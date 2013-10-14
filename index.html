@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="avalon.js"></script>
+        <script>
+            avalon.ready(function() {
+                var model = avalon.define("test", function(vm) {
+                    vm.json = {
+                        aaa: 111,
+                        bbb: 222
+                    }
+                })
+                avalon.scan()
+                require("mmRequest", function(avalon) {
+                    avalon.ajax({
+                        type: "POST",
+                        url: "/moredata",
+                        success: function(a, b) {
+                            avalon.log(a)
+                            avalon.log(b)
+                            setTimeout(function() {
+                                var json = avalon.mix(model.json.$model, a)
+                                model.json = json
+                            }, 3000)
+
+                        },
+                        complete: function(a, b) {
+                            console.log(b + "complete")
+                        }
+                    })
+                })
+            })
+
+
+
+        </script>
+    </head>
+    <body>
+        <h3>测试AJAX</h3>
+        <ul>
+            <li>avalon.ajax</li>
+            <li>avalon.post</li>
+            <li>avalon.get</li>
+            <li>avalon.upload</li>
+        </ul>
+        <div ms-controller="test">
+            <ul ms-each="json">
+                <li>{{$key}} ---  {{$val}}</li>
+            </ul>
+        </div>
+    </body>
+</html>

@@ -22,7 +22,7 @@
                             avalon.log(a)
                             avalon.log(b)
                             setTimeout(function() {
-                                //千万不要影响到$model
+                                //  千万不要影响到$model
                                 var json = avalon.mix({},model.json.$model, a)
                                 json.aaa = "ooo"
                                 model.json = json

@@ -22,9 +22,11 @@
                             avalon.log(a)
                             avalon.log(b)
                             setTimeout(function() {
-                                var json = avalon.mix(model.json.$model, a)
+                                //千万不要影响到$model
+                                var json = avalon.mix({},model.json.$model, a)
+                                json.aaa = "ooo"
                                 model.json = json
-                            }, 3000)
+                            }, 1000)
 
                         },
                         complete: function(a, b) {
@@ -47,6 +49,7 @@
             <li>avalon.upload</li>
         </ul>
         <div ms-controller="test">
+            <p>{{json.aaa}}</p>
             <ul ms-each="json">
                 <li>{{$key}} ---  {{$val}}</li>
             </ul>

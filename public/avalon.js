@@ -302,17 +302,6 @@
             }
             root.appendChild(node)
         }
-    } else if (window.postMessage && window.addEventListener) {//safar opera
-        avalon.nextTick = function(callback) {
-            function onGlobalMessage(event) {
-                if (typeof event.data === "string" && event.data.indexOf("usePostMessage") === 0) {
-                    callback()
-                }
-            }
-            window.addEventListener("message", onGlobalMessage);
-            var now = new Date - 0;
-            window.postMessage("usePostMessage" + now, "*");
-        }
     } else {
         avalon.nextTick = function(callback) {
             setTimeout(callback, 0)
@@ -1073,7 +1062,7 @@
         model.$id = name
         return VMODELS[name] = model
     }
-    var Observable = avalon.Events  = {
+    var Observable = {
         $watch: function(type, callback) {
             if (typeof callback === "function") {
                 var callbacks = this.$events[type]
@@ -1643,6 +1632,9 @@
                 }
             }
         }
+        bindings.sort(function(a, b){
+            return a.node.name > b.node.name
+        })
         if (ifBinding) {
             // 优先处理if绑定， 如果if绑定的表达式为假，那么就不处理同级的绑定属性及扫描子孙节点
             ifBinding.state = {}
@@ -1908,7 +1900,7 @@
     }
     var supportDisplay = (function(td) {
         return window.getComputedStyle ?
-                window.getComputedStyle(td, null).display === "table cell" : true
+                window.getComputedStyle(td, null).display === "table-cell" : true
     })(DOC.createElement("td"))
     var domParser = DOC.createElement("div")
     domParser.setAttribute("className", "t")

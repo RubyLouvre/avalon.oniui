@@ -21,10 +21,8 @@ app.get("/tmpl.html", function(req, res) {
 });
 
 app.post('/', function(req, res) {
-    if (req.xhr) {
         console.log("upload successfully")
-        res.send('Hello World');
-    }
+        res.send('upload successfully');
 });
 
 app.post("/moredata", function(req, res) {

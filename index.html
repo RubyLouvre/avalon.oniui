@@ -7,15 +7,26 @@
         <script src="avalon.js"></script>
         <script>
             avalon.ready(function() {
+                var avalonAjax
                 var model = avalon.define("test", function(vm) {
                     vm.json = {
                         aaa: 111,
                         bbb: 222
                     }
+                    vm.upload = function() {
+                        var form = this.form
+                        if (avalonAjax) {
+                            avalon.upload("/", form, function(a) {
+                                alert(a)
+                            },"text")
+                        }
+
+                    }
                 })
                 avalon.scan()
                 require("mmRequest", function(avalon) {
-                    avalon.ajax({
+                    avalonAjax = avalon.ajax
+                    avalonAjax({
                         type: "POST",
                         url: "/moredata",
                         success: function(a, b) {
@@ -23,7 +34,7 @@
                             avalon.log(b)
                             setTimeout(function() {
                                 //  千万不要影响到$model
-                                var json = avalon.mix({},model.json.$model, a)
+                                var json = avalon.mix({}, model.json.$model, a)
                                 json.aaa = "ooo"
                                 model.json = json
                             }, 1000)
@@ -54,5 +65,14 @@
                 <li>{{$key}} ---  {{$val}}</li>
             </ul>
         </div>
+        <table>
+            <tr>
+                <td></td>
+            </tr>
+        </table>
+        <form action="/" method="post" enctype="multipart/form-data" ms-controller="test">
+            <input type="file" id="myFile" name="myFile"/>
+            <p><button type="button" ms-click="upload" >submit</button></p>
+        </form>
     </body>
 </html>

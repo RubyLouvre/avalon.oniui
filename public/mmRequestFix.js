@@ -19,7 +19,7 @@ define(!!this.FormData, ["avalon", "mmDeferred"], function(avalon, mmDeferred) {
         };
         function createIframe(ID) {
             var iframe = avalon.parseHTML("<iframe " + " id='" + ID + "'" +
-                    " name='" + ID + "'" + " style='position:absolute;left:-9999px;top:-9999px;/>").firstChild;
+                    " name='" + ID + "'" + " style='position:absolute;left:-9999px;top:-9999px;'/>").firstChild;
             return (DOC.body || DOC.documentElement).insertBefore(iframe, null);
         }
         function addDataToForm(form, data) {

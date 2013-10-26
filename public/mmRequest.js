@@ -55,7 +55,7 @@ define("mmRequest", this.FormData ? ["avalon", "mmDeferred"] : ["avalon, mmReque
 
     function ajaxExtend(opts) {
         opts = avalon.mix({}, defaults, opts)
-        
+
         if (typeof opts.crossDomain !== "boolean") { //判定是否跨域
             var parts = rurl.exec(opts.url.toLowerCase())
             opts.crossDomain = !!(parts && (parts[1] !== segments[1] || parts[2] !== segments[2] || (parts[3] || (parts[1] === "http:" ? 80 : 443)) !== (segments[3] || (segments[1] === "http:" ? 80 : 443))))
@@ -136,7 +136,7 @@ define("mmRequest", this.FormData ? ["avalon", "mmDeferred"] : ["avalon, mmReque
         if (!opts || !opts.url) {
             avalon.error("参数必须为Object并且拥有url属性")
         }
-    
+
         opts = ajaxExtend(opts)  //处理用户参数，比如生成querystring, type大写化
         //创建一个伪XMLHttpRequest,能处理complete,success,error等多投事件
         var XHRProperties = {
@@ -316,12 +316,11 @@ define("mmRequest", this.FormData ? ["avalon", "mmDeferred"] : ["avalon, mmReque
             },
             jsonp: {
                 preproccess: function() {
-                    var namespace = DOC.URL.replace(/(#.+|\W)/g, '')  //得到框架的命名空间
                     var opts = this.options;
                     var name = this.jsonpCallback = opts.jsonpCallback || "jsonp" + setTimeout("1")
-                    opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=" + namespace + "." + name
+                    opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=avalon." + name
                     //将后台返回的json保存在惰性函数中
-                    global[namespace][name] = function(json) {
+                    avalon[name] = function(json) {
                         avalon[name] = json
                     };
                     return "script"

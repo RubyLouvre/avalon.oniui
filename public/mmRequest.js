@@ -2,7 +2,7 @@
 //  数据交互模块
 //==========================================
 define("mmRequest", this.FormData ? ["avalon", "mmDeferred"] : ["avalon, mmRequestFix"], function(avalon, mmDeferred) {
-    var global = this,
+    var global = window,
             DOC = global.document,
             r20 = /%20/g,
             rCRLF = /\r?\n/g,

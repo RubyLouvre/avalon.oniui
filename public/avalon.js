@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.2 2014.2.17
+ avalon 1.2.3 2014.3.7
  ==================================================*/
 (function(DOC) {
     var Registry = {} //将函数曝光到此对象上，方便访问器收集依赖
@@ -97,7 +97,7 @@
     }
     if (rnative.test(Object.getPrototypeOf)) {
         avalon.isPlainObject = function(obj) {
-            return obj && typeof obj === "object" && Object.getPrototypeOf(obj) === oproto
+            return !!obj && typeof obj === "object" && Object.getPrototypeOf(obj) === oproto
         }
     }
     avalon.mix = avalon.fn.mix = function() {
@@ -236,7 +236,6 @@
                 el.addEventListener(eventMap[type] || type, callback, !!phase)
             } else {
                 el.attachEvent("on" + type, callback)
-
             }
             return callback
         },
@@ -284,6 +283,25 @@
                 }
             }
         },
+        getWidgetData: function(elem, prefix) {
+            var raw = avalon(elem).data()
+            var result = {}
+            for (var i in raw) {
+                if (i.indexOf(prefix) === 0) {
+                    result[i.replace(prefix, "").replace(/\w/, function(a) {
+                        return a.toLowerCase()
+                    })] = raw[i]
+                }
+            }
+            return result
+        },
+        getVModel: function(prop, vmodels) {//得到当前属性prop所在的VM
+            for (var i = 0, el; el = vmodels[i++]; ) {
+                if (el.hasOwnProperty(prop)) {
+                    return el
+                }
+            }
+        },
         Array: {
             ensure: function(target, item) {
                 //只有当前数组不存在此元素时只添加它
@@ -314,7 +332,7 @@
     //只让节点集合，纯数组，arguments与拥有非负整数的length属性的纯JS对象通过
 
     function isArrayLike(obj) {
-        if (obj && typeof obj === "object") {
+        if (obj && typeof obj === "object" && !avalon.isWindow(obj)) {
             var n = obj.length
             if (+n === n && !(n % 1) && n >= 0) { //检测length属性是否为非负整数
                 try {
@@ -359,8 +377,10 @@
 
     function modelFactory(scope, model) {
         if (Array.isArray(scope)) {
+            var arr = scope.concat()//原数组的作为新生成的监控数组的$model而存在
+            scope.length = 0
             var collection = Collection(scope)
-            collection._add(scope)
+            collection.push.apply(collection, arr)
             return collection
         }
         if (typeof scope.nodeType === "number") {
@@ -445,7 +465,7 @@
 
     function loopModel(name, val, model, normalProperties, accessingProperties, computedProperties, watchProperties) {
         model[name] = val
-        if (normalProperties[name]) { //如果是指明不用监控的系统属性，或放到 $skipArray里面
+        if (normalProperties[name] || (val && val.nodeType)) { //如果是指明不用监控的系统属性或元素节点，或放到 $skipArray里面
             return normalProperties[name] = val
         }
         if (name.charAt(0) === "$" && !watchProperties[name]) { //如果是$开头，并且不在watchMore里面的
@@ -505,7 +525,7 @@
                     }
                     if (!isEqual(preValue, newValue)) {
                         if (rchecktype.test(valueType)) {
-                            var value = accessor.$vmodel = updateModel(accessor.$vmodel, newValue, valueType)
+                            var value = accessor.$vmodel = updateVModel(accessor.$vmodel, newValue, valueType)
                             var fn = rebindings[value.$id]
                             fn && fn()
                             withProxyCount && updateWithProxy(vmodel.$id, name, value)
@@ -551,7 +571,7 @@
         }
     }
 
-    function updateModel(a, b, valueType) {
+    function updateVModel(a, b, valueType) {
         //a为原来的VM， b为新数组或新对象
         if (valueType === "array") {
             if (!Array.isArray(b)) {
@@ -687,8 +707,9 @@
      *                           ecma262 v5语法补丁                   *
      **********************************************************************/
     if (!"司徒正美".trim) {
+        var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g
         String.prototype.trim = function() {
-            return this.replace(/^[\s\xA0]+/, "").replace(/[\s\xA0]+$/, "")
+            return this.replace(rtrim, "")
         }
     }
     for (var i in {
@@ -896,14 +917,15 @@
 
     avalon.fn.mix({
         hasClass: function(cls) {
-            var el = this[0] || {}
-            if (el.nodeType === 1) {
-                return !!el.className && (" " + el.className + " ").indexOf(" " + cls + " ") > -1
+            var node = this[0] || {}
+            if (node.nodeType === 1 && node.className) {
+                return (" " + node.className + " ").indexOf(" " + cls + " ") > -1
             }
+            return false
         },
         addClass: function(cls) {
-            var node = this[0]
-            if (cls && typeof cls === "string" && node && node.nodeType === 1) {
+            var node = this[0] || {}
+            if (cls && typeof cls === "string" && node.nodeType === 1) {
                 if (!node.className) {
                     node.className = cls
                 } else {
@@ -919,8 +941,8 @@
             return this
         },
         removeClass: function(cls) {
-            var node = this[0]
-            if (cls && typeof cls > "o" && node && node.nodeType === 1 && node.className) {
+            var node = this[0] || {}
+            if (cls && typeof cls > "o" && node.nodeType === 1 && node.className) {
                 var classNames = (cls || "").match(rnospaces) || []
                 var cl = classNames.length
                 var set = " " + node.className.match(rnospaces).join(" ") + " "
@@ -991,9 +1013,9 @@
             var offsetParent, offset,
                     elem = this[0],
                     parentOffset = {
-                top: 0,
-                left: 0
-            }
+                        top: 0,
+                        left: 0
+                    }
             if (!elem) {
                 return
             }
@@ -1053,12 +1075,30 @@
             data = data === "true" ? true :
                     data === "false" ? false :
                     data === "null" ? null :
-                    data === "NaN" ? NaN :
-                    +data + "" === data ? +data : eval("0," + data)
+                    +data + "" === data ? +data : rbrace.test(data) ? parseJSON(data) : data
         } catch (e) {
         }
         return data
     }
+    var rbrace = /(?:\{[\s\S]*\}|\[[\s\S]*\])$/,
+            rvalidchars = /^[\],:{}\s]*$/,
+            rvalidbraces = /(?:^|:|,)(?:\s*\[)+/g,
+            rvalidescape = /\\(?:["\\\/bfnrt]|u[\da-fA-F]{4})/g,
+            rvalidtokens = /"[^"\\\r\n]*"|true|false|null|-?(?:\d+\.|)\d+(?:[eE][+-]?\d+|)/g
+    var parseJSON = window.JSON ? JSON.parse : function(data) {
+        if (typeof data === "string") {
+            data = data.trim();
+            if (data) {
+                if (rvalidchars.test(data.replace(rvalidescape, "@")
+                        .replace(rvalidtokens, "]")
+                        .replace(rvalidbraces, ""))) {
+                    return (new Function("return " + data))();
+                }
+            }
+            avalon.error("Invalid JSON: " + data);
+        }
+    }
+
     //生成avalon.fn.scrollLeft, avalon.fn.scrollTop方法
     avalon.each({
         scrollLeft: "pageXOffset",
@@ -1295,8 +1335,7 @@
         var ret = el.tagName.toLowerCase()
         return ret === "input" && /checkbox|radio/.test(el.type) ? "checked" : ret
     }
-    var rstring = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/g,
-            rhasValue = /\bvalue=/
+    var roption = /^<option(?:\s+\w+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?)*\s+value[\s=]/i
     var valHooks = {
         "option:get": function(node) {
             //在IE11及W3C，如果没有指定value，那么node.value默认为node.text（存在trim作），但IE9-10则是取innerHTML(没trim操作)
@@ -1304,8 +1343,7 @@
                 return node.hasAttribute("value") ? node.value : node.text
             }
             //specified并不可靠，因此通过分析outerHTML判定用户有没有显示定义value
-            return rhasValue.test(node.outerHTML.replace(node.innerHTML, "").replace(rstring, "")) ?
-                    node.value : node.text
+            return roption.test(node.outerHTML) ? node.value : node.text
         },
         "select:get": function(node, value) {
             var option, options = node.options,
@@ -1385,7 +1423,7 @@
                 wrapper = domParser,
                 firstChild, neo
         if (!W3C) { //fix IE
-            html = html.replace(rcreate, "<br class=fixNoscope>$1") //在link style script等标签之前添加一个补丁
+            html = html.replace(rcreate, "<br class=msNoScope>$1") //在link style script等标签之前添加一个补丁
         }
         wrapper.innerHTML = wrap[1] + html + (wrap[2] || "")
         var els = wrapper.getElementsByTagName("script")
@@ -1408,7 +1446,7 @@
         }
         if (!W3C) { //fix IE
             for (els = wrapper["getElementsByTagName"]("br"), i = 0; el = els[i++]; ) {
-                if (el.className && el.className === "fixNoscope") {
+                if (el.className && el.className === "msNoScope") {
                     el.parentNode.removeChild(el)
                 }
             }
@@ -1543,10 +1581,10 @@
     /*********************************************************************
      *                           扫描系统                                 *
      **********************************************************************/
-    avalon.scan = function(elem, vmodel, state) {
+    avalon.scan = function(elem, vmodel) {
         elem = elem || root
         var vmodels = vmodel ? [].concat(vmodel) : []
-        scanTag(elem, vmodels, state)
+        scanTag(elem, vmodels)
     }
 
     //http://www.w3.org/TR/html5/syntax.html#void-elements
@@ -1558,14 +1596,14 @@
     function checkScan(elem, callback) {
         var innerHTML = NaN,
                 id = setInterval(function() {
-            var currHTML = elem.innerHTML
-            if (currHTML === innerHTML) {
-                clearInterval(id)
-                callback()
-            } else {
-                innerHTML = currHTML
-            }
-        }, interval)
+                    var currHTML = elem.innerHTML
+                    if (currHTML === innerHTML) {
+                        clearInterval(id)
+                        callback()
+                    } else {
+                        innerHTML = currHTML
+                    }
+                }, interval)
     }
 
 
@@ -1582,19 +1620,17 @@
             if (!newVmodel) {
                 return
             }
-            if (elem.msLoopData) {
-                delete VMODELS[node.value]
-            }
             //ms-important不包含父VM，ms-controller相反
             vmodels = node === b ? [newVmodel] : [newVmodel].concat(vmodels)
             elem.removeAttribute(node.name) //removeAttributeNode不会刷新[ms-controller]样式规则
-            avalon(elem).removeClass(node.name)
+            avalon(elem).removeClass(node.name)//处理IE6
         }
         scanAttr(elem, vmodels) //扫描特性节点
     }
 
     function scanNodes(parent, vmodels) {
         var node = parent.firstChild
+
         while (node) {
             var nextNode = node.nextSibling
             if (node.nodeType === 1) {
@@ -1650,13 +1686,14 @@
 
     function scanAttr(elem, vmodels) {
         var attributes = getAttributes ? getAttributes(elem) : elem.attributes
-        var bindings = [],
+        var bindings = [], msData = {},
                 match
         for (var i = 0, attr; attr = attributes[i++]; ) {
             if (attr.specified) {
                 if (match = attr.name.match(rmsAttr)) {
                     //如果是以指定前缀命名的
                     var type = match[1]
+                    msData[attr.name] = attr.value
                     if (typeof bindingHandlers[type] === "function") {
                         var param = match[2] || ""
                         var binding = {
@@ -1664,14 +1701,16 @@
                             param: param,
                             element: elem,
                             name: match[0],
-                            value: attr.nodeValue,
+                            value: attr.value,
                             priority: type in priorityMap ? priorityMap[type] : type.charCodeAt(0) * 10 + (Number(param) || 0)
                         }
-                        if (type == "if" && param == "loop") {
+
+                        if (type === "if" && param === "loop") {
                             binding.priority += 100
                         }
                         if (type === "widget") {
                             bindings.push(binding)
+                            elem.msData = elem.msData || msData
                         } else if (vmodels.length) {
                             bindings.push(binding)
                         }
@@ -1682,6 +1721,9 @@
         bindings.sort(function(a, b) {
             return a.priority - b.priority
         })
+        if (msData["ms-checked"] && msData["ms-duplex"]) {
+            avalon.log("warning!一个元素上不能同时定义ms-checked与ms-duplex")
+        }
         var firstBinding = bindings[0] || {}
         switch (firstBinding.type) {
             case "if":
@@ -1695,20 +1737,14 @@
                 }
                 break;
         }
-        var data = elem.msLoopData
-        if (data) {
-            elem.msLoopData = void 0
-            if (typeof data.group !== "number") {
-                data.group = elem.childNodes.length
-            }
-            var p = elem.parentNode
-            while (elem.firstChild) {
-                p.insertBefore(elem.firstChild, elem)
-            }
-            p.removeChild(elem)
+
+        if (elem.patchRepeat) {
+            elem.patchRepeat()
+            elem.patchRepeat = null
         }
+
     }
-    //IE6下，在循环绑定中，一个节点如果是通过cloneNode得到，自定义属性的specified为false，无法进入里面的分支，
+    //IE67下，在循环绑定中，一个节点如果是通过cloneNode得到，自定义属性的specified为false，无法进入里面的分支，
     //但如果我们去掉scanAttr中的attr.specified检测，一个元素会有80+个特性节点（因为它不区分固有属性与自定义属性），很容易卡死页面
     if (!"1" [0]) {
         var cacheAttr = createCache(512)
@@ -1716,6 +1752,9 @@
                 rquote = /^['"]/,
                 rtag = /<\w+\b(?:(["'])[^"]*?(\1)|[^>])*>/i
         var getAttributes = function(elem) {
+            if (elem.outerHTML.slice(0, 2) == "</") {//处理旧式IE模拟HTML5新元素带来的伪标签
+                return []
+            }
             var str = elem.outerHTML.match(rtag)[0]
             var attributes = [],
                     match,
@@ -1730,7 +1769,7 @@
                 var binding = {
                     name: name,
                     specified: true,
-                    nodeValue: v ? rquote.test(v) ? v.slice(1, -1) : v : ""
+                    value: v ? rquote.test(v) ? v.slice(1, -1) : v : ""
                 }
                 attributes.push(binding)
             }
@@ -1742,6 +1781,7 @@
         for (var i = 0, data; data = bindings[i++]; ) {
             data.vmodels = vmodels
             bindingHandlers[data.type](data, vmodels)
+
             if (data.evaluator && data.name) { //移除数据绑定，防止被二次解析
                 //chrome使用removeAttributeNode移除不存在的特性节点时会报错 https://github.com/RubyLouvre/avalon/issues/99
                 data.element.removeAttribute(data.name)
@@ -1837,13 +1877,15 @@
 
     //添加赋值语句
 
-    function addAssign(vars, scope, name) {
+    function addAssign(vars, scope, name, duplex) {
         var ret = [],
                 prefix = " = " + name + "."
-        for (var i = vars.length; name = vars[--i]; ) {
-            name = vars[i]
-            if (scope.hasOwnProperty && scope.hasOwnProperty(name)) { //IE6下节点没有hasOwnProperty
-                ret.push(name + prefix + name)
+        for (var i = vars.length, prop; prop = vars[--i]; ) {
+            if (scope.hasOwnProperty && scope.hasOwnProperty(prop)) { //IE6下节点没有hasOwnProperty
+                ret.push(prop + prefix + prop)
+                if (duplex === "duplex") {
+                    vars.get = name + "." + prop
+                }
                 vars.splice(i, 1)
             }
         }
@@ -1881,7 +1923,7 @@
     }
     var cacheExpr = createCache(256)
     //取得求值函数及其传参
-
+    var rduplex = /\w\[.*\]|\w\.\w/
     function parseExpr(code, scopes, data, four) {
         var exprId = scopes.map(function(el) {
             return el.$id
@@ -1899,7 +1941,7 @@
                 var name = "vm" + expose + "_" + i
                 names.push(name)
                 args.push(scopes[i])
-                assigns.push.apply(assigns, addAssign(vars, scopes[i], name))
+                assigns.push.apply(assigns, addAssign(vars, scopes[i], name, four))
             }
         }
         //---------------args----------------
@@ -1923,7 +1965,7 @@
                     prefix +
                     ";\n\tif(!arguments.length){\n\t\treturn " +
                     code +
-                    "\n\t}\n\t" + (code.indexOf(".") === -1 ? names[0] + "." + code : code) +
+                    "\n\t}\n\t" + (!rduplex.test(code) ? vars.get : code) +
                     "= vvv;\n} "
             try {
                 fn = Function.apply(Function, names.concat(_body))
@@ -2110,7 +2152,6 @@
                 var vmodels = data.vmodels
                 var rendered = getBindingCallback(elem, "data-include-rendered", vmodels)
                 var loaded = getBindingCallback(elem, "data-include-loaded", vmodels)
-
                 function scanTemplate(text) {
                     if (loaded) {
                         text = loaded.apply(elem, [text].concat(vmodels))
@@ -2168,6 +2209,9 @@
                     }
                 }
             } else {
+                if (!W3C && (method === "src" || method === "href")) {
+                    val = val.replace(/&amp;/g, "&")//处理IE67自动转义的问题
+                }
                 elem[method] = val
             }
         },
@@ -2232,9 +2276,13 @@
         "each": function(method, pos, el) {
             var data = this
             var group = data.group
+            var pp = data.startRepeat && data.startRepeat.parentNode
+            if (pp) {//fix  #300 #307
+                data.parent = pp
+            }
             var parent = data.parent
             var proxies = data.proxies
-            if (method == "del" || method == "move") {
+            if (method === "del" || method === "move") {
                 var locatedNode = getLocatedNode(parent, data, pos)
             }
             switch (method) {
@@ -2242,14 +2290,16 @@
                     var arr = el
                     var last = data.getter().length - 1
                     var transation = documentFragment.cloneNode(false)
-                    var spans = []
+                    var spans = [], lastFn = {}
                     for (var i = 0, n = arr.length; i < n; i++) {
                         var ii = i + pos
                         var proxy = createEachProxy(ii, arr[i], data, last)
                         proxies.splice(ii, 0, proxy)
-                        shimController(data, transation, spans, proxy)
+                        lastFn = shimController(data, transation, spans, proxy)
                     }
                     locatedNode = getLocatedNode(parent, data, pos)
+                    lastFn.node = locatedNode
+                    lastFn.parent = parent
                     parent.insertBefore(transation, locatedNode)
                     for (var i = 0, el; el = spans[i++]; ) {
                         scanTag(el, data.vmodels)
@@ -2307,8 +2357,7 @@
                     var pool = el
                     var transation = documentFragment.cloneNode(false)
                     var callback = getBindingCallback(data.callbackElement, "data-with-sorted", data.vmodels)
-                    var keys = []
-                    var spans = []
+                    var keys = [], spans = [], lastFn = {}
                     for (var key in pos) { //得到所有键名
                         if (pos.hasOwnProperty(key) && key !== "hasOwnProperty") {
                             keys.push(key)
@@ -2322,10 +2371,12 @@
                     }
                     for (var i = 0, key; key = keys[i++]; ) {
                         if (key !== "hasOwnProperty") {
-                            shimController(data, transation, spans, pool[key])
+                            lastFn = shimController(data, transation, spans, pool[key])
                         }
                     }
-                    parent.insertBefore(transation, data.endRepeat || null)
+                    lastFn.parent = parent
+                    lastFn.node = data.endRepeat || null
+                    parent.insertBefore(transation, lastFn.node)
                     for (var i = 0, el; el = spans[i++]; ) {
                         scanTag(el, data.vmodels)
                     }
@@ -2389,6 +2440,7 @@
             var fn = data.evaluator
             var args = data.args
             var vmodels = data.vmodels
+
             if (!data.hasArgs) {
                 callback = function(e) {
                     return fn.apply(0, args).call(this, e)
@@ -2417,7 +2469,7 @@
         "text": function(val, elem, data) {
             val = val == null ? "" : val //不在页面上显示undefined null
             if (data.nodeType === 3) { //绑定在文本节点上
-                data.node.nodeValue = val
+                data.node.data = val
             } else { //绑定在特性节点上
                 if (!elem) {
                     elem = data.element = data.node.parentNode
@@ -2495,10 +2547,7 @@
             var elem = data.element,
                     tagName = elem.tagName
             if (typeof modelBinding[tagName] === "function") {
-                var callback = getBindingCallback(elem, "data-duplex-changed", vmodels)
-                if (!/radio|checkbox|select/.test(elem.type)) {
-                    data.changed = callback
-                }
+                data.changed = getBindingCallback(elem, "data-duplex-changed", vmodels)
                 //由于情况特殊，不再经过parseExprProxy
                 parseExpr(data.value, vmodels, data, "duplex")
                 if (data.evaluator && data.args) {
@@ -2569,8 +2618,13 @@
                     withProxyCount++
                     pool = withProxyPool[list.$id] = {}
                     for (var key in list) {
-                        if (list.hasOwnProperty(key) && key !== "hasOwnPropery") {
-                            pool[key] = createWithProxy(key, list[key], data.$outer)
+                        if (list.hasOwnProperty(key) && key !== "hasOwnProperty") {
+                            (function(k, v) {
+                                pool[k] = createWithProxy(k, v, data.$outer)
+                                pool[k].$watch("$val", function(val) {
+                                    list[k] = val//#303
+                                })
+                            })(key, list[key])
                         }
                     }
                 }
@@ -2661,9 +2715,9 @@
                         args[1] = id
                     }
                 }
-                var elemData = filterData(avalon(element).data(), args[0]) //抽取data-tooltip-text、data-tooltip-attr属性，组成一个配置对象
+                var widgetData = avalon.getWidgetData(element, args[0]) //抽取data-tooltip-text、data-tooltip-attr属性，组成一个配置对象
                 data[widget + "Id"] = args[1]
-                data[widget + "Options"] = avalon.mix({}, constructor.defaults, vmOptions, elemData)
+                data[widget + "Options"] = avalon.mix({}, constructor.defaults, vmOptions, widgetData)
                 element.removeAttribute("ms-widget")
                 var widgetVM = constructor(element, data, vmodels)
                 data.evaluator = noop
@@ -2678,17 +2732,7 @@
         }
     }
 
-    function filterData(obj, prefix) {
-        var result = {}
-        for (var i in obj) {
-            if (i.indexOf(prefix) === 0) {
-                result[i.replace(prefix, "").replace(/\w/, function(a) {
-                    return a.toLowerCase()
-                })] = obj[i]
-            }
-        }
-        return result
-    }
+
 
 
     //============================ class preperty binding  =======================
@@ -2729,8 +2773,8 @@
             return element.value
         }
         //当value变化时改变model的值
-        var updateModel = function() {
-            element.oldValue = element.vlaue
+        var updateVModel = function() {
+            element.oldValue = element.value
             if ($elem.data("duplex-observe") !== false) {
                 evaluator(valueAccessor())
             }
@@ -2745,12 +2789,15 @@
         if (type === "radio") {
             data.handler = function() {
                 //IE6是通过defaultChecked来实现打勾效果
-                element.defaultChecked = (element.checked = fixType === "text" ? evaluator() === element.value : !!evaluator())
+                element.defaultChecked = (element.checked = /bool|text/.test(fixType) ? evaluator() + "" === element.value : !!evaluator())
             }
-            updateModel = function() {
+            updateVModel = function() {
                 if ($elem.data("duplex-observe") !== false) {
+                    var value = element.value
                     if (fixType === "text") {
-                        evaluator(element.value)
+                        evaluator(value)
+                    } else if (fixType === "bool") {
+                        evaluator(value === "true")
                     } else {
                         var val = !element.defaultChecked
                         evaluator(val)
@@ -2758,22 +2805,27 @@
                     }
                 }
             }
-            removeFn = $elem.bind("click", updateModel)
+            removeFn = $elem.bind("click", updateVModel)
             data.rollback = function() {
                 $elem.unbind("click", removeFn)
             }
         } else if (type === "checkbox") {
-            updateModel = function() {
+            updateVModel = function() {
                 if ($elem.data("duplex-observe") !== false) {
                     var method = element.checked ? "ensure" : "remove"
-                    avalon.Array[method](evaluator(), element.value)
+                    var array = evaluator()
+                    if (Array.isArray(array)) {
+                        avalon.Array[method](array, element.value)
+                    } else {
+                        avalon.error("ms-duplex位于checkbox时要求对应一个数组")
+                    }
                 }
             }
             data.handler = function() {
                 var array = [].concat(evaluator()) //强制转换为数组
                 element.checked = array.indexOf(element.value) >= 0
             }
-            removeFn = $elem.bind("click", updateModel) //IE6-8
+            removeFn = $elem.bind("click", updateVModel) //IE6-8
             data.rollback = function() {
                 $elem.unbind("click", removeFn)
             }
@@ -2781,18 +2833,17 @@
             var event = element.attributes["data-duplex-event"] || element.attributes["data-event"] || {}
             event = event.value
             if (event === "change") {
-                avalon.bind(element, event, updateModel)
+                avalon.bind(element, event, updateVModel)
             } else {
                 if (W3C) { //先执行W3C
-                    element.addEventListener("input", updateModel)
+                    element.addEventListener("input", updateVModel)
                     data.rollback = function() {
-                        element.removeEventListener("input", updateModel)
+                        element.removeEventListener("input", updateVModel)
                     }
-
                 } else {
                     removeFn = function(e) {
                         if (e.propertyName === "value") {
-                            updateModel()
+                            updateVModel()
                         }
                     }
                     element.attachEvent("onpropertychange", removeFn)
@@ -2804,9 +2855,9 @@
                 if (DOC.documentMode === 9) { // IE9 无法在切剪中同步VM
                     var selectionchange = function(e) {
                         if (e.type === "focus") {
-                            DOC.addEventListener("selectionchange", updateModel)
+                            DOC.addEventListener("selectionchange", updateVModel)
                         } else {
-                            DOC.removeEventListener("selectionchange", updateModel)
+                            DOC.removeEventListener("selectionchange", updateVModel)
                         }
                     }
                     element.addEventListener("focus", selectionchange)
@@ -2820,56 +2871,57 @@
                 }
             }
         }
-        if (!hackValueSetter) {//chrome, opera, safari
-            element.oldValue = element.value
-            checkElements.push(element)
-        }
+        element.oldValue = element.value
+        launch(element)
         registerSubscriber(data)
     }
-    var checkElements = []
-    setInterval(function() {
-        for (var n = checkElements.length - 1; n >= 0; n--) {
-            var el = checkElements[n]
-            if (el.parentNode) {
-                if (el.oldValue == el.value) {
-                    el.oldValue = el.value
+    var TimerID, ribbon = [], launch = noop
+    function ticker() {
+        for (var n = ribbon.length - 1; n >= 0; n--) {
+            var el = ribbon[n]
+            if (avalon.contains(root, el)) {
+                if (el.oldValue !== el.value) {
                     var event = DOC.createEvent("Event")
                     event.initEvent("input", true, true)
                     el.dispatchEvent(event)
-                } else {
-                    checkElements.splice(n, 1)
                 }
+            } else {
+                ribbon.splice(n, 1)
             }
         }
-    }, 16)
+        if (!ribbon.length) {
+            clearInterval(TimerID)
+        }
+    }
+    function launchImpl(el) {
+        if (ribbon.push(el) === 1) {
+            TimerID = setInterval(ticker, 30)
+        }
+    }
     //http://msdn.microsoft.com/en-us/library/dd229916(VS.85).aspx
     //https://docs.google.com/document/d/1jwA8mtClwxI-QJuHT7872Z0pxpZz8PBkf2bGAbsUtqs/edit?pli=1
-    //IE9-11, firefox3+
-    var hackValueSetter = true
-    if (window.HTMLInputElement) {
-        var inputProto = HTMLInputElement.prototype, oldSetter
-        function newSetter(newValue) {
-            var oldValue = this.getAttribute("value")
-            if (newValue !== oldValue) {
-                this.setAttribute("value", newValue)
-                oldSetter.call(this, newValue)
-                var event = DOC.createEvent("Event")
-                event.initEvent("input", true, true)
-                this.dispatchEvent(event)
-            }
-        }
+    if (Object.getOwnPropertyNames) {//屏蔽IE8
         try {
-            oldSetter = Object.getOwnPropertyDescriptor(inputProto, "value").set
+            var inputProto = HTMLInputElement.prototype, oldSetter
+            function newSetter(newValue) {
+                oldSetter.call(this, newValue)
+                if (newValue !== this.oldValue) {
+                    var event = DOC.createEvent("Event")
+                    event.initEvent("input", true, true)
+                    this.dispatchEvent(event)
+                }
+            }
+            oldSetter = Object.getOwnPropertyDescriptor(inputProto, "value").set//屏蔽chrome, safari,opera
             Object.defineProperty(inputProto, "value", {
                 set: newSetter
             })
         } catch (e) {
+            launch = launchImpl
         }
-        hackValueSetter = !!oldSetter
     }
     modelBinding.SELECT = function(element, evaluator, data, oldValue) {
         var $elem = avalon(element)
-        function updateModel() {
+        function updateVModel() {
             if ($elem.data("duplex-observe") !== false) {
                 var curValue = $elem.val() //字符串或字符串数组
                 if (curValue + "" !== oldValue) {
@@ -2887,7 +2939,7 @@
                 oldValue = curValue + ""
             }
         }
-        var removeFn = $elem.bind("change", updateModel)
+        var removeFn = $elem.bind("change", updateVModel)
         data.rollback = function() {
             $elem.unbind("change", removeFn)
         }
@@ -2943,13 +2995,13 @@
     }
     "animationend,blur,change,click,dblclick,focus,keydown,keypress,keyup,mousedown,mouseenter,mouseleave,mousemove,mouseout,mouseover,mouseup,scroll".
             replace(rword, function(name) {
-        bindingHandlers[name] = function(data) {
-            data.param = name
-            bindingHandlers.on.apply(0, arguments)
-        }
-    })
-    if (!("onmouseenter" in root)) {
-        var oldBind = avalon.bind
+                bindingHandlers[name] = function(data) {
+                    data.param = name
+                    bindingHandlers.on.apply(0, arguments)
+                }
+            })
+    var oldBind = avalon.bind
+    if (!("onmouseenter" in root)) {//fix firefox, chrome
         var events = {
             mouseenter: "mouseover",
             mouseleave: "mouseout"
@@ -2969,6 +3021,20 @@
             }
         }
     }
+    if (!("oninput" in document.createElement("input"))) {//fix IE6-8
+        avalon.bind = function(elem, type, fn) {
+            if (type === "input") {
+                return oldBind(elem, "propertychange", function(e) {
+                    if (e.propertyName === "value") {
+                        e.type = "input"
+                        return fn.call(elem, e)
+                    }
+                })
+            } else {
+                return oldBind(elem, type, fn)
+            }
+        }
+    }
     /*********************************************************************
      *          监控数组（与ms-each, ms-repeat配合使用）                     *
      **********************************************************************/
@@ -2976,7 +3042,7 @@
         var array = []
         array.$id = generateID()
         array[subscribers] = []
-        array.$model = model.concat()
+        array.$model = model// model.concat()
         array.$events = {} //VB对象的方法里的this并不指向自身，需要使用bind处理一下
         array._ = modelFactory({
             length: model.length
@@ -3019,7 +3085,9 @@
         },
         push: function() {
             ap.push.apply(this.$model, arguments)
-            return this._add(arguments) //返回长度
+            var n = this._add(arguments)
+            notifySubscribers(this, "index", n > 2 ? n - 2 : 0)
+            return n
         },
         unshift: function() {
             ap.unshift.apply(this.$model, arguments)
@@ -3192,10 +3260,10 @@
         parent.textContent = ""
     }
 
-    function iteratorCallback() {
+    function iteratorCallback(args) {
         var callback = getBindingCallback(this.callbackElement, this.callbackName, this.vmodels)
         if (callback) {
-            var parent = this.parent, args = arguments
+            var parent = this.parent
             checkScan(parent, function() {
                 callback.apply(parent, args)
             })
@@ -3205,14 +3273,27 @@
 
     function shimController(data, transation, spans, proxy) {
         var tview = data.template.cloneNode(true)
-        avalon.vmodels[proxy.$id] = proxy
+        var id = proxy.$id
+        VMODELS[id] = proxy
         var span = DOC.createElement("msloop")
         span.style.display = "none"
-        span.setAttribute("ms-controller", proxy.$id)
-        span["msLoopData"] = data
+        span.setAttribute("ms-controller", id)
         span.appendChild(tview)
         spans.push(span)
         transation.appendChild(span)
+        function fn() {
+            delete VMODELS[id]
+            span.parentNode.removeChild(span)
+            var n = span.childNodes.length
+            while (span.firstChild) {
+                transation.appendChild(span.firstChild)
+            }
+            if (fn.node !== void 0) {
+                data.group = n
+                fn.parent.insertBefore(transation, fn.node)
+            }
+        }
+        return span.patchRepeat = fn
     }
     // 取得用于定位的节点。在绑定了ms-each, ms-with属性的元素里，它的整个innerHTML都会视为一个子模板先行移出DOM树，
     // 然后如果它的元素有多少个（ms-each）或键值对有多少双（ms-with），就将它复制多少份(多少为N)，再经过扫描后，重新插入该元素中。
@@ -3321,9 +3402,9 @@
                     dec = dec_point || ".",
                     s = "",
                     toFixedFix = function(n, prec) {
-                var k = Math.pow(10, prec)
-                return "" + Math.round(n * k) / k
-            }
+                        var k = Math.pow(10, prec)
+                        return "" + Math.round(n * k) / k
+                    }
             // Fix for IE parseFloat(0.55).toFixed(0) = 0 
             s = (prec ? toFixedFix(n, prec) : "" + Math.round(n)).split('.')
             if (s[0].length > 3) {
@@ -3470,6 +3551,8 @@
             }
             return string
         }
+        var rfixFFDate = /^(\d+)-(\d+)-(\d{4})$/
+        var rfixIEDate = /^(\d+)\s+(\d+),(\d{4})$/
         filters.date = function(date, format) {
             var locate = filters.date.locate,
                     text = "",
@@ -3481,6 +3564,10 @@
                 if (NUMBER_STRING.test(date)) {
                     date = toInt(date)
                 } else {
+                    var trimDate = date.trim()
+                    if (trimDate.match(rfixFFDate) || trimDate.match(rfixIEDate)) {
+                        date = RegExp.$3 + "/" + RegExp.$1 + "/" + RegExp.$2
+                    }
                     date = jsonStringToDate(date)
                 }
                 date = new Date(date)

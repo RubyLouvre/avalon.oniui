@@ -18,16 +18,19 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 <p>avalon.unparam(str) 将一个字符串转换为对象
 <p>avalon.serializ(form)  将表单元素变字符串
 
-用法与jQuery的同名方法用法完全一样
-```javascript
+用法与jQuery的同名方法用法完全一样，将avalon.js, mmRequest.js, mmDeferred.js放到同一目录下，然后
+```html
+<script src="avalon.js"></script>
+<!--不能直接用script引入mmRequest.js-->
+<script >
 require(["mmRequest"], function(){
-var form = document.getElementById("formId")
-var str = avalon.serializ(form)
-var data = avalon.unparam(str)
-   mmRequest.post(url, data, function(json){
-      alert(json)
-   }, "json")
-})
-
+    var form = document.getElementById("formId")
+    var str = avalon.serializ(form)
+    var data = avalon.unparam(str)
+       mmRequest.post(url, data, function(json){
+          alert(json)
+       }, "json")
+    })
+</script>
 
 ```

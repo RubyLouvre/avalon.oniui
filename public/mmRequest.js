@@ -60,10 +60,8 @@ define("mmRequest", ["avalon", "mmDeferred"], function(avalon, mmDeferred) {
             var parts = rurl.exec(opts.url.toLowerCase())
             opts.crossDomain = !!(parts && (parts[1] !== segments[1] || parts[2] !== segments[2] || (parts[3] || (parts[1] === "http:" ? 80 : 443)) !== (segments[3] || (segments[1] === "http:" ? 80 : 443))))
         }
-        if (opts.data && typeof opts.data !== "object") {
-            avalon.log("data必须为对象")
-        }
-        var querystring = avalon.param(opts.data)
+
+        var querystring = typeof opts.data === "string" ? opts.data:  avalon.param(opts.data)
         opts.querystring = querystring || ""
         opts.url = opts.url.replace(/#.*$/, "").replace(/^\/\//, segments[1] + "//")
         opts.type = opts.type.toUpperCase()
@@ -136,7 +134,9 @@ define("mmRequest", ["avalon", "mmDeferred"], function(avalon, mmDeferred) {
         if (!opts || !opts.url) {
             avalon.error("参数必须为Object并且拥有url属性")
         }
-
+        if (typeof opts.data === "string") {
+            opts.data = avalon.param(opts.data)
+        }
         opts = ajaxExtend(opts)  //处理用户参数，比如生成querystring, type大写化
         //创建一个伪XMLHttpRequest,能处理complete,success,error等多投事件
         var XHRProperties = {
@@ -478,7 +478,7 @@ define("mmRequest", ["avalon", "mmDeferred"], function(avalon, mmDeferred) {
         serialize: function(form) { //表单元素变字符串
             var json = {};
             // 不直接转换form.elements，防止以下情况：   <form > <input name="elements"/><input name="test"/></form>
-            avalon.slice(form || []).filter(form || [], function(el) {
+            avalon.slice(form || []).filter( function(el) {
                 return el.name && !el.disabled && (el.checked === true || /radio|checkbox/.test(el.type))
             }).forEach(function(el) {
                 var val = avalon(el).val(),

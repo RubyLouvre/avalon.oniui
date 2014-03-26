@@ -24,17 +24,57 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 
 用法与jQuery的同名方法用法完全一样，将avalon.js, mmRequest.js, mmDeferred.js放到同一目录下，然后
 ```html
-<script src="avalon.js"></script>
-<!--不能直接用script引入mmRequest.js-->
-<script >
-require(["mmRequest"], function(){
-    var form = document.getElementById("formId")
-    var str = avalon.serializ(form)
-    var data = avalon.unparam(str)
-       mmRequest.post(url, data, function(json){
-          alert(json)
-       }, "json")
-    })
-</script>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="avalon.js"></script>
+        <!--不能直接用script引入mmRequest.js-->
+        <script>
+
+            var avalonAjax
+            var model = avalon.define("test", function(vm) {
+                vm.username = ""
+                vm.password = ""
+                vm.email = ""
+                vm.ajax = function(e) {
+                    if (avalonAjax) {
+                        avalon.post("/registry", avalon.serialize(this), function(a) {
+                            alert(a)
+                        }, "text")
+                    }
+                    e.preventDefault()
+                }
+            })
+
+            require(["./mmRequest"], function(avalon) {
+                avalonAjax = avalon.ajax
+                avalon.log(avalonAjax)
+            })
+
+
+
+
+        </script>
+    </head>
+    <body>
+        <h3>测试AJAX</h3>
+        <ul>
+            <li>avalon.ajax</li>
+            <li>avalon.post</li>
+            <li>avalon.get</li>
+            <li>avalon.upload</li>
+        </ul>
+        <form action="/registry"  ms-controller="test" ms-on-submit="ajax" >
+            <div>帐号:<input name="username" ms-duplex="username"></div>
+            <div>密码:<input name="password" ms-duplex="password"></div>
+            <div>邮箱:<input name="email" ms-duplex="email"></div>
+            <button type="submit">提交</button>
+        </form>
+    </body>
+</html>
+
 
 ```

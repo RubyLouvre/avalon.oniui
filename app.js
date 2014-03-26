@@ -13,25 +13,14 @@ app.use(app.router);
 app.get('/', function(req, res) {
     res.sendfile('index.html');
 });
-app.get("/tmpl.html", function(req, res) {
+app.post("/registry", function(req, res) {
     //  console.log("tmpl.html")
     if (req.xhr) {
-        res.sendfile('tmpl.html');
+        res.json({msg: '提交成功'});
     }
 });
 
-app.post('/', function(req, res) {
-        console.log("upload successfully")
-        res.send('upload successfully');
-});
 
-app.post("/moredata", function(req, res) {
-    console.log("发送数据到前端")
-    //  console.log("tmpl.html")
-    if (req.xhr) {
-        res.json({ccc: "ccc", ddd: "ddd"})
-    }
-})
 app.listen(3000);
 
 console.log("3000")

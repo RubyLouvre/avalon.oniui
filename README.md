@@ -5,6 +5,10 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 
 
 例子，需要执行npm install命令，安装Express 3.x 和它的依赖，location:3000
+如果被墙了,可以使用代理 npm config set registry http://registry.cnpmjs.org 
+
+<img src="https://f.cloud.github.com/assets/190846/2522052/eb28a388-b4b7-11e3-8536-3920de5388c1.jpg"/>
+
 
 
 它提供如下方法

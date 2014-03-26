@@ -1,6 +1,6 @@
 {
-  "name": "helloworld",
-  "description": "hello world test app",
+  "name": "mmRequest",
+  "description": "直接npm install安装后端支持",
   "version": "0.0.1",
   "private": true,
   "dependencies": {

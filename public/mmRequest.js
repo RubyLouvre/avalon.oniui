@@ -227,7 +227,7 @@ define("mmRequest", ["avalon", "mmDeferred"], function(avalon, mmDeferred) {
                     if (this.mimeType && transport.overrideMimeType) {
                         transport.overrideMimeType(this.mimeType)
                     }
-                    this.requestHeaders["X-Requested-With"] = "XMLHTTPRequest";
+                    this.requestHeaders["X-Requested-With"] = "XMLHttpRequest";
                     for (var i in this.requestHeaders) {
                         transport.setRequestHeader(i, this.requestHeaders[i])
                     }

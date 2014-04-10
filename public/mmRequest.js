@@ -61,7 +61,7 @@ define("mmRequest", ["avalon", "mmDeferred"], function(avalon, mmDeferred) {
             opts.crossDomain = !!(parts && (parts[1] !== segments[1] || parts[2] !== segments[2] || (parts[3] || (parts[1] === "http:" ? 80 : 443)) !== (segments[3] || (segments[1] === "http:" ? 80 : 443))))
         }
 
-        var querystring = typeof opts.data === "string" ? opts.data:  avalon.param(opts.data)
+        var querystring = typeof opts.data === "string" ? opts.data : avalon.param(opts.data)
         opts.querystring = querystring || ""
         opts.url = opts.url.replace(/#.*$/, "").replace(/^\/\//, segments[1] + "//")
         opts.type = opts.type.toUpperCase()
@@ -115,17 +115,18 @@ define("mmRequest", ["avalon", "mmDeferred"], function(avalon, mmDeferred) {
         }
         return xml;
     }
-    var seval = window.execScript ? "execScript" : "eval"
+    var head = document.getElementsByTagName("head")[0] || document.head
 
     function parseJS(code) {
-        //IE中，global.eval()和eval()一样只在当前作用域生效。
-        //Firefox，Safari，Opera中，直接调用eval()为当前作用域，global.eval()调用为全局作用域。
-        //window.execScript 在IE下一些限制条件
-        //http://www.ascadnetworks.com/Guides-and-Tips/IE-error-%2522Could-not-complete-the-operation-due-to-error-80020101%2522
-        if (code && /\S/.test(code)) {
-            try {
-                global[seval](code)
-            } catch (e) {
+        var indirect = eval
+        code = code.trim()
+        if (code) {
+            if (code.indexOf("use strict") === 1) {
+                var script = document.createElement("script")
+                script.text = code;
+                head.appendChild(script).parentNode.removeChild(script)
+            } else {
+                indirect(code)
             }
         }
     }
@@ -478,7 +479,7 @@ define("mmRequest", ["avalon", "mmDeferred"], function(avalon, mmDeferred) {
         serialize: function(form) { //表单元素变字符串
             var json = {};
             // 不直接转换form.elements，防止以下情况：   <form > <input name="elements"/><input name="test"/></form>
-            avalon.slice(form || []).filter( function(el) {
+            avalon.slice(form || []).filter(function(el) {
                 return el.name && !el.disabled && (el.checked === true || /radio|checkbox/.test(el.type))
             }).forEach(function(el) {
                 var val = avalon(el).val(),

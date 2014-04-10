@@ -135,9 +135,6 @@ define("mmRequest", ["avalon", "mmDeferred"], function(avalon, mmDeferred) {
         if (!opts || !opts.url) {
             avalon.error("参数必须为Object并且拥有url属性")
         }
-        if (typeof opts.data === "string") {
-            opts.data = avalon.param(opts.data)
-        }
         opts = ajaxExtend(opts)  //处理用户参数，比如生成querystring, type大写化
         //创建一个伪XMLHttpRequest,能处理complete,success,error等多投事件
         var XHRProperties = {

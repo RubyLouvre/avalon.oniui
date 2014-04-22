@@ -1,16 +1,26 @@
 //avalon 1.2.5 2014.4.2
-define(["avalon"], function(avalon) {
+define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
     var widget = avalon.ui.at = function(element, data, vmodels) {
 
         var options = data.atOptions, $element = avalon(element), keyupCallback, popup
+        var arr = tmpl.split("MS_OPTION_STYLE")
+        var cssText = arr[1].replace(/<\/?style>/g, "")
+        var styleEl = document.getElementById("avalonStyle")
+        var popupHTML = arr[0]
+        try {
+            styleEl.innerHTML += cssText
+        } catch (e) {
+            styleEl.styleSheet.cssText += cssText
+        }
         var vmodel = avalon.define(data.atId, function(vm) {
 
             avalon.mix(vm, options)
 
-            vm.$skipArray = ["at", "widgetElement"]
+            vm.$skipArray = ["at", "widgetElement", "datalist"]
             vm.widgetElement = element
-       
+
             vm.$init = function() {
+                var _vmodels = [vmodel].concat(vmodels)
                 keyupCallback = $element.bind("keyup", function(e) {
                     var value = this.value
                     var at = options.at
@@ -40,6 +50,7 @@ define(["avalon"], function(avalon) {
                                 width: this.offsetWidth,
                                 height: this.offsetHeight,
                                 border: "1px solid red",
+                                display: "block",
                                 "word-wrap": "break-word", //fix IE6-8
                                 "word-break": "break-all" //fix IE6-8
                             })
@@ -60,23 +71,53 @@ define(["avalon"], function(avalon) {
                             var top = rangeRect.bottom - fakeRect.top
                             var left = rangeRect.left - fakeRect.left
                             popup = document.createElement("div")
-                            popup.innerHTML = "这是@菜单"
+                            popup.innerHTML = popupHTML
                             document.body.appendChild(popup)
+                            popup.className = "ui-at"
                             avalon(popup).css({
-                                width: 100,
-                                height: 100,
-                                backgroundColor: "#ddd",
                                 top: offset.top + top,
                                 left: offset.left + left,
                                 position: "absolute"
                             })
+                            avalon.scan(popup, _vmodels)
                             document.body.removeChild(fakeTextArea)
+                            fakeTextArea = null
                         }
+                        var rightContext = value.substr(index + 1, options.maxLength)
+                        if (rightContext.length >= options.minLength) {
+                            // 取得@右边的内容，一直取得其最近的一个空白为止
+                            var match = rightContext.match(/^\S+/)
+                            if (match) {
+                                var query = match[0], lowquery = query.toLowerCase()
+                                var unique = {}
+                               //精确匹配
+                                var datalist = vmodel.datalist.filter(function(el) {
+                                    if (el.indexOf(query) > -1) {
+                                        unique[el] = 1
+                                        return true
+                                    }
+                                })
+                                //模糊匹配
+                                vmodel.datalist.forEach(function(el) {
+                                    var str = el.toLowerCase()
+                                    if (!unique[el]) {
+                                        if (str.indexOf(lowquery) > -1) {
+                                            unique[el] = 1
+                                            datalist.push(el)
+                                        }
+                                    }
+                                })
+                                if(vmodel.$model._datalist.join(",") != datalist.join(",")){
+                                    vmodel._datalist = datalist
+                                }
+                            
+                            }
 
+                        }
 
                     }
                 })
-                avalon.scan(element, [vmodel].concat(vmodels))
+                avalon.scan(element, _vmodels)
             }
             vm.$remove = function() {
                 avalon(element).unbind(keyupCallback)
@@ -96,9 +137,11 @@ define(["avalon"], function(avalon) {
     widget.defaults = {
         at: "@", //默认的标识符,
         datalist: [], //字符串数组
+        _datalist: [],
         popupHTML: "",
-        limit: 5, //最多显示多少个
-        matchLength: 20, //@之后多长的字符串可以匹配
+        items: 5, //最多显示多少个
+        maxLength: 20, //@之后多长的字符串可以匹配
+        minLength: 1, //当前文本输入框中字符串达到该属性值时才进行匹配处理，默认：1；
         highlightCallback: avalon.noop,
         sortCallback: avalon.noop,
         matchCallback: avalon.noop,

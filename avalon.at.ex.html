@@ -9,13 +9,18 @@
         </script>
         <script>
             require(["avalon.at"], function(){
-                avalon.define("test",avalon.noop)
+                avalon.define("test",function(vm){
+                    vm.at = {
+                        datalist : ["aaa", "aab", "aaaa", "aac", "ccc","cc1","ccaac"]
+                    }
+                    vm.$skipArray = ["at"]
+                })
                 avalon.scan()
             })
         </script>
     </head>
     <body ms-controller="test">
         <p><a href="avalon.at.doc.html">文档</a></p>
-        <textarea ms-widget="at"></textarea>
+        <textarea ms-widget="at" placeholder="@后面填上a,或aa, c试试"></textarea>
     </body>
 </html>

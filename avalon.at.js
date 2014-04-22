@@ -32,7 +32,15 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                     var index = value.lastIndexOf(at)
                     if (index > -1) {
                         if (!popup) {
-                            var str = value.replace(/\s+$/g, "").split("").join("<wbr>") + "<wbr>"
+                            var str = value.replace(/\s+$/g, "")
+                            if (str !== value && element.createTextRange) {
+                                var range = element.createTextRange(); //建立文本选区   
+                                range.moveStart('character', str.length); //选区的起点移到最后去  
+                                range.collapse(true);
+                                range.select()
+                            }
+
+                            str = str.split("").join("<wbr>") + "<wbr>"
                             str = str.replace("<wbr>" + at + "<wbr>", "<bdi>" + at + "</bdi>")
 
                             var fakeTextArea = document.createElement("div")
@@ -102,13 +110,15 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                                 function callback() {
                                     //对请求回来的数据进笨过滤排序
                                     var datalist = vmodel.$filter(vmodel)
+                                    var toString = datalist.join(",")
                                     //只有发生改动才同步视图
-                                    if (vmodel.$model._datalist.join(",") !== datalist.join(",")) {
+                                    if (vmodel.$model._toString !== toString) {
                                         //添加高亮
                                         datalist = datalist.map(function(el) {
                                             return vmodel.$highlight(el, query)
                                         })
                                         vmodel._datalist = datalist
+                                        vmodel.$model._toString = toString
                                     }
                                     vmodel.toggle = !!datalist.length
                                 }
@@ -120,6 +130,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                                     lastModified = now
                                 }
                                 callback()
+                                moveIndex(e, vmodel)
                             }
 
                         }
@@ -136,18 +147,18 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 }
             }
             vm.$hover = function(index) {
-                vm.activeIndex = index
+                //   vm.activeIndex = index
             }
-            vm.$removePopup = function(e) {
-                e.stopPropagation()
-                e.preventDefault()
-                setTiemout(function() {
-                    vmodel.toggle = false
-                    popup.parentNode.removeChild(popup)
-                    popup = null
-                }, 150)
-
-            }
+//            vm.$removePopup = function(e) {
+//                e.stopPropagation()
+//                e.preventDefault()
+//                setTiemout(function() {
+//                    vmodel.toggle = false
+//                    popup.parentNode.removeChild(popup)
+//                    popup = null
+//                }, 150)
+//
+//            }
             vm.$select = function(e) {
                 e.stopPropagation()
                 e.preventDefault()
@@ -234,41 +245,41 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
 //                popup = null
 //            }
 //        })
+//eventSupported(elem, "keydown") ? "keydown" :
 
-        $elem.bind(eventSupported(elem, "keydown") ? "keydown" : "keypress", function(e) {
-            e.stopPropagation()
-            switch (e.keyCode) {
-                case 13:
-                    // enter
-                    vmodel.$select(e)
-                    break;
-                case 9:
-                    // tab
-                case 27:
-                    // escape
-                    e.preventDefault();
-                    break;
-                case 38:
-                    // up arrow
-                    e.preventDefault();
-                    var index = vmodel.activeIndex - 1
-                    if (index < 0) {
-                        index = vmodel.limit - 1
-                    }
-                    vmodel.activeIndex = index
-                    break;
-                case 40:
-                    // down arrow
-                    e.preventDefault();
-                    var index = vmodel.activeIndex + 1
-                    if (index === vmodel.limit) {
-                        index = 0
-                    }
-                    vmodel.activeIndex = index
-                    break;
-            }
+    }
 
-        })
+    function moveIndex(e, vmodel) {
+        switch (e.keyCode) {
+            case 13:
+                // enter
+                vmodel.$select(e)
+                break;
+            case 9:
+                // tab
+            case 27:
+                // escape
+                e.preventDefault();
+                break;
+            case 38:
+                // up arrow
+                e.preventDefault();
+                var index = vmodel.activeIndex - 1
+                if (index < 0) {
+                    index = vmodel.limit - 1
+                }
+                vmodel.activeIndex = index
+                break;
+            case 40:
+                // down arrow
+                e.preventDefault();
+                var index = vmodel.activeIndex + 1
+                if (index === vmodel.limit) {
+                    index = 0
+                }
+                vmodel.activeIndex = index
+                break;
+        }
     }
 
     function eventSupported(elem, eventName) {
@@ -292,6 +303,6 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
  })
  }
  http://dddemo.duapp.com/bootstrap
-
-http://www.cnblogs.com/haogj/p/3376874.html
+ 
+ http://www.cnblogs.com/haogj/p/3376874.html
  **/

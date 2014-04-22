@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>avalon类似新浪微博的@提示插件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="avalon.js">
+            
+        </script>
+        <script>
+            require(["avalon.at"], function(){
+                avalon.define("test",avalon.noop)
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <p><a href="avalon.at.doc.html">文档</a></p>
+        <textarea ms-widget="at"></textarea>
+    </body>
+</html>

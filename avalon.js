@@ -2472,8 +2472,10 @@
                     return fn.apply(this, args.concat(e))
                 }
             }
+            try{
             elem.$vmodel = vmodels[0]
             elem.$vmodels = vmodels
+            }catch(e){}
             if (typeof data.specialBind === "function") {
                 data.specialBind(elem, callback)
             } else {

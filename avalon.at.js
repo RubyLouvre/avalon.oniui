@@ -33,15 +33,19 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                     if (index > -1) {
                         if (!popup) {
                             var str = value.replace(/\s+$/g, "")
-                            if (str !== value && element.createTextRange) {
-                                var range = element.createTextRange(); //建立文本选区   
-                                range.moveStart('character', str.length); //选区的起点移到最后去  
-                                range.collapse(true);
-                                range.select()
+                            if (str !== value) {
+                                element.value = str
+                                if (element.createTextRange) {
+                                    element.focus()
+                                    var range = element.createTextRange(); //建立文本选区   
+                                    range.moveStart('character', str.length); //选区的起点移到最后去  
+                                    range.collapse(true);
+                                    range.select()
+                                }
                             }
 
                             str = str.split("").join("<wbr>") + "<wbr>"
-                            str = str.replace("<wbr>" + at + "<wbr>", "<bdi>" + at + "</bdi>")
+                            str = str.replace("<wbr>" + at + "<wbr>", "<bdo>" + at + "</bdo>")
 
                             var fakeTextArea = document.createElement("div")
                             fakeTextArea.innerHTML = str
@@ -70,10 +74,10 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
 
                             var offset = $element.offset()
                             var fakeRect = fakeTextArea.getBoundingClientRect()
-                            var bdi = fakeTextArea.getElementsByTagName("bdi")[0]
+                            var bdo = fakeTextArea.getElementsByTagName("bdo")[0]
                             if (document.createRange && document.documentMode != 9) {//如果是IE10+或W3C
                                 var range = document.createRange();
-                                range.selectNode(bdi)
+                                range.selectNode(bdo)
                             } else {
                                 var range = document.selection.createRange().duplicate()
                                 range.moveToElementText(bdi)
@@ -95,9 +99,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                                 position: "absolute"
                             })
                             avalon.scan(popup, _vmodels)
-                            setTimeout(function() {
-                                listen(popup, vmodel)
-                            })
+
                             document.body.removeChild(fakeTextArea)
                             fakeTextArea = null
                         }
@@ -130,7 +132,12 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                                     lastModified = now
                                 }
                                 callback()
+                                //用户在用键盘移动时，mouseenter将失效
+                                vmodel.keyLock = true
                                 moveIndex(e, vmodel)
+                                setTimeout(function() {
+                                    vmodel.keyLock = false
+                                }, 150)
                             }
 
                         }
@@ -146,8 +153,12 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                     document.body.removeChild(popup)
                 }
             }
-            vm.$hover = function(index) {
-                //   vm.activeIndex = index
+            vm.keyLock = false
+            vm.$hover = function(e, index) {
+                e.preventDefault()
+                if (!vm.keyLock) {
+                    vm.activeIndex = index
+                }
             }
 //            vm.$removePopup = function(e) {
 //                e.stopPropagation()
@@ -224,30 +235,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
             })
         }
     }
-    function listen(popup, vmodel) {
 
-        var elem = vmodel.widgetElement
-        var $elem = avalon(elem)
-        avalon(popup).bind('click', vmodel.$select)
-//        var hide = true
-//        avalon(popup).bind("mouseenter", function() {
-//            hide = false
-//        })
-//        avalon(popup).bind("mouseleave", function() {
-//            hide = true
-//        })
-//        $elem.bind("blur", function(e) {
-//            e.stopPropagation()
-//            e.preventDefault()
-//            if (hide) {
-//                vmodel.toggle = false
-//                popup.parentNode.removeChild(popup)
-//                popup = null
-//            }
-//        })
-//eventSupported(elem, "keydown") ? "keydown" :
-
-    }
 
     function moveIndex(e, vmodel) {
         switch (e.keyCode) {

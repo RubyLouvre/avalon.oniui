@@ -26,6 +26,16 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
 
             vm.$init = function() {
                 var _vmodels = [vmodel].concat(vmodels)
+                $element.bind("blur", function(e) {
+                    if (!vmodel.$model.__mouseenter) {
+                        vmodel.toggle = false
+                        if (popup) {
+                            popup.parentNode.removeChild(popup)
+                            popup = null
+                        }
+                    }
+                })
+
                 keyupCallback = $element.bind("keyup", function(e) {
                     var value = this.value
                     var at = options.at
@@ -80,7 +90,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                                 range.selectNode(bdo)
                             } else {
                                 var range = document.selection.createRange().duplicate()
-                                range.moveToElementText(bdi)
+                                range.moveToElementText(bdo)
                                 range.select();
                             }
                             //取得@相对于文本框或文本区的距离的关键，Range对象与元素节点一样都有getBoundingClientRect
@@ -99,6 +109,9 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                                 position: "absolute"
                             })
                             avalon.scan(popup, _vmodels)
+                            avalon(popup).bind("mouseleave", function() {
+                                vmodel.$model.__mouseenter = false
+                            })
 
                             document.body.removeChild(fakeTextArea)
                             fakeTextArea = null
@@ -133,10 +146,10 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                                 }
                                 callback()
                                 //用户在用键盘移动时，mouseenter将失效
-                                vmodel.keyLock = true
+                                vmodel.$model.__keyup__ = true
                                 moveIndex(e, vmodel)
                                 setTimeout(function() {
-                                    vmodel.keyLock = false
+                                    vmodel.$model.__keyup__ = false
                                 }, 150)
                             }
 
@@ -153,23 +166,15 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                     document.body.removeChild(popup)
                 }
             }
-            vm.keyLock = false
             vm.$hover = function(e, index) {
                 e.preventDefault()
-                if (!vm.keyLock) {
+                var model = vmodel.$model
+                model.__mouseenter__ = true
+                if (!model.__keyup__) {
                     vm.activeIndex = index
                 }
             }
-//            vm.$removePopup = function(e) {
-//                e.stopPropagation()
-//                e.preventDefault()
-//                setTiemout(function() {
-//                    vmodel.toggle = false
-//                    popup.parentNode.removeChild(popup)
-//                    popup = null
-//                }, 150)
-//
-//            }
+
             vm.$select = function(e) {
                 e.stopPropagation()
                 e.preventDefault()
@@ -236,7 +241,6 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
         }
     }
 
-
     function moveIndex(e, vmodel) {
         switch (e.keyCode) {
             case 13:
@@ -270,14 +274,6 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
         }
     }
 
-    function eventSupported(elem, eventName) {
-        var isSupported = (eventName in elem)
-        if (!isSupported) {
-            elem.setAttribute(eventName, 'return;')
-            isSupported = typeof elem[eventName] === 'function'
-        }
-        return isSupported;
-    }
     return avalon
 })
 /*

@@ -291,5 +291,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
  callback()
  })
  }
- 
+ http://dddemo.duapp.com/bootstrap
+
+http://www.cnblogs.com/haogj/p/3376874.html
  **/

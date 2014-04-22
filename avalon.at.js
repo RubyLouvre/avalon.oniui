@@ -1,22 +1,26 @@
 //avalon 1.2.5 2014.4.2
 define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
+    var arr = tmpl.split("MS_OPTION_STYLE")
+    var cssText = arr[1].replace(/<\/?style>/g, "")
+    var styleEl = document.getElementById("avalonStyle")
+    var popupHTML = arr[0]
+    try {
+        styleEl.innerHTML += cssText
+    } catch (e) {
+        styleEl.styleSheet.cssText += cssText
+    }
     var widget = avalon.ui.at = function(element, data, vmodels) {
 
         var options = data.atOptions, $element = avalon(element), keyupCallback, popup
-        var arr = tmpl.split("MS_OPTION_STYLE")
-        var cssText = arr[1].replace(/<\/?style>/g, "")
-        var styleEl = document.getElementById("avalonStyle")
-        var popupHTML = arr[0]
-        try {
-            styleEl.innerHTML += cssText
-        } catch (e) {
-            styleEl.styleSheet.cssText += cssText
+        if (!options.popupHTML) {
+            options.popupHTML = popupHTML
         }
+        var lastModified = new Date - 0//上次更新时间
         var vmodel = avalon.define(data.atId, function(vm) {
 
             avalon.mix(vm, options)
 
-            vm.$skipArray = ["at", "widgetElement", "datalist"]
+            vm.$skipArray = ["at", "widgetElement", "datalist", "popupHTML"]
             vm.widgetElement = element
 
             vm.$init = function() {
@@ -70,10 +74,12 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                             var rangeRect = range.getBoundingClientRect()
                             var top = rangeRect.bottom - fakeRect.top
                             var left = rangeRect.left - fakeRect.left
+                            //创建弹出菜单
                             popup = document.createElement("div")
-                            popup.innerHTML = popupHTML
+                            popup.innerHTML = vmodel.popupHTML
                             document.body.appendChild(popup)
                             popup.className = "ui-at"
+                            popup.setAttribute("ms-visible", "toggle")
                             avalon(popup).css({
                                 top: offset.top + top,
                                 left: offset.left + left,
@@ -88,29 +94,28 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                             // 取得@右边的内容，一直取得其最近的一个空白为止
                             var match = rightContext.match(/^\S+/)
                             if (match) {
-                                var query = match[0], lowquery = query.toLowerCase()
-                                var unique = {}
-                               //精确匹配
-                                var datalist = vmodel.datalist.filter(function(el) {
-                                    if (el.indexOf(query) > -1) {
-                                        unique[el] = 1
-                                        return true
+                                var query = vmodel.query = match[0]
+                                function callback() {
+                                    //对请求回来的数据进笨过滤排序
+                                    var datalist = vmodel.$filter(vmodel)
+                                    //只有发生改动才同步视图
+                                    if (vmodel.$model._datalist.join(",") !== datalist.join(",")) {
+                                        //添加高亮
+                                        datalist = datalist.map(function(el) {
+                                            return vmodel.$highlight(el, query)
+                                        })
+                                        vmodel._datalist = datalist
                                     }
-                                })
-                                //模糊匹配
-                                vmodel.datalist.forEach(function(el) {
-                                    var str = el.toLowerCase()
-                                    if (!unique[el]) {
-                                        if (str.indexOf(lowquery) > -1) {
-                                            unique[el] = 1
-                                            datalist.push(el)
-                                        }
-                                    }
-                                })
-                                if(vmodel.$model._datalist.join(",") != datalist.join(",")){
-                                    vmodel._datalist = datalist
+                                    vmodel.toggle = !!datalist.length
                                 }
-                            
+
+                                var now = new Date//时间闸
+                                if (lastModified - now > vmodel.delay && typeof vmodel.$update === "function") {
+                                    //远程请求数据，自己实现remoteFetch方法，主要是改变datalist数组，然后在调用callback
+                                    vmodel.$update(callback)
+                                    lastModified = now
+                                }
+                                callback()
                             }
 
                         }
@@ -139,13 +144,55 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
         datalist: [], //字符串数组
         _datalist: [],
         popupHTML: "",
-        items: 5, //最多显示多少个
-        maxLength: 20, //@之后多长的字符串可以匹配
-        minLength: 1, //当前文本输入框中字符串达到该属性值时才进行匹配处理，默认：1；
-        highlightCallback: avalon.noop,
-        sortCallback: avalon.noop,
-        matchCallback: avalon.noop,
+        toggle: false,
+        query: "", //@后的查询词组
+        limit: 5, //popup里最多显示多少项
+        maxLength: 20, //@之后的字符串最大能匹配的长度
+        minLength: 1, //@之后的字符串的长度达到多少才显现popup
+        delay: 500, //指定延时毫秒数后，才正真向后台请求数据，以防止输入过快导致频繁向后台请求，默认
+        $update: avalon.noop, //用于远程更新数据
+        //你可以在这里进行过滤与排序等操作
+        $filter: function(opts) {
+            var unique = {}, query = opts.query, lowquery = query.toLowerCase()
+            //精确匹配的项放在前面
+            var datalist = opts.datalist.filter(function(el) {
+                if (el.indexOf(query) > -1) {
+                    unique[el] = 1
+                    return true
+                }
+            })
+            //模糊匹配的项放在后面
+            opts.datalist.forEach(function(el) {
+                var str = el.toLowerCase()
+                if (!unique[el]) {
+                    if (str.indexOf(lowquery) > -1) {
+                        unique[el] = 1
+                        datalist.push(el)
+                    }
+                }
+            })
+            return datalist.slice(0, opts.limit) //对显示个数进行限制
+        },
+        //你可以在这里对已匹配的项 进行高亮 
+        $highlight: function(item, str) {
+            var query = str.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+            return item.replace(new RegExp('(' + query + ')', 'ig'), function($1, match) {
+                return '<strong style="color:#FF6600;">' + match + '</strong>'
+            })
+        }
     }
 
     return avalon
 })
+/*
+ updater的实现例子：
+ 
+ function updater(callback){ 
+ var vmodel = this, model = vmodel.$model
+ jQuery.post("url", { limit: model.limit, query: model.query}, function(data){
+ vmodel.datalist = data.datalist
+ callback()
+ })
+ }
+ 
+ **/

@@ -1,5 +1,10 @@
 <ul class="ui-at-popup" >
-    <li class="ui-at-item" ms-repeat-item="_datalist">{{item | html}}</li>
+    <li class="ui-at-item" 
+        ms-repeat-item="_datalist" 
+        ms-class="hover:activeIndex == $index"
+  
+        
+        >{{item | html}}</li>
 </ul>
 MS_OPTION_STYLE
 <style>
@@ -17,7 +22,7 @@ MS_OPTION_STYLE
         margin: 0px;
         padding: 0px;
     }
-    .ui-at-item:hover{
+    .ui-at-item.hover{
         background:rgb(227,242, 225);
     }
 </style>

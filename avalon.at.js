@@ -9,6 +9,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
     } catch (e) {
         styleEl.styleSheet.cssText += cssText
     }
+
     var widget = avalon.ui.at = function(element, data, vmodels) {
 
         var options = data.atOptions, $element = avalon(element), keyupCallback, popup
@@ -86,6 +87,9 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                                 position: "absolute"
                             })
                             avalon.scan(popup, _vmodels)
+                            setTimeout(function() {
+                                listen(popup, vmodel)
+                            })
                             document.body.removeChild(fakeTextArea)
                             fakeTextArea = null
                         }
@@ -130,9 +134,36 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                     popup.innerHTML = ""
                     document.body.removeChild(popup)
                 }
+            }
+            vm.$hover = function(index) {
+                vm.activeIndex = index
+            }
+            vm.$removePopup = function(e) {
+                e.stopPropagation()
+                e.preventDefault()
+                setTiemout(function() {
+                    vmodel.toggle = false
+                    popup.parentNode.removeChild(popup)
+                    popup = null
+                }, 150)
 
             }
+            vm.$select = function(e) {
+                e.stopPropagation()
+                e.preventDefault()
+                var query = vmodel._datalist[vmodel.activeIndex]
+                var span = document.createElement("span")
+                span.innerHTML = query
+                query = span.textContent || span.innerText//去掉高亮标签
+                var value = element.value
+                var index = value.replace(/\s+$/g, "").lastIndexOf(vmodel.at)
+                //添加一个特殊的空格,让aaa不再触发 <ZWNJ>，零宽不连字空格
+                element.value = value.slice(0, index) + "@\u200c" + query
+                vmodel.toggle = false
+                popup.parentNode.removeChild(popup)
+                popup = null
 
+            }
 
         })
         return vmodel
@@ -145,6 +176,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
         _datalist: [],
         popupHTML: "",
         toggle: false,
+        activeIndex: 0,
         query: "", //@后的查询词组
         limit: 5, //popup里最多显示多少项
         maxLength: 20, //@之后的字符串最大能匹配的长度
@@ -181,7 +213,72 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
             })
         }
     }
+    function listen(popup, vmodel) {
 
+        var elem = vmodel.widgetElement
+        var $elem = avalon(elem)
+        avalon(popup).bind('click', vmodel.$select)
+//        var hide = true
+//        avalon(popup).bind("mouseenter", function() {
+//            hide = false
+//        })
+//        avalon(popup).bind("mouseleave", function() {
+//            hide = true
+//        })
+//        $elem.bind("blur", function(e) {
+//            e.stopPropagation()
+//            e.preventDefault()
+//            if (hide) {
+//                vmodel.toggle = false
+//                popup.parentNode.removeChild(popup)
+//                popup = null
+//            }
+//        })
+
+        $elem.bind(eventSupported(elem, "keydown") ? "keydown" : "keypress", function(e) {
+            e.stopPropagation()
+            switch (e.keyCode) {
+                case 13:
+                    // enter
+                    vmodel.$select(e)
+                    break;
+                case 9:
+                    // tab
+                case 27:
+                    // escape
+                    e.preventDefault();
+                    break;
+                case 38:
+                    // up arrow
+                    e.preventDefault();
+                    var index = vmodel.activeIndex - 1
+                    if (index < 0) {
+                        index = vmodel.limit - 1
+                    }
+                    vmodel.activeIndex = index
+                    break;
+                case 40:
+                    // down arrow
+                    e.preventDefault();
+                    var index = vmodel.activeIndex + 1
+                    if (index === vmodel.limit) {
+                        index = 0
+                    }
+                    vmodel.activeIndex = index
+                    break;
+            }
+
+        })
+    }
+
+    function eventSupported(elem, eventName) {
+        var isSupported = (eventName in elem)
+        if (!isSupported) {
+            elem.setAttribute(eventName, 'return;')
+            isSupported = typeof elem[eventName] === 'function'
+        }
+        return isSupported;
+    }
     return avalon
 })
 /*

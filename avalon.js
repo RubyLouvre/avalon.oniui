@@ -2473,9 +2473,12 @@
                 }
             }
             try{
-            elem.$vmodel = vmodels[0]
-            elem.$vmodels = vmodels
-            }catch(e){}
+            //elem.$vmodel = vmodels[0]
+            //elem.$vmodels = vmodels
+            }catch(e){
+                console.log(elem)
+                  console.log(vmodels)
+            }
             if (typeof data.specialBind === "function") {
                 data.specialBind(elem, callback)
             } else {

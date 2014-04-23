@@ -11,6 +11,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
     }
 
     var widget = avalon.ui.at = function(element, data, vmodels) {
+
         var options = data.atOptions, $element = avalon(element), keyupCallback, blurCallback, popup
         if (!options.popupHTML) {
             options.popupHTML = popupHTML
@@ -26,9 +27,13 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
             vm.$init = function() {
                 var _vmodels = [vmodel].concat(vmodels)
                 blurCallback = $element.bind("blur", function(e) {
-                    if (!vmodel.$model.__mouseenter__ && vmodel.$hasPopup) {
-                        vmodel.$hasPopup = vmodel.toggle = false
-                        popup.parentNode.removeChild(popup)
+                    if (!vmodel.$model.__mouseenter__) {
+                        vmodel.toggle = false
+                        console.log("blur")
+                        if (popup) {
+                            popup.parentNode.removeChild(popup)
+                            popup = null
+                        }
                     }
                 })
 
@@ -37,9 +42,9 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                     var at = options.at
                     var index = value.lastIndexOf(at)
                     if (index > -1) {
-                        if (!vmodel.$hasPopup) {
-                            vmodel.$hasPopup = true
+                        if (!popup) {
                             var str = value.replace(/\s+$/g, "")
+                      //      console.log(str)
                             if (str !== value) {
                                 element.value = str//让光标定位在文字的最后
                                 element.focus()
@@ -52,71 +57,72 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                             }
                             //每隔一个字符插入一个<wbr>，实现强制换行，插入<bdo>包围@，方便以后查找
                             str = str.split("").join("<wbr>") + "<wbr>"
-                            str = str.replace(new RegExp(escapeRegExp("<wbr>" + at + "<wbr>")+"([\\S]*)$"), function(a,b){
-                                return"<bdo>"+at+"</bdo>"+b
-                            })
+                            str = str.replace("<wbr>" + at + "<wbr>", "<bdo>" + at + "</bdo>")
                             //创建弹出层
                             popup = vmodel.$popup.call(this, str)
-                            avalon.scan(popup, _vmodels)
 
+                            avalon.scan(popup, _vmodels)
                             avalon(popup).bind("mouseleave", function() {
                                 vmodel.$model.__mouseenter__ = false
                             })
 
                         }
                         var rightContext = value.substr(index + 1, options.maxLength)
-
                         if (rightContext.length >= options.minLength) {
                             // 取得@右边的内容，一直取得其最近的一个空白为止
                             var match = rightContext.match(/^\S+/) || [""]
                             var query = vmodel.query = match[0]//取得查询字符串
-                            function callback() {
-                                //对请求回来的数据进笨过滤排序
-                                var datalist = vmodel.$filter(vmodel)
-                                var toString = datalist.join(",")
-                                //只有发生改动才同步视图
-                                if (vmodel.$model.__toString__ !== toString) {
-                                    //添加高亮
-                                    datalist = datalist.map(function(el) {
-                                        return vmodel.$highlight(el, query)
-                                    })
-                                    vmodel._datalist = datalist
-                                    vmodel.$model.__toString__ = toString
-                                }
-                                vmodel.toggle = !!datalist.length
-                            }
+                            if (query ) {
 
-                            var now = new Date//时间闸
-                            if (lastModified - now > vmodel.delay && typeof vmodel.$update === "function") {
-                                //远程请求数据，自己实现remoteFetch方法，主要是改变datalist数组，然后在调用callback
-                                vmodel.$update(callback)
-                                lastModified = now
+                                function callback() {
+                                    //对请求回来的数据进笨过滤排序
+                                    var datalist = vmodel.$filter(vmodel)
+                                    var toString = datalist.join(",")
+                                    //只有发生改动才同步视图
+                                    if (vmodel.$model.__toString__ !== toString) {
+                                        //添加高亮
+                                        datalist = datalist.map(function(el) {
+                                            return vmodel.$highlight(el, query)
+                                        })
+                                        vmodel._datalist = datalist
+                                        vmodel.$model.__toString__ = toString
+                                    }
+                                    vmodel.toggle = !!datalist.length
+                                }
+
+                                var now = new Date//时间闸
+                                if (lastModified - now > vmodel.delay && typeof vmodel.$update === "function") {
+                                    //远程请求数据，自己实现remoteFetch方法，主要是改变datalist数组，然后在调用callback
+                                    vmodel.$update(callback)
+                                    lastModified = now
+                                }
+                                callback()
+                                //用户在用键盘移动时，mouseenter将失效
+                                vmodel.$model.__keyup__ = true
+                                moveIndex(e, vmodel)
+                                setTimeout(function() {
+                                    vmodel.$model.__keyup__ = false
+                                }, 150)
                             }
-                            callback()
-                            //用户在用键盘移动时，mouseenter将失效
-                            vmodel.$model.__keyup__ = true
-                            moveIndex(e, vmodel)
-                            setTimeout(function() {
-                                vmodel.$model.__keyup__ = false
-                            }, 150)
 
                         }
 
                     }
-
                 })
                 avalon.scan(element, _vmodels)
             }
 
             vm.$remove = function() {
                 avalon(element).unbind("keyup", keyupCallback).unbind("blur", blurCallback)
-                if (vm.$hasPopup) {
-                    vm.$hasPopup = popup.innerHTML = ""
+                if (popup) {
+                    popup.innerHTML = ""
                     document.body.removeChild(popup)
+                    popup = null
                 }
             }
 
             vm.$popup = function(str) {
+                console.log(str+"!!!!!!!!!!!!!")
                 //创建测量用的DIV,它与当前textara, input的大小样式完全相同
                 var fakeTextArea = document.createElement("div")
                 fakeTextArea.innerHTML = str
@@ -145,8 +151,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 //取得textarea,input在页面上的坐标
                 var offset = avalon(this).offset()
                 var fakeRect = fakeTextArea.getBoundingClientRect()
-                var bdos = fakeTextArea.getElementsByTagName("bdo")
-                var bdo = bdos[bdos.length - 1]
+                var bdo = fakeTextArea.getElementsByTagName("bdo")[0]
                 //高亮@所在bdo元素，然后通过Range.getBoundingClientRect取得它在视口的坐标
                 if (document.createRange && document.documentMode != 9) {//如果是IE10+或W3C
                     var range = document.createRange();
@@ -198,9 +203,9 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 //添加一个特殊的空格,让aaa不再触发 <ZWNJ>，零宽不连字空格
                 element.value = value.slice(0, index) + "@\u200c" + query
                 //销毁菜单
-                vmodel.$hasPopup = vmodel.toggle = false
+                vmodel.toggle = false
                 popup.parentNode.removeChild(popup)
-
+                popup = null
             }
 
         })
@@ -214,7 +219,6 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
         _datalist: [], //实际是应用于模板上的字符串数组，它里面的字符可能做了高亮处理
         popupHTML: "", //弹出层的模板，如果为空，使用默认模板，注意要在上面添加点击或hover处理
         toggle: false, //用于控制弹出层的显示隐藏
-        $hasPopup: false, //表示弹出层是不否已被创建
         activeIndex: 0, //弹出层里面要高亮的列表项的索引值
         query: "", //@后的查询字符串
         limit: 5, //弹出层里面总共有多少个列表项
@@ -248,14 +252,11 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
         },
         //用于对_datalist中的字符串进行高亮处理，item为_datalist中的每一项，str为查询字符串
         $highlight: function(item, str) {
-            var query = escapeRegExp(str)
+            var query = str.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
             return item.replace(new RegExp('(' + query + ')', 'ig'), function($1, match) {
                 return '<strong style="color:#FF6600;">' + match + '</strong>'
             })
         }
-    }
-    function escapeRegExp(str){
-         return str.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
     }
     //通过监听textarea,input的keyup进行，移动列表项的高亮位置
     function moveIndex(e, vmodel) {

@@ -10,7 +10,7 @@
 
     <fieldset>
         <legend>普通文本框</legend>
-            <input ms-widget="textbox" ms-duplex="a.b" type="textbox" data-textbox-suggest="test" />
+<!--             <input ms-widget="textbox"  type="textbox" data-textbox-suggest="test" /> -->
 
             <!-- <input ms-widget="textbox" ms-duplex="a.b2" type="textbox" data-textbox-suggest="test" data-textbox-suggest-changed="xueerChanged"/> -->
     </fieldset>
@@ -53,11 +53,11 @@
     {{area}} -->
 
 
-    <!-- <fieldset>
+    <fieldset>
         <legend>特殊suggest</legend>
-        <input ms-widget="textbox" ms-duplex="p" data-textbox-suggest="phone" data-textbox-suggest-focus="true" />
+        <input ms-widget="textbox" ms-duplex="p" data-textbox-suggest="phone" data-textbox-suggest-focus="true" data-textbox-suggest-changed="schanged"/>
     </fieldset>
- -->
+
 
     <script>
         require("avalon.textbox", function() {
@@ -89,8 +89,9 @@
                 vm.ooo = function(){
                     // console.info( arguments );
                 };
-                vm.xueerChanged =function() {
-                    console.log("xueer changed !");
+                
+                vm.schanged =function() {
+                    console.log("监听到suggest changed, 用户可在此处进行一些后续操作");
                 }
 
             });
@@ -98,13 +99,13 @@
             avalon.ui["suggest"].strategies['phone'] = function( value , done ) {
                 console.log("value is : "+value);
                 setTimeout(function(){
-                    // done( null , value ? [] : [
-                    //     { value : '13800138000' , text : '<b>日审</b> 13800138000' } ,
-                    //     { value : '13800138001' , text : '<b>夜审</b> 13800138001' }
-                    // ])
-                    // 在此处理联想的结果，规则由自己写
+                    done( null , value ? [] : [
+                        { value : '13800138000' , text : '<b>日审</b> 13800138000' } ,
+                        { value : '13800138001' , text : '<b>夜审</b> 13800138001' }
+                    ])
+                    //在此处理联想的结果，规则由自己写
                     
-                    done( null , value ? [] : ["xueer", "jinger"])
+                    //done( null , value ? [] : ["xueer", "jinger"])
                 },100)
             }
 

@@ -26,9 +26,8 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
             vm.$init = function() {
                 var _vmodels = [vmodel].concat(vmodels)
                 blurCallback = $element.bind("blur", function(e) {
-                    if (!vmodel.$model.__mouseenter__ && vmodel.$hasPopup) {
-                        vmodel.$hasPopup = vmodel.toggle = false
-                        popup.parentNode.removeChild(popup)
+                    if (!vmodel.$model.__mouseenter__ && vmodel.toggle) {
+                        vmodel.toggle = false
                     }
                 })
 
@@ -37,8 +36,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                     var at = options.at
                     var index = value.lastIndexOf(at)
                     if (index > -1) {
-                        if (!vmodel.$hasPopup) {
-                            vmodel.$hasPopup = true
+                        if (!vmodel.toggle) {
                             var str = value.replace(/\s+$/g, "")
                             if (str !== value) {
                                 element.value = str//让光标定位在文字的最后
@@ -52,11 +50,13 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                             }
                             //每隔一个字符插入一个<wbr>，实现强制换行，插入<bdo>包围@，方便以后查找
                             str = str.split("").join("<wbr>") + "<wbr>"
-                            str = str.replace(new RegExp(escapeRegExp("<wbr>" + at + "<wbr>")+"([\\S]*)$"), function(a,b){
-                                return"<bdo>"+at+"</bdo>"+b
-                            })
+                            str = str.replace(new RegExp(escapeRegExp("<wbr>" + at + "<wbr>"), "img"), "<bdo>" + at + "</bdo>")
+
                             //创建弹出层
                             popup = vmodel.$popup.call(this, str)
+                            if(!popup){
+                                return
+                            }
                             avalon.scan(popup, _vmodels)
 
                             avalon(popup).bind("mouseleave", function() {
@@ -84,6 +84,9 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                                     vmodel.$model.__toString__ = toString
                                 }
                                 vmodel.toggle = !!datalist.length
+                                if (!vmodel.toggle) {
+                                    popup.parentNode.removeChild(popup)
+                                }
                             }
 
                             var now = new Date//时间闸
@@ -110,10 +113,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
 
             vm.$remove = function() {
                 avalon(element).unbind("keyup", keyupCallback).unbind("blur", blurCallback)
-                if (vm.$hasPopup) {
-                    vm.$hasPopup = popup.innerHTML = ""
-                    document.body.removeChild(popup)
-                }
+                vm.toggle = false
             }
 
             vm.$popup = function(str) {
@@ -147,6 +147,9 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 var fakeRect = fakeTextArea.getBoundingClientRect()
                 var bdos = fakeTextArea.getElementsByTagName("bdo")
                 var bdo = bdos[bdos.length - 1]
+                if(!bdo){
+                    return 
+                }
                 //高亮@所在bdo元素，然后通过Range.getBoundingClientRect取得它在视口的坐标
                 if (document.createRange && document.documentMode != 9) {//如果是IE10+或W3C
                     var range = document.createRange();
@@ -185,7 +188,12 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                     vm.activeIndex = index
                 }
             }
-
+            vm.$watch("toggle", function(v) {
+                if (v == false && popup && popup.parentNode) {
+                    popup.parentNode.removeChild(popup)
+                    popup = null
+                }
+            })
             vm.$select = function(e) {
                 e.stopPropagation()
                 e.preventDefault()
@@ -198,8 +206,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 //添加一个特殊的空格,让aaa不再触发 <ZWNJ>，零宽不连字空格
                 element.value = value.slice(0, index) + "@\u200c" + query
                 //销毁菜单
-                vmodel.$hasPopup = vmodel.toggle = false
-                popup.parentNode.removeChild(popup)
+                vmodel.toggle = false
 
             }
 
@@ -214,7 +221,6 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
         _datalist: [], //实际是应用于模板上的字符串数组，它里面的字符可能做了高亮处理
         popupHTML: "", //弹出层的模板，如果为空，使用默认模板，注意要在上面添加点击或hover处理
         toggle: false, //用于控制弹出层的显示隐藏
-        $hasPopup: false, //表示弹出层是不否已被创建
         activeIndex: 0, //弹出层里面要高亮的列表项的索引值
         query: "", //@后的查询字符串
         limit: 5, //弹出层里面总共有多少个列表项
@@ -254,8 +260,8 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
             })
         }
     }
-    function escapeRegExp(str){
-         return str.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+    function escapeRegExp(str) {
+        return str.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
     }
     //通过监听textarea,input的keyup进行，移动列表项的高亮位置
     function moveIndex(e, vmodel) {

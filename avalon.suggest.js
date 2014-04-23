@@ -56,6 +56,7 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
 
             // 处理提示项的鼠标点击，也就是更新input值，同时隐藏提示框
             vm.clk = function(idx, evt) {
+                evt.preventDefault();
                 vmodel.onchange(vmodel.list[idx].value, vmodel.list[idx].$model, evt);
                 vm.show = false;
             }
@@ -115,6 +116,7 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
                             break;
 
                         case 13:
+                            //evt.preventDefault();
                             if (!vmodel.show) return ;
                             vmodel.show = false;
                             vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.list[vmodel.selectedIndex].$model, evt );
@@ -217,19 +219,7 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
     };
 
     // 根据提示类型的不同提供提示信息，也就是信息的过滤方式完全由用户自己决定
-    avalon.ui["suggest"].strategies = {
-        // 添加策略
-        // done( err , array ) {callback}
-        "test" : function( value , done ) {
-            setTimeout(function(){
-                done( null , value ? [
-                    value + "1" ,
-                    value + "2" ,
-                    value + "3"  
-                ] : [] )
-            },100)
-        }
+    avalon.ui["suggest"].strategies = {}
 
-    }
     return avalon ;
 })

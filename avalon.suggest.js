@@ -1,7 +1,6 @@
 define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceHTML) {
 
     var ttt = sourceHTML.split("MS_OPTION_STYLE"),
-        suggestHtml = avalon.parseHTML(ttt[0]).firstChild,
         cssText = ttt[1].replace(/<\/?style>/g, ""),
         styleEl = document.getElementById("avalonStyle");
 
@@ -13,8 +12,10 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
     
     var widget = avalon.ui.suggest = function(element, data, vmodels) {
 
+
         var $element = avalon(element),
-            options = data.suggestOptions ;      
+            options = data.suggestOptions ,
+            suggestHtml = avalon.parseHTML(ttt[0]).firstChild ;
         
         var vmodel = avalon.define(data.suggestId, function(vm) {
 

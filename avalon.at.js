@@ -27,7 +27,9 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
             vm.$init = function() {
                 var _vmodels = [vmodel].concat(vmodels)
                 $element.bind("blur", function(e) {
-                    if (!vmodel.$model.__mouseenter) {
+                    console.log(vmodel.$model.__mouseenter__ + " blur")
+                    if (!vmodel.$model.__mouseenter__) {
+
                         vmodel.toggle = false
                         if (popup) {
                             popup.parentNode.removeChild(popup)
@@ -44,77 +46,27 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                         if (!popup) {
                             var str = value.replace(/\s+$/g, "")
                             if (str !== value) {
-                                element.value = str
+                                element.value = str//让光标定位在文字的最后
+                                element.focus()
                                 if (element.createTextRange) {
-                                    element.focus()
                                     var range = element.createTextRange(); //建立文本选区   
-                                    range.moveStart('character', str.length); //选区的起点移到最后去  
+                                    range.moveStart('character', str.length);
                                     range.collapse(true);
                                     range.select()
                                 }
                             }
-
+                            //每隔一个字符插入一个<wbr>，实现强制换行，插入<bdo>包围@，方便以后查找
                             str = str.split("").join("<wbr>") + "<wbr>"
                             str = str.replace("<wbr>" + at + "<wbr>", "<bdo>" + at + "</bdo>")
+                            //创建弹出层
+                            popup = vmodel.$popup.call(this, str)
 
-                            var fakeTextArea = document.createElement("div")
-                            fakeTextArea.innerHTML = str
-                            document.body.appendChild(fakeTextArea)
-                            var styles = window.getComputedStyle ?
-                                    window.getComputedStyle(element, null) :
-                                    element.currentStyle
-                            var $fakeTextArea = avalon(fakeTextArea)
-                            for (var i in styles) {//确保DIV与TEXTAREA中的样式一致
-                                if (typeof styles[i] !== "function") {
-                                    try {
-                                        $fakeTextArea.css(i, styles[i])
-                                    } catch (e) {
-                                    }
-                                }
-                            }
-
-                            $fakeTextArea.css({
-                                width: this.offsetWidth,
-                                height: this.offsetHeight,
-                                border: "1px solid red",
-                                display: "block",
-                                "word-wrap": "break-word", //fix IE6-8
-                                "word-break": "break-all" //fix IE6-8
-                            })
-
-                            var offset = $element.offset()
-                            var fakeRect = fakeTextArea.getBoundingClientRect()
-                            var bdo = fakeTextArea.getElementsByTagName("bdo")[0]
-                            if (document.createRange && document.documentMode != 9) {//如果是IE10+或W3C
-                                var range = document.createRange();
-                                range.selectNode(bdo)
-                            } else {
-                                var range = document.selection.createRange().duplicate()
-                                range.moveToElementText(bdo)
-                                range.select();
-                            }
-                            //取得@相对于文本框或文本区的距离的关键，Range对象与元素节点一样都有getBoundingClientRect
-                            var rangeRect = range.getBoundingClientRect()
-                            var top = rangeRect.bottom - fakeRect.top
-                            var left = rangeRect.left - fakeRect.left
-                            //创建弹出菜单
-                            popup = document.createElement("div")
-                            popup.innerHTML = vmodel.popupHTML
-                            document.body.appendChild(popup)
-                            popup.className = "ui-at"
-                            popup.setAttribute("ms-visible", "toggle")
-                            avalon(popup).css({
-                                top: offset.top + top,
-                                left: offset.left + left,
-                                position: "absolute"
-                            })
                             avalon.scan(popup, _vmodels)
                             avalon(popup).bind("mouseleave", function() {
-                                vmodel.$model.__mouseenter = false
+                                vmodel.$model.__mouseenter__ = false
                             })
 
-                            document.body.removeChild(fakeTextArea)
-                            fakeTextArea = null
+
                         }
                         var rightContext = value.substr(index + 1, options.maxLength)
                         if (rightContext.length >= options.minLength) {
@@ -127,13 +79,13 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                                     var datalist = vmodel.$filter(vmodel)
                                     var toString = datalist.join(",")
                                     //只有发生改动才同步视图
-                                    if (vmodel.$model._toString !== toString) {
+                                    if (vmodel.$model.__toString__ !== toString) {
                                         //添加高亮
                                         datalist = datalist.map(function(el) {
                                             return vmodel.$highlight(el, query)
                                         })
                                         vmodel._datalist = datalist
-                                        vmodel.$model._toString = toString
+                                        vmodel.$model.__toString__ = toString
                                     }
                                     vmodel.toggle = !!datalist.length
                                 }
@@ -164,8 +116,70 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 if (popup) {
                     popup.innerHTML = ""
                     document.body.removeChild(popup)
+                    popup = null
                 }
             }
+
+            vm.$popup = function(str) {
+                //创建测量用的DIV,它与当前textara, input的大小样式完全相同
+                var fakeTextArea = document.createElement("div")
+                fakeTextArea.innerHTML = str
+                document.body.appendChild(fakeTextArea)
+                var styles = window.getComputedStyle ?
+                        window.getComputedStyle(this, null) :
+                        this.currentStyle
+                var $fakeTextArea = avalon(fakeTextArea)
+                for (var i in styles) {
+                    if (typeof styles[i] !== "function") {
+                        try {
+                            $fakeTextArea.css(i, styles[i])
+                        } catch (e) {
+                        }
+                    }
+                }
+
+                $fakeTextArea.css({
+                    width: this.offsetWidth,
+                    height: this.offsetHeight,
+                    border: "1px solid red",
+                    display: "block",
+                    "word-wrap": "break-word", //强制换行 fix IE6-8
+                    "word-break": "break-all" //强制换行 fix IE6-8
+                })
+                //取得textarea,input在页面上的坐标
+                var offset = avalon(this).offset()
+                var fakeRect = fakeTextArea.getBoundingClientRect()
+                var bdo = fakeTextArea.getElementsByTagName("bdo")[0]
+                //高亮@所在bdo元素，然后通过Range.getBoundingClientRect取得它在视口的坐标
+                if (document.createRange && document.documentMode != 9) {//如果是IE10+或W3C
+                    var range = document.createRange();
+                    range.selectNode(bdo)
+                } else {
+                    var range = document.selection.createRange().duplicate()
+                    range.moveToElementText(bdo)
+                    range.select();
+                }
+                //高亮@所在bdo元素在测量用的DIV的坐标
+                var rangeRect = range.getBoundingClientRect()
+                var top = rangeRect.bottom - fakeRect.top
+                var left = rangeRect.left - fakeRect.left
+                //创建弹出菜单
+                popup = document.createElement("div")
+                popup.innerHTML = vmodel.popupHTML
+                document.body.appendChild(popup)
+                popup.className = "ui-at"
+                popup.setAttribute("ms-visible", "toggle")
+                avalon(popup).css({
+                    top: offset.top + top, //得到@在textarea, input的坐标
+                    left: offset.left + left,
+                    position: "absolute"
+                })
+                document.body.removeChild(fakeTextArea)
+                fakeTextArea = null
+                return popup
+            }
+
+
             vm.$hover = function(e, index) {
                 e.preventDefault()
                 var model = vmodel.$model
@@ -176,9 +190,10 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
             }
 
             vm.$select = function(e) {
+
                 e.stopPropagation()
                 e.preventDefault()
-                var query = vmodel._datalist[vmodel.activeIndex]
+                var query = vmodel._datalist[ vmodel.activeIndex ]
                 var span = document.createElement("span")
                 span.innerHTML = query
                 query = span.textContent || span.innerText//去掉高亮标签
@@ -186,6 +201,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 var index = value.replace(/\s+$/g, "").lastIndexOf(vmodel.at)
                 //添加一个特殊的空格,让aaa不再触发 <ZWNJ>，零宽不连字空格
                 element.value = value.slice(0, index) + "@\u200c" + query
+                //隐藏菜单
                 vmodel.toggle = false
                 popup.parentNode.removeChild(popup)
                 popup = null

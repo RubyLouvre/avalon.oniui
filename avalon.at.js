@@ -12,7 +12,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
 
     var widget = avalon.ui.at = function(element, data, vmodels) {
 
-        var options = data.atOptions, $element = avalon(element), keyupCallback, popup
+        var options = data.atOptions, $element = avalon(element), keyupCallback, blurCallback, popup
         if (!options.popupHTML) {
             options.popupHTML = popupHTML
         }
@@ -26,10 +26,8 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
 
             vm.$init = function() {
                 var _vmodels = [vmodel].concat(vmodels)
-                $element.bind("blur", function(e) {
-                    console.log(vmodel.$model.__mouseenter__ + " blur")
+                blurCallback = $element.bind("blur", function(e) {
                     if (!vmodel.$model.__mouseenter__) {
-
                         vmodel.toggle = false
                         if (popup) {
                             popup.parentNode.removeChild(popup)
@@ -66,14 +64,13 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                                 vmodel.$model.__mouseenter__ = false
                             })
 
-
                         }
                         var rightContext = value.substr(index + 1, options.maxLength)
                         if (rightContext.length >= options.minLength) {
                             // 取得@右边的内容，一直取得其最近的一个空白为止
                             var match = rightContext.match(/^\S+/)
                             if (match) {
-                                var query = vmodel.query = match[0]
+                                var query = vmodel.query = match[0]//取得查询字符串
                                 function callback() {
                                     //对请求回来的数据进笨过滤排序
                                     var datalist = vmodel.$filter(vmodel)
@@ -111,8 +108,9 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 })
                 avalon.scan(element, _vmodels)
             }
+            
             vm.$remove = function() {
-                avalon(element).unbind(keyupCallback)
+                avalon(element).unbind("keyup",keyupCallback).unbind("blur", blurCallback)
                 if (popup) {
                     popup.innerHTML = ""
                     document.body.removeChild(popup)
@@ -190,7 +188,6 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
             }
 
             vm.$select = function(e) {
-
                 e.stopPropagation()
                 e.preventDefault()
                 var query = vmodel._datalist[ vmodel.activeIndex ]
@@ -201,11 +198,10 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 var index = value.replace(/\s+$/g, "").lastIndexOf(vmodel.at)
                 //添加一个特殊的空格,让aaa不再触发 <ZWNJ>，零宽不连字空格
                 element.value = value.slice(0, index) + "@\u200c" + query
-                //隐藏菜单
+                //销毁菜单
                 vmodel.toggle = false
                 popup.parentNode.removeChild(popup)
                 popup = null
-
             }
 
         })
@@ -215,19 +211,21 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
     widget.vertion = 1.0
     widget.defaults = {
         at: "@", //默认的标识符,
-        datalist: [], //字符串数组
-        _datalist: [],
-        popupHTML: "",
-        toggle: false,
-        activeIndex: 0,
-        query: "", //@后的查询词组
-        limit: 5, //popup里最多显示多少项
-        maxLength: 20, //@之后的字符串最大能匹配的长度
-        minLength: 1, //@之后的字符串的长度达到多少才显现popup
-        delay: 500, //指定延时毫秒数后，才正真向后台请求数据，以防止输入过快导致频繁向后台请求，默认
-        $update: avalon.noop, //用于远程更新数据
-        //你可以在这里进行过滤与排序等操作
+        datalist: [], //字符串数组，不可监控
+        _datalist: [], //实际是应用于模板上的字符串数组，它里面的字符可能做了高亮处理
+        popupHTML: "", //弹出层的模板，如果为空，使用默认模板，注意要在上面添加点击或hover处理
+        toggle: false, //用于控制弹出层的显示隐藏
+        activeIndex: 0, //弹出层里面要高亮的列表项的索引值
+        query: "", //@后的查询字符串
+        limit: 5, //弹出层里面总共有多少个列表项
+        maxLength: 20, //@后的查询字符串的最大长度，注意中间不能有空格
+        minLength: 1, //@后的查询字符串只有出现了多少个字符后才显示弹出层
+        delay: 500, //我们是通过$update方法与后台进行AJAX连接，为了防止输入过快导致频繁，需要指定延时毫秒数
+        //与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行$filter、$highlight操作
+        $update: avalon.noop,
+        //用于对datalist进行过滤排序，将得到的新数组赋给_datalist，实现弹出层的更新
         $filter: function(opts) {
+            //opts实质上就是vmodel，但由于在IE6-8下，this不指向调用者，因此需要手动传vmodel
             var unique = {}, query = opts.query, lowquery = query.toLowerCase()
             //精确匹配的项放在前面
             var datalist = opts.datalist.filter(function(el) {
@@ -248,7 +246,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
             })
             return datalist.slice(0, opts.limit) //对显示个数进行限制
         },
-        //你可以在这里对已匹配的项 进行高亮 
+        //用于对_datalist中的字符串进行高亮处理，item为_datalist中的每一项，str为查询字符串
         $highlight: function(item, str) {
             var query = str.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
             return item.replace(new RegExp('(' + query + ')', 'ig'), function($1, match) {
@@ -256,7 +254,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
             })
         }
     }
-
+    //通过监听textarea,input的keyup进行，移动列表项的高亮位置
     function moveIndex(e, vmodel) {
         switch (e.keyCode) {
             case 13:
@@ -293,16 +291,19 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
     return avalon
 })
 /*
- updater的实现例子：
+ //$update的例子，里面是一个AJAX回调，成功后更新VM的datalist，并执行回调
  
- function updater(callback){ 
+ function $update(callback){ 
  var vmodel = this, model = vmodel.$model
  jQuery.post("url", { limit: model.limit, query: model.query}, function(data){
  vmodel.datalist = data.datalist
  callback()
  })
  }
- http://dddemo.duapp.com/bootstrap
- 
- http://www.cnblogs.com/haogj/p/3376874.html
+
  **/
+/**
+ * 参考链接
+ http://dddemo.duapp.com/bootstrap
+ http://www.cnblogs.com/haogj/p/3376874.html
+ */

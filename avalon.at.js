@@ -57,6 +57,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                             if(!popup){
                                 return
                             }
+                            vmodel.activeIndex = 0 //重置高亮行
                             avalon.scan(popup, _vmodels)
 
                             avalon(popup).bind("mouseleave", function() {
@@ -85,7 +86,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                                 }
                                 vmodel.toggle = !!datalist.length
                                 if (!vmodel.toggle) {
-                                    popup.parentNode.removeChild(popup)
+                                   popup.parentNode.removeChild(popup)
                                 }
                             }
 
@@ -147,9 +148,6 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 var fakeRect = fakeTextArea.getBoundingClientRect()
                 var bdos = fakeTextArea.getElementsByTagName("bdo")
                 var bdo = bdos[bdos.length - 1]
-                if(!bdo){
-                    return 
-                }
                 //高亮@所在bdo元素，然后通过Range.getBoundingClientRect取得它在视口的坐标
                 if (document.createRange && document.documentMode != 9) {//如果是IE10+或W3C
                     var range = document.createRange();
@@ -157,7 +155,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 } else {
                     var range = document.selection.createRange().duplicate()
                     range.moveToElementText(bdo)
-                    range.select();
+                //    range.select()
                 }
                 //高亮@所在bdo元素在测量用的DIV的坐标
                 var rangeRect = range.getBoundingClientRect()
@@ -205,6 +203,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 var index = value.replace(/\s+$/g, "").lastIndexOf(vmodel.at)
                 //添加一个特殊的空格,让aaa不再触发 <ZWNJ>，零宽不连字空格
                 element.value = value.slice(0, index) + "@\u200c" + query
+                element.focus()//聚集到最后
                 //销毁菜单
                 vmodel.toggle = false
 

@@ -58,15 +58,15 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
 
                             //创建弹出层
                             popup = vmodel.$popup.call(this, str)
-                            if (!popup) {
-                                return
-                            }
-                            vmodel.activeIndex = 0 //重置高亮行
-                            avalon.scan(popup, _vmodels)
+                            if (popup) {
+                                vmodel.activeIndex = 0 //重置高亮行
+                                avalon.scan(popup, _vmodels)
 
-                            avalon(popup).bind("mouseleave", function() {
-                                vmodel.$model.__mouseenter__ = false
-                            })
+                                avalon(popup).bind("mouseleave", function() {
+                                    vmodel.$model.__mouseenter__ = false
+                                })
+                            }
+
 
                         }
                         var rightContext = value.substr(index + 1, options.maxLength)
@@ -89,7 +89,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                                     vmodel.$model.__toString__ = toString
                                 }
                                 vmodel.toggle = !!datalist.length
-                                if (!vmodel.toggle) {
+                                if (!vmodel.toggle && popup) {
                                     popup.parentNode.removeChild(popup)
                                 }
                             }
@@ -159,7 +159,6 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 } else {
                     var range = document.selection.createRange().duplicate()
                     range.moveToElementText(bdo)
-                    //    range.select()
                 }
                 //高亮@所在bdo元素在测量用的DIV的坐标
                 var rangeRect = range.getBoundingClientRect()
@@ -181,7 +180,6 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 return popup
             }
 
-
             vm.$hover = function(e, index) {
                 e.preventDefault()
                 var model = vmodel.$model
@@ -191,7 +189,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 }
             }
             vm.$watch("toggle", function(v) {
-                if (v == false && popup && popup.parentNode) {
+                if (v === false && popup && popup.parentNode) {
                     popup.parentNode.removeChild(popup)
                     popup = null
                 }
@@ -238,7 +236,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
             var unique = {}, query = opts.query, lowquery = query.toLowerCase()
             //精确匹配的项放在前面
             var datalist = opts.datalist.filter(function(el) {
-                if (el.indexOf(query) > -1) {
+                if (el.indexOf(query) === 0) {
                     unique[el] = 1
                     return true
                 }
@@ -268,6 +266,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
     }
     //通过监听textarea,input的keyup进行，移动列表项的高亮位置
     function moveIndex(e, vmodel) {
+        var max = vmodel._datalist.size()
         switch (e.keyCode) {
             case 13:
                 // enter
@@ -284,7 +283,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 e.preventDefault();
                 var index = vmodel.activeIndex - 1
                 if (index < 0) {
-                    index = vmodel.limit - 1
+                    index = max - 1
                 }
                 vmodel.activeIndex = index
                 break;
@@ -292,7 +291,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 // down arrow
                 e.preventDefault();
                 var index = vmodel.activeIndex + 1
-                if (index === vmodel.limit) {
+                if (index === max) {
                     index = 0
                 }
                 vmodel.activeIndex = index

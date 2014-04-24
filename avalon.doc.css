@@ -1,0 +1,75 @@
+body {
+    background: none repeat scroll 0 0 #252525;
+    color: #F0E7D5;
+    font: 14px/1.5 "OpenSansRegular","Helvetica Neue",Helvetica,Arial,sans-serif;
+    margin: 0;
+    padding: 0 0 100px;
+    text-align: center;
+}
+h1 {
+    text-align: center;
+}
+table {
+    text-align: left;
+    border-collapse: collapse;
+}
+tr, td, th {
+    border: 1px solid #ccc;
+}
+
+th {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.4em;
+}
+.pad30 {
+    padding: 30px;   
+}
+a {
+    color: #FFCC00;
+    font-weight: 400;
+    text-decoration: none;
+}
+a:hover {
+    color: #FFEB9B;
+}
+table caption {
+    color: #FFCC00;
+    text-align: left;
+    line-height: 40px;
+}
+p {
+    line-height: 30px;
+}
+.wrapper {
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    width: 760px;
+    text-align: left;
+}
+.example {
+    color: orange;
+    font-weight: bold;
+}
+.statement {
+    color: green;
+    padding: 0 10px;
+}
+.demoShow {
+    border: 1px solid #ccc;
+    padding: 10px;
+    background: #fff;
+    margin: 5px 0 20px 0;
+    color: #000;
+}
+.useDescription {
+    color: #8A2BE2;
+}
+.warn {
+    color: #f00;
+}
+.syntaxhighlighter {
+    padding: 10px !important;
+    width: auto !important;
+}

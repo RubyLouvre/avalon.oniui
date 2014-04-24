@@ -49,12 +49,16 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                                 }
                             }
                             //每隔一个字符插入一个<wbr>，实现强制换行，插入<bdo>包围@，方便以后查找
+                            var sington = str.length === 1
                             str = str.split("").join("<wbr>") + "<wbr>"
+                            if (sington) {
+                                str = "<wbr>" + str //防止@出现在最前面
+                            }
                             str = str.replace(new RegExp(escapeRegExp("<wbr>" + at + "<wbr>"), "img"), "<bdo>" + at + "</bdo>")
 
                             //创建弹出层
                             popup = vmodel.$popup.call(this, str)
-                            if(!popup){
+                            if (!popup) {
                                 return
                             }
                             vmodel.activeIndex = 0 //重置高亮行
@@ -86,7 +90,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                                 }
                                 vmodel.toggle = !!datalist.length
                                 if (!vmodel.toggle) {
-                                   popup.parentNode.removeChild(popup)
+                                    popup.parentNode.removeChild(popup)
                                 }
                             }
 
@@ -155,7 +159,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 } else {
                     var range = document.selection.createRange().duplicate()
                     range.moveToElementText(bdo)
-                //    range.select()
+                    //    range.select()
                 }
                 //高亮@所在bdo元素在测量用的DIV的坐标
                 var rangeRect = range.getBoundingClientRect()

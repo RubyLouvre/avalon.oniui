@@ -19,7 +19,6 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
          * avalon都会自动转为inputelement)配置的
          * 与textbox组件无关，而字符串是要进行自动补全的输入域节点对应的id 
          */
-        console.log(options);
         options.inputElement = !!options.inputelement ? document.getElementById(options.inputelement) : options.inputElement;
         /**
          * 如果options.textboxContainer为空，说明此suggest组件是独立的，
@@ -92,6 +91,7 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
             // 当点击input框之外的区域时，隐藏提示框?
             vm.hidepromptinfo = function(event) {
                 if (!vmodel.toggle) return false;
+                /* 此判断是关键，当点击区域是在提示框上说明是在选择提示信息，隐藏提示框的操作放在提示项的click回调上处理，反之则隐藏提示框 */
                 if (findParent( event.target , options.textboxContainer ) ) return;
                 vmodel.toggle = false;
             };

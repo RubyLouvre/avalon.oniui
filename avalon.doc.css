@@ -73,3 +73,6 @@ p {
     padding: 10px !important;
     width: auto !important;
 }
+.syntaxhighlighter, .syntaxhighlighter div, .syntaxhighlighter code, .syntaxhighlighter table, .syntaxhighlighter table td, .syntaxhighlighter table tr, .syntaxhighlighter table tbody,.syntaxhighlighter .line.alt1, .syntaxhighlighter .line.alt2 {
+    background: #1B2426 !important;
+}

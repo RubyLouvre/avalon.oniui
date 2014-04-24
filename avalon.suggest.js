@@ -171,7 +171,7 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
         if( element == findElement ) return true;
         return findParent( element.parentNode , findElement );
     }
-    widget.default = {
+    widget.defaults = {
     };
     // 根据提示类型的不同提供提示信息，也就是信息的过滤方式完全由用户自己决定
     avalon.ui["suggest"].strategies = {}

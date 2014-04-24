@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>规范</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+        <pre>
+            
+组件基于avalon1.2.5构建，每个必须有$init, $remove，方便让框架自行管理创建与销毁
+组件的模板必须分离出来，样式附加于模板上，通过正则抽取，然后放到共享的#avalonStyle这个style元素上
+组件要最大程度兼容之前的，不行就两个，一个是兼容的，一个无牵制的
+组件必须有改写模板的接口
+与表单相关的组件，必须通过el.disable来设置它自已的diabled
+组件的显示隐藏必须通过toggle属性
+
+        </pre>
+    </body>
+</html>

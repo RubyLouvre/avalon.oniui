@@ -5,15 +5,34 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <style>
-            li a{
+
+            h1{
+                text-align: center;
+            }
+            body{
+                background: rgb(238,238,238) url(logo_oni.png) repeat;
+            }
+            .menu{
+                list-style: none;
+                overflow: hidden;
+            }
+            .menu li{
+                display: inline-block;
+                float: left;
+
+            }
+            .index a{
                 text-decoration: none;
                 color:goldenrod;
             }
         </style>
     </head>
-    <body>
+    <body >
         <h1>Oni UI</h1>
-        <ul>
+        <ul class="menu">
+            <li><a href="oni.standard.html">规范</a></li>
+        </ul>
+        <ul class="index">
             <li><a href="avalon.at.ex.html">新浪微博式的@提示菜单</a></li>
             <li><a href="avalon.textbox.ex.html">文本框组件（带placehoder与自动完成功能）</a></li>
         </ul>

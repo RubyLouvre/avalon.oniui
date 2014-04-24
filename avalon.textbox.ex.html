@@ -16,9 +16,9 @@
 
     <fieldset>
         <legend>普通文本框</legend>
-            <input ms-widget="textbox" ms-duplex="a.b" type="textbox" data-textbox-suggest="test" />
+        <input ms-widget="textbox" ms-duplex="a.b" type="textbox" data-textbox-suggest="test" />
 
-            <input ms-widget="textbox" ms-duplex="a.b2" type="textbox" data-textbox-suggest="test" />
+        <input ms-widget="textbox" ms-duplex="a.b2" type="textbox" data-textbox-suggest="test" />
     </fieldset>
 
     <p class="duplexText">
@@ -61,7 +61,8 @@
 
     <fieldset>
         <legend>特殊suggest</legend>
-        <input ms-widget="textbox" ms-duplex="p" data-textbox-suggest="phone" data-textbox-suggest-focus="true" />
+        <input ms-widget="textbox" type="textbox" ms-duplex="p" data-textbox-suggest="phone" data-textbox-suggest-focus="true" />
+        <input type="text" style="display:none"/>
     </fieldset>
 
 
@@ -100,16 +101,29 @@
             });
 
             avalon.scan();
-
             avalon.ui["suggest"].strategies['phone'] = function( value , done ) {
-                console.log(value, done)
+                console.log("phomne");
                 setTimeout(function(){
+
                     done( null , value ? [] : [
                         { value : '13800138000' , text : '<b>日审</b> 13800138000' } ,
                         { value : '13800138001' , text : '<b>夜审</b> 13800138001' }
                     ])
                 },100)
             }
+            avalon.ui["suggest"].strategies["test"] = function(value, done){
+                console.log("test strategies");
+                // 添加策略
+                // done( err , array ) {callback}
+                setTimeout(function(){
+                    done( null , value ? [
+                        value + "1" ,
+                        value + "2" ,
+                        value + "3"  
+                    ] : [] )
+                },100)
+            }
+
 
         })
     </script>

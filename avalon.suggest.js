@@ -11,23 +11,20 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
     }
     
     var widget = avalon.ui.suggest = function(element, data, vmodels) {
-
-
         var $element = avalon(element),
             options = data.suggestOptions ,
             suggestHtml = avalon.parseHTML(ttt[0]).firstChild ;
-        
-        var vmodel = avalon.define(data.suggestId, function(vm) {
 
+        var vmodel = avalon.define(data.suggestId, function(vm) {
             avalon.mix(vm, options);
             vm.searchText = "";
-            vm.list = [{text:"sss"}];
-            vm.show = false;
+            vm.list = [{text: "sss"}];
+            vm.toggle = false;
             vm.loading = false;
             vm.selectedIndex = 0;
 
-            // 监控show值变化，当show为true时更新提示框尺寸
-            vm.$watch('show', function(v) {
+            // 监控toggle值变化，当toggle为true时更新提示框尺寸
+            vm.$watch('toggle', function(v) {
                 if( v ) {
                     suggestHtml.style.width = options.textboxContainer.clientWidth+"px" ;
                 }
@@ -38,12 +35,8 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
                 updateSource( v , vm);
             });
 
-
             // 当通过键盘上下箭头或者使用鼠标点击来切换提示项时触发
             vm.onchange = function(val) {
-
-                if( val.srcElement ) return;
-
                 // 如果存在双向数据绑定，则更新绑定的属性值
                 if( options.inputElement.msData && options.inputElement.msData['ms-duplex'] ) {
                     var d = options.inputElement.msData['ms-duplex'];
@@ -55,16 +48,15 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
             }
 
             // 处理提示项的鼠标点击，也就是更新input值，同时隐藏提示框
-            vm.clk = function(idx, evt) {
-                evt.preventDefault();
-                vmodel.onchange(vmodel.list[idx].value, vmodel.list[idx].$model, evt);
-                vm.show = false;
+            vm.clickcallback = function(idx, event) {
+                vmodel.onchange(vmodel.list[idx].value, vmodel.list[idx].$model, event);
+                vm.toggle = false;
             }
 
             // 如果input元素配置了suggest-focus项，则执行此条件块
             if (options.focus) {
                 // 特殊的suggest，即当searchText与input值相等时更新提示列表list，不相等时，更新searchText
-                avalon.bind(options.inputElement,"focus", function() {
+                avalon.bind(options.inputElement,"focus", function(event) {
                     var v = this.value;
                     if( vmodel.searchText == v ) {
                         updateSource( v , vmodel );
@@ -74,94 +66,72 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
                 })
             }
 
-
             if (options.changed) {
-                console.log(options.changed);
                 var arr = avalon.getModel( options.changed , vmodels );
-
-                console.log(arr);
-                
                 var _onchange = vm.onchange;
-
                 vm.onchange = function(){
                     _onchange.apply( null , arguments );
-                    
                     arr[1][arr[0]].apply( arr[1] , arguments );
                 }
             }
 
             // 当点击input框之外的区域时，隐藏提示框
-            vm.hidepromptinfo = function(evt) {
-
-                if (!vmodel.show) return false;
-
-                if (findParent( evt.target , options.textboxContainer ) ) return;
-                vmodel.show = false;
+            vm.hidepromptinfo = function(event) {
+                if (!vmodel.toggle) return false;
+                if (findParent( event.target , options.textboxContainer ) ) return;
+                vmodel.toggle = false;
             };
 
             vm.$init = function() {
-
-                avalon.bind(options.inputElement, "keyup", function(evt) {
-                    switch( evt.which ) {
+                avalon.bind(options.inputElement, "keyup", function(event) {
+                    event.preventDefault();
+                    console.log("preventDefault");
+                    switch( event.which ) {
                         case 9:
-
-                            if (!vmodel.show) return ;
-                            vmodel.show = false;
-                            break;
-
+                            if (!vmodel.toggle) return ;
+                            vmodel.toggle = false;
+                        break;
                         case 27:
-                            if (!vmodel.show) return ;
-
-                            vmodel.show = false;
-                            break;
-
+                            if (!vmodel.toggle) return ;
+                            vmodel.toggle = false;
+                        break;
                         case 13:
-                            //evt.preventDefault();
-                            if (!vmodel.show) return ;
-                            vmodel.show = false;
-                            vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.list[vmodel.selectedIndex].$model, evt );
-                            break;
-
+                            event.preventDefault();
+                            if (!vmodel.toggle) return ;
+                            vmodel.toggle = false;
+                            vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.list[vmodel.selectedIndex].$model, event );
+                        break;
                         case 38:
                             // up arrow
-                            if( !vmodel.show ) return;
+                            if (!vmodel.toggle) return ;
                             --vmodel.selectedIndex
                             if (vmodel.selectedIndex === -1) {
                                 vmodel.selectedIndex = vmodel.list.length - 1
                             }
-                            vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.list[vmodel.selectedIndex].$model, evt );
-                            return false;
-
+                            vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.list[vmodel.selectedIndex].$model, event );
                         break;
-
                         case 40:
                             // down arrow
-                            if( !vmodel.show ) return;
+                            if (!vmodel.toggle) return ;
                             ++vmodel.selectedIndex
                             if (vmodel.selectedIndex === vmodel.list.length) {
                                 vmodel.selectedIndex = 0
                             }
-                            vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.list[vmodel.selectedIndex].$model, evt );
-                            return false;
+                            vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.list[vmodel.selectedIndex].$model, event );
                         break;
-
                         default:
                             vmodel.searchText = this.value;
                         break;
                     }
                 })
-
                 avalon.bind(document.body, "click", function(e) {
                     vmodel.hidepromptinfo(e);
                 })
-
                 avalon.nextTick(function() {
                     element.appendChild(suggestHtml);
                     avalon.scan(element, [vmodel].concat(vmodels)); 
                 })
-                   
             };
-
             // 销毁方法
             vm.$remove = function() {
                 document.body.removeChild(element);
@@ -169,40 +139,29 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
         });
     
         function updateSource( value , vm ) {
-
             if( vm.loading == true ) return;
-
             var s = avalon.ui["suggest"].strategies[ options.strategy ];
-
             if( !s ) return;
-
             vm.loading = true;
-
             // 根据提示类型所提供的方法过滤的数据来渲染提示视图
             s( value , function( err , array ){
-
                 vm.selectedIndex = 0;
                 vm.list.removeAll();
-
                 avalon.each( array , function( idx , val ){
-
                     if( typeof val == 'string' ) {
                         vm.list.push({  text : val , value : val  });
                     } else {
                         vm.list.push( val );
                     }
                 })
-
                 vm.loading = false;
-         
                 if( array.length == 0 ) {
-                    vm.show = false;
+                    vm.toggle = false;
                 } else {
-                    vm.show = true;
+                    vm.toggle = true;
                 }
             });
         };
-
         return vmodel ;
     };
 
@@ -212,14 +171,9 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
         if( element == findElement ) return true;
         return findParent( element.parentNode , findElement );
     }
-
-
     widget.default = {
-
     };
-
     // 根据提示类型的不同提供提示信息，也就是信息的过滤方式完全由用户自己决定
     avalon.ui["suggest"].strategies = {}
-
     return avalon ;
 })

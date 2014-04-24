@@ -216,7 +216,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
     widget.vertion = 1.0
     widget.defaults = {
         at: "@", //默认的标识符,
-        datalist: [], //字符串数组，不可监控
+        datalist: [], //字符串数组，不可监控，(名字取自HTML的datalist同名元素)
         _datalist: [], //实际是应用于模板上的字符串数组，它里面的字符可能做了高亮处理
         popupHTML: "", //弹出层的模板，如果为空，使用默认模板，注意要在上面添加点击或hover处理
         toggle: false, //用于控制弹出层的显示隐藏
@@ -226,7 +226,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
         maxLength: 20, //@后的查询字符串的最大长度，注意中间不能有空格
         minLength: 1, //@后的查询字符串只有出现了多少个字符后才显示弹出层
         delay: 500, //我们是通过$update方法与后台进行AJAX连接，为了防止输入过快导致频繁，需要指定延时毫秒数
-        //与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行$filter、$highlight操作
+        //远程更新函数,与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行$filter、$highlight操作
         $update: avalon.noop,
         //用于对datalist进行过滤排序，将得到的新数组赋给_datalist，实现弹出层的更新
         $filter: function(opts) {

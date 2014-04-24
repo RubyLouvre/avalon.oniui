@@ -25,15 +25,19 @@ define(["avalon.suggest", "text!avalon.textbox.html"], function(avalon, sourceHT
             vm.elementDisabled = element.disabled;
             vm.show = "none";
             vm.placehold = options.placeholder;
+            vm.time = +new Date();
+
+            // input获得焦点时隐藏占位符
             vm.hidePlaceholder = function() {
                 vm.show = "none";
                 element.focus();
             }
-            vm.blur = function() {
 
+            vm.blur = function() {
                 vm.elementDisabled = element.disabled;
                 vm.show = element.value != "" ? "none" : "block";
             }
+
             vm.$remove = function() {
                 var elementInput = element.cloneNode(true);
                 var parentNode = sourceList.parentNode ;
@@ -59,7 +63,7 @@ define(["avalon.suggest", "text!avalon.textbox.html"], function(avalon, sourceHT
                         strategy : options.suggest , 
                         textboxContainer : sourceList ,
                         focus : options.suggestFocus ,
-
+                        changed : options.suggestChanged
                     }
                 }
 
@@ -86,20 +90,22 @@ define(["avalon.suggest", "text!avalon.textbox.html"], function(avalon, sourceHT
                     }
                 }
 
-
                 avalon.ready(function() {
-
                     var models = [vmodel].concat(vmodels);
+
                     $element.addClass("ui-textbox-input");
+                    var tempDiv = document.createElement("div");
+                    elePar.insertBefore(tempDiv, element);
                     innerWrapper.appendChild(element);
-                    elePar.appendChild(sourceList);
+                    elePar.replaceChild(sourceList, tempDiv);
 
                     if (options.suggest) {
                         var suggest = avalon.parseHTML(suggestHTML).firstChild;
                         sourceList.appendChild(suggest);
 
-                        avalon.scan( suggest , models );
+                        //avalon.scan( sourceList , models );
                     }
+
                     avalon.scan(sourceList, models);
                     avalon.scan(element, models);
                     vm.show = element.value != "" ? "none" : "block";

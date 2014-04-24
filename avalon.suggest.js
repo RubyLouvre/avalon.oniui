@@ -1,8 +1,6 @@
 define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceHTML) {
 
     var ttt = sourceHTML.split("MS_OPTION_STYLE"),
-        suggestHtml = avalon.parseHTML(ttt[0]).firstChild,
-
         cssText = ttt[1].replace(/<\/?style>/g, ""),
         styleEl = document.getElementById("avalonStyle");
 
@@ -14,104 +12,92 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
     
     var widget = avalon.ui.suggest = function(element, data, vmodels) {
 
+
         var $element = avalon(element),
-            options = data.suggestOptions ;
-
-        console.log("options is : ");
-        console.log(options);        
+            options = data.suggestOptions ,
+            suggestHtml = avalon.parseHTML(ttt[0]).firstChild ;
         
-
         var vmodel = avalon.define(data.suggestId, function(vm) {
 
             avalon.mix(vm, options);
-
-            vm.onchange = function(val) {
-                if( val.srcElement ) return;
-                console.log("element.msData is :");
-                console.log(options.inputElement.msData);
-                if( options.inputElement.msData && options.inputElement.msData['ms-duplex'] ) {
-                    console.log("执行此ddddddddddddddddddddddddddddddd");
-                    var d = options.inputElement.msData['ms-duplex'];
-                    var vm = avalon.getModel( d , vmodels );
-                    vm[1][vm[0]] = val;
-                } else {
-                    // 当不存在duplex时执行此，很糟糕，除非38和40分别处理
-                    options.inputElement.value = val;
-                }
-            }
-
-            // if (options.changed) {
-            //     var arr = avalon.getModel( options.changed , vmodels );
-            //     var _onchange = onchange;
-
-            //     onchange = function(){
-            //         _onchange.apply( null , arguments );
-                    
-            //         arr[1][arr[0]].apply( arr[1] , arguments );
-            //     } 
-            // }
-
             vm.searchText = "";
             vm.list = [{text:"sss"}];
             vm.show = false;
             vm.loading = false;
             vm.selectedIndex = 0;
 
-            vm.clk = function(idx, evt) {
-                vmodel.onchange(vmodel.list[idx].value, vmodel.list[idx].$model, evt);
-                vm.show = false;
-            }
-
-            if (options.focus) {
-
-                avalon.bind(options.inputElement,"focus", function() {
-                    // console.log("focus 中的vmodel us : ");
-                    // console.log(vmodel);
-                    var v = this.value;
-                    if( vmodel.searchText == v ) {
-                    
-                        updateSource( v , vmodel );
-                    } else {
-                        vmodel.searchText = v;
-                    }
-                })
-
-            }
-
+            // 监控show值变化，当show为true时更新提示框尺寸
             vm.$watch('show', function(v) {
-                console.log("show suggest "+ v);
                 if( v ) {
                     suggestHtml.style.width = options.textboxContainer.clientWidth+"px" ;
                 }
             })
 
+            // 监控searchText值的变化，及时更新提示列表
             vm.$watch('searchText',function(v){
-                console.log("searchText watch");
                 updateSource( v , vm);
             });
 
-            // 当切换提示列表项的时候改变
-            // vm.onValueChange = function( val ) {
-            //     // 必须有值，如果是事件对象则不处理
-            //     if ( val.srcElement ) return;
 
-            //     if ( element.msData && element.msData['ms-duplex'] ) {
-            //         var d = element.msData['ms-duplex'];
-            //         var vm = avalon.getModel( d , vmodels );
-            //         vm[1][vm[0]] = val;
-            //     } else {
-            //         element.value = val;
-            //     }
-            // }
+            // 当通过键盘上下箭头或者使用鼠标点击来切换提示项时触发
+            vm.onchange = function(val) {
+
+                if( val.srcElement ) return;
+
+                // 如果存在双向数据绑定，则更新绑定的属性值
+                if( options.inputElement.msData && options.inputElement.msData['ms-duplex'] ) {
+                    var d = options.inputElement.msData['ms-duplex'];
+                    var vm = avalon.getModel( d , vmodels );
+                    vm[1][vm[0]] = val;
+                } else {
+                    options.inputElement.value = val;
+                }
+            }
+
+            // 处理提示项的鼠标点击，也就是更新input值，同时隐藏提示框
+            vm.clk = function(idx, evt) {
+                evt.preventDefault();
+                vmodel.onchange(vmodel.list[idx].value, vmodel.list[idx].$model, evt);
+                vm.show = false;
+            }
+
+            // 如果input元素配置了suggest-focus项，则执行此条件块
+            if (options.focus) {
+                // 特殊的suggest，即当searchText与input值相等时更新提示列表list，不相等时，更新searchText
+                avalon.bind(options.inputElement,"focus", function() {
+                    var v = this.value;
+                    if( vmodel.searchText == v ) {
+                        updateSource( v , vmodel );
+                    } else {
+                        vmodel.searchText = v;
+                    }
+                })
+            }
 
 
+            if (options.changed) {
+                console.log(options.changed);
+                var arr = avalon.getModel( options.changed , vmodels );
+
+                console.log(arr);
+                
+                var _onchange = vm.onchange;
+
+                vm.onchange = function(){
+                    _onchange.apply( null , arguments );
+                    
+                    arr[1][arr[0]].apply( arr[1] , arguments );
+                }
+            }
+
+            // 当点击input框之外的区域时，隐藏提示框
             vm.hidepromptinfo = function(evt) {
-                if( findParent( evt.target , options.textboxContainer ) ) return;
+
+                if (!vmodel.show) return false;
+
+                if (findParent( evt.target , options.textboxContainer ) ) return;
                 vmodel.show = false;
             };
-
-
-
 
             vm.$init = function() {
 
@@ -130,6 +116,7 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
                             break;
 
                         case 13:
+                            //evt.preventDefault();
                             if (!vmodel.show) return ;
                             vmodel.show = false;
                             vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.list[vmodel.selectedIndex].$model, evt );
@@ -157,15 +144,16 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
                             vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.list[vmodel.selectedIndex].$model, evt );
                             return false;
                         break;
-                        default:
 
+                        default:
                             vmodel.searchText = this.value;
-                            
                         break;
                     }
                 })
-                
 
+                avalon.bind(document.body, "click", function(e) {
+                    vmodel.hidepromptinfo(e);
+                })
 
                 avalon.nextTick(function() {
                     element.appendChild(suggestHtml);
@@ -174,20 +162,25 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
                    
             };
 
+            // 销毁方法
             vm.$remove = function() {
-
+                document.body.removeChild(element);
             }
         });
     
         function updateSource( value , vm ) {
-            console.log("value is : "+value);
-            //if( vm.show != true ) return;
+
             if( vm.loading == true ) return;
+
             var s = avalon.ui["suggest"].strategies[ options.strategy ];
+
             if( !s ) return;
 
             vm.loading = true;
+
+            // 根据提示类型所提供的方法过滤的数据来渲染提示视图
             s( value , function( err , array ){
+
                 vm.selectedIndex = 0;
                 vm.list.removeAll();
 
@@ -196,19 +189,16 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
                     if( typeof val == 'string' ) {
                         vm.list.push({  text : val , value : val  });
                     } else {
-                        
                         vm.list.push( val );
                     }
                 })
+
                 vm.loading = false;
          
-                console.log(vm);
                 if( array.length == 0 ) {
                     vm.show = false;
                 } else {
-                   
                     vm.show = true;
-                     console.log("show----------")
                 }
             });
         };
@@ -216,6 +206,7 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
         return vmodel ;
     };
 
+    // 判断点击目标元素是否在查找元素内部，在则返回true，否则返回false
     function findParent( element , findElement ) {
         if( !element ) return false;
         if( element == findElement ) return true;
@@ -227,21 +218,8 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
 
     };
 
-    avalon.ui["suggest"].strategies = {
+    // 根据提示类型的不同提供提示信息，也就是信息的过滤方式完全由用户自己决定
+    avalon.ui["suggest"].strategies = {}
 
-        // 添加策略
-        // done( err , array ) {callback}
-        "test" : function( value , done ) {
-            console.log("test strategies");
-            setTimeout(function(){
-                done( null , value ? [
-                    value + "1" ,
-                    value + "2" ,
-                    value + "3"  
-                ] : [] )
-            },100)
-        }
-
-    }
     return avalon ;
 })

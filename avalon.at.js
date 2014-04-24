@@ -304,13 +304,15 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
 /*
  //$update的例子，里面是一个AJAX回调，成功后更新VM的datalist，并执行回调
  
- function $update(callback){ 
- var vmodel = this, model = vmodel.$model
+ function $update(vmodel, callback){ 
+ var model = vmodel.$model
  jQuery.post("url", { limit: model.limit, query: model.query}, function(data){
  vmodel.datalist = data.datalist
  callback()
  })
  }
+ 
+ 
  
  **/
 /**
@@ -318,3 +320,4 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
  http://dddemo.duapp.com/bootstrap
  http://www.cnblogs.com/haogj/p/3376874.html
  */
+

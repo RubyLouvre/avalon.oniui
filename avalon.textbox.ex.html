@@ -10,12 +10,15 @@
         line-height: 30px;
         border: 1px solid #ccc;
     }
+    h1 {
+        text-align: center;
+    }
 </style>
 </head>
 <body class="ms-controller" ms-controller="demo">
-
+    <h1>说明： 要了解具体的使用说明，请移步avalon.textbox.doc.html</h1>
     <fieldset>
-        <legend>普通文本框</legend>
+        <legend>自动补全功能的输入框</legend>
         <input ms-widget="textbox" ms-duplex="a.b" type="textbox" data-textbox-suggest="test" />
 
         <input ms-widget="textbox" ms-duplex="a.b2" type="textbox" data-textbox-suggest="test" />
@@ -25,7 +28,7 @@
         {{ a.b }}
     </p>
     <fieldset>
-        <legend>禁用文本框</legend>
+        <legend>切换禁用文本框</legend>
             <input ms-widget="textbox" ms-disabled="disable" ms-duplex="txt" type="textbox"/>
 
             <button ms-click="changeDis">切换禁用</button>
@@ -52,7 +55,7 @@
     {{ txt }}
 
     <fieldset>
-        <legend>普通文本框</legend>
+        <legend>拥有占位符的文本框</legend>
         <textarea ms-widget="textbox" ms-duplex="area" data-textbox-placeholder="456"></textarea>
     </fieldset>
 
@@ -102,7 +105,6 @@
 
             avalon.scan();
             avalon.ui["suggest"].strategies['phone'] = function( value , done ) {
-                console.log("phomne");
                 setTimeout(function(){
 
                     done( null , value ? [] : [
@@ -112,7 +114,6 @@
                 },100)
             }
             avalon.ui["suggest"].strategies["test"] = function(value, done){
-                console.log("test strategies");
                 // 添加策略
                 // done( err , array ) {callback}
                 setTimeout(function(){

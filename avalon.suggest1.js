@@ -12,21 +12,6 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
         var $element = avalon(element),
             options = data.suggestOptions ,
             suggestHtml = avalon.parseHTML(parseHtmlStruction[0]).firstChild ;
-        /**
-         * 如果options.inputelement不为空，说明此suggest组件是独立的，
-         * inputelement是通过data-suggest-inputElement(
-         * 注意不管是inputElement还是inputelement，
-         * avalon都会自动转为inputelement)配置的
-         * 与textbox组件无关，而字符串是要进行自动补全的输入域节点对应的id 
-         */
-        console.log(options);
-        options.inputElement = !!options.inputelement ? document.getElementById(options.inputelement) : options.inputElement;
-        /**
-         * 如果options.textboxContainer为空，说明此suggest组件是独立的，
-         * 与textbox组件无关，下面将通过输入框的位置、大小来
-         * 设置suggest提示框的position和width
-        */
-        options.textboxContainer = options.textboxContainer == "" ? options.inputElement : options.textboxContainer;
         var vmodel = avalon.define(data.suggestId, function(vm) {
             avalon.mix(vm, options);
             vm.widgetElement = element;
@@ -37,15 +22,7 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
             vm.selectedIndex = 0;
             // 监控toggle值变化，当toggle为true时更新提示框尺寸
             vm.$watch('toggle', function(v) {
-                var inputElement = options.inputElement;
                 if( v ) {
-                    if (options.textboxContainer === inputElement) {
-                        var offset = $element.offset(),
-                            suggestHtmlWidth = (inputElement.clientWidth+parseInt(avalon.css(inputElement,"padding-left"))+parseInt(avalon.css(inputElement,"padding-right")))+"px";
-                        element.style.cssText = "position: absolute; left:"+offset.left+"px;top:"+offset.top+"px;";
-                        
-                        suggestHtml.style.cssText = "margin:0;left:0;top:0;width:"+suggestHtmlWidth ;
-                    }
                     suggestHtml.style.width = options.textboxContainer.clientWidth+"px" ;
                 }
             })
@@ -179,27 +156,13 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
         return findParent( element.parentNode , findElement );
     }
     widget.defaults = {
-        inputElement : "" , 
-        strategy : "__getVal" , 
-        textboxContainer : "" ,
-        focus : false ,
-        changed : false
+        inputElement : element , 
+        strategy : options.suggest , 
+        textboxContainer : sourceList ,
+        focus : options.suggestFocus ,
+        changed : options.suggestChanged
     };
     // 根据提示类型的不同提供提示信息，也就是信息的过滤方式完全由用户自己决定?
-    avalon.ui["suggest"].strategies = {
-        __getVal: function(value, done) {
-            done( null , value ? [
-                value + "1" ,
-                value + "2" ,
-                value + "3" ,
-                value + "4" ,
-                value + "5" ,
-                value + "6" ,
-                value + "7" ,
-                value + "8" ,
-                value + "9"   
-            ] : [] )
-        }
-    }
+    avalon.ui["suggest"].strategies = {}
     return avalon ;
 })

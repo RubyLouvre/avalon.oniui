@@ -12,37 +12,39 @@
         <script>
             function fireKeyUp(elem, keyCode) {
                 //https://gist.github.com/termi/4654819
-                var customEvent
+                var oEvent
                 try {
                     // FF
-                    customEvent = document.createEvent("KeyEvents")//firefox 
-                    customEvent.initKeyEvent("keyup", true, true, document.defaultView, false, false, false, false, keyCode, 0)
+                    oEvent = document.createEvent("KeyEvents")//firefox 
+                    oEvent.initKeyEvent("keyup", true, true, document.defaultView, false, false, false, false, keyCode, 0)
                     console.log("firefox success")
                 } catch (ex) {
-                    //http://stackoverflow.com/questions/10455626/keydown-simulation-in-chrome-fires-normally-but-not-the-correct-key
-//                    try {
-//                        customEvent = new KeyboardEvent("keypress", {"key": keyCode})
-//                        console.log(customEvent)
-//                    } catch (e) {
-                        try {
-                            //http://www.w3.org/TR/DOM-Level-3-Events/#idl-interface-KeyboardEvent-initializers
-                            customEvent = document.createEvent("KeyboardEvent")
-                            customEvent.initKeyboardEvent("keyup", true, true, document.defaultView,false, false, false, false, keyCode,keyCode )
-                            console.log("which " + customEvent.which)
-                        } catch (ex3) {
-                        }
-                //    }
-
-
+                    try {
+                        //http://www.w3.org/TR/DOM-Level-3-Events/#idl-interface-KeyboardEvent-initializers
+                        oEvent = document.createEvent("KeyboardEvent")
+                        Object.defineProperty(oEvent, 'keyCode', {
+                            get: function() {
+                                return this.keyCodeVal;
+                            }
+                        });
+                        Object.defineProperty(oEvent, 'which', {
+                            get: function() {
+                                return this.keyCodeVal;
+                            }
+                        });
+                        oEvent.initKeyboardEvent("keyup", true, true, document.defaultView, false, false, false, false, keyCode, keyCode)
+                        oEvent.keyCodeVal = keyCode
+                        console.log("which " + oEvent.which)
+                    } catch (ex3) {
+                    }
                 }
-                if (customEvent) {
-                    // customEvent.keyCode = keyCode;
-                    elem.dispatchEvent(customEvent)
+                if (oEvent) {
+                    elem.dispatchEvent(oEvent)
                 } else if (document.createEventObject) {
                     //http://stackoverflow.com/questions/7518664/how-can-i-generate-a-keyup-event-with-a-specific-keycode-in-ie8
-                    customEvent = document.createEventObject("KeyboardEvent");
-                    customEvent.keyCode = keyCode;
-                    elem.fireEvent("onkeyup", customEvent);
+                    oEvent = document.createEventObject("KeyboardEvent");
+                    oEvent.keyCode = keyCode;
+                    elem.fireEvent("onkeyup", oEvent);
                 }
             }
             require(["avalon.at"], function() {
@@ -60,16 +62,16 @@
                     it("async", function(done) {
                         var elem = document.getElementById("test")
                         elem.value = "xxx@a"
-                        elem.focus()
                         setTimeout(function() {
                             fireKeyUp(elem, 11)
                             expect($(".ui-at-item.hover").index()).to.be(0)
                             setTimeout(function() {
-                                elem.focus()
                                 fireKeyUp(elem, 40)
+                                expect($(".ui-at-item.hover").index()).to.be(1)
+                                done()
                             }, 1000)
 
-                            done()
+
                         }, 100)
 
                     })

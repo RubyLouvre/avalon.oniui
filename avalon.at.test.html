@@ -16,24 +16,27 @@
                 try {
                     // FF
                     customEvent = document.createEvent("KeyEvents")//firefox 
-                    customEvent.initKeyEvent("keyup", true, true, document.defaultView, true, true, true, true, keyCode, 0);
+                    customEvent.initKeyEvent("keyup", true, true, document.defaultView, false, false, false, false, keyCode, 0)
+                    console.log("firefox success")
                 } catch (ex) {
-                    try {
-                        //https://github.com/termi/DOM-Keyboard-Event-Level-3-polyfill
-                        customEvent = new KeyboardEvent("keyup", {key: keyCode })//DOM4
-                        console.log("ddddddddddddddd")
-                    } catch (ex2) {
-                        //http://stackoverflow.com/questions/10455626/keydown-simulation-in-chrome-fires-normally-but-not-the-correct-key
+                    //http://stackoverflow.com/questions/10455626/keydown-simulation-in-chrome-fires-normally-but-not-the-correct-key
+//                    try {
+//                        customEvent = new KeyboardEvent("keypress", {"key": keyCode})
+//                        console.log(customEvent)
+//                    } catch (e) {
                         try {
+                            //http://www.w3.org/TR/DOM-Level-3-Events/#idl-interface-KeyboardEvent-initializers
                             customEvent = document.createEvent("KeyboardEvent")
-                            customEvent.initKeyboardEvent("keyup", true, true, document.defaultView,
-                                    true, true, true, true, keyCode, 0)
-                             customEvent.keyCode = keyCode;
+                            customEvent.initKeyboardEvent("keyup", true, true, document.defaultView,false, false, false, false, keyCode,keyCode )
+                            console.log("which " + customEvent.which)
                         } catch (ex3) {
                         }
-                    }
+                //    }
+
+
                 }
                 if (customEvent) {
+                    // customEvent.keyCode = keyCode;
                     elem.dispatchEvent(customEvent)
                 } else if (document.createEventObject) {
                     //http://stackoverflow.com/questions/7518664/how-can-i-generate-a-keyup-event-with-a-specific-keycode-in-ie8
@@ -61,10 +64,11 @@
                         setTimeout(function() {
                             fireKeyUp(elem, 11)
                             expect($(".ui-at-item.hover").index()).to.be(0)
-                            setTimeout(function(){
-                                 fireKeyUp(elem, 40)
-                            })
-                           
+                            setTimeout(function() {
+                                elem.focus()
+                                fireKeyUp(elem, 40)
+                            }, 1000)
+
                             done()
                         }, 100)
 
@@ -74,11 +78,31 @@
                 mocha.run()
 
             })
+
+
         </script>
     </head>
     <body>
         <p>mocha 在浏览器的测试文档见<a href="http://visionmedia.github.io/mocha/#browser-support">这里</a></p>
         <div><input ms-controller="test" ms-widget="at,at1" id="test"></div>
         <div id="mocha"></div>
+        <pre>
+dictionary KeyboardEventInit {
+    boolean       bubbles = false;
+    boolean       cancelable = false;
+    AbstractView? view = null;
+    long          detail = 0;
+    DOMString     key = "";
+    unsigned long location = 0;
+    boolean       ctrlKey = false;
+    boolean       shiftKey = false;
+    boolean       altKey = false;
+    boolean       metaKey = false;
+    boolean       repeat = false;
+    unsigned long charCode = 0;
+    unsigned long keyCode = 0;
+    unsigned long which = 0;
+};
+        </pre>
     </body>
 </html>

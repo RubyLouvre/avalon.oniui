@@ -267,6 +267,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
     //通过监听textarea,input的keyup进行，移动列表项的高亮位置
     function moveIndex(e, vmodel) {
         var max = vmodel._datalist.size()
+        console.log("e.keyCode"+ e.keyCode)
         switch (e.keyCode) {
             case 13:
                 // enter

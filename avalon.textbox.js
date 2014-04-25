@@ -58,7 +58,9 @@ define(["avalon.suggest", "text!avalon.textbox.html"], function(avalon, sourceHT
                 element.focus();
             }
             vm.blur = function() {
+                // 切换input外层包装的div元素class(ui-textbox-disabled)的显示或隐藏
                 vmodel.elementDisabled = element.disabled;
+                // 切换占位符的显示、隐藏
                 vmodel.toggle = element.value != "" ? false : true;
             }
             vm.$remove = function() {
@@ -67,7 +69,7 @@ define(["avalon.suggest", "text!avalon.textbox.html"], function(avalon, sourceHT
                 parentNode.replaceChild(elementInput, sourceList);
             }           
             vm.$init = function() {
-                element.setAttribute("ms-blur", "blur");
+                avalon.bind(element, "blur", vm.blur);
                 /**
                  * 如果存在suggest配置，说明需要自动补全功能，
                  * 此处将suggest需要的配置信息保存方便后续传给suggest widget，

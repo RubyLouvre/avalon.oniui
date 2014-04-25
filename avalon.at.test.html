@@ -4,9 +4,10 @@
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <script src="avalon.js"></script>
-        <script src="mocha/mocha.js"></script>
         <link href="mocha/mocha.css" rel="stylesheet" type="text/css" />
+        <script src="avalon.js"></script>
+        <script src="mocha/jquery.js"></script>
+        <script src="mocha/mocha.js"></script>
         <script src="mocha/expect.js"></script>
         <script>
             function fireKeyUp(elem, keyCode) {
@@ -19,13 +20,15 @@
                 } catch (ex) {
                     try {
                         //https://github.com/termi/DOM-Keyboard-Event-Level-3-polyfill
-                        customEvent = new KeyboardEvent("keyup", {key: keyCode + ""})//DOM4
+                        customEvent = new KeyboardEvent("keyup", {key: keyCode })//DOM4
+                        console.log("ddddddddddddddd")
                     } catch (ex2) {
                         //http://stackoverflow.com/questions/10455626/keydown-simulation-in-chrome-fires-normally-but-not-the-correct-key
                         try {
                             customEvent = document.createEvent("KeyboardEvent")
                             customEvent.initKeyboardEvent("keyup", true, true, document.defaultView,
                                     true, true, true, true, keyCode, 0)
+                             customEvent.keyCode = keyCode;
                         } catch (ex3) {
                         }
                     }
@@ -50,15 +53,19 @@
                     vm.$skipArray = ["at"]
                 })
                 avalon.scan()
-                describe('测试@组件', function(done) {
-                    console.log(done)
-                    it("async", function() {
+                describe('测试@组件', function() {
+                    it("async", function(done) {
                         var elem = document.getElementById("test")
-                        elem.value = "xxx@"
-
+                        elem.value = "xxx@a"
+                        elem.focus()
                         setTimeout(function() {
                             fireKeyUp(elem, 11)
-                          //  done()
+                            expect($(".ui-at-item.hover").index()).to.be(0)
+                            setTimeout(function(){
+                                 fireKeyUp(elem, 40)
+                            })
+                           
+                            done()
                         }, 100)
 
                     })

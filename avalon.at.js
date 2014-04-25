@@ -22,7 +22,6 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
 
             vm.$skipArray = ["at", "widgetElement", "datalist", "popupHTML"]
             vm.widgetElement = element
-
             vm.$init = function() {
                 var _vmodels = [vmodel].concat(vmodels)
                 blurCallback = $element.bind("blur", function(e) {
@@ -30,7 +29,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                         vmodel.toggle = false
                     }
                 })
-
+                avalon.log("at $init")
                 keyupCallback = $element.bind("keyup", function(e) {
                     var value = this.value
                     var at = options.at
@@ -119,6 +118,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
             vm.$remove = function() {
                 avalon(element).unbind("keyup", keyupCallback).unbind("blur", blurCallback)
                 vm.toggle = false
+                avalon.log("at $remove")
             }
 
             vm.$popup = function(str) {
@@ -152,6 +152,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 var fakeRect = fakeTextArea.getBoundingClientRect()
                 var bdos = fakeTextArea.getElementsByTagName("bdo")
                 var bdo = bdos[bdos.length - 1]
+                console.log(bdo+"")
                 //高亮@所在bdo元素，然后通过Range.getBoundingClientRect取得它在视口的坐标
                 if (document.createRange && document.documentMode != 9) {//如果是IE10+或W3C
                     var range = document.createRange();
@@ -267,7 +268,6 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
     //通过监听textarea,input的keyup进行，移动列表项的高亮位置
     function moveIndex(e, vmodel) {
         var max = vmodel._datalist.size()
-        console.log("e.keyCode"+ e.keyCode)
         switch (e.keyCode) {
             case 13:
                 // enter

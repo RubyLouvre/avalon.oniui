@@ -5481,7 +5481,7 @@ exports.filter = function(arr, fn){
  * @api private
  */
 
-exports.keys = Object.keys || function(obj) {
+exports.keys =  /\[native code\]/.test(Object.keys) ? Object.keys : function(obj) {
   var keys = []
     , has = Object.prototype.hasOwnProperty // for `window` on <=IE8
 

@@ -2462,7 +2462,7 @@
         "on": function(callback, elem, data) {
             var fn = data.evaluator
             var args = data.args
-            var vmodels = data.vmodels
+            var vmodels = data.vmodels || []
             if (!data.hasArgs) {
                 callback = function(e) {
                     return fn.apply(0, args).call(this, e)
@@ -2472,8 +2472,11 @@
                     return fn.apply(this, args.concat(e))
                 }
             }
-            elem.$vmodel = vmodels[0]
-            elem.$vmodels = vmodels
+            try {
+                elem.$vmodel = vmodels[0]
+                elem.$vmodels = vmodels
+            } catch (e) {
+            }
             if (typeof data.specialBind === "function") {
                 data.specialBind(elem, callback)
             } else {

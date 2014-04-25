@@ -5,10 +5,11 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <link href="mocha/mocha.css" rel="stylesheet" type="text/css" />
-        <script src="avalon.js"></script>
+
         <script src="mocha/jquery.js"></script>
         <script src="mocha/mocha.js"></script>
         <script src="mocha/expect.js"></script>
+        <script src="avalon.js"></script>
         <script>
             function fireKeyUp(elem, keyCode) {
                 //https://gist.github.com/termi/4654819
@@ -17,7 +18,6 @@
                     // FF
                     oEvent = document.createEvent("KeyEvents")//firefox 
                     oEvent.initKeyEvent("keyup", true, true, document.defaultView, false, false, false, false, keyCode, 0)
-                    console.log("firefox success")
                 } catch (ex) {
                     try {
                         //http://www.w3.org/TR/DOM-Level-3-Events/#idl-interface-KeyboardEvent-initializers
@@ -34,7 +34,6 @@
                         });
                         oEvent.initKeyboardEvent("keyup", true, true, document.defaultView, false, false, false, false, keyCode, keyCode)
                         oEvent.keyCodeVal = keyCode
-                        console.log("which " + oEvent.which)
                     } catch (ex3) {
                     }
                 }
@@ -47,9 +46,8 @@
                     elem.fireEvent("onkeyup", oEvent);
                 }
             }
-            require(["avalon.at"], function() {
-                mocha.ui('bdd')
-                mocha.setup({timeout: 100000})
+            require(["ready!", "avalon.at"], function() {
+
                 avalon.define("test", function(vm) {
                     vm.at = {
                         datalist: ["aaa", "aab", "aaaa", "aac", "ccc", "cc1", "ccaaccaa"],
@@ -57,20 +55,36 @@
                     }
                     vm.$skipArray = ["at"]
                 })
+
                 avalon.scan()
+                mocha.ui('bdd')
+                mocha.setup({timeout: 100000})
+
                 describe('测试@组件', function() {
                     it("async", function(done) {
-                        var elem = document.getElementById("test")
+                        var elem = $("#test")[0]
                         elem.value = "xxx@a"
                         setTimeout(function() {
                             fireKeyUp(elem, 11)
+
                             expect($(".ui-at-item.hover").index()).to.be(0)
                             setTimeout(function() {
                                 fireKeyUp(elem, 40)
                                 expect($(".ui-at-item.hover").index()).to.be(1)
-                                done()
-                            }, 1000)
+                                setTimeout(function() {
+                                    fireKeyUp(elem, 40)
+                                    expect($(".ui-at-item.hover").index()).to.be(2)
+                                    setTimeout(function() {
+                                        fireKeyUp(elem, 38)
+                                        expect($(".ui-at-item.hover").index()).to.be(1)
+                                        fireKeyUp(elem, 13)
+                                        expect(elem.value).to.be("xxx@\u200caab")
+                                        done()
+                                    }, 1000)
 
+                                }, 1000)
+
+                            }, 1000)
 
                         }, 100)
 
@@ -79,8 +93,8 @@
                 })
                 mocha.run()
 
-            })
 
+            })
 
         </script>
     </head>
@@ -88,23 +102,6 @@
         <p>mocha 在浏览器的测试文档见<a href="http://visionmedia.github.io/mocha/#browser-support">这里</a></p>
         <div><input ms-controller="test" ms-widget="at,at1" id="test"></div>
         <div id="mocha"></div>
-        <pre>
-dictionary KeyboardEventInit {
-    boolean       bubbles = false;
-    boolean       cancelable = false;
-    AbstractView? view = null;
-    long          detail = 0;
-    DOMString     key = "";
-    unsigned long location = 0;
-    boolean       ctrlKey = false;
-    boolean       shiftKey = false;
-    boolean       altKey = false;
-    boolean       metaKey = false;
-    boolean       repeat = false;
-    unsigned long charCode = 0;
-    unsigned long keyCode = 0;
-    unsigned long which = 0;
-};
-        </pre>
+
     </body>
 </html>

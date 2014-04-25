@@ -879,7 +879,7 @@
     }
 
     function keys(obj) {
-        if (Object.keys) {
+        if ( /\[native code\]/.test(Object.keys)) {
             return Object.keys(obj);
         }
 

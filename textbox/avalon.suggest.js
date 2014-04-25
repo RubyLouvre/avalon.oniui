@@ -1,4 +1,4 @@
-define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceHTML) {
+define(["avalon.getModel", "text!./avalon.suggest.html"], function(avalon, sourceHTML) {
 
     var parseHtmlStruction = sourceHTML.split("MS_OPTION_STYLE"),
         cssText = parseHtmlStruction[1].replace(/<\/?style>/g, ""),

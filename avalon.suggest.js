@@ -97,6 +97,7 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
             };
             vm.$init = function() {
                 avalon.bind(options.inputElement, "keyup", function(event) {
+                    console.log("suggest 里的 keyup");
                     switch( event.which ) {
                         case 9:
                             if (!vmodel.toggle) return ;
@@ -131,7 +132,7 @@ define(["avalon.getModel", "text!avalon.suggest.html"], function(avalon, sourceH
                             vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.list[vmodel.selectedIndex].$model, event );
                         break;
                         default:
-                            vmodel.searchText = this.value;
+                            vmodel.searchText = this.value || String.fromCharCode(event.which);
                         break;
                     }
                 })

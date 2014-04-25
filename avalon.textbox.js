@@ -64,9 +64,9 @@ define(["avalon.suggest", "text!avalon.textbox.html"], function(avalon, sourceHT
                 vmodel.toggle = element.value != "" ? false : true;
             }
             vm.$remove = function() {
-                var elementInput = element.cloneNode(true);
-                var parentNode = sourceList.parentNode ;
-                parentNode.replaceChild(elementInput, sourceList);
+                var sourceListParent = sourceList.parentNode;
+                sourceListParent.removeChild(sourceList);
+                sourceList.innerHTML = sourceList.textContent = "";
             }           
             vm.$init = function() {
                 avalon.bind(element, "blur", vm.blur);
@@ -89,11 +89,13 @@ define(["avalon.suggest", "text!avalon.textbox.html"], function(avalon, sourceHT
                 avalon.ready(function() {
                     var models = [vmodel].concat(vmodels);
                     $element.addClass("ui-textbox-input");
-                    // 包装原始输入域?
+                    // 包装原始输入域
                     var tempDiv = document.createElement("div");
                     elemParent.insertBefore(tempDiv, element);
+                    vmodel.msRetain = true;
                     inputWraper.appendChild(element);
                     elemParent.replaceChild(sourceList, tempDiv);
+                    vmodel.msRetain = false;
                     // 如果存在自动补全配置项的话，添加自动补全widget
                     if (options.suggest) {
                         var suggest = avalon.parseHTML(suggestHTML).firstChild;

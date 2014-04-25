@@ -4,6 +4,9 @@
         <title>avalon类似新浪微博的@提示插件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
+         <script src="highlight/shCore.js">
+            
+        </script>
     </head>
     <body>
         <h3> 默认参数</h3>
@@ -49,5 +52,15 @@
             </tr>
 
         </table>
+        <p>$update是一个非常重要的配置项，用于与后端同步数据，下面是</p>
+        <pre class="brush:js;gutter:false;toolbar:false;">
+function $update(vmodel, callback) {
+    var model = vmodel.$model
+    jQuery.post("url", {limit: model.limit, query: model.query}, function(data) {
+        vmodel.datalist = data.datalist
+        callback()
+    })
+}
+        </pre>
     </body>
 </html>

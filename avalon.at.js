@@ -22,6 +22,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
 
             vm.$skipArray = ["at", "widgetElement", "datalist", "popupHTML"]
             vm.widgetElement = element
+            var bdoName = document.documentMode ? "bdo" : "bdi"
             vm.$init = function() {
                 var _vmodels = [vmodel].concat(vmodels)
                 blurCallback = $element.bind("blur", function(e) {
@@ -53,7 +54,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                             if (sington) {
                                 str = "<wbr>" + str //防止@出现在最前面
                             }
-                            str = str.replace(new RegExp(escapeRegExp("<wbr>" + at + "<wbr>"), "img"), "<bdo>" + at + "</bdo>")
+                            str = str.replace(new RegExp(escapeRegExp("<wbr>" + at + "<wbr>"), "img"), "<" + bdoName + ">" + at + "</" + bdoName + ">")
 
                             //创建弹出层
                             popup = vmodel.$popup.call(this, str)
@@ -150,19 +151,20 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 //取得textarea,input在页面上的坐标
                 var offset = avalon(this).offset()
                 var fakeRect = fakeTextArea.getBoundingClientRect()
-                var bdos = fakeTextArea.getElementsByTagName("bdo")
+                var bdos = fakeTextArea.getElementsByTagName(bdoName)
                 var bdo = bdos[bdos.length - 1]
-                console.log(bdo+"")
+
                 //高亮@所在bdo元素，然后通过Range.getBoundingClientRect取得它在视口的坐标
                 if (document.createRange && document.documentMode != 9) {//如果是IE10+或W3C
                     var range = document.createRange();
                     range.selectNode(bdo)
+                    var rangeRect = range.getBoundingClientRect()
                 } else {
-                    var range = document.selection.createRange().duplicate()
-                    range.moveToElementText(bdo)
+                    //var range = document.selection.createRange().duplicate()
+                    //range.moveToElementText(bdo)
+                    rangeRect = bdo.getBoundingClientRect()
                 }
                 //高亮@所在bdo元素在测量用的DIV的坐标
-                var rangeRect = range.getBoundingClientRect()
                 var top = rangeRect.bottom - fakeRect.top
                 var left = rangeRect.left - fakeRect.left
                 //创建弹出菜单

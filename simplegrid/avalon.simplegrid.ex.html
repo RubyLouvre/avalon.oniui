@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script>
+            require(["avalon.simplegrid"], function() {
+                avalon.define("test", function(vm) {
+                    vm.simplegrid = {
+                        columns: ["xxx","yyy","ccc"]
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <div ms-widget="simplegrid">
+            
+        </div>
+    </body>
+</html>

@@ -20,6 +20,7 @@
                     oEvent.initKeyEvent("keyup", true, true, document.defaultView, false, false, false, false, keyCode, 0)
                 } catch (ex) {
                     try {
+                        //http://stackoverflow.com/questions/10455626/keydown-simulation-in-chrome-fires-normally-but-not-the-correct-key
                         //http://www.w3.org/TR/DOM-Level-3-Events/#idl-interface-KeyboardEvent-initializers
                         oEvent = document.createEvent("KeyboardEvent")
                         Object.defineProperty(oEvent, 'keyCode', {

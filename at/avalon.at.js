@@ -30,7 +30,6 @@ define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
                         vmodel.toggle = false
                     }
                 })
-                avalon.log("at $init")
                 keyupCallback = $element.bind("keyup", function(e) {
                     var value = this.value
                     var at = options.at

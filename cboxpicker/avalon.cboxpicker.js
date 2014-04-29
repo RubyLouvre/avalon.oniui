@@ -1,29 +1,28 @@
 define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, sourceHTML) {
     var widget = avalon.ui.cboxpicker = function(element, data, vmodels) {
+        // 获取配置项        
         var getVMFunc = (function(data){
             return function ( name , isGetSet ) {
                 if( !options[name] ) return avalon.noop;
-                avalon.parseExprProxy( options[name] , vmodels , data , isGetSet ? 'duplex' : null );
+                avalon.mix(vmodels, data);
+                // if (!options.duplex) {
+                //     avalon.parseExprProxy( options[name] , [vmodel].concat(vmodels) , data , isGetSet ? 'duplex' : null );
+                // } else {
+                    avalon.parseExprProxy( options[name] , vmodels , data , isGetSet ? 'duplex' : null );
+                // }
+                
                 return data.evaluator.apply( 0 , data.args );
             }
         })(data);
         var options = data.cboxpickerOptions;
-        var arr = avalon.getModel( options.duplex , vmodels );
-        var $dlist = arr[1][arr[0]];
         var onfetch = getVMFunc('fetch');
         var onselect = getVMFunc('select');
-
-        element.value = $dlist.$model.join(",");
         var vmodel = avalon.define(data.cboxpickerId, function(vm) {
             avalon.mix(vm, options);
             vm.widgetElement = element;
-            // checkStatus中key分别代表每个选项，选中的选项对应key的value非0，没选中的value为0或者false
-            vm.checkStatus = {};
-            vm.inputduplex = arr[0];
             // 判断是否全部选中
             vm.isAll = function() {
                 var arr = vm.data.$model.map(function(obj, index){
-
                     return obj.value || obj.name;
                 });
                 var allChecked = true
@@ -53,13 +52,12 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
                     }
                 }
                 // 执行onselect回调
-                onselect.apply(0, [vm.data.$model, checkStatus]);
+                onselect.apply(0, [vm.data.$model, checkStatus, event.target]);
             }
             // 选中某一项之后的回调操作
             vm.click_one = function(event,index) {
                 vm.checkStatus[vm.data[index].$model.value] = event.target.checked;
-                vm.all = vmodel.isAll();
-                onselect.apply(0, [vm.data.$model, event.target.checked]);
+                onselect.apply(0, [vm.data.$model, event.target.checked, event.target]);
             }
             vm.$init = function() {
                 var cboxpickerHTML = avalon.parseHTML(sourceHTML);
@@ -73,8 +71,11 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
                 element.innerHTML = "";
             };
         })
+        var arr = avalon.getModel( options.duplex , [vmodel].concat(vmodels) );
+        var $dlist = arr[1][arr[0]];
+        element.value = $dlist.$model.join(",");
         // 为了兼容 jvalidator，将ul的value同步为duplex的值
-        $dlist.$watch("length", function(newValue) {
+        $dlist.$watch("length", function(newValue) { // 当选中checkbox或者全校选中时判断vmodel.all，从而判断是否选中"全选"按钮
             if (newValue == 0 ) {
                 element.value = "";
             } else {
@@ -84,6 +85,7 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
                 vmodel.all = (newValue == vmodel.data.length);
             });
         })
+        console.log(options.fetch);
         if (options.fetch) {
             /*
                 通过回调返回数据，数据结构必须是
@@ -92,7 +94,9 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
                 ]
                 以 text 作为每一个选项的文字，value 为选项的值，如果没有则直接使用 text
             */
+            // 取到数据之后进行视图的渲染
             onfetch.apply(0, [function(data) {
+                console.log(data);
                 vmodel.data = data;
                 syncCheckStatus(vmodel);
                 xssFilter(vmodel);
@@ -103,6 +107,7 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
                 fragment.appendChild(element.firstChild);
             }
             switch (options.type) {
+                // 配置了type为week的话，使用组件默认的提供的data
                 case "week":
                     var data = [
                         { text : '周一' , value : 'MONDAY' } ,
@@ -115,12 +120,14 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
                     ];
                 break;
                 default:
+                    // 既未配置fetch自取data，也没配置type使用默认的data，就需要通过页面提供的html抽取出data
                     var inputs = fragment.getElementsByTagName("input");
                     var data = [];
                     for (var i=0; i<inputs.length; i++) {
                         var input = inputs[i],
                             li = input.parentNode,
                             txt = "";
+                        // 获取离input最近的父级li元素
                         while(li) {
                             if (li.tagName = "LI") {
                                 break;
@@ -129,7 +136,9 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
                             }
                         }
                         txt = li.textContent || li.innerText;
+                        // trim掉li元素中文本两边的空格
                         txt.replace(/^\s+/, "").replace(/\s+$/,"");
+                        // 将提取出来的数据保存在data中
                         data.push({
                             text: (!~txt.indexOf(options.alltext || "全部") && txt),
                             value: input.value || txt
@@ -141,8 +150,10 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
             syncCheckStatus();
             xssFilter();
         }
+        /* 根据duplex的配置信息判断data中哪些选项是被选中的，哪些是不被选中的，不被选中的选项的key对应0，选中选项的key对应其在duplex中的位置取反 */
         function syncCheckStatus() {
-            var duplex_list = getVMFunc("duplex");
+            var modelArr = avalon.getModel(options.duplex, [vmodel].concat(vmodels));
+            var duplex_list = modelArr[1][arr[0]];
             duplex_list = duplex_list && duplex_list.$model ? duplex_list.$model : [];
             var obj = {}
             avalon.each( vmodel.data.$model , function(idx,o){
@@ -183,13 +194,24 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
     }
     widget.version = 1.0
     widget.defaults = {
-        data: [],
-        all: true,
-        //duplex: "data",
-        alltext: "全部",
-        type: "" ,
-        fetch: "",
-        select: ""
+        data: [], // 所有选项值的集合，通过此数据来渲染初始视图
+        all: false, // 默认不选中所有选项
+        _val: [], // 默认双向绑定的变量
+        duplex: "_val", // 通过此配置实现双向绑定，从而判断是否全选
+        checkStatus: {}, // 通过此对象判断选框的选中状态，从而选中或者不选中对应选框
+        alltext: "全部", // 显示"全部"按钮，方便进行全选或者全不选操作
+        type: "" , // 内置type为week时的data，用户只需配置type为week即可显示周一到周日的选项 
+        /*
+            通过配置fetch来获得要显示的数据，数据格式必须如下所示：
+             [
+                { text : '文字1' , value : 'w1' } ,
+                { text : '文字2' , value : 'w2' } ,
+                { text : '文字3' , value : 'w3' } ,
+                { text : '文字4' , value : 'w4' }
+            ]
+        */
+        fetch: "", 
+        select: "" // 通过配置select来进行选中或者不选中选框的回调操作
     }
     return avalon;
 });

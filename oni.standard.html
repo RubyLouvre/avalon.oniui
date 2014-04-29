@@ -23,6 +23,9 @@
             <li>
                 组件必须有widgetElement属性，引用元素本身
             </li>
+            <li>
+                有模板的组件的默认匹配项里必须getTemplate方法 ,用于修改template, template在vm中不可监控的
+            </li>
             <li>尽量减举行监控元素，善用$skipArray。</li>
             <li>为元素绑定事件时，注意不要覆盖用户预置的ms-click, ms-keyup等事件</li>
             <li>

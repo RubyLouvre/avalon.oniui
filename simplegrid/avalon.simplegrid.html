@@ -1,0 +1,49 @@
+<div class="ui-grid">
+    <div class="ui-grid-thead-wrapper">
+        <table>
+            <tr>
+                <td  ms-repeat="columns"
+                     data-repeat-rendered="getRealWidth"
+                     ms-css-height="headerHeight"  
+                     ms-css-width="el.width" 
+                     ms-attr-align="el.align" 
+                     ms-class="el.className" 
+                     ms-visible="el.toggle" 
+                     ms-data-vm="el">  {{el.text}} </td>
+            </tr>
+        </table>
+    </div>
+    <div class="ui-grid-tbody-wrapper">
+        <table>
+            <tr  ms-repeat-row="_store">
+                <td  ms-repeat="row" data-with-sorted="getColumnsOrder" ms-css-width="getCellWidth($key)" ms-visible="getCellToggle($key)"  class="ui-grid-td">
+                    <div class="editable">{{$val}}</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="ui-grid-tfoot-wrapper">
+
+    </div>
+</div>
+MS_OPTION_STYLE
+<style>
+    .ui-grid-thead-wrapper table{
+        width: 100%;
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    .ui-grid-thead-wrapper table td{
+        width: 100%;
+        border: 1px solid black;
+    }
+    .ui-grid-tbody-wrapper table{
+        width: 100%;
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    .ui-grid-tbody-wrapper table td{
+        width: 100%;
+        border: 1px solid black;
+    }
+</style>

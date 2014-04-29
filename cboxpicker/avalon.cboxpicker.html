@@ -11,9 +11,10 @@
         <input type="checkbox" 
                ms-checked="checkStatus[cpitem.value||cpitem.text]" 
                ms-click="click_one($event, $index)"
-               ms-duplex-text="{{cpitem.value}}"
+               ms-duplex-text="MS_OPTIONS_DUPLEX"
                ms-value="{{cpitem.value||cpitem.text}}" 
                class="checkbox" /> 
         {{cpitem.text||cpitem.html|html}}
     </label>
 </li>
+MS_OPTION_STYLE

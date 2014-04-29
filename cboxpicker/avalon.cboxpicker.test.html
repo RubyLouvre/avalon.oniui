@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>cboxpicker test</title>
+        <link type="text/css" rel="stylesheet" charset="utf-8" href="../mocha/mocha.css" />
+        <script src="../avalon.js"></script>
+        <script src="../mocha/mocha.js"></script>
+        <script src="../mocha/expect.js"></script>
+        <style>
+            #testWrapper {
+                margin: -40px 50px 100px 80px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="mocha"></div>
+        <div id="testWrapper"></div>
+        <script>
+            (function() {
+                mocha.ui('bdd')
+                mocha.setup({timeout: 100000})
+                require(["ready!", "cboxpicker/avalon.cboxpicker"], function() {
+                    function getElementNode(elem) {
+                        while(elem) {
+                            if (elem.nodeType === 1) {
+                                break;
+                            } else {
+                                elem = elem.nextSibling;
+                            }
+                        }
+                        return elem;
+                    }
+
+                    var testWrapper = document.getElementById("testWrapper");
+                  
+                    describe("textbox only", function() {
+                        it("", function() {
+
+                        })    
+                    });
+                    mocha.run()
+                })
+            })()
+        </script>
+    </body>
+</html>

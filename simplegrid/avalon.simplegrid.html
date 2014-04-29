@@ -7,22 +7,29 @@
                      ms-css-height="headerHeight"  
                      ms-css-width="el.width" 
                      ms-attr-align="el.align" 
-                     ms-class="el.className" 
+                     ms-class="{{el.className}}" 
                      ms-visible="el.toggle" 
-                     ms-data-vm="el">  {{el.text}} </td>
+                     ms-css="el.className"
+                     ms-data-vm="el">{{el.text}}</td>
             </tr>
         </table>
     </div>
     <div class="ui-grid-tbody-wrapper">
         <table>
             <tr  ms-repeat-row="_store">
-                <td  ms-repeat="row" data-with-sorted="getColumnsOrder" ms-css-width="getCellWidth($key)" ms-visible="getCellToggle($key)"  class="ui-grid-td">
+                <td class="ui-grid-td"
+                    ms-repeat="row" 
+                    data-with-sorted="getColumnsOrder"
+                    ms-css-width="getCellWidth($key)"
+                    ms-visible="getCellToggle($key)" 
+                    ms-css-height="rowHeight" 
+                    >
                     <div class="editable">{{$val}}</div>
                 </td>
             </tr>
         </table>
     </div>
-    <div class="ui-grid-tfoot-wrapper">
+    <div class="ui-grid-tfoot-wrapper" ms-if="pageable">
 
     </div>
 </div>

@@ -20,14 +20,27 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         options._store = options.getStore(options.store, options)
 
         options.template = options.getTemplate(template, options)
-        if (!options.columnsOrder) {
+        if (!Array.isArray(options.columnsOrder)) {
             var orders = []
             for (var i = 0, el; el = options.columns[i++]; ) {
                 orders.push(el.field)
             }
             options.columnsOrder = orders
+        } else if(options.syncTheadColumnsOrder){
+            orders = options.columnsOrder.concat()
+            var aaa = [], bbb = options.columns, elem
+            while (el = orders.shift()) {
+                for (var i = 0, n = bbb.length; i < n; i++) {
+                    elem = bbb[i]
+                    if (elem.field == el) {
+                        aaa.push(elem)
+                        bbb.splice(i, 1)
+                    }
+                }
+            }
+            options.columns = aaa
         }
-console.log(options)
+        
         var _vmodels
         var vmodel = avalon.define(data.simplegridId, function(vm) {
 
@@ -63,16 +76,14 @@ console.log(options)
             }
         })
         return vmodel
-
     }
     widget.defaults = {
         //表头的格子的高
         headerHeight: 35,
+        rowHeight: 35,
         columnWidth: 160,
-        //纵向滚动条距滚动面板的顶部的距离（滚动面板可理解为可视区）
-        srollTop: 0,
-        //横向滚动条距滚动面板的左侧的距离（滚动面板可理解为可视区）
-        scrollLeft: 0,
+        pageable: false,
+        syncTheadColumnsOrder: true,
         getColumnTitle: function() {
             return ""
         },
@@ -110,6 +121,20 @@ console.log(options)
 })
 /**
  * 参考链接
- http://www.alidata.org/edp_model/#components|normaltable
+阿里大数据的UI设计稿
+http://www.cnblogs.com/xuxiace/archive/2012/03/07/2383180.html
+Onion UI 控件集 
+http://wiki.corp.qunar.com/pages/viewpage.action?pageId=49957733
+http://wiki.corp.qunar.com/pages/viewpage.action?pageId=49956129
+来往
+http://m.laiwang.com/market/laiwang/event-square.php?spm=0.0.0.0.Hg4P8X
+
+ ExtJS初级教程之ExtJS Grid(二)
+
+http://blog.csdn.net/letthinking/article/details/6321767
+
+http://wenku.baidu.com/view/2f30e882e53a580216fcfe34.html
+
+http://ued.taobao.org/blog/2013/03/modular-scalable-kissy/
  */
 

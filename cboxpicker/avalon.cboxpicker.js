@@ -1,15 +1,20 @@
 define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, sourceHTML) {
+    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""];
+    var cssText = arr[1].replace(/<\/?style>/g, "");
+    var styleEl = document.getElementById("avalonStyle");
+    var template = arr[0];
+    try {
+        styleEl.innerHTML += cssText;
+    } catch (e) {
+        styleEl.styleSheet.cssText += cssText;
+    }
     var widget = avalon.ui.cboxpicker = function(element, data, vmodels) {
         // 获取配置项        
         var getVMFunc = (function(data){
             return function ( name , isGetSet ) {
                 if( !options[name] ) return avalon.noop;
                 avalon.mix(vmodels, data);
-                // if (!options.duplex) {
-                //     avalon.parseExprProxy( options[name] , [vmodel].concat(vmodels) , data , isGetSet ? 'duplex' : null );
-                // } else {
-                    avalon.parseExprProxy( options[name] , vmodels , data , isGetSet ? 'duplex' : null );
-                // }
+                avalon.parseExprProxy( options[name] , vmodels , data , isGetSet ? 'duplex' : null );
                 
                 return data.evaluator.apply( 0 , data.args );
             }
@@ -17,8 +22,11 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
         var options = data.cboxpickerOptions;
         var onfetch = getVMFunc('fetch');
         var onselect = getVMFunc('select');
+        options.template = options.getTemplate(template, options);
+
         var vmodel = avalon.define(data.cboxpickerId, function(vm) {
             avalon.mix(vm, options);
+            vm.$skipArray = ["widgetElement", "template"];
             vm.widgetElement = element;
             // 判断是否全部选中
             vm.isAll = function() {
@@ -60,11 +68,8 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
                 onselect.apply(0, [vm.data.$model, event.target.checked, event.target]);
             }
             vm.$init = function() {
-                var cboxpickerHTML = avalon.parseHTML(sourceHTML);
-                var liHTML = cboxpickerHTML.lastChild;
-                var input = liHTML.getElementsByTagName("input")[0];
-                input.setAttribute("ms-duplex-text", arr[0]);
-                avalon.clearHTML(element).appendChild(cboxpickerHTML);
+                options.template = options.template.replace("MS_OPTIONS_DUPLEX", options.duplex);
+                element.innerHTML = options.template;
                 avalon.scan(element, [vmodel].concat(vmodels));
             };  
             vm.$remove = function() {
@@ -85,7 +90,6 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
                 vmodel.all = (newValue == vmodel.data.length);
             });
         })
-        console.log(options.fetch);
         if (options.fetch) {
             /*
                 通过回调返回数据，数据结构必须是
@@ -96,7 +100,6 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
             */
             // 取到数据之后进行视图的渲染
             onfetch.apply(0, [function(data) {
-                console.log(data);
                 vmodel.data = data;
                 syncCheckStatus(vmodel);
                 xssFilter(vmodel);
@@ -211,7 +214,10 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
             ]
         */
         fetch: "", 
-        select: "" // 通过配置select来进行选中或者不选中选框的回调操作
+        select: "", // 通过配置select来进行选中或者不选中选框的回调操作
+        getTemplate: function(tmpl, options) {
+            return tmpl
+        }
     }
     return avalon;
 });

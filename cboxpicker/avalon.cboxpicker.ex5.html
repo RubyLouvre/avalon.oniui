@@ -79,11 +79,16 @@
                     vm.onselect = function() {
                         console.log("selectCallback argumnets is: ");
                         console.log(arguments);
-                        alert("选中了："+arguments[2].value);
+                        if (arguments[1]) {
+                            alert("选中了："+arguments[2].value);  
+                        } else {
+                            alert("取消对"+arguments[2].value+"的选中");
+                        }
+                        
                         for (var i=0; i<arguments[0].length; i++) {
                             var obj = arguments[0][i];
                             if (obj.value == arguments[2].value) {
-                                alert(obj.text);
+                                alert("当前项的值是：" +obj.text);
                             }
                         }
                     }

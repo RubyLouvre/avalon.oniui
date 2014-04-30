@@ -42,7 +42,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             }
             options.columns = aaa
         }
-        var remptyfn = /^function\s+\w*\s*\([^)]*\){\s*}$/
+        var remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m
         var _vmodels
         var vmodel = avalon.define(data.simplegridId, function(vm) {
 
@@ -63,13 +63,13 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                 var field = el.field
                 var opts = vmodel.$model
                 trend = trend ? 1 : -1
-                if (typeof opts.remoteSort === "function" && !remptyfn.test(opts.remoteSort)) {
+                if (typeof opts.remoteSort === "function" && !remptyfn.test( opts.remoteSort)) {
                     //如果指定了回调函数,通过服务器端进行排数,那么能回调传入当前字段,状态,VM本身及callback
                     function callback() {
                         vmodel._store = opts.getStore(opts.store, opts)
                     }
                     vmodel.remoteSort(field, trend, opts, callback)
-                } else if (typeof el.localSort === "function" && !remptyfn.test(el.localSort)) {
+                } else if (typeof el.localSort === "function" && !remptyfn.test(el.localSort )) {// !isEmptyFn(el.localSort)
                     //如果要在本地排序,并且指定排数函数
                     vmodel._store.sort(function(a, b) {
                         return trend * el.localSort(a, b, field, opts)

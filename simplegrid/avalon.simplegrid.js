@@ -57,19 +57,23 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                 avalon.scan(element, _vmodels)
 
             }
+            //通过拖动改变列宽
+            vm.resizeColumn = function(e, el) {
+
+            }
             //如果当前列可以排序，那么点击标题旁边的icon,将会调用此方法
             vm.sortColumn = function(el) {
                 var trend = el.sortAsc = !el.sortAsc
                 var field = el.field
                 var opts = vmodel.$model
                 trend = trend ? 1 : -1
-                if (typeof opts.remoteSort === "function" && !remptyfn.test( opts.remoteSort)) {
+                if (typeof opts.remoteSort === "function" && !remptyfn.test(opts.remoteSort)) {
                     //如果指定了回调函数,通过服务器端进行排数,那么能回调传入当前字段,状态,VM本身及callback
                     function callback() {
                         vmodel._store = opts.getStore(opts.store, opts)
                     }
                     vmodel.remoteSort(field, trend, opts, callback)
-                } else if (typeof el.localSort === "function" && !remptyfn.test(el.localSort )) {// !isEmptyFn(el.localSort)
+                } else if (typeof el.localSort === "function" && !remptyfn.test(el.localSort)) {// !isEmptyFn(el.localSort)
                     //如果要在本地排序,并且指定排数函数
                     vmodel._store.sort(function(a, b) {
                         return trend * el.localSort(a, b, field, opts)
@@ -110,7 +114,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         columnWidth: 160,
         pageable: false,
         syncTheadColumnsOrder: true,
-        remoteSort: avalon.noop,//远程排数函数
+        remoteSort: avalon.noop, //远程排数函数
         getColumnTitle: function() {
             return ""
         },
@@ -136,6 +140,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                 el.align = el.align || "" //赋给align属性,表示是对齐方向 left, right, center
                 el.localSort = typeof el.localSort === "function" ? el.localSort : false//当前列的排序函数
                 makeBool(el, "sortable", true)//能否排序
+                makeBool(el, "resizable", false)//能否排序
                 makeBool(el, "sortAsc", true)//排序方向
                 makeBool(el, "toggle", true)//是否显示当前列
                 makeBool(el, "disabledToggle")//禁止改变当前列的显示状态

@@ -16,6 +16,10 @@
                              ms-class="sort_{{el.sortAsc ? 'asc': 'desc'}}">
                         {{el.sortAsc}}
                     </button>
+                    <div class="ui-grid-resizable-handle"
+                         ms-if="el.resizable" 
+                         ms-mousedown="resizeColumn($event,el)"
+                         ></div>
                 </td>
             </tr>
         </table>
@@ -58,5 +62,14 @@ MS_OPTION_STYLE
     .ui-grid-tbody-wrapper table td{
         width: 100%;
         border: 1px solid black;
+    }
+    .ui-grid-resizable-handle{
+        background: red;
+        float: right;
+        font-size: 0.1px;
+        display: block;
+        cursor: col-resize;
+        width: 4px;
+        height: 100%;
     }
 </style>

@@ -1,11 +1,11 @@
 /*==================================================
- Copyright 20013-2014 司徒正美、 UnitedStack and other contributors
+ Copyright 20013-2014 司徒正美 and other contributors
  http://www.cnblogs.com/rubylouvre/
  https://github.com/RubyLouvre
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.2.5 2014.4.15
+ avalon 1.2.6 2014.4.29
  ==================================================*/
 (function(DOC) {
     var Registry = {} //将函数曝光到此对象上，方便访问器收集依赖
@@ -246,6 +246,7 @@
             el.detachEvent("on" + type, fn || noop)
         },
         css: function(node, name, value) {
+            var _name =name
             if (node instanceof avalon) {
                 node = node[0]
             }
@@ -2462,7 +2463,7 @@
         "on": function(callback, elem, data) {
             var fn = data.evaluator
             var args = data.args
-            var vmodels = data.vmodels || []
+            var vmodels = data.vmodels
             if (!data.hasArgs) {
                 callback = function(e) {
                     return fn.apply(0, args).call(this, e)
@@ -2472,11 +2473,8 @@
                     return fn.apply(this, args.concat(e))
                 }
             }
-            try {
-                elem.$vmodel = vmodels[0]
-                elem.$vmodels = vmodels
-            } catch (e) {
-            }
+            elem.$vmodel = vmodels[0]
+            elem.$vmodels = vmodels
             if (typeof data.specialBind === "function") {
                 data.specialBind(elem, callback)
             } else {
@@ -2572,7 +2570,7 @@
         "duplex": function(data, vmodels) {
             var elem = data.element,
                     tagName = elem.tagName
-            if (typeof modelBinding[tagName] === "function") {
+            if (typeof duplexBinding[tagName] === "function") {
                 data.changed = getBindingCallback(elem, "data-duplex-changed", vmodels) || noop
                 //由于情况特殊，不再经过parseExprProxy
                 parseExpr(data.value, vmodels, data, "duplex")
@@ -2581,7 +2579,19 @@
                     if (form && form.msValidate) {
                         form.msValidate(elem)
                     }
-                    modelBinding[elem.tagName](elem, data.evaluator.apply(null, data.args), data)
+                    data.bound = function(type, callback) {
+                        if (elem.addEventListener) {
+                            elem.addEventListener(type, callback, false)
+                        } else {
+                            elem.attachEvent("on" + type, callback)
+                        }
+                        var old = data.rollback
+                        data.rollback = function() {
+                            avalon.unbind(elem, type, callback)
+                            old && old()
+                        }
+                    }
+                    duplexBinding[elem.tagName](elem, data.evaluator.apply(null, data.args), data)
                 }
             }
         },
@@ -2755,7 +2765,7 @@
                 element.removeAttribute("ms-widget")
                 var vmodel = constructor(element, data, vmodels) || {}//防止组件不返回VM
                 data.evaluator = noop
-                element.msData["ms-widget-id"] = vmodel.$id
+                element.msData["ms-widget-id"] = vmodel.$id || ""
                 if (vmodel.hasOwnProperty("$init")) {
                     vmodel.$init()
                 }
@@ -2806,22 +2816,28 @@
     //============================= model binding =======================
 
     //将模型中的字段与input, textarea的value值关联在一起
-    var modelBinding = bindingHandlers.duplex
+    var duplexBinding = bindingHandlers.duplex
     //如果一个input标签添加了model绑定。那么它对应的字段将与元素的value连结在一起
     //字段变，value就变；value变，字段也跟着变。默认是绑定input事件，
-    modelBinding.INPUT = function(element, evaluator, data) {
+    duplexBinding.INPUT = function(element, evaluator, data) {
         var fixType = data.param,
                 type = element.type,
                 callback = data.changed,
-                $elem = avalon(element),
-                removeFn
+                bound = data.bound,
+                $elem = avalon(element)
 
-
-        if (type === "checkbox" && fixType === "radio") {
-            type = "radio"
+        var composing = false
+        function compositionStart() {
+            composing = true
         }
+        function compositionEnd() {
+            composing = false
+        }
+
         //当value变化时改变model的值
         var updateVModel = function() {
+            if (composing)
+                return
             var val = element.oldValue = element.value
             if ($elem.data("duplex-observe") !== false) {
                 evaluator(val)
@@ -2835,6 +2851,10 @@
             if (val !== element.value) {
                 element.value = val + ""
             }
+        }
+
+        if (type === "checkbox" && fixType === "radio") {
+            type = "radio"
         }
         if (type === "radio") {
             data.handler = function() {
@@ -2857,11 +2877,7 @@
                     callback.call(element, val)
                 }
             }
-            var eventType = fixType ? "click" : "mousedown"
-            removeFn = $elem.bind(eventType, updateVModel)
-            data.rollback = function() {
-                $elem.unbind(eventType, removeFn)
-            }
+            bound(fixType ? "click" : "mousedown", updateVModel)
         } else if (type === "checkbox") {
             updateVModel = function() {
                 if ($elem.data("duplex-observe") !== false) {
@@ -2879,41 +2895,41 @@
                 var array = [].concat(evaluator()) //强制转换为数组
                 element.checked = array.indexOf(element.value) >= 0
             }
-            var eventType = W3C ? "change" : "click"
-            removeFn = $elem.bind(eventType, updateVModel) //IE6-8
-            data.rollback = function() {
-                $elem.unbind(eventType, removeFn)
-            }
+
+            bound(W3C ? "change" : "click", updateVModel)
+
         } else {
             var event = element.attributes["data-duplex-event"] || element.attributes["data-event"] || {}
             event = event.value
             if (event === "change") {
-                avalon.bind(element, event, updateVModel)
+                bound("change", updateVModel)
             } else {
                 if (W3C && DOC.documentMode !== 9) { //IE10+, W3C
-                    element.addEventListener("input", updateVModel)
-                    data.rollback = function() {
-                        element.removeEventListener("input", updateVModel)
-                    }
+                    bound("input", updateVModel)
+                    bound("compositionstart", compositionStart)
+                    bound("compositionend", compositionEnd)
                 } else {
+                    var events = ["keyup", "paste", "cut", "change"]
 
-                    var eventArr = ["keyup", "paste", "cut", "change"]
-
-                    removeFn = function(e) {
+                    function removeFn(e) {
                         var key = e.keyCode
                         //    command            modifiers                   arrows
                         if (key === 91 || (15 < key && key < 19) || (37 <= key && key <= 40))
                             return
-                        updateVModel()
+                        if (e.type === "cut") {
+                            avalon.nextTick(updateVModel)
+                        } else {
+                            updateVModel()
+                        }
                     }
 
-                    avalon.each(eventArr, function(i, name) {
-                        element.attachEvent("on" + name, removeFn)
+                    events.forEach(function(type) {
+                        element.attachEvent("on" + type, removeFn)
                     })
 
                     data.rollback = function() {
-                        avalon.each(eventArr, function(i, name) {
-                            element.detachEvent("on" + name, removeFn)
+                        events.forEach(function(type) {
+                            element.detachEvent("on" + type, removeFn)
                         })
                     }
                 }
@@ -2979,14 +2995,14 @@
             launch = launchImpl
         }
     }
-    modelBinding.SELECT = function(element, evaluator, data, oldValue) {
+    duplexBinding.SELECT = function(element, evaluator, data) {
         var $elem = avalon(element)
         function updateVModel() {
             if ($elem.data("duplex-observe") !== false) {
                 var val = $elem.val() //字符串或字符串数组
-                if (val + "" !== oldValue) {
+                if (val + "" !== element.oldValue) {
                     evaluator(val)
-                    oldValue = val + ""
+                    element.oldValue = val + ""
                 }
                 data.changed.call(element, val)
             }
@@ -2995,15 +3011,12 @@
             var curValue = evaluator()
             curValue = curValue && curValue.$model || curValue
             curValue = Array.isArray(curValue) ? curValue.map(String) : curValue + ""
-            if (curValue + "" !== oldValue) {
+            if (curValue + "" !== element.oldValue) {
                 $elem.val(curValue)
-                oldValue = curValue + ""
+                element.oldValue = curValue + ""
             }
         }
-        var removeFn = $elem.bind("change", updateVModel)
-        data.rollback = function() {
-            $elem.unbind("change", removeFn)
-        }
+        data.bound("change", updateVModel)
         var innerHTML = NaN
         var id = setInterval(function() {
             var currHTML = element.innerHTML
@@ -3016,7 +3029,7 @@
             }
         }, 20)
     }
-    modelBinding.TEXTAREA = modelBinding.INPUT
+    duplexBinding.TEXTAREA = duplexBinding.INPUT
     //============================= event binding =======================
 
     var eventName = {
@@ -3445,6 +3458,7 @@
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;')
                     .replace(/"/g, '&quot;')
+                    .replace(/'/g, "&#39;")//IE下不支持&apos;(单引号)转义
         },
         currency: function(number, symbol) {
             symbol = symbol || "￥"

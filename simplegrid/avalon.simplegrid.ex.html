@@ -4,40 +4,12 @@
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <script src="../avalon.js"></script>
-        <script>
-            require(["simplegrid/avalon.simplegrid"], function() {
-                avalon.define("test", function(vm) {
-                    vm.simplegrid = {
-                        columns: ["xxx", "yyy", {
-                                field:"zzz",
-                                align:"center"
-                        }],
-                        store: [{
-                                xxx: 1, yyy: 1, zzz: 1
-                            },
-                            {
-                                xxx: 2, yyy: 2, zzz: 2
-                            },
-                            {
-                                xxx: 3, yyy: 3, zzz: 3
-                            },
-                            {
-                                xxx: 4, yyy: 4, zzz: 4
-                            }
-
-                        ]
-                    }
-
-                    vm.$skipArray = ["simplegrid"]
-                })
-                avalon.scan()
-            })
-        </script>
     </head>
-    <body ms-controller="test">
-        <div ms-widget="simplegrid">
-
-        </div>
+    <body>
+        <ul>
+            <li><a href="avalon.simplegrid.ex1.html">只有columns与store</li>
+            <li><a href="avalon.simplegrid.ex2.html">指定类名、align与columnsOrder</li>
+            <li><a href="avalon.simplegrid.ex3.html">指定列宽</li>
+        </ul>
     </body>
 </html>

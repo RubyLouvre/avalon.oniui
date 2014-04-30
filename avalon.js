@@ -246,6 +246,7 @@
             el.detachEvent("on" + type, fn || noop)
         },
         css: function(node, name, value) {
+            var _name =name
             if (node instanceof avalon) {
                 node = node[0]
             }
@@ -2462,7 +2463,7 @@
         "on": function(callback, elem, data) {
             var fn = data.evaluator
             var args = data.args
-            var vmodels = data.vmodels || []
+            var vmodels = data.vmodels
             if (!data.hasArgs) {
                 callback = function(e) {
                     return fn.apply(0, args).call(this, e)
@@ -2472,11 +2473,8 @@
                     return fn.apply(this, args.concat(e))
                 }
             }
-            try {
-                elem.$vmodel = vmodels[0]
-                elem.$vmodels = vmodels
-            } catch (e) {
-            }
+            elem.$vmodel = vmodels[0]
+            elem.$vmodels = vmodels
             if (typeof data.specialBind === "function") {
                 data.specialBind(elem, callback)
             } else {
@@ -2767,7 +2765,7 @@
                 element.removeAttribute("ms-widget")
                 var vmodel = constructor(element, data, vmodels) || {}//防止组件不返回VM
                 data.evaluator = noop
-                element.msData["ms-widget-id"] = vmodel.$id
+                element.msData["ms-widget-id"] = vmodel.$id || ""
                 if (vmodel.hasOwnProperty("$init")) {
                     vmodel.$init()
                 }

@@ -2,15 +2,20 @@
     <div class="ui-grid-thead-wrapper">
         <table>
             <tr>
-                <td  ms-repeat="columns"
-                     data-repeat-rendered="getRealWidth"
-                     ms-css-height="headerHeight"  
-                     ms-css-width="el.width" 
-                     ms-attr-align="el.align" 
-                     ms-class="{{el.className}}" 
-                     ms-visible="el.toggle" 
-                     ms-css="el.className"
-                     ms-data-vm="el">{{el.text}}</td>
+                <td data-repeat-rendered="getRealWidth"
+                    ms-repeat="columns"
+                    ms-css-height="headerHeight"  
+                    ms-css-width="el.width" 
+                    ms-attr-align="el.align" 
+                    ms-class="{{el.className}}" 
+                    ms-visible="el.toggle" 
+                    ms-data-vm="el">{{el.text}}
+                    <button  ms-click="sortColumn(el)"
+                             ms-if="el.sortable" 
+                             ms-class="sort_{{el.sortAsc ? 'asc': 'desc'}}">
+                        {{el.sortAsc}}
+                    </button>
+                </td>
             </tr>
         </table>
     </div>

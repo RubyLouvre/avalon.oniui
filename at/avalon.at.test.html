@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link href="../mocha/mocha.css" rel="stylesheet" type="text/css" />
+
+        <script src="../mocha/jquery.js"></script>
+        <script src="../mocha/mocha.js"></script>
+        <script src="../mocha/expect.js"></script>
+        <script src="../avalon.js"></script>
+        <script>
+            function fireKeyUp(elem, keyCode) {
+                //https://gist.github.com/termi/4654819
+                var oEvent
+                try {
+                    // FF
+                    oEvent = document.createEvent("KeyEvents")//firefox 
+                    oEvent.initKeyEvent("keyup", true, true, document.defaultView, false, false, false, false, keyCode, 0)
+                } catch (ex) {
+                    try {
+                        //http://stackoverflow.com/questions/10455626/keydown-simulation-in-chrome-fires-normally-but-not-the-correct-key
+                        //http://www.w3.org/TR/DOM-Level-3-Events/#idl-interface-KeyboardEvent-initializers
+                        oEvent = document.createEvent("KeyboardEvent")
+                        Object.defineProperty(oEvent, 'keyCode', {
+                            get: function() {
+                                return this.keyCodeVal;
+                            }
+                        });
+                        Object.defineProperty(oEvent, 'which', {
+                            get: function() {
+                                return this.keyCodeVal;
+                            }
+                        });
+                        oEvent.initKeyboardEvent("keyup", true, true, document.defaultView, false, false, false, false, keyCode, keyCode)
+                        oEvent.keyCodeVal = keyCode
+                    } catch (ex3) {
+                    }
+                }
+                if (oEvent) {
+                    elem.dispatchEvent(oEvent)
+                } else if (document.createEventObject) {
+                    //http://stackoverflow.com/questions/7518664/how-can-i-generate-a-keyup-event-with-a-specific-keycode-in-ie8
+                    oEvent = document.createEventObject("KeyboardEvent");
+                    oEvent.keyCode = keyCode;
+                    elem.fireEvent("onkeyup", oEvent);
+                }
+            }
+            require(["ready!", "./at/avalon.at"], function() {
+
+                avalon.define("test", function(vm) {
+                    vm.at = {
+                        datalist: ["aaa", "aab", "aaaa", "aac", "ccc", "cc1", "ccaaccaa"],
+                        minLength: 0
+                    }
+                    vm.$skipArray = ["at"]
+                })
+
+                avalon.scan()
+                mocha.ui('bdd')
+                mocha.setup({timeout: 100000})
+
+                describe('测试@组件', function() {
+                    it("async", function(done) {
+                        var elem = $("#test")[0]
+                        elem.value = "xxx@a"
+                        setTimeout(function() {
+                            fireKeyUp(elem, 11)
+
+                            expect($(".ui-at-item.hover").index()).to.be(0)
+                            setTimeout(function() {
+                                fireKeyUp(elem, 40)
+                                expect($(".ui-at-item.hover").index()).to.be(1)
+                                setTimeout(function() {
+                                    fireKeyUp(elem, 40)
+                                    expect($(".ui-at-item.hover").index()).to.be(2)
+                                    setTimeout(function() {
+                                        fireKeyUp(elem, 38)
+                                        expect($(".ui-at-item.hover").index()).to.be(1)
+                                        fireKeyUp(elem, 13)
+                                        expect(elem.value).to.be("xxx@\u200caab")
+                                        done()
+                                    }, 1000)
+
+                                }, 1000)
+
+                            }, 1000)
+
+                        }, 100)
+
+                    })
+
+                })
+                mocha.run()
+
+
+            })
+
+        </script>
+    </head>
+    <body>
+        <p>mocha 在浏览器的测试文档见<a href="http://visionmedia.github.io/mocha/#browser-support">这里</a></p>
+        <div><input ms-controller="test" ms-widget="at,at1" id="test"></div>
+        <div id="mocha"></div>
+
+    </body>
+</html>

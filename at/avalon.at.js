@@ -1,9 +1,9 @@
 //avalon 1.2.5 2014.4.2
-define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
+define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
     var arr = tmpl.split("MS_OPTION_STYLE")
     var cssText = arr[1].replace(/<\/?style>/g, "")
     var styleEl = document.getElementById("avalonStyle")
-    var popupHTML = arr[0]
+    var template = arr[0]
     try {
         styleEl.innerHTML += cssText
     } catch (e) {
@@ -12,17 +12,16 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
 
     var widget = avalon.ui.at = function(element, data, vmodels) {
         var options = data.atOptions, $element = avalon(element), keyupCallback, blurCallback, popup
-        if (!options.popupHTML) {
-            options.popupHTML = popupHTML
-        }
+        options.template = options.getTemplate(template, options)
+
         var lastModified = new Date - 0//上次更新时间
         var vmodel = avalon.define(data.atId, function(vm) {
 
             avalon.mix(vm, options)
 
-            vm.$skipArray = ["at", "widgetElement", "datalist", "popupHTML"]
+            vm.$skipArray = ["at", "widgetElement", "datalist", "template"]
             vm.widgetElement = element
-
+            var bdoName = document.documentMode ? "bdo" : "bdi"
             vm.$init = function() {
                 var _vmodels = [vmodel].concat(vmodels)
                 blurCallback = $element.bind("blur", function(e) {
@@ -30,7 +29,6 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                         vmodel.toggle = false
                     }
                 })
-
                 keyupCallback = $element.bind("keyup", function(e) {
                     var value = this.value
                     var at = options.at
@@ -54,7 +52,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                             if (sington) {
                                 str = "<wbr>" + str //防止@出现在最前面
                             }
-                            str = str.replace(new RegExp(escapeRegExp("<wbr>" + at + "<wbr>"), "img"), "<bdo>" + at + "</bdo>")
+                            str = str.replace(new RegExp(escapeRegExp("<wbr>" + at + "<wbr>"), "img"), "<" + bdoName + ">" + at + "</" + bdoName + ">")
 
                             //创建弹出层
                             popup = vmodel.$popup.call(this, str)
@@ -119,6 +117,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
             vm.$remove = function() {
                 avalon(element).unbind("keyup", keyupCallback).unbind("blur", blurCallback)
                 vm.toggle = false
+                avalon.log("at $remove")
             }
 
             vm.$popup = function(str) {
@@ -150,23 +149,25 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
                 //取得textarea,input在页面上的坐标
                 var offset = avalon(this).offset()
                 var fakeRect = fakeTextArea.getBoundingClientRect()
-                var bdos = fakeTextArea.getElementsByTagName("bdo")
+                var bdos = fakeTextArea.getElementsByTagName(bdoName)
                 var bdo = bdos[bdos.length - 1]
+
                 //高亮@所在bdo元素，然后通过Range.getBoundingClientRect取得它在视口的坐标
                 if (document.createRange && document.documentMode != 9) {//如果是IE10+或W3C
                     var range = document.createRange();
                     range.selectNode(bdo)
+                    var rangeRect = range.getBoundingClientRect()
                 } else {
-                    var range = document.selection.createRange().duplicate()
-                    range.moveToElementText(bdo)
+                    //var range = document.selection.createRange().duplicate()
+                    //range.moveToElementText(bdo)
+                    rangeRect = bdo.getBoundingClientRect()
                 }
                 //高亮@所在bdo元素在测量用的DIV的坐标
-                var rangeRect = range.getBoundingClientRect()
                 var top = rangeRect.bottom - fakeRect.top
                 var left = rangeRect.left - fakeRect.left
                 //创建弹出菜单
                 popup = document.createElement("div")
-                popup.innerHTML = vmodel.popupHTML
+                popup.innerHTML = vmodel.template
                 document.body.appendChild(popup)
                 popup.className = "ui-at"
                 popup.setAttribute("ms-visible", "toggle")
@@ -220,7 +221,7 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
         at: "@", //默认的标识符,
         datalist: [], //字符串数组，不可监控，(名字取自HTML的datalist同名元素)
         _datalist: [], //实际是应用于模板上的字符串数组，它里面的字符可能做了高亮处理
-        popupHTML: "", //弹出层的模板，如果为空，使用默认模板，注意要在上面添加点击或hover处理
+        template: "", //弹出层的模板，如果为空，使用默认模板，注意要在上面添加点击或hover处理
         toggle: false, //用于控制弹出层的显示隐藏
         activeIndex: 0, //弹出层里面要高亮的列表项的索引值
         query: "", //@后的查询字符串
@@ -230,6 +231,9 @@ define(["avalon", "text!avalon.at.popup.html"], function(avalon, tmpl) {
         delay: 500, //我们是通过$update方法与后台进行AJAX连接，为了防止输入过快导致频繁，需要指定延时毫秒数
         //远程更新函数,与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行$filter、$highlight操作
         $update: avalon.noop,
+        getTemplate: function(str, options){
+            return str
+        },
         //用于对datalist进行过滤排序，将得到的新数组赋给_datalist，实现弹出层的更新
         $filter: function(opts) {
             //opts实质上就是vmodel，但由于在IE6-8下，this不指向调用者，因此需要手动传vmodel

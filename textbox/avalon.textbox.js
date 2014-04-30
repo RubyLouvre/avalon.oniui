@@ -1,10 +1,10 @@
-define(["avalon.suggest", "text!avalon.textbox.html"], function(avalon, sourceHTML) {
+define(["./avalon.suggest", "text!./avalon.textbox.html"], function(avalon, sourceHTML) {
 
-    var ttt = sourceHTML.split("MS_OPTION_STYLE"),
-        cssText = ttt[1].replace(/<\/?style>/g, ""),
+    var parseHtmlStruction = sourceHTML.split("MS_OPTION_STYLE"),
+        cssText = parseHtmlStruction[1].replace(/<\/?style>/g, ""),
         styleEl = document.getElementById("avalonStyle"),
-        xxx = ttt[0].split("MS_OPTION_SUGGEST"),
-        suggestHTML = xxx[1];
+        htmlStructArray = parseHtmlStruction[0].split("MS_OPTION_SUGGEST"),
+        suggestHTML = htmlStructArray[1];
 
     try {
         styleEl.innerHTML += cssText ;
@@ -15,8 +15,16 @@ define(["avalon.suggest", "text!avalon.textbox.html"], function(avalon, sourceHT
     var widget = avalon.ui.textbox = function(element, data, vmodels) {
         var elemParent = element.parentNode,
             $element = avalon(element),
-            options = data.textboxOptions;
-
+            options = data.textboxOptions,
+            vmSub = "",
+            sourceList = "",
+            inputWraper = "",
+            placeholder = "";
+                    
+        // 解析html并获取需要的Dom对象引用
+        sourceList = avalon.parseHTML(sourceHTML).firstChild ;
+        inputWraper = sourceList.getElementsByTagName("div")[0];
+        placeholder = sourceList.getElementsByTagName("span")[0];
         var vmodel = avalon.define(data.textboxId, function(vm) {
             var msData = element.msData["ms-duplex"];
             avalon.mix(vm, options);
@@ -24,7 +32,6 @@ define(["avalon.suggest", "text!avalon.textbox.html"], function(avalon, sourceHT
             vm.elementDisabled = "";
             vm.toggle = false;
             vm.placehold = options.placeholder;
-
             if (msData) {
                 vmSub = avalon.getModel(msData, vmodels);
                 if(vmSub) {
@@ -35,9 +42,7 @@ define(["avalon.suggest", "text!avalon.textbox.html"], function(avalon, sourceHT
                     })
                 }
             }
-
             msData = element.msData["ms-disabled"] || element.msData["ms-enabled"];
-
             if (msData) {
                 vmSub = avalon.getModel(msData, vmodels);
                 if (vmSub) {
@@ -47,36 +52,31 @@ define(["avalon.suggest", "text!avalon.textbox.html"], function(avalon, sourceHT
                     })
                 }
             }
-
-            // input获得焦点时且输入域值为空时隐藏占位符
+            // input获得焦点时且输入域值为空时隐藏占位符?
             vm.hidePlaceholder = function() {
                 vm.toggle = false;
                 element.focus();
             }
-
             vm.blur = function() {
-                vm.elementDisabled = element.disabled;
-                vm.toggle = element.value != "" ? false : true;
+                // 切换input外层包装的div元素class(ui-textbox-disabled)的显示或隐藏
+                vmodel.elementDisabled = element.disabled;
+                // 切换占位符的显示、隐藏
+                vmodel.toggle = element.value != "" ? false : true;
             }
-
             vm.$remove = function() {
-                var elementInput = element.cloneNode(true);
-                var parentNode = sourceList.parentNode ;
-                parentNode.replaceChild(elemengInput, sourceList);
+                var sourceListParent = sourceList.parentNode;
+                sourceListParent.removeChild(sourceList);
+                sourceList.innerHTML = sourceList.textContent = "";
             }           
-            
             vm.$init = function() {
-
-                var inputWraper = "",
-                    placeholder = "",
-                    vmSub = "",
-                    sourceList = "";
-                // 解析html并获取需要的Dom对象引用
-                sourceList = avalon.parseHTML(sourceHTML).firstChild ;
-                innerWrapper = sourceList.getElementsByTagName("div")[0];
-                placeholder = sourceList.getElementsByTagName("span")[0];
-                element.setAttribute("ms-blur", "blur");
-
+                avalon.bind(element, "blur", vm.blur);
+                /**
+                 * 如果存在suggest配置，说明需要自动补全功能，
+                 * 此处将suggest需要的配置信息保存方便后续传给suggest widget，
+                 * suggest的配置信息通过html结构的
+                 * ms-widget="suggest,suggestId,$suggestopts"中的
+                 * $suggestopts自动获取
+                 **/
                 if (options.suggest) {
                     vm.$suggestopts = {
                         inputElement : element , 
@@ -86,15 +86,16 @@ define(["avalon.suggest", "text!avalon.textbox.html"], function(avalon, sourceHT
                         changed : options.suggestChanged
                     }
                 }
-
                 avalon.ready(function() {
                     var models = [vmodel].concat(vmodels);
                     $element.addClass("ui-textbox-input");
-                    // 包装原始输入框
+                    // 包装原始输入域
                     var tempDiv = document.createElement("div");
                     elemParent.insertBefore(tempDiv, element);
-                    innerWrapper.appendChild(element);
+                    vmodel.msRetain = true;
+                    inputWraper.appendChild(element);
                     elemParent.replaceChild(sourceList, tempDiv);
+                    vmodel.msRetain = false;
                     // 如果存在自动补全配置项的话，添加自动补全widget
                     if (options.suggest) {
                         var suggest = avalon.parseHTML(suggestHTML).firstChild;
@@ -108,11 +109,11 @@ define(["avalon.suggest", "text!avalon.textbox.html"], function(avalon, sourceHT
                 })
             }
         })
-
         return vmodel
     } 
     widget.defaults = {
-        
+        suggest : false,
+        placeholder: ""
     }
     return avalon ;
 })

@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>textbox文档说明</title>
+<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>textbox使用说明</h1>
+        <p>通过给简单的表单输入域设置不同的配置项可以使表单拥有舒服的视觉效果，也可以使其具有提示补全功能，接下来列出textbox组件可以使用的配置项，然后分别举例说明</p>
+        <table>
+            <caption class="example">textbox组件配置项说明：</caption>
+            <thead>
+                <tr>
+                    <th>name</th>
+                    <th>value</th>
+                    <th>description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ms-widget</td>
+                    <td>textbox</td>
+                    <td>给输入域配置textbox ui</td>
+                </tr>
+                <tr>
+                    <td>data-textbox-placeholder</td>
+                    <td>456(or other 用户自定义的占位符配)</td>
+                    <td>置textbox输入框的初始占位符，存在则显示，不存在则隐藏，当focus时隐藏</td>
+                </tr>
+                <tr>
+                    <td>data-text-suggest</td>
+                    <td>"test" || "phone" || other </td>
+                    <td>配置输入框有自动提示补全功能，且提示类型为suggest的属性值，由用户自定义，默认配置为false，也就是不开启自动补全功能</td>
+                </tr>
+                <tr>
+                    <td>data-textbox-suggest-changed</td>
+                    <td>"changeCallback" or other 用户的定义</td>
+                    <td>配置提示补全时切换提示项之后的callback</td>
+                </tr>
+                <tr>
+                    <td>data-textbox-suggest-focus</td>
+                    <td>true</td>
+                    <td>特殊的suggest，当focus时即显示特定的提示列表</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

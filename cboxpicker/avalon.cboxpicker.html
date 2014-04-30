@@ -1,16 +1,16 @@
 <li class="item all" ms-if="!!alltext">
     <label>
         <input type="checkbox" 
-               ms-click="click_all($event)" 
+               ms-click="clickAll($event)" 
                ms-duplex-radio="all" 
-               class="checkbox" /> {{alltext|| "全部"}} 
+               class="checkbox" /> {{alltext}} 
     </label>
 </li>
 <li ms-repeat-cpitem="data" class="item">
     <label>
         <input type="checkbox" 
                ms-checked="checkStatus[cpitem.value||cpitem.text]" 
-               ms-click="click_one($event, $index)"
+               ms-click="clickOne($event, $index)"
                ms-duplex-text="MS_OPTIONS_DUPLEX"
                ms-value="{{cpitem.value||cpitem.text}}" 
                class="checkbox" /> 

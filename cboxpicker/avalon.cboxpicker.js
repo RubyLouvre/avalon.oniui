@@ -28,6 +28,7 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
             avalon.mix(vm, options);
             vm.$skipArray = ["widgetElement", "template"];
             vm.widgetElement = element;
+            vm.alltext = options.alltext !== undefined ? options.alltext : options.allText;
             // 判断是否全部选中
             vm.isAll = function() {
                 var arr = vm.data.$model.map(function(obj, index){
@@ -44,7 +45,7 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
                 return allChecked;
             }
             // 点击全选按钮之后的回调
-            vm.click_all = function(event) {
+            vm.clickAll = function(event) {
                 var checkStatus = event.target.checked;
                 avalon.each(vm.checkStatus.$model, function(key, value) {
                     vm.checkStatus[key] = checkStatus;
@@ -63,7 +64,7 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
                 onselect.apply(0, [vm.data.$model, checkStatus, event.target]);
             }
             // 选中某一项之后的回调操作
-            vm.click_one = function(event,index) {
+            vm.clickOne = function(event,index) {
                 vm.checkStatus[vm.data[index].$model.value] = event.target.checked;
                 onselect.apply(0, [vm.data.$model, event.target.checked, event.target]);
             }
@@ -73,6 +74,7 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
                 avalon.scan(element, [vmodel].concat(vmodels));
             };  
             vm.$remove = function() {
+                console.log("$remove");
                 element.innerHTML = "";
             };
         })
@@ -102,7 +104,6 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
             onfetch.apply(0, [function(data) {
                 vmodel.data = data;
                 syncCheckStatus(vmodel);
-                xssFilter(vmodel);
             }])
         } else {
             var fragment = document.createElement("div");
@@ -143,7 +144,7 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
                         txt.replace(/^\s+/, "").replace(/\s+$/,"");
                         // 将提取出来的数据保存在data中
                         data.push({
-                            text: (!~txt.indexOf(options.alltext || "全部") && txt),
+                            text: (!~txt.indexOf(vmodel.allText) && txt),
                             value: input.value || txt
                         });
                     }
@@ -151,7 +152,6 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
             }
             vmodel.data = data;
             syncCheckStatus();
-            xssFilter();
         }
         /* 根据duplex的配置信息判断data中哪些选项是被选中的，哪些是不被选中的，不被选中的选项的key对应0，选中选项的key对应其在duplex中的位置取反 */
         function syncCheckStatus() {
@@ -167,32 +167,6 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
             vmodel.checkStatus = obj;
             vmodel.all = vmodel.isAll();
         }
-        function excapeHTML(val) {
-            // 防止grid xss注入
-            var rAmp = /&/g,
-                rLt = /</g,
-                rGt = />/g,
-                rApos = /\'/g,
-                rQuot = /\"/g,
-                hChars = /[&<>\"\']/;
-
-            val = String((val === null || val === undefined) ? '' : val);
-            return hChars.test(val) ?
-                val
-                    .replace(rAmp, '&amp;')
-                    .replace(rLt, '&lt;')
-                    .replace(rGt, '&gt;')
-                    .replace(rApos, '&#39;')
-                    .replace(rQuot, '&quot;') :
-                val; 
-        }
-        function xssFilter() {
-            avalon.each(vmodel.data, function(index, obj) {
-                if (obj.text) {
-                    obj.text = excapeHTML(obj.text);
-                }
-            })
-        }
         return vmodel;
     }
     widget.version = 1.0
@@ -202,7 +176,7 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
         _val: [], // 默认双向绑定的变量
         duplex: "_val", // 通过此配置实现双向绑定，从而判断是否全选
         checkStatus: {}, // 通过此对象判断选框的选中状态，从而选中或者不选中对应选框
-        alltext: "全部", // 显示"全部"按钮，方便进行全选或者全不选操作
+        allText: "全部", // 显示"全部"按钮，方便进行全选或者全不选操作
         type: "" , // 内置type为week时的data，用户只需配置type为week即可显示周一到周日的选项 
         /*
             通过配置fetch来获得要显示的数据，数据格式必须如下所示：

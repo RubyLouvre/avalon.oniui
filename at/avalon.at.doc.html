@@ -4,51 +4,51 @@
         <title>avalon类似新浪微博的@提示插件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-         <script src="../highlight/shCore.js">
-            
+        <script src="../highlight/shCore.js">
+
         </script>
     </head>
     <body>
         <h3> 默认参数</h3>
         <table width="80%" border="1">
             <tr>
-                <th>名字</th> <th>说明</th>
+                <th>名字</th><th>默认值</th> <th>说明</th>
             </tr>
             <tr>
-                <td>at</td> <td>"@",默认的标识符,</td>
+                <td>at</td><td>"@"</td> <td>默认的标识符,</td>
             </tr>
             <tr>  
-                <td>datalist</td> <td>字符串数组，不可监控，(名字取自HTML的datalist同名元素)</td> 
+                <td>datalist</td><td>[]</td> <td>字符串数组，不可监控，(名字取自HTML的datalist同名元素)</td> 
             </tr>
             <tr>   
-                <td>template</td> <td>"",弹出层的模板，如果为空，使用默认模板，注意要在上面添加点击或hover处理</td> 
+                <td>template</td> <td>""</td><td>弹出层的模板，如果为空，使用默认模板，注意要在上面添加点击或hover处理</td> 
             </tr>
             <tr>   
-                <td>toggle</td> <td>false,用于控制弹出层的显示隐藏</td> 
+                <td>toggle</td>  <td>false</td><td>f用于控制弹出层的显示隐藏</td> 
             </tr>
             <tr>   
-                <td>limit</td> <td>5，弹出层里面总共有多少个列表项</td> 
+                <td>limit</td> <td>5</td> <td>弹出层里面总共有多少个列表项</td> 
             </tr>
             <tr>   
-                <td>maxLength</td> <td>1,  @后的查询字符串的最大长度，注意中间不能有空格</td>  
+                <td>maxLength</td> <td>1</td> <td>  @后的查询字符串的最大长度，注意中间不能有空格</td>  
             </tr>
             <tr>   
-                <td>query</td> <td>"",  @后的查询字符串</td> 
+                <td>query</td>  <td>""</td><td>  @后的查询字符串</td> 
             </tr>
             <tr>   
-                <td>maxLength</td> <td> 20, @后的查询字符串只有出现了多少个字符后才显示弹出层</td> 
+                <td>maxLength</td><td>20</td> <td> @后的查询字符串只有出现了多少个字符后才显示弹出层</td> 
             </tr>
             <tr>   
-                <td>delay</td> <td> 500,我们是通过$update方法与后台进行AJAX连接，为了防止输入过快导致频繁，需要指定延时毫秒数</td> 
+                <td>delay</td> <td>500</td><td> 我们是通过$update方法与后台进行AJAX连接，为了防止输入过快导致频繁，需要指定延时毫秒数</td> 
             </tr>
             <tr>   
-                <td>$update</td> <td> 远程更新函数, 与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行$filter、$highlight操作</td> 
+                <td>$update</td><td>空函数</td> <td> 远程更新函数, 与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行$filter、$highlight操作</td> 
             </tr>
             <tr>   
-                <td>$filter</td> <td> 用于对datalist进行过滤排序，将得到的新数组赋给_datalist，实现弹出层的更新</td>
+                <td>$filter</td> <td>defaults.$filter</td> <td> 用于对datalist进行过滤排序，将得到的新数组赋给_datalist，实现弹出层的更新</td>
             </tr>
             <tr>   
-                <td>$highlight</td> <td> 用于对_datalist中的字符串进行高亮处理，item为_datalist中的每一项，str为查询字符串</td>  
+                <td>$highlight</td><td>defaults.$highlight</td> <td> 用于对_datalist中的字符串进行高亮处理，item为_datalist中的每一项，str为查询字符串</td>  
             </tr>
 
         </table>

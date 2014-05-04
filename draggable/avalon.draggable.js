@@ -355,7 +355,6 @@ define(["avalon"], function(avalon) {
             var a = o.containment
             
             data.containment = [a[0],a[1],a[2]-elemWidth, a[3]-elemHeight]
-            console.log( data.containment)
             return;
         }
 

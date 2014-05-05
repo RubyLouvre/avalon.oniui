@@ -41,7 +41,7 @@ define(["avalon"], function(avalon) {
         return result
     }
     var draggable = avalon.bindingHandlers.draggable = function(data, vmodels) {
-        var args = data.value.match(avalon.rword) || [""]
+        var args = data.value.match(avalon.rword) || ["$","draggable"]
         var ID = args[0].trim(), opts = args[1], model, vmOptions
         if (ID && ID != "$") {
             model = avalon.vmodels[ID]//如果指定了此VM的ID

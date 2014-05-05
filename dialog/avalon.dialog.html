@@ -1,0 +1,192 @@
+<div class="ui-dialog-layout" ms-visible="toggle"></div>
+MS_OPTION_WIDGET
+<div ms-widget="dialog,MS_OPTION_ID" data-dialog-title="MS_OPTION_TITLE" data-dialog-submit="MS_OPTION_SUBMIT" data-dialog-cancel="MS_OPTION_CANCEL" data-dialog-type="MS_OPTION_TYPE" ms-visible="toggle" data-dialog-width="MS_OPTION_WIDTH">MS_OPTION_DIALOG_CONTENT</div>
+MS_OPTION_INNERWRAPPER
+<div class="ui-dialog-inner"></div>
+MS_OPTION_HEADER
+<div class="ui-dialog-header">
+    <div class="ui-dialog-close" ms-click="MS_OPTION_CANCEL" ms-if="showClose">
+        <i class="ui-icon ui-icon-times"></i>
+    </div>
+    <div class="ui-dialog-title">{{ title }}</div>
+</div>
+MS_OPTION_CONTENT
+<div class="ui-dialog-content"></div>
+MS_OPTION_FOOTER
+<div class="ui-dialog-footer clrfix">
+    <div class="ui-dialog-btns">
+        <button class="ui-btn ui-btn-primary" ms-click="MS_OPTION_SUBMIT">确定</button>
+        <button class="ui-btn" ms-if="!typeAlert" ms-click="MS_OPTION_CANCEL">取消</button>
+    </div>
+</div>
+MS_OPTION_STYLE
+<style>
+@font-face {
+  font-family: fontawesome;
+  font-style: normal;
+  font-weight: normal;
+  src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?v=4.0.3');
+  src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?#iefix&v=4.0.3') format('embedded-opentype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.woff?v=4.0.3') format('woff'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.ttf?v=4.0.3') format('truetype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular') format('svg');
+}
+.ui-icon {
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+  font-family: fontawesome !important;
+  font-size: 14px;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 18px;
+  vertical-align: middle;
+}
+a .ui-icon,
+.ui-btn .ui-icon {
+  cursor: pointer;
+}
+.ui-btn {
+  display: inline-block;
+  *display: inline;
+  vertical-align: middle;
+  *zoom: 1;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  border-radius: 2px;
+  color: #333333;
+  cursor: pointer;
+  font-size: 12px;
+  height: 26px;
+  outline: none;
+  overflow: visible;
+  _overflow-y: hidden;
+  padding: 0 10px;
+  text-decoration: none;
+}
+.ui-btn:hover {
+  box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1);
+  background-color: #f8f8f8;
+  border-color: #bbbbbb;
+  color: #333333;
+}
+.ui-btn .ui-icon {
+  line-height: 15px;
+}
+a.ui-btn,
+span.ui-btn {
+  height: 24px;
+  line-height: 24px;
+}
+.ui-btn-primary {
+  background-color: #58b359;
+  border-color: #45a846;
+  color: #ffffff;
+}
+.ui-btn-primary:hover {
+  background-color: #68c969;
+  border-color: #3e973e;
+  color: #ffffff;
+}
+.clrfix {
+  zoom: 1;
+}
+.clrfix:before,
+.clrfix:after {
+  content: '';
+  display: block;
+}
+.clrfix:after {
+  clear: both;
+}
+.ui-dialog-layout {
+    display: none;
+    position: absolute;
+    background: #000;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    opacity: 0.6;
+    filter: Alpha(opacity=60);
+}
+.ui-dialog {
+    position: absolute;
+}
+.ui-dialog-inner {
+  box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+}
+.ui-dialog-vertical-center-transform {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+}
+.ui-dialog-header {
+  background-color: #f3f3f3;
+}
+.ui-dialog-close {
+  display: inline;
+  float: right;
+  background-color: #f3f3f3;
+  color: #666666;
+  cursor: pointer;
+  margin-top: 5px;
+  padding: 1px 10px 1px 9px;
+}
+.ui-dialog-close .ui-icon {
+  cursor: pointer;
+}
+.ui-dialog-close:hover {
+  background-color: #ffffff;
+  border: 1px solid #dedede;
+  border-right: 0;
+  padding: 0 10px 0 8px;
+}
+.ui-dialog-title {
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.ui-dialog-content {
+  font-size: 12px;
+  padding: 17px 20px;
+}
+.ui-dialog-footer {
+  background-color: #f8f8f8;
+  padding: 8px 5px;
+}
+.ui-dialog-msg {
+  display: inline;
+  float: left;
+  font-size: 12px;
+  margin-top: 4px;
+}
+.ui-dialog-btns {
+  display: inline;
+  float: right;
+  font-size: 0;
+}
+.ui-dialog-btns .ui-btn {
+  margin-left: 10px;
+}
+.ui-dialog-footer-small {
+  padding-bottom: 4px;
+  padding-top: 4px;
+}
+.ui-dialog-footer-small .ui-dialog-msg {
+  margin-top: 2px;
+}
+.ui-dialog-footer-small .ui-btn {
+  margin-left: 5px;
+}
+</style>

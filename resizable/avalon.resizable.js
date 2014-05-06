@@ -1,6 +1,112 @@
 define(["../draggable/avalon.draggable"], function(avalon) {
 
-    var defaults = {
+
+    var draggable = avalon.bindingHandlers.draggable;
+    var resizable = avalon.bindingHandlers.resizable = function(data, vmodels) {
+        var args = data.value.match(avalon.rword) || ["$", "resizable"]
+        var ID = args[0].trim(), opts = args[1], model, vmOptions
+        if (ID && ID != "$") {
+            model = avalon.vmodels[ID]//如果指定了此VM的ID
+            if (!model) {
+                data.remove = false
+                return
+            }
+        }
+        if (!model) {//如果使用$或绑定值为空，那么就默认取最近一个VM，没有拉倒
+            model = vmodels.length ? vmodels[0] : null
+        }
+        var fnObj = model || {}
+        if (opts && model && typeof model[opts] === "object") {//如果指定了配置对象，并且有VM
+            vmOptions = model[opts]
+            if (vmOptions.$model) {
+                vmOptions = vmOptions.$model
+            }
+            fnObj = vmOptions
+        }
+        var element = data.element
+        var options = avalon.mix({}, resizable.defaults, vmOptions || {}, avalon.getWidgetData(element, "resizable"));
+        //修正drag,stop为函数
+        "stop,start,resize".replace(avalon.rword, function(name) {
+            var method = options[name]
+            if (typeof method === "string") {
+                if (typeof fnObj[method] === "function") {
+                    options[name] = fnObj[method]
+                } else {
+                    options[name] = avalon.noop
+                }
+            }
+        })
+        options.handles = options.handles.match(avalon.rword) || ["all"];
+        options._aspectRatio = !!options.aspectRatio
+        //element.setAttribute("data-draggable-before-start","start")
+        //element.setAttribute("data-draggable-start","start")
+        var target = avalon(element)
+        target.bind("mousemove", function(e) {
+            if (options.started)
+                return;
+            var dir = getDirection(e, target, options)
+            options._cursor = target.css("cursor"); //保存原来的光标样式
+            if (dir == "") {
+                target.css("cursor", "default");
+            } else {
+                target.css("cursor", dir + "-resize");
+            }
+        })
+
+        target.bind("mouseleave", function(e) {
+            target.css("cursor", options._cursor); //还原光标样式
+        })
+        var body = document.body
+        //在dragstart回调中,我们通过draggable已经设置了
+        //data.startPageX = event.pageX;    data.startPageY = event.pageY;
+        //data.originalX = offset.left; data.originalY = offset.top;
+        options.beforeStart = function(event, data) {
+            var target = data.$element;
+            data.dragX = data.dragY = false
+            var dir = getDirection(event, target, data);
+            if (dir == '')
+                return;
+            avalon.mix(data, {
+                dir: dir,
+                startResizeLeft: getCssValue(target, "left"),
+                startResizeTop: getCssValue(target, "top"),
+                startResizeWidth: target.width(),
+                startResizeHeight: target.height()
+            })
+            //开始缩放时的位置大小
+            "startResizeLeft,startResizeTop,startResizeWidth,startResizeHeight".replace(avalon.rword, function(word) {
+                data[word.replace("startR", "r")] = data[word];
+            })
+            //等比例缩放
+            data.aspectRatio = (typeof data.aspectRatio === "number") ? data.aspectRatio : ((data.startResizeWidth / data.startResizeHeight) || 1);
+            event.type = "resizestart";
+            //data.start.call(target[0], event, data); //触发用户回调
+            avalon(body).css('cursor', dir + '-resize');
+        }
+        options.drag = function(event, data) {
+            if (data.dir) {
+                var target = data.$element;
+                refresh(event, target, data);
+                event.type = "resize";
+                data.resize.call(target[0], event, data); //触发用户回调
+            }
+        }
+        options.beforeStop = function(event, data) {
+            if (data.dir) {
+                var target = data.$element;
+                refresh(event, target, data);
+                delete data.dir;
+                event.type = "resizeend";
+                //   data.stop.call(target[0], event, data); //触发用户回调
+                avalon(body).css("cursor", "default");
+            }
+        }
+        data.value = ""
+        data.draggable = options
+        draggable(data, vmodels)
+
+    }
+    resizable.defaults = {
         handles: "n,e,s,w,ne,se,sw,nw",
         maxHeight: 10000,
         maxWidth: 10000,
@@ -20,27 +126,27 @@ define(["../draggable/avalon.draggable"], function(avalon) {
      */
 
     function getDirection(e, target, data) {
-        var dir = '';
+        var dir = "";
         var offset = target.offset();
-        var width = target.outerWidth();
-        var height = target.outerHeight();
+        var width = target[0].offsetWidth;
+        var height = target[0].offsetHeight;
         var edge = data.edge;
         if (e.pageY > offset.top && e.pageY < offset.top + edge) {
-            dir += 'n';
+            dir += "n";
         } else if (e.pageY < offset.top + height && e.pageY > offset.top + height - edge) {
-            dir += 's';
+            dir += "s";
         }
         if (e.pageX > offset.left && e.pageX < offset.left + edge) {
-            dir += 'w';
+            dir += "w";
         } else if (e.pageX < offset.left + width && e.pageX > offset.left + width - edge) {
-            dir += 'e';
+            dir += "e";
         }
         for (var i = 0, handle; handle = data.handles[i++]; ) {
-            if (handle == 'all' || handle == dir) {
+            if (handle == "all" || handle == dir) {
                 return dir;
             }
         }
-        return '';
+        return "";
     }
 
     function getCssValue(el, css) { //对样式值进行处理,强制转数值
@@ -53,12 +159,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
     }
 
     function refresh(event, target, data) { //刷新缩放元素
-        var b = data.b || {
-            minWidth: data.minWidth,
-            maxWidth: data.maxWidth,
-            minHeight: data.minHeight,
-            maxHeight: data.maxHeight
-        }
+        var b = data
         if (data._aspectRatio || event.shiftKey) {
             var aspest = true,
                     pMinWidth = b.minHeight * data.aspectRatio,
@@ -81,88 +182,48 @@ define(["../draggable/avalon.draggable"], function(avalon) {
         }
 
         if (data.dir.indexOf("e") != -1) {
-            var width = data.startWidth + event.pageX - data.startX;
+            var width = data.startResizeWidth + event.pageX - data.startPageX;
             width = Math.min(Math.max(width, b.minWidth), b.maxWidth);
-            data.width = width;
+            data.resizeWidth = width;
             if (aspest) {
-                data.height = width / data.aspectRatio;
+                data.resizeHeight = width / data.aspectRatio;
             }
         }
         if (data.dir.indexOf("s") != -1) {
-            var height = data.startHeight + event.pageY - data.startY;
+            var height = data.startResizeHeight + event.pageY - data.startPageY;
             height = Math.min(Math.max(height, b.minHeight), b.maxHeight);
-            data.height = height;
+            data.resizeHeight = height;
             if (aspest) {
-                data.width = height * data.aspectRatio;
+                data.resizeWidth = height * data.aspectRatio;
             }
         }
         if (data.dir.indexOf("w") != -1) {
-            data.width = data.startWidth - event.pageX + data.startX;
-            if (data.width >= b.minWidth && data.width <= b.maxWidth) {
-                data.left = data.startLeft + event.pageX - data.startX;
+            data.resizeWidth = data.startResizeWidth - event.pageX + data.startPageX;
+            if (data.resizeWidth >= b.minWidth && data.resizeWidth <= b.maxWidth) {
+                data.resizeLeft = data.startResizeLeft + event.pageX - data.startPageX;
                 if (aspest) {
-                    data.top = data.startTop + (event.pageX - data.startX) / data.aspectRatio;
+                    data.resizeTop = data.startResizeTop + (event.pageX - data.startPageX) / data.aspectRatio;
                 }
             }
         }
         if (data.dir.indexOf("n") != -1) {
-            data.height = data.startHeight - event.pageY + data.startY;
-            if (data.height >= b.minHeight && data.height <= b.maxHeight) {
-                data.top = data.startTop + event.pageY - data.startY;
+            data.resizeHeight = data.startResizeHeight - event.pageY + data.startPageY;
+            if (data.resizeHeight >= b.minHeight && data.resizeHeight <= b.maxHeight) {
+                data.resizeTop = data.startResizeTop + event.pageY - data.startPageY;
                 if (aspest) {
-                    data.left = data.startLeft + (event.pageY - data.startY) * data.aspectRatio;
+                    data.resizeLeft = data.startResizeLeft + (event.pageY - data.startPageY) * data.aspectRatio;
                 }
             }
         }
-        target.css({
-            left: data.left,
-            top: data.top,
-            width: data.width,
-            height: data.height
-        });
+        var obj = {
+            left: data.resizeLeft,
+            top: data.resizeTop,
+            width: data.resizeWidth,
+            height: data.resizeHeight
+        }
+        for (var i in obj) {
+            target.css(i, obj[i])
+        }
     }
-    var draggable = avalon.bindingHandlers.draggable;
-    avalon.bindingHandlers.resizable = function(data, vmodels) {
-        var args = data.value.match(avalon.rword) || ["$", "resizable"]
-        var ID = args[0].trim(), opts = args[1], model, vmOptions
-        if (ID && ID != "$") {
-            model = avalon.vmodels[ID]//如果指定了此VM的ID
-            if (!model) {
-                data.remove = false
-                return
-            }
-        }
-        if (!model) {//如果使用$或绑定值为空，那么就默认取最近一个VM，没有拉倒
-            model = vmodels.length ? vmodels[0] : null
-        }
-        var fnObj = model || {}
-        if (opts && model && typeof model[opts] === "object") {//如果指定了配置对象，并且有VM
-            vmOptions = model[opts]
-            if (vmOptions.$model) {
-                vmOptions = vmOptions.$model
-            }
-            fnObj = vmOptions
-        }
-        var element = data.element
-        var options = avalon.mix({}, defaults, vmOptions || {}, avalon.getWidgetData(element, "resizable"));
-        //修正drag,stop为函数
-        "stop,start,resize".replace(avalon.rword, function(name) {
-            var method = options[name]
-            if (typeof method === "string") {
-                if (typeof fnObj[method] === "function") {
-                    options[name] = fnObj[method]
-                } else {
-                    options[name] = avalon.noop
-                }
-            }
-        })
-        console.log(options)
-        
-        
-
-
-
-    }
-
     return avalon
 })

@@ -43,7 +43,7 @@ define(["avalon"], function(avalon) {
         if (!model) {//如果使用$或绑定值为空，那么就默认取最近一个VM，没有拉倒
             model = vmodels.length ? vmodels[0] : null
         }
-        var fnObj = model || data
+        var fnObj = model || {}
         if (model && typeof model[opts] === "object") {//如果指定了配置对象，并且有VM
             vmOptions = model[opts]
             if (vmOptions.$model) {
@@ -53,15 +53,13 @@ define(["avalon"], function(avalon) {
         }
         var element = data.element
         var $element = avalon(element)
-        var options = avalon.mix({}, defaults, vmOptions || {}, avalon.getWidgetData(element, "draggable"));
+        var options = avalon.mix({}, defaults, vmOptions || {}, data[opts] || {}, avalon.getWidgetData(element, "draggable"));
         //修正drag,stop为函数
         "drag,stop,start,beforeStart,beforeStop".replace(avalon.rword, function(name) {
             var method = options[name]
             if (typeof method === "string") {
                 if (typeof fnObj[method] === "function") {
                     options[name] = fnObj[method]
-                } else {
-                    options[name] = avalon.noop
                 }
             }
         })
@@ -121,6 +119,7 @@ define(["avalon"], function(avalon) {
                     data.started = true
                 }, options.delay)
             }
+      
             var startOffset = $element.offset()
             if (options.ghosting) {
                 var clone = element.cloneNode(true)

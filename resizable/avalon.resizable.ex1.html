@@ -14,8 +14,14 @@
             require(["resizable/avalon.resizable"], function() {
                 avalon.define("test", function(vm) {
                     vm.resizable = {
-                        start: function(){
-                            console.log("111111111111111")
+                        start: function() {
+                            avalon.log("resize start")
+                        },
+                        resize: function() {
+                            avalon.log("resizing")
+                        },
+                        stop: function() {
+                            avalon.log("resize stop")
                         }
                     }
                     vm.$skipArray = ["start"]
@@ -39,6 +45,6 @@
 
         </div>
         <h1>四个方向都可以拖动</h1>
-    
+
     </body>
 </html>

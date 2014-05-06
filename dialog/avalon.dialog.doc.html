@@ -9,7 +9,7 @@
 <body>
     <div class="wrapper">
         <h1>dialog使用说明</h1>
-        <p>dialog组件提供弹窗显示</p>
+        <p>dialog组件提供弹窗显示或者隐藏,通过简单配置可以水平居中显示dialog弹窗，此组件支持弹窗中再弹窗，也可以用来模拟alert的行为，非常方便，下面介绍下如何进行组件配置，可以通过提供的demo更明确的了解它的使用情况</p>
         <table>
             <caption class="example">dialog组件配置项说明：</caption>
             <thead>
@@ -22,93 +22,78 @@
             <tbody>
                 <tr>
                     <td>title</td>
-                    <td></td>
-                    <td></td>
+                    <td>默认""</td>
+                    <td>设置弹窗的标题，通过data-dialog-title配置</td>
                 </tr>
                 <tr>
                     <td>type</td>
-                    <td></td>
-                    <td></td>
+                    <td>默认""</td>
+                    <td>配置弹窗的类型，可以配置为alert来模拟浏览器的alert，通过data-dialog-type="alert"的方式配置，其他的配置无效，也就不需要添加了</td>
                 </tr>
                 <tr>
                     <td>submit</td>
-                    <td></td>
-                    <td></td>
+                    <td>默认"close"</td>
+                    <td>配置点击"确定"按钮后的回调操作，通过data-dialog-submit="xxx"来配置</td>
                 </tr>
                 <tr>
                     <td>cancel</td>
-                    <td></td>
-                    <td></td>
+                    <td>默认"close"</td>
+                    <td>配置点击"取消"或关闭按钮后的回调操作，通过data-dialog-cancel="xxx"来配置</td>
                 </tr>
                 <tr>
                     <td>width</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>_lastContent</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>content</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>_lastHeader</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>header</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>_lastFooter</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>footer</td>
-                    <td></td>
-                    <td></td>
+                    <td>默认480</td>
+                    <td>设置dialog的width，通过data-dialog-width="320"来配置</td>
                 </tr>
                 <tr>
                     <td>show</td>
-                    <td></td>
-                    <td></td>
+                    <td>function</td>
+                    <td>显示dialog</td>
                 </tr>
                 <tr>
                     <td>close</td>
-                    <td></td>
-                    <td></td>
+                    <td>function</td>
+                    <td>隐藏dialog</td>
                 </tr>
                 <tr>
                     <td>setContent</td>
-                    <td></td>
-                    <td></td>
+                    <td>function</td>
+                    <td>动态改变dialog的内容</td>
                 </tr>
                 <tr>
                     <td>setTitle</td>
-                    <td></td>
-                    <td>修改dialog的title</td>
+                    <td>function</td>
+                    <td>动态修改dialog的title</td>
                 </tr>
                 <tr>
                     <td>setModel</td>
-                    <td></td>
+                    <td>function</td>
                     <td>重新渲染模板</td>
                 </tr>
                 <tr>
                     <td>showClose</td>
-                    <td></td>
-                    <td>如果显示模式为alert或者配置了showClose为false，不显示关闭按钮</td>
+                    <td>true</td>
+                    <td>配置dialog是否显示"取消"按钮，通过data-dialog-show-close=false | true来配置，但是如果type为alert，不论showClose为true or false都不会显示"取消"按钮</td>
                 </tr>
                 <tr>
                     <td>typeAlert</td>
-                    <td></td>
-                    <td></td>
+                    <td>默认false</td>
+                    <td>typeAlert为true就不显示“取消”按钮，为false时根据showClose的配置决定是否显示“取消”按钮，默认配置为显示"取消按钮"</td>
+                </tr>
+                <tr>
+                    <td>toggle</td>
+                    <td>false</td>
+                    <td>通过此属性决定dialog的显示或者隐藏状态,默认隐藏</td>
+                </tr>
+                <tr>
+                    <td>widgetElement</td>
+                    <td>element</td>
+                    <td>保留对使用dialog ui元素的引用</td>
+                </tr>
+                <tr>
+                    <td>getTemplate</td>
+                    <td>function</td>
+                    <td>通过此方法配置用户自己的模板</td>
                 </tr>
             </tbody>
         </table>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>draggable</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script src="../avalon.js">
+
+        </script>
+        <script>
+            require(["resizable/avalon.resizable"], function() {
+                avalon.define("test", function(vm) {
+                    vm.resizable = {
+                        start: function(){
+                            console.log("111111111111111")
+                        }
+                    }
+                    vm.$skipArray = ["start"]
+                })
+                avalon.scan()
+            })
+
+        </script>
+        <style>
+            #aaa{
+                width:200px;
+                height: 200px;
+                position: absolute;
+                background: red;
+                z-index: 10;
+            }
+        </style>
+    </head>
+    <body>
+        <div ms-controller="test" ms-resizable=""id="aaa">
+
+        </div>
+        <h1>最简单例子</h1>
+    
+    </body>
+</html>

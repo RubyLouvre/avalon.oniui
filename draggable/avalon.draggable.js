@@ -43,8 +43,8 @@ define(["avalon"], function(avalon) {
         if (!model) {//如果使用$或绑定值为空，那么就默认取最近一个VM，没有拉倒
             model = vmodels.length ? vmodels[0] : null
         }
-        var fnObj = model || {}
-        if (opts && model && typeof model[opts] === "object") {//如果指定了配置对象，并且有VM
+        var fnObj = model || data
+        if (model && typeof model[opts] === "object") {//如果指定了配置对象，并且有VM
             vmOptions = model[opts]
             if (vmOptions.$model) {
                 vmOptions = vmOptions.$model

@@ -38,15 +38,14 @@ define(["../draggable/avalon.draggable"], function(avalon) {
         })
         options.handles = options.handles.match(avalon.rword) || ["all"];
         options._aspectRatio = !!options.aspectRatio
-        //element.setAttribute("data-draggable-before-start","start")
-        //element.setAttribute("data-draggable-start","start")
+
         var target = avalon(element)
         target.bind("mousemove", function(e) {
             if (options.started)
                 return;
             var dir = getDirection(e, target, options)
             options._cursor = target.css("cursor"); //保存原来的光标样式
-            if (dir == "") {
+            if (dir === "") {
                 target.css("cursor", "default");
             } else {
                 target.css("cursor", dir + "-resize");
@@ -64,7 +63,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
             var target = data.$element;
             data.dragX = data.dragY = false
             var dir = getDirection(event, target, data);
-            if (dir == '')
+            if (dir === "")
                 return;
             avalon.mix(data, {
                 dir: dir,
@@ -142,7 +141,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
             dir += "e";
         }
         for (var i = 0, handle; handle = data.handles[i++]; ) {
-            if (handle == "all" || handle == dir) {
+            if (handle === "all" || handle === dir) {
                 return dir;
             }
         }
@@ -181,7 +180,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
             }
         }
 
-        if (data.dir.indexOf("e") != -1) {
+        if (data.dir.indexOf("e") !== -1) {
             var width = data.startResizeWidth + event.pageX - data.startPageX;
             width = Math.min(Math.max(width, b.minWidth), b.maxWidth);
             data.resizeWidth = width;
@@ -189,7 +188,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
                 data.resizeHeight = width / data.aspectRatio;
             }
         }
-        if (data.dir.indexOf("s") != -1) {
+        if (data.dir.indexOf("s") !== -1) {
             var height = data.startResizeHeight + event.pageY - data.startPageY;
             height = Math.min(Math.max(height, b.minHeight), b.maxHeight);
             data.resizeHeight = height;
@@ -197,7 +196,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
                 data.resizeWidth = height * data.aspectRatio;
             }
         }
-        if (data.dir.indexOf("w") != -1) {
+        if (data.dir.indexOf("w") !== -1) {
             data.resizeWidth = data.startResizeWidth - event.pageX + data.startPageX;
             if (data.resizeWidth >= b.minWidth && data.resizeWidth <= b.maxWidth) {
                 data.resizeLeft = data.startResizeLeft + event.pageX - data.startPageX;
@@ -206,7 +205,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
                 }
             }
         }
-        if (data.dir.indexOf("n") != -1) {
+        if (data.dir.indexOf("n") !== -1) {
             data.resizeHeight = data.startResizeHeight - event.pageY + data.startPageY;
             if (data.resizeHeight >= b.minHeight && data.resizeHeight <= b.maxHeight) {
                 data.resizeTop = data.startResizeTop + event.pageY - data.startPageY;

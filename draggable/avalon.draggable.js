@@ -29,17 +29,7 @@ define(["avalon"], function(avalon) {
         drag = "touchmove"
         dragstop = "touchend"
     }
-    function filterData(obj, prefix) {
-        var result = {}
-        for (var i in obj) {
-            if (i.indexOf(prefix) === 0) {
-                result[  i.replace(prefix, "").replace(/\w/, function(a) {
-                    return a.toLowerCase()
-                }) ] = obj[i]
-            }
-        }
-        return result
-    }
+
     var draggable = avalon.bindingHandlers.draggable = function(data, vmodels) {
         var args = data.value.match(avalon.rword) || ["$","draggable"]
         var ID = args[0].trim(), opts = args[1], model, vmOptions
@@ -63,7 +53,7 @@ define(["avalon"], function(avalon) {
         }
         var element = data.element
         var $element = avalon(element)
-        var options = avalon.mix({}, defaults, vmOptions || {}, filterData($element.data(), "draggable"));
+        var options = avalon.mix({}, defaults, vmOptions || {}, avalon.getWidgetData(element, "draggable"));
         //修正drag,stop为函数
         "drag,stop,start,beforeStart,beforeStop".replace(avalon.rword, function(name) {
             var method = options[name]
@@ -381,33 +371,3 @@ define(["avalon"], function(avalon) {
 
     return avalon
 })
-/*
- ms-draggable="ID?,opt?" , ID为一个VM的ID,可选,没有为离它最近的VM；opt为VM的一个对象属性，可选
- 下面这些全部可用data-drag-*进行配置
- drag 为VM中一个方法名
- stop 为VM中一个方法名
- start  为VM中一个方法名
- handle  要求为VM中的一个函数，它会重置data.handle为一个元素节点，如果事件源位于data.handle的里面或等于它则继续进行操作
- ghosting: false, //是否影子拖动，动态生成一个元素，拖动此元素，当拖动结束时，让原元素到达此元素的位置上,
- delay: 0, 延迟时间
- axis: "xy" "x", "y" 决定只能垂直拖动，还是水平拖动，还是任意拖动
- containment： 拖动范围，#id值， "window", "document", "parent", "[0, 0, 400, 300]"
- <body ms-controller="xxx">
- <ul  ms-each-el="array">
- <li ms-draggable="xxx" >item {{$index}}</li>
- </ul>
- </body>
- avalon.require("avalon.draggable", function() {
- avalon.define("xxx", function(vm) {
- vm.array = avalon.range(0, 10)
- vm.drag = function(e, data) {
- console.log(e.pageX + " : " + e.pageY)
- }
- vm.stop = function(e, data) {
- console.log("done")
- }
- })
- avalon.scan()
- })
- * 
- */

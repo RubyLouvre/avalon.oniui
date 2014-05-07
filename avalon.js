@@ -2329,13 +2329,7 @@
                         spans = null
                         break
                     case "del": //将pos后的el个元素删掉(pos, el都是数字)
-                        var pp = proxies.splice(pos, el) //移除对应的子VM
-                        for (var i = 0, p; p = pp[i++]; ) {
-                            var ac = p["$accessors"]
-                            for (var i in ac) {
-                                ac[i][subscribers] = []
-                            }
-                        }
+                        proxies.splice(pos, el)
                         removeFromSanctuary(removeView(locatedNode, group, el))
                         break
                     case "index": //将proxies中的第pos个起的所有元素重新索引（pos为数字，el用作循环变量）
@@ -2609,15 +2603,16 @@
                     elem = data.element,
                     list
             parseExpr(data.value, vmodels, data)
-            data.getter = function() {
-                return this.evaluator.apply(0, this.args || [])
-            }
-            data.handler = bindingExecutors.each
-            data.callbackName = "data-" + (type || "each") + "-rendered"
             if (type !== "repeat") {
                 log("warning:建议使用ms-repeat代替ms-each, ms-with, ms-repeat只占用一个标签并且性能更好")
             }
+            data.$outer = {}
+            data.handler = bindingExecutors.each
+            data.callbackName = "data-" + (type || "each") + "-rendered"
             data.callbackElement = data.parent = elem
+            data.getter = function() {
+                return this.evaluator.apply(0, this.args || [])
+            }
             var freturn = true
             try {
                 list = data.getter()
@@ -2638,7 +2633,6 @@
                     break
                 }
             }
-            data.$outer = data.$outer || {}
             var template = documentFragment.cloneNode(false)
             if (type === "repeat") {
                 var startRepeat = DOC.createComment("ms-repeat-start")
@@ -2676,7 +2670,7 @@
                     for (var key in list) {
                         if (list.hasOwnProperty(key) && key !== "hasOwnProperty") {
                             (function(k, v) {
-                                pool[k] = createWithProxy(k, v, data.$outer)
+                                pool[k] = createWithProxy(k, v, {})
                                 pool[k].$watch("$val", function(val) {
                                     list[k] = val //#303
                                 })
@@ -3334,7 +3328,18 @@
                 }
             }
         }
-        parent.innerHTML = parent.textContent = ""
+        if (parent.textContent) {
+            parent.textContent = ""
+        } else {
+            while (comment = parent.firstChild) {
+                if (comment.nodeType === 1) {
+                    comment.innerHTML = ""
+                } else if (comment.nodeType === 3) {
+                    comment.data = ""
+                }
+                parent.removeChild(comment)
+            }
+        }
     }
 
     function iteratorCallback(args) {
@@ -3359,6 +3364,7 @@
         span.setAttribute("ms-controller", id)
         spans.push(span)
         transation.appendChild(span)
+        proxy.$outer = data.$outer
         VMODELS[id] = proxy
         function fn() {
             delete VMODELS[id]

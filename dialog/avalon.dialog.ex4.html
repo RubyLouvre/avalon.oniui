@@ -11,15 +11,15 @@
 </head>
 <body class="ms-controller">
     <div class="wrapper">
-        <h1>cboxpicker demo 1</h1>
-        <p class="example">最基本的cboxpicker组件（<span class="statement">ms-widget="cboxpicker"</span>）</p>
-        <p><span class="">说明：</span>只配置ms-widget="cboxpicker"组件，默认组件会显示“全部”选框，不想让其出现的话，可以配置data-cboxpicket-alltext=""</p>
+        <h1>dialog demo 4</h1>
+        <p class="example">层上层的弹窗demo</p>
+        <p><span class="">说明：</span>当需要在已经show的弹窗中再弹出的弹窗，可以嵌套dialog，嵌套的dialog稍有不同，触发dialog的button配置ms-click时，show方法要明确添加第二个参数，表示使用外层用户定义的vmodel.show方法,否则会出错</p>
         <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
             &lt;!DOCTYPE HTML&gt;
             &lt;html&gt;
             &lt;head&gt;
                 &lt;meta charset='utf-8'/&gt;
-                &lt;title&gt;xxxxx&lt;/title&gt;
+                &lt;title&gt;层上层的弹窗demo&lt;/title&gt;
                 &lt;script src='avalon.js'&gt;&lt;/script&gt;
             &lt;/head&gt;
             &lt;body&gt;

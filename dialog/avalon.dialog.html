@@ -21,6 +21,10 @@ MS_OPTION_FOOTER
 </div>
 MS_OPTION_STYLE
 <style>
+body {
+    position: relative;
+    margin: 0;
+}
 @font-face {
     font-family: fontawesome;
     font-style: normal;
@@ -28,9 +32,7 @@ MS_OPTION_STYLE
     src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?v=4.0.3');
     src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?#iefix&v=4.0.3') format('embedded-opentype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.woff?v=4.0.3') format('woff'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.ttf?v=4.0.3') format('truetype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular') format('svg');
 }
-[ms-controller] { 
-    display:none
-}
+
 .ui-icon {
     -moz-user-select: none;
     -ms-user-select: none;
@@ -132,14 +134,6 @@ span.ui-btn {
     box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
     border: 1px solid #cccccc;
-}
-.ui-dialog-vertical-center-transform {
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
 }
 .ui-dialog-header {
     background-color: #f3f3f3;

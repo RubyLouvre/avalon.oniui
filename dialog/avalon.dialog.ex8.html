@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>dialog demo 8</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body class="ms-controller">
+    <div class="wrapper">
+        <h1>cboxpicker demo 1</h1>
+        <p class="example">最基本的cboxpicker组件（<span class="statement">ms-widget="cboxpicker"</span>）</p>
+        <p><span class="">说明：</span>只配置ms-widget="cboxpicker"组件，默认组件会显示“全部”选框，不想让其出现的话，可以配置data-cboxpicket-alltext=""</p>
+        <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+            &lt;!DOCTYPE HTML&gt;
+            &lt;html&gt;
+            &lt;head&gt;
+                &lt;meta charset='utf-8'/&gt;
+                &lt;title&gt;xxxxx&lt;/title&gt;
+                &lt;script src='avalon.js'&gt;&lt;/script&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+                &lt;div class="demoShow" ms-controller="demo"&gt;
+                    &lt;fieldset&gt;
+                        &lt;legend&gt;可以从方法中执行的dialog&lt;/legend&gt;
+                        &lt;button ms-click="customShow"&gt;打开对话框&lt;/button&gt;
+                        &lt;button ms-click="changeDialog"&gt;改变对话框内容&lt;/button&gt;
+                        &lt;button ms-click="changeTitle"&gt;改变对话框title&lt;/button&gt;
+                        &lt;button ms-click="changeModel"&gt;改变对话框model&lt;/button&gt;
+                    &lt;/fieldset&gt; 
+                    &lt;script&gt; 
+                        require("dialog/avalon.dialog", function($$) {
+                            $$.define("demo", function(vm) {
+                                var dialog;
+                                vm.tpl = '我是tpl';
+                                vm.tpl2 = '我是tpl2';
+                                vm.show = function( id ){
+                                    $$.$ui( id ).show();
+                                }
+                                vm.okfun = function( close ){
+                                    alert('success')
+                                    close()
+                                }
+                                vm.cancelfun = function( close ){
+                                    alert('fail')
+                                    close()
+                                }
+                                /**
+                                 * 使用方法生成dialog
+                                 */
+                                vm.customShow = function() {
+                                    if(!dialog) {
+                                        dialog = $$.dialog( {
+                                            model: 'demo',
+                                            title: 'customShow',
+                                            content: '呵呵呵呵 {{tpl}} ',
+                                            id: 'cus',
+                                            confirm: 'okfun( close )',
+                                            cancel: 'cancelfun( close )',
+                                            type: 'alert'
+                                        } );
+                                    }
+
+                                    dialog.show();
+                                }
+                                /**
+                                 * 更改dialog的content
+                                 */
+                                vm.changeDialog = function() {
+                                    if(!dialog) {
+                                        return;
+                                    }
+                                    dialog.setContent('{{tpl2}}');
+                                }
+                                /**
+                                 * 更改dialogtitle
+                                 */
+                                vm.changeTitle = function() {
+                                    if(!dialog) {
+                                        return;
+                                    }
+                                    dialog.setTitle('我是title');
+                                };
+                                vm.m = {
+                                    tpl: '我变了',
+                                    okfun: function( close ) {
+                                        alert('我变了');
+                                        close();
+                                    },
+                                    cancelfun: function( close ) {
+                                        alert('cancel变了');
+                                        close();
+                                    }
+                                };
+                                vm.changeModel = function() {
+                                    dialog.setModel(vm.m);
+                                };
+                            })
+                            $$.scan();
+                        })
+                    &lt;/script&gt;
+                &lt;/div&gt;
+            &lt;/body&gt;
+            &lt;/html&gt;
+        </pre>
+        <div class="demoShow" ms-controller="demo">
+            <fieldset>
+                <legend>可以从方法中执行的dialog</legend>
+                <button ms-click="customShow">打开对话框</button>
+                <button ms-click="changeDialog">改变对话框内容</button>
+                <button ms-click="changeTitle">改变对话框title</button>
+                <button ms-click="changeModel">改变对话框model</button>
+            </fieldset> 
+            <script> 
+                require("dialog/avalon.dialog", function($$) {
+                    $$.define("demo", function(vm) {
+                        var dialog;
+                        vm.tpl = '我是tpl';
+                        vm.tpl2 = '我是tpl2';
+                        vm.show = function( id ){
+                            $$.$ui( id ).show();
+                        }
+                        vm.okfun = function( close ){
+                            alert('success')
+                            close()
+                        }
+                        vm.cancelfun = function( close ){
+                            alert('fail')
+                            close()
+                        }
+                        /**
+                         * 使用方法生成dialog
+                         */
+                        vm.customShow = function() {
+                            if(!dialog) {
+                                dialog = $$.dialog( {
+                                    model: 'demo',
+                                    title: 'customShow',
+                                    content: '呵呵呵呵 {{tpl}} ',
+                                    id: 'cus',
+                                    confirm: 'okfun( close )',
+                                    cancel: 'cancelfun( close )',
+                                    type: 'alert'
+                                } );
+                            }
+
+                            dialog.show();
+                        }
+                        /**
+                         * 更改dialog的content
+                         */
+                        vm.changeDialog = function() {
+                            if(!dialog) {
+                                return;
+                            }
+                            dialog.setContent('{{tpl2}}');
+                        }
+                        /**
+                         * 更改dialogtitle
+                         */
+                        vm.changeTitle = function() {
+                            if(!dialog) {
+                                return;
+                            }
+                            dialog.setTitle('我是title');
+                        };
+                        vm.m = {
+                            tpl: '我变了',
+                            okfun: function( close ) {
+                                alert('我变了');
+                                close();
+                            },
+                            cancelfun: function( close ) {
+                                alert('cancel变了');
+                                close();
+                            }
+                        };
+                        vm.changeModel = function() {
+                            dialog.setModel(vm.m);
+                        };
+                    })
+                    $$.scan();
+                })
+            </script>
+        </div>
+    </div>
+</body>
+</html>
+

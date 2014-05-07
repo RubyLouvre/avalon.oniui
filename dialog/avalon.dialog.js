@@ -9,27 +9,16 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
         layoutExist = false, // 页面不存在遮罩层就添加layout节点，存在则忽略
         layout = avalon.parseHTML(_layout).firstChild, // 遮罩层节点(dom node)
         _widget =  widgetArr[1].split("MS_OPTION_INNERWRAPPER")[0], // 动态添加dialog时,添加组件的html(string)
-        dialogShows = []; // 存在层上层时由此数组判断层的个数，据此做相应的处理
+        dialogShows = [], // 存在层上层时由此数组判断层的个数，据此做相应的处理
+        dialogNum = 0; // 保存页面dialog的数量，当dialogNum为0时，清除layout
     try {
         styleEl.innerHTML += cssText;
     } catch (e) {
         styleEl.styleSheet.cssText += cssText;
     }
-    //判定是否支持css3 transform
-    var transforms = {//IE9+ firefox3.5+ chrome4+ safari3.1+ opera10.5+
-        "transform": "transform",
-        "-moz-transform": "mozTransform",
-        "-webkit-transform": "webkitTransform",
-        "-ms-transform": "msTransform"
-    }
-    for (var i in transforms) {
-        if (transforms[i] in layout.style) {
-            supportTransform = true;
-            break;
-        }
-    }
-
+    var body = (document.compatMode && document.compatMode.toLowerCase() == "css1compat") ? document.documentElement : document.body;
     var widget = avalon.ui.dialog = function(element, data, vmodels) {
+        dialogNum++;
         var options = data.dialogOptions;
         options.template = options.getTemplate(template, options);
         var _footerArr = options.template.split("MS_OPTION_FOOTER"),
@@ -120,8 +109,11 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
             // 重新渲染dialog
             vm.setModel = function(m) {
                 // 这里是为了充分利用vm._ReanderView方法，才提前设置一下element.innerHTML
+                // console.log("setModel");
+
                 element.innerHTML = _lastContent;
                 vm._RenderView();
+                console.log([vm].concat(findModel(m)).concat(vmodels));
                 avalon.scan( element, [vm].concat(findModel(m)).concat(vmodels) );
             };
             // 将零散的模板(dialog header、dialog content、 dialog footer、 dialog wrapper)组合成完整的dialog
@@ -161,7 +153,12 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
                 avalon.scan(element, [vmodel].concat(vmodels));
             };
             vm.$remove = function() {
+                dialogNum--;
                 element.innerHTML = "";
+                if (!dialogNum) {
+                    layout.parentNode.removeChild(layout);
+                    layoutExist = false;
+                }
             }
         });
         return vmodel;
@@ -207,6 +204,7 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
         return "avalonDialog" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
     }
     function findModel( m ) {
+        // console.log(m);
         var model = m;
         if(model) {
             if(avalon.type(model) === 'string') {
@@ -221,20 +219,22 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
     }
     // 调整弹窗水平、垂直居中
     function resetCenter(vmodel, target) {
+        var bodyHeight = Math.max( body.clientHeight , body.scrollHeight ),
+            scrollTop = Math.max(document.body.scrollTop , document.documentElement.scrollTop),
+            scrollLeft = Math.max(document.body.scrollLeft , document.documentElement.scrollLeft);
         if (vmodel.toggle) {
             layout.style.width = avalon(window).width() + "px";
-            layout.style.height = avalon(window).height() + "px";
-            var parentNode = document.body;
-            // 支持transform变换的话就使用transform，不支持就通过绝对定位来实现
-            if (supportTransform) {
-                avalon(target).addClass("ui-dialog-vertical-center-transform");
-            } else {
-                var l = (avalon(window).width() - target.offsetWidth) / 2
-                var t = (avalon(window).height() - target.offsetHeight) / 2
-                target.style.left = l + "px"
-                target.style.top = t + "px"
-            } 
+            layout.style.height = bodyHeight + "px";
+            var l = ((avalon(window).width() - target.offsetWidth) / 2) + scrollLeft;
+            var t = ((avalon(window).height() - target.offsetHeight) / 2) +scrollTop;
+            target.style.left = l + "px"
+            target.style.top = t + "px"
         }
     }
     return avalon;
+
+
+
+
+
 });

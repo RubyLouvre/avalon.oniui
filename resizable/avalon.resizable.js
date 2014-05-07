@@ -37,7 +37,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
             }
         })
         options.handles = options.handles.match(avalon.rword) || ["all"];
-        options._aspectRatio = !!options.aspectRatio
+        options._aspectRatio = typeof options.aspectRatio === "number"
 
         var target = avalon(element)
         target.bind("mousemove", function(e) {
@@ -77,7 +77,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
                 data[word.replace("startR", "r")] = data[word];
             })
             //等比例缩放
-            data.aspectRatio = (typeof data.aspectRatio === "number") ? data.aspectRatio : ((data.startResizeWidth / data.startResizeHeight) || 1);
+            data.aspectRatio = data._aspectRatio ? data.aspectRatio : ((data.startResizeWidth / data.startResizeHeight) || 1);
             event.type = "resizestart";
             //data.start.call(target[0], event, data); //触发用户回调
             avalon(body).css('cursor', dir + '-resize');
@@ -159,6 +159,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
 
     function refresh(event, target, data) { //刷新缩放元素
         var b = data
+        console.log(data.dir)
         if (data._aspectRatio || event.shiftKey) {
             var aspest = true,
                     pMinWidth = b.minHeight * data.aspectRatio,
@@ -214,6 +215,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
                 }
             }
         }
+       
         var obj = {
             left: data.resizeLeft,
             top: data.resizeTop,

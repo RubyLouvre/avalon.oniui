@@ -14,15 +14,7 @@
             require(["resizable/avalon.resizable"], function() {
                 avalon.define("test", function(vm) {
                     vm.resizable = {
-                        start: function() {
-                            avalon.log("resize start")
-                        },
-                        resize: function() {
-                            avalon.log("resizing")
-                        },
-                        stop: function() {
-                            avalon.log("resize stop")
-                        }
+                        aspectRatio: 4 / 3
                     }
                     vm.$skipArray = ["resizable"]
                 })
@@ -31,17 +23,20 @@
 
         </script>
         <style>
-            #aaa{
-                width:200px;
-                height: 200px;
+            #aaa {
+                border: 1px solid #89B;
+                background: #BCE;
+                height: 100px;
+                width: 100px;
+                cursor: move;
                 position: absolute;
-                background: red;
-                z-index: 10;
+                top: 120px;
+                left: 120px;
             }
         </style>
     </head>
     <body>
-        <h1>四个方向都可以拖动</h1>
+        <h1>等比例缩放,使用aspectRatio参数,为长与高之比</h1>
         <div id="aaa" ms-controller="test" ms-resizable >
 
         </div>

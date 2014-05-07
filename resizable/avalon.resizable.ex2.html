@@ -14,15 +14,10 @@
             require(["resizable/avalon.resizable"], function() {
                 avalon.define("test", function(vm) {
                     vm.resizable = {
-                        start: function() {
-                            avalon.log("resize start")
-                        },
-                        resize: function() {
-                            avalon.log("resizing")
-                        },
-                        stop: function() {
-                            avalon.log("resize stop")
-                        }
+                        minWidth: 40,
+                        minHeight: 40,
+                        maxWidth: 250,
+                        maxHeight: 250
                     }
                     vm.$skipArray = ["resizable"]
                 })
@@ -31,17 +26,20 @@
 
         </script>
         <style>
-            #aaa{
-                width:200px;
-                height: 200px;
+            #aaa {
                 position: absolute;
-                background: red;
-                z-index: 10;
+                border: 1px solid #89B;
+                background: #BCE;
+                height: 100px;
+                width: 100px;
+                cursor: move;
+                top: 120px;
+                left:20px;
             }
         </style>
     </head>
     <body>
-        <h1>四个方向都可以拖动</h1>
+        <h1>限定最大范围与最小范围</h1>
         <div id="aaa" ms-controller="test" ms-resizable >
 
         </div>

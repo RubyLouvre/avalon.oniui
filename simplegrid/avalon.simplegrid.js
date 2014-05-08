@@ -11,6 +11,44 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
     }
 
 
+    var styleEl = document.createElement("style")
+    var body = document.body || document.documentElement
+
+    var cssText = "*{ -webkit-touch-callout: none!important;-webkit-user-select: none!important;-khtml-user-select: none!important;" +
+            "-moz-user-select: none!important;-ms-user-select: none!important;user-select: none!important;}"
+    var fixUserSelect = function() {
+        body.appendChild(styleEl)
+        //如果不插入DOM树，styleEl.styleSheet为null
+        if (typeof styleEl.styleSheet === "object") {
+            styleEl.styleSheet.cssText = cssText
+        } else {
+            styleEl.appendChild(document.createTextNode(cssText))
+        }
+    }
+    var restoreUserSelect = function() {
+        try {
+            styleEl.innerHTML = ""
+        } catch (e) {
+            styleEl.styleSheet.cssText = ""
+        }
+        body.removeChild(styleEl)
+    }
+    if (window.VBArray && !("msUserSelect" in document.documentElement.style)) {
+        var _ieSelectBack;//fix IE6789
+        function returnFalse(event) {
+            event.returnValue = false
+        }
+        fixUserSelect = function() {
+            _ieSelectBack = body.onselectstart;
+            body.onselectstart = returnFalse;
+        }
+        restoreUserSelect = function() {
+            body.onselectstart = _ieSelectBack;
+        }
+    }
+
+
+
     var widget = avalon.ui.simplegrid = function(element, data, vmodels) {
         var options = data.simplegridOptions
 //格式化各列的具体规格
@@ -53,12 +91,43 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
 
             vm.$init = function() {
                 element.innerHTML = options.template
+
                 _vmodels = [vmodel].concat(vmodels)
                 avalon.scan(element, _vmodels)
 
             }
             //通过拖动改变列宽
             vm.resizeColumn = function(e, el) {
+                var startX = e.pageX, drag = true, td = this
+                do {
+                    if (!td || td.tagName == "TD" || td.tagName == "TH") {
+                        break
+                    }
+                } while ((td = td.parentNode));
+
+                if (typeof el.width !== "number") {
+                    el.width = td.offsetWidth
+                }
+                var width = el.width
+                fixUserSelect()
+                var moveFn = avalon.bind(document, "mousemove", function(e) {
+                    if (drag) {
+                        e.preventDefault()
+                        el.width = width + e.pageX - startX
+                    }
+                })
+
+                var upFn = avalon.bind(document, "mouseup", function(e) {
+                    e.preventDefault()
+                    if (drag) {
+                        restoreUserSelect()
+                        drag = false
+                        el.width = width + e.pageX - startX
+                        avalon.unbind(document, "mousemove", moveFn)
+                        avalon.unbind(document, "mouseup", upFn)
+                    }
+                })
+
 
             }
             //如果当前列可以排序，那么点击标题旁边的icon,将会调用此方法

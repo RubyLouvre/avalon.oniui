@@ -246,7 +246,6 @@
             el.detachEvent("on" + type, fn || noop)
         },
         css: function(node, name, value) {
-            var _name =name
             if (node instanceof avalon) {
                 node = node[0]
             }
@@ -1614,6 +1613,10 @@
         //扫描顺序  ms-skip(0) --> ms-important(1) --> ms-controller(2) --> ms-if(10) --> ms-repeat(100) 
         //--> ms-if-loop(110) --> ms-attr(970) ...--> ms-each(1400)-->ms-with(1500)--〉ms-duplex(2000)垫后
         var a = elem.getAttribute(prefix + "skip")
+        //#360 在旧式IE中 Object标签在引入Flash等资源时,可能出现没有getAttributeNode,innerHTML的情形
+        if (!elem.getAttributeNode) {
+            return log("warning " + elem.tagName + " no getAttributeNode method")
+        }
         var b = elem.getAttributeNode(prefix + "important")
         var c = elem.getAttributeNode(prefix + "controller")
         if (typeof a === "string") {
@@ -1626,7 +1629,7 @@
             //ms-important不包含父VM，ms-controller相反
             vmodels = node === b ? [newVmodel] : [newVmodel].concat(vmodels)
             elem.removeAttribute(node.name) //removeAttributeNode不会刷新[ms-controller]样式规则
-            avalon(elem).removeClass(node.name) //处理IE6
+            avalon(elem).removeClass(node.name)
         }
         scanAttr(elem, vmodels) //扫描特性节点
     }
@@ -2326,7 +2329,7 @@
                         spans = null
                         break
                     case "del": //将pos后的el个元素删掉(pos, el都是数字)
-                        proxies.splice(pos, el) //移除对应的子VM
+                        proxies.splice(pos, el)
                         removeFromSanctuary(removeView(locatedNode, group, el))
                         break
                     case "index": //将proxies中的第pos个起的所有元素重新索引（pos为数字，el用作循环变量）
@@ -2600,15 +2603,16 @@
                     elem = data.element,
                     list
             parseExpr(data.value, vmodels, data)
-            data.getter = function() {
-                return this.evaluator.apply(0, this.args || [])
-            }
-            data.handler = bindingExecutors.each
-            data.callbackName = "data-" + (type || "each") + "-rendered"
             if (type !== "repeat") {
                 log("warning:建议使用ms-repeat代替ms-each, ms-with, ms-repeat只占用一个标签并且性能更好")
             }
+            data.$outer = {}
+            data.handler = bindingExecutors.each
+            data.callbackName = "data-" + (type || "each") + "-rendered"
             data.callbackElement = data.parent = elem
+            data.getter = function() {
+                return this.evaluator.apply(0, this.args || [])
+            }
             var freturn = true
             try {
                 list = data.getter()
@@ -2629,7 +2633,6 @@
                     break
                 }
             }
-            data.$outer = data.$outer || {}
             var template = documentFragment.cloneNode(false)
             if (type === "repeat") {
                 var startRepeat = DOC.createComment("ms-repeat-start")
@@ -2667,7 +2670,7 @@
                     for (var key in list) {
                         if (list.hasOwnProperty(key) && key !== "hasOwnProperty") {
                             (function(k, v) {
-                                pool[k] = createWithProxy(k, v, data.$outer)
+                                pool[k] = createWithProxy(k, v, {})
                                 pool[k].$watch("$val", function(val) {
                                     list[k] = val //#303
                                 })
@@ -3325,7 +3328,18 @@
                 }
             }
         }
-        parent.textContent = ""
+        if (parent.textContent) {
+            parent.textContent = ""
+        } else {
+            while (comment = parent.firstChild) {
+                if (comment.nodeType === 1) {
+                    comment.innerHTML = ""
+                } else if (comment.nodeType === 3) {
+                    comment.data = ""
+                }
+                parent.removeChild(comment)
+            }
+        }
     }
 
     function iteratorCallback(args) {
@@ -3350,6 +3364,7 @@
         span.setAttribute("ms-controller", id)
         spans.push(span)
         transation.appendChild(span)
+        proxy.$outer = data.$outer
         VMODELS[id] = proxy
         function fn() {
             delete VMODELS[id]

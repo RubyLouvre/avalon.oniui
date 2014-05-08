@@ -16,7 +16,7 @@ MS_OPTION_FOOTER
 <div class="ui-dialog-footer clrfix">
     <div class="ui-dialog-btns">
         <button class="ui-btn ui-btn-primary" ms-click="MS_OPTION_SUBMIT">确定</button>
-        <button class="ui-btn" ms-if="!typeAlert" ms-click="MS_OPTION_CANCEL">取消</button>
+        <button class="ui-btn" ms-if="type == 'confirm'" ms-click="MS_OPTION_CANCEL">取消</button>
     </div>
 </div>
 MS_OPTION_STYLE

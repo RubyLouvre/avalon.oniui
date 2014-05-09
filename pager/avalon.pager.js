@@ -119,24 +119,22 @@ define(["avalon", "text!./avalon.pager.html"], function(avalon, tmpl) {
         })
         scripts.forEach(function(el, index) {
             el.index = index
-            return el
         })
-//添加添加
+        //添加添加
+        var reverse = []
         for (var i = 0, el; el = scripts[i++]; ) {
             switch (el.action) {
                 case "add":
                     aaa.splice(el.index, 0, el.el)
                     break;
-            }
-        }
-        scripts.reverse()
-        //再删除
-        for (var i = 0, el; el = scripts[i++]; ) {
-            switch (el.action) {
                 case "del":
-                    aaa.splice(el.index, 1)
+                    reverse.unshift(el)
                     break;
             }
+        }
+        //再删除
+        for (var i = 0, el; el = reverse[i++]; ) {
+            aaa.splice(el.index, 1)
         }
 
     }

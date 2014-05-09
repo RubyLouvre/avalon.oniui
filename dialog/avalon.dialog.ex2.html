@@ -25,28 +25,29 @@
             &lt;body&gt;
                 &lt;div class="demoShow" ms-controller="demo"&gt;
                     &lt;fieldset&gt;  
-                        &lt;legend&gt;确认框&lt;/legend&gt;
+                        &lt;legend&gt;可自定义回调操作的dialog&lt;/legend&gt;
                             &lt;button ms-click="show('aa')"&gt;打开对话框&lt;/button&gt;
-                            &lt;div ms-widget="dialog,aa" data-dialog-title="xxxx" data-dialog-submit="okfun(close)" data-dialog-cancel="cancelfun(close)"&gt;
+                            &lt;div ms-widget="dialog,aa,$aaOpts"&gt;
                                 呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
                             &lt;/div&gt;
                     &lt;/fieldset&gt;
                     &lt;script&gt; 
-                        require("dialog/avalon.dialog", function($$) {
-                            $$.define("demo", function(vm) {
+                        require("dialog/avalon.dialog", function(avalon) {
+                            avalon.define("demo", function(vm) {
                                 vm.show = function( id ){
-                                    $$.$ui( id ).show();
+                                    avalon.vmodels[id].toggle = true;
                                 }
-                                vm.okfun = function( close ){
-                                    alert('success')
-                                    close()
-                                }
-                                vm.cancelfun = function( close ){
-                                    alert('fail')
-                                    close()
+                                vm.title = "可自定义回调操作的dialog"
+                                vm.$aaOpts = {
+                                    onSubmit: function(){
+                                        alert('success')
+                                    },
+                                    onCancel: function(){
+                                        alert('fail')
+                                    }
                                 }
                             })
-                            $$.scan();
+                            avalon.scan();
                         })
                     &lt;/script&gt;
                 &lt;/div&gt;
@@ -55,28 +56,29 @@
         </pre>
         <div class="demoShow" ms-controller="demo">
             <fieldset>  
-                <legend>确认框</legend>
+                <legend>可自定义回调操作的dialog</legend>
                     <button ms-click="show('aa')">打开对话框</button>
-                    <div ms-widget="dialog,aa" data-dialog-title="xxxx" data-dialog-submit="okfun(close)" data-dialog-cancel="cancelfun(close)">
+                    <div ms-widget="dialog,aa,$aaOpts">
                         呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
                     </div>
             </fieldset>
             <script> 
-                require("dialog/avalon.dialog", function($$) {
-                    $$.define("demo", function(vm) {
+                require("dialog/avalon.dialog", function(avalon) {
+                    avalon.define("demo", function(vm) {
                         vm.show = function( id ){
-                            $$.$ui( id ).show();
+                            avalon.vmodels[id].toggle = true;
                         }
-                        vm.okfun = function( close ){
-                            alert('success')
-                            close()
-                        }
-                        vm.cancelfun = function( close ){
-                            alert('fail')
-                            close()
+                        vm.title = "可自定义回调操作的dialog"
+                        vm.$aaOpts = {
+                            onSubmit: function(){
+                                alert('success')
+                            },
+                            onCancel: function(){
+                                alert('fail')
+                            }
                         }
                     })
-                    $$.scan();
+                    avalon.scan();
                 })
             </script>
         </div>

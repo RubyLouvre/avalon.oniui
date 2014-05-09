@@ -25,24 +25,24 @@
             &lt;body&gt;
                 &lt;div class="demoShow" ms-controller="demo"&gt;
                     &lt;fieldset&gt;  
-                        &lt;legend&gt;警告框&lt;/legend&gt;
+                        &lt;legend&gt;模拟alert&lt;/legend&gt;
                             &lt;button ms-click="show('bb')"&gt;打开对话框&lt;/button&gt;
                             &lt;div ms-widget="dialog,bb,opts"&gt;
                                 呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
                             &lt;/div&gt;
                     &lt;/fieldset&gt;
                     &lt;script&gt; 
-                        require("dialog/avalon.dialog", function($$) {
-                            $$.define("demo", function(vm) {
+                        require("dialog/avalon.dialog", function(avalon) {
+                            avalon.define("demo", function(vm) {
                                 vm.opts = {
                                     type: 'alert',
                                     title: '警告框demo'
                                 };
                                 vm.show = function( id ){
-                                    $$.$ui( id ).show();
+                                    avalon.vmodels[id].toggle = true;
                                 }
                             })
-                            $$.scan();
+                            avalon.scan();
                         })
                     &lt;/script&gt;
                 &lt;/div&gt;
@@ -51,24 +51,24 @@
         </pre>
         <div class="demoShow" ms-controller="demo">
             <fieldset>  
-                <legend>警告框</legend>
+                <legend>模拟alert</legend>
                     <button ms-click="show('bb')">打开对话框</button>
                     <div ms-widget="dialog,bb,opts">
                         呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
                     </div>
             </fieldset>
             <script> 
-                require("dialog/avalon.dialog", function($$) {
-                    $$.define("demo", function(vm) {
+                require("dialog/avalon.dialog", function(avalon) {
+                    avalon.define("demo", function(vm) {
                         vm.opts = {
                             type: 'alert',
                             title: '警告框demo'
                         };
                         vm.show = function( id ){
-                            $$.$ui( id ).show();
+                            avalon.vmodels[id].toggle = true;
                         }
                     })
-                    $$.scan();
+                    avalon.scan();
                 })
             </script>
         </div>

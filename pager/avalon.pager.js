@@ -18,7 +18,7 @@ define(["avalon", "text!./avalon.pager.html"], function(avalon, tmpl) {
         var vmodel = avalon.define(data.pagerId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
-            vm.$skipArray = ["showPages", "widgetElement", "template", "currentIndex", "ellipseText", "alwaysShowPrev", "alwaysShowNext"]//这些属性不被监控
+            vm.$skipArray = ["showPages", "widgetElement", "template", "ellipseText", "alwaysShowPrev", "alwaysShowNext"]//这些属性不被监控
             vm.$init = function() {
                 var pageHTML = options.template
                 if (vmodel.alwaysShowPrev) {

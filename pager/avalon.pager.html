@@ -1,5 +1,6 @@
 <div class="ui-pager" onselectstart="return false;" unselectable="on">
     <span class="ui-pager-prev"
+          ms-class="ui-pager-disabled:firstPage==1"
           ms-if="firstPage!==1" 
           ms-title="getTitle('prev')" 
           ms-click="jumpPage($event,'prev')" 
@@ -16,9 +17,9 @@
     <span  class="ui-pager-item" 
            ms-repeat="pages" 
            ms-title="getTitle(el)"
+           ms-hover="ui-state-hover"
            ms-click="jumpPage($event,el)"
            ms-class-ui-pager-current="el == currentPage" 
-           ms-hover="ui-state-hover"
            >{{el}}</span>
     <span class="ui-pager-omit"
           ms-if="lastPage!==maxPage" 
@@ -26,14 +27,15 @@
     <span class="ui-pager-item"
           ms-if="lastPage!==maxPage" 
           ms-title="getTitle('last')" 
-          ms-click="jumpPage($event,'last')"  
           ms-hover="ui-state-hover" 
+          ms-click="jumpPage($event,'last')"  
           >{{maxPage}}</span>
     <span class="ui-pager-next"
           ms-if="lastPage!==maxPage" 
           ms-title="getTitle('next')"
-          ms-click="jumpPage($event,'next')" 
           ms-hover="ui-state-hover" 
+          ms-click="jumpPage($event,'next')" 
+          ms-class="ui-pager-disabled:lastPage==maxPage"
           >{{nextText}}</span>
     <div class="ui-pager-jump" ms-if="showJumper">
         <span class="ui-pager-text">跳到第</span>

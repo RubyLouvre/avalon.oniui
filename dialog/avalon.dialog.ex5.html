@@ -32,17 +32,17 @@
                             &lt;/div&gt;
                     &lt;/fieldset&gt;
                     &lt;script&gt; 
-                        require("dialog/avalon.dialog", function($$) {
-                            $$.define("demo", function(vm) {
+                        require("dialog/avalon.dialog", function(avalon) {
+                            avalon.define("demo", function(vm) {
                                 vm.opts = {
                                     type: 'alert',
                                     title: '警告框demo'
                                 };
                                 vm.show = function( id ){
-                                    $$.$ui( id ).show();
+                                    avalon.vmodels[id].toggle = true;
                                 }
                             })
-                            $$.scan();
+                            avalon.scan();
                         })
                     &lt;/script&gt;
                 &lt;/div&gt;
@@ -58,17 +58,17 @@
                     </div>
             </fieldset>
             <script> 
-                require("dialog/avalon.dialog", function($$) {
-                    $$.define("demo", function(vm) {
+                require("dialog/avalon.dialog", function(avalon) {
+                    avalon.define("demo", function(vm) {
                         vm.opts = {
                             type: 'alert',
                             title: '警告框demo'
                         };
                         vm.show = function( id ){
-                            $$.$ui( id ).show();
+                            avalon.vmodels[id].toggle = true;
                         }
                     })
-                    $$.scan();
+                    avalon.scan();
                 })
             </script>
         </div>

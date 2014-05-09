@@ -26,50 +26,44 @@
                 &lt;div class="demoShow" ms-controller="demo"&gt;
                     &lt;fieldset&gt;
                         &lt;legend&gt;可以从方法中执行的dialog&lt;/legend&gt;
-                        &lt;button ms-click="customShow"&gt;打开对话框&lt;/button&gt;
-                        &lt;button ms-click="changeDialog"&gt;改变对话框内容&lt;/button&gt;
-                        &lt;button ms-click="changeTitle"&gt;改变对话框title&lt;/button&gt;
-                        &lt;button ms-click="changeModel"&gt;改变对话框model&lt;/button&gt;
+                        &lt;button ms-click="showCustomDialog('cus')"&gt;打开对话框&lt;/button&gt;
+                        &lt;button ms-click="changeDialog('cus')"&gt;改变对话框内容&lt;/button&gt;
+                        &lt;button ms-click="changeTitle('cus')"&gt;改变对话框title&lt;/button&gt;
+                        &lt;button ms-click="changeModel('cus')"&gt;改变对话框model&lt;/button&gt;
                     &lt;/fieldset&gt; 
                     &lt;script&gt; 
-                        require("dialog/avalon.dialog", function($$) {
-                            $$.define("demo", function(vm) {
+                        require("dialog/avalon.dialog", function(avalon) {
+                            avalon.define("demo", function(vm) {
                                 var dialog;
                                 vm.tpl = '我是tpl';
                                 vm.tpl2 = '我是tpl2';
                                 vm.show = function( id ){
-                                    $$.$ui( id ).show();
+                                    avalon.vmodels[id].toggle = true;
                                 }
-                                vm.okfun = function( close ){
-                                    alert('success')
-                                    close()
-                                }
-                                vm.cancelfun = function( close ){
-                                    alert('fail')
-                                    close()
-                                }
-                                /**
-                                 * 使用方法生成dialog
-                                 */
-                                vm.customShow = function() {
+                                vm.customDialogOptions = {
+                                        title: 'customShow',
+                                        onSubmit: function() {alert("success !")},
+                                        type: 'alert'
+                                    };
+                                vm.showCustomDialog = function(id) {
                                     if(!dialog) {
-                                        dialog = $$.dialog( {
-                                            model: 'demo',
-                                            title: 'customShow',
-                                            content: '呵呵呵呵 {{tpl}} ',
-                                            id: 'cus',
-                                            confirm: 'okfun( close )',
-                                            cancel: 'cancelfun( close )',
-                                            type: 'alert'
-                                        } );
+                                        // 注意用户动态生成dialog时，需要配置dialog的id,options，model，和content，且属性名是固定的
+                                        var config = {
+                                            id: id,
+                                            model: "demo",
+                                            // dialog配置项的值必须是model下的对应配置属性名
+                                            options: "customDialogOptions",
+                                            content: '呵呵呵呵 {{tpl}} '
+                                        }
+                                        dialog = avalon.dialog(config);
                                     }
-
-                                    dialog.show();
+                                    dialog.toggle = true;
                                 }
                                 /**
                                  * 更改dialog的content
                                  */
-                                vm.changeDialog = function() {
+                                vm.changeDialog = function(id) {
+                                    var dialog = avalon.vmodels[id];
                                     if(!dialog) {
                                         return;
                                     }
@@ -78,28 +72,29 @@
                                 /**
                                  * 更改dialogtitle
                                  */
-                                vm.changeTitle = function() {
+                                vm.changeTitle = function(id) {
+                                    var dialog = avalon.vmodels[id];
                                     if(!dialog) {
                                         return;
                                     }
                                     dialog.setTitle('我是title');
                                 };
+                                // setModel的参数就是个简单对象，不要监控
                                 vm.m = {
-                                    tpl: '我变了',
-                                    okfun: function( close ) {
-                                        alert('我变了');
-                                        close();
-                                    },
-                                    cancelfun: function( close ) {
-                                        alert('cancel变了');
-                                        close();
-                                    }
+                                    tpl2: '我变了',
+                                    $title: "改变title并且改变模板然后重新渲染",
+                                    $content: "改变modal的content{{tpl2}}",
+                                    $noScan: false // 是否需要扫描编译模板，需要编译则设为false或者不定义即可，不需要扫描设为true
                                 };
-                                vm.changeModel = function() {
+                                vm.changeModel = function(id) {
+                                    var dialog = avalon.vmodels[id];
+                                    if(!dialog) {
+                                        return;
+                                    }
                                     dialog.setModel(vm.m);
                                 };
                             })
-                            $$.scan();
+                            avalon.scan();
                         })
                     &lt;/script&gt;
                 &lt;/div&gt;
@@ -109,50 +104,44 @@
         <div class="demoShow" ms-controller="demo">
             <fieldset>
                 <legend>可以从方法中执行的dialog</legend>
-                <button ms-click="customShow">打开对话框</button>
-                <button ms-click="changeDialog">改变对话框内容</button>
-                <button ms-click="changeTitle">改变对话框title</button>
-                <button ms-click="changeModel">改变对话框model</button>
+                <button ms-click="showCustomDialog('cus')">打开对话框</button>
+                <button ms-click="changeDialog('cus')">改变对话框内容</button>
+                <button ms-click="changeTitle('cus')">改变对话框title</button>
+                <button ms-click="changeModel('cus')">改变对话框model</button>
             </fieldset> 
             <script> 
-                require("dialog/avalon.dialog", function($$) {
-                    $$.define("demo", function(vm) {
+                require("dialog/avalon.dialog", function(avalon) {
+                    avalon.define("demo", function(vm) {
                         var dialog;
                         vm.tpl = '我是tpl';
                         vm.tpl2 = '我是tpl2';
                         vm.show = function( id ){
-                            $$.$ui( id ).show();
+                            avalon.vmodels[id].toggle = true;
                         }
-                        vm.okfun = function( close ){
-                            alert('success')
-                            close()
-                        }
-                        vm.cancelfun = function( close ){
-                            alert('fail')
-                            close()
-                        }
-                        /**
-                         * 使用方法生成dialog
-                         */
-                        vm.customShow = function() {
+                        vm.customDialogOptions = {
+                                title: 'customShow',
+                                onSubmit: function() {alert("success !")},
+                                type: 'alert'
+                            };
+                        vm.showCustomDialog = function(id) {
                             if(!dialog) {
-                                dialog = $$.dialog( {
-                                    model: 'demo',
-                                    title: 'customShow',
-                                    content: '呵呵呵呵 {{tpl}} ',
-                                    id: 'cus',
-                                    confirm: 'okfun( close )',
-                                    cancel: 'cancelfun( close )',
-                                    type: 'alert'
-                                } );
+                                // 注意用户动态生成dialog时，需要配置dialog的id,options，model，和content，且属性名是固定的
+                                var config = {
+                                    id: id,
+                                    model: "demo",
+                                    // dialog配置项的值必须是model下的对应配置属性名
+                                    options: "customDialogOptions",
+                                    content: '呵呵呵呵 {{tpl}} '
+                                }
+                                dialog = avalon.dialog(config);
                             }
-
-                            dialog.show();
+                            dialog.toggle = true;
                         }
                         /**
                          * 更改dialog的content
                          */
-                        vm.changeDialog = function() {
+                        vm.changeDialog = function(id) {
+                            var dialog = avalon.vmodels[id];
                             if(!dialog) {
                                 return;
                             }
@@ -161,28 +150,29 @@
                         /**
                          * 更改dialogtitle
                          */
-                        vm.changeTitle = function() {
+                        vm.changeTitle = function(id) {
+                            var dialog = avalon.vmodels[id];
                             if(!dialog) {
                                 return;
                             }
                             dialog.setTitle('我是title');
                         };
+                        // setModel的参数就是个简单对象，不要监控
                         vm.m = {
-                            tpl: '我变了',
-                            okfun: function( close ) {
-                                alert('我变了');
-                                close();
-                            },
-                            cancelfun: function( close ) {
-                                alert('cancel变了');
-                                close();
-                            }
+                            tpl2: '我变了',
+                            $title: "改变title并且改变模板然后重新渲染",
+                            $content: "改变modal的content{{tpl2}}",
+                            $noScan: false // 是否需要扫描编译模板，需要编译则设为false或者不定义即可，不需要扫描设为true
                         };
-                        vm.changeModel = function() {
+                        vm.changeModel = function(id) {
+                            var dialog = avalon.vmodels[id];
+                            if(!dialog) {
+                                return;
+                            }
                             dialog.setModel(vm.m);
                         };
                     })
-                    $$.scan();
+                    avalon.scan();
                 })
             </script>
         </div>

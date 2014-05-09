@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>分页栏组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script>
+            require(["pager/avalon.pager"], function() {
+                avalon.define("test", function(vm) {
+                    vm.pager = {
+                        nextText: "下一页",
+                        prevText: "上一页"
+
+                    }
+                    vm.$skipArray = ["pager"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <h1>指定上一页,下一页的文本</h1>
+        <div ms-widget="pager"></div>
+    </body>
+</html>

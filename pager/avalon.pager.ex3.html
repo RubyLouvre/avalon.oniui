@@ -38,5 +38,47 @@
             <option>10</option>
             <option>15</option>
         </select>
+        <pre class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;分页栏组件&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;
+
+        &lt;/script&gt;
+        &lt;script&gt;
+            require(["pager/avalon.pager"], function() {
+                avalon.define("test", function(vm) {
+                    vm.pager = {
+                        total: 150,
+                        perPages: 5
+                    }
+                    vm.perPages = 5
+                    vm.$watch("perPages", function(a) {
+                        var widget = avalon.vmodels.pp
+                        if (widget) {
+                            widget.perPages = a
+                        }
+                    })
+                    vm.$skipArray = ["pager"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="test"&gt;
+        &lt;h1&gt;改变每页显示的数量&lt;/h1&gt;
+        &lt;div ms-widget="pager, pp"&gt;&lt;/div&gt;
+        &lt;select ms-duplex="perPages"&gt;
+            &lt;option&gt;5&lt;/option&gt;
+            &lt;option&gt;10&lt;/option&gt;
+            &lt;option&gt;15&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+  
+        </pre>
     </body>
 </html>

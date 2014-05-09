@@ -100,5 +100,45 @@
                 </td>
             </tr>
         </table>
+        <p>pager 组件有一个重要的jumpPage方向，用于决定它的跳转方式。它有两个参数，第一个事件对象，第二个是跳转方式，见源码：</p>
+        <pre class="brush:js;gutter:false;toolbar:false;">
+           vm.jumpPage = function(event, page) {
+                event.preventDefault()
+                if (page !== vm.currentPage) {
+                    switch (page) {
+                        case "first":
+                            vm.currentPage = 1
+                            break
+                        case "last":
+                            vm.currentPage = vm.maxPage
+                            break
+                        case "next":
+                            vm.currentPage++
+                            if (vm.currentPage > vm.maxPage) {
+                                vm.currentPage = vm.maxPage
+                            }
+                            break
+                        case "prev":
+                            vm.currentPage--
+                            if (vm.currentPage < 1) {
+                                vm.currentPage = 1
+                            }
+                            break
+                        default:
+                            vm.currentPage = page
+                            break
+                    }
+                    vm.onJump.call(element, event, vm)
+                    efficientChangePages(vm.pages, getPages(vm))
+                }
+            }
+        </pre>
+        <ol>
+            <li><a href="avalon.pager.ex1.html">显示跳转台</a></li>
+            <li><a href="avalon.pager.ex2.html">指定回调onJump</a></li>
+            <li><a href="avalon.pager.ex3.html">改变每页显示的数量</a></li>
+            <li><a href="avalon.pager.ex4.html">指定上一页,下一页的文本</a></li>
+            <li><a href="avalon.pager.ex5.html">通过左右方向键或滚轮改变页码</a></li>
+        </ol>
     </body>
 </html>

@@ -55,15 +55,17 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
                 if (typeof options.onSubmit != "function") {
                     throw new Error("onSubmit必须是一个回调方法");
                 }
-                options.onSubmit.call(e.target, e, vmodel);
-                vmodel.$close();
+                if(options.onSubmit.call(e.target, e, vmodel) !== false){
+                   vmodel.$close()
+                }
             }
             vm.$cancel = function(e) {
                 if (typeof options.onCancel != "function") {
                     throw new Error("onCancel必须是一个回调方法");
                 }
-                options.onCancel.call(e.target, e, vmodel);
-                vmodel.$close();
+                if(options.onCancel.call(e.target, e, vmodel) !== false){
+                   vmodel.$close()
+                }
             }
             /**
              * desc: 显示dialogmask

@@ -183,9 +183,6 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
         onOpen: avalon.noop,
         onClose: avalon.noop,
         width: 480, // 默认dialog的width
-        setContent: avalon.noop,
-        setTitle: avalon.noop,
-        setModel: avalon.noop,
         showClose: true,
         toggle: false, // 通过此属性的决定dialog的显示或者隐藏状态
         widgetElement: "",

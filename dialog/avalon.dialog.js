@@ -59,20 +59,13 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
                    vmodel.$close()
                 }
             }
-            vm.$cancel = function(e) {
-                if (typeof options.onCancel != "function") {
-                    throw new Error("onCancel必须是一个回调方法");
-                }
-                if(options.onCancel.call(e.target, e, vmodel) !== false){
-                   vmodel.$close()
-                }
-            }
+
             /**
              * desc: 显示dialogmask
              * @param event: 当参数个数为2时，event为要显示的dialog的id，参数个数为1时event为事件对象
              * @param scope: 当存在层中层时，才可能有2个参数，此时scope是用户定义的controller的id 
              **/
-            vm.$show = function() {
+            vm.$show = function() {//open
                 document.body.style.overflow = "hidden";
                 var len = 0;
                 avalon.Array.ensure(dialogShows, vm);
@@ -81,9 +74,10 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
                 maskLayer.style.zIndex = 2 * len - 1 + maxZIndex;
                 element.style.zIndex = 2 * len + maxZIndex;
                 resetCenter(vmodel, element);
+                options.onOpen.call(e.target, e, vmodel)
             }
             // 隐藏dialog
-            vm.$close = function() {
+            vm.$close = function() {//close
                 var len = 0;
                 avalon.Array.remove(dialogShows, vm);
                 len = dialogShows.length;
@@ -97,6 +91,7 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
                 }
                 // 重置maskLayer的z-index,当最上层的dialog关闭，通过降低遮罩层的z-index来显示紧邻其下的dialog
                 maskLayer.style.zIndex = 2 * len - 1 +maxZIndex;
+                options.onClose.call(e.target, e, vmodel)
             };
             vm.$watch("toggle", function(val) {
                 if (val) {
@@ -185,7 +180,8 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
         title: "&nbsp;", // dialog的title
         type: "confirm", // dialog的显示类型，prompt(有返回值) confirm(有两个按钮) alert(有一个按钮)
         onSubmit: avalon.noop, // 点击"确定"按钮时的回调
-        onCancel: avalon.noop, // 点击“取消”或关闭按钮时的回调
+        onOpen: avalon.noop,
+        onClose: avalon.noop,
         width: 480, // 默认dialog的width
         setContent: avalon.noop,
         setTitle: avalon.noop,

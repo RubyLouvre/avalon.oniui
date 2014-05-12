@@ -36,16 +36,6 @@ define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
                     if (index > -1) {
                         if (!vmodel.toggle) {
                             var str = value.replace(/\s+$/g, "")
-                            if (str !== value) {
-                                element.value = str//让光标定位在文字的最后
-                                element.focus()
-                                if (element.createTextRange) {
-                                    var range = element.createTextRange(); //建立文本选区   
-                                    range.moveStart('character', str.length);
-                                    range.collapse(true);
-                                    range.select()
-                                }
-                            }
                             //每隔一个字符插入一个<wbr>，实现强制换行，插入<bdo>包围@，方便以后查找
                             var sington = str.length === 1
                             str = str.split("").join("<wbr>") + "<wbr>"
@@ -122,7 +112,7 @@ define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
 
             vm.$popup = function(str) {
                 //创建测量用的DIV,它与当前textara, input的大小样式完全相同
-                var fakeTextArea = document.createElement("div")
+                var fakeTextArea = document.createElement("pre")
                 fakeTextArea.innerHTML = str
                 document.body.appendChild(fakeTextArea)
                 var styles = window.getComputedStyle ?
@@ -231,7 +221,7 @@ define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
         delay: 500, //我们是通过$update方法与后台进行AJAX连接，为了防止输入过快导致频繁，需要指定延时毫秒数
         //远程更新函数,与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行$filter、$highlight操作
         $update: avalon.noop,
-        getTemplate: function(str, options){
+        getTemplate: function(str, options) {
             return str
         },
         //用于对datalist进行过滤排序，将得到的新数组赋给_datalist，实现弹出层的更新

@@ -32,7 +32,6 @@
                         }
                         return elem;
                     }
-
                     function getElementsByClassName(root, className) {
                         if (root.getElementsByClassName) {;
                             return root.getElementsByClassName(className);
@@ -49,14 +48,12 @@
                             return arr;
                         }
                     }
-
                     var testWrapper = document.getElementById("testWrapper");
                     describe("测试dialog组件", function() {
                         var dialogDiv = "";
                         var button = "";
                         beforeEach(function() {
-                            console.log("each hook");
-                            var dialogTemplate = '<button ms-click="show('+"'aa')"+'">打开对话框</button>'+'<div id="dialog" ms-widget="dialog,aa">呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵<p>{{message}}</p></div>';
+                            var dialogTemplate = '<button ms-click="show('+"'aa')"+'">打开对话框</button>'+'<div id="dialog" ms-widget="dialog,aa,$aaOpts">呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵<p>{{message}}</p></div>';
                             testWrapper.innerHTML = dialogTemplate;
                             dialogDiv = testWrapper.getElementsByTagName("div")[0];
                             button = testWrapper.getElementsByTagName("button")[0];
@@ -79,18 +76,20 @@
                                         sureBtn = getElementsByClassName(dialogDiv, "ui-btn-primary")[0];
 
                                     pText = pText.replace(/^\s*|\s*$/g,"");
-                                    avalon.$ui( id ).show();
-                                    expect(dialogDiv.className).to.be("ui-dialog");
-                                    expect(dialogHeader.length).to.be(1);
-                                    expect(dialogContent.length).to.be(1);
-                                    expect(dialogFooter.length).to.be(1);
-                                    expect(dialogDiv.style.display).to.be("block");
-                                    expect(pText).to.be("笑傻了吧！！");
-                                    sureBtn.onclick = function(){
-                                        expect(dialogDiv.style.display).to.be("none");
-                                        done()
-                                    }
-                                    sureBtn.click();
+                                    avalon.vmodels[id].toggle = true;
+                                    setTimeout(function() {
+                                        expect(dialogDiv.className).to.be("ui-dialog");
+                                        expect(dialogHeader.length).to.be(1);
+                                        expect(dialogContent.length).to.be(1);
+                                        expect(dialogFooter.length).to.be(1);
+                                        expect(dialogDiv.style.display).to.be("block");
+                                        expect(pText).to.be("笑傻了吧！！");
+                                        sureBtn.onclick = function(){
+                                            expect(dialogDiv.style.display).to.be("none");
+                                            done()
+                                        }
+                                        sureBtn.click();
+                                    }, 400)
                                 }
                             })
                             avalon.scan(dialogDiv, model);
@@ -101,23 +100,25 @@
                         }) 
 
                         it("为dialog自定义回调", function(done) {
-                            dialogDiv.setAttribute("data-dialog-submit", 'okfun(close)');
                             var model = avalon.define("demo", function(vm) {
                                 vm.message = "笑傻了吧！！";
-                                vm.show = function( id ){
-                                    avalon.$ui( id ).show();
-                                    var sureBtn = getElementsByClassName(dialogDiv, "ui-btn-primary")[0];
-                                    sureBtn.click();
-                                }
                                 vm.callback = "";
-                                vm.okfun = function( close ){
-                                    model.callback = "fired!";
-                                    close()
+                                vm.$aaOpts = {
+                                    onSubmit: function(){
+                                        model.callback = "fired!";
+                                        setTimeout(function() {
+                                            expect(dialogDiv.style.display).to.be("none");
+                                            expect(model.callback).to.be("fired!");
+                                            done();
+                                        }, 400)
+                                    }
+                                }
+                                vm.show = function( id ){
+                                    avalon.vmodels[id].toggle = true;
                                     setTimeout(function() {
-                                        expect(dialogDiv.style.display).to.be("none");
-                                        expect(model.callback).to.be("fired!");
-                                        done();
-                                    }, 400)
+                                        var sureBtn = getElementsByClassName(dialogDiv, "ui-btn-primary")[0];
+                                        sureBtn.click();
+                                    }, 800)
                                 }
                             })
                             avalon.scan(dialogDiv, model);
@@ -131,15 +132,15 @@
                             var model = avalon.define("demo", function(vm) {
                                 vm.message = "笑傻了吧！！";
                                 vm.show = function( id ){
-                                    avalon.$ui( id ).show();
+                                    avalon.vmodels[id].toggle = true;
                                     setTimeout(function() {
                                         expect(dialogDiv.style.display).to.be("block");
                                         close[0].click();
                                         setTimeout(function() {
                                             expect(dialogDiv.style.display).to.be("none");
                                             done();
-                                        }, 400);
-                                    }, 400)
+                                        }, 1000);
+                                    }, 800)
                                 }
                                 
                             })
@@ -153,12 +154,10 @@
                         })
                     });
                     describe("模拟alert", function() {
-                        
                         var dialogDiv = "";
                         var button = "";
                         beforeEach(function() {
-                            console.log("each hook");
-                            var dialogTemplate = '<button ms-click="show('+"'aa')"+'">打开对话框</button>'+'<div id="dialog" ms-widget="dialog,aa" data-dialog-type="alert">呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵</div>';
+                            var dialogTemplate = '<button ms-click="show('+"'aa')"+'">打开对话框</button>'+'<div id="dialog" ms-widget="dialog,aa,$aaOpts" data-dialog-type="alert">呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵</div>';
                             testWrapper.innerHTML = dialogTemplate;
                             dialogDiv = testWrapper.getElementsByTagName("div")[0];
                             button = testWrapper.getElementsByTagName("button")[0];
@@ -171,8 +170,9 @@
                                 
                         it("类alert无取消按钮和关闭按钮", function(done) {
                             var model = avalon.define("demo", function(vm) {
+                                vm.$aaOpts = {};
                                 vm.show = function( id ){
-                                    avalon.$ui( id ).show();
+                                    avalon[id].toggle = true;
                                 }
                                 
                             })
@@ -190,9 +190,11 @@
                             
                         }) 
 
-                        it("模拟alert时，显示配置show-close无效", function(done) {
-                            dialogDiv.setAttribute("data-dialog-show-close", true);
+                        it("模拟alert时，显示配置showClose无效", function(done) {
                             var model = avalon.define("demo", function(vm) {
+                                $aaOpts = {
+                                    showClose: true
+                                }
                                 vm.show = function( id ){
                                     avalon.$ui( id ).show();
                                 }
@@ -211,10 +213,12 @@
                             }, 400)
                         })
                         it("可配置dialog的width", function(done) {
-                            dialogDiv.setAttribute("data-dialog-width", 300);
                             var model = avalon.define("demo", function(vm) {
+                                vm.$aaOpts = {
+                                    width: 300
+                                }
                                 vm.show = function( id ){
-                                    avalon.$ui( id ).show();
+                                    avalon.vmodels[id].toggle = true;
                                     setTimeout(function() {
                                         expect(dialogDiv.style.display).to.be("block");
                                         expect(dialogDiv.style.width).to.be("300px");
@@ -238,48 +242,46 @@
                             var model = avalon.define("demo", function(vm) {
                                 vm.tpl = '我是tpl';
                                 vm.tpl2 = '我是tpl2';
+                                vm.$aaOpts = {
+                                    onSubmit: function(){
+                                        alert('success')
+                                    },
+                                    onClose: function() {
+                                        alert('fail')
+                                    }
+                                }
                                 vm.show = function( id ){
-                                    avalon.$ui( id ).show();
-                                }
-                                vm.okfun = function( close ){
-                                    alert('success')
-                                    close()
-                                }
-                                vm.cancelfun = function( close ){
-                                    alert('fail')
-                                    close()
+                                    avalon.vmodels[id].toggle = true;
                                 }
                                 /**
                                  * 使用方法生成dialog
                                  */
-                                vm.customShow = function() {
+                                vm.customDialogOptions = {
+                                    title: 'customShow',
+                                    onSubmit: function() {alert("success !")},
+                                    type: 'alert'
+                                };
+                                vm.customShow = function(id) {
                                     if(!dialog) {
-                                        dialog = avalon.dialog( {
-                                            model: 'demo',
-                                            title: 'customShow',
-                                            content: '呵呵呵呵 {{tpl}} ',
-                                            id: 'cus',
-                                            confirm: 'okfun( close )',
-                                            cancel: 'cancelfun( close )',
-                                            type: 'alert'
-                                        } );
+                                        var config = {
+                                            id: id,
+                                            model: "demo",
+                                            // dialog配置项的值必须是model下的对应配置属性名
+                                            options: "customDialogOptions",
+                                            content: '呵呵呵呵 {{tpl}} '
+                                        }
+                                        dialog = avalon.dialog(config);
                                     }
-                                    dialog.show();
+                                    dialog.toggle = true;
                                 }
                                 vm.m = {
                                     tpl2: '我变了',
-                                    okfun: function( close ) {
-                                        alert('我变了');
-                                        close();
-                                    },
-                                    cancelfun: function( close ) {
-                                        alert('cancel变了');
-                                        close();
-                                    }
-                                }
-                                
+                                    $title: "改变title并且改变模板然后重新渲染",
+                                    $content: "改变modal的content{{tpl2}}",
+                                    $noScan: false // 是否需要扫描编译模板，需要编译则设为false或者不定义即可，不需要扫描设为true
+                                };
                             }) 
-                            model.customShow();
+                            model.customShow("cus");
                             setTimeout(function() {
                                 dialogDiv = getElementsByClassName(document, "ui-dialog")[0],
                                 dialogHeader = getElementsByClassName(dialogDiv, "ui-dialog-header")[0],
@@ -320,13 +322,13 @@
                         })
                         it("可以重新渲染dialog", function(done) {
                             var dialogDiv = dialog.widgetElement;
-                            var model = avalon.$ui("demo");
+                            var model = avalon.vmodels["demo"];
                             dialog.setModel(model.m);
                             setTimeout(function() {
                                 var dialogContent = getElementsByClassName(dialogDiv, "ui-dialog-content")[0];
                                 var content = dialogContent.innerText || dialogContent.textContent;
                                 content = content.replace(/^\s*|\s*$/g,"");
-                                expect(content).to.be("我变了");
+                                expect(content).to.be("改变modal的content我变了");
                                 done();
                             }, 400)
                         })
@@ -340,6 +342,42 @@
                             }, 400)
                         })
                     });
+                    describe("设置modal为false不显示遮罩层", function() {
+                        var dialogDiv = "";
+                        var button = "";
+                        beforeEach(function() {
+                            var dialogTemplate = '<button ms-click="show('+"'aa')"+'">打开对话框</button>'+'<div id="dialog" ms-widget="dialog,aa,$aaOpts">呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵<p>{{message}}</p></div>';
+                            testWrapper.innerHTML = dialogTemplate;
+                            dialogDiv = testWrapper.getElementsByTagName("div")[0];
+                            button = testWrapper.getElementsByTagName("button")[0];
+
+                        })
+                        afterEach(function() {
+                            testWrapper.innerHTML = "";
+                            dialogDiv.parentNode.removeChild(dialogDiv);
+                        })
+                        it("modal=false", function(done) {
+                            var model = avalon.define("demo", function(vm) {
+                                vm.message = "笑傻了吧！！";
+                                vm.$aaOpts = {
+                                    modal: false
+                                }
+                                vm.show = function( id ){
+                                    avalon.vmodels[id].toggle = true;
+                                    setTimeout(function() {
+                                        var layout = getElementsByClassName(document, "ui-dialog-layout");
+                                        expect(layout[0].style.display).not.to.be("none");
+                                        done();
+                                    }, 800)
+                                }
+                            })
+                            avalon.scan(dialogDiv, model);
+                            avalon.scan(button, model);
+                            setTimeout(function() {
+                                button.click();
+                            }, 400)
+                        })
+                    })
                     mocha.run()
                 })
             })()

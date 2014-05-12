@@ -1,11 +1,11 @@
 <div class="ui-dialog-layout" ms-visible="toggle"></div>
 MS_OPTION_WIDGET
-<div ms-widget="dialog,MS_OPTION_ID" data-dialog-title="MS_OPTION_TITLE" data-dialog-submit="MS_OPTION_SUBMIT" data-dialog-cancel="MS_OPTION_CANCEL" data-dialog-type="MS_OPTION_TYPE" ms-visible="toggle" data-dialog-width="MS_OPTION_WIDTH">MS_OPTION_DIALOG_CONTENT</div>
+<div ms-widget="dialog,MS_OPTION_ID,MS_OPTION_OPTS">MS_OPTION_DIALOG_CONTENT</div>
 MS_OPTION_INNERWRAPPER
 <div class="ui-dialog-inner"></div>
 MS_OPTION_HEADER
 <div class="ui-dialog-header">
-    <div class="ui-dialog-close" ms-click="MS_OPTION_CANCEL" ms-if="showClose">
+    <div class="ui-dialog-close" ms-click="$close" ms-if="showClose">
         <i class="ui-icon ui-icon-times"></i>
     </div>
     <div class="ui-dialog-title">{{ title|html }}</div>
@@ -15,8 +15,8 @@ MS_OPTION_CONTENT
 MS_OPTION_FOOTER
 <div class="ui-dialog-footer clrfix">
     <div class="ui-dialog-btns">
-        <button class="ui-btn ui-btn-primary" ms-click="MS_OPTION_SUBMIT">确定</button>
-        <button class="ui-btn" ms-if="type == 'confirm'" ms-click="MS_OPTION_CANCEL">取消</button>
+        <button class="ui-btn ui-btn-primary" ms-click="$submit">确定</button>
+        <button class="ui-btn" ms-if="type =='confirm'" ms-click="$cancel">取消</button>
     </div>
 </div>
 MS_OPTION_STYLE

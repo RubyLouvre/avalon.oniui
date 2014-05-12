@@ -1,0 +1,178 @@
+<div class="ui-pager" onselectstart="return false;" unselectable="on">
+    <span class="ui-pager-prev"
+          ms-class="ui-pager-disabled:firstPage==1"
+          ms-if="firstPage!==1" 
+          ms-title="getTitle('prev')" 
+          ms-click="jumpPage($event,'prev')" 
+          ms-hover="ui-state-hover" 
+          >{{prevText}}</span>
+    <span class="ui-pager-item"
+          ms-if="firstPage!==1" 
+          ms-title="getTitle('first')" 
+          ms-click="jumpPage($event,'first')" 
+          ms-hover="ui-state-hover" >1</span>
+    <span class='ui-pager-omit'
+          ms-if="firstPage!==1" 
+          >{{ellipseText}}</span>
+    <span  class="ui-pager-item" 
+           ms-repeat="pages" 
+           ms-title="getTitle(el)"
+           ms-hover="ui-state-hover"
+           ms-click="jumpPage($event,el)"
+           ms-class-ui-pager-current="el == currentPage" 
+           >{{el}}</span>
+    <span class="ui-pager-omit"
+          ms-if="lastPage!==maxPage" 
+          >{{ellipseText}}</span>
+    <span class="ui-pager-item"
+          ms-if="lastPage!==maxPage" 
+          ms-title="getTitle('last')" 
+          ms-hover="ui-state-hover" 
+          ms-click="jumpPage($event,'last')"  
+          >{{maxPage}}</span>
+    <span class="ui-pager-next"
+          ms-if="lastPage!==maxPage" 
+          ms-title="getTitle('next')"
+          ms-hover="ui-state-hover" 
+          ms-click="jumpPage($event,'next')" 
+          ms-class="ui-pager-disabled:lastPage==maxPage"
+          >{{nextText}}</span>
+    <div class="ui-pager-jump" ms-if="showJumper">
+        <span class="ui-pager-text">跳到第</span>
+        <div class="ui-textbox">
+            <input class="ui-textbox-input" ms-duplex="_currentPage" ms-keyup="changeCurrentPage">
+        </div>
+        <span class="ui-pager-text">页</span>
+        <button class="ui-btn" ms-click="changeCurrentPage" >确定</button>
+
+    </div>
+</div>
+MS_OPTION_STYLE
+<style>
+    .ui-pager {
+        display: inline-block;
+        font-size: 0;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+    .ui-pager-items {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .ui-pager-prev, .ui-pager-next, .ui-pager-item {
+        -moz-user-select: none;
+        background-color: #FFFFFF;
+        border: 1px solid #CCCCCC;
+        border-radius: 2px;
+        cursor: pointer;
+        display: inline-block;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        margin-right: 5px;
+        padding: 0 10px;
+        vertical-align: middle;
+    }
+    .ui-pager-prev:hover, .ui-pager-next:hover, .ui-pager-item:hover {
+        border-color: #FF8888;
+    }
+    .ui-pager-current {
+        -moz-user-select: none;
+        color: #FF5555;
+        cursor: default;
+        display: inline-block;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        margin-right: 5px;
+        padding: 1px 11px;
+        vertical-align: middle;
+        border: 0 none;
+    }
+    .ui-pager-omit {
+        -moz-user-select: none;
+        cursor: default;
+        display: inline-block;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        margin-right: 5px;
+        padding: 1px 0;
+        vertical-align: middle;
+    }
+    .ui-pager-disabled {
+        background-color: #F5F5F5;
+        border-color: #D9D9D9;
+        color: #CCCCCC;
+        cursor: default;
+    }
+    .ui-pager-disabled:hover {
+        background-color: #F5F5F5;
+        border-color: #D9D9D9;
+        color: #CCCCCC;
+        cursor: default;
+    }
+    .ui-pager-jump {
+        display: inline-block;
+        padding-left: 5px;
+        vertical-align: middle;
+    }
+    .ui-pager-jump .ui-textbox {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    .ui-textbox {
+        display: inline-block;
+        vertical-align: middle;
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        font-size: 0;
+        outline: none;
+        padding: 3px 5px;
+    }
+    .ui-pager-jump .ui-textbox-input {
+        text-align: center;
+        width: 26px;
+    }
+    .ui-textbox-input {
+        background-color: #FFFFFF;
+        border: 0 none;
+        color: #333333;
+        display: inline;
+        float: left;
+        font-size: 12px;
+        height: 18px;
+        line-height: 18px;
+        outline: medium none;
+        position: relative;
+        vertical-align: middle;
+    }
+    .ui-pager-jump .ui-btn {
+        margin-left: 5px;
+    }
+    .ui-btn {
+        display: inline-block;
+        vertical-align: middle;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        background-color: #f8f8f8;
+        border: 1px solid #cccccc;
+        border-radius: 2px;
+        color: #333333;
+        cursor: pointer;
+        font-size: 12px;
+        height: 26px;
+        outline: none;
+        overflow: visible;
+        _overflow-y: hidden;
+        padding: 0 10px;
+        text-decoration: none;
+    }
+    .ui-pager-text {
+        display: inline-block;
+        font-size: 12px;
+        vertical-align: middle;
+    }
+</style>

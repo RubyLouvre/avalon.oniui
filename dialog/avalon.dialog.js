@@ -5,13 +5,12 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
         template = arr[0],
         widgetArr = template.split("MS_OPTION_WIDGET"),
         _maskLayer = widgetArr[0], // 遮罩层html(string)
-        supportTransform = false, // 支持transform的浏览器使用transform实现水平垂直居中，不支持的浏览器使用position:absolute来实现
         maskLayerExist = false, // 页面不存在遮罩层就添加maskLayer节点，存在则忽略
         maskLayer = avalon.parseHTML(_maskLayer).firstChild, // 遮罩层节点(dom node)
         _widget = widgetArr[1].split("MS_OPTION_INNERWRAPPER")[0], // 动态添加dialog时,添加组件的html(string)
         dialogShows = [], // 存在层上层时由此数组判断层的个数，据此做相应的处理
         dialogNum = 0, // 保存页面dialog的数量，当dialogNum为0时，清除maskLayer
-        maxZIndex = getMaxZIndex(); // 保存body直接子元素中最大的z-index值， 保证dialog在最上层显示
+        maxZIndex // 保存body直接子元素中最大的z-index值， 保证dialog在最上层显示
     try {
         styleEl.innerHTML += cssText;
     } catch (e) {
@@ -55,46 +54,41 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
                 if (typeof options.onSubmit != "function") {
                     throw new Error("onSubmit必须是一个回调方法");
                 }
-                options.onSubmit.call(e.target, e, vmodel);
-                vmodel.$close();
-            }
-            vm.$cancel = function(e) {
-                if (typeof options.onCancel != "function") {
-                    throw new Error("onCancel必须是一个回调方法");
+                if(options.onSubmit.call(e.target, e, vmodel) !== false){
+                   vmodel.$close()
                 }
-                options.onCancel.call(e.target, e, vmodel);
-                vmodel.$close();
             }
+
             /**
              * desc: 显示dialogmask
              * @param event: 当参数个数为2时，event为要显示的dialog的id，参数个数为1时event为事件对象
              * @param scope: 当存在层中层时，才可能有2个参数，此时scope是用户定义的controller的id 
              **/
-            vm.$show = function() {
+            vm.$show = function(e) {//open
                 document.body.style.overflow = "hidden";
-                var len = 0;
                 avalon.Array.ensure(dialogShows, vm);
-                len = dialogShows.length;
                 // 通过zIndex的提升来调整遮罩层，保证层上层存在时遮罩层始终在顶层dialog下面(顶层dialog zIndex-1)但是在其他dialog上面
-                maskLayer.style.zIndex = 2 * len - 1 + maxZIndex;
-                element.style.zIndex = 2 * len + maxZIndex;
+                maxZIndex = getMaxZIndex()
+                maskLayer.style.zIndex = maxZIndex + 1;
+                element.style.zIndex =  maxZIndex + 2;
                 resetCenter(vmodel, element);
+                options.onOpen.call(e.target, e, vmodel)
             }
             // 隐藏dialog
-            vm.$close = function() {
-                var len = 0;
+            vm.$close = function(e) {//close
                 avalon.Array.remove(dialogShows, vm);
-                len = dialogShows.length;
+                var len = dialogShows.length;
                 vmodel.toggle = false;
                 /* 处理层上层的情况，因为maskLayer公用，所以需要其以将要显示的dialog的toggle状态为准 */
-                if (len >= 1 && dialogShows[len-1].modal) {
+                if (len && dialogShows[len-1].modal) {
                     maskLayer.setAttribute("ms-visible", "toggle");
                     avalon.scan(maskLayer, dialogShows[len - 1]);
                 } else {
                     document.body.style.overflow = "auto";
                 }
                 // 重置maskLayer的z-index,当最上层的dialog关闭，通过降低遮罩层的z-index来显示紧邻其下的dialog
-                maskLayer.style.zIndex = 2 * len - 1 +maxZIndex;
+                maskLayer.style.zIndex = maxZIndex - 1;
+                options.onClose.call(e.target, e, vmodel)
             };
             vm.$watch("toggle", function(val) {
                 if (val) {
@@ -111,7 +105,7 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
                 avalon.clearHTML(_content);
                 lastContent.innerHTML = _lastContent;
                 if (!noScan) {
-                    avalon.scan(lastContent, [vm].concat(vmodels));
+                    avalon.scan(lastContent, [vmodel].concat(vmodels));
                 }
             };
             // 动态修改dialog的title
@@ -121,15 +115,15 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
             // 重新渲染dialog
             vm.setModel = function(m) {
                 // 这里是为了充分利用vm._ReanderView方法，才提前设置一下element.innerHTML
-                if (!!m.$content) {
+                if (!!m.$content) {// ?????????
                     vmodel.setContent(m.$content, m.$noScan);
                 }
-                if (!!m.$title) {
+                if (!!m.$title) {// ??????????
                     vmodel.setTitle(m.$title);
                 }
                 element.innerHTML = _lastContent;
                 vm._RenderView();
-                avalon.scan(element, [vm].concat(findModel(m)).concat(vmodels));
+                avalon.scan(element, [vmodel].concat(findModel(m)).concat(vmodels));
             };
 
             // 将零散的模板(dialog header、dialog content、 dialog footer、 dialog wrapper)组合成完整的dialog
@@ -183,11 +177,9 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
         title: "&nbsp;", // dialog的title
         type: "confirm", // dialog的显示类型，prompt(有返回值) confirm(有两个按钮) alert(有一个按钮)
         onSubmit: avalon.noop, // 点击"确定"按钮时的回调
-        onCancel: avalon.noop, // 点击“取消”或关闭按钮时的回调
+        onOpen: avalon.noop,
+        onClose: avalon.noop,
         width: 480, // 默认dialog的width
-        setContent: avalon.noop,
-        setTitle: avalon.noop,
-        setModel: avalon.noop,
         showClose: true,
         toggle: false, // 通过此属性的决定dialog的显示或者隐藏状态
         widgetElement: "",
@@ -208,10 +200,7 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
         avalon.scan(widget, model);
         return avalon.vmodels[config.id];
     }
-    function generateID() {
-        //生成UUID http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
-        return "avalonDialog" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-    }
+
     function findModel(m) {
         // console.log(m);
         var model = m;
@@ -222,8 +211,7 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
                 model = [].concat(model);
             }
         } else {
-            model = avalon.define('dialogVM' + generateID(), function(vm) {
-            });
+            model = []
         }
         return model;
     }
@@ -242,11 +230,12 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
         }
     }
     function getMaxZIndex() {
-        var bodyChildren = document.body.children;
-        var maxIndex = 0, zIndex;
-        for(var i=0, len=bodyChildren.length; i<len; i++) {
-            zIndex = avalon(bodyChildren[i]).css("z-index");
-            zIndex = !!zIndex && parseInt(zIndex);
+        var children = document.body.children;
+        var maxIndex = 10, zIndex;
+        for(var i = 0, el; el = children[i++]; ) {
+            if(el === maskLayer)
+                continue
+            zIndex = ~~valon(el).css("z-index")
             if (zIndex) {
                 maxIndex = Math.max(maxIndex, zIndex);
             }

@@ -115,6 +115,9 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
                     vmodel.$open();
                 }
             })
+            vm.$watch("zIndex", function(val) {
+                maxZIndex = val;
+            })
             /**
              * desc: 可以动态改变dialog的内容
              * @param content: 要替换的content，可以是已经渲染ok的view也可以是未解析渲染的模板
@@ -207,7 +210,8 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
         getTemplate: function(str, options) {
             return str;
         },
-        modal: true
+        modal: true,
+        zIndex: maxZIndex
     }
     // 动态创建dialog
     avalon.dialog = function(config) {

@@ -60,7 +60,7 @@
      
     <script> 
         require("dialog/avalon.dialog", function(avalon) {
-            avalon.define("demo", function(vm) {
+            var model = avalon.define("demo", function(vm) {
                 var dialog;
                 // 要求组件的配置项一定要放在组件的配置对象中，不可放在外部定义的controller，比如这里的demo
                 // 注意配置选项绝不可以监控
@@ -73,7 +73,7 @@
                         alert('执行了submit')
                         console.log("非组件的确定回调");
                     },
-                    onCancel: function(){
+                    onClose: function(){
                         alert('执行了cancel')
                     }
                 };
@@ -94,7 +94,7 @@
                     onSubmit: function() {
                         alert("确定操作，完成之后关闭弹窗");
                     },
-                    onCancel: function() {
+                    onClose: function() {
                         alert("取消操作，完成之后关闭弹窗");
                     }
                 };
@@ -116,7 +116,7 @@
                 /**
                  * 使用方法生成dialog
                  */
-                vm.customDialogOptions = {
+                vm.$customDialogOptions = {
                         title: 'customShow',
                         onSubmit: function() {alert("success !")},
                         type: 'alert'
@@ -128,7 +128,7 @@
                             id: id,
                             model: "demo",
                             // dialog配置项的值必须是model下的对应配置属性名
-                            options: "customDialogOptions",
+                            options: "$customDialogOptions",
                             content: '呵呵呵呵 {{tpl}} '
                         }
                         dialog = avalon.dialog(config);

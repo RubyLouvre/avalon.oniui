@@ -13,7 +13,7 @@
     <div class="wrapper">
         <h1>dialog demo 4</h1>
         <p class="example">层上层的弹窗demo</p>
-        <p><span class="">说明：</span>当需要在已经show的弹窗中再弹出的弹窗，可以嵌套dialog，嵌套的dialog稍有不同，触发dialog的button配置ms-click时，show方法要明确添加第二个参数，表示使用外层用户定义的vmodel.show方法,否则会出错</p>
+        <p><span class="useDescription">说明：</span>当需要在已经show的弹窗中再弹出弹窗的话，可以嵌套dialog，嵌套的dialog是通过不断调整遮罩层的z-index来共用一个遮罩层从而达到层上层的效果</p>
         <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
             &lt;!DOCTYPE HTML&gt;
             &lt;html&gt;
@@ -52,8 +52,8 @@
                                     title: "层上层的dialog",
                                     onSubmit: function() {
                                         alert("submit success !");
-                                        console.log(arguments);
-                                        console.log(this);
+                                        // console.log(arguments);
+                                        // console.log(this);
                                     }
                                 };
                                 vm.$ggOpts = {
@@ -65,7 +65,7 @@
                                     onSubmit: function() {
                                         alert("确定操作，完成之后关闭弹窗");
                                     },
-                                    onCancel: function() {
+                                    onClose: function() {
                                         alert("取消操作，完成之后关闭弹窗");
                                     }
                                 };
@@ -106,8 +106,8 @@
                             title: "层上层的dialog",
                             onSubmit: function() {
                                 alert("submit success !");
-                                console.log(arguments);
-                                console.log(this);
+                                // console.log(arguments);
+                                // console.log(this);
                             }
                         };
                         vm.$ggOpts = {
@@ -119,7 +119,7 @@
                             onSubmit: function() {
                                 alert("确定操作，完成之后关闭弹窗");
                             },
-                            onCancel: function() {
+                            onClose: function() {
                                 alert("取消操作，完成之后关闭弹窗");
                             }
                         };

@@ -157,7 +157,6 @@
                         var dialogDiv = "";
                         var button = "";
                         beforeEach(function() {
-                            console.log("each hook");
                             var dialogTemplate = '<button ms-click="show('+"'aa')"+'">打开对话框</button>'+'<div id="dialog" ms-widget="dialog,aa,$aaOpts" data-dialog-type="alert">呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵</div>';
                             testWrapper.innerHTML = dialogTemplate;
                             dialogDiv = testWrapper.getElementsByTagName("div")[0];
@@ -247,7 +246,7 @@
                                     onSubmit: function(){
                                         alert('success')
                                     },
-                                    onCancel: function() {
+                                    onClose: function() {
                                         alert('fail')
                                     }
                                 }

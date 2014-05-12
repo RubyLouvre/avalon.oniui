@@ -10,7 +10,7 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
         _widget = widgetArr[1].split("MS_OPTION_INNERWRAPPER")[0], // 动态添加dialog时,添加组件的html(string)
         dialogShows = [], // 存在层上层时由此数组判断层的个数，据此做相应的处理
         dialogNum = 0, // 保存页面dialog的数量，当dialogNum为0时，清除maskLayer
-        maxZIndex // 保存body直接子元素中最大的z-index值， 保证dialog在最上层显示
+        maxZIndex = getMaxZIndex();// 保存body直接子元素中最大的z-index值， 保证dialog在最上层显示
     try {
         styleEl.innerHTML += cssText;
     } catch (e) {
@@ -42,20 +42,20 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
 
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "template"];
+            vm.$skipArray = ["widgetElement", "template","sureBtnClick"];
             vm.width = options.width;
+            vm.sureBtnClick = false;
             vm.widgetElement = element;
             // 如果显示模式为alert或者配置了showClose为false，不显示关闭按钮
             vm.showClose = vm.type == "alert" ? false : options.showClose;
-            // console.log("关于showClose 的配置问题");
-            // console.log(vm.showClose);
-            // console.log(vm);
             vm.$submit = function(e) {
                 if (typeof options.onSubmit != "function") {
                     throw new Error("onSubmit必须是一个回调方法");
                 }
+                // 在用户回调返回false时，不关闭弹窗
                 if(options.onSubmit.call(e.target, e, vmodel) !== false){
-                   vmodel.$close()
+                    vmodel.sureBtnClick = true;
+                    vmodel.$close(e)
                 }
             }
 
@@ -64,15 +64,17 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
              * @param event: 当参数个数为2时，event为要显示的dialog的id，参数个数为1时event为事件对象
              * @param scope: 当存在层中层时，才可能有2个参数，此时scope是用户定义的controller的id 
              **/
-            vm.$show = function(e) {//open
+            vm.$open = function() {//open
+                var len = 0;
                 document.body.style.overflow = "hidden";
                 avalon.Array.ensure(dialogShows, vm);
+                len = dialogShows.length;
                 // 通过zIndex的提升来调整遮罩层，保证层上层存在时遮罩层始终在顶层dialog下面(顶层dialog zIndex-1)但是在其他dialog上面
-                maxZIndex = getMaxZIndex()
-                maskLayer.style.zIndex = maxZIndex + 1;
-                element.style.zIndex =  maxZIndex + 2;
+                
+                maskLayer.style.zIndex = 2 * len + maxZIndex -1;
+                element.style.zIndex =  2 * len + maxZIndex;
                 resetCenter(vmodel, element);
-                options.onOpen.call(e.target, e, vmodel)
+                options.onOpen.call(vmodel)
             }
             // 隐藏dialog
             vm.$close = function(e) {//close
@@ -87,12 +89,17 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
                     document.body.style.overflow = "auto";
                 }
                 // 重置maskLayer的z-index,当最上层的dialog关闭，通过降低遮罩层的z-index来显示紧邻其下的dialog
-                maskLayer.style.zIndex = maxZIndex - 1;
-                options.onClose.call(e.target, e, vmodel)
+                maskLayer.style.zIndex = 2 * len + maxZIndex - 1;
+                // 因为在submit操作之后也调用了$close方法来关闭弹窗，但是如果用户定义了onClose方法的话是不应该触发的，因此通过sureBtnClick这个开关来判断是点击了确定按钮还是点击了"取消"或者“关闭”按钮.
+                if (vmodel.sureBtnClick) {
+                    vmodel.sureBtnClick = false;
+                } else {
+                    options.onClose.call(e.target, e, vmodel)
+                }
             };
             vm.$watch("toggle", function(val) {
                 if (val) {
-                    vmodel.$show();
+                    vmodel.$open();
                 }
             })
             /**
@@ -202,7 +209,6 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
     }
 
     function findModel(m) {
-        // console.log(m);
         var model = m;
         if (model) {
             if (avalon.type(model) === 'string') {
@@ -235,12 +241,12 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
         for(var i = 0, el; el = children[i++]; ) {
             if(el === maskLayer)
                 continue
-            zIndex = ~~valon(el).css("z-index")
+            zIndex = ~~avalon(el).css("z-index")
             if (zIndex) {
                 maxIndex = Math.max(maxIndex, zIndex);
             }
         }
-        return maxIndex;
+        return maxIndex + 1;
     }
     return avalon;
 });

@@ -13,7 +13,10 @@
     <div class="wrapper">
         <h1>dialog demo 8</h1>
         <p class="example">动态创建dialog（<span class="statement">avalon.dialog(configObject)</span>）</p>
-        <p><span class="">说明：</span>通过avalon.dialog方法可以动态创建dialog，需要做的是为dialog方法添加必要的配置参数，也可以通过调用setTitle、setContent、setModel方法重置dialog的title，修改dialog的content或者重新渲染dialog，很灵活，查看demo进一步了解</p>
+        <p><span class="useDescription">说明：</span>通过avalon.dialog方法可以动态创建dialog，需要做的是为dialog方法添加必要的配置参数，也可以通过调用setTitle、setContent、setModel方法重置dialog的title，修改dialog的content或者重新渲染dialog，很灵活，查看demo进一步了解.</p>
+        <p>需要注意的是： 动态定义dialog时，dialog的配置参数一定要定在controller下面，比如示例中的$customDialogOptions,它将会成为dialog的配置项存在，形式如下：ms-widget="dialog, cus, $customDialogOptions"; </p>
+        <p>重新渲染dialog时，需要注意setModel的参数必须是controller下的对象，不可以“$”开头，也不可放在$skipArray中，但是它里面的content、title等都可以设置为不可监控的。</p>
+        <p>调用setContent时，如果传入的是已经渲染好的view，则可以设置第二个参数为true，告诉avalon不再对其进行扫描、解析、渲染，如果传递是模拟，则需要设为false或者不设，avalon会自动对其扫描、渲染成view。相应的调用setModel时，如果$content是个html 模板，则设置$noScan为true，如果是渲染好的view则设置$noScan为false</p>
         <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
             &lt;!DOCTYPE HTML&gt;
             &lt;html&gt;
@@ -40,7 +43,7 @@
                                 vm.show = function( id ){
                                     avalon.vmodels[id].toggle = true;
                                 }
-                                vm.customDialogOptions = {
+                                vm.$customDialogOptions = {
                                         title: 'customShow',
                                         onSubmit: function() {alert("success !")},
                                         type: 'alert'
@@ -52,7 +55,7 @@
                                             id: id,
                                             model: "demo",
                                             // dialog配置项的值必须是model下的对应配置属性名
-                                            options: "customDialogOptions",
+                                            options: "$customDialogOptions",
                                             content: '呵呵呵呵 {{tpl}} '
                                         }
                                         dialog = avalon.dialog(config);
@@ -118,7 +121,7 @@
                         vm.show = function( id ){
                             avalon.vmodels[id].toggle = true;
                         }
-                        vm.customDialogOptions = {
+                        vm.$customDialogOptions = {
                                 title: 'customShow',
                                 onSubmit: function() {alert("success !")},
                                 type: 'alert'
@@ -130,7 +133,7 @@
                                     id: id,
                                     model: "demo",
                                     // dialog配置项的值必须是model下的对应配置属性名
-                                    options: "customDialogOptions",
+                                    options: "$customDialogOptions",
                                     content: '呵呵呵呵 {{tpl}} '
                                 }
                                 dialog = avalon.dialog(config);
@@ -148,7 +151,7 @@
                             dialog.setContent('{{tpl2}}');
                         }
                         /**
-                         * 更改dialogtitle
+                         * 更改dialog title
                          */
                         vm.changeTitle = function(id) {
                             var dialog = avalon.vmodels[id];

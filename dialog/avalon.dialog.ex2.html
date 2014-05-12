@@ -12,8 +12,8 @@
 <body class="ms-controller">
     <div class="wrapper">
         <h1>dialog demo 2</h1>
-        <p class="example">点击弹窗的确定和取消按钮进行自定义回调操作（<span class="statement">data-dialog-submit="okfun(close)" data-dialog-cansel="cancelfun(close)"</span>）</p>
-        <p><span class="">说明：</span>通过submit和cansel的配置定义用户的回调操作，注意close参数传递的close方法，区分于字符串</p>
+        <p class="example">通过事件接口配置用户的回调操作</p>
+        <p><span class="useDescription">说明：</span>所有dialog的配置项都定义在一个统一的配置对象中传给dialog widget，比如:ms-widget="dialog,aa,$aaOpts",注意必须定义成以"$"开头或者放在controller的$skipArray中，防止avalon对其进行扫描而影响性能。onOpen属性定义open dialog时的回调，onSubmit定义点击确定按钮之后的回调，onClose定义close dialog时的回调。</p>
         <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
             &lt;!DOCTYPE HTML&gt;
             &lt;html&gt;
@@ -39,10 +39,13 @@
                                 }
                                 vm.title = "可自定义回调操作的dialog"
                                 vm.$aaOpts = {
+                                    onOpen: function() {
+                                        alert("open dialog");
+                                    },
                                     onSubmit: function(){
                                         alert('success')
                                     },
-                                    onCancel: function(){
+                                    onClose: function(){
                                         alert('fail')
                                     }
                                 }
@@ -70,10 +73,13 @@
                         }
                         vm.title = "可自定义回调操作的dialog"
                         vm.$aaOpts = {
+                            onOpen: function() {
+                                alert("open dialog");
+                            },
                             onSubmit: function(){
                                 alert('success')
                             },
-                            onCancel: function(){
+                            onClose: function(){
                                 alert('fail')
                             }
                         }

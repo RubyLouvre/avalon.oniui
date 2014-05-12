@@ -148,7 +148,7 @@
                             if(!dialog) {
                                 return;
                             }
-                            dialog.setContent('{{tpl2}}');
+                            dialog.setContent('<p>{{tpl2}}</p><span>我是个dom template</span>');
                         }
                         /**
                          * 更改dialog title
@@ -161,7 +161,7 @@
                             dialog.setTitle('我是title');
                         };
                         // setModel的参数就是个简单对象，不要监控
-                        vm.m = {
+                        vm.$m = {
                             tpl2: '我变了',
                             $title: "改变title并且改变模板然后重新渲染",
                             $content: "改变modal的content{{tpl2}}",
@@ -172,7 +172,7 @@
                             if(!dialog) {
                                 return;
                             }
-                            dialog.setModel(vm.m);
+                            dialog.setModel(vm.$m);
                         };
                     })
                     avalon.scan();

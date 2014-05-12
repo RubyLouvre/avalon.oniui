@@ -42,9 +42,10 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
 
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "template","sureBtnClick"];
+            vm.$skipArray = ["widgetElement", "template","submitBtnClick","cancelBtnClick"];
             vm.width = options.width;
-            vm.sureBtnClick = false;
+            vm.submitBtnClick = false;
+            vm.cancelBtnClick = false;
             vm.widgetElement = element;
             // 如果显示模式为alert或者配置了showClose为false，不显示关闭按钮
             vm.showClose = vm.type == "alert" ? false : options.showClose;
@@ -54,7 +55,7 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
                 }
                 // 在用户回调返回false时，不关闭弹窗
                 if(options.onSubmit.call(e.target, e, vmodel) !== false){
-                    vmodel.sureBtnClick = true;
+                    vmodel.submitBtnClick = true;
                     vmodel.$close(e)
                 }
             }
@@ -90,13 +91,25 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
                 }
                 // 重置maskLayer的z-index,当最上层的dialog关闭，通过降低遮罩层的z-index来显示紧邻其下的dialog
                 maskLayer.style.zIndex = 2 * len + maxZIndex - 1;
-                // 因为在submit操作之后也调用了$close方法来关闭弹窗，但是如果用户定义了onClose方法的话是不应该触发的，因此通过sureBtnClick这个开关来判断是点击了确定按钮还是点击了"取消"或者“关闭”按钮.
-                if (vmodel.sureBtnClick) {
-                    vmodel.sureBtnClick = false;
+                // 因为在submit操作之后也调用了$close方法来关闭弹窗，但是如果用户定义了onClose方法的话是不应该触发的，因此通过submitBtnClick这个开关来判断是点击了确定按钮还是点击了"取消"或者“关闭”按钮.
+                if (vmodel.submitBtnClick) {
+                    vmodel.submitBtnClick = false;
+                } else if (vmodel.cancelBtnClick) {
+                    vmodel.cancelBtnClick = false;
                 } else {
                     options.onClose.call(e.target, e, vmodel)
                 }
             };
+            vm.$cancel = function(e) {
+                if (typeof options.onCancel != "function") {
+                    throw new Error("onCancel必须是一个回调方法");
+                }
+                // 在用户回调返回false时，不关闭弹窗
+                if(options.onCancel.call(e.target, e, vmodel) !== false){
+                    vmodel.cancelBtnClick = true;
+                    vmodel.$close(e)
+                }
+            }
             vm.$watch("toggle", function(val) {
                 if (val) {
                     vmodel.$open();
@@ -109,7 +122,6 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
              */
             vm.setContent = function(content, noScan) {
                 _lastContent = content;
-                avalon.clearHTML(_content);
                 lastContent.innerHTML = _lastContent;
                 if (!noScan) {
                     avalon.scan(lastContent, [vmodel].concat(vmodels));
@@ -122,17 +134,15 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
             // 重新渲染dialog
             vm.setModel = function(m) {
                 // 这里是为了充分利用vm._ReanderView方法，才提前设置一下element.innerHTML
-                if (!!m.$content) {// ?????????
-                    vmodel.setContent(m.$content, m.$noScan);
+                if (!!m.$content) {
+                    _lastContent = m.$content;
+                    lastContent.innerHTML = _lastContent;
                 }
-                if (!!m.$title) {// ??????????
-                    vmodel.setTitle(m.$title);
+                if (!!m.$title) {
+                    vmodel.title = m.$title;
                 }
-                element.innerHTML = _lastContent;
-                vm._RenderView();
                 avalon.scan(element, [vmodel].concat(findModel(m)).concat(vmodels));
             };
-
             // 将零散的模板(dialog header、dialog content、 dialog footer、 dialog wrapper)组合成完整的dialog
             vm._RenderView = function() {
                 var innerWrapper = ""; // 保存innerWraper元素节点
@@ -185,7 +195,11 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
         type: "confirm", // dialog的显示类型，prompt(有返回值) confirm(有两个按钮) alert(有一个按钮)
         onSubmit: avalon.noop, // 点击"确定"按钮时的回调
         onOpen: avalon.noop,
+        onCancel: avalon.noop,
         onClose: avalon.noop,
+        setTitle: avalon.noop,
+        setContent: avalon.noop,
+        setModel: avalon.noop,
         width: 480, // 默认dialog的width
         showClose: true,
         toggle: false, // 通过此属性的决定dialog的显示或者隐藏状态
@@ -197,6 +211,7 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
     }
     // 动态创建dialog
     avalon.dialog = function(config) {
+        console.log(config);
         if (avalon.type(config.id) === 'undefined') {
             config.id = generateID();
         }
@@ -207,19 +222,26 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
         avalon.scan(widget, model);
         return avalon.vmodels[config.id];
     }
-
-    function findModel(m) {
+    function findModel( m ) {
         var model = m;
-        if (model) {
-            if (avalon.type(model) === 'string') {
-                model = [avalon.vmodels[model]];
-            } else {
-                model = [].concat(model);
-            }
-        } else {
-            model = []
+        if(model) { // 如果m为字符串参数，说明是要在已存在的vmodels中查找对应id的vmodel
+            if(avalon.type(model) === 'string') {
+                model = avalon.vmodels[model];
+            } 
+        } else { // 如果没有传递参数m，则返回空vmodel
+            model = avalon.define('dialogVM' + setTimeout("1"), function(vm) {
+            });
         }
-        return model;
+        if (!model) {
+            throw new Error("您查找的"+model+"不存在");
+        }
+        // 如果传入的是avalon的vmodel格式的参数对象，直接返回，如果是普通的对象，将其转换为avalon的监控对象
+        if (avalon.isPlainObject(model) && !model.$id && !model.$accessors) {
+            model = avalon.define('dialogVM' + setTimeout("1"), function(vm) {
+                avalon.mix(vm, m);
+            });
+        }
+        return [].concat(model);
     }
     // 调整弹窗水平、垂直居中
     function resetCenter(vmodel, target) {

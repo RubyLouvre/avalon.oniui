@@ -22,43 +22,64 @@
             <tbody>
                 <tr>
                     <td>title</td>
-                    <td>默认""</td>
-                    <td>设置弹窗的标题，通过data-dialog-title配置</td>
+                    <td>默认"&nbsp;"</td>
+                    <td>设置弹窗的标题</td>
                 </tr>
                 <tr>
                     <td>type</td>
-                    <td>默认"confirm"</td>
+                    <td>默认"confirm"<div style="width:300px;height:1px;line-height:1px;"></td></td>
                     <td>配置弹窗的类型，可以配置为alert来模拟浏览器的alert</td>
                 </tr>
                 <tr>
                     <td>onSubmit</td>
                     <td>type: function</td>
-                    <td>配置点击"确定"按钮后的回调操作</td>
+                    <td>定义点击"确定"按钮后的回调操作</td>
+                </tr>
+                <tr>
+                    <td>onOpen</td>
+                    <td>type: function</td>
+                    <td>定义显示dialog时的回调</td>
                 </tr>
                 <tr>
                     <td>onCancel</td>
-                    <td>function</td>
-                    <td>配置点击"取消"或关闭按钮后的回调操作，通过data-dialog-cancel="xxx"来配置</td>
+                    <td>type: function</td>
+                    <td>定义点击"取消"按钮后的回调操作</td>
+                </tr>
+                <tr>
+                    <td>onClose</td>
+                    <td>type: function</td>
+                    <td>定义点击"关闭"按钮后的回调操作</td>
+                </tr>
+                <tr>
+                    <td>setContent</td>
+                    <td>
+                        <p>type: function</p>
+                        <p>@param1 content: dialog的主体内容，可以是已经渲染好的view，也可以是模板，type:string</p>  
+                        <p>@param2 noScan: 判断content是否需要avalon渲染、解析生成对应的view，设为true则需要avalon进行解析，设为false不进行解析，直接展示</p>
+                    </td>
+                    <td>动态改变dialog的主体内容</td>
+                </tr>
+                <tr>
+                    <td>setTitle</td>
+                    <td>
+                        <p>type: function</p>
+                        <p>@param title: dialog要显示的title，type:string</p>
+                    </td>
+                    <td>动态修改dialog的title</td>
+                </tr>
+                <tr>
+                    <td>setModel</td>
+                    <td>
+                        <p>type: function</p>
+                        <p>@param m: 重新渲染dialog的配置对象，包括title、content、content中涉及的插值表达式，需要注意的是，title和content不是真正渲染的内容，所以不需要avalon进行扫描监控，定义的时候必须在其前面加上"$",否则组件不会渲染成想要的效果</p>
+                        <p></p>
+                    </td>
+                    <td>重新渲染模板</td>
                 </tr>
                 <tr>
                     <td>width</td>
                     <td>默认480</td>
                     <td>设置dialog的width</td>
-                </tr>
-                <tr>
-                    <td>setContent</td>
-                    <td>function</td>
-                    <td>动态改变dialog的内容</td>
-                </tr>
-                <tr>
-                    <td>setTitle</td>
-                    <td>function</td>
-                    <td>动态修改dialog的title</td>
-                </tr>
-                <tr>
-                    <td>setModel</td>
-                    <td>function</td>
-                    <td>重新渲染模板</td>
                 </tr>
                 <tr>
                     <td>showClose</td>
@@ -68,7 +89,7 @@
                 <tr>
                     <td>toggle</td>
                     <td>false</td>
-                    <td>通过此属性决定dialog的显示或者隐藏状态,默认隐藏</td>
+                    <td>通过此属性决定dialog和遮罩的显示或者隐藏状态,默认隐藏</td>
                 </tr>
                 <tr>
                     <td>widgetElement</td>
@@ -84,6 +105,37 @@
                     <td>modal</td>
                     <td>默认true</td>
                     <td>配置为false不显示遮罩层，默认显示遮罩层</td>
+                </tr>
+                <tr>
+                    <td>avalon.dialog</td>
+                    <td>
+                        <p>type：function</p>
+                        <p>@param config: 此参数定义动态dialog的id、options配置项、dialog主体内容content、以及打开dialog的controller对应的vmodel的id</p>
+                    </td>
+                    <td>
+                        当需要动态生成dialog时，需要调用此方法，config的配置项举例如下：
+                        <pre>
+var model = avalon.define("demo", function(vm) {
+    vm.$customDialogOptions = {
+        title: 'customShow',
+        onSubmit: function() {alert("success !")},
+        type: 'alert'
+    };
+    vm.show = function(id) {
+        avalon.vmodels[id].toggle = true;
+    }
+    vm.
+})
+var config = {
+    id: "dialogId",
+    model: "demo",
+    // dialog配置项的值必须是model下的对应配置属性名
+    options: "$customDialogOptions",
+    content: '呵呵呵呵 {{tpl}} '
+}
+dialog = avalon.dialog(config);
+                        </pre>
+                    </td>
                 </tr>
             </tbody>
         </table>

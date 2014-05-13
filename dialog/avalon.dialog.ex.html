@@ -14,6 +14,7 @@
                 呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
             </div>
     </fieldset>
+    <button ms-click="addZIndex('aa')">add z-index</button>
     <fieldset>
         <legend>层上层</legend>
         <button ms-click="show('ss')">打开对话框</button>
@@ -169,6 +170,9 @@
                     }
                     dialog.setModel(vm.m);
                 };
+                vm.addZIndex = function(id) {
+                    avalon.vmodels[id].zIndex = 300;
+                }
             })
             avalon.scan();
         })

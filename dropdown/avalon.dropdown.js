@@ -10,8 +10,85 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
         styleEl.styleSheet.cssText += cssText;
     }
 
+    //根据配置中textField及valueField做数据适配
+    function modelMatch(model, text, value) {
+        avalon.each(model, function(i, item) {
+            if(text !== 'text') {
+                if(avalon.type(text) === 'function') {
+                    item.text = text.call(item, item);
+                } else if(text in item) {
+                    item.text = item[text];
+                } else {
+                    throw new Error('textField设置无效！');
+                }
+            }
+            if(value !== 'value') {
+                if(value in item) {
+                    item.value = item[value];
+                } else {
+                    throw  new Error('valueField设置无效！');
+                }
+            }
+        });
+
+        return model;
+    }
+
+    //提取options中的数据
+    function getOption(options) {
+        var ret = [];
+
+        avalon.each(options, function(i, option) {
+            ret.push({
+                text: option.innerHTML,
+                value: option.value,
+                enable: !option.disabled,
+                item: true,
+                divider: false,
+                optGroup: false
+            });
+        });
+
+        return ret;
+    }
+
+    //提取select中的数据
+    function getSource(el) {
+        var ret = [],
+            groups = el.getElementsByTagName('optgroup'),
+            options = el.getElementsByTagName('option');
+
+        if(options.length === 0) {
+            return null;
+        } else if(groups.length === 0) {
+            ret = ret.concat(getOption(options));
+        } else {
+            avalon.each(groups, function(i, group) {
+                var options = group.getElementsByTagName('option');
+                if(options.length > 0) {
+                    ret.push({
+                        text: group.label,
+                        enable: !group.disabled,
+                        items: false,
+                        divider: false,
+                        optGroup: true
+                    });
+                    ret.push({
+                        items: false,
+                        divider: true,
+                        optGroup: false
+                    });
+                    ret = ret.concat(getOption(options));
+                }
+            })
+        }
+
+        return ret;
+    }
+
     var widget = avalon.ui.dropdown = function(element, data, vmodels) {
         var $element = avalon(element),
+            elemParent = element.parentNode,
             options = data.dropdownOptions,
             templates, titleTemplate, listTemplate;
 
@@ -33,22 +110,34 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
             avalon.mix(vm, options);
 
             vm.$skipArray= ['widgetElement'];
-
             vm.widgetElement = element;
 
-            vm.model = [];
+            //model的获取优先级 表单元素 > options.model.$model > options.model(plan Object)
+            vm.model = modelMatch(avalon.mix(true, [], getSource(element) || options.model.$model || options.model || []), options.textFiled, options.valueField);
 
-            //处理model
+            //对model的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
+            if(options.modleBind && avalon.type(options.model.$watch) === 'function') {
+                options.model.$watch('length', function() {
+                    avalon.mix(true, vmodel.model, modelMatch(options.model.$model, options.textFiled, options.valueField));
+                });
+            }
 
             vm.$init = function() {
+                var titleNode, listNode;
                 //根据multiple的类型初始化组件
                 if(options.multiple) {
-
+                    listNode = avalon.parseHTML(listTemplate);
+                    elemParent.insertBefore(listNode, element);
+                    avalon(element).css('display', 'none');
                 }
+                avalon.ready(function() {
+                    avalon.scan(elemParent, [vmodel].concat(vmodels));
+                });
             };
 
-            vm.$remove = function() {};
+            vm.$select = function() {};
 
+            vm.$remove = function() {};
 
         });
 
@@ -63,7 +152,7 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
         height: 200,            //下拉列表的高度
         enable: true,           //组件是否可用
         readonly: false,        //组件是否只读
-        model: null,            //下拉列表显示的数据模型
+        model: [],            //下拉列表显示的数据模型
         textFiled: 'text',      //模型数据项中对应显示text的字段,可以传function，根据数据源对text值进行格式化
         valueField: 'value',    //模型数据项中对应value的字段
         value: null,            //设置组件的初始值

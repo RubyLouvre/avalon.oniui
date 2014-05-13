@@ -9,15 +9,14 @@
 </div>
 MS_OPTION_TEMPLATE
 <div class="ui-dropdown-menu-wrap">
-    <div class="ui-dropdown-menu js-dropdown-menu">
-        <div class="ui-dropdown-menu-inner js-dropdown-menu-inner"
-             ms-each-el="options">
-            <div class="ui-dropdown-optGroup" ms-if="optGroup"></div>
-            <div class="ui-dropdown-divider" ms-if="divider"></div>
-            <div class="ui-dropdown-item" ms-if="item"></div>
+    <div class="ui-dropdown-menu">
+        <div class="ui-dropdown-menu-inner"
+             ms-each-el="model">
+            <div class="ui-dropdown-optGroup" ms-if="el.optGroup">{{el.text}}</div>
+            <div class="ui-dropdown-divider" ms-if="el.divider"></div>
             <div class="ui-dropdown-item"
                  ms-click="$select($event, el)"
-                 ms-title="{{text}}">{{text}}</div>
+                 ms-title="el.text" ms-if="el.item">{{el.text}}</div>
         </div>
     </div>
 </div>
@@ -26,14 +25,6 @@ MS_OPTION_STYLE
     .ui-dropdown-menu-wrap {
         position: relative;
         z-index: 1000;
-    }
-    .ui-dropdown-menu {
-        display: none;
-        left: 0;
-        position: absolute;
-        top: -1px;
-        width: 100%;
-        _width: auto !important;
     }
     .ui-dropdown-menu-inner {
         box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);

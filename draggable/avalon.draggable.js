@@ -4,14 +4,11 @@ define(["avalon"], function(avalon) {
         delay: 0,
         axis: "xy",
         started: true,
-        start: avalon.noop,
-        beforeStart: avalon.noop,
-        drag: avalon.noop,
-        beforeStop: avalon.noop,
-        stop: avalon.noop,
-        scrollPlugin: true,
-        scrollSensitivity: 20,
-        scrollSpeed: 20
+        onStart: avalon.noop,
+        onBeforeStart: avalon.noop,
+        onDrag: avalon.noop,
+        onBeforeStop: avalon.noop,
+        onStop: avalon.noop
     }
     var body
     var ua = navigator.userAgent;
@@ -31,7 +28,7 @@ define(["avalon"], function(avalon) {
     }
 
     var draggable = avalon.bindingHandlers.draggable = function(data, vmodels) {
-        var args = data.value.match(avalon.rword) || ["$","draggable"]
+        var args = data.value.match(avalon.rword) || ["$", "draggable"]
         var ID = args[0].trim(), opts = args[1], model, vmOptions
         if (ID && ID != "$") {
             model = avalon.vmodels[ID]//如果指定了此VM的ID
@@ -53,16 +50,8 @@ define(["avalon"], function(avalon) {
         }
         var element = data.element
         var $element = avalon(element)
-        var options = avalon.mix({}, defaults, vmOptions || {}, data[opts] || {}, avalon.getWidgetData(element, "draggable"));
-        //修正drag,stop为函数
-        "drag,stop,start,beforeStart,beforeStop".replace(avalon.rword, function(name) {
-            var method = options[name]
-            if (typeof method === "string") {
-                if (typeof fnObj[method] === "function") {
-                    options[name] = fnObj[method]
-                }
-            }
-        })
+        var options = avalon.mix({}, defaults, vmOptions || {}, avalon.getWidgetData(element, "draggable"));
+
         if (options.axis !== "" && !/^(x|y|xy)$/.test(options.axis)) {
             options.axis = "xy"
         }
@@ -87,9 +76,8 @@ define(["avalon"], function(avalon) {
                 data.started = false
             }
             //在处理手柄拖动前做些事情
-            if (typeof options.beforeStart === "function") {
-                options.beforeStart.call(data.element, e, data)
-            }
+            draggable.beforeStart.push(options.onBeforeStart)
+            draggable.fire("beforeStart", e, data)
 
             if (data.handle && fnObj) {// 实现手柄拖动
                 var handle = fnObj[data.handle]
@@ -119,7 +107,7 @@ define(["avalon"], function(avalon) {
                     data.started = true
                 }, options.delay)
             }
-      
+
             var startOffset = $element.offset()
             if (options.ghosting) {
                 var clone = element.cloneNode(true)
@@ -146,12 +134,17 @@ define(["avalon"], function(avalon) {
             data.clickY = data.pageY - startOffset.top //鼠标点击的位置与目标元素左上角的距离
             setContainment(options, data)//修正containment
             draggable.dragData = data//决定有东西在拖动
-            "start,drag,beforeStop,stop".replace(avalon.rword, function(name) {
-                draggable[name] = [options[name]]
+            "onStart,onDrag,onBeforeStop,onStop".replace(avalon.rword, function(event) {
+                draggable[trimOn(event)].push(options[event])
             })
-            draggable.plugin.call("start", e, data)
+            draggable.fire("start", e, data)
         })
 
+    }
+    function trimOn(word) {
+        return word.replace(/^on(\w)/, function(a, b) {
+            return b.toLowerCase()
+        })
     }
     var xy2prop = {
         "X": "Left",
@@ -159,41 +152,27 @@ define(["avalon"], function(avalon) {
     }
     //插件系统
     draggable.dragData = {}
+    draggable.beforeStart = []
     draggable.start = []
     draggable.drag = []
     draggable.stop = []
     draggable.beforeStop = []
-    draggable.plugin = {
-        add: function(name, set) {
-            for (var i in set) {
-                var fn = set[i]
-                if (typeof fn === "function" && Array.isArray(draggable[i])) {
-                    fn.isPlugin = true
-                    fn.pluginName = name + "Plugin"
-                    draggable[i].push(fn)
-                }
+    draggable.fire = function(name, e, data) {
+        var array = draggable[name]
+        if (Array.isArray(array)) {
+            for (var i = 0, fn; fn = array[i++]; ) {
+                fn.call(data.element, e, data)
             }
-        },
-        call: function(name, e, data) {
-            var array = draggable[name]
-            if (Array.isArray(array)) {
-                array.forEach(function(fn) {
-                    //用户回调总会执行，插件要看情况
-                    if (typeof fn.pluginName === "undefined" ? true : data[fn.pluginName]) {
-                        fn.call(data.element, e, data)
-                    }
-                })
-            }
-            if (name === "stop") {
-                for (var i in draggable) {
-                    array = draggable[i]
-                    if (Array.isArray(array)) {
-                        array.forEach(function(fn) {
-                            if (!fn.isPlugin) {// 用户回调都是一次性的，插件的方法永远放在列队中
-                                avalon.Array.remove(array, fn)
-                            }
-                        })
-                    }
+        }
+        if (name === "stop") {
+            for (var i in draggable) {
+                array = draggable[i]
+                if (Array.isArray(array)) {
+                    array.forEach(function(fn) {
+                        if (!fn.isPlugin) {// 用户回调都是一次性的，插件的方法永远放在列队中
+                            avalon.Array.remove(array, fn)
+                        }
+                    })
                 }
             }
         }
@@ -277,7 +256,7 @@ define(["avalon"], function(avalon) {
                 var element = data.clone || data.element
                 setPosition(e, element, data, "X")
                 setPosition(e, element, data, "Y")
-                draggable.plugin.call("drag", e, data)
+                draggable.fire("drag", e, data)
             }
         }
     })
@@ -288,7 +267,7 @@ define(["avalon"], function(avalon) {
         if (data.started === true) {
             restoreUserSelect()
             var element = data.element
-            draggable.plugin.call("beforeStop", e, data)
+            draggable.fire("beforeStop", e, data)
             if (data.dragX) {
                 setPosition(e, element, data, "X", true)
             }
@@ -298,16 +277,11 @@ define(["avalon"], function(avalon) {
             if (data.clone) {
                 body.removeChild(data.clone)
             }
-            draggable.plugin.call("stop", e, data)
+            draggable.fire("stop", e, data)
             draggable.dragData = {}
         }
     })
 
-
-
-    function getWindow(node) {
-        return node.window && node.document ? node : node.nodeType === 9 ? node.defaultView || node.parentWindow : false;
-    }
     function setContainment(o, data) {
         if (!o.containment) {
             if (Array.isArray(data.containment)) {
@@ -342,8 +316,8 @@ define(["avalon"], function(avalon) {
 
         if (Array.isArray(o.containment)) {
             var a = o.containment
-            
-            data.containment = [a[0],a[1],a[2]-elemWidth, a[3]-elemHeight]
+
+            data.containment = [a[0], a[1], a[2] - elemWidth, a[3] - elemHeight]
             return;
         }
 

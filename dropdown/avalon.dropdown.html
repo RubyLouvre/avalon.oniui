@@ -1,0 +1,80 @@
+<div class="ui-dropdown">
+    <div class="ui-dropdown-source">
+        <div class="ui-dropdown-input" title="{{text}}">{{name}}</div>
+        <div class="ui-dropdown-icon-wrap">
+            <i class="ui-dropdown-icon ui-icon ui-icon-angle-up">&#xf106;</i>
+            <i class="ui-dropdown-icon ui-icon ui-icon-angle-down">&#xf107;</i>
+        </div>
+    </div>
+</div>
+MS_OPTION_TEMPLATE
+<div class="ui-dropdown-menu-wrap">
+    <div class="ui-dropdown-menu js-dropdown-menu">
+        <div class="ui-dropdown-menu-inner js-dropdown-menu-inner"
+             ms-each-el="options">
+            <div class="ui-dropdown-optGroup" ms-if="optGroup"></div>
+            <div class="ui-dropdown-divider" ms-if="divider"></div>
+            <div class="ui-dropdown-item" ms-if="item"></div>
+            <div class="ui-dropdown-item"
+                 ms-click="$select($event, el)"
+                 ms-title="{{text}}">{{text}}</div>
+        </div>
+    </div>
+</div>
+MS_OPTION_STYLE
+<style type="text/css">
+    .ui-dropdown-menu-wrap {
+        position: relative;
+        z-index: 1000;
+    }
+    .ui-dropdown-menu {
+        display: none;
+        left: 0;
+        position: absolute;
+        top: -1px;
+        width: 100%;
+        _width: auto !important;
+    }
+    .ui-dropdown-menu-inner {
+        box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        overflow: hidden;
+        padding: 3px 0;
+    }
+    .ui-dropdown-item {
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: pointer;
+        overflow: hidden;
+        padding: 3px 0;
+        text-indent: 6px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+        word-break: normal;
+        word-wrap: normal;
+        *zoom: 1;
+    }
+    .ui-dropdown-item-hover {
+        background-color: #f8f8f8;
+    }
+    .ui-dropdown-item-selected {
+        background-color: #58b359;
+        color: #ffffff;
+    }
+    .ui-dropdown-item-selected .ui-icon {
+        color: #ffffff;
+    }
+    .ui-dropdown-divider {
+        border-top: 1px solid #f2f2f2;
+        height: 0;
+        _height: auto;
+        margin: 3px 0;
+        overflow: hidden;
+        width: 100%;
+        _width: auto;
+    }
+</style>

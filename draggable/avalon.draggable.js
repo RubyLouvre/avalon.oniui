@@ -50,7 +50,7 @@ define(["avalon"], function(avalon) {
         }
         var element = data.element
         var $element = avalon(element)
-        var options = avalon.mix({}, defaults, vmOptions || {}, more || {},avalon.getWidgetData(element, "draggable"));
+        var options = avalon.mix({}, defaults, vmOptions || {}, more || {}, avalon.getWidgetData(element, "draggable"));
 
         if (options.axis !== "" && !/^(x|y|xy)$/.test(options.axis)) {
             options.axis = "xy"
@@ -93,12 +93,23 @@ define(["avalon"], function(avalon) {
                 }
             }
             fixUserSelect()
+
+
             var position = $element.css("position")
             //如果原元素没有被定位
             if (!/^(?:r|a|f)/.test(position)) {
                 element.style.position = "relative";
                 element.style.top = "0px"
                 element.style.left = "0px"
+            }
+            if (data.stack) {
+                data.zIndex = ~~avalon(element).css("zIndex")
+                var children = element.parentNode.children
+                var maxZIndex = 0
+                for (var i = 0, el; el = children[i++]; ) {
+                    maxZIndex = Math.max(~~avalon(element).css("zIndex"), maxZIndex)
+                }
+                element.style.zIndex = maxZIndex + 1
             }
 
             if (options.delay && isFinite(options.delay)) {

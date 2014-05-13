@@ -1,4 +1,4 @@
-define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
+define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
     var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],
         cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
         styleEl = document.getElementById("avalonStyle"),

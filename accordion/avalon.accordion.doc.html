@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>accordion文档说明</title>
+<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>accordion使用说明</h1>
+        <p>accordion组件</p>
+        <table>
+            <caption class="example">accordion组件配置项说明：</caption>
+            <thead>
+                <tr>
+                    <th>name</th>
+                    <th>value</th>
+                    <th>description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>autoRun</td>
+                    <td>{Bool}</td>
+                    <td>是否自动渲染</td>
+                </tr>
+                <tr>
+                    <td>container  || widgetElement</td>
+                    <td>{Element|JQuery|String}</td>
+                    <td>组件容器</td>
+                </tr>
+                <tr>
+                    <td>controlCls</td>
+                    <td>{String}</td>
+                    <td>组件容器自定义className</td>
+                </tr>
+                <tr>
+                    <td>currentTriggerCls</td>
+                    <td>{String}</td>
+                    <td>组件激活时在标题区域标记的className，默认值为：“ui-accordion-active”</td>
+                </tr>
+                <tr>
+                    <td>data</td>
+                    <td>{Array}</td>
+                    <td>组件配置数据对象，格式为{title: string, content: {String|Object:Accordion}}</td>
+                </tr>
+                <tr>
+                    <td>content</td>
+                    <td>{String|Object:Accordion}}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>initIndex || active</td>
+                    <td>{Number|null}</td>
+                    <td>初始展开第几个抽屉</td>
+                </tr>
+                <tr>
+                    <td>mode</td>
+                    <td>{nav|caret|custom}</td>
+                    <td>组件展开模式，取值说明："nav"=点击整个标题区域以展开面板，"caret"=点击标题区域中的图标以展开面板，"custom"=自定义面板展开方式</td>
+                </tr>
+                <tr>
+                    <td>multiple || collapsible</td>
+                    <td>{Bool}</td>
+                    <td>是否允许同时展开多个抽屉面板</td>
+                </tr>
+                <tr>
+                    <td>template</td>
+                    <td>{
+                            header: {String},
+                            panel: {String}
+                        }
+                    </td>
+                    <td>配置抽屉标题、面板区域的html模板</td>
+                </tr>
+                <tr>
+                    <td>trigger</td>
+                    <td>{String}</td>
+                    <td>组件展开模式为自定义(mode="custom")时，配置指定触发面板展开的对象</td>
+                </tr>
+                <tr>
+                    <td>triggerType || event</td>
+                    <td>{'click'|'mouseover'}</td>
+                    <td>触发方式："click"=点击触发，"mouseover"=鼠标悬浮触发</td>
+                </tr>
+                <tr>
+                    <td>width</td>
+                    <td>{Number|'100%'}v</td>
+                    <td>组件宽度</td>
+                </tr>
+                <tr>
+                    <td>beforeSwitch || onBeforeActive</td>
+                    <td>{Function}</td>
+                    <td>组件面板展开前回调函数，若函数返回false则不展开面板，传入参数：index=面板序号，header=标题区域jQuery对象，panel=面板区域jQuery对象</td>
+                </tr>
+                <tr>
+                    <td>onSwitch || onActive</td>
+                    <td>{Function}</td>
+                    <td>组件面板展开后回调函数，传入参数定义同上</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+rendered //组件是否完成渲染
+currentIndex //组件最新展开的抽屉序号
+setData([{
+            title: '标题',
+            content: '正文'
+        }]); //重定义组件配置数据对象
+
+
+refresh(); //手工刷新组件视图
+        accordion.refresh({
+            data: [{
+                title: '标题',
+                content: '正文'
+            }]
+        }); //另一种手工刷新组件的方式，可以同时重定义组件配置数据对象
+        accordion.getCurrentHeader(); //获得当前展开的抽屉标题对象，仅在config.multiple == false时有效
+        accordion.getCurrentPanel(); //获得当前展开的抽屉面板对象，仅在config.multiple == false时有效
+        accordion.getHeader(1); //获得指定序号的抽屉标题对象
+        accordion.getPanel(1); //获得指定序号的抽屉面板对象
+        accordion.getLength(); //获得组件的抽屉数量
+        accordion.getStatus(1); //获得指定序号的抽屉面板展开(1)/收起(0)状态
+        accordion.switchTo(1); //切换抽屉展开

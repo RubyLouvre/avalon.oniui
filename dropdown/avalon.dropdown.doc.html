@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>dropdown</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+</head>
+<body>
+<h3> 默认参数</h3>
+    <table width="80%" border="1">
+        <tr>
+            <th>名字</th><th>默认值</th> <th>说明</th>
+        </tr>
+        <tr>
+            <td>width</td>
+            <td></td>
+            <td>自定义宽度</td>
+        </tr>
+        <tr>
+            <td>listWidth</td>
+            <td></td>
+            <td>自定义下拉列表的宽度</td>
+        </tr>
+        <tr>
+            <td>height(new)</td>
+            <td>200</td>
+            <td>下拉列表的高度</td>
+        </tr>
+        <tr>
+            <td>enable(new)</td>
+            <td>true</td>
+            <td>组件是否可用</td>
+        </tr>
+        <tr>
+            <td>readonly(new)</td>
+            <td>false</td>
+            <td>组件是否只读</td>
+        </tr>
+        <tr>
+            <td>model</td>
+            <td>[]</td>
+            <td>下拉列表显示的数据模型</td>
+        </tr>
+        <tr>
+            <td>textFiled(new)</td>
+            <td>"text"||"name"(对上一版本进行兼容)</td>
+            <td>模型数据项中对应显示text的字段,可以传function，根据数据源对text值进行格式化<br>
+<pre>
+    function(item) {
+        return item.text;
+    }
+</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>valueField(new)</td>
+            <td>"value"</td>
+            <td>模型数据项中对应value的字段</td>
+        </tr>
+        <tr>
+            <td>value</td>
+            <td>model中第一个数据项的value</td>
+            <td>设置组件的初始值</td>
+        </tr>
+        <tr>
+            <td>label</td>
+            <td>""</td>
+            <td>设置组件的提示文案，可以是一个字符串，也可以是一个对象 <br/>
+<pre>
+    {
+        label: "This is a label..."
+    }
+</pre>
+或者是
+<pre>
+    {
+        model: [],
+        textField: 'text',
+        valueField: 'value',
+        label: {
+            text: 'This is a label...',
+            value: ''
+        }
+    }
+</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>titleTemplate</td>
+            <td></td>
+            <td>title模板</td>
+        </tr>
+        <tr>
+            <td>optionTemplate</td>
+            <td></td>
+            <td>下拉菜单中每一个option的模板</td>
+        </tr>
+        <tr>
+            <td>listTemplate</td>
+            <td></td>
+            <td>下拉菜单模板</td>
+        </tr>
+        <tr>
+            <td>bodyTemplate</td>
+            <td></td>
+            <td>整体外围框架模板</td>
+        </tr>
+    </table>
+
+
+</body>
+</html>

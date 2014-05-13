@@ -88,6 +88,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
 
             vm.$skipArray = ["widgetElement", "store", "template"]
             vm.widgetElement = element
+            
 
             vm.$init = function() {
                 element.innerHTML = options.template

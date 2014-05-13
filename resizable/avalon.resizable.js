@@ -25,20 +25,11 @@ define(["../draggable/avalon.draggable"], function(avalon) {
         }
         var element = data.element
         var options = avalon.mix({}, resizable.defaults, vmOptions || {}, avalon.getWidgetData(element, "resizable"));
-        //修正drag,stop为函数
-        "stop,start,resize".replace(avalon.rword, function(name) {
-            var method = options[name]
-            if (typeof method === "string") {
-                if (typeof fnObj[method] === "function") {
-                    options[name] = fnObj[method]
-                } else {
-                    options[name] = avalon.noop
-                }
-            }
-        })
+        
         options.handles = options.handles.match(avalon.rword) || ["all"];
         options._aspectRatio = typeof options.aspectRatio === "number"
 
+        data.value = ""
         var target = avalon(element)
         target.bind("mousemove", function(e) {
             if (options.started)
@@ -59,51 +50,50 @@ define(["../draggable/avalon.draggable"], function(avalon) {
         //在dragstart回调中,我们通过draggable已经设置了
         //data.startPageX = event.pageX;    data.startPageY = event.pageY;
         //data.originalX = offset.left; data.originalY = offset.top;
-        options.beforeStart = function(event, data) {
-            var target = data.$element;
-            data.dragX = data.dragY = false
-            var dir = getDirection(event, target, data);
-            if (dir === "")
-                return;
-            avalon.mix(data, {
-                dir: dir,
-                startResizeLeft: getCssValue(target, "left"),
-                startResizeTop: getCssValue(target, "top"),
-                startResizeWidth: target.width(),
-                startResizeHeight: target.height()
-            })
-            //开始缩放时的位置大小
-            "startResizeLeft,startResizeTop,startResizeWidth,startResizeHeight".replace(avalon.rword, function(word) {
-                data[word.replace("startR", "r")] = data[word];
-            })
-            //等比例缩放
-            data.aspectRatio = data._aspectRatio ? data.aspectRatio : ((data.startResizeWidth / data.startResizeHeight) || 1);
-            event.type = "resizestart";
-            //data.start.call(target[0], event, data); //触发用户回调
-            avalon(body).css('cursor', dir + '-resize');
-        }
-        options.drag = function(event, data) {
-            if (data.dir) {
+        target.bind("mousedown", function(e) {
+            draggable.beforeStart.push(function(event, data) {
                 var target = data.$element;
-                refresh(event, target, data);
-                event.type = "resize";
-                data.resize.call(target[0], event, data); //触发用户回调
-            }
-        }
-        options.beforeStop = function(event, data) {
-            if (data.dir) {
-                var target = data.$element;
-                refresh(event, target, data);
-                delete data.dir;
-                event.type = "resizeend";
-                //   data.stop.call(target[0], event, data); //触发用户回调
-                avalon(body).css("cursor", "default");
-            }
-        }
-        data.value = ""
-        data.draggable = options
-        draggable(data, vmodels)
+                data.dragX = data.dragY = false
+                var dir = getDirection(event, target, data);
+                if (dir === "")
+                    return
+                avalon.mix(data, {
+                    dir: dir,
+                    startResizeLeft: getCssValue(target, "left"),
+                    startResizeTop: getCssValue(target, "top"),
+                    startResizeWidth: target.width(),
+                    startResizeHeight: target.height()
+                })
+                //开始缩放时的位置大小
+                "startResizeLeft,startResizeTop,startResizeWidth,startResizeHeight".replace(avalon.rword, function(word) {
+                    data[word.replace("startR", "r")] = data[word];
+                })
+                //等比例缩放
+                data.aspectRatio = data._aspectRatio ? data.aspectRatio : ((data.startResizeWidth / data.startResizeHeight) || 1);
+                event.type = "resizestart";
+                avalon(body).css('cursor', dir + '-resize');
+            })
 
+            draggable.drag.push(function(event, data) {
+                if (data.dir) {
+                    var target = data.$element;
+                    refresh(event, target, data);
+                    event.type = "resize";
+                    data.onResize.call(target[0], event, data); //触发用户回调
+                }
+            })
+            draggable.beforeStop.push(function(event, data) {
+                if (data.dir) {
+                    var target = data.$element;
+                    refresh(event, target, data);
+                    delete data.dir;
+                    event.type = "resizeend";
+                    avalon(body).css("cursor", "default");
+                }
+            })
+        })
+
+        draggable(data, vmodels, options)
     }
     resizable.defaults = {
         handles: "n,e,s,w,ne,se,sw,nw",
@@ -113,9 +103,9 @@ define(["../draggable/avalon.draggable"], function(avalon) {
         minWidth: 10,
         cursor: false,
         edge: 5,
-        start: avalon.noop,
-        resize: avalon.noop,
-        stop: avalon.noop
+        onStart: avalon.noop,
+        onResize: avalon.noop,
+        onStop: avalon.noop
     }
     /**
      * 用于修正拖动元素靠边边缘的区域的鼠标样式
@@ -159,7 +149,6 @@ define(["../draggable/avalon.draggable"], function(avalon) {
 
     function refresh(event, target, data) { //刷新缩放元素
         var b = data
-        console.log(data.dir)
         if (data._aspectRatio || event.shiftKey) {
             var aspest = true,
                     pMinWidth = b.minHeight * data.aspectRatio,
@@ -215,7 +204,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
                 }
             }
         }
-       
+
         var obj = {
             left: data.resizeLeft,
             top: data.resizeTop,

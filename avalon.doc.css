@@ -16,7 +16,9 @@ table {
 tr, td, th {
     border: 1px solid #ccc;
 }
-
+tr {
+    width: 100%;
+}
 th {
     text-align: center;
     font-weight: bold;

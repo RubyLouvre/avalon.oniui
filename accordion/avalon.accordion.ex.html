@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>dialog demo </title>
+<script src="../avalon.js"></script>
+</head>
+<body class="ms-controller" ms-controller="demo">
+    <div ms-widget="accordion,aa,$aaOpts">
+    </div>
+    <button ms-click="switch" id="test">什么情况</button>
+    <script> 
+        require("accordion/avalon.accordion", function($$) {
+            $$.define('demo',function(vm){
+                vm.tpl = "fdsfsdf";
+                vm.switch = function() {
+                    console.log("swidth methos fired");
+                    
+                }
+                vm.$aaOpts = {
+                    data: [{
+                        'title': '标题1',
+                        'content': '正文1<p>fasdfsdaf</p>'
+                    }, {
+                        'title': '标题2',
+                        'content': '正文2'
+                    }],
+                    controlCls: "xueerAddClass",
+                    initIndex: 1,
+                    // mode: "nav",
+                    width: "800",
+                    beforeSwitch: function() {
+                        console.log(this);
+                        console.log(arguments);
+                        console.log("beforeSwitch callback");
+                    },
+                    onSwitch: function() {
+                        console.log("onSwitch callback");
+                    },
+                    //autoRun: false,
+                    // mode: "custom",
+                    // template: '<div class="ui-accordion-inner" ms-each-item="data"><h3 class="ui-accordion-header" ms-class="MS_OPTION_ACTIVECLASS:currentIndex == $index">{{item.title}}</h3><div class="ui-accordion-content" ms-visible="currentIndex == $index">{{item.content|html}}</div></div>'
+                    multiple: true,
+                    // trigger: "",
+                    // triggerType: "mouseover"
+                }
+                
+            });
+            document.getElementById("test").onclick = function() {
+                // var data = [
+                //     {
+                //         title: "雪儿",
+                //         content: "heelfifsfsd"
+                //     },
+                //     {
+                //         title: "静儿",
+                //         content: "很好，我喜欢，继续额"
+                //     }
+                // ]
+                // console.log(avalon.vmodels["aa"].getPanel(1));
+                avalon.vmodels["aa"].refresh();
+            }
+            $$.scan();
+        });
+    </script>
+</body>
+</html>
+

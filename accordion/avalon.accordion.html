@@ -1,0 +1,116 @@
+<div class="ui-accordion-inner" ms-each-item="data">
+    <div class="ui-accordion-header ui-accordion-trigger" 
+         ms-class="MS_OPTION_ACTIVECLASS:currentIndex == $index"
+    >
+        {{item.title}}
+    </div>
+    <div class="ui-accordion-content" ms-visible="currentIndex == $index">
+        {{item.content|html}}
+    </div>
+</div>
+MS_OPTION_MODE_CARET
+<div class="ui-accordion-inner" ms-each-item="data">
+    <div class="ui-accordion-header" ms-class="MS_OPTION_ACTIVECLASS:currentIndex == $index">
+        <span class="ui-accordion-icon-wrap ui-accordion-trigger">
+            <i class="ui-icon ui-icon-caret-right">&#xf0da;</i>
+            <i class="ui-icon ui-icon-caret-down">&#xf0d7;</i>
+        </span> 
+        {{item.title}}
+    </div>
+    <div class="ui-accordion-content" ms-visible="currentIndex == $index">
+        {{item.content|html}}
+    </div>
+</div>
+MS_OPTION_STYLE 
+<style>
+@font-face {
+    font-family: fontawesome;
+    font-style: normal;
+    font-weight: normal;
+    src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?v=4.0.3');
+    src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?#iefix&v=4.0.3') format('embedded-opentype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.woff?v=4.0.3') format('woff'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.ttf?v=4.0.3') format('truetype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular') format('svg');
+}
+
+.ui-icon {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+    font-family: fontawesome !important;
+    font-size: 14px;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 18px;
+    vertical-align: middle;
+}
+a .ui-icon,
+.ui-btn .ui-icon {
+    cursor: pointer;
+}
+.ui-accordion {
+    display: inline-block;
+    *display: inline;
+    vertical-align: middle;
+    *zoom: 1;
+    width: 100%;
+}
+.ui-accordion-inner {
+    background-color: #ffffff;
+}
+.ui-accordion-header {
+    font-size: 12px;
+    font-weight: 700;
+}
+.ui-accordion-icon-wrap {
+    display: inline-block;
+    *display: inline;
+    vertical-align: middle;
+    *zoom: 1;
+    text-align: right;
+    width: 14px;
+}
+.ui-accordion-trigger {
+    cursor: pointer;
+}
+.ui-accordion-trigger .ui-icon {
+    cursor: pointer;
+}
+.ui-accordion-content {
+    font-size: 12px;
+}
+.ui-accordion-mode-nav {
+    margin-top: -1px;
+}
+.ui-accordion-mode-nav .ui-accordion-inner {
+    border-top: 0 none;
+}
+.ui-accordion-mode-nav .ui-accordion-header {
+    padding: 7px 10px;
+}
+.ui-accordion-mode-nav .ui-accordion-header:hover {
+    background-color: #f8f8f8;
+    color: #3775c0;
+}
+.ui-accordion-mode-caret .ui-accordion-inner {
+    border: 0 none;
+}
+.ui-accordion-mode-caret .ui-accordion-header {
+    border: 0 none;
+    padding: 4px 10px;
+}
+.ui-accordion-mode-caret .ui-accordion-icon-wrap .ui-icon-caret-down,
+.ui-accordion-mode-caret .ui-accordion-icon-wrap .ui-icon-minus-square-o {
+    display: none;
+}
+.ui-accordion-mode-caret .ui-accordion-active .ui-accordion-icon-wrap .ui-icon-caret-right,
+.ui-accordion-mode-caret .ui-accordion-active .ui-accordion-icon-wrap .ui-icon-plus-square-o {
+    display: none;
+}
+.ui-accordion-mode-caret .ui-accordion-active .ui-accordion-icon-wrap .ui-icon-caret-down,
+.ui-accordion-mode-caret .ui-accordion-active .ui-accordion-icon-wrap .ui-icon-minus-square-o {
+    display: inline;
+}
+</style>

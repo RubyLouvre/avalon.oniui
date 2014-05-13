@@ -27,7 +27,7 @@ define(["avalon"], function(avalon) {
         dragstop = "touchend"
     }
 
-    var draggable = avalon.bindingHandlers.draggable = function(data, vmodels) {
+    var draggable = avalon.bindingHandlers.draggable = function(data, vmodels, more) {
         var args = data.value.match(avalon.rword) || ["$", "draggable"]
         var ID = args[0].trim(), opts = args[1], model, vmOptions
         if (ID && ID != "$") {
@@ -50,7 +50,7 @@ define(["avalon"], function(avalon) {
         }
         var element = data.element
         var $element = avalon(element)
-        var options = avalon.mix({}, defaults, vmOptions || {}, avalon.getWidgetData(element, "draggable"));
+        var options = avalon.mix({}, defaults, vmOptions || {}, more || {},avalon.getWidgetData(element, "draggable"));
 
         if (options.axis !== "" && !/^(x|y|xy)$/.test(options.axis)) {
             options.axis = "xy"

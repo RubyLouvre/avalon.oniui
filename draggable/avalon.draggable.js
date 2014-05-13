@@ -105,9 +105,9 @@ define(["avalon"], function(avalon) {
             if (data.stack) {
                 data.zIndex = ~~avalon(element).css("zIndex")
                 var children = element.parentNode.children
-                var maxZIndex = 0
+                var maxZIndex = 0;
                 for (var i = 0, el; el = children[i++]; ) {
-                    maxZIndex = Math.max(~~avalon(element).css("zIndex"), maxZIndex)
+                    maxZIndex = Math.max(maxZIndex, ~~avalon(el).css("zIndex"))
                 }
                 element.style.zIndex = maxZIndex + 1
             }

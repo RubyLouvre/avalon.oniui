@@ -14,22 +14,22 @@
             require(["draggable/avalon.draggable"], function() {
                 avalon.define("test", function(vm) {
                     vm.draggable = {
-                        onBeforeStart: function(e, data) {
+                        beforeStartFn: function(e, data) {
                             console.log(e.type + " beforeStart")
                             data.$element.addClass("active")
                         },
-                        onStart: function(e) {
+                        startFn: function(e) {
                             console.log(e.type + " start")
                         },
-                        onDrag: function(e, data) {
+                        dragFn: function(e, data) {
                             this.innerHTML = data.pageX + " " + data.pageY
                             console.log(e.type + " drag")
                         },
-                        onBeforeStop: function(e, data) {
+                        beforeStopFn: function(e, data) {
                             console.log(e.type + " beforeStop")
                             data.$element.removeClass("active")
                         },
-                        onStop: function(e) {
+                        stopFn: function(e) {
                             console.log(e.type + " stop")
                             this.innerHTML = ""
                         }
@@ -58,6 +58,11 @@
     </head>
     <body>
         <div id="aaa"
+             data-draggable-before-start="beforeStartFn"
+             data-draggable-start="startFn"
+             data-draggable-drag="dragFn"
+             data-draggable-before-stop="beforeStopFn"
+             data-draggable-stop="stopFn"
              ms-draggable 
              ms-controller="test" 
              >

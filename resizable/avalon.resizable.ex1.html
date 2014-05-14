@@ -14,13 +14,13 @@
             require(["resizable/avalon.resizable"], function() {
                 avalon.define("test", function(vm) {
                     vm.resizable = {
-                        onStart: function() {
+                        start: function() {
                             avalon.log("resize start")
                         },
-                        onResize: function(e, data) {
+                        resize: function() {
                             avalon.log("resizing")
                         },
-                        onStop: function() {
+                        stop: function() {
                             avalon.log("resize stop")
                         }
                     }

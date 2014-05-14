@@ -1,5 +1,5 @@
 //avalon 1.2.5 2014.4.2
-define(["avalon", "text!./avalon.at.html"], function(avalon, tmpl) {
+define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
     var arr = tmpl.split("MS_OPTION_STYLE")
     var cssText = arr[1].replace(/<\/?style>/g, "")
     var styleEl = document.getElementById("avalonStyle")

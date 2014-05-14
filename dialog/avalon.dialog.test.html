@@ -22,16 +22,6 @@
                 mocha.ui('bdd')
                 mocha.setup({timeout: 100000})
                 require(["ready!", "dialog/avalon.dialog"], function() {
-                    function getElementNode(elem) {
-                        while(elem) {
-                            if (elem.nodeType === 1) {
-                                break;
-                            } else {
-                                elem = elem.nextSibling;
-                            }
-                        }
-                        return elem;
-                    }
                     function getElementsByClassName(root, className) {
                         if (root.getElementsByClassName) {;
                             return root.getElementsByClassName(className);

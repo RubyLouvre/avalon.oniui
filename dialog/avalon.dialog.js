@@ -215,7 +215,6 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
     }
     // 动态创建dialog
     avalon.dialog = function(config) {
-        console.log(config);
         if (avalon.type(config.id) === 'undefined') {
             config.id = generateID();
         }

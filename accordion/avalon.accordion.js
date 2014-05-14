@@ -16,16 +16,22 @@ define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) 
     var widget = avalon.ui.accordion = function(element, data, vmodels) {
         accordionNum++ ;
         var options = data.accordionOptions;
+        var vmodelsLength = vmodels.length;
+        var accordionOpts = data.value.split(",")[2];
+        if(vmodelsLength>1) { // 存在嵌套的accordion时，需要手动将配置对象mix到options上，这就要求所有accordion的组件定义必须存在id和options选项，比如：ms-widget="accordion,accordionId,accordionOpts"
+            avalon.mix(options, vmodels[vmodelsLength-1][accordionOpts]);
+        }
         // 根据mode的不同使用不同的template
         var template = options.mode=="caret" ? caretTemplate : options.mode=="nav" ? navTemplate : options.template;
         options.template = options.getTemplate(template, options);
         
         var vmodel = avalon.define(data.accordionId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "rendered","autoRun","template","container","controlCls","currentTrigge","initIndex","multiple","trigger","triggerType"];
+            vm.$skipArray = ["widgetElement", "rendered","autoRun","template","container","controlCls","currentTrigge","initIndex","multiple","trigger","triggerType","data"];
             vm.widgetElement = vm.container = element;
             vm.$headers = []; // 保存所有面板的header
             vm.$panels = []; // 保存所有的面板content
+            vm.$triggers = [];
             vm.rendered = false; // 判断是否渲染了组件
             vm._renderView = function() {
                 var template = options.template;
@@ -40,7 +46,6 @@ define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) 
                 accordionItems = accordionInnerWrapper.children;
                 header = accordionItems[0]; // header
                 content = accordionItems[1]; // panel
-                trigger; // 触发面板展开收起事件的DOM节点
                 if(!!options.trigger) {
                     var headerChildren = header.children;
                     for(var i=0, el; el = headerChildren[i++];) {
@@ -77,6 +82,18 @@ define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) 
                             if(options.multiple && Math.floor(i/2)==options.initIndex) {
                                 avalon(el).addClass(options.currentTriggerCls);
                             }
+                            if(!!options.trigger) {
+                                var headerChildren = el.children;
+                                for(var j=0, subEl; subEl = headerChildren[j++];) {
+                                    if(avalon(subEl).hasClass(options.trigger)) {
+                                        vmodel.$triggers.push(subEl);
+                                        break;
+                                    }
+                                }
+                            } else {
+                                vmodel.$triggers.push(el);
+                            }
+
                         } else if($el.hasClass("ui-accordion-content")) {
                             vmodel.$panels.push(el);
                             if(options.multiple && (i/2-1)==options.initIndex) {
@@ -104,16 +121,20 @@ define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) 
             }
             // 重新渲染accordion
             vm.setData = function(data) {
-                vm.data = data;
+                vmodel.data = data;
+                vmodel.currentIndex = -1;
+                vmodel._renderView();
             }
             // 手动渲染accordion
             vm.refresh = function(data) {
-                if (vmodel.rendered) {
-                    vmodel.data = data;
-                } else {
+                if (data) {
+                    console.log("设置了data")
+                    vmodel.setData(data);
+                } else if(!vmodel.rendered){
+                    console.log("not rendered");
                     vm._renderView();
                 }
-                
+                console.log("既无data且已经redered");
             }
             vm.getCurrentHeader = function() {
                 if (options.multiple) {
@@ -140,7 +161,21 @@ define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) 
                 return (avalon(vmodel.$panels[index]).css('display') === 'none') ? 0 : 1;
             }
             vm.switchTo = function(index) {
-                vmodel.$headers[index][options.triggerType]();
+                var event= {
+                        target: vmodel.$triggers[index]
+                    };
+                if(!options.multiple) { // multiple为false时直接通过currentIndex打开面板
+                    if (options.beforeSwitch.call(event.target, index, vm.getHeader(index), vm.getPanel(index)) === false) {
+                        return false;
+                    }
+                    vmodel.currentIndex = index;
+                    options.onSwitch.call(event.target, index, vm.getHeader(index), vm.getPanel(index));
+                } else if(options.triggerType=="click") {
+                    console.log("switch");
+                    event.target[options.triggerType]();
+                } else { // dom元素不可以像调用click一样调用mouseover方法
+                    eventCallback(event, index);                    
+                }
             }
             function eventCallback(event, index) {
                 var header = vmodel.getHeader(index),
@@ -148,7 +183,7 @@ define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) 
                     headerActive = avalon(header).hasClass(options.currentTriggerCls);
 
                 header.headerActive = headerActive;
-                if (options.beforeSwitch.call(this, index, header, panel) === false) {
+                if (options.beforeSwitch.call(event.target, index, header, panel) === false) {
                     return false;
                 }
                 if (options.multiple && !header.headerActive) {
@@ -161,7 +196,7 @@ define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) 
                     panel.style.display = "none";
                 } 
                 vm.currentIndex = index;
-                options.onSwitch.call(this, index, header, panel);
+                options.onSwitch.call(event.target, index, header, panel);
             }
         });
         return vmodel;
@@ -185,8 +220,8 @@ define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) 
         triggerType: 'click', // 触发展开面板的事件类型，可以是：click|mouseover
         width: '100%',
         currentIndex: -1, // 当前点击的面板的索引值
-        beforeSwitch: function() {},
-        onSwitch: function() {}
+        beforeSwitch: avalon.noop,
+        onSwitch: avalon.noop
     }
     return avalon;
 });

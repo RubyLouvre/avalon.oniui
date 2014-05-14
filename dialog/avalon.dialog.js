@@ -179,6 +179,7 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
                 if (vmodel.modal) {
                     avalon.scan(maskLayer, [vmodel].concat(vmodels));
                 }
+                console.log([vmodel].concat(vmodels));
                 avalon.scan(element, [vmodel].concat(vmodels));
             };
             vm.$remove = function() {
@@ -215,7 +216,6 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
     }
     // 动态创建dialog
     avalon.dialog = function(config) {
-        console.log(config);
         if (avalon.type(config.id) === 'undefined') {
             config.id = generateID();
         }

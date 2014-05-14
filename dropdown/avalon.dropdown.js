@@ -15,7 +15,6 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
         label: '',
         enable: true,
         selected: false,
-        optGroup: '',
         item: false,
         optGroup: false,
         divider: false
@@ -46,11 +45,12 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
     }
 
     //根据dataSource构建数据结构
-    function getSelectModel(model) {
+    function getSelectModel(dataSource) {
         var group = {},
-            options = [],
             groupSeq = [],
-            dataModel = [],
+            exportGroup = [],
+            options = [],
+            model = [],
             hasGroup = false;
 
         /**
@@ -71,9 +71,20 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
          *     ]
          * }
          */
-        avalon.each(model, function(i, item) {
-            var option = avalon.mix(true, {}, MODEL_ITEM, item),
-                groupName = option.optGroup;
+        avalon.each(dataSource, function(i, item) {
+            //如果item为group，直接对group进行抽取
+            //如果item为option，对option进行抽取并分割成group组
+            var groupName,
+                option,
+                opts = [];
+            if(item.options && item.options.length > 0) {
+                groupName = item.optGroup;
+                opts = opts.concat(getOption(item.options));
+            } else {
+                groupName = item.optGroup;
+                option = avalon.mix(true, {}, MODEL_ITEM, item, {item: true });
+                opts.push(option);
+            }
 
             //如果该item属于组，将该item放入组中
             if(typeof groupName !== 'undefined') {
@@ -81,38 +92,42 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
                 hasGroup = true;
                 if(!group[groupName]) {
                     group[groupName] = [];
+                    group[groupName].enable = item.enable;
                     groupSeq.push(groupName);
                 }
-                group[groupName].push(option);
+                group[groupName].concat(opts);
             } else {
-                options.push(option);
+                options = options.concat(opts);
             }
         });
 
         avalon.each(groupSeq, function(i, seq) {
 
-            ret.push({
+            model.push({
                 text: seq,
                 items: false,
                 divider: false,
                 optGroup: true
             });
-
-            avalon.each(group[seq], function(i, option) {
-
-            });
-
-            ret = ret.concat(getOption(options));
-            ret.push({
+            model = model.concat(group[seq]);
+            model.push({
                 items: false,
                 divider: true,
                 optGroup: false
             });
+            exportGroup.push({
+                label: seq,
+                enable: group[seq].enable,
+                options: group[seq]
+            });
         });
 
+        model = model.concat(options);
+
         return {
-            optGroup: group,
-            options: options
+            optGroup: exportGroup,
+            options: options,
+            model: model
         };
     }
 
@@ -122,7 +137,7 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
 
         avalon.each(options, function(i, option) {
             ret.push({
-                text: option.label.trim() || option.innerHTML,
+                label: option.label.trim() || option.innerHTML || "",
                 value: option.value,
                 enable: !option.disabled,
                 item: true,
@@ -142,7 +157,7 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
             options = el.getElementsByTagName('option');
 
         if(options.length === 0) {
-            return null;
+            return ret;
         } else if(groups.length === 0) {
             ret = ret.concat(getOption(options));
         } else {
@@ -176,54 +191,64 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
         var $element = avalon(element),
             elemParent = element.parentNode,
             options = data.dropdownOptions,
+            modelPattern = false,   //标志是否通过model值构建下拉列表
             dataSource,
             dataModel,
-            templates, titleTemplate, listTemplate, selectTemplate;
+            optionsModel,
+            templates, titleTemplate, listTemplate, optionsTemplate;
 
         //将元素的属性值copy到options中
         avalon.each(['autofocus', 'multiple', 'size'], function(i, name) {
-            options[name] = element[name];
+            if(element.hasAttribute(name)) {
+                options[name] = element[name];
+            }
         });
 
-        options.enable = !element.disabled;
+        if(element.hasAttribute('disabled')) {
+            options.enable = !element.disabled;
+        }
 
         //读取template
         templates = options.template = options.getTemplate(template).split('MS_OPTION_TEMPLATE');
         titleTemplate = templates[0];
         listTemplate = templates[1];
-        selectTemplate = templates[2];
-        dataSource = getSource(element);
-        dataModel = options.model.$model || options.model;
+        optionsTemplate = templates[2];
+        dataModel = getSource(element);
+        dataSource = options.model.$model || options.model;
 
-        if(dataSource.length === 0) {
+        if(dataModel.length === 0) {
             //dataSource = dataModel;
             //model ==> view
             //model ==> source
-
+            optionsModel = getSelectModel(dataSource);
+            dataModel =  optionsModel.model;
+            modelPattern = true;
         }
 
         var vmodel = avalon.define(data.dropdownId, function(vm) {
 
             avalon.mix(vm, options);
-
             vm.$skipArray= ['widgetElement'];
             vm.widgetElement = element;
             vm.activeIndex = null;
 
+            vm.dataSource = dataSource; //渲染下拉列表的数据源
+            vm.elementModel = {};       //源节点的数据源，通过dataSource传递的值将完全模拟select
             //model的获取优先级 表单元素 > options.model.$model > options.model(plan Object)
-            vm.model = modelMatch(avalon.mix(true, [], getSource(element) || options.model.$model || options.model || []), options.textFiled, options.valueField);
+            vm.model = dataModel;
+            vm.optionsModel = optionsModel;
 
             //对model的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
             if(options.modleBind) {
-                vm.model.$watch('length', function() {
-                    avalon.mix(true, vmodel.model, modelMatch(options.model.$model, options.textFiled, options.valueField));
+                vm.dataSource.$watch('length', function() {
+                    vmodel.model = getSelectModel(vmodel.dataSource.$model);
                 });
             }
 
             //同步组件的model到element上
 
             vm.$init = function() {
-                var titleNode, listNode;
+                var titleNode, listNode, optionsNode;
                 //根据multiple的类型初始化组件
                 if(options.multiple) {
                     listNode = avalon.parseHTML(listTemplate);
@@ -231,8 +256,19 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
                     avalon(element).css('display', 'none');
                 }
                 avalon.ready(function() {
-                    avalon.scan(elemParent, [vmodel].concat(vmodels));
+                    avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
                 });
+                if(modelPattern) {
+                    optionsNode = avalon.parseHTML(optionsTemplate);
+                    element.appendChild(optionsNode);
+                    avalon.each(['autofocus', 'multiple', 'size'], function(i, attr) {
+                        avalon(element).attr('ms-attr-' + attr, attr);
+                    });
+                    avalon(element).attr('ms-enabled', 'enable');
+                    avalon.ready(function() {
+                        avalon.scan(element, [vmodel].concat(vmodels));
+                    });
+                }
             };
 
             vm.$hover = function(e, index) {

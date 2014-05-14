@@ -179,7 +179,6 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
                 if (vmodel.modal) {
                     avalon.scan(maskLayer, [vmodel].concat(vmodels));
                 }
-                console.log([vmodel].concat(vmodels));
                 avalon.scan(element, [vmodel].concat(vmodels));
             };
             vm.$remove = function() {

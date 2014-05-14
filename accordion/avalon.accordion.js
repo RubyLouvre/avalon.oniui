@@ -128,13 +128,10 @@ define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) 
             // 手动渲染accordion
             vm.refresh = function(data) {
                 if (data) {
-                    console.log("设置了data")
                     vmodel.setData(data);
                 } else if(!vmodel.rendered){
-                    console.log("not rendered");
                     vm._renderView();
                 }
-                console.log("既无data且已经redered");
             }
             vm.getCurrentHeader = function() {
                 if (options.multiple) {
@@ -171,7 +168,6 @@ define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) 
                     vmodel.currentIndex = index;
                     options.onSwitch.call(event.target, index, vm.getHeader(index), vm.getPanel(index));
                 } else if(options.triggerType=="click") {
-                    console.log("switch");
                     event.target[options.triggerType]();
                 } else { // dom元素不可以像调用click一样调用mouseover方法
                     eventCallback(event, index);                    

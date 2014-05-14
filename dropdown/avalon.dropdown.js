@@ -10,6 +10,17 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
         styleEl.styleSheet.cssText += cssText;
     }
 
+    var MODEL_ITEM = {
+        value: '',
+        label: '',
+        enable: true,
+        selected: false,
+        optGroup: '',
+        item: false,
+        optGroup: false,
+        divider: false
+    };
+
     //根据配置中textField及valueField做数据适配
     function modelMatch(model, text, value) {
         avalon.each(model, function(i, item) {
@@ -32,6 +43,77 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
         });
 
         return model;
+    }
+
+    //根据dataSource构建数据结构
+    function getSelectModel(model) {
+        var group = {},
+            options = [],
+            groupSeq = [],
+            dataModel = [],
+            hasGroup = false;
+
+        /**
+         * item can like this:
+         * {
+         *    value: '',    //option的值
+         *    label: '',    //option或者optGroup显示的label
+         *    selected: '', //option是否被选中
+         *    optGroup: '', //是否属于某个group
+         *    enable: true
+         * }
+         * group can like this:
+         * {
+         *     label: '',
+         *     enable: true,
+         *     options: [
+         *          item
+         *     ]
+         * }
+         */
+        avalon.each(model, function(i, item) {
+            var option = avalon.mix(true, {}, MODEL_ITEM, item),
+                groupName = option.optGroup;
+
+            //如果该item属于组，将该item放入组中
+            if(typeof groupName !== 'undefined') {
+                groupName = groupName.trim();
+                hasGroup = true;
+                if(!group[groupName]) {
+                    group[groupName] = [];
+                    groupSeq.push(groupName);
+                }
+                group[groupName].push(option);
+            } else {
+                options.push(option);
+            }
+        });
+
+        avalon.each(groupSeq, function(i, seq) {
+
+            ret.push({
+                text: seq,
+                items: false,
+                divider: false,
+                optGroup: true
+            });
+
+            avalon.each(group[seq], function(i, option) {
+
+            });
+
+            ret = ret.concat(getOption(options));
+            ret.push({
+                items: false,
+                divider: true,
+                optGroup: false
+            });
+        });
+
+        return {
+            optGroup: group,
+            options: options
+        };
     }
 
     //提取options中的数据
@@ -81,7 +163,10 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
                         optGroup: false
                     });
                 }
-            })
+            });
+            ret = ret.concat(getOption([].filter.call(options,function(option) {
+                return option.parentNode.tagName !== 'OPTGROUP';
+            })));
         }
 
         return ret;
@@ -91,7 +176,9 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
         var $element = avalon(element),
             elemParent = element.parentNode,
             options = data.dropdownOptions,
-            templates, titleTemplate, listTemplate;
+            dataSource,
+            dataModel,
+            templates, titleTemplate, listTemplate, selectTemplate;
 
         //将元素的属性值copy到options中
         avalon.each(['autofocus', 'multiple', 'size'], function(i, name) {
@@ -104,6 +191,16 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
         templates = options.template = options.getTemplate(template).split('MS_OPTION_TEMPLATE');
         titleTemplate = templates[0];
         listTemplate = templates[1];
+        selectTemplate = templates[2];
+        dataSource = getSource(element);
+        dataModel = options.model.$model || options.model;
+
+        if(dataSource.length === 0) {
+            //dataSource = dataModel;
+            //model ==> view
+            //model ==> source
+
+        }
 
         var vmodel = avalon.define(data.dropdownId, function(vm) {
 

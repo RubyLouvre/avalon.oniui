@@ -1,4 +1,4 @@
-<div class="ui-dropdown">
+<div class="ui-dropdown" ms-css-width="{{width}}">
     <div class="ui-dropdown-source">
         <div class="ui-dropdown-input" title="{{text}}">{{name}}</div>
         <div class="ui-dropdown-icon-wrap">
@@ -9,28 +9,40 @@
 </div>
 MS_OPTION_TEMPLATE
 <div class="ui-dropdown-menu-wrap">
-    <div class="ui-dropdown-menu">
+    <div class="ui-dropdown-menu"
+         ms-css-width="{{listWidth}}">
         <div class="ui-dropdown-menu-inner"
+             ms-css-height="height"
              ms-each-el="model">
-            <div class="ui-dropdown-optGroup" ms-if="el.optGroup">{{el.text}}</div>
-            <div class="ui-dropdown-divider" ms-if="el.divider"></div>
+            <div class="ui-dropdown-optGroup"
+                 ms-if="el.optGroup">{{el.text}}</div>
             <div class="ui-dropdown-item"
                  ms-click="$select($event, el)"
-                 ms-title="el.text" ms-if="el.item">{{el.text}}</div>
+                 ms-title="el.text"
+                 ms-if="el.item"
+                 ms-mouseenter="$hover($event, $index)"
+                 ms-class="ui-dropdown-item-hover:activeIndex == $index && el.enable"
+                 ms-class-1="ui-dropdown-item-disabled:!el.enable"
+                 ms-class-2="ui-dropdown-item-selected:el.selected && el.enable && activeIndex !== $index">{{el.text}}</div>
+            <div class="ui-dropdown-divider"
+                 ms-if="el.divider"></div>
         </div>
     </div>
 </div>
+MS_OPTION_TEMPLATE
+
 MS_OPTION_STYLE
 <style type="text/css">
     .ui-dropdown-menu-wrap {
         position: relative;
         z-index: 1000;
     }
+    /*css change*/
     .ui-dropdown-menu-inner {
         box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
         background-color: #ffffff;
         border: 1px solid #cccccc;
-        overflow: hidden;
+        overflow-y: scroll;
         padding: 3px 0;
     }
     .ui-dropdown-item {

@@ -40,12 +40,13 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
 
         avalon.each(options, function(i, option) {
             ret.push({
-                text: option.innerHTML,
+                text: option.label.trim() || option.innerHTML,
                 value: option.value,
                 enable: !option.disabled,
                 item: true,
                 divider: false,
-                optGroup: false
+                optGroup: false,
+                selected: option.selected
             });
         });
 
@@ -73,12 +74,12 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
                         divider: false,
                         optGroup: true
                     });
+                    ret = ret.concat(getOption(options));
                     ret.push({
                         items: false,
                         divider: true,
                         optGroup: false
                     });
-                    ret = ret.concat(getOption(options));
                 }
             })
         }
@@ -104,23 +105,25 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
         titleTemplate = templates[0];
         listTemplate = templates[1];
 
-        //TODO 同步元素的属性到组件中
         var vmodel = avalon.define(data.dropdownId, function(vm) {
 
             avalon.mix(vm, options);
 
             vm.$skipArray= ['widgetElement'];
             vm.widgetElement = element;
+            vm.activeIndex = null;
 
             //model的获取优先级 表单元素 > options.model.$model > options.model(plan Object)
             vm.model = modelMatch(avalon.mix(true, [], getSource(element) || options.model.$model || options.model || []), options.textFiled, options.valueField);
 
             //对model的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
-            if(options.modleBind && avalon.type(options.model.$watch) === 'function') {
-                options.model.$watch('length', function() {
+            if(options.modleBind) {
+                vm.model.$watch('length', function() {
                     avalon.mix(true, vmodel.model, modelMatch(options.model.$model, options.textFiled, options.valueField));
                 });
             }
+
+            //同步组件的model到element上
 
             vm.$init = function() {
                 var titleNode, listNode;
@@ -135,6 +138,11 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
                 });
             };
 
+            vm.$hover = function(e, index) {
+                e.preventDefault();
+                vm.activeIndex = index;
+            };
+
             vm.$select = function() {};
 
             vm.$remove = function() {};
@@ -147,8 +155,8 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
     widget.version = "1.0";
 
     widget.defaults = {
-        width: null,            //自定义宽度
-        listWidth: null,        //自定义下拉列表的宽度
+        width: 200,            //自定义宽度
+        listWidth: 200,        //自定义下拉列表的宽度
         height: 200,            //下拉列表的高度
         enable: true,           //组件是否可用
         readonly: false,        //组件是否只读

@@ -39,7 +39,7 @@
                     &lt;input type="button" ms-click="getStatus('aa',1)" value="getStatus('aa',1)"/&gt;
                     &lt;input type="button" ms-click="switchTo('aa',1)" value="switchTo('aa',1)"/&gt;
                     &lt;script&gt; 
-                        require("accordion/avalon.accordion", function($$) {
+                        require(["accordion/avalon.accordion"], function($$) {
                             $$.define('demo',function(vm){
                                 vm.$aaOpts = {
                                     data: [{
@@ -100,7 +100,7 @@
             <input type="button" ms-click="getStatus('aa',1)" value="getStatus('aa',1)"/>
             <input type="button" ms-click="switchTo('aa',1)" value="switchTo('aa',1)"/>
             <script> 
-                require("accordion/avalon.accordion", function($$) {
+                require(["accordion/avalon.accordion"], function($$) {
                     $$.define('demo',function(vm){
                         vm.$aaOpts = {
                             data: [{

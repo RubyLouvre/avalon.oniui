@@ -27,7 +27,7 @@
                     &lt;div ms-widget="accordion,aa,$aaOpts"&gt;
                     &lt;/div&gt;
                     &lt;script&gt; 
-                        require("accordion/avalon.accordion", function($$) {
+                        require(["accordion/avalon.accordion"], function($$) {
                             $$.define('demo',function(vm){
                                 vm.$aaOpts = {
                                     data: [{
@@ -62,7 +62,7 @@
             <div ms-widget="accordion,aa,$aaOpts">
             </div>
             <script> 
-                require("accordion/avalon.accordion", function($$) {
+                require(["accordion/avalon.accordion"], function($$) {
                     $$.define('demo',function(vm){
                         vm.$aaOpts = {
                             data: [{

@@ -34,6 +34,12 @@
                 </td>
             </tr>
             <tr>
+                <td>stack</td>
+                <td>false</td> 
+                <td>让拖动的元素自动位于最上层 
+                </td>
+            </tr>
+            <tr>
                 <td>containment</td>
                 <td></td> 
                 <td>区域拖动，可以是window, parent, #id, [0, 0, 400, 300]这些格式。
@@ -42,31 +48,31 @@
                 </td>
             </tr>
             <tr>
-                <td>beforeStart</td>
+                <td>onBeforeStart</td>
                 <td>空函数</td> 
                 <td>鼠标按下时立即触发的回调，它的参数与this参考handle。你可以在这里设置拖动范围与改变元素样式。
                 </td>
             </tr>
             <tr>
-                <td>start</td>
+                <td>onStart</td>
                 <td>空函数</td> 
                 <td>紧接着beforeStart，handle触发的回调，它的参数与this参考handle
                 </td>
             </tr>
             <tr>
-                <td>drag</td>
+                <td>onDrag</td>
                 <td>空函数</td> 
                 <td>鼠标拖动（mousemove或touchmove）连续触发的回调，它的参数与this参考handle
                 </td>
             </tr>
             <tr>
-                <td>beforeStop</td>
+                <td>onBeforeStop</td>
                 <td>空函数</td> 
                 <td>鼠标弹起后立即触发的回调，它的参数与this参考handle。你可以在恢复样式，或改变data的一些属性
                 </td>
             </tr>
             <tr>
-                <td>stop</td>
+                <td>onStop</td>
                 <td>空函数</td> 
                 <td>拖放结束后执行的回调，它的参数与this参考handle。
                 </td>
@@ -124,6 +130,7 @@
             <li><a href="avalon.draggable.ex4.html">影子拖动</a></li>
             <li><a href="avalon.draggable.ex5.html">手柄拖动</a></li>
             <li><a href="avalon.draggable.ex6.html">各种回调</a></li>
+            <li><a href="avalon.draggable.ex7.html">让元素位于最前面</a></li>
         </ol>
     </body>
 </html>

@@ -9,7 +9,7 @@
 <body>
     <div class="wrapper">
         <h1>accordion使用说明</h1>
-        <p>accordion组件</p>
+        <p>accordion组件是在有限的区域显示可折叠内容面板的信息，通过不同的配置选项和丰富的api可以灵活的设置和调用accordion，接下来对所有的配置项和可用的API做以说明</p>
         <table>
             <caption class="example">accordion组件配置项说明：</caption>
             <thead>
@@ -22,38 +22,38 @@
             <tbody>
                 <tr>
                     <td>autoRun</td>
-                    <td>{Bool}</td>
-                    <td>是否自动渲染</td>
+                    <td>默认true，type:Boolean</td>
+                    <td>告知组件是否自动渲染，设为false时需要手动调用refresh方法进行组件的解析渲染</td>
                 </tr>
                 <tr>
                     <td>container  || widgetElement</td>
-                    <td>{Element|JQuery|String}</td>
-                    <td>组件容器</td>
+                    <td>调用组件元素的element</td>
+                    <td>保存组件容器的引用，不可配置</td>
                 </tr>
                 <tr>
                     <td>controlCls</td>
-                    <td>{String}</td>
+                    <td>默认"",type: String</td>
                     <td>组件容器自定义className</td>
                 </tr>
                 <tr>
                     <td>currentTriggerCls</td>
-                    <td>{String}</td>
-                    <td>组件激活时在标题区域标记的className，默认值为：“ui-accordion-active”</td>
+                    <td>默认"ui-accordion-active", type: String</td>
+                    <td>组件展开时标题区域的className</td>
                 </tr>
                 <tr>
                     <td>data</td>
-                    <td>{Array}</td>
-                    <td>组件配置数据对象，格式为{title: string, content: {String|Object:Accordion}}</td>
+                    <td>默认[], type: Array</td>
+                    <td>配置accordion组件要展示的数据对象，格式为
+                        [
+                            {title: String, content: String},
+                            {title: String, content: String},
+                            {title: String, content: String}
+                        ]</td>
                 </tr>
                 <tr>
-                    <td>content</td>
-                    <td>{String|Object:Accordion}}</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>initIndex || active</td>
-                    <td>{Number|null}</td>
-                    <td>初始展开第几个抽屉</td>
+                    <td>initIndex</td>
+                    <td>默认null， type: Number|null </td>
+                    <td>初始展开第几个面板</td>
                 </tr>
                 <tr>
                     <td>mode</td>
@@ -61,89 +61,134 @@
                     <td>组件展开模式，取值说明："nav"=点击整个标题区域以展开面板，"caret"=点击标题区域中的图标以展开面板，"custom"=自定义面板展开方式</td>
                 </tr>
                 <tr>
-                    <td>multiple || collapsible</td>
-                    <td>{Bool}</td>
-                    <td>是否允许同时展开多个抽屉面板</td>
+                    <td>multiple</td>
+                    <td>默认true type: Boolean</td>
+                    <td>是否允许同时展开多个accordion面板</td>
                 </tr>
                 <tr>
                     <td>template</td>
-                    <td>{
-                            header: {String},
-                            panel: {String}
-                        }
+                    <td>默认"" type: String</td>
+                    <td>配置抽屉标题、面板区域的html模板,在mode为“custom”时有效
+                        比如：'&lt;div class="ui-accordion-inner" ms-each-item="data"&gt;&lt;h3 class="ui-accordion-header" ms-class="MS_OPTION_ACTIVECLASS:currentIndex == $index"&gt;{{item.title}}&lt;/h3&gt;&lt;div class="ui-accordion-content" ms-visible="currentIndex == $index"&gt;{{item.content|html}}&lt;/div&gt;'
+                        <p>注意：模板必须是由最外层的ui-accordion-inner包装，并配置ms-each-item="data",accordion的header部分由ui-accordion-header包装，content部分由ui-accordion-content包装，内部结构随便设置，accordion的tittle由{{item.content}}占位符表示，content由{{item.content}}占位符表示，必须注意务必配置ui-accordion-header元素的ms-class，如上例所示</p>
                     </td>
-                    <td>配置抽屉标题、面板区域的html模板</td>
                 </tr>
                 <tr>
                     <td>trigger</td>
-                    <td>{String}</td>
-                    <td>组件展开模式为自定义(mode="custom")时，配置指定触发面板展开的对象</td>
+                    <td>默认"ui-accordion-trigger",type: String</td>
+                    <td>组件模式(mode)设为"custorm|caret"时，指定触发面板展开的节点对象所对应的className</td>
                 </tr>
                 <tr>
-                    <td>triggerType || event</td>
-                    <td>{'click'|'mouseover'}</td>
-                    <td>触发方式："click"=点击触发，"mouseover"=鼠标悬浮触发</td>
+                    <td>triggerType</td>
+                    <td>默认“click”, type: String, 可选'click'|'mouseover'</td>
+                    <td>配置面板展开、收起的触发方式："click"=点击触发，"mouseover"=鼠标悬停触发</td>
                 </tr>
                 <tr>
                     <td>width</td>
-                    <td>{Number|'100%'}v</td>
-                    <td>组件宽度</td>
+                    <td>默认："100%", type: Number|'100%'</td>
+                    <td>配置组件宽度</td>
                 </tr>
                 <tr>
-                    <td>beforeSwitch || onBeforeActive</td>
-                    <td>{Function}</td>
-                    <td>组件面板展开前回调函数，若函数返回false则不展开面板，传入参数：index=面板序号，header=标题区域jQuery对象，panel=面板区域jQuery对象</td>
+                    <td>beforeSwitch</td>
+                    <td>type: Function</td>
+                    <td>组件面板展开前回调函数，若函数返回false则不展开面板，传入参数：index=面板序号，header=标题区域节点对象，panel=面板区域节点对象，调用此方法的对象是触发事件的dom节点</td>
                 </tr>
                 <tr>
                     <td>onSwitch || onActive</td>
-                    <td>{Function}</td>
-                    <td>组件面板展开后回调函数，传入参数定义同上</td>
+                    <td>type: Function</td>
+                    <td>组件面板展开前回调函数，若函数返回false则不展开面板，传入参数：index=面板序号，header=标题区域节点对象，panel=面板区域节点对象，调用此方法的对象是触发事件的dom节点</td>
                 </tr>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>rendered</td>
+                    <td>false, type: Boolean</td>
+                    <td>组件是否完成渲染</td>
                 </tr>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>currentIndex</td>
+                    <td>-1, type: Integer</td>
+                    <td>组件最新展开的面板序号，不可配置</td>
                 </tr>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>setData</td>
+                    <td>type: Function</td>
+                    <td>重定义组件配置数据对象，参数data的结构如下：
+                        [{
+                            title: "标题1",
+                            content: "正文1"
+                        },
+                        {
+                            title: "标题2",
+                            content: "正文2"
+                        }] 
+                        setData方法仅供外部调用，不可配置
+                    </td>
                 </tr>
                 <tr>
+                    <td>refresh</td>
+                    <td>type: Function</td>
+                    <td>手工刷新组件视图,也可以传递参数data，重渲染组件视图
+                        accordion.refresh({
+                            data: [{
+                                title: '标题',
+                                content: '正文'
+                            }]
+                        });  
+                        refresh方法仅供外部调用，不可配置   
+                    </td>
+                </tr>
+                <tr>
+                    <td>getCurrentHeader</td>
+                    <td>type: Function</td>
+                    <td>获得当前展开的accordion标题对象，仅在config.multiple == false时有效；getCurrentHeader方法仅供外部调用，不可配置 </td>
+                </tr>
+                <tr>
+                    <td>getCurrentPanel</td>
                     <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>获得当前展开的accordion面板对象，仅在config.multiple == false时有效；getCurrentPanel方法仅供外部调用，不可配置 </td></td>
+                </tr>
+                <tr>
+                    <td>getHeader(1)</td>
+                    <td>type: Function
+                        <p>@param index: Integer</p>
+                    </td>
+                    <td>获得指定序号的accordion面板对应的标题节点对象；此方法仅供外部调用，不可配置 </td></td>
+                </tr>
+                <tr>
+                    <td>getPanel(1)</td>
+                    <td>type: Function
+                        <p>@param index: Integer</p>
+                    </td>
+                    <td>获得指定序号的accordion面板节点对象；此方法仅供外部调用，不可配置 </td></td>
+                </tr>
+                <tr>
+                    <td>getLength()</td>
+                    <td>type: Function
+                    </td>
+                    <td>获得组件的面板数量；此方法仅供外部调用，不可配置 </td></td>
+                </tr>
+                <tr>
+                    <td>getStatus(1)</td>
+                    <td>type: Function
+                        <p>@param index: Integer</p>
+                    </td>
+                    <td>获得指定序号的accordion面板展开(1)/收起(0)状态；此方法仅供外部调用，不可配置 </td></td>
+                </tr>
+                <tr>
+                    <td>switchTo(1)</td>
+                    <td>type: Function
+                        <p>@param index: Integer</p>
+                    </td>
+                    <td>切换accordion面板的展开；此方法仅供外部调用，不可配置 </td></td>
                 </tr>
             </tbody>
         </table>
+        <h3>例子：</h3>
+        <ol>
+            <li><a target="_blank" href="avalon.accordion.ex1.html">简单例子</a></li>
+            <li><a target="_blank" href="avalon.accordion.ex2.html">使用setData或者refresh(data)重新渲染accordion</a></li>
+            <li><a target="_blank" href="avalon.accordion.ex3.html">accordion提供的各种API</a></li>
+            <li><a target="_blank" href="avalon.accordion.ex4.html">嵌套的accordion</a></li>
+        </ol>
     </div>
 </body>
 </html>
-
-rendered //组件是否完成渲染
-currentIndex //组件最新展开的抽屉序号
-setData([{
-            title: '标题',
-            content: '正文'
-        }]); //重定义组件配置数据对象
-
-
-refresh(); //手工刷新组件视图
-        accordion.refresh({
-            data: [{
-                title: '标题',
-                content: '正文'
-            }]
-        }); //另一种手工刷新组件的方式，可以同时重定义组件配置数据对象
-        accordion.getCurrentHeader(); //获得当前展开的抽屉标题对象，仅在config.multiple == false时有效
-        accordion.getCurrentPanel(); //获得当前展开的抽屉面板对象，仅在config.multiple == false时有效
-        accordion.getHeader(1); //获得指定序号的抽屉标题对象
-        accordion.getPanel(1); //获得指定序号的抽屉面板对象
-        accordion.getLength(); //获得组件的抽屉数量
-        accordion.getStatus(1); //获得指定序号的抽屉面板展开(1)/收起(0)状态
-        accordion.switchTo(1); //切换抽屉展开

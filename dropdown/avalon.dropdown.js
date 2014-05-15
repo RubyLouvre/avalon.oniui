@@ -1,5 +1,5 @@
 
-define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
+define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(avalon, $$, tmpl) {
     var arr = tmpl.split("MS_OPTION_STYLE");
     var cssText = arr[1].replace(/<\/?style>/g, "");
     var styleEl = document.getElementById("avalonStyle");
@@ -197,6 +197,9 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
             optionsModel,
             templates, titleTemplate, listTemplate, optionsTemplate;
 
+        //首先扫描该元素
+        avalon.scan(element, vmodels);
+
         //将元素的属性值copy到options中
         avalon.each(['autofocus', 'multiple', 'size'], function(i, name) {
             if(element.hasAttribute(name)) {
@@ -213,16 +216,47 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
         titleTemplate = templates[0];
         listTemplate = templates[1];
         optionsTemplate = templates[2];
-        dataModel = getSource(element);
-        dataSource = options.model.$model || options.model;
 
-        if(dataModel.length === 0) {
-            //dataSource = dataModel;
-            //model ==> view
-            //model ==> source
-            optionsModel = getSelectModel(dataSource);
-            dataModel =  optionsModel.model;
-            modelPattern = true;
+        dataSource = options.model.$model || options.model;
+        modelPattern = getSource(element).length === 0;
+
+        function _init() {
+
+            //数据抽取
+            dataModel = getSource(element);
+
+            if(dataModel.length === 0) {
+                optionsModel = getSelectModel(dataSource);
+                dataModel =  optionsModel.model;
+            }
+
+            vmodel.model = dataModel;
+            vmodel.optionsModel = optionsModel || [];
+
+            var titleNode, listNode, optionsNode;
+
+            //根据multiple的类型初始化组件
+            if(options.multiple) {
+                listNode = avalon.parseHTML(listTemplate);
+                elemParent.insertBefore(listNode, element);
+                avalon(element).css('display', 'none');
+            }
+            avalon.ready(function() {
+                avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
+            });
+
+            //通过model构建的组件，需要同步select的结构
+            if(modelPattern) {
+                optionsNode = avalon.parseHTML(optionsTemplate);
+                element.appendChild(optionsNode);
+                avalon.each(['autofocus', 'multiple', 'size'], function(i, attr) {
+                    avalon(element).attr('ms-attr-' + attr, attr);
+                });
+                avalon(element).attr('ms-enabled', 'enable');
+                avalon.ready(function() {
+                    avalon.scan(element, [vmodel].concat(vmodels));
+                });
+            }
         }
 
         var vmodel = avalon.define(data.dropdownId, function(vm) {
@@ -232,11 +266,15 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
             vm.widgetElement = element;
             vm.activeIndex = null;
 
-            vm.dataSource = dataSource; //渲染下拉列表的数据源
-            vm.elementModel = {};       //源节点的数据源，通过dataSource传递的值将完全模拟select
-            //model的获取优先级 表单元素 > options.model.$model > options.model(plan Object)
-            vm.model = dataModel;
-            vm.optionsModel = optionsModel;
+
+            vm.dataSource = dataSource;     //源节点的数据源，通过dataSource传递的值将完全模拟select
+            vm.model = [];      //下拉列表的渲染model
+
+            //当使用options.model生成相关结构时，使用下面的model同步element的节点
+            vm.optionsModel = {
+                optGroup: [],
+                options: []
+            };
 
             //对model的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
             if(options.modleBind) {
@@ -245,35 +283,41 @@ define(['avalon', 'text!./avalon.dropdown.html'], function(avalon, tmpl) {
                 });
             }
 
-            //同步组件的model到element上
-
             vm.$init = function() {
-                var titleNode, listNode, optionsNode;
-                //根据multiple的类型初始化组件
-                if(options.multiple) {
-                    listNode = avalon.parseHTML(listTemplate);
-                    elemParent.insertBefore(listNode, element);
-                    avalon(element).css('display', 'none');
+                var duplexName = (element.msData['ms-duplex'] || '').trim(),
+                    duplexModel, values, selectedLen, id;
+
+                if(duplexName) {
+                    duplexModel = avalon.getModel(duplexName, vmodels);
+                    if(duplexModel) {
+                        values = duplexModel[1][duplexName];
+                    }
                 }
-                avalon.ready(function() {
-                    avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
-                });
-                if(modelPattern) {
-                    optionsNode = avalon.parseHTML(optionsTemplate);
-                    element.appendChild(optionsNode);
-                    avalon.each(['autofocus', 'multiple', 'size'], function(i, attr) {
-                        avalon(element).attr('ms-attr-' + attr, attr);
-                    });
-                    avalon(element).attr('ms-enabled', 'enable');
-                    avalon.ready(function() {
-                        avalon.scan(element, [vmodel].concat(vmodels));
-                    });
+
+                //等待select中的子项被扫描完，并且已经被赋值
+                if(!modelPattern && values && values.toString().trim().length > 0) {
+                    selectedLen = values.length;
+                    id = setInterval(function() {
+                        console.log(element.selectedOptions.length);
+                        console.log(selectedLen);
+                        if (element.selectedOptions.length === selectedLen) {
+                            clearInterval(id);
+                            _init();
+                        }
+                    }, 20);
+                } else {
+                    _init();
                 }
+
             };
 
             vm.$hover = function(e, index) {
                 e.preventDefault();
                 vm.activeIndex = index;
+            };
+
+            vm.$mouseleave = function() {
+                vm.activeIndex = null;
             };
 
             vm.$select = function() {};

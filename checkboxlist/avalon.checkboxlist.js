@@ -1,4 +1,4 @@
-define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, sourceHTML) {
+define(["avalon.getModel", "text!./avalon.checkboxlist.html"], function(avalon, sourceHTML) {
     var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""];
     var cssText = arr[1].replace(/<\/?style>/g, "");
     var styleEl = document.getElementById("avalonStyle");
@@ -8,7 +8,7 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
     } catch (e) {
         styleEl.styleSheet.cssText += cssText;
     }
-    var widget = avalon.ui.cboxpicker = function(element, data, vmodels) {
+    var widget = avalon.ui.checkboxlist = function(element, data, vmodels) {
         // 获取配置项        
         var getVMFunc = (function(data){
             return function ( name , isGetSet ) {
@@ -19,12 +19,12 @@ define(["avalon.getModel", "text!./avalon.cboxpicker.html"], function(avalon, so
                 return data.evaluator.apply( 0 , data.args );
             }
         })(data);
-        var options = data.cboxpickerOptions;
+        var options = data.checkboxlistOptions;
         var onfetch = getVMFunc('fetch');
         var onselect = getVMFunc('select');
         options.template = options.getTemplate(template, options);
 
-        var vmodel = avalon.define(data.cboxpickerId, function(vm) {
+        var vmodel = avalon.define(data.checkboxlistId, function(vm) {
             avalon.mix(vm, options);
             vm.$skipArray = ["widgetElement", "template"];
             vm.widgetElement = element;

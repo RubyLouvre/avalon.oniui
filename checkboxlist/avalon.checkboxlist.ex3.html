@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
-<title>cboxpicker demo(配置type为week)</title>
+<title>checkboxlist demo(配置type为week)</title>
 <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
 <link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
 <script src="../highlight/shCore.js"></script>
@@ -11,8 +11,8 @@
 </head>
 <body>
     <div class="wrapper">
-        <h1>cboxpicker demo 3</h1>
-        <p class="example">cboxpicker组件默认提供了type为week时的data（<span class="statement">data-cboxpicker-type="week"</span>）,只需简单配置就可完成星期一到星期日的选项的展示。</p>
+        <h1>checkboxlist demo 3</h1>
+        <p class="example">checkboxlist组件默认提供了type为week时的data（<span class="statement">data-checkboxlist-type="week"</span>）,只需简单配置就可完成星期一到星期日的选项的展示。</p>
         <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
             &lt;!DOCTYPE HTML&gt;
             &lt;html&gt;
@@ -25,14 +25,14 @@
                 &lt;div class="demoShow" ms-controller="demo3"&gt;
                     &lt;fieldse&gt;
                         &lt;legend&gt;设置type为week展示周一到周日的选项&lt;/legend&gt;
-                        &lt;ul ms-widget="cboxpicker" data-cboxpicker-type="week" data-cboxpicker-duplex="val" data-cboxpicker-alltext="全部"&gt;
+                        &lt;ul ms-widget="checkboxlist" data-checkboxlist-type="week" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部"&gt;
                         &lt;/ul&gt;
                     &lt;/fieldset&gt;
 
                     {{ val }}
                 &lt;/div&gt;
                 &lt;script&gt;
-                    require("./cboxpicker/avalon.cboxpicker", function(avalon) {
+                    require("./checkboxlist/avalon.checkboxlist", function(avalon) {
                         avalon.define('demo3',function(vm){
                             vm.val = ['TUESDAY'];
                         });
@@ -45,14 +45,14 @@
         <div class="demoShow" ms-controller="demo3">
             <fieldse>
                 <legend>设置type为week展示周一到周日的选项</legend>
-                <ul ms-widget="cboxpicker" data-cboxpicker-type="week" data-cboxpicker-duplex="val" data-cboxpicker-alltext="全部">
+                <ul ms-widget="checkboxlist" data-checkboxlist-type="week" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部">
                 </ul>
             </fieldset>
 
             {{ val }}
         </div>
         <script>
-            require("./cboxpicker/avalon.cboxpicker", function(avalon) {
+            require("./checkboxlist/avalon.checkboxlist", function(avalon) {
                 avalon.define('demo3',function(vm){
                     vm.val = ['TUESDAY'];
                 });

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
-<title>cboxpicker demo 5(select配置)</title>
+<title>checkboxlist demo 5(select配置)</title>
 <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
 <link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
 <script src="../highlight/shCore.js"></script>
@@ -11,21 +11,21 @@
 </head>
 <body>
     <div class="wrapper">
-        <h1>cboxpicker demo 5</h1>
-        <p class="example">通过配置select，可以在选中或者取消选中选框的情况下做一些后续处理，传给回调的参数分别是：选项值组成的数组（[{value:"",text:""},{value: "", text:""}]的格式）、选中(true)还是取消选中(false)的选框状态、当前点击的checkbox元素的引用（<span class="statement">data-cboxpicker-select="onselect"</span>）</p>
+        <h1>checkboxlist demo 5</h1>
+        <p class="example">通过配置select，可以在选中或者取消选中选框的情况下做一些后续处理，传给回调的参数分别是：选项值组成的数组（[{value:"",text:""},{value: "", text:""}]的格式）、选中(true)还是取消选中(false)的选框状态、当前点击的checkbox元素的引用（<span class="statement">data-checkboxlist-select="onselect"</span>）</p>
         <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
             &lt;!DOCTYPE HTML&gt;
             &lt;html&gt;
             &lt;head&gt;
                 &lt;meta charset='utf-8'/&gt;
-                &lt;title&gt;cboxpicker demo5（配置select回调）&lt;/title&gt;
+                &lt;title&gt;checkboxlist demo5（配置select回调）&lt;/title&gt;
                 &lt;script src='avalon.js'&gt;&lt;/script&gt;
             &lt;/head&gt;
             &lt;body&gt;
                 &lt;div class="demoShow" ms-controller="demo5"&gt;
                     &lt;fieldset&gt;
-                        &lt;legend&gt;data-cboxpicker-select="onselect"&lt;/legend&gt;
-                        &lt;ul ms-widget="cboxpicker" data-cboxpicker-select="onselect" data-cboxpicker-duplex="val" data-cboxpicker-alltext="全部"&gt;
+                        &lt;legend&gt;data-checkboxlist-select="onselect"&lt;/legend&gt;
+                        &lt;ul ms-widget="checkboxlist" data-checkboxlist-select="onselect" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部"&gt;
                             &lt;li&gt;&lt;input type="checkbox" value="1"&gt;选项一&lt;/li&gt;
                             &lt;li&gt;&lt;input type="checkbox" value="2"&gt;选项二&lt;/li&gt;
                             &lt;li&gt;&lt;input type="checkbox" value="3"&gt;选项三&lt;/li&gt;
@@ -37,7 +37,7 @@
                     {{ val }}
                 &lt;/div&gt;
                 &lt;script&gt;
-                    require("./cboxpicker/avalon.cboxpicker", function(avalon) {
+                    require("./checkboxlist/avalon.checkboxlist", function(avalon) {
                         var sss = avalon.define('demo5',function(vm){
                             vm.val = ["1", "2"];
                             vm.onselect = function() {
@@ -60,8 +60,8 @@
         </pre>
         <div class="demoShow" ms-controller="demo5">
             <fieldset>
-                <legend>data-cboxpicker-select="onselect"</legend>
-                <ul ms-widget="cboxpicker" data-cboxpicker-select="onselect" data-cboxpicker-duplex="val" data-cboxpicker-alltext="全部">
+                <legend>data-checkboxlist-select="onselect"</legend>
+                <ul ms-widget="checkboxlist" data-checkboxlist-select="onselect" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部">
                     <li><input type="checkbox" value="1">选项一</li>
                     <li><input type="checkbox" value="2">选项二</li>
                     <li><input type="checkbox" value="3">选项三</li>
@@ -73,7 +73,7 @@
             {{ val }}
         </div>
         <script>
-            require("./cboxpicker/avalon.cboxpicker", function(avalon) {
+            require("./checkboxlist/avalon.checkboxlist", function(avalon) {
                 var sss = avalon.define('demo5',function(vm){
                     vm.val = ["1", "2"];
                     vm.onselect = function() {

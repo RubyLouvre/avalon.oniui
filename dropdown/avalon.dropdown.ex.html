@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <script src="../avalon.js"></script>
+    <script type="text/javascript">
+        require('dropdown/avalon.dropdown.js', function() {
+            avalon.ready(function() {
+                //multiple select vmodel
+                avalon.define('mulSelect', function(vm) {
+                    vm.$skipArray = ['opts'];
+                    vm.opts = {
+                        model: [
+                            {
+                                value: '1',
+                                label: '1'
+                            }, {
+                                value: '2',
+                                label: '2'
+                            }
+                        ],
+                        multiple: true,
+                        autofocus: true,
+                        size: 4,
+                        enable: false
+                    };
+                });
+                avalon.scan();
+            });
+        });
+    </script>
+</head>
+<body>
+<div ms-controller="mulSelect">
+    <h2>multiple select</h2>
+    <select multiple ms-widget="dropdown">
+        <optgroup label="group1">
+            <option value="value1" selected>Value 1</option>
+            <option selected>textValue</option>
+            <option label="label" value="labelValue">with label</option>
+            <option value="value2" selected>Value 2</option>
+            <option value="value3">Value 3</option>
+        </optgroup>
+        <optgroup label="group2">
+            <option value="value4">Value 4</option>
+            <option value="value5" disabled>Value 5</option>
+            <option value="value6">Value 6</option>
+        </optgroup>
+    </select>
+    <h2>multiple select with model in opts</h2>
+    <select ms-widget="dropdown,$,opts"></select>
+</div>
+</body>
+</html>

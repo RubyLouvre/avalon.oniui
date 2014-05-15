@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
-<title>cboxpicker demo(配置duplex选项)</title>
+<title>checkboxlist demo(配置duplex选项)</title>
 <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
 <link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
 <script src="../highlight/shCore.js"></script>
@@ -11,8 +11,8 @@
 </head>
 <body>
     <div class="wrapper">
-        <h1>cboxpicker demo 2</h1>
-        <p class="example">配置cboxpicker-duplex初始化初始选中的选项，而且可以通过duplex值的改变修正选中项状态（<span class="statement">data-cboxpicker-duplex="val"</span>）</p>
+        <h1>checkboxlist demo 2</h1>
+        <p class="example">配置checkboxlist-duplex初始化初始选中的选项，而且可以通过duplex值的改变修正选中项状态（<span class="statement">data-checkboxlist-duplex="val"</span>）</p>
         <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
             &lt;!DOCTYPE HTML&gt;
             &lt;html&gt;
@@ -24,8 +24,8 @@
             &lt;body&gt;
                 &lt;div class="demoShow" ms-controller="demo2"&gt;
                     &lt;fieldset&gt;
-                        &lt;legend&gt;data-cboxpicker-duplex="val"&lt;/legend&gt;
-                        &lt;ul ms-widget="cboxpicker" data-cboxpicker-duplex="val" data-cboxpicker-alltext="全部"&gt;
+                        &lt;legend&gt;data-checkboxlist-duplex="val"&lt;/legend&gt;
+                        &lt;ul ms-widget="checkboxlist" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部"&gt;
                             &lt;li&gt;&lt;input type="checkbox" value="1"&gt;选项一&lt;/li&gt;
                             &lt;li&gt;&lt;input type="checkbox" value="2"&gt;选项二&lt;/li&gt;
                             &lt;li&gt;&lt;input type="checkbox" value="3"&gt;选项三&lt;/li&gt;
@@ -37,7 +37,7 @@
                     &lt;/fieldset&gt;
                 &lt;/div&gt;
                 &lt;script&gt;
-                    require("./cboxpicker/avalon.cboxpicker", function(avalon) {
+                    require("./checkboxlist/avalon.checkboxlist", function(avalon) {
                         var sss = avalon.define('demo2',function(vm){
                             vm.val = ["1", "2"];
                         });
@@ -52,8 +52,8 @@
         </pre>
         <div class="demoShow" ms-controller="demo2">
             <fieldset>
-                <legend>data-cboxpicker-duplex="val"</legend>
-                <ul ms-widget="cboxpicker" data-cboxpicker-duplex="val" data-cboxpicker-alltext="全部">
+                <legend>data-checkboxlist-duplex="val"</legend>
+                <ul ms-widget="checkboxlist" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部">
                     <li><input type="checkbox" value="1">选项一</li>
                     <li><input type="checkbox" value="2">选项二</li>
                     <li><input type="checkbox" value="3">选项三</li>
@@ -65,7 +65,7 @@
             </fieldset>
         </div>
         <script>
-            require("./cboxpicker/avalon.cboxpicker", function(avalon) {
+            require("./checkboxlist/avalon.checkboxlist", function(avalon) {
                 var sss = avalon.define('demo2',function(vm){
                     vm.val = ["1", "2"];
                 });

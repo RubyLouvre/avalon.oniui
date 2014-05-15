@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
-<title>cboxpicker demo(配置fetch获取选项)</title>
+<title>checkboxlist demo(配置fetch获取选项)</title>
 <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
 <link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
 <script src="../highlight/shCore.js"></script>
@@ -11,8 +11,8 @@
 </head>
 <body>
     <div class="wrapper">
-        <h1>cboxpicker demo 4</h1>
-        <p class="example">配置cboxpicker-fetch获取用户定义的所有选项值（<span class="statement">data-cboxpicker-fetch="get_options"</span>）</p>
+        <h1>checkboxlist demo 4</h1>
+        <p class="example">配置checkboxlist-fetch获取用户定义的所有选项值（<span class="statement">data-checkboxlist-fetch="get_options"</span>）</p>
         <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
             &lt;!DOCTYPE HTML&gt;
             &lt;html&gt;
@@ -24,14 +24,14 @@
             &lt;body&gt;
                 &lt;div class="demoShow" ms-controller="demo4"&gt;
                     &lt;fieldset&gt;
-                        &lt;legend&gt;data-cboxpicker-duplex="val"&lt;/legend&gt;
-                        &lt;ul ms-widget="cboxpicker" data-cboxpicker-duplex="val" data-cboxpicker-alltext="全部" data-cboxpicker-fetch="get_options"&gt;
+                        &lt;legend&gt;data-checkboxlist-duplex="val"&lt;/legend&gt;
+                        &lt;ul ms-widget="checkboxlist" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部" data-checkboxlist-fetch="get_options"&gt;
                         &lt;/ul&gt;
                         {{ val }}
                     &lt;/fieldset&gt;
                 &lt;/div&gt;
                 &lt;script&gt;
-                    require("./cboxpicker/avalon.cboxpicker", function(avalon) {
+                    require("./checkboxlist/avalon.checkboxlist", function(avalon) {
                         var sss = avalon.define('demo4',function(vm){
                             vm.val = ["w1", "w2"];
                             vm.get_options = function( callback ){
@@ -54,14 +54,14 @@
         </pre>
         <div class="demoShow" ms-controller="demo4">
             <fieldset>
-                <legend>data-cboxpicker-duplex="val"</legend>
-                <ul ms-widget="cboxpicker" data-cboxpicker-duplex="val" data-cboxpicker-alltext="全部" data-cboxpicker-fetch="get_options">
+                <legend>data-checkboxlist-duplex="val"</legend>
+                <ul ms-widget="checkboxlist" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部" data-checkboxlist-fetch="get_options">
                 </ul>
                 {{ val }}
             </fieldset>
         </div>
         <script>
-            require("./cboxpicker/avalon.cboxpicker", function(avalon) {
+            require("./checkboxlist/avalon.checkboxlist", function(avalon) {
                 var sss = avalon.define('demo4',function(vm){
                     vm.val = ["w1", "w2"];
                     vm.get_options = function( callback ){

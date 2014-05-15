@@ -220,6 +220,20 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
         dataSource = options.model.$model || options.model;
         modelPattern = getSource(element).length === 0;
 
+        //同步model中的选中状态
+        function sync(value) {
+            var dataModel = vmodel.model;
+
+            dataModel.forEach(function(model) {
+                if(model.item && value.indexOf(model.value) > -1) {
+                    model.selected = true;
+                } else if(model.item) {
+                    model.selected = false;
+                }
+            });
+
+        }
+
         function _init() {
 
             //数据抽取
@@ -261,6 +275,8 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
         var vmodel = avalon.define(data.dropdownId, function(vm) {
 
+            var currentValues;
+
             avalon.mix(vm, options);
             vm.$skipArray= ['widgetElement'];
             vm.widgetElement = element;
@@ -277,38 +293,28 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             };
 
             //对model的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
-            if(options.modleBind) {
+            if(options.modleBind && vm.dataSource.$watch) {
                 vm.dataSource.$watch('length', function() {
-                    vmodel.model = getSelectModel(vmodel.dataSource.$model);
+                    vmodel.model = getSelectModel(vmodel.dataSource.$model).model;
+                    sync(currentValues);
                 });
             }
 
             vm.$init = function() {
                 var duplexName = (element.msData['ms-duplex'] || '').trim(),
-                    duplexModel, values, selectedLen, id;
+                    duplexModel;
 
-                if(duplexName) {
-                    duplexModel = avalon.getModel(duplexName, vmodels);
-                    if(duplexModel) {
-                        values = duplexModel[1][duplexName];
-                    }
-                }
-
-                //等待select中的子项被扫描完，并且已经被赋值
-                if(!modelPattern && values && values.toString().trim().length > 0) {
-                    selectedLen = values.length;
-                    id = setInterval(function() {
-                        console.log(element.selectedOptions.length);
-                        console.log(selectedLen);
-                        if (element.selectedOptions.length === selectedLen) {
-                            clearInterval(id);
-                            _init();
-                        }
-                    }, 20);
+                //当有绑定duplex，向duplex同步视图
+                if(duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
+                    currentValues = duplexModel[1][duplexName];
+                    duplexModel[1][duplexName].$watch('length', function() {
+                        currentValues = avalon(element).val();
+                    });
+                    _init();
+                    sync(currentValues);
                 } else {
                     _init();
                 }
-
             };
 
             vm.$hover = function(e, index) {

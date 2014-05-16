@@ -768,7 +768,7 @@
                         return i
                 return -1
             },
-            //定位引操作，同上，不过是从后遍历。
+            //定位操作，同上，不过是从后遍历。
             lastIndexOf: function(item, index) {
                 var n = this.length,
                         i = index == null ? n - 1 : index
@@ -1304,31 +1304,35 @@
     })
     avalon.fn.offset = function() { //取得距离页面左右角的坐标
         var node = this[0],
-                doc = node && node.ownerDocument
-        var pos = {
-            left: 0,
-            top: 0
-        }
-        if (!doc) {
-            return pos
+                doc = node && node.ownerDocument,
+                win = doc.defaultView || doc.parentWindow,
+                body = doc.body,
+                root = doc.documentElement,
+                box = {
+                    left: 0,
+                    top: 0
+                }
+        if (!doc || !avalon.contains(root, node)) {
+            return box
         }
         //http://hkom.blog1.fc2.com/?mode=m&no=750 body的偏移量是不包含margin的
         //我们可以通过getBoundingClientRect来获得元素相对于client的rect.
         //http://msdn.microsoft.com/en-us/library/ms536433.aspx
-        var box = node.getBoundingClientRect(),
-                //chrome1+, firefox3+, ie4+, opera(yes) safari4+    
-                win = doc.defaultView || doc.parentWindow,
-                root = (navigator.vendor || doc.compatMode === "BackCompat") ? doc.body : doc.documentElement,
-                clientTop = root.clientTop >> 0,
-                clientLeft = root.clientLeft >> 0,
-                scrollTop = win.pageYOffset || root.scrollTop,
-                scrollLeft = win.pageXOffset || root.scrollLeft
+        if (typeof node.getBoundingClientRect !== "undefined") {
+            box = node.getBoundingClientRect()// BlackBerry 5, iOS 3 (original iPhone)
+        }
+        //chrome/IE6: body.scrollTop, firefox/other: root.scrollTop
+        var clientTop = root.clientTop || body.clientTop,
+                clientLeft = root.clientLeft || body.clientLeft,
+                scrollTop = Math.max(win.pageYOffset || 0, root.scrollTop, body.scrollTop),
+                scrollLeft = Math.max(win.pageXOffset || 0, root.scrollLeft, body.scrollLeft)
         // 把滚动距离加到left,top中去。
         // IE一些版本中会自动为HTML元素加上2px的border，我们需要去掉它
         // http://msdn.microsoft.com/en-us/library/ms533564(VS.85).aspx
-        pos.top = box.top + scrollTop - clientTop
-        pos.left = box.left + scrollLeft - clientLeft
-        return pos
+        return {
+            top: box.top + scrollTop - clientTop,
+            left: box.left + scrollLeft - clientLeft
+        }
     }
 
     //==================================val相关============================
@@ -1768,7 +1772,8 @@
         var cacheAttr = createCache(512)
         var rattrs = /\s+(ms-[^=\s]+)(?:=("[^"]*"|'[^']*'|[^\s>]+))?/g,
                 rquote = /^['"]/,
-                rtag = /<\w+\b(?:(["'])[^"]*?(\1)|[^>])*>/i
+                rtag = /<\w+\b(?:(["'])[^"]*?(\1)|[^>])*>/i,
+                ramp = /&amp;/g
         var getAttributes = function(elem) {
             if (elem.outerHTML.slice(0, 2) === "</") { //处理旧式IE模拟HTML5新元素带来的伪标签
                 return []
@@ -1782,12 +1787,15 @@
             }
             while (k = rattrs.exec(str)) {
                 v = k[2]
+                if (v) {
+                    v = (rquote.test(v) ? v.slice(1, -1) : v).replace(ramp, "&")
+                }
                 var name = k[1].toLowerCase()
                 match = name.match(rmsAttr)
                 var binding = {
                     name: name,
                     specified: true,
-                    value: v ? rquote.test(v) ? v.slice(1, -1) : v : ""
+                    value: v || ""
                 }
                 attributes.push(binding)
             }
@@ -2732,30 +2740,25 @@
             parseExprProxy(data.value, vmodels, data)
         },
         "widget": function(data, vmodels) {
-            var args = data.value.match(rword),
-                    element = data.element,
-                    widget = args[0],
-                    vmOptions = {}
-
-            if (args[1] === "$") {
-                args[1] = void 0
-            }
-            if (!args[1]) {
+            var args = data.value.match(rword)
+            var element = data.element
+            var widget = args[0]
+            if (args[1] === "$" || !args[1]) {
                 args[1] = widget + setTimeout("1")
             }
             data.value = args.join(",")
             var constructor = avalon.ui[widget]
             if (typeof constructor === "function") { //ms-widget="tabs,tabsAAA,optname"
                 vmodels = element.vmodels || vmodels
+                var optName = args[2] || widget //尝试获得配置项的名字，没有则取widget的名字
                 for (var i = 0, v; v = vmodels[i++]; ) {
-                    if (!/^\$proxy\$[a-z]+0\.\d+$/.test(v.$id)) { //过滤代理VM #337
+                    if (v.hasOwnProperty(optName) && typeof v[optName] === "object") {
                         var nearestVM = v
                         break
                     }
                 }
-                var optName = args[2] || widget //尝试获得配置项的名字，没有则取widget的名字
-                if (nearestVM && typeof nearestVM[optName] === "object") {
-                    vmOptions = nearestVM[optName]
+                if (nearestVM) {
+                    var vmOptions = nearestVM[optName]
                     vmOptions = vmOptions.$model || vmOptions
                     var id = vmOptions[widget + "Id"]
                     if (typeof id === "string") {
@@ -2764,7 +2767,7 @@
                 }
                 var widgetData = avalon.getWidgetData(element, args[0]) //抽取data-tooltip-text、data-tooltip-attr属性，组成一个配置对象
                 data[widget + "Id"] = args[1]
-                data[widget + "Options"] = avalon.mix({}, constructor.defaults, vmOptions, widgetData)
+                data[widget + "Options"] = avalon.mix({}, constructor.defaults, vmOptions || {}, widgetData)
                 element.removeAttribute("ms-widget")
                 var vmodel = constructor(element, data, vmodels) || {}//防止组件不返回VM
                 data.evaluator = noop

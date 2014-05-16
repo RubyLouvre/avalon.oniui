@@ -86,15 +86,29 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
 
             avalon.mix(vm, options)
 
-            vm.$skipArray = ["widgetElement", "store", "template"]
+            vm.$skipArray = ["widgetElement","tableElement", "store", "template"]
             vm.widgetElement = element
 
             vm.$init = function() {
                 element.innerHTML = options.template
+                
 
                 _vmodels = [vmodel].concat(vmodels)
                 avalon.scan(element, _vmodels)
 
+            }
+            vm.getRealWidth = function() {
+                console.log(this)
+                var td = this
+                while (td.tagName !== "TABLE") {
+                    td = td.parentNode
+                }
+                var width = td.offsetWidth
+                td.style.width = width + "px"
+                while (td.className.indexOf("ui-grid-wrapper") == -1) {
+                    td = td.parentNode
+                }
+                td.style.width = width + "px"
             }
             //通过拖动改变列宽
             vm.resizeColumn = function(e, el) {

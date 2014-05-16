@@ -13,12 +13,13 @@ MS_OPTION_TEMPLATE
          ms-css-width="{{listWidth}}">
         <div class="ui-dropdown-menu-inner"
              ms-css-height="height"
+             ms-mouseleave="$mouseleave"
              ms-each-el="model">
             <div class="ui-dropdown-optGroup"
                  ms-if="el.optGroup">{{el.text}}</div>
             <div class="ui-dropdown-item"
                  ms-click="$select($event, el)"
-                 ms-title="el.text"
+                 ms-title="el.label"
                  ms-if="el.item"
                  ms-mouseenter="$hover($event, $index)"
                  ms-class="ui-dropdown-item-hover:activeIndex == $index && el.enable"

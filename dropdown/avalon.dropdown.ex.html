@@ -24,8 +24,11 @@
                         multiple: true,
                         autofocus: true,
                         size: 4,
-                        enable: false
+                        enable: false,
+                        modleBind: true
                     };
+                    vm.s1 = ['value1', 'value2'];
+                    vm.s2 = ['1'];
                 });
                 avalon.scan();
             });
@@ -35,12 +38,14 @@
 <body>
 <div ms-controller="mulSelect">
     <h2>multiple select</h2>
-    <select multiple ms-widget="dropdown">
+    <select ms-duplex="s1"
+            ms-widget="dropdown"
+            multiple>
         <optgroup label="group1">
-            <option value="value1" selected>Value 1</option>
-            <option selected>textValue</option>
+            <option value="value1">Value 1</option>
+            <option>textValue</option>
             <option label="label" value="labelValue">with label</option>
-            <option value="value2" selected>Value 2</option>
+            <option value="value2">Value 2</option>
             <option value="value3">Value 3</option>
         </optgroup>
         <optgroup label="group2">
@@ -49,8 +54,10 @@
             <option value="value6">Value 6</option>
         </optgroup>
     </select>
+    <p>select1: {{s1}}</p>
     <h2>multiple select with model in opts</h2>
-    <select ms-widget="dropdown,$,opts"></select>
+    <select ms-widget="dropdown,$,opts" ms-duplex="s2"></select>
+    <p>select2: {{s2}}</p>
 </div>
 </body>
 </html>

@@ -1,32 +1,33 @@
 <div class="ui-grid">
-    <div class="ui-grid-wrapper">
-        <div class="ui-grid-thead-wrapper">
-            <table>
-                <tr>
-                    <td data-repeat-rendered="getRealWidth"
-                        ms-repeat="columns"
-                        ms-css-height="headerHeight"  
-                        ms-css-width="el.width" 
-                        ms-attr-align="el.align" 
-                        ms-class="{{el.className}}" 
-                        ms-title="el.title" 
-                        ms-visible="el.toggle" 
-                        ms-data-vm="el">{{el.text}}
-                        <button  ms-click="sortColumn(el)"
-                                 ms-if="el.sortable" 
-                                 ms-class="sort_{{el.sortAsc ? 'asc': 'desc'}}">
-                            {{el.sortAsc}}
-                        </button>
-                        <div class="ui-grid-resizable-handle"
-                             ms-if="el.resizable" 
-                             ms-mousedown="resizeColumn($event,el)"
-                             ></div>
-                    </td>
-                </tr>
-            </table>
-        </div>
+    <div class="ui-grid-wrapper" 
+         id="grid-wrapper-MS_OPTION_ID">
+        <table class="ui-grid-thead" 
+               ms-css-width="gridWidth">
+            <tr>
+                <td data-repeat-rendered="getRealWidth"
+                    ms-repeat="columns"
+                    ms-css-height="headerHeight"  
+                    ms-css-width="el.width" 
+                    ms-attr-align="el.align" 
+                    ms-class="{{el.className}}" 
+                    ms-title="el.title" 
+                    ms-visible="el.toggle" 
+                    ms-data-vm="el"
+                    >{{el.text}}
+                    <button  ms-click="sortColumn(el)"
+                             ms-if="el.sortable" 
+                             ms-class="sort_{{el.sortAsc ? 'asc': 'desc'}}">
+                        {{el.sortAsc}}
+                    </button>
+                    <div class="ui-grid-resizable-handle"
+                         ms-if="el.resizable" 
+                         ms-mousedown="resizeColumn($event,el)"
+                         ></div>
+                </td>
+            </tr>
+        </table>
         <div class="ui-grid-tbody-wrapper">
-            <table>
+            <table ms-css-width="gridWidth">
                 <tr  ms-repeat-row="_store">
                     <td class="ui-grid-td"
                         ms-repeat="row" 
@@ -51,23 +52,29 @@ MS_OPTION_STYLE
         width:100%;
         overflow-x:auto;
     }
-    .ui-grid-thead-wrapper table{
+    .ui-grid-thead{
         width: 100%;
         border: 1px solid black;
         border-collapse: collapse;
+      
     }
-    .ui-grid-thead-wrapper table td{
+    .ui-grid-thead  td{
         width: 100%;
         border: 1px solid black;
+        overflow: hidden;
+        /*        white-space:nowrap;*/
     }
     .ui-grid-tbody-wrapper table{
         width: 100%;
         border: 1px solid black;
         border-collapse: collapse;
+       
     }
     .ui-grid-tbody-wrapper table td{
         width: 100%;
         border: 1px solid black;
+        /*        white-space:nowrap;*/
+        overflow: hidden;
     }
     .ui-grid-resizable-handle{
         background: red;

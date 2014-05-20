@@ -88,7 +88,7 @@ define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html"
 
             avalon.mix(vm, options)
 
-
+           
             var inited
             vm.$init = function() {
                 if(inited) return
@@ -97,6 +97,8 @@ define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html"
                 vm.tabs = vm.tabs || tabs
                 vm.tabpanels = vm.tabpanels || tabpanels
                 if(vm.removable) vm.removable = closeTpl
+
+
                 
                 avalon.nextTick(function() {
                     avalon(element).addClass("ui-tabs ui-widget ui-widget-content ui-corner-all ui-tabs-collapsible")
@@ -109,15 +111,19 @@ define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html"
                     element.setAttribute("ms-class-2", "tabs-bottom:bottom")
 
                     avalon.scan(element, [vmodel].concat(vmodels))
+
+                    if(vm.autoSwitch) {
+                        vm.$autoSwitch();
+                    }
                 })
             }
 
-            vm.activate = function(event, index) {
-                event.preventDefault()
+            vm.activate = function(event, index, fix) {
+                // 猥琐的解决在ie里面报找不到成员的bug
+                !fix && event.preventDefault()
                 if (vm.tabs[index].disabled === true) {
                     return
                 }
-                var el = this
                 // event是click，点击激活状态tab
                 if (vm.event === 'click' && vm.active === index) {
                     // 去除激活状态
@@ -139,14 +145,14 @@ define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html"
             }
             // 延时效果
             if(vm.event == "mouseenter" && vm.activeDelay) {
-                var tmp = vm.activate
-                    , timer
+                var timer
+                    , tmp = vm.activate
                 vm.activate = function($event, $index) {
                     clearTimeout(timer)
                     var el = this
                         , arg = arguments
                     timer = setTimeout(function() {
-                        tmp.apply(el, [$event, $index])
+                        tmp.apply(el, [$event, $index, 'fix event bug in ie'])
                     }, vm.activeDelay)
                     if(!el.getAttribute('leave-binded') && 0) {
                         el.setAttribute('leave-binded', 1)
@@ -156,6 +162,31 @@ define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html"
                     }
                 }
             }
+
+            // 自动切换效果
+            vm.$autoSwitch = function() {
+                clearTimeout(vm.$switchTimer)
+                if(vm.tabs.length < 2) return
+                vm.$switchTimer = setTimeout(function() {
+                    var i = vm.active + 1
+                        // 防止死循环
+                        , loop = 0
+                    while(i != vm.active && loop < vm.tabs.length - 1) {
+                        if(i >= vm.tabs.length) {
+                            i = 0
+                        }
+                        avalon.log(i)
+                        if(!vm.tabs[i].disabled) {
+                            vm.active = i
+                            vm.$autoSwitch()
+                            break
+                        }
+                        i++
+                        loop++
+                    }
+                }, vm.autoSwitch)
+            }
+
 
             //清空构成UI的所有节点，一下代码继承自pilotui
             vm.$remove = function() {
@@ -223,7 +254,25 @@ define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html"
             return vm
         })
 
-        if(options.callInit) vmodel.$init();
+        if(options.callInit) vmodel.$init()
+
+
+        if(vmodel.autoSwitch) {
+            vmodel.tabs.$watch('length', function(value, oldValue) {
+                if(value < 2) {
+                    clearTimeout(vmodel.$switchTimer)
+                } else {
+                    vmodel.$autoSwitch()
+                }
+            })
+            avalon.bind(element, 'mouseenter', function() {
+                clearTimeout(vmodel.$switchTimer)
+            })
+            avalon.bind(element, 'mouseleave', function() {
+                clearTimeout(vmodel.$switchTimer)
+                vmodel.$autoSwitch()
+            })
+        }
 
         return vmodels
     }

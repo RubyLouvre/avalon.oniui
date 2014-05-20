@@ -10,7 +10,8 @@
 <body class="ms-controller" ms-controller="demo">
 
 <!--通用模板，指定数据-->
-<div id="t1" ms-widget="tab,cc,$ccOpt" data-tab-active-delay="500" data-tab-removable="true">
+<h5>延迟切换</h5>
+<div id="t1" ms-widget="tab,cc,$ccOpt" data-tab-active-delay="250" data-tab-removable="true">
 </div>
 
 <!--通用模板，指定数据-->
@@ -18,10 +19,18 @@
 </div>
 
 <!--通用模板，指定数据-->
+<h5>自动切换</h5>
+<div id="t1" ms-widget="tab,ff,$ccOpt" data-tab-removable="true" data-tab-auto-switch="2500">
+</div>
+
+
+<!--通用模板，指定数据-->
+<h5>点击切换</h5>
 <div id="t1" ms-widget="tab,dd,$ccOpt" data-tab-removable="true" data-tab-active="1" data-tab-event="click">
 </div>
 
 <!--通用模板，指定数据-->
+<h5>重复点击取消</h5>
 <div id="t1" ms-widget="tab,ee,$ccOpt" data-tab-removable="true" data-tab-active="0" data-tab-event="click" data-tab-collapsible="true">
 </div>
 

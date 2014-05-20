@@ -1,0 +1,12 @@
+<div ms-each-panel="tabpanels">
+     <div class="ui-tabs-panel ui-widget-content" 
+          ms-class="ui-corner-bottom:!bottom" 
+          ms-visible="active == $index" 
+          ms-if-loop="contentType=='content' && !panel.contentType || panel.contentType=='content'">{{panel.content |html }}</div>
+     <div class="ui-tabs-panel ui-widget-content" 
+          ms-class="ui-corner-bottom:!bottom" 
+          ms-visible="active == $index " 
+          ms-include-src="panel.content" 
+          ms-if-loop="!(contentType=='content' && !panel.contentType || panel.contentType=='content')">
+     </div>
+</div>

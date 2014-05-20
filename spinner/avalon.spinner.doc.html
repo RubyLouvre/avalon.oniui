@@ -35,6 +35,16 @@
                     <td>默认为1， type: number</td>
                     <td>spinner的步长</td>
                 </tr>
+                <tr>
+                    <td>onadd</td>
+                    <td>默认avalon.noop， type: function</td>
+                    <td>增值更新spinner之后的回调</td>
+                </tr>
+                <tr>
+                    <td>onsub</td>
+                    <td>默认avalon.noop， type: function</td>
+                    <td>减值更新spinner之后的回调</td>
+                </tr>
             </tbody>
         </table>
         <h1>spinner使用注意点</h1>
@@ -43,6 +53,7 @@
             <li>当通过手动输入值时，如果输入的值不是数值型的，组件会默认将其置为修改之前的值，如果输入大于最大值，组件会自动将其置为最大值，小于最小值时同理
             </li>
             <li>在输入域获得焦点时可通过键盘上的上下箭头控制spinner的增减</li>
+            <li>spinner会判断初始输入域值是否在用户设置的数值范围呢，不在的话会进行调整</li>
         </ol>
         <h3>例子：</h3>
         <ol>

@@ -1,0 +1,97 @@
+<div class="ui-dropdown" ms-css-width="{{width}}">
+    <div class="ui-dropdown-source">
+        <div class="ui-dropdown-input" title="{{text}}">{{name}}</div>
+        <div class="ui-dropdown-icon-wrap">
+            <i class="ui-dropdown-icon ui-icon ui-icon-angle-up">&#xf106;</i>
+            <i class="ui-dropdown-icon ui-icon ui-icon-angle-down">&#xf107;</i>
+        </div>
+    </div>
+</div>
+MS_OPTION_TEMPLATE
+<div class="ui-dropdown-menu-wrap">
+    <div class="ui-dropdown-menu"
+         ms-css-width="{{listWidth}}">
+        <div class="ui-dropdown-menu-inner"
+             ms-css-height="height"
+             ms-mouseleave="$mouseleave"
+             ms-each-el="model">
+            <div class="ui-dropdown-optGroup"
+                 ms-if="el.optGroup">{{el.text}}</div>
+            <div class="ui-dropdown-item"
+                 ms-click="$select($event, el)"
+                 ms-title="el.label"
+                 ms-if="el.item"
+                 ms-mouseenter="$hover($event, $index)"
+                 ms-class="ui-dropdown-item-hover:activeIndex == $index && el.enable"
+                 ms-class-1="ui-dropdown-item-disabled:!el.enable"
+                 ms-class-2="ui-dropdown-item-selected:el.selected && el.enable && activeIndex !== $index">{{el.label}}</div>
+            <div class="ui-dropdown-divider"
+                 ms-if="el.divider"></div>
+        </div>
+    </div>
+</div>
+MS_OPTION_TEMPLATE
+<optgroup ms-repeat="optionsModel.optGroup"
+          ms-disabled="!el.enable"
+          ms-attr-label="el.label"
+          ms-each-option="el.options">
+    <option ms-value="option.value"
+            ms-disabled="!option.enable"
+            ms-selected="option.selected"
+            ms-attr-label="option.label">{{option.label}}</option>
+</optgroup>
+<option ms-repeat-option="optionsModel.options"
+        ms-value="option.value"
+        ms-disabled="!option.enable"
+        ms-selected="option.selected"
+        ms-attr-label="option.label">{{option.label}}</option>
+MS_OPTION_STYLE
+<style type="text/css">
+    .ui-dropdown-menu-wrap {
+        position: relative;
+        z-index: 1000;
+    }
+    /*css change*/
+    .ui-dropdown-menu-inner {
+        box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        overflow-y: scroll;
+        padding: 3px 0;
+    }
+    .ui-dropdown-item {
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: pointer;
+        overflow: hidden;
+        padding: 3px 0;
+        text-indent: 6px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+        word-break: normal;
+        word-wrap: normal;
+        *zoom: 1;
+    }
+    .ui-dropdown-item-hover {
+        background-color: #f8f8f8;
+    }
+    .ui-dropdown-item-selected {
+        background-color: #58b359;
+        color: #ffffff;
+    }
+    .ui-dropdown-item-selected .ui-icon {
+        color: #ffffff;
+    }
+    .ui-dropdown-divider {
+        border-top: 1px solid #f2f2f2;
+        height: 0;
+        _height: auto;
+        margin: 3px 0;
+        overflow: hidden;
+        width: 100%;
+        _width: auto;
+    }
+</style>

@@ -13,7 +13,7 @@ define(["avalon", "text!./avalon.spinner.html"], function(avalon, sourceHTML) {
         options.template = options.getTemplate(template, options);
         var vmodel = avalon.define(data.spinnerId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["min", "max", "widgetElement", "step"];
+            vm.$skipArray = ["min", "max", "widgetElement", "step", "onsub", "onadd"];
             vm.widgetElement = element;
             var wrapper = null, focusValue = 0;
             vm.$init = function() {
@@ -30,12 +30,24 @@ define(["avalon", "text!./avalon.spinner.html"], function(avalon, sourceHTML) {
                 tmpBParent.removeChild(tmpBElement);
                 elementParent.replaceChild(wrapper, tmpDiv);
                 avalon.scan(wrapper, [vmodel].concat(vmodels));
+                setTimeout(function() { // 如果输入域的初始值不在spinner的范围，调整它
+                    var value = Number(element.value),
+                        min = options.min,
+                        max = options.max;
+                    if( typeof min == 'number' && !isNaN(Number(min)) && value < min) {
+                        value = min;
+                    } 
+                    if( typeof max == 'number' && !isNaN(Number(max)) && value > max) {
+                        value = max;
+                    } 
+                    element.value  = value;
+                }, 400)
             }
             vm.$remove = function() {
                 wrapper.innerHTML = wrapper.textContent = "";
                 wrapper.parentNode.removeChild(wrapper);
             }
-            vm.$add = function() { // add number by step
+            vm.$add = function(event) { // add number by step
                 var value = Number(element.value),
                     subValue = 0;
                 subValue = value + (options.step || 1);
@@ -45,8 +57,9 @@ define(["avalon", "text!./avalon.spinner.html"], function(avalon, sourceHTML) {
                 }
                 subValue = checkNum(subValue);
                 element.value = subValue;
+                options.onadd.call(event.target, subValue);
             }
-            vm.$sub = function() { // minus number by step
+            vm.$sub = function(event) { // minus number by step
                 var value = Number(element.value),
                     subValue = 0;
                 subValue = value - (options.step || 1);
@@ -55,6 +68,7 @@ define(["avalon", "text!./avalon.spinner.html"], function(avalon, sourceHTML) {
                 }
                 subValue = checkNum(subValue);
                 element.value = subValue;
+                options.onsub.call(event.target, subValue);
             }
             function decorateElement() {
                 var $element = avalon(element);
@@ -108,7 +122,9 @@ define(["avalon", "text!./avalon.spinner.html"], function(avalon, sourceHTML) {
         widgetElement: "", // accordion容器
         getTemplate: function(str, options) {
             return str;
-        }
+        },
+        onsub: avalon.noop,
+        onadd: avalon.noop
     }
     return avalon;
 })

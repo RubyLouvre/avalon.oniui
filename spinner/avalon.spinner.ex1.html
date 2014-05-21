@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>spinner demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>spinner demo</h1>
+        <p class="example">可以添加onsub、onadd为spinner添加回调，onsub是用户点击了"-"更新spinner之后的回调，this是触发事件的元素，参数是新的spinner值，同理onadd是点击了"+"更新spinner之后的回调</p>
+        <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+            &lt;!DOCTYPE HTML&gt;
+            &lt;html&gt;
+            &lt;head&gt;
+                &lt;meta charset='utf-8'/&gt;
+                &lt;title&gt;spinner demo 1&lt;/title&gt;
+                &lt;script src='avalon.js'&gt;&lt;/script&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+                &lt;div class="demoShow" ms-controller="pager"&gt;
+                    &lt;fieldset&gt;
+                        &lt;legend&gt;有范围限制的spinner,最小0,最大5&lt;/legend&gt;
+                            &lt;input ms-duplex="p1" ms-widget="spinner, $spinner, $spinnerOpts" /&gt;
+                    &lt;/fieldset&gt;
+                    &lt;script&gt;
+                        require(["spinner/avalon.spinner"], function(avalon) {
+                            var pager = avalon.define('pager', function(vm) {
+                                vm.p1 = 2;
+                                vm.$spinnerOpts = {
+                                    min: 0,
+                                    max: 5,
+                                    onsub : function(value) {
+                                        avalon.log("this是触发事件的元素");
+                                        avalon.log(this);
+                                        avalon.log("value是spinner的当前数值");
+                                        avalon.log(value);
+                                    },
+                                    onadd : function(value) {
+                                        avalon.log("this是触发事件的元素");
+                                        avalon.log(this);
+                                        avalon.log("value是spinner的当前数值");
+                                        avalon.log(value);
+                                    }
+                                }
+                            });
+                            avalon.scan();
+                        })
+                    &lt;/script&gt;
+                &lt;/div&gt;
+            &lt;/body&gt;
+            &lt;/html&gt;
+        </pre>
+        <div class="demoShow" ms-controller="pager">
+            <fieldset>
+                <legend>有范围限制的spinner,最小0,最大5</legend>
+                    <input ms-duplex="p1" ms-widget="spinner, $spinner, $spinnerOpts" />
+            </fieldset>
+            <script>
+                require(["spinner/avalon.spinner"], function(avalon) {
+                    var pager = avalon.define('pager', function(vm) {
+                        vm.p1 = 8;
+                        vm.$spinnerOpts = {
+                            min: 0,
+                            max: 5,
+                            onsub : function(value) {
+                                avalon.log("this是触发事件的元素");
+                                avalon.log(this);
+                                avalon.log("value是spinner的当前数值");
+                                avalon.log(value);
+                            },
+                            onadd : function(value) {
+                                avalon.log("this是触发事件的元素");
+                                avalon.log(this);
+                                avalon.log("value是spinner的当前数值");
+                                avalon.log(value);
+                            }
+                        }
+                    });
+                    avalon.scan();
+                })
+            </script>
+        </div>
+    </div>
+</body>
+</html>

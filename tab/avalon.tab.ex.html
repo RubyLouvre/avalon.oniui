@@ -8,32 +8,137 @@
     <script src="../avalon.js"></script>
 </head>
 <body class="ms-controller" ms-controller="demo">
+    <!--
+<div id="t0" data-tab-removable="true" ms-widget="tab,jj,$jjOpt" data-tab-auto-switch="1500" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+    <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+        <li class="ui-state-default ui-corner-top ui-tab-item">
+            <a href="#">
+                水果
+            </a>
+            <span class="ui-icon ui-icon-close" style="float: left; margin: 0.4em 0.2em 0px 0px; cursor: pointer; display: block;">
+            </span>
+        </li>
+        <li class="ui-state-default ui-corner-top ui-tab-item ui-tab-active">
+            <a href="#">
+                服装
+            </a>
+            <span class="ui-icon ui-icon-close" style="float: left; margin: 0.4em 0.2em 0px 0px; cursor: pointer; display: block;">
+            </span>
+        </li>
+        <li class="ui-state-default ui-corner-top ui-tab-item">
+            <a href="#">
+                工具
+            </a>
+            <span class="ui-icon ui-icon-close" style="float: left; margin: 0.4em 0.2em 0px 0px; cursor: pointer; display: block;">
+            </span>
+        </li>
+        <li class="ui-state-default ui-corner-top ui-tab-item" data-disabled="true">
+            <a href="#">
+                动物
+            </a>
+            <span class="ui-icon ui-icon-close" style="float: left; margin: 0.4em 0.2em 0px 0px; cursor: pointer;">
+            </span>
+        </li>
+    </ul>
+    <div class="this-is-joke">
+        <div class="ui-tabs-panel ui-widget-content ui-corner-bottom" style="display: none;">
+            line 1 -
+            <a href="#">
+                点击我添加一个tab!
+            </a>
+        </div>
+        <div data-content-type="ajax" data-content="avalon.tab.ajax.html" class="ui-tabs-panel ui-widget-content ui-corner-bottom" style="display: none;">
+            
+        </div>
+        <div class="ui-tabs-panel ui-widget-content ui-corner-bottom" style="display: none;">
+            line 2 -
+            <a href="#">
+                点击我激活动物tab!
+            </a>
+        </div>
+        <div class="ui-tabs-panel ui-widget-content ui-corner-bottom" style="display: none;">
+            line 3
+        </div>
+    </div>
+</div>
+    -->
+<h5>扫描dom树</h5>
+<div id="t0" data-tab-removable="true" ms-widget="tab,jj,$jjOpt" data-tab-auto-switch="1500" class="ui-tabs ui-widget ui-widget-content ui-corner-all" data-tab-destroy-dom="false">
+    <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+        <li class="ui-state-default ui-corner-top ui-tab-item" data-removable="false">
+            水果
+        </li>
+        <li class="ui-state-default ui-corner-top ui-tab-item ui-tab-active" data-removable="false">
+            服装
+        </li>
+        <li class="ui-state-default ui-corner-top ui-tab-item">
+            工具
+        </li>
+        <li class="ui-state-default ui-corner-top ui-tab-item">
+            电器
+        </li>
+        <li class="ui-state-default ui-corner-top ui-tab-item" data-disabled="true">
+            动物
+        </li>
+    </ul>
+    <div class="this-is-joke">
+        <div class="ui-tabs-panel ui-widget-content ui-corner-bottom" style="display: none;">
+            line 1 -
+            <a href="#" ms-click="add(peaple)">
+                点击我添加一个tab!
+            </a>
+        </div>
+        <div data-content-type="ajax" data-content="avalon.tab.ajax.html" class="ui-tabs-panel ui-widget-content ui-corner-bottom" style="display: none;">
+            
+        </div>
+        <div class="ui-tabs-panel ui-widget-content ui-corner-bottom" style="display: none;">
+            line 2 -
+            <a href="#" ms-click="enable(4)">
+                点击我激活动物tab!
+            </a>
+        </div>
+        <div class="ui-tabs-panel ui-widget-content ui-corner-bottom" style="display: none;">
+            line 3 -
+            <a href="#" ms-click="add(peaple2)">
+                点击我添加一个不能删除的tab!
+            </a>
+        </div>
+        <div class="ui-tabs-panel ui-widget-content ui-corner-bottom" style="display: none;">
+            line 4
+        </div>
+    </div>
+</div>
 
-<!--通用模板，指定数据-->
+
+<h5>延迟切换</h5>
+<div id="t1" ms-widget="tab" data-tab-active-delay="250" data-tab-removable="true">
+</div>
+<h5>延迟初始化</h5>
+<div id="t1" ms-widget="tab,gg,$ccOpt" data-tab-removable="true" data-tab-call-init="false">
+</div>
+
 <h5>延迟切换</h5>
 <div id="t1" ms-widget="tab,cc,$ccOpt" data-tab-active-delay="250" data-tab-removable="true">
 </div>
-
-<!--通用模板，指定数据-->
 <div id="t1" ms-widget="tab,ff,$ccOpt" data-tab-removable="true">
 </div>
 
-<!--通用模板，指定数据-->
 <h5>自动切换</h5>
-<div id="t1" ms-widget="tab,ff,$ccOpt" data-tab-removable="true" data-tab-auto-switch="2500">
+<div id="t1" ms-widget="tab,hh,$ccOpt" data-tab-removable="true" data-tab-auto-switch="1500">
+</div>
+<div id="t1" ms-widget="tab,ii,$ccOpt" data-tab-removable="true" data-tab-auto-switch="1500">
 </div>
 
 
-<!--通用模板，指定数据-->
 <h5>点击切换</h5>
 <div id="t1" ms-widget="tab,dd,$ccOpt" data-tab-removable="true" data-tab-active="1" data-tab-event="click">
 </div>
 
-<!--通用模板，指定数据-->
 <h5>重复点击取消</h5>
 <div id="t1" ms-widget="tab,ee,$ccOpt" data-tab-removable="true" data-tab-active="0" data-tab-event="click" data-tab-collapsible="true">
 </div>
-
+<!--
+-->
 
 <script>
     require(["./tab/tab"], function () {
@@ -43,11 +148,27 @@
                 title: "人类"
                 , content: "我是来搞笑的"
             }
+
+            vm.peaple2 = {
+                title: "人类"
+                , removable: false
+                , content: "我是来搞笑的"
+            }
+
+
+            vm.$myclick = function(e) {
+                avalon.log('insert event from getTemplate method')
+            }
+
+            vm.$_ajaxCallback = function() {
+                avalon.log(this)
+            }
+
             vm.$ccOpt = {
-                activate : function(e) {
+                onActivate : function(e) {
                     console.log("user define cc activate callback")
                 }
-                , clickActive: function(e, model) {
+                , onClickActive: function(e, model) {
                     alert('u click a active tab')
                 }
                 , active: 2
@@ -64,6 +185,10 @@
                         , name: "tool"
                     },
                     {
+                        title: "电器"
+                        , name: "tool"
+                    },
+                    {
                         title: "动物"
                         , name: "animal"
                         , disabled: true
@@ -72,13 +197,72 @@
                 , tabpanels : [
                     {content: "line 1 - <a href=\"#\" ms-click=\"add(peaple)\">点击我添加一个tab!</a>"},
                     {content: "avalon.tab.ajax.html", contentType: "ajax"},
-                    {content: "line 2 - <a href=\"#\" ms-click=\"enable(3)\">点击我激活动物tab!</a>"},
-                    {content: "line 3"}
+                    {content: "line 2 - <a href=\"#\" ms-click=\"enable(4)\">点击我激活动物tab!</a>"},
+                    {content: 'line 3 -  <a href="#" ms-click="add(peaple2)">点击我添加一个不能删除的tab! </a>'},
+                    {content: "line 4"}
+                ]
+                , getTemplate: function(template, vm, tplName) {
+                    // 给tab注入一个点击事件
+                    if(tplName != 'panel' && tplName != 'close') {
+                        return template.replace(/<li/g, '<li ms-click="$myclick($event)" ')
+                    // 给panel大容器注入一个class
+                    } else if(tplName == 'panel') {
+                        return template.replace(/^<div/g, '<div class="this-is-joke"')
+                    }
+                    // return ''
+                    // return template
+                }
+            }
+            vm.tab = {
+                onActivate : function(e) {
+                    console.log("user define cc activate callback")
+                }
+                , onClickActive: function(e, model) {
+                    alert('u click a active tab')
+                }
+                , active: 1
+                , tabs : [{
+                    title: "水果2",
+                    name: "fruit",
+                    href: "http://news.163.com/"
+                    },
+                    {
+                        title: "服装2",
+                        name: "cloth"
+                    },
+                    {
+                        title: "工具2"
+                        , name: "tool"
+                    },
+                    {
+                        title: "电器2"
+                        , name: "tool"
+                    },
+                    {
+                        title: "动物2"
+                        , name: "animal"
+                        , disabled: true
+                    }
+                ]
+                , tabpanels : [
+                    {content: "line 1 - <a href=\"#\" ms-click=\"add(peaple)\">点击我添加一个tab!</a>"},
+                    {content: "avalon.tab.ajax.html", contentType: "ajax"},
+                    {content: "line 2 - <a href=\"#\" ms-click=\"enable(4)\">点击我激活动物tab!</a>"},
+                    {content: 'line 3 -  <a href="#" ms-click="add(peaple2)">点击我添加一个不能删除的tab! </a>'},
+                    {content: "line 4"}
                 ]
             }
 
+            vm.$jjOpt = {
+                onAjaxCallback: vm.$_ajaxCallback
+            }
+
+            vm.$skipArray = ["tab"]
+
         });
         avalon.scan()
+
+        avalon.vmodels["gg"].$init("now init me")
     })
 </script>
 </body>

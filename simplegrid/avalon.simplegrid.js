@@ -86,48 +86,48 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
 
             avalon.mix(vm, options)
 
-            vm.$skipArray = ["widgetElement","tableElement", "store", "template"]
+            vm.$skipArray = ["widgetElement", "tableElement", "wrapperElement", "store", "template"]
             vm.widgetElement = element
 
             vm.$init = function() {
-                element.innerHTML = options.template
-                
+                element.innerHTML = options.template.replace(/MS_OPTION_ID/g, vmodel.$id)
+
 
                 _vmodels = [vmodel].concat(vmodels)
                 avalon.scan(element, _vmodels)
 
             }
+            vm.gridWidth = "100%"
             vm.getRealWidth = function() {
-                console.log(this)
-                var td = this
-                while (td.tagName !== "TABLE") {
-                    td = td.parentNode
+                var table = this
+                while (table.tagName !== "TABLE") {
+                    table = table.parentNode
                 }
-                var width = td.offsetWidth
-                td.style.width = width + "px"
-                while (td.className.indexOf("ui-grid-wrapper") == -1) {
-                    td = td.parentNode
-                }
-                td.style.width = width + "px"
+                vm.gridWidth = table.offsetWidth
             }
             //通过拖动改变列宽
             vm.resizeColumn = function(e, el) {
-                var startX = e.pageX, drag = true, td = this
+                var startX = e.pageX, drag = true, cell = this
                 do {
-                    if (!td || td.tagName == "TD" || td.tagName == "TH") {
+                    if (!cell || cell.tagName == "TD" || cell.tagName == "TH") {
                         break
                     }
-                } while ((td = td.parentNode));
+                } while ((cell = cell.parentNode));
 
                 if (typeof el.width !== "number") {
-                    el.width = td.offsetWidth
+                    el.width = cell.offsetWidth
                 }
-                var width = el.width
+
                 fixUserSelect()
+                var cellWidth = el.width
+                console.log(cellWidth)
+                var gridWidth = vm.gridWidth
+
                 var moveFn = avalon.bind(document, "mousemove", function(e) {
                     if (drag) {
                         e.preventDefault()
-                        el.width = width + e.pageX - startX
+                        vm.gridWidth = gridWidth + e.pageX - startX
+                        el.width = cellWidth + e.pageX - startX
                     }
                 })
 
@@ -136,7 +136,8 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                     if (drag) {
                         restoreUserSelect()
                         drag = false
-                        el.width = width + e.pageX - startX
+                        vm.gridWidth = gridWidth + e.pageX - startX
+                        el.width = cellWidth + e.pageX - startX
                         avalon.unbind(document, "mousemove", moveFn)
                         avalon.unbind(document, "mouseup", upFn)
                     }
@@ -196,6 +197,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         rowHeight: 35,
         columnWidth: 160,
         pageable: false,
+        gridWrapperElement: {},
         syncTheadColumnsOrder: true,
         remoteSort: avalon.noop, //远程排数函数
         getColumnTitle: function() {

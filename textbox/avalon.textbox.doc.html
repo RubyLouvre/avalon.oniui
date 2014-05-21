@@ -45,8 +45,32 @@
                     <td>true</td>
                     <td>特殊的suggest，当focus时即显示特定的提示列表</td>
                 </tr>
+                <tr>
+                    <td>tabIndex</td>
+                    <td>默认：-1</td>
+                    <td>配置textbox在进行tab切换时的tabIndex，切换顺序从值小的开始，必须配置为大于0的值</td>
+                </tr>
+                <tr>
+                    <td>width</td>
+                    <td>默认：200</td>
+                    <td>配置textbox的显示宽</td>
+                </tr>
+                <tr>
+                    <td>disabledClass</td>
+                    <td>默认："ui-textbox-disabled" {type: string}</td>
+                    <td>配置输入域disabled时组件包装元素设置的类，多个类以空格分隔</td>
+                </tr>
             </tbody>
         </table>
+        <h3>demo示例：</h3>
+        <ol>
+            <li><a target="_blank" href="avalon.textbox.ex1.html">基本textbox、配置了width、tabIndex的textbox以及配置了disabledClass的textbox</a></li>
+            <li><a target="_blank" href="avalon.textbox.ex2.html">拥有占位符的textbox</a></li>
+            <li><a target="_blank" href="avalon.textbox.ex3.html">切换禁用textbox</a></li>
+            <li><a target="_blank" href="avalon.textbox.ex4.html">有自动补全功能的textbox</a></li>
+            <li><a target="_blank" href="avalon.textbox.ex5.html">无视用户输入的自动补全</a></li>
+            <li><a target="_blank" href="avalon.textbox.ex6.html">添加回调操作的自动补全</a></li>
+        </ol>
     </div>
 </body>
 </html>

@@ -9,31 +9,34 @@
 </head>
 <body class="ms-controller" ms-controller="demo">
 
-<!--通用模板，指定数据-->
+
+<h5>延迟切换</h5>
+<div id="t1" ms-widget="tab" data-tab-active-delay="250" data-tab-removable="true">
+</div>
+<h5>延迟初始化</h5>
+<div id="t1" ms-widget="tab,gg,$ccOpt" data-tab-removable="true" data-tab-call-init="false">
+</div>
+
 <h5>延迟切换</h5>
 <div id="t1" ms-widget="tab,cc,$ccOpt" data-tab-active-delay="250" data-tab-removable="true">
 </div>
-
-<!--通用模板，指定数据-->
 <div id="t1" ms-widget="tab,ff,$ccOpt" data-tab-removable="true">
 </div>
 
-<!--通用模板，指定数据-->
 <h5>自动切换</h5>
 <div id="t1" ms-widget="tab,ff,$ccOpt" data-tab-removable="true" data-tab-auto-switch="2500">
 </div>
 
 
-<!--通用模板，指定数据-->
 <h5>点击切换</h5>
 <div id="t1" ms-widget="tab,dd,$ccOpt" data-tab-removable="true" data-tab-active="1" data-tab-event="click">
 </div>
 
-<!--通用模板，指定数据-->
 <h5>重复点击取消</h5>
 <div id="t1" ms-widget="tab,ee,$ccOpt" data-tab-removable="true" data-tab-active="0" data-tab-event="click" data-tab-collapsible="true">
 </div>
-
+<!--
+-->
 
 <script>
     require(["./tab/tab"], function () {
@@ -76,9 +79,46 @@
                     {content: "line 3"}
                 ]
             }
+            vm.tab = {
+                activate : function(e) {
+                    console.log("user define cc activate callback")
+                }
+                , clickActive: function(e, model) {
+                    alert('u click a active tab')
+                }
+                , active: 1
+                , tabs : [{
+                    title: "水果2",
+                    name: "fruit"
+                    },
+                    {
+                        title: "服装2",
+                        name: "cloth"
+                    },
+                    {
+                        title: "工具2"
+                        , name: "tool"
+                    },
+                    {
+                        title: "动物2"
+                        , name: "animal"
+                        , disabled: true
+                    }
+                ]
+                , tabpanels : [
+                    {content: "line 1 - <a href=\"#\" ms-click=\"add(peaple)\">点击我添加一个tab!</a>"},
+                    {content: "avalon.tab.ajax.html", contentType: "ajax"},
+                    {content: "line 2 - <a href=\"#\" ms-click=\"enable(3)\">点击我激活动物tab!</a>"},
+                    {content: "line 3"}
+                ]
+            }
+
+            vm.$skipArray = ["tab"]
 
         });
         avalon.scan()
+
+        avalon.vmodels["gg"].$init("now init me")
     })
 </script>
 </body>

@@ -1,49 +1,17 @@
 define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html", "text!./avalon.tabs.close.html"], function(avalon, tabTpl, panelTpl, closeTpl) {
-          
-    // 默认配置
-    var defautOpt = {
-        autoSwitch: false,      // 是否自动切换，默认否
-        active: 0,              // 默认选中的tab，默认第一个tab
-        event: "mouseenter",    // tab选中事件，默认mouseenter
-        removeable: false,      // 是否支持删除，默认否
-        activate: avalon.noop,  // 选中tab后的回调
-        clickActive: avalon.noop, // 点击选中的tab，适用于event是点击的情况
-        activeDelay: 0,         // 比较适用于mouseenter事件情形，延迟切换tab，例如:200 = 200ms
-        collapsible: false,     // 当切换面板的事件为click时，如果对处于激活状态的按钮再点击，将会它失去激活并且对应的面板会收起来,再次点击它时，它还原，并且对应面板重新出现
-        contentType: "content", // panel是静态元素，还是需要通过异步载入
-        //classnamePrefix: false, // 注入自定义class前缀，适用组件自带模板时候有用
-        bottom: false,          // tab显示在底部
-        callInit: true,         // 调用即初始化
-        contentType: "content", // 静态内容，还是异步获取
-        // tabContainer: undefined, // tab容器，如果指定，则到该容器内扫描tabs
-        // panelContainer: undefined, // panel容器，如果指定，则到该容器内扫描panel
 
-        // 获取模板，防止用户自定义的getTemplate方法没有返回有效的模板
-        $getTemplate: function (tplName, vm) {
-            // 这里不能用this.getxxx in IE
-            var tpl = vm.getTemplate(tplName)
-            if(tpl) return tpl
-            if(tplName == 'panel') {
-                return panelTpl
-            } else if(tplName == 'close') {
-                return closeTpl
-            } else {
-                return tabTpl
-            }
-        },
-        getTemplate: function (tplName) {
-            return ""
-        },
-
-        // 保留实现配置
-        // switchEffect: function() {},     // 切换效果
-        // init: true,                      // 立即初始化
-        // useSkin: false,                  // 载入神马皮肤
-        "$author":"skipper@123"
+    var arr = tabTpl.split("MS_OPTION_STYLE") || ["", ""]
+    var cssText = arr[1].replace(/<\/?style>/g, "")
+    var styleEl = document.getElementById("avalonStyle")
+    var template = arr[0]
+    try {
+        styleEl.innerHTML += cssText
+    } catch (e) {
+        styleEl.styleSheet.cssText += cssText
     }
 
     // 对模板进行转换
-    var _getTemplate = function(tpl, vm) {
+    function _getTemplate(tpl, vm) {
         return tpl.replace(/MS_[A-Z_0-9]+/g, function(mat) {
             var mat = (mat.split("MS_OPTION_")[1]||"").toLowerCase().replace(/_[^_]/g, function(mat) {
                 return mat.replace(/_/g, '').toUpperCase()
@@ -52,9 +20,8 @@ define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html"
         })
     }
 
-    var tab = avalon.ui.tab = function(element, data, vmodels) {
-        var defineOpt = data['tabOptions']
-            , options = avalon.mix({}, defautOpt, defineOpt)
+    var widget = avalon.ui.tab = function(element, data, vmodels) {
+        var options = data.tabOptions 
             , tabpanels = []
             , tabs = []
 
@@ -84,14 +51,14 @@ define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html"
         }*/
 
         var vmodel = avalon.define(data["tabId"], function(vm) {
-            vm.$skipArray = ["disable", "enable", "add", "activate", "remove", "getTemplate"]
+            vm.$skipArray = ["disable", "enable", "add", "activate", "remove", "getTemplate", "widgetElement", "callInit"]
 
             avalon.mix(vm, options)
-
+            vm.widgetElement = element
            
             var inited
-            vm.$init = function() {
-                if(inited) return
+            vm.$init = function(force) {
+                if(inited || !force && !vm.callInit) return
                 inited = true
 
                 vm.tabs = vm.tabs || tabs
@@ -118,6 +85,7 @@ define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html"
                 })
             }
 
+            // 选中tab
             vm.activate = function(event, index, fix) {
                 // 猥琐的解决在ie里面报找不到成员的bug
                 !fix && event.preventDefault()
@@ -143,7 +111,7 @@ define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html"
                     })
                 }
             }
-            // 延时效果
+            // 延迟切换效果
             if(vm.event == "mouseenter" && vm.activeDelay) {
                 var timer
                     , tmp = vm.activate
@@ -175,7 +143,6 @@ define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html"
                         if(i >= vm.tabs.length) {
                             i = 0
                         }
-                        avalon.log(i)
                         if(!vm.tabs[i].disabled) {
                             vm.active = i
                             vm.$autoSwitch()
@@ -196,12 +163,17 @@ define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html"
                 disable = typeof disable == "undefined" ? true : disable
                 // 这个方法ms不见了
                 //if (!avalon.isArray(index)) {
-                if(!index instanceof Array) {
+                if(!(index instanceof Array)) {
                     index = [index]
                 }
                 var total = vm.tabs.length
                 // 这里也是
-                index.forEach(function(idx) {
+                //index.forEach(function(idx) {
+                    //if (idx >= 0 && total > idx) {
+                        //vm.tabs[idx].disabled = disable
+                    //}
+                //})
+                avalon.each(index, function(i, idx) {
                     if (idx >= 0 && total > idx) {
                         vm.tabs[idx].disabled = disable
                     }
@@ -254,8 +226,6 @@ define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html"
             return vm
         })
 
-        if(options.callInit) vmodel.$init()
-
 
         if(vmodel.autoSwitch) {
             vmodel.tabs.$watch('length', function(value, oldValue) {
@@ -274,8 +244,49 @@ define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html"
             })
         }
 
-        return vmodels
+        // return vmodel使符合框架体系，可以自动调用
+        return vmodel
     }
 
-    tab.defauts = defautOpt;
+    widget.defaults = {
+        autoSwitch: false,      // 是否自动切换，默认否
+        active: 0,              // 默认选中的tab，默认第一个tab
+        event: "mouseenter",    // tab选中事件，默认mouseenter
+        removeable: false,      // 是否支持删除，默认否
+        activeDelay: 0,         // 比较适用于mouseenter事件情形，延迟切换tab，例如:200 = 200ms
+        collapsible: false,     // 当切换面板的事件为click时，如果对处于激活状态的按钮再点击，将会它失去激活并且对应的面板会收起来,再次点击它时，它还原，并且对应面板重新出现
+        contentType: "content", // panel是静态元素，还是需要通过异步载入
+        //classnamePrefix: false, // 注入自定义class前缀，适用组件自带模板时候有用
+        bottom: false,          // tab显示在底部
+        callInit: true,         // 调用即初始化
+        contentType: "content", // 静态内容，还是异步获取
+        // tabContainer: undefined, // tab容器，如果指定，则到该容器内扫描tabs
+        // panelContainer: undefined, // panel容器，如果指定，则到该容器内扫描panel
+        activate: avalon.noop,  // 选中tab后的回调
+        clickActive: avalon.noop, // 点击选中的tab，适用于event是点击的情况
+        
+
+        // 获取模板，防止用户自定义的getTemplate方法没有返回有效的模板
+        $getTemplate: function (tplName, vm) {
+            // 这里不能用this.getxxx in IE
+            var tpl = vm.getTemplate(tplName)
+            if(tpl) return tpl
+            if(tplName == 'panel') {
+                return panelTpl
+            } else if(tplName == 'close') {
+                return closeTpl
+            } else {
+                return template
+            }
+        },
+        getTemplate: function (tplName) {
+            return ""
+        },
+
+        // 保留实现配置
+        // switchEffect: function() {},     // 切换效果
+        // init: true,                      // 立即初始化
+        // useSkin: false,                  // 载入神马皮肤
+        "$author":"skipper@123"
+    }
 })

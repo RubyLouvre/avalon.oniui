@@ -1,6 +1,6 @@
-define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html", "text!./avalon.tabs.close.html"], function(avalon, tabTpl, panelTpl, closeTpl) {
+define(["avalon", "text!./avalon.tab.tabs.html", "text!./avalon.tab.panels.html", "text!./avalon.tabs.close.html"], function(avalon, tmpl, panelTpl, closeTpl) {
 
-    var arr = tabTpl.split("MS_OPTION_STYLE") || ["", ""]
+    var arr = tmpl.split("MS_OPTION_STYLE") || ["", ""]
     var cssText = arr[1].replace(/<\/?style>/g, "")
     var styleEl = document.getElementById("avalonStyle")
     var template = arr[0]

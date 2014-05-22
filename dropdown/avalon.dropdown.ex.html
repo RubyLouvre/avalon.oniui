@@ -29,6 +29,11 @@
                     };
                     vm.s1 = ['value1', 'value2'];
                     vm.s2 = ['1'];
+                    vm.s0 = [];
+                    vm.arr= [1,2,3];
+                    vm.get = function(name) {
+                        return name == 1;
+                    }
                 });
                 avalon.scan();
             });
@@ -37,7 +42,24 @@
 </head>
 <body>
 <div ms-controller="mulSelect">
-    <h2>multiple select</h2>
+    <h2>multiple select: value from options property</h2>
+    <select ms-widget="dropdown"
+            multiple>
+        <optgroup label="group1">
+            <option value="value1">Value 1</option>
+            <option>textValue</option>
+            <option label="label" value="labelValue">with label</option>
+            <option value="value2" selected>Value 2</option>
+            <option value="value3">Value 3</option>
+        </optgroup>
+        <optgroup label="group2">
+            <option value="value4" selected>Value 4</option>
+            <option value="value5" disabled selected>Value 5</option>
+            <option value="value6">Value 6</option>
+        </optgroup>
+    </select>
+
+    <h2>multiple select: value from duplex</h2>
     <select ms-duplex="s1"
             ms-widget="dropdown"
             multiple>
@@ -55,9 +77,13 @@
         </optgroup>
     </select>
     <p>select1: {{s1}}</p>
-    <h2>multiple select with model in opts</h2>
+
+    <h2>multiple select: model in opts</h2>
     <select ms-widget="dropdown,$,opts" ms-duplex="s2"></select>
     <p>select2: {{s2}}</p>
+    <ul ms-each-el="arr">
+        <li ms-class="abc: get(el) && 1 && 2">{{el}}</li>
+    </ul>
 </div>
 </body>
 </html>

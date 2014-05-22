@@ -211,45 +211,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
         }
 
-        function _init() {
-
-            //数据抽取
-            dataModel = getSource(element);
-
-            if(dataModel.length === 0) {
-                optionsModel = getSelectModel(dataSource);
-                dataModel =  optionsModel.model;
-            }
-
-            vmodel.model = dataModel;
-            vmodel.optionsModel = optionsModel || [];
-
-            var titleNode, listNode, optionsNode;
-
-            //根据multiple的类型初始化组件
-            if(options.multiple) {
-                listNode = avalon.parseHTML(listTemplate);
-                elemParent.insertBefore(listNode, element);
-                avalon(element).css('display', 'none');
-            }
-            avalon.ready(function() {
-                avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
-            });
-
-            //通过model构建的组件，需要同步select的结构
-            if(modelPattern) {
-                optionsNode = avalon.parseHTML(optionsTemplate);
-                element.appendChild(optionsNode);
-                avalon.each(['autofocus', 'multiple', 'size'], function(i, attr) {
-                    avalon(element).attr('ms-attr-' + attr, attr);
-                });
-                avalon(element).attr('ms-enabled', 'enable');
-                avalon.ready(function() {
-                    avalon.scan(element, [vmodel].concat(vmodels));
-                });
-            }
-        }
-
         //将option适配为更适合vm的形式
         function _buildOptions(opt) {
             //dropdown的valueVm有两种形式：
@@ -259,13 +220,19 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 duplexModel;
 
             if(duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
-                options.value = duplexModel[1][duplexName];
+                opt.value = duplexModel[1][duplexName];
             } else if(modelPattern) {
                 if(avalon.type(opt.value) !== 'array') {
                     opt.value = [opt.value];
                 }
             } else {
-                options.value = dataModel.map(function() {});
+                var options = element.getElementsByTagName('OPTION');
+                options = Array.prototype.filter.call(options, function(option) {
+                    return option.selected;
+                });
+                opt.value = Array.prototype.map.call(options, function(option) {
+                    return option.value;
+                });
             }
 
         }
@@ -293,6 +260,14 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
         dataSource = options.model.$model || options.model;
         modelPattern = getSource(element).length === 0;
 
+        //数据抽取
+        dataModel = getSource(element);
+
+        if(dataModel.length === 0) {
+            optionsModel = getSelectModel(dataSource);
+            dataModel =  optionsModel.model;
+        }
+
         //转换option
         _buildOptions(options);
 
@@ -306,10 +281,10 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             vm.activeIndex = null;
 
             vm.dataSource = dataSource;     //源节点的数据源，通过dataSource传递的值将完全模拟select
-            vm.model = [];      //下拉列表的渲染model
+            vm.model = dataModel;      //下拉列表的渲染model
 
             //当使用options.model生成相关结构时，使用下面的model同步element的节点
-            vm.optionsModel = {
+            vm.optionsModel = optionsModel || {
                 optGroup: [],
                 options: []
             };
@@ -323,19 +298,31 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             }
 
             vm.$init = function() {
-                var duplexName = (element.msData['ms-duplex'] || '').trim(),
-                    duplexModel;
 
-                //当有绑定duplex，向duplex同步视图
-                if(duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
-                    currentValues = duplexModel[1][duplexName];
-                    duplexModel[1][duplexName].$watch('length', function() {
-                        currentValues = avalon(element).val();
+                var titleNode, listNode, optionsNode;
+
+                //根据multiple的类型初始化组件
+                if(options.multiple) {
+                    listNode = avalon.parseHTML(listTemplate);
+                    elemParent.insertBefore(listNode, element);
+                }
+
+                avalon(element).css('display', 'none');
+                avalon.ready(function() {
+                    avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
+                });
+
+                //通过model构建的组件，需要同步select的结构
+                if(modelPattern) {
+                    optionsNode = avalon.parseHTML(optionsTemplate);
+                    element.appendChild(optionsNode);
+                    avalon.each(['autofocus', 'multiple', 'size'], function(i, attr) {
+                        avalon(element).attr('ms-attr-' + attr, attr);
                     });
-                    _init();
-                    sync(currentValues);
-                } else {
-                    _init();
+                    avalon(element).attr('ms-enabled', 'enable');
+                    avalon.ready(function() {
+                        avalon.scan(element, [vmodel].concat(vmodels));
+                    });
                 }
             };
 
@@ -352,7 +339,19 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
             vm.$remove = function() {};
 
-            vm.val = function() {};
+            vm.val = function(newValue) {
+                if(typeof newValue !== 'undefined') {
+                    if(avalon.type(newValue) !== 'array') {
+                        newValue = [newValue];
+                    }
+                    vmodel.value = newValue;
+                }
+                return vmodel.value;
+            };
+
+            vm.isSelected = function( value ) {
+                return vmodel.value.indexOf(value) > -1;
+            };
 
         });
 

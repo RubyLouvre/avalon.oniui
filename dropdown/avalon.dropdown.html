@@ -24,7 +24,7 @@ MS_OPTION_TEMPLATE
                  ms-mouseenter="$hover($event, $index)"
                  ms-class="ui-dropdown-item-hover:activeIndex == $index && el.enable"
                  ms-class-1="ui-dropdown-item-disabled:!el.enable"
-                 ms-class-2="ui-dropdown-item-selected:el.selected && el.enable && activeIndex !== $index">{{el.label}}</div>
+                 ms-class-2="ui-dropdown-item-selected:isSelected(el.value) && el.enable && activeIndex !== $index">{{el.label}}</div>
             <div class="ui-dropdown-divider"
                  ms-if="el.divider"></div>
         </div>

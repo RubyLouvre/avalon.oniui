@@ -1,4 +1,3 @@
-
 define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(avalon, $$, tmpl) {
     var arr = tmpl.split("MS_OPTION_STYLE");
     var cssText = arr[1].replace(/<\/?style>/g, "");
@@ -14,11 +13,22 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
         value: '',
         label: '',
         enable: true,
-        selected: false,
         item: false,
         optGroup: false,
         divider: false
     };
+
+    //用于将字符串中的值转换成具体值
+    function parseData(data) {
+        try {
+            data = data === "true" ? true :
+                data === "false" ? false :
+                    data === "null" ? null :
+                        +data + "" === data ? +data : data;
+        } catch (e) {
+        }
+        return data
+    }
 
     //根据配置中textField及valueField做数据适配
     function modelMatch(model, text, value) {
@@ -58,7 +68,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
          * {
          *    value: '',    //option的值
          *    label: '',    //option或者optGroup显示的label
-         *    selected: '', //option是否被选中
          *    optGroup: '', //是否属于某个group
          *    enable: true
          * }
@@ -78,8 +87,11 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 option,
                 opts = [];
             if(item.options && item.options.length > 0) {
-                groupName = item.optGroup;
-                opts = opts.concat(getOption(item.options));
+                groupName = item.label;
+                opts = item.options.map(function(option) {
+                    return avalon.mix(true, {}, MODEL_ITEM, option, {item: true });
+                });
+                opts = getOption(opts);
             } else {
                 groupName = item.optGroup;
                 option = avalon.mix(true, {}, MODEL_ITEM, item, {item: true });
@@ -95,7 +107,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     group[groupName].enable = item.enable;
                     groupSeq.push(groupName);
                 }
-                group[groupName].concat(opts);
+                group[groupName] = group[groupName].concat(opts);
             } else {
                 options = options.concat(opts);
             }
@@ -132,18 +144,17 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
     }
 
     //提取options中的数据
-    function getOption(options) {
+    function getOption(options, isDom) {
         var ret = [];
 
         avalon.each(options, function(i, option) {
             ret.push({
                 label: option.label.trim() || option.innerHTML || "",
-                value: option.value,
-                enable: !option.disabled,
+                value: isDom?parseData( option.value ): option.value,
+                enable: isDom?!option.disabled: option.enable,
                 item: true,
                 divider: false,
-                optGroup: false,
-                selected: option.selected
+                optGroup: false
             });
         });
 
@@ -159,7 +170,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
         if(options.length === 0) {
             return ret;
         } else if(groups.length === 0) {
-            ret = ret.concat(getOption(options));
+            ret = ret.concat(getOption(options, true));
         } else {
             avalon.each(groups, function(i, group) {
                 var options = group.getElementsByTagName('option');
@@ -171,7 +182,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                         divider: false,
                         optGroup: true
                     });
-                    ret = ret.concat(getOption(options));
+                    ret = ret.concat(getOption(options, true));
                     ret.push({
                         items: false,
                         divider: true,
@@ -181,7 +192,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             });
             ret = ret.concat(getOption([].filter.call(options,function(option) {
                 return option.parentNode.tagName !== 'OPTGROUP';
-            })));
+            }), true));
         }
 
         return ret;
@@ -196,20 +207,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             dataModel,
             optionsModel,
             templates, titleTemplate, listTemplate, optionsTemplate;
-
-        //同步model中的选中状态
-        function sync(value) {
-            var dataModel = vmodel.model;
-
-            dataModel.forEach(function(model) {
-                if(model.item && value.indexOf(model.value) > -1) {
-                    model.selected = true;
-                } else if(model.item) {
-                    model.selected = false;
-                }
-            });
-
-        }
 
         //将option适配为更适合vm的形式
         function _buildOptions(opt) {
@@ -231,7 +228,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     return option.selected;
                 });
                 opt.value = Array.prototype.map.call(options, function(option) {
-                    return option.value;
+                    return parseData(option.value);
                 });
             }
 
@@ -335,7 +332,21 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 vm.activeIndex = null;
             };
 
-            vm.$select = function() {};
+            vm.$select = function(e, option) {
+                if(!option.enable) {
+                    return;
+                }
+
+                var index = vmodel.value.indexOf(option.value);
+                //根据multiple区分对待
+                if( index > -1) {
+                    vmodel.value.splice(index, 1);
+                } else if(vmodel.multiple) {
+                    vmodel.value.push(option.value);
+                } else {
+                    vmodel.value.set(0, option.value);
+                }
+            };
 
             vm.$remove = function() {};
 

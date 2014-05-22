@@ -43,6 +43,9 @@ table caption {
 p {
     line-height: 30px;
 }
+ol, ul {
+    padding: 20px;
+}
 .wrapper {
     margin: 0 auto;
     padding: 0 20px;

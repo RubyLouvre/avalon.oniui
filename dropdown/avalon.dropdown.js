@@ -197,29 +197,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             optionsModel,
             templates, titleTemplate, listTemplate, optionsTemplate;
 
-        //首先扫描该元素
-        avalon.scan(element, vmodels);
-
-        //将元素的属性值copy到options中
-        avalon.each(['autofocus', 'multiple', 'size'], function(i, name) {
-            if(element.hasAttribute(name)) {
-                options[name] = element[name];
-            }
-        });
-
-        if(element.hasAttribute('disabled')) {
-            options.enable = !element.disabled;
-        }
-
-        //读取template
-        templates = options.template = options.getTemplate(template).split('MS_OPTION_TEMPLATE');
-        titleTemplate = templates[0];
-        listTemplate = templates[1];
-        optionsTemplate = templates[2];
-
-        dataSource = options.model.$model || options.model;
-        modelPattern = getSource(element).length === 0;
-
         //同步model中的选中状态
         function sync(value) {
             var dataModel = vmodel.model;
@@ -273,6 +250,52 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             }
         }
 
+        //将option适配为更适合vm的形式
+        function _buildOptions(opt) {
+            //dropdown的valueVm有两种形式：
+            // 1，未配置duplex，使用内置vm，内置vm的取值参考页面select及options.value
+            // 2，配置duplex，使用duplex的数据
+            var duplexName = (element.msData['ms-duplex'] || '').trim(),
+                duplexModel;
+
+            if(duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
+                options.value = duplexModel[1][duplexName];
+            } else if(modelPattern) {
+                if(avalon.type(opt.value) !== 'array') {
+                    opt.value = [opt.value];
+                }
+            } else {
+                options.value = dataModel.map(function() {});
+            }
+
+        }
+
+        //首先扫描该元素
+        avalon.scan(element, vmodels);
+
+        //将元素的属性值copy到options中
+        avalon.each(['autofocus', 'multiple', 'size'], function(i, name) {
+            if(element.hasAttribute(name)) {
+                options[name] = element[name];
+            }
+        });
+
+        if(element.hasAttribute('disabled')) {
+            options.enable = !element.disabled;
+        }
+
+        //读取template
+        templates = options.template = options.getTemplate(template).split('MS_OPTION_TEMPLATE');
+        titleTemplate = templates[0];
+        listTemplate = templates[1];
+        optionsTemplate = templates[2];
+
+        dataSource = options.model.$model || options.model;
+        modelPattern = getSource(element).length === 0;
+
+        //转换option
+        _buildOptions(options);
+
         var vmodel = avalon.define(data.dropdownId, function(vm) {
 
             var currentValues;
@@ -281,7 +304,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             vm.$skipArray= ['widgetElement'];
             vm.widgetElement = element;
             vm.activeIndex = null;
-
 
             vm.dataSource = dataSource;     //源节点的数据源，通过dataSource传递的值将完全模拟select
             vm.model = [];      //下拉列表的渲染model
@@ -330,6 +352,8 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
             vm.$remove = function() {};
 
+            vm.val = function() {};
+
         });
 
         return vmodel;
@@ -338,15 +362,15 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
     widget.version = "1.0";
 
     widget.defaults = {
-        width: 200,            //自定义宽度
-        listWidth: 200,        //自定义下拉列表的宽度
+        width: 200,             //自定义宽度
+        listWidth: 200,         //自定义下拉列表的宽度
         height: 200,            //下拉列表的高度
         enable: true,           //组件是否可用
         readonly: false,        //组件是否只读
-        model: [],            //下拉列表显示的数据模型
+        model: [],              //下拉列表显示的数据模型
         textFiled: 'text',      //模型数据项中对应显示text的字段,可以传function，根据数据源对text值进行格式化
         valueField: 'value',    //模型数据项中对应value的字段
-        value: null,            //设置组件的初始值
+        value: [],              //设置组件的初始值
         label: null,            //设置组件的提示文案，可以是一个字符串，也可以是一个对象
         autofocus: false,       //是否自动获取焦点
         multiple: false,        //是否为多选模式

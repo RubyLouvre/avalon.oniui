@@ -1,12 +1,10 @@
 <div ms-each-panel="tabpanels">
-     <div class="ui-tabs-panel ui-widget-content" 
-          ms-class="ui-corner-bottom:!bottom" 
+     <div class="ui-tab-panel ui-widget-content" 
           ms-visible="active == $index" 
-          ms-if-loop="contentType=='content' && !panel.contentType || panel.contentType=='content'">{{panel.content |html }}</div>
-     <div class="ui-tabs-panel ui-widget-content" 
-          ms-class="ui-corner-bottom:!bottom" 
+          ms-if-loop="$isAjax(panel)">{{panel.content |html }}</div>
+     <div class="ui-tab-panel ui-widget-content"
           ms-visible="active == $index " 
           ms-include-src="panel.content" 
-          ms-if-loop="!(contentType=='content' && !panel.contentType || panel.contentType=='content')" data-include-rendered="onAjaxCallback">
+          ms-if-loop="!$isAjax(panel)" data-include-rendered="onAjaxCallback">
      </div>
 </div>

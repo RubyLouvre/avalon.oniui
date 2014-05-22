@@ -116,7 +116,7 @@ define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
                 fakeTextArea.innerHTML = str
                 document.body.appendChild(fakeTextArea)
                 var styles = window.getComputedStyle ?
-                        window.getComputedStyle(this, null) :
+                        getComputedStyle(this, null) :
                         this.currentStyle
                 var $fakeTextArea = avalon(fakeTextArea)
                 for (var i in styles) {
@@ -147,12 +147,10 @@ define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
                     var range = document.createRange();
                     range.selectNode(bdo)
                     var rangeRect = range.getBoundingClientRect()
-                } else {
-                    //var range = document.selection.createRange().duplicate()
-                    //range.moveToElementText(bdo)
+                } else {//IE6-9
                     rangeRect = bdo.getBoundingClientRect()
                 }
-                //高亮@所在bdo元素在测量用的DIV的坐标
+                //高亮@所在bdo元素在测量用的PER的坐标
                 var top = rangeRect.bottom - fakeRect.top
                 var left = rangeRect.left - fakeRect.left
                 //创建弹出菜单

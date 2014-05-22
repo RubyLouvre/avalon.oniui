@@ -13,7 +13,11 @@
         ms-hover="ui-state-hover:!tab.disabled" 
         ms-MS_OPTION_EVENT="activate($event, $index)" 
         > 
-        <a href="#">{{tab.title | html}}</a>
+        <a ms-href="tab.href?tab.href:'#'">{{tab.title | html}}</a>
         MS_OPTION_REMOVABLE
     </li>
 </ul>
+MS_OPTION_STYLE
+<style>
+    @import url("http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css");
+</style>

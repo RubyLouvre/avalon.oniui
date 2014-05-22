@@ -24,32 +24,7 @@
                 mocha.ui('bdd')
                 mocha.setup({timeout: 100000})
                 require(["ready!", "accordion/avalon.accordion"], function() {
-                    function getElementNode(elem) {
-                        while(elem) {
-                            if (elem.nodeType === 1) {
-                                break;
-                            } else {
-                                elem = elem.nextSibling;
-                            }
-                        }
-                        return elem;
-                    }
-                    function getElementsByClassName(root, className) {
-                        if (root.getElementsByClassName) {;
-                            return root.getElementsByClassName(className);
-                        } else {
-                            var childs = root.childNodes;
-                            var i = 0;
-                            var arr = [];
-                            while(childs[i++]) {
-                                var node = childs[i-1];
-                                if(node.nodeType == 1 && node.className.indexOf(className)>-1) {
-                                    arr.push(node);
-                                }
-                            }
-                            return arr;
-                        }
-                    }
+                    
                     var testWrapper = document.getElementById("testWrapper");
                     describe("测试accordion组件", function() {
                         var accordionElement = "";

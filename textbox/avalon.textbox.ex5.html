@@ -68,9 +68,7 @@
                 avalon.define("demo5", function(vm) {
                     vm.sfocus = "";
                 })
-
                 avalon.scan();
-
                 avalon.ui["suggest"].strategies['phone'] = function( value , done ) {
                     setTimeout(function(){
                         done( null , value ? [] : [

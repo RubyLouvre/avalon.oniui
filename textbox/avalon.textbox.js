@@ -1,6 +1,6 @@
 define(["./avalon.suggest", "text!./avalon.textbox.html"], function(avalon, sourceHTML) {
-
     var parseHtmlStruction = sourceHTML.split("MS_OPTION_STYLE"),
+        
         cssText = parseHtmlStruction[1].replace(/<\/?style>/g, ""),
         styleEl = document.getElementById("avalonStyle"),
         htmlStructArray = parseHtmlStruction[0].split("MS_OPTION_SUGGEST"),
@@ -19,15 +19,17 @@ define(["./avalon.suggest", "text!./avalon.textbox.html"], function(avalon, sour
             vmSub = "",
             sourceList = "",
             inputWraper = "",
-            placeholder = "";
-                    
+            placeholder = "",
+            sourceHTML = parseHtmlStruction[0];
         // 解析html并获取需要的Dom对象引用
+        sourceHTML = sourceHTML.replace(/MS_OPTION_DISABLEDCLASS/gm, options.disabledClass);
         sourceList = avalon.parseHTML(sourceHTML).firstChild ;
         inputWraper = sourceList.getElementsByTagName("div")[0];
         placeholder = sourceList.getElementsByTagName("span")[0];
         var vmodel = avalon.define(data.textboxId, function(vm) {
             var msData = element.msData["ms-duplex"];
             avalon.mix(vm, options);
+            vm.$skipArray = ["widgetElement", "disabledClass"];
             vm.widgetElement = element;
             vm.elementDisabled = "";
             vm.toggle = false;
@@ -83,7 +85,8 @@ define(["./avalon.suggest", "text!./avalon.textbox.html"], function(avalon, sour
                         strategy : options.suggest , 
                         textboxContainer : sourceList ,
                         focus : options.suggestFocus ,
-                        changed : options.suggestChanged
+                        changed : options.suggestChanged,
+                        type: "textbox"
                     }
                 }
                 avalon.ready(function() {
@@ -94,6 +97,15 @@ define(["./avalon.suggest", "text!./avalon.textbox.html"], function(avalon, sour
                     elemParent.insertBefore(tempDiv, element);
                     vmodel.msRetain = true;
                     inputWraper.appendChild(element);
+                    if(~options.width) {
+                        $element.width(options.width);
+                    }
+                    if(~options.height) {
+                        $element.height(options.height);
+                    }
+                    if(~options.tabIndex) {
+                        element.tabIndex = options.tabIndex;
+                    }
                     elemParent.replaceChild(sourceList, tempDiv);
                     vmodel.msRetain = false;
                     // 如果存在自动补全配置项的话，添加自动补全widget
@@ -113,7 +125,11 @@ define(["./avalon.suggest", "text!./avalon.textbox.html"], function(avalon, sour
     } 
     widget.defaults = {
         suggest : false,
-        placeholder: ""
+        placeholder: "",
+        widgetElement: "",
+        tabIndex: -1,
+        width: 200,
+        disabledClass: "ui-textbox-disabled"
     }
     return avalon ;
 })

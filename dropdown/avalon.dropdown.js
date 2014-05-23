@@ -280,6 +280,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             vm.dataSource = dataSource;     //源节点的数据源，通过dataSource传递的值将完全模拟select
             vm.model = dataModel;           //下拉列表的渲染model
             vm.label = '';                  //title显示文字
+            vm.__listenter__ = false;      //是否当前鼠标在list区域
 
             //当使用options.model生成相关结构时，使用下面的model同步element的节点
             vm.optionsModel = optionsModel || {
@@ -358,13 +359,19 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 vmodel.$toggle();
             };
 
+            vm.$listenter = function() {
+                vmodel.__listenter__ = true;
+            };
+
+            vm.$listleave = function() {
+                vmodel.__listenter__ = false;
+            };
+
             vm.$createListNode = function() {
                 return avalon.parseHTML(listTemplate);
             };
 
             vm.$toggle = function() {
-                var $titleNode = avalon(titleNode)
-
                 if(!listNode) {
                     var list;
                     listNode = vm.$createListNode();
@@ -399,12 +406,12 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 var offset = $titleNode.offset(),
                     outerHeight = $titleNode.outerHeight(true),
                     $listNode = avalon(listNode),
-                    listHeight = $listNode.outerHeight(true),
-                    $document = avalon(document),
+                    listHeight = $listNode.height(),
+                    $window = avalon(window),
                     css = {};
 
                 //计算浮层的位置
-                if(offset.top + outerHeight + listHeight > $document.scrollTop() + $document.height() && offset.top - listHeight > $document.scrollTop() ) {
+                if(offset.top + outerHeight + listHeight > $window.scrollTop() + $window.height() && offset.top - listHeight > $window.scrollTop() ) {
                     css.top = offset.top - listHeight;
                 } else {
                     css.top = offset.top + outerHeight;
@@ -417,6 +424,12 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             };
 
             vm.$remove = function() {};
+
+            vm.$blur = function(e) {
+                if(!vmodel.__listenter__ && vmodel.toggle) {
+                    vmodel.$toggle();
+                }
+            };
 
             vm.val = function(newValue) {
                 if(typeof newValue !== 'undefined') {

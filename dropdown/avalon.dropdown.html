@@ -1,4 +1,4 @@
-<div class="ui-dropdown" ms-css-width="{{width}}" ms-click="$toggle">
+<div class="ui-dropdown" ms-css-width="{{width}}" ms-click="$toggle" tabindex="0" ms-blur="$blur($event)">
     <div class="ui-dropdown-source">
         <div class="ui-dropdown-input" ms-title="{{label}}">{{value}}</div>
         <div class="ui-dropdown-icon-wrap">
@@ -9,6 +9,8 @@
 </div>
 MS_OPTION_TEMPLATE
 <div ms-class="ui-dropdown-menu:!multiple"
+     ms-mouseenter="$listenter"
+     ms-mouseleave="$listleave"
      ms-css-width="{{listWidth}}">
     <div class="ui-dropdown-menu-inner"
          ms-css-height="height"

@@ -220,7 +220,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 opt.value = duplexModel[1][duplexName];
             } else if(modelPattern) {
                 if(avalon.type(opt.value) !== 'array') {
-                    opt.value = [opt.value];
+                    opt.value = [opt.value || ''];
                 }
             } else {
                 var options = element.getElementsByTagName('OPTION');
@@ -270,7 +270,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
         var vmodel = avalon.define(data.dropdownId, function(vm) {
 
-            var currentValues;
+            var titleNode, listNode, optionsNode;
 
             avalon.mix(vm, options);
             vm.$skipArray= ['widgetElement'];
@@ -278,7 +278,9 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             vm.activeIndex = null;
 
             vm.dataSource = dataSource;     //源节点的数据源，通过dataSource传递的值将完全模拟select
-            vm.model = dataModel;      //下拉列表的渲染model
+            vm.model = dataModel;           //下拉列表的渲染model
+            vm.label = '';                  //title显示文字
+            vm.__listenter__ = false;      //是否当前鼠标在list区域
 
             //当使用options.model生成相关结构时，使用下面的model同步element的节点
             vm.optionsModel = optionsModel || {
@@ -290,18 +292,24 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             if(options.modleBind && vm.dataSource.$watch) {
                 vm.dataSource.$watch('length', function() {
                     vmodel.model = getSelectModel(vmodel.dataSource.$model).model;
-                    sync(currentValues);
                 });
             }
 
             vm.$init = function() {
 
-                var titleNode, listNode, optionsNode;
-
                 //根据multiple的类型初始化组件
                 if(options.multiple) {
-                    listNode = avalon.parseHTML(listTemplate);
+                    listNode = vmodel.$createListNode();
                     elemParent.insertBefore(listNode, element);
+                } else {
+                    var title;
+                    titleNode = avalon.parseHTML(titleTemplate);
+                    title = titleNode.firstChild;
+                    elemParent.insertBefore(titleNode, element);
+                    titleNode = title;
+                    vmodel.label = vmodel.model.filter(function(option) {
+                        return option.value === vmodel.value.join('');
+                    })[0].label;
                 }
 
                 avalon(element).css('display', 'none');
@@ -345,10 +353,83 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     vmodel.value.push(option.value);
                 } else {
                     vmodel.value.set(0, option.value);
+                    vmodel.label = option.label;
                 }
+
+                vmodel.$toggle();
+            };
+
+            vm.$listenter = function() {
+                vmodel.__listenter__ = true;
+            };
+
+            vm.$listleave = function() {
+                vmodel.__listenter__ = false;
+            };
+
+            vm.$createListNode = function() {
+                return avalon.parseHTML(listTemplate);
+            };
+
+            vm.$toggle = function() {
+                if(!listNode) {
+                    var list;
+                    listNode = vm.$createListNode();
+                    list = listNode.firstChild;
+                    document.body.appendChild(listNode);
+                    avalon.scan(list, [vmodel].concat(vmodels));
+                    listNode = list;
+                }
+
+                var $listNode = avalon(listNode);
+
+                if(vmodel.toggle) {
+                    $listNode.css({
+                        display: 'none'
+                    });
+                } else {
+                    vmodel.$position();
+                    $listNode.css({
+                        display: 'block'
+                    });
+                }
+
+                vmodel.toggle = !vmodel.toggle;
+            };
+
+            vm.toggle = false;
+
+            vm.$position = function() {
+                var $titleNode = avalon(titleNode);
+                //计算浮层当前位置，对其进行定位，默认定位正下方
+                //获取title元素的尺寸及位置
+                var offset = $titleNode.offset(),
+                    outerHeight = $titleNode.outerHeight(true),
+                    $listNode = avalon(listNode),
+                    listHeight = $listNode.height(),
+                    $window = avalon(window),
+                    css = {};
+
+                //计算浮层的位置
+                if(offset.top + outerHeight + listHeight > $window.scrollTop() + $window.height() && offset.top - listHeight > $window.scrollTop() ) {
+                    css.top = offset.top - listHeight;
+                } else {
+                    css.top = offset.top + outerHeight;
+                }
+
+                css.left = offset.left;
+
+                //显示浮层
+                $listNode.css(css);
             };
 
             vm.$remove = function() {};
+
+            vm.$blur = function(e) {
+                if(!vmodel.__listenter__ && vmodel.toggle) {
+                    vmodel.$toggle();
+                }
+            };
 
             vm.val = function(newValue) {
                 if(typeof newValue !== 'undefined') {

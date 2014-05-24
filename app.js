@@ -4,22 +4,26 @@ var app = express();
 app.use(express.static(__dirname + '/public'));
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(express.bodyParser({
-    keepExtensions: true,
-    uploadDir: __dirname + '/tmp',
-    limit: '2mb'
-}));
+app.use(express.bodyParser());
 app.use(app.router);
 app.get('/', function(req, res) {
     res.sendfile('index.html');
 });
-app.post("/registry", function(req, res) {
-    //  console.log("tmpl.html")
+app.post("/post", function(req, res) {
+    console.log(req.body)
+    
     if (req.xhr) {
         res.json({msg: '提交成功'});
     }
 });
-
+app.get("/get", function(req, res) {
+    if (req.xhr) {
+        res.send("这是后端返回的数据");
+    }
+});
+app.get("/getjson", function(req, res) {
+    res.jsonp({"msg": 'json', "aaa": "jsonp"});
+});
 
 app.listen(3000);
 

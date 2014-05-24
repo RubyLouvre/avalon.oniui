@@ -319,6 +319,7 @@ define("mmRequest", ["avalon", "mmDeferred"], function(avalon, mmDeferred) {
                     opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=avalon." + name
                     //将后台返回的json保存在惰性函数中
                     avalon[name] = function(json) {
+                        console.log(json)
                         avalon[name] = json
                     };
                     return "script"

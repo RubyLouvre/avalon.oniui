@@ -60,6 +60,9 @@ MS_OPTION_STYLE
     color: #333;
     text-decoration: none;;
 }
+.ui-state-disabled, .ui-state-disabled a, .ui-tab-click .ui-state-disabled, .ui-tab-click .ui-state-disabled a{
+    color: #aaa;
+}
 .ui-tab-active{
     background: #fff;
     border-bottom-color: #fff;
@@ -73,7 +76,8 @@ MS_OPTION_STYLE
     top:7px;
     padding: 3px;
     height: 12px;
-    widows: 12px;
+    width: 12px;
+    overflow: hidden;
     border: 1px solid #f8f8f8;
     border-right-width:0; 
     color: #666;
@@ -111,6 +115,7 @@ MS_OPTION_STYLE
 }
 .ui-tab-vertical .ui-tab-active{
     border-right-color: #fff;
+    border-bottom-color: #dedede;
 }
 .ui-tab-vertical .ui-tab-last{
     border-bottom-width: 1px;

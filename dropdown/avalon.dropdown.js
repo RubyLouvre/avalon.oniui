@@ -213,7 +213,9 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             dataSource,
             dataModel,
             optionsModel,
-            templates, titleTemplate, listTemplate, optionsTemplate;
+            templates, titleTemplate, listTemplate, optionsTemplate,
+            scrollHandler,
+            resizeHandler;
 
         //将option适配为更适合vm的形式
         function _buildOptions(opt) {
@@ -301,7 +303,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             }
 
             vm.$init = function() {
-
                 if(vmodel.model.length === 0) {
                     throw new Error('the options is not enough for init a dropdown!');
                 }
@@ -327,6 +328,13 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                             return option.value === vmodel.value[0];
                         })[0];
                     }
+                    //模拟浏览器对dropdown在scroll和resize事件下的行为
+                    scrollHandler = avalon.bind(window, 'scroll', function() {
+                        vmodel.toggle = false;
+                    });
+                    resizeHandler = avalon.bind(window, 'resize', function() {
+                        vmodel.toggle = false;
+                    });
                 }
 
                 avalon(element).css('display', 'none');
@@ -390,6 +398,10 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             };
 
             vm.$toggle = function(b) {
+                if(!vmodel.enable || vmodel.readOnly) {
+                    vmodel.toggle = false;
+                    return;
+                }
                 if(typeof b !== 'boolean') {
                     vmodel.toggle = !vmodel.toggle;
                     return;
@@ -453,7 +465,16 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 $listNode.css(css);
             };
 
-            vm.$remove = function() {};
+            vm.$remove = function() {
+                if(scrollHandler) {
+                    avalon.unbind(window, 'scroll', scrollHandler);
+                }
+                if(resizeHandler) {
+                    avalon.unbind(window, 'resize', resizeHandler);
+                }
+                vmodel.toggle = false;
+                avalon.log("at $remove")
+            };
 
             vm.$blur = function(e) {
                 if(!vmodel.__listenter__ && vmodel.toggle) {
@@ -487,7 +508,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
         listWidth: 200,         //自定义下拉列表的宽度
         height: 200,            //下拉列表的高度
         enable: true,           //组件是否可用
-        readonly: false,        //组件是否只读
+        readOnly: false,        //组件是否只读
         model: [],              //下拉列表显示的数据模型
         textFiled: 'text',      //模型数据项中对应显示text的字段,可以传function，根据数据源对text值进行格式化
         valueField: 'value',    //模型数据项中对应value的字段

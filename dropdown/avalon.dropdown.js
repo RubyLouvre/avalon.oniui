@@ -473,7 +473,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     avalon.unbind(window, 'resize', resizeHandler);
                 }
                 vmodel.toggle = false;
-                avalon.log("at $remove")
+                avalon.log("dropdown $remove")
             };
 
             vm.$blur = function(e) {

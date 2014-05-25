@@ -231,7 +231,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     return parseData(option.value);
                 });
             }
-
         }
 
         //首先扫描该元素
@@ -307,9 +306,16 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     title = titleNode.firstChild;
                     elemParent.insertBefore(titleNode, element);
                     titleNode = title;
-                    vmodel.label = vmodel.model.filter(function(option) {
-                        return option.value === vmodel.value.join('');
-                    })[0].label;
+                    if(!options.multiple) {
+                        if(vmodel.value.length === 0) {
+                            var defaultOption =  vmodel.model.filter(function(option) {
+                                return option.item === true;
+                            })[0];
+
+                            vmodel.value = [defaultOption.value];
+                            vmodel.label = defaultOption.label;
+                        }
+                    }
                 }
 
                 avalon(element).css('display', 'none');

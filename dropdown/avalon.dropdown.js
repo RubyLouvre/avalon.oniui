@@ -301,20 +301,23 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     listNode = vmodel.$createListNode();
                     elemParent.insertBefore(listNode, element);
                 } else {
-                    var title;
+                    var title, defaultOption;
                     titleNode = avalon.parseHTML(titleTemplate);
                     title = titleNode.firstChild;
                     elemParent.insertBefore(titleNode, element);
                     titleNode = title;
-                    if(!options.multiple) {
-                        if(vmodel.value.length === 0) {
-                            var defaultOption =  vmodel.model.filter(function(option) {
-                                return option.item === true;
-                            })[0];
+                    if(vmodel.value.length === 0) {
+                        defaultOption =  vmodel.model.filter(function(option) {
+                            return option.item === true;
+                        })[0];
 
-                            vmodel.value = [defaultOption.value];
-                            vmodel.label = defaultOption.label;
-                        }
+                        vmodel.value = [defaultOption.value];
+                        vmodel.label = defaultOption.label;
+                    } else {
+                        defaultOption = vmodel.model.filter(function(option) {
+                            return option.value === vmodel.value[0];
+                        })[0];
+                        vmodel.label = defaultOption.label;
                     }
                 }
 
@@ -362,7 +365,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     vmodel.label = option.label;
                 }
 
-                vmodel.$toggle();
+                vmodel.toggle = false;
             };
 
             vm.$listenter = function() {
@@ -377,7 +380,13 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 return avalon.parseHTML(listTemplate);
             };
 
-            vm.$toggle = function() {
+            vm.$toggle = function(b) {
+
+                if(typeof b !== 'boolean') {
+                    vmodel.toggle = !vmodel.toggle;
+                    return;
+                }
+
                 if(!listNode) {
                     var list;
                     listNode = vm.$createListNode();
@@ -389,7 +398,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
                 var $listNode = avalon(listNode);
 
-                if(vmodel.toggle) {
+                if(!b) {
                     $listNode.css({
                         display: 'none'
                     });
@@ -399,9 +408,11 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                         display: 'block'
                     });
                 }
-
-                vmodel.toggle = !vmodel.toggle;
             };
+
+            vm.$watch('toggle', function(b) {
+                vmodel.$toggle(b);
+            });
 
             vm.toggle = false;
 
@@ -433,7 +444,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
             vm.$blur = function(e) {
                 if(!vmodel.__listenter__ && vmodel.toggle) {
-                    vmodel.$toggle();
+                    vmodel.toggle = false;
                 }
             };
 

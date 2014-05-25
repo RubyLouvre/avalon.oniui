@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <script src="../avalon.js"></script>
+    <script type="text/javascript">
+        require('dropdown/avalon.dropdown.js', function() {
+            avalon.ready(function() {
+                avalon.define('dropdown', function(vm) {
+                    vm.$skipArray = ['opts'];
+                    vm.opts = {
+                        model: [
+                            {
+                                value: '1',
+                                label: '1'
+                            }, {
+                                value: 2,
+                                label: '2'
+                            }, {
+                                label: 'group1',
+                                options: [
+                                    {
+                                        value: false,
+                                        label: 'false'
+                                    },
+                                    {
+                                        value: null,
+                                        label: 'null'
+                                    }
+                                ]
+                            }, {
+                                label: 'group2',
+                                options: [
+                                    {
+                                        value: 'disabled',
+                                        label: 'disabled',
+                                        enable: false
+                                    }
+                                ]
+                            }
+                        ],
+                        modleBind: true
+                    };
+                    vm.value = ['1'];
+                });
+                avalon.scan();
+            });
+        });
+    </script>
+    <script src="../highlight/shCore.js"></script>
+</head>
+<body>
+<div class="frame" ms-controller="dropdown">
+    <h2>dropdown</h2>
+    <p>使用option配置并使用duplex绑定</p>
+    <select ms-widget="dropdown,$,opts"
+            ms-duplex="value">
+    </select>
+    <p>{{value}}</p>
+</div>
+</body>
+</html>

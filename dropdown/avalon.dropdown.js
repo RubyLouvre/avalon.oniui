@@ -85,9 +85,11 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             //如果item为option，对option进行抽取并分割成group组
             var groupName,
                 option,
+                enable,
                 opts = [];
             if(item.options && item.options.length > 0) {
                 groupName = item.label;
+                enable = item.enable;
                 opts = item.options.map(function(option) {
                     return avalon.mix(true, {}, MODEL_ITEM, option, {item: true });
                 });
@@ -104,10 +106,15 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 hasGroup = true;
                 if(!group[groupName]) {
                     group[groupName] = [];
-                    group[groupName].enable = item.enable;
                     groupSeq.push(groupName);
                 }
+                if(typeof enable === 'undefined') {
+                    enable = group[groupName].enable;
+                }
+                //如果已经通过options传递的有enable设置，使用该设置，否则使用保存的设置
                 group[groupName] = group[groupName].concat(opts);
+                group[groupName].enable = typeof enable === 'undefined' ? true : enable;
+
             } else {
                 options = options.concat(opts);
             }
@@ -278,7 +285,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
             vm.dataSource = dataSource;     //源节点的数据源，通过dataSource传递的值将完全模拟select
             vm.model = dataModel;           //下拉列表的渲染model
-            vm.label = '';                  //title显示文字
             vm.__listenter__ = false;      //是否当前鼠标在list区域
 
             //当使用options.model生成相关结构时，使用下面的model同步element的节点
@@ -296,6 +302,10 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
             vm.$init = function() {
 
+                if(vmodel.model.length === 0) {
+                    throw new Error('the options is not enough for init a dropdown!');
+                }
+
                 //根据multiple的类型初始化组件
                 if(options.multiple) {
                     listNode = vmodel.$createListNode();
@@ -312,12 +322,10 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                         })[0];
 
                         vmodel.value = [defaultOption.value];
-                        vmodel.label = defaultOption.label;
                     } else {
                         defaultOption = vmodel.model.filter(function(option) {
                             return option.value === vmodel.value[0];
                         })[0];
-                        vmodel.label = defaultOption.label;
                     }
                 }
 
@@ -353,16 +361,17 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 if(!option.enable) {
                     return;
                 }
-
                 var index = vmodel.value.indexOf(option.value);
-                //根据multiple区分对待
-                if( index > -1) {
-                    vmodel.value.splice(index, 1);
-                } else if(vmodel.multiple) {
-                    vmodel.value.push(option.value);
-                } else {
-                    vmodel.value.set(0, option.value);
-                    vmodel.label = option.label;
+
+                //根据multiple区分对待, 多选时可以为空值
+                if(vmodel.multiple) {
+                    if(index > -1) {
+                        vmodel.value.splice(index, 1);
+                    } else {
+                        vmodel.value.push(option.value);
+                    }
+                } else if(index === -1) {
+                        vmodel.value.set(0, option.value);
                 }
 
                 vmodel.toggle = false;
@@ -381,12 +390,10 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             };
 
             vm.$toggle = function(b) {
-
                 if(typeof b !== 'boolean') {
                     vmodel.toggle = !vmodel.toggle;
                     return;
                 }
-
                 if(!listNode) {
                     var list;
                     listNode = vm.$createListNode();
@@ -395,9 +402,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     avalon.scan(list, [vmodel].concat(vmodels));
                     listNode = list;
                 }
-
                 var $listNode = avalon(listNode);
-
                 if(!b) {
                     $listNode.css({
                         display: 'none'
@@ -408,6 +413,14 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                         display: 'block'
                     });
                 }
+            };
+
+            vm.$getLabel = function(value) {
+                var v = value[0];
+
+                return vmodel.model.filter(function(option) {
+                    return option.value === v;
+                })[0].label;
             };
 
             vm.$watch('toggle', function(b) {

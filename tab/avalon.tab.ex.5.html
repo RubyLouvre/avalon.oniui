@@ -9,14 +9,23 @@
         <script>
             require(["tab/avalon.tab"], function() {
                 avalon.define("test", function(vm) {
+                    vm.$inject = function() {
+                        alert("ah, injected!")
+                    }
                     vm.tab = {
                         onActivate : function(e) {
-                            console.log("user define cc activate callback")
+                            avalon.log("user define cc activate callback")
                         }
                         , active: 1
                         , event: "click"
                         , activeDelay: 250
                         , dir: "v"
+                        , getTemplate: function(template, vm, tplName) {
+                            if(tplName == "panel") {
+                                return template.replace("<div", "<div title='点击我，我被注入了' ms-click='$inject'")
+                            }
+                            return template
+                        }
                         , tabs : [{
                             title: "水果2",
                             name: "fruit",
@@ -72,7 +81,7 @@
         </style>
     </head>
     <body ms-controller="test">
-        <h1>传参配置数据 - click切换tab - 纵向排列字数多出效果</h1>
+        <h1>传参配置数据 - click切换tab，修改默认模板 - 纵向排列字数多出效果</h1>
         <div ms-widget="tab" data-tab-removable="true"></div>
         <pre class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -85,14 +94,23 @@
         &lt;script&gt;
             require([&quot;tab/avalon.tab&quot;], function() {
                 avalon.define(&quot;test&quot;, function(vm) {
+                    vm.$inject = function() {
+                        alert(&quot;ah, injected!&quot;)
+                    }
                     vm.tab = {
                         onActivate : function(e) {
-                            console.log(&quot;user define cc activate callback&quot;)
+                            avalon.log(&quot;user define cc activate callback&quot;)
                         }
                         , active: 1
                         , event: &quot;click&quot;
                         , activeDelay: 250
                         , dir: &quot;v&quot;
+                        , getTemplate: function(template, vm, tplName) {
+                            if(tplName == &quot;panel&quot;) {
+                                return template.replace(&quot;&lt;div&quot;, &quot;&lt;div title='点击我，我被注入了' ms-click='$inject'&quot;)
+                            }
+                            return template
+                        }
                         , tabs : [{
                             title: &quot;水果2&quot;,
                             name: &quot;fruit&quot;,
@@ -148,7 +166,7 @@
         &lt;/style&gt;
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
-        &lt;h1&gt;传参配置数据 - click切换tab - 纵向排列字数多出效果&lt;/h1&gt;
+        &lt;h1&gt;传参配置数据 - click切换tab，修改默认模板 - 纵向排列字数多出效果&lt;/h1&gt;
         &lt;div ms-widget=&quot;tab&quot; data-tab-removable=&quot;true&quot;&gt;&lt;/div&gt;
         
     &lt;/body&gt;

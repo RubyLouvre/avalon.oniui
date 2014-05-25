@@ -13,11 +13,12 @@
                         onActivate : function(e) {
                             avalon.log("user define cc activate callback")
                         }
-                        , onClickActive: function(e, model) {
-                            alert('u click a active tab')
-                        }
-                        , autoSwitch: 1200
                         , active: 1
+                        , event: "click"
+                        , activeDelay: 250
+                        , dir: "v"
+                        , forceCut: true
+                        , cutEnd: ""
                         , tabs : [{
                             title: "水果2",
                             name: "fruit",
@@ -66,9 +67,14 @@
                 avalon.scan()
             })
         </script>
+        <style type="text/css">
+        .ui-tab-vertical .ui-tab-nav{
+            width: 157px;
+        }
+        </style>
     </head>
     <body ms-controller="test">
-        <h1>传参配置数据 - 自动切换tab</h1>
+        <h1>传参配置数据 - click切换tab - 纵向排列字数多出强制截断并且不要省略号效果</h1>
         <div ms-widget="tab" data-tab-removable="true"></div>
         <pre class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -85,11 +91,12 @@
                         onActivate : function(e) {
                             avalon.log(&quot;user define cc activate callback&quot;)
                         }
-                        , onClickActive: function(e, model) {
-                            alert('u click a active tab')
-                        }
-                        , autoSwitch: 1200
                         , active: 1
+                        , event: &quot;click&quot;
+                        , activeDelay: 250
+                        , dir: &quot;v&quot;
+                        , forceCut: true
+                        , cutEnd: &quot;&quot;
                         , tabs : [{
                             title: &quot;水果2&quot;,
                             name: &quot;fruit&quot;,
@@ -138,9 +145,14 @@
                 avalon.scan()
             })
         &lt;/script&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+        .ui-tab-vertical .ui-tab-nav{
+            width: 157px;
+        }
+        &lt;/style&gt;
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
-        &lt;h1&gt;传参配置数据 - 自动切换tab&lt;/h1&gt;
+        &lt;h1&gt;传参配置数据 - click切换tab - 纵向排列字数多出强制截断并且不要省略号效果&lt;/h1&gt;
         &lt;div ms-widget=&quot;tab&quot; data-tab-removable=&quot;true&quot;&gt;&lt;/div&gt;
         
     &lt;/body&gt;

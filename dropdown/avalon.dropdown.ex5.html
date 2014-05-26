@@ -8,9 +8,8 @@
     <script type="text/javascript">
         require('dropdown/avalon.dropdown.js', function() {
             avalon.ready(function() {
-                //multiple select vmodel
-                avalon.define('mulSelect', function(vm) {
-                    vm.s1 = [];
+                avalon.define('dropdown', function(vm) {
+                    vm.value = [];
                 });
                 avalon.scan();
             });
@@ -19,26 +18,25 @@
     <script src="../highlight/shCore.js"></script>
 </head>
 <body>
-<div ms-controller="mulSelect">
-    <h2>multiple select: value from duplex</h2>
-    <p>使用html配置dropdown并附加双工绑定，默认处理value的值为Number，Boolean，null的情况</p>
-    <select ms-duplex="s1"
-            ms-widget="dropdown"
-            multiple>
+<div ms-controller="dropdown">
+    <h2>dropdown</h2>
+    <p>使用html配置并使用duplex绑定</p>
+    <select ms-widget="dropdown"
+            ms-duplex="value">
         <optgroup label="group1">
             <option value="value1">Value 1</option>
             <option>textValue</option>
             <option label="label" value="labelValue">with label</option>
-            <option value="null">Value 2</option>
-            <option value="1">Value 3</option>
+            <option value="value2" selected>Value 2</option>
+            <option value="value3">Value 3</option>
         </optgroup>
         <optgroup label="group2">
-            <option value="false">Value 4</option>
+            <option value="value4">Value 4</option>
             <option value="value5" disabled>Value 5</option>
             <option value="value6">Value 6</option>
         </optgroup>
     </select>
-    <p>select1: {{s1}}</p>
+    <p>{{value}}</p>
 </div>
 <pre class="brush:html;gutter:false;toolbar:false;">
 &lt;!DOCTYPE html&gt;
@@ -51,9 +49,8 @@
     &lt;script type="text/javascript"&gt;
         require('dropdown/avalon.dropdown.js', function() {
             avalon.ready(function() {
-                //multiple select vmodel
-                avalon.define('mulSelect', function(vm) {
-                    vm.s1 = ['value1', 1, null, false];
+                avalon.define('dropdown', function(vm) {
+                    vm.value = [];
                 });
                 avalon.scan();
             });
@@ -62,26 +59,25 @@
     &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
-&lt;div ms-controller="mulSelect"&gt;
-    &lt;h2&gt;multiple select: value from duplex&lt;/h2&gt;
-    &lt;p&gt;使用html配置dropdown并附加双工绑定，默认处理value的值为Number，Boolean，null的情况&lt;/p&gt;
-    &lt;select ms-duplex="s1"
-            ms-widget="dropdown"
-            multiple&gt;
+&lt;div class="frame" ms-controller="dropdown"&gt;
+    &lt;h2&gt;dropdown&lt;/h2&gt;
+    &lt;p&gt;使用html配置并使用duplex绑定&lt;/p&gt;
+    &lt;select ms-widget="dropdown"
+            ms-duplex="value"&gt;
         &lt;optgroup label="group1"&gt;
             &lt;option value="value1"&gt;Value 1&lt;/option&gt;
             &lt;option&gt;textValue&lt;/option&gt;
             &lt;option label="label" value="labelValue"&gt;with label&lt;/option&gt;
-            &lt;option value="null"&gt;Value 2&lt;/option&gt;
-            &lt;option value="1"&gt;Value 3&lt;/option&gt;
+            &lt;option value="value2" selected&gt;Value 2&lt;/option&gt;
+            &lt;option value="value3"&gt;Value 3&lt;/option&gt;
         &lt;/optgroup&gt;
         &lt;optgroup label="group2"&gt;
-            &lt;option value="false"&gt;Value 4&lt;/option&gt;
+            &lt;option value="value4"&gt;Value 4&lt;/option&gt;
             &lt;option value="value5" disabled&gt;Value 5&lt;/option&gt;
             &lt;option value="value6"&gt;Value 6&lt;/option&gt;
         &lt;/optgroup&gt;
     &lt;/select&gt;
-    &lt;p&gt;select1: {{s1}}&lt;/p&gt;
+    &lt;p&gt;{{value}}&lt;/p&gt;
 &lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;

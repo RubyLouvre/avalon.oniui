@@ -13,16 +13,19 @@
                     ms-title="el.title" 
                     ms-visible="el.toggle" 
                     ms-data-vm="el"
+                    ms-on-mousemove-10="startResize"
+                    ms-on-mousedown-10="resizeColumn($event,el)"
+                    ms-on-mouseleave-10="stopResize"
                     >{{el.text}}
                     <button  ms-click="sortColumn(el)"
                              ms-if="el.sortable" 
                              ms-class="sort_{{el.sortAsc ? 'asc': 'desc'}}">
                         {{el.sortAsc}}
                     </button>
-                    <div class="ui-grid-resizable-handle"
-                         ms-if="el.resizable" 
-                         ms-mousedown="resizeColumn($event,el)"
-                         ></div>
+                    <!--                    <div class="ui-grid-resizable-handle"
+                                             ms-if="el.resizable" 
+                                             ms-mousedown="resizeColumn($event,el)"
+                                             ></div>-->
                 </td>
             </tr>
         </table>
@@ -56,7 +59,7 @@ MS_OPTION_STYLE
         width: 100%;
         border: 1px solid black;
         border-collapse: collapse;
-      
+
     }
     .ui-grid-thead  td{
         width: 100%;
@@ -68,7 +71,7 @@ MS_OPTION_STYLE
         width: 100%;
         border: 1px solid black;
         border-collapse: collapse;
-       
+
     }
     .ui-grid-tbody-wrapper table td{
         width: 100%;

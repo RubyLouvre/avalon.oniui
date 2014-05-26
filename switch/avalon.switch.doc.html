@@ -13,6 +13,34 @@
             <tr>
                 <th>名字</th><th>默认值</th> <th>说明</th>
             </tr>
+            <!--auto doc start-->
+<tr>
+    <td>onText</td><td> "ON"</td><td> 选中状态提示文字</td></tr>
+<tr>
+    <td>offText</td><td> "OFF"</td><td> 未选中状态提示文字</td></tr>
+<tr>
+    <td>type</td><td> "normal"</td><td> 滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成ui-switch-{{type}}添加给switch模板容器</td></tr>
+<tr>
+    <td>theme</td><td> "normal"</td><td> 主题，normal,success,warning,danger</td></tr>
+<tr>
+    <td>draggable</td><td> false</td><td> 是否支持拖动切换状态</td></tr>
+<tr>
+    <td>disabled</td><td> false</td><td> 禁用</td></tr>
+<tr>
+    <td>checked</td><td> false</td><td> 默认选中状态</td></tr>
+<tr>
+    <td>animated</td><td> true</td><td> 是否开启切换动画效果</td></tr>
+<tr>
+    <td>hdir</td><td> "on-off"</td><td> 开启、关闭选项排列顺序on-off,off-on</td></tr>
+<tr>
+    <td>$vmDragging</td><td> false</td><td> 为true，不响应click切换效果</td></tr>
+<tr>
+    <td>toggle</td><td>接口函数</td><td>toggle 交替改变选中状态</td></tr>
+<tr>
+    <td>disable</td><td>接口函数</td><td>disable 禁用组件</td></tr>
+<tr>
+    <td>enable</td><td>接口函数</td><td>enable 启用组件</td></tr>
+<!--auto doc end-->
         </table>
         <p>switch 组件有一个重要的xx方法,见源码：</p>
         <pre class="brush:js;gutter:false;toolbar:false;">

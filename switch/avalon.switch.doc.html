@@ -35,6 +35,12 @@
 <tr>
     <td>$vmDragging</td><td> false</td><td> 为true，不响应click切换效果</td></tr>
 <tr>
+    <td>$animateArrMaker</td><td>配置函数</td><td>$animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]</td></tr>
+<tr>
+    <td>onChange</td><td>配置函数</td><td>onChange(newValue, vmodel) 选中状态发生变化时触发，参数为当前的选中状态及vmodel对象</td></tr>
+<tr>
+    <td>getTemplate</td><td>配置函数</td><td>getTemplate(tmp, opts) 用于修改模板的接口，默认不做修改</td></tr>
+<tr>
     <td>toggle</td><td>接口函数</td><td>toggle 交替改变选中状态</td></tr>
 <tr>
     <td>disable</td><td>接口函数</td><td>disable 禁用组件</td></tr>
@@ -48,7 +54,12 @@
         </pre>
         <!--ex list start-->
 <ol>
-<li><a href="avalon.switch.ex.html">不同大小type</a></li>
+<li><a href="avalon.switch.ex.html">不同大小type，默认设置，选中状态</a></li>
+<li><a href="avalon.switch.ex.1.html">不同大小type，支持可拖动切换，选中状态</a></li>
+<li><a href="avalon.switch.ex.2.html">不同大小type，OFF-ON顺序排列，选中状态</a></li>
+<li><a href="avalon.switch.ex.3.html">不同大小type，disabled状态，选中状态</a></li>
+<li><a href="avalon.switch.ex.4.html">不同大小type，自定义ON-OFF文本，选中状态</a></li>
+<li><a href="avalon.switch.ex.5.html">不同大小type，通过接口修改状态，选中状态</a></li>
 </ol>
 <!--ex list end-->
     </body>

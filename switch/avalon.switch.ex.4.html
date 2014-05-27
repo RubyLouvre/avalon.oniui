@@ -13,6 +13,11 @@
             require(["switch/avalon.switch"], function() {
                 avalon.define("test", function(vm) {
                     vm["switch"] = {
+                        "onText": "开"
+                        , "offText": "关"
+                        , "onChange": function(newValue, vmodel) {
+                            avalon.log(vmodel.$id + '.checked is changed to ' + newValue)
+                        }
                     }
                     vm.$skipArray = ["switch"]
                 })
@@ -21,7 +26,7 @@
         </script>
     </head>
     <body ms-controller="test">
-        <h1>不同大小type，默认设置，选中状态</h1>
+        <h1>不同大小type，自定义ON-OFF文本，选中状态</h1>
         <div>
             <p>---------type=mini---------</p>
             <div class="this-for-test-3">
@@ -56,6 +61,11 @@
             require([&quot;switch/avalon.switch&quot;], function() {
                 avalon.define(&quot;test&quot;, function(vm) {
                     vm[&quot;switch&quot;] = {
+                        &quot;onText&quot;: &quot;开&quot;
+                        , &quot;offText&quot;: &quot;关&quot;
+                        , &quot;onChange&quot;: function(newValue, vmodel) {
+                            avalon.log(vmodel.$id + '.checked is changed to ' + newValue)
+                        }
                     }
                     vm.$skipArray = [&quot;switch&quot;]
                 })
@@ -64,7 +74,7 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
-        &lt;h1&gt;不同大小type，默认设置，选中状态&lt;/h1&gt;
+        &lt;h1&gt;不同大小type，自定义ON-OFF文本，选中状态&lt;/h1&gt;
         &lt;div&gt;
             &lt;p&gt;---------type=mini---------&lt;/p&gt;
             &lt;div class=&quot;this-for-test-3&quot;&gt;

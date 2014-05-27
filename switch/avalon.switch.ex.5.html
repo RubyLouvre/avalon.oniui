@@ -21,7 +21,7 @@
         </script>
     </head>
     <body ms-controller="test">
-        <h1>不同大小type，默认设置，选中状态</h1>
+        <h1>不同大小type，通过接口修改状态，选中状态</h1>
         <div>
             <p>---------type=mini---------</p>
             <div class="this-for-test-3">
@@ -29,11 +29,14 @@
             </div>
             <p>---------type=small---------</p>
             <div class="this-for-test">
-                <input checked="checked" type="checkbox" ms-widget="switch" data-switch-type="small">
+                <input checked="checked" type="checkbox" ms-widget="switch,$cc" data-switch-type="small">
+                <input type="button" value="Toggle" onclick="avalon.vmodels.$cc.toggle()">
             </div>
             <p>---------type=normal---------</p>
             <div class="this-for-test-4">
-                <input checked="checked" type="checkbox" ms-widget="switch" data-switch-type="normal">
+                <input checked="checked" type="checkbox" ms-widget="switch,$dd" data-switch-type="normal">
+                <input type="button" value="disable" onclick="avalon.vmodels.$dd.disable()">
+                <input type="button" value="enable" onclick="avalon.vmodels.$dd.enable()">
             </div>
             <p>---------type=large---------</p>
             <div class="this-for-test-2">
@@ -64,7 +67,7 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
-        &lt;h1&gt;不同大小type，默认设置，选中状态&lt;/h1&gt;
+        &lt;h1&gt;不同大小type，通过接口修改状态，选中状态&lt;/h1&gt;
         &lt;div&gt;
             &lt;p&gt;---------type=mini---------&lt;/p&gt;
             &lt;div class=&quot;this-for-test-3&quot;&gt;
@@ -72,11 +75,14 @@
             &lt;/div&gt;
             &lt;p&gt;---------type=small---------&lt;/p&gt;
             &lt;div class=&quot;this-for-test&quot;&gt;
-                &lt;input checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;switch&quot; data-switch-type=&quot;small&quot;&gt;
+                &lt;input checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;switch,$cc&quot; data-switch-type=&quot;small&quot;&gt;
+                &lt;input type=&quot;button&quot; value=&quot;Toggle&quot; onclick=&quot;avalon.vmodels.$cc.toggle()&quot;&gt;
             &lt;/div&gt;
             &lt;p&gt;---------type=normal---------&lt;/p&gt;
             &lt;div class=&quot;this-for-test-4&quot;&gt;
-                &lt;input checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;switch&quot; data-switch-type=&quot;normal&quot;&gt;
+                &lt;input checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;switch,$dd&quot; data-switch-type=&quot;normal&quot;&gt;
+                &lt;input type=&quot;button&quot; value=&quot;disable&quot; onclick=&quot;avalon.vmodels.$dd.disable()&quot;&gt;
+                &lt;input type=&quot;button&quot; value=&quot;enable&quot; onclick=&quot;avalon.vmodels.$dd.enable()&quot;&gt;
             &lt;/div&gt;
             &lt;p&gt;---------type=large---------&lt;/p&gt;
             &lt;div class=&quot;this-for-test-2&quot;&gt;

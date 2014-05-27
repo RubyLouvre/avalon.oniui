@@ -97,7 +97,8 @@ MS_OPTION_STYLE
 		height: 9px;
 		line-height: 9px;
 	}
-	.ui-switch-disabled{
+	/*后面加的是修复IE 8透明未继承问题*/
+	.ui-switch-disabled, .ui-switch-disabled .ui-switch-bar{
 		opacity: 0.5;
 		filter: alpha(opacity=50);
 		cursor: default;

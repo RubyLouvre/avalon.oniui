@@ -86,31 +86,7 @@ define(["avalon", "text!./avalon.switch.html", "../draggable/avalon.draggable"],
                 'draxis': 'x'
                 , 'drStop': function(e, data) {
                     if(e.x == dragEvent.x) {
-                        vmodel.$vmDragging = false
-                    }
-                }
-                , 'drStart': function(e, data) {
-                    vmodel.$vmDragging = true
-                    dragEvent = e
-                }
-                , 'drDrag': function(e) {
-                }
-                , 'drHandle': function(e) {
-                    if((e.target || e.srcElement) == dragger) return dragger
-                    vmodel.$vmDragging = false
-                    return
-                }
-                , 'drBefore-start': function(e, data) {
-                    vmodel.$vmDragging = true
-                    var w = bar.parentNode.clientWidth
-                        , w2 = bar.parentNode.offsetWidth
-                        , b = (w2 - w) / 2
-                        , p = avalon(bar.parentNode).position()
-                    vmodel.drContainment = data.containment = [-w * 0.5 + b + p.left, 0, p.left + b, 0]
-                }
-                , 'drBefore-stop': function(e, data) {
-                    if(e.x == dragEvent.x) {
-                        vmodel.$vmDragging = false
+                        vmodel.$toggle()
                     } else {
                         var dis = dragEvent.x - e.x
                         , dir = vmodel.$getDir()
@@ -122,11 +98,34 @@ define(["avalon", "text!./avalon.switch.html", "../draggable/avalon.draggable"],
                         }
                         to = vmodel.$getDir() ? -50 : 0
                         if(css3support) {
-                            bar.style[vmodel.dir] = to + '%'
+                            bar.style[vmodel.dir] = to ? to + '%' : 0
                         } else {
                             vm.$animate(-to)
                         }
                     }
+                }
+                , 'drStart': function(e, data) {
+                    dragEvent = e
+                }
+                , 'drDrag': function(e) {
+                }
+                , 'drHandle': function(e, data) {
+                    if(vmodel.disabled) {
+                        return
+                    } else if((e.target || e.srcElement) != dragger) {
+                        vmodel.$toggle()
+                        return
+                    } 
+                    return dragger
+                }
+                , 'drBefore-start': function(e, data) {
+                    var w = bar.parentNode.clientWidth
+                        , w2 = bar.parentNode.offsetWidth
+                        , b = (w2 - w) / 2
+                        , p = avalon(bar.parentNode).position()
+                    vmodel.drContainment = data.containment = [-w * 0.5 + b + p.left, 0, p.left + b, 0]
+                }
+                , 'drBefore-stop': function(e, data) {
                 }
                 , 'drContainment': [0,0,0,0]
             }
@@ -170,7 +169,7 @@ define(["avalon", "text!./avalon.switch.html", "../draggable/avalon.draggable"],
                     }
                     if(dragger) {
                         bar.setAttribute("ms-draggable", "")
-                        , avaElem = avalon(bar)
+                        var avaElem = avalon(bar)
                         avalon.each(attrMaps, function(key, item) {
                             var _key = key.replace(/^dr/, '').replace(/^[A-Z]/, function(mat) {return mat.toLowerCase()})
                             avaElem.data('draggable-' + _key, typeof item != 'function' ? item : key)
@@ -198,18 +197,26 @@ define(["avalon", "text!./avalon.switch.html", "../draggable/avalon.draggable"],
 
             //@method toggle 交替改变选中状态
             vm.toggle = function() {
-                if(vmodel.disabled || vmodel.$vmDragging) return
+                if(vmodel.disabled || vmodel.draggable) return
+                vmodel.$toggle()
+            }
+            vm.$toggle = function() {
                 vmodel.checked = !vmodel.checked
                 vmodel.$animate()
             }
             vm.$getDir = function() {
                 return vmodel.checked && vmodel.hdir !='on-off' || !vmodel.checked && vmodel.hdir == 'on-off'
             }
-            vm.$animate = function(to) {
+            vm.$animate = function(to, fn) {
                 var dir = vmodel.$getDir()
-                    , lt = -(parseInt(bar.style[vmodel.dir]) >> 0)
+                    , lt = bar.style[vmodel.dir]
                 if(!css3support && vmodel.animated) {
                     clearTimeout(timer)
+                    if(/px/.test(lt)) {
+                        lt = -parseInt((parseInt(lt) >> 0) / bar.parentNode.clientWidth * 100)
+                    } else {
+                        lt = -parseInt(lt) >> 0 
+                    }
                     var distance
                     if(dir) {
                         distance = vmodel.$animateArrMaker(lt, typeof to == 'undefined' ? 50 : to)
@@ -219,27 +226,34 @@ define(["avalon", "text!./avalon.switch.html", "../draggable/avalon.draggable"],
                     bar.style[vmodel.dir] = -distance[0] + '%'
                     distance.splice(0, 1)
                     timer = setInterval(function() {
-                        if(distance.length == 0) return
+                        if(distance.length == 0) {
+                            fn && fn()
+                            return
+                        }
                         bar.style[vmodel.dir] = -distance[0] + '%'
                         distance.splice(0, 1)
-                    }, 200 / distance.length - 1 || 1)
+                    }, 100)
                 } else if(vmodel.animated) {
                     bar.style[vmodel.dir] = dir ? '-50%' : '0'
                 }
             }
             //@method disable 禁用组件
-            vm.disbale = function() {
-                vm.disbale = true
+            vm.disable = function() {
+                vmodel.disabled = true
             }
 
             //@method enable 启用组件
             vm.enable = function() {
-                vm.disbale = true
+                vmodel.disabled = false
             }
 
             return vm
         })
       
+        vmodel.$watch('checked', function(newValue, oldValue) {
+            vmodel.onChange && vmodel.onChange(newValue, vmodel)
+        })
+
         return vmodel
     }
 
@@ -256,18 +270,22 @@ define(["avalon", "text!./avalon.switch.html", "../draggable/avalon.draggable"],
         dir: "left",            //\@param 组件排列方向,left,to
         $vmDragging: false,     //@param 为true，不响应click切换效果
         $css3support: false,
+        //@optMethod $animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]
         $animateArrMaker: function(from, to) {
             var arr = []
                 , dis = to - from
             while(from != to) {
                 from += parseInt(dis / 1.5)
-                dis = parseInt(dis / 1.5)
+                dis = parseInt(dis - dis / 1.5)
                 if(Math.abs(dis) <= 1) from = to
                 arr.push(from)
             }
             if(arr.length == 0) arr = [to]
             return arr
         },
+        //@optMethod onChange(newValue, vmodel) 选中状态发生变化时触发，参数为当前的选中状态及vmodel对象
+        onChange: avalon.noop,
+        //@optMethod getTemplate(tmp, opts) 用于修改模板的接口，默认不做修改
         getTemplate: function(tmpl, opts) {
             return tmpl
         },

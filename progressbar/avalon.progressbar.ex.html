@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>progressbar组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["progressbar/avalon.progressbar"], function() {
+                avalon.define("test", function(vm) {
+                    vm.progressbar = {
+                        onComplete: function() {
+                            avalon.log(this)
+                        }
+                    }
+                    vm.$skipArray = ["progressbar"]
+                    var v = 0
+                        , timer
+                    setTimeout(function() {
+                        return
+                        timer = setInterval(function() {
+                            v++
+                            if(v > 100) return clearInterval(timer)
+                        }, 50)
+                    }, 2000)
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <h1>progressbar</h1>
+        <div ms-widget="progressbar,$aa">
+            
+        </div>
+        <p>-------------------------------</p>
+        <div ms-widget="progressbar,$bb" data-progressbar-label="true">
+            
+        </div>
+        <p>-------------------------------</p>
+        <div ms-widget="progressbar,$cc" data-progressbar-label="true" data-progressbar-indeterminate="true">
+            
+        </div>
+        <p>-------------------------------</p>
+        <div ms-widget="progressbar,$dd" data-progressbar-label="true" data-progressbar-indeterminate="true" data-progressbar-simulate="100">
+            
+        </div>
+        <p>-------------------------------</p>
+        <div ms-widget="progressbar,$ee" data-progressbar-label="true" data-progressbar-indeterminate="false" data-progressbar-simulate="100">
+            
+        </div>
+        <p>-------------------------------</p>
+        <div ms-widget="progressbar,$ff" data-progressbar-label="true" data-progressbar-indeterminate="true" data-progressbar-simulate="100" data-progressbar-value="100">
+            
+        </div>
+        <p>-------------------------------</p>
+        <div ms-widget="progressbar,$gg" data-progressbar-label="true" data-progressbar-right="true" data-progressbar-value="50">
+            
+        </div>
+        <pre class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;progressbar组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;progressbar/avalon.progressbar&quot;], function() {
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.progressbar = {
+                        onComplete: function() {
+                            avalon.log(this)
+                        }
+                    }
+                    vm.$skipArray = [&quot;progressbar&quot;]
+                    var v = 0
+                        , timer
+                    setTimeout(function() {
+                        return
+                        timer = setInterval(function() {
+                            v++
+                            if(v &gt; 100) return clearInterval(timer)
+                        }, 50)
+                    }, 2000)
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;progressbar&lt;/h1&gt;
+        &lt;div ms-widget=&quot;progressbar,$aa&quot;&gt;
+            
+        &lt;/div&gt;
+        &lt;p&gt;-------------------------------&lt;/p&gt;
+        &lt;div ms-widget=&quot;progressbar,$bb&quot; data-progressbar-label=&quot;true&quot;&gt;
+            
+        &lt;/div&gt;
+        &lt;p&gt;-------------------------------&lt;/p&gt;
+        &lt;div ms-widget=&quot;progressbar,$cc&quot; data-progressbar-label=&quot;true&quot; data-progressbar-indeterminate=&quot;true&quot;&gt;
+            
+        &lt;/div&gt;
+        &lt;p&gt;-------------------------------&lt;/p&gt;
+        &lt;div ms-widget=&quot;progressbar,$dd&quot; data-progressbar-label=&quot;true&quot; data-progressbar-indeterminate=&quot;true&quot; data-progressbar-simulate=&quot;100&quot;&gt;
+            
+        &lt;/div&gt;
+        &lt;p&gt;-------------------------------&lt;/p&gt;
+        &lt;div ms-widget=&quot;progressbar,$ee&quot; data-progressbar-label=&quot;true&quot; data-progressbar-indeterminate=&quot;false&quot; data-progressbar-simulate=&quot;100&quot;&gt;
+            
+        &lt;/div&gt;
+        &lt;p&gt;-------------------------------&lt;/p&gt;
+        &lt;div ms-widget=&quot;progressbar,$ff&quot; data-progressbar-label=&quot;true&quot; data-progressbar-indeterminate=&quot;true&quot; data-progressbar-simulate=&quot;100&quot; data-progressbar-value=&quot;100&quot;&gt;
+            
+        &lt;/div&gt;
+        &lt;p&gt;-------------------------------&lt;/p&gt;
+        &lt;div ms-widget=&quot;progressbar,$gg&quot; data-progressbar-label=&quot;true&quot; data-progressbar-right=&quot;true&quot; data-progressbar-value=&quot;50&quot;&gt;
+            
+        &lt;/div&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

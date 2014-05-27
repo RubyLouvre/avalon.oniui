@@ -94,8 +94,6 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
 
             vm.$init = function() {
                 element.innerHTML = options.template.replace(/MS_OPTION_ID/g, vmodel.$id)
-
-
                 _vmodels = [vmodel].concat(vmodels)
                 avalon.scan(element, _vmodels)
 
@@ -108,10 +106,9 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                 }
                 vm.gridWidth = table.offsetWidth
             }
-            vm.startResize = function(e) {
+            vm.startResize = function(e, el) {
                 //当移动到表头的右侧,改变光标的形状,表示它可以拖动改变列宽
-                console.log("11111111111")
-                if (options.canResize)
+                if ( options._drag || !el.resizable)
                     return
                 var cell = avalon(this)
                 var dir = getDirection(e, cell, options)
@@ -128,22 +125,24 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             vm.stopResize = function() {
                 if (options.canResize) {
                     options.canResize.css("cursor", options._cursor); //还原光标样式
+                    delete options.canResize
                 }
             }
             //通过拖动改变列宽
             vm.resizeColumn = function(e, el) {
                 var cell = options.canResize
                 if (cell) {//只有鼠标进入可拖动区域才能拖动
-                    //  var el = cell[0]
                     if (typeof el.width !== "number") {
                         el.width = cell[0].offsetWidth
                     }
-                    var startX = e.pageX, drag = true
+                    var startX = e.pageX
+                    options._drag = true
+                    
                     fixUserSelect()
                     var cellWidth = el.width
                     var gridWidth = vm.gridWidth
                     var moveFn = avalon.bind(document, "mousemove", function(e) {
-                        if (drag) {
+                        if ( options._drag) {
                             e.preventDefault()
                             vm.gridWidth = gridWidth + e.pageX - startX
                             el.width = cellWidth + e.pageX - startX
@@ -152,9 +151,9 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
 
                     var upFn = avalon.bind(document, "mouseup", function(e) {
                         e.preventDefault()
-                        if (drag) {
+                        if ( options._drag ) {
                             restoreUserSelect()
-                            drag = false
+                            delete options._drag
                             vm.gridWidth = gridWidth + e.pageX - startX
                             el.width = cellWidth + e.pageX - startX
                             avalon.unbind(document, "mousemove", moveFn)
@@ -245,7 +244,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                 el.align = el.align || "" //赋给align属性,表示是对齐方向 left, right, center
                 el.localSort = typeof el.localSort === "function" ? el.localSort : false//当前列的排序函数
                 makeBool(el, "sortable", true)//能否排序
-                makeBool(el, "resizable", false)//能否排序
+                makeBool(el, "resizable", false)//能否改变列宽
                 makeBool(el, "sortAsc", true)//排序方向
                 makeBool(el, "toggle", true)//是否显示当前列
                 makeBool(el, "disabledToggle")//禁止改变当前列的显示状态

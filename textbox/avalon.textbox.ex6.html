@@ -14,46 +14,46 @@
         <h1>textbox demo 6</h1>
         <p class="example">表单域的自动补全功能的changed配置项的使用（<span class="statement">data-textbox-suggest-changed</span>）</p>
         <p><span class="useDescription">说明：</span>设置data-textbox-suggest-changed为用户自定义的提示切换的callback，可在切换提示信息时做一些后续操作</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;自动补全changed配置项&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                &lt;div class="demoShow" ms-controller="demo6"&gt;
+                        &lt;form&gt;
+                            &lt;input ms-widget="textbox" ms-duplex="inputValue" data-textbox-suggest="test3" data-textbox-suggest-changed="changedCallback" /&gt;
+                            &lt;input type="text" style="display:none"/&gt;
+                            &lt;p&gt;输入框的值是： {{inputValue}}&lt;/p&gt;
+                        &lt;/form&gt;
+                    &lt;/div&gt;
 
-        <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
-            &lt;!DOCTYPE HTML&gt;
-            &lt;html&gt;
-            &lt;head&gt;
-                &lt;meta charset='utf-8'/&gt;
-                &lt;title&gt;自动补全changed配置项&lt;/title&gt;
-                &lt;script src='avalon.js'&gt;&lt;/script&gt;
-            &lt;/head&gt;
-            &lt;body&gt;
-            &lt;div class="demoShow" ms-controller="demo6"&gt;
-                    &lt;form&gt;
-                        &lt;input ms-widget="textbox" ms-duplex="inputValue" data-textbox-suggest="test3" data-textbox-suggest-changed="changedCallback" /&gt;
-                        &lt;input type="text" style="display:none"/&gt;
-                        &lt;p&gt;输入框的值是： {{inputValue}}&lt;/p&gt;
-                    &lt;/form&gt;
-                &lt;/div&gt;
+                    &lt;script&gt;
+                        require("avalon.textbox", function() {
+                            avalon.define("demo6", function(vm) {
+                                vm.inputValue = "";
+                                vm.changedCallback = function() {
+                                    vm.inputValue += "_tht result of callback handler";
+                                }
+                            })
 
-                &lt;script&gt;
-                    require("avalon.textbox", function() {
-                        avalon.define("demo6", function(vm) {
-                            vm.inputValue = "";
-                            vm.changedCallback = function() {
-                                vm.inputValue += "_tht result of callback handler";
+                            avalon.scan();
+
+                            avalon.ui["suggest"].strategies['test3'] = function( value , done ) {
+                                setTimeout(function(){
+                                    done( null , value ? ["11", "22", "33"] : []);
+                                },100)
                             }
                         })
-
-                        avalon.scan();
-
-                        avalon.ui["suggest"].strategies['test3'] = function( value , done ) {
-                            setTimeout(function(){
-                                done( null , value ? ["11", "22", "33"] : []);
-                            },100)
-                        }
-                    })
-                &lt;/script&gt;
-            &lt;/body&gt;
-            &lt;/html&gt;
-        </pre>
-
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
         <div class="demoShow" ms-controller="demo6">
             <form>
                 <input ms-widget="textbox" ms-duplex="inputValue" data-textbox-suggest="test3" data-textbox-suggest-changed="changedCallback" />

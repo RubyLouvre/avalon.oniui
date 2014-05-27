@@ -19,20 +19,17 @@
                     var v = 0
                         , timer
                     setTimeout(function() {
-                        timer = setInterval(function() {
-                            v++
-                            if(v > 100) return clearInterval(timer)
-                            avalon.vmodels.$aa.value = v
-                        }, 50)
-                    }, 1000)
+                        // 告知结束
+                        avalon.vmodels.$aa.end(100)
+                    }, 10000)
                 })
                 avalon.scan()
             })
         </script>
     </head>
     <body ms-controller="test">
-        <h1>外部设置进度值</h1>
-        <div ms-widget="progressbar,$aa">
+        <h1>模拟进度条，带label</h1>
+        <div ms-widget="progressbar,$aa" data-progressbar-simulate="100" data-progressbar-label="true">
             
         </div>
         <pre class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
@@ -56,20 +53,17 @@
                     var v = 0
                         , timer
                     setTimeout(function() {
-                        timer = setInterval(function() {
-                            v++
-                            if(v &gt; 100) return clearInterval(timer)
-                            avalon.vmodels.$aa.value = v
-                        }, 50)
-                    }, 1000)
+                        // 告知结束
+                        avalon.vmodels.$aa.end(100)
+                    }, 10000)
                 })
                 avalon.scan()
             })
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
-        &lt;h1&gt;外部设置进度值&lt;/h1&gt;
-        &lt;div ms-widget=&quot;progressbar,$aa&quot;&gt;
+        &lt;h1&gt;模拟进度条，带label&lt;/h1&gt;
+        &lt;div ms-widget=&quot;progressbar,$aa&quot; data-progressbar-simulate=&quot;100&quot; data-progressbar-label=&quot;true&quot;&gt;
             
         &lt;/div&gt;
         

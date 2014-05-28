@@ -5,56 +5,8 @@
 		<div class="ui-progressbar-overlay" ms-if="$indeterminate()"></div>
 	</div>
 	<div class="ui-progressbar-bar ui-progressbar-bar-right" ms-if="right" ms-css-width="{{$cssMaker('right')}}">
-		<div class="ui-progressbar-label" ms-if="$showLabel(label, right)">{{$labelShower(value) | html}}</div>
+		<div class="ui-progressbar-label" ms-if="$showLabel(label, right)">
+		<div class="ui-progressbar-overlay" ms-if="$indeterminate()"></div>{{$labelShower(value, "right") | html}}</div>
 	</div>
 </div>
-MS_OPTION_STYLE
-<style>
-	.clrfix {
-	   zoom: 1;
-	}
-	.clrfix:before,
-	.clrfix:after {
-	    content: '';
-	    display: block;
-	}
-	.clrfix:after {
-	    clear: both;
-	}
-	.ui-progressbar{
-		width: 100%;
-		position: relative;
-		height: 24px;
-		border:1px solid #aaa;
-		background-color: #fff;
-		font-family: Verdana,Arial,sans-serif;
-		color: #222;
-		line-height: 24px;
-	}
-	.ui-progressbar-bar{
-		z-index: 1;
-		position: relative;
-		background-color: #ccc;
-		height: 100%;
-		width: 0;
-		float: left;
-		display: inline;
-	}
-	.ui-progressbar-bar-right{
-		background-color: #333;
-	}
-	.ui-progressbar-overlay{
-		width: 100%;
-		background-color: #ddd;
-		position: relative;
-		z-index: 1;
-		height: 100%;
-	}
-	.ui-progressbar-label{
-		position: absolute;
-		left:50%;
-		height: 100%;
-		z-index: 10;
-		margin: 0 auto;
-	}
-</style>
+	

@@ -1,0 +1,109 @@
+@import "../avalon.clrfix.scss";
+$pf : ".ui-tab";
+$pf2 : ".ui-state";
+
+
+/*dir=h, normal size, auto width*/
+#{$pf2} {
+	&-default{
+	    background-color: #f8f8f8;
+	    font-size:12px;
+	    float: left;
+	    display: inline;
+	    list-style: none;
+	    padding: 10px 20px;
+	    position: relative;
+	    border: 1px solid #ccc;
+	    border-right-width: 0;
+	    text-align: center;
+	}
+	&-default, &-default a{
+	    color: #333;
+	    text-decoration: none;;
+	}
+	&-hover{
+	    background: #fff;
+	}
+	&-disabled, #{$pf}-click &-disabled{
+	    color: #aaa;
+	    a {
+	    	color: #aaa;
+	    }
+	}
+	&-disabled a{
+	    cursor: default;
+	}
+}
+#{$pf} {
+	zoom: 1;
+	&-last{
+	    border-right-width:1px; 
+	}
+	&-click #{$pf2}-default{
+	    cursor: pointer;
+	}
+	&-removable{
+	    padding-right: 30px;
+	}
+	&-active{
+	    background: #fff;
+	    border-bottom-color: #fff;
+	}
+	&-close{
+	    position: absolute;
+	    right: 0px;
+	    top:7px;
+	    padding: 3px;
+	    height: 12px;
+	    width: 12px;
+	    overflow: hidden;
+	    border: 1px solid #f8f8f8;
+	    border-right-width:0; 
+	    color: #666;
+	}
+	#{$pf2}-disabled, &-click #{$pf2}-disabled{
+	    background-color: #fafafa;
+	    cursor: default;
+	}
+	#{$pf2}-hover,#{$pf2}-active{
+	    #{$pf}-close{
+	    	border-color: #fff;
+	    }
+	}
+
+	&-close-hover, & #{$pf2}-active &-close-hover,& #{$pf2}-hover &-close-hover{
+	    background: #fff;
+	    border-color: #dedede;
+	    cursor: pointer;
+	}
+	/*dir=v, small size*/
+	&-small {
+		#{$pf2}-default{
+		    border-right-width: 1px;
+		    margin-right: -1px;
+		    z-index: 1;
+		    padding: 7px 10px;
+		}
+		#{pf}-active{
+		    border-color: #3775C0;
+		    z-index: 10;
+		}
+	}
+	/*dir=v, normal size*/
+	&-vertical {
+		#{$pf2}-default{
+		    float:none;
+		    display: block;
+		    text-align: left;
+		    border-right-width: 1px;
+		    border-bottom-width: 0;
+		}
+		#{$pf}-active{
+		    border-right-color: #fff;
+		    border-bottom-color: #dedede;
+		}
+		#{$pf}-last{
+		    border-bottom-width: 1px;
+		}
+	}
+}

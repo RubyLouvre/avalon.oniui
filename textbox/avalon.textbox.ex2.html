@@ -16,48 +16,49 @@
         <p class="example">拥有占位符的textbox组件（<span class="statement">ms-widget="textbox" data-textbox-placeholder="表单域获得焦点且表单域值为空时显示占位符，其他时候隐藏占位符"</span>）</p>
 
         <p><span class="useDescription">说明：</span>表单域获得焦点且表单域值为空时显示占位符，其他时候隐藏占位符</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;拥有占位符的textbox组件&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                &lt;div class="demoShow" ms-controller="demo2"&gt;
+                        &lt;form&gt;
+                            &lt;table style="width:100%; border:1px solid #000;"&gt;
+                                &lt;tbody&gt;
+                                    &lt;tr&gt;
+                                        &lt;td class="pad30"&gt;
+                                            &lt;textarea ms-widget="textbox" ms-duplex="areaempty"  type="text" data-textbox-placeholder="表单域为空且存在占位符"&gt;&lt;/textarea&gt;
+                                            &lt;p&gt;输入框的值是： {{areaempty}}&lt;/p&gt;
 
-        <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
-            &lt;!DOCTYPE HTML&gt;
-            &lt;html&gt;
-            &lt;head&gt;
-                &lt;meta charset='utf-8'/&gt;
-                &lt;title&gt;拥有占位符的textbox组件&lt;/title&gt;
-                &lt;script src='avalon.js'&gt;&lt;/script&gt;
-            &lt;/head&gt;
-            &lt;body&gt;
-            &lt;div class="demoShow" ms-controller="demo2"&gt;
-                    &lt;form&gt;
-                        &lt;table style="width:100%; border:1px solid #000;"&gt;
-                            &lt;tbody&gt;
-                                &lt;tr&gt;
-                                    &lt;td class="pad30"&gt;
-                                        &lt;textarea ms-widget="textbox" ms-duplex="areaempty"  type="text" data-textbox-placeholder="表单域为空且存在占位符"&gt;&lt;/textarea&gt;
-                                        &lt;p&gt;输入框的值是： {{areaempty}}&lt;/p&gt;
+                                        &lt;/td&gt;
+                                        &lt;td class="pad30"&gt;
+                                            &lt;textarea ms-widget="textbox" ms-duplex="areavalue" type="text" data-textbox-placeholder="表单域不为空且存在占位符"&gt;&lt;/textarea&gt;
+                                            &lt;p&gt;输入框的值是： {{areavalue}}&lt;/p&gt;
+                                        &lt;/td&gt;
+                                    &lt;/tr&gt;
+                                &lt;/tbody&gt;
+                            &lt;/table&gt;
+                        &lt;/form&gt;
+                    &lt;/div&gt;
 
-                                    &lt;/td&gt;
-                                    &lt;td class="pad30"&gt;
-                                        &lt;textarea ms-widget="textbox" ms-duplex="areavalue" type="text" data-textbox-placeholder="表单域不为空且存在占位符"&gt;&lt;/textarea&gt;
-                                        &lt;p&gt;输入框的值是： {{areavalue}}&lt;/p&gt;
-                                    &lt;/td&gt;
-                                &lt;/tr&gt;
-                            &lt;/tbody&gt;
-                        &lt;/table&gt;
-                    &lt;/form&gt;
-                &lt;/div&gt;
-
-                &lt;script&gt;
-                    require("avalon.textbox", function() {
-                        avalon.define("demo2", function(vm) {
-                            vm.areaempty = "";
-                            vm.areavalue = "表单域存在占位符但是有值的情况";
+                    &lt;script&gt;
+                        require("avalon.textbox", function() {
+                            avalon.define("demo2", function(vm) {
+                                vm.areaempty = "";
+                                vm.areavalue = "表单域存在占位符但是有值的情况";
+                            })
+                            avalon.scan();
                         })
-                        avalon.scan();
-                    })
-                &lt;/script&gt;
-            &lt;/body&gt;
-            &lt;/html&gt;
-        </pre>
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
 
         <div class="demoShow" ms-controller="demo2">
             <form>

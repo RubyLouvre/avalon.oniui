@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>progressbar组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body>
+
+
+        <table width="90%" border="1">
+            <tr>
+                <th>名字</th><th>默认值</th> <th>说明</th>
+            </tr>
+            <!--auto doc start-->
+<tr>
+    <td>value</td><td> false</td><td> 当前进度值 0 - 100 or false</td></tr>
+<tr>
+    <td>label</td><td> false</td><td> 是否在进度条上显示进度数字提示</td></tr>
+<tr>
+    <td>simulate</td><td> false</td><td> 是否模拟进度条效果，默认为否，模拟的时候需要调用触发告知完成，模拟会采用模拟函数及算子进行模拟，取值为int表示动画效果间隔ms数</td></tr>
+<tr>
+    <td>indeterminate</td><td> false</td><td> 是否不确定当前进度，现在loading效果</td></tr>
+<tr>
+    <td>right</td><td> false</td><td> 是否显示左右两段</td></tr>
+<tr>
+    <td>success</td><td> false</td><td> 是否完成，进度为100时或者外部将success置为true，用于打断模拟效果</td></tr>
+<tr>
+    <td>simulater</td><td>配置函数</td><td>simulater(value, vmodel) 模拟进度进行效果函数，参数为当前进度和vmodel，默认return value + 5 * Math.random() >> 0</td></tr>
+<tr>
+    <td>getTemplate</td><td>配置函数</td><td>getTemplate(tmp, opts) 用于修改模板的接口，默认不做修改</td></tr>
+<tr>
+    <td>onComplete</td><td>配置函数</td><td>onComplete(vmodel) 完成回调，默认空函数</td></tr>
+<tr>
+    <td>labelShower</td><td>配置函数</td><td>labelShower(value, isContainerLabel) 用于格式化进度条上label显示文字，默认value为false显示“loading…”，完成显示“complete!”，失败显示“failed!”，第二个参数是是否是居中显示的label，两段显示的时候，默认将这个label内容置空，只显示两边的label,this指向vmodel</td></tr>
+<tr>
+    <td>start</td><td>接口函数</td><td>start() 开始进度推进，该接口适用于模拟进度条</td></tr>
+<tr>
+    <td>end</td><td>接口函数</td><td>end(value) 结束进度推进，该接口适用于模拟进度条，value为100表示结束，failed表示失败，undefine等于pause，其他则终止于value，并在label上显示</td></tr>
+<tr>
+    <td>reset</td><td>接口函数</td><td>reset() 重置设置项</td></tr>
+<!--auto doc end-->
+        </table>
+        <p>progressbar 组件有一个重要的labelShower方法，用于配置格式化label显示,见源码：</p>
+        <pre class="brush:js;gutter:false;toolbar:false;">
+            labelShower: function(value, l1) {
+                if(l1 && this.right) return ''
+                if(value === false) return 'loading…'
+                if(value === 'failed' || this.ended && this.value != 100) return 'failed!'
+                if(value == 100) return 'complete!'
+                return value + '%'
+            }
+        </pre>
+        <!--ex list start-->
+<ol>
+<li><a href="avalon.progressbar.ex.html">外部设置进度值</a></li>
+<li><a href="avalon.progressbar.ex.1.html">模拟进度条，带label</a></li>
+<li><a href="avalon.progressbar.ex.2.html">外部设置进度值，带label</a></li>
+<li><a href="avalon.progressbar.ex.3.html">模拟进度条，带label，进度indeterminate，接口调用</a></li>
+</ol>
+<!--ex list end-->
+    </body>
+</html>

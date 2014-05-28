@@ -13,43 +13,45 @@
     <div class="wrapper">
         <h1>checkboxlist demo 2</h1>
         <p class="example">配置checkboxlist-duplex初始化初始选中的选项，而且可以通过duplex值的改变修正选中项状态（<span class="statement">data-checkboxlist-duplex="val"</span>）</p>
-        <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
-            &lt;!DOCTYPE HTML&gt;
-            &lt;html&gt;
-            &lt;head&gt;
-                &lt;meta charset='utf-8'/&gt;
-                &lt;title&gt;配置duplex选项&lt;/title&gt;
-                &lt;script src='avalon.js'&gt;&lt;/script&gt;
-            &lt;/head&gt;
-            &lt;body&gt;
-                &lt;div class="demoShow" ms-controller="demo2"&gt;
-                    &lt;fieldset&gt;
-                        &lt;legend&gt;data-checkboxlist-duplex="val"&lt;/legend&gt;
-                        &lt;ul ms-widget="checkboxlist" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部"&gt;
-                            &lt;li&gt;&lt;input type="checkbox" value="1"&gt;选项一&lt;/li&gt;
-                            &lt;li&gt;&lt;input type="checkbox" value="2"&gt;选项二&lt;/li&gt;
-                            &lt;li&gt;&lt;input type="checkbox" value="3"&gt;选项三&lt;/li&gt;
-                            &lt;li&gt;&lt;input type="checkbox" value="4"&gt;选项四&lt;/li&gt;
-                            &lt;li&gt;&lt;input type="checkbox" value="5"&gt;选项五&lt;/li&gt;
-                            &lt;li&gt;&lt;input type="checkbox" value="6"&gt;选项六&lt;/li&gt;
-                        &lt;/ul&gt;
-                        {{ val }}
-                    &lt;/fieldset&gt;
-                &lt;/div&gt;
-                &lt;script&gt;
-                    require("./checkboxlist/avalon.checkboxlist", function(avalon) {
-                        var sss = avalon.define('demo2',function(vm){
-                            vm.val = ["1", "2"];
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;配置duplex选项&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demoShow" ms-controller="demo2"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;data-checkboxlist-duplex="val"&lt;/legend&gt;
+                            &lt;ul ms-widget="checkboxlist" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部"&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="1"&gt;选项一&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="2"&gt;选项二&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="3"&gt;选项三&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="4"&gt;选项四&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="5"&gt;选项五&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="6"&gt;选项六&lt;/li&gt;
+                            &lt;/ul&gt;
+                            {{ val }}
+                        &lt;/fieldset&gt;
+                    &lt;/div&gt;
+                    &lt;script&gt;
+                        require("./checkboxlist/avalon.checkboxlist", function(avalon) {
+                            var sss = avalon.define('demo2',function(vm){
+                                vm.val = ["1", "2"];
+                            });
+                            setTimeout(function (){
+                                sss.val = ["1","2","3","4","5","6"];
+                            },5000);
+                            avalon.scan();
                         });
-                        setTimeout(function (){
-                            sss.val = ["1","2","3","4","5","6"];
-                        },5000);
-                        avalon.scan();
-                    });
-                &lt;/script&gt;
-            &lt;/body&gt;
-            &lt;/html&gt;
-        </pre>
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
         <div class="demoShow" ms-controller="demo2">
             <fieldset>
                 <legend>data-checkboxlist-duplex="val"</legend>

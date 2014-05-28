@@ -33,9 +33,6 @@ define(["avalon.getModel", "text!./avalon.suggest.html"], function(avalon, sourc
         options.textboxContainer = options.textboxContainer == "" ? options.inputElement : options.textboxContainer;
         var vmodel = avalon.define(data.suggestId, function(vm) {
             avalon.mix(vm, options);
-
-            console.log("suggest options is : ");
-            console.log(options);
             vm.$skipArray = ["widgetElement", "puresuggest"];
             vm.widgetElement = element;
             vm.searchText = "";
@@ -105,11 +102,7 @@ define(["avalon.getModel", "text!./avalon.suggest.html"], function(avalon, sourc
                 vmodel.toggle = false;
             };
             vm.$init = function() {
-                console.log("suggest init");
-                console.log("options.inputElement is : ");
-                console.log(options.inputElement);
                 avalon.bind(options.inputElement, "keyup", function(event) {
-                    console.log("suggest 里的 keyup");
                     switch( event.which ) {
                         case 9:
                             if (!vmodel.toggle) return ;

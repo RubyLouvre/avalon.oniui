@@ -210,6 +210,9 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                     }
                 }
             }
+            vm.getRowHeight = function(){
+                console.log(this.rows[0].offsetHeight)
+            }
             //得到可视区某一个格子的显示隐藏情况
             vm.getCellToggle = function(name) {
                 for (var i = 0, el; el = vm.columns[i++]; ) {
@@ -228,6 +231,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         //表头的格子的高
         headerHeight: 35,
         rowHeight: 35,
+        _rowHeight: 35,//实际行高,包含border什么的
         columnWidth: 160,
         edge: 15,
         perPage: "", //默认不分页,

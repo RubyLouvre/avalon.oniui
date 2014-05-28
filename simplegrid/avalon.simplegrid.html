@@ -18,27 +18,29 @@
                     ms-on-mouseleave-10="stopResize"
                     >{{el.text}}
                     <span  ms-click="sortColumn(el)"
-                             ms-if="el.sortable" 
-                             ms-class="sort_{{el.sortAsc ? 'asc': 'desc'}}">
+                           ms-if="el.sortable" 
+                           ms-class="sort_{{el.sortAsc ? 'asc': 'desc'}}">
                         {{el.sortAsc}}
                     </span>
                 </td>
             </tr>
         </table>
         <div class="ui-grid-tbody-wrapper">
-            <table ms-css-width="gridWidth">
-                <tr  ms-repeat-row="_store">
-                    <td class="ui-grid-td"
-                        ms-repeat="row" 
-                        data-with-sorted="getColumnsOrder"
-                        ms-css-width="getCellWidth($key)"
-                        ms-visible="getCellToggle($key)" 
-                        ms-css-height="rowHeight" 
-                        >
-                        <div class="editable">{{$val}}</div>
-                    </td>
-                </tr>
-            </table>
+            <div class="ui-grid-scroll-wrapper">
+                <table ms-css-width="gridWidth">
+                    <tr  ms-repeat-row="_store" data-repeat-rendered="getRowHeight">
+                        <td class="ui-grid-td"
+                            ms-repeat="row" 
+                            data-with-sorted="getColumnsOrder"
+                            ms-css-width="getCellWidth($key)"
+                            ms-visible="getCellToggle($key)" 
+                            ms-css-height="rowHeight" 
+                            >
+                            <div class="editable">{{$val}}</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
     <div class="ui-grid-tfoot-wrapper" ms-if="pageable">
@@ -75,13 +77,5 @@ MS_OPTION_STYLE
         /*        white-space:nowrap;*/
         overflow: hidden;
     }
-    .ui-grid-resizable-handle{
-        background: red;
-        float: right;
-        font-size: 0.1px;
-        display: block;
-        cursor: col-resize;
-        width: 4px;
-        height: 100%;
-    }
+
 </style>

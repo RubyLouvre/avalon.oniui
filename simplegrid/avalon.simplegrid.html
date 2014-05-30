@@ -25,9 +25,9 @@
                 </td>
             </tr>
         </table>
-        <div class="ui-grid-tbody-wrapper">
-            <div class="ui-grid-scroll-wrapper">
-                <table ms-css-width="gridWidth">
+        <div class="ui-grid-tbody-wrapper" ms-css-height="tbodyHeight">
+            <div class="ui-grid-scroll-wrapper" ms-css-height="tbodyScrollHeight">
+                <table ms-css-width="gridWidth" ms-css-top="tbodyScrollTop">
                     <tr  ms-repeat-row="_store" data-repeat-rendered="getRowHeight">
                         <td class="ui-grid-td"
                             ms-repeat="row" 
@@ -71,6 +71,11 @@ MS_OPTION_STYLE
         border-collapse: collapse;
 
     }
+    .ui-grid-tbody-wrapper{
+        overflow: hidden;
+        position: relative;
+    }
+
     .ui-grid-tbody-wrapper table td{
         width: 100%;
         border: 1px solid black;

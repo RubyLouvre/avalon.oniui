@@ -1,0 +1,16 @@
+@import "../themes/default.scss";
+$pf : ".ui-tooltip";
+
+#{$pf} {
+	// current style
+	display: none;
+	padding: 8px;
+	position: absolute;
+	z-index: 9999;
+	max-width: 300px;
+	font-size: 12px;
+	// means #{$pr}-bar
+	&-content {
+
+	}
+}

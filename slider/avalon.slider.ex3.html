@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script src="../avalon.js"></script>
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/start/jquery-ui.css" />
+        <style>
+            body{
+                font-size:13px;
+            }
+            .drag{
+                width:100px;
+                height:100px;
+                background: green;
+                position: absolute;
+            }
+            .ui-slider-vertical{
+                float:left;
+                margin-right:3em;
+            }
+            .ui-slider-vertical:after {
+                visibility: hidden;
+                display: block;
+                font-size: 0;
+                content: " ";
+                clear: both;
+                height: 0;
+            }
+            p {
+                clear: both;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h1>slider demo</h1>
+            <p class="example">可以配置slider的max、min、value值，当rang为默认配置时，配置values无效</p>
+            <div ms-skip>
+                <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                    &lt;!DOCTYPE HTML&gt;
+                    &lt;html&gt;
+                    &lt;head&gt;
+                        &lt;meta charset='utf-8'/&gt;
+                        &lt;title&gt;slider demo 3&lt;/title&gt;
+                        &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                    &lt;/head&gt;
+                    &lt;body&gt;
+                        &lt;div class="demoShow" ms-controller = "theme"&gt;
+                            &lt;div style="width:70%"&gt;
+                          
+                                &lt;input ms-widget="slider, a" data-slider-max="80" data-slider-value="36"&gt;
+                                &lt;p ms-controller = "a"&gt;如果可以拖动的话,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}&lt;/p&gt;
+                                &lt;input ms-widget="slider, b" data-slider-min="20" data-slider-value="36"&gt;
+                                &lt;p ms-controller = "b"&gt;如果可以拖动的话,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}&lt;/p&gt;
+                                &lt;input ms-widget="slider, c" data-slider-value="36" data-slider-values = ["40", "60"]&gt;
+                                &lt;p ms-controller = "c"&gt;如果可以拖动的话,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}&lt;/p&gt;
+                            &lt;/div&gt;
+                            
+                            &lt;script&gt;
+                                require("slider/avalon.slider", function() {
+                                    var model = avalon.define("theme", function(vm) {
+                                        
+                                    })
+                                    avalon.scan()
+                                })
+                            &lt;/script&gt;
+                        &lt;/div&gt;
+                    &lt;/body&gt;
+                    &lt;/html&gt;
+                </pre>
+            </div>
+            <div class="demoShow" ms-controller = "theme">
+                <div style="width:70%">
+              
+                    <input ms-widget="slider, a" data-slider-max="80" data-slider-value="36">
+                    <p ms-controller = "a">如果可以拖动的话,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+                    <input ms-widget="slider, b" data-slider-min="20" data-slider-value="36">
+                    <p ms-controller = "b">如果可以拖动的话,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+                    <input ms-widget="slider, c" data-slider-value="36" data-slider-values = ["40", "60"]>
+                    <p ms-controller = "c">如果可以拖动的话,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+                </div>
+                
+                <script>
+                    require("slider/avalon.slider", function() {
+                        var model = avalon.define("theme", function(vm) {
+                            
+                        })
+                        avalon.scan()
+                    })
+                </script>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,4 +1,4 @@
-define(["../avalon.draggable", "text!./avalon.slider.html"], function(avalon, sourceHTML) {
+define(["../draggable/avalon.draggable", "text!./avalon.slider.html"], function(avalon, sourceHTML) {
     var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],
         cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
         styleEl = document.getElementById("avalonStyle"),
@@ -40,6 +40,9 @@ define(["../avalon.draggable", "text!./avalon.slider.html"], function(avalon, so
         } else if (!value && oRange === 'max' && !values) {
             value = valueMax || value;
         }
+        if (options.step !== 1 && !/\D/.test(options.step)) {
+            value = correctValue(value);
+        }
         // 如果滑动块有双手柄，重置values
         if (twohandlebars) {
             if (Array.isArray(values)) {
@@ -66,11 +69,15 @@ define(["../avalon.draggable", "text!./avalon.slider.html"], function(avalon, so
         }
         function percent2Value(percent) {//0~1
             var val = (valueMax-valueMin) * percent +valueMin
+            val = correctValue(val);
+            return parseFloat(val.toFixed(3))
+        }
+        function correctValue(val) {
             var step = (options.step > 0) ? options.step : 1
             var valModStep = (val-valueMin) % step
             var n = (val-valueMin) / step 
             val = valueMin + (valModStep * 2 >= step ? step * Math.ceil(n) : step * Math.floor(n))
-            return parseFloat(val.toFixed(3))
+            return val;
         }
         var model = avalon.define(data.sliderId, function(vm) {
             avalon.mix(vm, options);
@@ -97,10 +104,11 @@ define(["../avalon.draggable", "text!./avalon.slider.html"], function(avalon, so
                 data.dragX = data.dragY = false
                 Index = handlers.indexOf(data.element)
                 data.$element.addClass("ui-state-active")
-                options.ondragstart.call(null);
+                options.ondragstart.call(null, event, data);
             }
             vm.dragend = function(event, data) {
                 data.$element.removeClass("ui-state-active")
+                options.ondragend.call(null, event, data);
             }
             vm.drag = function(event, data, keyVal) {
                 var $handler = data.$element
@@ -109,6 +117,7 @@ define(["../avalon.draggable", "text!./avalon.slider.html"], function(avalon, so
                 } else {
                     var prop = isHorizontal ? "left" : "top"
                     var pixelMouse = data[prop]
+                    console.log("pixelMouse is : "+pixelMouse)
                     //如果是垂直时,往上拖,值就越大
                     var percent = (pixelMouse / model.$pixelTotal) //求出当前handler在slider的位置
                     if (!isHorizontal) { // 垂直滑块，往上拖动时pixelMouse变小，下面才是真正的percent，所以需要调整percent
@@ -142,6 +151,7 @@ define(["../avalon.draggable", "text!./avalon.slider.html"], function(avalon, so
                     model.value = val
                     model.percent = value2Percent(val)
                 }
+                options.ondrag.call(null, event, data);
             }
             vm.$init = function() {
                 var a = slider.getElementsByTagName("b")
@@ -166,7 +176,6 @@ define(["../avalon.draggable", "text!./avalon.slider.html"], function(avalon, so
         return model
     }
     widget.defaults = {
-        distance: 0,
         max: 100,
         min: 0,
         orientation: "horizontal",
@@ -176,10 +185,11 @@ define(["../avalon.draggable", "text!./avalon.slider.html"], function(avalon, so
         values: null,
         disabled: false,
         ondragstart: avalon.noop,
-        widgetElement : "",
+        ondrag: avalon.noop,
+        ondragend: avalon.noop,
         getTemplate: function(str, options) {
             return str;
-        },
+        }
     }
     avalon(document).bind("click", function(e) { // 当点击slider之外的区域取消选中状态
         var el = e.target

@@ -2,12 +2,11 @@
   * progressbar组件，
   *
   */
-define(["avalon", "text!./avalon.progressbar.html"], function(avalon, tmpl) {
+define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.css"], function(avalon, tmpl, css) {
 
-    var arr = tmpl.split("MS_OPTION_STYLE") || ["", ""]
-    var cssText = arr[1].replace(/<\/?style>/g, "")
+    var cssText = css
     var styleEl = document.getElementById("avalonStyle")
-    var template = arr[0]
+    var template = tmpl
     try {
         styleEl.innerHTML += cssText
     } catch (e) {
@@ -105,6 +104,11 @@ define(["avalon", "text!./avalon.progressbar.html"], function(avalon, tmpl) {
                 vmodel.$simulater()
             }
 
+            //@method progress(value) 设置value值，其实也可以直接设置vmodel.value
+            vm.progress = function(value) {
+                vmodel.value = value
+            }
+
         })
         // 模拟进度条情形下，不监控success属性的变化
         vmodel.$watch('success', function(newValue) {
@@ -113,9 +117,9 @@ define(["avalon", "text!./avalon.progressbar.html"], function(avalon, tmpl) {
         })
         vmodel.$watch('value', function(newValue) {
             if(newValue == 100) vmodel.success = true
+            vmodel.onChange && vmodel.onChange.call(vmodel, newValue)
         })
 
-      
         return vmodel
     }
     //add args like this:
@@ -136,11 +140,14 @@ define(["avalon", "text!./avalon.progressbar.html"], function(avalon, tmpl) {
         getTemplate: function(tmpl, opts) {
             return tmpl
         },
-        //@optMethod onComplete(vmodel) 完成回调，默认空函数
+        //@optMethod onChange(value) value发生变化回调，this指向vmodel
+        onChange: avalon.noop,
+        //@optMethod onComplete() 完成回调，默认空函数，this指向vmodel
         onComplete: avalon.noop,
         //@optMethod labelShower(value, isContainerLabel) 用于格式化进度条上label显示文字，默认value为false显示“loading…”，完成显示“complete!”，失败显示“failed!”，第二个参数是是否是居中显示的label，两段显示的时候，默认将这个label内容置空，只显示两边的label,this指向vmodel
         labelShower: function(value, l1) {
-            if(l1 && this.right) return ''
+            var value = l1 == 'right' ? 100 - (value || 0) : value
+            if(l1 == 'l1' && this.right) return ''
             if(value === false) return 'loading…'
             if(value === 'failed' || this.ended && this.value != 100) return 'failed!'
             if(value == 100) return 'complete!'

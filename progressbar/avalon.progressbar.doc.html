@@ -31,7 +31,9 @@
 <tr>
     <td>getTemplate</td><td>配置函数</td><td>getTemplate(tmp, opts) 用于修改模板的接口，默认不做修改</td></tr>
 <tr>
-    <td>onComplete</td><td>配置函数</td><td>onComplete(vmodel) 完成回调，默认空函数</td></tr>
+    <td>onChange</td><td>配置函数</td><td>onChange(value) value发生变化回调，this指向vmodel</td></tr>
+<tr>
+    <td>onComplete</td><td>配置函数</td><td>onComplete() 完成回调，默认空函数，this指向vmodel</td></tr>
 <tr>
     <td>labelShower</td><td>配置函数</td><td>labelShower(value, isContainerLabel) 用于格式化进度条上label显示文字，默认value为false显示“loading…”，完成显示“complete!”，失败显示“failed!”，第二个参数是是否是居中显示的label，两段显示的时候，默认将这个label内容置空，只显示两边的label,this指向vmodel</td></tr>
 <tr>
@@ -40,6 +42,8 @@
     <td>end</td><td>接口函数</td><td>end(value) 结束进度推进，该接口适用于模拟进度条，value为100表示结束，failed表示失败，undefine等于pause，其他则终止于value，并在label上显示</td></tr>
 <tr>
     <td>reset</td><td>接口函数</td><td>reset() 重置设置项</td></tr>
+<tr>
+    <td>progress</td><td>接口函数</td><td>progress(value) 设置value值，其实也可以直接设置vmodel.value</td></tr>
 <!--auto doc end-->
         </table>
         <p>progressbar 组件有一个重要的labelShower方法，用于配置格式化label显示,见源码：</p>
@@ -58,6 +62,8 @@
 <li><a href="avalon.progressbar.ex.1.html">模拟进度条，带label</a></li>
 <li><a href="avalon.progressbar.ex.2.html">外部设置进度值，带label</a></li>
 <li><a href="avalon.progressbar.ex.3.html">模拟进度条，带label，进度indeterminate，接口调用</a></li>
+<li><a href="avalon.progressbar.ex.4.html">占比进度条，带label，左右两段，接口调用</a></li>
+<li><a href="avalon.progressbar.ex.5.html">检测测onChange触发结束</a></li>
 </ol>
 <!--ex list end-->
     </body>

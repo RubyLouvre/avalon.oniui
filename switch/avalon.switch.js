@@ -2,12 +2,11 @@
   * switch组件，
   *
   */
-define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable"], function(avalon, tmpl) {
+define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "draggable/avalon.draggable"], function(avalon, tmpl, css) {
 
-    var arr = tmpl.split("MS_OPTION_STYLE") || ["", ""]
-    var cssText = arr[1].replace(/<\/?style>/g, "")
+    var cssText = css
     var styleEl = document.getElementById("avalonStyle")
-    var template = arr[0]
+    var template = tmpl
     try {
         styleEl.innerHTML += cssText
     } catch (e) {

@@ -1,0 +1,89 @@
+@import "../themes/default.scss";
+$pf : ".ui-switch";
+
+#{$pf} {
+	position: relative;
+	height: 100%;
+	top:0;
+	overflow: hidden;
+	text-align: center;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+    & label, & span{
+		cursor: pointer;
+		margin: 0;
+		top:0;
+		left:0;
+	}
+	&-normal{
+	    width: 100px;
+	    height: 28px;
+		font-size: 14px;
+	}
+	&-mini{
+	    width: 74px;
+	    height: 17px;
+		font-size: 12px;
+	}
+	&-small{
+	    width: 79px;
+	    height: 24px;
+		font-size: 12px;
+	}
+	&-large{
+		width: 120px;
+	    height: 37px;
+		font-size: 16px;
+	}
+	&-bar{
+		position: absolute;
+		width: 150%;
+		left:0;
+	}
+	&-animate{
+		transition:all .5s;
+		-webkit-transition:all .5s;
+		-moz-transition:all .5s;
+		-o-transition:all .5s;
+		-ms-transition:all .5s;
+	}
+	&-left, &-right{
+		width: 33%;
+		background-color: #005fcc;
+		color:#fff;
+	}
+	&-dragger{
+		width: 34%;
+	}
+	&-left, &-right, &-dragger{
+		float: left;
+		display: inline;
+		height: 20px;
+		line-height: 20px;
+		padding: 4px 0;
+	}
+	&-large &-left, &-large &-right, &-large &-dragger{
+		padding: 9px 0;
+		height: 19px;
+		line-height: 19px;
+	}
+	&-small &-left, &-small &-right, &-small &-dragger{
+		padding: 3px 0;
+		height: 18px;
+		line-height: 18px;
+	}
+	&-mini &-left, &-mini &-right, &-mini &-dragger{
+		padding: 4px 0;
+		height: 9px;
+		line-height: 9px;
+	}
+	/*fix ie 8 bugs*/
+	&-disabled, &-disabled &-bar{
+		opacity: 0.5;
+		filter: alpha(opacity=50);
+		cursor: default;
+	}
+	&-disabled label, &-disabled span{
+		cursor: default;
+	}
+}

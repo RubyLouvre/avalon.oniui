@@ -51,14 +51,22 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
 
     var widget = avalon.ui.simplegrid = function(element, data, vmodels) {
         var options = data.simplegridOptions
-//格式化各列的具体规格
+        //格式化各列的具体规格
         options.columns = options.getColumns(options.columns, options)
-//抽取要显示的数据(因为可能存在分页,不用全部显示,那么我们只将要显示的
-//那一部分转换为监控数组就行,这样能大大提高性能)
+        //抽取要显示的数据(因为可能存在分页,不用全部显示,那么我们只将要显示的
+        //那一部分转换为监控数组就行,这样能大大提高性能)
         options._store = options.getStore(options.store, options)
-//方便用户对原始模板进行修改,提高制定性
+        //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
-//如果没有指定各列的出现顺序,那么将按用户定义时的顺序输出
+        //决定每页的行数
+        options.perPage = options.pageable ? options.perPage : options.store.length
+        if (typeof options.perPage !== "number") {
+            options.perPage = options.store.length
+        }
+        //如果没有指定各列的出现顺序,那么将按用户定义时的顺序输出
+
+
+
         if (!Array.isArray(options.columnsOrder)) {
             var orders = []
             for (var i = 0, el; el = options.columns[i++]; ) {
@@ -82,6 +90,9 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         }
         var remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m
         var _vmodels
+
+
+
         var vmodel = avalon.define(data.simplegridId, function(vm) {
 
             avalon.mix(vm, options)
@@ -89,60 +100,82 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             vm.$skipArray = ["widgetElement", "tableElement", "wrapperElement", "store", "template"]
             vm.widgetElement = element
 
+
+
             vm.$init = function() {
                 element.innerHTML = options.template.replace(/MS_OPTION_ID/g, vmodel.$id)
-
-
                 _vmodels = [vmodel].concat(vmodels)
                 avalon.scan(element, _vmodels)
 
             }
             vm.gridWidth = "100%"
             vm.getRealWidth = function() {
-                var table = this
+                var table = this //这是TR元素
+                var cells = this.children
+                for (var i = 0, cell; cell = cells[i]; i++) {
+                    vm.columns[i].width = cell.offsetWidth
+                }
                 while (table.tagName !== "TABLE") {
                     table = table.parentNode
                 }
                 vm.gridWidth = table.offsetWidth
             }
+            vm.startResize = function(e, el) {
+                //当移动到表头的右侧,改变光标的形状,表示它可以拖动改变列宽
+                if (options._drag || !el.resizable)
+                    return
+                var cell = avalon(this)
+                var dir = getDirection(e, cell, options)
+                options._cursor = cell.css("cursor") //保存原来的光标样式
+                if (dir === "") {
+                    options.canResize = false
+                    cell.css("cursor", "default")
+                } else {
+                    options.canResize = cell
+                    cell.css("cursor", dir + "-resize")//改变光标
+                }
+            }
+
+            vm.stopResize = function() {
+                if (options.canResize) {
+                    options.canResize.css("cursor", options._cursor); //还原光标样式
+                    delete options.canResize
+                }
+            }
             //通过拖动改变列宽
             vm.resizeColumn = function(e, el) {
-                var startX = e.pageX, drag = true, cell = this
-                do {
-                    if (!cell || cell.tagName == "TD" || cell.tagName == "TH") {
-                        break
+                var cell = options.canResize
+                if (cell) {//只有鼠标进入可拖动区域才能拖动
+                    if (typeof el.width !== "number") {
+                        el.width = cell[0].offsetWidth
                     }
-                } while ((cell = cell.parentNode));
+                    var cellWidth = el.width
+                    var startX = e.pageX
+                    options._drag = true
+                    fixUserSelect()
 
-                if (typeof el.width !== "number") {
-                    el.width = cell.offsetWidth
-                }
+                    var gridWidth = vm.gridWidth
+                    var moveFn = avalon.bind(document, "mousemove", function(e) {
+                        if (options._drag) {
+                            e.preventDefault()
+                            var change = e.pageX - startX
+                            vm.gridWidth = gridWidth + change
+                            el.width = cellWidth + change
+                        }
+                    })
 
-                fixUserSelect()
-                var cellWidth = el.width
-                console.log(cellWidth)
-                var gridWidth = vm.gridWidth
-
-                var moveFn = avalon.bind(document, "mousemove", function(e) {
-                    if (drag) {
+                    var upFn = avalon.bind(document, "mouseup", function(e) {
                         e.preventDefault()
-                        vm.gridWidth = gridWidth + e.pageX - startX
-                        el.width = cellWidth + e.pageX - startX
-                    }
-                })
-
-                var upFn = avalon.bind(document, "mouseup", function(e) {
-                    e.preventDefault()
-                    if (drag) {
-                        restoreUserSelect()
-                        drag = false
-                        vm.gridWidth = gridWidth + e.pageX - startX
-                        el.width = cellWidth + e.pageX - startX
-                        avalon.unbind(document, "mousemove", moveFn)
-                        avalon.unbind(document, "mouseup", upFn)
-                    }
-                })
-
+                        if (options._drag) {
+                            restoreUserSelect()
+                            delete options._drag
+                            vm.gridWidth = gridWidth + e.pageX - startX
+                            el.width = cellWidth + e.pageX - startX
+                            avalon.unbind(document, "mousemove", moveFn)
+                            avalon.unbind(document, "mouseup", upFn)
+                        }
+                    })
+                }
 
             }
             //如果当前列可以排序，那么点击标题旁边的icon,将会调用此方法
@@ -177,6 +210,9 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                     }
                 }
             }
+            vm.getRowHeight = function(){
+                console.log(this.rows[0].offsetHeight)
+            }
             //得到可视区某一个格子的显示隐藏情况
             vm.getCellToggle = function(name) {
                 for (var i = 0, el; el = vm.columns[i++]; ) {
@@ -195,7 +231,10 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         //表头的格子的高
         headerHeight: 35,
         rowHeight: 35,
+        _rowHeight: 35,//实际行高,包含border什么的
         columnWidth: 160,
+        edge: 15,
+        perPage: "", //默认不分页,
         pageable: false,
         gridWrapperElement: {},
         syncTheadColumnsOrder: true,
@@ -225,7 +264,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                 el.align = el.align || "" //赋给align属性,表示是对齐方向 left, right, center
                 el.localSort = typeof el.localSort === "function" ? el.localSort : false//当前列的排序函数
                 makeBool(el, "sortable", true)//能否排序
-                makeBool(el, "resizable", false)//能否排序
+                makeBool(el, "resizable", false)//能否改变列宽
                 makeBool(el, "sortAsc", true)//排序方向
                 makeBool(el, "toggle", true)//是否显示当前列
                 makeBool(el, "disabledToggle")//禁止改变当前列的显示状态
@@ -234,6 +273,17 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             }
             return ret
         }
+    }
+    //得到移动的方向
+    function getDirection(e, target, data) {
+        var dir = "";
+        var offset = target.offset();
+        var width = target[0].offsetWidth;
+        var edge = data.edge;
+        if (e.pageX < offset.left + width && e.pageX > offset.left + width - edge) {
+            dir = "e";
+        }
+        return dir === "e" ? dir : ""
     }
     function makeBool(el, prop, val) {
         val = !!val

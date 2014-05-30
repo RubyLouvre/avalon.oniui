@@ -1,4 +1,4 @@
-@import "../avalon.clrfix.scss";
+@import "../themes/default.scss";
 $pf : ".ui-switch";
 
 #{$pf} {
@@ -8,7 +8,6 @@ $pf : ".ui-switch";
 	overflow: hidden;
 	text-align: center;
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    border: 1px solid #ccc;
 
     & label, & span{
 		cursor: pointer;

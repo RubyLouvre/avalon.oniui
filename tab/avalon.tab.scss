@@ -1,41 +1,21 @@
-@import "../avalon.clrfix.scss";
+@import "../themes/default.scss";
 $pf : ".ui-tab";
 $pf2 : ".ui-state";
 
-
-/*dir=h, normal size, auto width*/
-#{$pf2} {
-	&-default{
-	    background-color: #f8f8f8;
-	    font-size:12px;
-	    float: left;
-	    display: inline;
-	    list-style: none;
-	    padding: 10px 20px;
-	    position: relative;
-	    border: 1px solid #ccc;
-	    border-right-width: 0;
-	    text-align: center;
-	}
-	&-default, &-default a{
-	    color: #333;
-	    text-decoration: none;;
-	}
-	&-hover{
-	    background: #fff;
-	}
-	&-disabled, #{$pf}-click &-disabled{
-	    color: #aaa;
-	    a {
-	    	color: #aaa;
-	    }
-	}
-	&-disabled a{
-	    cursor: default;
-	}
+#{$pf2}-default{
+    font-size:12px;
+    float: left;
+    display: inline;
+    list-style: none;
+    padding: 10px 20px;
+    position: relative;
+    border-right-width: 0;
+    text-align: center;
+}
+#{$pf2}-active {
+	border-bottom-color: #fff;
 }
 #{$pf} {
-	zoom: 1;
 	&-last{
 	    border-right-width:1px; 
 	}
@@ -44,10 +24,6 @@ $pf2 : ".ui-state";
 	}
 	&-removable{
 	    padding-right: 30px;
-	}
-	&-active{
-	    background: #fff;
-	    border-bottom-color: #fff;
 	}
 	&-close{
 	    position: absolute;
@@ -60,10 +36,6 @@ $pf2 : ".ui-state";
 	    border: 1px solid #f8f8f8;
 	    border-right-width:0; 
 	    color: #666;
-	}
-	#{$pf2}-disabled, &-click #{$pf2}-disabled{
-	    background-color: #fafafa;
-	    cursor: default;
 	}
 	#{$pf2}-hover,#{$pf2}-active{
 	    #{$pf}-close{
@@ -84,7 +56,7 @@ $pf2 : ".ui-state";
 		    z-index: 1;
 		    padding: 7px 10px;
 		}
-		#{pf}-active{
+		#{$pf2}-active{
 		    border-color: #3775C0;
 		    z-index: 10;
 		}
@@ -98,7 +70,7 @@ $pf2 : ".ui-state";
 		    border-right-width: 1px;
 		    border-bottom-width: 0;
 		}
-		#{$pf}-active{
+		#{$pf2}-active{
 		    border-right-color: #fff;
 		    border-bottom-color: #dedede;
 		}

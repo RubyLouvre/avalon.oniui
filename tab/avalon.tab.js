@@ -104,7 +104,7 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
 
                 
                 avalon.nextTick(function() {
-                    avalon(element).addClass("ui-tab ui-widget" + (vm.event == 'click' ? " ui-tab-click" : "") + (vm.dir == 'v' ? " ui-tab-vertical" : "") + (vm.dir != "v" && vm.uiSize == "small" ? " ui-tab-small" : ""))
+                    avalon(element).addClass("ui-tab ui-widget ui-widget-content" + (vm.event == 'click' ? " ui-tab-click" : "") + (vm.dir == 'v' ? " ui-tab-vertical" : "") + (vm.dir != "v" && vm.uiSize == "small" ? " ui-tab-small" : ""))
                     // tab列表
                     var tabFrag = _getTemplate(vm.$getTemplate(0, vm), vm)
                         , panelFrag = _getTemplate(vm.$getTemplate("panel", vm), vm)

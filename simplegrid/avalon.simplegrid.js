@@ -25,7 +25,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             styleEl.appendChild(document.createTextNode(cssText))
         }
     }
-    var restoreUserSelect = function() {
+    var redataSourceUserSelect = function() {
         try {
             styleEl.innerHTML = ""
         } catch (e) {
@@ -55,11 +55,11 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         options.columns = options.getColumns(options.columns, options)
         //抽取要显示的数据(因为可能存在分页,不用全部显示,那么我们只将要显示的
         //那一部分转换为监控数组就行,这样能大大提高性能)
-        options._store = options.getStore(options.store, options)
+        options._dataSource = options.getStore(options.dataSource, options)
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
         //决定每页的行数(分页与滚动模式下都要用到它)
-        options.perPages = options.perPages || options.store.length
+        options.perPages = options.perPages || options.dataSource.length
         //每页真实要显示的行数
         options.showRows = options.showRows || options.perPages
 
@@ -97,7 +97,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
 
             avalon.mix(vm, options)
 
-            vm.$skipArray = ["widgetElement", "tableElement", "wrapperElement", "store", "template"]
+            vm.$skipArray = ["widgetElement", "tableElement", "wrapperElement", "dataSource", "template"]
             vm.widgetElement = element
 
 
@@ -187,17 +187,17 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                 if (typeof opts.remoteSort === "function" && !remptyfn.test(opts.remoteSort)) {
                     //如果指定了回调函数,通过服务器端进行排数,那么能回调传入当前字段,状态,VM本身及callback
                     function callback() {
-                        vmodel._store = opts.getStore(opts.store, opts)
+                        vmodel._dataSource = opts.getStore(opts.dataSource, opts)
                     }
                     vmodel.remoteSort(field, trend, opts, callback)
                 } else if (typeof el.localSort === "function" && !remptyfn.test(el.localSort)) {// !isEmptyFn(el.localSort)
                     //如果要在本地排序,并且指定排数函数
-                    vmodel._store.sort(function(a, b) {
+                    vmodel._dataSource.sort(function(a, b) {
                         return trend * el.localSort(a, b, field, opts)
                     })
                 } else {
                     //否则默认处理
-                    vmodel._store.sort(function(a, b) {
+                    vmodel._dataSource.sort(function(a, b) {
                         return trend * (a[field] - b[field])
                     })
                 }
@@ -269,7 +269,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                     el = {
                         field: el
                     }
-                }//field用于关联store中的字段
+                }//field用于关联dataSource中的字段
                 el.text = el.text || el.field//真正在表格里显示的内容
                 el.title = options.getColumnTitle(el)//当前当元素格的title属性
                 el.width = el.width || options.columnWidth//指定宽度,可以是百分比

@@ -10,7 +10,13 @@
             body{
                 padding-bottom: 400px;
             }
+            a{
+                font-size: 13px;
+                margin-left: 20px;
+                display: inline-block;
+            }
         </style>
+        <link type="text/css" rel="stylesheet" href="avalon.tooltip.css">
         <script>
             var str = '';
             while(str.length < 40) {
@@ -34,87 +40,29 @@
             })
         </script>
     </head>
-    <body ms-controller="test">
+    <body class="reset" ms-controller="test">
         <h1>tooltip</h1>
-        <div ms-widget="tooltip,jj, $jjOpt" data-tooltip-delegate="true">
-            <a href="xx" title="xxx">xx</a><br>
-            <a href="xx" title="yyy">yy</a><br>
-            <a href="xx" title="zzz">zz</a><br>
-            <a href="xx" title="aaa">aa</a><br>
+        <div ms-widget="tooltip,jj, $jjOpt" data-tooltip-delegate="true" data-tooltip-position="tr">
+            <a href="xx" title="xxx">xxxxxxxxxxxxxx</a><br>
+            <a href="xx" title="yyy">yyxxxxxxxxxxxxxxxx</a><br>
+            <a href="xx" title="zzz">zzxxxxxxxxxxxx</a><br>
+            <a href="xx" title="aaa">aaxxxxxxxxxxxxxxxx</a><br>
         </div>
         <p>----------------------------------------</p>
-        <div class="reset" style="width:300px;border:1px solid #ccc;line-height:300px;" ms-widget="tooltip,cc, $ccOpt" data-tooltip-delegate="false">这个没有代理了</div>
+        <div class="reset" style="width:300px;border:1px solid #ccc;line-height:300px;margin:0 auto;" ms-widget="tooltip,cc, $ccOpt" data-tooltip-delegate="false" data-tooltip-event="click" data-tooltip-autohide="false" data-tooltip-position="tr">这个没有代理了</div>
         <p>----------------------------------------</p>
-        <div ms-widget="tooltip" data-tooltip-delegate="true">
-            <a href="xx" title="xxx">xx</a><br>
-            <a href="xx" title="yyy">yy</a><br>
-            <a href="xx" title="zzz">zz</a><br>
-            <a href="xx" title="aaa">aa</a><br>
-            <a href="xx" title="zzz">zz</a><br>
-            <a href="xx" title="aaa">aa</a><br>
-            <a href="xx" title="zzz">zz</a><br>
-            <a href="xx" title="aaa">aa</a><br>
+        <div class="reset" style="width:300px;border:1px solid #ccc;line-height:300px;margin:0 auto;" ms-widget="tooltip,ccc, $ccOpt" data-tooltip-delegate="false" data-tooltip-event="click" data-tooltip-autohide="false" data-tooltip-position="bl">这个没有代理了</div>
+        <p>----------------------------------------</p>
+        <div class="reset" style="width:300px;border:1px solid #ccc;line-height:300px;margin:0 auto;" ms-widget="tooltip,dd, $ccOpt" data-tooltip-delegate="false" data-tooltip-event="click" data-tooltip-autohide="false" data-tooltip-position="lt">这个没有代理了</div>
+        <p>----------------------------------------</p>
+        <div class="reset" style="width:300px;border:1px solid #ccc;line-height:300px;margin:0 auto;" ms-widget="tooltip,ee, $ccOpt" data-tooltip-delegate="false" data-tooltip-event="click" data-tooltip-autohide="false" data-tooltip-position="rb">这个没有代理了</div>
+        <p>----------------------------------------</p>
+        <div class="reset" style="width:300px;border:1px solid #ccc;line-height:300px;margin:0 auto;" ms-widget="tooltip,ff, $ccOpt" data-tooltip-delegate="false" data-tooltip-event="click" data-tooltip-autohide="false" data-tooltip-position-my="left bottom-10" data-tooltip-position-at="left top">这个没有代理了</div>
+        <p>----------------------------------------</p>
+        <div ms-widget="tooltip" data-tooltip-delegate="true" data-tooltip-position="tr">
+            <a href="xx" title="xxx">xxxxxxxxxxxxxxxxxxxx</a><br>
         </div>
-        <pre class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;title&gt;tooltip组件&lt;/title&gt;
-        &lt;meta charset=&quot;UTF-8&quot;&gt;
-        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
-        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
-        
-        &lt;style type=&quot;text/css&quot;&gt;
-            body{
-                padding-bottom: 400px;
-            }
-        &lt;/style&gt;
-        &lt;script&gt;
-            var str = '';
-            while(str.length &lt; 40) {
-                str += '你好'
-            }
-            require([&quot;tooltip/avalon.tooltip&quot;], function() {
-                avalon.define(&quot;test&quot;, function(vm) {
-                    vm.$jjOpt = {
-                        &quot;contentGetter&quot;: function(elem) {
-                            if(elem.tagName.toLowerCase() == 'a') return str 
-                        }
-                    }
-                    vm.$ccOpt = {
-                        &quot;contentGetter&quot;: function(elem) {
-                            if(elem.tagName.toLowerCase() == 'div') return str 
-                        }
-                    }
-                    vm.$skipArray = [&quot;tooltip&quot;]
-                })
-                avalon.scan()
-            })
-        &lt;/script&gt;
-    &lt;/head&gt;
-    &lt;body ms-controller=&quot;test&quot;&gt;
-        &lt;h1&gt;tooltip&lt;/h1&gt;
-        &lt;div ms-widget=&quot;tooltip,jj, $jjOpt&quot; data-tooltip-delegate=&quot;true&quot;&gt;
-            &lt;a href=&quot;xx&quot; title=&quot;xxx&quot;&gt;xx&lt;/a&gt;&lt;br&gt;
-            &lt;a href=&quot;xx&quot; title=&quot;yyy&quot;&gt;yy&lt;/a&gt;&lt;br&gt;
-            &lt;a href=&quot;xx&quot; title=&quot;zzz&quot;&gt;zz&lt;/a&gt;&lt;br&gt;
-            &lt;a href=&quot;xx&quot; title=&quot;aaa&quot;&gt;aa&lt;/a&gt;&lt;br&gt;
-        &lt;/div&gt;
-        &lt;p&gt;----------------------------------------&lt;/p&gt;
-        &lt;div class=&quot;reset&quot; style=&quot;width:300px;border:1px solid #ccc;line-height:300px;&quot; ms-widget=&quot;tooltip,cc, $ccOpt&quot; data-tooltip-delegate=&quot;false&quot;&gt;这个没有代理了&lt;/div&gt;
-        &lt;p&gt;----------------------------------------&lt;/p&gt;
-        &lt;div ms-widget=&quot;tooltip&quot; data-tooltip-delegate=&quot;true&quot;&gt;
-            &lt;a href=&quot;xx&quot; title=&quot;xxx&quot;&gt;xx&lt;/a&gt;&lt;br&gt;
-            &lt;a href=&quot;xx&quot; title=&quot;yyy&quot;&gt;yy&lt;/a&gt;&lt;br&gt;
-            &lt;a href=&quot;xx&quot; title=&quot;zzz&quot;&gt;zz&lt;/a&gt;&lt;br&gt;
-            &lt;a href=&quot;xx&quot; title=&quot;aaa&quot;&gt;aa&lt;/a&gt;&lt;br&gt;
-            &lt;a href=&quot;xx&quot; title=&quot;zzz&quot;&gt;zz&lt;/a&gt;&lt;br&gt;
-            &lt;a href=&quot;xx&quot; title=&quot;aaa&quot;&gt;aa&lt;/a&gt;&lt;br&gt;
-            &lt;a href=&quot;xx&quot; title=&quot;zzz&quot;&gt;zz&lt;/a&gt;&lt;br&gt;
-            &lt;a href=&quot;xx&quot; title=&quot;aaa&quot;&gt;aa&lt;/a&gt;&lt;br&gt;
-        &lt;/div&gt;
-        
-    &lt;/body&gt;
-&lt;/html&gt;
-</pre>
+        <pre class="brush:html;gutter:false;toolbar:false">&lt;
+        </pre>
     </body>
 </html>

@@ -396,7 +396,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
  http://ued.taobao.org/blog/2013/03/modular-scalable-kissy/
  
  http://gist.corp.qunar.com/jifeng.yao/gist/demos/pager/pager.html
- 
+ //http://www.datatables.net/
  各种UI的比例
  http://www.cnblogs.com/xuanye/archive/2009/11/04/1596244.html
  jQueryUI theme体系调研 http://hi.baidu.com/ivugogo/item/605795f7a5c27a1ea62988e4?qq-pf-to=pcqq.discussion

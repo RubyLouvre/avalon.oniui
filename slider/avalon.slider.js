@@ -116,8 +116,7 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html"], function(
                     var val = keyVal
                 } else {
                     var prop = isHorizontal ? "left" : "top"
-                    var pixelMouse = data[prop]
-                    console.log("pixelMouse is : "+pixelMouse)
+                    var pixelMouse = data[prop] + parseFloat(data.$element.css("border-top-width"))
                     //如果是垂直时,往上拖,值就越大
                     var percent = (pixelMouse / model.$pixelTotal) //求出当前handler在slider的位置
                     if (!isHorizontal) { // 垂直滑块，往上拖动时pixelMouse变小，下面才是真正的percent，所以需要调整percent
@@ -172,7 +171,6 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html"], function(
                 slider.parentNode.removeChild(slider);
             }
         })
-        window.Handlers = Handlers;
         return model
     }
     widget.defaults = {

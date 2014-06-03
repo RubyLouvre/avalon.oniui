@@ -1,0 +1,47 @@
+@import "../avalon.clrfix.scss";
+$pf : ".ui-progressbar";
+
+#{$pf}{
+	width: 100%;
+	position: relative;
+	height: 24px;
+	border:1px solid #aaa;
+	background-color: #fff;
+	font-family: Verdana,Arial,sans-serif;
+	color: #222;
+	line-height: 24px;
+	// means #{$pr}-bar
+	&-bar{
+		z-index: 1;
+		position: relative;
+		background-color: #ccc;
+		height: 100%;
+		width: 0;
+		float: left;
+		display: inline;
+		transition: all .5s;
+	}
+	&-bar-right {
+		background: #ddd;
+		#{$pf}-label {
+			color : blue;
+		}
+	}
+	&-right{
+		background-color: #333;
+	}
+	&-overlay{
+		width: 100%;
+		background-color: #ddd;
+		position: relative;
+		z-index: 1;
+		height: 100%;
+	}
+	&-label{
+		position: absolute;
+		left:50%;
+		height: 100%;
+		z-index: 10;
+		margin: 0 auto;
+	}
+}

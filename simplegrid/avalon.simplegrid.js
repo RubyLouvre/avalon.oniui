@@ -58,11 +58,11 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         options._store = options.getStore(options.store, options)
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
-        //决定每页的行数
-        options.perPage = options.pageable ? options.perPage : options.store.length
-        if (typeof options.perPage !== "number") {
-            options.perPage = options.store.length
-        }
+        //决定每页的行数(分页与滚动模式下都要用到它)
+        options.perPages = options.perPages || options.store.length
+        //每页真实要显示的行数
+        options.showRows = options.showRows || options.perPages
+
         //如果没有指定各列的出现顺序,那么将按用户定义时的顺序输出
 
 
@@ -210,8 +210,18 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                     }
                 }
             }
-            vm.getRowHeight = function(){
-                console.log(this.rows[0].offsetHeight)
+            vm.getRowHeight = function() {
+                vm._rowHeight = this.rows[0].offsetHeight
+                vm.tbodyHeight = vm._rowHeight * vm.showRows + avalon.css(this.parentNode,"borderTopWidth", true) * 3
+                vm.tbodyScrollHeight = vm._rowHeight * vm.perPages
+                if(vm.showRows !==  vm.perPages){
+                    var target = this
+                    while(target.className.indexOf("ui-grid-tbody-wrapper") === -1){
+                        target = target.parentNode
+                    }
+                    target.style.overflowY = "scroll"
+                }
+
             }
             //得到可视区某一个格子的显示隐藏情况
             vm.getCellToggle = function(name) {
@@ -231,7 +241,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         //表头的格子的高
         headerHeight: 35,
         rowHeight: 35,
-        _rowHeight: 35,//实际行高,包含border什么的
+        _rowHeight: 35, //实际行高,包含border什么的
         columnWidth: 160,
         edge: 15,
         perPage: "", //默认不分页,
@@ -242,6 +252,9 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         getColumnTitle: function() {
             return ""
         },
+        tbodyScrollHeight: "auto",
+        tbodyScrollTop: 0,
+        tbodyHeight: "auto",
         getTemplate: function(tmpl, options) {
             return tmpl
         },
@@ -310,5 +323,9 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
  http://ued.taobao.org/blog/2013/03/modular-scalable-kissy/
  
  http://gist.corp.qunar.com/jifeng.yao/gist/demos/pager/pager.html
+ 
+ 各种UI的比例
+ http://www.cnblogs.com/xuanye/archive/2009/11/04/1596244.html
+ jQueryUI theme体系调研 http://hi.baidu.com/ivugogo/item/605795f7a5c27a1ea62988e4?qq-pf-to=pcqq.discussion
  */
 

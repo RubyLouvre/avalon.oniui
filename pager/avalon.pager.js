@@ -84,6 +84,7 @@ define(["avalon", "text!./avalon.pager.html"], function(avalon, tmpl) {
                 if (e.type === "keyup" && e.keyCode !== 13)
                     return
                 vmodel.currentPage = vmodel._currentPage
+                vmodel.pages = getPages(vmodel)
             }
             vm.pages = []
             vm.getPages = getPages

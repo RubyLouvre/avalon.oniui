@@ -1,7 +1,7 @@
 body {
-    background: none repeat scroll 0 0 #252525;
-    color: #F0E7D5;
-    font: 14px/1.5 "OpenSansRegular","Helvetica Neue",Helvetica,Arial,sans-serif;
+    /*background: none repeat scroll 0 0 #252525;*/
+    /*color: #F0E7D5;*/
+    font: 14px/1.5 "微软雅黑","OpenSansRegular","Helvetica Neue",Helvetica,Arial,sans-serif;
     margin: 0;
     padding: 0 0 100px;
     text-align: center;
@@ -24,24 +24,38 @@ th {
     font-weight: bold;
     font-size: 1.4em;
 }
+td {
+    padding: 10px; 
+}
 .pad30 {
     padding: 30px;   
 }
 a {
-    color: #FFCC00;
+    color: #000;
     font-weight: 400;
     text-decoration: none;
+    font-size: 16px;
+    line-height: 30px;
+    display: inline-block;
 }
+
 a:hover {
-    color: #FFEB9B;
+    color: blue;
 }
 table caption {
-    color: #FFCC00;
+    color: #FF0000;
     text-align: left;
     line-height: 40px;
+    font-size: 16px;
 }
 p {
     line-height: 30px;
+    font-size: 16px;
+}
+.demo {
+    color:#f00; 
+    font-weight: bold;
+    font-size: 20px;
 }
 .wrapper {
     margin: 0 auto;
@@ -49,10 +63,6 @@ p {
     position: relative;
     width: 760px;
     text-align: left;
-}
-.example {
-    color: orange;
-    font-weight: bold;
 }
 .statement {
     color: green;

@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>avalon类似新浪微博的@提示插件</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width">
+        <title>grid文档</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
         <script src="../highlight/shCore.js">
-
         </script>
     </head>
     <body>
-        
-       有两个重要的数据项,一个是columns ,用于配置表头的每一列的具体规格， 一个是store，用于配置tbody里的每一行的内容
+
+        <p>有两个重要的数据项,一个是columns ,用于配置表头的每一列的具体规格， 一个是data，用于配置tbody里的每一行的内容</p>
 
         <h3> columns对象数组里面的各个对象的匹置项</h3>
         <table width="80%" border="1">
@@ -46,11 +45,23 @@
             </tr>
 
         </table>
-        <p>$update是一个非常重要的配置项，用于与后端同步数据，下面是</p>
-        <pre class="brush:js;gutter:false;toolbar:false;">
-           vm.simplegrid = {
+        <p><b style="color:orangered">data</b>是当前页的所有数据。
+            如果存在分页，默认是第一页。当我们点击分页栏的下一页或其他页时，就会ajax请求数据，
+            重写data。此属性在vm里是<b style="color:green">不可监控的</b>，
+            只是用来克隆其中一部分到_data。这个data你也可以看作是<b style="color:goldenrod">pageData</b>。 </p>
+        <p> <b style="color:orangered">_data</b>是当前页的显示出来的数据，
+            如果出现滚动条就是可视区那一部分的TR元素上附加的数据。
+            此属性在vm里是<b style="color:green">可监控的</b>，但不建议用户修改它，
+            应该交给框架自行处理。这个_data你也可以看作是<b style="color:goldenrod">rowsData</b>。 </p>
 
-          }
+        <pre class="brush:js;gutter:false;toolbar:false;">
+
         </pre>
+        <ul>
+            <li><a href="avalon.simplegrid.ex1.html">只有columns与dataSource</li>
+            <li><a href="avalon.simplegrid.ex2.html">指定类名、align与columnsOrder</li>
+            <li><a href="avalon.simplegrid.ex3.html">指定列宽</li>
+            <li><a href="avalon.simplegrid.ex4.html">表头拖动改变列宽</li>
+        </ul>
     </body>
 </html>

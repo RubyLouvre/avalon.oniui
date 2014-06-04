@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
-<title>cboxpicker demo</title>
+<title>checkboxlist demo</title>
 <!-- <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
 <link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
 <script src="../highlight/shCore.js"></script> -->
@@ -13,7 +13,7 @@
 
     <fieldset>
         <legend>普通绑定</legend>
-        <ul ms-widget="cboxpicker" data-cboxpicker-select="selectCallback" data-cboxpicker-duplex="val" data-cboxpicker-alltext="全部">
+        <ul ms-widget="checkboxlist" data-checkboxlist-select="selectCallback" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部">
             <li><input type="checkbox" value="1">选项一</li>
             <li><input type="checkbox" value="2">选项二</li>
             <li><input type="checkbox" value="3">选项三</li>
@@ -24,14 +24,14 @@
 
     <fieldset>
         <legend>内置类型：周</legend>
-        <ul ms-widget="cboxpicker" data-cboxpicker-duplex="val2" data-cboxpicker-type="week" data-cboxpicker-alltext="全部"></ul>
+        <ul ms-widget="checkboxlist" data-checkboxlist-duplex="val2" data-checkboxlist-type="week" data-checkboxlist-alltext="全部"></ul>
     </fieldset>
 
     {{ val2 }}
 
     <fieldset>
         <legend>异步加载选项</legend>
-        <ul ms-widget="cboxpicker" data-cboxpicker-fetch="get_options" data-cboxpicker-duplex="val3" data-cboxpicker-alltext="全部内容">
+        <ul ms-widget="checkboxlist" data-checkboxlist-fetch="get_options" data-checkboxlist-duplex="val3" data-checkboxlist-alltext="全部内容">
             <li><input type="checkbox" /></li>
         </ul>
     </fieldset>
@@ -40,7 +40,7 @@
 
 
     <script>
-        require("./cboxpicker/avalon.cboxpicker", function(avalon) {
+        require("./checkboxlist/avalon.checkboxlist", function(avalon) {
             var sss = avalon.define('demo',function(vm){
                 vm.val = ["1", "2"];
                 vm.val2 = ['TUESDAY'];

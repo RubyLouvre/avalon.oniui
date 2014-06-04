@@ -77,7 +77,6 @@ define(["avalon"], function(avalon) {
                 marginLeft: parseFloat($element.css("marginLeft")) || 0,
                 marginTop: parseFloat($element.css("marginTop")) || 0
             })
-
             data.startPageX = data.pageX//一次拖放只赋值一次
             data.startPageY = data.pageY//一次拖放只赋值一次
             options.axis.replace(/./g, function(a) {
@@ -143,7 +142,7 @@ define(["avalon"], function(avalon) {
             data.endTop = parseFloat($element.css("top")) - data.startTop
 
             data.clickX = data.pageX - startOffset.left //鼠标点击的位置与目标元素左上角的距离
-            data.clickY = data.pageY - startOffset.top //鼠标点击的位置与目标元素左上角的距离
+            data.clickY = data.pageY - startOffset.top  //鼠标点击的位置与目标元素左上角的距离
             setContainment(options, data)//修正containment
             draggable.dragData = data//决定有东西在拖动
             "start,drag,beforeStop,stop".replace(avalon.rword, function(name) {
@@ -222,9 +221,11 @@ define(["avalon"], function(avalon) {
 
         var number = data["start" + Prop] + page - data["startPage" + pos] + (end ? data["end" + Prop] : 0)
         data[prop] = number
+
         if (data["drag" + pos]) {//保存top, left
             element.style[ prop ] = number + "px"
         }
+
     }
 
     var styleEl = document.createElement("style")
@@ -355,18 +356,15 @@ define(["avalon"], function(avalon) {
                 elem = document.getElementById(o.containment.slice(1))
             }
             if (elem) {
-                var $offset = avalon(elem).offset()
-
+                var $offset = avalon(elem).offset() 
                 data.containment = [
-                    $offset.left,
-                    $offset.top,
-                    Math.floor($offset.left + elem.offsetWidth - data.marginLeft - elemWidth),
-                    Math.floor($offset.top + elem.offsetHeight - data.marginTop - elemHeight)
+                    $offset.left+data.marginLeft, //如果元素设置了marginLeft，设置左边界时需要考虑它 
+                    $offset.top+data.marginTop,
+                    $offset.left + elem.offsetWidth - data.marginLeft - elemWidth,
+                    $offset.top + elem.offsetHeight - data.marginTop - elemHeight
                 ]
-
             }
         }
     }
-
     return avalon
 })

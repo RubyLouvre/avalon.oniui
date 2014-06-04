@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>cboxpicker test</title>
+        <title>checkboxlist test</title>
         <link type="text/css" rel="stylesheet" charset="utf-8" href="../mocha/mocha.css" />
         <script src="../avalon.js"></script>
         <script src="../mocha/mocha.js"></script>
@@ -21,7 +21,7 @@
             (function() {
                 mocha.ui('bdd')
                 mocha.setup({timeout: 100000})
-                require(["ready!", "cboxpicker/avalon.cboxpicker"], function() {
+                require(["ready!", "checkboxlist/avalon.checkboxlist"], function() {
                     function getElementNode(elem) {
                         while(elem) {
                             if (elem.nodeType === 1) {
@@ -35,10 +35,10 @@
 
                     var testWrapper = document.getElementById("testWrapper");
                   
-                    describe("测试cboxpicker组件基本功能", function() {
+                    describe("测试checkboxlist组件基本功能", function() {
                         var ul, ulElement, liElements;
                         beforeEach(function() {
-                            ul = '<ul ms-widget="cboxpicker">'+
+                            ul = '<ul ms-widget="checkboxlist">'+
                                 '<li><input type="checkbox" value="1">选项一</li>'+
                                 '<li><input type="checkbox" value="2">选项二</li>'+
                                 '<li><input type="checkbox" value="3">选项三</li></ul>';
@@ -66,7 +66,7 @@
                         }) 
 
                         it("配置alltext为空将不会显示“全部”选项", function(done) {
-                            ulElement.setAttribute("data-cboxpicker-alltext", "");
+                            ulElement.setAttribute("data-checkboxlist-alltext", "");
                             var model = avalon.define("test", function(vm) {
 
                             });
@@ -80,8 +80,8 @@
                             },400)
                         })
 
-                        it("设置data-cboxpicker-duplex='val'通过val值改变各选项框的选中状态", function(done) {
-                            ulElement.setAttribute("data-cboxpicker-duplex", "val");
+                        it("设置data-checkboxlist-duplex='val'通过val值改变各选项框的选中状态", function(done) {
+                            ulElement.setAttribute("data-checkboxlist-duplex", "val");
                             var model = avalon.define("test", function(vm) {
                                 vm.val = ["1", "2"];
                             })
@@ -110,8 +110,8 @@
                         })
                         
                         it("配置select进行选框状态切换的回调操作", function(done) {
-                            ulElement.setAttribute("data-cboxpicker-duplex", "val");
-                            ulElement.setAttribute("data-cboxpicker-select", "onselect");
+                            ulElement.setAttribute("data-checkboxlist-duplex", "val");
+                            ulElement.setAttribute("data-checkboxlist-select", "onselect");
                             var model = avalon.define("test", function(vm) {
                                 vm.val = ["1","2","3"];
                                 vm.selectElement = "";
@@ -144,12 +144,12 @@
 
                     });
 
-                    describe("测试cboxpicker的type配置", function() {
+                    describe("测试checkboxlist的type配置", function() {
                         var ul , ulElement;
                         beforeEach(function() {
-                            ul = '<ul ms-widget="cboxpicker" '+
-                                'data-cboxpicker-type="week" '+
-                                'data-cboxpicker-duplex="val"></ul>';
+                            ul = '<ul ms-widget="checkboxlist" '+
+                                'data-checkboxlist-type="week" '+
+                                'data-checkboxlist-duplex="val"></ul>';
                             testWrapper.innerHTML = ul;
                             ulElement = testWrapper.getElementsByTagName("ul")[0];
                         })
@@ -174,12 +174,12 @@
                             }, 400);
                         })
                     })
-                    describe("测试cboxpicker的fetch配置，通过它来取得渲染选项", function() {
+                    describe("测试checkboxlist的fetch配置，通过它来取得渲染选项", function() {
                         var ul, ulElement;
                         beforeEach(function() {
-                            ul = '<ul ms-widget="cboxpicker" '+
-                                'data-cboxpicker-fetch="get_options" '+
-                                'data-cboxpicker-duplex="val"></ul>';
+                            ul = '<ul ms-widget="checkboxlist" '+
+                                'data-checkboxlist-fetch="get_options" '+
+                                'data-checkboxlist-duplex="val"></ul>';
                             testWrapper.innerHTML = ul;
                             ulElement = testWrapper.getElementsByTagName("ul")[0];
                         })

@@ -9,17 +9,22 @@ define(["avalon.getModel", "text!./avalon.suggest.html"], function(avalon, sourc
         styleEl.styleSheet.cssText += cssText ;
     }
     var widget = avalon.ui.suggest = function(element, data, vmodels) {
+
         var $element = avalon(element),
             options = data.suggestOptions ,
-            suggestHtml = avalon.parseHTML(parseHtmlStruction[0]).firstChild ;
+            suggestHtml = avalon.parseHTML(parseHtmlStruction[0]).firstChild ,
+            dataValue = data.value.split(","),
+            suggestOptions = !dataValue[2] ? 0 : avalon.getModel( dataValue[2] , vmodels ) || 0;
+
+        suggestOptions = !!options.notpuresuggest ? suggestOptions[1][suggestOptions[0]] : 0;
+        if(suggestOptions) {
+            avalon.mix(options, suggestOptions);
+        }
         /**
-         * 如果options.inputelement不为空，说明此suggest组件是独立的，
-         * inputelement是通过data-suggest-inputElement(
-         * 注意不管是inputElement还是inputelement，
-         * avalon都会自动转为inputelement)配置的
-         * 与textbox组件无关，而字符串是要进行自动补全的输入域节点对应的id 
+         * 如果options.notpuresuggest为true说明是与textbox组件结合的，
+         * 否则与textbox组件无关，options.inputElement就是进行自动补全的输入域节点对应的id 
          */
-        options.inputElement = !!options.inputelement ? document.getElementById(options.inputelement) : options.inputElement;
+        options.inputElement = !!options.notpuresuggest ? options.inputElement : document.getElementById(options.inputElement);
         /**
          * 如果options.textboxContainer为空，说明此suggest组件是独立的，
          * 与textbox组件无关，下面将通过输入框的位置、大小来
@@ -28,6 +33,7 @@ define(["avalon.getModel", "text!./avalon.suggest.html"], function(avalon, sourc
         options.textboxContainer = options.textboxContainer == "" ? options.inputElement : options.textboxContainer;
         var vmodel = avalon.define(data.suggestId, function(vm) {
             avalon.mix(vm, options);
+            vm.$skipArray = ["widgetElement", "puresuggest"];
             vm.widgetElement = element;
             vm.searchText = "";
             vm.list = [{text: "sss"}];
@@ -97,7 +103,6 @@ define(["avalon.getModel", "text!./avalon.suggest.html"], function(avalon, sourc
             };
             vm.$init = function() {
                 avalon.bind(options.inputElement, "keyup", function(event) {
-                    console.log("suggest 里的 keyup");
                     switch( event.which ) {
                         case 9:
                             if (!vmodel.toggle) return ;

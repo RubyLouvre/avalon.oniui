@@ -13,49 +13,48 @@
     <div class="wrapper">
         <h1>textbox demo 3</h1>
         <p class="example">切换禁用组件（<span class="statement">ms-disabled来控制</span>）</p>
-        <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
-            &lt;!DOCTYPE HTML&gt;
-            &lt;html&gt;
-            &lt;head&gt;
-                &lt;meta charset='utf-8'/&gt;
-                &lt;title&gt;切换禁用组件&lt;/title&gt;
-                &lt;script src='avalon.js'&gt;&lt;/script&gt;
-            &lt;/head&gt;
-            &lt;body&gt;
-            &lt;div class="demoShow" ms-controller="demo3"&gt;
-                    &lt;form&gt;
-                        &lt;input ms-widget="textbox" ms-disabled="disable" ms-duplex="txt" type="textbox"/&gt;
-                        &lt;button ms-click="changeDis" type="button"&gt;切换禁用&lt;/button&gt;
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;切换禁用组件&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                &lt;div class="demoShow" ms-controller="demo3"&gt;
+                        &lt;form&gt;
+                            &lt;input ms-widget="textbox" ms-disabled="disable" ms-duplex="txt" type="textbox"/&gt;
+                            &lt;button ms-click="changeDis" type="button"&gt;切换禁用&lt;/button&gt;
 
-                        &lt;p&gt;输入框的值是： {{txt}}&lt;/p&gt;
-                    &lt;/form&gt;
-                &lt;/div&gt;
+                            &lt;p&gt;输入框的值是： {{txt}}&lt;/p&gt;
+                        &lt;/form&gt;
+                    &lt;/div&gt;
 
-                &lt;script&gt;
-                    require("avalon.textbox", function() {
-                        avalon.define("demo3", function(vm) {
-                            vm.txt = "点击 “切换禁用” 按钮，来切换禁用输入域";
-                            vm.disable = true;
-                            vm.changeDis = function() {
-                                vm.disable = !vm.disable;
-                            }
+                    &lt;script&gt;
+                        require("avalon.textbox", function() {
+                            avalon.define("demo3", function(vm) {
+                                vm.txt = "点击 “切换禁用” 按钮，来切换禁用输入域";
+                                vm.disable = true;
+                                vm.changeDis = function() {
+                                    vm.disable = !vm.disable;
+                                }
+                            })
+                            avalon.scan();
                         })
-                        avalon.scan();
-                    })
-                &lt;/script&gt;
-            &lt;/body&gt;
-            &lt;/html&gt;
-        </pre>
-
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
         <div class="demoShow" ms-controller="demo3">
             <form>
                 <input ms-widget="textbox" ms-disabled="disable" ms-duplex="txt" type="textbox"/>
                 <button ms-click="changeDis" type="button">切换禁用</button>
-
                 <p>输入框的值是： {{txt}}</p>
             </form>
         </div>
-
         <script>
             require("textbox/avalon.textbox", function() {
                 avalon.define("demo3", function(vm) {

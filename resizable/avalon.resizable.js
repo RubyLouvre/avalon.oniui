@@ -159,7 +159,6 @@ define(["../draggable/avalon.draggable"], function(avalon) {
 
     function refresh(event, target, data) { //刷新缩放元素
         var b = data
-        console.log(data.dir)
         if (data._aspectRatio || event.shiftKey) {
             var aspest = true,
                     pMinWidth = b.minHeight * data.aspectRatio,

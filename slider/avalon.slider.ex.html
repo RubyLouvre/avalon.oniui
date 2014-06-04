@@ -39,30 +39,24 @@
                     vm.percent = 0
                     vm.$aaaOpts = {
                         ondragstart: function(){
-                            console.log("start dragging");
-                            console.log(arguments);
+                            avalon.log("start dragging");
+                            avalon.log(arguments);
                         },
                         drag: function() {
-                            console.log("dragging");
-                            console.log(arguments);
+                            avalon.log("dragging");
+                            avalon.log(arguments);
                         },
                         dragend: function() {
-                            console.log("dragend");
-                            console.log(arguments);
+                            avalon.log("dragend");
+                            avalon.log(arguments);
                         },
                         min: 20,
                         max: 100,
                         value: 30,
                     }
                 })
-                // var id = setInterval(function() {
-                //     if (model.percent < 100) {
-                //         model.percent++
-                //     } else {
-                //         clearInterval(id)
-                //     }
-                // }, 100)
-                console.log("avalon scan");
+
+                avalon.log("avalon scan");
                 avalon.scan()
             })
         </script>

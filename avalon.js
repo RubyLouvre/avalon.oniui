@@ -1336,7 +1336,7 @@
             return cssHooks[method + ":get"](this[0], void 0, "padding-box")
         }
         avalon.fn["outer" + name] = function(includeMargin) {
-            return cssHooks[method + ":get"](this[0], void 0, includeMargin === true ? "border-box" : "margin-box")
+            return cssHooks[method + ":get"](this[0], void 0, includeMargin === true ? "margin-box": "border-box" )
         }
     })
     avalon.fn.offset = function() { //取得距离页面左右角的坐标
@@ -1344,7 +1344,7 @@
             left: 0,
             top: 0
         }
-        if (!node || node.nodeType !== 1 || !node.ownerDocument) {
+        if (!node || !node.tagName || !node.ownerDocument) {
             return box
         }
         var doc = node.ownerDocument,
@@ -3518,7 +3518,7 @@
                 }
                 proxy.$index = index
                 proxy.$outer = data.$outer
-                proxy[param] = item
+                proxy[param] = item.$model ? item.$model: item;
                 proxy.$first = index === 0
                 proxy.$last = last
                 eachPool.splice(i, 1)
@@ -3549,6 +3549,9 @@
         ["$index", "$last", "$first", proxy.$itemName].forEach(function(prop) {
             obj[prop][subscribers].length = 0
         })
+        if(proxy[proxy.$itemName][subscribers]) {
+            proxy[proxy.$itemName][subscribers].length = 0;
+        }
         if (eachPool.unshift(proxy) > kernel.maxRepeatSize) {
             eachPool.pop()
         }

@@ -274,11 +274,13 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                 var length = vmodel.data.length, count = 0
                 if (scrollDir === "down") {
                     //    console.log("下拉 " + integer + "行")
-                    while (vmodel.endIndex < length) {
+                    while (vmodel.endIndex + 1 < length) {
                         vmodel.endIndex += 1
                         vmodel.startIndex += 1
                         count += 1
                         var el = vmodel.data[vmodel.endIndex]
+                    //   console.log(el)
+                   //     console.log(vmodel.endIndex)
                         vmodel._data.push(el)
                         vmodel._data.shift()
                         if (count === integer) {

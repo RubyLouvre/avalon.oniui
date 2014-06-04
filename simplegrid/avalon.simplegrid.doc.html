@@ -9,8 +9,8 @@
         </script>
     </head>
     <body>
-        
-       有两个重要的数据项,一个是columns ,用于配置表头的每一列的具体规格， 一个是dataSource，用于配置tbody里的每一行的内容
+
+        <p>有两个重要的数据项,一个是columns ,用于配置表头的每一列的具体规格， 一个是dataSource，用于配置tbody里的每一行的内容</p>
 
         <h3> columns对象数组里面的各个对象的匹置项</h3>
         <table width="80%" border="1">
@@ -46,11 +46,17 @@
             </tr>
 
         </table>
-        <p>$update是一个非常重要的配置项，用于与后端同步数据，下面是</p>
-        <pre class="brush:js;gutter:false;toolbar:false;">
-           vm.simplegrid = {
+        <p><b style="color:orangered">dataSource</b>是当前页的所有数据。
+            如果存在分页，默认是第一页。当我们点击分页栏的下一页或其他页时，就会ajax请求数据，
+            重写dataSource。此属性在vm里是<b style="color:green">不可监控的</b>，
+            只是用来克隆其中一部分到_dataSource。这个dataSource你也可以看作是<b style="color:goldenrod">pageData</b>。 </p>
+        <p> <b style="color:orangered">_dataSource</b>是当前页的显示出来的数据，
+            如果出现滚动条就是可视区那一部分的TR元素上附加的数据。
+            此属性在vm里是<b style="color:green">可监控的</b>，但不建议用户修改它，
+            应该交给框架自笨处理。这个_dataSource你也可以看作是<b style="color:goldenrod">rowsData</b>。 </p>
 
-          }
+        <pre class="brush:js;gutter:false;toolbar:false;">
+
         </pre>
     </body>
 </html>

@@ -10,7 +10,9 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
         _widget = widgetArr[1].split("MS_OPTION_INNERWRAPPER")[0], // 动态添加dialog时,添加组件的html(string)
         dialogShows = [], // 存在层上层时由此数组判断层的个数，据此做相应的处理
         dialogNum = 0, // 保存页面dialog的数量，当dialogNum为0时，清除maskLayer
-        maxZIndex = getMaxZIndex();// 保存body直接子元素中最大的z-index值， 保证dialog在最上层显示
+        maxZIndex = getMaxZIndex(),// 保存body直接子元素中最大的z-index值， 保证dialog在最上层显示
+        isIE6 = (window.navigator.userAgent || '').toLowerCase().indexOf('msie 6') !== -1,
+        iFrame = null;
     try {
         styleEl.innerHTML += cssText;
     } catch (e) {
@@ -67,7 +69,7 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
              **/
             vm.$open = function() {//open
                 var len = 0;
-                document.body.style.overflow = "hidden";
+                !isIE6 ? document.body.style.overflow = "hidden" : 0;
                 avalon.Array.ensure(dialogShows, vm);
                 len = dialogShows.length;
                 // 通过zIndex的提升来调整遮罩层，保证层上层存在时遮罩层始终在顶层dialog下面(顶层dialog zIndex-1)但是在其他dialog上面
@@ -75,6 +77,14 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
                 maskLayer.style.zIndex = 2 * len + maxZIndex -1;
                 element.style.zIndex =  2 * len + maxZIndex;
                 resetCenter(vmodel, element);
+                if (isIE6 && document.getElementsByTagName("select").length && iFrame === null) {
+                    iFrame = createIframe();
+                } else {
+                    iFrame.style.display = "block";
+                    iFrame.style.width = maskLayer.style.width;
+                    iFrame.style.height = maskLayer.style.height;
+                    iFrame.style.zIndex = maskLayer.style.zIndex -1;
+                }
                 options.onOpen.call(vmodel)
             }
             // 隐藏dialog
@@ -83,14 +93,20 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
                 var len = dialogShows.length;
                 vmodel.toggle = false;
                 /* 处理层上层的情况，因为maskLayer公用，所以需要其以将要显示的dialog的toggle状态为准 */
+                
                 if (len && dialogShows[len-1].modal) {
                     maskLayer.setAttribute("ms-visible", "toggle");
                     avalon.scan(maskLayer, dialogShows[len - 1]);
                 } else {
-                    document.body.style.overflow = "auto";
+                    iFrame.style.display = "none";
+                    !isIE6? document.body.style.overflow = "auto" : 0;
                 }
                 // 重置maskLayer的z-index,当最上层的dialog关闭，通过降低遮罩层的z-index来显示紧邻其下的dialog
-                maskLayer.style.zIndex = 2 * len + maxZIndex - 1;
+                var layoutZIndex = 2 * len + maxZIndex - 1;
+                maskLayer.style.zIndex = layoutZIndex;
+                if (iFrame) {
+                    iFrame.style.zIndex = layoutZIndex -1;
+                }
                 // 因为在submit操作之后也调用了$close方法来关闭弹窗，但是如果用户定义了onClose方法的话是不应该触发的，因此通过submitBtnClick这个开关来判断是点击了确定按钮还是点击了"取消"或者“关闭”按钮.
                 if (vmodel.submitBtnClick) {
                     vmodel.submitBtnClick = false;
@@ -272,6 +288,11 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
             }
         }
         return maxIndex + 1;
+    }
+    function createIframe() {
+        var iframe = document.createElement('<iframe src="javascript:\'\'" style="position:absolute;top:0;left:0;bottom:0;margin:0;padding:0;right:0;zoom:1;width:'+maskLayer.style.width+';height:'+maskLayer.style.height+';z-index:'+(maskLayer.style.zIndex-1)+';"></iframe>');
+        document.body.appendChild(iframe);
+        return iframe;
     }
     return avalon;
 });

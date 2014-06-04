@@ -1,0 +1,128 @@
+.clrfix {
+  zoom: 1; }
+  .clrfix:before, .clrfix:after {
+    content: '';
+    display: block; }
+  .clrfix:after {
+    clear: both; }
+
+.reset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  line-height: 100%;
+  text-decoration: none;
+  font-size: 100%;
+  list-style: none; }
+
+/*corner css*/
+.ui-corner-all,
+.ui-corner-top,
+.ui-corner-left,
+.ui-corner-tl {
+  border-top-left-radius: 4px; }
+
+.ui-corner-all,
+.ui-corner-top,
+.ui-corner-right,
+.ui-corner-tr {
+  border-top-right-radius: 4px; }
+
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-left,
+.ui-corner-bl {
+  border-bottom-left-radius: 4px; }
+
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-right,
+.ui-corner-br {
+  border-bottom-right-radius: 4px; }
+
+/*state css*/
+.ui-state-default {
+  color: #333;
+  background-color: #f8f8f8;
+  border: 1px solid #ccc; }
+  .ui-state-default a {
+    color: #333;
+    text-decoration: none; }
+
+.ui-state-hover {
+  background: #fff; }
+  .ui-state-hover a {
+    text-decoration: none; }
+    .ui-state-hover a:hover {
+      text-decoration: none; }
+
+.ui-state-active {
+  background: #fff; }
+
+.ui-state-disabled {
+  color: #aaa;
+  cursor: default; }
+  .ui-state-disabled a {
+    color: #aaa;
+    cursor: default; }
+
+/*content*/
+.ui-state-default {
+  font-size: 12px;
+  float: left;
+  display: inline;
+  list-style: none;
+  padding: 10px 20px;
+  position: relative;
+  border-right-width: 0;
+  text-align: center; }
+
+.ui-state-active {
+  border-bottom-color: #fff; }
+
+.ui-tab {
+  /*dir=v, small size*/
+  /*dir=v, normal size*/ }
+  .ui-tab-last {
+    border-right-width: 1px; }
+  .ui-tab-click .ui-state-default {
+    cursor: pointer; }
+  .ui-tab-removable {
+    padding-right: 30px; }
+  .ui-tab-close {
+    position: absolute;
+    right: 0px;
+    top: 7px;
+    padding: 3px;
+    height: 12px;
+    width: 12px;
+    overflow: hidden;
+    border: 1px solid #f8f8f8;
+    border-right-width: 0;
+    color: #666; }
+  .ui-tab .ui-state-hover .ui-tab-close, .ui-tab .ui-state-active .ui-tab-close {
+    border-color: #fff; }
+  .ui-tab-close-hover, .ui-tab .ui-state-active .ui-tab-close-hover, .ui-tab .ui-state-hover .ui-tab-close-hover {
+    background: #fff;
+    border-color: #dedede;
+    cursor: pointer; }
+  .ui-tab-small .ui-state-default {
+    border-right-width: 1px;
+    margin-right: -1px;
+    z-index: 1;
+    padding: 7px 10px; }
+  .ui-tab-small .ui-state-active {
+    border-color: #3775C0;
+    z-index: 10; }
+  .ui-tab-vertical .ui-state-default {
+    float: none;
+    display: block;
+    text-align: left;
+    border-right-width: 1px;
+    border-bottom-width: 0; }
+  .ui-tab-vertical .ui-state-active {
+    border-right-color: #fff;
+    border-bottom-color: #dedede; }
+  .ui-tab-vertical .ui-tab-last {
+    border-bottom-width: 1px; }

@@ -13,51 +13,53 @@
     <div class="wrapper">
         <h1>checkboxlist demo 5</h1>
         <p class="example">通过配置select，可以在选中或者取消选中选框的情况下做一些后续处理，传给回调的参数分别是：选项值组成的数组（[{value:"",text:""},{value: "", text:""}]的格式）、选中(true)还是取消选中(false)的选框状态、当前点击的checkbox元素的引用（<span class="statement">data-checkboxlist-select="onselect"</span>）</p>
-        <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
-            &lt;!DOCTYPE HTML&gt;
-            &lt;html&gt;
-            &lt;head&gt;
-                &lt;meta charset='utf-8'/&gt;
-                &lt;title&gt;checkboxlist demo5（配置select回调）&lt;/title&gt;
-                &lt;script src='avalon.js'&gt;&lt;/script&gt;
-            &lt;/head&gt;
-            &lt;body&gt;
-                &lt;div class="demoShow" ms-controller="demo5"&gt;
-                    &lt;fieldset&gt;
-                        &lt;legend&gt;data-checkboxlist-select="onselect"&lt;/legend&gt;
-                        &lt;ul ms-widget="checkboxlist" data-checkboxlist-select="onselect" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部"&gt;
-                            &lt;li&gt;&lt;input type="checkbox" value="1"&gt;选项一&lt;/li&gt;
-                            &lt;li&gt;&lt;input type="checkbox" value="2"&gt;选项二&lt;/li&gt;
-                            &lt;li&gt;&lt;input type="checkbox" value="3"&gt;选项三&lt;/li&gt;
-                            &lt;li&gt;&lt;input type="checkbox" value="4"&gt;选项四&lt;/li&gt;
-                            &lt;li&gt;&lt;input type="checkbox" value="5"&gt;选项五&lt;/li&gt;
-                        &lt;/ul&gt;
-                    &lt;/fieldset&gt;
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;checkboxlist demo5（配置select回调）&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demoShow" ms-controller="demo5"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;data-checkboxlist-select="onselect"&lt;/legend&gt;
+                            &lt;ul ms-widget="checkboxlist" data-checkboxlist-select="onselect" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部"&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="1"&gt;选项一&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="2"&gt;选项二&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="3"&gt;选项三&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="4"&gt;选项四&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="5"&gt;选项五&lt;/li&gt;
+                            &lt;/ul&gt;
+                        &lt;/fieldset&gt;
 
-                    {{ val }}
-                &lt;/div&gt;
-                &lt;script&gt;
-                    require("./checkboxlist/avalon.checkboxlist", function(avalon) {
-                        var sss = avalon.define('demo5',function(vm){
-                            vm.val = ["1", "2"];
-                            vm.onselect = function() {
-                                console.log("selectCallback argumnets is: ");
-                                console.log(arguments);
-                                alert("选中了："+arguments[2].value);
-                                for (var i=0; i&lt;arguments[0].length; i++) {
-                                    var obj = arguments[0][i];
-                                    if (obj.value == arguments[2].value) {
-                                        alert(obj.text);
+                        {{ val }}
+                    &lt;/div&gt;
+                    &lt;script&gt;
+                        require("./checkboxlist/avalon.checkboxlist", function(avalon) {
+                            var sss = avalon.define('demo5',function(vm){
+                                vm.val = ["1", "2"];
+                                vm.onselect = function() {
+                                    avalon.log("selectCallback argumnets is: ");
+                                    avalon.log(arguments);
+                                    alert("选中了："+arguments[2].value);
+                                    for (var i=0; i&lt;arguments[0].length; i++) {
+                                        var obj = arguments[0][i];
+                                        if (obj.value == arguments[2].value) {
+                                            alert(obj.text);
+                                        }
                                     }
                                 }
-                            }
+                            });
+                            avalon.scan();
                         });
-                        avalon.scan();
-                    });
-                &lt;/script&gt;
-            &lt;/body&gt;
-            &lt;/html&gt;
-        </pre>
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
         <div class="demoShow" ms-controller="demo5">
             <fieldset>
                 <legend>data-checkboxlist-select="onselect"</legend>
@@ -77,8 +79,8 @@
                 var sss = avalon.define('demo5',function(vm){
                     vm.val = ["1", "2"];
                     vm.onselect = function() {
-                        console.log("selectCallback argumnets is: ");
-                        console.log(arguments);
+                        avalon.log("selectCallback argumnets is: ");
+                        avalon.log(arguments);
                         if (arguments[1]) {
                             alert("选中了："+arguments[2].value);  
                         } else {

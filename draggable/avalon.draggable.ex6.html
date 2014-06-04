@@ -15,22 +15,22 @@
                 avalon.define("test", function(vm) {
                     vm.draggable = {
                         beforeStartFn: function(e, data) {
-                            console.log(e.type + " beforeStart")
+                            avalon.log(e.type + " beforeStart")
                             data.$element.addClass("active")
                         },
                         startFn: function(e) {
-                            console.log(e.type + " start")
+                            avalon.log(e.type + " start")
                         },
                         dragFn: function(e, data) {
                             this.innerHTML = data.pageX + " " + data.pageY
-                            console.log(e.type + " drag")
+                            avalon.log(e.type + " drag")
                         },
                         beforeStopFn: function(e, data) {
-                            console.log(e.type + " beforeStop")
+                            avalon.log(e.type + " beforeStop")
                             data.$element.removeClass("active")
                         },
                         stopFn: function(e) {
-                            console.log(e.type + " stop")
+                            avalon.log(e.type + " stop")
                             this.innerHTML = ""
                         }
                     }
@@ -88,22 +88,22 @@
                 avalon.define("test", function(vm) {
                     vm.draggable = {
                         beforeStartFn: function(e, data) {
-                            console.log(e.type + " beforeStart")
+                            avalon.log(e.type + " beforeStart")
                             data.$element.addClass("active")
                         },
                         startFn: function(e) {
-                            console.log(e.type + " start")
+                            avalon.log(e.type + " start")
                         },
                         dragFn: function(e, data) {
                             this.innerHTML = data.pageX + " " + data.pageY
-                            console.log(e.type + " drag")
+                            avalon.log(e.type + " drag")
                         },
                         beforeStopFn: function(e, data) {
-                            console.log(e.type + " beforeStop")
+                            avalon.log(e.type + " beforeStop")
                             data.$element.removeClass("active")
                         },
                         stopFn: function(e) {
-                            console.log(e.type + " stop")
+                            avalon.log(e.type + " stop")
                             this.innerHTML = ""
                         }
                     }

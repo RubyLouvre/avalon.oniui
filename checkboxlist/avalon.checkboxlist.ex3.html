@@ -13,35 +13,37 @@
     <div class="wrapper">
         <h1>checkboxlist demo 3</h1>
         <p class="example">checkboxlist组件默认提供了type为week时的data（<span class="statement">data-checkboxlist-type="week"</span>）,只需简单配置就可完成星期一到星期日的选项的展示。如要配置初始选中项，值必须是["TUESDAY","MONDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","SUNDAY"]中的表示星期几的英文全写</p>
-        <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
-            &lt;!DOCTYPE HTML&gt;
-            &lt;html&gt;
-            &lt;head&gt;
-                &lt;meta charset='utf-8'/&gt;
-                &lt;title&gt;配置type为week&lt;/title&gt;
-                &lt;script src='avalon.js'&gt;&lt;/script&gt;
-            &lt;/head&gt;
-            &lt;body&gt;
-                &lt;div class="demoShow" ms-controller="demo3"&gt;
-                    &lt;fieldse&gt;
-                        &lt;legend&gt;设置type为week展示周一到周日的选项&lt;/legend&gt;
-                        &lt;ul ms-widget="checkboxlist" data-checkboxlist-type="week" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部"&gt;
-                        &lt;/ul&gt;
-                    &lt;/fieldset&gt;
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;配置type为week&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demoShow" ms-controller="demo3"&gt;
+                        &lt;fieldse&gt;
+                            &lt;legend&gt;设置type为week展示周一到周日的选项&lt;/legend&gt;
+                            &lt;ul ms-widget="checkboxlist" data-checkboxlist-type="week" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部"&gt;
+                            &lt;/ul&gt;
+                        &lt;/fieldset&gt;
 
-                    {{ val }}
-                &lt;/div&gt;
-                &lt;script&gt;
-                    require("./checkboxlist/avalon.checkboxlist", function(avalon) {
-                        avalon.define('demo3',function(vm){
-                            vm.val = ['TUESDAY'];
+                        {{ val }}
+                    &lt;/div&gt;
+                    &lt;script&gt;
+                        require("./checkboxlist/avalon.checkboxlist", function(avalon) {
+                            avalon.define('demo3',function(vm){
+                                vm.val = ['TUESDAY'];
+                            });
+                            avalon.scan();
                         });
-                        avalon.scan();
-                    });
-                &lt;/script&gt;
-            &lt;/body&gt;
-            &lt;/html&gt;
-        </pre>
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
         <div class="demoShow" ms-controller="demo3">
             <fieldse>
                 <legend>设置type为week展示周一到周日的选项</legend>

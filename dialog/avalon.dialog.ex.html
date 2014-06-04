@@ -14,6 +14,15 @@
                 呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
             </div>
     </fieldset>
+    <p>测试IE6下存在select时遮罩遮不住的问题是否解决</p>
+    <select>
+        <option>hello 1 </option>
+        <option>hello 2 </option>        
+        <option>hello 3</option>
+        <option>hello 4</option>
+        <option>hello 5</option>
+    </select>
+    <p>增加z-index看看dialog的z-index是否会自动调整</p>
     <button ms-click="addZIndex('aa')">add z-index</button>
     <fieldset>
         <legend>层上层</legend>
@@ -69,10 +78,10 @@
                     title: 'dialog title',
                     modal: false,
                     onSubmit: function(){
-                        console.log(this);
-                        console.log(arguments);
+                        avalon.log(this);
+                        avalon.log(arguments);
                         alert('执行了submit')
-                        console.log("非组件的确定回调");
+                        avalon.log("非组件的确定回调");
                     },
                     onClose: function(){
                         alert('执行了cancel')
@@ -82,8 +91,8 @@
                     title: "层上层的dialog",
                     onSubmit: function() {
                         alert("submit success !");
-                        console.log(arguments);
-                        console.log(this);
+                        avalon.log(arguments);
+                        avalon.log(this);
                     }
                 };
                 vm.$ggOpts = {

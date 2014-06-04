@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>progressbar组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["progressbar/avalon.progressbar"], function() {
+                avalon.define("test", function(vm) {
+                    vm.progressbar = {
+                        onComplete: function() {
+                            avalon.log(this)
+                            avalon.log('this bar is complete')
+                        }
+                        , onChange: function(v) {
+                            if(v == 0) this.onComplete()
+                        }
+                    }
+                    vm.$skipArray = ["progressbar"]
+                    var v = 0
+                        , timer = setInterval(function() {
+                            if(avalon.vmodels.$aa.value <= 0) return clearInterval(timer)
+                            avalon.vmodels.$aa.value--
+                        }, 500)
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <h1>检测测onChange触发结束</h1>
+        <div ms-widget="progressbar,$aa" data-progressbar-value="100" data-progressbar-label="true">
+            
+        </div>
+        <p>------------------------------------------------------------------------</p>
+        <pre class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;progressbar组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;progressbar/avalon.progressbar&quot;], function() {
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.progressbar = {
+                        onComplete: function() {
+                            avalon.log(this)
+                            avalon.log('this bar is complete')
+                        }
+                        , onChange: function(v) {
+                            if(v == 0) this.onComplete()
+                        }
+                    }
+                    vm.$skipArray = [&quot;progressbar&quot;]
+                    var v = 0
+                        , timer = setInterval(function() {
+                            if(avalon.vmodels.$aa.value &lt;= 0) return clearInterval(timer)
+                            avalon.vmodels.$aa.value--
+                        }, 500)
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;检测测onChange触发结束&lt;/h1&gt;
+        &lt;div ms-widget=&quot;progressbar,$aa&quot; data-progressbar-value=&quot;100&quot; data-progressbar-label=&quot;true&quot;&gt;
+            
+        &lt;/div&gt;
+        &lt;p&gt;------------------------------------------------------------------------&lt;/p&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

@@ -1,8 +1,8 @@
-<ul class="ui-tab-nav clrfix" 
+<ul class="ui-tab-nav clrfix ui-widget-header reset" 
     >
     <li class="ui-state-default" 
         ms-repeat-tab="tabs" 
-        ms-class="ui-tab-item ui-tab-active:$index==active"  
+        ms-class="ui-tab-item"  
         ms-class-1="ui-state-active:!!$canActive(tab, $index)" 
         ms-class-2="ui-state-disabled:tab.disabled" 
         ms-class-3="ui-tab-last:$last" 
@@ -14,110 +14,3 @@
         MS_OPTION_REMOVABLE
     </li>
 </ul>
-MS_OPTION_STYLE
-<style>
-.clrfix {
-   zoom: 1;
-}
-.clrfix:before,
-.clrfix:after {
-    content: '';
-    display: block;
-}
-.clrfix:after {
-    clear: both;
-}
-/*默认横向排列，中等尺寸，不限制宽度*/
-.ui-state-default{
-    background-color: #f8f8f8;
-    font-size:12px;
-    float: left;
-    display: inline;
-    list-style: none;
-    padding: 10px 20px;
-    position: relative;
-    border: 1px solid #ccc;
-    border-right-width: 0;
-    text-align: center;
-}
-.ui-tab-last{
-    border-right-width:1px; 
-}
-.ui-tab-click .ui-state-default{
-    cursor: pointer;
-}
-.ui-state-disabled, .ui-tab-click .ui-state-disabled{
-    background-color: #fafafa;
-    cursor: default;
-}
-.ui-state-disabled a{
-    cursor: default;
-}
-.ui-tab-removable{
-    padding-right: 30px;
-}
-.ui-state-default, .ui-state-default a{
-    color: #333;
-    text-decoration: none;;
-}
-.ui-state-disabled, .ui-state-disabled a, .ui-tab-click .ui-state-disabled, .ui-tab-click .ui-state-disabled a{
-    color: #aaa;
-}
-.ui-tab-active{
-    background: #fff;
-    border-bottom-color: #fff;
-}
-.ui-state-hover{
-    background: #fff;
-}
-.ui-tab-close{
-    position: absolute;
-    right: 0px;
-    top:7px;
-    padding: 3px;
-    height: 12px;
-    width: 12px;
-    overflow: hidden;
-    border: 1px solid #f8f8f8;
-    border-right-width:0; 
-    color: #666;
-}
-
-.ui-state-hover .ui-tab-close,.ui-state-active .ui-tab-close{
-    border-color: #fff;
-}
-
-.ui-tab-close-hover, .ui-state-active .ui-tab-close-hover,.ui-state-hover .ui-tab-close-hover{
-    background: #fff;
-    border-color: #dedede;
-    cursor: pointer;
-}
-/*横向排列，小尺寸*/
-.ui-tab-small .ui-state-default{
-    border-right-width: 1px;
-    margin-right: -1px;
-    z-index: 1;
-    padding: 7px 10px;
-}
-.ui-tab-small .ui-tab-active{
-    border-color: #3775C0;
-    z-index: 10;
-}
-/*纵向排列，中等尺寸*/
-.ui-tab-vertical .ui-state-default{
-    float:none;
-    display: block;
-}
-.ui-tab-vertical .ui-state-default{
-    text-align: left;
-    border-right-width: 1px;
-    border-bottom-width: 0;
-}
-.ui-tab-vertical .ui-tab-active{
-    border-right-color: #fff;
-    border-bottom-color: #dedede;
-}
-.ui-tab-vertical .ui-tab-last{
-    border-bottom-width: 1px;
-}
-</style>

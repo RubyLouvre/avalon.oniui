@@ -13,33 +13,34 @@
                     ms-title="el.title" 
                     ms-visible="el.toggle" 
                     ms-data-vm="el"
+                    ms-on-mousemove-10="startResize($event,el)"
+                    ms-on-mousedown-10="resizeColumn($event,el)"
+                    ms-on-mouseleave-10="stopResize"
                     >{{el.text}}
-                    <button  ms-click="sortColumn(el)"
-                             ms-if="el.sortable" 
-                             ms-class="sort_{{el.sortAsc ? 'asc': 'desc'}}">
+                    <span  ms-click="sortColumn(el)"
+                           ms-if="el.sortable" 
+                           ms-class="sort_{{el.sortAsc ? 'asc': 'desc'}}">
                         {{el.sortAsc}}
-                    </button>
-                    <div class="ui-grid-resizable-handle"
-                         ms-if="el.resizable" 
-                         ms-mousedown="resizeColumn($event,el)"
-                         ></div>
+                    </span>
                 </td>
             </tr>
         </table>
-        <div class="ui-grid-tbody-wrapper">
-            <table ms-css-width="gridWidth">
-                <tr  ms-repeat-row="_store">
-                    <td class="ui-grid-td"
-                        ms-repeat="row" 
-                        data-with-sorted="getColumnsOrder"
-                        ms-css-width="getCellWidth($key)"
-                        ms-visible="getCellToggle($key)" 
-                        ms-css-height="rowHeight" 
-                        >
-                        <div class="editable">{{$val}}</div>
-                    </td>
-                </tr>
-            </table>
+        <div class="ui-grid-tbody-wrapper" ms-css-height="tbodyHeight" ms-on-scroll-12="throttleRenderTbody">
+            <div class="ui-grid-scroll-wrapper" ms-css-height="tbodyScrollHeight">
+                <table ms-css-width="gridWidth" ms-css-top="tbodyScrollTop">
+                    <tr ms-repeat-row="_data" data-repeat-rendered="getRowHeight">
+                        <td class="ui-grid-td"
+                            ms-repeat="row" 
+                            data-with-sorted="getColumnsOrder"
+                            ms-css-width="getCellWidth($key)"
+                            ms-visible="getCellToggle($key)" 
+                            ms-css-height="rowHeight" 
+                            >
+                            <div class="editable">{{$val}}</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
     <div class="ui-grid-tfoot-wrapper" ms-if="pageable">
@@ -56,7 +57,7 @@ MS_OPTION_STYLE
         width: 100%;
         border: 1px solid black;
         border-collapse: collapse;
-      
+
     }
     .ui-grid-thead  td{
         width: 100%;
@@ -68,21 +69,22 @@ MS_OPTION_STYLE
         width: 100%;
         border: 1px solid black;
         border-collapse: collapse;
-       
+
     }
+    .ui-grid-tbody-wrapper{
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .ui-grid-scroll-wrapper table{
+        position: absolute;
+    }
+
     .ui-grid-tbody-wrapper table td{
         width: 100%;
         border: 1px solid black;
         /*        white-space:nowrap;*/
         overflow: hidden;
     }
-    .ui-grid-resizable-handle{
-        background: red;
-        float: right;
-        font-size: 0.1px;
-        display: block;
-        cursor: col-resize;
-        width: 4px;
-        height: 100%;
-    }
+
 </style>

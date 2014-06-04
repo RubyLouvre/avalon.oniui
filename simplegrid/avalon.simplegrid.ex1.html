@@ -5,15 +5,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../avalon.js"></script>
-        <script src="../highlight/shCore.js">
-
-        </script>
+        <script src="../highlight/shCore.js"> </script>
         <script>
             require(["simplegrid/avalon.simplegrid"], function() {
                 avalon.define("test", function(vm) {
                     vm.simplegrid = {
                         columns: ["xxx", "yyy", "zzz"],
-                        dataSource: [{
+                        data: [{
                                 xxx: 1, yyy: 1, zzz: 1
                             },
                             {
@@ -57,7 +55,7 @@
                 avalon.define("test", function(vm) {
                     vm.simplegrid = {
                         columns: ["xxx", "yyy", "zzz"],
-                        dataSource: [{
+                        data: [{
                                 xxx: 1, yyy: 1, zzz: 1
                             },
                             {

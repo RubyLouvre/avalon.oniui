@@ -1,5 +1,6 @@
 //avalon 1.2.5 2014.4.2
 define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
+
     var arr = tmpl.split("MS_OPTION_STYLE") || ["", ""]
     var cssText = arr[1].replace(/<\/?style>/g, "")
     var styleEl = document.getElementById("avalonStyle")
@@ -46,15 +47,12 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             body.onselectstart = _ieSelectBack;
         }
     }
-
-
-
     var widget = avalon.ui.simplegrid = function(element, data, vmodels) {
         var options = data.simplegridOptions
         //格式化各列的具体规格
         options.columns = options.getColumns(options.columns, options)
         //抽取要显示的数据(因为可能存在分页,不用全部显示,那么我们只将要显示的
-     
+
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
         //决定每页的行数(分页与滚动模式下都要用到它)
@@ -90,11 +88,10 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         }
         var remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m
         var _vmodels
-      
 
         var vmodel = avalon.define(data.simplegridId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "data","startIndex","endIndex", "template"]
+            vm.$skipArray = ["widgetElement", "data", "startIndex", "endIndex", "template"]
             vm.widgetElement = element
             vm.startIndex = 0
             vm.endIndex = options.showRows
@@ -107,9 +104,12 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             vm.getRealWidth = function() {
                 //位于表头的data-repeat-rendered回调,用于得到table的宽度
                 var table = this //这是TR元素
-                var cells = this.children
-                for (var i = 0, cell; cell = cells[i]; i++) {
-                    vm.columns[i].width = cell.offsetWidth
+                var cells = this.children//在旧式IE下可能包含注释节点
+                var cellIndex = 0
+                for (var i = 0, cell; cell = cells[i++]; ) {
+                    if (cell.nodeType === 1) {
+                        vm.columns[cellIndex++].width = cell.offsetWidth
+                    }
                 }
                 while (table.tagName !== "TABLE") {
                     table = table.parentNode
@@ -242,12 +242,12 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             vm.getColumnsOrder = function() {
                 return vm.columnsOrder
             }
-            vm.getStore = function (array){
-                return array.slice(vm.startIndex,vm.endIndex )
+            vm.getStore = function(array) {
+                return array.slice(vm.startIndex, vm.endIndex)
             }
             vm._data = vm.data.slice(vm.startIndex, vm.endIndex)
-            
-             
+
+
         })
 
         //那一部分转换为监控数组就行,这样能大大提高性能)
@@ -255,7 +255,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                 wrapper,
                 prevScrollTop = 0,
                 lastRenderedScrollTop = 0
-    
+
         function reRenderTbody() {
 
             var scrollTop = wrapper.scrollTop
@@ -264,7 +264,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             var distance = Math.abs(lastRenderedScrollTop - scrollTop)
             var rowHeight = vmodel._rowHeight
             if (distance >= vmodel._rowHeightNoBorders) {
-           
+
                 var linage = distance / rowHeight
                 var integer = Math.floor(linage)//取得整数部分
                 var decimal = linage - integer//取得小数部分
@@ -279,8 +279,8 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                         vmodel.startIndex += 1
                         count += 1
                         var el = vmodel.data[vmodel.endIndex]
-                    //   console.log(el)
-                   //     console.log(vmodel.endIndex)
+                        //   console.log(el)
+                        //     console.log(vmodel.endIndex)
                         vmodel._data.push(el)
                         vmodel._data.shift()
                         if (count === integer) {

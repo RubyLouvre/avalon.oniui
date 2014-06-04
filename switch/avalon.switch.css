@@ -45,7 +45,7 @@
 .ui-state-default {
   color: #333;
   background-color: #f8f8f8;
-  border: 1px solid #ccc; }
+  border: 1px solid #cccccc; }
   .ui-state-default a {
     color: #333;
     text-decoration: none; }
@@ -68,6 +68,10 @@
     cursor: default; }
 
 /*content*/
+.ui-widget-content {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc; }
+
 .ui-switch {
   position: relative;
   height: 100%;
@@ -111,6 +115,9 @@
     width: 33%;
     background-color: #005fcc;
     color: #fff; }
+  .ui-switch-right {
+    background: #d9d9d9;
+    color: #333; }
   .ui-switch-dragger {
     width: 34%; }
   .ui-switch-left, .ui-switch-right, .ui-switch-dragger {

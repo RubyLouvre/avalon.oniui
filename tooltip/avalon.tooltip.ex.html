@@ -28,11 +28,25 @@
                         "contentGetter": function(elem) {
                             if(elem.tagName.toLowerCase() == 'a') return str 
                         }
+                        , "track": true
                     }
                     vm.$ccOpt = {
                         "contentGetter": function(elem) {
                             if(elem.tagName.toLowerCase() == 'div') return str 
                         }
+                    }
+                    vm.$ppOpt = {
+                        "contentGetter": function(elem) {
+                            if(elem.tagName.toLowerCase() == 'input') return str
+                        }
+                        , autohide: true
+                        , event: 'focus'
+                    }
+                    vm.$qqOpt = {
+                        "contentGetter": function(elem) {
+                            if(elem.tagName.toLowerCase() == 'input') return str
+                        }
+                        , autohide: true
                     }
                     vm.$skipArray = ["tooltip"]
                 })
@@ -42,11 +56,20 @@
     </head>
     <body class="reset" ms-controller="test">
         <h1>tooltip</h1>
+        <div>
+            <input type="text" ms-widget="tooltip,pp, $ppOpt" data-tooltip-delegate="true" data-tooltip-position="tr" value="focus me"/>
+        </div>
+        <p>-----------------------------------------</p>
+        <div ms-widget="tooltip,ppo, $qqOpt" data-tooltip-delegate="true" data-tooltip-position="tr">
+            <input type="text" value="hover me"/>
+        </div>
+        <p>-----------------------------------------</p>
         <div ms-widget="tooltip,jj, $jjOpt" data-tooltip-delegate="true" data-tooltip-position="tr">
-            <a href="xx" title="xxx">xxxxxxxxxxxxxx</a><br>
-            <a href="xx" title="yyy">yyxxxxxxxxxxxxxxxx</a><br>
-            <a href="xx" title="zzz">zzxxxxxxxxxxxx</a><br>
-            <a href="xx" title="aaa">aaxxxxxxxxxxxxxxxx</a><br>
+            delegate<br>
+            <a href="xx" title="xxx">hover me ------- hover me</a><br>
+            <a href="xx" title="yyy">hover me</a><br>
+            <a href="xx" title="zzz">hover me</a><br>
+            <a href="xx" title="aaa">hover me</a><br>
         </div>
         <p>----------------------------------------</p>
         <div class="reset" style="width:300px;border:1px solid #ccc;line-height:300px;margin:0 auto;" ms-widget="tooltip,cc, $ccOpt" data-tooltip-delegate="false" data-tooltip-event="click" data-tooltip-autohide="false" data-tooltip-position="tr">这个没有代理了</div>
@@ -60,6 +83,7 @@
         <div class="reset" style="width:300px;border:1px solid #ccc;line-height:300px;margin:0 auto;" ms-widget="tooltip,ff, $ccOpt" data-tooltip-delegate="false" data-tooltip-event="click" data-tooltip-autohide="false" data-tooltip-position-my="left bottom-10" data-tooltip-position-at="left top">这个没有代理了</div>
         <p>----------------------------------------</p>
         <div ms-widget="tooltip" data-tooltip-delegate="true" data-tooltip-position="tr">
+            delegate<br>
             <a href="xx" title="xxx">xxxxxxxxxxxxxxxxxxxx</a><br>
         </div>
         <pre class="brush:html;gutter:false;toolbar:false">&lt;

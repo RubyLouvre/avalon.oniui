@@ -21,8 +21,8 @@ define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.c
         var vmodel = avalon.define(data.progressbarId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
-            var newElem = element
-                , simulateTimer
+            var newElem = element, 
+                simulateTimer
             vm.$skipArray = ["widgetElement", "template"]
             vm.ended = false
 
@@ -31,7 +31,7 @@ define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.c
                 if(inited) return
                 inited = true
 
-                newElem.innerHTML = template
+                newElem.innerHTML = vmodel.template
 
                 avalon.scan(element, [vmodel].concat(vmodels))
 
@@ -63,8 +63,8 @@ define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.c
             }
 
             vm.$cssMaker = function(right) {
-                if(vmodel.value === false && vmodel.indeterminate || vmodel.value == 100) return right ? 0 : '100%'
-                return right ? 100 - (vmodel.value || 0) + '%' : (vmodel.value || 0) + '%'
+                if(vmodel.value === false && vmodel.indeterminate || vmodel.value == 100) return right ? 0 : "100%"
+                return right ? 100 - (vmodel.value || 0) + "%" : (vmodel.value || 0) + "%"
             }
 
             vm.$indeterminate = function() {
@@ -88,7 +88,7 @@ define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.c
             vm.end = function(value) {
                 clearTimeout(simulateTimer)
                 vmodel.ended = true
-                if(typeof value != 'undefined') vmodel.value = value
+                if(value != void 0) vmodel.value = value
             }
 
             //@method reset() 重置设置项
@@ -111,11 +111,11 @@ define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.c
 
         })
         // 模拟进度条情形下，不监控success属性的变化
-        vmodel.$watch('success', function(newValue) {
+        vmodel.$watch("success", function(newValue) {
             if(newValue && vmodel.simulate) vmodel.value = 100
             if(newValue) vmodel.onComplete.call(vmodel)
         })
-        vmodel.$watch('value', function(newValue) {
+        vmodel.$watch("value", function(newValue) {
             if(newValue == 100) vmodel.success = true
             vmodel.onChange && vmodel.onChange.call(vmodel, newValue)
         })
@@ -146,12 +146,12 @@ define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.c
         onComplete: avalon.noop,
         //@optMethod labelShower(value, isContainerLabel) 用于格式化进度条上label显示文字，默认value为false显示“loading…”，完成显示“complete!”，失败显示“failed!”，第二个参数是是否是居中显示的label，两段显示的时候，默认将这个label内容置空，只显示两边的label,this指向vmodel
         labelShower: function(value, l1) {
-            var value = l1 == 'right' ? 100 - (value || 0) : value
-            if(l1 == 'l1' && this.right) return ''
-            if(value === false) return 'loading…'
-            if(value === 'failed' || this.ended && this.value != 100) return 'failed!'
-            if(value == 100) return 'complete!'
-            return value + '%'
+            var value = l1 == "right" ? 100 - (value || 0) : value
+            if(l1 == "l1" && this.right) return ""
+            if(value === false) return "loading…"
+            if(value === "failed" || this.ended && this.value != 100) return "failed!"
+            if(value == 100) return "complete!"
+            return value + "%"
         },
         $author: "skipper@123"
     }

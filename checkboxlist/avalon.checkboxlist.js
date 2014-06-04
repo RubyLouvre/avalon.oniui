@@ -74,7 +74,6 @@ define(["avalon.getModel", "text!./avalon.checkboxlist.html"], function(avalon, 
                 avalon.scan(element, [vmodel].concat(vmodels));
             };  
             vm.$remove = function() {
-                console.log("$remove");
                 element.innerHTML = "";
             };
         })

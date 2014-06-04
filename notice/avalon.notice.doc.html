@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>notice文档说明</title>
+<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>notice使用文档</h1>
+        <p>notice组件用来向用户显示一些提示信息</p>
+        <table>
+            <caption class="example">notice组件配置项说明：</caption>
+            <thead>
+                <tr>
+                    <th>name</th>
+                    <th>value</th>
+                    <th>description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>container</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td>"info"</td>
+                    <td>样式类型</td>
+                </tr>
+                <tr>
+                    <td>content</td>
+                    <td>“”</td>
+                    <td>要显示的内容DOM|String</td>
+                </tr>
+                <tr>
+                    <td>header</td>
+                    <td>“”</td>
+                    <td>标题</td>
+                </tr>
+                <tr>
+                    <td>hasCloseBtn</td>
+                    <td>true</td>
+                    <td>是否显示关闭</td>
+                </tr>
+                <tr>
+                    <td>onHide</td>
+                    <td>avalon.noop</td>
+                    <td>关闭回调</td>
+                </tr>
+                <tr>
+                    <td>timer</td>
+                    <td>0</td>
+                    <td>自动消失时间</td>
+                </tr>
+                <tr>
+                    <td>hasCloseBtn</td>
+                    <td>true</td>
+                    <td>是否有关闭按钮</td>
+                </tr>
+                <tr>
+                    <td>isPlace</td>
+                    <td>true</td>
+                    <td>是否被下一个notice替换</td>
+                </tr>
+                <tr>
+                    <td>isAffix</td>
+                    <td>false</td>
+                    <td>是否吸顶</td>
+                </tr>
+                <tr>
+                    <td>setContent</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>setType</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>toggle</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>setTitle</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>onShow</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                
+            </tbody>
+        </table>
+        <h1>notice使用注意点</h1>
+        <ol>
+            <li>请保证输入域的值是数值或者字符串型的数值，否则会报错</li>
+            <li>当通过手动输入值时，如果输入的值不是数值型的，组件会默认将其置为修改之前的值，如果输入大于最大值，组件会自动将其置为最大值，小于最小值时同理
+            </li>
+            <li>在输入域获得焦点时可通过键盘上的上下箭头控制notice的增减</li>
+            <li>notice会判断初始输入域值是否在用户设置的数值范围呢，不在的话会进行调整</li>
+        </ol>
+        <h3>例子：</h3>
+        <ol>
+            <li><a target="_blank" href="avalon.notice.ex.html">notice demo</a></li>
+        </ol>
+    </div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tooltip组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body>
+
+
+        <table width="90%" border="1">
+            <tr>
+                <th>名字</th><th>默认值</th> <th>说明</th>
+            </tr>
+            <!--auto doc start-->
+<tr>
+    <td>event</td><td> "mouseenter"</td><td> 显示tooltip的事件，默认hover的时候显示tooltip，为false的时候就不绑定事件</td></tr>
+<tr>
+    <td>content</td><td> ""</td><td> tooltip显示内容，默认去获取element的title属性</td></tr>
+<tr>
+    <td>autohide</td><td> true</td><td> 元素hoverout之后，是否自动隐藏tooltip，默认true</td></tr>
+<tr>
+    <td>delegate</td><td> false</td><td> 元素是否只作为一个代理元素，这样适合对元素内多个子元素进行tooltip绑定</td></tr>
+<tr>
+    <td>disabled</td><td> false</td><td> 禁用</td></tr>
+<tr>
+    <td>track</td><td> false</td><td> tooltip是否跟随鼠标，默认否</td></tr>
+<tr>
+    <td>animated</td><td> true</td><td> 是否开启显示隐藏切换动画效果</td></tr>
+<tr>
+    <td>position</td><td> "right+10 top"</td><td> tooltip相对于element的位置，like: "(left|center|right)([+-]number)? (top|center|bottom)([+-]number)?"</td></tr>
+<tr>
+    <td>hiddenDelay</td><td> 16</td><td> tooltip自动隐藏时间</td></tr>
+<tr>
+    <td>contentGetter</td><td>配置函数</td><td>contentGetter() 获取内容接口，讲srcElement作为参数传递过来，默认是返回title</td></tr>
+<tr>
+    <td>$animateArrMaker</td><td>配置函数</td><td>$animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]</td></tr>
+<tr>
+    <td>getTemplate</td><td>配置函数</td><td>getTemplate(tpl, opts) 定制修改模板接口</td></tr>
+<tr>
+    <td>show</td><td>接口函数</td><td>show(elem) 显示tooltip，相对于elem定位，如果elem为空，则不改变位置</td></tr>
+<tr>
+    <td>hide</td><td>接口函数</td><td>hide($event) 隐藏tooltip，参数是$event，可缺省</td></tr>
+<!--auto doc end-->
+        </table>
+        <p>tooltip 组件有一个重要的xx方法,见源码：</p>
+        <pre class="brush:js;gutter:false;toolbar:false;">
+           
+        </pre>
+        <!--ex list start-->
+<ol>
+<li><a href="avalon.tooltip.ex.html">tooltip</a></li>
+</ol>
+<!--ex list end-->
+    </body>
+</html>

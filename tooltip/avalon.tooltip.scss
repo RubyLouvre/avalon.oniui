@@ -1,0 +1,90 @@
+@import "../themes/default.scss";
+$pf : ".ui-tooltip";
+
+.ui-tooltip-hidden{
+	visibility: hidden;
+}
+
+#{$pf} {
+	// current style
+	padding: 8px;
+	position: absolute;
+	z-index: 9999;
+	max-width: 300px;
+	font-size: 12px;
+	overflow: visible;
+	.in, .out{
+	    font-family: simsun;
+	    font-size: 0;
+	    height: 0;
+	    overflow: visible;
+	    position: absolute;
+	    width: 0;
+	}
+	&-top {
+		.in{
+			border-style: dashed dashed solid;
+			border-color: transparent transparent $backgroundColor;
+		    border-width: 0 6px 7px;
+		    left: 29px;
+		    top: -7px;
+		}	
+		.out{
+			border-style: dashed dashed solid;
+			border-color: transparent transparent $borderColor;
+		    border-width: 0 7px 8px;
+		    left: 28px;
+		    top: -8px;
+		}
+	}
+	&-right{
+		.in{
+			border-style: dashed dashed dashed solid;
+		    border-color: transparent transparent transparent $backgroundColor;
+		    border-width: 7px 0 6px 6px;
+		    right: -6px;
+		    top: 29px;
+		}
+		.out{
+			border-style: dashed dashed dashed solid;
+		    border-color: transparent transparent transparent $borderColor;
+		    border-width: 8px 0 7px 7px;
+		    right: -7px;
+		    top: 28px;
+		}
+	}
+	&-bottom{
+		.in{
+			border-style: solid dashed dashed;
+		    border-color: $backgroundColor transparent transparent;
+		    border-width: 7px 6px 0;
+		    bottom: -7px;
+		    left: 29px;
+		    top: auto;
+		}
+		.out{
+			border-style: solid dashed dashed;
+			border-color: $borderColor transparent transparent;
+		    border-width: 8px 7px 0;
+		    bottom: -8px;
+		    left: 28px;
+		    top: auto;
+		}
+	}
+	&-left{
+		.in{
+			border-style: dashed solid dashed dashed;
+			border-color: transparent $backgroundColor transparent transparent;
+		    border-width: 6px 7px 6px 0;
+		    left: -7px;
+		    top: 29px;
+		}
+		.out{
+			border-style: dashed solid dashed dashed;
+		    border-color: transparent $borderColor transparent transparent;
+		    border-width: 7px 8px 7px 0;
+		    left: -8px;
+		    top: 28px;
+		}
+	}
+}

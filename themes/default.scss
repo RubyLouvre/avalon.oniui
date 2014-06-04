@@ -1,4 +1,6 @@
 @import "../avalon.clrfix.scss";
+$backgroundColor : #f8f8f8;
+$borderColor : #ccc;
 /*corner css*/
 .ui-corner-all,
 .ui-corner-top,
@@ -28,8 +30,8 @@
 /*state css*/
 .ui-state-default{
 	color: #333;
-	background-color: #f8f8f8;
-	border: 1px solid #ccc;
+	background-color: $backgroundColor;
+	border: 1px solid $borderColor;
 	a {
 		color: #333;
 		text-decoration: none;
@@ -57,4 +59,6 @@
 }
 /*content*/
 .ui-widget-content {
+	background-color: $backgroundColor;
+	border: 1px solid $borderColor;
 }

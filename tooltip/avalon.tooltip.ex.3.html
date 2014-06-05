@@ -67,6 +67,10 @@
         &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
         
         &lt;style type=&quot;text/css&quot;&gt;
+            *{
+                padding: 0;
+                margin:0;
+            }
             body{
                 padding-bottom: 400px;
             }
@@ -87,6 +91,8 @@
                         &quot;contentGetter&quot;: function(elem) {
                             if(elem.tagName.toLowerCase() == 'input' || elem.getAttribute(&quot;tp&quot;)) return str
                         }
+                        , width: &quot;400px&quot;
+                        , height: &quot;200px&quot; 
                         , autohide: true
                     }
                     vm.$qqqOpt = {
@@ -105,11 +111,11 @@
     &lt;/head&gt;
     &lt;body class=&quot;reset&quot; ms-controller=&quot;test&quot;&gt;
         &lt;h1&gt;箭头位置自动调整，点击展示&lt;/h1&gt;
-        &lt;div class=&quot;reset clrfix&quot;&gt;
+        &lt;div class=&quot;reset clrfix&quot; style=&quot;margin-top:200px;&quot;&gt;
             &lt;div class=&quot;reset ct&quot; style=&quot;float:left;display:inline;margin:20px;width:200px;border:1px solid #ccc;line-height:300px;&quot; ms-widget=&quot;tooltip,fff1, $qqOpt&quot; data-tooltip-delegate=&quot;false&quot; data-tooltip-event=&quot;click&quot; data-tooltip-autohide=&quot;true&quot; data-tooltip-position-my=&quot;left bottom-10&quot; data-tooltip-position-at=&quot;left top&quot; tp=&quot;1&quot;&gt;元素A本身绑定&lt;/div&gt;
             &lt;div class=&quot;reset ct&quot; style=&quot;float:left;display:inline;margin:20px;width:200px;border:1px solid #ccc;line-height:300px;&quot; ms-widget=&quot;tooltip,fff2, $qqOpt&quot; data-tooltip-delegate=&quot;false&quot; data-tooltip-event=&quot;click&quot; data-tooltip-autohide=&quot;true&quot; data-tooltip-position-my=&quot;left top&quot; data-tooltip-position-at=&quot;left bottom+10&quot; tp=&quot;1&quot;&gt;元素B本身绑定&lt;/div&gt;
-            &lt;div class=&quot;reset ct&quot; style=&quot;float:left;display:inline;margin:20px;width:200px;border:1px solid #ccc;line-height:300px;&quot; ms-widget=&quot;tooltip,fff3, $qqqOpt&quot; data-tooltip-delegate=&quot;false&quot; data-tooltip-event=&quot;click&quot; data-tooltip-autohide=&quot;true&quot; data-tooltip-position-my=&quot;right-10 top&quot; data-tooltip-position-at=&quot;left top&quot; tp=&quot;1&quot;&gt;自定义宽高&lt;/div&gt;
-            &lt;div class=&quot;reset ct&quot; style=&quot;float:left;display:inline;margin:20px;margin-right:0;width:200px;border:1px solid #ccc;line-height:300px;&quot; ms-widget=&quot;tooltip,fff4, $qqqOpt&quot; data-tooltip-delegate=&quot;false&quot; data-tooltip-event=&quot;click&quot; data-tooltip-autohide=&quot;true&quot; data-tooltip-position-my=&quot;left+10 bottom&quot; data-tooltip-position-at=&quot;right bottom&quot; tp=&quot;1&quot;&gt;自定义宽高&lt;/div&gt;
+            &lt;div class=&quot;reset ct&quot; style=&quot;float:left;display:inline;margin:20px;width:200px;border:1px solid #ccc;line-height:300px;&quot; ms-widget=&quot;tooltip,fff3, $qqqOpt&quot; data-tooltip-delegate=&quot;false&quot; data-tooltip-event=&quot;click&quot; data-tooltip-position-my=&quot;right-10 top&quot; data-tooltip-position-at=&quot;left top&quot; tp=&quot;1&quot;&gt;自定义宽高&lt;/div&gt;
+            &lt;div class=&quot;reset ct&quot; style=&quot;float:left;display:inline;margin:20px;margin-right:0;width:200px;border:1px solid #ccc;line-height:300px;&quot; ms-widget=&quot;tooltip,fff4, $qqqOpt&quot; data-tooltip-delegate=&quot;false&quot; data-tooltip-event=&quot;click&quot; data-tooltip-position-my=&quot;left+10 bottom&quot; data-tooltip-position-at=&quot;right bottom&quot; tp=&quot;1&quot;&gt;自定义宽高&lt;/div&gt;
         &lt;/div&gt;
         
         

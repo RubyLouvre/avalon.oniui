@@ -42,8 +42,8 @@
                             var sss = avalon.define('demo5',function(vm){
                                 vm.val = ["1", "2"];
                                 vm.onselect = function() {
-                                    console.log("selectCallback argumnets is: ");
-                                    console.log(arguments);
+                                    avalon.log("selectCallback argumnets is: ");
+                                    avalon.log(arguments);
                                     alert("选中了："+arguments[2].value);
                                     for (var i=0; i&lt;arguments[0].length; i++) {
                                         var obj = arguments[0][i];
@@ -79,8 +79,8 @@
                 var sss = avalon.define('demo5',function(vm){
                     vm.val = ["1", "2"];
                     vm.onselect = function() {
-                        console.log("selectCallback argumnets is: ");
-                        console.log(arguments);
+                        avalon.log("selectCallback argumnets is: ");
+                        avalon.log(arguments);
                         if (arguments[1]) {
                             alert("选中了："+arguments[2].value);  
                         } else {

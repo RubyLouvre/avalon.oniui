@@ -1336,20 +1336,22 @@
             return cssHooks[method + ":get"](this[0], void 0, "padding-box")
         }
         avalon.fn["outer" + name] = function(includeMargin) {
-            return cssHooks[method + ":get"](this[0], void 0, includeMargin === true ? "border-box" : "margin-box")
+            return cssHooks[method + ":get"](this[0], void 0, includeMargin === true ? "margin-box": "border-box" )
         }
     })
     avalon.fn.offset = function() { //取得距离页面左右角的坐标
-        var node = this[0],
-                doc = node && node.ownerDocument,
-                win = doc.defaultView || doc.parentWindow,
+        var node = this[0], box = {
+            left: 0,
+            top: 0
+        }
+        if (!node || !node.tagName || !node.ownerDocument) {
+            return box
+        }
+        var doc = node.ownerDocument,
                 body = doc.body,
                 root = doc.documentElement,
-                box = {
-                    left: 0,
-                    top: 0
-                }
-        if (!doc || !avalon.contains(root, node)) {
+                win = doc.defaultView || doc.parentWindow
+        if (!avalon.contains(root, node)) {
             return box
         }
         //http://hkom.blog1.fc2.com/?mode=m&no=750 body的偏移量是不包含margin的
@@ -3055,7 +3057,7 @@
             TimerID = setInterval(ticker, 30)
         }
     }
-    
+
     function newSetter(newValue) {
         oldSetter.call(this, newValue)
         if (newValue !== this.oldValue) {
@@ -3516,7 +3518,7 @@
                 }
                 proxy.$index = index
                 proxy.$outer = data.$outer
-                proxy[param] = item
+                proxy[param] = item.$model ? item.$model: item;
                 proxy.$first = index === 0
                 proxy.$last = last
                 eachPool.splice(i, 1)
@@ -3547,6 +3549,9 @@
         ["$index", "$last", "$first", proxy.$itemName].forEach(function(prop) {
             obj[prop][subscribers].length = 0
         })
+        if(proxy[proxy.$itemName][subscribers]) {
+            proxy[proxy.$itemName][subscribers].length = 0;
+        }
         if (eachPool.unshift(proxy) > kernel.maxRepeatSize) {
             eachPool.pop()
         }

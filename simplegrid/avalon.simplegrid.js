@@ -1,5 +1,6 @@
 //avalon 1.2.5 2014.4.2
 define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
+
     var arr = tmpl.split("MS_OPTION_STYLE") || ["", ""]
     var cssText = arr[1].replace(/<\/?style>/g, "")
     var styleEl = document.getElementById("avalonStyle")
@@ -46,21 +47,19 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             body.onselectstart = _ieSelectBack;
         }
     }
-
-
-
     var widget = avalon.ui.simplegrid = function(element, data, vmodels) {
         var options = data.simplegridOptions
         //格式化各列的具体规格
         options.columns = options.getColumns(options.columns, options)
         //抽取要显示的数据(因为可能存在分页,不用全部显示,那么我们只将要显示的
-         options._data = options.getStore(options.data, options)
+
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
         //决定每页的行数(分页与滚动模式下都要用到它)
         options.perPages = options.perPages || options.data.length
         //每页真实要显示的行数
         options.showRows = options.showRows || options.perPages
+        // data.length >= perPages >= showRows
 
         //如果没有指定各列的出现顺序,那么将按用户定义时的顺序输出
 
@@ -90,17 +89,12 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         var remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m
         var _vmodels
 
-
-
         var vmodel = avalon.define(data.simplegridId, function(vm) {
-
             avalon.mix(vm, options)
-
-            vm.$skipArray = ["widgetElement", "tableElement", "data", "template"]
+            vm.$skipArray = ["widgetElement", "data", "startIndex", "endIndex", "template"]
             vm.widgetElement = element
-
-
-
+            vm.startIndex = 0
+            vm.endIndex = options.showRows
             vm.$init = function() {
                 element.innerHTML = options.template.replace(/MS_OPTION_ID/g, vmodel.$id)
                 _vmodels = [vmodel].concat(vmodels)
@@ -108,10 +102,14 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             }
             vm.gridWidth = "100%"
             vm.getRealWidth = function() {
+                //位于表头的data-repeat-rendered回调,用于得到table的宽度
                 var table = this //这是TR元素
-                var cells = this.children
-                for (var i = 0, cell; cell = cells[i]; i++) {
-                    vm.columns[i].width = cell.offsetWidth
+                var cells = this.children//在旧式IE下可能包含注释节点
+                var cellIndex = 0
+                for (var i = 0, cell; cell = cells[i++]; ) {
+                    if (cell.nodeType === 1) {
+                        vm.columns[cellIndex++].width = cell.offsetWidth
+                    }
                 }
                 while (table.tagName !== "TABLE") {
                     table = table.parentNode
@@ -209,8 +207,12 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                 }
             }
             vm.getRowHeight = function() {
-                vm._rowHeight = this.rows[0].offsetHeight
-                vm.tbodyHeight = vm._rowHeight * vm.showRows + avalon.css(this.parentNode, "borderTopWidth", true) * 3
+                var row = this.rows[0], cell = row.cells[0]
+                //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
+                var borderHeight = Math.max(avalon.css(cell, "borderTopWidth", true), avalon.css(cell, "borderBottomWidth", true))
+                vm._rowHeight = row.offsetHeight
+                vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
+                vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2
                 vm.tbodyScrollHeight = vm._rowHeight * vm.perPages
                 if (vm.showRows !== vm.perPages) {
                     var target = this
@@ -222,10 +224,11 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
 
             }
             vm.throttleRenderTbody = function() {
-                avalon.log("================")
+
                 vmodel.tbodyScrollTop = this.scrollTop
                 cancelAnimationFrame(requestID)
                 wrapper = this
+
                 requestID = requestAnimationFrame(reRenderTbody)
             }
             //得到可视区某一个格子的显示隐藏情况
@@ -239,21 +242,30 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             vm.getColumnsOrder = function() {
                 return vm.columnsOrder
             }
+            vm.getStore = function(array) {
+                return array.slice(vm.startIndex, vm.endIndex)
+            }
+            vm._data = vm.data.slice(vm.startIndex, vm.endIndex)
+
+
         })
+
         //那一部分转换为监控数组就行,这样能大大提高性能)
-        //vmodel._data = vmodel.getStore(vmodel.data, vmodel)
         var requestID,
                 wrapper,
                 prevScrollTop = 0,
                 lastRenderedScrollTop = 0
 
-        var reRenderTbody = function() {
+        function reRenderTbody() {
+
             var scrollTop = wrapper.scrollTop
             var scrollDir = scrollTop > prevScrollTop ? "down" : "up"
             prevScrollTop = scrollTop
             var distance = Math.abs(lastRenderedScrollTop - scrollTop)
-            if (distance >= vmodel._rowHeight) {
-                var linage = distance / vmodel._rowHeight
+            var rowHeight = vmodel._rowHeight
+            if (distance >= vmodel._rowHeightNoBorders) {
+
+                var linage = distance / rowHeight
                 var integer = Math.floor(linage)//取得整数部分
                 var decimal = linage - integer//取得小数部分
                 if (decimal > 0.55) {//四舍五入
@@ -262,11 +274,13 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                 var length = vmodel.data.length, count = 0
                 if (scrollDir === "down") {
                     //    console.log("下拉 " + integer + "行")
-                    while (endIndex < length) {
-                        endIndex += 1
-                        startIndex += 1
+                    while (vmodel.endIndex + 1 < length) {
+                        vmodel.endIndex += 1
+                        vmodel.startIndex += 1
                         count += 1
-                        var el = vmodel.data[endIndex]
+                        var el = vmodel.data[vmodel.endIndex]
+                        //   console.log(el)
+                        //     console.log(vmodel.endIndex)
                         vmodel._data.push(el)
                         vmodel._data.shift()
                         if (count === integer) {
@@ -275,11 +289,11 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                     }
                 } else {
                     //  console.log("上移 " + integer + "行")
-                    while (startIndex >= 0) {
-                        endIndex -= 1
-                        startIndex -= 1
+                    while (vmodel.startIndex >= 0) {
+                        vmodel.endIndex -= 1
+                        vmodel.startIndex -= 1
                         count += 1
-                        var el = vmodel.data[startIndex]
+                        var el = vmodel.data[vmodel.startIndex]
                         vmodel._data.unshift(el)
                         vmodel._data.pop()
                         if (count === integer) {
@@ -287,7 +301,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                         }
                     }
                 }
-                lastRenderedScrollTop = wrapper.scrollTop = vmodel.top = startIndex * trHeight
+                lastRenderedScrollTop = wrapper.scrollTop = vmodel.tbodyScrollTop = vmodel.startIndex * rowHeight
             }
         }
         return vmodel
@@ -297,8 +311,10 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         headerHeight: 35,
         rowHeight: 35,
         _rowHeight: 35, //实际行高,包含border什么的
+        _rowHeightNoBorders: 0,
         columnWidth: 160,
         edge: 15,
+        _data: [],
         perPage: "", //默认不分页,
         pageable: false,
         currentPage: 0,
@@ -315,7 +331,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             return tmpl
         },
         getStore: function(array, options) {
-         
+
             return array.concat()
         },
         getColumns: function(array, options) {

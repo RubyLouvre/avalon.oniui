@@ -31,8 +31,8 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
     }
 
     //根据配置中textField及valueField做数据适配
-    function modelMatch(model, text, value) {
-        avalon.each(model, function(i, item) {
+    function modelMatch(data, text, value) {
+        avalon.each(data, function(i, item) {
             if(text !== 'text') {
                 if(avalon.type(text) === 'function') {
                     item.text = text.call(item, item);
@@ -51,7 +51,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             }
         });
 
-        return model;
+        return data;
     }
 
     //根据dataSource构建数据结构
@@ -60,7 +60,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             groupSeq = [],
             exportGroup = [],
             options = [],
-            model = [],
+            data = [],
             hasGroup = false;
 
         /**
@@ -122,14 +122,14 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
         avalon.each(groupSeq, function(i, seq) {
 
-            model.push({
+            data.push({
                 text: seq,
                 items: false,
                 divider: false,
                 optGroup: true
             });
-            model = model.concat(group[seq]);
-            model.push({
+            data = data.concat(group[seq]);
+            data.push({
                 items: false,
                 divider: true,
                 optGroup: false
@@ -141,12 +141,12 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             });
         });
 
-        model = model.concat(options);
+        data = data.concat(options);
 
         return {
             optGroup: exportGroup,
             options: options,
-            model: model
+            data: data
         };
     }
 
@@ -262,7 +262,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
         listTemplate = templates[1];
         optionsTemplate = templates[2];
 
-        dataSource = options.model.$model || options.model;
+        dataSource = options.data.$model || options.data;
         modelPattern = getSource(element).length === 0;
 
         //数据抽取
@@ -270,7 +270,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
         if(dataModel.length === 0) {
             optionsModel = getSelectModel(dataSource);
-            dataModel =  optionsModel.model;
+            dataModel =  optionsModel.data;
         }
 
         //转换option
@@ -286,7 +286,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             vm.activeIndex = null;
 
             vm.dataSource = dataSource;     //源节点的数据源，通过dataSource传递的值将完全模拟select
-            vm.model = dataModel;           //下拉列表的渲染model
+            vm.data = dataModel;           //下拉列表的渲染model
             vm.__listenter__ = false;      //是否当前鼠标在list区域
 
             //当使用options.model生成相关结构时，使用下面的model同步element的节点
@@ -298,12 +298,12 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             //对model的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
             if(options.modleBind && vm.dataSource.$watch) {
                 vm.dataSource.$watch('length', function() {
-                    vmodel.model = getSelectModel(vmodel.dataSource.$model).model;
+                    vmodel.data = getSelectModel(vmodel.dataSource.$model).data;
                 });
             }
 
             vm.$init = function() {
-                if(vmodel.model.length === 0) {
+                if(vmodel.data.length === 0) {
                     throw new Error('the options is not enough for init a dropdown!');
                 }
 
@@ -318,13 +318,13 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     elemParent.insertBefore(titleNode, element);
                     titleNode = title;
                     if(vmodel.value.length === 0) {
-                        defaultOption =  vmodel.model.filter(function(option) {
+                        defaultOption =  vmodel.data.filter(function(option) {
                             return option.item === true;
                         })[0];
 
                         vmodel.value = [defaultOption.value];
                     } else {
-                        defaultOption = vmodel.model.filter(function(option) {
+                        defaultOption = vmodel.data.filter(function(option) {
                             return option.value === vmodel.value[0];
                         })[0];
                     }
@@ -430,7 +430,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             vm.$getLabel = function(value) {
                 var v = value[0];
 
-                return vmodel.model.filter(function(option) {
+                return vmodel.data.filter(function(option) {
                     return option.value === v;
                 })[0].label;
             };
@@ -477,7 +477,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             };
 
             vm.$blur = function(e) {
-                if(!vmodel.__listenter__ && vmodel.toggle) {
+                if( ( !vmodel.__listenter__ || !vmodel.data[vmodel.activeIndex].enable ) && vmodel.toggle ) {
                     vmodel.toggle = false;
                 }
             };
@@ -509,7 +509,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
         height: 200,            //下拉列表的高度
         enable: true,           //组件是否可用
         readOnly: false,        //组件是否只读
-        model: [],              //下拉列表显示的数据模型
+        data: [],              //下拉列表显示的数据模型
         textFiled: 'text',      //模型数据项中对应显示text的字段,可以传function，根据数据源对text值进行格式化
         valueField: 'value',    //模型数据项中对应value的字段
         value: [],              //设置组件的初始值

@@ -364,14 +364,10 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
 
     //优化scroll事件的回调次数
     var requestAnimationFrame = window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame ||
             function(callback) {
                 return window.setTimeout(callback, 1000 / 60);
             }
     var cancelAnimationFrame = window.cancelAnimationFrame ||
-            window.webkitCancelRequestAnimationFrame ||
-            window.mozCancelAnimationFrame ||
             function(id) {
                 clearTimeout(id)
             }

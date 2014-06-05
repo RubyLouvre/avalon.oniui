@@ -1,4 +1,4 @@
-@import "../themes/default.scss";
+@import "../style/default.scss";
 $pf : ".ui-tooltip";
 
 .ui-tooltip-hidden{
@@ -16,6 +16,7 @@ $pf : ".ui-tooltip";
 	.in, .out{
 	    font-family: simsun;
 	    font-size: 0;
+	    line-height: 0;
 	    height: 0;
 	    overflow: visible;
 	    position: absolute;

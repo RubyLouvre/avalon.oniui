@@ -6,6 +6,16 @@
   .clrfix:after {
     clear: both; }
 
+.reset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  line-height: 100%;
+  text-decoration: none;
+  font-size: 100%;
+  list-style: none; }
+
 .ui-progressbar {
   width: 100%;
   position: relative;
@@ -22,8 +32,7 @@
     height: 100%;
     width: 0;
     float: left;
-    display: inline;
-    transition: all .5s; }
+    display: inline; }
   .ui-progressbar-bar-right {
     background: #ddd; }
     .ui-progressbar-bar-right .ui-progressbar-label {

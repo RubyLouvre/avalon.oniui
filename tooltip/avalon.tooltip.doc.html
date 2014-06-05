@@ -15,9 +15,13 @@
             </tr>
             <!--auto doc start-->
 <tr>
-    <td>event</td><td> "mouseenter"</td><td> 显示tooltip的事件，默认hover的时候显示tooltip，为false的时候就不绑定事件</td></tr>
+    <td>event</td><td> "mouseenter"</td><td> 显示tooltip的事件，默认hover的时候显示tooltip，为false的时候就不绑定事件，如果后面设置了自动隐藏，则mouseenter对应的是mouseleave,focus对应的是blur，进行自动隐藏事件侦听，使用代理的时候，目测不支持focus,blur</td></tr>
 <tr>
-    <td>content</td><td> ""</td><td> tooltip显示内容，默认去获取element的title属性</td></tr>
+    <td>width</td><td> "auto"</td><td> tip宽度，默认是auto</td></tr>
+<tr>
+    <td>height</td><td> "auto"</td><td> tip高度，默认是auto    </td></tr>
+<tr>
+    <td>arrow</td><td> true</td><td> 是否显示尖角图标，默认为true</td></tr>
 <tr>
     <td>autohide</td><td> true</td><td> 元素hoverout之后，是否自动隐藏tooltip，默认true</td></tr>
 <tr>
@@ -29,28 +33,44 @@
 <tr>
     <td>animated</td><td> true</td><td> 是否开启显示隐藏切换动画效果</td></tr>
 <tr>
-    <td>position</td><td> "right+10 top"</td><td> tooltip相对于element的位置，like: "(left|center|right)([+-]number)? (top|center|bottom)([+-]number)?"</td></tr>
+    <td>position</td><td> "rt"</td><td> tooltip相对于element的位置，like: "rt,rb,rc..."</td></tr>
 <tr>
-    <td>hiddenDelay</td><td> 16</td><td> tooltip自动隐藏时间</td></tr>
+    <td>positionMy</td><td> false</td><td> tooltip元素的定位点，like: "left top+11"</td></tr>
 <tr>
-    <td>contentGetter</td><td>配置函数</td><td>contentGetter() 获取内容接口，讲srcElement作为参数传递过来，默认是返回title</td></tr>
+    <td>positionAt</td><td> false</td><td> element元素的定位点，like: "left top+11",positionAt && positionMy时候忽略position设置</td></tr>
+<tr>
+    <td>hiddenDelay</td><td> 64</td><td> tooltip自动隐藏时间，单位ms</td></tr>
+<tr>
+    <td>contentGetter</td><td>配置函数</td><td>contentGetter() 获取内容接口，讲srcElement作为参数传递过来，默认是返回a标签的title，如果该函数返回为空，那么则不会显示tooltip</td></tr>
 <tr>
     <td>$animateArrMaker</td><td>配置函数</td><td>$animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]</td></tr>
 <tr>
     <td>getTemplate</td><td>配置函数</td><td>getTemplate(tpl, opts) 定制修改模板接口</td></tr>
 <tr>
-    <td>show</td><td>接口函数</td><td>show(elem) 显示tooltip，相对于elem定位，如果elem为空，则不改变位置</td></tr>
+    <td>show</td><td>接口函数</td><td>show(elem) 显示tooltip，相对于elem定位，elem为元素或者event事件对象，如果elem为空，则采用之前缓存的对象，两者都为空，则只展示，不改变位置</td></tr>
 <tr>
     <td>hide</td><td>接口函数</td><td>hide($event) 隐藏tooltip，参数是$event，可缺省</td></tr>
 <!--auto doc end-->
         </table>
-        <p>tooltip 组件有一个重要的xx方法,见源码：</p>
+        <p>
+        组件在不跟随鼠标移动时候，会自动将箭头对齐元素中间的位置，当tooltip没有元素高或者宽时，会自动调整tip显示在元素高度或者宽度居中的地方
+        </p>
+        <p>tooltip 组件有一个重要的contentGetter方法,见源码：</p>
         <pre class="brush:js;gutter:false;toolbar:false;">
-           
+           "contentGetter": function(elem) {
+                if(elem.tagName.toLowerCase() != "a") return
+                return elem.title
+            }
         </pre>
+        <p>该函数有无返回值，将决定是否展示tooltip</p>
         <!--ex list start-->
 <ol>
-<li><a href="avalon.tooltip.ex.html">tooltip</a></li>
+<li><a href="avalon.tooltip.ex.html">input元素获取焦点显示tip</a></li>
+<li><a href="avalon.tooltip.ex.1.html">input元素hover显示tip-父容器做代理</a></li>
+<li><a href="avalon.tooltip.ex.2.html">不使用代理，各个方向绑定，改变位置，点击展示</a></li>
+<li><a href="avalon.tooltip.ex.3.html">箭头位置自动调整，点击展示</a></li>
+<li><a href="avalon.tooltip.ex.4.html">input元素获取焦点显示tip，不展示箭头</a></li>
+<li><a href="avalon.tooltip.ex.5.html">鼠标跟随</a></li>
 </ol>
 <!--ex list end-->
     </body>

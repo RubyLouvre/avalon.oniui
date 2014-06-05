@@ -11,7 +11,7 @@
                 padding-bottom: 400px;
             }
             div.ct{
-                padding: 40px 0;
+                text-align: center;
             }
             a{
                 font-size: 13px;
@@ -29,6 +29,7 @@
                         }
                         , autohide: true
                         , event: 'focus'
+                        , arrow: false
                     }
                     vm.$skipArray = ["tooltip"]
                 })
@@ -37,8 +38,8 @@
         </script>
     </head>
     <body class="reset" ms-controller="test">
-        <h1>input元素获取焦点显示tip</h1>
-        <div class="ct">
+        <h1>input元素获取焦点显示tip，不展示箭头</h1>
+        <div>
             <input type="text" ms-widget="tooltip,pp, $ppOpt" data-tooltip-delegate="true" data-tooltip-position="tr" value="focus me"/>
         </div>
         <pre class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
@@ -54,7 +55,7 @@
                 padding-bottom: 400px;
             }
             div.ct{
-                padding: 40px 0;
+                text-align: center;
             }
             a{
                 font-size: 13px;
@@ -72,6 +73,7 @@
                         }
                         , autohide: true
                         , event: 'focus'
+                        , arrow: false
                     }
                     vm.$skipArray = [&quot;tooltip&quot;]
                 })
@@ -80,8 +82,8 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body class=&quot;reset&quot; ms-controller=&quot;test&quot;&gt;
-        &lt;h1&gt;input元素获取焦点显示tip&lt;/h1&gt;
-        &lt;div class=&quot;ct&quot;&gt;
+        &lt;h1&gt;input元素获取焦点显示tip，不展示箭头&lt;/h1&gt;
+        &lt;div&gt;
             &lt;input type=&quot;text&quot; ms-widget=&quot;tooltip,pp, $ppOpt&quot; data-tooltip-delegate=&quot;true&quot; data-tooltip-position=&quot;tr&quot; value=&quot;focus me&quot;/&gt;
         &lt;/div&gt;
         

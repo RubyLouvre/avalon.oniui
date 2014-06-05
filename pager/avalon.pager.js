@@ -83,7 +83,8 @@ define(["avalon", "text!./avalon.pager.html"], function(avalon, tmpl) {
             vm.changeCurrentPage = function(e) {
                 if (e.type === "keyup" && e.keyCode !== 13)
                     return
-                vmodel.currentPage = vmodel._currentPage
+                //currentPage需要转换为Number类型 fix lb1064@qq.com
+                vmodel.currentPage = parseInt(vmodel._currentPage,10)
                 vmodel.pages = getPages(vmodel)
             }
             vm.pages = []

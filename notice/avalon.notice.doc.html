@@ -22,28 +22,63 @@
             <tbody>
                 <tr>
                     <td>container</td>
-                    <td></td>
-                    <td></td>
+                    <td>默认为绑定组件的元素</td>
+                    <td>显示notice的容器，可以配置为自己想要包裹notice的元素对象或者元素id，id的话必须是"#ID"的格式</td>
                 </tr>
                 <tr>
                     <td>type</td>
-                    <td>"info"</td>
-                    <td>样式类型</td>
+                    <td>默认"info"</td>
+                    <td>notice类型,可以选择为"success"、"error"或者默认的"info"</td>
                 </tr>
                 <tr>
                     <td>content</td>
-                    <td>“”</td>
+                    <td>默认为“”</td>
                     <td>要显示的内容DOM|String</td>
                 </tr>
                 <tr>
                     <td>header</td>
-                    <td>“”</td>
-                    <td>标题</td>
+                    <td>默认为""</td>
+                    <td>notice的标题</td>
+                </tr>
+                <tr>
+                    <td>timer</td>
+                    <td>默认为0</td>
+                    <td>notice显示之后自动隐藏的定时器，0表示不自动隐藏</td>
                 </tr>
                 <tr>
                     <td>hasCloseBtn</td>
+                    <td>默认true</td>
+                    <td>是否显示关闭按钮，设为false不显示</td>
+                </tr>
+                <tr>
+                    <td>toggle</td>
+                    <td>默认false</td>
+                    <td>显示或隐藏notice， true显示，false隐藏</td>
+                </tr>
+                <tr>
+                    <td>isPlace</td>
                     <td>true</td>
-                    <td>是否显示关闭</td>
+                    <td>是否占位，false不占位，true占位，占位时notice显示在自定义的container中，不占位时append到body元素下</td>
+                </tr>
+                <tr>
+                    <td>isAffix</td>
+                    <td>false</td>
+                    <td>是否吸顶，非占位元素不吸顶，占位元素当滚动距离大于元素距页面顶部距离时吸顶，否则保持原位置</td>
+                </tr>
+                <tr>
+                    <td>successClass</td>
+                    <td>默认"ui-notice-info"</td>
+                    <td>type为success时的提示类名</td>
+                </tr>
+                <tr>
+                    <td>errorClass</td>
+                    <td>默认"ui-notice-danger"</td>
+                    <td>type为success时的提示类名</td>
+                </tr>
+                <tr>
+                    <td>infoClass</td>
+                    <td>默认""</td>
+                    <td>type为info时的提示类名</td>
                 </tr>
                 <tr>
                     <td>onHide</td>
@@ -51,61 +86,12 @@
                     <td>关闭回调</td>
                 </tr>
                 <tr>
-                    <td>timer</td>
-                    <td>0</td>
-                    <td>自动消失时间</td>
-                </tr>
-                <tr>
-                    <td>hasCloseBtn</td>
-                    <td>true</td>
-                    <td>是否有关闭按钮</td>
-                </tr>
-                <tr>
-                    <td>isPlace</td>
-                    <td>true</td>
-                    <td>是否被下一个notice替换</td>
-                </tr>
-                <tr>
-                    <td>isAffix</td>
-                    <td>false</td>
-                    <td>是否吸顶</td>
-                </tr>
-                <tr>
-                    <td>setContent</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>setType</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>toggle</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>setTitle</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
                     <td>onShow</td>
                     <td></td>
-                    <td></td>
+                    <td>显示回调</td>
                 </tr>
-                
             </tbody>
         </table>
-        <h1>notice使用注意点</h1>
-        <ol>
-            <li>请保证输入域的值是数值或者字符串型的数值，否则会报错</li>
-            <li>当通过手动输入值时，如果输入的值不是数值型的，组件会默认将其置为修改之前的值，如果输入大于最大值，组件会自动将其置为最大值，小于最小值时同理
-            </li>
-            <li>在输入域获得焦点时可通过键盘上的上下箭头控制notice的增减</li>
-            <li>notice会判断初始输入域值是否在用户设置的数值范围呢，不在的话会进行调整</li>
-        </ol>
         <h3>例子：</h3>
         <ol>
             <li><a target="_blank" href="avalon.notice.ex.html">notice demo</a></li>

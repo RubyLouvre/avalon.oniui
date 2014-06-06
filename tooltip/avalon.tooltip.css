@@ -76,12 +76,18 @@
   visibility: hidden; }
 
 .ui-tooltip {
-  padding: 8px;
+  padding: 10px;
   position: absolute;
   z-index: 9999;
   max-width: 300px;
   font-size: 12px;
-  overflow: visible; }
+  overflow: visible;
+  background: #FFE44F;
+  border-color: #FFC805;
+  color: #A65A00;
+  border-radius: 0 0 0 0; }
+  .ui-tooltip a {
+    color: #A65A00; }
   .ui-tooltip .in, .ui-tooltip .out {
     font-family: simsun;
     font-size: 0;
@@ -92,51 +98,51 @@
     width: 0; }
   .ui-tooltip-top .in {
     border-style: dashed dashed solid;
-    border-color: transparent transparent #f8f8f8;
-    border-width: 0 6px 7px;
+    border-color: transparent transparent #FFE44F;
+    border-width: 0 4px 5px;
     left: 29px;
-    top: -7px; }
+    top: -5px; }
   .ui-tooltip-top .out {
     border-style: dashed dashed solid;
-    border-color: transparent transparent #cccccc;
-    border-width: 0 7px 8px;
+    border-color: transparent transparent #FFC805;
+    border-width: 0 5px 6px;
     left: 28px;
-    top: -8px; }
+    top: -6px; }
   .ui-tooltip-right .in {
     border-style: dashed dashed dashed solid;
-    border-color: transparent transparent transparent #f8f8f8;
-    border-width: 7px 0 6px 6px;
-    right: -6px;
+    border-color: transparent transparent transparent #FFE44F;
+    border-width: 5px 0 4px 4px;
+    right: -4px;
     top: 29px; }
   .ui-tooltip-right .out {
     border-style: dashed dashed dashed solid;
-    border-color: transparent transparent transparent #cccccc;
-    border-width: 8px 0 7px 7px;
-    right: -7px;
+    border-color: transparent transparent transparent #FFC805;
+    border-width: 6px 0 5px 5px;
+    right: -5px;
     top: 28px; }
   .ui-tooltip-bottom .in {
     border-style: solid dashed dashed;
-    border-color: #f8f8f8 transparent transparent;
-    border-width: 7px 6px 0;
-    bottom: -7px;
+    border-color: #FFE44F transparent transparent;
+    border-width: 5px 4px 0;
+    bottom: -5px;
     left: 29px;
     top: auto; }
   .ui-tooltip-bottom .out {
     border-style: solid dashed dashed;
-    border-color: #cccccc transparent transparent;
-    border-width: 8px 7px 0;
-    bottom: -8px;
+    border-color: #FFC805 transparent transparent;
+    border-width: 6px 5px 0;
+    bottom: -6px;
     left: 28px;
     top: auto; }
   .ui-tooltip-left .in {
     border-style: dashed solid dashed dashed;
-    border-color: transparent #f8f8f8 transparent transparent;
-    border-width: 6px 7px 6px 0;
-    left: -7px;
+    border-color: transparent #FFE44F transparent transparent;
+    border-width: 4px 5px 4px 0;
+    left: -4px;
     top: 29px; }
   .ui-tooltip-left .out {
     border-style: dashed solid dashed dashed;
-    border-color: transparent #cccccc transparent transparent;
-    border-width: 7px 8px 7px 0;
-    left: -8px;
+    border-color: transparent #FFC805 transparent transparent;
+    border-width: 5px 6px 5px 0;
+    left: -5px;
     top: 28px; }

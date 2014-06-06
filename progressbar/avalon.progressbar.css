@@ -16,6 +16,62 @@
   font-size: 100%;
   list-style: none; }
 
+/*corner css*/
+.ui-corner-all,
+.ui-corner-top,
+.ui-corner-left,
+.ui-corner-tl {
+  border-top-left-radius: 4px; }
+
+.ui-corner-all,
+.ui-corner-top,
+.ui-corner-right,
+.ui-corner-tr {
+  border-top-right-radius: 4px; }
+
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-left,
+.ui-corner-bl {
+  border-bottom-left-radius: 4px; }
+
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-right,
+.ui-corner-br {
+  border-bottom-right-radius: 4px; }
+
+/*state css*/
+.ui-state-default {
+  color: #333;
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc; }
+  .ui-state-default a {
+    color: #333;
+    text-decoration: none; }
+
+.ui-state-hover {
+  background: #fff; }
+  .ui-state-hover a {
+    text-decoration: none; }
+    .ui-state-hover a:hover {
+      text-decoration: none; }
+
+.ui-state-active {
+  background: #fff; }
+
+.ui-state-disabled {
+  color: #aaa;
+  cursor: default; }
+  .ui-state-disabled a {
+    color: #aaa;
+    cursor: default; }
+
+/*content*/
+.ui-widget-content {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc; }
+
 .ui-progressbar {
   width: 100%;
   position: relative;

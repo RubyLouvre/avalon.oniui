@@ -123,7 +123,7 @@ define(["avalon", "text!./avalon.tooltip.html", "text!./avalon.tooltip.css", "po
                         cName = "left"
                     }
                 } else {
-                    cName = "bottom"
+                    cName = mys[1] || "bottom"
                 }
             }
             return cName
@@ -143,11 +143,11 @@ define(["avalon", "text!./avalon.tooltip.html", "text!./avalon.tooltip.css", "po
                 inited = true
 
                 vmodel.arrClass = _init(vmodel.position)
+                // 埋个钩子
+                vmodel.widgetElement.setAttribute("ui-tooltip-id", vmodel.$id)
 
-                if(vmodel.event == "mouseenter") {
-                    if(vmodel.delegate) {
-                        vmodel.event = "mouseover"
-                    }
+                if(vmodel.event == "mouseenter" && vmodel.delegate) {
+                    vmodel.event = "mouseover"
                 }
                 element.setAttribute("ms-" + vmodel.event, "$show($event)")
                 tooltipElem = tooltipELementMaker()
@@ -211,9 +211,26 @@ define(["avalon", "text!./avalon.tooltip.html", "text!./avalon.tooltip.css", "po
 
                         // 根据元素和tooltip元素的宽高调整箭头位置
                         if(arrOut && arrIn) {
-                            var dir = vmodel.arrClass == "bottom" || vmodel.arrClass == "left"
-                            // 竖直方向，高度不够
-                            if((vmodel.arrClass == "bottom" || vmodel.arrClass == "top") && tooltipElem.offsetWidth < elem.offsetWidth) {
+                            var dir = vmodel.arrClass == "bottom" || vmodel.arrClass == "left",
+                                avalonElem = avalon(elem),
+                                moveToLeft = tipElem.position().left + tooltipElem.offsetWidth / 2 > avalonElem.position().left + elem.offsetWidth,
+                                moveToRight = tipElem.position().left + tooltipElem.offsetWidth / 2 < avalonElem.position().left
+                            // tip元素中线偏出elem
+                            if((vmodel.arrClass == "top" || vmodel.arrClass == "bottom") && ( moveToRight || moveToLeft)) {
+                                arrOut.position({
+                                    of: tooltipElem, 
+                                    at: (moveToRight ? "right" : "left") + " " + (dir ? "bottom" : "top"), 
+                                    my: (moveToRight ? "right-10" : "left+10") + " " + (dir ? "top" : "bottom"), 
+                                    within: document.body
+                                })
+                                arrIn.position({
+                                    of: tooltipElem, 
+                                    at: (moveToRight ? "right" : "left") + " " + (dir ? "bottom" : "top"), 
+                                    my: (moveToRight ? "right-11" : "left+11") + " " + (dir ? "top-" : "bottom+") + lessH/2, 
+                                    within: document.body
+                                })
+                            // 竖直方向，高度不够  
+                            } else if((vmodel.arrClass == "bottom" || vmodel.arrClass == "top") && tooltipElem.offsetWidth < elem.offsetWidth) {
                                 arrOut.position({
                                     of: tooltipElem, 
                                     at: "center " + (dir ? "bottom" : "top"), 
@@ -241,7 +258,7 @@ define(["avalon", "text!./avalon.tooltip.html", "text!./avalon.tooltip.css", "po
                                     within: document.body
                                 })
                             } else {
-                                // 不使用position，不方便计算of位置
+                                // vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
                                 var tipPos = tipElem.offset(),
                                     elemPos = avalon(elem).offset(),
                                     elemH = elem.offsetHeight,
@@ -251,30 +268,30 @@ define(["avalon", "text!./avalon.tooltip.html", "text!./avalon.tooltip.css", "po
                                     case "left":
                                     case "right":
                                         if(vmodel.arrClass == "left") {
-                                            arrOut[0].style.left = "-8px"
-                                            arrIn[0].style.left = "-7px"
+                                            arrOut[0].style.left = "-6px"
+                                            arrIn[0].style.left = "-5px"
                                         } else {
-                                            arrOut[0].style.right = "-7px"
-                                            arrIn[0].style.right = "-6px"
+                                            arrOut[0].style.right = "-5px"
+                                            arrIn[0].style.right = "-4px"
                                         }
                                         oleft = (Math.floor(elemH / 2) - tipPos.top + elemPos.top)
-                                        arrOut[0].style.top = oleft + 'px'
-                                        arrIn[0].style.top = (oleft + 1) + 'px'
+                                        arrOut[0].style.top = oleft + "px"
+                                        arrIn[0].style.top = (oleft + 1) + "px"
                                         break
                                     case "top":
                                     case "bottom":
                                     default:
                                         if(vmodel.arrClass == "top") {
-                                            arrOut[0].style.top = "-8px"
-                                            arrIn[0].style.top = "-7px"
+                                            arrOut[0].style.top = "-6px"
+                                            arrIn[0].style.top = "-5px"
                                         } else {
                                             arrOut[0].style.top = arrIn[0].style.top = "auto"
-                                            arrOut[0].style.bottom = "-8px"
-                                            arrIn[0].style.bottom = "-7px"
+                                            arrOut[0].style.bottom = "-6px"
+                                            arrIn[0].style.bottom = "-5px"
                                         }
                                         oleft = (Math.floor(elemW / 2) - tipPos.left + elemPos.left)
-                                        arrOut[0].style.left = oleft + 'px'
-                                        arrIn[0].style.left = (oleft + 1) + 'px'
+                                        arrOut[0].style.left = oleft + "px"
+                                        arrIn[0].style.left = (oleft + 1) + "px"
                                 }
                             }
                         }
@@ -320,10 +337,23 @@ define(["avalon", "text!./avalon.tooltip.html", "text!./avalon.tooltip.css", "po
 
             vm.$show = function(e) {
                 if(vmodel.disabled) return
-                var tar = e.srcElement || e.target
-                    , content = vmodel.contentGetter.call(vmodel, tar)
+                var tar = this
+                    , src = e.srcElement || e.target
+                    , content
+                // delegate情形下，从src->this找到符合要求的元素
+                if(vmodel.delegate) {
+                    content = vmodel.contentGetter.call(vmodel, src)
+                    while(!content && src && src != tar) {
+                        src = src.parentNode
+                        content = vmodel.contentGetter.call(vmodel, src)
+                    }
+                    tar = src
+                } else {
+                    content = vmodel.contentGetter.call(vmodel, tar)
+                }
                 if(content == void 0) return
                 clearTimeout(hideTimer)
+                clearTimeout(animateTimer)
                 var inited = tar.getAttribute("ui-tooltip-inited")
                 // 禁用默认的title
                 var oldTitle = tar.title
@@ -342,7 +372,7 @@ define(["avalon", "text!./avalon.tooltip.html", "text!./avalon.tooltip.css", "po
                 if(!inited) {
                     tar.setAttribute("ui-tooltip-inited", 1)
                     // 自动隐藏
-                    vmodel.autohide && avalon(tar).bind(vmodel.event != "focus" ? "mouseout" : "blur", function() {
+                    vmodel.autohide && avalon(tar).bind(vmodel.event != "focus" ? "mouseleave" : "blur", function(e) {
                         clearTimeout(hideTimer)
                         if(oldTitle) tar.title = oldTitle
                         if(vmodel.autohide) hideTimer = setTimeout(vmodel.hide, vmodel.hiddenDelay)
@@ -360,7 +390,7 @@ define(["avalon", "text!./avalon.tooltip.html", "text!./avalon.tooltip.css", "po
 
             vm.$isShown = function() {
                 var elem = avalon(tooltipElem)
-                return elem.css('display') != "none" && !elem.hasClass("ui-tooltip-hidden")
+                return elem.css("display") != "none" && !elem.hasClass("ui-tooltip-hidden")
             }
 
         })

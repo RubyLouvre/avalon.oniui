@@ -1,4 +1,4 @@
-define(['avalon', 'avalon.getModel', 'text!./avalon.miniswitch.html'], function(avalon, $$, tmpl) {
+define(['avalon', 'avalon.getModel', 'text!./avalon.switchdropdown.html'], function(avalon, $$, tmpl) {
     var arr = tmpl.split("MS_OPTION_STYLE");
     var cssText = arr[1].replace(/<\/?style>/g, "");
     var styleEl = document.getElementById("avalonStyle");
@@ -205,10 +205,10 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.miniswitch.html'], function(
         return ret;
     }
 
-    var widget = avalon.ui.miniswitch = function(element, data, vmodels) {
+    var widget = avalon.ui.switchdropdown = function(element, data, vmodels) {
         var $element = avalon(element),
             elemParent = element.parentNode,
-            options = data.miniswitchOptions,
+            options = data.switchdropdownOptions,
             modelPattern = false,   //标志是否通过model值构建下拉列表
             dataSource,
             dataModel,
@@ -289,7 +289,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.miniswitch.html'], function(
         //转换option
         _buildOptions(options, dataModel);
 
-        var vmodel = avalon.define(data.miniswitchId, function(vm) {
+        var vmodel = avalon.define(data.switchdropdownId, function(vm) {
 
             var titleNode, listNode, optionsNode;
 
@@ -317,7 +317,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.miniswitch.html'], function(
 
             vm.$init = function() {
                 if(vmodel.data.length === 0) {
-                    throw new Error('the options is not enough for init a miniswitch!');
+                    throw new Error('the options is not enough for init a switchdropdown!');
                 }
 
                 //根据multiple的类型初始化组件
@@ -528,7 +528,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.miniswitch.html'], function(
                     avalon.unbind(window, 'resize', resizeHandler);
                 }
                 vmodel.toggle = false;
-                avalon.log("miniswitch $remove")
+                avalon.log("switchdropdown $remove")
             };
 
             vm.$blur = function(e) {
@@ -563,7 +563,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.miniswitch.html'], function(
     widget.version = "1.0";
 
     widget.defaults = {
-        width: 40,             //自定义宽度
+        width: 100,             //自定义宽度
         listWidth: 100,         //自定义下拉列表的宽度
         height: 44,            //下拉列表的高度
         enable: true,           //组件是否可用

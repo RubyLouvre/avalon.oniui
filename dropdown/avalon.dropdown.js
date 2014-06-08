@@ -242,7 +242,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             }
 
             if(!opt.multiple && avalon.type(opt.value) === 'array') {
-                opt.value = opt.value[0] || undefined;
+                opt.value = opt.value[0] || "";
             }
 
             opt.duplexName = duplexName;

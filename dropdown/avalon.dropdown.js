@@ -248,9 +248,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             opt.duplexName = duplexName;
         }
 
-        //首先扫描该元素
-        avalon.scan(element, vmodels);
-
         //将元素的属性值copy到options中
         avalon.each(['autofocus', 'multiple', 'size'], function(i, name) {
             if(element.hasAttribute(name)) {
@@ -278,6 +275,8 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             optionsModel = getSelectModel(dataSource);
             dataModel =  optionsModel.data;
         }
+
+        avalon(element).css('display', 'none');
 
         //转换option
         _buildOptions(options);
@@ -342,8 +341,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                         vmodel.toggle = false;
                     });
                 }
-
-                avalon(element).css('display', 'none');
 
                 //通过model构建的组件，需要同步select的结构
                 if(modelPattern) {

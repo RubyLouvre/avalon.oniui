@@ -250,9 +250,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.miniswitch.html'], function(
             opt.duplexName = duplexName;
         }
 
-        //首先扫描该元素
-        avalon.scan(element, vmodels);
-
         //将元素的属性值copy到options中
         avalon.each(['autofocus', 'multiple', 'size'], function(i, name) {
             if(element.hasAttribute(name)) {
@@ -283,7 +280,11 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.miniswitch.html'], function(
         if(dataModel.length === 0) {
             optionsModel = getSelectModel(dataSource);
             dataModel =  optionsModel.data;
+        } else {
+            dataModel = avalon.mix(true, [], options.switchOpt, dataModel);
         }
+
+        avalon(element).css('display', 'none');
 
         //转换option
         _buildOptions(options, dataModel);
@@ -348,8 +349,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.miniswitch.html'], function(
                         vmodel.toggle = false;
                     });
                 }
-
-                avalon(element).css('display', 'none');
 
                 //通过model构建的组件，需要同步select的结构
                 if(modelPattern) {
@@ -576,8 +575,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.miniswitch.html'], function(
         value: [],              //设置组件的初始值
         label: null,            //设置组件的提示文案，可以是一个字符串，也可以是一个对象
         autofocus: false,       //是否自动获取焦点
-        multiple: false,        //是否为多选模式
-        size: 1,                //多选模式下显示的条数
         getTemplate: function(str, options) {
             return str
         },

@@ -9,7 +9,7 @@
         require('dropdown/avalon.dropdown.js', function() {
             avalon.ready(function() {
                 avalon.define('dropdown', function(vm) {
-                    vm.value = [];
+                    vm.value = 'value1';
                 });
                 avalon.scan();
             });
@@ -38,7 +38,7 @@
     </select>
     <p>{{value}}</p>
 </div>
-<pre class="brush:html;gutter:false;toolbar:false;">
+<pre class="brush:html;gutter:false;toolbar:false;" ms-skip>
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;

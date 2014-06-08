@@ -240,6 +240,12 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     return parseData(option.value);
                 });
             }
+
+            if(!opt.multiple && avalon.type(opt.value) === 'array') {
+                opt.value = opt.value[0] || undefined;
+            }
+
+            opt.duplexName = duplexName;
         }
 
         //首先扫描该元素
@@ -281,7 +287,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             var titleNode, listNode, optionsNode;
 
             avalon.mix(vm, options);
-            vm.$skipArray= ['widgetElement'];
+            vm.$skipArray= ['widgetElement', 'duplexName'];
             vm.widgetElement = element;
             vm.activeIndex = null;
 
@@ -317,12 +323,12 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     title = titleNode.firstChild;
                     elemParent.insertBefore(titleNode, element);
                     titleNode = title;
-                    if(vmodel.value.length === 0) {
+                    if(typeof vmodel.value === 'undefined') {
                         defaultOption =  vmodel.data.filter(function(option) {
                             return option.item === true;
                         })[0];
 
-                        vmodel.value = [defaultOption.value];
+                        vmodel.value = defaultOption.value;
                     } else {
                         defaultOption = vmodel.data.filter(function(option) {
                             return option.value === vmodel.value[0];
@@ -338,9 +344,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 }
 
                 avalon(element).css('display', 'none');
-                avalon.ready(function() {
-                    avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
-                });
 
                 //通过model构建的组件，需要同步select的结构
                 if(modelPattern) {
@@ -349,11 +352,29 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     avalon.each(['autofocus', 'multiple', 'size'], function(i, attr) {
                         avalon(element).attr('ms-attr-' + attr, attr);
                     });
-                    avalon(element).attr('ms-enabled', 'enable');
-                    avalon.ready(function() {
-                        avalon.scan(element, [vmodel].concat(vmodels));
-                    });
                 }
+
+                avalon.ready(function() {
+                    avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
+                    $element.attr('ms-enabled', 'enable');
+                    $element.attr('ms-duplex', 'value');
+                    avalon.scan(element, [vmodel].concat(vmodels));
+                });
+
+                if(!vmodel.multiple) {
+                    var duplexName = (element.msData['ms-duplex'] || '').trim(),
+                        duplexModel;
+
+                    if(duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
+                        duplexModel[1].$watch(duplexName, function(newValue) {
+                            vmodel.value = newValue;
+                        });
+                        vmodel.$watch('value', function(newValue) {
+                            duplexModel[1][duplexName] = newValue;
+                        });
+                    }
+                }
+
             };
 
             vm.$hover = function(e, index) {
@@ -369,17 +390,18 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 if(!option.enable) {
                     return;
                 }
-                var index = vmodel.value.indexOf(option.value);
+                var index;
 
                 //根据multiple区分对待, 多选时可以为空值
                 if(vmodel.multiple) {
+                    index = vmodel.value.indexOf(option.value);
                     if(index > -1) {
                         vmodel.value.splice(index, 1);
                     } else {
                         vmodel.value.push(option.value);
                     }
-                } else if(index === -1) {
-                        vmodel.value.set(0, option.value);
+                } else {
+                    vmodel.value = option.value;
                 }
 
                 vmodel.toggle = false;
@@ -428,11 +450,14 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             };
 
             vm.$getLabel = function(value) {
-                var v = value[0];
+                var v = avalon.type(value) === 'array' ? value[0] : value,
+                    label = vmodel.data.filter(function(option) {
+                        return option.value == v;
+                    });
 
-                return vmodel.data.filter(function(option) {
-                    return option.value === v;
-                })[0].label;
+                if(label.length > 0) {
+                    return label[0].label;
+                }
             };
 
             vm.$watch('toggle', function(b) {
@@ -493,7 +518,11 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             };
 
             vm.isSelected = function( value ) {
-                return vmodel.value.indexOf(value) > -1;
+                if(vmodel.multiple) {
+                    return vmodel.value.indexOf(value) > -1;
+                } else {
+                    return vmodel.value === value;
+                }
             };
 
         });

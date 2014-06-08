@@ -1,4 +1,4 @@
-define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(avalon, $$, tmpl) {
+define(['avalon', 'avalon.getModel', 'text!./avalon.miniswitch.html'], function(avalon, $$, tmpl) {
     var arr = tmpl.split("MS_OPTION_STYLE");
     var cssText = arr[1].replace(/<\/?style>/g, "");
     var styleEl = document.getElementById("avalonStyle");
@@ -205,10 +205,10 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
         return ret;
     }
 
-    var widget = avalon.ui.dropdown = function(element, data, vmodels) {
+    var widget = avalon.ui.miniswitch = function(element, data, vmodels) {
         var $element = avalon(element),
             elemParent = element.parentNode,
-            options = data.dropdownOptions,
+            options = data.miniswitchOptions,
             modelPattern = false,   //标志是否通过model值构建下拉列表
             dataSource,
             dataModel,
@@ -218,10 +218,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             resizeHandler;
 
         //将option适配为更适合vm的形式
-        function _buildOptions(opt) {
-            //dropdown的valueVm有两种形式：
-            // 1，未配置duplex，使用内置vm，内置vm的取值参考页面select及options.value
-            // 2，配置duplex，使用duplex的数据
+        function _buildOptions(opt, dm) {
             var duplexName = (element.msData['ms-duplex'] || '').trim(),
                 duplexModel;
 
@@ -240,9 +237,14 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     return parseData(option.value);
                 });
             }
+            if(!opt.value || opt.value.length === 0) {
+                opt.value = dm.filter(function(option) {
+                    return option.item === true;
+                })[0].value;
+            }
 
             if(!opt.multiple && avalon.type(opt.value) === 'array') {
-                opt.value = opt.value[0] || "";
+                opt.value = opt.value[0] || void 0;
             }
 
             opt.duplexName = duplexName;
@@ -265,23 +267,29 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
         listTemplate = templates[1];
         optionsTemplate = templates[2];
 
-        dataSource = options.data.$model || options.data;
-        modelPattern = getSource(element).length === 0;
+        dataSource = options.switchOpt;
+        if(options.data.length > 0) {
+            dataSource = options.data.$model || options.data;
+        }
 
         //数据抽取
         dataModel = getSource(element);
+        modelPattern = dataModel.length === 0;
+
 
         if(dataModel.length === 0) {
             optionsModel = getSelectModel(dataSource);
             dataModel =  optionsModel.data;
+        } else {
+            dataModel = avalon.mix(true, [], options.switchOpt, dataModel);
         }
 
         avalon(element).css('display', 'none');
 
         //转换option
-        _buildOptions(options);
+        _buildOptions(options, dataModel);
 
-        var vmodel = avalon.define(data.dropdownId, function(vm) {
+        var vmodel = avalon.define(data.miniswitchId, function(vm) {
 
             var titleNode, listNode, optionsNode;
 
@@ -309,7 +317,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
             vm.$init = function() {
                 if(vmodel.data.length === 0) {
-                    throw new Error('the options is not enough for init a dropdown!');
+                    throw new Error('the options is not enough for init a miniswitch!');
                 }
 
                 //根据multiple的类型初始化组件
@@ -333,7 +341,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                             return option.value === vmodel.value[0];
                         })[0];
                     }
-                    //模拟浏览器对dropdown在scroll和resize事件下的行为
                     scrollHandler = avalon.bind(window, 'scroll', function() {
                         vmodel.toggle = false;
                     });
@@ -346,7 +353,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 if(modelPattern) {
                     optionsNode = avalon.parseHTML(optionsTemplate);
                     element.appendChild(optionsNode);
-                    avalon.each(['autofocus', 'multiple', 'size'], function(i, attr) {
+                    avalon.each(['autofocus'], function(i, attr) {
                         avalon(element).attr('ms-attr-' + attr, attr);
                     });
                 }
@@ -455,6 +462,32 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 if(label.length > 0) {
                     return label[0].label;
                 }
+                return "";
+            };
+
+            vm.$getClass = function(value) {
+                    var v = avalon.type(value) === 'array' ? value[0] : value,
+                        cls = vmodel.data.filter(function(option) {
+                            return option.value == v;
+                        });
+
+                    if(cls.length > 0) {
+                        return cls[0].cls;
+                    }
+                    return "";
+            };
+
+            vm.$getFont = function(value) {
+                var v = avalon.type(value) === 'array' ? value[0] : value,
+                    font = vmodel.data.filter(function(option) {
+                        return option.value == v;
+                    });
+
+                if(font.length > 0) {
+                    return font[0].font;
+                }
+
+                return "";
             };
 
             vm.$watch('toggle', function(b) {
@@ -495,7 +528,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     avalon.unbind(window, 'resize', resizeHandler);
                 }
                 vmodel.toggle = false;
-                avalon.log("dropdown $remove")
+                avalon.log("miniswitch $remove")
             };
 
             vm.$blur = function(e) {
@@ -530,9 +563,9 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
     widget.version = "1.0";
 
     widget.defaults = {
-        width: 200,             //自定义宽度
-        listWidth: 200,         //自定义下拉列表的宽度
-        height: 200,            //下拉列表的高度
+        width: 40,             //自定义宽度
+        listWidth: 100,         //自定义下拉列表的宽度
+        height: 44,            //下拉列表的高度
         enable: true,           //组件是否可用
         readOnly: false,        //组件是否只读
         data: [],              //下拉列表显示的数据模型
@@ -541,11 +574,23 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
         value: [],              //设置组件的初始值
         label: null,            //设置组件的提示文案，可以是一个字符串，也可以是一个对象
         autofocus: false,       //是否自动获取焦点
-        multiple: false,        //是否为多选模式
-        size: 1,                //多选模式下显示的条数
         getTemplate: function(str, options) {
             return str
-        }
+        },
+        switchOpt: [{
+            value: 1,
+            label : ' 启用',
+            cls: 'g-icon-start',
+            title: '启用',
+            font: '&#xf111;'
+        },
+        {
+            value: 2,
+            label : ' 暂停',
+            cls: 'g-icon-pause',
+            title: '暂停',
+            font: '&#xf04c;'
+        }]
     };
 
     return avalon;

@@ -1,4 +1,4 @@
-@import "../avalon.clrfix.scss";
+@import "../style/default.scss";
 $pf : ".ui-progressbar";
 
 #{$pf}{
@@ -19,7 +19,6 @@ $pf : ".ui-progressbar";
 		width: 0;
 		float: left;
 		display: inline;
-		transition: all .5s;
 	}
 	&-bar-right {
 		background: #ddd;

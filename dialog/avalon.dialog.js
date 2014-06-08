@@ -77,9 +77,10 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
                 maskLayer.style.zIndex = 2 * len + maxZIndex -1;
                 element.style.zIndex =  2 * len + maxZIndex;
                 resetCenter(vmodel, element);
-                if (isIE6 && document.getElementsByTagName("select").length && iFrame === null) {
+                var selectLength = document.getElementsByTagName("select").length;
+                if (isIE6 && selectLength && iFrame === null) {
                     iFrame = createIframe();
-                } else {
+                } else if(isIE6 && selectLength) {
                     iFrame.style.display = "block";
                     iFrame.style.width = maskLayer.style.width;
                     iFrame.style.height = maskLayer.style.height;
@@ -98,7 +99,10 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
                     maskLayer.setAttribute("ms-visible", "toggle");
                     avalon.scan(maskLayer, dialogShows[len - 1]);
                 } else {
-                    iFrame.style.display = "none";
+                    if (iFrame !== null) {
+                        iFrame.style.display = "none";
+                    }
+                    
                     !isIE6? document.body.style.overflow = "auto" : 0;
                 }
                 // 重置maskLayer的z-index,当最上层的dialog关闭，通过降低遮罩层的z-index来显示紧邻其下的dialog
@@ -265,13 +269,13 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
     // 调整弹窗水平、垂直居中
     function resetCenter(vmodel, target) {
         var bodyHeight = Math.max(body.clientHeight, body.scrollHeight),
-                scrollTop = Math.max(document.body.scrollTop, document.documentElement.scrollTop),
-                scrollLeft = Math.max(document.body.scrollLeft, document.documentElement.scrollLeft);
+            scrollTop = Math.max(document.body.scrollTop, document.documentElement.scrollTop),
+            scrollLeft = Math.max(document.body.scrollLeft, document.documentElement.scrollLeft);
         if (vmodel.toggle) {
             maskLayer.style.width = avalon(window).width() + "px";
             maskLayer.style.height = bodyHeight + "px";
             var l = ((avalon(window).width() - target.offsetWidth) / 2) + scrollLeft;
-            var t = ((avalon(window).height() - target.offsetHeight) / 2) + scrollTop;
+            var t = (avalon(window).height() - target.offsetHeight) / 2 + scrollTop - 10;
             target.style.left = l + "px"
             target.style.top = t + "px"
         }

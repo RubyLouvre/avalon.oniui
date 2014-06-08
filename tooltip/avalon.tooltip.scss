@@ -1,4 +1,4 @@
-@import "../themes/default.scss";
+@import "../style/default.scss";
 $pf : ".ui-tooltip";
 
 .ui-tooltip-hidden{
@@ -7,15 +7,23 @@ $pf : ".ui-tooltip";
 
 #{$pf} {
 	// current style
-	padding: 8px;
+	padding: 10px;
 	position: absolute;
 	z-index: 9999;
 	max-width: 300px;
 	font-size: 12px;
 	overflow: visible;
+	background: #FFE44F;
+	border-color: #FFC805;
+	color: #A65A00;
+	border-radius: 0 0 0 0;
+	a{
+		color: #A65A00;
+	}
 	.in, .out{
 	    font-family: simsun;
 	    font-size: 0;
+	    line-height: 0;
 	    height: 0;
 	    overflow: visible;
 	    position: absolute;
@@ -24,49 +32,49 @@ $pf : ".ui-tooltip";
 	&-top {
 		.in{
 			border-style: dashed dashed solid;
-			border-color: transparent transparent $backgroundColor;
-		    border-width: 0 6px 7px;
+			border-color: transparent transparent #FFE44F;
+		    border-width: 0 4px 5px;
 		    left: 29px;
-		    top: -7px;
+		    top: -5px;
 		}	
 		.out{
 			border-style: dashed dashed solid;
-			border-color: transparent transparent $borderColor;
-		    border-width: 0 7px 8px;
+			border-color: transparent transparent #FFC805;
+		    border-width: 0 5px 6px;
 		    left: 28px;
-		    top: -8px;
+		    top: -6px;
 		}
 	}
 	&-right{
 		.in{
 			border-style: dashed dashed dashed solid;
-		    border-color: transparent transparent transparent $backgroundColor;
-		    border-width: 7px 0 6px 6px;
-		    right: -6px;
+		    border-color: transparent transparent transparent #FFE44F;
+		    border-width: 5px 0 4px 4px;
+		    right: -4px;
 		    top: 29px;
 		}
 		.out{
 			border-style: dashed dashed dashed solid;
-		    border-color: transparent transparent transparent $borderColor;
-		    border-width: 8px 0 7px 7px;
-		    right: -7px;
+		    border-color: transparent transparent transparent #FFC805;
+		    border-width: 6px 0 5px 5px;
+		    right: -5px;
 		    top: 28px;
 		}
 	}
 	&-bottom{
 		.in{
 			border-style: solid dashed dashed;
-		    border-color: $backgroundColor transparent transparent;
-		    border-width: 7px 6px 0;
-		    bottom: -7px;
+		    border-color: #FFE44F transparent transparent;
+		    border-width: 5px 4px 0;
+		    bottom: -5px;
 		    left: 29px;
 		    top: auto;
 		}
 		.out{
 			border-style: solid dashed dashed;
-			border-color: $borderColor transparent transparent;
-		    border-width: 8px 7px 0;
-		    bottom: -8px;
+			border-color: #FFC805 transparent transparent;
+		    border-width: 6px 5px 0;
+		    bottom: -6px;
 		    left: 28px;
 		    top: auto;
 		}
@@ -74,16 +82,16 @@ $pf : ".ui-tooltip";
 	&-left{
 		.in{
 			border-style: dashed solid dashed dashed;
-			border-color: transparent $backgroundColor transparent transparent;
-		    border-width: 6px 7px 6px 0;
-		    left: -7px;
+			border-color: transparent #FFE44F transparent transparent;
+		    border-width: 4px 5px 4px 0;
+		    left: -4px;
 		    top: 29px;
 		}
 		.out{
 			border-style: dashed solid dashed dashed;
-		    border-color: transparent $borderColor transparent transparent;
-		    border-width: 7px 8px 7px 0;
-		    left: -8px;
+		    border-color: transparent #FFC805 transparent transparent;
+		    border-width: 5px 6px 5px 0;
+		    left: -5px;
 		    top: 28px;
 		}
 	}

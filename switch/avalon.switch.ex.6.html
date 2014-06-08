@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>switch组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <style type="text/css">
+            
+        </style>
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["switch/avalon.switch", "tooltip/avalon.tooltip"], function() {
+                var id = 0;
+                var vmodel = avalon.define("test", function(vm) {
+                    vm["switch"] = {
+                        getTemplate: function(tpl) {
+                            id++;
+                            return tpl.replace(/^<div/, "<div ms-class='checked:checked' ")
+                        }
+                        , onChange: function(v) {
+                            if(avalon.vmodels.$b2) {
+                                avalon.vmodels.$b2.content = "单击" + (v ? "关闭" : "打开")
+                            }
+                        }
+                    }
+                    vm.$ttOpt = {
+                        contentGetter: function(elem) {
+                            var elem = avalon(elem)
+                            if(elem.hasClass("ui-switch")) return "单击" + (elem.hasClass("checked") ? "关闭" : "打开")
+                        },
+                        position: "tc"
+                        , delegate: true
+                    }
+                    vm.$skipArray = ["switch"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <h1>switch + tooltip</h1>
+        <div ms-widget="tooltip,$b2,$ttOpt">
+            <p>---------type=mini---------</p>
+            <div class="this-for-test-3">
+                <input rank="1" checked="checked" type="checkbox" ms-widget="switch" data-switch-type="mini">
+            </div>
+            <p>---------type=small---------</p>
+            <div class="this-for-test">
+                <input rank="2" checked="checked" type="checkbox" ms-widget="switch,$cc" data-switch-type="small">
+                <input type="button" value="Toggle" onclick="avalon.vmodels.$cc.toggle()">
+            </div>
+            <p>---------type=normal---------</p>
+            <div class="this-for-test-4">
+                <input rank="3" checked="checked" type="checkbox" ms-widget="switch,$dd" data-switch-type="normal">
+                <input type="button" value="disable" onclick="avalon.vmodels.$dd.disable()">
+                <input type="button" value="enable" onclick="avalon.vmodels.$dd.enable()">
+            </div>
+            <p>---------type=large---------</p>
+            <div class="this-for-test-2">
+                <input rank="4" checked="checked" type="checkbox" ms-widget="switch" data-switch-type="large">
+            </div>
+            <p>------------------</p>
+        </div>
+        <pre class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;switch组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            
+        &lt;/style&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;switch/avalon.switch&quot;, &quot;tooltip/avalon.tooltip&quot;], function() {
+                var id = 0;
+                var vmodel = avalon.define(&quot;test&quot;, function(vm) {
+                    vm[&quot;switch&quot;] = {
+                        getTemplate: function(tpl) {
+                            id++;
+                            return tpl.replace(/^&lt;div/, &quot;&lt;div ms-class='checked:checked' &quot;)
+                        }
+                        , onChange: function(v) {
+                            if(avalon.vmodels.$b2) {
+                                avalon.vmodels.$b2.content = &quot;单击&quot; + (v ? &quot;关闭&quot; : &quot;打开&quot;)
+                            }
+                        }
+                    }
+                    vm.$ttOpt = {
+                        contentGetter: function(elem) {
+                            var elem = avalon(elem)
+                            if(elem.hasClass(&quot;ui-switch&quot;)) return &quot;单击&quot; + (elem.hasClass(&quot;checked&quot;) ? &quot;关闭&quot; : &quot;打开&quot;)
+                        },
+                        position: &quot;tc&quot;
+                        , delegate: true
+                    }
+                    vm.$skipArray = [&quot;switch&quot;]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;switch + tooltip&lt;/h1&gt;
+        &lt;div ms-widget=&quot;tooltip,$b2,$ttOpt&quot;&gt;
+            &lt;p&gt;---------type=mini---------&lt;/p&gt;
+            &lt;div class=&quot;this-for-test-3&quot;&gt;
+                &lt;input rank=&quot;1&quot; checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;switch&quot; data-switch-type=&quot;mini&quot;&gt;
+            &lt;/div&gt;
+            &lt;p&gt;---------type=small---------&lt;/p&gt;
+            &lt;div class=&quot;this-for-test&quot;&gt;
+                &lt;input rank=&quot;2&quot; checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;switch,$cc&quot; data-switch-type=&quot;small&quot;&gt;
+                &lt;input type=&quot;button&quot; value=&quot;Toggle&quot; onclick=&quot;avalon.vmodels.$cc.toggle()&quot;&gt;
+            &lt;/div&gt;
+            &lt;p&gt;---------type=normal---------&lt;/p&gt;
+            &lt;div class=&quot;this-for-test-4&quot;&gt;
+                &lt;input rank=&quot;3&quot; checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;switch,$dd&quot; data-switch-type=&quot;normal&quot;&gt;
+                &lt;input type=&quot;button&quot; value=&quot;disable&quot; onclick=&quot;avalon.vmodels.$dd.disable()&quot;&gt;
+                &lt;input type=&quot;button&quot; value=&quot;enable&quot; onclick=&quot;avalon.vmodels.$dd.enable()&quot;&gt;
+            &lt;/div&gt;
+            &lt;p&gt;---------type=large---------&lt;/p&gt;
+            &lt;div class=&quot;this-for-test-2&quot;&gt;
+                &lt;input rank=&quot;4&quot; checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;switch&quot; data-switch-type=&quot;large&quot;&gt;
+            &lt;/div&gt;
+            &lt;p&gt;------------------&lt;/p&gt;
+        &lt;/div&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

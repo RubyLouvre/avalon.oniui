@@ -10,13 +10,13 @@
         </script>
         <script>
             require(["simplegrid/avalon.simplegrid"], function() {
-                var createData = function(n){
-                    var array  = []
-                    for(var i = 0; i < n; i++){
+                var createData = function(n) {
+                    var array = []
+                    for (var i = 0; i < n; i++) {
                         array.push({
-                            xxx:  Math.random().toString(36).substring(4, 10) ,
-                            yyy:  Math.random().toString(36).substring(4, 10) ,
-                            zzz:  i 
+                            xxx: Math.random().toString(36).substring(4, 10),
+                            yyy: Math.random().toString(36).substring(4, 10),
+                            zzz: i
                         })
                     }
                     return array
@@ -39,15 +39,15 @@
             })
         </script>
     </head>
-    <body >
-      
-    <fielset ms-controller="test">
-        <legend>resizable</legend>
+    <body>
+     
+            <fieldset ms-controller="test">
+                <legend>演示大数据表格</legend>
 
-        <div ms-widget="simplegrid">
+                <div ms-widget="simplegrid">
 
-        </div>
-       
-    </fielset>
-</body>
+                </div>
+            </fieldset>
+  
+    </body>
 </html>

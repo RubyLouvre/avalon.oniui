@@ -271,6 +271,7 @@ define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
                 e.preventDefault();
                 break;
             case 38:
+            case 63233: //safari
                 // up arrow
                 e.preventDefault();
                 var index = vmodel.activeIndex - 1
@@ -280,6 +281,7 @@ define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
                 vmodel.activeIndex = index
                 break;
             case 40:
+            case 63235: //safari
                 // down arrow
                 e.preventDefault();
                 var index = vmodel.activeIndex + 1

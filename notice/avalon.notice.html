@@ -5,10 +5,11 @@
             <span class="js_notice_content">{{content|html}}</span>
             <span class="ui-notice-close js_notice_close" 
                 ms-if="hasCloseBtn"
-                ms-click="$hide">关闭</span>
+                ms-click="$close">关闭</span>
         </div>
     </div>
 </div>
+<div ms-if="_isAffix" ms-css-width="noticeAffixWidth" ms-css-height="noticeAffixHeight" ms-css-display="affixPlaceholderDisplay"></div>
 MS_OPTION_STYLE
 <style>
 .ui-notice {

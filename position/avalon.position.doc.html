@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>position2组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body>
+
+
+        <table width="90%" border="1">
+            <tr>
+                <th>名字</th><th>默认值</th> <th>说明</th>
+            </tr>
+            <!--auto doc start-->
+<tr>
+    <td>of</td><td> null</td><td> Element 或 Event，以这个元素作为定位元素，事件（Event）对象，将使用 pageX 和 pageY 属性</td></tr>
+<tr>
+    <td>at</td><td> "center"</td><td> 设置定位元素上被定位元素的位置： "horizontal vertical"，例如:"left+20 top"</td></tr>
+<tr>
+    <td>my</td><td> "center"</td><td> 设置被定位元素上对准定位元素的位置："horizontal vertical" 对齐方式。一个单一的值，比如 "right" 将规范为 "right center"，"top" 将规范为 "center top"（下面的 CSS 公约）。可接受的水平值："left"、"center"、"right"。可接受的垂直值："top"、"center"、"bottom"。例如，"left top" 或 "center center"。每个纬度也可以包含偏移，以像素计或以百分比计，例如 "right+10 top-25%"。百分比偏移是相对于被定位的元素。</td></tr>
+<tr>
+    <td>collision</td><td> "flip"</td><td> 溢出检测，当被定位元素在某些方向上溢出窗口，则移动它到另一个位置。与 my 和 at 选项相似，该选项会接受一个单一的值或一对 horizontal/vertical 值。例如："flip"、"fit"、"fit flip"、"fit none"。<br>"flip"：翻转元素到目标的相对一边，再次运行 collision 检测一遍查看元素是否适合。无论哪一边允许更多的元素可见，则使用那一边。<br>"fit"：把元素从窗口的边缘移开。<br>"flipfit"：首先应用 flip 逻辑，把元素放置在允许更多元素可见的那一边。然后应用 fit 逻辑，确保尽可能多的元素可见。<br>"none": 不检测</td></tr>
+<tr>
+    <td>within</td><td> window</td><td> 设置溢出检测的容器，默认是window</td></tr>
+<!--auto doc end-->
+        </table>
+        <p>position2 组件有一个重要的xx方法,见源码：</p>
+        <pre class="brush:js;gutter:false;toolbar:false;">
+           
+        </pre>
+        <!--ex list start-->
+<ol>
+<li><a href="avalon.position.ex.html">position+spinner+dropdown+draggable</a></li>
+</ol>
+<!--ex list end-->
+    </body>
+</html>

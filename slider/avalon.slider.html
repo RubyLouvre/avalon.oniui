@@ -10,7 +10,6 @@
          ms-if = "range"
          style="width: 100%;">
     </div>
-
     <b  class="ui-slider-handle ui-state-default ui-corner-all hander___flag"
         ms-css-MS_OPTION_LEFTORBOTTOM = "{{percent}}%"
         ms-data-axis = "$axis"
@@ -47,7 +46,94 @@
 </div>
 MS_OPTION_STYLE
 <style>
+
+    .ui-helper-hidden-accessible {
+        border: 0 none;
+        clip: rect(0px 0px 0px 0px);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+    .ui-corner-all {
+        border-radius: 5px;
+    }
+    .ui-slider {
+        position: relative;
+        text-align: left;
+        background: #e7e7e7;
+    }
+    .ui-slider .ui-slider-handle {
+        cursor: default;
+        height: 14px;
+        position: absolute;
+        width: 14px;
+        z-index: 2;
+        background: #619fea;
+        border-radius: 7px;
+        display: block;
+        font-size: 0px;
+        line-height: 0px;
+    }
+    .ui-slider .ui-slider-handle.ui-state-focus, .ui-slider .ui-slider-handle.ui-state-hover {
+        background: #79c9ec;
+    }
+    .ui-slider.ui-state-disabled .ui-slider-handle{
+        background: #ccc;
+    }
+    .ui-slider.ui-state-disabled .ui-slider-range {
+        background: #ccc;
+    }
+    .ui-slider .ui-slider-range {
+        background: #afd9fc;
+        border: 0 none;
+        display: block;
+        font-size: 0px;
+        line-height: 0px;
+        position: absolute;
+        z-index: 1;
+    }
+    .ui-slider-horizontal {
+        height: 8px;
+        
+    }
+    .ui-slider-horizontal .ui-slider-handle {
+        margin-left: -7px;
+        top: -3px;
+    }
+    .ui-slider-horizontal .ui-slider-range {
+        height: 100%;
+        top: 0;
+    }
+    .ui-slider-horizontal .ui-slider-range-min {
+        left: 0;
+    }
+    .ui-slider-horizontal .ui-slider-range-max {
+        right: 0;
+    }
+    .ui-slider-vertical {
+        height: 100px;
+        width: 8px;
+    }
     .ui-slider-vertical .ui-slider-handle {
-        margin-top: -0.6em;
+        left: -3px;
+        margin-bottom: -7px;
+        margin-left: 0;
+    }
+    .ui-slider-vertical .ui-slider-range {
+        left: 0;
+        width: 100%;
+    }
+    .ui-slider-vertical .ui-slider-range-min {
+        bottom: 0;
+    }
+    .ui-slider-vertical .ui-slider-range-max {
+        top: 0;
+    }
+
+    .ui-slider-vertical .ui-slider-handle {
+        margin-top: -7px;
     }
 </style>

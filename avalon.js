@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.3.1 2014.6.3
+ avalon 1.3.1 2014.6.9
  ==================================================*/
 (function(DOC) {
     var prefix = "ms-"
@@ -252,9 +252,6 @@
         css: function(node, name, value) {
             if (node instanceof avalon) {
                 node = node[0]
-            }
-            if(!node || !node.style){
-                return 
             }
             var prop = /[_-]/.test(name) ? camelize(name) : name
             name = avalon.cssName(prop) || prop
@@ -905,9 +902,8 @@
                 kernel.commentInterpolate = true
             } else {
                 var test = openTag + "test" + closeTag
-                var cinerator = DOC.createElement("div")
                 cinerator.innerHTML = test
-                if (cinerator.innerHTML !== test && cinerator.innerHTML.indexOf("&lt;") !== 0) {
+                if (cinerator.innerHTML !== test && cinerator.innerHTML.indexOf("&lt;") >= 0) {
                     throw new SyntaxError("此定界符不合法")
                 }
                 cinerator.innerHTML = ""
@@ -3361,7 +3357,7 @@
                         b = bbb[i]
                 if (!isEqual(a, b)) {
                     sorted = true
-                    var index = getIndex(a, bbb, i)
+                    var index = bbb.indexOf(a, i)
                     var remove = this._splice(index, 1)[0]
                     var remove2 = bbb.splice(index, 1)[0]
                     this._splice(i, 0, remove)
@@ -3384,16 +3380,6 @@
         return val
     }
 
-    //取得el在array的位置
-
-    function getIndex(a, array, start) {
-        for (var i = start, n = array.length; i < n; i++) {
-            if (isEqual(a, array[i])) {
-                return i
-            }
-        }
-        return -1
-    }
     //============ each/repeat/with binding 用到的辅助函数与对象 ======================
     //得到某一元素节点或文档碎片对象下的所有注释节点
     var queryComments = DOC.createTreeWalker ? function(parent) {

@@ -1,12 +1,56 @@
-<div class="ui-progressbar reset clrfix ui-widget ui-widget-content" ms-class-100="ui-progressbar-indeterminate:indeterminate" ms-class-101="ui-progressbar-haslabel:label">
-	<div class="ui-progressbar-label" ms-if="label">{{$labelShower(value, 'l1') | html}}</div>
+<div ms-if="!circle" class="ui-progressbar reset clrfix ui-widget ui-widget-content ui-progressbar-normal" ms-class-100="ui-progressbar-indeterminate:indeterminate" ms-class-101="ui-progressbar-haslabel:label" ms-class-102="ui-progressbar-right:right">
+	<div ms-class-100="ui-helper-hidden:right" class="ui-progressbar-label" ms-if="label">{{$labelShower(value, 'l1') | html}}
+		<b ms-if="!right" class="ui-progressbar-arrow"></b>
+	</div>
 	<div class="ui-progressbar-bar" ms-css-width="{{$cssMaker()}}">
-		<div class="ui-progressbar-label" ms-if="$showLabel(label, right)">{{$labelShower(value) | html}}</div>
+		<div class="ui-progressbar-label" ms-if="$showLabel(label, right)">{{$labelShower(value) | html}}
+		<b ms-if="right" class="ui-progressbar-arrow"></b></div>
 		<div class="ui-progressbar-overlay" ms-if="$indeterminate()"></div>
 	</div>
 	<div class="ui-progressbar-bar ui-progressbar-bar-right" ms-if="right" ms-css-width="{{$cssMaker('right')}}">
 		<div class="ui-progressbar-label" ms-if="$showLabel(label, right)">
-		<div class="ui-progressbar-overlay" ms-if="$indeterminate()"></div>{{$labelShower(value, "right") | html}}</div>
+		<div class="ui-progressbar-overlay" ms-if="$indeterminate()"></div>{{$labelShower(value, "right") | html}}
+		<b ms-if="right" class="ui-progressbar-arrow"></b></div>
 	</div>
 </div>
-	
+<div ms-if="circle" class="ui-progressbar reset clrfix ui-widget ui-widget-content ui-progressbar-circle" ms-class-100="ui-progressbar-indeterminate:indeterminate" ms-class-101="ui-progressbar-haslabel:label" ms-css-height="circleR*2+'px'" ms-css-width="circleR*2+'px'">
+	<svg ms-if="svgSupport" version="1.1" 
+	ms-attr-width="100%" 
+	ms-attr-height="100%" 
+	style="position:absolute;z-index:3;" 
+	xmlns="http://www.w3.org/2000/svg">
+		<path ms-attr-d="full" 
+		ms-attr-stroke="circleBorderColor" 
+		ms-attr-stroke-width="circleBorderWidth" 
+		stroke-linejoin="round" ms-attr-fill="circleColor"></path>
+		<path ms-if="d" 
+		ms-attr-d="d" 
+		ms-attr-stroke="circleBarColor" 
+		ms-attr-stroke-width="circleBorderWidth" 
+		stroke-linejoin="round" 
+		fill="none"></path>
+	</svg>
+	<v:arc ms-if="!svgSupport"  
+    filled="false" 
+    stroked="true" 
+    ms-css-height="(circleR-circleBorderWidth)*2+'px'" 
+    ms-css-width="(circleR-circleBorderWidth)*2+'px'" 
+    ms-attr-strokecolor="circleBarColor" 
+    ms-attr-strokeweight="circleBorderWidth" 
+    style="position:absolute;z-index:3;left:0;top:0;BEHAVIOR: url(#default#VML);text-indent:-1000px;overflow:hidden;" 
+    StartAngle="0" 
+    EndAngle="0" 
+    ms-attr-EndAngle="angel">
+	</v:arc>
+   	<v:oval ms-if="!svgSupport"  
+   stroked="true" 
+   ms-css-height="(circleR-circleBorderWidth)*2+'px'" 
+   ms-css-width="(circleR-circleBorderWidth)*2+'px'" 
+   ms-attr-fillcolor="circleColor" 
+   ms-attr-strokecolor="circleBorderColor" 
+   ms-attr-strokeweight="circleBorderWidth" 
+   style="position:absolute;z-index:2;left:0;top:0;BEHAVIOR: url(#default#VML)"></v:oval>
+    <div class="ui-progressbar-label" 
+	ms-css-line-height="circleR*2-4+'px'" 
+    ms-if="label">{{$labelShower(value) | html}}</div>
+</div>

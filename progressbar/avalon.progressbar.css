@@ -16,6 +16,9 @@
   font-size: 100%;
   list-style: none; }
 
+.ui-helper-hidden {
+  display: none; }
+
 /*corner css*/
 .ui-corner-all,
 .ui-corner-top,
@@ -75,16 +78,14 @@
 .ui-progressbar {
   width: 100%;
   position: relative;
-  height: 24px;
-  border: 1px solid #aaa;
-  background-color: #fff;
-  font-family: Verdana,Arial,sans-serif;
-  color: #222;
-  line-height: 24px; }
+  height: 6px;
+  border: none;
+  background-color: #DEDEDE;
+  font-family: Verdana,Arial,sans-serif; }
   .ui-progressbar-bar {
     z-index: 1;
     position: relative;
-    background-color: #ccc;
+    background-color: #619FE8;
     height: 100%;
     width: 0;
     float: left;
@@ -104,6 +105,39 @@
   .ui-progressbar-label {
     position: absolute;
     left: 50%;
-    height: 100%;
     z-index: 10;
-    margin: 0 auto; }
+    margin: 0 auto;
+    color: #fff; }
+  .ui-progressbar-circle {
+    border: none;
+    background-color: transparent; }
+    .ui-progressbar-circle .ui-progressbar-label {
+      font-size: 13px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      color: #619FE8; }
+  .ui-progressbar-normal .ui-progressbar-label {
+    background-color: #6AA5E9;
+    padding: 2px 4px;
+    font-size: 13px;
+    top: -25px;
+    height: 14px;
+    color: #fff;
+    line-height: 14px;
+    left: 0;
+    border-radius: 2px; }
+  .ui-progressbar-right .ui-progressbar-label {
+    left: 50%; }
+  .ui-progressbar-arrow {
+    border-style: solid dashed dashed;
+    border-color: #6AA5E9 transparent transparent;
+    border-width: 6px 5px 0;
+    height: 0;
+    overflow: hidden;
+    line-height: 0;
+    font-size: 0;
+    bottom: -6px;
+    left: 50%;
+    position: absolute;
+    margin-left: -6px; }

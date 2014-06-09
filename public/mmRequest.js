@@ -159,6 +159,9 @@ define("mmRequest", ["avalon", "mmDeferred"], function(avalon, mmDeferred) {
 
         var dataType = opts.dataType  //目标返回数据类型
         var transports = avalon.ajaxTransports
+        if (dataType === "json" && opts.type === "GET" && opts.crossDomain) {
+            dataType = opts.dataType = "jsonp"
+        }
         var name = opts.form ? "upload" : dataType
         var transport = transports[name] || transports.xhr
         avalon.mix(promise, transport)  //取得传送器的request, respond, preproccess
@@ -396,7 +399,7 @@ define("mmRequest", ["avalon", "mmDeferred"], function(avalon, mmDeferred) {
             return avalon.get(url, null, callback, "script")
         },
         getJSON: function(url, data, callback) {
-            return avalon.get(url, data, callback, "jsonp")
+            return avalon.get(url, data, callback, "json")
         },
         upload: function(url, form, data, callback, dataType) {
             if (typeof data === "function") {

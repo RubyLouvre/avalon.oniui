@@ -11,7 +11,7 @@ app.get('/', function(req, res) {
 });
 app.post("/post", function(req, res) {
     console.log(req.body)
-    
+
     if (req.xhr) {
         res.json({msg: '提交成功'});
     }
@@ -22,7 +22,13 @@ app.get("/get", function(req, res) {
     }
 });
 app.get("/getjson", function(req, res) {
-    res.jsonp({"msg": 'json', "aaa": "jsonp"});
+    console.log(req.xhr)
+    if (req.xhr) {
+        res.send({"msg": 'json', "channel": "ajax"});
+    } else {
+        res.jsonp({"msg": 'json', "channel": "jsonp"});
+    }
+
 });
 
 app.listen(3000);

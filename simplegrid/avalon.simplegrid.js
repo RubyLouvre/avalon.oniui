@@ -315,7 +315,7 @@ define(["avalon","pager/avalon.pager", "text!./avalon.simplegrid.html"], functio
         columnWidth: 160,
         edge: 15,
         _data: [],
-        perPage: "", //默认不分页,
+        perPages: "", //默认不分页,
         pageable: false,
         currentPage: 0,
         gridWrapperElement: {},
@@ -331,7 +331,6 @@ define(["avalon","pager/avalon.pager", "text!./avalon.simplegrid.html"], functio
             return tmpl
         },
         getStore: function(array, options) {
-
             return array.concat()
         },
         getColumns: function(array, options) {

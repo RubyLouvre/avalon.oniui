@@ -32,24 +32,49 @@
                 <td>hidden</td> <td>false</td><td>是否隐藏列</td> 
             </tr>
             <tr>   
-                <td>resizable</td> <td>是否允许改变列宽，默认为true</td>  
+                <td>resizable</td> <td>true</td> <td>是否允许改变列宽</td>  
             </tr>
             <tr>   
-                <td>sortable</td> <td>是否允许排序，默认为true </td> 
+                <td>sortable</td> <td>true</td> <td>是否允许排序 </td> 
             </tr>
             <tr>   
-                <td>title</td> <td>通过getColumnTitle获得 </td> 
+                <td>title</td> <td></td> <td>通过getColumnTitle获得 </td> 
             </tr>
             <tr>   
-                <td>className</td> <td>类名 </td> 
+                <td>className</td><td></td>  <td>类名 </td> 
             </tr>
 
         </table>
-        <table>
+        <br/>
+        <table width="80%" border="1">
             <tr>
-                   <td>className</td> <td>类名 </td> 
+                <th>与columns并列的属性</th> <th>默认值 </th>  <th>说明 </th> 
+            </tr>
+            <tr>
+                <td>pageable</td> <td>false </td>  <td> 是否显示分页栏</td> 
+            </tr>
+            <tr>
+                <td>perPages</td> <td> 0</td>  <td>决定每页的行数(分页与滚动模式下都要用到它)</td> 
+            </tr>
+            <tr>
+                <td>showRows</td> <td> 0 </td>  <td> 每页真实要显示的行数</td> 
+            </tr>
+            <tr>
+                <td>currentPage</td> <td> 0 </td>  <td> 当前位于第几页</td> 
+            </tr>
+            <tr>
+                <td>edge</td> <td> 15 </td>  <td>如果某一列可以允许通过拖动改变列宽,当用户在表头对应的单元格移动鼠标时,<br/>
+                    它离单元格的右边多少像素时就改变光标的形态,表示可以拖动</td> 
+            </tr>
+            <tr>
+                <td>columnWidth</td> <td> 160 </td>  <td>每列默认的宽度</td> 
+            </tr>
+            <tr>
+                <td>rowHeight</td> <td> 35 </td>  <td>每行默认的高度</td> 
             </tr>
         </table>
+
+
         <p><b style="color:orangered">data</b>是当前页的所有数据。
             如果存在分页，默认是第一页。当我们点击分页栏的下一页或其他页时，就会ajax请求数据，
             重写data。此属性在vm里是<b style="color:green">不可监控的</b>，

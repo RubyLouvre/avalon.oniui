@@ -6,33 +6,6 @@
         <link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
         <script src="../highlight/shCore.js"></script>
         <script src="../avalon.js"></script>
-        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/start/jquery-ui.css" />
-        <style>
-            body{
-                font-size:13px;
-            }
-            .drag{
-                width:100px;
-                height:100px;
-                background: green;
-                position: absolute;
-            }
-            .ui-slider-vertical{
-                float:left;
-                margin-right:3em;
-            }
-            .ui-slider-vertical:after {
-                visibility: hidden;
-                display: block;
-                font-size: 0;
-                content: " ";
-                clear: both;
-                height: 0;
-            }
-            p {
-                clear: both;
-            }
-        </style>
     </head>
     <body>
         <div class="wrapper">
@@ -75,12 +48,12 @@
             <div class="demoShow" ms-controller = "theme">
                 <div style="width:70%">
               
-                    <input ms-widget="slider, a" data-slider-max="80" data-slider-value="36">
-                    <p ms-controller = "a">如果可以拖动的话,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
-                    <input ms-widget="slider, b" data-slider-min="20" data-slider-value="36">
-                    <p ms-controller = "b">如果可以拖动的话,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
-                    <input ms-widget="slider, c" data-slider-value="36" data-slider-values = ["40", "60"]>
-                    <p ms-controller = "c">如果可以拖动的话,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+                    <input ms-widget="slider, a" data-slider-max="80" data-slider-value="36" data-slider-range="max">
+                    <p ms-controller = "a">值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+                    <input ms-widget="slider, b" data-slider-min="20" data-slider-value="36" data-slider-range="min">
+                    <p ms-controller = "b">值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+                    <input ms-widget="slider, c" data-slider-value="36" data-slider-values = "[40, 60]" data-slider-range="true">
+                    <p ms-controller = "c">值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
                 </div>
                 
                 <script>

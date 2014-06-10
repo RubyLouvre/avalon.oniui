@@ -4,16 +4,9 @@
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script src="../avalon.js"></script>
-        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/start/jquery-ui.css" />
         <style>
             body{
                 font-size:13px;
-            }
-            .drag{
-                width:100px;
-                height:100px;
-                background: green;
-                position: absolute;
             }
             .ui-slider-vertical{
                 float:left;
@@ -35,7 +28,6 @@
 
             require("slider/avalon.slider", function() {
                 var model = avalon.define("theme", function(vm) {
-                    vm.theme = "start";
                     vm.percent = 0
                     vm.$aaaOpts = {
                         ondragstart: function(){
@@ -52,7 +44,7 @@
                         },
                         min: 20,
                         max: 100,
-                        value: 30,
+                        value: 30
                     }
                 })
 
@@ -67,7 +59,12 @@
             <p ms-controller="aaa">值为{{value}}，百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
             <p>想禁止拖动，可以为原input元素设置disabled属性</p>
             <input ms-widget="slider, tt" disabled data-slider-max="255" data-slider-value="36">
-            <p>如果可以拖动的话,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+            <p ms-controller="tt">如果可以拖动的话,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+            <input ms-widget="slider, ll" disabled data-slider-range="min" data-slider-value="36">
+            <p ms-controller="ll">禁止拖动的slider ll,初始值为36，range 为min,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+            <input ms-widget="slider, qq" disabled data-slider-range="max" data-slider-value="36">
+            <p ms-controller="qq">禁止拖动的slider qq,初始值为36，range 为max,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+            
         </div>
         
         <div style="width:70%">
@@ -83,7 +80,7 @@
             <p ms-controller="b">值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
 
             <p>固定值小值</p>
-            <input ms-widget="slider, c" data-slider-min="1" data-slider-max="700" data-slider-value="37" data-slider-range="min"/>
+            <input ms-widget="slider, c" data-slider-min="1" data-slider-max="700" data-slider-value="8" data-slider-range="min"/>
 
             <p ms-controller="c">值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
         
@@ -128,6 +125,10 @@
 
             <p ms-controller="pp">值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
 
+            <input ms-widget="slider,pp" disabled data-slider-values="[20,80]" data-slider-range="true" data-slider-orientation="vertical" >
+
+            <p ms-controller="pp">slider pp 设置为diabled，值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+
         </div> 
 
         <p style="padding: 100px;">请测试范围是否正确</p>
@@ -135,31 +136,6 @@
         <div style="width:70%">
             <input ms-widget="slider,eee" data-slider-range="true" data-slider-values="[ 25,50 ]" data-slider-max="100" data-slider-min="20">
             <p ms-controller="eee">{{ percent0 }} {{ percent1 }} {{value}}; min为{{$valueMin}}, max为{{$valueMax}}</p>
-        </div>
-        <div ms-controller="theme">
-            <link rel="stylesheet" ms-href="http://code.jquery.com/ui/1.10.3/themes/{{theme}}/jquery-ui.css" />
-            <select ms-duplex="theme">
-                <option value='start'>start</option>
-                <option value='smoothness'>smoothness</option>
-                <option value='flick'>flick</option>
-                <option value='sunny'>sunny</option>
-                <option value='excite-bike'>excite bike</option>
-                <option value='black-tie'>black tie</option>
-                <option value='trontastic'>trontastic</option>
-                <option value='swanky-purse'>swanky purse</option>
-                <option value='le-frog'>le frog</option>
-                <option value='blitzer'>blitzer</option>
-                <option value='dot-luv'>dot luv</option>
-                <option value='mint-choc'>mint-choc</option>
-                <option value='hot-sneaks'>hot sneaks</option>
-                <option value='south-street'> south street</option>
-                <option value='humanity'>humanity</option>
-                <option value='vader'>vader</option>
-                <option value='eggplant'>eggplant</option>
-                <option value='cupertino'>cupertino</option>
-                <option value='overcast'>overcast</option>
-            </select>你喜欢的皮肤
-
         </div>
     </body>
 </html>

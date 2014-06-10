@@ -14,9 +14,6 @@ define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "drag
     }
     var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect,
         radiusSupport =typeof avalon.cssName("border-radius") == "string"
-    if(!svgSupport) {
-        document.namespaces.add("v", "urn:schemas-microsoft-com:vml")
-    }
 
     function formateTpl(tpl) {
         return tpl.replace(/MS_OPTION_[^\}]+/g, function(mat) {
@@ -122,6 +119,9 @@ define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "drag
             vm.$init = function() {
                 if(inited) return
                 inited = true
+                if(!svgSupport) {
+                    document.namespaces.add("v", "urn:schemas-microsoft-com:vml")
+                }
                 var divCon = avalon.parseHTML(formateTpl(vmodel.template))
                 newDiv = divCon.childNodes[0]
                 insertAfer(element, newDiv)

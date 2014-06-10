@@ -15,13 +15,24 @@
 					ms-attr-r="draggerR"  
 					ms-attr-fill="draggerColor"/>
 				</svg>
-				<v:oval ms-if="$shallDrawVML()"  
+				<v:oval class="oval-n"
 			   	stroked="false" 
 			   	filled="true" 
 			    ms-css-height="draggerR*2+'px'" 
 			    ms-css-width="draggerR*2+'px'" 
 			   	ms-attr-fillcolor="draggerColor" 
-			   	style="position:absolute;z-index:2;left:-1;top:0;behavior: url(#default#VML)"></v:oval>
+			   	style="position:absolute;z-index:2;left:-1;top:0;behavior: url(#default#VML)">
+				    <v:fill opacity="1"></v:fill>
+			    </v:oval>
+				<v:oval class="oval-hd"
+			   	stroked="false" 
+			   	filled="true" 
+			    ms-css-height="draggerR*2+'px'" 
+			    ms-css-width="draggerR*2+'px'" 
+			   	ms-attr-fillcolor="draggerColor" 
+			   	style="position:absolute;z-index:2;left:-1;top:0;behavior: url(#default#VML);">
+				    <v:fill opacity="0.4"></v:fill>
+			    </v:oval>
 		   	</b>
 		</label>
 		<span class="ui-switch-left" ms-if="!hdir">{{MS_OPTION_ON_TEXT|html}}</span>

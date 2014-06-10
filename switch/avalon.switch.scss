@@ -1,4 +1,4 @@
-@import "../themes/default.scss";
+@import "../style/default.scss";
 $pf : ".ui-switch";
 
 #{$pf} {
@@ -51,6 +51,10 @@ $pf : ".ui-switch";
 		width: 33%;
 		background-color: #005fcc;
 		color:#fff;
+	}
+	&-right{
+		background: #d9d9d9;
+		color: #333;
 	}
 	&-dragger{
 		width: 34%;

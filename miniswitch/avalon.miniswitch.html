@@ -1,0 +1,229 @@
+<div class="ui-dropdown"
+     ms-class="ui-dropdown-disabled:!enable"
+     ms-css-width="{{width}}"
+     ms-click="$toggle"
+     ms-blur="$blur($event)"
+     tabindex="-1">
+    <div class="ui-dropdown-source">
+        <div class="ui-dropdown-input"
+             ms-title="$getLabel(value)">
+            <i class="ui-icon"
+               ms-class="$getClass(value)">{{$getFont(value)| html}}</i></div>
+        <div class="ui-dropdown-icon-wrap">
+            <i class="ui-dropdown-icon ui-icon ui-icon-angle-up">&#xf106;</i>
+            <i class="ui-dropdown-icon ui-icon ui-icon-angle-down">&#xf107;</i>
+        </div>
+    </div>
+</div>
+MS_OPTION_TEMPLATE
+<div class="ui-dropdown-menu"
+     ms-mouseenter="$listenter"
+     ms-mouseleave="$listleave"
+     ms-css-width="{{listWidth}}">
+    <div class="ui-dropdown-menu-inner"
+         ms-css-height="height"
+         ms-mouseleave="$mouseleave"
+         ms-each-el="data">
+        <div class="ui-dropdown-optGroup"
+             ms-if="el.optGroup">{{el.text}}</div>
+        <div class="ui-dropdown-item"
+             ms-click="$select($event, el)"
+             ms-title="el.label"
+             ms-if="el.item"
+             ms-mouseenter="$hover($event, $index)"
+             ms-class="ui-dropdown-item-hover:activeIndex == $index && el.enable && !isSelected(el.value)"
+             ms-class-1="ui-dropdown-item-disabled:!el.enable"
+             ms-class-2="ui-dropdown-item-selected:isSelected(el.value) && el.enable"><i class="ui-icon" ms-class="el.cls">{{el.font | html}}</i>{{el.label}}</div>
+        <div class="ui-dropdown-divider"
+             ms-if="el.divider"></div>
+    </div>
+</div>
+MS_OPTION_TEMPLATE
+<optgroup ms-repeat="optionsModel.optGroup"
+          ms-disabled="!el.enable"
+          ms-attr-label="el.label"
+          ms-each-option="el.options">
+    <option ms-value="option.value"
+            ms-disabled="!option.enable"
+            ms-selected="option.selected"
+            ms-attr-label="option.label">{{option.label}}</option>
+</optgroup>
+<option ms-repeat-option="optionsModel.options"
+        ms-value="option.value"
+        ms-disabled="!option.enable"
+        ms-selected="option.selected"
+        ms-attr-label="option.label">{{option.label}}</option>
+MS_OPTION_STYLE
+<style type="text/css">
+    @font-face {
+        font-family: fontawesome;
+        font-style: normal;
+        font-weight: normal;
+        src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?v=4.0.3');
+        src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?#iefix&v=4.0.3') format('embedded-opentype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.woff?v=4.0.3') format('woff'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.ttf?v=4.0.3') format('truetype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular') format('svg');
+    }
+    .ui-icon {
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: default;
+        font-family: fontawesome !important;
+        font-size: 14px;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        font-style: normal;
+        font-weight: normal;
+        line-height: 18px;
+        vertical-align: middle;
+    }
+    a .ui-icon,
+    .ui-btn .ui-icon {
+        cursor: pointer;
+    }
+    .ui-dropdown {
+        display: inline-block;
+        *display: inline;
+        vertical-align: middle;
+        *zoom: 1;
+        font-size: 12px;
+        outline: none;
+    }
+    .ui-dropdown .ui-icon {
+        cursor: pointer;
+        font-size: 12px;
+        vertical-align: baseline;
+    }
+    .ui-dropdown-source {
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        cursor: pointer;
+    }
+    .ui-dropdown-input {
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        height: 18px;
+        overflow: hidden;
+        padding: 3px 21px 3px 6px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        word-break: normal;
+        word-wrap: normal;
+    }
+    .ui-dropdown-icon-wrap {
+        display: block;
+        height: 0;
+        position: relative;
+    }
+    .ui-dropdown-icon-wrap .ui-icon-angle-down {
+        display: block;
+    }
+    .ui-dropdown-icon {
+        color: #b5b5b5;
+        cursor: pointer;
+        display: none;
+        padding: 0 6px;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        top: -21px;
+    }
+    .ui-dropdown:hover .ui-dropdown-source {
+        border-color: #999999;
+    }
+    .ui-dropdown-focus .ui-dropdown-source {
+        border-color: #3775c0;
+    }
+    .ui-dropdown-focus:hover .ui-dropdown-source {
+        border-color: #3775c0;
+    }
+    .ui-dropdown-error .ui-dropdown-source {
+        border-color: #ff8888;
+    }
+    .ui-dropdown-error:hover .ui-dropdown-source {
+        border-color: #ff8888;
+    }
+    .ui-dropdown-disabled .ui-dropdown-source {
+        background-color: #f5f5f5;
+        border-color: #d9d9d9;
+        color: #cccccc;
+        cursor: default;
+    }
+    .ui-dropdown-disabled .ui-dropdown-icon {
+        cursor: default;
+    }
+    .ui-dropdown-disabled:hover .ui-dropdown-source {
+        background-color: #f5f5f5;
+        border-color: #d9d9d9;
+        color: #cccccc;
+        cursor: default;
+    }
+    .ui-dropdown-open .ui-icon-angle-up {
+        display: block;
+    }
+    .ui-dropdown-open .ui-icon-angle-down {
+        display: none;
+    }
+    .ui-dropdown-small .ui-dropdown-source {
+        border-radius: 2px;
+    }
+    .ui-dropdown-small .ui-dropdown-input {
+        padding-top: 1px;
+        padding-bottom: 1px;
+    }
+    .ui-dropdown-small .ui-dropdown-icon {
+        top: -19px;
+    }
+    .ui-dropdown-menu {
+        display: none;
+        left: 0;
+        position: absolute;
+        top: -1px;
+        width: 100%;
+        _width: auto !important;
+    }
+    .ui-dropdown-menu-inner {
+        box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        overflow-y: scroll;
+        padding: 3px 0;
+    }
+    .ui-dropdown-item {
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: pointer;
+        overflow: hidden;
+        padding: 3px 0;
+        text-indent: 6px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+        word-break: normal;
+        word-wrap: normal;
+        *zoom: 1;
+    }
+    .ui-dropdown-item-hover {
+        background-color: #f8f8f8;
+    }
+    .ui-dropdown-item-selected {
+        background-color: #58b359;
+        color: #ffffff;
+    }
+    .ui-dropdown-item-selected .ui-icon {
+        color: #ffffff;
+    }
+    .ui-dropdown-divider {
+        border-top: 1px solid #f2f2f2;
+        height: 0;
+        _height: auto;
+        margin: 3px 0;
+        overflow: hidden;
+        width: 100%;
+        _width: auto;
+    }
+</style>

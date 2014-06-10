@@ -1,5 +1,6 @@
 //avalon 1.2.5 2014.4.2
 define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
+
     var arr = tmpl.split("MS_OPTION_STYLE") || ["", ""]
     var cssText = arr[1].replace(/<\/?style>/g, "")
     var styleEl = document.getElementById("avalonStyle")
@@ -46,22 +47,19 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             body.onselectstart = _ieSelectBack;
         }
     }
-
-
-
     var widget = avalon.ui.simplegrid = function(element, data, vmodels) {
         var options = data.simplegridOptions
         //格式化各列的具体规格
         options.columns = options.getColumns(options.columns, options)
         //抽取要显示的数据(因为可能存在分页,不用全部显示,那么我们只将要显示的
-        //那一部分转换为监控数组就行,这样能大大提高性能)
-        options._store = options.getStore(options.store, options)
+
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
         //决定每页的行数(分页与滚动模式下都要用到它)
-        options.perPages = options.perPages || options.store.length
+        options.perPages = options.perPages || options.data.length
         //每页真实要显示的行数
         options.showRows = options.showRows || options.perPages
+        // data.length >= perPages >= showRows
 
         //如果没有指定各列的出现顺序,那么将按用户定义时的顺序输出
 
@@ -91,29 +89,27 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         var remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m
         var _vmodels
 
-
-
         var vmodel = avalon.define(data.simplegridId, function(vm) {
-
             avalon.mix(vm, options)
-
-            vm.$skipArray = ["widgetElement", "tableElement", "wrapperElement", "store", "template"]
+            vm.$skipArray = ["widgetElement", "data", "startIndex", "endIndex", "template"]
             vm.widgetElement = element
-
-
-
+            vm.startIndex = 0
+            vm.endIndex = options.showRows
             vm.$init = function() {
                 element.innerHTML = options.template.replace(/MS_OPTION_ID/g, vmodel.$id)
                 _vmodels = [vmodel].concat(vmodels)
                 avalon.scan(element, _vmodels)
-
             }
             vm.gridWidth = "100%"
             vm.getRealWidth = function() {
+                //位于表头的data-repeat-rendered回调,用于得到table的宽度
                 var table = this //这是TR元素
-                var cells = this.children
-                for (var i = 0, cell; cell = cells[i]; i++) {
-                    vm.columns[i].width = cell.offsetWidth
+                var cells = this.children//在旧式IE下可能包含注释节点
+                var cellIndex = 0
+                for (var i = 0, cell; cell = cells[i++]; ) {
+                    if (cell.nodeType === 1) {
+                        vm.columns[cellIndex++].width = cell.offsetWidth
+                    }
                 }
                 while (table.tagName !== "TABLE") {
                     table = table.parentNode
@@ -187,17 +183,17 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                 if (typeof opts.remoteSort === "function" && !remptyfn.test(opts.remoteSort)) {
                     //如果指定了回调函数,通过服务器端进行排数,那么能回调传入当前字段,状态,VM本身及callback
                     function callback() {
-                        vmodel._store = opts.getStore(opts.store, opts)
+                        vmodel._data = opts.getStore(opts.data, opts)
                     }
                     vmodel.remoteSort(field, trend, opts, callback)
                 } else if (typeof el.localSort === "function" && !remptyfn.test(el.localSort)) {// !isEmptyFn(el.localSort)
                     //如果要在本地排序,并且指定排数函数
-                    vmodel._store.sort(function(a, b) {
+                    vmodel._data.sort(function(a, b) {
                         return trend * el.localSort(a, b, field, opts)
                     })
                 } else {
                     //否则默认处理
-                    vmodel._store.sort(function(a, b) {
+                    vmodel._data.sort(function(a, b) {
                         return trend * (a[field] - b[field])
                     })
                 }
@@ -211,17 +207,29 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                 }
             }
             vm.getRowHeight = function() {
-                vm._rowHeight = this.rows[0].offsetHeight
-                vm.tbodyHeight = vm._rowHeight * vm.showRows + avalon.css(this.parentNode,"borderTopWidth", true) * 3
+                var row = this.rows[0], cell = row.cells[0]
+                //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
+                var borderHeight = Math.max(avalon.css(cell, "borderTopWidth", true), avalon.css(cell, "borderBottomWidth", true))
+                vm._rowHeight = row.offsetHeight
+                vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
+                vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2
                 vm.tbodyScrollHeight = vm._rowHeight * vm.perPages
-                if(vm.showRows !==  vm.perPages){
+                if (vm.showRows !== vm.perPages) {
                     var target = this
-                    while(target.className.indexOf("ui-grid-tbody-wrapper") === -1){
+                    while (target.className.indexOf("ui-grid-tbody-wrapper") === -1) {
                         target = target.parentNode
                     }
                     target.style.overflowY = "scroll"
                 }
 
+            }
+            vm.throttleRenderTbody = function() {
+
+                vmodel.tbodyScrollTop = this.scrollTop
+                cancelAnimationFrame(requestID)
+                wrapper = this
+
+                requestID = requestAnimationFrame(reRenderTbody)
             }
             //得到可视区某一个格子的显示隐藏情况
             vm.getCellToggle = function(name) {
@@ -234,7 +242,68 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             vm.getColumnsOrder = function() {
                 return vm.columnsOrder
             }
+            vm.getStore = function(array) {
+                return array.slice(vm.startIndex, vm.endIndex)
+            }
+            vm._data = vm.data.slice(vm.startIndex, vm.endIndex)
+
+
         })
+
+        //那一部分转换为监控数组就行,这样能大大提高性能)
+        var requestID,
+                wrapper,
+                prevScrollTop = 0,
+                lastRenderedScrollTop = 0
+
+        function reRenderTbody() {
+
+            var scrollTop = wrapper.scrollTop
+            var scrollDir = scrollTop > prevScrollTop ? "down" : "up"
+            prevScrollTop = scrollTop
+            var distance = Math.abs(lastRenderedScrollTop - scrollTop)
+            var rowHeight = vmodel._rowHeight
+            if (distance >= vmodel._rowHeightNoBorders) {
+
+                var linage = distance / rowHeight
+                var integer = Math.floor(linage)//取得整数部分
+                var decimal = linage - integer//取得小数部分
+                if (decimal > 0.55) {//四舍五入
+                    integer += 1 //要添加或删除的行数
+                }
+                var length = vmodel.data.length, count = 0
+                if (scrollDir === "down") {
+                    //    console.log("下拉 " + integer + "行")
+                    while (vmodel.endIndex + 1 < length) {
+                        vmodel.endIndex += 1
+                        vmodel.startIndex += 1
+                        count += 1
+                        var el = vmodel.data[vmodel.endIndex]
+                        //   console.log(el)
+                        //     console.log(vmodel.endIndex)
+                        vmodel._data.push(el)
+                        vmodel._data.shift()
+                        if (count === integer) {
+                            break
+                        }
+                    }
+                } else {
+                    //  console.log("上移 " + integer + "行")
+                    while (vmodel.startIndex >= 0) {
+                        vmodel.endIndex -= 1
+                        vmodel.startIndex -= 1
+                        count += 1
+                        var el = vmodel.data[vmodel.startIndex]
+                        vmodel._data.unshift(el)
+                        vmodel._data.pop()
+                        if (count === integer) {
+                            break
+                        }
+                    }
+                }
+                lastRenderedScrollTop = wrapper.scrollTop = vmodel.tbodyScrollTop = vmodel.startIndex * rowHeight
+            }
+        }
         return vmodel
     }
     widget.defaults = {
@@ -242,10 +311,13 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         headerHeight: 35,
         rowHeight: 35,
         _rowHeight: 35, //实际行高,包含border什么的
+        _rowHeightNoBorders: 0,
         columnWidth: 160,
         edge: 15,
+        _data: [],
         perPage: "", //默认不分页,
         pageable: false,
+        currentPage: 0,
         gridWrapperElement: {},
         syncTheadColumnsOrder: true,
         remoteSort: avalon.noop, //远程排数函数
@@ -259,6 +331,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             return tmpl
         },
         getStore: function(array, options) {
+
             return array.concat()
         },
         getColumns: function(array, options) {
@@ -269,7 +342,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                     el = {
                         field: el
                     }
-                }//field用于关联store中的字段
+                }//field用于关联data中的字段
                 el.text = el.text || el.field//真正在表格里显示的内容
                 el.title = options.getColumnTitle(el)//当前当元素格的title属性
                 el.width = el.width || options.columnWidth//指定宽度,可以是百分比
@@ -287,6 +360,18 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             return ret
         }
     }
+
+
+    //优化scroll事件的回调次数
+    var requestAnimationFrame = window.requestAnimationFrame ||
+            function(callback) {
+                return window.setTimeout(callback, 1000 / 60);
+            }
+    var cancelAnimationFrame = window.cancelAnimationFrame ||
+            function(id) {
+                clearTimeout(id)
+            }
+
     //得到移动的方向
     function getDirection(e, target, data) {
         var dir = "";
@@ -323,7 +408,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
  http://ued.taobao.org/blog/2013/03/modular-scalable-kissy/
  
  http://gist.corp.qunar.com/jifeng.yao/gist/demos/pager/pager.html
- 
+ //http://www.datatables.net/
  各种UI的比例
  http://www.cnblogs.com/xuanye/archive/2009/11/04/1596244.html
  jQueryUI theme体系调研 http://hi.baidu.com/ivugogo/item/605795f7a5c27a1ea62988e4?qq-pf-to=pcqq.discussion

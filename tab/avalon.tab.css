@@ -45,7 +45,7 @@
 .ui-state-default {
   color: #333;
   background-color: #f8f8f8;
-  border: 1px solid #ccc; }
+  border: 1px solid #cccccc; }
   .ui-state-default a {
     color: #333;
     text-decoration: none; }
@@ -68,6 +68,10 @@
     cursor: default; }
 
 /*content*/
+.ui-widget-content {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc; }
+
 .ui-state-default {
   font-size: 12px;
   float: left;

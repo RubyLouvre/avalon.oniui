@@ -1,4 +1,4 @@
-define(["../avalon"], function(avalon) {
+define(["avalon"], function(avalon) {
     var cachedScrollbarWidth,
             abs = Math.abs,
             round = Math.round,

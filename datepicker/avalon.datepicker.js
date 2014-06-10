@@ -1,5 +1,6 @@
 define(["avalon", "text!./avalon.datepicker.html"], function(avalon, sourceHTML) {
-    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],
+    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],  
+        calendarTemplate = arr[0],
         cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
         styleEl = document.getElementById("avalonStyle");
 
@@ -12,13 +13,17 @@ define(["avalon", "text!./avalon.datepicker.html"], function(avalon, sourceHTML)
     var widget = avalon.ui.datepicker = function(element, data, vmodels) {
 
         var options = data.datepickerOptions;
-        options.template = options.getTemplate(template, options);
+        options.template = options.getTemplate(calendarTemplate, options);
 
-        var vmodel = avalon.define(data.accordionId, function(vm) {
+        var vmodel = avalon.define(data.datepickerId, function(vm) {
             avalon.mix(vm, options);
 
-
-
+            vm.elementLeft = 0;
+            vm.elementTop = 0;
+            vm.weekNames = [];
+            vm.rows = [];
+            vm.prevMonth = 0;
+            vm.nextMonth = 0;
             vm.open = function() {
 
             }
@@ -42,8 +47,75 @@ define(["avalon", "text!./avalon.datepicker.html"], function(avalon, sourceHTML)
             vm.setDate = function() {
 
             }
-        });
+            vm.$init = function() {
+                var calendar = avalon.parseHTML(calendarTemplate).firstChild;
+                document.body.appendChild(calendar);
+                vmodel.weekNames = calendarHeader();
+                vmodel.rows = calendarDays();
+                avalon.scan(calendar, [vmodel].concat(vmodels))
+            }
+            vm.$remove = function() {
 
+            }
+
+            function calendarHeader() {
+                var weekNames = [],
+                    startDay = options.startDay;
+                for(var j = 0 , w = options.dayNames ; j < 7 ; j++){
+                    var n = ( j + startDay ) % 7;
+                    weekNames.push(w[n]);
+                }
+                return weekNames;
+            }
+            function calendarDays () {
+                var date = new Date();
+                    startDay = options.startDay,
+                    month = new Date(date.getFullYear(), date.getMonth() , 1),
+                    stepMonths = options.stepMonths,
+                    minDate = options.minDate,
+                    maxDate = options.maxDate,
+                    showOtherMonths = options.showOtherMonths,
+                    days = [],
+                    cellDate = new Date(month.getFullYear() , month.getMonth() , 1 - ( month.getDay() - startDay + 7 ) % 7 ),
+                    rows = [];
+                for (var m=0; m<6; m++) {
+                    days = [];
+                    for(var n = 0 ; n < 7 ; n++){
+                        var isCurrentMonth = cellDate.getMonth() === month.getMonth() && cellDate.getFullYear() === month.getFullYear();
+                        cellDate = showOtherMonths || isCurrentMonth ? cellDate : null;
+                        days.push(cellDate.getDate());
+                        cellDate = new Date(cellDate.setDate(cellDate.getDate()+1));
+                    } 
+                    rows.push(days); 
+                }
+                console.log(rows);
+                return rows;
+            }
+            function getDefaultDate () {
+                var _date;
+                _date = this._date;
+                if( force !== true && !_date && this._opts.allowBlank )
+                    return _date;
+                if( _date && this._validate( _date ).success  )
+                    return _date;
+                _date = this.getDate();
+                if( _date && this._validate( _date ).success  )
+                    return _date;
+                _date = this.getNow();
+                if( this._validate( _date ).success  )
+                    return _date;
+                if( this.minDate && this.maxDate ){
+                    var _date = new Date( this.minDate.getTime() );
+                    while( !this._validate( _date ).success ){
+                        _date = _date.setDate( _date.getDate() + 1 );
+                        if( _date > this.maxDate )
+                            return null;
+                    }
+                    return _date;
+                }else
+                    return this.minDate || this.maxDate;
+            }
+        });
         return vmodel;
     }
     widget.version = 1.0
@@ -88,7 +160,7 @@ define(["avalon", "text!./avalon.datepicker.html"], function(avalon, sourceHTML)
         CLASS_INPUT : 'ui-datepicker-input',
         CLASS_OPEN : 'ui-datepicker-open',
 
-        LANG_DAYS_NAMES : ['日', '一', '二', '三', '四', '五', '六'],
+        dayNames : ['日', '一', '二', '三', '四', '五', '六'],
         LANG_OUT_OF_RANGE : '超出范围',
         LANG_ERR_FORMAT : '格式错误',
         calendarLabel: "提示信息",
@@ -97,14 +169,15 @@ define(["avalon", "text!./avalon.datepicker.html"], function(avalon, sourceHTML)
         label : '',
         startDay: 1,
         cls : '',
-        showOtherMonths: false,
+        showOtherMonths: true,
         disabledDates : '',  // Function Array
-        numberOfMonths: 2,
+        numberOfMonths: 1,
         correctOnError: true,
         allowBlank : false,
         minDate : null,
         maxDate : null,
         stepMonths : 1,
+        toggle: true,
         formatMonth: function(date){
             return '<span class="year">' + date.getFullYear() + '年</span>' + (date.getMonth() + 1) + '月'
         },
@@ -155,3 +228,7 @@ define(["avalon", "text!./avalon.datepicker.html"], function(avalon, sourceHTML)
 //         return typeof SERVER_TIME !== 'undefined' && SERVER_TIME.getTime && new Date( SERVER_TIME.getTime() );
 //     }
 // }
+
+
+// 1. keydown时当keyCode为27或9时，toggle false calendar
+// 2. 点击非calendar时toggle false calendar

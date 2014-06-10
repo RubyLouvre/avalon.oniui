@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>notice文档说明</title>
+<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>notice使用文档</h1>
+        <p>notice组件用来向用户显示一些提示信息</p>
+        <table>
+            <caption class="example">notice组件配置项说明：</caption>
+            <thead>
+                <tr>
+                    <th>name</th>
+                    <th>value</th>
+                    <th>description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>altField</td>
+                    <td></td>
+                    <td>根据日历框的选择更新的输入域，使用altFormat格式化日期</td>
+                </tr>
+                <tr>
+                    <td>altFormat</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>appendText</td>
+                    <td></td>
+                    <td>输入域后要显示的text，比如显示日期格式,示例：appendText:"(yyyy-mm-dd)"</td>
+                </tr>
+                <tr>
+                    <td>autoSize</td>
+                    <td></td>
+                    <td>根据dataFormat自动resize输入域的大小</td>
+                </tr>
+                <tr>
+                    <td>changeMonth</td>
+                    <td>false</td>
+                    <td>是否可以通过下拉框选择月份</td>
+                </tr>
+                <tr>
+                    <td>changeYear</td>
+                    <td>false</td>
+                    <td>是否可以通过下拉框选择年份</td>
+                </tr>
+                <tr>
+                    <td>dateFormat</td>
+                    <td>"mm/dd/yy"</td>
+                    <td>显示日期的格式</td>
+                </tr>
+                <tr>
+                    <td>dayNames</td>
+                    <td> [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ]</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>defaultDate</td>
+                    <td></td>
+                    <td>显示日历框之后高亮的日期</td>
+                </tr>
+                <tr>
+                    <td>firstDay</td>
+                    <td></td>
+                    <td>设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推</td>
+                </tr>
+                <tr>
+                    <td>hideIfNoPrevNext</td>
+                    <td>false</td>
+                    <td>当设置了minDate、maxDate时可能next、prev就失效禁用，如果设置了hideIfNoPrevNext为true那么组件会将其隐藏</td>
+                </tr>
+                <tr>
+                    <td>maxDate</td>
+                    <td></td>
+                    <td>最大的可选日期，设为null，可以任意选</td>
+                </tr>
+                <tr>
+                    <td>minDate</td>
+                    <td></td>
+                    <td>最小的可选日期，设为null则任选</td>
+                </tr>
+                <tr>
+                    <td>nextText</td>
+                    <td>"next"</td>
+                    <td>"下个月"链接的显示文本</td>
+                </tr>
+                <tr>
+                    <td>numberOfMonths</td>
+                    <td>1</td>
+                    <td>一次显示的日历数</td>
+                </tr>
+                <tr>
+                    <td>onChangeMonthYear</td>
+                    <td></td>
+                    <td>当month或者year更新时调用的回调。参数为year、month、日历组件实例</td>
+                </tr>
+                <tr>
+                    <td>onSelect</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>onClose</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>prevText</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>showButtonPanelType</td>
+                    <td></td>
+                    <td>是否在日历下显示button面板</td>
+                </tr>
+                <tr>
+                    <td>stepMonths</td>
+                    <td></td>
+                    <td>当点击next、prev链接时应该跳过几个月份</td>
+                </tr>
+                <tr>
+                    <td>yearRange</td>
+                    <td></td>
+                    <td>在year下拉框中显示的year范围，可以是相对于今年的格式"-nn:+nn",也可以是相对于当前选中日期year的范围"c-nn:c+nn",也可以是绝对的"nnnn:nnnn"</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>例子：</h3>
+        <ol>
+            <li><a target="_blank" href="avalon.datepicker.ex.html"></a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex1.html"></a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex2.html"></a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex3.html"></a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex4.html"></a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex5.html"></a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex6.html"></a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex7.html"></a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex8.html"></a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex9.html"></a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex10.html"></a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex11.html"></a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex12.html"></a></li>
+        </ol>
+    </div>
+</body>
+</html>
+<!-- 
+//设置日历框的规则
+        /**
+         var dateOpts = {
+                LANG_DAYS_NAMES : ['日', '一', '二', '三', '四', '五', '六'],
+                LANG_OUT_OF_RANGE : '超出范围',
+                LANG_ERR_FORMAT : '格式错误',
+                startDay: 1,    //星期开始时间
+                correctOnError: true,   //是否自动纠正错误的日期
+                fromMinDate : null,         //{String/Date} 最小日期
+                toMinDate : null,         //{String/Date} 最小日期
+                fromMaxDate : null,         //{String/Date} 最小日期
+                toMaxDate : null,         //{String/Date} 最小日期
+                formatMonth: function(date){    //{Function} 月份格式化函数
+                    return '<span class="year">' + date.getFullYear() + '年</span>' + (date.getMonth() + 1) + '月'
+                },
+                parseDate : function( str ){    //{Function} 日期解析函数
+                    var x = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+                    return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
+                },
+                formatDate : function( date ){  //{Function} 日期格式化函数
+                    return date.getFullYear() + "-" + formatNum( date.getMonth() + 1 , 2 ) + "-" + formatNum( date.getDate() , 2 );
+                },
+                now : function(){               //{Function} 获取当前时间函数
+                    return typeof SERVER_TIME !== 'undefined' && SERVER_TIME.getTime && new Date( SERVER_TIME.getTime() );
+                },
+                rules : '1D,+2D,3M' //{String} 逗号分隔的表达式，分别代表默认时间（如果日期非法时两个日历的默认间隔）、最小间隔、最大间隔。每个表达式格式为 [+-]\d[YMD]，YMD分别表示年月日
+            };
+         */ -->

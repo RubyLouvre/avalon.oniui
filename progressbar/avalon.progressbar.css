@@ -6,24 +6,90 @@
   .clrfix:after {
     clear: both; }
 
+.reset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  line-height: 100%;
+  text-decoration: none;
+  font-size: 100%;
+  list-style: none; }
+
+.ui-helper-hidden {
+  display: none; }
+
+/*corner css*/
+.ui-corner-all,
+.ui-corner-top,
+.ui-corner-left,
+.ui-corner-tl {
+  border-top-left-radius: 4px; }
+
+.ui-corner-all,
+.ui-corner-top,
+.ui-corner-right,
+.ui-corner-tr {
+  border-top-right-radius: 4px; }
+
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-left,
+.ui-corner-bl {
+  border-bottom-left-radius: 4px; }
+
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-right,
+.ui-corner-br {
+  border-bottom-right-radius: 4px; }
+
+/*state css*/
+.ui-state-default {
+  color: #333;
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc; }
+  .ui-state-default a {
+    color: #333;
+    text-decoration: none; }
+
+.ui-state-hover {
+  background: #fff; }
+  .ui-state-hover a {
+    text-decoration: none; }
+    .ui-state-hover a:hover {
+      text-decoration: none; }
+
+.ui-state-active {
+  background: #fff; }
+
+.ui-state-disabled {
+  color: #aaa;
+  cursor: default; }
+  .ui-state-disabled a {
+    color: #aaa;
+    cursor: default; }
+
+/*content*/
+.ui-widget-content {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc; }
+
 .ui-progressbar {
   width: 100%;
   position: relative;
-  height: 24px;
-  border: 1px solid #aaa;
-  background-color: #fff;
-  font-family: Verdana,Arial,sans-serif;
-  color: #222;
-  line-height: 24px; }
+  height: 6px;
+  border: none;
+  background-color: #DEDEDE;
+  font-family: Verdana,Arial,sans-serif; }
   .ui-progressbar-bar {
     z-index: 1;
     position: relative;
-    background-color: #ccc;
+    background-color: #619FE8;
     height: 100%;
     width: 0;
     float: left;
-    display: inline;
-    transition: all .5s; }
+    display: inline; }
   .ui-progressbar-bar-right {
     background: #ddd; }
     .ui-progressbar-bar-right .ui-progressbar-label {
@@ -39,6 +105,39 @@
   .ui-progressbar-label {
     position: absolute;
     left: 50%;
-    height: 100%;
     z-index: 10;
-    margin: 0 auto; }
+    margin: 0 auto;
+    color: #fff; }
+  .ui-progressbar-circle {
+    border: none;
+    background-color: transparent; }
+    .ui-progressbar-circle .ui-progressbar-label {
+      font-size: 13px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      color: #619FE8; }
+  .ui-progressbar-normal .ui-progressbar-label {
+    background-color: #6AA5E9;
+    padding: 2px 4px;
+    font-size: 13px;
+    top: -25px;
+    height: 14px;
+    color: #fff;
+    line-height: 14px;
+    left: 0;
+    border-radius: 2px; }
+  .ui-progressbar-right .ui-progressbar-label {
+    left: 50%; }
+  .ui-progressbar-arrow {
+    border-style: solid dashed dashed;
+    border-color: #6AA5E9 transparent transparent;
+    border-width: 6px 5px 0;
+    height: 0;
+    overflow: hidden;
+    line-height: 0;
+    font-size: 0;
+    bottom: -6px;
+    left: 50%;
+    position: absolute;
+    margin-left: -6px; }

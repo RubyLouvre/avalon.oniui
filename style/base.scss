@@ -1,0 +1,23 @@
+.clrfix {
+   	zoom: 1;
+   	&:before, &:after {
+		content: '';
+		display: block;
+   	}
+   	&:after {
+	    clear: both;
+	}
+}
+.reset {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	line-height: 100%;
+	text-decoration: none;
+	font-size: 100%;
+	list-style: none;
+}
+.ui-helper-hidden{
+	display: none;
+}

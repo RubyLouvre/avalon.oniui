@@ -17,23 +17,23 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
     function _getTemplate(tpl, vm) {
         return tpl.replace(/MS_[A-Z_0-9]+/g, function(mat) {
             var mat = (mat.split("MS_OPTION_")[1]||"").toLowerCase().replace(/_[^_]/g, function(mat) {
-                return mat.replace(/_/g, '').toUpperCase()
+                return mat.replace(/_/g, "").toUpperCase()
             })
             // 防止事件绑定覆盖，可能匹配不对，但是不会影响实际效果
-            if(mat == 'event' && vm[mat]) {
+            if(mat == "event" && vm[mat]) {
                 var m, eventId
-                if(m = tpl.match(new RegExp(" ms\-" + vm[mat] + "[^\'\\\"]", 'g'))) {
+                if(m = tpl.match(new RegExp(" ms\-" + vm[mat] + "[^\'\\\"]", "g"))) {
                     eventId = m.length
-                    m = m.join(',')
-                    while(m.match(new RegExp(eventId, 'g'))) {
+                    m = m.join(",")
+                    while(m.match(new RegExp(eventId, "g"))) {
                         eventId++
                     }
-                    return vm[mat] + '-' + eventId
+                    return vm[mat] + "-" + eventId
                 }
             } else if(mat == "removable") {
                 return closeTpl
             }
-            return vm[mat] || ''
+            return vm[mat] || ""
         })
     }
 
@@ -44,13 +44,13 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
             var opt = avalon(el).data()
                 , obj = type == "div" ? {
                     content: opt.content || el.innerHTML,
-                    contentType: opt.contentType || 'content'
+                    contentType: opt.contentType || "content"
                 } : {
                     title: el.innerHTML,
                     removable: opt.removable,
-                    disabled: opt.disabled == undefined ? false : opt.disabled
+                    disabled: opt.disabled == void 0 ? false : opt.disabled
                 }
-            var href = opt.href || el.getAttribute('href')
+            var href = opt.href || el.getAttribute("href")
             if(href) obj.href = href
             res.push(obj)
         }
@@ -68,14 +68,14 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
             item.disabled = !!item.disabled
         })
         // 扫描获取tabs
-        if(typeof options.tabs == "undefined") {
+        if(options.tabs == void 0) {
             tabsParent = options.tabContainerGetter(element)
             tabs = _getData(tabsParent, "li")
             // 销毁dom
             if(options.distroyDom) element.removeChild(tabsParent)
         }
         // 扫描获取panels
-        if(typeof options.tabpanels == "undefined") {
+        if(options.tabpanels == void 0) {
             panelsParent = options.panelContainerGetter(element)
             tabpanels = _getData(panelsParent, "div")
             if(options.distroyDom) element.removeChild(panelsParent)
@@ -104,7 +104,7 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
 
                 
                 avalon.nextTick(function() {
-                    avalon(element).addClass("ui-tab ui-widget ui-widget-content" + (vm.event == 'click' ? " ui-tab-click" : "") + (vm.dir == 'v' ? " ui-tab-vertical" : "") + (vm.dir != "v" && vm.uiSize == "small" ? " ui-tab-small" : ""))
+                    avalon(element).addClass("ui-tab ui-widget ui-widget-content" + (vm.event == "click" ? " ui-tab-click" : "") + (vm.dir == "v" ? " ui-tab-vertical" : "") + (vm.dir != "v" && vm.uiSize == "small" ? " ui-tab-small" : ""))
                     // tab列表
                     var tabFrag = _getTemplate(vm.$getTemplate(0, vm), vm)
                         , panelFrag = _getTemplate(vm.$getTemplate("panel", vm), vm)
@@ -131,7 +131,7 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
                     return
                 }
                 // event是click，点击激活状态tab
-                if (vm.event === 'click' && vm.active === index) {
+                if (vm.event === "click" && vm.active === index) {
                     // 去除激活状态
                     if(vm.collapsible) {
                         vm.active = NaN
@@ -159,11 +159,11 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
                     var el = this
                         , arg = arguments
                     timer = setTimeout(function() {
-                        tmp.apply(el, [$event, $index, 'fix event bug in ie'])
+                        tmp.apply(el, [$event, $index, "fix event bug in ie"])
                     }, vm.activeDelay)
-                    if(!el.getAttribute('leave-binded') && 0) {
-                        el.setAttribute('leave-binded', 1)
-                        avalon.bind(el, 'mouseleave', function() {
+                    if(!el.getAttribute("leave-binded") && 0) {
+                        el.setAttribute("leave-binded", 1)
+                        avalon.bind(el, "mouseleave", function() {
                             clearTimeout(timer)
                         })
                     }
@@ -201,7 +201,7 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
             // 修改使用了avalon的几个方法
             //@method disable(index) 禁用索引指向的tab，index为数字或者元素为数字的数组
             vm.disable = function(index, disable) {
-                disable = typeof disable == "undefined" ? true : disable
+                disable = disable == void 0 ? true : disable
                 if(!(index instanceof Array)) {
                     index = [index]
                 }
@@ -218,11 +218,11 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
             }
             //@method add(config) 新增tab, config = {title: "tab title", removable: bool, disabled: bool, content: "panel content", contentType: "ajax" or "content"}
             vm.add = function(config) {
-                var title = config.title || 'Tab Tile'
-                var content = config.content || '<div></div>'
+                var title = config.title || "Tab Tile"
+                var content = config.content || "<div></div>"
                 var exsited = false
                 vm.tabpanels.forEach(function(panel) {
-                    if (panel.contentType == 'include' && panel.content == config.content) {
+                    if (panel.contentType == "include" && panel.content == config.content) {
                         exsited = true
                     }
                 })
@@ -252,7 +252,7 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
                 } else {
                     index = e
                 }
-                if (vmodel.tabs[index].disabled === true || vmodel.tabs[index].removable === false || typeof vmodel.tabs[index].removable == "undefined" && !vm.removable) {
+                if (vmodel.tabs[index].disabled === true || vmodel.tabs[index].removable === false || vmodel.tabs[index].removable == void 0 && !vm.removable) {
                     return
                 }
                 vmodel.tabs.removeAt(index)
@@ -265,7 +265,7 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
             }
 
             vm.$canRemove = function(tab) {
-                return (tab.removable == true || tab.removable !== false && vm.removable) && !tab.disabled && vm.dir != 'v'
+                return (tab.removable == true || tab.removable !== false && vm.removable) && !tab.disabled && vm.dir != "v"
             }
 
             vm.$canActive = function(tab, $index) {
@@ -273,7 +273,7 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
             }
 
             vm.$isAjax = function(panel) {
-                return vm.contentType=='content' && !panel.contentType || panel.contentType=='content'
+                return vm.contentType=="content" && !panel.contentType || panel.contentType=="content"
             }
             return vm
         })
@@ -281,7 +281,7 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
 
         if(vmodel.autoSwitch) {
             /*
-            vmodel.tabs.$watch('length', function(value, oldValue) {
+            vmodel.tabs.$watch("length", function(value, oldValue) {
                 if(value < 2) {
                     vmodel.$clearTimeout()
                 } else {
@@ -289,10 +289,10 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
                 }
             })
             */
-            avalon.bind(element, 'mouseenter', function() {
+            avalon.bind(element, "mouseenter", function() {
                 vmodel.$clearTimeout()
             })
-            avalon.bind(element, 'mouseleave', function() {
+            avalon.bind(element, "mouseleave", function() {
                 vmodel.$clearTimeout()
                 vmodel.$autoSwitch()
             })
@@ -328,10 +328,10 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
         //tabpanels:undefined,         //@param  [{content:content or url, contentType: "content" or "ajax"}] 单个panel的contentType配置优先级高于组件的contentType
 
         tabContainerGetter: function(element) {
-            return element.getElementsByTagName('ul')[0] || element.getElementsByTagName('ol')[0]
+            return element.getElementsByTagName("ul")[0] || element.getElementsByTagName("ol")[0]
         }, //@optMethod tabContainerGetter(element) tab容器，如果指定，则到该容器内扫描tabs，参数为绑定组件的元素，默认返回element内第一个ul或者ol元素
         panelContainerGetter: function(element) {
-            return element.getElementsByTagName('div')[0] || element
+            return element.getElementsByTagName("div")[0] || element
         }, //@optMethod panelContainerGetter(element)  panel容器，如果指定，则到该容器内扫描panel，参数为绑定组件的元素，默认返回第element内第一个div元素
         onActivate: avalon.noop,  //@optMethod onActivate(event, vmode) 选中tab后的回调，this指向对应的li元素，参数是事件对象，vm对象 fn(event, vmode)，默认为avalon.noop
         onClickActive: avalon.noop, //@optMethod onClickActive(event, vmode)  点击选中的tab，适用于event是"click"的情况，this指向对应的li元素，参数是事件对象，vm对象 fn(event, vmode)，默认为avalon.noop
@@ -340,9 +340,9 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
         $getTemplate: function (tplName, vm) {
             var tpl
                 , defineTpl
-            if(tplName == 'panel') {
+            if(tplName == "panel") {
                 tpl = panelTpl
-            } else if(tplName == 'close') {
+            } else if(tplName == "close") {
                 tpl = closeTpl
             } else {
                 tpl = template
@@ -355,9 +355,9 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
         }, //@optMethod getTemplate(template, vm, tplName)  修改模板的接口，参数分别是模板字符串，vm对象，模板名字，返回如果是空字符串则对应的tplName(close,panel,tab)返回为空，return false,null,undedined等于返回组件自带的模板，其他情况为返回值，默认返回组件自带的模板
         $tabTitle : function (title, tab, count, end) {
             var cut
-            if(typeof tab.titleCutCount != "undefined") {
+            if(tab.titleCutCount != void 0) {
                 cut = tab.titleCutCount
-            } else if(typeof count != undefined) {
+            } else if(count != void 0) {
                 cut = count
             }
             if(!cut) return title

@@ -12,6 +12,11 @@ define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "drag
     } catch (e) {
         styleEl.styleSheet.cssText += cssText
     }
+    var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect,
+        radiusSupport =typeof avalon.cssName("border-radius") == "string"
+    if(!svgSupport) {
+        document.namespaces.add("v", "urn:schemas-microsoft-com:vml")
+    }
 
     function formateTpl(tpl) {
         return tpl.replace(/MS_OPTION_[^\}]+/g, function(mat) {
@@ -32,7 +37,6 @@ define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "drag
     }
 
     var css3support =typeof avalon.cssName("transition") == "string"
-
     var widget = avalon.ui["switch"] = function(element, data, vmodels) {
         var options = data.switchOptions
         //方便用户对原始模板进行修改,提高制定性
@@ -44,6 +48,12 @@ define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "drag
             vm.widgetElement = element
             vm.$css3support = css3support && vm.animated
             vm.$skipArray = ["widgetElement", "template"]
+            vm.$svgSupport = svgSupport
+            if(vm.type == "large") {
+                vm.draggerR = 12
+                vm.height = 30
+                vm.width = 57
+            }
             var newDiv, 
                 inputEle, 
                 bar, 
@@ -89,7 +99,7 @@ define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "drag
                 "drHandle": function(e, data) {
                     if(vmodel.disabled) {
                         return
-                    } else if((e.target || e.srcElement) != dragger) {
+                    } else if((e.target || e.srcElement) != dragger && (e.target || e.srcElement).parentNode != dragger) {
                         vmodel.$toggle()
                         return
                     } 
@@ -154,6 +164,8 @@ define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "drag
                 }
 
                 avalon.scan(newDiv, [vmodel].concat(vmodels))
+
+                vmodel.$draw()
 
             }
             vm.$remove = function() {
@@ -223,6 +235,85 @@ define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "drag
                 vmodel.disabled = false
             }
 
+            vm.$getFillColor = function() {
+                return vmodel.disabled ? vmodel.disabledColor : (vmodel.checked ? vmodel.onColor : vmodel.offColor)
+            }
+
+            vm.$shallDrawSvg = function() {
+                return vmodel.$svgSupport && !radiusSupport
+            }
+
+            vm.$shallDrawVML = function() {
+                return !vmodel.$svgSupport && !radiusSupport
+            }
+
+            // 根据样式绘制园，圆角等
+            vm.$draw = function() {
+                if(radiusSupport) return
+                var divs = newDiv.getElementsByTagName("div")
+                    , bs = newDiv.getElementsByTagName("b")
+                    , bg
+                    , ball
+                avalon.each(divs, function(i, item) {
+                    var ae = avalon(item)
+                    if(ae.hasClass("ui-switch-bg")) bg = ae
+                }) 
+                avalon.each(bs, function(i, item) {
+                    var ae = avalon(item)
+                    if(ae.hasClass("ui-switch-dragger-ball")) ball = ae
+                }) 
+                if(bg) {
+                    var par = avalon(newDiv),
+                        bgColor = bg.css("background-color"),
+                        offColor = bgColor,
+                        disabledColor = bgColor,
+                        w = bg.css("width"),
+                        h = bg.css("height")
+                    if(vmodel.disabled) {
+                        vmodel.disabled = false
+                        if(vmodel.checked) {
+                            bgColor = bg.css("background-color")
+                            vmodel.checked = false
+                            offColor = bg.css("background-color")
+                            vmodel.checked = true
+                        } else {
+                            offColor = bg.css("background-color")
+                            vmodel.checked = true
+                            bgColor = bg.css("background-color")
+                            vmodel.checked = false
+                        }
+                        vmodel.disabled = true
+                    } else {
+                        if(vmodel.checked) {
+                            bgColor = bg.css("background-color")
+                            vmodel.checked = false
+                            offColor = bg.css("background-color")
+                            vmodel.checked = true
+                        } else {
+                            vmodel.checked = true
+                            bgColor = bg.css("background-color")
+                            vmodel.checked = false
+                        }
+                        vmodel.disabled = true
+                        disabledColor = bg.css("background-color")
+                        vmodel.disabled = false
+                    }
+                    vmodel.onColor = bgColor
+                    vmodel.offColor = offColor
+                    vmodel.disabledColor = disabledColor
+                    vmodel.height = parseInt(h)
+                    vmodel.width = parseInt(w)
+                    bg.css("background-color", "transparent")
+                }
+                if(ball) {
+                    var bbColor = ball.css("background-color"),
+                        bw = parseInt(ball.css("width")) >> 0
+                    vmodel.draggerColor = bbColor
+                    vmodel.draggerR = bw / 2
+                    ball.css("background-color", "transparent")
+                }
+            }
+
             return vm
         })
       
@@ -234,8 +325,8 @@ define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "drag
     }
 
     widget.defaults = {
-        onText: "ON",           //@param 选中状态提示文字
-        offText: "OFF",         //@param 未选中状态提示文字
+        onText: "<b class=\"ui-switch-on\"></b>",           //@param 选中状态提示文字
+        offText: "&times;",         //@param 未选中状态提示文字
         type: "normal",         //@param 滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成ui-switch-{{type}}添加给switch模板容器
         theme: "normal",        //@param 主题，normal,success,warning,danger
         draggable: false,       //@param 是否支持拖动切换状态
@@ -244,7 +335,15 @@ define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "drag
         animated: true,         //@param 是否开启切换动画效果
         hdir: true,         //@param 开启、关闭选项排列顺序默认为true，即on-off,false为off-on
         dir: "left",            //\@param 组件排列方向,left,to
-        $css3support: false,
+        draggerColor: "#ffffff", //@param 推动头颜色，会尝试自动到样式文件里面提取
+        draggerHoverColor: "#ffffff",
+        onColor: "#45A846", //@param 选中情况颜色，会尝试自动到样式文件里面提取
+        offColor: "#D5D5D5", //@param 未选中情况颜色，会尝试自动到样式文件里面提取
+        disabledColor: "#DEDEDE",//@param 禁用情况颜色，会尝试自动到样式文件里面提取
+        draggerR: 7, //@param normal size拖动头半径，会尝试自动到样式文件里面提取
+        height: 18,   //@param normal size高度，会尝试自动到样式文件里面提取
+        width: 35,    //@param normal size宽度，会尝试自动到样式文件里面提取
+        css3support: false,
         //@optMethod $animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]
         $animateArrMaker: function(from, to) {
             var arr = []

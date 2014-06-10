@@ -1,0 +1,38 @@
+<div class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"
+    style="position: absolute; top: 32px; left: 35px; z-index: 1; display: block;">
+    <div class="ui-datepicker-label">{{label}}</div>
+    <div class="ui-datepicker-header ui-widget-header ui-helper-clearfix ui-corner-all">
+        <i class="ui-datepicker-prev ui-icon ui-icon-chevron-left" ms-click="prev">&#xf053;</i>
+        <i class="ui-datepicker-next ui-icon ui-icon-chevron-right" ms-click="next">&#xf054;</i>
+        <div class="ui-datepicker-title">
+            <span class="ui-datepicker-month">
+                June
+            </span>
+            &nbsp;
+            <span class="ui-datepicker-year">
+                2014
+            </span>
+        </div>
+    </div>
+    <table class="ui-datepicker-calendar">
+        <thead>
+            <tr>
+                <th class="ui-datepicker-week-end">日</th>
+                <th>一</th>
+                ...
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td ms-click="selectDate" class="ui-datepicker-week-end ui-state-default">1</td>
+                ...
+                <td ms-click="selectDate" class="ui-datepicker-today ui-state-default ui-state-highlight">10</td>
+                ...
+                <td class=" ui-datepicker-other-month ui-datepicker-unselectable ui-state-disabled">
+                    &nbsp;
+                </td>
+                ...
+            </tr>
+        </tbody>
+    </table>
+</div>

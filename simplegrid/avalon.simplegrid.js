@@ -1,5 +1,5 @@
 //avalon 1.2.5 2014.4.2
-define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
+define(["avalon","pager/avalon.pager", "text!./avalon.simplegrid.html"], function(avalon, page, tmpl) {
 
     var arr = tmpl.split("MS_OPTION_STYLE") || ["", ""]
     var cssText = arr[1].replace(/<\/?style>/g, "")
@@ -206,7 +206,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                     }
                 }
             }
-            vm.getRowHeight = function() {
+            vm.getRowHeight = function(a) {
                 var row = this.rows[0], cell = row.cells[0]
                 //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
                 var borderHeight = Math.max(avalon.css(cell, "borderTopWidth", true), avalon.css(cell, "borderBottomWidth", true))

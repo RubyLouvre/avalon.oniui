@@ -2196,12 +2196,20 @@
         return W3C ? getComputedStyle(td, null).display === "table-cell" : true
     })(DOC.createElement("td"))
 
-    cinerator.setAttribute("className", "t")
-    var fuckIEAttr = cinerator.className === "t"
-    var propMap = {
+    var propMap = {//属性名映射
+        "accept-charset": "acceptCharset",
+        "char": "ch",
+        "charoff": "chOff",
         "class": "className",
-        "for": "htmlFor"
+        "for": "htmlFor",
+        "http-equiv": "httpEquiv"
     }
+    var anomaly = "accessKey,allowTransparency,bgColor,cellPadding,cellSpacing,codeBase,codeType,colSpan,contentEditable," 
+            + "dateTime,defaultChecked,defaultSelected,defaultValue,frameBorder,isMap,longDesc,maxLength,marginWidth,marginHeight,"
+            + "noHref,noResize,noShade,readOnly,rowSpan,tabIndex,useMap,vSpace,valueType,vAlign"
+    anomaly.replace(rword, function(name) {
+        propMap[name.toLowerCase()] = name
+    })
     var rdash = /\(([^)]*)\)/
     var cssText = "<style id='avalonStyle'>.avalonHide{ display: none!important }</style>"
     head.insertBefore(avalon.parseHTML(cssText), head.firstChild) //避免IE6 base标签BUG
@@ -2244,10 +2252,10 @@
                 // ms-attr-class="xxx" vm.xxx=false  清空元素的所有类名
                 // ms-attr-name="yyy"  vm.yyy="ooo" 为元素设置name属性
                 var toRemove = (val === false) || (val === null) || (val === void 0)
-                if (toRemove)
+                if (toRemove) {
                     elem.removeAttribute(attrName)
-                if (fuckIEAttr && attrName in propMap) {
-                    attrName = propMap[attrName]
+                } else if (!W3C) {
+                    attrName = propMap[attrName] || attrName
                     if (toRemove) {
                         elem.removeAttribute(attrName)
                     } else {
@@ -3584,6 +3592,18 @@
     /*********************************************************************
      *                  文本绑定里默认可用的过滤器                          *
      **********************************************************************/
+
+    var rscripts = /<script[^>]*>([\S\s]*?)<\/script\s*>/gim
+    var ron = /\s+(on[^=\s]+)(?:=("[^"]*"|'[^']*'|[^\s>]+))?/g
+    var ropen = /<\w+\b(?:(["'])[^"]*?(\1)|[^>])*>/ig
+    var rsurrogate = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g
+    var rnoalphanumeric = /([^\#-~| |!])/g;
+    var toStaticHTML = window.toStaticHTML || function(str) {
+        return str.replace(rscripts, "").replace(ropen, function(a, b) {
+            return a.replace(ron, " ").replace(/\s+/g, " ")
+        })
+    }
+
     var filters = avalon.filters = {
         uppercase: function(str) {
             return str.toUpperCase()
@@ -3598,14 +3618,21 @@
             return target.length > length ? target.slice(0, length - truncation.length) + truncation : String(target)
         },
         camelize: camelize,
+        sanitize: toStaticHTML,
         escape: function(html) {
             //将字符串经过 html 转义得到适合在页面中显示的内容, 例如替换 < 为 &lt 
-            return String(html)
-                    .replace(/&(?!\w+;)/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/'/g, "&#39;") //IE下不支持&apos;(单引号)转义
+            return String(html).
+                    replace(/&/g, '&amp;').
+                    replace(rsurrogate, function(value) {
+                        var hi = value.charCodeAt(0)
+                        var low = value.charCodeAt(1)
+                        return '&#' + (((hi - 0xD800) * 0x400) + (low - 0xDC00) + 0x10000) + ';'
+                    }).
+                    replace(rnoalphanumeric, function(value) {
+                        return '&#' + value.charCodeAt(0) + ';'
+                    }).
+                    replace(/</g, '&lt;').
+                    replace(/>/g, '&gt;')
         },
         currency: function(number, symbol) {
             symbol = symbol || "￥"

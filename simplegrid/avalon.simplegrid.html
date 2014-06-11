@@ -6,7 +6,6 @@
             <tr>
                 <td data-repeat-rendered="getRealWidth"
                     ms-repeat="columns"
-                    ms-css-height="headerHeight"  
                     ms-css-width="el.width" 
                     ms-attr-align="el.align" 
                     ms-class="{{el.className}}" 
@@ -34,7 +33,7 @@
                             data-with-sorted="getColumnsOrder"
                             ms-css-width="getCellWidth($key)"
                             ms-visible="getCellToggle($key)" 
-                            ms-css-height="rowHeight" 
+                            ms-css-height="tbodyRowHeight" 
                             >
                             <div class="editable">{{$val}}</div>
                         </td>
@@ -62,6 +61,7 @@ MS_OPTION_STYLE
     .ui-grid-thead  td{
         width: 100%;
         border: 1px solid black;
+        height: 35px;
         overflow: hidden;
         /*        white-space:nowrap;*/
     }

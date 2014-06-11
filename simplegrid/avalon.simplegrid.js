@@ -308,8 +308,7 @@ define(["avalon","pager/avalon.pager", "text!./avalon.simplegrid.html"], functio
     }
     widget.defaults = {
         //表头的格子的高
-        headerHeight: 35,
-        rowHeight: 35,
+        tbodyRowHeight: 35,
         _rowHeight: 35, //实际行高,包含border什么的
         _rowHeightNoBorders: 0,
         columnWidth: 160,

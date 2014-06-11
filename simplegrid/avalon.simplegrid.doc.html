@@ -12,7 +12,7 @@
         <p>有两个重要的数据项,一个是columns ,用于配置表头的每一列的具体规格， 一个是data，用于配置tbody里的每一行的内容</p>
 
         <h3> columns对象数组里面的各个对象的匹置项</h3>
-        <table width="80%" border="1">
+        <table width="90%" border="1">
             <tr>
                 <th>名字</th><th>默认值</th> <th>说明</th>
             </tr>
@@ -46,7 +46,7 @@
 
         </table>
         <br/>
-        <table width="80%" border="1">
+        <table width="90%" border="1">
             <tr>
                 <th>与columns并列的属性</th> <th>默认值 </th>  <th>说明 </th> 
             </tr>
@@ -60,32 +60,41 @@
                 <td>showRows</td> <td> 0 </td>  <td> 每页真实要显示的行数</td> 
             </tr>
             <tr>
-                <td>currentPage</td> <td> 0 </td>  <td> 当前位于第几页</td> 
+                <td>currentPage</td> <td> 1 </td>  <td> 当前位于第几页</td> 
             </tr>
             <tr>
-                <td>edge</td> <td> 15 </td>  <td>如果某一列可以允许通过拖动改变列宽,当用户在表头对应的单元格移动鼠标时,<br/>
+                <td>edge</td> <td> 15 </td>  <td>如果某一列可以允许<b>通过拖动改变列宽</b>,当用户在表头对应的单元格移动鼠标时,<br/>
                     它离单元格的右边多少像素时就改变光标的形态,表示可以拖动</td> 
             </tr>
             <tr>
                 <td>columnWidth</td> <td> 160 </td>  <td>每列默认的宽度</td> 
             </tr>
             <tr>
-                <td>rowHeight</td> <td> 35 </td>  <td>tbody每行默认的高度</td> 
+                <td>tbodyRowHeight</td> <td> 35 </td>  <td>tbody每行默认的高度</td> 
             </tr>
             <tr>
-                <td>headerHeight</td> <td> 35 </td>  <td>thead中每行默认的高度</td> 
+                <td><b style="color:orangered">data</b></td> 
+                <td> [] </td>  
+                <td>是当前页的所有数据。
+                    如果存在分页，默认是第一页。<br/>当我们点击分页栏的下一页或其他页时，就会ajax请求数据，
+                    重写data。<br/>此属性在vm里是<b style="color:green">不可监控的</b>，
+                    只是用来克隆其中一部分到_data。
+                </td> 
+            </tr>
+            <tr>
+                <td><b style="color:orangered">_data</b></td> 
+                <td> [] </td>  
+                <td>是当前页的显示出来的数据，
+                    如果出现滚动条就是可视区那一部分的TR元素上附加的数据。<br/>
+                    此属性在vm里是<b style="color:green">可监控的</b>，但不建议用户修改它，
+                    应该交给框架自行处理。
+                </td> 
+
             </tr>
         </table>
 
 
-        <p><b style="color:orangered">data</b>是当前页的所有数据。
-            如果存在分页，默认是第一页。当我们点击分页栏的下一页或其他页时，就会ajax请求数据，
-            重写data。此属性在vm里是<b style="color:green">不可监控的</b>，
-            只是用来克隆其中一部分到_data。这个data你也可以看作是<b style="color:goldenrod">pageData</b>。 </p>
-        <p> <b style="color:orangered">_data</b>是当前页的显示出来的数据，
-            如果出现滚动条就是可视区那一部分的TR元素上附加的数据。
-            此属性在vm里是<b style="color:green">可监控的</b>，但不建议用户修改它，
-            应该交给框架自行处理。这个_data你也可以看作是<b style="color:goldenrod">rowsData</b>。 </p>
+
 
         <pre class="brush:js;gutter:false;toolbar:false;">
 

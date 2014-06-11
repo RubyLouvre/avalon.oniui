@@ -1,5 +1,5 @@
 //avalon 1.2.5 2014.4.2
-define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
+define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], function(avalon, page, tmpl) {
 
     var arr = tmpl.split("MS_OPTION_STYLE") || ["", ""]
     var cssText = arr[1].replace(/<\/?style>/g, "")
@@ -56,14 +56,20 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
         //决定每页的行数(分页与滚动模式下都要用到它)
-        options.perPages = options.perPages || options.data.length
+        if (typeof options.pager !== "object") {
+            options.pager = {}
+        }
+        var pager = options.pager
+        pager.perPages = pager.perPages || options.data.length
+        pager.nextText = pager.nextText || "下一页"
+        pager.prevText = pager.prevText || "上一页"
+        makeBool(pager, "showJumper", true)
+
         //每页真实要显示的行数
-        options.showRows = options.showRows || options.perPages
-        // data.length >= perPages >= showRows
+        options.showRows = options.showRows || pager.perPages
+        options.pager = options.getPager(pager, options)
 
         //如果没有指定各列的出现顺序,那么将按用户定义时的顺序输出
-
-
 
         if (!Array.isArray(options.columnsOrder)) {
             var orders = []
@@ -91,7 +97,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
 
         var vmodel = avalon.define(data.simplegridId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "data", "startIndex", "endIndex", "template"]
+            vm.$skipArray = ["widgetElement", "data", "startIndex", "pager", "endIndex", "template"]
             vm.widgetElement = element
             vm.startIndex = 0
             vm.endIndex = options.showRows
@@ -122,6 +128,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                     return
                 var cell = avalon(this)
                 var dir = getDirection(e, cell, options)
+
                 options._cursor = cell.css("cursor") //保存原来的光标样式
                 if (dir === "") {
                     options.canResize = false
@@ -207,19 +214,27 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                 }
             }
             vm.getRowHeight = function() {
-                var row = this.rows[0], cell = row.cells[0]
+                var tbody = this, row = tbody.rows[0], cell = row.cells[0]
                 //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
-                var borderHeight = Math.max(avalon.css(cell, "borderTopWidth", true), avalon.css(cell, "borderBottomWidth", true))
-                vm._rowHeight = row.offsetHeight
-                vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
-                vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2
-                vm.tbodyScrollHeight = vm._rowHeight * vm.perPages
-                if (vm.showRows !== vm.perPages) {
-                    var target = this
-                    while (target.className.indexOf("ui-grid-tbody-wrapper") === -1) {
-                        target = target.parentNode
+                if (cell) {
+                    var borderHeight = Math.max(avalon.css(cell, "borderTopWidth", true),
+                            avalon.css(cell, "borderBottomWidth", true))
+                    var perPagers = vm.pager.perPages
+                    vm._rowHeight = row.offsetHeight
+                    vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
+                    vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2
+                    vm.tbodyScrollHeight = vm._rowHeight * perPagers
+                    if (vm.showRows !== perPagers) {
+                        var target = tbody
+                        while (target.className.indexOf("ui-grid-tbody-wrapper") === -1) {
+                            target = target.parentNode
+                        }
+                        target.style.overflowY = "scroll"
                     }
-                    target.style.overflowY = "scroll"
+                } else {
+                    setTimeout(function() {
+                        vmodel.getRowHeight.call(tbody)
+                    }, 100)
                 }
 
             }
@@ -246,10 +261,16 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                 return array.slice(vm.startIndex, vm.endIndex)
             }
             vm._data = vm.data.slice(vm.startIndex, vm.endIndex)
-
-
         })
 
+        var intervalID = setInterval(function() {
+            var pagerVM = avalon.vmodels["pager_" + vmodel.$id]
+            if (pagerVM) {
+                vmodel.pager = pagerVM
+                clearInterval(intervalID)
+            }
+        }, 30)
+        console.log(vmodel)
         //那一部分转换为监控数组就行,这样能大大提高性能)
         var requestID,
                 wrapper,
@@ -279,8 +300,7 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
                         vmodel.startIndex += 1
                         count += 1
                         var el = vmodel.data[vmodel.endIndex]
-                        //   console.log(el)
-                        //     console.log(vmodel.endIndex)
+
                         vmodel._data.push(el)
                         vmodel._data.shift()
                         if (count === integer) {
@@ -308,16 +328,13 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
     }
     widget.defaults = {
         //表头的格子的高
-        headerHeight: 35,
-        rowHeight: 35,
+        tbodyRowHeight: 35,
         _rowHeight: 35, //实际行高,包含border什么的
         _rowHeightNoBorders: 0,
         columnWidth: 160,
         edge: 15,
         _data: [],
-        perPage: "", //默认不分页,
         pageable: false,
-        currentPage: 0,
         gridWrapperElement: {},
         syncTheadColumnsOrder: true,
         remoteSort: avalon.noop, //远程排数函数
@@ -331,8 +348,10 @@ define(["avalon", "text!./avalon.simplegrid.html"], function(avalon, tmpl) {
             return tmpl
         },
         getStore: function(array, options) {
-
             return array.concat()
+        },
+        getPager: function(pager, options) {
+            return pager
         },
         getColumns: function(array, options) {
             var ret = []

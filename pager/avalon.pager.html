@@ -22,23 +22,23 @@
            ms-class-ui-pager-current="el == currentPage" 
            >{{el}}</span>
     <span class="ui-pager-omit"
-          ms-if="lastPage!==maxPage" 
+          ms-if="lastPage!==totalPages" 
           >{{ellipseText}}</span>
     <span class="ui-pager-item"
-          ms-if="lastPage!==maxPage" 
+          ms-if="lastPage!==totalPages" 
           ms-title="getTitle('last')" 
           ms-hover="ui-state-hover" 
           ms-click="jumpPage($event,'last')"  
-          >{{maxPage}}</span>
+          >{{totalPages}}</span>
     <span class="ui-pager-next"
-          ms-if="lastPage!==maxPage" 
+          ms-if="lastPage!==totalPages" 
           ms-title="getTitle('next')"
           ms-hover="ui-state-hover" 
           ms-click="jumpPage($event,'next')" 
-          ms-class="ui-pager-disabled:lastPage==maxPage"
+          ms-class="ui-pager-disabled:lastPage==totalPages"
           >{{nextText}}</span>
     <div class="ui-pager-jump" ms-if="showJumper">
-        <span class="ui-pager-text">跳到第</span>
+        <span class="ui-pager-text">共{{totalPages}}页，到第</span>
         <div class="ui-textbox">
             <input class="ui-textbox-input" ms-duplex="_currentPage" ms-keyup="changeCurrentPage">
         </div>

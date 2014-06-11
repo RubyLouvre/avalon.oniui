@@ -1,9 +1,51 @@
-<div class="ui-switch ui-state-default reset" ms-class-100="ui-switch-{{MS_OPTION_TYPE}} ui-switch-{{MS_OPTION_THEME}}" ms-class-100="ui-switch-off:$addThisClass()" ms-class-101="ui-switch-disabled:disabled" ms-click="toggle">
+<div class="ui-switch ui-state-default reset ui-switch-use-no-img" ms-class-100="ui-switch-{{MS_OPTION_TYPE}} ui-switch-{{MS_OPTION_THEME}}" ms-class-100="ui-switch-off:$addThisClass()" ms-class-101="ui-state-disabled:disabled" ms-click="toggle" ms-hover="ui-state-hover">
 	<div class="ui-switch-bar clrfix" ms-class="ui-switch-animate:$css3support" ms-if="dir=='left'">
 		<span class="ui-switch-left" ms-if="hdir">{{MS_OPTION_ON_TEXT|html}}</span>
 		<span class="ui-switch-right" ms-if="!hdir">{{MS_OPTION_OFF_TEXT|html}}</span>
-		<label class="ui-switch-dragger"></label>
+		<label class="ui-switch-dragger">
+		   	<b class="ui-switch-dragger-ball ui-switch-ico" ms-class-103="ui-switch-dragger-ball-unchecked:!checked">
+				<svg ms-if="$shallDrawSvg()" version="1.1" 
+				width="100%" 
+				height="100%" 
+				style="position:absolute;z-index:3;left:0;" 
+				xmlns="http://www.w3.org/2000/svg">
+					<circle stroked="false" 
+					ms-attr-cx="draggerR" 
+					ms-attr-cy="draggerR" 
+					ms-attr-r="draggerR"  
+					ms-attr-fill="draggerColor"/>
+				</svg>
+				<v:oval ms-if="$shallDrawVML()"  
+			   	stroked="false" 
+			   	filled="true" 
+			    ms-css-height="draggerR*2+'px'" 
+			    ms-css-width="draggerR*2+'px'" 
+			   	ms-attr-fillcolor="draggerColor" 
+			   	style="position:absolute;z-index:2;left:-1;top:0;behavior: url(#default#VML)"></v:oval>
+		   	</b>
+		</label>
 		<span class="ui-switch-left" ms-if="!hdir">{{MS_OPTION_ON_TEXT|html}}</span>
 		<span class="ui-switch-right" ms-if="hdir">{{MS_OPTION_OFF_TEXT|html}}</span>
+	</div>
+	<div class="ui-switch-bg ui-switch-ico" ms-class-101="ui-switch-uckbg:!checked" ms-class-102="ui-switch-uckbg-disabled:disabled"><svg ms-if="$shallDrawSvg()" version="1.1" 
+		width="100%" 
+		height="100%" 
+		style="position:absolute;z-index:3;left:0;top:0;" 
+		xmlns="http://www.w3.org/2000/svg">
+			<rect x="0" y="0" 
+			ms-attr-rx="height/2" 
+			ms-attr-ry="height/2" 
+			width="100%" 
+			height="100%" 
+			ms-attr-fill="$getFillColor()"/>
+		</svg>
+		<v:roundrect ms-if="$shallDrawVML()" style="behavior:url(#default#VML);position:absolute;left:-1;top:0;" 
+		stroked="false"  
+		filled="t" 
+		arcsize="100%" 
+		ms-attr-fillcolor="$getFillColor()" 
+	    ms-css-height="height+'px'" 
+	    ms-css-width="width+'px'">
+		</v:roundrect>
 	</div>
 </div>

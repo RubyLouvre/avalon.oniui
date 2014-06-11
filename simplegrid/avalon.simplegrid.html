@@ -43,7 +43,7 @@
         </div>
     </div>
     <div class="ui-grid-tfoot-wrapper"  ms-if="pageable" id="pager-MS_OPTION_ID" >
-       
+
     </div>
 </div>
 MS_OPTION_STYLE
@@ -74,7 +74,7 @@ MS_OPTION_STYLE
         cursor: pointer;
     }
     .ui-helper-asc span{
-        width: 0;
+        width: 0px;
         height: 0;
         border-left: 8px dashed transparent;
         border-right: 8px dashed transparent;
@@ -84,7 +84,7 @@ MS_OPTION_STYLE
         left: 0px;
     }
     .ui-helper-desc span{
-        width: 0;
+        width: 8px;
         height: 0;
         border-left:8px dashed transparent;
         border-right: 8px dashed transparent;
@@ -93,12 +93,33 @@ MS_OPTION_STYLE
         top:10px;
         left: 0px;
     }
+    @-moz-document url-prefix(){
+        .ui-helper-asc span{
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid  #58B359;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+        }
+        .ui-helper-desc span{
+            width: 0;
+            height: 0;
+            border-left:8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top:8px solid  #58B359;
+            position: absolute;
+            top:10px;
+            left: 0px;
+        }
+    }
     .ui-grid-thead  td{
         width: 100%;
         border: 1px solid black;
         height: 35px;
         overflow: hidden;
-        /*        white-space:nowrap;*/
     }
     .ui-grid-tbody-wrapper table{
         width: 100%;
@@ -124,7 +145,6 @@ MS_OPTION_STYLE
     .ui-grid-tfoot-wrapper{
         width: 100%;
         border: 1px solid black;
-        border-top: 0 none;
         padding:2px 0px;
         overflow:hidden;
     }

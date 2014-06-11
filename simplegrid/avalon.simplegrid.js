@@ -195,13 +195,15 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     vmodel.remoteSort(field, trend, opts, callback)
                 } else if (typeof el.localSort === "function" && !remptyfn.test(el.localSort)) {// !isEmptyFn(el.localSort)
                     //如果要在本地排序,并且指定排数函数
+                 
                     vmodel._data.sort(function(a, b) {
-                        return trend * el.localSort(a, b, field, opts)
+                        return trend * el.localSort(a, b, field, opts) || 0
                     })
                 } else {
+                     
                     //否则默认处理
                     vmodel._data.sort(function(a, b) {
-                        return trend * (a[field] - b[field])
+                        return trend * ( a[field] - b[field]) || 0
                     })
                 }
             }

@@ -270,7 +270,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 clearInterval(intervalID)
             }
         }, 30)
-        console.log(vmodel)
+    //    console.log(vmodel)
         //那一部分转换为监控数组就行,这样能大大提高性能)
         var requestID,
                 wrapper,

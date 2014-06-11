@@ -61,6 +61,10 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         }
         var pager = options.pager
         pager.perPages = pager.perPages || options.data.length
+        pager.nextText = pager.nextText || "下一页"
+        pager.prevText = pager.prevText || "上一页"
+        makeBool(pager, "showJumper", true)
+
         //每页真实要显示的行数
         options.showRows = options.showRows || pager.perPages
         options.pager = options.getPager(pager, options)
@@ -331,7 +335,6 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         edge: 15,
         _data: [],
         pageable: false,
-        currentPage: 0,
         gridWrapperElement: {},
         syncTheadColumnsOrder: true,
         remoteSort: avalon.noop, //远程排数函数
@@ -347,7 +350,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         getStore: function(array, options) {
             return array.concat()
         },
-        getPager: function(pager, options){
+        getPager: function(pager, options) {
             return pager
         },
         getColumns: function(array, options) {

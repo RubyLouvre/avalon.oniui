@@ -42,8 +42,8 @@
             </div>
         </div>
     </div>
-    <div class="ui-grid-tfoot-wrapper" ms-if="pageable" ms-widget="pager, pager_MS_OPTION_ID" >
-
+    <div class="ui-grid-tfoot-wrapper"  ms-if="pageable"  >
+        <div ms-widget="pager, pager_MS_OPTION_ID" style="float:right"></div>
     </div>
 </div>
 MS_OPTION_STYLE
@@ -75,7 +75,7 @@ MS_OPTION_STYLE
         overflow: hidden;
         position: relative;
     }
-    
+
     .ui-grid-scroll-wrapper table{
         position: absolute;
     }
@@ -85,6 +85,13 @@ MS_OPTION_STYLE
         border: 1px solid black;
         /*        white-space:nowrap;*/
         overflow: hidden;
+    }
+    .ui-grid-tfoot-wrapper{
+        width: 100%;
+        border: 1px solid black;
+        border-top: 0 none;
+        padding:2px 0px;
+        overflow:hidden;
     }
 
 </style>

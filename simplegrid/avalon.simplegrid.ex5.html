@@ -31,6 +31,13 @@
                         ],
                         showRows: 10,
                         pageable: true,
+                        pager: {
+                            perPages: 30,
+                            totalItems: 1000,
+                            showPages: 5,
+                             currentPage: 2,
+                             _currentPage: 2
+                        },
                         columnsOrder: ["xxx", "yyy", "zzz"],
                         data: createData(100)
                     }
@@ -39,16 +46,21 @@
                 avalon.scan()
             })
         </script>
+        <style>
+            #gridsample{
+                width:900px;
+            }
+        </style>
     </head>
     <body>
-     
-            <fieldset ms-controller="test">
-                <legend>演示大数据表格</legend>
 
-                <div ms-widget="simplegrid">
+        <fieldset ms-controller="test">
+            <legend>演示大数据表格</legend>
 
-                </div>
-            </fieldset>
-  
+            <div ms-widget="simplegrid" id="gridsample">
+
+            </div>
+        </fieldset>
+
     </body>
 </html>

@@ -7,28 +7,32 @@
         <div class="ui-datepicker-content-content">
             <div class="ui-datepicker-header">
                 <i class="ui-datepicker-prev ui-icon ui-icon-chevron-left" 
-                    ms-click="prev"
+                    ms-click="_prev"
                     ms-class="ui-datepicker-prev-disabled:!prevMonth">&#xf053;</i>
                 <i class="ui-datepicker-next ui-icon ui-icon-chevron-right" 
-                    ms-click="next"
+                    ms-click="_next"
                     ms-class="ui-datepicker-next-disabled:!nextMonth">&#xf054;</i>
                 <div class="ui-datepicker-title">
-                    <span class="ui-datepicker-year">2014年</span>
-                    <span class="ui-datepicker-month">6月</span>
+                    <span class="ui-datepicker-year">{{year}}年</span>
+                    <span class="ui-datepicker-month">{{month+1}}月</span>
                 </div>
             </div>
             <table class="ui-datepicker-calendar-week">
                 <thead>
                     <tr>
-                        <th ms-class="ui-datepicker-week-end:$index%7==0 || $index%7==6" ms-repeat="weekNames">{{el}}</th>
+                        <th ms-class="ui-datepicker-week-end:dayNames.indexOf(el)%7==0 || dayNames.indexOf(el)%7==6" ms-repeat="weekNames">{{el}}</th>
                     </tr>
                 </thead>
             </table>
             <table class="ui-datepicker-calendar-days">
                 <tbody>
                     <tr ms-repeat-days="rows">
-                        <td ms-click="selectDate" class="ui-datepicker-week-end ui-state-default"
-                            ms-repeat-el="days">{{el}}</td>
+                        <td ms-click="selectDate" class="ui-state-default"
+                            ms-repeat-el="days"
+                            ms-class="ui-datepicker-week-end:(new Date(year, $outer.$index===0 ? el>21? month-1 :month : month, el).getDay())%7==0 || (new Date(year, $outer.$index===0 ? el>21? month-1 :month : month, el).getDay())%7==6"
+                            ms-attr-othermonth = "showOtherMonths && ($outer.$index===0 ? el>21?true: false: false)"
+
+                            >{{el}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -132,7 +136,7 @@ MS_OPTION_STYLE
     line-height: 18px;
     font-weight: 400;
 }
-.ui-datepicker-week-end {
+.ui-datepicker-week-end , .ui-datepicker-calendar-days td.ui-datepicker-week-end{
     color: #ff5555;
 }
 .ui-datepicker-calendar-days td {

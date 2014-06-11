@@ -14,16 +14,21 @@ define(["avalon", "text!./avalon.datepicker.html"], function(avalon, sourceHTML)
 
         var options = data.datepickerOptions;
         options.template = options.getTemplate(calendarTemplate, options);
-
+        var date = new Date();
+        var month = date.getMonth();
+        var year = date.getFullYear();
         var vmodel = avalon.define(data.datepickerId, function(vm) {
+            
             avalon.mix(vm, options);
-
             vm.elementLeft = 0;
             vm.elementTop = 0;
             vm.weekNames = [];
             vm.rows = [];
+            vm.date = date;
             vm.prevMonth = 0;
             vm.nextMonth = 0;
+            vm.month = month;
+            vm.year = year;
             vm.open = function() {
 
             }
@@ -47,17 +52,38 @@ define(["avalon", "text!./avalon.datepicker.html"], function(avalon, sourceHTML)
             vm.setDate = function() {
 
             }
+            vm._prev = function() {
+                toggleMonth("prev");
+            }
+            vm._next = function() {
+                toggleMonth("next");
+            }
             vm.$init = function() {
                 var calendar = avalon.parseHTML(calendarTemplate).firstChild;
+                var year = vmodel.year;
+                var month = vmodel.month;
                 document.body.appendChild(calendar);
                 vmodel.weekNames = calendarHeader();
-                vmodel.rows = calendarDays();
+                vmodel.rows = calendarDays(month, year);
                 avalon.scan(calendar, [vmodel].concat(vmodels))
             }
             vm.$remove = function() {
 
             }
-
+            function toggleMonth(operate) {
+                var month = 0, year=0;
+                if(operate === "next") {
+                    month = vmodel.month + options.stepMonths;
+                } else {
+                    month = vmodel.month - options.stepMonths;
+                }
+                var firstDayOfNextMonth = new Date(vmodel.year, month, 1);
+                year = vmodel.year = firstDayOfNextMonth.getFullYear();   
+                month = vmodel.month = firstDayOfNextMonth.getMonth();
+                console.log("vmodel.month is : "+vmodel.month);
+                vmodel.rows.clear();
+                vmodel.rows = calendarDays(month, year);  
+            }
             function calendarHeader() {
                 var weekNames = [],
                     startDay = options.startDay;
@@ -67,28 +93,45 @@ define(["avalon", "text!./avalon.datepicker.html"], function(avalon, sourceHTML)
                 }
                 return weekNames;
             }
-            function calendarDays () {
-                var date = new Date();
-                    startDay = options.startDay,
-                    month = new Date(date.getFullYear(), date.getMonth() , 1),
+            function calendarDays (month, year) {
+                var startDay = options.startDay,
+                    firstDayOfMonth = new Date(year, month , 1),
                     stepMonths = options.stepMonths,
                     minDate = options.minDate,
                     maxDate = options.maxDate,
                     showOtherMonths = options.showOtherMonths,
                     days = [],
-                    cellDate = new Date(month.getFullYear() , month.getMonth() , 1 - ( month.getDay() - startDay + 7 ) % 7 ),
+                    cellDate = _cellDate =  new Date(year , month , 1 - ( firstDayOfMonth.getDay() - startDay + 7 ) % 7 ),
                     rows = [];
+                var exitLoop = false;
                 for (var m=0; m<6; m++) {
                     days = [];
                     for(var n = 0 ; n < 7 ; n++){
-                        var isCurrentMonth = cellDate.getMonth() === month.getMonth() && cellDate.getFullYear() === month.getFullYear();
+                        var isCurrentMonth = cellDate.getMonth() === firstDayOfMonth.getMonth() && cellDate.getFullYear() === firstDayOfMonth.getFullYear();
                         cellDate = showOtherMonths || isCurrentMonth ? cellDate : null;
-                        days.push(cellDate.getDate());
-                        cellDate = new Date(cellDate.setDate(cellDate.getDate()+1));
+                        if(!cellDate) {
+                            if(_cellDate.getMonth() > month) {
+                                exitLoop = true;
+                                break;
+                            } else {
+                                cellDate = _cellDate = new Date(_cellDate.setDate(_cellDate.getDate()+1));
+                                days.push(void 0);
+                                continue;
+                            }
+                        }
+                        if(showOtherMonths && _cellDate.getMonth() > month) {
+                            exitLoop = true;
+                            break;
+                        }
+                        var day = cellDate.getDate();
+                        days.push(day);
+                        cellDate = _cellDate = new Date(cellDate.setDate(day+1));
                     } 
                     rows.push(days); 
+                    if(exitLoop) {
+                        break;
+                    }
                 }
-                console.log(rows);
                 return rows;
             }
             function getDefaultDate () {
@@ -116,6 +159,10 @@ define(["avalon", "text!./avalon.datepicker.html"], function(avalon, sourceHTML)
                     return this.minDate || this.maxDate;
             }
         });
+        vmodel.$watch("month", function(month) {
+            console.log("month is : "+month)
+            console.log(vmodel.month);
+        })
         return vmodel;
     }
     widget.version = 1.0
@@ -169,7 +216,7 @@ define(["avalon", "text!./avalon.datepicker.html"], function(avalon, sourceHTML)
         label : '',
         startDay: 1,
         cls : '',
-        showOtherMonths: true,
+        showOtherMonths: false,
         disabledDates : '',  // Function Array
         numberOfMonths: 1,
         correctOnError: true,

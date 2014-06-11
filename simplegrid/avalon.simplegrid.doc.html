@@ -9,7 +9,9 @@
     </head>
     <body>
 
-        <p>有两个重要的数据项,一个是columns ,用于配置表头的每一列的具体规格， 一个是data，用于配置tbody里的每一行的内容</p>
+        <p>有三个重要的数据项,一个是columns ,用于配置表头的每一列的具体规格， 一个是data，用于配置tbody里的每一行的内容，一个是pager，
+            用于配置分页栏
+        </p>
 
         <h3> columns对象数组里面的各个对象的匹置项</h3>
         <table width="90%" border="1">
@@ -54,7 +56,7 @@
                 <td>pageable</td> <td>false </td>  <td> 是否显示分页栏</td> 
             </tr>
             <tr>
-                <td>perPages</td> <td> 0</td>  <td>决定每页的行数(分页与滚动模式下都要用到它)</td> 
+                <td>pager</td> <td>{} </td>  <td> 用于配置分页栏</td> 
             </tr>
             <tr>
                 <td>showRows</td> <td> 0 </td>  <td> 每页真实要显示的行数</td> 

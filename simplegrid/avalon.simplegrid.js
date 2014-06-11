@@ -262,15 +262,23 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             }
             vm._data = vm.data.slice(vm.startIndex, vm.endIndex)
         })
-
-        var intervalID = setInterval(function() {
-            var pagerVM = avalon.vmodels["pager_" + vmodel.$id]
-            if (pagerVM) {
-                vmodel.pager = pagerVM
-                clearInterval(intervalID)
-            }
-        }, 30)
-        console.log(vmodel)
+        if (vmodel.pageable) {
+            var flagPager = false
+            var intervalID = setInterval(function() {
+                var elem = document.getElementById("pager_" + vmodel.$id)
+                if (elem && !flagPager){
+                    elem.innerHTML =  '<div ms-widget="pager,pager_' +vmodel.$id + '" style="float:right"></div>'
+                    avalon.scan(elem, vmodel)
+                    flagPager = true
+                    clearInterval(intervalID)
+                }
+                 var pagerVM = avalon.vmodels["pager_" + vmodel.$id]
+                if (pagerVM) {
+                    vmodel.pager = pagerVM
+                    clearInterval(intervalID)
+                }
+            }, 30)
+        }
         //那一部分转换为监控数组就行,这样能大大提高性能)
         var requestID,
                 wrapper,

@@ -18,8 +18,8 @@
                     >{{el.text}}
                     <span  ms-click="sortColumn(el)"
                            ms-if="el.sortable" 
-                           ms-class="sort_{{el.sortAsc ? 'asc': 'desc'}}">
-                        {{el.sortAsc}}
+                           ms-class="ui-helper-{{el.sortAsc ? 'asc': 'desc'}}">
+                        <span></span>
                     </span>
                 </td>
             </tr>
@@ -56,7 +56,42 @@ MS_OPTION_STYLE
         width: 100%;
         border: 1px solid black;
         border-collapse: collapse;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
 
+    }
+    .ui-helper-asc, .ui-helper-desc{
+        width:16px;
+        height:16px;
+        line-height: 1;
+        vertical-align: middle;
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+    }
+    .ui-helper-asc span{
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px dashed  #58B359;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+    .ui-helper-desc span{
+        width: 0;
+        height: 0;
+        border-left:8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top:8px dashed  #58B359;
+        position: absolute;
+        top:10px;
+        left: 0px;
     }
     .ui-grid-thead  td{
         width: 100%;

@@ -26,7 +26,7 @@ define(["avalon", "text!./avalon.pager.html"], function(avalon, tmpl) {
                 }
                 if (vmodel.alwaysShowNext) {
                     var index = 0
-                    pageHTML = pageHTML.replace(/ms-if="lastPage!==maxPage"/g, function(a) {
+                    pageHTML = pageHTML.replace(/ms-if="lastPage!==totalPages"/g, function(a) {
                         index++
                         if (index == 3) {
                             return ""
@@ -49,12 +49,12 @@ define(["avalon", "text!./avalon.pager.html"], function(avalon, tmpl) {
                             vm.currentPage = 1
                             break
                         case "last":
-                            vm.currentPage = vm.maxPage
+                            vm.currentPage = vm.totalPages
                             break
                         case "next":
                             vm.currentPage++
-                            if (vm.currentPage > vm.maxPage) {
-                                vm.currentPage = vm.maxPage
+                            if (vm.currentPage > vm.totalPages) {
+                                vm.currentPage = vm.totalPages
                             }
                             break
                         case "prev":
@@ -71,7 +71,7 @@ define(["avalon", "text!./avalon.pager.html"], function(avalon, tmpl) {
                     efficientChangePages(vm.pages, getPages(vm))
                 }
             }
-            vm.$watch("total", function() {
+            vm.$watch("totalItems", function() {
                 efficientChangePages(vm.pages, getPages(vm))
             })
             vm.$watch("perPages", function() {
@@ -84,7 +84,7 @@ define(["avalon", "text!./avalon.pager.html"], function(avalon, tmpl) {
                 if (e.type === "keyup" && e.keyCode !== 13)
                     return
                 //currentPage需要转换为Number类型 fix lb1064@qq.com
-                vmodel.currentPage = parseInt(vmodel._currentPage,10)
+                vmodel.currentPage = parseInt(vmodel._currentPage, 10)
                 vmodel.pages = getPages(vmodel)
             }
             vm.pages = []
@@ -141,18 +141,18 @@ define(["avalon", "text!./avalon.pager.html"], function(avalon, tmpl) {
 
     }
     widget.defaults = {
-        perPages: 10, //每页显示多少条目
-        showPages: 10, //一共显示多页，从1开始
+        perPages: 10, //每页包含多少条目
+        showPages: 10, //要显示的页面的数量，从1开始
         currentPage: 1, //当前被高亮的页面，从1开始
         _currentPage: 1,
-        total: 200,
-        pages: [], //装载所有要显示的页面，从1开始
+        totalItems: 200, //总条目数
+        totalPages: 0, //总页数,通过Math.ceil(vm.totalItems / vm.perPages)求得
+        pages: [], //要显示的页面组成的数字数组，如[1,2,3,4,5,6,7]
         nextText: ">",
         prevText: "<",
         ellipseText: "…",
         firstPage: 0, //当前可显示的最小页码，不能小于1
-        lastPage: 0, //当前可显示的最大页码，不能大于maxPage
-        maxPage: 0, //通过Math.ceil(vm.total / vm.perPages)求得
+        lastPage: 0, //当前可显示的最大页码，不能大于totalPages
         alwaysShowNext: false, //总是显示向后按钮
         alwaysShowPrev: false, //总是显示向前按钮
         showJumper: false, //是否显示输入跳转台
@@ -177,12 +177,12 @@ define(["avalon", "text!./avalon.pager.html"], function(avalon, tmpl) {
     }
 
     function getPages(vm) {
-        var c = vm.currentPage, p = Math.ceil(vm.total / vm.perPages), pages = [], s = vm.showPages, max = p,
+        var c = vm.currentPage, max = Math.ceil(vm.totalItems / vm.perPages), pages = [], s = vm.showPages, 
                 left = c, right = c
         //一共有p页，要显示s个页面
-        vm.maxPage = max
-        if (p <= s) {
-            for (var i = 1; i <= p; i++) {
+        vm.totalPages = max
+        if (max <= s) {
+            for (var i = 1; i <= max; i++) {
                 pages.push(i)
             }
         } else {

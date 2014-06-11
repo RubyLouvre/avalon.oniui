@@ -14,7 +14,7 @@
             require(["pager/avalon.pager"], function() {
                 avalon.define("test", function(vm) {
                     vm.pager = {
-                        total: 150,
+                        totalItems: 150,
                         onJump: function(e, data) {
                             location.href = "#page=" + data.currentPage
                         }
@@ -42,7 +42,7 @@
             require(["pager/avalon.pager"], function() {
                 avalon.define("test", function(vm) {
                     vm.pager = {
-                        total: 150,
+                        totalItems: 150,
                         onJump: function(e, data) {
                             location.href = "#page=" + data.currentPage
                         }

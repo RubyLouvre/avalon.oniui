@@ -18,8 +18,8 @@
                     >{{el.text}}
                     <span  ms-click="sortColumn(el)"
                            ms-if="el.sortable" 
-                           ms-class="sort_{{el.sortAsc ? 'asc': 'desc'}}">
-                        {{el.sortAsc}}
+                           ms-class="ui-helper-{{el.sortAsc ? 'asc': 'desc'}}">
+                        <span></span>
                     </span>
                 </td>
             </tr>
@@ -42,7 +42,7 @@
             </div>
         </div>
     </div>
-    <div class="ui-grid-tfoot-wrapper"  ms-if="pageable" id="pager_MS_OPTION_ID" >
+    <div class="ui-grid-tfoot-wrapper"  ms-if="pageable" id="pager-MS_OPTION_ID" >
 
     </div>
 </div>
@@ -56,14 +56,51 @@ MS_OPTION_STYLE
         width: 100%;
         border: 1px solid black;
         border-collapse: collapse;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
 
     }
+    .ui-helper-asc, .ui-helper-desc{
+        width:16px;
+        height:16px;
+        line-height: 1;
+        vertical-align: middle;
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+    }
+    .ui-helper-asc span{
+        width: 0px;
+        height: 0;
+        line-height:0;
+        border-width: 8px;
+        border-color: #58B359  transparent transparent transparent;
+        border-style:solid dashed dashed dashed;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+    .ui-helper-desc span{
+        width: 0px;
+        height: 0;
+        line-height:0;
+        border-width: 8px;
+        border-color:  transparent transparent #58B359 transparent;
+        border-style: dashed dashed  solid dashed;
+        position: absolute;
+        top: -5px;
+        left: 0px;
+    }
+
     .ui-grid-thead  td{
         width: 100%;
         border: 1px solid black;
         height: 35px;
         overflow: hidden;
-        /*        white-space:nowrap;*/
     }
     .ui-grid-tbody-wrapper table{
         width: 100%;
@@ -89,7 +126,6 @@ MS_OPTION_STYLE
     .ui-grid-tfoot-wrapper{
         width: 100%;
         border: 1px solid black;
-        border-top: 0 none;
         padding:2px 0px;
         overflow:hidden;
     }

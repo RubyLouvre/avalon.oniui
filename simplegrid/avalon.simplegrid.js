@@ -195,13 +195,15 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     vmodel.remoteSort(field, trend, opts, callback)
                 } else if (typeof el.localSort === "function" && !remptyfn.test(el.localSort)) {// !isEmptyFn(el.localSort)
                     //如果要在本地排序,并且指定排数函数
+                 
                     vmodel._data.sort(function(a, b) {
-                        return trend * el.localSort(a, b, field, opts)
+                        return trend * el.localSort(a, b, field, opts) || 0
                     })
                 } else {
+                     
                     //否则默认处理
                     vmodel._data.sort(function(a, b) {
-                        return trend * (a[field] - b[field])
+                        return trend * ( a[field] - b[field]) || 0
                     })
                 }
             }
@@ -262,23 +264,25 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             }
             vm._data = vm.data.slice(vm.startIndex, vm.endIndex)
         })
+
         if (vmodel.pageable) {
             var flagPager = false
             var intervalID = setInterval(function() {
-                var elem = document.getElementById("pager_" + vmodel.$id)
-                if (elem && !flagPager){
-                    elem.innerHTML =  '<div ms-widget="pager,pager_' +vmodel.$id + '" style="float:right"></div>'
+                var elem = document.getElementById("pager-" + vmodel.$id)
+                if (elem && !flagPager) {
+                    elem.innerHTML = '<div ms-widget="pager, pager-MS_OPTION_ID" style="float:right"></div>'
+                            .replace("MS_OPTION_ID", vmodel.$id)
                     avalon.scan(elem, vmodel)
                     flagPager = true
-                    clearInterval(intervalID)
                 }
-                 var pagerVM = avalon.vmodels["pager_" + vmodel.$id]
+                var pagerVM = avalon.vmodels["pager_" + vmodel.$id]
                 if (pagerVM) {
                     vmodel.pager = pagerVM
                     clearInterval(intervalID)
                 }
-            }, 30)
+            }, 100)
         }
+
         //那一部分转换为监控数组就行,这样能大大提高性能)
         var requestID,
                 wrapper,

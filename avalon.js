@@ -37,9 +37,11 @@
 
     function noop() {
     }
-
+    
     function log(a) {
-        window.console && console.log(W3C ? a : a + "")
+        if (window.console && avalon.config.debug) {
+            console.log(W3C ? a : a + "")
+        }
     }
 
     /*********************************************************************
@@ -898,14 +900,6 @@
         return (target + "").replace(rregexp, "\\$&")
     }
     var plugins = {
-        debug: function(open) {
-            if (window.console) {
-                if (!console._log) {
-                    console._log = console.log
-                }
-                console.log = open ? console._log : noop
-            }
-        },
         loader: function(builtin) {
             window.define = builtin ? innerRequire.define : otherDefine
             window.require = builtin ? innerRequire : otherRequire
@@ -932,7 +926,7 @@
             rbind = new RegExp(o + ".*?" + c + "|\\sms-")
         }
     }
-
+    kernel.debug = true
     kernel.plugins = plugins
     kernel.plugins['interpolate'](["{{", "}}"])
     kernel.paths = {}
@@ -2597,11 +2591,14 @@
         },
         "text": function(val, elem, data) {
             val = val == null ? "" : val //不在页面上显示undefined null
+            var node = data.node
             if (data.nodeType === 3) { //绑定在文本节点上
-                data.node.data = val
+                try{//IE对游离于DOM树外的节点赋值会报错
+                    node.data = val
+                }catch(e){}
             } else { //绑定在特性节点上
                 if (!elem) {
-                    elem = data.element = data.node.parentNode
+                    elem = data.element = node.parentNode
                 }
                 if ("textContent" in elem) {
                     elem.textContent = val
@@ -3094,7 +3091,7 @@
     function newSetter(newValue) {
         oldSetter.call(this, newValue)
         if (newValue !== this.oldValue) {
-            var event = DOC.createEvent("Event")
+            var event = DOC.createEvent("Events")
             event.initEvent("input", true, true)
             this.dispatchEvent(event)
         }

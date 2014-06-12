@@ -181,8 +181,15 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 }
 
             }
+            vm.sortIndex = NaN
+            vm.getArrow = function(el, $index) {
+                var sortIndex = vm.sortIndex
+                var asc = el.sortAsc
+                return  $index !== sortIndex ? "ndb" : asc ? "asc" : "desc"
+            }
             //如果当前列可以排序，那么点击标题旁边的icon,将会调用此方法
-            vm.sortColumn = function(el) {
+            vm.sortColumn = function(el, $index) {
+                vm.sortIndex = $index
                 var trend = el.sortAsc = !el.sortAsc
                 var field = el.field
                 var opts = vmodel.$model
@@ -195,15 +202,15 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     vmodel.remoteSort(field, trend, opts, callback)
                 } else if (typeof el.localSort === "function" && !remptyfn.test(el.localSort)) {// !isEmptyFn(el.localSort)
                     //如果要在本地排序,并且指定排数函数
-                 
+
                     vmodel._data.sort(function(a, b) {
                         return trend * el.localSort(a, b, field, opts) || 0
                     })
                 } else {
-                     
+
                     //否则默认处理
                     vmodel._data.sort(function(a, b) {
-                        return trend * ( a[field] - b[field]) || 0
+                        return trend * (a[field] - b[field]) || 0
                     })
                 }
             }

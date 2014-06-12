@@ -16,10 +16,12 @@
                     ms-on-mousedown-10="resizeColumn($event,el)"
                     ms-on-mouseleave-10="stopResize"
                     >{{el.text}}
-                    <span  ms-click="sortColumn(el)"
+                    <span  ms-click="sortColumn(el, $index)"
                            ms-if="el.sortable" 
-                           ms-class="ui-helper-{{el.sortAsc ? 'asc': 'desc'}}">
-                        <span></span>
+
+                           ms-class="ui-helper-{{ getArrow(el, $index)}}">
+                        <span class="ui-helper-sort-top"></span>
+                        <span class="ui-helper-sort-bottom"></span>
                     </span>
                 </td>
             </tr>
@@ -64,7 +66,8 @@ MS_OPTION_STYLE
         user-select: none;
 
     }
-    .ui-helper-asc, .ui-helper-desc{
+    /*三种容器的规则*/
+    .ui-helper-asc, .ui-helper-desc,  .ui-helper-ndb{
         width:16px;
         height:16px;
         line-height: 1;
@@ -73,27 +76,37 @@ MS_OPTION_STYLE
         position: relative;
         cursor: pointer;
     }
-    .ui-helper-asc span{
+    /*三种容器下三角形的共同点*/
+    .ui-helper-asc span, .ui-helper-desc span, .ui-helper-ndb span{
         width: 0px;
-        height: 0;
+        height: 0px;
         line-height:0;
-        border-width: 8px;
-        border-color: #58B359  transparent transparent transparent;
-        border-style:solid dashed dashed dashed;
+        border-width: 6px;
         position: absolute;
         top: 0px;
-        left: 0px;
+        left: 4px;
     }
-    .ui-helper-desc span{
-        width: 0px;
-        height: 0;
-        line-height:0;
-        border-width: 8px;
-        border-color:  transparent transparent #58B359 transparent;
-        border-style: dashed dashed  solid dashed;
-        position: absolute;
-        top: -5px;
-        left: 0px;
+    /*上三角*/
+    .ui-helper-ndb .ui-helper-sort-top, .ui-helper-desc .ui-helper-sort-top{
+        border-color: transparent transparent #ccc transparent;
+        border-style: dashed dashed solid dashed;
+        top: -8px;
+    }
+    .ui-helper-asc .ui-helper-sort-top{
+        border-color: transparent transparent #000 transparent;
+        border-style: dashed dashed solid dashed;
+        top: -8px;
+    }
+    /*下三角*/
+    .ui-helper-ndb .ui-helper-sort-bottom, .ui-helper-asc .ui-helper-sort-bottom{
+        border-color: #ccc transparent transparent transparent;
+        border-style: solid dashed dashed  dashed;
+        top: 8px;
+    }
+    .ui-helper-desc .ui-helper-sort-bottom{
+        border-color: #000 transparent transparent transparent;
+        border-style: solid dashed dashed  dashed;
+        top: 8px;
     }
 
     .ui-grid-thead  td{

@@ -120,7 +120,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 while (table.tagName !== "TABLE") {
                     table = table.parentNode
                 }
-                vm.gridWidth = table.offsetWidth - 18
+                vm.gridWidth = table.offsetWidth - (window.nescape ? 18 : 0)
             }
             vm.startResize = function(e, el) {
                 //当移动到表头的右侧,改变光标的形状,表示它可以拖动改变列宽

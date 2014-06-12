@@ -16,9 +16,14 @@
                 <th>名字</th><th>默认值</th> <th>说明</th>
             </tr>
             <tr>
-                <td>totals</td>
+                <td>totalItems</td>
                 <td>200</td> 
                 <td>总条目数</td>
+            </tr>
+               <tr>
+                <td>totalpages</td>
+                <td>0</td> 
+                <td>总页数</td>
             </tr>
             <tr>
                 <td>perPages</td>
@@ -100,7 +105,7 @@
                 </td>
             </tr>
         </table>
-        <p>pager 组件有一个重要的jumpPage方向，用于决定它的跳转方式。它有两个参数，第一个事件对象，第二个是跳转方式，见源码：</p>
+        <p>pager 组件有一个重要的jumpPage方法，用于决定它的跳转方式。它有两个参数，第一个事件对象，第二个是跳转方式，见源码：</p>
         <pre class="brush:js;gutter:false;toolbar:false;">
            vm.jumpPage = function(event, page) {
                 event.preventDefault()
@@ -110,12 +115,12 @@
                             vm.currentPage = 1
                             break
                         case "last":
-                            vm.currentPage = vm.maxPage
+                            vm.currentPage = vm.totalPages
                             break
                         case "next":
                             vm.currentPage++
-                            if (vm.currentPage > vm.maxPage) {
-                                vm.currentPage = vm.maxPage
+                            if (vm.currentPage > vm.totalPages) {
+                                vm.currentPage = vm.totalPages
                             }
                             break
                         case "prev":

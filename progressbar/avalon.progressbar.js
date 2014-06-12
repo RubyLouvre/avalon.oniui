@@ -12,7 +12,6 @@ define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.c
     } catch (e) {
         styleEl.styleSheet.cssText += cssText
     }
-    var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect
     // 园的半径，边框宽度
     function circleValueList(r, bw) {
         var arr = [],
@@ -31,7 +30,8 @@ define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.c
         avalon.log(arr.join(""))
         return arr
     }
-    if(!svgSupport) {
+    var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect
+    if(!svgSupport &&  document.namespaces &&  !document.namespaces["v"]) {
         document.namespaces.add("v", "urn:schemas-microsoft-com:vml")
     }
 
@@ -49,7 +49,7 @@ define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.c
                 labelElement,
                 barParElement,
                 d = svgSupport && vm.circle && circleValueList(options.circleR, options.circleBorderWidth) || []
-            vm.$skipArray = ["widgetElement", "template"]
+            vm.$skipArray = ["widgetElement", "template", "svgSupport"]
             vm.ended = false
             vm.full = d.join("")
             vm.d = ""
@@ -92,6 +92,7 @@ define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.c
                     lw = labelElement.offsetWidth || 0,
                     bpw = barParElement && barParElement.offsetWidth || 0,
                     res = bpw - bw > lw + 2 ? bw - lw / 2 + 2 : bpw - lw
+                    res = res > 0 ? res : 0
                     labelElement.style.left =  res + 'px'
             }
 

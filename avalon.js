@@ -37,9 +37,11 @@
 
     function noop() {
     }
-
+    
     function log(a) {
-        window.console && console.log(W3C ? a : a + "")
+        if (window.console && avalon.config.debug) {
+            console.log(W3C ? a : a + "")
+        }
     }
 
     /*********************************************************************
@@ -898,14 +900,6 @@
         return (target + "").replace(rregexp, "\\$&")
     }
     var plugins = {
-        debug: function(open) {
-            if (window.console) {
-                if (!console._log) {
-                    console._log = console.log
-                }
-                console.log = open ? console._log : noop
-            }
-        },
         loader: function(builtin) {
             window.define = builtin ? innerRequire.define : otherDefine
             window.require = builtin ? innerRequire : otherRequire
@@ -932,7 +926,7 @@
             rbind = new RegExp(o + ".*?" + c + "|\\sms-")
         }
     }
-
+    kernel.debug = true
     kernel.plugins = plugins
     kernel.plugins['interpolate'](["{{", "}}"])
     kernel.paths = {}
@@ -1199,6 +1193,9 @@
     }
     if (window.getComputedStyle) {
         cssHooks["@:get"] = function(node, name) {
+            if (!node || !node.style) {
+                throw new Error("getComputedStyle要求传入一个节点 " + node)
+            }
             var ret, styles = getComputedStyle(node, null)
             if (styles) {
                 ret = name === "filter" ? styles.getPropertyValue(name) : styles[name]
@@ -2066,6 +2063,9 @@
                 assigns.push.apply(assigns, addAssign(vars, scopes[i], name, four))
             }
         }
+        if (!assigns.length && four === "duplex") {
+            return
+        }
         //---------------args----------------
         if (filters) {
             args.push(avalon.filters)
@@ -2204,7 +2204,7 @@
         "for": "htmlFor",
         "http-equiv": "httpEquiv"
     }
-    var anomaly = "accessKey,allowTransparency,bgColor,cellPadding,cellSpacing,codeBase,codeType,colSpan,contentEditable," 
+    var anomaly = "accessKey,allowTransparency,bgColor,cellPadding,cellSpacing,codeBase,codeType,colSpan,contentEditable,"
             + "dateTime,defaultChecked,defaultSelected,defaultValue,frameBorder,isMap,longDesc,maxLength,marginWidth,marginHeight,"
             + "noHref,noResize,noShade,readOnly,rowSpan,tabIndex,useMap,vSpace,valueType,vAlign"
     anomaly.replace(rword, function(name) {
@@ -2591,11 +2591,14 @@
         },
         "text": function(val, elem, data) {
             val = val == null ? "" : val //不在页面上显示undefined null
+            var node = data.node
             if (data.nodeType === 3) { //绑定在文本节点上
-                data.node.data = val
+                try{//IE对游离于DOM树外的节点赋值会报错
+                    node.data = val
+                }catch(e){}
             } else { //绑定在特性节点上
                 if (!elem) {
-                    elem = data.element = data.node.parentNode
+                    elem = data.element = node.parentNode
                 }
                 if ("textContent" in elem) {
                     elem.textContent = val
@@ -3088,7 +3091,7 @@
     function newSetter(newValue) {
         oldSetter.call(this, newValue)
         if (newValue !== this.oldValue) {
-            var event = DOC.createEvent("Event")
+            var event = DOC.createEvent("Events")
             event.initEvent("input", true, true)
             this.dispatchEvent(event)
         }
@@ -3216,10 +3219,10 @@
         }
     }
     if (document.onmousewheel === void 0) {
-        /* IE6-11 chrome wheelDetla 下 -120 上 120
+        /* IE6-11 chrome mousewheel wheelDetla 下 -120 上 120
          firefox DOMMouseScroll detail 下3 上-3
          firefox wheel detlaY 下3 上-3
-         IE9-11 wheel deltaY 下40 
+         IE9-11 wheel deltaY 下40 上-40
          chrome wheel deltaY 下100 上-100 */
         eventHooks.mousewheel = {
             type: "DOMMouseScroll",
@@ -3592,17 +3595,13 @@
     /*********************************************************************
      *                  文本绑定里默认可用的过滤器                          *
      **********************************************************************/
-
     var rscripts = /<script[^>]*>([\S\s]*?)<\/script\s*>/gim
+    var raimg = /^<(a|img)\s/i
     var ron = /\s+(on[^=\s]+)(?:=("[^"]*"|'[^']*'|[^\s>]+))?/g
     var ropen = /<\w+\b(?:(["'])[^"]*?(\1)|[^>])*>/ig
+    var rjavascripturl = /\s+(src|href)(?:=("javascript[^"]*"|'javascript[^']*'))?/ig
     var rsurrogate = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g
     var rnoalphanumeric = /([^\#-~| |!])/g;
-    var toStaticHTML = window.toStaticHTML || function(str) {
-        return str.replace(rscripts, "").replace(ropen, function(a, b) {
-            return a.replace(ron, " ").replace(/\s+/g, " ")
-        })
-    }
 
     var filters = avalon.filters = {
         uppercase: function(str) {
@@ -3618,7 +3617,14 @@
             return target.length > length ? target.slice(0, length - truncation.length) + truncation : String(target)
         },
         camelize: camelize,
-        sanitize: toStaticHTML,
+        sanitize: function(str) {
+            return str.replace(rscripts, "").replace(ropen, function(a, b) {
+                if (raimg.test(a)) {
+                    a = a.replace(rjavascripturl, "")//移除javascript伪协议
+                }
+                return a.replace(ron, " ").replace(/\s+/g, " ")//移除onXXX事件
+            })
+        },
         escape: function(html) {
             //将字符串经过 html 转义得到适合在页面中显示的内容, 例如替换 < 为 &lt 
             return String(html).

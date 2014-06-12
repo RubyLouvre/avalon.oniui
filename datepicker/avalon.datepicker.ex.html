@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo </title>
+<script src="../avalon.js"></script>
+</head>
+<body class="ms-controller" ms-controller="demo">
+    <fieldset>
+        <legend>单日历框</legend>
+        <input ms-widget="datepicker" ms-duplex="data1" data-datepicker-disabled="disabled"/>
+        <p>{{date1}}</p>
+    </fieldset>
+    <script> 
+        require("datepicker/avalon.datepicker", function(avalon) {
+            var model = avalon.define("demo", function(vm) {
+                vm.date1 = '2014-04-02';
+                vm.disabled = false;
+            })
+            avalon.scan();
+        })
+    </script>
+
+</body>
+</html>
+

@@ -22,23 +22,23 @@
            ms-class-ui-pager-current="el == currentPage" 
            >{{el}}</span>
     <span class="ui-pager-omit"
-          ms-if="lastPage!==maxPage" 
+          ms-if="lastPage!==totalPages" 
           >{{ellipseText}}</span>
     <span class="ui-pager-item"
-          ms-if="lastPage!==maxPage" 
+          ms-if="lastPage!==totalPages" 
           ms-title="getTitle('last')" 
           ms-hover="ui-state-hover" 
           ms-click="jumpPage($event,'last')"  
-          >{{maxPage}}</span>
+          >{{totalPages}}</span>
     <span class="ui-pager-next"
-          ms-if="lastPage!==maxPage" 
+          ms-if="lastPage!==totalPages" 
           ms-title="getTitle('next')"
           ms-hover="ui-state-hover" 
           ms-click="jumpPage($event,'next')" 
-          ms-class="ui-pager-disabled:lastPage==maxPage"
+          ms-class="ui-pager-disabled:lastPage==totalPages"
           >{{nextText}}</span>
     <div class="ui-pager-jump" ms-if="showJumper">
-        <span class="ui-pager-text">跳到第</span>
+        <span class="ui-pager-text">共{{totalPages}}页，到第</span>
         <div class="ui-textbox">
             <input class="ui-textbox-input" ms-duplex="_currentPage" ms-keyup="changeCurrentPage">
         </div>
@@ -51,6 +51,8 @@ MS_OPTION_STYLE
 <style>
     .ui-pager {
         display: inline-block;
+        _zoom: 1;
+        _display:inline;
         font-size: 0;
         vertical-align: middle;
         white-space: nowrap;
@@ -60,12 +62,15 @@ MS_OPTION_STYLE
         vertical-align: middle;
     }
     .ui-pager-prev, .ui-pager-next, .ui-pager-item {
+        display: inline-block;
+        _zoom: 1;
+        _display:inline;
         -moz-user-select: none;
         background-color: #FFFFFF;
         border: 1px solid #CCCCCC;
         border-radius: 2px;
         cursor: pointer;
-        display: inline-block;
+
         font-size: 12px;
         height: 24px;
         line-height: 24px;
@@ -114,6 +119,9 @@ MS_OPTION_STYLE
     }
     .ui-pager-jump {
         display: inline-block;
+        _zoom: 1;
+        _display:inline;
+        vertical-align: middle;
         padding-left: 5px;
         vertical-align: middle;
     }
@@ -123,11 +131,14 @@ MS_OPTION_STYLE
     }
     .ui-textbox {
         display: inline-block;
+        _zoom:1;
+        _display:inline;
         vertical-align: middle;
         background-color: #ffffff;
         border: 1px solid #cccccc;
         font-size: 0;
         outline: none;
+        width:26px;
         padding: 3px 5px;
     }
     .ui-pager-jump .ui-textbox-input {
@@ -135,16 +146,17 @@ MS_OPTION_STYLE
         width: 26px;
     }
     .ui-textbox-input {
-        background-color: #FFFFFF;
-        border: 0 none;
-        color: #333333;
         display: inline;
         float: left;
+        position: relative;
+        border: 0 none;
+        color: #333333;
+        background: #fff;
         font-size: 12px;
         height: 18px;
         line-height: 18px;
         outline: medium none;
-        position: relative;
+
         vertical-align: middle;
     }
     .ui-pager-jump .ui-btn {
@@ -152,6 +164,8 @@ MS_OPTION_STYLE
     }
     .ui-btn {
         display: inline-block;
+        _zoom: 1;
+        _display:inline;
         vertical-align: middle;
         -moz-user-select: none;
         -ms-user-select: none;
@@ -172,6 +186,8 @@ MS_OPTION_STYLE
     }
     .ui-pager-text {
         display: inline-block;
+        _zoom: 1;
+        _display:inline;
         font-size: 12px;
         vertical-align: middle;
     }

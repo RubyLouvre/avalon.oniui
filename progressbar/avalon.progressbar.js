@@ -30,7 +30,7 @@ define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.c
         return arr
     }
     var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect
-    if(!svgSupport) {
+    if(!svgSupport &&  document.namespaces &&  !document.namespaces["v"]) {
         document.namespaces.add("v", "urn:schemas-microsoft-com:vml")
     }
 

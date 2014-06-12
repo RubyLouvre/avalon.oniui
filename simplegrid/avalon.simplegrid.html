@@ -1,8 +1,11 @@
 <div class="ui-grid">
     <div class="ui-grid-wrapper" 
-         id="grid-wrapper-MS_OPTION_ID">
+         ms-css-height="tbodyHeight+theadHeight"
+         ms-on-scroll-12="throttleRenderTbody"
+         >
         <table class="ui-grid-thead" 
-               ms-css-width="gridWidth">
+               ms-css-width="gridWidth" 
+               ms-css-top="tbodyScrollTop">
             <tr>
                 <td data-repeat-rendered="getRealWidth"
                     ms-repeat="columns"
@@ -26,22 +29,25 @@
                 </td>
             </tr>
         </table>
-        <div class="ui-grid-tbody-wrapper" ms-css-height="tbodyHeight" ms-on-scroll-12="throttleRenderTbody">
-            <div class="ui-grid-scroll-wrapper" ms-css-height="tbodyScrollHeight">
-                <table ms-css-width="gridWidth" ms-css-top="tbodyScrollTop">
-                    <tr ms-repeat-row="_data" data-repeat-rendered="getRowHeight">
-                        <td class="ui-grid-td"
-                            ms-repeat="row" 
-                            data-with-sorted="getColumnsOrder"
-                            ms-css-width="getCellWidth($key)"
-                            ms-visible="getCellToggle($key)" 
-                            ms-css-height="tbodyRowHeight" 
-                            >
-                            <div class="editable">{{$val}}</div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+        <table class="ui-grid-tbody" 
+               ms-css-width="gridWidth" 
+               ms-css-top="tbodyScrollTop + theadHeight">
+            <tr  data-repeat-rendered="getRowHeight"
+                 ms-repeat-row="_data"
+                 >
+                <td class="ui-grid-td"
+                    data-with-sorted="getColumnsOrder"
+                    ms-repeat="row" 
+                    ms-visible="getCellToggle($key)" 
+                    ms-css-width="getCellWidth($key)"
+                    ms-css-height="tbodyRowHeight" 
+                    >
+                    <div class="editable">{{$val}}</div>
+                </td>
+            </tr>
+        </table>
+        <div class="ui-grid-scroll-marker" ms-css-height="tbodyScrollHeight+theadHeight" >
+
         </div>
     </div>
     <div class="ui-grid-tfoot-wrapper"  ms-if="pageable" id="pager-MS_OPTION_ID" >
@@ -50,22 +56,7 @@
 </div>
 MS_OPTION_STYLE
 <style>
-    .ui-grid-wrapper{
-        width:100%;
-        overflow-x:auto;
-    }
-    .ui-grid-thead{
-        width: 100%;
-        border: 1px solid black;
-        border-collapse: collapse;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
 
-    }
     /*三种容器的规则*/
     .ui-helper-asc, .ui-helper-desc,  .ui-helper-ndb{
         width:16px;
@@ -108,34 +99,55 @@ MS_OPTION_STYLE
         border-style: solid dashed dashed  dashed;
         top: 8px;
     }
+    .ui-grid{
+        width:100%;
+        border: 1px solid #000;
+    }
+    .ui-grid-wrapper{
+        width:100%;
+        overflow-x:auto;
+        position: relative;
+    }
 
+    .ui-grid-thead{
+        position: absolute;
+        width: 100%;
+        border: 1px solid black;
+        border-collapse: collapse;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+    }
     .ui-grid-thead  td{
         width: 100%;
         border: 1px solid black;
         height: 35px;
         overflow: hidden;
     }
-    .ui-grid-tbody-wrapper table{
+
+    .ui-grid-tbody{
+        position: absolute;
         width: 100%;
         border: 1px solid black;
         border-collapse: collapse;
-
-    }
-    .ui-grid-tbody-wrapper{
-        overflow: hidden;
-        position: relative;
     }
 
-    .ui-grid-scroll-wrapper table{
-        position: absolute;
-    }
-
-    .ui-grid-tbody-wrapper table td{
+    .ui-grid-tbody  td{
         width: 100%;
         border: 1px solid black;
-        /*        white-space:nowrap;*/
+        height: 35px;
         overflow: hidden;
     }
+
+
+    .ui-grid-scroll-marker{
+        width:100%;
+    }
+
     .ui-grid-tfoot-wrapper{
         width: 100%;
         border: 1px solid black;

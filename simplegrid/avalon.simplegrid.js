@@ -120,7 +120,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 while (table.tagName !== "TABLE") {
                     table = table.parentNode
                 }
-                vm.gridWidth = table.offsetWidth
+                vm.gridWidth = table.offsetWidth - 18
             }
             vm.startResize = function(e, el) {
                 //当移动到表头的右侧,改变光标的形状,表示它可以拖动改变列宽
@@ -231,11 +231,11 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     var perPagers = vm.pager.perPages
                     vm._rowHeight = row.offsetHeight
                     vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
-                    vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2
+                    vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2 
                     vm.tbodyScrollHeight = vm._rowHeight * perPagers
                     if (vm.showRows !== perPagers) {
                         var target = tbody
-                        while (target.className.indexOf("ui-grid-tbody-wrapper") === -1) {
+                        while (target.className.indexOf("ui-grid-wrapper") === -1) {
                             target = target.parentNode
                         }
                         target.style.overflowY = "scroll"
@@ -266,6 +266,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             vm.getColumnsOrder = function() {
                 return vm.columnsOrder
             }
+   
             vm.getStore = function(array) {
                 return array.slice(vm.startIndex, vm.endIndex)
             }
@@ -347,6 +348,8 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
     }
     widget.defaults = {
         //表头的格子的高
+        theadHeight: 35,
+        tbodyHeight: 0,
         tbodyRowHeight: 35,
         _rowHeight: 35, //实际行高,包含border什么的
         _rowHeightNoBorders: 0,
@@ -354,7 +357,6 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         edge: 15,
         _data: [],
         pageable: false,
-        gridWrapperElement: {},
         syncTheadColumnsOrder: true,
         remoteSort: avalon.noop, //远程排数函数
         getColumnTitle: function() {

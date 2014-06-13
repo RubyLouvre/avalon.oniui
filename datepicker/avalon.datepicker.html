@@ -7,10 +7,10 @@
         <div class="ui-datepicker-content-content">
             <div class="ui-datepicker-header">
                 <i class="ui-datepicker-prev ui-icon ui-icon-chevron-left" 
-                    ms-click="_prev"
+                    ms-click="_prev(prevMonth)"
                     ms-class="ui-datepicker-prev-disabled:!prevMonth">&#xf053;</i>
                 <i class="ui-datepicker-next ui-icon ui-icon-chevron-right" 
-                    ms-click="_next"
+                    ms-click="_next(nextMonth)"
                     ms-class="ui-datepicker-next-disabled:!nextMonth">&#xf054;</i>
                 <div class="ui-datepicker-title">
                     <span class="ui-datepicker-year">{{year}}年</span>
@@ -34,8 +34,8 @@
                             
                             ms-class-1="ui-datepicker-day-none: item.month === false"
                             ms-class-2="ui-datepicker-selected:item.selected"
-                            ms-attr-month = "item.month"
-                            ms-click="_selectDate(year, item.month, item.day)"
+                            ms-class-3="ui-state-disabled:item.dateDisabled"
+                            ms-click="_selectDate(year, item.month, item.day, item.dateDisabled)"
                             >{{item.day}}</td>
                     </tr>
                 </tbody>
@@ -169,5 +169,10 @@ MS_OPTION_STYLE
 }
 .ui-datepicker .ui-datepicker-day-none {
     cursor: auto;
+}
+.ui-datepicker .ui-datepicker-calendar-days .ui-state-disabled {
+    color: #cccccc;
+    cursor: default;
+    background: #fff;
 }
 </style>

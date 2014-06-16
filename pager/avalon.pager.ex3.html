@@ -15,15 +15,12 @@
                 avalon.define("test", function(vm) {
                     vm.pager = {
                         totalItems: 150,
-                        perPages: 5
+                        perPages: 5,
+                        getTemplate: function(tmpl) {
+                            return "<select  ms-duplex='perPages' style='float:left;height:24px;' ><option ms-repeat='options'>{{el.text}}</option></select>" + tmpl
+                        },
+                        options: [5, 10, 15]
                     }
-                    vm.perPages = 5
-                    vm.$watch("perPages", function(a) {
-                        var widget = avalon.vmodels.pp
-                        if (widget) {
-                            widget.perPages = a
-                        }
-                    })
                     vm.$skipArray = ["pager"]
                 })
                 avalon.scan()
@@ -33,11 +30,6 @@
     <body ms-controller="test">
         <h1>改变每页显示的数量</h1>
         <div ms-widget="pager, pp"></div>
-        <select ms-duplex="perPages">
-            <option>5</option>
-            <option>10</option>
-            <option>15</option>
-        </select>
         <pre class="brush:html;gutter:false;toolbar:false">
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;

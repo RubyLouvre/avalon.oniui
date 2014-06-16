@@ -1,0 +1,15 @@
+<div ms-repeat-pos="$position" class="ui-scrollbar reset clrfix ui-widget" ms-class-100="ui-scrollbar-{{pos}}">
+	<div ms-if="showBarHeader" class="ui-scrollbar-arrow ui-scrollbar-arrow-up" ms-click="$arrClick($event, 'up', pos, $index)"><b></b></div>
+	<div class="ui-scrollbar-draggerpar" ms-click="$barClick($event, pos, $index)">
+		<div class="ui-scrollbar-dragger"
+		ms-data-draggable-axis="pos == 'left' || pos == 'right' ? 'y' : 'x'" 
+		data-draggable-before-start="beforeStartFn" 
+		data-draggable-start="startFn" 
+		data-draggable-drag="dragFn" 
+		data-draggable-before-stop="beforeStopFn" 
+		data-draggable-stop="stopFn" 
+		data-draggable-containment="parent" 
+		>{{draggerHTML | html}}</div>
+	</div>
+	<div ms-if="showBarHeader" class="ui-scrollbar-arrow ui-scrollbar-arrow-down" ms-click="$arrClick($event, 'down', pos)"><b></b></div>
+</div>

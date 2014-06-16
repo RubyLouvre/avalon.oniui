@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>scrollbar组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["scrollbar/avalon.scrollbar"], function() {
+                avalon.define("test", function(vm) {
+                    vm.scrollbar = {
+                    }
+                    vm.data = avalon.range(1,100)
+                    vm.$skipArray = ["scrollbar"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test" style="padding-bottom:800px;" class="reset">
+        <h1>scrollbar</h1>
+        <!--element to bind scrollbar-->
+        <div ms-widget="scrollbar" class="reset" style="height:300px;border:1px solid #ccc;width:400px;" data-scrollbar-position="right,bottom">
+            <!--element to scroll-->
+            <div class="ui-scrollbar-scroller reset" style="background:green;">
+                <p style="width:800px" ms-repeat="data" class="reset">left {{$index}} <span style="float:right;padding-right:20px;">right</span></p>
+            </div>
+        </div>
+        <pre class="brush:html;gutter:false;toolbar:false">
+        </pre>
+    </body>
+</html>

@@ -1,0 +1,101 @@
+@import "../style/default.scss";
+$pf : ".ui-scrollbar";
+
+#{$pf} {
+	width: 10px;
+	height: 100%;
+	position: absolute;
+	left: auto;
+	right:0;
+	top:0;
+	bottom: auto;
+	background:#ccc;
+	&-arrow{
+		position: absolute;
+		background:#eee;
+		top:0;
+		left: 0;
+		width: 10px;
+		height: 10px;
+	    b{
+	    	border-style: dashed dashed solid;
+			border-color: transparent transparent #FFE44F;
+			border-width: 0 4px 4px;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-top: -2px;
+			margin-left: -4px;
+	    }
+	    &-down{
+	    	top: auto;
+	    	bottom: 0;
+	    	b{
+	    		border-style: solid dashed dashed;
+		    	border-color: #FFE44F transparent transparent;
+				border-width: 4px 4px 0;
+	    	}
+	    }
+	}
+	&-scroller{
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+	&-left {
+		left: 0;
+		right: auto;
+	}
+	&-top {
+		width: 100%;
+		height: 10px;
+		left: 0;
+		top: 0;
+		bottom: auto;
+	}
+	&-bottom {
+		width: 100%;
+		height: 10px;
+		left: 0;
+		top: auto;
+		bottom: 0;
+	}
+	&-draggerpar{
+		position: absolute;
+		left: 0;
+		top:0;
+		width: 100%;
+		height: 100%;
+	}
+	&-dragger{
+		position: absolute;
+		width: 100%;
+		left: 0;
+		background: #111;
+	}
+	&-top,&-bottom {
+		#{$pf}{
+			&-ragger {
+				height: 100%;
+				width: auto;
+				top:0;
+			}
+			&-arrow b{
+				border-style: dashed solid dashed dashed;
+				border-color: transparent #FFE44F transparent transparent;
+				border-width: 4px 4px 4px 0;
+				margin-top: -4px;
+				margin-left: -2px;
+			}
+			&-arrow-down{
+				right: 0;
+				left: auto;
+				b {
+					border-style: dashed dashed dashed solid;
+				    border-color: transparent transparent transparent #FFE44F;
+					border-width: 4px 0 4px 4px;
+				}
+			}
+		}
+	}
+}

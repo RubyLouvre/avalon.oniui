@@ -97,7 +97,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             options.columns = aaa
         }
 
-        var _vmodels
+        var _vmodels, wrapper
 
         var vmodel = avalon.define(data.simplegridId, function(vm) {
             avalon.mix(vm, options)
@@ -125,7 +125,8 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 while (table.tagName !== "TABLE") {
                     table = table.parentNode
                 }
-                vm.gridWidth = Math.max(table.offsetWidth, table.parentNode.offsetWidth)
+                wrapper = table.parentNode
+                vm.gridWidth = Math.min(table.offsetWidth, wrapper.offsetWidth)
             }
             vm.startResize = function(e, el) {
                 //当移动到表头的右侧,改变光标的形状,表示它可以拖动改变列宽
@@ -178,6 +179,10 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                             restoreUserSelect()
                             delete options._drag
                             vm.gridWidth = gridWidth + e.pageX - startX
+                            //如果出现水平滚动条,那么往高度加17
+                            if (wrapper && wrapper.clientWidth < wrapper.scrollWidth) {
+                                vm.tbodyHeight += 17
+                            }
                             el.width = cellWidth + e.pageX - startX
                             avalon.unbind(document, "mousemove", moveFn)
                             avalon.unbind(document, "mouseup", upFn)
@@ -228,7 +233,8 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     }
                 }
             }
-            vm.getRowHeight = function() {
+            vm.getRowHeight = function(a) {
+
                 var tbody = this, row = tbody.rows[0], cell = row.cells[0]
                 //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
                 if (cell) {
@@ -237,17 +243,15 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     var perPages = vm.pager.perPages
                     vm._rowHeight = row.offsetHeight
                     vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
-                    vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2 +
-                            (perPages > vm.showRows ? 18 : 0)
-
+                    vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2 
                     vm.tbodyScrollHeight = vm._rowHeight * perPages
-                    if (vm.showRows !== perPages) {
-                        var target = tbody
-                        while (target.className.indexOf("ui-grid-wrapper") === -1) {
-                            target = target.parentNode
-                        }
-                        target.style.overflowY = "scroll"
+                    //如果同时出现两个滚动条
+                    avalon.log(wrapper.clientWidth, wrapper.offsetWidth, wrapper.scrollWidth)
+                    if (perPages > vm.showRows && wrapper.clientWidth < wrapper.scrollWidth) {
+                        vm.gridWidth = wrapper.scrollWidth - 17
                     }
+
+
                 } else {
                     setTimeout(function() {
                         vmodel.getRowHeight.call(tbody)
@@ -306,6 +310,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             prevScrollTop = scrollTop
             var distance = Math.abs(lastRenderedScrollTop - scrollTop)
             var rowHeight = vmodel._rowHeight
+
             if (distance >= vmodel._rowHeightNoBorders) {
 
                 var linage = distance / rowHeight

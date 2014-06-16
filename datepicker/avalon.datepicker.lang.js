@@ -1,5 +1,4 @@
-(function(global){
-
+define(function() {
     var HolidayStyle = {
         "元旦节" : {
             "afterTime": 3,
@@ -71,10 +70,7 @@
             "holidayClass" : "c_shengdan",
             "holidayText" : "圣诞"
         }
-
     };
-
-
     var HolidayData = {
         "2013-01-01": {
             "holidayName": "元旦节"
@@ -158,12 +154,10 @@
             "holidayName": "圣诞节"
         }
     };
-
     for( var x in HolidayData ){
         if( HolidayData.hasOwnProperty(x)){
             var data = HolidayData[x],
                 name = data.holidayName;
-
             if( name && HolidayStyle[ name ] ){
                 var style = HolidayStyle[ name ];
                 for( var y in style){
@@ -171,11 +165,8 @@
                         data[y] = style[y];
                     }
                 }
-
             }
         }
     }
-
-    global.HolidayData = HolidayData;
-
-})(window);
+    return HolidayData;
+})

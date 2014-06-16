@@ -13,8 +13,14 @@
                     ms-click="_next(nextMonth)"
                     ms-class="ui-datepicker-next-disabled:!nextMonth">&#xf054;</i>
                 <div class="ui-datepicker-title">
-                    <span class="ui-datepicker-year">{{year}}年</span>
-                    <span class="ui-datepicker-month">{{month+1}}月</span>
+                    <!-- <span >{{year}}年</span> -->
+                    <select ms-each="years" data-each-rendered="_afterYearRendered">
+                        <option>{{el}}</option>
+                    </select>年
+                    <select ms-each="months" data-each-rendered="_afterMonthRendered">
+                        <option ms-value="{{el-1}}">{{el}}</option>
+                    </select>月
+                    <!-- <span class="ui-datepicker-month">{{month+1}}月</span> -->
                 </div>
             </div>
             <table class="ui-datepicker-calendar-week">

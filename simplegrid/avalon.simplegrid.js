@@ -38,8 +38,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
         //决定每页的行数(分页与滚动模式下都要用到它)
-        // 每页真实要显示的行数
-        options.showRows = options.showRows || pager.perPages
+
         //<------开始配置分页的参数
         if (typeof options.pager !== "object") {
             options.pager = {}
@@ -58,6 +57,8 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         //如果还不满意可以通过getPager方法重写
         options.pager = options.getPager(pager, options)
         //-----结束配置分页的参数--------->
+        // 每页真实要显示的行数
+        options.showRows = options.showRows || pager.perPages
         //如果没有指定各列的出现顺序,那么将按用户定义时的顺序输出
 
         if (!Array.isArray(options.columnsOrder)) {

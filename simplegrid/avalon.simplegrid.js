@@ -63,6 +63,12 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         pager.perPages = pager.perPages || options.data.length
         pager.nextText = pager.nextText || "下一页"
         pager.prevText = pager.prevText || "上一页"
+        if (Array.isArray(pager.options)) {
+            pager.getTemplate = typeof pager.getTemplate === "function" ? pager.getTemplate : function(tmpl) {
+                return "<div class='ui-grid-pager-options'>每页显示<select ms-duplex='perPages'><option ms-repeat='options' ms-el.value>{{el.text}}</options></select>条,共{{totalItems}}条结果</div>" 
+                        + tmpl
+            }
+        }
         makeBool(pager, "showJumper", true)
 
         //每页真实要显示的行数
@@ -231,7 +237,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     var perPagers = vm.pager.perPages
                     vm._rowHeight = row.offsetHeight
                     vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
-                    vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2 
+                    vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2
                     vm.tbodyScrollHeight = vm._rowHeight * perPagers
                     if (vm.showRows !== perPagers) {
                         var target = tbody
@@ -266,7 +272,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             vm.getColumnsOrder = function() {
                 return vm.columnsOrder
             }
-   
+
             vm.getStore = function(array) {
                 return array.slice(vm.startIndex, vm.endIndex)
             }
@@ -278,14 +284,16 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             var intervalID = setInterval(function() {
                 var elem = document.getElementById("pager-" + vmodel.$id)
                 if (elem && !flagPager) {
-                    elem.innerHTML = '<div ms-widget="pager, pager-MS_OPTION_ID" style="float:right"></div>'
-                            .replace("MS_OPTION_ID", vmodel.$id)
+                    elem.setAttribute("ms-widget","pager,pager-"+ vmodel.$id)
+                    avalon(elem).addClass("ui-grid-pager-wrapper")
+      
                     avalon.scan(elem, vmodel)
                     flagPager = true
                 }
                 var pagerVM = avalon.vmodels["pager_" + vmodel.$id]
                 if (pagerVM) {
                     vmodel.pager = pagerVM
+                
                     clearInterval(intervalID)
                 }
             }, 100)
@@ -349,8 +357,10 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
     widget.defaults = {
         //表头的格子的高
         theadHeight: 35,
-        tbodyHeight: 0,
         tbodyRowHeight: 35,
+        tbodyScrollHeight: "auto",
+        tbodyScrollTop: 0,
+        tbodyHeight: "auto",
         _rowHeight: 35, //实际行高,包含border什么的
         _rowHeightNoBorders: 0,
         columnWidth: 160,
@@ -362,9 +372,6 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         getColumnTitle: function() {
             return ""
         },
-        tbodyScrollHeight: "auto",
-        tbodyScrollTop: 0,
-        tbodyHeight: "auto",
         getTemplate: function(tmpl, options) {
             return tmpl
         },

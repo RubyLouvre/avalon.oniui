@@ -32,9 +32,9 @@
         <table class="ui-grid-tbody" 
                ms-css-width="gridWidth" 
                ms-css-top="tbodyScrollTop + theadHeight">
-            <tr  data-repeat-rendered="getRowHeight"
-                 ms-repeat-row="_data"
-                 >
+            <tr data-repeat-rendered="getRowHeight"
+                ms-repeat-row="_data"
+                >
                 <td class="ui-grid-td"
                     data-with-sorted="getColumnsOrder"
                     ms-repeat="row" 
@@ -153,6 +153,16 @@ MS_OPTION_STYLE
         border: 1px solid black;
         padding:2px 0px;
         overflow:hidden;
+    }
+
+    .ui-pager{
+        float: right;
+    }
+    .ui-grid-pager-options{
+        float: left;
+        height: 24px;
+        line-height: 24px;
+        padding-left: 5px;
     }
 
 </style>

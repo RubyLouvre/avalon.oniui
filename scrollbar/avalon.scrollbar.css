@@ -83,7 +83,12 @@
   right: 0;
   top: 0;
   bottom: auto;
-  background: #ccc; }
+  background: #ccc;
+  transition: opacity .5s;
+  -webkit-transition: opacity .5s;
+  -moz-transition: opacity .5s;
+  -o-transition: opacity .5s;
+  -ms-transition: opacity .5s; }
   .ui-scrollbar-arrow {
     position: absolute;
     background: #eee;
@@ -99,7 +104,9 @@
       top: 50%;
       left: 50%;
       margin-top: -2px;
-      margin-left: -4px; }
+      margin-left: -4px;
+      font-size: 0;
+      line-height: 0; }
     .ui-scrollbar-arrow-down {
       top: auto;
       bottom: 0; }
@@ -107,6 +114,12 @@
         border-style: solid dashed dashed;
         border-color: #FFE44F transparent transparent;
         border-width: 4px 4px 0; }
+    .ui-scrollbar-arrow-hover {
+      background: #666; }
+    .ui-scrollbar-arrow-onmousedown {
+      background: #444; }
+    .ui-scrollbar-arrow-disabled {
+      background: #eee; }
   .ui-scrollbar-scroller {
     position: absolute;
     left: 0;
@@ -136,7 +149,11 @@
     position: absolute;
     width: 100%;
     left: 0;
-    background: #111; }
+    background: #666; }
+    .ui-scrollbar-dragger-hover {
+      background: #333; }
+    .ui-scrollbar-dragger-onmousedown {
+      background: #111; }
   .ui-scrollbar-top .ui-scrollbar-ragger, .ui-scrollbar-bottom .ui-scrollbar-ragger {
     height: 100%;
     width: auto;

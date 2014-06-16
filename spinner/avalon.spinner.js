@@ -88,10 +88,10 @@ define(["avalon", "text!./avalon.spinner.html"], function(avalon, sourceHTML) {
                 $element.bind("keydown", function(event) {
                     switch( event.which ) {
                         case 38: // up
-                            vmodel.$add();
+                            vmodel.$add(event);
                             return false;
                         case 40: // down
-                            vmodel.$sub();
+                            vmodel.$sub(event);
                             return false;
                     }
                 })

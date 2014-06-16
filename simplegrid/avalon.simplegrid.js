@@ -120,7 +120,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 while (table.tagName !== "TABLE") {
                     table = table.parentNode
                 }
-                vm.gridWidth = table.offsetWidth
+                vm.gridWidth = table.offsetWidth - (window.nescape ? 18 : 0)
             }
             vm.startResize = function(e, el) {
                 //当移动到表头的右侧,改变光标的形状,表示它可以拖动改变列宽
@@ -181,8 +181,15 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 }
 
             }
+            vm.sortIndex = NaN
+            vm.getArrow = function(el, $index) {
+                var sortIndex = vm.sortIndex
+                var asc = el.sortAsc
+                return  $index !== sortIndex ? "ndb" : asc ? "asc" : "desc"
+            }
             //如果当前列可以排序，那么点击标题旁边的icon,将会调用此方法
-            vm.sortColumn = function(el) {
+            vm.sortColumn = function(el, $index) {
+                vm.sortIndex = $index
                 var trend = el.sortAsc = !el.sortAsc
                 var field = el.field
                 var opts = vmodel.$model
@@ -195,15 +202,15 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     vmodel.remoteSort(field, trend, opts, callback)
                 } else if (typeof el.localSort === "function" && !remptyfn.test(el.localSort)) {// !isEmptyFn(el.localSort)
                     //如果要在本地排序,并且指定排数函数
-                 
+
                     vmodel._data.sort(function(a, b) {
                         return trend * el.localSort(a, b, field, opts) || 0
                     })
                 } else {
-                     
+
                     //否则默认处理
                     vmodel._data.sort(function(a, b) {
-                        return trend * ( a[field] - b[field]) || 0
+                        return trend * (a[field] - b[field]) || 0
                     })
                 }
             }
@@ -224,11 +231,11 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     var perPagers = vm.pager.perPages
                     vm._rowHeight = row.offsetHeight
                     vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
-                    vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2
+                    vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2 
                     vm.tbodyScrollHeight = vm._rowHeight * perPagers
                     if (vm.showRows !== perPagers) {
                         var target = tbody
-                        while (target.className.indexOf("ui-grid-tbody-wrapper") === -1) {
+                        while (target.className.indexOf("ui-grid-wrapper") === -1) {
                             target = target.parentNode
                         }
                         target.style.overflowY = "scroll"
@@ -259,6 +266,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             vm.getColumnsOrder = function() {
                 return vm.columnsOrder
             }
+   
             vm.getStore = function(array) {
                 return array.slice(vm.startIndex, vm.endIndex)
             }
@@ -340,6 +348,8 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
     }
     widget.defaults = {
         //表头的格子的高
+        theadHeight: 35,
+        tbodyHeight: 0,
         tbodyRowHeight: 35,
         _rowHeight: 35, //实际行高,包含border什么的
         _rowHeightNoBorders: 0,
@@ -347,7 +357,6 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         edge: 15,
         _data: [],
         pageable: false,
-        gridWrapperElement: {},
         syncTheadColumnsOrder: true,
         remoteSort: avalon.noop, //远程排数函数
         getColumnTitle: function() {

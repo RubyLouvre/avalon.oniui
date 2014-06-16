@@ -13,6 +13,22 @@ define(["avalon"], function(avalon) {
         scrollSensitivity: 20,
         scrollSpeed: 20
     }
+
+    var styleEl = document.getElementById("avalonStyle")
+    //拖动时禁止文字被选中，禁止图片被拖动
+    var cssText = ".ui-helper-global-drag *{ -webkit-touch-callout: none;" +
+            "-khtml-user-select: none;" +
+            "-moz-user-select: none;" +
+            "-ms-user-select: none;" +
+            "user-select: none;}" +
+            ".ui-helper-global-drag img{-webkit-user-drag:none; " +
+            "pointer-events:none;}"
+    try {
+        styleEl.innerHTML += cssText;
+    } catch (e) {
+        styleEl.styleSheet.cssText += cssText;
+    }
+
     var body
     var ua = navigator.userAgent;
     var isAndroid = /Android/i.test(ua);
@@ -31,12 +47,11 @@ define(["avalon"], function(avalon) {
     }
 
     var draggable = avalon.bindingHandlers.draggable = function(data, vmodels) {
-        var args = data.value.match(avalon.rword) || ["$","draggable"]
+        var args = data.value.match(avalon.rword) || ["$", "draggable"]
         var ID = args[0].trim(), opts = args[1], model, vmOptions
         if (ID && ID != "$") {
             model = avalon.vmodels[ID]//如果指定了此VM的ID
             if (!model) {
-                data.remove = false
                 return
             }
         }
@@ -105,6 +120,7 @@ define(["avalon"], function(avalon) {
             }
             fixUserSelect()
             var position = $element.css("position")
+
             //如果原元素没有被定位
             if (!/^(?:r|a|f)/.test(position)) {
                 element.style.position = "relative";
@@ -118,7 +134,7 @@ define(["avalon"], function(avalon) {
                     data.started = true
                 }, options.delay)
             }
-      
+
             var startOffset = $element.offset()
             if (options.ghosting) {
                 var clone = element.cloneNode(true)
@@ -228,28 +244,16 @@ define(["avalon"], function(avalon) {
 
     }
 
-    var styleEl = document.createElement("style")
 
-    var cssText = "*{ -webkit-touch-callout: none!important;-webkit-user-select: none!important;-khtml-user-select: none!important;" +
-            "-moz-user-select: none!important;-ms-user-select: none!important;user-select: none!important;}"
+    var rootElement = document.documentElement
     var fixUserSelect = function() {
-        body.appendChild(styleEl)
-        //如果不插入DOM树，styleEl.styleSheet为null
-        if (typeof styleEl.styleSheet === "object") {
-            styleEl.styleSheet.cssText = cssText
-        } else {
-            styleEl.appendChild(document.createTextNode(cssText))
-        }
+        avalon(rootElement).addClass("ui-helper-global-drag")
     }
     var restoreUserSelect = function() {
-        try {
-            styleEl.innerHTML = ""
-        } catch (e) {
-            styleEl.styleSheet.cssText = ""
-        }
-        body.removeChild(styleEl)
+        avalon(rootElement).removeClass("ui-helper-global-drag")
     }
-    if (window.VBArray && !("msUserSelect" in document.documentElement.style)) {
+
+    if (window.VBArray && !("msUserSelect" in rootElement.style)) {
         var _ieSelectBack;//fix IE6789
         function returnFalse(event) {
             event.returnValue = false
@@ -304,11 +308,6 @@ define(["avalon"], function(avalon) {
         }
     })
 
-
-
-    function getWindow(node) {
-        return node.window && node.document ? node : node.nodeType === 9 ? node.defaultView || node.parentWindow : false;
-    }
     function setContainment(o, data) {
         if (!o.containment) {
             if (Array.isArray(data.containment)) {
@@ -343,8 +342,7 @@ define(["avalon"], function(avalon) {
 
         if (Array.isArray(o.containment)) {
             var a = o.containment
-            
-            data.containment = [a[0],a[1],a[2]-elemWidth, a[3]-elemHeight]
+            data.containment = [a[0], a[1], a[2] - elemWidth, a[3] - elemHeight]
             return;
         }
 
@@ -356,10 +354,10 @@ define(["avalon"], function(avalon) {
                 elem = document.getElementById(o.containment.slice(1))
             }
             if (elem) {
-                var $offset = avalon(elem).offset() 
+                var $offset = avalon(elem).offset()
                 data.containment = [
-                    $offset.left+data.marginLeft, //如果元素设置了marginLeft，设置左边界时需要考虑它 
-                    $offset.top+data.marginTop,
+                    $offset.left + data.marginLeft, //如果元素设置了marginLeft，设置左边界时需要考虑它 
+                    $offset.top + data.marginTop,
                     $offset.left + elem.offsetWidth - data.marginLeft - elemWidth,
                     $offset.top + elem.offsetHeight - data.marginTop - elemHeight
                 ]

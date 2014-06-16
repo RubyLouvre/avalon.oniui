@@ -214,6 +214,49 @@ define(["avalon"], function(avalon) {
         }
     }
 
+    //统一处理拖动的事件
+    var lockTime = new Date - 0, minTime = document.querySelector ? 12 : 30
+    avalon(document).bind(drag, function(e) {
+        var time = new Date - lockTime
+        if (time > minTime) {//减少调用次数，防止卡死IE6-8
+            lockTime = time
+            var data = draggable.dragData
+            if (data.started === true) {
+                //fix touchmove bug;  
+                //IE 在 img 上拖动时默认不能拖动（不触发 mousemove，mouseup 事件，mouseup 后接着触发 mousemove ...）
+                //防止 html5 draggable 元素的拖放默认行为 (选中文字拖放)
+                e.preventDefault();
+                //使用document.selection.empty()来清除选择，会导致捕获失败 
+                var element = data.clone || data.element
+                setPosition(e, element, data, "X")
+                setPosition(e, element, data, "Y")
+                draggable.plugin.call("drag", e, data)
+            }
+        }
+    })
+
+    //统一处理拖动结束的事件
+    avalon(document).bind(dragstop, function(e) {
+        var data = draggable.dragData
+        if (data.started === true) {
+            restoreUserSelect()
+            var element = data.element
+            draggable.plugin.call("beforeStop", e, data)
+            if (data.dragX) {
+                setPosition(e, element, data, "X", true)
+            }
+            if (data.dragY) {
+                setPosition(e, element, data, "Y", true)
+            }
+            if (data.clone) {
+                body.removeChild(data.clone)
+            }
+            draggable.plugin.call("stop", e, data)
+            draggable.dragData = {}
+        }
+    })
+    
+    
     function getPosition(e, pos) {
         var page = "page" + pos
         return isMobile ? e.changedTouches[0][page] : e[page]
@@ -266,47 +309,6 @@ define(["avalon"], function(avalon) {
             body.onselectstart = _ieSelectBack;
         }
     }
-    //统一处理拖动的事件
-    var lockTime = new Date - 0, minTime = document.querySelector ? 12 : 30
-    avalon(document).bind(drag, function(e) {
-        var time = new Date - lockTime
-        if (time > minTime) {//减少调用次数，防止卡死IE6-8
-            lockTime = time
-            var data = draggable.dragData
-            if (data.started === true) {
-                //fix touchmove bug;  
-                //IE 在 img 上拖动时默认不能拖动（不触发 mousemove，mouseup 事件，mouseup 后接着触发 mousemove ...）
-                //防止 html5 draggable 元素的拖放默认行为 (选中文字拖放)
-                e.preventDefault();
-                //使用document.selection.empty()来清除选择，会导致捕获失败 
-                var element = data.clone || data.element
-                setPosition(e, element, data, "X")
-                setPosition(e, element, data, "Y")
-                draggable.plugin.call("drag", e, data)
-            }
-        }
-    })
-
-    //统一处理拖动结束的事件
-    avalon(document).bind(dragstop, function(e) {
-        var data = draggable.dragData
-        if (data.started === true) {
-            restoreUserSelect()
-            var element = data.element
-            draggable.plugin.call("beforeStop", e, data)
-            if (data.dragX) {
-                setPosition(e, element, data, "X", true)
-            }
-            if (data.dragY) {
-                setPosition(e, element, data, "Y", true)
-            }
-            if (data.clone) {
-                body.removeChild(data.clone)
-            }
-            draggable.plugin.call("stop", e, data)
-            draggable.dragData = {}
-        }
-    })
 
     function setContainment(o, data) {
         if (!o.containment) {

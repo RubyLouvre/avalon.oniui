@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>scrollbar组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["scrollbar/avalon.scrollbar"], function() {
+                avalon.define("test", function(vm) {
+                    vm.scrollbar = {
+                    }
+                    vm.data = avalon.range(1,400)
+                    vm.$skipArray = ["scrollbar"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test" style="padding-bottom:800px;" class="reset">
+        <h1>scrollbar</h1>
+        <!--element to bind scrollbar-->
+        <div ms-widget="scrollbar" class="reset" style="height:300px;border:1px solid #ccc;width:700px;overflow:hidden;" data-scrollbar-position="right,bottom">
+            <!--element to scroll-->
+            <div class="ui-scrollbar-scroller reset" style="padding:0 18px 18px 0;">
+                <div ms-widget="scrollbar" class="reset" style="height:400px;border:1px solid #ccc;width:400px;overflow:hidden;" data-scrollbar-position="right,bottom">
+                    <!--element to scroll-->
+                    <div class="ui-scrollbar-scroller reset" style="padding:0 18px 18px 0;">
+                        <p style="width:800px" ms-repeat="data" class="reset">left {{$index}} <span style="float:right;">right {{$index}} </span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ms-widget="scrollbar" class="reset" style="height:400px;border:1px solid #ccc;width:400px;overflow:hidden;" data-scrollbar-position="right,bottom" data-scrollbar-show="scrolling">
+                    <!--element to scroll-->
+                    <div class="ui-scrollbar-scroller reset" style="padding:0 18px 18px 0;">
+                        <p style="width:800px" ms-repeat="data" class="reset">left {{$index}} <span style="float:right;">right {{$index}} </span></p>
+                    </div>
+                </div>
+        <pre class="brush:html;gutter:false;toolbar:false">
+        </pre>
+    </body>
+</html>

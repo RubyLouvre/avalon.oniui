@@ -15,23 +15,21 @@
                             avalon.log('this bar is complete')
                         }
                         , onChange: function(v) {
-                            if(v == 0) this.onComplete()
                         }
                     }
                     vm.$skipArray = ["progressbar"]
                     var v = 0
-                        , timer = setInterval(function() {
-                            if(avalon.vmodels.$aa.value <= 0) return clearInterval(timer)
-                            avalon.vmodels.$aa.value--
-                        }, 500)
+                        , timer = setTimeout(function() {
+                            avalon.vmodels.$aa.value = 0
+                        }, 5000)
                 })
                 avalon.scan()
             })
         </script>
     </head>
     <body ms-controller="test">
-        <h1>检测测onChange触发结束</h1>
-        <div ms-widget="progressbar,$aa" data-progressbar-value="100" data-progressbar-label="true">
+        <h1>模拟进度条倒计时</h1>
+        <div ms-widget="progressbar,$aa" data-progressbar-label="true" data-progressbar-count-down="true" data-progressbar-simulate="100">
             
         </div>
         <p>------------------------------------------------------------------------</p>
@@ -52,23 +50,21 @@
                             avalon.log('this bar is complete')
                         }
                         , onChange: function(v) {
-                            if(v == 0) this.onComplete()
                         }
                     }
                     vm.$skipArray = [&quot;progressbar&quot;]
                     var v = 0
-                        , timer = setInterval(function() {
-                            if(avalon.vmodels.$aa.value &lt;= 0) return clearInterval(timer)
-                            avalon.vmodels.$aa.value--
-                        }, 500)
+                        , timer = setTimeout(function() {
+                            avalon.vmodels.$aa.value = 0
+                        }, 5000)
                 })
                 avalon.scan()
             })
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
-        &lt;h1&gt;检测测onChange触发结束&lt;/h1&gt;
-        &lt;div ms-widget=&quot;progressbar,$aa&quot; data-progressbar-value=&quot;100&quot; data-progressbar-label=&quot;true&quot;&gt;
+        &lt;h1&gt;模拟进度条倒计时&lt;/h1&gt;
+        &lt;div ms-widget=&quot;progressbar,$aa&quot; data-progressbar-label=&quot;true&quot; data-progressbar-count-down=&quot;true&quot; data-progressbar-simulate=&quot;100&quot;&gt;
             
         &lt;/div&gt;
         &lt;p&gt;------------------------------------------------------------------------&lt;/p&gt;

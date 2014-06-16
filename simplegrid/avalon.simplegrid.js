@@ -5,12 +5,12 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
     var cssText = arr[1].replace(/<\/?style>/g, "")
     //添加grid的样式
     var styleEl = document.getElementById("avalonStyle")
-    var template = arr[0]
     try {
         styleEl.innerHTML += cssText
     } catch (e) {
         styleEl.styleSheet.cssText += cssText
     }
+
     //拖动时禁止文字被选中，禁止图片被拖动
     var cssText = ".ui-helper-global-drag *{ -webkit-touch-callout: none;" +
             "-khtml-user-select: none;" +
@@ -26,6 +26,16 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             styleEl.styleSheet.cssText += cssText;
         }
     }
+    //切割出表头与表身的模板
+    var template = arr[0], theadTemplate, tbodyTemplate
+    template = template.replace(/MS_OPTION_THEAD_BEGIN([\s\S]+)MS_OPTION_THEAD_END/, function(a, b) {
+        theadTemplate = b
+        return "MS_OPTION_THEAD_HOLDER"
+    })
+    template = template.replace(/MS_OPTION_TBODY_BEGIN([\s\S]+)MS_OPTION_TBODY_END/, function(a, b) {
+        tbodyTemplate = b
+        return "MS_OPTION_TBODY_HOLDER"
+    })
 
     var body = document.body || document.documentElement
     var remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m
@@ -34,16 +44,20 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         var options = data.simplegridOptions
         //格式化各列的具体规格
         options.columns = options.getColumns(options.columns, options)
-        //抽取要显示的数据(因为可能存在分页,不用全部显示,那么我们只将要显示的
+        //允许指定表头与表身的每一行的模板
+        options.theadTemplate = options.theadTemplate || theadTemplate
+        options.tbodyTemplate = options.tbodyTemplate || tbodyTemplate
+        template = template.replace(/MS_OPTION_THEAD_HOLDER/, options.theadTemplate)
+                .replace(/MS_OPTION_TBODY_HOLDER/, options.tbodyTemplate)
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
         //决定每页的行数(分页与滚动模式下都要用到它)
-
         //<------开始配置分页的参数
         if (typeof options.pager !== "object") {
             options.pager = {}
         }
         var pager = options.pager
+        //抽取要显示的数据(因为可能存在分页,不用全部显示,那么我们只将要显示的
         pager.perPages = pager.perPages || options.data.length
         pager.nextText = pager.nextText || "下一页"
         pager.prevText = pager.prevText || "上一页"
@@ -111,7 +125,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 while (table.tagName !== "TABLE") {
                     table = table.parentNode
                 }
-                vm.gridWidth = table.offsetWidth - (window.nescape ? 18 : 0)
+                vm.gridWidth = Math.max(table.offsetWidth, table.parentNode.offsetWidth)
             }
             vm.startResize = function(e, el) {
                 //当移动到表头的右侧,改变光标的形状,表示它可以拖动改变列宽
@@ -205,11 +219,12 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     })
                 }
             }
-            //得到可视区某一个格子的宽
-            vm.getCellWidth = function(name) {
+
+            //得到可视区某一个格子的显示情况,长度,align
+            vm.getCellProperty = function(name, prop) {
                 for (var i = 0, el; el = vm.columns[i++]; ) {
                     if (el.field === name) {
-                        return el.width
+                        return el[prop]
                     }
                 }
             }
@@ -223,7 +238,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     vm._rowHeight = row.offsetHeight
                     vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
                     vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2 +
-                            (perPages >= vm.showRows && window.netscape ? 17 : 0)
+                            (perPages > vm.showRows ? 18 : 0)
 
                     vm.tbodyScrollHeight = vm._rowHeight * perPages
                     if (vm.showRows !== perPages) {
@@ -240,22 +255,16 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 }
 
             }
-            vm.throttleRenderTbody = function() {
 
+
+            vm.throttleRenderTbody = function() {
                 vmodel.tbodyScrollTop = this.scrollTop
                 cancelAnimationFrame(requestID)
                 wrapper = this
 
                 requestID = requestAnimationFrame(reRenderTbody)
             }
-            //得到可视区某一个格子的显示隐藏情况
-            vm.getCellToggle = function(name) {
-                for (var i = 0, el; el = vm.columns[i++]; ) {
-                    if (el.field === name) {
-                        return el.toggle
-                    }
-                }
-            }
+
             vm.getColumnsOrder = function() {
                 return vm.columnsOrder
             }

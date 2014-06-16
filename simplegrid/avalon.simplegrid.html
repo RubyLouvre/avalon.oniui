@@ -3,14 +3,16 @@
          ms-css-height="tbodyHeight+theadHeight"
          ms-on-scroll-12="throttleRenderTbody"
          >
+
         <table class="ui-grid-thead" 
                ms-css-width="gridWidth" 
                ms-css-top="tbodyScrollTop">
             <tr>
+                MS_OPTION_THEAD_BEGIN
                 <td data-repeat-rendered="getRealWidth"
                     ms-repeat="columns"
                     ms-css-width="el.width" 
-                    ms-attr-align="el.align" 
+                    ms-css-text-align="el.align" 
                     ms-class="{{el.className}}" 
                     ms-title="el.title" 
                     ms-visible="el.toggle" 
@@ -21,36 +23,41 @@
                     >{{el.text}}
                     <span  ms-click="sortColumn(el, $index)"
                            ms-if="el.sortable" 
-
                            ms-class="ui-helper-{{ getArrow(el, $index)}}">
                         <span class="ui-helper-sort-top"></span>
                         <span class="ui-helper-sort-bottom"></span>
                     </span>
                 </td>
+                MS_OPTION_THEAD_END
             </tr>
         </table>
         <table class="ui-grid-tbody" 
                ms-css-width="gridWidth" 
                ms-css-top="tbodyScrollTop + theadHeight">
+            >
             <tr data-repeat-rendered="getRowHeight"
                 ms-repeat-row="_data"
                 >
+                MS_OPTION_TBODY_BEGIN
                 <td class="ui-grid-td"
                     data-with-sorted="getColumnsOrder"
                     ms-repeat="row" 
-                    ms-visible="getCellToggle($key)" 
-                    ms-css-width="getCellWidth($key)"
+                    ms-visible="getCellProperty($key,'toggle')" 
+                    ms-css-width="getCellProperty($key,'width')"
+                    ms-css-text-align="getCellProperty($key,'align')"
                     ms-css-height="tbodyRowHeight" 
                     >
                     <div class="editable">{{$val}}</div>
                 </td>
+                MS_OPTION_TBODY_END
             </tr>
         </table>
+
         <div class="ui-grid-scroll-marker" ms-css-height="tbodyScrollHeight+theadHeight" >
 
         </div>
     </div>
-    <div class="ui-grid-tfoot-wrapper"  ms-if="pageable" id="pager-MS_OPTION_ID" >
+    <div class="ui-grid-pager-wrapper"  ms-if="pageable" id="pager-MS_OPTION_ID" >
 
     </div>
 </div>
@@ -105,13 +112,13 @@ MS_OPTION_STYLE
     }
     .ui-grid-wrapper{
         width:100%;
-        overflow-x:auto;
+/*        overflow-x:auto;*/
         position: relative;
     }
 
     .ui-grid-thead{
-        position: absolute;
         width: 100%;
+        position: absolute;
         border: 1px solid black;
         border-collapse: collapse;
         -webkit-touch-callout: none;
@@ -120,7 +127,6 @@ MS_OPTION_STYLE
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-
     }
     .ui-grid-thead  td{
         width: 100%;
@@ -130,8 +136,8 @@ MS_OPTION_STYLE
     }
 
     .ui-grid-tbody{
-        position: absolute;
         width: 100%;
+        position: absolute;
         border: 1px solid black;
         border-collapse: collapse;
     }
@@ -148,15 +154,11 @@ MS_OPTION_STYLE
         width:100%;
     }
 
-    .ui-grid-tfoot-wrapper{
+    .ui-grid-pager-wrapper{
         width: 100%;
         border: 1px solid black;
         padding:2px 0px;
         overflow:hidden;
-    }
-
-    .ui-pager{
-        float: right;
     }
     .ui-grid-pager-options{
         float: left;
@@ -164,5 +166,7 @@ MS_OPTION_STYLE
         line-height: 24px;
         padding-left: 5px;
     }
-
+    .ui-pager{
+        float: right;
+    }
 </style>

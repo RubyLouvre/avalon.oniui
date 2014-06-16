@@ -41,25 +41,26 @@
         </script>
     </head>
     <body >
-      
-    <fieldset ms-controller="test">
-        <legend>columns的配置项使用</legend>
-        <p>columnsOrder用于控制每列的出现顺序，它默认是根据columns中的每个对象的field出现顺序推算出来的</p>
-        <style>
-            .col1{
-                background: orange;
-            }
-            .col2{
-                background: orangered;
-            }
-            .col3{
-                background:violet;
-            }
-        </style>
-        <div ms-widget="simplegrid">
 
-        </div>
-        <pre class="brush:html;gutter:false;toolbar:false;">
+        <fieldset ms-controller="test">
+            <legend>columns的配置项使用</legend>
+            <p>columnsOrder用于控制每列的出现顺序，它默认是根据columns中的每个对象的field出现顺序推算出来的</p>
+            <style>
+                .col1{
+                    background: orange;
+                }
+                .col2{
+                    background: orangered;
+                }
+                .col3{
+                    background:violet;
+                }
+            </style>
+            <div ms-widget="simplegrid">
+
+            </div>
+            <div ms-skip>
+                <pre class="brush:html;gutter:false;toolbar:false;">
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
@@ -124,7 +125,8 @@
     &lt;/fieldset&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-        </pre>
-    </fieldset>
-</body>
+                </pre>
+            </div>
+        </fieldset>
+    </body>
 </html>

@@ -1,8 +1,9 @@
-//avalon 1.2.5 2014.4.2
+//avalon 1.3.2 2014.4.2
 define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], function(avalon, page, tmpl) {
 
     var arr = tmpl.split("MS_OPTION_STYLE") || ["", ""]
     var cssText = arr[1].replace(/<\/?style>/g, "")
+    //添加grid的样式
     var styleEl = document.getElementById("avalonStyle")
     var template = arr[0]
     try {
@@ -10,52 +11,36 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
     } catch (e) {
         styleEl.styleSheet.cssText += cssText
     }
-
-
-    var styleEl = document.createElement("style")
-    var body = document.body || document.documentElement
-
-    var cssText = "*{ -webkit-touch-callout: none!important;-webkit-user-select: none!important;-khtml-user-select: none!important;" +
-            "-moz-user-select: none!important;-ms-user-select: none!important;user-select: none!important;}"
-    var fixUserSelect = function() {
-        body.appendChild(styleEl)
-        //如果不插入DOM树，styleEl.styleSheet为null
-        if (typeof styleEl.styleSheet === "object") {
-            styleEl.styleSheet.cssText = cssText
-        } else {
-            styleEl.appendChild(document.createTextNode(cssText))
-        }
-    }
-    var restoreUserSelect = function() {
+    //拖动时禁止文字被选中，禁止图片被拖动
+    var cssText = ".ui-helper-global-drag *{ -webkit-touch-callout: none;" +
+            "-khtml-user-select: none;" +
+            "-moz-user-select: none;" +
+            "-ms-user-select: none;" +
+            "user-select: none;}" +
+            ".ui-helper-global-drag img{-webkit-user-drag:none; " +
+            "pointer-events:none;}"
+    if (styleEl.innerHTML.indexOf("ui-helper-global-drag") > 0) {
         try {
-            styleEl.innerHTML = ""
+            styleEl.innerHTML += cssText;
         } catch (e) {
-            styleEl.styleSheet.cssText = ""
-        }
-        body.removeChild(styleEl)
-    }
-    if (window.VBArray && !("msUserSelect" in document.documentElement.style)) {
-        var _ieSelectBack;//fix IE6789
-        function returnFalse(event) {
-            event.returnValue = false
-        }
-        fixUserSelect = function() {
-            _ieSelectBack = body.onselectstart;
-            body.onselectstart = returnFalse;
-        }
-        restoreUserSelect = function() {
-            body.onselectstart = _ieSelectBack;
+            styleEl.styleSheet.cssText += cssText;
         }
     }
+
+    var body = document.body || document.documentElement
+    var remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m
+
     var widget = avalon.ui.simplegrid = function(element, data, vmodels) {
         var options = data.simplegridOptions
         //格式化各列的具体规格
         options.columns = options.getColumns(options.columns, options)
         //抽取要显示的数据(因为可能存在分页,不用全部显示,那么我们只将要显示的
-
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
         //决定每页的行数(分页与滚动模式下都要用到它)
+        // 每页真实要显示的行数
+        options.showRows = options.showRows || pager.perPages
+        //<------开始配置分页的参数
         if (typeof options.pager !== "object") {
             options.pager = {}
         }
@@ -65,16 +50,14 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         pager.prevText = pager.prevText || "上一页"
         if (Array.isArray(pager.options)) {
             pager.getTemplate = typeof pager.getTemplate === "function" ? pager.getTemplate : function(tmpl) {
-                return "<div class='ui-grid-pager-options'>每页显示<select ms-duplex='perPages'><option ms-repeat='options' ms-el.value>{{el.text}}</options></select>条,共{{totalItems}}条结果</div>" 
+                return "<div class='ui-grid-pager-options'>每页显示<select ms-duplex='perPages'><option ms-repeat='options' ms-el.value>{{el.text}}</options></select>条,共{{totalItems}}条结果</div>"
                         + tmpl
             }
         }
         makeBool(pager, "showJumper", true)
-
-        //每页真实要显示的行数
-        options.showRows = options.showRows || pager.perPages
+        //如果还不满意可以通过getPager方法重写
         options.pager = options.getPager(pager, options)
-
+        //-----结束配置分页的参数--------->
         //如果没有指定各列的出现顺序,那么将按用户定义时的顺序输出
 
         if (!Array.isArray(options.columnsOrder)) {
@@ -98,13 +81,14 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             }
             options.columns = aaa
         }
-        var remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m
+
         var _vmodels
 
         var vmodel = avalon.define(data.simplegridId, function(vm) {
             avalon.mix(vm, options)
             vm.$skipArray = ["widgetElement", "data", "startIndex", "pager", "endIndex", "template"]
             vm.widgetElement = element
+            vm.gridWidth = "100%"
             vm.startIndex = 0
             vm.endIndex = options.showRows
             vm.$init = function() {
@@ -112,7 +96,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 _vmodels = [vmodel].concat(vmodels)
                 avalon.scan(element, _vmodels)
             }
-            vm.gridWidth = "100%"
+
             vm.getRealWidth = function() {
                 //位于表头的data-repeat-rendered回调,用于得到table的宽度
                 var table = this //这是TR元素
@@ -234,12 +218,14 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 if (cell) {
                     var borderHeight = Math.max(avalon.css(cell, "borderTopWidth", true),
                             avalon.css(cell, "borderBottomWidth", true))
-                    var perPagers = vm.pager.perPages
+                    var perPages = vm.pager.perPages
                     vm._rowHeight = row.offsetHeight
                     vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
-                    vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2
-                    vm.tbodyScrollHeight = vm._rowHeight * perPagers
-                    if (vm.showRows !== perPagers) {
+                    vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2 +
+                            (perPages >= vm.showRows && window.netscape ? 17 : 0)
+
+                    vm.tbodyScrollHeight = vm._rowHeight * perPages
+                    if (vm.showRows !== perPages) {
                         var target = tbody
                         while (target.className.indexOf("ui-grid-wrapper") === -1) {
                             target = target.parentNode
@@ -278,27 +264,25 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             }
             vm._data = vm.data.slice(vm.startIndex, vm.endIndex)
         })
-
+        //<-----------开始渲染分页栏----------
         if (vmodel.pageable) {
             var flagPager = false
             var intervalID = setInterval(function() {
                 var elem = document.getElementById("pager-" + vmodel.$id)
                 if (elem && !flagPager) {
-                    elem.setAttribute("ms-widget","pager,pager-"+ vmodel.$id)
+                    elem.setAttribute("ms-widget", "pager,pager-" + vmodel.$id)
                     avalon(elem).addClass("ui-grid-pager-wrapper")
-      
                     avalon.scan(elem, vmodel)
                     flagPager = true
                 }
                 var pagerVM = avalon.vmodels["pager_" + vmodel.$id]
                 if (pagerVM) {
                     vmodel.pager = pagerVM
-                
                     clearInterval(intervalID)
                 }
             }, 100)
         }
-
+        //-----------结束渲染分页栏---------->
         //那一部分转换为监控数组就行,这样能大大提高性能)
         var requestID,
                 wrapper,
@@ -322,7 +306,6 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 }
                 var length = vmodel.data.length, count = 0
                 if (scrollDir === "down") {
-                    //    console.log("下拉 " + integer + "行")
                     while (vmodel.endIndex + 1 < length) {
                         vmodel.endIndex += 1
                         vmodel.startIndex += 1
@@ -408,6 +391,25 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         }
     }
 
+    var fixUserSelect = function() {
+        avalon(body).addClass("ui-helper-global-drag")
+    }
+    var restoreUserSelect = function() {
+        avalon(body).removeClass("ui-helper-global-drag")
+    }
+    if (window.VBArray && !("msUserSelect" in document.documentElement.style)) {
+        var _ieSelectBack;//fix IE6789
+        function returnFalse(event) {
+            event.returnValue = false
+        }
+        fixUserSelect = function() {
+            _ieSelectBack = body.onselectstart;
+            body.onselectstart = returnFalse;
+        }
+        restoreUserSelect = function() {
+            body.onselectstart = _ieSelectBack;
+        }
+    }
 
     //优化scroll事件的回调次数
     var requestAnimationFrame = window.requestAnimationFrame ||

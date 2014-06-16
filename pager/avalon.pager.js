@@ -29,9 +29,7 @@ define(["avalon", "text!./avalon.pager.html"], function(avalon, tmpl) {
         } else {
             options.options = []
         }
-        console.log(options.options)
         //方便用户对原始模板进行修改,提高制定性
-        console.log(options.getTemplate + "")
         options.template = options.getTemplate(template, options)
         options._currentPage = options.currentPage
         var vmodel = avalon.define(data.pagerId, function(vm) {

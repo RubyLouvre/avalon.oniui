@@ -17,6 +17,7 @@
                         array.push({
                             xxx: Math.random().toString(36).substring(4, 10),
                             yyy: Math.random().toString(36).substring(4, 10),
+                            www: 1 + 10,
                             zzz: i
                         })
                     }
@@ -27,9 +28,10 @@
 
                     vm.simplegrid = {
                         columns: [
-                            {field: "zzz", text: "列三", resizable: true},
-                            {field: "yyy", text: "列二", resizable: true},
-                            {field: "xxx", text: "列一", resizable: true}
+                            {field: "www", text: "紫薯", resizable: true},
+                            {field: "zzz", text: "石榴", resizable: true},
+                            {field: "yyy", text: "雪梨", resizable: true},
+                            {field: "xxx", text: "苹果", resizable: true}
                         ],
                         tbodyTemplate: function(str) {
                             return str.replace('class="ui-grid-td"', 'class="ui-grid-td" ms-mouseenter="addCross" ms-mouseleave="removeCross"')
@@ -61,7 +63,7 @@
                             showPages: 5,
                             options: [10, 20, 30, 40]
                         },
-                        columnsOrder: ["xxx", "yyy", "zzz"],
+                        columnsOrder: ["xxx", "yyy", "zzz", "www"],
                         data: createData(100)
                     }
                     vm.$skipArray = ["simplegrid"]
@@ -74,10 +76,10 @@
                 width:900px;
             }
             .ui-grid-tbody tr.hcross td{
-                background:gold;
+                background:yellow;
             }
             .ui-grid-tbody .vcross{
-                background:goldenrod;
+                background:gold;
             }
         </style>
     </head>
@@ -119,10 +121,10 @@
                 <p>CSS</p>
                 <pre class="brush:css;gutter:false;toolbar:false;">
             .ui-grid-tbody tr.hcross td{
-                background:gold;
+                background:yellow;
             }
             .ui-grid-tbody .vcross{
-                background:goldenrod;
+                background:gold;
             }
                 </pre>
             </div>

@@ -89,19 +89,22 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             }
             options.columnsOrder = orders
         } else if (options.syncTheadColumnsOrder) {
+           
             //如果用户指定columnsOrder,那么要对columns进行重排
             orders = options.columnsOrder.concat()
-            var aaa = [], bbb = options.columns, elem
+            var newColumns = [], oldColumns = options.columns, elem
             while (el = orders.shift()) {
-                for (var i = 0, n = bbb.length; i < n; i++) {
-                    elem = bbb[i]
+                label:
+                for (var k = 0, kn = oldColumns.length; k < kn; k++) {
+                    elem = oldColumns[k]
                     if (elem.field == el) {
-                        aaa.push(elem)
-                        bbb.splice(i, 1)
+                        newColumns.push(elem)
+                        oldColumns.splice(k, 1)
+                        break label
                     }
                 }
             }
-            options.columns = aaa
+            options.columns = newColumns
         }
 
         var _vmodels

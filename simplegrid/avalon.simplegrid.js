@@ -104,11 +104,11 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             options.columns = aaa
         }
 
-        var _vmodels, wrapper
+        var _vmodels
 
         var vmodel = avalon.define(data.simplegridId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "data", "startIndex", "pager", "endIndex", "template"]
+            vm.$skipArray = ["widgetElement", "data","scrollPanel","topTable", "bottomTable", "startIndex", "pager", "endIndex", "template"]
             vm.widgetElement = element
             vm.gridWidth = "100%"
             vm.startIndex = 0
@@ -135,8 +135,9 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 while (table.tagName !== "TABLE") {
                     table = table.parentNode
                 }
-                wrapper = table.parentNode
-                vm.gridWidth = Math.min(table.offsetWidth, wrapper.offsetWidth)
+                vm.topTable = table //重置真正的代表表头的table
+                vm.scrollPanel = table.parentNode//重置包含两个table的会出现滚动条的容器对象
+                vm.gridWidth = Math.min(table.offsetWidth, vm.scrollPanel.offsetWidth)
             }
             vm.startResize = function(e, el) {
                 //当移动到表头的右侧,改变光标的形状,表示它可以拖动改变列宽
@@ -190,7 +191,8 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                             delete options._drag
                             vm.gridWidth = gridWidth + e.pageX - startX
                             //如果出现水平滚动条,那么往高度加17
-                            if (wrapper && wrapper.clientWidth < wrapper.scrollWidth) {
+                            var panel = vm.scrollPanel
+                            if (panel.clientWidth < panel.scrollWidth) {
                                 vm.tbodyHeight += 17
                             }
                             el.width = cellWidth + e.pageX - startX
@@ -256,10 +258,10 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2
                     vm.tbodyScrollHeight = vm._rowHeight * perPages
                     //如果同时出现两个滚动条
-                    var wrapper = this.parentNode.parentNode
-                    avalon.log(wrapper.clientWidth, wrapper.offsetWidth, wrapper.scrollWidth)
-                    if (perPages > vm.showRows && wrapper.clientWidth < wrapper.scrollWidth) {
-                        vm.gridWidth = wrapper.scrollWidth - 17
+                    vm.bottomTable = this.parentNode
+                    var panel = vm.scrollPanel
+                    if (perPages > vm.showRows && panel.clientWidth < panel.scrollWidth) {
+                        vm.gridWidth = panel.scrollWidth - 17
                     }
 
 
@@ -275,8 +277,6 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             vm.throttleRenderTbody = function() {
                 vmodel.tbodyScrollTop = this.scrollTop
                 cancelAnimationFrame(requestID)
-                wrapper = this
-
                 requestID = requestAnimationFrame(reRenderTbody)
             }
 
@@ -310,13 +310,12 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         //-----------结束渲染分页栏---------->
         //那一部分转换为监控数组就行,这样能大大提高性能)
         var requestID,
-                wrapper,
                 prevScrollTop = 0,
                 lastRenderedScrollTop = 0
 
         function reRenderTbody() {
-
-            var scrollTop = wrapper.scrollTop
+            var panel = vmodel.scrollPanel
+            var scrollTop = panel.scrollTop
             var scrollDir = scrollTop > prevScrollTop ? "down" : "up"
             prevScrollTop = scrollTop
             var distance = Math.abs(lastRenderedScrollTop - scrollTop)
@@ -358,7 +357,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                         }
                     }
                 }
-                lastRenderedScrollTop = wrapper.scrollTop = vmodel.tbodyScrollTop = vmodel.startIndex * rowHeight
+                lastRenderedScrollTop = panel.scrollTop = vmodel.tbodyScrollTop = vmodel.startIndex * rowHeight
             }
         }
         return vmodel
@@ -375,6 +374,9 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         columnWidth: 160,
         edge: 15,
         _data: [],
+        topTable: {},
+        bottomTable: {},
+        scrollPanel: {},
         pageable: false,
         syncTheadColumnsOrder: true,
         remoteSort: avalon.noop, //远程排数函数

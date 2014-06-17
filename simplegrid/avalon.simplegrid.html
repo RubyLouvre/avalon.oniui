@@ -34,7 +34,6 @@
         <table class="ui-grid-tbody" 
                ms-css-width="gridWidth" 
                ms-css-top="tbodyScrollTop + theadHeight">
-            >
             <tr data-repeat-rendered="getRowHeight"
                 ms-repeat-row="_data"
                 >
@@ -128,8 +127,7 @@ MS_OPTION_STYLE
         -ms-user-select: none;
         user-select: none;
     }
-    .ui-grid-thead  td{
-        width: 100%;
+    .ui-grid-thead td,.ui-grid-thead th{
         border: 1px solid black;
         height: 35px;
         overflow: hidden;
@@ -142,8 +140,7 @@ MS_OPTION_STYLE
         border-collapse: collapse;
     }
 
-    .ui-grid-tbody  td{
-        width: 100%;
+    .ui-grid-tbody  td, .ui-grid-tbody th{
         border: 1px solid black;
         height: 35px;
         overflow: hidden;

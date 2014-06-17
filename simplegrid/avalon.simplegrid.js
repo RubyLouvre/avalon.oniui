@@ -40,17 +40,21 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
     var body = document.body || document.documentElement
     var remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m
 
+
+
     var widget = avalon.ui.simplegrid = function(element, data, vmodels) {
         var options = data.simplegridOptions
         //格式化各列的具体规格
         options.columns = options.getColumns(options.columns, options)
         //允许指定表头与表身的每一行的模板
-        options.theadTemplate = options.theadTemplate || theadTemplate
-        options.tbodyTemplate = options.tbodyTemplate || tbodyTemplate
+        makeTemplate(options, "theadTemplate", theadTemplate)
+        makeTemplate(options, "tbodyTemplate", tbodyTemplate)
+
         template = template.replace(/MS_OPTION_THEAD_HOLDER/, options.theadTemplate)
                 .replace(/MS_OPTION_TBODY_HOLDER/, options.tbodyTemplate)
+
         //方便用户对原始模板进行修改,提高制定性
-        options.template = options.getTemplate(template, options)
+        makeTemplate(options, "template", template)
         //决定每页的行数(分页与滚动模式下都要用到它)
         //<------开始配置分页的参数
         if (typeof options.pager !== "object") {
@@ -118,7 +122,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 var cells = this.children//在旧式IE下可能包含注释节点
                 var cellIndex = 0
                 for (var i = 0, cell; cell = cells[i++]; ) {
-                    if (cell.nodeType === 1) {
+                    if (cell.nodeType === 1 && cell["data-vm"]) {
                         vm.columns[cellIndex++].width = cell.offsetWidth
                     }
                 }
@@ -243,9 +247,10 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     var perPages = vm.pager.perPages
                     vm._rowHeight = row.offsetHeight
                     vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
-                    vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2 
+                    vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2
                     vm.tbodyScrollHeight = vm._rowHeight * perPages
                     //如果同时出现两个滚动条
+                    var wrapper = this.parentNode.parentNode
                     avalon.log(wrapper.clientWidth, wrapper.offsetWidth, wrapper.scrollWidth)
                     if (perPages > vm.showRows && wrapper.clientWidth < wrapper.scrollWidth) {
                         vm.gridWidth = wrapper.scrollWidth - 17
@@ -398,6 +403,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 makeBool(el, "resizable", false)//能否改变列宽
                 makeBool(el, "sortAsc", true)//排序方向
                 makeBool(el, "toggle", true)//是否显示当前列
+                makeBool(el, "checked", false)//是否被勾上
                 makeBool(el, "disabledToggle")//禁止改变当前列的显示状态
                 makeBool(el, "disabledResize")//禁止改变当前列的宽度
                 ret.push(el)
@@ -447,9 +453,14 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         }
         return dir === "e" ? dir : ""
     }
-    function makeBool(el, prop, val) {
-        val = !!val
-        el[prop] = typeof el[prop] === "boolean" ? el[prop] : val
+    function makeBool(elem, name, value) {
+        value = !!value
+        elem[name] = typeof elem[name] === "boolean" ? elem[name] : value
+    }
+
+    function makeTemplate(opts, name, value) {
+        opts[name] = typeof opts[name] === "function" ? opts[name](value, opts) :
+                (typeof opts[name] === "string" ? opts[name] : value)
     }
     return avalon
 })

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>simplegrid</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script>
+            avalon.config({debug: false})
+            require(["simplegrid/avalon.simplegrid"], function() {
+                var createData = function(n) {
+                    var array = []
+                    for (var i = 0; i < n; i++) {
+                        array.push({
+                            xxx: Math.random().toString(36).substring(4, 10),
+                            yyy: Math.random().toString(36).substring(4, 10),
+                            zzz: i,
+                            checked: false
+                        })
+                    }
+                    return array
+                }
+
+                avalon.define("test", function(vm) {
+                    vm.simplegrid = {
+                        allchecked: false,
+                        checkAll: function() {
+                            var vmodel = avalon.vmodels.xxx
+                            var bool = vmodel.allchecked = this.checked
+                            vmodel._data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                            vmodel.data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                        },
+                        checkOne: function(el, index) {
+                            var vmodel = avalon.vmodels.xxx
+                            index = vm.startIndex + index
+                            vmodel.data[index] = el.checked = this.checked
+                            if (!this.checked) {
+                                vmodel.allchecked = false
+                            } else {
+                                vmodel.allchecked = vmodel._data.every(function(el) {
+                                    return el.checked
+                                })
+                            }
+                        },
+                        theadTemplate: function(str) {
+                            return "<th style='width:80px'><input type='checkbox' ms-checked='allchecked' ms-click='checkAll'  /></th>" + str
+                        },
+                        tbodyTemplate: function(str) {
+                            return "<th style='width:80px'><input type=\"checkbox\" ms-checked='row.checked' ms-click='checkOne(row, $index)' class='ui-helper-checkone'/></th>" + str
+                        },
+                        
+                        columns: [
+                            {field: "zzz", text: "列三", resizable: true},
+                            {field: "yyy", text: "列二", resizable: true},
+                            {field: "xxx", text: "列一", resizable: true}
+                        ],
+                        showRows: 10,
+                        pageable: true,
+                        pager: {
+                            perPages: 30,
+                            totalItems: 1000,
+                            showPages: 5,
+                            options: [10, 20, 30, 40]
+                        },
+                        columnsOrder: ["xxx", "yyy", "zzz"],
+                        data: createData(30)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        </script>
+        <style>
+            #gridsample{
+                width:900px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <fieldset ms-controller="test">
+            <legend>右边添加一个全选非全选的checkbox栏</legend>
+
+            <div ms-widget="simplegrid, xxx" id="gridsample">
+
+            </div>
+            <div>
+                <h3>要点</h3>
+                <p>添加theadTemplate, theadTemplate函数，在原模板的前面添加一个td或th元素，分别绑定checkAll,checkOne自定义方法，为了方便操作VM
+                    需要用户在定义ms-widget="simplegrid,?"时指定ID。
+                </p>
+                <p>data数据的每一列需要添加checked属性，默认为false</p>
+                <p>simplegrid添加一个allchecked属性，默认为false</p>
+                <p>row为每一行的引用名，row.checked与allchecked通过ms-checked绑在复选框上。</p>
+                <p>自己细细品味checkAll, checkOne的实现</p>
+            </div>
+        </fieldset>
+
+    </body>
+</html>

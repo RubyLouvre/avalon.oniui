@@ -30,6 +30,9 @@
                 avalon.define("test", function(vm) {
                     vm.simplegrid = {
                         allchecked: false,
+                        getColumn: function(el) {
+                            el.checked = false
+                        },
                         checkAll: function() {
                             var vmodel = avalon.vmodels.xxx
                             var bool = vmodel.allchecked = this.checked
@@ -55,8 +58,11 @@
                         theadTemplate: function(str) {
                             return "<th style='width:80px'><input type='checkbox' ms-checked='allchecked' ms-click='checkAll'  /></th>" + str
                         },
+                        colTemplate: function(str) {
+                            return "<col style='width: 80px'/>" + str
+                        },
                         tbodyTemplate: function(str) {
-                            return "<th style='width:80px'><input type=\"checkbox\" ms-checked='row.checked' ms-click='checkOne(row, $index)' class='ui-helper-checkone'/></th>" + str
+                            return "<th><input type=\"checkbox\" ms-checked='row.checked' ms-click='checkOne(row, $index)' class='ui-helper-checkone'/></th>" + str
                         },
                         columns: [
                             {field: "zzz", text: "生成订单量", resizable: true},
@@ -95,11 +101,12 @@
             </div>
             <div>
                 <h3>要点</h3>
-                <p>添加theadTemplate, theadTemplate函数，在原模板的前面添加一个td或th元素，分别绑定checkAll,checkOne自定义方法，为了方便操作VM
-                    需要用户在定义ms-widget="simplegrid,?"时指定ID。
-                </p>
-                <p>data数据的每一列需要添加checked属性，默认为false</p>
-                <p>simplegrid添加一个allchecked属性，默认为false</p>
+                <p>通过theadTemplate方法修改表头的那一行的模板</p>
+                <p>通过tbodyTemplate方法修改表身的那一行的模板</p>
+                <p>通过colTemplate方法修改表身的col模板</p>
+                <p>通过getColumn方法为每一列的数据添加checked属性，默认为false</p>
+                <p>为了方便操作V需要用户在定义ms-widget="simplegrid,?"时指定ID</p>
+                <p>添加一个allchecked属性，默认为false</p>
                 <p>row为每一行的引用名，row.checked与allchecked通过ms-checked绑在复选框上。</p>
                 <p>自己细细品味checkAll, checkOne的实现</p>
             </div>

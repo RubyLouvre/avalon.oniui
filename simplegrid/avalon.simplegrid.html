@@ -34,6 +34,14 @@
         <table class="ui-grid-tbody" 
                ms-css-width="gridWidth" 
                ms-css-top="tbodyScrollTop + theadHeight">
+            MS_OPTION_COL_BEGIN
+            <col ms-repeat="getColumnsOrder()"          
+                 ms-css-display="getCellProperty(el,'toggle') ? '': 'none'" 
+                 ms-css-width="getCellProperty(el,'width')"
+                 ms-css-text-align="getCellProperty(el,'align')"
+                 ms-css-height="tbodyRowHeight" 
+                 >
+            MS_OPTION_COL_END
             <tr data-repeat-rendered="getRowHeight"
                 ms-repeat-row="_data"
                 >
@@ -41,10 +49,6 @@
                 <td class="ui-grid-td"
                     data-with-sorted="getColumnsOrder"
                     ms-repeat="row" 
-                    ms-visible="getCellProperty($key,'toggle')" 
-                    ms-css-width="getCellProperty($key,'width')"
-                    ms-css-text-align="getCellProperty($key,'align')"
-                    ms-css-height="tbodyRowHeight" 
                     >
                     <div class="editable">{{$val}}</div>
                 </td>

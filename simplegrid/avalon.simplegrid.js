@@ -27,7 +27,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         }
     }
     //切割出表头与表身的模板
-    var template = arr[0], theadTemplate, tbodyTemplate
+    var template = arr[0], theadTemplate, tbodyTemplate, colTemplate
     template = template.replace(/MS_OPTION_THEAD_BEGIN([\s\S]+)MS_OPTION_THEAD_END/, function(a, b) {
         theadTemplate = b
         return "MS_OPTION_THEAD_HOLDER"
@@ -36,10 +36,12 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         tbodyTemplate = b
         return "MS_OPTION_TBODY_HOLDER"
     })
-
+    template = template.replace(/MS_OPTION_COL_BEGIN([\s\S]+)MS_OPTION_COL_END/, function(a, b) {
+        colTemplate = b
+        return "MS_OPTION_COL_HOLDER"
+    })
     var body = document.body || document.documentElement
     var remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m
-
 
 
     var widget = avalon.ui.simplegrid = function(element, data, vmodels) {
@@ -49,12 +51,13 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         //允许指定表头与表身的每一行的模板
         makeTemplate(options, "theadTemplate", theadTemplate)
         makeTemplate(options, "tbodyTemplate", tbodyTemplate)
-
+        makeTemplate(options, "colTemplate", colTemplate)
         template = template.replace(/MS_OPTION_THEAD_HOLDER/, options.theadTemplate)
                 .replace(/MS_OPTION_TBODY_HOLDER/, options.tbodyTemplate)
-
+                .replace(/MS_OPTION_COL_HOLDER/, options.colTemplate)
         //方便用户对原始模板进行修改,提高制定性
-        makeTemplate(options, "template", template)
+        options.template = options.getTemplate(template, options)
+
         //决定每页的行数(分页与滚动模式下都要用到它)
         //<------开始配置分页的参数
         if (typeof options.pager !== "object") {
@@ -111,9 +114,12 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             vm.startIndex = 0
             vm.endIndex = options.showRows
             vm.$init = function() {
-                element.innerHTML = options.template.replace(/MS_OPTION_ID/g, vmodel.$id)
-                _vmodels = [vmodel].concat(vmodels)
-                avalon.scan(element, _vmodels)
+                avalon.ready(function() {
+                    element.innerHTML = options.template.replace(/MS_OPTION_ID/g, vmodel.$id)
+                    _vmodels = [vmodel].concat(vmodels)
+                    avalon.scan(element, _vmodels)
+                })
+
             }
 
             vm.getRealWidth = function() {
@@ -381,6 +387,9 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         getStore: function(array, options) {
             return array.concat()
         },
+        getColumn: function(el, options) {
+            return el
+        },
         getPager: function(pager, options) {
             return pager
         },
@@ -403,9 +412,9 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 makeBool(el, "resizable", false)//能否改变列宽
                 makeBool(el, "sortAsc", true)//排序方向
                 makeBool(el, "toggle", true)//是否显示当前列
-                makeBool(el, "checked", false)//是否被勾上
                 makeBool(el, "disabledToggle")//禁止改变当前列的显示状态
                 makeBool(el, "disabledResize")//禁止改变当前列的宽度
+                options.getColumn(el, options)
                 ret.push(el)
             }
             return ret

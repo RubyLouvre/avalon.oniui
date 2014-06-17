@@ -168,9 +168,20 @@ v\:* { behavior: url(#default#VML);}
 	}
 }
 
+
+.hd{
+	display: none;
+}
+
 .ui-state-disabled ,.ui-state-hover{
 	#{$pf}-dragger-ball{
 		opacity: .4;
+	}
+	.oval-hd{
+		display: block;
+	}
+	.oval-n{
+		display: none;
 	}
 }
 .ui-state-disabled{
@@ -180,6 +191,12 @@ v\:* { behavior: url(#default#VML);}
 	}
 	#{$pf}-bg{
 		background-position: -57px -18px;
+	}
+	.oval-hd{
+		display: block;
+	}
+	.oval-n {
+		display: none;
 	}
 }
 #{$pf}-large{

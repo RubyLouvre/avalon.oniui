@@ -13,7 +13,7 @@ define(["avalon", "text!./avalon.spinner.html"], function(avalon, sourceHTML) {
         options.template = options.getTemplate(template, options);
         var vmodel = avalon.define(data.spinnerId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["min", "max", "widgetElement", "step", "onsub", "onadd"];
+            vm.$skipArray = ["min", "max", "widgetElement", "step"];
             vm.widgetElement = element;
             var wrapper = null, focusValue = 0;
             vm.$init = function() {

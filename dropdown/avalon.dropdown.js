@@ -264,7 +264,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
         titleTemplate = templates[0];
         listTemplate = templates[1];
         optionsTemplate = templates[2];
-
         dataSource = options.data.$model || options.data;
         modelPattern = getSource(element).length === 0;
 
@@ -402,6 +401,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 }
 
                 vmodel.toggle = false;
+                vmodel.onSelect.call(this, e, listNode);
             };
 
             vm.$listenter = function() {
@@ -542,7 +542,8 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
         label: null,            //设置组件的提示文案，可以是一个字符串，也可以是一个对象
         autofocus: false,       //是否自动获取焦点
         multiple: false,        //是否为多选模式
-        size: 1,                //多选模式下显示的条数
+        size: 1, 
+        onSelect: avalon.noop,               //多选模式下显示的条数
         getTemplate: function(str, options) {
             return str
         }

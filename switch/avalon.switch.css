@@ -200,14 +200,25 @@ v\:* {
     .ui-switch-use-no-img.ui-state-disabled .ui-switch-uckbg-disabled {
       background-color: #dedede; }
 
+.hd {
+  display: none; }
+
 .ui-state-disabled .ui-switch-dragger-ball, .ui-state-hover .ui-switch-dragger-ball {
   opacity: .4; }
+.ui-state-disabled .oval-hd, .ui-state-hover .oval-hd {
+  display: block; }
+.ui-state-disabled .oval-n, .ui-state-hover .oval-n {
+  display: none; }
 
 .ui-state-disabled label, .ui-state-disabled span {
   cursor: default;
   color: #fff; }
 .ui-state-disabled .ui-switch-bg {
   background-position: -57px -18px; }
+.ui-state-disabled .oval-hd {
+  display: block; }
+.ui-state-disabled .oval-n {
+  display: none; }
 
 .ui-switch-large .ui-switch-uckbg-disabled {
   background-position: 0 -30px; }

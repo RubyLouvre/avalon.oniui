@@ -11,13 +11,16 @@
         <script>
             avalon.config({debug: false})
             require(["simplegrid/avalon.simplegrid"], function() {
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
                 var createData = function(n) {
                     var array = []
                     for (var i = 0; i < n; i++) {
                         array.push({
-                            xxx: Math.random().toString(36).substring(4, 10),
-                            yyy: Math.random().toString(36).substring(4, 10),
-                            zzz: i,
+                            xxx: range(3000, 20000),
+                            yyy: range(8000, 90000),
+                            zzz: range(5000, 60000),
                             checked: false
                         })
                     }
@@ -55,11 +58,10 @@
                         tbodyTemplate: function(str) {
                             return "<th style='width:80px'><input type=\"checkbox\" ms-checked='row.checked' ms-click='checkOne(row, $index)' class='ui-helper-checkone'/></th>" + str
                         },
-                        
                         columns: [
-                            {field: "zzz", text: "列三", resizable: true},
-                            {field: "yyy", text: "列二", resizable: true},
-                            {field: "xxx", text: "列一", resizable: true}
+                            {field: "zzz", text: "生成订单量", resizable: true},
+                            {field: "yyy", text: "访问量", resizable: true},
+                            {field: "xxx", text: "确认订单量", resizable: true}
                         ],
                         showRows: 10,
                         pageable: true,
@@ -86,7 +88,7 @@
     <body>
 
         <fieldset ms-controller="test">
-            <legend>右边添加一个全选非全选的checkbox栏</legend>
+            <legend>左边添加一个全选非全选的checkbox栏</legend>
 
             <div ms-widget="simplegrid, xxx" id="gridsample">
 

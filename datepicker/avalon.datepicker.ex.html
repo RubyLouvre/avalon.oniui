@@ -7,16 +7,44 @@
 <script src="../avalon.js"></script>
 </head>
 <body class="ms-controller" ms-controller="demo">
+<!--     <fieldset>
+        <legend>单日历框</legend>
+        <input ms-widget="datepicker, a , $aOpts" ms-duplex="date1"/>
+        <p>{{date1}}</p>
+    </fieldset> -->
+<!-- 
     <fieldset>
         <legend>单日历框</legend>
-        <input ms-widget="datepicker" ms-duplex="data1" data-datepicker-disabled="disabled"/>
+        <input ms-widget="datepicker, a , $aOpts" ms-duplex="date1" data-datepicker-change='changeCallback'/>
+        <p>{{date1}}</p>
+    </fieldset> -->
+
+    <fieldset>
+        <legend>单日历框</legend>
+        <input ms-widget="datepicker, a , $aOpts" ms-duplex="date1" ms-data-toggle="toggle"/>
         <p>{{date1}}</p>
     </fieldset>
+
     <script> 
+
+        var minDate = new Date(new Date().setDate(-6));
+        var maxDate = new Date(new Date().setDate(-1));
+
         require("datepicker/avalon.datepicker", function(avalon) {
             var model = avalon.define("demo", function(vm) {
                 vm.date1 = '2014-04-02';
                 vm.disabled = false;
+                vm.changeCallback = function() {
+                    avalon.log("changeCallback arguments is : ")
+                    avalon.log(arguments);
+                }
+                vm.toggle = true;
+                vm.$aOpts = {
+                    change: function() {
+                        avalon.log("changeCallback arguments is : ")
+                        avalon.log(arguments);
+                    }
+                }
             })
             avalon.scan();
         })

@@ -50,7 +50,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         makeTemplate(options, "tbodyTemplate", tbodyTemplate)
         template = template.replace(/MS_OPTION_THEAD_HOLDER/, options.theadTemplate)
                 .replace(/MS_OPTION_TBODY_HOLDER/, options.tbodyTemplate)
-                
+
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
 
@@ -85,13 +85,13 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             }
             options.columnsOrder = orders
         } else if (options.syncTheadColumnsOrder) {
-           
+
             //如果用户指定columnsOrder,那么要对columns进行重排
             orders = options.columnsOrder.concat()
             var newColumns = [], oldColumns = options.columns, elem
             while (el = orders.shift()) {
                 label:
-                for (var k = 0, kn = oldColumns.length; k < kn; k++) {
+                        for (var k = 0, kn = oldColumns.length; k < kn; k++) {
                     elem = oldColumns[k]
                     if (elem.field == el) {
                         newColumns.push(elem)
@@ -107,7 +107,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
 
         var vmodel = avalon.define(data.simplegridId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "data","scrollPanel","topTable", "bottomTable", "startIndex", "pager", "endIndex", "template"]
+            vm.$skipArray = ["widgetElement", "data", "scrollPanel", "topTable", "bottomTable", "startIndex", "pager", "endIndex", "template"]
             vm.widgetElement = element
             vm.gridWidth = "100%"
             vm.startIndex = 0
@@ -136,6 +136,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 }
                 vm.topTable = table //重置真正的代表表头的table
                 vm.scrollPanel = table.parentNode//重置包含两个table的会出现滚动条的容器对象
+                
                 vm.gridWidth = Math.min(table.offsetWidth, vm.scrollPanel.offsetWidth)
             }
             vm.startResize = function(e, el) {

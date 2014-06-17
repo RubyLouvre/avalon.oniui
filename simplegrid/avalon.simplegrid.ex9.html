@@ -28,10 +28,10 @@
 
                     vm.simplegrid = {
                         columns: [
-                            {field: "www", text: "紫薯", resizable: true},
-                            {field: "zzz", text: "石榴", resizable: true},
-                            {field: "yyy", text: "雪梨", resizable: true},
-                            {field: "xxx", text: "苹果", resizable: true}
+                            {field: "www", text: "紫薯", resizable: true, align:"center"},
+                            {field: "zzz", text: "石榴", resizable: true, align:"center"},
+                            {field: "yyy", text: "雪梨", resizable: true, align:"center"},
+                            {field: "xxx", text: "苹果", resizable: true, align:"center"}
                         ],
                         tbodyTemplate: function(str) {
                             return str.replace('class="ui-grid-td"', 'class="ui-grid-td" ms-mouseenter="addCross" ms-mouseleave="removeCross"')
@@ -39,21 +39,19 @@
                         addCross: function() {
                             avalon(this.parentNode).addClass("hcross")
                             var index = this.cellIndex
-                            if (!cols) {
-                                var table = this
-                                while (table.tagName != "TABLE") {
-                                    table = table.parentNode
-                                }
-                                cols = table.getElementsByTagName("col")
-                            }
-                            avalon(cols[index]).addClass("vcross")
+
+                            var tbody = this.parentNode.parentNode
+                            Array.prototype.forEach.call(tbody.rows, function(row) {
+                                avalon(row.cells[index]).addClass("vcross")
+                            })
                         },
                         removeCross: function() {
                             avalon(this.parentNode).removeClass("hcross")
                             var index = this.cellIndex
-                            if (cols) {
-                                avalon(cols[index]).removeClass("vcross")
-                            }
+                            var tbody = this.parentNode.parentNode
+                            Array.prototype.forEach.call(tbody.rows, function(row) {
+                                avalon(row.cells[index]).removeClass("vcross")
+                            })
                         },
                         showRows: 10,
                         pageable: true,
@@ -77,9 +75,11 @@
             }
             .ui-grid-tbody tr.hcross td{
                 background:yellow;
+                color:#fff;
             }
             .ui-grid-tbody .vcross{
                 background:gold;
+                 color:#fff;
             }
         </style>
     </head>
@@ -101,30 +101,30 @@
                         addCross: function() {
                             avalon(this.parentNode).addClass("hcross")
                             var index = this.cellIndex
-                            if (!cols) {
-                                var table = this
-                                while (table.tagName != "TABLE") {
-                                    table = table.parentNode
-                                }
-                                cols = table.getElementsByTagName("col")
-                            }
-                            avalon(cols[index]).addClass("vcross")
+
+                            var tbody = this.parentNode.parentNode
+                            Array.prototype.forEach.call(tbody.rows, function(row) {
+                                avalon(row.cells[index]).addClass("vcross")
+                            })
                         },
                         removeCross: function() {
                             avalon(this.parentNode).removeClass("hcross")
                             var index = this.cellIndex
-                            if (cols) {
-                                avalon(cols[index]).removeClass("vcross")
-                            }
+                            var tbody = this.parentNode.parentNode
+                            Array.prototype.forEach.call(tbody.rows, function(row) {
+                                avalon(row.cells[index]).removeClass("vcross")
+                            })
                         },
                 </pre>
                 <p>CSS</p>
                 <pre class="brush:css;gutter:false;toolbar:false;">
             .ui-grid-tbody tr.hcross td{
                 background:yellow;
+                color:#fff;
             }
             .ui-grid-tbody .vcross{
                 background:gold;
+                 color:#fff;
             }
                 </pre>
             </div>

@@ -36,10 +36,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         tbodyTemplate = b
         return "MS_OPTION_TBODY_HOLDER"
     })
-    template = template.replace(/MS_OPTION_COL_BEGIN([\s\S]+)MS_OPTION_COL_END/, function(a, b) {
-        colTemplate = b
-        return "MS_OPTION_COL_HOLDER"
-    })
+
     var body = document.body || document.documentElement
     var remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m
 
@@ -51,10 +48,9 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         //允许指定表头与表身的每一行的模板
         makeTemplate(options, "theadTemplate", theadTemplate)
         makeTemplate(options, "tbodyTemplate", tbodyTemplate)
-        makeTemplate(options, "colTemplate", colTemplate)
         template = template.replace(/MS_OPTION_THEAD_HOLDER/, options.theadTemplate)
                 .replace(/MS_OPTION_TBODY_HOLDER/, options.tbodyTemplate)
-                .replace(/MS_OPTION_COL_HOLDER/, options.colTemplate)
+                
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
 

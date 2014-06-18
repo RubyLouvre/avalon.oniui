@@ -8,10 +8,10 @@ define(["../draggable/avalon.draggable"], function(avalon) {
         if (ID && ID != "$") {
             model = avalon.vmodels[ID]//如果指定了此VM的ID
             if (!model) {
-                data.remove = false
                 return
             }
         }
+        data.element.removeAttribute("ms-resizable")
         if (!model) {//如果使用$或绑定值为空，那么就默认取最近一个VM，没有拉倒
             model = vmodels.length ? vmodels[0] : null
         }

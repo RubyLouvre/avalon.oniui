@@ -55,6 +55,7 @@ define(["avalon"], function(avalon) {
                 return
             }
         }
+        data.element.removeAttribute("ms-draggable")
         if (!model) {//如果使用$或绑定值为空，那么就默认取最近一个VM，没有拉倒
             model = vmodels.length ? vmodels[0] : null
         }
@@ -255,8 +256,8 @@ define(["avalon"], function(avalon) {
             draggable.dragData = {}
         }
     })
-    
-    
+
+
     function getPosition(e, pos) {
         var page = "page" + pos
         return isMobile ? e.changedTouches[0][page] : e[page]

@@ -11,12 +11,12 @@ define(["../draggable/avalon.draggable"], function(avalon) {
                 return
             }
         }
-        data.element.removeAttribute("ms-resizable")
+
         if (!model) {//如果使用$或绑定值为空，那么就默认取最近一个VM，没有拉倒
             model = vmodels.length ? vmodels[0] : null
         }
         var fnObj = model || {}
-        if (opts && model && typeof model[opts] === "object") {//如果指定了配置对象，并且有VM
+        if (model && typeof model[opts] === "object") {//如果指定了配置对象，并且有VM
             vmOptions = model[opts]
             if (vmOptions.$model) {
                 vmOptions = vmOptions.$model
@@ -24,9 +24,10 @@ define(["../draggable/avalon.draggable"], function(avalon) {
             fnObj = vmOptions
         }
         var element = data.element
+        element.removeAttribute("ms-resizable")
         var options = avalon.mix({}, resizable.defaults, vmOptions || {}, avalon.getWidgetData(element, "resizable"));
         //修正drag,stop为函数
-        "stop,start,resize".replace(avalon.rword, function(name) {
+        "stop,start,resize,drag".replace(avalon.rword, function(name) {
             var method = options[name]
             if (typeof method === "string") {
                 if (typeof fnObj[method] === "function") {
@@ -55,6 +56,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
         target.bind("mouseleave", function(e) {
             target.css("cursor", options._cursor); //还原光标样式
         })
+        var _drag = options.drag || avalon.noop
         var body = document.body
         //在dragstart回调中,我们通过draggable已经设置了
         //data.startPageX = event.pageX;    data.startPageY = event.pageY;
@@ -84,11 +86,11 @@ define(["../draggable/avalon.draggable"], function(avalon) {
         }
         options.drag = function(event, data) {
             if (data.dir) {
-                var target = data.$element;
-                refresh(event, target, data);
+                refresh(event,  data.$element, data);
                 event.type = "resize";
-                data.resize.call(target[0], event, data); //触发用户回调
+                data.resize.call(data.element, event, data); //触发用户回调
             }
+            _drag.call(data.element, event, data); //触发用户回调
         }
         options.beforeStop = function(event, data) {
             if (data.dir) {
@@ -214,7 +216,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
                 }
             }
         }
-       
+
         var obj = {
             left: data.resizeLeft,
             top: data.resizeTop,

@@ -44,6 +44,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
         target.bind("mousemove", function(e) {
             if (options.started)
                 return;
+
             var dir = getDirection(e, target, options)
             options._cursor = target.css("cursor"); //保存原来的光标样式
             if (dir === "") {
@@ -55,6 +56,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
 
         target.bind("mouseleave", function(e) {
             target.css("cursor", options._cursor); //还原光标样式
+            delete options._cursor
         })
         var _drag = options.drag || avalon.noop
         var body = document.body
@@ -86,11 +88,12 @@ define(["../draggable/avalon.draggable"], function(avalon) {
         }
         options.drag = function(event, data) {
             if (data.dir) {
-                refresh(event,  data.$element, data);
+                refresh(event, data.$element, data);
                 event.type = "resize";
                 data.resize.call(data.element, event, data); //触发用户回调
+            }else if ("_cursor" in options) {
+                _drag.call(data.element, event, data); //触发用户回调
             }
-            _drag.call(data.element, event, data); //触发用户回调
         }
         options.beforeStop = function(event, data) {
             if (data.dir) {

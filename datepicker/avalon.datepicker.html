@@ -1,0 +1,184 @@
+<div class="ui-datepicker ui-widget"
+    ms-visible="toggle"
+    ms-css-left="elementLeft"
+    ms-css-top="elementTop">
+    <div class="ui-datepicker-content">
+        <div class="ui-datepicker-label">{{calendarLabel}}</div>
+        <div class="ui-datepicker-content-content">
+            <div class="ui-datepicker-header">
+                <i class="ui-datepicker-prev ui-icon ui-icon-chevron-left" 
+                    ms-click="_prev(prevMonth)"
+                    ms-class="ui-datepicker-prev-disabled:!prevMonth">&#xf053;</i>
+                <i class="ui-datepicker-next ui-icon ui-icon-chevron-right" 
+                    ms-click="_next(nextMonth)"
+                    ms-class="ui-datepicker-next-disabled:!nextMonth">&#xf054;</i>
+                <div class="ui-datepicker-title">
+                    <!-- <span >{{year}}年</span> -->
+                    <select ms-each="years" data-each-rendered="_afterYearRendered">
+                        <option>{{el}}</option>
+                    </select>年
+                    <select ms-each="months" data-each-rendered="_afterMonthRendered">
+                        <option ms-value="{{el-1}}">{{el}}</option>
+                    </select>月
+                    <!-- <span class="ui-datepicker-month">{{month+1}}月</span> -->
+                </div>
+            </div>
+            <table class="ui-datepicker-calendar-week">
+                <thead>
+                    <tr>
+                        <th ms-class="ui-datepicker-week-end:dayNames.indexOf(el)%7==0 || dayNames.indexOf(el)%7==6" ms-repeat="weekNames">{{el}}</th>
+                    </tr>
+                </thead>
+            </table>
+            <table class="ui-datepicker-calendar-days">
+                <tbody>
+                    <tr ms-repeat-days="rows">
+                        <td class="ui-state-default"
+                            ms-repeat-item="days"
+                            ms-class="ui-datepicker-week-end: item.weekend"
+                            ms-hover="ui-datepicker-day-hover:item.month !== false"
+                            
+                            ms-class-1="ui-datepicker-day-none: item.month === false"
+                            ms-class-2="ui-datepicker-selected:item.selected"
+                            ms-class-3="ui-state-disabled:item.dateDisabled"
+                            ms-click="_selectDate(year, item.month, item.day, item.dateDisabled)"
+                            >{{item.day}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+MS_OPTION_STYLE
+<style>
+@font-face {
+    font-family: fontawesome;
+    font-style: normal;
+    font-weight: normal;
+    src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?v=4.0.3');
+    src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?#iefix&v=4.0.3') format('embedded-opentype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.woff?v=4.0.3') format('woff'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.ttf?v=4.0.3') format('truetype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular') format('svg');
+}
+.ui-icon {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+    font-family: fontawesome !important;
+    font-size: 14px;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 18px;
+    vertical-align: middle;
+    z-index: 999;
+}
+.ui-datepicker {
+    position: absolute;
+    font-size: 0;
+    padding: 9px 0 9px 10px;
+    white-space: nowrap;
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    border: 1px solid #cccccc;
+    line-height: 18px;
+}
+.ui-datepicker-content {
+    border: 1px solid #e5e5e5;
+    font-size: 12px;
+    margin-right: 10px;
+}
+
+.ui-datepicker-label {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #e5e5e5;
+    font-weight: 700;
+    padding: 7px 0;
+    text-align: center;
+}
+.ui-datepicker-content-content {
+    padding: 0 10px;
+    width: 196px;  
+}
+.ui-datepicker-header {
+    position: relative;
+    height: 30px;
+    line-height: 30px;
+}
+.ui-datepicker-prev, .ui-datepicker-next {
+    color: #3775c0;
+    cursor: pointer;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    text-align: center;
+    width: 20px;
+}
+.ui-datepicker-prev-disabled, .ui-datepicker-next-disabled {
+    color: #cccccc;
+    cursor: default;
+}
+.ui-datepicker-prev {
+    left: 0;
+}
+.ui-datepicker-next {
+    right: 0;
+}
+.ui-datepicker-title {
+    color: #3775c0;
+    font-weight: 700;
+    text-align: center;
+}
+.ui-datepicker-calendar-week, .ui-datepicker-calendar-days {
+    /*height: 175px;*/
+    border-collapse: collapse;
+    margin-bottom: 5px;
+    table-layout: fixed;
+    width: 100%;
+    border-spacing: 0;
+}
+.ui-datepicker-calendar-week th {
+    border-bottom: 1px solid #efefef;
+    border-top: 1px solid #efefef;
+    padding: 3px 0;
+    text-align: center;
+    line-height: 18px;
+    font-weight: 400;
+}
+.ui-datepicker-week-end , .ui-datepicker-calendar-days .ui-datepicker-week-end{
+    color: #ff5555;
+}
+.ui-datepicker-calendar-days td {
+    color: #333333;
+    cursor: pointer;
+    text-align: center;  
+    line-height: 18px;
+    padding: 3px 0;
+}
+.ui-datepicker-day-hover  {
+    background: #dbebff;
+}
+.ui-datepicker-today {
+  font-family: pmingliu, arial, sans-serif;
+  font-size: 11px;
+}
+@media screen and (-webkit-transform-2d: 1) {
+    .ui-datepicker-today {
+        /* font-size: 12px; */
+        -webkit-transform: scale(0.91666667);
+    }
+}
+.ui-datepicker .ui-datepicker-selected {
+    background: #3775c0;
+    color: #fff;
+}
+.ui-datepicker .ui-datepicker-day-none {
+    cursor: auto;
+}
+.ui-datepicker .ui-datepicker-calendar-days .ui-state-disabled {
+    color: #cccccc;
+    cursor: default;
+    background: #fff;
+}
+</style>

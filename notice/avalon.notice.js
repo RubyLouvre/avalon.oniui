@@ -38,15 +38,15 @@ define(["avalon", "text!./avalon.notice.html"], function(avalon, sourceHTML) {
             vm.affixPlaceholderDisplay = "none";
             // 如果配置notice不占位则设置器容器为body
             !vm.isPlace ? vm.container = document.body : vm.container;
-            vm.$show = function() { // toggle为true时调用此方法显示notice
+            vm._show = function() { // toggle为true时调用此方法显示notice
                 _timerClose();
                 _affix(); 
                 vmodel.onShow.call(element, data, vmodels); // 用户回调
             }
-            vm.$close = function() { //close按钮click时的监听处理函数
+            vm._close = function() { //close按钮click时的监听处理函数
                 vmodel.toggle = false;
             }
-            vm.$hide = function() { //toggle为false时隐藏notice
+            vm._hide = function() { //toggle为false时隐藏notice
                 var hideAffixIndex = affixBoxs.indexOf(templateView);
                 //隐藏吸顶元素后将其从吸顶队列中删除，并修改吸顶队列中所有元素的position为static，以便affixPosition能重新调整吸顶元素位置
                 if(hideAffixIndex !== -1) { 
@@ -105,9 +105,9 @@ define(["avalon", "text!./avalon.notice.html"], function(avalon, sourceHTML) {
         });
         vmodel.$watch("toggle", function(v) { //改变toggle影响notice的显示、隐藏
             if(v) {
-                vmodel.$show();
+                vmodel._show();
             } else {
-                vmodel.$hide();
+                vmodel._hide();
             }
         })
         vmodel.$watch("type", function(v) { //改变type影响notice的显示类型

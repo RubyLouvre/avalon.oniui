@@ -1,0 +1,79 @@
+<div class="ui-daterangepicker">
+    <div class="ui-datepicker-range-input" 
+        ms-click="_toggleDatepicker(toggle, $event)"
+        >
+        <div class="ui-datepicker-input js-input">
+            <strong>日期范围：</strong>2014-01-02 至 2014-01-15
+        </div>
+        <div class="ui-datepicker-icon-wrap">
+            <i class="ui-datepicker-icon ui-icon ui-icon-angle-up">&#xf106;</i>
+            <i class="ui-datepicker-icon ui-icon ui-icon-angle-down">&#xf107;</i>
+        </div>
+    </div>
+    <div class="ui-datepicker-groups">
+        <div class="ui-datepicker-group-first ui-datepicker-group">
+            <input style="display:none" ms-widget="datepicker" ms-data-toggle="toggle" data-datepicker-type="range"/>
+        </div>
+        <div class="ui-datepicker-group-second ui-datepicker-group">
+            <input style="display:none" ms-widget="datepicker" ms-data-toggle="toggle" data-datepicker-type="range"/>
+        </div>
+        <div class="ui-calendarbox-footer ui-calendarbox-footer-small clrfix">
+            <div class="ui-calendarbox-msg js-msg">{{msg}}</div>
+            <div class="ui-calendarbox-btns">
+                <button type="button" class="ui-btn ui-btn-primary ui-btn-small js-submit">确定</button>
+                <button type="button" class="ui-btn ui-btn-small js-cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+MS_OPTION_STYLE
+<style>
+.ui-datepicker-range-input {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    cursor: pointer;
+    display: inline-block;
+}
+.ui-datepicker-input {
+    height: 18px;
+    overflow: hidden;
+    padding: 3px 21px 3px 6px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ui-datepicker-icon-wrap {
+    display: block;
+    height: 0;
+    position: relative;
+}
+.ui-datepicker-icon {
+    color: #b5b5b5;
+    cursor: pointer;
+    display: none;
+    padding: 0 6px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: -21px;
+}
+.ui-datepicker-icon-wrap .ui-icon-angle-down {
+    display: block;
+}
+.ui-datepicker-groups {
+    position: absolute;
+}
+.ui-datepicker-group {
+    position: relative;
+    display: inline-block;
+}
+.ui-calendarbox-footer-small {
+  padding-bottom: 4px;
+  padding-top: 4px;
+}
+.ui-calendarbox-footer-small .ui-calendarbox-msg {
+  margin-top: 2px;
+}
+.ui-calendarbox-footer-small .ui-btn {
+  margin-left: 5px;
+}  
+</style>

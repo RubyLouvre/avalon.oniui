@@ -15,9 +15,9 @@
             </tr>
             <!--auto doc start-->
 <tr>
-    <td>onText</td><td> "ON"</td><td> 选中状态提示文字</td></tr>
+    <td>onText</td><td> "<b class=\"ui-switch-on\"></b>"</td><td> 选中状态提示文字</td></tr>
 <tr>
-    <td>offText</td><td> "OFF"</td><td> 未选中状态提示文字</td></tr>
+    <td>offText</td><td> "&times;"</td><td> 未选中状态提示文字</td></tr>
 <tr>
     <td>type</td><td> "normal"</td><td> 滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成ui-switch-{{type}}添加给switch模板容器</td></tr>
 <tr>
@@ -32,6 +32,20 @@
     <td>animated</td><td> true</td><td> 是否开启切换动画效果</td></tr>
 <tr>
     <td>hdir</td><td> true</td><td> 开启、关闭选项排列顺序默认为true，即on-off,false为off-on</td></tr>
+<tr>
+    <td>draggerColor</td><td> "#ffffff"</td><td> 推动头颜色，会尝试自动到样式文件里面提取</td></tr>
+<tr>
+    <td>onColor</td><td> "#45A846"</td><td> 选中情况颜色，会尝试自动到样式文件里面提取</td></tr>
+<tr>
+    <td>offColor</td><td> "#D5D5D5"</td><td> 未选中情况颜色，会尝试自动到样式文件里面提取</td></tr>
+<tr>
+    <td>disabledColor</td><td> "#DEDEDE"</td><td> 禁用情况颜色，会尝试自动到样式文件里面提取</td></tr>
+<tr>
+    <td>draggerR</td><td> 7</td><td> normal size拖动头半径，会尝试自动到样式文件里面提取</td></tr>
+<tr>
+    <td>height</td><td> 18</td><td> normal size高度，会尝试自动到样式文件里面提取</td></tr>
+<tr>
+    <td>width</td><td> 35</td><td> normal size宽度，会尝试自动到样式文件里面提取</td></tr>
 <tr>
     <td>$animateArrMaker</td><td>配置函数</td><td>$animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]</td></tr>
 <tr>

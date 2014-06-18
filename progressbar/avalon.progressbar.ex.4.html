@@ -18,7 +18,7 @@
                     vm.$skipArray = ["progressbar"]
                     var v = 0
                         , timer = setInterval(function() {
-                            avalon.vmodels.$aa.value = ((100 * Math.random()) >> 0)
+                            //avalon.vmodels.$aa.value = ((100 * Math.random()) >> 0)
                         }, 1500)
                 })
                 avalon.scan()
@@ -27,7 +27,7 @@
     </head>
     <body ms-controller="test">
         <h1>占比进度条，带label，左右两段，接口调用</h1>
-        <div ms-widget="progressbar,$aa" data-progressbar-value="49" data-progressbar-label="true" data-progressbar-right="true">
+        <div ms-widget="progressbar,$aa" data-progressbar-value="49" data-progressbar-label="true" data-progressbar-in-two="true">
             
         </div>
         <p>------------------------------------------------------------------------</p>
@@ -52,7 +52,7 @@
                     vm.$skipArray = [&quot;progressbar&quot;]
                     var v = 0
                         , timer = setInterval(function() {
-                            avalon.vmodels.$aa.value = ((100 * Math.random()) &gt;&gt; 0)
+                            //avalon.vmodels.$aa.value = ((100 * Math.random()) &gt;&gt; 0)
                         }, 1500)
                 })
                 avalon.scan()
@@ -61,7 +61,7 @@
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
         &lt;h1&gt;占比进度条，带label，左右两段，接口调用&lt;/h1&gt;
-        &lt;div ms-widget=&quot;progressbar,$aa&quot; data-progressbar-value=&quot;49&quot; data-progressbar-label=&quot;true&quot; data-progressbar-right=&quot;true&quot;&gt;
+        &lt;div ms-widget=&quot;progressbar,$aa&quot; data-progressbar-value=&quot;49&quot; data-progressbar-label=&quot;true&quot; data-progressbar-in-two=&quot;true&quot;&gt;
             
         &lt;/div&gt;
         &lt;p&gt;------------------------------------------------------------------------&lt;/p&gt;

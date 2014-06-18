@@ -122,10 +122,10 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html"], function(
                     if (!isHorizontal) { // 垂直滑块，往上拖动时pixelMouse变小，下面才是真正的percent，所以需要调整percent
                         percent = Math.abs(1 - percent)
                     }
-                    if (percent > 0.99) {
+                    if (percent > 0.999) {
                         percent = 1
                     }
-                    if (percent < 0.01) {
+                    if (percent < 0.001) {
                         percent = 0
                     }
                     val = percent2Value(percent)
@@ -150,7 +150,7 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html"], function(
                     model.value = val
                     model.percent = value2Percent(val)
                 }
-                options.ondrag.call(null, event, data);
+                options.ondrag.call(null, model, data);
             }
             vm.$init = function() {
                 var a = slider.getElementsByTagName("b")

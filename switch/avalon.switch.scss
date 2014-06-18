@@ -1,42 +1,39 @@
 @import "../style/default.scss";
 $pf : ".ui-switch";
-
+v\:* { behavior: url(#default#VML);} 
 #{$pf} {
 	position: relative;
+	z-index: 10;
 	height: 100%;
 	top:0;
 	overflow: hidden;
 	text-align: center;
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	border: none;
+	background: none;
+	
+	&-on{
+		background-image: url("bg.gif");
+	}
 
     & label, & span{
 		cursor: pointer;
 		margin: 0;
 		top:0;
 		left:0;
+		position: relative;
 	}
 	&-normal{
-	    width: 100px;
-	    height: 28px;
-		font-size: 14px;
-	}
-	&-mini{
-	    width: 74px;
-	    height: 17px;
-		font-size: 12px;
-	}
-	&-small{
-	    width: 79px;
-	    height: 24px;
-		font-size: 12px;
+	    width: 35px;
+	    height: 18px;
 	}
 	&-large{
-		width: 120px;
-	    height: 37px;
-		font-size: 16px;
+	    width: 57px;
+	    height: 30px;
 	}
 	&-bar{
 		position: absolute;
+		z-index: 10;
 		width: 150%;
 		left:0;
 	}
@@ -49,45 +46,161 @@ $pf : ".ui-switch";
 	}
 	&-left, &-right{
 		width: 33%;
-		background-color: #005fcc;
 		color:#fff;
 	}
 	&-right{
-		background: #d9d9d9;
-		color: #333;
+		color: #9B9B9B;
 	}
 	&-dragger{
 		width: 34%;
+		&-ball{
+			width: 14px;
+			height: 14px;
+			left: 50%;
+			top:50%;
+			margin-left: -7px;
+			margin-top: -7px;
+			position: absolute;
+			background-position: -57px -54px;
+			&-unchecked{
+				margin-left: -6px;
+			}
+		}
+	}
+	&-on {
+		position: absolute;
+		left: 50%;
+		top:50%;
+		background-position: -57px -83px;
+		width: 8px;
+		height: 7px;
+		margin-left: -4px;
+		margin-top: -3px;
+	}
+	&-bg{
+		background-position: -57px 0;
+	}
+	&-uckbg{
+		background-position: -57px -36px;
+	}
+	&-large{
+		#{$pf}{
+			&-dragger-ball{
+				height: 24px;
+				width: 24px;
+				margin-left: -13px;
+				margin-top: -12px;
+				background-position: -69px -67px;
+				&-unchecked{
+					margin-left: -10px;
+				}
+			}
+			&-on {
+				background-position: -71px -54px;
+				width: 14px;
+				height: 11px;
+				margin-left: -7px;
+				margin-top: -5px;
+			}
+			&-bg{
+				background-position: 0 0;
+			}
+			&-uckbg{
+				background-position: 0 -60px;
+			}
+		}
 	}
 	&-left, &-right, &-dragger{
 		float: left;
 		display: inline;
-		height: 20px;
-		line-height: 20px;
-		padding: 4px 0;
-	}
-	&-large &-left, &-large &-right, &-large &-dragger{
-		padding: 9px 0;
-		height: 19px;
-		line-height: 19px;
-	}
-	&-small &-left, &-small &-right, &-small &-dragger{
-		padding: 3px 0;
 		height: 18px;
 		line-height: 18px;
+		font-weight: bolder;
 	}
-	&-mini &-left, &-mini &-right, &-mini &-dragger{
-		padding: 4px 0;
-		height: 9px;
-		line-height: 9px;
+	&-large &-left, &-large &-right, &-large &-dragger{
+		height:30px;
+		line-height: 30px;
+		font-size: 24px;
 	}
-	/*fix ie 8 bugs*/
-	&-disabled, &-disabled &-bar{
-		opacity: 0.5;
-		filter: alpha(opacity=50);
+	&-large &-right{
+		text-indent: -3px;
+	}
+	&-bg{
+		position: absolute;
+		z-index: 1;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+	}
+	// do not use background-image
+	&-use-no-img{
+		#{$pf}-ico{
+			background-image: none;
+		}
+		#{$pf}-bg{
+			border-radius: 9px;
+			background-color: #45A846;
+		}
+		#{$pf}-dragger-ball{
+			background: #fff;
+			border-radius: 6px;
+		}
+		&#{$pf}-large{
+			#{$pf}-bg{
+				border-radius: 15px;
+			}
+			#{$pf}-dragger-ball{
+				border-radius: 12px;
+			}
+		}
+		#{$pf}-uckbg{
+			background-color: #bcbcbc;
+		}
+		&.ui-state-disabled{
+			#{$pf}-uckbg{
+				background-color: #dedede;
+				&-disabled{
+					background-color: #dedede;
+				}
+			}
+		}
+	}
+}
+
+
+.hd{
+	display: none;
+}
+
+.ui-state-disabled ,.ui-state-hover{
+	#{$pf}-dragger-ball{
+		opacity: .4;
+	}
+	.oval-hd{
+		display: block;
+	}
+	.oval-n{
+		display: none;
+	}
+}
+.ui-state-disabled{
+	& label, & span{
 		cursor: default;
+		color: #fff;
 	}
-	&-disabled label, &-disabled span{
-		cursor: default;
+	#{$pf}-bg{
+		background-position: -57px -18px;
+	}
+	.oval-hd{
+		display: block;
+	}
+	.oval-n {
+		display: none;
+	}
+}
+#{$pf}-large{
+	#{$pf}-uckbg-disabled {
+		background-position: 0 -30px;
 	}
 }

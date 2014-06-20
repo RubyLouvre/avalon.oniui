@@ -10,6 +10,8 @@ $pf : ".ui-scrollbar";
 	top:0;
 	bottom: auto;
 	background:#ccc;
+	// fix ie8 opacity bug
+	z-index: 100;
 	transition:opacity .5s;
 	-webkit-transition:opacity .5s;
 	-moz-transition:opacity .5s;

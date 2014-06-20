@@ -31,7 +31,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
 
     // 响应wheel,binded
     var wheelBinded,
-        wheelArr = []
+        wheelArr = [],
+        keyArr = []
 
     var widget = avalon.ui.scrollbar = function(element, data, vmodels) {
         var options = data.scrollbarOptions
@@ -73,39 +74,83 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 })
                 // 竖直方向支持滚轮事件
                 if(vmodel.position.match(/left|right/g)) {
-                    var vs = []
+                    var vs = [],hs = []
                     avalon.each(vmodel.$position, function(i, item) {
-                        if(item.match(/left|right/g)) vs.push([i, item])
+                        if(item.match(/left|right/g)) {
+                            vs.push([i, item])
+                        } else {
+                            hs.push([i, item])
+                        }
                     })
 
-                    function myOnWheel(e) {
-                        var diretion = e.wheelDelta > 0 ? "up" : "down"
-                        if(vmodel.inFocuse) {
-                            avalon.each(vs, function(i, item) {
-                                if(!bars[i].data("ui-scrollbar-needed")) return
-                                vmodel.$computer(function(obj) {
-                                    return vmodel.$clickComputer(obj, diretion)
-                                }, item[0], item[1], function(breakOut) {
-                                    if(!breakOut) 
-                                e.preventDefault()
-                                })
+                    function wheelLike(diretion, arr, e, func) {
+                        avalon.each(arr, function(i, item) {
+                            if(!bars[i].data("ui-scrollbar-needed")) return
+                            vmodel.$computer(func || function(obj) {
+                                return vmodel.$clickComputer(obj, diretion)
+                            }, item[0], item[1], function(breakOut) {
+                                if(!breakOut) 
+                            e.preventDefault()
                             })
+                        })
+                    }
+
+                    function myOnWheel(e) {
+                        if(vmodel.inFocuse) {
+                            wheelLike(e.wheelDelta > 0 ? "up" : "down", vs, e)
+                        }
+                    }
+                    function myKeyDown(e) {
+                        var k = e.keyCode
+                        if(k > 32 && k < 41 & vmodel.inFocuse) {
+                            // 方向按键
+                            if(k in {37:1, 39: 1, 38: 1, 40:1}) {
+                                wheelLike(k in {37:1, 38:1} ? "up" : "down", k in {38: 1, 40:1} ? vs : hs, e)
+                            // end or home
+                            // pageup or pagedown
+                            } else{
+                                var diretion = k in {33: 1, 36: 1} ? "up" : "down"
+                                wheelLike(diretion, vs, e, function(obj) {
+                                    var _top = -(parseInt(scroller.css("top"))) >> 0
+                                    // home, pageup
+                                    if(k in {33: 1, 36: 1}) {
+                                        if(_top) e.preventDefault()
+                                    // end, pagedown
+                                    } else {
+                                        if(_top < obj.scrollerH - obj.viewH) event.preventDefault()
+                                    }
+                                    // home or end
+                                    if(k in {36: 1, 35: 1}) {
+                                        return {
+                                            x: 0,
+                                            y: k == 36 ? 0 : obj.draggerparHeight - obj.draggerHeight
+                                        }
+                                    // pageup or pagedown
+                                    // a frame
+                                    } else {
+                                        return vmodel.$clickComputer(obj, diretion, obj.draggerHeight)
+                                    }
+                                })
+                            }
                         }
                     }
                     // document.body直接如此处理
                     if(vmodel.widgetElement == document.body) {
                         vmodel.inFocuse = true
                         wheelArr.push(myOnWheel)
+                        keyArr.push(myKeyDown)
                     } else {
                         avalon.bind(element, "mouseenter", function(e) {
                             vmodel.inFocuse = true
                             wheelArr.push(myOnWheel)
+                            keyArr.push(myKeyDown)
                         })
                         avalon.bind(element, "mouseleave", function(e) {
                             vmodel.inFocuse = false
                             for(var i = 0, len = wheelArr.length; i < len; i++) {
                                 if(wheelArr[i] === myOnWheel) {
                                     wheelArr.splice(i, 1)
+                                    keyArr.splice(i, 1)
                                     break
                                 }
                             }
@@ -116,6 +161,19 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                         wheelBinded = true
                         avalon.bind(document, "mousewheel", function(e) {
                             var cb = wheelArr[wheelArr.length - 1]
+                            cb && cb(e)
+                        })
+                        // keyborad,,,simida
+                        // left 37
+                        // right 39
+                        // top 38
+                        // down 40
+                        // pageup 33
+                        // pagedown 34
+                        // home 36
+                        // end 35
+                        avalon.bind(document, "keydown", function(e) {
+                           var cb = keyArr[keyArr.length - 1]
                             cb && cb(e)
                         })
                     }
@@ -361,11 +419,12 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 }, position, barIndex)
             }
 
-            vm.$clickComputer = function(obj, diretion) {
-                var l = parseInt(obj.dragger.css("left")) >> 0,
+            vm.$clickComputer = function(obj, diretion, step) {
+                var step = step || 40,
+                    l = parseInt(obj.dragger.css("left")) >> 0,
                     r = parseInt(obj.dragger.css("top")) >> 0,
-                    x = diretion == "down" ? l + 40 : l - 40,
-                    y = diretion == "down" ? r + 40 : r - 40
+                    x = diretion == "down" ? l + step : l - step,
+                    y = diretion == "down" ? r + step : r - step
                 return {
                     x: x,
                     y: y
@@ -420,13 +479,14 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                     obj.offset = obj.draggerpar.offset()
                     obj.up = avalon(getByClassName("ui-scrollbar-arrow-up", bar[0])[0])
                     obj.down = avalon(getByClassName("ui-scrollbar-arrow-down", bar[0])[0])
+                    obj.viewer = avalon(vmodel.viewElement)
+                    obj.viewH = obj.viewer.innerHeight()
+                    obj.viewW = obj.viewer.innerWidth()
+                    obj.scrollerH = scroller.innerHeight()
+                    obj.scrollerW = scroller.innerWidth()
+
                     var xy = axisComputer(obj),
-                        breakOut,
-                        viewer = avalon(vmodel.viewElement),
-                        viewH = viewer.innerHeight(),
-                        viewW = viewer.innerWidth(),
-                        scrollerH = scroller.innerHeight(),
-                        scrollerW = scroller.innerWidth()
+                        breakOut
 
                     if(position.match(/left|right/g)) {
                         if(xy.y < 0) {
@@ -444,7 +504,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                             obj.down.removeClass("ui-scrollbar-arrow-disabled")
                         }
                         obj.dragger.css("top", xy.y + "px")
-                        vmodel.$scrollTo(void 0, (scrollerH - viewH) * xy.y / (obj.draggerparHeight - obj.draggerHeight))
+                        vmodel.$scrollTo(void 0, (obj.scrollerH - obj.viewH) * xy.y / (obj.draggerparHeight - obj.draggerHeight))
                     } else {
                         if(xy.x < 0) {
                             xy.x = 0
@@ -461,7 +521,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                             obj.down.removeClass("ui-scrollbar-arrow-disabled")
                         }
                         obj.dragger.css("left", xy.x + "px")
-                        vmodel.$scrollTo((scrollerW - viewW) * xy.x / (obj.draggerparWidth - obj.draggerWidth), void 0)
+                        vmodel.$scrollTo((obj.scrollerW - obj.viewW) * xy.x / (obj.draggerparWidth - obj.draggerWidth), void 0)
                     }
 
                 }

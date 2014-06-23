@@ -84,6 +84,7 @@
   top: 0;
   bottom: auto;
   background: #ccc;
+  z-index: 100;
   transition: opacity .5s;
   -webkit-transition: opacity .5s;
   -moz-transition: opacity .5s;

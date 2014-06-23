@@ -1,0 +1,8 @@
+<li class="ui-roleselect-item" ms-class="ui-state-disabled:$itemSelected(item)" 
+ms-data-value="item.value" 
+ms-data-name="item.name" 
+ms-hover="ui-state-hover" 
+ms-click="$select($event, item)" 
+ms-attr-id="(item.isSelect?'select':'data')+item.value+$uid">
+	{{ item.name | html }}
+</li>

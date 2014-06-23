@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>roleselect组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["roleselect/avalon.roleselect"], function() {
+                avalon.define("test", function(vm) {
+                    vm.roleselect = {
+                        data: [
+                            {name: "Lily", value: 1},
+                            {name: "Lucy", value: 2},
+                            {name: "Tom", value: 3},
+                            {name: "Harry", value: 4},
+                            {name: "Jim", value: 5}
+                        ],
+                        select: [5],
+                        change: function() {
+                            avalon.log("2b le")
+                        }
+                    }
+                    var i = 6
+                    while(i < 200) {
+                        vm.roleselect.data.push({
+                            name: "Hello Sang" + i,
+                            value: i
+                        })
+                        i++
+                    }
+                    vm.$skipArray = ["roleselect"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <h1>roleselect</h1>
+        <div ms-widget="roleselect"></div>
+        <pre class="brush:html;gutter:false;toolbar:false">
+        </pre>
+    </body>
+</html>

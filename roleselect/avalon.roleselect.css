@@ -1,0 +1,122 @@
+.clrfix {
+  zoom: 1; }
+  .clrfix:before, .clrfix:after {
+    content: '';
+    display: block; }
+  .clrfix:after {
+    clear: both; }
+
+.reset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  line-height: 100%;
+  text-decoration: none;
+  font-size: 100%;
+  list-style: none; }
+
+.ui-helper-hidden {
+  display: none; }
+
+/*corner css*/
+.ui-corner-all,
+.ui-corner-top,
+.ui-corner-left,
+.ui-corner-tl {
+  border-top-left-radius: 4px; }
+
+.ui-corner-all,
+.ui-corner-top,
+.ui-corner-right,
+.ui-corner-tr {
+  border-top-right-radius: 4px; }
+
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-left,
+.ui-corner-bl {
+  border-bottom-left-radius: 4px; }
+
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-right,
+.ui-corner-br {
+  border-bottom-right-radius: 4px; }
+
+/*state css*/
+.ui-state-default {
+  color: #333;
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc; }
+  .ui-state-default a {
+    color: #333;
+    text-decoration: none; }
+
+.ui-state-hover {
+  background: #fff; }
+  .ui-state-hover a {
+    text-decoration: none; }
+    .ui-state-hover a:hover {
+      text-decoration: none; }
+
+.ui-state-active {
+  background: #fff; }
+
+.ui-state-disabled {
+  color: #aaa;
+  cursor: default; }
+  .ui-state-disabled a {
+    color: #aaa;
+    cursor: default; }
+
+/*content*/
+.ui-widget-content {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc; }
+
+/*button*/
+.ui-button {
+  cursor: pointer; }
+
+.ui-roleselect {
+  font-size: 12px; }
+  .ui-roleselect-menu {
+    width: 180px;
+    height: 190px;
+    border: 1px solid #cccccc;
+    background: #fff;
+    float: left;
+    display: inline; }
+  .ui-roleselect ul {
+    width: 100%; }
+  .ui-roleselect-option {
+    width: 58px;
+    height: 62px;
+    padding: 10px;
+    vertical-align: middle;
+    float: left;
+    display: inline;
+    margin-top: 40px; }
+  .ui-roleselect li {
+    list-style: none;
+    padding: 3px 6px;
+    cursor: pointer; }
+  .ui-roleselect li.ui-state-hover {
+    background-color: #f8f8f8; }
+  .ui-roleselect li.ui-state-active {
+    background-color: #58b359;
+    color: #fff; }
+  .ui-roleselect li.ui-state-disabled {
+    cursor: default;
+    color: #cccccc;
+    background: #fff; }
+  .ui-roleselect div.ui-button {
+    height: 24px;
+    line-height: 24px;
+    background-color: #f8f8f8;
+    border: 1px solid #cccccc;
+    border-radius: 2px;
+    color: #333333;
+    text-align: center;
+    margin-top: 10px; }

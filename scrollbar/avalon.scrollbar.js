@@ -89,8 +89,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                             vmodel.$computer(func || function(obj) {
                                 return vmodel.$clickComputer(obj, diretion)
                             }, item[0], item[1], function(breakOut) {
-                                if(!breakOut) 
-                            e.preventDefault()
+                                if(!breakOut) e.preventDefault()
                             })
                         })
                     }
@@ -420,7 +419,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
             }
 
             vm.$clickComputer = function(obj, diretion, step) {
-                var step = step || 40,
+                var step = step || obj.step || 40,
                     l = parseInt(obj.dragger.css("left")) >> 0,
                     r = parseInt(obj.dragger.css("top")) >> 0,
                     x = diretion == "down" ? l + step : l - step,
@@ -469,7 +468,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
             vm.$computer = function(axisComputer, barIndex, position, callback) {
                 var bar = bars[barIndex]
                 if(bar) {
-                    var obj = {}
+                    var obj = {},
+                        isVertical = position.match(/left|right/g)
                     obj.dragger = avalon(getByClassName("ui-scrollbar-dragger", bar[0])[0])
                     obj.draggerWidth = obj.dragger.innerWidth()
                     obj.draggerHeight = obj.dragger.innerHeight()
@@ -484,11 +484,12 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                     obj.viewW = obj.viewer.innerWidth()
                     obj.scrollerH = scroller.innerHeight()
                     obj.scrollerW = scroller.innerWidth()
+                    obj.step = isVertical ? 40 * (obj.draggerparHeight - obj.draggerHeight) / obj.scrollerH : 40 * (obj.draggerparWidth - obj.draggerWidth) / obj.scrollerW
 
                     var xy = axisComputer(obj),
                         breakOut
 
-                    if(position.match(/left|right/g)) {
+                    if(isVertical) {
                         if(xy.y < 0) {
                             xy.y = 0
                             obj.up.addClass("ui-scrollbar-arrow-disabled")

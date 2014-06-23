@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>simplegrid</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script>
+            avalon.config({debug: false})
+            require(["simplegrid/avalon.simplegrid"], function() {
+                var createData = function(n) {
+                    var array = []
+                    for (var i = 0; i < n; i++) {
+                        array.push({
+                            xxx: Math.random().toString(36).substring(4, 10),
+                            yyy: Math.random().toString(36).substring(4, 10),
+                            www: 1 + 10,
+                            zzz: i
+                        })
+                    }
+                    return array
+                }
+                var cols
+                avalon.define("test", function(vm) {
+
+                    vm.simplegrid = {
+                        columns: [
+                            {field: "www", text: "紫薯", resizable: true, align:"center"},
+                            {field: "zzz", text: "石榴", resizable: true, align:"center"},
+                            {field: "yyy", text: "雪梨", resizable: true, align:"center"},
+                            {field: "xxx", text: "苹果", resizable: true, align:"center"}
+                        ],
+                        tbodyTemplate: function(str) {
+                            return str.replace('class="ui-grid-td"', 'class="ui-grid-td" ms-mouseenter="addCross" ms-mouseleave="removeCross"')
+                        },
+                        addCross: function() {
+                            avalon(this.parentNode).addClass("hcross")
+                            var index = this.cellIndex
+
+                            var tbody = this.parentNode.parentNode
+                            Array.prototype.forEach.call(tbody.rows, function(row) {
+                                avalon(row.cells[index]).addClass("vcross")
+                            })
+                        },
+                        removeCross: function() {
+                            avalon(this.parentNode).removeClass("hcross")
+                            var index = this.cellIndex
+                            var tbody = this.parentNode.parentNode
+                            Array.prototype.forEach.call(tbody.rows, function(row) {
+                                avalon(row.cells[index]).removeClass("vcross")
+                            })
+                        },
+                        showRows: 10,
+                        pageable: true,
+                        pager: {
+                            perPages: 20,
+                            totalItems: 1000,
+                            showPages: 5,
+                            options: [10, 20, 30, 40]
+                        },
+                        columnsOrder: ["xxx", "yyy", "zzz", "www"],
+                        data: createData(100)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        </script>
+        <style>
+            #gridsample{
+                width:900px;
+            }
+            .ui-grid-tbody tr.hcross td{
+                background:yellow;
+                color:#fff;
+            }
+            .ui-grid-tbody .vcross{
+                background:gold;
+                 color:#fff;
+            }
+        </style>
+    </head>
+    <body>
+
+        <fieldset ms-controller="test">
+            <legend>演示十字线效果</legend>
+
+            <div ms-widget="simplegrid" id="gridsample">
+
+            </div>
+            <div>
+                <h3>要点</h3>
+                <p>需要通过tbodyTemplate修改的行模板,为每一个tr加两个事件绑定,在移出移入操作类名</p>  
+                <pre class="brush:javascript;gutter:false;toolbar:false;">
+                        tbodyTemplate: function(str) {
+                            return str.replace('class="ui-grid-td"', 'class="ui-grid-td" ms-mouseenter="addCross" ms-mouseleave="removeCross"')
+                        },
+                        addCross: function() {
+                            avalon(this.parentNode).addClass("hcross")
+                            var index = this.cellIndex
+
+                            var tbody = this.parentNode.parentNode
+                            Array.prototype.forEach.call(tbody.rows, function(row) {
+                                avalon(row.cells[index]).addClass("vcross")
+                            })
+                        },
+                        removeCross: function() {
+                            avalon(this.parentNode).removeClass("hcross")
+                            var index = this.cellIndex
+                            var tbody = this.parentNode.parentNode
+                            Array.prototype.forEach.call(tbody.rows, function(row) {
+                                avalon(row.cells[index]).removeClass("vcross")
+                            })
+                        },
+                </pre>
+                <p>CSS</p>
+                <pre class="brush:css;gutter:false;toolbar:false;">
+            .ui-grid-tbody tr.hcross td{
+                background:yellow;
+                color:#fff;
+            }
+            .ui-grid-tbody .vcross{
+                background:gold;
+                 color:#fff;
+            }
+                </pre>
+            </div>
+        </fieldset>
+
+    </body>
+</html>

@@ -75,6 +75,24 @@
                 <td>tbodyRowHeight</td> <td> 35 </td>  <td>tbody每行默认的高度</td> 
             </tr>
             <tr>
+                <td>tbodyHeight</td> <td> 35 </td>  <td>框架根据 tbodyRowHeight * showRows求出 </td> 
+            </tr>
+            <tr>
+                <td>theadHeight</td> <td> 35 </td>  <td>这个最好与thead的单元格一样或差一两像素 </td> 
+            </tr>
+            <tr>
+                <td>theadTemplate</td> <td>函数或默认模板  </td>  <td>表头那一行的HTML模板 </td> 
+            </tr>
+            <tr>
+                <td>tbodyTemplate</td> <td>>函数或默认模板</td>  <td>表身每一行的HTML模板 </td> 
+            </tr>
+            <tr>
+                <td>getTemplate</td> <td>>函数</td>  <td>用于修改整个模板 </td> 
+            </tr>
+            <tr>
+                <td>getColumn</td> <td>>函数</td>  <td>用于为每一列的数据添加更多自定义属性 </td> 
+            </tr>
+            <tr>
                 <td><b style="color:orangered">data</b></td> 
                 <td> [] </td>  
                 <td>是当前页的所有数据。
@@ -102,10 +120,15 @@
 
         </pre>
         <ul>
-            <li><a href="avalon.simplegrid.ex1.html">只有columns与data</li>
-            <li><a href="avalon.simplegrid.ex2.html">指定类名、align与columnsOrder</li>
-            <li><a href="avalon.simplegrid.ex3.html">指定列宽</li>
+            <li><a href="avalon.simplegrid.ex1.html">最简单的例子,只有columns与data</li>
+            <li><a href="avalon.simplegrid.ex2.html">指定表头的类名、align与columnsOrder</li>
+            <li><a href="avalon.simplegrid.ex3.html">指定百分比列宽</li>
             <li><a href="avalon.simplegrid.ex4.html">表头拖动改变列宽</li>
+            <li><a href="avalon.simplegrid.ex5.html">演示无限拖与分页栏</li>
+            <li><a href="avalon.simplegrid.ex6.html">右边添加一个全选非全选的checkbox栏</li>
+            <li><a href="avalon.simplegrid.ex7.html">演示hover效果</li>
+            <li><a href="avalon.simplegrid.ex8.html">演示斑马线效果</li>
+            <li><a href="avalon.simplegrid.ex9.html">演示十字线效果</li>
         </ul>
     </body>
 </html>

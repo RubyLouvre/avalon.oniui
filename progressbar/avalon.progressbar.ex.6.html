@@ -15,7 +15,7 @@
                         circle: true
                     }
                     vm.$skipArray = ["progressbar"]
-                    var v = 0
+                    var v = 30
                         , timer
                     setTimeout(function() {
                         timer = setInterval(function() {
@@ -31,7 +31,7 @@
     </head>
     <body ms-controller="test">
         <h1>圆形进度条，外部设置进度值，带label</h1>
-        <div ms-widget="progressbar,$aa" data-progressbar-label="true">
+        <div ms-widget="progressbar,$aa" data-progressbar-label="true" data-progressbar-value="30">
             
         </div>
         <pre class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
@@ -51,7 +51,7 @@
                         circle: true
                     }
                     vm.$skipArray = [&quot;progressbar&quot;]
-                    var v = 0
+                    var v = 30
                         , timer
                     setTimeout(function() {
                         timer = setInterval(function() {
@@ -67,7 +67,7 @@
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
         &lt;h1&gt;圆形进度条，外部设置进度值，带label&lt;/h1&gt;
-        &lt;div ms-widget=&quot;progressbar,$aa&quot; data-progressbar-label=&quot;true&quot;&gt;
+        &lt;div ms-widget=&quot;progressbar,$aa&quot; data-progressbar-label=&quot;true&quot; data-progressbar-value=&quot;30&quot;&gt;
             
         &lt;/div&gt;
         

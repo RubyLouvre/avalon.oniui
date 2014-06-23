@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>scrollbar组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["scrollbar/avalon.scrollbar"], function() {
+                avalon.define("test", function(vm) {
+                    vm.scrollbar = {
+                    }
+                    vm.data = avalon.range(1,400)
+                    vm.$index = 2
+                    vm.$skipArray = ["scrollbar"]
+                })
+                avalon.scan()
+            })
+        </script>
+        <style type="text/css">
+            .nobarbg .ui-scrollbar{
+                background: transparent;
+            }
+        </style>
+    </head>
+    <body ms-controller="test">
+        <h1>scrollbar-元素带上下小箭头双滚动条</h1>
+        <div ms-widget="scrollbar" class="reset" style="height:300px;border:1px solid #ccc;width:700px;overflow:hidden;" data-scrollbar-position="right,bottom">
+            <div class="ui-scrollbar-scroller reset" style="padding:0 18px 18px 0;">
+                <p style="width:800px" ms-repeat="data" class="reset">left {{$index}} <span style="float:right;">right {{$index}} </span></p>
+            </div>
+        </div>
+        <pre class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;scrollbar组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;scrollbar/avalon.scrollbar&quot;], function() {
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.scrollbar = {
+                    }
+                    vm.data = avalon.range(1,400)
+                    vm.$index = 2
+                    vm.$skipArray = [&quot;scrollbar&quot;]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            .nobarbg .ui-scrollbar{
+                background: transparent;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;scrollbar-元素带上下小箭头双滚动条&lt;/h1&gt;
+        &lt;div ms-widget=&quot;scrollbar&quot; class=&quot;reset&quot; style=&quot;height:300px;border:1px solid #ccc;width:700px;overflow:hidden;&quot; data-scrollbar-position=&quot;right,bottom&quot;&gt;
+            &lt;div class=&quot;ui-scrollbar-scroller reset&quot; style=&quot;padding:0 18px 18px 0;&quot;&gt;
+                &lt;p style=&quot;width:800px&quot; ms-repeat=&quot;data&quot; class=&quot;reset&quot;&gt;left {{$index}} &lt;span style=&quot;float:right;&quot;&gt;right {{$index}} &lt;/span&gt;&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

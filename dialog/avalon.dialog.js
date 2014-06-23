@@ -300,3 +300,4 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
     }
     return avalon;
 });
+//弹出层的各种特效 http://tympanus.net/Development/ModalWindowEffects/

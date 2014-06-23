@@ -81,7 +81,24 @@
   height: 6px;
   border: none;
   background-color: #DEDEDE;
-  font-family: Verdana,Arial,sans-serif; }
+  font-family: Verdana,Arial,sans-serif;
+  /*	&-bg{
+  		width: 100%;
+  		height: 100%;
+  		position: absolute;
+  		left: 0;
+  		top: 0;
+  		background: #6AA5E9 repeat-x;
+  		background-size: 9px 9px;
+  		background-image: -webkit-gradient(linear, left top, right bottom,color-stop(.25, rgba(255, 255, 255, .15)), color-stop(.25, transparent),color-stop(.5, transparent), color-stop(.5, rgba(255, 255, 255, .15)),color-stop(.75, rgba(255, 255, 255, .15)), color-stop(.75, transparent),to(transparent));
+  		background-image: -webkit-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
+  		background-image: -moz-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  		background-image: -ms-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
+  		background-image: -o-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
+  		background-image: linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
+  		-moz-animation: animate-stripes 3s linear infinite;
+  		-webkit-animation: animate-stripes 3s linear infinite;
+  	}*/ }
   .ui-progressbar-bar {
     z-index: 1;
     position: relative;
@@ -94,14 +111,14 @@
     background: #ddd; }
     .ui-progressbar-bar-right .ui-progressbar-label {
       color: blue; }
-  .ui-progressbar-right {
-    background-color: #333; }
   .ui-progressbar-overlay {
     width: 100%;
     background-color: #ddd;
     position: relative;
     z-index: 1;
-    height: 100%; }
+    height: 100%;
+    overflow: hidden;
+    background: url("indeterminate.gif") repeat-x; }
   .ui-progressbar-label {
     position: absolute;
     left: 50%;
@@ -141,3 +158,21 @@
     left: 50%;
     position: absolute;
     margin-left: -6px; }
+
+/*@-moz-keyframes animate-stripes {
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: 60px 0;
+	}  
+}
+
+@-webkit-keyframes animate-stripes {
+	0% {
+	  background-position: 0 0;
+	}
+	100% {
+	  background-position: 60px 0;
+	}
+}*/

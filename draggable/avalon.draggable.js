@@ -13,6 +13,22 @@ define(["avalon"], function(avalon) {
         scrollSensitivity: 20,
         scrollSpeed: 20
     }
+
+    var styleEl = document.getElementById("avalonStyle")
+    //拖动时禁止文字被选中，禁止图片被拖动
+    var cssText = ".ui-helper-global-drag *{ -webkit-touch-callout: none;" +
+            "-khtml-user-select: none;" +
+            "-moz-user-select: none;" +
+            "-ms-user-select: none;" +
+            "user-select: none;}" +
+            ".ui-helper-global-drag img{-webkit-user-drag:none; " +
+            "pointer-events:none;}"
+    try {
+        styleEl.innerHTML += cssText;
+    } catch (e) {
+        styleEl.styleSheet.cssText += cssText;
+    }
+
     var body
     var ua = navigator.userAgent;
     var isAndroid = /Android/i.test(ua);
@@ -31,15 +47,15 @@ define(["avalon"], function(avalon) {
     }
 
     var draggable = avalon.bindingHandlers.draggable = function(data, vmodels) {
-        var args = data.value.match(avalon.rword) || ["$","draggable"]
+        var args = data.value.match(avalon.rword) || ["$", "draggable"]
         var ID = args[0].trim(), opts = args[1], model, vmOptions
         if (ID && ID != "$") {
             model = avalon.vmodels[ID]//如果指定了此VM的ID
             if (!model) {
-                data.remove = false
                 return
             }
         }
+        data.element.removeAttribute("ms-draggable")
         if (!model) {//如果使用$或绑定值为空，那么就默认取最近一个VM，没有拉倒
             model = vmodels.length ? vmodels[0] : null
         }
@@ -105,6 +121,7 @@ define(["avalon"], function(avalon) {
             }
             fixUserSelect()
             var position = $element.css("position")
+
             //如果原元素没有被定位
             if (!/^(?:r|a|f)/.test(position)) {
                 element.style.position = "relative";
@@ -118,7 +135,7 @@ define(["avalon"], function(avalon) {
                     data.started = true
                 }, options.delay)
             }
-      
+
             var startOffset = $element.offset()
             if (options.ghosting) {
                 var clone = element.cloneNode(true)
@@ -198,70 +215,6 @@ define(["avalon"], function(avalon) {
         }
     }
 
-    function getPosition(e, pos) {
-        var page = "page" + pos
-        return isMobile ? e.changedTouches[0][page] : e[page]
-    }
-
-    function setPosition(e, element, data, pos, end) {
-        var page = getPosition(e, pos)
-        if (data.containment) {
-            var min = pos === "X" ? data.containment[0] : data.containment[1]
-            var max = pos === "X" ? data.containment[2] : data.containment[3]
-            var check = page - (pos === "X" ? data.clickX : data.clickY)
-            if (check < min) {
-                page += Math.abs(min - check)
-            } else if (check > max) {
-                page -= Math.abs(max - check)
-            }
-        }
-        data["page" + pos] = page//重设pageX, pageY
-        var Prop = xy2prop[pos]
-        var prop = Prop.toLowerCase()
-
-        var number = data["start" + Prop] + page - data["startPage" + pos] + (end ? data["end" + Prop] : 0)
-        data[prop] = number
-
-        if (data["drag" + pos]) {//保存top, left
-            element.style[ prop ] = number + "px"
-        }
-
-    }
-
-    var styleEl = document.createElement("style")
-
-    var cssText = "*{ -webkit-touch-callout: none!important;-webkit-user-select: none!important;-khtml-user-select: none!important;" +
-            "-moz-user-select: none!important;-ms-user-select: none!important;user-select: none!important;}"
-    var fixUserSelect = function() {
-        body.appendChild(styleEl)
-        //如果不插入DOM树，styleEl.styleSheet为null
-        if (typeof styleEl.styleSheet === "object") {
-            styleEl.styleSheet.cssText = cssText
-        } else {
-            styleEl.appendChild(document.createTextNode(cssText))
-        }
-    }
-    var restoreUserSelect = function() {
-        try {
-            styleEl.innerHTML = ""
-        } catch (e) {
-            styleEl.styleSheet.cssText = ""
-        }
-        body.removeChild(styleEl)
-    }
-    if (window.VBArray && !("msUserSelect" in document.documentElement.style)) {
-        var _ieSelectBack;//fix IE6789
-        function returnFalse(event) {
-            event.returnValue = false
-        }
-        fixUserSelect = function() {
-            _ieSelectBack = body.onselectstart;
-            body.onselectstart = returnFalse;
-        }
-        restoreUserSelect = function() {
-            body.onselectstart = _ieSelectBack;
-        }
-    }
     //统一处理拖动的事件
     var lockTime = new Date - 0, minTime = document.querySelector ? 12 : 30
     avalon(document).bind(drag, function(e) {
@@ -305,10 +258,59 @@ define(["avalon"], function(avalon) {
     })
 
 
-
-    function getWindow(node) {
-        return node.window && node.document ? node : node.nodeType === 9 ? node.defaultView || node.parentWindow : false;
+    function getPosition(e, pos) {
+        var page = "page" + pos
+        return isMobile ? e.changedTouches[0][page] : e[page]
     }
+
+    function setPosition(e, element, data, pos, end) {
+        var page = getPosition(e, pos)
+        if (data.containment) {
+            var min = pos === "X" ? data.containment[0] : data.containment[1]
+            var max = pos === "X" ? data.containment[2] : data.containment[3]
+            var check = page - (pos === "X" ? data.clickX : data.clickY)
+            if (check < min) {
+                page += Math.abs(min - check)
+            } else if (check > max) {
+                page -= Math.abs(max - check)
+            }
+        }
+        data["page" + pos] = page//重设pageX, pageY
+        var Prop = xy2prop[pos]
+        var prop = Prop.toLowerCase()
+
+        var number = data["start" + Prop] + page - data["startPage" + pos] + (end ? data["end" + Prop] : 0)
+        data[prop] = number
+
+        if (data["drag" + pos]) {//保存top, left
+            element.style[ prop ] = number + "px"
+        }
+
+    }
+
+
+    var rootElement = document.documentElement
+    var fixUserSelect = function() {
+        avalon(rootElement).addClass("ui-helper-global-drag")
+    }
+    var restoreUserSelect = function() {
+        avalon(rootElement).removeClass("ui-helper-global-drag")
+    }
+
+    if (window.VBArray && !("msUserSelect" in rootElement.style)) {
+        var _ieSelectBack;//fix IE6789
+        function returnFalse(event) {
+            event.returnValue = false
+        }
+        fixUserSelect = function() {
+            _ieSelectBack = body.onselectstart;
+            body.onselectstart = returnFalse;
+        }
+        restoreUserSelect = function() {
+            body.onselectstart = _ieSelectBack;
+        }
+    }
+
     function setContainment(o, data) {
         if (!o.containment) {
             if (Array.isArray(data.containment)) {
@@ -343,8 +345,7 @@ define(["avalon"], function(avalon) {
 
         if (Array.isArray(o.containment)) {
             var a = o.containment
-            
-            data.containment = [a[0],a[1],a[2]-elemWidth, a[3]-elemHeight]
+            data.containment = [a[0], a[1], a[2] - elemWidth, a[3] - elemHeight]
             return;
         }
 
@@ -356,10 +357,10 @@ define(["avalon"], function(avalon) {
                 elem = document.getElementById(o.containment.slice(1))
             }
             if (elem) {
-                var $offset = avalon(elem).offset() 
+                var $offset = avalon(elem).offset()
                 data.containment = [
-                    $offset.left+data.marginLeft, //如果元素设置了marginLeft，设置左边界时需要考虑它 
-                    $offset.top+data.marginTop,
+                    $offset.left + data.marginLeft, //如果元素设置了marginLeft，设置左边界时需要考虑它 
+                    $offset.top + data.marginTop,
                     $offset.left + elem.offsetWidth - data.marginLeft - elemWidth,
                     $offset.top + elem.offsetHeight - data.marginTop - elemHeight
                 ]

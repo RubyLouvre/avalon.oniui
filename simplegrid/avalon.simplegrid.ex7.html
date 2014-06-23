@@ -30,6 +30,13 @@
                             {field: "yyy", text: "列二", resizable: true},
                             {field: "xxx", text: "列一", resizable: true}
                         ],
+                        getTemplate: function(str) {
+                            if (document.body.hasAttribue) {
+                                return str//IE67不支持div:hover效果
+                            } else {
+                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-hover="hover"')
+                            }
+                        },
                         showRows: 10,
                         pageable: true,
                         pager: {
@@ -50,15 +57,45 @@
             #gridsample{
                 width:900px;
             }
+            .ui-grid-tbody tr.hover td, .ui-grid-tbody tr.hover td div{
+                background: #356aa0;
+                color:#fff;
+            }
+            .ui-grid-tbody tr:hover td, .ui-grid-tbody tr:hover td div{
+                background:#356aa0;
+                color:#fff;
+            }
         </style>
     </head>
     <body>
 
         <fieldset ms-controller="test">
-            <legend>演示大数据表格</legend>
+            <legend>演示hover效果</legend>
 
             <div ms-widget="simplegrid" id="gridsample">
 
+            </div>
+            <div>
+                <h3>要点</h3>
+                <p>IE67下,需要通过getTemplate修改默认模板,为每一个tr加一个ms-hover绑定,对应的类名自己在样式表添加</p>  
+                <pre class="brush:javascript;gutter:false;toolbar:false;">
+                     getTemplate: function(str) {
+                            if (document.body.hasAttribue) {
+                                return str//IE67不支持div:hover效果
+                            } else {
+                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-hover="hover"')
+                            }
+                        },
+                </pre>
+                <p>CSS</p>
+                <pre class="brush:css;gutter:false;toolbar:false;">
+            .ui-grid-tbody tr.hover td,  .ui-grid-tbody tr.hover td div{
+                background: rgb(232,245,253)
+            }
+            .ui-grid-tbody tr:hover td,  .ui-grid-tbody tr:hover td div{
+                background: rgb(232,245,253)
+            }
+                </pre>
             </div>
         </fieldset>
 

@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.3.1 2014.6.9
+ avalon 1.3.1 2014.6.12
  ==================================================*/
 (function(DOC) {
     var prefix = "ms-"
@@ -39,7 +39,9 @@
     }
 
     function log(a) {
-        window.console && console.log(W3C ? a : a + "")
+        if (window.console && avalon.config.debug) {
+            console.log(W3C ? a : a + "")
+        }
     }
 
     /*********************************************************************
@@ -753,6 +755,22 @@
             return this.replace(rtrim, "")
         }
     }
+
+    if (DOC.documentMode > 8 && window.SVGElement) {
+        Object.defineProperty(SVGElement.prototype, "outerHTML", {
+            get: function() {
+                return new XMLSerializer().serializeToString(this)
+            }
+        })
+        Object.defineProperty(SVGElement.prototype, "innerHTML", {
+            get: function() {
+                var s = this.outerHTML
+                var ropen = new RegExp("<" + this.nodeName + '\\b(?:(["\'])[^"]*?(\\1)|[^>])*>', "i")
+                var rclose = new RegExp("<\/" + this.nodeName + ">$", "i")
+                return  s.replace(ropen, "").replace(rclose, "")
+            }
+        })
+    }
     var enumerables = "propertyIsEnumerable,isPrototypeOf,hasOwnProperty,toLocaleString,toString,valueOf,constructor".split(",")
 
     for (var i in {
@@ -898,14 +916,6 @@
         return (target + "").replace(rregexp, "\\$&")
     }
     var plugins = {
-        debug: function(open) {
-            if (window.console) {
-                if (!console._log) {
-                    console._log = console.log
-                }
-                console.log = open ? console._log : noop
-            }
-        },
         loader: function(builtin) {
             window.define = builtin ? innerRequire.define : otherDefine
             window.require = builtin ? innerRequire : otherRequire
@@ -932,7 +942,7 @@
             rbind = new RegExp(o + ".*?" + c + "|\\sms-")
         }
     }
-
+    kernel.debug = true
     kernel.plugins = plugins
     kernel.plugins['interpolate'](["{{", "}}"])
     kernel.paths = {}
@@ -1854,7 +1864,7 @@
     //IE67下，在循环绑定中，一个节点如果是通过cloneNode得到，自定义属性的specified为false，无法进入里面的分支，
     //但如果我们去掉scanAttr中的attr.specified检测，一个元素会有80+个特性节点（因为它不区分固有属性与自定义属性），很容易卡死页面
     if (!"1" [0]) {
-        var cacheAttr = createCache(512)
+        var cacheAttrs = createCache(512)
         var rattrs = /\s+(ms-[^=\s]+)(?:=("[^"]*"|'[^']*'|[^\s>]+))?/g,
                 rquote = /^['"]/,
                 rtag = /<\w+\b(?:(["'])[^"]*?(\1)|[^>])*>/i,
@@ -1867,8 +1877,8 @@
             var attributes = [],
                     match,
                     k, v;
-            if (cacheAttr[str]) {
-                return cacheAttr[str]
+            if (cacheAttrs[str]) {
+                return cacheAttrs[str]
             }
             while (k = rattrs.exec(str)) {
                 v = k[2]
@@ -1884,7 +1894,7 @@
                 }
                 attributes.push(binding)
             }
-            return cacheAttr(str, attributes)
+            return cacheAttrs(str, attributes)
         }
     }
 
@@ -2043,7 +2053,7 @@
         }
         return cache;
     }
-    var cacheExpr = createCache(256)
+    var cacheExprs = createCache(256)
     //取得求值函数及其传参
     var rduplex = /\w\[.*\]|\w\.\w/
     var rproxy = /(\$proxy\$[a-z]+)\d+$/
@@ -2078,7 +2088,7 @@
         }
         data.args = args
         //---------------cache----------------
-        var fn = cacheExpr[exprId] //直接从缓存，免得重复生成
+        var fn = cacheExprs[exprId] //直接从缓存，免得重复生成
         if (fn) {
             data.evaluator = fn
             return
@@ -2116,7 +2126,7 @@
                     "= vvv;\n} "
             try {
                 fn = Function.apply(noop, names.concat(_body))
-                data.evaluator = cacheExpr(exprId, fn)
+                data.evaluator = cacheExprs(exprId, fn)
             } catch (e) {
                 log("debug: parse error," + e.message)
             }
@@ -2136,7 +2146,7 @@
         }
         try {
             fn = Function.apply(noop, names.concat("'use strict';\n" + prefix + code))
-            data.evaluator = cacheExpr(exprId, fn)
+            data.evaluator = cacheExprs(exprId, fn)
         } catch (e) {
             log("debug: parse error," + e.message)
         } finally {
@@ -2235,7 +2245,7 @@
             }
         }
     }
-    var includeContents = {}
+    var cacheTmpls = avalon.templateCache = {}
     var ifSanctuary = DOC.createElement("div")
     ifSanctuary.innerHTML = "a"
     try {
@@ -2286,15 +2296,15 @@
                     })
                 }
                 if (data.param === "src") {
-                    if (includeContents[val]) {
-                        scanTemplate(includeContents[val])
+                    if (cacheTmpls[val]) {
+                        scanTemplate(cacheTmpls[val])
                     } else {
                         var xhr = getXHR()
                         xhr.onreadystatechange = function() {
                             if (xhr.readyState === 4) {
                                 var s = xhr.status
                                 if (s >= 200 && s < 300 || s === 304 || s === 1223) {
-                                    scanTemplate(includeContents[val] = xhr.responseText)
+                                    scanTemplate(cacheTmpls[val] = xhr.responseText)
                                 }
                             }
                         }
@@ -2597,11 +2607,15 @@
         },
         "text": function(val, elem, data) {
             val = val == null ? "" : val //不在页面上显示undefined null
+            var node = data.node
             if (data.nodeType === 3) { //绑定在文本节点上
-                data.node.data = val
+                try {//IE对游离于DOM树外的节点赋值会报错
+                    node.data = val
+                } catch (e) {
+                }
             } else { //绑定在特性节点上
                 if (!elem) {
-                    elem = data.element = data.node.parentNode
+                    elem = data.element = node.parentNode
                 }
                 if ("textContent" in elem) {
                     elem.textContent = val
@@ -3094,7 +3108,7 @@
     function newSetter(newValue) {
         oldSetter.call(this, newValue)
         if (newValue !== this.oldValue) {
-            var event = DOC.createEvent("Event")
+            var event = DOC.createEvent("Events")
             event.initEvent("input", true, true)
             this.dispatchEvent(event)
         }

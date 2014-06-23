@@ -1,0 +1,20 @@
+<div ms-repeat-pos="$position" class="ui-scrollbar reset clrfix ui-widget" ms-class-100="ui-scrollbar-{{pos}}" ms-mouseenter="$show($event, 'always', $index)">
+	<div ms-if="showBarHeader" class="ui-scrollbar-arrow ui-scrollbar-arrow-up" ms-click="$arrClick($event, 'up', pos, $index)" ms-mousedown="$arrDown($event,'up', pos, $index)" ms-mouseup="$arrDown($event,'up', pos, $index,'release')" ms-hover="ui-state-hover ui-scrollbar-arrow-hover"><b></b></div>
+	<div class="ui-scrollbar-draggerpar" ms-click="$barClick($event, pos, $index)">
+		<div class="ui-scrollbar-dragger"
+		ms-data-draggable-axis="pos == 'left' || pos == 'right' ? 'y' : 'x'" 
+		data-draggable-before-start="beforeStartFn" 
+		data-draggable-start="startFn" 
+		data-draggable-drag="dragFn" 
+		data-draggable-before-stop="beforeStopFn" 
+		data-draggable-stop="stopFn" 
+		data-draggable-containment="parent" 
+		ms-click="$stopPropagation($event)" 
+		ms-mouseover="$show($event,'always',$index)" 
+		ms-mousedown="$draggerDown($event, true)" 
+		ms-mouseup="$draggerDown($event, false)" 
+		ms-hover="ui-scrollbar-dragger-hover ui-state-hover"
+		>{{draggerHTML | html}}</div>
+	</div>
+	<div ms-if="showBarHeader" class="ui-scrollbar-arrow ui-scrollbar-arrow-down" ms-click="$arrClick($event, 'down', pos, $index)" ms-mousedown="$arrDown($event,'down', pos, $index)" ms-mouseup="$arrDown($event,'down', pos, $index,'release')" ms-hover="ui-state-hover ui-scrollbar-arrow-hover"><b></b></div>
+</div>

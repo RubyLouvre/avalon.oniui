@@ -12,6 +12,23 @@ define(["avalon", "text!./avalon.pager.html"], function(avalon, tmpl) {
 
     var widget = avalon.ui.pager = function(element, data, vmodels) {
         var options = data.pagerOptions
+        var pageOptions = options.options
+        if (Array.isArray(pageOptions)) {
+            options.options = pageOptions.map(function(el) {
+                var obj = {}
+                switch (typeof el) {
+                    case "number":
+                    case "string":
+                        obj.value = el
+                        obj.text = el
+                        return obj
+                    case "object":
+                        return el
+                }
+            })
+        } else {
+            options.options = []
+        }
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
         options._currentPage = options.currentPage
@@ -74,12 +91,14 @@ define(["avalon", "text!./avalon.pager.html"], function(avalon, tmpl) {
             vm.$watch("totalItems", function() {
                 efficientChangePages(vm.pages, getPages(vm))
             })
-            vm.$watch("perPages", function() {
+            vm.$watch("perPages", function(a) {
+                vm.perPages = parseInt(vm.perPages, 10)
                 efficientChangePages(vm.pages, getPages(vm))
             })
             vm.$watch("currentPage", function(a) {
                 vmodel._currentPage = a
             })
+
             vm.changeCurrentPage = function(e) {
                 if (e.type === "keyup" && e.keyCode !== 13)
                     return
@@ -177,7 +196,7 @@ define(["avalon", "text!./avalon.pager.html"], function(avalon, tmpl) {
     }
 
     function getPages(vm) {
-        var c = vm.currentPage, max = Math.ceil(vm.totalItems / vm.perPages), pages = [], s = vm.showPages, 
+        var c = vm.currentPage, max = Math.ceil(vm.totalItems / vm.perPages), pages = [], s = vm.showPages,
                 left = c, right = c
         //一共有p页，要显示s个页面
         vm.totalPages = max

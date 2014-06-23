@@ -1,11 +1,12 @@
 <div class="ui-datepicker ui-widget"
     ms-visible="toggle"
     ms-css-left="elementLeft"
-    ms-css-top="elementTop">
-    <div class="ui-datepicker-content">
-        <div class="ui-datepicker-label">{{calendarLabel}}</div>
-        <div class="ui-datepicker-content-content">
-            <div class="ui-datepicker-header">
+    ms-css-top="elementTop"
+    ms-class="ui-datepicker-multiple:numberOfMonths!==1">
+    <div class="ui-datepicker-content" >
+        <div class="ui-datepicker-label" ms-if="numberOfMonths===1">{{calendarLabel}}</div>
+        <div class="ui-datepicker-content-content" ms-repeat="calendars">
+            <div class="ui-datepicker-header" ms-if="numberOfMonths===1">
                 <i class="ui-datepicker-prev ui-icon ui-icon-chevron-left" 
                     ms-click="_prev(prevMonth)"
                     ms-class="ui-datepicker-prev-disabled:!prevMonth">&#xf053;</i>
@@ -15,13 +16,17 @@
                 <div class="ui-datepicker-title">
                     <!-- <span >{{year}}年</span> -->
                     <select ms-each="years" data-each-rendered="_afterYearRendered">
-                        <option>{{el}}</option>
+                        <option ms-value="el">{{el}}</option>
                     </select>年
                     <select ms-each="months" data-each-rendered="_afterMonthRendered">
                         <option ms-value="{{el-1}}">{{el}}</option>
                     </select>月
-                    <!-- <span class="ui-datepicker-month">{{month+1}}月</span> -->
                 </div>
+            </div>
+            <div class="ui-datepicker-header" ms-if="numberOfMonths!==1">
+                <div class="ui-datepicker-title">
+                    2014年2月
+                </div> 
             </div>
             <table class="ui-datepicker-calendar-week">
                 <thead>
@@ -41,7 +46,7 @@
                             ms-class-1="ui-datepicker-day-none: item.month === false"
                             ms-class-2="ui-datepicker-selected:item.selected"
                             ms-class-3="ui-state-disabled:item.dateDisabled"
-                            ms-click="_selectDate(year, item.month, item.day, item.dateDisabled)"
+                            ms-click="_selectDate(year, item.month, item.day, item.dateDisabled, $outer.$index, $index)"
                             >{{item.day}}</td>
                     </tr>
                 </tbody>
@@ -75,7 +80,6 @@ MS_OPTION_STYLE
     z-index: 999;
 }
 .ui-datepicker {
-    position: absolute;
     font-size: 0;
     padding: 9px 0 9px 10px;
     white-space: nowrap;
@@ -83,6 +87,7 @@ MS_OPTION_STYLE
     background: #ffffff;
     border: 1px solid #cccccc;
     line-height: 18px;
+    font-size: 12px;
 }
 .ui-datepicker-content {
     border: 1px solid #e5e5e5;
@@ -97,14 +102,24 @@ MS_OPTION_STYLE
     padding: 7px 0;
     text-align: center;
 }
+  
 .ui-datepicker-content-content {
     padding: 0 10px;
     width: 196px;  
+    display: inline-block;
+}
+.ui-datepicker-multiple .ui-datepicker-content-content {
+    margin-left: -10px;
+    margin-right: -10px;
+
 }
 .ui-datepicker-header {
     position: relative;
     height: 30px;
     line-height: 30px;
+}
+.ui-datepicker-multiple .ui-datepicker-header {
+    background: #f8f8f8;
 }
 .ui-datepicker-prev, .ui-datepicker-next {
     color: #3775c0;
@@ -130,8 +145,10 @@ MS_OPTION_STYLE
     font-weight: 700;
     text-align: center;
 }
+.ui-datepicker-calendar-days {
+    height: 150px;
+}
 .ui-datepicker-calendar-week, .ui-datepicker-calendar-days {
-    /*height: 175px;*/
     border-collapse: collapse;
     margin-bottom: 5px;
     table-layout: fixed;

@@ -18,12 +18,10 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
             msDisabled, 
             duplexVM = msDuplexName && avalon.getModel(msDuplexName, vmodels), //ms-duplex绑定值所在的vmodel及对应绑定值组成的数组
             vmSub = msDisabledName && avalon.getModel(msDisabledName, vmodels), //ms-disabled绑定值所在的vmodel及对应绑定值组成的数组
-            yearMonthListClick = false, //点击日历的年份、月份与否
-            elementParent = element.parentNode,
-            parentposition = avalon(elementParent).css("position"),
-            msToggle = element.msData["ms-data-toggle"],
+            msToggle = element.getAttribute("data-toggle") || element.msData["ms-toggle"],
             toggleVM = msToggle && avalon.getModel(msToggle, vmodels),
-            rangeInputVM = options.type === "range" && avalon.getModel("_rangeInput", vmodels);
+            minDateVM,
+            maxDateVm;
         options.template = options.getTemplate(calendarTemplate, options);
         if (duplexVM) {
             var value = duplexVM[1][duplexVM[0]];
@@ -34,13 +32,12 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                     month = vmodel.month = date.getMonth();
                     vmodel.day = date.getDate();
                     _value = element.value = val;
-                    if(vmodel.toggle) {
-                        vmodel.rows = calendarDays(month, year);
-                    }
+                    vmodel.rows = calendarDays(month, year);
                 }
             })
             _value = element.value = value;
         }
+        
         if(vmSub) {
             msDisabled = vmSub[1][vmSub[0]];
             vmSub[1].$watch(vmSub[0], function(val) {
@@ -54,17 +51,40 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                 vmodel.toggle = val;
             })  
         }
-
+        console.log("options.minDate is : ");
+        console.log(options.minDate);
+        console.log("options.maxDate is : ");
+        console.log(options.maxDate);
+        
+        if(options.minDate && !minDate) {
+            minDateVM = avalon.getModel(options.minDate, vmodels);
+            if(minDateVM) {
+                minDateVM[1].$watch(minDateVM[0], function(val) {
+                    vmodel.minDate = val;
+                })
+                minDate = validateDate(minDateVM[1][minDateVM[0]]);
+            }
+        } 
+        if(options.maxDate && !maxDate) {
+            maxDateVM = avalon.getModel(options.maxDate, vmodels);
+            if(maxDateVM) {
+                maxDateVM[1].$watch(maxDateVM[0], function(val) {
+                    vmodel.maxDate = val;
+                })
+                maxDate = validateDate(maxDateVM[1][maxDateVM[0]]);
+            }
+        }
         if(typeof options.change === "string") {
             var changeVM = avalon.getModel(options.change, vmodels);
             options.change = changeVM[1][changeVM[0]];
         }
-        if(parentposition !=="relative" && parentposition!=="absolute" && parentposition!=="fixed") {
-            elementParent.style.position = "relative";
-        }
+        console.log("minDate is : ")
+        console.log(minDate);
+        console.log("maxDate is : ")
+        console.log(maxDate);
         options.minDate = minDate && cleanDate(minDate);
         options.maxDate = maxDate && cleanDate(maxDate);
-        options.toggle = toggleVM[1][toggleVM[0]] || options.toggle;
+        options.toggle = toggleVM && toggleVM[1][toggleVM[0]] || options.toggle;
         // disabled属性取自msDisabled，msDisabled为false时取配置项disabled，如果配置项仍为false，则取element的disabled属性
         options.disabled = msDisabled || options.disabled || element.disabled;
         msDisabledName ? vmSub[1][vmSub[0]] = options.disabled : 0;
@@ -78,28 +98,30 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
         element.value = _originValue && options.formatDate(year, month, day);
         var vmodel = avalon.define(data.datepickerId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["type"];
+            vm.$skipArray = ["container"];
             vm.elementLeft = 0;
             vm.elementTop = 0;
             vm.weekNames = [];
             vm.rows = [];
             vm.widgetElement = element;
-            vm.date = date;
+            //vm.date = date;
+            vm.data = [];
             vm.prevMonth = -1; //控制prev class是否禁用
             vm.nextMonth = -1; //控制next class是否禁用
             vm.month = month;
             vm.year = year;
             vm.day = day;
-            vm.years = [2014, 2015, 2016];
+            vm.years = [2013,2014, 2015, 2016];
+            vm.calendars = [1,2,3];
             vm.months = [1,2,3,4,5,6,7,8,9,10,11,12];
             vm.$opts = {
                 width: 60,
                 listWidth: 60,
                 onSelect: function(e, listNode) {
-                    yearMonthListClick = true;
+                    e.stopPropagation();
                 }
             }
-            // 年份选择器渲染ok之为其绑定dropdown组件并扫描渲染出dropdown
+            // 年份选择器渲染ok之后为其绑定dropdown组件并扫描渲染出dropdown
             vm._afterYearRendered = function() {
                 this.setAttribute("ms-widget", "dropdown,$,$opts");
                 this.setAttribute("ms-duplex", "year");
@@ -112,15 +134,37 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                 avalon.scan(this, vmodel);
             }
             // 选择日期
-            vm._selectDate = function(year, month, day, dateDisabled) {
+            vm._selectDate = function(year, month, day, dateDisabled, outerIndex, innerIndex) {
                 if(month !== false && !dateDisabled) {
-                    var formatDate = options.formatDate.bind(options);
-                    var date = formatDate(year, month, day);
+                    var formatDate = options.formatDate.bind(options),
+                        date = formatDate(year, month, day),
+                        calendarWrapper = options.type ==="range" ? element["data-calenderwrapper"] : null;
                     element.value = date;
-                    vmodel.toggle = false;
+                    if(!calendarWrapper) {
+                        vmodel.toggle = false;
+                    } else { // range datepicker时需要切换选中日期项的类名
+                        var colSelectFlag = false,
+                            rows = vmodel.rows;
+                        if(rows[outerIndex][innerIndex].selected) {
+                            return ;
+                        }
+                        for(var i=0, len=rows.length; i<len;i++) {
+                            var cols = rows[i];
+                            for(var j=0, colLen = cols.length; j<colLen;j++) {
+                                var colSelect = cols[j].selected;
+                                if(colSelect) {
+                                    cols[j].selected = false;
+                                    colSelectFlag = true;
+                                    break;
+                                }
+                            }
+                            if(colSelectFlag) {
+                                break;
+                            }
+                        }
+                        vmodel.rows[outerIndex][innerIndex].selected = true;
+                    }
                     vmodel.day = day;
-                    console.log(data["datepickerId"]);
-                    console.log(avalon(element).data());
                     vmodel.change.call(null, options.parseDate(date), data["datepickerId"], avalon(element).data())
                 }
             }
@@ -142,9 +186,9 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                 var calendar = avalon.parseHTML(calendarTemplate).firstChild;
                 var year = vmodel.year;
                 var month = vmodel.month;
-                elementParent.appendChild(calendar);
+                element.parentNode.appendChild(calendar);
                 bindEvents(calendar)
-                getElementPosition();
+                getElementPosition(calendar);
                 // 如果输入域不允许为空，且_originValue不存在则强制更新element.value
                 if(!options.allowBlank && !_originValue) {
                     element.value = options.formatDate(year,month,vmodel.day);
@@ -160,8 +204,6 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
             }
         });
         vmodel.$watch("toggle", function(val) {
-
-            console.log("vmodel watch toggle "+val);
             if(val) {
                 _value = element.value;
                 vmodel.rows = calendarDays(vmodel.month, vmodel.year);
@@ -180,6 +222,16 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
             }
             element.disabled = val;
         })
+        vmodel.$watch("minDate", function(val) {
+            var minDate = validateDate(val);
+            vmodel.minDate = minDate && cleanDate(minDate);
+            vmodel.rows = calendarDays(vmodel.month, vmodel.year);
+        })
+        vmodel.$watch("maxDate", function(val) {
+            var maxDate = validateDate(val);
+            vmodel.maxDate = maxDate && cleanDate(maxDate);
+            vmodel.rows = calendarDays(vmodel.month, vmodel.year);
+        })
         function cleanDate( date ){
             date.setHours(0);
             date.setMinutes(0);
@@ -188,10 +240,10 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
             return date;
         }
         // 根据minDate和maxDate的设置判断给定的日期是否不可选
-        function isDateDisabled( date ){
+        function isDateDisabled(date, vmodel){
             var time = date.getTime(),
-                minDate = options.minDate,
-                maxDate = options.maxDate;
+                minDate = vmodel.minDate,
+                maxDate = vmodel.maxDate;
             if(minDate && time < minDate.getTime()){
                 return true;
             } else if(maxDate && time > maxDate.getTime()) {
@@ -207,18 +259,15 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
             })
             // 切换日期年月或者点击input输入域时不隐藏组件，选择日期或者点击文档的其他地方则隐藏日历组件
             avalon.bind(document, "click", function(e) {
-                var target = e.target;
-                window.target = target;
-                rangeInput = rangeInputVM && rangeInputVM[1][rangeInputVM[0]];
-                if(!calendar.contains(target) && element!==target && vmodel.toggle && !yearMonthListClick && !rangeInput) {
-                    vmodel.toggle = false;
+                var target = e.target,
+                    type = options.type;
+                if(options.type==="range" && (element["data-container"].contains(target) || element["data-calenderwrapper"].contains(target))) {
                     return ;
-                }
-                if(rangeInput) {
-                    rangeInput = false;
-                }
-                if(yearMonthListClick) {
-                    yearMonthListClick = false;
+                } 
+                if(!calendar.contains(target) && element!==target && vmodel.toggle) {
+                    vmodel.toggle = false;
+                    toggleVM ? toggleVM[1][toggleVM[0]] = false : 0;
+                    return ;
                 }
             })
             // 输入域的值改变之后相应的更新外部的ms-duplex绑定值
@@ -292,12 +341,13 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
             var startDay = options.startDay,
                 firstDayOfMonth = new Date(year, month , 1),
                 stepMonths = options.stepMonths,
-                minDate = options.minDate,
-                maxDate = options.maxDate,
+                minDate = vmodel.minDate,
+                maxDate = vmodel.maxDate,
                 showOtherMonths = options.showOtherMonths,
                 days = [],
                 cellDate = _cellDate =  new Date(year , month , 1 - ( firstDayOfMonth.getDay() - startDay + 7 ) % 7 ),
-                rows = [];
+                rows = [],
+                valueDate = options.parseDate(_value);
             var exitLoop = false;
             var prev = minDate ? (year-minDate.getFullYear())*12+month-minDate.getMonth() : true;
             var next = maxDate ? (maxDate.getFullYear()-year)*12+maxDate.getMonth()-month : true;
@@ -328,17 +378,20 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                     var day = _cellDate.getDate();
                     var weekDay = cellDate.getDay();
                     var weekend = weekDay%7==0 || weekDay%7==6;
-                    var valueDate = options.parseDate(_value);
-                    if(vmodel.day === day && _value && dateMonth===valueDate.getMonth() && _cellDate.getFullYear()===valueDate.getFullYear()) {
-                        selected = true;
+                    
+                    if(valueDate) {
+                        if(valueDate.getDate() === day && _value && dateMonth===valueDate.getMonth() && _cellDate.getFullYear()===valueDate.getFullYear()) {
+                            selected = true;
+                        }
                     }
+
                     // showOtherMonths为true，且为下月日期时，退出总循环
                     if(showOtherMonths && m>= 4 && (_cellDate.getFullYear() > year || dateMonth > month)) {
                         exitLoop = true;
                         break;
                     }
-                    var dateDisabled = isDateDisabled(_cellDate);
-                    days.push({day:day, month: dateMonth, weekend: weekend, selected: selected, dateDisabled: dateDisabled});
+                    var dateDisabled = isDateDisabled(_cellDate, vmodel);
+                    days.push({day:day, month: dateMonth, weekend: weekend, selected: selected, dateDisabled: dateDisabled, outerIndex: m, innerIndex: n});
                     cellDate = _cellDate = new Date(cellDate.setDate(day+1));
                 } 
                 rows.push(days); 
@@ -349,11 +402,32 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
             return rows;
         }
         // 获取输入域相对于文档的位置坐标，并设置日历组件的位置
-        function getElementPosition() {
-            var $element = avalon(element);
-            var elementOffset = $element.position();
-            console.log(elementOffset);
-            console.log($element.css("margin-left"))
+        function getElementPosition(calendar) {
+            var $element = null,
+                $calendarWrapper = null,
+                parentposition = "",
+                parentNode = null,
+                elementOffset = {};
+            
+            switch(options.type) {
+                case "range": 
+                    $element = avalon(element["data-input"]);
+                    $calendarWrapper = avalon(element["data-calenderwrapper"]);
+                break;
+                case "couple":
+                    $element = null;
+                break;
+                default: 
+                    $element = avalon(element);
+                    $calendarWrapper = avalon(calendar);
+            }
+            $calendarWrapper.css("position", "absolute");
+            parentNode = $calendarWrapper[0].parentNode;
+            parentposition = avalon(parentNode).css("position");
+            if(parentposition !=="relative" && parentposition!=="absolute" && parentposition!=="fixed") {
+                parentNode.style.position = "relative";
+            }
+            elementOffset = $element.position();
             vmodel.elementLeft = elementOffset.left+parseFloat($element.css("margin-left"));
             vmodel.elementTop = elementOffset.top + $element.outerHeight()+parseFloat($element.css("margin-top"));
         }
@@ -374,8 +448,8 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                 _originValue = "";
                 date = cleanDate(new Date());
             }
-            if(isDateDisabled(date)) {
-                if(options.minDate || options.maxDate) {
+            if(isDateDisabled(date, options)) {
+                if((options.minDate || options.maxDate)) {
                     return options.minDate || options.maxDate;
                 }
             }
@@ -391,7 +465,7 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
         label : '',
         startDay: 1,
         showOtherMonths: false,
-        numberOfMonths: 1,
+        numberOfMonths: 2,
         correctOnError: true,
         allowBlank : false,
         minDate : null,
@@ -400,7 +474,6 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
         toggle: false,
         separator: "-",
         calendarLabel: "选择日期",
-        
         parseDate : function( str ){
             var separator = this.separator;
             var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})$";

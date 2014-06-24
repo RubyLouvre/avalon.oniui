@@ -20,14 +20,6 @@
                         select: [5],
                         change: function(newValue, oldValue, vmodel) {
                             avalon.log(vmodel.select)
-                        },
-                        hideSelect: true,
-                        countLimit: function(select, action) {
-                            var len = action == "delete" ? select.length > 1 : select.length < 20
-                            if(!len) {
-                                alert("out of limit with length of " + select.length)
-                            }
-                            return len
                         }
                     }
                     var i = 6
@@ -69,14 +61,6 @@
                         select: [5],
                         change: function(newValue, oldValue, vmodel) {
                             avalon.log(vmodel.select)
-                        },
-                        hideSelect: true,
-                        countLimit: function(select, action) {
-                            var len = action == &quot;delete&quot; ? select.length &gt; 1 : select.length &lt; 20
-                            if(!len) {
-                                alert(&quot;out of limit with length of &quot; + select.length)
-                            }
-                            return len
                         }
                     }
                     var i = 6

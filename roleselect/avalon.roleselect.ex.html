@@ -47,7 +47,58 @@
     <body ms-controller="test">
         <h1>roleselect-隐藏已选中条目，限制选中条数</h1>
         <div ms-widget="roleselect"></div>
-        <pre class="brush:html;gutter:false;toolbar:false">
-        </pre>
+        <pre class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;roleselect组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;roleselect/avalon.roleselect&quot;], function() {
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.roleselect = {
+                        data: [
+                            {name: &quot;Lily&quot;, value: 1},
+                            {name: &quot;Lucy&quot;, value: 2},
+                            {name: &quot;Tom&quot;, value: 3},
+                            {name: &quot;Harry&quot;, value: 4},
+                            {name: &quot;Jim&quot;, value: 5}
+                        ],
+                        select: [5],
+                        change: function(newValue, oldValue, vmodel) {
+                            avalon.log(vmodel.select)
+                        },
+                        hideSelect: true,
+                        countLimit: function(select, action) {
+                            var len = action == &quot;delete&quot; ? select.length &gt; 1 : select.length &lt; 20
+                            if(!len) {
+                                alert(&quot;out of limit with length of &quot; + select.length)
+                            }
+                            return len
+                        }
+                    }
+                    var i = 6
+                    while(i &lt; 200) {
+                        vm.roleselect.data.push({
+                            name: &quot;Hello Sang&quot; + i,
+                            value: i
+                        })
+                        i++
+                    }
+                    vm.$skipArray = [&quot;roleselect&quot;]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;roleselect-隐藏已选中条目，限制选中条数&lt;/h1&gt;
+        &lt;div ms-widget=&quot;roleselect&quot;&gt;&lt;/div&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
     </body>
 </html>

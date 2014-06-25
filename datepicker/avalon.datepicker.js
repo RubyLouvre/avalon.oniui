@@ -223,13 +223,9 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                         }
                         event.stopPropagation();
                     })
-                    // calendar = div.nextSibling;
                 }
                 
                 bindEvents(calendar);
-                if(vmodel.type==="range") {
-                    getElementPosition(calendar);
-                }
                 // 如果输入域不允许为空，且_originValue不存在则强制更新element.value
                 if(!options.allowBlank && !_originValue) {
                     element.value = options.formatDate(year,month,vmodel.day);

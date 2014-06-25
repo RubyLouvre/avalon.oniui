@@ -591,6 +591,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
         onScroll: function(newValue, oldValue, diretion, vmodel) {
 
         },//@optMethod 滚动回调,scrollLeft or scrollTop变化的时候触发，参数为newValue, oldValue, diretion, vmodel diretion = h 水平方向，= v 竖直方向
+        type: "normal", //@param srollbar size,normal为10px，small为8px，large为14px
         $author: "skipper@123"
     }
 })

@@ -9,7 +9,7 @@ $pf : ".ui-scrollbar";
 	right:0;
 	top:0;
 	bottom: auto;
-	background:#ccc;
+	background:#f8f8f8;
 	// fix ie8 opacity bug
 	z-index: 100;
 	transition:opacity .5s;
@@ -46,13 +46,13 @@ $pf : ".ui-scrollbar";
 	    	}
 	    }
 	    div &-hover{
-	    	background: #666;
+	    	background: #aaa;
 	    }
 	    div &-onmousedown{
-	    	background: #444;
+	    	background: #999;
 	    }
 	    div &-disabled{
-	    	background: #eee;
+	    	background: #e9e9e9;
 	    }
 	}
 	&-scroller{
@@ -89,12 +89,12 @@ $pf : ".ui-scrollbar";
 		position: absolute;
 		width: 100%;
 		left: 0;
-		background: #666;
+		background: #bcbcbc;
 		div &-hover{
-			background: #333;
+			background: #aaa;
 		}
 		div &-onmousedown{
-			background:#111;
+			background:#999;
 		}
 	}
 	&-top,&-bottom {
@@ -122,4 +122,31 @@ $pf : ".ui-scrollbar";
 			}
 		}
 	}
+}
+#{$pf}-large{
+	width: 14px;
+	#{$pf}{
+		&-arrow{
+			width: 14px;
+			height: 14px;
+		}
+		&-top, &-bottom{
+			height: 14px;
+		}
+	}
+}
+#{$pf}-bottom-large{
+	height: 14px;
+}
+#{$pf}-small{
+	width: 8px;
+	#{$pf}{
+		&-arrow{
+			width: 8px;
+			height: 8px;
+		}
+	}
+}
+#{$pf}-bottom-small{
+	height: 8px;
 }

@@ -158,7 +158,6 @@ define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.dat
                 vmodel.select = []
                 vmodel.$getSelect()
             }
-            //@method apiName(argx) description
 
         })
         // change
@@ -175,7 +174,7 @@ define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.dat
         getTemplate: function(tmpl, opts, tplName) {
             return tmpl
         },
-        hideSelect: false, //@param 是否隐藏以选中的项目，默认是
+        hideSelect: false, //@param 是否隐藏以选中的项目，默认不隐藏
         countLimit: function(select) {
             return true
         },//@optMethod countLimit(select) 选择条目限制，必须有return true or false，参数是当前已选中条数和add or delete操作

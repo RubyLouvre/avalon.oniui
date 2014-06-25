@@ -95,7 +95,6 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
             vm.inputFromValue = ""
             vm.inputToValue = "";
             vm._toggleDatepicker = function(val, event) {
-                console.log(vmodel.disabled);
                 if(!vmodel.disabled) {
                     vmodel.toggle = !val;
                 }
@@ -218,13 +217,8 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
             if (maxDate) {
                 vmodel.rules.toMaxDate = options.formatDate(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate());
             }
-            // if(!vmodel.inputToValue && df['defaultDate']){
-                
-            // }
         }
         function calcDate( desc , date ){
-            // console.log("date");
-            // console.log(date)
             var time;
             desc = ( desc || "" ).toString();
             time = date ? date : new Date();
@@ -235,8 +229,6 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
             if(key && _c[key]){
                 _c[key](_date ,arr[2] * 1);
             }
-            // console.log("_date is : ");
-            // console.log(_date)
             return _date;
         }
         function initMsgAndOldValue() {
@@ -275,7 +267,6 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                             }
                         };
                     msg = options.opts.msgFormat(from, to);
-                    console.log("msg is : "+msg);
                 } else {
                     msg = "已选时间段："+inputFrom.value+" 至 "+inputTo.value+" 共计"+day+"天";
                 }

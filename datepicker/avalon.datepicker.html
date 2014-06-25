@@ -14,10 +14,10 @@
         <div class="ui-datepicker-content-content" ms-repeat-calendar="data">
             <div class="ui-datepicker-header" ms-if="numberOfMonths===1">
                 <i class="ui-datepicker-prev ui-icon ui-icon-chevron-left" 
-                    ms-click="_prev(prevMonth)"
+                    ms-click="_prev(prevMonth, $event)"
                     ms-class="ui-datepicker-prev-disabled:!prevMonth">&#xf053;</i>
                 <i class="ui-datepicker-next ui-icon ui-icon-chevron-right" 
-                    ms-click="_next(nextMonth)"
+                    ms-click="_next(nextMonth, $event)"
                     ms-class="ui-datepicker-next-disabled:!nextMonth">&#xf054;</i>
                 <div class="ui-datepicker-title">
                     <!-- <span >{{year}}年</span> -->
@@ -54,7 +54,7 @@
                             ms-class-2="ui-datepicker-selected:item.selected"
                             ms-class-3="ui-state-disabled:item.dateDisabled"
                             ms-click="_selectDate(year, item.month, item.day, item.dateDisabled, $outer.$index, $index)"
-                            >{{item.day}}</td>
+                            >{{item._day}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -86,21 +86,68 @@ MS_OPTION_STYLE
     vertical-align: middle;
     z-index: 999;
 }
+.ui-icon.ui-datepicker-icon.ui-icon-calendar-o {
+
+    padding: 0 6px;
+    vertical-align: top;
+}
 .ui-datepicker {
     font-size: 0;
-    padding: 9px 0 9px 10px;
     white-space: nowrap;
-    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+    color: #333;
+    position: relative;
+}
+.ui-datepicker-input-wrapper {
     background: #ffffff;
     border: 1px solid #cccccc;
-    line-height: 18px;
+    cursor: pointer;
+    display: inline-block;
+    color: #333;
     font-size: 12px;
+    position: relative;
+}
+.ui-datepicker-input-wrapper input {
+    border: 0 none;
+    cursor: pointer;
+    outline: none;
+    padding: 3px 90px 3px 6px;
+    width: 72px;
+    height: 18px;
+    margin: 0;
+}
+.ui-datepicker-tip {
+    position: absolute;
+    top: 3px;
+    right: 0px;
+    line-height: 18px;
+    color: #b5b5b5;
+}
+.ui-datepicker-input-wrapper.ui-state-active {
+    border-color: #3775c0;
+    border-bottom: 0;
+}
+.ui-datepicker-text {
+    color: #999999;
+    *line-height: 1.231;
+    position: absolute;
+    right: 21px;
+    top: -21px;
+    *top: -18px;
+    _top: -19px;
+}
+.ui-datepicker-disabled .ui-datepicker-text {
+    color: #cccccc;
 }
 .ui-datepicker-content {
     border: 1px solid #e5e5e5;
-    border-right: 0;
     font-size: 12px;
     margin-right: 10px;
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+    position: absolute;
+    background: #fff;
+}
+.ui-datepicker-multiple .ui-datepicker-content {
+    border-right: 0;
 }
 
 .ui-datepicker-label {

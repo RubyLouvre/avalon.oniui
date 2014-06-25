@@ -16,9 +16,6 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
             disabledVM = avalon.getModel(disabled, vmodels),
             duplex = options.duplex && options.duplex.split(","),
             rules = options.rules,
-            // selectFuncVM = typeof options.select ==="string" ? avalon.getModel(options.select, vmodels) : null,
-            // _confirmClick = false,
-            // _oldValue,
             _inputToValue = "",
             _toMinDate = "",
             _toMaxDate = "";
@@ -102,54 +99,9 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
             vm.widgetElement = element;
             vm.fromDisabled = options.disabled;
             vm.toDisabled = options.disabled;
-            // vm.toggle = false;
-
             vm.inputElement = null;
-            // vm.calendarWrapper = null;
-            // vm.value = "";
             vm.inputFromValue = ""
             vm.inputToValue = "";
-            // vm._toggleDatepicker = function(val, event) {
-            //     console.log(vmodel.disabled);
-            //     if(!vmodel.disabled) {
-            //         vmodel.toggle = !val;
-            //     }
-            // }
-            // vm._updateMsg = function(event) {
-            //     var target = event.target;
-            //     if(target.tagName === "TD") {
-            //         updateMsg();
-            //     }
-            // }
-            // vm._selectDate = function() {
-            //     var inputFromValue = inputFrom.value,
-            //         inputToValue = inputTo.value,
-            //         inputFromDate = options.parseDate(inputFromValue),
-            //         inputToDate = options.parseDate(inputToValue);
-            //     vmodel.label = options.datesDisplayFormat(options.defaultLabel,inputFromValue, inputToValue);
-            //     _confirmClick = true;
-            //     vmodel.toggle = false;
-            //     options.select.call(vmodel, inputFromDate, inputToDate, _oldValue, vmodel, avalon(element).data());
-            //     _oldValue = [inputFromDate, inputToDate];
-            // }
-            // vm._cancelSelectDate = function() {
-            //     vmodel.toggle ? vmodel.toggle = false: 0;
-                
-            // }
-            // vm.setDates = function(from, to, defaultLabel) {
-            //     var inputValues = to === void 0 ? [from] : [from, to],
-            //         len = inputValues.length;
-            //     if(len) {
-            //         vmodel.defaultLabel = defaultLabel;
-            //         setValues(len, from, to);
-            //     } else {
-            //         vmodel.label = "";
-            //     }
-            //     initMsgAndOldValue();
-            // }
-            // vm.setLabel = function(str) {
-            //     vmodel.label = str;
-            // }
             vm.setDisabled = function(val) {
                 vmodel.disabled = val;
             }
@@ -165,10 +117,7 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
                     fromInput = null,
                     toInput = null,
                     calendarTemplate = "";
-
-                
                 initValues();
-
                 applyRules(vmodel.inputFromValue && options.parseDate(vmodel.inputFromValue) || new Date());
                 calendarTemplate = vmodel.container.length ? inputOnlyTemp : containerTemp;
                 calendarTemplate = calendarTemplate.replace("MS_OPTION_FROM_MINDATE", vmodel.rules.fromMinDate).replace("MS_OPTION_FROM_MAXDATE", vmodel.rules.fromMaxDate).replace("MS_OPTION_TO_MINDATE", vmodel.rules.toMinDate).replace("MS_OPTION_TO_MAXDATE", vmodel.rules.toMaxDate);
@@ -184,9 +133,7 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
                     calendar = avalon.parseHTML(calendarTemplate);
                     element.appendChild(calendar);
                 }
-
                 avalon.scan(element, [vmodel].concat(vmodels));
-                
             }
             vm.$remove = function() {
 
@@ -211,8 +158,6 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
                     vmodel.inputFromValue = from && options.parseDate(from) && from || "";
                     _inputToValue = to;
                     vmodel.inputToValue = to && options.parseDate(to) && to || "";
-
-                    // vmodel.label = options.datesDisplayFormat(options.defaultLabel,vmodel.inputFromValue, vmodel.inputToValue);
                 } else if(len==1){
                     vmodel.inputFromValue = from && options.parseDate(from) && from || "";
                 }
@@ -260,49 +205,6 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
             }
             return _date;
         }
-        // function initMsgAndOldValue() {
-        //     _oldValue = [options.parseDate(inputFrom.value), options.parseDate(inputTo.value)];
-
-        //     if(vmodel.label) {
-        //         updateMsg();
-        //     }
-        // }
-        // function updateMsg() {
-        //     var msg = "",
-        //         day = 0,
-        //         inputToDate = options.parseDate(inputTo.value),
-        //         inputToFormatValue = inputToDate && options.formatDate(inputToDate.getFullYear(), inputToDate.getMonth(), inputToDate.getDate()),
-        //         msgFormat = options.opts && options.opts.msgFormat;
-        //     if(inputTo.value && !inputToDate) {
-        //         vmodel.inputToValue = "";
-        //     } 
-        //     if(inputTo.value && inputFrom.value) {
-        //         day = Math.floor(((inputToDate.getTime()-options.parseDate(inputFrom.value).getTime()))/1000/60/60/24 +1);
-        //         if(msgFormat && typeof msgFormat === "function") {
-        //             var from = {
-        //                     getRawValue: function() {
-        //                         return inputFrom.value;
-        //                     },
-        //                     getDate: function() {
-        //                         return options.parseDate(inputFrom.value) || cleanDate(new Date());
-        //                     }
-        //                 },
-        //                 to = {
-        //                     getRawValue: function() {
-        //                         return inputTo.value;
-        //                     },
-        //                     getDate: function() {
-        //                         return inputToDate;
-        //                     }
-        //                 };
-        //             msg = options.opts.msgFormat(from, to);
-        //             console.log("msg is : "+msg);
-        //         } else {
-        //             msg = "已选时间段："+inputFrom.value+" 至 "+inputTo.value+" 共计"+day+"天";
-        //         }
-        //         vmodel.msg = msg;
-        //     }
-        // }
         function cleanDate( date ){
             date.setHours(0);
             date.setMinutes(0);
@@ -310,16 +212,6 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
             date.setMilliseconds(0);
             return date;
         }
-        // vmodel.$watch("toggle", function(val) {
-        //     if(!val && !_confirmClick) {
-        //         inputFrom.value = vmodel.inputFromValue;
-        //         inputTo.value = vmodel.inputToValue;
-        //     } else if(_confirmClick){
-        //         vmodel.inputFromValue = inputFrom.value;
-        //         vmodel.inputToValue = inputTo.value;
-        //         _confirmClick = false;
-        //     }
-        // })
         return vmodel;
     }
     widget.version = 1.0

@@ -134,15 +134,23 @@ MS_OPTION_STYLE
     box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
     background: #ffffff;
     border: 1px solid #cccccc;
+    position: absolute;
 }
 .ui-datepicker-groups .ui-datepicker {
     padding: 0;
     border: 0;
     box-shadow: 0 0 0 0 rgba(0,0,0,0.1);
+    position: static;
 }
 .ui-datepicker-group {
     position: relative;
     display: inline-block;
+}
+.ui-daterangepicker .ui-datepicker-content {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); 
+}
+.ui-daterangepicker .ui-datepicker-content {
+    position: static;
 }
 .ui-calendarbox-footer-small {
     padding: 4px 5px;

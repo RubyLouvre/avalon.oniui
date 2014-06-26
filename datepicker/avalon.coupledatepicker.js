@@ -21,18 +21,17 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
             _toMaxDate = "";
         var _c = {  
             '+M': function(time ,n) {
-
                 var _d = time.getDate();
                 time.setMonth(time.getMonth() + n);
                 if(time.getDate() !== _d) {
-                    time.setDate(0)
+                    time.setDate(0);
                 } 
             },
             '-M': function(time ,n) { 
                 var _d = time.getDate();
                 time.setMonth(time.getMonth() - n);
                 if(time.getDate() !== _d) {
-                    time.setDate(0)
+                    time.setDate(0);
                 }
             },
             '+D': function(time ,n) { 
@@ -75,8 +74,7 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
             options.disabled = disabledVM[1][disabledVM[0]];
             disabledVM[1].$watch(disabledVM[0], function(val) {
                 vmodel.disabled = val;
-
-            })
+            });
         }
         var rangeRules = options.rules && options.rules.rules || "";
         rangeRules = rangeRules.length>0 ? rangeRules.split(",") : [];
@@ -86,7 +84,7 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
             avalon.each(container, function(item, index) {
                 container[0] = document.getElementById(container[0]);
                 container[1] = document.getElementById(container[1]);
-            })
+            });
         }
         if(!container.length) {
             container = element.getElementsByTagName("div");
@@ -100,14 +98,14 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
             vm.fromDisabled = options.disabled;
             vm.toDisabled = options.disabled;
             vm.inputElement = null;
-            vm.inputFromValue = ""
+            vm.inputFromValue = "";
             vm.inputToValue = "";
             vm.setDisabled = function(val) {
                 vmodel.disabled = val;
-            }
+            };
             vm.fromSelectCal = function(date) {
                 applyRules(date);
-            }
+            };
             vm.$init = function() {
                 var template = options.template.replace(/MS_OPTION_FROM_LABEL/g,vmodel.fromCalendarLabel ).replace(/MS_OPTION_TO_LABEL/g,vmodel.toCalendarLabel ).split("MS_OPTION_TEMPLATE"),
                     containerTemp = template[0],
@@ -134,10 +132,10 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
                     element.appendChild(calendar);
                 }
                 avalon.scan(element, [vmodel].concat(vmodels));
-            }
+            };
             vm.$remove = function() {
-
-            }
+                element.innerHTML = element.textContent = "";
+            };
         })
         vmodel.$watch("disabled", function(val) {
             vmodel.fromDisabled = vmodel.toDisabled = val;
@@ -181,9 +179,7 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
                 var toMinDateFormat = options.formatDate(minDate.getFullYear(), minDate.getMonth(), minDate.getDate());
                 if(_inputToValue) {
                     vmodel.rules.toMinDate = toMinDateFormat;
-                    if(vmodel.inputToValue) {
-                        vmodel.inputToValue = vmodel.inputToValue;
-                    } else {
+                    if(!vmodel.inputToValue) {
                         vmodel.inputToValue = toMinDateFormat;
                     }
                 }
@@ -227,10 +223,6 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
         startDay: 1,    //星期开始时间
         separator: "-",
         rules: "",
-        fromCalendarLabel : '选择起始日期',
-        toCalendarLabel : '选择结束日期',
-        fromName : 'fromDate',
-        toName : 'toDate',
         parseDate : function( str ){
             var separator = this.separator;
             var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})$";

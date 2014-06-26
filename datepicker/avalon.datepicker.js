@@ -87,7 +87,8 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
         options.disabled = msDisabled || options.disabled || element.disabled;
         msDisabledName ? vmSub[1][vmSub[0]] = options.disabled : 0;
         var day, month, year, _originValue, years=[],// 手动输入时keydown的辅助值;
-            date = _getDate(); //获取datepicker的初始选择日期
+            date = _getDate(), //获取datepicker的初始选择日期
+            calendar;
         month = date.getMonth();
         year = date.getFullYear();
         day = date.getDate();
@@ -96,18 +97,16 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
         }
         // 如果输入域初始值存在则验证其是否符合日期显示规则，不符合设element.value为null
         element.value = _originValue && options.formatDate(year, month, day);
-        if(_originValue && element.value) {
-            options.tip = getDateTip(date).text;
-        } else {
-            options.tip = "格式错误";
-        }
+
         var vmodel = avalon.define(data.datepickerId, function(vm) {
             avalon.mix(vm, options);
             vm.$skipArray = ["container"];
-            vm.elementLeft = 0;
-            vm.elementTop = 0;
+            vm.dateError = vm.dateError || "";
+            // vm.elementLeft = 0;
+            // vm.elementTop = 0;
             vm.weekNames = [];
             vm.rows = [];
+            vm.tip = vm.tip || "";
             vm.widgetElement = element;
             //vm.date = date;
             vm.data = [];
@@ -155,7 +154,7 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                         calendarWrapper = options.type ==="range" ? element["data-calenderwrapper"] : null;
                     element.value = date;
                     vmodel.tip = getDateTip(cleanDate(new Date(year, month, day))).text;
-                    console.log(vmodel.tip);
+                    vmodel.dateError = "#cccccc";
                     if(!calendarWrapper) {
                         vmodel.toggle = false;
                     } else { // range datepicker时需要切换选中日期项的类名
@@ -201,22 +200,44 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                 event.stopPropagation();
             }
             vm.$init = function() {
-                var calendar = avalon.parseHTML(calendarTemplate).firstChild;
-                    year = vmodel.year,
-                    month = vmodel.month;
+                var year = vmodel.year,
+                    month = vmodel.month,
                     elementPar = element.parentNode;
+                calendar = avalon.parseHTML(calendarTemplate).firstChild;
                 elementPar.insertBefore(calendar, element);
                 elementPar.insertBefore(element, calendar);
-
+                if(_value) {
+                    if(!_originValue) {
+                        if(vmodel.allowBlank) {
+                            vmodel.tip = "格式错误";
+                            vmodel.dateError = "#ff8888";
+                            element.value = _value;
+                        } else {
+                            vmodel.tip = getDateTip(date).text;
+                        }
+                    } else {
+                        vmodel.tip = getDateTip(date).text;
+                    }
+                } else {
+                    if(vmodel.allowBlank) {
+                        vmodel.tip = "今天";
+                    } else {
+                        vmodel.tip = getDateTip(date).text;
+                    }
+                }
                 if(element.tagName === "INPUT" && vmodel.type!=="range") {
                     var div = document.createElement("div");
                     div.className = "ui-datepicker-input-wrapper";
                     div.setAttribute("ms-class", "ui-state-active:toggle");
+                    div.setAttribute("ms-css-border-color", "dateError");
+                    div.setAttribute("ms-hover", "ui-state-hover");
                     elementPar.insertBefore(div,element);
+                    element.msRetain = true;
                     div.appendChild(element);
-                    div.innerHTML+="<div class='ui-datepicker-tip'>{{tip}}<i class='ui-datepicker-icon ui-icon ui-icon-calendar-o'>&#xf133;</i></div>";
-                    element = div.getElementsByTagName("input")[0];
-                    element.value = _originValue;
+                    var tip = avalon.parseHTML("<div class='ui-datepicker-tip'>{{tip}}<i class='ui-datepicker-icon ui-icon ui-icon-calendar-o'>&#xf133;</i></div>");
+                    div.appendChild(tip);
+                    element.msRetain = false;
+                    element.value = vmodel.allowBlank ? _value : _originValue;
                     avalon.bind(div, "click", function(event) {
                         if(!vmodel.toggle) {
                             vmodel.toggle = true;
@@ -238,7 +259,12 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                 avalon.scan(calendar, [vmodel].concat(vmodels))
             }
             vm.$remove = function() {
-
+                var elementPar = element.parentNode,
+                    eleParPar = elementPar.parentNode,
+                    calendarPar = calendar.parentNode;
+                calendar.innerHTML = calendar.textContent = "";
+                calendarPar.removeChild(calendar);
+                eleParPar.removeChild(elementPar);
             }
         });
         getDateTip = getDateTip.bind(vmodel);
@@ -315,7 +341,6 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
             avalon.bind(document, "click", function(e) {
                 var target = e.target,
                     type = options.type;
-                console.log(calendar);
                 if(options.type==="range" && (element["data-container"].contains(target) || element["data-calenderwrapper"].contains(target))) {
                     return ;
                 } 
@@ -423,7 +448,6 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                     days = [];
                     for(var n = 0 ; n < 7 ; n++){
                         var isCurrentMonth = cellDate.getMonth() === firstDayOfMonth.getMonth() && cellDate.getFullYear() === firstDayOfMonth.getFullYear();
-                        var now = new Date();
                         var selected = false;
                         var dateMonth = 0;
                         // showOtherMonths为true时cellDate不变，为false时，如果不是当前月日期则cellDate为null
@@ -478,36 +502,6 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                 exitLoop = false;
             }
             return data;
-        }
-        // 获取输入域相对于文档的位置坐标，并设置日历组件的位置
-        function getElementPosition(calendar) {
-            var $element = null,
-                $calendarWrapper = null,
-                parentposition = "",
-                parentNode = null,
-                elementOffset = {};
-            
-            switch(options.type) {
-                case "range": 
-                    $element = avalon(element["data-input"]);
-                    $calendarWrapper = avalon(element["data-calenderwrapper"]);
-                break;
-                case "couple":
-                    $element = null;
-                break;
-                default: 
-                    $element = avalon(element);
-                    $calendarWrapper = avalon(calendar);
-            }
-            $calendarWrapper.css("position", "absolute");
-            parentNode = $calendarWrapper[0].parentNode;
-            parentposition = avalon(parentNode).css("position");
-            if(parentposition !=="relative" && parentposition!=="absolute" && parentposition!=="fixed") {
-                parentNode.style.position = "relative";
-            }
-            elementOffset = $element.position();
-            vmodel.elementLeft = elementOffset.left+parseFloat($element.css("margin-left"));
-            vmodel.elementTop = elementOffset.top + $element.outerHeight()+parseFloat($element.css("margin-top"));
         }
         // 检验date
         function validateDate(date) {

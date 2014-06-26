@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
-<title>datepicker demo </title>
+<title>daterangepicker demo </title>
 <script src="../avalon.js"></script>
 </head>
 <body class="ms-controller">
     <div class="wrapper">
-        <h1>datepicker demo 1</h1>
+        <h1>daterangepicker demo 1</h1>
         <p class="example"></p>
         <p><span class="useDescription">说明：</span></p>
         <div ms-skip>
@@ -17,7 +17,7 @@
                 &lt;html&gt;
                 &lt;head&gt;
                     &lt;meta charset='utf-8'/&gt;
-                    &lt;title&gt;datepicker demo&lt;/title&gt;
+                    &lt;title&gt;daterangepicker demo&lt;/title&gt;
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body&gt;
@@ -27,8 +27,12 @@
             </pre>
         </div>
         <div class="demoShow" ms-controller="demo">
+            <fieldset>
+                <legend></legend>
+                <div ms-widget="daterangepicker"></div>
+            </fieldset>
             <script> 
-                require("datepicker/avalon.datepicker", function(avalon) {
+                require("datepicker/avalon.daterangepicker", function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         
                     })
@@ -39,4 +43,3 @@
     </div>
 </body>
 </html>
-

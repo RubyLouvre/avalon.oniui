@@ -1,6 +1,8 @@
 <div class="ui-daterangepicker">
     <div class="ui-datepicker-range-input" 
         ms-click="_toggleDatepicker(toggle, $event)"
+        ms-class="ui-state-active:toggle"
+        ms-hover="ui-state-hover"
         >
         <div class="ui-datepicker-input js-input">{{label|html}}</div>
         <div class="ui-datepicker-icon-wrap">
@@ -102,6 +104,13 @@ MS_OPTION_STYLE
     border: 1px solid #cccccc;
     cursor: pointer;
 }
+.ui-datepicker-range-input.ui-state-hover {
+    border: 1px solid #999;
+}
+.ui-datepicker-range-input.ui-state-active {
+    border-color: #3775c0;
+    border-bottom: 0;
+}
 .ui-datepicker-input {
     height: 18px;
     overflow: hidden;
@@ -136,11 +145,11 @@ MS_OPTION_STYLE
     border: 1px solid #cccccc;
     position: absolute;
 }
-.ui-datepicker-groups .ui-datepicker {
+.ui-datepicker-groups .ui-datepicker-wrapper {
+    position: static;
     padding: 0;
     border: 0;
-    box-shadow: 0 0 0 0 rgba(0,0,0,0.1);
-    position: static;
+    box-shadow: 0 0 0 0 rgba(0,0,0,0);
 }
 .ui-datepicker-group {
     position: relative;

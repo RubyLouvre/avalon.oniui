@@ -167,7 +167,7 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                 })
             }
             vm.$remove = function() {
-
+                element.innerHTML = element.textContent = "";
             }
         })
         function initValues() {
@@ -242,7 +242,6 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
             var msg = "",
                 day = 0,
                 inputToDate = options.parseDate(inputTo.value),
-                inputToFormatValue = inputToDate && options.formatDate(inputToDate.getFullYear(), inputToDate.getMonth(), inputToDate.getDate()),
                 msgFormat = options.opts && options.opts.msgFormat;
             if(inputTo.value && !inputToDate) {
                 vmodel.inputToValue = "";

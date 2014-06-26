@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
-<title>datepicker demo </title>
+<title>coupledatepicker demo </title>
 <script src="../avalon.js"></script>
 </head>
 <body class="ms-controller">
     <div class="wrapper">
-        <h1>datepicker demo 1</h1>
+        <h1>coupledatepicker demo 1</h1>
         <p class="example"></p>
         <p><span class="useDescription">说明：</span></p>
         <div ms-skip>
@@ -17,7 +17,7 @@
                 &lt;html&gt;
                 &lt;head&gt;
                     &lt;meta charset='utf-8'/&gt;
-                    &lt;title&gt;datepicker demo&lt;/title&gt;
+                    &lt;title&gt;coupledatepicker demo&lt;/title&gt;
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body&gt;
@@ -27,8 +27,20 @@
             </pre>
         </div>
         <div class="demoShow" ms-controller="demo">
+            <fieldset>
+                <legend>双日历框 配置参数,两天最小相隔0天</legend>
+                <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from4" data-coupledatepicker-rules="opts" class="ui-coupledatepicker">
+                <div class="ui-coupledatepicker-item"></div>
+                <span class="label">-</span>
+                <div class="ui-coupledatepicker-item"></div>
+                </div>
+
+                {{from4}}
+                {{to4}}
+
+            </fieldset>
             <script> 
-                require("datepicker/avalon.datepicker", function(avalon) {
+                require("datepicker/avalon.coupledatepicker", function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         
                     })
@@ -39,4 +51,3 @@
     </div>
 </body>
 </html>
-

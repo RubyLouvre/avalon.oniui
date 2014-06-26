@@ -1,6 +1,9 @@
 @import "../style/default.scss";
 $pf : ".ui-switch";
 v\:* { behavior: url(#default#VML);} 
+div#{$pf}{
+	border: none;
+}
 #{$pf} {
 	position: relative;
 	z-index: 10;
@@ -74,6 +77,7 @@ v\:* { behavior: url(#default#VML);}
 		background-position: -57px -83px;
 		width: 8px;
 		height: 7px;
+		overflow: hidden;
 		margin-left: -4px;
 		margin-top: -3px;
 	}
@@ -99,6 +103,7 @@ v\:* { behavior: url(#default#VML);}
 				background-position: -71px -54px;
 				width: 14px;
 				height: 11px;
+				overflow: hidden;
 				margin-left: -7px;
 				margin-top: -5px;
 			}

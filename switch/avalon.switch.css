@@ -75,8 +75,15 @@
   background-color: #f8f8f8;
   border: 1px solid #cccccc; }
 
+/*button*/
+.ui-button {
+  cursor: pointer; }
+
 v\:* {
   behavior: url(#default#VML); }
+
+div.ui-switch {
+  border: none; }
 
 .ui-switch {
   position: relative;
@@ -138,6 +145,7 @@ v\:* {
     background-position: -57px -83px;
     width: 8px;
     height: 7px;
+    overflow: hidden;
     margin-left: -4px;
     margin-top: -3px; }
   .ui-switch-bg {
@@ -156,6 +164,7 @@ v\:* {
     background-position: -71px -54px;
     width: 14px;
     height: 11px;
+    overflow: hidden;
     margin-left: -7px;
     margin-top: -5px; }
   .ui-switch-large .ui-switch-bg {

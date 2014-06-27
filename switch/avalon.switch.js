@@ -96,7 +96,7 @@ define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "drag
                 "drHandle": function(e, data) {
                     if(vmodel.disabled) {
                         return
-                    } else if((e.target || e.srcElement) != dragger && (e.target || e.srcElement).parentNode != dragger) {
+                    } else if((e.target || e.srcElement) != dragger && (e.target || e.srcElement).parentNode != dragger && (e.target || e.srcElement).parentNode.parentNode != dragger) {
                         vmodel.$toggle()
                         return
                     } 

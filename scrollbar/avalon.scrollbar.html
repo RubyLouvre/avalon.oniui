@@ -1,4 +1,4 @@
-<div ms-repeat-pos="$position" class="ui-scrollbar reset clrfix ui-widget" ms-class-100="ui-scrollbar-{{pos}}" ms-mouseenter="$show($event, 'always', $index)">
+<div ms-repeat-pos="$position" class="ui-scrollbar reset clrfix ui-widget" ms-class-100="ui-scrollbar-{{pos}}" ms-class-101="ui-scrollbar-{{type}} ui-scrollbar-{{pos}}-{{type}}" ms-mouseenter="$show($event, 'always', $index)">
 	<div ms-if="showBarHeader" class="ui-scrollbar-arrow ui-scrollbar-arrow-up" ms-click="$arrClick($event, 'up', pos, $index)" ms-mousedown="$arrDown($event,'up', pos, $index)" ms-mouseup="$arrDown($event,'up', pos, $index,'release')" ms-hover="ui-state-hover ui-scrollbar-arrow-hover"><b></b></div>
 	<div class="ui-scrollbar-draggerpar" ms-click="$barClick($event, pos, $index)">
 		<div class="ui-scrollbar-dragger"

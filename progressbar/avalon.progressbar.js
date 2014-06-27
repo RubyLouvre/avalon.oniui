@@ -58,7 +58,7 @@ define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.c
             vm.svgSupport = svgSupport
             vm.successValue = vm.countDown ? 0 : 100
             vm.value = vm.countDown ? 100 : vm.value
-            vm.angel = vm.countDown ? 360 : vm.angel
+            vm.angel = vm.countDown ? 360 : 360 * vm.angel / 100
 
             var inited
             vm.$init = function() {

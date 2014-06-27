@@ -475,7 +475,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     css = {};
 
                 //计算浮层的位置
-                if(offset.top + outerHeight + listHeight > $window.scrollTop() + $window.height() && offset.top - listHeight > $window.scrollTop() ) {
+                if(options.position && offset.top + outerHeight + listHeight > $window.scrollTop() + $window.height() && offset.top - listHeight > $window.scrollTop() ) {
                     css.top = offset.top - listHeight;
                 } else {
                     css.top = offset.top + outerHeight;
@@ -542,7 +542,8 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
         label: null,            //设置组件的提示文案，可以是一个字符串，也可以是一个对象
         autofocus: false,       //是否自动获取焦点
         multiple: false,        //是否为多选模式
-        size: 1, 
+        size: 1,
+        position: true,         //是否自动定位下拉列表
         onSelect: avalon.noop,               //多选模式下显示的条数
         getTemplate: function(str, options) {
             return str

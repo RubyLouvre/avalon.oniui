@@ -2,7 +2,9 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
     var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],  
         calendarTemplate = arr[0],
         cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
-        styleEl = document.getElementById("avalonStyle");
+        styleEl = document.getElementById("avalonStyle"),
+        HOLIDAYS,
+        ONE_DAY = 24 * 60 * 60 * 1000;
     try {
         styleEl.innerHTML += cssText;
     } catch (e) {
@@ -18,13 +20,12 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
             msDisabled, 
             duplexVM = msDuplexName && avalon.getModel(msDuplexName, vmodels), //ms-duplex绑定值所在的vmodel及对应绑定值组成的数组
             vmSub = msDisabledName && avalon.getModel(msDisabledName, vmodels), //ms-disabled绑定值所在的vmodel及对应绑定值组成的数组
-            yearMonthListClick = false, //点击日历的年份、月份与否
-            elementParent = element.parentNode,
-            parentposition = avalon(elementParent).css("position"),
-            msToggle = element.msData["ms-data-toggle"],
+            msToggle = element.getAttribute("data-toggle") || element.msData["ms-toggle"],
             toggleVM = msToggle && avalon.getModel(msToggle, vmodels),
-            rangeInputVM = options.type === "range" && avalon.getModel("_rangeInput", vmodels);
+            minDateVM,
+            maxDateVm;
         options.template = options.getTemplate(calendarTemplate, options);
+        HOLIDAYS = initHoliday.call(options, holidayDate) || {};
         if (duplexVM) {
             var value = duplexVM[1][duplexVM[0]];
             var date ;
@@ -34,13 +35,16 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                     month = vmodel.month = date.getMonth();
                     vmodel.day = date.getDate();
                     _value = element.value = val;
-                    if(vmodel.toggle) {
-                        vmodel.rows = calendarDays(month, year);
+                    if(vmodel.numberOfMonths ===1) {
+                        vmodel.data[0] ? vmodel.data[0].rows = calendarDays(vmodel.month, vmodel.year)[0].rows : vmodel.data = calendarDays(vmodel.month, vmodel.year);
+                    } else {
+                        vmodel.data = calendarDays(vmodel.month, vmodel.year);
                     }
                 }
             })
             _value = element.value = value;
         }
+        
         if(vmSub) {
             msDisabled = vmSub[1][vmSub[0]];
             vmSub[1].$watch(vmSub[0], function(val) {
@@ -54,97 +58,195 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                 vmodel.toggle = val;
             })  
         }
-
+        if(options.minDate && !minDate) {
+            minDateVM = avalon.getModel(options.minDate, vmodels);
+            if(minDateVM) {
+                minDateVM[1].$watch(minDateVM[0], function(val) {
+                    vmodel.minDate = val;
+                })
+                minDate = validateDate(minDateVM[1][minDateVM[0]]);
+            }
+        } 
+        if(options.maxDate && !maxDate) {
+            maxDateVM = avalon.getModel(options.maxDate, vmodels);
+            if(maxDateVM) {
+                maxDateVM[1].$watch(maxDateVM[0], function(val) {
+                    vmodel.maxDate = val;
+                })
+                maxDate = validateDate(maxDateVM[1][maxDateVM[0]]);
+            }
+        }
         if(typeof options.change === "string") {
             var changeVM = avalon.getModel(options.change, vmodels);
             options.change = changeVM[1][changeVM[0]];
         }
-        if(parentposition !=="relative" && parentposition!=="absolute" && parentposition!=="fixed") {
-            elementParent.style.position = "relative";
-        }
         options.minDate = minDate && cleanDate(minDate);
         options.maxDate = maxDate && cleanDate(maxDate);
-        options.toggle = toggleVM[1][toggleVM[0]] || options.toggle;
+        options.toggle = toggleVM && toggleVM[1][toggleVM[0]] || options.toggle;
         // disabled属性取自msDisabled，msDisabled为false时取配置项disabled，如果配置项仍为false，则取element的disabled属性
         options.disabled = msDisabled || options.disabled || element.disabled;
         msDisabledName ? vmSub[1][vmSub[0]] = options.disabled : 0;
-        var day, month, year, _originValue,// 手动输入时keydown的辅助值;
-            date = _getDate(); //获取datepicker的初始选择日期
+        var day, month, year, _originValue, years=[],// 手动输入时keydown的辅助值;
+            date = _getDate(), //获取datepicker的初始选择日期
+            calendar;
         month = date.getMonth();
         year = date.getFullYear();
         day = date.getDate();
-        
+        for(var i=1901; i<=2050; i++) {
+            years.push(i);
+        }
         // 如果输入域初始值存在则验证其是否符合日期显示规则，不符合设element.value为null
         element.value = _originValue && options.formatDate(year, month, day);
+
         var vmodel = avalon.define(data.datepickerId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["type"];
-            vm.elementLeft = 0;
-            vm.elementTop = 0;
+            vm.$skipArray = ["container"];
+            vm.dateError = vm.dateError || "";
+            // vm.elementLeft = 0;
+            // vm.elementTop = 0;
             vm.weekNames = [];
             vm.rows = [];
+            vm.tip = vm.tip || "";
             vm.widgetElement = element;
-            vm.date = date;
+            //vm.date = date;
+            vm.data = [];
             vm.prevMonth = -1; //控制prev class是否禁用
             vm.nextMonth = -1; //控制next class是否禁用
             vm.month = month;
             vm.year = year;
             vm.day = day;
-            vm.years = [2014, 2015, 2016];
+            vm.years = years;
+            vm.calendars = [1,2,3];
             vm.months = [1,2,3,4,5,6,7,8,9,10,11,12];
-            vm.$opts = {
+            vm.$yearOpts = {
                 width: 60,
                 listWidth: 60,
+                height: 150,
                 onSelect: function(e, listNode) {
-                    yearMonthListClick = true;
+                    e.stopPropagation();
                 }
             }
-            // 年份选择器渲染ok之为其绑定dropdown组件并扫描渲染出dropdown
+            vm.$monthOpts = {
+                width: 40,
+                height: 150,
+                listWidth: 40,
+                onSelect: function(e, listNode) {
+                    e.stopPropagation();
+                }
+            }
+            // 年份选择器渲染ok之后为其绑定dropdown组件并扫描渲染出dropdown
             vm._afterYearRendered = function() {
-                this.setAttribute("ms-widget", "dropdown,$,$opts");
+                this.setAttribute("ms-widget", "dropdown,$,$yearOpts");
                 this.setAttribute("ms-duplex", "year");
                 avalon.scan(this, vmodel);
             }
             // 月份选择器渲染ok之为其绑定dropdown组件并扫描渲染出dropdown
             vm._afterMonthRendered = function() {
-                this.setAttribute("ms-widget", "dropdown,$,$opts");
+                this.setAttribute("ms-widget", "dropdown,$,$monthOpts");
                 this.setAttribute("ms-duplex", "month");
                 avalon.scan(this, vmodel);
             }
             // 选择日期
-            vm._selectDate = function(year, month, day, dateDisabled) {
+            vm._selectDate = function(year, month, day, dateDisabled, outerIndex, innerIndex) {
                 if(month !== false && !dateDisabled) {
-                    var formatDate = options.formatDate.bind(options);
-                    var date = formatDate(year, month, day);
+                    var formatDate = options.formatDate.bind(options),
+                        date = formatDate(year, month, day),
+                        calendarWrapper = options.type ==="range" ? element["data-calenderwrapper"] : null;
                     element.value = date;
-                    vmodel.toggle = false;
+                    vmodel.tip = getDateTip(cleanDate(new Date(year, month, day))).text;
+                    vmodel.dateError = "#cccccc";
+                    if(!calendarWrapper) {
+                        vmodel.toggle = false;
+                    } else { // range datepicker时需要切换选中日期项的类名
+                        var colSelectFlag = false,
+                            rows = vmodel.data[0].rows; //rangedatepicker限制为单月份日历显示
+                        if(rows[outerIndex][innerIndex].selected) {
+                            return ;
+                        }
+                        for(var i=0, len=rows.length; i<len;i++) {
+                            var cols = rows[i];
+                            for(var j=0, colLen = cols.length; j<colLen;j++) {
+                                var colSelect = cols[j].selected;
+                                if(colSelect) {
+                                    cols[j].selected = false;
+                                    colSelectFlag = true;
+                                    break;
+                                }
+                            }
+                            if(colSelectFlag) {
+                                break;
+                            }
+                        }
+                        vmodel.data[0].rows[outerIndex][innerIndex].selected = true;
+                    }
                     vmodel.day = day;
-                    console.log(data["datepickerId"]);
-                    console.log(avalon(element).data());
                     vmodel.change.call(null, options.parseDate(date), data["datepickerId"], avalon(element).data())
                 }
             }
             // 点击prev按钮切换到当前月的上个月，如当前月存在minDate则prev按钮点击无效
-            vm._prev = function(prevFlag) {
+            vm._prev = function(prevFlag, event) {
                 if(!prevFlag) {
                     return false;
                 }
                 toggleMonth("prev");
+                event.stopPropagation();
             }
             // 点击next按钮切换到当前月的下一个月，如果当前月存在maxDate则next按钮点击无效
-            vm._next = function(nextFlag) {
+            vm._next = function(nextFlag, event) {
                 if(!nextFlag) {
                     return false;
                 }
                 toggleMonth("next");
+                event.stopPropagation();
             }
             vm.$init = function() {
-                var calendar = avalon.parseHTML(calendarTemplate).firstChild;
-                var year = vmodel.year;
-                var month = vmodel.month;
-                elementParent.appendChild(calendar);
-                bindEvents(calendar)
-                getElementPosition();
+                var year = vmodel.year,
+                    month = vmodel.month,
+                    elementPar = element.parentNode;
+                calendar = avalon.parseHTML(calendarTemplate).firstChild;
+                elementPar.insertBefore(calendar, element);
+                elementPar.insertBefore(element, calendar);
+                if(_value) {
+                    if(!_originValue) {
+                        if(vmodel.allowBlank) {
+                            vmodel.tip = "格式错误";
+                            vmodel.dateError = "#ff8888";
+                            element.value = _value;
+                        } else {
+                            vmodel.tip = getDateTip(date).text;
+                        }
+                    } else {
+                        vmodel.tip = getDateTip(date).text;
+                    }
+                } else {
+                    if(vmodel.allowBlank) {
+                        vmodel.tip = "今天";
+                    } else {
+                        vmodel.tip = getDateTip(date).text;
+                    }
+                }
+                if(element.tagName === "INPUT" && vmodel.type!=="range") {
+                    var div = document.createElement("div");
+                    div.className = "ui-datepicker-input-wrapper";
+                    div.setAttribute("ms-class", "ui-state-active:toggle");
+                    div.setAttribute("ms-css-border-color", "dateError");
+                    div.setAttribute("ms-hover", "ui-state-hover");
+                    elementPar.insertBefore(div,element);
+                    element.msRetain = true;
+                    div.appendChild(element);
+                    var tip = avalon.parseHTML("<div class='ui-datepicker-tip'>{{tip}}<i class='ui-datepicker-icon ui-icon ui-icon-calendar-o'>&#xf133;</i></div>");
+                    div.appendChild(tip);
+                    element.msRetain = false;
+                    element.value = vmodel.allowBlank ? _value : _originValue;
+                    avalon.bind(div, "click", function(event) {
+                        if(!vmodel.toggle) {
+                            vmodel.toggle = true;
+                        }
+                        event.stopPropagation();
+                    })
+                }
+                
+                bindEvents(calendar);
                 // 如果输入域不允许为空，且_originValue不存在则强制更新element.value
                 if(!options.allowBlank && !_originValue) {
                     element.value = options.formatDate(year,month,vmodel.day);
@@ -153,25 +255,42 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                 vmodel.weekNames = calendarHeader();
                 _value = element.value;
                 element.disabled = options.disabled;
+                avalon.scan(div, [vmodel]);
                 avalon.scan(calendar, [vmodel].concat(vmodels))
             }
             vm.$remove = function() {
-
+                var elementPar = element.parentNode,
+                    eleParPar = elementPar.parentNode,
+                    calendarPar = calendar.parentNode;
+                calendar.innerHTML = calendar.textContent = "";
+                calendarPar.removeChild(calendar);
+                eleParPar.removeChild(elementPar);
             }
         });
+        getDateTip = getDateTip.bind(vmodel);
         vmodel.$watch("toggle", function(val) {
-
-            console.log("vmodel watch toggle "+val);
             if(val) {
                 _value = element.value;
-                vmodel.rows = calendarDays(vmodel.month, vmodel.year);
+                if(vmodel.numberOfMonths ===1) {
+                    vmodel.data[0] ? vmodel.data[0].rows = calendarDays(vmodel.month, vmodel.year)[0].rows : vmodel.data = calendarDays(vmodel.month, vmodel.year);
+                } else {
+                    vmodel.data = calendarDays(vmodel.month, vmodel.year);
+                }
             }
         })
         vmodel.$watch("year", function(year) {
-            vmodel.rows = calendarDays(vmodel.month, year);
+            if(vmodel.numberOfMonths ===1) {
+                vmodel.data[0] ? vmodel.data[0].rows = calendarDays(vmodel.month, vmodel.year)[0].rows : vmodel.data = calendarDays(vmodel.month, vmodel.year);
+            } else {
+                vmodel.data = calendarDays(vmodel.month, vmodel.year);
+            }
         })
         vmodel.$watch("month", function(month) {
-            vmodel.rows = calendarDays(month, vmodel.year);
+            if(vmodel.numberOfMonths ===1) {
+                vmodel.data[0] ? vmodel.data[0].rows = calendarDays(vmodel.month, vmodel.year)[0].rows : vmodel.data = calendarDays(vmodel.month, vmodel.year);
+            } else {
+                vmodel.data = calendarDays(vmodel.month, vmodel.year);
+            }
         })
         // 这里的处理使得设置外部disabled或者组件VM的disabled同步
         vmodel.$watch("disabled", function(val) {
@@ -180,18 +299,30 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
             }
             element.disabled = val;
         })
-        function cleanDate( date ){
-            date.setHours(0);
-            date.setMinutes(0);
-            date.setSeconds(0);
-            date.setMilliseconds(0);
-            return date;
-        }
+        vmodel.$watch("minDate", function(val) {
+            var minDate = validateDate(val);
+            vmodel.minDate = minDate && cleanDate(minDate);
+            if(vmodel.numberOfMonths ===1) {
+                vmodel.data[0] ? vmodel.data[0].rows = calendarDays(vmodel.month, vmodel.year)[0].rows : vmodel.data = calendarDays(vmodel.month, vmodel.year);
+            } else {
+                vmodel.data = calendarDays(vmodel.month, vmodel.year);
+            }
+        })
+        vmodel.$watch("maxDate", function(val) {
+            var maxDate = validateDate(val);
+            vmodel.maxDate = maxDate && cleanDate(maxDate);
+            if(vmodel.numberOfMonths ===1) {
+                vmodel.data[0] ? vmodel.data[0].rows = calendarDays(vmodel.month, vmodel.year)[0].rows : vmodel.data = calendarDays(vmodel.month, vmodel.year);
+            } else {
+                vmodel.data = calendarDays(vmodel.month, vmodel.year);
+            }
+        })
+        
         // 根据minDate和maxDate的设置判断给定的日期是否不可选
-        function isDateDisabled( date ){
+        function isDateDisabled(date, vmodel){
             var time = date.getTime(),
-                minDate = options.minDate,
-                maxDate = options.maxDate;
+                minDate = vmodel.minDate,
+                maxDate = vmodel.maxDate;
             if(minDate && time < minDate.getTime()){
                 return true;
             } else if(maxDate && time > maxDate.getTime()) {
@@ -202,23 +333,21 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
         // 初始化时绑定各种回调
         function bindEvents(calendar) {
             // focus Input元素时显示日历组件
-            avalon.bind(element, "focus", function() {
+            avalon.bind(element, "focus", function(e) {
                 vmodel.toggle = true;
+                e.stopPropagation();
             })
             // 切换日期年月或者点击input输入域时不隐藏组件，选择日期或者点击文档的其他地方则隐藏日历组件
             avalon.bind(document, "click", function(e) {
-                var target = e.target;
-                window.target = target;
-                rangeInput = rangeInputVM && rangeInputVM[1][rangeInputVM[0]];
-                if(!calendar.contains(target) && element!==target && vmodel.toggle && !yearMonthListClick && !rangeInput) {
-                    vmodel.toggle = false;
+                var target = e.target,
+                    type = options.type;
+                if(options.type==="range" && (element["data-container"].contains(target) || element["data-calenderwrapper"].contains(target))) {
                     return ;
-                }
-                if(rangeInput) {
-                    rangeInput = false;
-                }
-                if(yearMonthListClick) {
-                    yearMonthListClick = false;
+                } 
+                if(!calendar.contains(target) && element!==target && vmodel.toggle) {
+                    vmodel.toggle = false;
+                    toggleVM ? toggleVM[1][toggleVM[0]] = false : 0;
+                    return ;
                 }
             })
             // 输入域的值改变之后相应的更新外部的ms-duplex绑定值
@@ -258,24 +387,33 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                     month = vmodel.month = date.getMonth();
                     vmodel.day = date.getDate();
                     _value = value;
-                    vmodel.rows = calendarDays(month, year);
+                    if(vmodel.numberOfMonths ===1) {
+                        vmodel.data[0] ? vmodel.data[0].rows = calendarDays(vmodel.month, vmodel.year)[0].rows : vmodel.data = calendarDays(vmodel.month, vmodel.year);
+                    } else {
+                        vmodel.data = calendarDays(vmodel.month, vmodel.year);
+                    }
                 }
-                
             })
         }
         // 通过prev、next按钮切换月份
         function toggleMonth(operate) {
-            var month = 0, year=0;
+            var month = 0, 
+                year = 0,
+                numberOfMonths = vmodel.numberOfMonths;
             if(operate === "next") {
-                month = vmodel.month + options.stepMonths;
+                month = vmodel.month + options.stepMonths + numberOfMonths -1;
             } else {
-                month = vmodel.month - options.stepMonths;
+                month = vmodel.month - options.stepMonths - numberOfMonths + 1;
             }
             var firstDayOfNextMonth = new Date(vmodel.year, month, 1);
             year = vmodel.year = firstDayOfNextMonth.getFullYear();   
             month = vmodel.month = firstDayOfNextMonth.getMonth();
             _value = element.value;
-            vmodel.rows = calendarDays(month, year);  
+            if(vmodel.numberOfMonths ===1) {
+                vmodel.data[0] ? vmodel.data[0].rows = calendarDays(vmodel.month, vmodel.year)[0].rows : vmodel.data = calendarDays(vmodel.month, vmodel.year);
+            } else {
+                vmodel.data = calendarDays(vmodel.month, vmodel.year);
+            }
         }
         // 日历头部的显示名
         function calendarHeader() {
@@ -289,73 +427,81 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
         }
         // 根据month、year得到要显示的日期数据
         function calendarDays (month, year) {
-            var startDay = options.startDay,
+            var startDay = vmodel.startDay,
                 firstDayOfMonth = new Date(year, month , 1),
-                stepMonths = options.stepMonths,
-                minDate = options.minDate,
-                maxDate = options.maxDate,
-                showOtherMonths = options.showOtherMonths,
+                stepMonths = vmodel.stepMonths,
+                minDate = vmodel.minDate,
+                maxDate = vmodel.maxDate,
+                showOtherMonths = vmodel.showOtherMonths,
                 days = [],
                 cellDate = _cellDate =  new Date(year , month , 1 - ( firstDayOfMonth.getDay() - startDay + 7 ) % 7 ),
-                rows = [];
+                rows = [],
+                data = [],
+                valueDate = vmodel.parseDate(_value);
             var exitLoop = false;
             var prev = minDate ? (year-minDate.getFullYear())*12+month-minDate.getMonth() : true;
             var next = maxDate ? (maxDate.getFullYear()-year)*12+maxDate.getMonth()-month : true;
-
             vmodel.prevMonth = prev;
             vmodel.nextMonth = next;
-            for (var m=0; m<6; m++) {
-                days = [];
-                for(var n = 0 ; n < 7 ; n++){
-                    var isCurrentMonth = cellDate.getMonth() === firstDayOfMonth.getMonth() && cellDate.getFullYear() === firstDayOfMonth.getFullYear();
-                    var now = new Date();
-                    var selected = false;
-                    var dateMonth = 0;
-                    // showOtherMonths为true时cellDate不变，为false时，如果不是当前月日期则cellDate为null
-                    cellDate = showOtherMonths || isCurrentMonth ? cellDate : null; 
-                    dateMonth = _cellDate.getMonth();
-                    
-                    if(!cellDate) { // showOtherMonths为false且非当前月日期
-                        if(m>= 4 && (_cellDate.getFullYear() > year || _cellDate.getMonth() > month)) { // 下月日期
+            for(var i=0, len=vmodel.numberOfMonths; i<len; i++) {
+                for (var m=0; m<6; m++) {
+                    days = [];
+                    for(var n = 0 ; n < 7 ; n++){
+                        var isCurrentMonth = cellDate.getMonth() === firstDayOfMonth.getMonth() && cellDate.getFullYear() === firstDayOfMonth.getFullYear();
+                        var selected = false;
+                        var dateMonth = 0;
+                        // showOtherMonths为true时cellDate不变，为false时，如果不是当前月日期则cellDate为null
+                        cellDate = showOtherMonths || isCurrentMonth ? cellDate : null; 
+                        dateMonth = _cellDate.getMonth();
+                        
+                        if(!cellDate) { // showOtherMonths为false且非当前月日期
+                            if(m>= 4 && (_cellDate.getFullYear() > year || _cellDate.getMonth() > month)) { // 下月日期
+                                exitLoop = true;
+                                break;
+                            } else { // 上月日期
+                                cellDate = _cellDate = new Date(_cellDate.setDate(_cellDate.getDate()+1));
+                                days.push({day:void 0, month: false, weekend: false, selected:false,dateDisabled: true});
+                                continue;
+                            }
+                        }
+                        var tip = getDateTip(_cellDate);
+                        var day = _cellDate.getDate();
+                        var _day = tip && tip.cellText || day;
+                        var weekDay = cellDate.getDay();
+                        var weekend = weekDay%7==0 || weekDay%7==6;
+                        if(valueDate) {
+                            if(valueDate.getDate() === day && _value && dateMonth===valueDate.getMonth() && _cellDate.getFullYear()===valueDate.getFullYear()) {
+                                selected = true;
+                            }
+                        }
+                        // showOtherMonths为true，且为下月日期时，退出总循环
+                        if(showOtherMonths && m>= 4 && (_cellDate.getFullYear() > year || dateMonth > month)) {
                             exitLoop = true;
                             break;
-                        } else { // 上月日期
-                            cellDate = _cellDate = new Date(_cellDate.setDate(_cellDate.getDate()+1));
-                            days.push({day:void 0, month: false, weekend: false, selected:false,dateDisabled: true});
-                            continue;
                         }
-                    }
-                    var day = _cellDate.getDate();
-                    var weekDay = cellDate.getDay();
-                    var weekend = weekDay%7==0 || weekDay%7==6;
-                    var valueDate = options.parseDate(_value);
-                    if(vmodel.day === day && _value && dateMonth===valueDate.getMonth() && _cellDate.getFullYear()===valueDate.getFullYear()) {
-                        selected = true;
-                    }
-                    // showOtherMonths为true，且为下月日期时，退出总循环
-                    if(showOtherMonths && m>= 4 && (_cellDate.getFullYear() > year || dateMonth > month)) {
-                        exitLoop = true;
+                        var dateDisabled = isDateDisabled(_cellDate, vmodel);
+                        days.push({day:day,_day: _day, month: dateMonth, weekend: weekend, selected: selected, dateDisabled: dateDisabled, outerIndex: m, innerIndex: n});
+                        cellDate = _cellDate = new Date(cellDate.setDate(day+1));
+                    } 
+                    rows.push(days); 
+                    if(exitLoop) {
                         break;
                     }
-                    var dateDisabled = isDateDisabled(_cellDate);
-                    days.push({day:day, month: dateMonth, weekend: weekend, selected: selected, dateDisabled: dateDisabled});
-                    cellDate = _cellDate = new Date(cellDate.setDate(day+1));
-                } 
-                rows.push(days); 
-                if(exitLoop) {
-                    break;
                 }
+                data.push({
+                    year: year,
+                    month: month,
+                    rows: rows
+                })
+                month +=1;
+                year = (new Date(year, month, 1)).getFullYear();
+                startDay = vmodel.startDay;
+                firstDayOfMonth = new Date(year, month , 1);
+                cellDate = _cellDate =  new Date(year , month , 1 - ( firstDayOfMonth.getDay() - startDay + 7 ) % 7 );
+                rows = [];
+                exitLoop = false;
             }
-            return rows;
-        }
-        // 获取输入域相对于文档的位置坐标，并设置日历组件的位置
-        function getElementPosition() {
-            var $element = avalon(element);
-            var elementOffset = $element.position();
-            console.log(elementOffset);
-            console.log($element.css("margin-left"))
-            vmodel.elementLeft = elementOffset.left+parseFloat($element.css("margin-left"));
-            vmodel.elementTop = elementOffset.top + $element.outerHeight()+parseFloat($element.css("margin-top"));
+            return data;
         }
         // 检验date
         function validateDate(date) {
@@ -374,8 +520,8 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                 _originValue = "";
                 date = cleanDate(new Date());
             }
-            if(isDateDisabled(date)) {
-                if(options.minDate || options.maxDate) {
+            if(isDateDisabled(date, options)) {
+                if((options.minDate || options.maxDate)) {
                     return options.minDate || options.maxDate;
                 }
             }
@@ -400,7 +546,6 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
         toggle: false,
         separator: "-",
         calendarLabel: "选择日期",
-        
         parseDate : function( str ){
             var separator = this.separator;
             var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})$";
@@ -424,5 +569,74 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
             n = "0" + n;
         return n;
     }
+    function cleanDate( date ){
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        return date;
+    }
+    function initHoliday( data ){
+        var _table = {},
+            _data = [];
+        for( var k in data ){
+            var v = data[ k ],
+                _date = this.parseDate( k );
+
+            if( _date ){
+                v.date = _date;
+                _data.push( v );
+            }
+        }
+        _data.sort( function( a , b ){
+            return ( a.dayIndex || 0 ) - ( b.dayIndex || 0 );
+        });
+        for( var k = 0 , len = _data.length ; k < len ; k++ ){
+            var v = _data[k],
+                _date = v.date,
+                beforeTime = v.beforeTime || 0,
+                afterTime = v.afterTime || 0;
+
+            _date.setDate( _date.getDate() - beforeTime - 1 );
+            for( var i = -v.beforeTime ; i < afterTime + 1 ; i++ ){
+                _date.setDate( _date.getDate() + 1 );
+                _table[ _date.getTime() ] =  {
+                    text : v['holidayName'] + ( i < 0 ? '前' + -i + '天' : i > 0 ? '后' + i + '天' : ''),
+                    cellClass : i === 0 && v['holidayClass'] || '',
+                    cellText : i === 0 && v['holidayText'] || ''
+                };
+            }
+        }
+        return _table;
+    };
+    function getDateTip(curDate) {
+        if(!curDate)
+            return;
+        var now = (cleanDate(new Date())).getTime(),
+            curTime = curDate.getTime();
+        if(now == curTime) {
+            return { 
+                    text : '今天', 
+                    cellClass : 'c_today', 
+                    cellText : '今天'
+                };
+        } else if(now == curTime - ONE_DAY) {
+            return { 
+                    text : '明天', 
+                    cellClass : '' 
+                };
+        } else if(now == curTime - ONE_DAY * 2) {
+            return {
+                    text : '后天' , 
+                    cellClass : '' 
+                };
+        }
+        var tip = HOLIDAYS && HOLIDAYS[curDate.getTime()];
+        if(!tip) {
+            return {text: '周' + this.dayNames[curDate.getDay()]};
+        } else {
+            return tip;
+        }
+    };
     return avalon;
 })

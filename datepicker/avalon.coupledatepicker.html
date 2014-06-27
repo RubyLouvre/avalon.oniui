@@ -1,0 +1,54 @@
+<div class="ui-coupledatepicker-item">
+    <input
+    ms-data-toggle="toggle" 
+    ms-widget="datepicker"
+    ms-duplex="inputFromValue"
+    ms-disabled="fromDisabled"
+    data-datepicker-min-date="rules.fromMinDate"
+    data-datepicker-max-date="rules.fromMaxDate"
+    data-datepicker-change="fromSelectCal"
+    data-datepicker-calendar-label="MS_OPTION_FROM_LABEL" id="test1"/>   
+</div>
+<span class="label">-</span>
+<div class="ui-coupledatepicker-item">
+    <input 
+    ms-data-toggle="toggle" 
+    ms-widget="datepicker"
+    ms-duplex="inputToValue"
+    ms-disabled="toDisabled"
+    data-datepicker-min-date="rules.toMinDate"
+    data-datepicker-max-date="rules.toMaxDate"
+    data-datepicker-calendar-label="MS_OPTION_TO_LABEL" id="test2"/>
+</div>
+MS_OPTION_TEMPLATE
+<input
+    ms-data-toggle="toggle" 
+    ms-widget="datepicker"
+    ms-duplex="inputFromValue"
+    ms-disabled="fromDisabled"
+    data-datepicker-min-date="rules.fromMinDate"
+    data-datepicker-max-date="rules.fromMaxDate"
+    data-datepicker-change="fromSelectCal"
+    data-datepicker-calendar-label="MS_OPTION_FROM_LABEL" id="test1"/>   
+<input 
+    ms-data-toggle="toggle" 
+    ms-widget="datepicker"
+    ms-duplex="inputToValue"
+    ms-disabled="toDisabled"
+    data-datepicker-min-date="rules.toMinDate"
+    data-datepicker-max-date="rules.toMaxDate"
+    data-datepicker-calendar-label="MS_OPTION_TO_LABEL" id="test2"/>
+MS_OPTION_STYLE
+<style>
+.ui-coupledatepicker {
+    font-size: 0;
+}
+.ui-coupledatepicker-item {
+    display: inline-block;
+    vertical-align: middle;
+}
+.ui-coupledatepicker .label {
+    font-size: 12px;
+    vertical-align: middle;
+}
+</style>

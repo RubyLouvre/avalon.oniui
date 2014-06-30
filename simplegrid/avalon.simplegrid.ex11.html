@@ -13,7 +13,7 @@
                     ms-css-width="el.width" 
                     ms-css-text-align="el.align" 
                     ms-visible="el.toggle" 
-                    >{{getSummarizing(summarizing, el.field)}}
+                    >{{getSummarizing(summarizing, el.field) | html}}
                 </td>
         </script>
         <script>
@@ -26,6 +26,7 @@
                     var array = []
                     for (var i = 0; i < n; i++) {
                         array.push({
+                            plan: "北上广经济型计划",
                             state: i % 2 === 0,
                             budget: range(3000, 6000),
                             emerge: range(70000, 200000),
@@ -43,36 +44,38 @@
                         summarizing: {
                             plan: "所有汇总",
                             state: "",
-                            budget: "预算汇总",
-                            emerge: "展现汇总",
-                            click: "平均点击率",
-                            consume: "消费汇总",
-                            clickprice: "平均点击价格"
+                            budget: "预算汇总<br/>￥38000",
+                            emerge: "展现汇总<br/>135346460",
+                            click: "平均点击率<br/>50.21%",
+                            consume: "消费汇总<br/>￥1135800",
+                            clickprice: "平均点击价格<br/>￥1.82"
                         },
                         theadRenderedCallback: function(vmodel) {
                             var tbody = this
                             var tr = document.createElement("tr")
+                            tr.className = "summarizing"
                             tbody.appendChild(tr)
                             avalon.innerHTML(tr, document.getElementById("summarizing").text)
                             avalon.scan(tbody, vmodel)
+                            vmodel.theadHeight = 85;
                         },
                         getSummarizing: function(obj, key) {
                             return obj[key]
                         },
                         columns: [
-                            {field: "plan", text: "竞价计划推广", resizable: true, wdth: 190},
+                            {field: "plan", text: "竞价计划推广", resizable: true, wdth: 120},
                             {field: "state", text: "状态", resizable: true, align: "center", width: 80},
-                            {field: "budget", text: "预算", resizable: true},
-                            {field: "emerge", text: "展现", resizable: true},
-                            {field: "click", text: "点击", resizable: true},
-                            {field: "consume", text: "消费", resizable: true},
-                            {field: "clickprice", text: "平均点击价格", resizable: true}
+                            {field: "budget", text: "预算", resizable: true, align: "right"},
+                            {field: "emerge", text: "展现", resizable: true, align: "right"},
+                            {field: "click", text: "点击", resizable: true, align: "right"},
+                            {field: "consume", text: "消费", resizable: true, align: "right"},
+                            {field: "clickprice", text: "平均点击价格", align: "right", resizable: true}
                         ],
                         addUnit: function(val, name) {
                             switch (name) {
                                 case  "budget":
                                 case "clickprice":
-                                    return val + "￥"
+                                    return "￥" + val
                                 case "state":
                                     return val ? "√" : "×"
                                 default:
@@ -90,7 +93,7 @@
                             showPages: 5,
                             options: [10, 20, 30, 40]
                         },
-                        columnsOrder: ["state", "budget", "emerge", "click", "consume", "clickprice"],
+                        columnsOrder: ["plan", "state", "budget", "emerge", "click", "consume", "clickprice"],
                         data: createData(100)
                     }
                     vm.$skipArray = ["simplegrid"]
@@ -114,29 +117,68 @@
                 border-left: 0 none;
                 border-right: 0 none;
             }
+            .summarizing td{
+                background:#edef7d;
+                color:rgb(136,136,136);
+                height: 50px;
+            }
         </style>
     </head>
     <body>
 
         <fieldset ms-controller="test">
-            <legend>演示十字线效果</legend>
+            <legend>演示theadRenderedCallback的使用(汇总效果)</legend>
 
             <div ms-widget="simplegrid" id="gridsample">
 
             </div>
             <div>
                 <h3>要点</h3>
-                <p>需要通过tbodyTemplate修改的行模板,为每一个tr加两个事件绑定,在移出移入操作类名</p>  
+                <p>在theadRenderedCallback的回调里,给表头再插入一行,数据由后端计算好,然后调整表头的高度</p>  
                 <pre class="brush:javascript;gutter:false;toolbar:false;">
-                       
+                   summarizing: {
+                            plan: "所有汇总",
+                            state: "",
+                            budget: "预算汇总<br/>￥38000",
+                            emerge: "展现汇总<br/>135346460",
+                            click: "平均点击率<br/>50.21%",
+                            consume: "消费汇总<br/>￥1135800",
+                            clickprice: "平均点击价格<br/>￥1.82"
+                        },
+                        theadRenderedCallback: function(vmodel) {
+                            var tbody = this
+                            var tr = document.createElement("tr")
+                            tr.className = "summarizing"
+                            tbody.appendChild(tr)
+                            avalon.innerHTML(tr, document.getElementById("summarizing").text)
+                            avalon.scan(tbody, vmodel)
+                            vmodel.theadHeight = 85;
+                        },
+                        getSummarizing: function(obj, key) {
+                            return obj[key]
+                        },                 
                 </pre>
                 <p>CSS</p>
                 <pre class="brush:css;gutter:false;toolbar:false;">
-            .ui-grid-tbody tr.hcross td{
-                background:yellow;
+            #gridsample{
+                width:900px;
             }
-            .ui-grid-tbody .vcross{
-                background:gold;
+            .ui-grid-tbody td{
+                border-left: 0 none;
+                border-right: 0 none;
+            }
+            .ui-grid-tbody {
+                border-top: 0 none!important;
+            }
+            .ui-grid-thead td{
+                background: #f8f8f8;
+                border-left: 0 none;
+                border-right: 0 none;
+            }
+            .summarizing td{
+                background:#edef7d;
+                color:rgb(136,136,136);
+                height: 50px;
             }
                 </pre>
             </div>

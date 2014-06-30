@@ -3,11 +3,10 @@
          ms-css-height="tbodyHeight+theadHeight"
          ms-on-scroll-12="throttleRenderTbody"
          >
-        <div class="ui-grid-wrapper"
-             ms-css-width="gridWidth" 
+        <span class="ui-grid-wrapper"
              ms-css-top="tbodyScrollTop"
              >
-            <table class="ui-grid-thead"   >
+            <table class="ui-grid-thead" ms-css-width="gridWidth"   >
                 <tr>
                     MS_OPTION_THEAD_BEGIN
                     <td data-repeat-rendered="_theadRenderedCallback"
@@ -32,7 +31,7 @@
                     MS_OPTION_THEAD_END
                 </tr>
             </table>
-            <table class="ui-grid-tbody" >
+            <table class="ui-grid-tbody" ms-css-width="gridWidth" >
                 <tr data-repeat-rendered="_tbodyRenderedCallback"
                     ms-repeat-row="_data"
                     >
@@ -50,7 +49,7 @@
                     MS_OPTION_TBODY_END
                 </tr>
             </table>
-        </div>
+        </span>
         <div class="ui-grid-scroll-marker" ms-css-height="tbodyScrollHeight+theadHeight" >
 
         </div>

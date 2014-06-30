@@ -161,7 +161,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
 
                 } else {
                     setTimeout(function() {
-                        vmodel.getRowHeight.call(tbody)
+                        vmodel._tbodyRenderedCallback.call(tbody)
                     }, 100)
                 }
 
@@ -218,11 +218,6 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                             restoreUserSelect()
                             delete options._drag
                             vm.gridWidth = gridWidth + e.pageX - startX
-                            //如果出现水平滚动条,那么往高度加17
-                            var panel = vm.scrollPanel
-                            if (panel.clientWidth < panel.scrollWidth) {
-                                vm.tbodyHeight += 17
-                            }
                             el.width = cellWidth + e.pageX - startX
                             avalon.unbind(document, "mousemove", moveFn)
                             avalon.unbind(document, "mouseup", upFn)
@@ -364,7 +359,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         return vmodel
     }
     widget.defaults = {
-        //表头的格子的高
+       
         theadHeight: 35,
         tbodyRowHeight: 35,
         tbodyScrollHeight: "auto",

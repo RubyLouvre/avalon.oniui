@@ -64,7 +64,7 @@
                             return obj[key]
                         },
                         columns: [
-                            {field: "plan", text: "竞价计划推广", resizable: true, wdth: 120},
+                            {field: "plan", text: "竞价计划推广", resizable: true, width: 180},
                             {field: "state", text: "状态", resizable: true, align: "center", width: 80},
                             {field: "budget", text: "预算", resizable: true, align: "right"},
                             {field: "emerge", text: "展现", resizable: true, align: "right"},
@@ -110,10 +110,10 @@
                             }
                         },
                         theadTemplate: function(str) {
-                            return "<th style='width:80px'><input type='checkbox' ms-checked='allchecked' ms-click='checkAll'  /></th>" + str
+                            return "<th style='width:60px'><input type='checkbox' ms-checked='allchecked' ms-click='checkAll'  /></th>" + str
                         },
                         tbodyTemplate: function() {
-                            return '<th style="width: 80px"><input type="checkbox" ms-checked="row.checked" ms-click="checkOne(row, $index)" '
+                            return '<th style="width: 60px"><input type="checkbox" ms-checked="row.checked" ms-click="checkOne(row, $index)" '
                                     + 'class="ui-helper-checkone"/></th><td class="ui-grid-td" data-with-sorted="getColumnsOrder" ms-repeat="row" ms-css-width="getCellProperty($key,\'width\')" ms-css-text-align="getCellProperty($key,\'align\')">{{addUnit($val,$key)}}</td>'
 
                         },
@@ -144,10 +144,13 @@
             .ui-grid-tbody {
                 border-top: 0 none!important;
             }
-            .ui-grid-thead td{
+            .ui-grid-thead td,.ui-grid-thead th{
                 background: #f8f8f8;
-                border-left: 0 none;
-                border-right: 0 none;
+                border: 0 none;
+            }
+             .ui-grid-thead th{
+                background: #f8f8f8;
+                border-right:1px solid #000;
             }
             .summarizing td{
                 background:#edef7d;
@@ -204,8 +207,7 @@
             }
             .ui-grid-thead td{
                 background: #f8f8f8;
-                border-left: 0 none;
-                border-right: 0 none;
+                border: 0 none;
             }
             .summarizing td{
                 background:#edef7d;

@@ -361,7 +361,6 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
     widget.defaults = {
        
         theadHeight: 35,
-        tbodyRowHeight: 35,
         tbodyScrollHeight: "auto",
         tbodyScrollTop: 0,
         tbodyHeight: "auto",

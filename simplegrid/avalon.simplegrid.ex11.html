@@ -9,7 +9,7 @@
 
         </script>
         <script id="summarizing" type="summarizing">
-                <td ms-repeat="columns"
+               <td></td> <td ms-repeat="columns"
                     ms-css-width="el.width" 
                     ms-css-text-align="el.align" 
                     ms-visible="el.toggle" 
@@ -32,7 +32,8 @@
                             emerge: range(70000, 200000),
                             click: range(3000, 50000),
                             consume: range(8000, 20000),
-                            clickprice: (1 + 3 * Math.random()).toFixed(2)
+                            clickprice: (1 + 3 * Math.random()).toFixed(2),
+                            checked: false
                         })
                     }
                     return array
@@ -82,8 +83,39 @@
                                     return val
                             }
                         },
+                        allchecked: false,
+                        getColumn: function(el) {
+                            el.checked = true
+                        },
+                        checkAll: function() {
+                            var vmodel = avalon.vmodels.xxx
+                            var bool = vmodel.allchecked = this.checked
+                            vmodel._data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                            vmodel.data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                        },
+                        checkOne: function(el, index) {
+                            var vmodel = avalon.vmodels.xxx
+                            index = vm.startIndex + index
+                            vmodel.data[index] = el.checked = this.checked
+                            if (!this.checked) {
+                                vmodel.allchecked = false
+                            } else {
+                                vmodel.allchecked = vmodel._data.every(function(el) {
+                                    return el.checked
+                                })
+                            }
+                        },
+                        theadTemplate: function(str) {
+                            return "<th style='width:80px'><input type='checkbox' ms-checked='allchecked' ms-click='checkAll'  /></th>" + str
+                        },
                         tbodyTemplate: function() {
-                            return '<td class="ui-grid-td" data-with-sorted="getColumnsOrder" ms-repeat="row" ms-css-width="getCellProperty($key,\'width\')" ms-css-text-align="getCellProperty($key,\'align\')">{{addUnit($val,$key)}}</td>'
+                            return '<th style="width: 80px"><input type="checkbox" ms-checked="row.checked" ms-click="checkOne(row, $index)" '
+                                    + 'class="ui-helper-checkone"/></th><td class="ui-grid-td" data-with-sorted="getColumnsOrder" ms-repeat="row" ms-css-width="getCellProperty($key,\'width\')" ms-css-text-align="getCellProperty($key,\'align\')">{{addUnit($val,$key)}}</td>'
+
                         },
                         showRows: 10,
                         pageable: true,
@@ -129,13 +161,13 @@
         <fieldset ms-controller="test">
             <legend>演示theadRenderedCallback的使用(汇总效果)</legend>
 
-            <div ms-widget="simplegrid" id="gridsample">
+            <div ms-widget="simplegrid,xxx" id="gridsample">
 
             </div>
             <div>
                 <h3>要点</h3>
                 <p>在theadRenderedCallback的回调里,给表头再插入一行,数据由后端计算好,然后调整表头的高度</p>  
-                <pre class="brush:javascript;gutter:false;toolbar:false;">
+                <pre class="brush:javascript;gutter:false;toolbdar:false;">
                    summarizing: {
                             plan: "所有汇总",
                             state: "",

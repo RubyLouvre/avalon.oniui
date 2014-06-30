@@ -4,9 +4,9 @@
          ms-on-scroll-12="throttleRenderTbody"
          >
         <span class="ui-grid-wrapper"
-             ms-css-top="tbodyScrollTop"
+             ms-css-top="tbodyScrollTop"ms-css-width="gridWidth" 
              >
-            <table class="ui-grid-thead" ms-css-width="gridWidth"   >
+            <table class="ui-grid-thead"   >
                 <tr>
                     MS_OPTION_THEAD_BEGIN
                     <td data-repeat-rendered="_theadRenderedCallback"
@@ -31,7 +31,7 @@
                     MS_OPTION_THEAD_END
                 </tr>
             </table>
-            <table class="ui-grid-tbody" ms-css-width="gridWidth" >
+            <table class="ui-grid-tbody" >
                 <tr data-repeat-rendered="_tbodyRenderedCallback"
                     ms-repeat-row="_data"
                     >

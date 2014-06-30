@@ -1,57 +1,55 @@
 <div class="ui-grid">
-    <div class="ui-grid-wrapper" 
+    <div class="ui-grid-scroll-wrapper" 
          ms-css-height="tbodyHeight+theadHeight"
          ms-on-scroll-12="throttleRenderTbody"
          >
-
-        <table class="ui-grid-thead" 
-               ms-css-width="gridWidth" 
-               ms-css-top="tbodyScrollTop">
-            <tr>
-                MS_OPTION_THEAD_BEGIN
-                <td data-repeat-rendered="getRealWidth"
-                    ms-repeat="columns"
-                    ms-css-width="el.width" 
-                    ms-css-text-align="el.align" 
-                    ms-class="{{el.className}}" 
-                    ms-title="el.title" 
-                    ms-visible="el.toggle" 
-                    ms-data-vm="el"
-                    ms-on-mousemove-10="startResize($event,el)"
-                    ms-on-mousedown-10="resizeColumn($event,el)"
-                    ms-on-mouseleave-10="stopResize"
-                    >{{el.text}}
-                    <span  ms-click="sortColumn(el, $index)"
-                           ms-if="el.sortable" 
-                           ms-class="ui-helper-{{ getArrow(el, $index)}}">
-                        <span class="ui-helper-sort-top"></span>
-                        <span class="ui-helper-sort-bottom"></span>
-                    </span>
-                </td>
-                MS_OPTION_THEAD_END
-            </tr>
-        </table>
-        <table class="ui-grid-tbody" 
-               ms-css-width="gridWidth" 
-               ms-css-top="tbodyScrollTop + theadHeight + 2">
-            <tr data-repeat-rendered="getRowHeight"
-                ms-repeat-row="_data"
-                >
-                MS_OPTION_TBODY_BEGIN
-                <td class="ui-grid-td"
-                    data-with-sorted="getColumnsOrder"
-                    ms-repeat="row" 
-                    ms-visible="getCellProperty($key,'toggle')" 
-                    ms-css-width="getCellProperty($key,'width')"
-                    ms-css-text-align="getCellProperty($key,'align')"
-                    ms-css-height="tbodyRowHeight" 
+        <span class="ui-grid-wrapper"
+             ms-css-top="tbodyScrollTop"ms-css-width="gridWidth" 
+             >
+            <table class="ui-grid-thead"   >
+                <tr>
+                    MS_OPTION_THEAD_BEGIN
+                    <td data-repeat-rendered="_theadRenderedCallback"
+                        ms-repeat="columns"
+                        ms-css-width="el.width" 
+                        ms-css-text-align="el.align" 
+                        ms-class="{{el.className}}" 
+                        ms-title="el.title" 
+                        ms-visible="el.toggle" 
+                        ms-data-vm="el"
+                        ms-on-mousemove-10="startResize($event,el)"
+                        ms-on-mousedown-10="resizeColumn($event,el)"
+                        ms-on-mouseleave-10="stopResize"
+                        >{{el.text}}
+                        <span  ms-click="sortColumn(el, $index)"
+                               ms-if="el.sortable" 
+                               ms-class="ui-helper-{{ getArrow(el, $index)}}">
+                            <span class="ui-helper-sort-top"></span>
+                            <span class="ui-helper-sort-bottom"></span>
+                        </span>
+                    </td>
+                    MS_OPTION_THEAD_END
+                </tr>
+            </table>
+            <table class="ui-grid-tbody" >
+                <tr data-repeat-rendered="_tbodyRenderedCallback"
+                    ms-repeat-row="_data"
                     >
-                    {{$val}}
-                </td>
-                MS_OPTION_TBODY_END
-            </tr>
-        </table>
-
+                    MS_OPTION_TBODY_BEGIN
+                    <td class="ui-grid-td"
+                        data-with-sorted="getColumnsOrder"
+                        ms-repeat="row" 
+                        ms-visible="getCellProperty($key,'toggle')" 
+                        ms-css-width="getCellProperty($key,'width')"
+                        ms-css-text-align="getCellProperty($key,'align')"
+                        ms-css-height="tbodyRowHeight" 
+                        >
+                        {{$val}}
+                    </td>
+                    MS_OPTION_TBODY_END
+                </tr>
+            </table>
+        </span>
         <div class="ui-grid-scroll-marker" ms-css-height="tbodyScrollHeight+theadHeight" >
 
         </div>
@@ -109,16 +107,18 @@ MS_OPTION_STYLE
         width:100%;
         border: 1px solid #000;
     }
-    .ui-grid-wrapper{
+    .ui-grid-scroll-wrapper{
         width:100%;
         overflow:auto;
         position: relative;
-
     }
-
+    .ui-grid-wrapper{
+        width:100%;
+        position: absolute;
+    }
     .ui-grid-thead{
         width: 100%;
-        position: absolute;
+        /*        position: absolute;*/
         background: #fff;
         border: 1px solid black;
         border-collapse: collapse;
@@ -140,7 +140,7 @@ MS_OPTION_STYLE
 
     .ui-grid-tbody{
         width: 100%;
-        position: absolute;
+        /*        position: absolute;*/
         border: 1px solid black;
         border-collapse: collapse;
     }

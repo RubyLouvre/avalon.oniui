@@ -84,13 +84,19 @@
                 <td>theadTemplate</td> <td>函数或默认模板  </td>  <td>表头那一行的HTML模板 </td> 
             </tr>
             <tr>
-                <td>tbodyTemplate</td> <td>>函数或默认模板</td>  <td>表身每一行的HTML模板 </td> 
+                <td>tbodyTemplate</td> <td>函数或默认模板</td>  <td>表身每一行的HTML模板 </td> 
             </tr>
             <tr>
-                <td>getTemplate</td> <td>>函数</td>  <td>用于修改整个模板 </td> 
+                <td>getTemplate</td> <td>函数</td>  <td>用于修改整个模板 </td> 
             </tr>
             <tr>
-                <td>getColumn</td> <td>>函数</td>  <td>用于为每一列的数据添加更多自定义属性 </td> 
+                <td>getColumn</td> <td>函数</td>  <td>用于为每一列的数据添加更多自定义属性 </td> 
+            </tr>
+            <tr>
+                <td>theadRenderedCallback</td> <td>函数</td>  <td>表头渲染完毕执行的回调，依次传入vmodel, options, vmodels </td> 
+            </tr>
+            <tr>
+                <td>tbodyRenderedCallback</td> <td>函数</td>  <td>表身渲染完毕执行的回调，依次传入vmodel, options, vmodels </td> 
             </tr>
             <tr>
                 <td><b style="color:orangered">data</b></td> 
@@ -129,6 +135,9 @@
             <li><a href="avalon.simplegrid.ex7.html">演示hover效果</li>
             <li><a href="avalon.simplegrid.ex8.html">演示斑马线效果</li>
             <li><a href="avalon.simplegrid.ex9.html">演示十字线效果</li>
+            <li><a href="avalon.simplegrid.ex10.html">演示tbodyTemplate的使用</li>
+
+            <li><a href="avalon.simplegrid.ex11.html">演示theadRenderedCallback的使用(数据汇总)</li>
         </ul>
     </body>
 </html>

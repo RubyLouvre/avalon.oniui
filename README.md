@@ -59,10 +59,10 @@ avalon.oniui
                 <td>progressbar</td><td>完成</td><td>杨</td>
             </tr>
             <tr>
-                <td>switchdropdown</td><td>开发中</td><td>姚</td>
+                <td>switchdropdown</td><td>完成</td><td>姚</td>
             </tr>
             <tr>
-                <td>miniswitch</td><td>开发中</td><td>姚</td>
+                <td>miniswitch</td><td>完成</td><td>姚</td>
             </tr>
             <tr>
                 <td>notice</td><td>完成</td><td>田</td>
@@ -71,12 +71,12 @@ avalon.oniui
                 <td>position</td><td>完成</td><td>杨</td>
             </tr>
             <tr>
-                <td>roleselect</td><td>开发中</td><td>姚</td>
+                <td>roleselect</td><td>完成</td><td>姚</td>
             </tr>
             <tr>
-                <td>datepicker</td><td>开发中</td><td>田</td>
+                <td>datepicker</td><td>完成</td><td>田</td>
             </tr>
             <tr>
-                <td>scrollbar</td><td>开发中</td><td>杨</td>
+                <td>scrollbar</td><td>完成</td><td>杨</td>
             </tr>
   </table>

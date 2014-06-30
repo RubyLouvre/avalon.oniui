@@ -134,7 +134,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     }
                 }
                 vm.topTable = table //重置真正的代表表头的table
-                vm.scrollPanel = table.parentNode//重置包含两个table的会出现滚动条的容器对象
+                vm.scrollPanel = table.parentNode.parentNode//重置包含两个table的会出现滚动条的容器对象
               
                 vm.gridWidth = Math.min(table.offsetWidth, vm.scrollPanel.offsetWidth)
                 vm.theadRenderedCallback.call(tbody, vmodel, options, vmodels)

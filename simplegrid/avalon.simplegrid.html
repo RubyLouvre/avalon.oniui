@@ -9,7 +9,7 @@
                ms-css-top="tbodyScrollTop">
             <tr>
                 MS_OPTION_THEAD_BEGIN
-                <td data-repeat-rendered="getRealWidth"
+                <td data-repeat-rendered="_theadRenderedCallback"
                     ms-repeat="columns"
                     ms-css-width="el.width" 
                     ms-css-text-align="el.align" 
@@ -34,7 +34,7 @@
         <table class="ui-grid-tbody" 
                ms-css-width="gridWidth" 
                ms-css-top="tbodyScrollTop + theadHeight + 2">
-            <tr data-repeat-rendered="getRowHeight"
+            <tr data-repeat-rendered="_tbodyRenderedCallback"
                 ms-repeat-row="_data"
                 >
                 MS_OPTION_TBODY_BEGIN

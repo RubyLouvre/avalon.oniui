@@ -395,6 +395,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
                 vmodel.toggle = false;
                 vmodel.onSelect.call(this, e, listNode);
+                titleNode.focus();
             };
 
             vm.$listenter = function() {
@@ -413,20 +414,11 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 e.preventDefault();
                 if(!vmodel.multiple) {
                     var up,
-                        selectedItemIndex,
-                        nextItem;
-
-                    avalon.each(vmodel.data, function(i, item) {
-                        if(item.item && item.value === vmodel.value) {
-                            selectedItemIndex = i;
-                            return false;
-                        }
-                        return true;
-                    });
-
-                    if(!selectedItemIndex) {
-                        selectedItemIndex = 0;
-                    }
+                        selectedItemIndex, //选中项index
+                        firstItemIndex,    //第一个可用的item index
+                        nextItem,
+                        enableItem,
+                        step, distance = 0;
 
                     //区分上下箭头和回车
                     switch (e.keyCode) {
@@ -437,6 +429,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                             up = false;
                             break;
                         case 13:
+                            vmodel.value = vmodel.data[vmodel.activeIndex].value;
                             vmodel.toggle = false;
                             break;
                         default:
@@ -444,18 +437,39 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
                     //根据键盘行为设置组件value
                     if(up !== void 0) {
-                        if(up) {
-                            nextItem = vmodel.data.slice(0, selectedItemIndex).reverse();
-                        } else {
-                            nextItem = vmodel.data.slice(selectedItemIndex + 1);
-                        }
-                        nextItem = nextItem.filter(function(item) {
-                            return item.item && item.enable;
-                        });
+                        vmodel.toggle = true;
+                        if(vmodel.activeIndex == void 0) {
+                            avalon.each(vmodel.data, function(i, item) {
+                                if(firstItemIndex === void 0 && item.item) {
+                                    firstItemIndex = i;
+                                }
+                                if(item.item && item.value === vmodel.value) {
+                                    selectedItemIndex = i;
+                                    return false;
+                                }
+                                return true;
+                            });
 
-                        if(nextItem.length > 0) {
-                            vmodel.value = nextItem[0].value;
+                            if(!selectedItemIndex) {
+                                selectedItemIndex = firstItemIndex;
+                            }
+                            vmodel.activeIndex = selectedItemIndex;
                         }
+                        if(up) {
+                            nextItem = vmodel.data.slice(0, vmodel.activeIndex).reverse();
+                            step = -1;
+                        } else {
+                            nextItem = vmodel.data.slice(vmodel.activeIndex + 1);
+                            step = 1;
+                        }
+
+                        do {
+                            distance += step;
+                            if(nextItem.length === 0) return;
+                            enableItem = nextItem.shift();
+                        } while(!enableItem.item||!enableItem.enable);
+
+                        vmodel.activeIndex += distance;
                     }
                 }
             };

@@ -3611,7 +3611,7 @@
     var raimg = /^<(a|img)\s/i
     var ron = /\s+(on[^=\s]+)(?:=("[^"]*"|'[^']*'|[^\s>]+))?/g
     var ropen = /<\w+\b(?:(["'])[^"]*?(\1)|[^>])*>/ig
-    var rjavascripturl = /\s+(src|href)(?:=("javascript[^"]*"|'javascript[^']*'))?/ig
+    var rjavascripturl = /\s+(src|href)(?:=("javascript[^"]*"|'javascript[^']*'))?/i
     var rsurrogate = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g
     var rnoalphanumeric = /([^\#-~| |!])/g;
 
@@ -3632,7 +3632,7 @@
         sanitize: function(str) {
             return str.replace(rscripts, "").replace(ropen, function(a, b) {
                 if (raimg.test(a)) {
-                    a = a.replace(rjavascripturl, "")//移除javascript伪协议
+                    a = a.replace(rjavascripturl, " $1=''")//移除javascript伪协议
                 }
                 return a.replace(ron, " ").replace(/\s+/g, " ")//移除onXXX事件
             })

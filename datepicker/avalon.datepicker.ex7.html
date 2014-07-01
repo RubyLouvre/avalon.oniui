@@ -4,13 +4,60 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
 <title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
 <script src="../avalon.js"></script>
 </head>
 <body class="ms-controller">
     <div class="wrapper">
-        <h1>datepicker demo 1</h1>
-        <p class="example"></p>
-        <p><span class="useDescription">说明：</span></p>
+        <h1>datepicker demo</h1>
+        <div class="demoShow" ms-controller="demo">
+            <fieldset>
+                <legend>change回调</legend>
+                <input ms-widget="datepicker" data-datepicker-change="changeCallback"/>
+                <p>说明：通过data-datepicker-change配置日历的change回调，值changeCallback映射到一个回调方法。change回调是在选中日期之后的回调操作。change回调参数分别是：选中的日期，绑定元素生成的datepicker VM的id，通过data-*设置的配置项组成的对象</p>
+            </fieldset>
+            <fieldset>
+                <legend>onClose回调</legend>
+                <input ms-widget="datepicker, a, $aOpts" />
+                <p>说明：配置onClose回调，使得日历关闭之后可以调用它做一些自定义操作，添加回调时我希望都能通过绑定组件时的config配置项来添加，而不是通过data-datapicker-name这种方式映射回调，这样避免过多的查找操作，上例中的change回调是个特例，纯粹是为了兼容以前adapter，而且其名后期也会废弃，转而使用onSelect。</p>
+                <p>onClose回调的参数分别是：最近一次选中date，datepicker生成的VM引用</p>
+            </fieldset>
+            <fieldset>
+                <legend>onChangeMonthYear回调</legend>
+                <input ms-widget="datepicker, b, $bOpts" data-datepicker-change-month-and-year="true" />
+                <p>说明：配置changeMonthAndYear为true使得用户可以通过下拉选项切换月份和年份的显示，配置onChangeMonthYear回调，使得用户在切换了月份或者年份之后可以做一些需要的操作。onChangeMonthYear回调的参数分别是当前选中year，当前选中month，datepicker绑定生成的VM应用</p>
+            </fieldset>
+            <script> 
+                require("datepicker/avalon.datepicker", function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.changeCallback = function(date, datepickerId, config) {
+                            avalon.log("选中日期后的用户回调")
+                            avalon.log(arguments);
+                        }
+                        vm.$aOpts = {
+                            onClose: function(date, vmodel) {
+                                avalon.log("关闭隐藏日历后的用户回调")
+                                avalon.log(arguments);
+                                avalon.log(date);
+                                avalon.log(vmodel);
+                            }
+                        }
+                        vm.$bOpts = {
+                            onChangeMonthYear: function(year, month, vmodel) {
+                                avalon.log("通过下拉框切换日历月份、年份的回调")
+                                avalon.log("year is : "+year);
+                                avalon.log("month is : "+month);
+                                avalon.log("vmodel is :");
+                                avalon.log(vmodel);
+                            }
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
         <div ms-skip>
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
@@ -21,20 +68,55 @@
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body&gt;
-                    
+                    &lt;div class="demoShow" ms-controller="demo"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;change回调&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-change="changeCallback"/&gt;
+                            &lt;p&gt;说明：通过data-datepicker-change配置日历的change回调，值changeCallback映射到一个回调方法。change回调是在选中日期之后的回调操作。change回调参数分别是：选中的日期，绑定元素生成的datepicker VM的id，通过data-*设置的配置项组成的对象&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;onClose回调&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker, a, $aOpts" /&gt;
+                            &lt;p&gt;说明：配置onClose回调，使得日历关闭之后可以调用它做一些自定义操作，添加回调时我希望都能通过绑定组件时的config配置项来添加，而不是通过data-datapicker-name这种方式映射回调，这样避免过多的查找操作，上例中的change回调是个特例，纯粹是为了兼容以前adapter，而且其名后期也会废弃，转而使用onSelect。&lt;/p&gt;
+                            &lt;p&gt;onClose回调的参数分别是：最近一次选中date，datepicker生成的VM引用&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;onChangeMonthYear回调&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker, b, $bOpts" data-datepicker-change-month-and-year="true" /&gt;
+                            &lt;p&gt;说明：配置changeMonthAndYear为true使得用户可以通过下拉选项切换月份和年份的显示，配置onChangeMonthYear回调，使得用户在切换了月份或者年份之后可以做一些需要的操作。onChangeMonthYear回调的参数分别是当前选中year，当前选中month，datepicker绑定生成的VM应用&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require("datepicker/avalon.datepicker", function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.changeCallback = function(date, datepickerId, config) {
+                                        avalon.log("选中日期后的用户回调")
+                                        avalon.log(arguments);
+                                    }
+                                    vm.$aOpts = {
+                                        onClose: function(date, vmodel) {
+                                            avalon.log("关闭隐藏日历后的用户回调")
+                                            avalon.log(arguments);
+                                            avalon.log(date);
+                                            avalon.log(vmodel);
+                                        }
+                                    }
+                                    vm.$bOpts = {
+                                        onChangeMonthYear: function(year, month, vmodel) {
+                                            avalon.log("通过下拉框切换日历月份、年份的回调")
+                                            avalon.log("year is : "+year);
+                                            avalon.log("month is : "+month);
+                                            avalon.log("vmodel is :");
+                                            avalon.log(vmodel);
+                                        }
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
                 &lt;/body&gt;
                 &lt;/html&gt;
             </pre>
-        </div>
-        <div class="demoShow" ms-controller="demo">
-            <script> 
-                require("datepicker/avalon.datepicker", function(avalon) {
-                    var model = avalon.define("demo", function(vm) {
-                        
-                    })
-                    avalon.scan();
-                })
-            </script>
         </div>
     </div>
 </body>

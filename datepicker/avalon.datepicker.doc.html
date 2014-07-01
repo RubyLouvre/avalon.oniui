@@ -3,15 +3,15 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
-<title>notice文档说明</title>
+<title>datepicker文档说明</title>
 <link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
 </head>
 <body>
     <div class="wrapper">
-        <h1>notice使用文档</h1>
-        <p>notice组件用来向用户显示一些提示信息</p>
+        <h1>datepicker使用文档</h1>
+        <p>datepicker组件方便快速创建功能齐备的日历组件，通过不同的配置日历可以满足显示多个月份、通过prev、next切换月份、或者通过下拉选择框切换日历的年份、月份，当然也可以手动输入日期，日历组件也会根据输入域中的日期值高亮显示对应日期等等各种需求</p>
         <table>
-            <caption class="example">notice组件配置项说明：</caption>
+            <caption class="example">datepicker组件配置项说明：</caption>
             <thead>
                 <tr>
                     <th>name</th>
@@ -21,162 +21,123 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>altField</td>
-                    <td></td>
-                    <td>根据日历框的选择更新的输入域，使用altFormat格式化日期</td>
-                </tr>
-                <tr>
-                    <td>altFormat</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>appendText</td>
-                    <td></td>
-                    <td>输入域后要显示的text，比如显示日期格式,示例：appendText:"(yyyy-mm-dd)"</td>
-                </tr>
-                <tr>
-                    <td>autoSize</td>
-                    <td></td>
-                    <td>根据dataFormat自动resize输入域的大小</td>
-                </tr>
-                <tr>
-                    <td>changeMonth</td>
-                    <td>false</td>
-                    <td>是否可以通过下拉框选择月份</td>
-                </tr>
-                <tr>
-                    <td>changeYear</td>
-                    <td>false</td>
-                    <td>是否可以通过下拉框选择年份</td>
-                </tr>
-                <tr>
-                    <td>dateFormat</td>
-                    <td>"mm/dd/yy"</td>
-                    <td>显示日期的格式</td>
-                </tr>
-                <tr>
                     <td>dayNames</td>
-                    <td> [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ]</td>
-                    <td></td>
+                    <td>默认['日', '一', '二', '三', '四', '五', '六']</td>
+                    <td>日期名列表，从周日开始，可以配置为["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]</td>
                 </tr>
                 <tr>
-                    <td>defaultDate</td>
-                    <td></td>
-                    <td>显示日历框之后高亮的日期</td>
+                    <td>name</td>
+                    <td>默认""， {{type: String}}</td>
+                    <td>日历组件的名字</td>
                 </tr>
                 <tr>
-                    <td>firstDay</td>
-                    <td></td>
-                    <td>设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推</td>
+                    <td>startDay</td>
+                    <td>默认1， {{type: Number}}</td>
+                    <td>设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推, 默认从周一开始</td>
                 </tr>
                 <tr>
-                    <td>hideIfNoPrevNext</td>
+                    <td>changeMonthAndYear</td>
                     <td>false</td>
-                    <td>当设置了minDate、maxDate时可能next、prev就失效禁用，如果设置了hideIfNoPrevNext为true那么组件会将其隐藏</td>
+                    <td>是否可以通过下拉框选择月份或者年份</td>
                 </tr>
                 <tr>
-                    <td>maxDate</td>
-                    <td></td>
-                    <td>最大的可选日期，设为null，可以任意选</td>
-                </tr>
-                <tr>
-                    <td>minDate</td>
-                    <td></td>
-                    <td>最小的可选日期，设为null则任选</td>
-                </tr>
-                <tr>
-                    <td>nextText</td>
-                    <td>"next"</td>
-                    <td>"下个月"链接的显示文本</td>
+                    <td>showOtherMonths</td>
+                    <td>默认false {{type: Boolean}}</td>
+                    <td>是否显示非当前月的日期</td>
                 </tr>
                 <tr>
                     <td>numberOfMonths</td>
-                    <td>1</td>
-                    <td>一次显示的日历数</td>
+                    <td>1 {{type: Number}}</td>
+                    <td>一次显示的日历月份数, 默认一次显示一个</td>
+                </tr>
+                <tr>
+                    <td>maxDate</td>
+                    <td>null</td>
+                    <td>最大的可选日期，默认null，可以任选，可以配置为Date对象，也可以是yyyy-mm-dd格式的字符串，或者当分隔符是“/”时，可以是yyyy/mm/dd格式的字符串</td>
+                </tr>
+                <tr>
+                    <td>minDate</td>
+                    <td>null</td>
+                    <td>最小的可选日期，默认null，可以任选，可以配置为Date对象，也可以是yyyy-mm-dd格式的字符串，或者当分隔符是“/”时，可以是yyyy/mm/dd格式的字符串</td>
+                </tr>
+                <tr>
+                    <td>stepMonths</td>
+                    <td>1 {{type: Number}}</td>
+                    <td>当点击next、prev链接时应该跳过几个月份, 默认一个月份</td>
+                </tr>
+                <tr>
+                    <td>toggle</td>
+                    <td>false {{type: Boolean}}</td>
+                    <td>设置日历的显示或者隐藏，false隐藏，true显示</td>
+                </tr>
+                <tr>
+                    <td>seperator</td>
+                    <td>"-" {{type: String}}</td>
+                    <td>日期格式的分隔符,默认“-”，可以配置为"/"，而且默认日期格式必须是yyyy-mm-dd</td>
+                </tr>
+                <tr>
+                    <td>calendarLabel</td>
+                    <td>"选择日期" {{type: String}}</td>
+                    <td>日历组件的说明label</td>
                 </tr>
                 <tr>
                     <td>onChangeMonthYear</td>
-                    <td></td>
+                    <td>avalon.noop</td>
                     <td>当month或者year更新时调用的回调。参数为year、month、日历组件实例</td>
                 </tr>
                 <tr>
-                    <td>onSelect</td>
-                    <td></td>
-                    <td></td>
+                    <td>change</td>
+                    <td>默认avalon.noop  {{type: Function}}</td>
+                    <td>选中日期后的回调，change这个名字日后将废弃，改成onSelect</td>
                 </tr>
                 <tr>
                     <td>onClose</td>
                     <td></td>
-                    <td></td>
+                    <td>日历关闭的回调，this指向日历组件自生成的vmodel，参数分别是当前year， month，及this指向的vmodel</td>
                 </tr>
                 <tr>
-                    <td>prevText</td>
-                    <td></td>
-                    <td></td>
+                    <td>parseDate</td>
+                    <td>function(str){...}</td>
+                    <td>将符合日期格式要求的字符串解析为date对象并返回，不符合格式的字符串返回null,用户可以根据自己需要自行配置解析过程
+<pre>
+parseDate : function(str){
+    var separator = this.separator;
+    var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})$";
+    reg = new RegExp(reg);
+    var x = str.match(reg);
+    return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
+}, 
+</pre>
+                    </td>
                 </tr>
                 <tr>
-                    <td>showButtonPanelType</td>
-                    <td></td>
-                    <td>是否在日历下显示button面板</td>
-                </tr>
-                <tr>
-                    <td>stepMonths</td>
-                    <td></td>
-                    <td>当点击next、prev链接时应该跳过几个月份</td>
-                </tr>
-                <tr>
-                    <td>yearRange</td>
-                    <td></td>
-                    <td>在year下拉框中显示的year范围，可以是相对于今年的格式"-nn:+nn",也可以是相对于当前选中日期year的范围"c-nn:c+nn",也可以是绝对的"nnnn:nnnn"</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>formatDate</td>
+                    <td>function(date){...}</td>
+                    <td>将日期对象转换为符合要求的日期字符串，默认实现如下：
+<pre>
+formatDate : function(date){
+    var separator = this.separator,
+        year = date.getFullYear(), 
+        month = date.getMonth(), 
+        day = date.getDate();
+    return year + separator + formatNum( month + 1 , 2 ) + separator + formatNum( day , 2 );
+},      
+</pre>
+                    </td>
                 </tr>
             </tbody>
         </table>
         <h3>例子：</h3>
         <ol>
-            <li><a target="_blank" href="avalon.datepicker.ex.html"></a></li>
-            <li><a target="_blank" href="avalon.datepicker.ex1.html"></a></li>
-            <li><a target="_blank" href="avalon.datepicker.ex2.html"></a></li>
-            <li><a target="_blank" href="avalon.datepicker.ex3.html"></a></li>
-            <li><a target="_blank" href="avalon.datepicker.ex4.html"></a></li>
-            <li><a target="_blank" href="avalon.datepicker.ex5.html"></a></li>
-            <li><a target="_blank" href="avalon.datepicker.ex6.html"></a></li>
-            <li><a target="_blank" href="avalon.datepicker.ex7.html"></a></li>
-            <li><a target="_blank" href="avalon.datepicker.ex8.html"></a></li>
-            <li><a target="_blank" href="avalon.datepicker.ex9.html"></a></li>
-            <li><a target="_blank" href="avalon.datepicker.ex10.html"></a></li>
-            <li><a target="_blank" href="avalon.datepicker.ex11.html"></a></li>
-            <li><a target="_blank" href="avalon.datepicker.ex12.html"></a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex1.html">默认配置的日历框、allowBlank为true时的不同</a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex2.html">配置日历周一-周日的对应的显示名、使日历的每一周从周日开始、通过下拉选框切换选择日历显示年份、月份</a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex3.html">显示非当前月日期、通过prev、next每次切换3个月、一次显示多个月份</a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex4.html">设置日期可选的最小日期、最大日期、以及初始值异常的显示情况</a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex5.html">设置toggle切换日历显示与隐藏、calendarLabel配置日历顶部说明文字</a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex6.html">ms-duplex初始化日期、allowBlank为false or true时组件对不同初始值的处理方式</a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex7.html">组件选择日期后的change回调、关闭时的onClose回调、切换月份、年份的onChangeMonthYear回调</a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex8.html">自定义parseDate、formatDate方法正确解析和显示日期</a></li>
+            <li><a target="_blank" href="avalon.datepicker.ex9.html">切换日历组件的禁用与否，以及手动输入日期的结果</a></li>
         </ol>
     </div>
 </body>

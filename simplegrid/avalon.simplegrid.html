@@ -3,10 +3,11 @@
          ms-css-height="tbodyHeight+theadHeight"
          ms-on-scroll-12="throttleRenderTbody"
          >
-        <span class="ui-grid-wrapper"
-             ms-css-top="tbodyScrollTop"ms-css-width="gridWidth" 
+        <div class="ui-grid-wrapper"  
+             ms-css-top="tbodyScrollTop"
+             ms-css-width="gridWidth" 
              >
-            <table class="ui-grid-thead"   >
+            <table class="ui-grid-thead"  >
                 <tr>
                     MS_OPTION_THEAD_BEGIN
                     <td data-repeat-rendered="_theadRenderedCallback"
@@ -31,7 +32,7 @@
                     MS_OPTION_THEAD_END
                 </tr>
             </table>
-            <table class="ui-grid-tbody" >
+            <table class="ui-grid-tbody"  >
                 <tr data-repeat-rendered="_tbodyRenderedCallback"
                     ms-repeat-row="_data"
                     >
@@ -42,14 +43,13 @@
                         ms-visible="getCellProperty($key,'toggle')" 
                         ms-css-width="getCellProperty($key,'width')"
                         ms-css-text-align="getCellProperty($key,'align')"
-                        ms-css-height="tbodyRowHeight" 
                         >
-                        {{$val}}
+                        {{ renderCell($val, $key, row) | html }}
                     </td>
                     MS_OPTION_TBODY_END
                 </tr>
             </table>
-        </span>
+        </div>
         <div class="ui-grid-scroll-marker" ms-css-height="tbodyScrollHeight+theadHeight" >
 
         </div>

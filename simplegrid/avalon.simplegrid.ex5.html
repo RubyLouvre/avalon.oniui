@@ -9,19 +9,7 @@
 
         </script>
         <script>
-            avalon.config({debug: false})
             require(["simplegrid/avalon.simplegrid"], function() {
-                var createData = function(n) {
-                    var array = []
-                    for (var i = 0; i < n; i++) {
-                        array.push({
-                            xxx: Math.random().toString(36).substring(4, 10),
-                            yyy: Math.random().toString(36).substring(4, 10),
-                            zzz: i
-                        })
-                    }
-                    return array
-                }
                 avalon.define("test", function(vm) {
 
                     vm.simplegrid = {
@@ -30,37 +18,91 @@
                             {field: "yyy", text: "列二", resizable: true},
                             {field: "xxx", text: "列一", resizable: true}
                         ],
-                        showRows: 10,
-                        pageable: true,
-                        pager: {
-                            perPages: 20,
-                            totalItems: 1000,
-                            showPages: 5,
-                            options: [10, 20, 30, 40]
-                        },
                         columnsOrder: ["xxx", "yyy", "zzz"],
-                        data: createData(100)
+                        data: [{
+                                xxx: 10, yyy: 1, zzz: 1
+                            },
+                            {
+                                xxx: 20, yyy: 2, zzz: 2
+                            },
+                            {
+                                xxx: 30, yyy: 3, zzz: 3
+                            },
+                            {
+                                xxx: 40, yyy: 4, zzz: 4
+                            }
+
+                        ]
                     }
                     vm.$skipArray = ["simplegrid"]
                 })
                 avalon.scan()
             })
         </script>
-        <style>
-            #gridsample{
-                width:900px;
-            }
-        </style>
     </head>
-    <body>
+    <body >
+      
+    <fieldset ms-controller="test">
+        <legend>允许通过拖动改变每一列的列宽</legend>
 
-        <fieldset ms-controller="test">
-            <legend>演示大数据表格</legend>
+        <div ms-widget="simplegrid">
 
-            <div ms-widget="simplegrid" id="gridsample">
+        </div>
+        <pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;simplegrid&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script src="../highlight/shCore.js"&gt;
 
-            </div>
-        </fieldset>
+        &lt;/script&gt;
+        &lt;script&gt;
+            require(["simplegrid/avalon.simplegrid"], function() {
+                avalon.define("test", function(vm) {
 
-    </body>
+                    vm.simplegrid = {
+                        columns: [
+                            {field: "zzz", text: "列三", resizable: true},
+                            {field: "yyy", text: "列二", resizable: true},
+                            {field: "xxx", text: "列一", resizable: true}
+                        ],
+                        columnsOrder: ["xxx", "yyy", "zzz"],
+                        data: [{
+                                xxx: 10, yyy: 1, zzz: 1
+                            },
+                            {
+                                xxx: 20, yyy: 2, zzz: 2
+                            },
+                            {
+                                xxx: 30, yyy: 3, zzz: 3
+                            },
+                            {
+                                xxx: 40, yyy: 4, zzz: 4
+                            }
+
+                        ]
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body &gt;
+      
+    &lt;fieldset ms-controller="test"&gt;
+        &lt;legend&gt;columns的配置项使用&lt;/legend&gt;
+      
+        &lt;div ms-widget="simplegrid"&gt;
+
+        &lt;/div&gt;
+    &lt;/fieldset&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+    </fielset>
+</body>
 </html>

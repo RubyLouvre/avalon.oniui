@@ -27,12 +27,12 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         }
     }
     //切割出表头与表身的模板
-    var template = arr[0], theadTemplate, tbodyTemplate, colTemplate
-    template = template.replace(/MS_OPTION_THEAD_BEGIN([\s\S]+)MS_OPTION_THEAD_END/, function(a, b) {
+    var gridTemplate = arr[0], theadTemplate, tbodyTemplate
+    gridTemplate = gridTemplate.replace(/MS_OPTION_THEAD_BEGIN([\s\S]+)MS_OPTION_THEAD_END/, function(a, b) {
         theadTemplate = b
         return "MS_OPTION_THEAD_HOLDER"
     })
-    template = template.replace(/MS_OPTION_TBODY_BEGIN([\s\S]+)MS_OPTION_TBODY_END/, function(a, b) {
+    gridTemplate = gridTemplate.replace(/MS_OPTION_TBODY_BEGIN([\s\S]+)MS_OPTION_TBODY_END/, function(a, b) {
         tbodyTemplate = b
         return "MS_OPTION_TBODY_HOLDER"
     })
@@ -40,20 +40,19 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
     var body = document.body || document.documentElement
     var remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m
 
-
     var widget = avalon.ui.simplegrid = function(element, data, vmodels) {
         var options = data.simplegridOptions
         //格式化各列的具体规格
         options.columns = options.getColumns(options.columns, options)
+
         //允许指定表头与表身的每一行的模板
         makeTemplate(options, "theadTemplate", theadTemplate)
         makeTemplate(options, "tbodyTemplate", tbodyTemplate)
-        template = template.replace(/MS_OPTION_THEAD_HOLDER/, options.theadTemplate)
+        var template = gridTemplate.replace(/MS_OPTION_THEAD_HOLDER/, options.theadTemplate)
                 .replace(/MS_OPTION_TBODY_HOLDER/, options.tbodyTemplate)
 
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
-
         //决定每页的行数(分页与滚动模式下都要用到它)
         //<------开始配置分页的参数
         if (typeof options.pager !== "object") {
@@ -134,29 +133,47 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     }
                 }
                 vm.topTable = table //重置真正的代表表头的table
+                vm.theadHeight = avalon(table).innerHeight()
+
                 vm.scrollPanel = table.parentNode.parentNode//重置包含两个table的会出现滚动条的容器对象
-              
+
                 vm.gridWidth = Math.min(table.offsetWidth, vm.scrollPanel.offsetWidth)
+                //console.log(table.offsetWidth, vm.scrollPanel.offsetWidth,vm.gridWidth)
                 vm.theadRenderedCallback.call(tbody, vmodel, options, vmodels)
             }
             vm._tbodyRenderedCallback = function(a) {
                 //取得tbody每一行的高
-                var tbody = this, row = tbody.rows[0], cell = row.cells[0]
+                var tbody = this
+                var cell = tbody.getElementsByTagName("td")[0] ||
+                        tbody.getElementsByTagName("th")[0]
+
                 //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
                 if (cell) {
+                    var table = vm.bottomTable = this.parentNode;
+                    vm.tbodyHeight = avalon(table).innerHeight() //求出可见区的总高度
+                    vm._rowHeight = vm.tbodyHeight / tbody.rows.length //求出每一行的高
+                    var perPages = vm.pager.perPages
+                    vm.tbodyScrollHeight = vm._rowHeight * perPages
                     var borderHeight = Math.max(avalon.css(cell, "borderTopWidth", true),
                             avalon.css(cell, "borderBottomWidth", true))
-                    var perPages = vm.pager.perPages
-                    vm._rowHeight = row.offsetHeight
                     vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
-                    vm.tbodyHeight = vm._rowHeight * vm.showRows + borderHeight * 2
-                    vm.tbodyScrollHeight = vm._rowHeight * perPages
                     //如果同时出现两个滚动条
-                    vm.bottomTable = this.parentNode
+
                     var panel = vm.scrollPanel
-                    if (perPages > vm.showRows && panel.clientWidth < panel.scrollWidth) {
-                        vm.gridWidth = panel.scrollWidth - 17
+                 
+                    if (hasScroll(panel, "y")) {
+                        r = panel.scrollHeight - panel.clientHeight
+                        if (r > 0 && r <= scrollbarHeight) {
+                            // vm.theadHeight += r
+                        }
                     }
+                    if (hasScroll(panel, "x")) {
+                        var r = panel.scrollWidth - panel.clientWidth
+                        if (r > 0 && r <= scrollbarWidth) {
+                            vm.gridWidth = panel.scrollWidth - 17
+                        }
+                    }
+
                     vm.tbodyRenderedCallback.call(tbody, vmodel, options, vmodels)
 
                 } else {
@@ -164,7 +181,6 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                         vmodel._tbodyRenderedCallback.call(tbody)
                     }, 100)
                 }
-
             }
 
             vm.startResize = function(e, el) {
@@ -247,7 +263,6 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                     vmodel.remoteSort(field, trend, opts, callback)
                 } else if (typeof el.localSort === "function" && !remptyfn.test(el.localSort)) {// !isEmptyFn(el.localSort)
                     //如果要在本地排序,并且指定排数函数
-
                     vmodel._data.sort(function(a, b) {
                         return trend * el.localSort(a, b, field, opts) || 0
                     })
@@ -359,7 +374,6 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         return vmodel
     }
     widget.defaults = {
-       
         theadHeight: 35,
         tbodyScrollHeight: "auto",
         tbodyScrollTop: 0,
@@ -378,6 +392,9 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         theadRenderedCallback: function(tbody, vmodel, options, vmodels) {
         },
         tbodyRenderedCallback: function(tbody, vmodel, options, vmodels) {
+        },
+        renderCell: function(val, key, row) {
+            return val
         },
         getColumnTitle: function() {
             return ""
@@ -468,6 +485,31 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
         elem[name] = typeof elem[name] === "boolean" ? elem[name] : value
     }
 
+    var scrollbarHeight, scrollbarWidth;
+    (function() {
+        var node = document.createElement("div")
+        node.style.cssText = "position: absolute;  width: 100px; height: 100px; overflow: scroll;background:red;"
+        document.body.appendChild(node)
+        scrollbarHeight = node.offsetHeight - node.clientHeight;
+        scrollbarWidth = node.offsetWidth - node.clientWidth;
+        document.body.removeChild(node)
+    })();
+    // console.log(scrollbarHeight+":"+ scrollbarWidth)
+    function hasScroll(el, a) {
+        //判定是否存在水平或垂直滚动条
+        if (avalon(el).css("overflow") === "hidden") {
+            return false
+        }
+        var scroll = (a && a === "x") ? "scrollLeft" : "scrollTop"
+        if (el[ scroll ] > 0) {
+            return true
+        }
+        if (scroll === "scrollLeft") {
+            return el.scrollWidth > el.clientWidth
+        } else {
+            return el.scrollHeight > el.clientHeight
+        }
+    }
     function makeTemplate(opts, name, value) {
         opts[name] = typeof opts[name] === "function" ? opts[name](value, opts) :
                 (typeof opts[name] === "string" ? opts[name] : value)

@@ -4,13 +4,62 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
 <title>daterangepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
 <script src="../avalon.js"></script>
 </head>
 <body class="ms-controller">
     <div class="wrapper">
-        <h1>daterangepicker demo 1</h1>
-        <p class="example"></p>
-        <p><span class="useDescription">说明：</span></p>
+        <h1>daterangepicker demo</h1>
+        <div class="demoShow" ms-controller="demo">
+            <fieldset>
+                <legend>日期范围框 两天最小相隔0天</legend>
+                <div ms-widget="daterangepicker" data-daterangepicker-duplex="from, to" data-daterangepicker-rules="aOpts"></div>
+                <p>通过配置rules来设置起始日历和结束日历之间两天相隔的最小天数。初始日期设为2014-06-12，最小相隔日期0天，则结束日期的最小日期为2014-06-12，虽然结束日期初始设置为2014-06-02，但是组件会自动修正结束日期</p>
+            </fieldset>
+            <fieldset>
+                <legend>日期范围框 两天最大相隔8天</legend>
+                <div ms-widget="daterangepicker" data-daterangepicker-duplex="from, to" data-daterangepicker-rules="bOpts"></div>
+                <p>通过配置rules来设置起始日历和结束日历之间两天相隔的最小天数为0，最大天数为8</p>
+            </fieldset>
+            <fieldset>
+                <legend>日期范围框 两天最小相隔0天，最大相隔8天</legend>
+                <div ms-widget="daterangepicker" data-daterangepicker-duplex="from, to1" data-daterangepicker-rules="dOpts"></div>
+                <p>初始结束日期的初始日期为2014-06-20，在最小间隔天数和最大间隔天数所包含的日期，正常显示</p>
+            </fieldset>
+            <fieldset>
+                <legend>日期范围框 最小日期、最大日期</legend>
+                <div ms-widget="daterangepicker" data-daterangepicker-duplex="from, to" data-daterangepicker-rules="cOpts"></div>
+                <p>通过配置rules对象，设置初始日期的最小日期fromMinDate、最大日期fromMaxDate和结束日期的最小日期toMinDate和最大日期toMaxDate,在显式设置结束日历的最小日期和最大日期的情况下，当结束日期不在其最小和最大日期范围之内时，组件会将结束日期设为其最小日期</p>
+            </fieldset>
+            <script> 
+                require("datepicker/avalon.daterangepicker", function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.from = "2014-06-12"
+                        vm.to = "2014-06-02"
+                        vm.to1 = "2014-06-15"
+                        vm.aOpts = {
+                            rules: 'null, 0D'
+                        };
+                        vm.bOpts = {
+                            rules: 'null, 0D, 8D' 
+                        }
+                        vm.cOpts = {
+                            rules: 'null, 0D, 8D',
+                            fromMinDate: '2014-05-02',
+                            fromMaxDate: '2014-06-28',
+                            toMinDate: '2014-06-01',
+                            toMaxDate: '2014-07-12'
+                        } 
+                        vm.dOpts = {
+                            rules: 'null, 0D, 8D' 
+                        }  
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
         <div ms-skip>
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
@@ -21,24 +70,57 @@
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body&gt;
-                    
+                    &lt;div class="demoShow" ms-controller="demo"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;日期范围框 两天最小相隔0天&lt;/legend&gt;
+                            &lt;div ms-widget="daterangepicker" data-daterangepicker-duplex="from, to" data-daterangepicker-rules="aOpts"&gt;&lt;/div&gt;
+                            &lt;p&gt;通过配置rules来设置起始日历和结束日历之间两天相隔的最小天数。初始日期设为2014-06-12，最小相隔日期0天，则结束日期的最小日期为2014-06-12，虽然结束日期初始设置为2014-06-02，但是组件会自动修正结束日期&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;日期范围框 两天最大相隔8天&lt;/legend&gt;
+                            &lt;div ms-widget="daterangepicker" data-daterangepicker-duplex="from, to" data-daterangepicker-rules="bOpts"&gt;&lt;/div&gt;
+                            &lt;p&gt;通过配置rules来设置起始日历和结束日历之间两天相隔的最小天数为0，最大天数为8&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;日期范围框 两天最小相隔0天，最大相隔8天&lt;/legend&gt;
+                            &lt;div ms-widget="daterangepicker" data-daterangepicker-duplex="from, to1" data-daterangepicker-rules="dOpts"&gt;&lt;/div&gt;
+                            &lt;p&gt;初始结束日期的初始日期为2014-06-20，在最小间隔天数和最大间隔天数所包含的日期，正常显示&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;日期范围框 最小日期、最大日期&lt;/legend&gt;
+                            &lt;div ms-widget="daterangepicker" data-daterangepicker-duplex="from, to" data-daterangepicker-rules="cOpts"&gt;&lt;/div&gt;
+                            &lt;p&gt;通过配置rules对象，设置初始日期的最小日期fromMinDate、最大日期fromMaxDate和结束日期的最小日期toMinDate和最大日期toMaxDate,在显式设置结束日历的最小日期和最大日期的情况下，当结束日期不在其最小和最大日期范围之内时，组件会将结束日期设为其最小日期&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require("datepicker/avalon.daterangepicker", function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.from = "2014-06-12"
+                                    vm.to = "2014-06-02"
+                                    vm.to1 = "2014-06-15"
+                                    vm.aOpts = {
+                                        rules: 'null, 0D'
+                                    };
+                                    vm.bOpts = {
+                                        rules: 'null, 0D, 8D' 
+                                    }
+                                    vm.cOpts = {
+                                        rules: 'null, 0D, 8D',
+                                        fromMinDate: '2014-05-02',
+                                        fromMaxDate: '2014-06-28',
+                                        toMinDate: '2014-06-01',
+                                        toMaxDate: '2014-07-12'
+                                    } 
+                                    vm.dOpts = {
+                                        rules: 'null, 0D, 8D' 
+                                    }  
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
                 &lt;/body&gt;
                 &lt;/html&gt;
             </pre>
-        </div>
-        <div class="demoShow" ms-controller="demo">
-            <fieldset>
-                <legend></legend>
-                <div ms-widget="daterangepicker"></div>
-            </fieldset>
-            <script> 
-                require("datepicker/avalon.daterangepicker", function(avalon) {
-                    var model = avalon.define("demo", function(vm) {
-                        
-                    })
-                    avalon.scan();
-                })
-            </script>
         </div>
     </div>
 </body>

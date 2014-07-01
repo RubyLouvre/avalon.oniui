@@ -23,7 +23,6 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
             _toMaxDate = "";
         var _c = {  
             '+M': function(time ,n) {
-
                 var _d = time.getDate();
                 time.setMonth(time.getMonth() + n);
                 if(time.getDate() !== _d) {
@@ -63,12 +62,11 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
         _toMinDate = rules.toMinDate; 
         _toMaxDate = rules.toMaxDate; 
         if(rules) {
-            rules.toMinDate = rules.toMinDate && "";
-            rules.toMaxDate = rules.toMaxDate && "";
-            rules.fromMaxDate = rules.fromMaxDate && "";
-            rules.fromMaxDate = rules.fromMaxDate && "";
+            rules.toMinDate = rules.toMinDate || "";
+            rules.toMaxDate = rules.toMaxDate || "";
+            rules.fromMinDate = rules.fromMinDate || "";
+            rules.fromMaxDate = rules.fromMaxDate || "";
         }
-
         options.rules = rules;
         if(selectFuncVM) {
             options.select = selectFuncVM[1][selectFuncVM[0]];
@@ -141,6 +139,7 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                 applyRules(date);
             }
             vm.$init = function() {
+                options.template = options.template.replace(/MS_OPTION_START_DAY/g, vmodel.startDay);
                 var daterangepicker = avalon.parseHTML(options.template).firstChild,
                     inputs = daterangepicker.getElementsByTagName("input"),
                     container = daterangepicker.children[0],
@@ -187,7 +186,6 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                 if(len==2) {
                     vmodel.inputFromValue = inputFrom.value = from && options.parseDate(from) && from || "";
                     vmodel.inputToValue = inputTo.value = to && options.parseDate(to) && to || "";
-
                     vmodel.label = options.datesDisplayFormat(options.defaultLabel,vmodel.inputFromValue, vmodel.inputToValue);
                 } else if(len==1){
                     vmodel.inputFromValue = inputFrom.value = from && options.parseDate(from) && from || "";
@@ -211,12 +209,36 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                 maxDateRule = df['maxDate'];
             minDate = (minDateRule ? minDateRule.getTime() : -1) > (minDate ? minDate.getTime() : -1) ? minDateRule : minDate ;
             maxDate = (maxDateRule ? maxDateRule.getTime() : Number.MAX_VALUE) > (maxDate ? maxDate.getTime() : Number.MAX_VALUE) ? maxDate : maxDateRule;
-            if (minDate){
-                vmodel.rules.toMinDate = options.formatDate(minDate.getFullYear(), minDate.getMonth(), minDate.getDate());
+            // if (minDate){
+            //     vmodel.rules.toMinDate = options.formatDate(minDate);
+            // }
+            // if (maxDate) {
+            //     vmodel.rules.toMaxDate = options.formatDate(maxDate);
+            // }
+            if(minDate){
+                var toMinDateFormat = options.formatDate(minDate);
+                vmodel.rules.toMinDate = toMinDateFormat;
+                if(!vmodel.inputToValue) {
+                    vmodel.inputToValue = toMinDateFormat;
+                }
             }
-            if (maxDate) {
-                vmodel.rules.toMaxDate = options.formatDate(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate());
+            if(maxDate) {
+                vmodel.rules.toMaxDate = options.formatDate(maxDate);
             }
+            var inputToDate = vmodel.inputToValue && vmodel.parseDate(vmodel.inputToValue);
+            if(inputToDate && isDateDisabled(inputToDate, minDate, maxDate)) {
+                vmodel.inputToValue = toMinDateFormat;
+            }
+        }
+        // 根据minDate和maxDate的设置判断给定的日期是否不可选
+        function isDateDisabled(date, minDate, maxDate){
+            var time = date.getTime();
+            if(minDate && time < minDate.getTime()){
+                return true;
+            } else if(maxDate && time > maxDate.getTime()) {
+                return true;
+            }
+            return false;
         }
         function calcDate( desc , date ){
             var time;
@@ -295,10 +317,7 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
     widget.defaults = {
         fromLabel : '选择起始日期',
         toLabel : '选择结束日期',
-        fromName : 'fromDate',
-        toName : 'toDate',
         rules: "",
-        msg: "",
         label: "", //范围选择框的日历说明
         defaultLabel: "日期范围",
         disabled: false,
@@ -306,16 +325,25 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
         separator: "-",
         startDay: 1,    //星期开始时间
         select: avalon.noop, //点击确定按钮选择日期后的回调
-        parseDate : function( str ){
+        parseDate: function(str){
             var separator = this.separator;
             var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})$";
             reg = new RegExp(reg);
             var x = str.match(reg);
             return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
         },
-        formatDate : function( year, month, day ){
-            var separator = this.separator;
-            return year + separator + formatNum( month + 1 , 2 ) + separator + formatNum( day , 2 );
+        formatDate: function(date){
+            var separator = this.separator,
+                year = date.getFullYear(), 
+                month = date.getMonth(), 
+                day = date.getDate();
+            return year + separator + this.formatNum( month + 1 , 2 ) + separator + this.formatNum( day , 2 );
+        },
+        formatNum: function(n , length){
+            n = String(n);
+            for( var i = 0 , len = length - n.length ; i < len ; i++)
+                n = "0" + n;
+            return n;
         },
         datesDisplayFormat: function(label, fromDate, toDate) {
             return label + "：" + fromDate + ' 至 ' + toDate;
@@ -324,11 +352,6 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
             return str;
         }
     }
-    function formatNum ( n , length ){
-        n = String(n);
-        for( var i = 0 , len = length - n.length ; i < len ; i++)
-            n = "0" + n;
-        return n;
-    }
+    
     return avalon;
 })

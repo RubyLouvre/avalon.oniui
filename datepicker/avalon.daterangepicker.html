@@ -17,25 +17,31 @@
             <input style="display:none" 
             data-datepicker-type="range" 
             data-datepicker-allow-blank=true
+            data-datepicker-parse-date="parseDate"
+            data-datepicker-format-date="formatDate"
             data-datepicker-change="fromSelectCal"
             data-datepicker-min-date="rules.fromMinDate"
             data-datepicker-max-date="rules.fromMaxDate"
+            data-datepicker-start-day="MS_OPTION_START_DAY"
             ms-data-container="container"
             ms-data-input="inputElement"
             ms-data-calenderwrapper="calendarWrapper"
-            ms-data-datepicker-calendar-label="fromLabel" id="test1"/>
+            ms-data-datepicker-calendar-label="fromLabel"/>
         </div>
         <div class="ui-datepicker-group-second ui-datepicker-group">
             <input style="display:none" 
             ms-data-toggle="toggle" 
             data-datepicker-type="range" 
             data-datepicker-allow-blank=true
+            data-datepicker-parse-date="parseDate"
+            data-datepicker-format-date="formatDate"
             data-datepicker-min-date="rules.toMinDate"
             data-datepicker-max-date="rules.toMaxDate"
+            data-datepicker-start-day="MS_OPTION_START_DAY"
             ms-data-container="container"
             ms-data-input="inputElement"
             ms-data-calenderwrapper="calendarWrapper"
-            ms-data-datepicker-calendar-label="toLabel" id="test2"/>
+            ms-data-datepicker-calendar-label="toLabel"/>
         </div>
         <div class="ui-calendarbox-footer ui-calendarbox-footer-small clrfix">
             <div class="ui-calendarbox-msg js-msg">{{msg}}</div>
@@ -95,7 +101,7 @@ MS_OPTION_STYLE
     height: 22px;
 }
 .ui-daterangepicker {
-    width: 240px;
+    width: 260px;
     font-size: 12px;
     line-height: 18px;
 }
@@ -144,6 +150,7 @@ MS_OPTION_STYLE
     background: #ffffff;
     border: 1px solid #cccccc;
     position: absolute;
+    z-index: 1000;
 }
 .ui-datepicker-groups .ui-datepicker-wrapper {
     position: static;

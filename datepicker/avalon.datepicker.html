@@ -11,12 +11,11 @@
                 ms-click="_next(nextMonth, $event)"
                 ms-class="ui-datepicker-next-disabled:!nextMonth" style="right:15px;">&#xf054;</i>
             <div class="ui-datepicker-content-content" ms-repeat-calendar="data">
-                <div class="ui-datepicker-header" ms-if="numberOfMonths===1">
+                <div class="ui-datepicker-header" ms-if="numberOfMonths===1 && changeMonthAndYear">
                     <i class="ui-datepicker-prev ui-icon ui-icon-chevron-left" 
                         ms-click="_prev(prevMonth, $event)"
                         ms-class="ui-datepicker-prev-disabled:!prevMonth">&#xf053;</i>
-                    <i class="ui-datepicker-next ui-icon ui-icon-chevron-right" 
-                        ms-click="_next(nextMonth, $event)"
+                    <i class="ui-datepicker-next ui-icon ui-icon-chevron-right"    ms-click="_next(nextMonth, $event)"
                         ms-class="ui-datepicker-next-disabled:!nextMonth">&#xf054;</i>
                     <div class="ui-datepicker-title">
                         <!-- <span >{{year}}年</span> -->
@@ -28,8 +27,14 @@
                         </select>&nbsp;月
                     </div>
                 </div>
-                <div class="ui-datepicker-header" ms-if="numberOfMonths!==1">
-                    
+                <div class="ui-datepicker-header" ms-if="numberOfMonths!==1 || !changeMonthAndYear">
+                    <i class="ui-datepicker-prev ui-icon ui-icon-chevron-left" 
+                        ms-click="_prev(prevMonth, $event)"
+                        ms-if="numberOfMonths===1 && !changeMonthAndYear"
+                        ms-class="ui-datepicker-prev-disabled:!prevMonth">&#xf053;</i>
+                    <i class="ui-datepicker-next ui-icon ui-icon-chevron-right"    ms-click="_next(nextMonth, $event)"
+                        ms-if="numberOfMonths===1 && !changeMonthAndYear"
+                        ms-class="ui-datepicker-next-disabled:!nextMonth">&#xf054;</i>
                     <div class="ui-datepicker-title">
                         {{calendar.year}}年{{calendar.month+1}}月
                     </div> 
@@ -52,7 +57,7 @@
                                 ms-class-1="ui-datepicker-day-none: item.month === false"
                                 ms-class-2="ui-datepicker-selected:item.selected"
                                 ms-class-3="ui-state-disabled:item.dateDisabled"
-                                ms-click="_selectDate(year, item.month, item.day, item.dateDisabled, $outer.$index, $index)"
+                                ms-click="_selectDate(calendar.year, item.month, item.day, item.dateDisabled, $outer.$index, $index)"
                                 >{{item._day}}</td>
                         </tr>
                     </tbody>
@@ -96,12 +101,16 @@ MS_OPTION_STYLE
     color: #333;
     position: relative;
 }
+.ui-datepicker tr, .ui-datepicker td, .ui-datepicker th {
+    border: 0;
+} 
 .ui-datepicker-wrapper {
     padding: 9px 0 9px 10px;
     border: 1px solid #cccccc;
     box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
     position: absolute;
     background: #fff;
+    z-index: 1000;
 }
 .ui-datepicker-input-wrapper {
     background: #ffffff;
@@ -119,9 +128,10 @@ MS_OPTION_STYLE
     cursor: pointer;
     outline: none;
     padding: 3px 90px 3px 6px;
-    width: 85px;
+    width: 90px;
     height: 18px;
     margin: 0;
+    font-size: 12px;
 }
 .ui-datepicker-tip {
     position: absolute;
@@ -221,6 +231,7 @@ MS_OPTION_STYLE
     text-align: center;
     line-height: 18px;
     font-weight: 400;
+    font-size: 12px;
 }
 .ui-datepicker-week-end , .ui-datepicker-calendar-days .ui-datepicker-week-end{
     color: #ff5555;
@@ -245,10 +256,6 @@ MS_OPTION_STYLE
         -webkit-transform: scale(0.91666667);
     }
 }
-.ui-datepicker .ui-datepicker-selected {
-    background: #3775c0;
-    color: #fff;
-}
 .ui-datepicker .ui-datepicker-day-none {
     cursor: auto;
 }
@@ -256,6 +263,10 @@ MS_OPTION_STYLE
     color: #cccccc;
     cursor: default;
     background: #fff;
+}
+.ui-datepicker .ui-datepicker-calendar-days .ui-datepicker-selected {
+    background: #3775c0;
+    color: #fff;
 }
 .ui-datepicker .ui-dropdown-input {
     padding: 0 21px 0 6px;

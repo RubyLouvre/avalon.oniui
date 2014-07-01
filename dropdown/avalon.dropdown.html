@@ -3,7 +3,8 @@
      ms-css-width="{{width}}"
      ms-click="$toggle"
      ms-blur="$blur($event)"
-     tabindex="-1">
+     ms-keydown="$keydown($event)"
+     tabindex="0">
     <div class="ui-dropdown-source">
         <div class="ui-dropdown-input"
              ms-title="$getLabel(value)">{{$getLabel(value)}}</div>

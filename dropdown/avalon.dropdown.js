@@ -289,7 +289,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             vm.widgetElement = element;
             vm.activeIndex = null;
 
-            vm.dataSource = dataSource;     //源节点的数据源，通过dataSource传递的值将完全模拟select
+            vm.dataSource = dataSource;    //源节点的数据源，通过dataSource传递的值将完全模拟select
             vm.data = dataModel;           //下拉列表的渲染model
             vm.__listenter__ = false;      //是否当前鼠标在list区域
 
@@ -407,6 +407,57 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
             vm.$createListNode = function() {
                 return avalon.parseHTML(listTemplate);
+            };
+
+            vm.$keydown = function(e) {
+                e.preventDefault();
+                if(!vmodel.multiple) {
+                    var up,
+                        selectedItemIndex,
+                        nextItem;
+
+                    avalon.each(vmodel.data, function(i, item) {
+                        if(item.item && item.value === vmodel.value) {
+                            selectedItemIndex = i;
+                            return false;
+                        }
+                        return true;
+                    });
+
+                    if(!selectedItemIndex) {
+                        selectedItemIndex = 0;
+                    }
+
+                    //区分上下箭头和回车
+                    switch (e.keyCode) {
+                        case 38:
+                            up = true;
+                            break;
+                        case 40:
+                            up = false;
+                            break;
+                        case 13:
+                            vmodel.toggle = false;
+                            break;
+                        default:
+                    }
+
+                    //根据键盘行为设置组件value
+                    if(up !== void 0) {
+                        if(up) {
+                            nextItem = vmodel.data.slice(0, selectedItemIndex - 1).reverse();
+                        } else {
+                            nextItem = vmodel.data.slice(selectedItemIndex + 1);
+                        }
+                        nextItem = nextItem.filter(function(item) {
+                            return item.item && item.enable;
+                        });
+
+                        if(nextItem.length > 0) {
+                            vmodel.value = nextItem[0].value;
+                        }
+                    }
+                }
             };
 
             vm.$toggle = function(b) {

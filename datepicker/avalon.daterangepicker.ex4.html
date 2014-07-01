@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>daterangepicker demo </title>
+<script src="../avalon.js"></script>
+</head>
+<body class="ms-controller">
+    <div class="wrapper">
+        <h1>daterangepicker demo 1</h1>
+        <p class="example"></p>
+        <p><span class="useDescription">说明：</span></p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;daterangepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+        <div class="demoShow" ms-controller="demo">
+            <fieldset>
+                <legend></legend>
+                <div ms-widget="daterangepicker"></div>
+            </fieldset>
+            <script> 
+                require("datepicker/avalon.daterangepicker", function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+    </div>
+</body>
+</html>
+

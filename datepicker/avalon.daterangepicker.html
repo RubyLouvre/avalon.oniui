@@ -1,38 +1,115 @@
 <div class="ui-daterangepicker">
     <div class="ui-datepicker-range-input" 
         ms-click="_toggleDatepicker(toggle, $event)"
+        ms-class="ui-state-active:toggle"
+        ms-hover="ui-state-hover"
         >
-        <div class="ui-datepicker-input js-input">
-            <strong>日期范围：</strong>2014-01-02 至 2014-01-15
-        </div>
+        <div class="ui-datepicker-input js-input">{{label|html}}</div>
         <div class="ui-datepicker-icon-wrap">
-            <i class="ui-datepicker-icon ui-icon ui-icon-angle-up">&#xf106;</i>
-            <i class="ui-datepicker-icon ui-icon ui-icon-angle-down">&#xf107;</i>
+            <i class="ui-datepicker-icon ui-icon ui-icon-angle-up" ms-visible="toggle">&#xf106;</i>
+            <i class="ui-datepicker-icon ui-icon ui-icon-angle-down" ms-visible="!toggle">&#xf107;</i>
         </div>
     </div>
-    <div class="ui-datepicker-groups">
+    <div class="ui-datepicker-groups" 
+        ms-visible="toggle"
+        ms-click="_updateMsg">
         <div class="ui-datepicker-group-first ui-datepicker-group">
-            <input style="display:none" ms-widget="datepicker" ms-data-toggle="toggle" data-datepicker-type="range"/>
+            <input style="display:none" 
+            data-datepicker-type="range" 
+            data-datepicker-allow-blank=true
+            data-datepicker-change="fromSelectCal"
+            data-datepicker-min-date="rules.fromMinDate"
+            data-datepicker-max-date="rules.fromMaxDate"
+            ms-data-container="container"
+            ms-data-input="inputElement"
+            ms-data-calenderwrapper="calendarWrapper"
+            ms-data-datepicker-calendar-label="fromLabel" id="test1"/>
         </div>
         <div class="ui-datepicker-group-second ui-datepicker-group">
-            <input style="display:none" ms-widget="datepicker" ms-data-toggle="toggle" data-datepicker-type="range"/>
+            <input style="display:none" 
+            ms-data-toggle="toggle" 
+            data-datepicker-type="range" 
+            data-datepicker-allow-blank=true
+            data-datepicker-min-date="rules.toMinDate"
+            data-datepicker-max-date="rules.toMaxDate"
+            ms-data-container="container"
+            ms-data-input="inputElement"
+            ms-data-calenderwrapper="calendarWrapper"
+            ms-data-datepicker-calendar-label="toLabel" id="test2"/>
         </div>
         <div class="ui-calendarbox-footer ui-calendarbox-footer-small clrfix">
             <div class="ui-calendarbox-msg js-msg">{{msg}}</div>
             <div class="ui-calendarbox-btns">
-                <button type="button" class="ui-btn ui-btn-primary ui-btn-small js-submit">确定</button>
-                <button type="button" class="ui-btn ui-btn-small js-cancel">取消</button>
+                <button type="button" class="ui-btn ui-btn-primary ui-btn-small js-submit"
+                ms-click="_selectDate">确定</button>
+                <button type="button" class="ui-btn ui-btn-small js-cancel"
+                ms-click="_cancelSelectDate">取消</button>
             </div>
         </div>
     </div>
 </div>
 MS_OPTION_STYLE
 <style>
+.clrfix {
+    zoom: 1;
+}
+.clrfix:before,
+.clrfix:after {
+    content: '';
+    display: block;
+}
+.clrfix:after {
+    clear: both;
+}
+.ui-btn {
+  display: inline-block;
+  *display: inline;
+  vertical-align: middle;
+  *zoom: 1;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  border-radius: 2px;
+  color: #333333;
+  cursor: pointer;
+  font-size: 12px;
+  height: 26px;
+  outline: none;
+  overflow: visible;
+  _overflow-y: hidden;
+  padding: 0 10px;
+  text-decoration: none;
+}
+.ui-btn:hover {
+  box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1);
+  background-color: #f8f8f8;
+  border-color: #bbbbbb;
+  color: #333333;
+}
+.ui-btn-small {
+    padding: 0 5px;
+    font-size: 12px;
+    height: 22px;
+}
+.ui-daterangepicker {
+    width: 240px;
+    font-size: 12px;
+    line-height: 18px;
+}
 .ui-datepicker-range-input {
     background-color: #ffffff;
     border: 1px solid #cccccc;
     cursor: pointer;
-    display: inline-block;
+}
+.ui-datepicker-range-input.ui-state-hover {
+    border: 1px solid #999;
+}
+.ui-datepicker-range-input.ui-state-active {
+    border-color: #3775c0;
+    border-bottom: 0;
 }
 .ui-datepicker-input {
     height: 18px;
@@ -56,24 +133,64 @@ MS_OPTION_STYLE
     text-align: center;
     top: -21px;
 }
-.ui-datepicker-icon-wrap .ui-icon-angle-down {
+.ui-datepicker-icon-wrap .ui-icon-angle-down, .ui-datepicker-icon-wrap .ui-icon-angle-up {
     display: block;
 }
 .ui-datepicker-groups {
+    font-size: 0;
+    padding: 9px 0 0 10px;
+    white-space: nowrap;
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    border: 1px solid #cccccc;
     position: absolute;
+}
+.ui-datepicker-groups .ui-datepicker-wrapper {
+    position: static;
+    padding: 0;
+    border: 0;
+    box-shadow: 0 0 0 0 rgba(0,0,0,0);
 }
 .ui-datepicker-group {
     position: relative;
     display: inline-block;
 }
+.ui-daterangepicker .ui-datepicker-content {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); 
+}
+.ui-daterangepicker .ui-datepicker-content {
+    position: static;
+}
 .ui-calendarbox-footer-small {
-  padding-bottom: 4px;
-  padding-top: 4px;
+    padding: 4px 5px;
+    background: #f8f8f8;
+    margin-top: 9px;
+    margin-left: -10px;
+    height:22px;
+    line-height: 22px;
 }
 .ui-calendarbox-footer-small .ui-calendarbox-msg {
-  margin-top: 2px;
+    float: left;
 }
 .ui-calendarbox-footer-small .ui-btn {
-  margin-left: 5px;
-}  
+    margin: 0 0 0 5px ;
+}
+.ui-btn-primary {
+    background-color: #58b359;
+    border-color: #45a846;
+    color: #ffffff;
+}
+.ui-btn-primary:hover {
+    background-color: #68c969;
+    border-color: #3e973e;
+    color: #ffffff;
+}
+.ui-calendarbox-btns {
+    display: inline;
+    float: right;
+    font-size: 0;
+}
+.ui-calendarbox-msg {
+    font-size: 12px;
+}
 </style>

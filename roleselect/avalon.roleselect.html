@@ -1,0 +1,20 @@
+<div class="ui-roleselect reset clrfix ui-widget">
+	<div class="ui-roleselect-data ui-roleselect-menu ui-widget-content" ms-widget="scrollbar,$left{{MS_OPTION_ID}}">
+		<ul class="reset ui-scrollbar-scroller" ms-each-item="data">
+		{{MS_OPTION_DATA}}
+		</ul>
+	</div>
+	<div class="ui-roleselect-option">
+		<div class="ui-button" ms-click="$update($event,'add')">
+			<span>添加<i class="ui-icon ui-icon-chevron-right"></i></span>
+		</div>
+		<div class="ui-button" ms-click="$update($event,'delete')">
+			<span><i class="ui-icon ui-icon-chevron-left"></i> 删除</span>
+		</div>
+	</div>
+	<div class="ui-roleselect-select ui-roleselect-menu ui-widget-content" ms-widget="scrollbar,$right{{MS_OPTION_ID}}">
+		<ul class="reset ui-scrollbar-scroller" ms-each-item="_select">
+			{{MS_OPTION_SELECT}}
+		</ul>
+	</div>
+</div>

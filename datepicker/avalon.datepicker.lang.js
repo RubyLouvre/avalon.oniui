@@ -72,48 +72,6 @@ define(function() {
         }
     };
     var HolidayData = {
-        "2013-01-01": {
-            "holidayName": "元旦节"
-        },
-        "2013-02-09": {
-            "holidayName": "除夕"
-        },
-        "2013-02-10": {
-            "holidayName": "春节"
-        },
-        "2013-02-11": {
-            "holidayName": "正月初二"
-        },
-        "2013-02-12": {
-            "holidayName": "正月初三"
-        },
-        "2013-02-24": {
-            "holidayName": "元宵节"
-        },
-        "2013-04-04": {
-            "holidayName": "清明节"
-        },
-        "2013-05-01": {
-            "holidayName": "劳动节"
-        },
-        "2013-06-01": {
-            "holidayName": "儿童节"
-        },
-        "2013-06-12": {
-            "holidayName": "端午节"
-        },
-        "2013-09-10": {
-            "holidayName": "教师节"
-        },
-        "2013-09-19": {
-            "holidayName": "中秋节"
-        },
-        "2013-10-01": {
-            "holidayName": "国庆节"
-        },
-        "2013-12-25": {
-            "holidayName": "圣诞节"
-        },
         "2014-01-01": {
             "holidayName": "元旦节"
         },
@@ -147,10 +105,52 @@ define(function() {
         "2014-09-08": {
             "holidayName": "中秋节"
         },
+        "2014-09-10": {
+            "holidayName": "教师节"
+        },
         "2014-10-01": {
             "holidayName": "国庆节"
         },
         "2014-12-25": {
+            "holidayName": "圣诞节"
+        },
+        "2015-01-01": {
+            "holidayName": "元旦节"
+        },
+        "2015-02-18": {
+            "holidayName": "除夕"
+        },
+        "2015-02-19": {
+            "holidayName": "春节"
+        },
+        "2015-02-20": {
+            "holidayName": "正月初二"
+        },
+        "2015-02-21": {
+            "holidayName": "正月初三"
+        },
+        "2015-03-05": {
+            "holidayName": "元宵节"
+        },
+        "2015-04-05": {
+            "holidayName": "清明节"
+        },
+        "2015-05-01": {
+            "holidayName": "劳动节"
+        },
+        "2015-06-01": {
+            "holidayName": "儿童节"
+        },
+        "2015-06-20": {
+            "holidayName": "端午节"
+        },
+        "2015-09-27": {
+            "holidayName": "中秋节"
+        },
+        "2015-10-01": {
+            "holidayName": "国庆节"
+        },
+        "2015-12-25": {
             "holidayName": "圣诞节"
         }
     };

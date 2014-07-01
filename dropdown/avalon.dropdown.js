@@ -332,13 +332,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                             return option.value === vmodel.value[0];
                         })[0];
                     }
-                    //模拟浏览器对dropdown在scroll和resize事件下的行为
-                    scrollHandler = avalon.bind(window, 'scroll', function() {
-                        vmodel.toggle = false;
-                    });
-                    resizeHandler = avalon.bind(window, 'resize', function() {
-                        vmodel.toggle = false;
-                    });
                 }
 
                 //通过model构建的组件，需要同步select的结构
@@ -470,9 +463,14 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 var offset = $titleNode.offset(),
                     outerHeight = $titleNode.outerHeight(true),
                     $listNode = avalon(listNode),
+                    $sourceNode = avalon(titleNode.firstChild),
                     listHeight = $listNode.height(),
                     $window = avalon(window),
                     css = {};
+
+                while($sourceNode.element && $sourceNode.element.nodeType != 1) {
+                    $sourceNode = avalon($sourceNode.element.nextSibling);
+                }
 
                 //计算浮层的位置
                 if(options.position && offset.top + outerHeight + listHeight > $window.scrollTop() + $window.height() && offset.top - listHeight > $window.scrollTop() ) {
@@ -481,6 +479,8 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     css.top = offset.top + outerHeight;
                 }
 
+                //修正由于边框带来的重叠样式
+                css.top = css.top - $sourceNode.css('borderTop').replace(/^(\d+)\w.*$/, '$1');
                 css.left = offset.left;
 
                 //显示浮层

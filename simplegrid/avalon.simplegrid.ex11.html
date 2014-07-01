@@ -40,7 +40,7 @@
                             {field: "consume", text: "消费", resizable: true},
                             {field: "clickprice", text: "平均点击价格", resizable: true}
                         ],
-                        addUnit: function(val, name) {
+                        renderCell: function(val, name) {
                             switch (name) {
                                 case  "budget":
                                 case "clickprice":
@@ -50,9 +50,6 @@
                                 default:
                                     return val
                             }
-                        },
-                        tbodyTemplate: function() {
-                            return '<td class="ui-grid-td" data-with-sorted="getColumnsOrder" ms-repeat="row" ms-css-width="getCellProperty($key,\'width\')" ms-css-text-align="getCellProperty($key,\'align\')">{{addUnit($val,$key)}}</td>'
                         },
                         showRows: 10,
                         pageable: true,
@@ -131,7 +128,7 @@
                             {field: "consume", text: "消费", resizable: true},
                             {field: "clickprice", text: "平均点击价格", resizable: true}
                         ],
-                        addUnit: function(val, name) {
+                        renderCell: function(val, name) {
                             switch (name) {
                                 case  "budget":
                                 case "clickprice":
@@ -142,9 +139,7 @@
                                     return val
                             }
                         },
-                        tbodyTemplate: function() {
-                            return '<td class="ui-grid-td" data-with-sorted="getColumnsOrder" ms-repeat="row" ms-css-width="getCellProperty($key,\'width\')" ms-css-text-align="getCellProperty($key,\'align\')">{{addUnit($val,$key)}}</td>'
-                        },
+              
                         showRows: 10,
                         pageable: true,
                         pager: {

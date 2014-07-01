@@ -445,7 +445,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     //根据键盘行为设置组件value
                     if(up !== void 0) {
                         if(up) {
-                            nextItem = vmodel.data.slice(0, selectedItemIndex - 1).reverse();
+                            nextItem = vmodel.data.slice(0, selectedItemIndex).reverse();
                         } else {
                             nextItem = vmodel.data.slice(selectedItemIndex + 1);
                         }

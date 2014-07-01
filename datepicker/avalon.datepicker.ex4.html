@@ -4,13 +4,46 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
 <title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
 <script src="../avalon.js"></script>
 </head>
 <body class="ms-controller">
     <div class="wrapper">
-        <h1>datepicker demo 1</h1>
-        <p class="example"></p>
-        <p><span class="useDescription">说明：</span></p>
+        <h1>datepicker demo</h1>
+        <div class="demoShow" ms-controller="demo">
+            <fieldset>
+                <legend>设置日历可选的最小日期</legend>
+                <input ms-widget="datepicker" data-datepicker-min-date="2014-06-02"/>
+                <p>说明：设置minDate配置日历可选的最小日期，如果显示的当前月份包含了最小日期，则prev按钮将不可用</p>
+            </fieldset>
+            <fieldset>
+                <legend>设置日历可选的最大日期</legend>
+                <input ms-widget="datepicker" data-datepicker-max-date="2014-06-28" />
+                <p>说明：设置maxDate配置日历可选的最大日期，如果当前月份包含了最大日期，则next按钮不可用</p>
+            </fieldset>
+            <fieldset>
+                <legend>同时设置minDate和maxDate</legend>
+                <input ms-widget="datepicker" data-datepicker-min-date="2014-06-7" data-datepicker-max-date="2014-06-28" value="2014-06-23"/>
+                <p>说明：同时设置minDate和maxDate，并且设置初始化输入域</p>
+            </fieldset>
+            <fieldset>
+                <legend>初始日期超出范围</legend>
+                <input ms-widget="datepicker" data-datepicker-min-date="2014-06-08" value="2014-06-05"/>
+                <p>说明：当输入域设置了初始值时，如初始值在minDate和maxDate范围内，则高亮输入域的日期，如果超出范围会警示说明初始日期超出日期范围</p>
+            </fieldset>
+            <script> 
+                require("datepicker/avalon.datepicker", function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.$aOpts = {
+                            dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
         <div ms-skip>
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
@@ -21,20 +54,41 @@
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body&gt;
-                    
+                    &lt;div class="demoShow" ms-controller="demo"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;设置日历可选的最小日期&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-min-date="2014-06-02"/&gt;
+                            &lt;p&gt;说明：设置minDate配置日历可选的最小日期，如果显示的当前月份包含了最小日期，则prev按钮将不可用&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;设置日历可选的最大日期&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-max-date="2014-06-28" /&gt;
+                            &lt;p&gt;说明：设置maxDate配置日历可选的最大日期，如果当前月份包含了最大日期，则next按钮不可用&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;同时设置minDate和maxDate&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-min-date="2014-06-7" data-datepicker-max-date="2014-06-28" value="2014-06-23"/&gt;
+                            &lt;p&gt;说明：同时设置minDate和maxDate，并且设置初始化输入域&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;初始日期超出范围&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-min-date="2014-06-08" value="2014-06-05"/&gt;
+                            &lt;p&gt;说明：当输入域设置了初始值时，如初始值在minDate和maxDate范围内，则高亮输入域的日期，如果超出范围会警示说明初始日期超出日期范围&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require("datepicker/avalon.datepicker", function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.$aOpts = {
+                                        dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
                 &lt;/body&gt;
                 &lt;/html&gt;
             </pre>
-        </div>
-        <div class="demoShow" ms-controller="demo">
-            <script> 
-                require("datepicker/avalon.datepicker", function(avalon) {
-                    var model = avalon.define("demo", function(vm) {
-                        
-                    })
-                    avalon.scan();
-                })
-            </script>
         </div>
     </div>
 </body>

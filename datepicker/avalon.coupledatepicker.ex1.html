@@ -4,13 +4,46 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
 <title>coupledatepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
 <script src="../avalon.js"></script>
 </head>
 <body class="ms-controller">
     <div class="wrapper">
-        <h1>coupledatepicker demo 1</h1>
-        <p class="example"></p>
-        <p><span class="useDescription">说明：</span></p>
+        <h1>coupledatepicker demo</h1>
+        <div class="demoShow" ms-controller="demo">
+            <fieldset>
+                <legend>默认配置的双日历框</legend>
+                <div ms-widget="coupledatepicker">
+                    <div class="ui-coupledatepicker-item"></div>
+                    <span class="label">-</span>
+                    <div class="ui-coupledatepicker-item"></div>
+                </div>
+                <p>说明：双日历框的DOM结构为:
+<pre ms-skip>
+    &lt;div ms-widget="coupledatepicker"&gt;
+        &lt;div class="ui-coupledatepicker-item"&gt;&lt;/div&gt;
+        &lt;span class="label"&gt;-&lt;/span&gt;
+        &lt;div class="ui-coupledatepicker-item"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+</pre>
+                </p>
+                <p>也就是绑定元素的子元素只能是起始日期包装div元素、分隔span元素、结束日期包装div元素</p>
+            </fieldset>
+            <fieldset>
+                <legend>默认配置的双日历框</legend>
+                <div ms-widget="coupledatepicker"></div>
+                <p>说明：双日历框除了上述的dom结构外也可以让其子元素为空，组件会自动创建需要的包装子元素</p>
+            </fieldset>
+            <script> 
+                require("datepicker/avalon.coupledatepicker", function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
         <div ms-skip>
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
@@ -21,32 +54,41 @@
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body&gt;
-                    
+                    &lt;div class="demoShow" ms-controller="demo"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;默认配置的双日历框&lt;/legend&gt;
+                            &lt;div ms-widget="coupledatepicker"&gt;
+                                &lt;div class="ui-coupledatepicker-item"&gt;&lt;/div&gt;
+                                &lt;span class="label"&gt;-&lt;/span&gt;
+                                &lt;div class="ui-coupledatepicker-item"&gt;&lt;/div&gt;
+                            &lt;/div&gt;
+                            &lt;p&gt;说明：双日历框的DOM结构为:
+                                &lt;pre ms-skip&gt;
+                                    &lt;div ms-widget="coupledatepicker"&gt;
+                                        &lt;div class="ui-coupledatepicker-item"&gt;&lt;/div&gt;
+                                        &lt;span class="label"&gt;-&lt;/span&gt;
+                                        &lt;div class="ui-coupledatepicker-item"&gt;&lt;/div&gt;
+                                    &lt;/div&gt;
+                                &lt;/pre&gt;
+                            &lt;/p&gt;
+                            &lt;p&gt;也就是绑定元素的子元素只能是起始日期包装div元素、分隔span元素、结束日期包装div元素&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;默认配置的双日历框&lt;/legend&gt;
+                            &lt;div ms-widget="coupledatepicker"&gt;&lt;/div&gt;
+                            &lt;p&gt;说明：双日历框除了上述的dom结构外也可以让其子元素为空，组件会自动创建需要的包装子元素&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require("datepicker/avalon.coupledatepicker", function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
                 &lt;/body&gt;
                 &lt;/html&gt;
             </pre>
-        </div>
-        <div class="demoShow" ms-controller="demo">
-            <fieldset>
-                <legend>双日历框 配置参数,两天最小相隔0天</legend>
-                <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from4" data-coupledatepicker-rules="opts" class="ui-coupledatepicker">
-                <div class="ui-coupledatepicker-item"></div>
-                <span class="label">-</span>
-                <div class="ui-coupledatepicker-item"></div>
-                </div>
-
-                {{from4}}
-                {{to4}}
-
-            </fieldset>
-            <script> 
-                require("datepicker/avalon.coupledatepicker", function(avalon) {
-                    var model = avalon.define("demo", function(vm) {
-                        
-                    })
-                    avalon.scan();
-                })
-            </script>
         </div>
     </div>
 </body>

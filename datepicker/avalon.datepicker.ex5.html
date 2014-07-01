@@ -4,13 +4,39 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
 <title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
 <script src="../avalon.js"></script>
 </head>
 <body class="ms-controller">
     <div class="wrapper">
-        <h1>datepicker demo 1</h1>
-        <p class="example"></p>
-        <p><span class="useDescription">说明：</span></p>
+        <h1>datepicker demo</h1>
+        <div class="demoShow" ms-controller="demo">
+            <fieldset style="position:relative;">
+                <legend>toggle切换日期的显示隐藏</legend>
+                <input ms-widget="datepicker" data-toggle ="toggle"/>
+                <button ms-click="toggleDatepicker" style="position:absolute;right:0;top: 20px;">toggle calendar</button>
+                <p>说明：可以通过toggle切换datepicker的显示与隐藏，这需要在绑定datepicker时，设置ms-data-toggle属性指向demo controller中的属性</p>
+            </fieldset>
+            <fieldset>
+                <legend>calendarLabel配置日历的说明label</legend>
+                <input ms-widget="datepicker" data-datepicker-calendar-label="选择你的日期" />
+                <p>说明：配置calendarLabel来显示你独特的日历说明</p>
+            </fieldset>
+            <script> 
+                require("datepicker/avalon.datepicker", function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.toggle = false;
+                        vm.toggleDatepicker = function(event) {
+                            model.toggle = !model.toggle;
+                            event.stopPropagation();
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
         <div ms-skip>
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
@@ -21,20 +47,39 @@
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body&gt;
-                    
+                    &lt;div class="demoShow" ms-controller="demo"&gt;
+                        &lt;fieldset style="position:relative;"&gt;
+                            &lt;legend&gt;toggle切换日期的显示隐藏&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-toggle ="toggle"/&gt;
+                            &lt;button ms-click="toggleDatepicker" style="position:absolute;right:0;top: 20px;"&gt;toggle calendar&lt;/button&gt;
+                            &lt;p&gt;说明：可以通过toggle切换datepicker的显示与隐藏，这需要在绑定datepicker时，设置ms-data-toggle属性指向demo controller中的属性&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;calendarLabel配置日历的说明label&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-calendar-label="选择你的日期" /&gt;
+                            &lt;p&gt;说明：配置calendarLabel来显示你独特的日历说明&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;使日历可以通过下拉框切换月份和年份的显示&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-change-month-and-year="true" /&gt;
+                            &lt;p&gt;说明：配置changeMonthAndYear为true使得用户可以通过下拉选项切换日历的月份和年份&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require("datepicker/avalon.datepicker", function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.toggle = false;
+                                    vm.toggleDatepicker = function(event) {
+                                        model.toggle = !model.toggle;
+                                        event.stopPropagation();
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
                 &lt;/body&gt;
                 &lt;/html&gt;
             </pre>
-        </div>
-        <div class="demoShow" ms-controller="demo">
-            <script> 
-                require("datepicker/avalon.datepicker", function(avalon) {
-                    var model = avalon.define("demo", function(vm) {
-                        
-                    })
-                    avalon.scan();
-                })
-            </script>
         </div>
     </div>
 </body>

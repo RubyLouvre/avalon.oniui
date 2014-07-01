@@ -108,7 +108,6 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
         }
         // 如果输入域初始值存在则验证其是否符合日期显示规则，不符合设element.value为null
         element.value = _originValue && options.formatDate(date);
-
         var vmodel = avalon.define(data.datepickerId, function(vm) {
             avalon.mix(vm, options);
             vm.$skipArray = ["container"];
@@ -219,7 +218,6 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                 toggleMonth("next");
                 event.stopPropagation();
             }
-            
             vm.$init = function() {
                 var year = vmodel.year,
                     month = vmodel.month,
@@ -645,6 +643,7 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
         date.setMilliseconds(0);
         return date;
     }
+    // 获取节日信息
     function initHoliday( data ){
         var _table = {},
             _data = [];
@@ -665,7 +664,6 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                 _date = v.date,
                 beforeTime = v.beforeTime || 0,
                 afterTime = v.afterTime || 0;
-
             _date.setDate( _date.getDate() - beforeTime - 1 );
             for( var i = -v.beforeTime ; i < afterTime + 1 ; i++ ){
                 _date.setDate( _date.getDate() + 1 );
@@ -678,6 +676,7 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
         }
         return _table;
     };
+    // 解析传入日期，如果是节日或者节日前三天和后三天只能，会相应的显示节日前几天信息，如果是今天就显示今天，其他情况显示日期对应的是周几
     function getDateTip(curDate) {
         if(!curDate)
             return;

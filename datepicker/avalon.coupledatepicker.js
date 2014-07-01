@@ -166,6 +166,9 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
                 maxDateRule = df['maxDate'];
             minDate = (minDateRule ? minDateRule.getTime() : -1) > (minDate ? minDate.getTime() : -1) ? minDateRule : minDate ;
             maxDate = (maxDateRule ? maxDateRule.getTime() : Number.MAX_VALUE) > (maxDate ? maxDate.getTime() : Number.MAX_VALUE) ? maxDate : maxDateRule;
+            if(!vmodel.inputToValue && df["defaultDate"]){
+                vmodel.inputToValue = options.formatDate(df["defaultDate"]);
+            }
             if(minDate){
                 var toMinDateFormat = options.formatDate(minDate);
                 vmodel.rules.toMinDate = toMinDateFormat;
@@ -176,6 +179,7 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
             if(maxDate) {
                 vmodel.rules.toMaxDate = options.formatDate(maxDate);
             }
+
             var inputToDate = vmodel.inputToValue && vmodel.parseDate(vmodel.inputToValue);
             if(inputToDate && isDateDisabled(inputToDate, minDate, maxDate)) {
                 vmodel.inputToValue = toMinDateFormat;
@@ -215,7 +219,7 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
     }
     widget.version = 1.0
     widget.defaults = {
-        //container : [], //必选，渲染的容器，每个元素类型为 {Element|JQuery|String}
+        container : [], //必选，渲染的容器，每个元素类型为 {Element|JQuery|String}
         fromCalendarLabel : '选择起始日期',   // 起始日期日历框上方提示文字
         toCalendarLabel : '选择结束日期',     // 结束日期日历框上方提示文字
         widgetElement: "", // accordion容器

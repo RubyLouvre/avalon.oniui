@@ -10,26 +10,27 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
     }
     var widget = avalon.ui.daterangepicker = function(element, data, vmodels) {
         var options = data.daterangepickerOptions,
-            inputFrom,
-            inputTo,
-            disabled = options.disabled.toString(),
+            inputFrom, //绑定datepicker组件的初始日期输入域元素的引用
+            inputTo, //绑定datepicker组件的结束日期输入域元素的引用
+            disabled = options.disabled.toString(), //组件的配置项，可能是Boolean类型也可能代表一个属性变量名的字符串，通过此属性来决定组件的禁用与否
             disabledVM = avalon.getModel(disabled, vmodels),
-            duplex = options.duplex && options.duplex.split(","),
-            rules = options.rules,
-            selectFuncVM = typeof options.select ==="string" ? avalon.getModel(options.select, vmodels) : null,
-            _confirmClick = false,
-            _oldValue,
-            _toMinDate = "",
-            _toMaxDate = "";
+            duplex = options.duplex && options.duplex.split(","), //options.duplex保存起始日期和结束日期初始化值的引用，逗号分隔
+            rules = options.rules, //日期选择框起始日期和结束日期之间关系的规则
+            selectFuncVM = typeof options.select ==="string" ? avalon.getModel(options.select, vmodels) : null, //得到select回调所在的VM域select值所组成的数组
+            _confirmClick = false, //判断是否点击了确定按钮，没点击为false，点击为true
+            _oldValue, //保存最近一次选择的起始日期和结束日期组成的日期对象数组，因为当选择了日期但没有点确定按钮时，日期选择范围不改变，相应的对应的日历默认输入域也应该恢复到最近一次的选择
+            _toMinDate = "", //保存rules指向的对象的toMinDate属性值，以便于rules属性计算所得的minDate做比较
+            _toMaxDate = ""; //保存rules指向的对象的toMaxDate属性值，以便于rules属性计算所得的maxDate做比较
+        // 结束日期初始异常时默认日期、起始日期和结束日期最小相隔天数、最大相隔天数的设定形式的转化处理
         var _c = {  
-            '+M': function(time ,n) {
+            '+M': function(time ,n) { //+M表示相隔n个月
                 var _d = time.getDate();
                 time.setMonth(time.getMonth() + n);
                 if(time.getDate() !== _d) {
                     time.setDate(0)
                 } 
             },
-            '-M': function(time ,n) { 
+            '-M': function(time ,n) { //-M表示相隔n个月不过是追溯到以前的日前
                 var _d = time.getDate();
                 time.setMonth(time.getMonth() - n);
                 if(time.getDate() !== _d) {
@@ -50,17 +51,19 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
             }
         };
         options.template = options.getTemplate(calendarTemplate, options);
+        // 获取用户定义的模拟输入框显示内容形式的方法
         if(options.opts && options.opts.datesDisplayFormat && typeof options.opts.datesDisplayFormat ==="function") {
             options.datesDisplayFormat = options.opts.datesDisplayFormat;
         }
+        // 获取rules配置对象
         if(rules && avalon.type(rules) === 'string') {
             var ruleVM = avalon.getModel(options.rules, vmodels);
             rules = ruleVM[1][ruleVM[0]];
-            
         }
         rules = rules.$model || rules;
         _toMinDate = rules.toMinDate; 
         _toMaxDate = rules.toMaxDate; 
+        // 让rules对象的toMinDate、toMaxDate、fromMinDate、fromMaxDate是可监控的属性
         if(rules) {
             rules.toMinDate = rules.toMinDate || "";
             rules.toMaxDate = rules.toMaxDate || "";
@@ -71,6 +74,7 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
         if(selectFuncVM) {
             options.select = selectFuncVM[1][selectFuncVM[0]];
         }
+        // 如果disabled配置为字符串，说明是通过外部vm控制组件的禁用与否，取得外部disabled所在vm并监控
         if(disabled!=="true" && disabled!=="false" && disabledVM) {
             options.disabled = disabledVM[1][disabledVM[0]];
             disabledVM[1].$watch(disabledVM[0], function(val) {
@@ -79,7 +83,6 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
         }
         var rangeRules = options.rules && options.rules.rules || "";
         rangeRules = rangeRules.length>0 ? rangeRules.split(",") : [];
-        
         var vmodel = avalon.define(data.daterangepickerId, function(vm) {
             avalon.mix(vm, options);
             vm.msg = "";
@@ -92,17 +95,20 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
             vm.value = "";
             vm.inputFromValue = ""
             vm.inputToValue = "";
+            // 切换组件的显示隐藏
             vm._toggleDatepicker = function(val, event) {
                 if(!vmodel.disabled) {
                     vmodel.toggle = !val;
                 }
             }
+            // 更新日期范围选择框下方的说明文字
             vm._updateMsg = function(event) {
                 var target = event.target;
                 if(target.tagName === "TD") {
                     updateMsg();
                 }
             }
+            // 点击确定按钮确定日期选择范围
             vm._selectDate = function() {
                 var inputFromValue = inputFrom.value,
                     inputToValue = inputTo.value,
@@ -114,10 +120,11 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                 options.select.call(vmodel, inputFromDate, inputToDate, _oldValue, vmodel, avalon(element).data());
                 _oldValue = [inputFromDate, inputToDate];
             }
+            // 点击取消按钮隐藏日历框
             vm._cancelSelectDate = function() {
                 vmodel.toggle ? vmodel.toggle = false: 0;
-                
             }
+            // 设置日期范围框的起始日期和结束日期
             vm.setDates = function(from, to, defaultLabel) {
                 var inputValues = to === void 0 ? [from] : [from, to],
                     len = inputValues.length;
@@ -129,12 +136,15 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                 }
                 initMsgAndOldValue();
             }
+            // 设置日期输入框的label
             vm.setLabel = function(str) {
                 vmodel.label = str;
             }
+            // 设置日历的禁用与否
             vm.setDisabled = function(val) {
                 vmodel.disabled = val;
             }
+            // 选择了初始日期之后根据rules的设置及时更新结束日期的选择范围
             vm.fromSelectCal = function(date) {
                 applyRules(date);
             }
@@ -169,6 +179,7 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                 element.innerHTML = element.textContent = "";
             }
         })
+        // 初始化日期范围值
         function initValues() {
             if(duplex) {
                 var duplexLen = duplex.length,
@@ -181,6 +192,7 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                 initMsgAndOldValue();
             } 
         }
+        // 根据参数个数进行日期的初始日期设置
         function setValues(len, from, to) {
             if(len) {
                 if(len==2) {
@@ -195,6 +207,7 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                 }
             }
         }
+        // 根据rules的设置确定结束日期可选的范围及默认值
         function applyRules(date) {
             var df = {},
                 rules = vmodel.rules;
@@ -209,12 +222,9 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                 maxDateRule = df['maxDate'];
             minDate = (minDateRule ? minDateRule.getTime() : -1) > (minDate ? minDate.getTime() : -1) ? minDateRule : minDate ;
             maxDate = (maxDateRule ? maxDateRule.getTime() : Number.MAX_VALUE) > (maxDate ? maxDate.getTime() : Number.MAX_VALUE) ? maxDate : maxDateRule;
-            // if (minDate){
-            //     vmodel.rules.toMinDate = options.formatDate(minDate);
-            // }
-            // if (maxDate) {
-            //     vmodel.rules.toMaxDate = options.formatDate(maxDate);
-            // }
+            if(!vmodel.inputToValue && df["defaultDate"]){
+                vmodel.inputToValue = options.formatDate(df["defaultDate"]);
+            }
             if(minDate){
                 var toMinDateFormat = options.formatDate(minDate);
                 vmodel.rules.toMinDate = toMinDateFormat;
@@ -240,6 +250,7 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
             }
             return false;
         }
+        // 解析rules.rules属性，得到正确的日期值
         function calcDate( desc , date ){
             var time;
             desc = ( desc || "" ).toString();
@@ -260,6 +271,7 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                 updateMsg();
             }
         }
+        // 根据选择的日期更新日历框下方的显示内容
         function updateMsg() {
             var msg = "",
                 day = 0,
@@ -294,6 +306,7 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                 vmodel.msg = msg;
             }
         }
+        // 将日期时间转为00:00:00
         function cleanDate( date ){
             date.setHours(0);
             date.setMinutes(0);
@@ -352,6 +365,5 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
             return str;
         }
     }
-    
     return avalon;
 })

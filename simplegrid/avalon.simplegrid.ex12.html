@@ -9,138 +9,115 @@
 
         </script>
         <script id="summarizing" type="summarizing">
-            <td></td> <td ms-repeat="columns"
-            ms-css-width="el.width" 
-            ms-css-text-align="el.align" 
-            ms-visible="el.toggle" 
-            >{{getSummarizing(summarizing, el.field) | html}}
-            </td>
+               <td></td> <td ms-repeat="columns"
+                    ms-css-width="el.width" 
+                    ms-css-text-align="el.align" 
+                    ms-visible="el.toggle" 
+                    >{{getSummarizing(summarizing, el.field) | html}}
+                </td>
         </script>
         <script>
             avalon.config({debug: false})
             require(["simplegrid/avalon.simplegrid"], function() {
-
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
                 var createData = function(n) {
                     var array = []
-                    array.push({
-                        date: "2014-03-07",
-                        search: 800,
-                        detail: 100000,
-                        booing: 44432,
-                        order: 589364,
-                        visit: 5800,
-                        affirm: 1800,
-                        compare: {
-                            lastyear: {
-                                date: "2013-03-07",
-                                search: 556,
-                                detail: 80000,
-                                booing: 4432,
-                                order: 89364,
-                                visit: 5200,
-                                affirm: 1700
-                            },
-                            lastday: {
-                                date: "2013-03-06",
-                                search: 670,
-                                detail: 125800,
-                                booing: 4432,
-                                order: 59364,
-                                visit: 3800,
-                                affirm: 800
-                            }
-                        }
-                    },
-                    {
-                        date: "2014-03-08",
-                        search: 800,
-                        detail: 100000,
-                        booing: 44432,
-                        order: 589364,
-                        visit: 5800,
-                        affirm: 1800,
-                        compare: {
-                            lastyear: {
-                                date: "2013-03-08",
-                                search: 556,
-                                detail: 80000,
-                                booing: 4432,
-                                order: 89364,
-                                visit: 5200,
-                                affirm: 1700
-                            },
-                            lastday: {
-                                date: "2013-03-07",
-                                search: 670,
-                                detail: 125800,
-                                booing: 4432,
-                                order: 59364,
-                                visit: 3800,
-                                affirm: 800
-                            }
-                        }
-                    },
-                    {
-                        date: "2014-03-09",
-                        search: 800,
-                        detail: 100000,
-                        booing: 44432,
-                        order: 589364,
-                        visit: 5800,
-                        affirm: 1800,
-                        compare: {
-                            lastyear: {
-                                date: "2013-03-09",
-                                search: 556,
-                                detail: 80000,
-                                booing: 4432,
-                                order: 89364,
-                                visit: 5200,
-                                affirm: 1700
-                            },
-                            lastday: {
-                                date: "2013-03-08",
-                                search: 670,
-                                detail: 125800,
-                                booing: 4432,
-                                order: 59364,
-                                visit: 3800,
-                                affirm: 800
-                            }
-                        }
-                    })
+                    for (var i = 0; i < n; i++) {
+                        array.push({
+                            plan: "北上广经济型计划",
+                            state: i % 2 === 0,
+                            budget: range(3000, 6000),
+                            emerge: range(70000, 200000),
+                            click: range(3000, 50000),
+                            consume: range(8000, 20000),
+                            clickprice: (1 + 3 * Math.random()).toFixed(2),
+                            checked: false
+                        })
+                    }
                     return array
                 }
 
                 avalon.define("test", function(vm) {
 
                     vm.simplegrid = {
-                        tbodyRowHeight: 105,
+                        summarizing: {
+                            plan: "所有汇总",
+                            state: "",
+                            budget: "预算汇总<br/>￥38000",
+                            emerge: "展现汇总<br/>135346460",
+                            click: "平均点击率<br/>50.21%",
+                            consume: "消费汇总<br/>￥1135800",
+                            clickprice: "平均点击价格<br/>￥1.82"
+                        },
+                        theadRenderedCallback: function(vmodel) {
+                            var tbody = this
+                            var tr = document.createElement("tr")
+                            tr.className = "summarizing"
+                            tbody.appendChild(tr)
+                            avalon.innerHTML(tr, document.getElementById("summarizing").text)
+                            avalon.scan(tbody, vmodel)
+                            vmodel.theadHeight = 85;
+                        },
+                        getSummarizing: function(obj, key) {
+                            return obj[key]
+                        },
                         columns: [
-                            {field: "date", text: "日期", resizable: true, width: 210},
-                            {field: "search", text: "曝光search量", resizable: true, align: "right"},
-                            {field: "detail", text: "Detail页访问量", resizable: true, align: "right"},
-                            {field: "booing", text: "Booing量", resizable: true, align: "right"},
-                            {field: "order", text: "生成订单量", resizable: true, align: "right"},
-                            {field: "visit", text: "访问量", resizable: true, align: "right"},
-                            {field: "affirm", text: "确认订单量", align: "right", resizable: true}
+                            {field: "plan", text: "竞价计划推广", resizable: true, width: 180},
+                            {field: "state", text: "状态", resizable: true, align: "center", width: 80},
+                            {field: "budget", text: "预算", resizable: true, align: "right"},
+                            {field: "emerge", text: "展现", resizable: true, align: "right"},
+                            {field: "click", text: "点击", resizable: true, align: "right"},
+                            {field: "consume", text: "消费", resizable: true, align: "right"},
+                            {field: "clickprice", text: "平均点击价格", align: "right", resizable: true}
                         ],
-                        renderCell: function(val, name, obj) {
-                            var compare = obj.compare
-                            var lastyear = compare.lastyear
-                            var lastday = compare.lastday
+                        addUnit: function(val, name) {
                             switch (name) {
-                                case  "date":
-                                    return "<div>" + val + "</div><div class='datecell'>" + lastyear[name] + "<span>同比</span></div><div class='datecell'>" + lastday[name] + "<span>环比</span></div>"
+                                case  "budget":
+                                case "clickprice":
+                                    return "￥" + val
+                                case "state":
+                                    return val ? "√" : "×"
                                 default:
-                                    return  "<div>" + val + "</div><div>" + lastyear[name] + "</div><div>" + lastday[name] + "</div>"
+                                    return val
                             }
                         },
-                        tbodyTemplate: function() {
-                            return '<td class="ui-grid-td" data-with-sorted="getColumnsOrder" ms-repeat="row"' +
-                                    ' ms-css-width="getCellProperty($key,\'width\')" ms-css-text-align="getCellProperty($key,\'align\')">{{renderCell($val,$key,row) | html}}</td>'
+                        allchecked: false,
+                        getColumn: function(el) {
+                            el.checked = true
                         },
-                        showRows: 3,
+                        checkAll: function() {
+                            var vmodel = avalon.vmodels.xxx
+                            var bool = vmodel.allchecked = this.checked
+                            vmodel._data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                            vmodel.data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                        },
+                        checkOne: function(el, index) {
+                            var vmodel = avalon.vmodels.xxx
+                            index = vm.startIndex + index
+                            vmodel.data[index] = el.checked = this.checked
+                            if (!this.checked) {
+                                vmodel.allchecked = false
+                            } else {
+                                vmodel.allchecked = vmodel._data.every(function(el) {
+                                    return el.checked
+                                })
+                            }
+                        },
+                        theadTemplate: function(str) {
+                            return "<th style='width:60px'><input type='checkbox' ms-checked='allchecked' ms-click='checkAll'  /></th>" + str
+                        },
+                        tbodyTemplate: function() {
+                            return '<th style="width: 60px"><input type="checkbox" ms-checked="row.checked" ms-click="checkOne(row, $index)" '
+                                    + 'class="ui-helper-checkone"/></th><td class="ui-grid-td" data-with-sorted="getColumnsOrder" ms-repeat="row" ms-css-width="getCellProperty($key,\'width\')" ms-css-text-align="getCellProperty($key,\'align\')">{{addUnit($val,$key)}}</td>'
+
+                        },
+                        showRows: 10,
                         pageable: true,
                         pager: {
                             perPages: 20,
@@ -148,35 +125,21 @@
                             showPages: 5,
                             options: [10, 20, 30, 40]
                         },
-                        columnsOrder: ["date", "search", "detail", "booing", "order", "visit", "affirm"],
+                        columnsOrder: ["plan", "state", "budget", "emerge", "click", "consume", "clickprice"],
                         data: createData(100)
                     }
                     vm.$skipArray = ["simplegrid"]
                 })
                 avalon.scan()
             })
-
         </script>
         <style>
             #gridsample{
-                width:1000px;
+                width:900px;
             }
             .ui-grid-tbody td{
                 border-left: 0 none;
                 border-right: 0 none;
-                height: 105px;
-            }
-            .ui-grid-tbody  td .datecell{
-                text-indent: 1em;
-            }
-
-            .ui-grid-tbody  td div{
-                height: 35px;
-                line-height: 35px;
-            }
-            .ui-grid-tbody  td div span{
-                background:#ccc;
-                color: #fff;
             }
             .ui-grid-tbody {
                 border-top: 0 none!important;
@@ -185,11 +148,15 @@
                 background: #f8f8f8;
                 border: 0 none;
             }
-            .ui-grid-thead th{
+             .ui-grid-thead th{
                 background: #f8f8f8;
                 border-right:1px solid #000;
             }
-
+            .summarizing td{
+                background:#edef7d;
+                color:rgb(136,136,136);
+                height: 50px;
+            }
         </style>
     </head>
     <body>
@@ -202,42 +169,50 @@
             </div>
             <div>
                 <h3>要点</h3>
-                <p>设计合理的数据与表格渲染函数</p>  
+                <p>在theadRenderedCallback的回调里,给表头再插入一行,数据由后端计算好,然后调整表头的高度</p>  
                 <pre class="brush:javascript;gutter:false;toolbdar:false;">
-                            
+                   summarizing: {
+                            plan: "所有汇总",
+                            state: "",
+                            budget: "预算汇总<br/>￥38000",
+                            emerge: "展现汇总<br/>135346460",
+                            click: "平均点击率<br/>50.21%",
+                            consume: "消费汇总<br/>￥1135800",
+                            clickprice: "平均点击价格<br/>￥1.82"
+                        },
+                        theadRenderedCallback: function(vmodel) {
+                            var tbody = this
+                            var tr = document.createElement("tr")
+                            tr.className = "summarizing"
+                            tbody.appendChild(tr)
+                            avalon.innerHTML(tr, document.getElementById("summarizing").text)
+                            avalon.scan(tbody, vmodel)
+                            vmodel.theadHeight = 85;
+                        },
+                        getSummarizing: function(obj, key) {
+                            return obj[key]
+                        },                 
                 </pre>
                 <p>CSS</p>
                 <pre class="brush:css;gutter:false;toolbar:false;">
             #gridsample{
-                width:1000px;
+                width:900px;
             }
             .ui-grid-tbody td{
                 border-left: 0 none;
                 border-right: 0 none;
-                height: 105px;
-            }
-            .ui-grid-tbody  td .datecell{
-                text-indent: 1em;
-            }
-
-            .ui-grid-tbody  td div{
-                height: 35px;
-                line-height: 35px;
-            }
-            .ui-grid-tbody  td div span{
-                background:#ccc;
-                color: #fff;
             }
             .ui-grid-tbody {
                 border-top: 0 none!important;
             }
-            .ui-grid-thead td,.ui-grid-thead th{
+            .ui-grid-thead td{
                 background: #f8f8f8;
                 border: 0 none;
             }
-            .ui-grid-thead th{
-                background: #f8f8f8;
-                border-right:1px solid #000;
+            .summarizing td{
+                background:#edef7d;
+                color:rgb(136,136,136);
+                height: 50px;
             }
                 </pre>
             </div>

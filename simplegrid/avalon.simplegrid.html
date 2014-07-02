@@ -1,8 +1,9 @@
 <div class="ui-grid">
     <div class="ui-grid-scroll-wrapper" 
          ms-css-height="tbodyHeight+theadHeight"
-         ms-on-scroll-12="throttleRenderTbody"
-         >
+         mss-on-scroll-12="throttleRenderTbody" 
+         ms-widget="scrollbar,$simplegrid{{MS_OPTION_ID}}" 
+         data-scrollbar-position="right,bottom">
         <div class="ui-grid-wrapper"  
              ms-css-top="tbodyScrollTop"
              ms-css-width="gridWidth" 
@@ -50,7 +51,7 @@
                 </tr>
             </table>
         </div>
-        <div class="ui-grid-scroll-marker" ms-css-height="tbodyScrollHeight+theadHeight" >
+        <div class="ui-grid-scroll-marker ui-scrollbar-scroller" ms-css-height="tbodyScrollHeight+theadHeight" >
 
         </div>
     </div>

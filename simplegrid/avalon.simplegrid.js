@@ -1,5 +1,5 @@
 //avalon 1.3.2 2014.4.2
-define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], function(avalon, page, tmpl) {
+define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html","scrollbar/avalon.scrollbar"], function(avalon, page, tmpl) {
 
     var arr = tmpl.split("MS_OPTION_STYLE") || ["", ""]
     var cssText = arr[1].replace(/<\/?style>/g, "")
@@ -41,7 +41,8 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
     var remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m
 
     var widget = avalon.ui.simplegrid = function(element, data, vmodels) {
-        var options = data.simplegridOptions
+        var options = data.simplegridOptions,
+            optId = +(new Date())
         //格式化各列的具体规格
         options.columns = options.getColumns(options.columns, options)
 
@@ -52,7 +53,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 .replace(/MS_OPTION_TBODY_HOLDER/, options.tbodyTemplate)
 
         //方便用户对原始模板进行修改,提高制定性
-        options.template = options.getTemplate(template, options)
+        options.template = options.getTemplate(template, options).replace(/\{\{MS_OPTION_ID\}\}/g, optId)
         //决定每页的行数(分页与滚动模式下都要用到它)
         //<------开始配置分页的参数
         if (typeof options.pager !== "object") {
@@ -181,6 +182,13 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                         vmodel._tbodyRenderedCallback.call(tbody)
                     }, 100)
                 }
+                // update scrollbar, if tbody rendered
+                vmodel.updateScrollbar()
+            }
+            // update scrollbar
+            vm.updateScrollbar = function() {
+                var scrollbar = avalon.vmodels["$simplegrid" + optId];
+                scrollbar && scrollbar.update();
             }
 
             vm.startResize = function(e, el) {
@@ -203,6 +211,8 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             vm.stopResize = function() {
                 if (options.canResize) {
                     options.canResize.css("cursor", options._cursor); //还原光标样式
+                    // update scrollbar, after resize
+                    vmodel.updateScrollbar()
                     delete options.canResize
                 }
             }
@@ -285,8 +295,9 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
             }
 
 
-            vm.throttleRenderTbody = function() {
-                vmodel.tbodyScrollTop = this.scrollTop
+            vm.throttleRenderTbody = function(s) {
+                vmodel.tbodyScrollTop = s == void 0 ? this.scrollTop : s
+                console.log(s)
                 cancelAnimationFrame(requestID)
                 requestID = requestAnimationFrame(reRenderTbody)
             }
@@ -299,6 +310,10 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html"], functi
                 return array.slice(vm.startIndex, vm.endIndex)
             }
             vm._data = vm.data.slice(vm.startIndex, vm.endIndex)
+
+            vm.scrollbar = {
+                onScroll: vm.throttleRenderTbody
+            }
         })
         //<-----------开始渲染分页栏----------
         if (vmodel.pageable) {

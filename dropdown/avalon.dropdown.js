@@ -514,7 +514,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             vm.$getLabel = function(value) {
                 var v = avalon.type(value) === 'array' ? value[0] : value,
                     label = vmodel.data.filter(function(option) {
-                        return option.value === v;
+                        return option.item && option.value == v;
                     });
 
                 if(label.length > 0) {

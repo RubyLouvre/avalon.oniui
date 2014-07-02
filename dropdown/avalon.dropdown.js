@@ -290,7 +290,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/a
             vm.widgetElement = element;
             vm.activeIndex = null;
 
-            vm.dataSource = dataSource;     //源节点的数据源，通过dataSource传递的值将完全模拟select
+            vm.dataSource = dataSource;    //源节点的数据源，通过dataSource传递的值将完全模拟select
             vm.data = dataModel;           //下拉列表的渲染model
             vm.__listenter__ = false;      //是否当前鼠标在list区域
 
@@ -333,13 +333,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/a
                             return option.value === vmodel.value[0];
                         })[0];
                     }
-                    //模拟浏览器对dropdown在scroll和resize事件下的行为
-                    scrollHandler = avalon.bind(window, 'scroll', function() {
-                        vmodel.toggle = false;
-                    });
-                    resizeHandler = avalon.bind(window, 'resize', function() {
-                        vmodel.toggle = false;
-                    });
                 }
 
                 //通过model构建的组件，需要同步select的结构
@@ -403,6 +396,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/a
 
                 vmodel.toggle = false;
                 vmodel.onSelect.call(this, e, listNode);
+                titleNode.focus();
             };
 
             vm.$listenter = function() {
@@ -415,6 +409,70 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/a
 
             vm.$createListNode = function() {
                 return avalon.parseHTML(listTemplate);
+            };
+
+            vm.$keydown = function(e) {
+                e.preventDefault();
+                if(!vmodel.multiple) {
+                    var up,
+                        selectedItemIndex, //选中项index
+                        firstItemIndex,    //第一个可用的item index
+                        nextItem,
+                        enableItem,
+                        step, distance = 0;
+
+                    //区分上下箭头和回车
+                    switch (e.keyCode) {
+                        case 38:
+                            up = true;
+                            break;
+                        case 40:
+                            up = false;
+                            break;
+                        case 13:
+                            vmodel.value = vmodel.data[vmodel.activeIndex].value;
+                            vmodel.toggle = false;
+                            break;
+                        default:
+                    }
+
+                    //根据键盘行为设置组件value
+                    if(up !== void 0) {
+                        vmodel.toggle = true;
+                        if(vmodel.activeIndex == void 0) {
+                            avalon.each(vmodel.data, function(i, item) {
+                                if(firstItemIndex === void 0 && item.item) {
+                                    firstItemIndex = i;
+                                }
+                                if(item.item && item.value === vmodel.value) {
+                                    selectedItemIndex = i;
+                                    return false;
+                                }
+                                return true;
+                            });
+
+                            if(!selectedItemIndex) {
+                                selectedItemIndex = firstItemIndex;
+                            }
+                            vmodel.activeIndex = selectedItemIndex;
+                        }
+                        if(up) {
+                            nextItem = vmodel.data.slice(0, vmodel.activeIndex).reverse();
+                            step = -1;
+                        } else {
+                            nextItem = vmodel.data.slice(vmodel.activeIndex + 1);
+                            step = 1;
+                        }
+
+                        do {
+                            distance += step;
+                            if(nextItem.length === 0) return;
+                            enableItem = nextItem.shift();
+                        } while(!enableItem.item||!enableItem.enable);
+
+                        vmodel.activeIndex += distance;
+                    }
+                }
             };
 
             vm.$toggle = function(b) {
@@ -471,17 +529,24 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/a
                 var offset = $titleNode.offset(),
                     outerHeight = $titleNode.outerHeight(true),
                     $listNode = avalon(listNode),
+                    $sourceNode = avalon(titleNode.firstChild),
                     listHeight = $listNode.height(),
                     $window = avalon(window),
                     css = {};
 
+                while($sourceNode.element && $sourceNode.element.nodeType != 1) {
+                    $sourceNode = avalon($sourceNode.element.nextSibling);
+                }
+
                 //计算浮层的位置
-                if(offset.top + outerHeight + listHeight > $window.scrollTop() + $window.height() && offset.top - listHeight > $window.scrollTop() ) {
+                if(options.position && offset.top + outerHeight + listHeight > $window.scrollTop() + $window.height() && offset.top - listHeight > $window.scrollTop() ) {
                     css.top = offset.top - listHeight;
                 } else {
                     css.top = offset.top + outerHeight;
                 }
 
+                //修正由于边框带来的重叠样式
+                css.top = css.top - $sourceNode.css('borderTop').replace(/^(\d+)\w.*$/, '$1');
                 css.left = offset.left;
 
                 //显示浮层
@@ -549,7 +614,8 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/a
         label: null,            //设置组件的提示文案，可以是一个字符串，也可以是一个对象
         autofocus: false,       //是否自动获取焦点
         multiple: false,        //是否为多选模式
-        size: 1, 
+        size: 1,
+        position: true,         //是否自动定位下拉列表
         onSelect: avalon.noop,               //多选模式下显示的条数
         getTemplate: function(str, options) {
             return str

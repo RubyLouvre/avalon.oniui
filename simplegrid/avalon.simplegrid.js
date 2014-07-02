@@ -42,7 +42,8 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html","scrollb
 
     var widget = avalon.ui.simplegrid = function(element, data, vmodels) {
         var options = data.simplegridOptions,
-            optId = +(new Date())
+            optId = +(new Date()),
+            scrollbarTimer
         //格式化各列的具体规格
         options.columns = options.getColumns(options.columns, options)
 
@@ -112,6 +113,9 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html","scrollb
             vm.gridWidth = "100%"
             vm.startIndex = 0
             vm.endIndex = options.showRows
+            vm.cssLeft = "0"
+            vm.barRight = 0
+            vm.paddingBottom = "0"
             vm.$init = function() {
                 avalon.ready(function() {
                     element.innerHTML = options.template.replace(/MS_OPTION_ID/g, vmodel.$id)
@@ -162,18 +166,18 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html","scrollb
 
                     var panel = vm.scrollPanel
                  
-                    if (hasScroll(panel, "y")) {
-                        r = panel.scrollHeight - panel.clientHeight
-                        if (r > 0 && r <= scrollbarHeight) {
-                            // vm.theadHeight += r
-                        }
-                    }
-                    if (hasScroll(panel, "x")) {
-                        var r = panel.scrollWidth - panel.clientWidth
-                        if (r > 0 && r <= scrollbarWidth) {
-                            vm.gridWidth = panel.scrollWidth - 17
-                        }
-                    }
+                    // if (hasScroll(panel, "y", vmodel)) {
+                    //     r = panel.scrollHeight - panel.clientHeight
+                    //     if (r > 0 && r <= scrollbarHeight) {
+                    //         // vm.theadHeight += r
+                    //     }
+                    // }
+                    // if (hasScroll(panel, "x", vmodel)) {
+                    //     var r = panel.scrollWidth - panel.clientWidth
+                    //     if (r > 0 && r <= scrollbarWidth) {
+                    //         vm.gridWidth = panel.scrollWidth - 17
+                    //     }
+                    // }
 
                     vm.tbodyRenderedCallback.call(tbody, vmodel, options, vmodels)
 
@@ -187,8 +191,22 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html","scrollb
             }
             // update scrollbar
             vm.updateScrollbar = function() {
-                var scrollbar = avalon.vmodels["$simplegrid" + optId];
-                scrollbar && scrollbar.update();
+                var scrollbar = vmodel.$getBar()
+                if(scrollbar) {
+                    scrollbar.update()
+                    var bars = scrollbar.getBars()
+                    // 更新滚动条附近的间距
+                    avalon.each(bars, function(i, bar) {
+                        if(bar.hasClass("ui-scrollbar-right") || bar.hasClass("ui-scrollbar-left")) {
+                            vmodel.barRight = bar.data("ui-scrollbar-needed") ? bar.innerWidth() : 0
+                        } else if(bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")){
+                            vmodel.paddingBottom = bar.data("ui-scrollbar-needed") ? bar.innerHeight() + 2 + "px" : "0"
+                        }
+                    })
+                }
+            }
+            vm.$getBar = function() {
+                return avalon.vmodels["$simplegrid" + optId]
             }
 
             vm.startResize = function(e, el) {
@@ -211,7 +229,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html","scrollb
             vm.stopResize = function() {
                 if (options.canResize) {
                     options.canResize.css("cursor", options._cursor); //还原光标样式
-                    // update scrollbar, after resize
+                    // update scrollbar, after resize end
                     vmodel.updateScrollbar()
                     delete options.canResize
                 }
@@ -235,6 +253,8 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html","scrollb
                             var change = e.pageX - startX
                             vm.gridWidth = gridWidth + change
                             el.width = cellWidth + change
+                            // update scrollbar while table size changed right now
+                            vmodel.updateScrollbar()
                         }
                     })
 
@@ -295,11 +315,14 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html","scrollb
             }
 
 
-            vm.throttleRenderTbody = function(s) {
-                vmodel.tbodyScrollTop = s == void 0 ? this.scrollTop : s
-                console.log(s)
+            vm.throttleRenderTbody = function(n, o) {
+                // 不再读取元素的scrollTop了
+                // vmodel.tbodyScrollTop = this.scrollTop
+                vmodel.tbodyScrollTop = n
                 cancelAnimationFrame(requestID)
-                requestID = requestAnimationFrame(reRenderTbody)
+                requestID = requestAnimationFrame(function() {
+                    reRenderTbody(n, o)
+                })
             }
 
             vm.getColumnsOrder = function() {
@@ -309,10 +332,32 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html","scrollb
             vm.getStore = function(array) {
                 return array.slice(vm.startIndex, vm.endIndex)
             }
+            vm.getScrollerHeight = function() {
+                var h = vmodel.tbodyScrollHeight + vmodel.tbodyScrollTop,
+                    max = vmodel._rowHeight * vmodel.data.length
+                // 设置一个上限，修复回滚bug
+                h = h > max ? max : h
+                return h
+            }
             vm._data = vm.data.slice(vm.startIndex, vm.endIndex)
-
+            // 自定义滚动条
             vm.scrollbar = {
-                onScroll: vm.throttleRenderTbody
+                onScroll: function(n, o, dir) {
+                    // 竖直方向滚动
+                    if(dir == "v") {
+                        clearTimeout(scrollbarTimer)
+                        scrollbarTimer = setTimeout(function() {
+                            vmodel.throttleRenderTbody(n, o)
+                        }, 20)
+                    // 水平方向
+                    } else {
+                        vmodel.cssLeft = n == void 0 ? "auto" : -n + "px"
+                    }
+                },
+                // 表头不参与滚动，shit啊
+                viewHeightGetter: function(viewElement) {
+                    return viewElement.innerHeight() - vmodel.theadHeight
+                }
             }
         })
         //<-----------开始渲染分页栏----------
@@ -339,9 +384,11 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html","scrollb
                 prevScrollTop = 0,
                 lastRenderedScrollTop = 0
 
-        function reRenderTbody() {
-            var panel = vmodel.scrollPanel
-            var scrollTop = panel.scrollTop
+        function reRenderTbody(n, o) {
+            // 不再读取scrollTop
+            // var panel = vmodel.scrollPanel
+            // var scrollTop = panel.scrollTop
+            var scrollTop = n
             var scrollDir = scrollTop > prevScrollTop ? "down" : "up"
             prevScrollTop = scrollTop
             var distance = Math.abs(lastRenderedScrollTop - scrollTop)
@@ -383,7 +430,9 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html","scrollb
                         }
                     }
                 }
-                lastRenderedScrollTop = panel.scrollTop = vmodel.tbodyScrollTop = vmodel.startIndex * rowHeight
+                // 不在设置panel的scrollTop
+                lastRenderedScrollTop = vmodel.tbodyScrollTop = vmodel.startIndex * rowHeight
+                // lastRenderedScrollTop = panel.scrollTop = vmodel.tbodyScrollTop = vmodel.startIndex * rowHeight
             }
         }
         return vmodel
@@ -510,7 +559,7 @@ define(["avalon", "pager/avalon.pager", "text!./avalon.simplegrid.html","scrollb
         document.body.removeChild(node)
     })();
     // console.log(scrollbarHeight+":"+ scrollbarWidth)
-    function hasScroll(el, a) {
+    function hasScroll(el, a, vmodel) {
         //判定是否存在水平或垂直滚动条
         if (avalon(el).css("overflow") === "hidden") {
             return false

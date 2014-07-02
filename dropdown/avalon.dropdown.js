@@ -395,7 +395,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
                 vmodel.toggle = false;
                 vmodel.onSelect.call(this, e, listNode);
-                titleNode.focus();
+                titleNode && titleNode.focus();
             };
 
             vm.$listenter = function() {
@@ -438,23 +438,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     //根据键盘行为设置组件value
                     if(up !== void 0) {
                         vmodel.toggle = true;
-                        if(vmodel.activeIndex == void 0) {
-                            avalon.each(vmodel.data, function(i, item) {
-                                if(firstItemIndex === void 0 && item.item) {
-                                    firstItemIndex = i;
-                                }
-                                if(item.item && item.value === vmodel.value) {
-                                    selectedItemIndex = i;
-                                    return false;
-                                }
-                                return true;
-                            });
-
-                            if(!selectedItemIndex) {
-                                selectedItemIndex = firstItemIndex;
-                            }
-                            vmodel.activeIndex = selectedItemIndex;
-                        }
                         if(up) {
                             nextItem = vmodel.data.slice(0, vmodel.activeIndex).reverse();
                             step = -1;
@@ -497,6 +480,30 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                         display: 'none'
                     });
                 } else {
+                    var firstItemIndex, selectedItemIndex, value = vmodel.value;
+
+                    if(avalon.type(value) !== 'array') {
+                        value = [value];
+                    }
+
+                    //计算activeIndex的值
+                    if(vmodel.activeIndex == void 0) {
+                        avalon.each(vmodel.data, function(i, item) {
+                            if(firstItemIndex === void 0 && item.item && item.enable) {
+                                firstItemIndex = i;
+                            }
+                            if(item.item && item.value === value[0]) {
+                                selectedItemIndex = i;
+                                return false;
+                            }
+                            return true;
+                        });
+
+                        if(!selectedItemIndex) {
+                            selectedItemIndex = firstItemIndex;
+                        }
+                        vmodel.activeIndex = selectedItemIndex;
+                    }
                     vmodel.$position();
                     $listNode.css({
                         display: 'block'

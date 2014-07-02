@@ -508,6 +508,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     $listNode.css({
                         display: 'block'
                     });
+                    titleNode && titleNode.focus();
                 }
             };
 
@@ -552,7 +553,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                 }
 
                 //修正由于边框带来的重叠样式
-                css.top = css.top - $sourceNode.css('borderTop').replace(/^(\d+)\w.*$/, '$1');
+                css.top = css.top - $sourceNode.css('borderBottomWidth').replace(/^(\d+)\w.*$/, '$1');
                 css.left = offset.left;
 
                 //显示浮层

@@ -103,7 +103,7 @@ define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
                 })
                 avalon.scan(element, _vmodels)
                 if (typeof options.onInit === "function") {
-                    options.onInit.calll(element, vmodel, options, vmodels)
+                    options.onInit.call(element, vmodel, options, vmodels)
                 }
             }
 

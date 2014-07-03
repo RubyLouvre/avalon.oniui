@@ -59,6 +59,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 vmodel.viewElement = vmodel.widgetElement == document.body ? document.getElementsByTagName(
                     "html")[0] : vmodel.widgetElement
                 vmodel.viewElement.style.overflow = "hidden"
+                if(vmodel.widgetElement == document.body) vmodel.widgetElement.style.overflow = "hidden"
                 vmodel._position = vmodel.position.split(",")
 
                 var frag = avalon.parseHTML(options.template)
@@ -245,7 +246,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                     if(!always) {
                         item.data("ui-scrollbar-hidetimer", setTimeout(function() {
                             item.css("opacity", 0)
-                        }, 700))
+                        }, 1000))
                     }
                 }
             }
@@ -267,8 +268,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
             vm.update = function(ifInit, x, y) {
                 var ele = avalon(vmodel.viewElement),
                     // 滚动内容宽高
-                    viewW = scroller.innerWidth(),
-                    viewH = scroller.innerHeight(),
+                    viewW = scroller[0].scrollWidth,
+                    viewH = scroller[0].scrollHeight,
                     // 计算滚动条宽高
                     barH = ele.innerHeight(),
                     barW = ele.innerWidth(),
@@ -503,8 +504,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                     obj.viewer = avalon(vmodel.viewElement)
                     obj.viewH = vmodel.viewHeightGetter(obj.viewer)
                     obj.viewW = vmodel.viewWidthGetter(obj.viewer)
-                    obj.scrollerH = scroller.innerHeight()
-                    obj.scrollerW = scroller.innerWidth()
+                    obj.scrollerH = scroller[0].scrollHeight
+                    obj.scrollerW = scroller[0].scrollWidth
                     obj.step = isVertical ? 40 * (obj.draggerparHeight - obj.draggerHeight) / obj.scrollerH : 40 * (obj.draggerparWidth - obj.draggerWidth) / obj.scrollerW
 
                     var xy = axisComputer(obj),
@@ -555,9 +556,9 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 if(x != void 0) vmodel.scrollLeft = x
                 if(y != void 0) vmodel.scrollTop = y// 更新视窗
                 if(y != void 0) {
-                    scroller[0].style.top = -vmodel.scrollTop + "px"
+                    scroller[0].style.marginTop = -vmodel.scrollTop + "px"
                 } else if(x != void 0) {
-                    scroller[0].style.left = -vmodel.scrollLeft + "px"
+                    scroller[0].style.marginLeft = -vmodel.scrollLeft + "px"
                 }
             }
 

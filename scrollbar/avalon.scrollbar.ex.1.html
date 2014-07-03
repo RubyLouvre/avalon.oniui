@@ -27,8 +27,8 @@
     </head>
     <body ms-controller="test">
         <h1>scrollbar-元素带上下小箭头双滚动条</h1>
-        <div ms-widget="scrollbar" class="reset" style="height:300px;border:1px solid #ccc;width:700px;overflow:hidden;" data-scrollbar-position="right,bottom">
-            <div class="ui-scrollbar-scroller reset" style="padding:0 18px 18px 0;">
+        <div ms-widget="scrollbar" class="reset" style="height:300px;border:1px solid #ccc;width:700px;" data-scrollbar-position="right,bottom">
+            <div class="ui-scrollbar-scroller reset">
                 <p style="width:800px" ms-repeat="data" class="reset">left {{$index}} <span style="float:right;">right {{$index}} </span></p>
             </div>
         </div>

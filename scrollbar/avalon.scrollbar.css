@@ -126,9 +126,9 @@
     div .ui-scrollbar-arrow-disabled {
       background: #e9e9e9; }
   .ui-scrollbar-scroller {
-    position: absolute;
+    /*position: absolute;
     left: 0;
-    top: 0; }
+    top: 0;*/ }
   .ui-scrollbar-left {
     left: 0;
     right: auto; }

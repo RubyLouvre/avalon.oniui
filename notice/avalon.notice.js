@@ -13,7 +13,6 @@ define(["avalon", "text!./avalon.notice.html"], function(avalon, sourceHTML) {
     var affixBoxs = []; // 存储吸顶的notice元素，且只保存弹出的notice
     var affixHeights = []; //存储吸顶元素对应的height、width、offsetTop
     var isIE6 = (window.navigator.userAgent || '').toLowerCase().indexOf('msie 6') !== -1;
-
     var widget = avalon.ui.notice = function(element, data, vmodels) {
         var options = data.noticeOptions;
         options.template = template = options.getTemplate(template, options);
@@ -43,6 +42,12 @@ define(["avalon", "text!./avalon.notice.html"], function(avalon, sourceHTML) {
                 _affix(); 
                 vmodel.onShow.call(element, data, vmodels); // 用户回调
             }
+            vm.show = function() { //兼容onion-adapter,规范的方式是使用toggle来切换notice的显示与隐藏
+                vmodel.toggle = true;
+            }
+            vm.$close = function() {
+                vmodel.toggle =false;
+            }
             vm._close = function() { //close按钮click时的监听处理函数
                 vmodel.toggle = false;
             }
@@ -61,6 +66,12 @@ define(["avalon", "text!./avalon.notice.html"], function(avalon, sourceHTML) {
                     } 
                 }
                 vmodel.onHide.call(element, data, vmodels); //用户回调
+            }
+            vm.setType = function(type) { //兼容onion-adapter，标准的用法是改变type控制notice的类型
+                vmodel.type = type;
+            }
+            vm.setContent = function(content) {
+                vmodel.content = content;
             }
             vm.$init = function() {
                 var container = null;
@@ -82,6 +93,10 @@ define(["avalon", "text!./avalon.notice.html"], function(avalon, sourceHTML) {
                     avalon.scan(AffixPlaceholder, [vmodel]);
                 }
                 avalon.scan(templateView, [vmodel].concat(vmodels))
+                if(typeof vmodel.onInit === "function" ){
+                    //vmodels是不包括vmodel的
+                     vmodel.onInit.calll(element, vmodel, options, vmodels)
+                }
             }
             vm.$remove = function() { //删除组件绑定元素后的自清理方法
                 var templateViewPar = templateView.parentNode;
@@ -252,6 +267,31 @@ define(["avalon", "text!./avalon.notice.html"], function(avalon, sourceHTML) {
         getTemplate: function(str, options) {
             return str;
         }
+    }
+    avalon.notice = {
+        show: function(id, content, type, callbacks) {
+            if( !id || !avalon.vmodels[id]) return;
+            var notice = avalon.vmodels[id];
+            notice.setContent(content);
+            notice.setType(type || 'info');
+            avalon.scan(notice.widgetElement, [notice]);
+            notice.show();
+        },
+        setTitle: function(id, title) {
+            if(!id || !avalon.vmodels[id]) return;
+            var notice = avalon.vmodels[id];
+            notice.header = title;
+        },
+        hide: function(id){
+            if(!id || !avalon.vmodels[id]) return;
+            avalon.vmodels[id].$close();
+        },
+        go: function(id, cb) {
+            if(!id || !avalon.vmodels[id]) return;
+            var notice = avalon.vmodels[id];
+            var toff = avalon(notice.widgetElement).offset();
+            window.scrollTo(toff.left, toff.top);
+        }     
     }
     return avalon;
 })

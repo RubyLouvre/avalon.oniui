@@ -30,6 +30,10 @@ define(["avalon", "text!./avalon.spinner.html"], function(avalon, sourceHTML) {
                 tmpBParent.removeChild(tmpBElement);
                 elementParent.replaceChild(wrapper, tmpDiv);
                 avalon.scan(wrapper, [vmodel].concat(vmodels));
+                if(typeof vmodel.onInit === "function" ){
+                    //vmodels是不包括vmodel的
+                     vmodel.onInit.calll(element, vmodel, options, vmodels)
+                }
                 setTimeout(function() { // 如果输入域的初始值不在spinner的范围，调整它
                     var value = Number(element.value),
                         min = options.min,

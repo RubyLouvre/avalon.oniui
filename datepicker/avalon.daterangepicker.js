@@ -15,6 +15,8 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
             disabled = options.disabled.toString(), //组件的配置项，可能是Boolean类型也可能代表一个属性变量名的字符串，通过此属性来决定组件的禁用与否
             disabledVM = avalon.getModel(disabled, vmodels),
             duplex = options.duplex && options.duplex.split(","), //options.duplex保存起始日期和结束日期初始化值的引用，逗号分隔
+            duplexFrom,
+            duplexTo,
             rules = options.rules, //日期选择框起始日期和结束日期之间关系的规则
             selectFuncVM = typeof options.select ==="string" ? avalon.getModel(options.select, vmodels) : null, //得到select回调所在的VM域select值所组成的数组
             _confirmClick = false, //判断是否点击了确定按钮，没点击为false，点击为true
@@ -106,6 +108,7 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                 var target = event.target;
                 if(target.tagName === "TD") {
                     updateMsg();
+                    event.stopPropagation();
                 }
             }
             // 点击确定按钮确定日期选择范围
@@ -173,10 +176,42 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                     inputTo.setAttribute("data-toggle","toggle");
                     avalon.scan(inputFrom, [vmodel]);
                     avalon.scan(inputTo, [vmodel]);
+                    if(typeof vmodel.onInit === "function" ){
+                        //vmodels是不包括vmodel的
+                         vmodel.onInit.calll(element, vmodel, options, vmodels)
+                    }
                 })
             }
             vm.$remove = function() {
                 element.innerHTML = element.textContent = "";
+            }
+        })
+        vmodel.$watch("inputFromValue", function(val) {
+            var duplexLen = 0;
+            if(vmodel.inputFromValue) {
+                duplexLen += 1;
+            }
+            if(vmodel.inputToValue) {
+                duplexLen += 1;
+            }
+            if(duplexFrom) {
+                duplexFrom[1][duplexFrom[0]] = val;
+                setValues(duplexLen, val, vmodel.inputToValue);
+                updateMsg();
+            }
+        })
+        vmodel.$watch("inputToValue", function(val) {
+            var duplexLen = 0;
+            if(vmodel.inputFromValue) {
+                duplexLen += 1;
+            }
+            if(vmodel.inputToValue) {
+                duplexLen += 1;
+            }
+            if(duplexTo) {
+                duplexTo[1][duplexTo[0]] = val;
+                setValues(duplexLen, vmodel.inputFromValue, val);
+                updateMsg();
             }
         })
         // 初始化日期范围值
@@ -187,7 +222,19 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                     duplexVM2 = duplexLen === 1 ? null : avalon.getModel(duplex[1].trim(), vmodels),
                     duplexVal1 = duplexVM1[1][duplexVM1[0]],
                     duplexVal2 = duplexVM2 ? duplexVM2[1][duplexVM2[0]] : "";
+                duplexFrom = duplexVM1;
+                duplexTo = duplexVM2;
                 setValues(duplexLen, duplexVal1, duplexVal2);
+                if(duplexVM1) {
+                    duplexVM1[1].$watch(duplexVM1[0], function(val) {
+                        vmodel.inputFromValue = val;
+                    })
+                }
+                if(duplexVM2) {
+                    duplexVM2[1].$watch(duplexVM2[0], function(val) {
+                        vmodel.inputToValue = val;
+                    })
+                }
                 vmodel.label =  options.label ? options.label : vmodel.label;
                 initMsgAndOldValue();
             } 

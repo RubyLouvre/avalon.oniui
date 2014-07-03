@@ -15,6 +15,8 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
             disabled = options.disabled.toString(),
             disabledVM = avalon.getModel(disabled, vmodels),
             duplex = options.duplex && options.duplex.split(","),
+            duplexFrom,
+            duplexTo,
             rules = options.rules,
             _inputToValue = "",
             _toMinDate = "",
@@ -123,6 +125,10 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
                     element.appendChild(calendar);
                 }
                 avalon.scan(element, [vmodel].concat(vmodels));
+                if(typeof vmodel.onInit === "function" ){
+                    //vmodels是不包括vmodel的
+                     vmodel.onInit.calll(element, vmodel, options, vmodels)
+                }
             };
             vm.$remove = function() {
                 element.innerHTML = element.textContent = "";
@@ -131,6 +137,16 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
         vmodel.$watch("disabled", function(val) {
             vmodel.fromDisabled = vmodel.toDisabled = val;
         })
+        vmodel.$watch("inputFromValue", function(val) {
+            if(duplexFrom) {
+                duplexFrom[1][duplexFrom[0]] = val;
+            }
+        })
+        vmodel.$watch("inputToValue", function(val) {
+            if(duplexTo) {
+                duplexTo[1][duplexTo[0]] = val;
+            }
+        })
         function initValues() {
             if(duplex) {
                 var duplexLen = duplex.length,
@@ -138,7 +154,19 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
                     duplexVM2 = duplexLen === 1 ? null : avalon.getModel(duplex[1].trim(), vmodels),
                     duplexVal1 = duplexVM1[1][duplexVM1[0]],
                     duplexVal2 = duplexVM2 ? duplexVM2[1][duplexVM2[0]] : "";
+                duplexFrom = duplexVM1;
+                duplexTo = duplexVM2;
                 setValues(duplexLen, duplexVal1, duplexVal2);
+                if(duplexVM1) {
+                    duplexVM1[1].$watch(duplexVM1[0], function(val) {
+                        vmodel.inputFromValue = val;
+                    })
+                }
+                if(duplexVM2) {
+                    duplexVM2[1].$watch(duplexVM2[0], function(val) {
+                        vmodel.inputToValue = val;
+                    })
+                }
             } 
         }
         function setValues(len, from, to) {

@@ -7,30 +7,3 @@ by 司徒正美 2014.6.28 拉萨开往西宁的火车上
 @import "compass/tools";
 @import "compass/config";
 @import "compass/css3";
-.float2{
-    @include  float-left ;
-}
-body{
-    color: $font-color;
-}
-$dirs: top bottom left right top-left top-right bottom-left bottom-right;
-@each $dir in $dirs{
-    .#{$dir}-triangle{
-         @include triangle($dir);
-    }
-}
-.pentagon{
-    @include pentagon(60px, 60px, #a9ea00);
-}
-.hexagon{
-    @include hexagon(60px, 60px,pink);
-}
-.octagon{
-    @include octagon(60px, 60px,blue);
-}
-.rhombus{
-    @include rhombus(60px, green);
-}
-.yin-yang{
-    @include yin-yang();
-}

@@ -9,7 +9,7 @@
 // @link http://nicolasgallagher.com/pure-css-folded-corner-effect/demo/
 ///
 
-@import "compass/tools/pseudo-element";
+@import "../pseudo-element";
 
 @mixin folded-corner (
     $position: top-right,

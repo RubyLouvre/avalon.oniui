@@ -7,7 +7,7 @@
 // @author Mason Wendell mason@canarypromo.com @canarymason for the sass mixin
 ///
 
-@import "compass/css3/images";
+@import "../../css3/images";
 
 @mixin background-polka-dot($bg-color: black, $dot-color:  white, $size: 15%, $spacing: 60px) {
     $transparent: rgba(black, 0);

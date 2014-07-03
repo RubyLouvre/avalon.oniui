@@ -6,8 +6,8 @@
 // @author @MoOx for compass version
 ////
 
-@import "compass/tools/pseudo-element";
-@import "compass/layout/stretching";
+@import "../pseudo-element";
+@import "../../layout/stretching";
 
 @mixin background-metal()
 {

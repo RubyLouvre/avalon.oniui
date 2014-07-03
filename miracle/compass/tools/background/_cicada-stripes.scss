@@ -7,7 +7,7 @@
 // @author Mason Wendell mason@canarypromo.com @canarymason for the sass mixin
 ///
 
-@import "compass/css3/images";
+@import "../../css3/images";
 
 @mixin background-cicada-stripes($bg-color: gray, $stripe-color: white, $dir: left) {
     $transparent: rgba(black, 0);

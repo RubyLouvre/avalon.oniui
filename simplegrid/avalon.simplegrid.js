@@ -196,9 +196,26 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                 return avalon.vmodels["$simplegrid" + optId]
             }
             // update scrollbar
+            var scrollbarInited
             vm.updateScrollbar = function() {
-                var scrollbar = vmodel.getScrollbar()
-                scrollbar && scrollbar.update()
+                var scrollbar = vmodel.getScrollbar(),
+                    scroller = scrollbar.getScroller()
+                if (scrollbar) {
+                    scrollbar.update()
+                    var bars = scrollbar.getBars()
+                    // 更新滚动条附近的间距
+                    avalon.each(bars, function(i, bar) {
+                        if(bar.hasClass("ui-scrollbar-right") || bar.hasClass("ui-scrollbar-left")) {
+                            // 竖直方向如果进入这个分支，只需要减一次滚动条的宽度即可
+                            if(scrollbarInited) return
+                            scrollbarInited = true
+                            vmodel.gridWidth = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ? scroller[0].scrollWidth - bar.width() : scroller[0].scrollWidth
+                        // 水平方向把这个滚动条宽度转移到大容器上
+                        } else if(bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")){
+                            vmodel.paddingBottom = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always"  ? bar.innerHeight() + 2 + "px" : "0"
+                        }
+                    })
+                }
             }
 
             vm.startResize = function(e, el) {

@@ -264,6 +264,10 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
             vm.getBars = function() {
                 return bars
             }
+            //@method getScroller()返回scroller
+            vm.getScroller = function() {
+                return scroller
+            }
             //@method update()更新滚动条状态，windowresize，内容高度变化等情况下调用，不能带参数
             vm.update = function(ifInit, x, y) {
                 var ele = avalon(vmodel.viewElement),

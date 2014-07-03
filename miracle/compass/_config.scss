@@ -41,7 +41,7 @@ $experimental-support-for-svg          : false !default;
 // Support for CSS PIE in experimental css3 properties (-pie).
 $experimental-support-for-pie          : false !default;
 
-$oinui-theme: blue;
+$oinui-theme: smoothness;
 
-@import "themes/blue" ;
+@import "themes/smoothness" ;
 

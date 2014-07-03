@@ -1,5 +1,4 @@
 @charset "utf-8";
-/*!
 // Shape/Polygon/Triangle
 // @author 司徒正美
 // $direction: 其值可以为top,  bottom, left, right 或者是 top-left， top-right, bottom-left, bottom-right
@@ -7,32 +6,6 @@
 // $height: 像素值，em值， half, auto。half为宽的一半，比较好看，auto则与宽相等
 // $color: 底色
 //默认生成高为底的一半的等腰三角形
-index.scss
-.top-triangle{
-   @include triangel(top);
-}
-index.html
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>triangle by 司徒正美</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width">
-        <link charset="utf-8" href="index.css"  rel="stylesheet" type="text/css" />
-    </head>
-    <body>
-        <div class="top-triangle"></div><br/>
-        <div class="bottom-triangle"></div><br/>
-        <div class="left-triangle"></div><br/>
-        <div class="right-triangle"></div><br/>
-        <div class="top-left-triangle"></div><br/>
-        <div class="top-right-triangle"></div><br/>
-        <div class="bottom-left-triangle"></div><br/>
-        <div class="bottom-right-triangle"></div>
-    </body>
-</html>
-
-*/
 
 @mixin triangle($direction: top, $width: 1em, $height: half, $color: #000){
     @if ($direction == top or $direction == right or $direction == bottom or $direction == left){

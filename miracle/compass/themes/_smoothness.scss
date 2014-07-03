@@ -32,8 +32,30 @@ $added-bg-color:        #006600 !default;
 $removed-color:           white !default;
 $removed-bg-color:      #990000 !default;
 
-$blueprint-table-header-color: #c3d9ff !default;
-$blueprint-table-stripe-color: #e5ecf9 !default;
 
-$ui-widget-font-widget: #000;
+
+//$ui-widget-font-widget: #000;
+//字体设置
+$oniui-font-size: 1em;
+$oniui-font-weight: normal;
+$oniui-font-family: unquote('Helvetica,Arial,Sans-serif');
+
+
+$ui-widget-content-border-color: #aaa;
+$ui-widget-content-background-color: rgb(215,215,215);
+$ui-widget-content-color: #222;
+
+$ui-widget-header-border-color: #aaa;
+$ui-widget-header-background-color: rgb(223,223,223);
+$ui-widget-header-color: #222;
+
+
+$ui-state-default-background-color: #e6e6e6;
+$ui-state-default-border-color: #d3d3d3;
+$ui-state-default-color: #555;
+
+
+
+$ui-state-error-color: #cd0a0a;
+
 

@@ -153,6 +153,11 @@ define(["avalon", "text!./avalon.tooltip.html", "text!./avalon.tooltip.css", "po
                 tooltipElem = tooltipELementMaker()
                 avalon.scan(tooltipElem, [vmodel].concat(vmodels))
                 avalon.scan(element, [vmodel].concat(vmodels))
+                // callback after inited
+                if(typeof options.onInit === "function" ) {
+                    //vmodels是不包括vmodel的 
+                    options.onInit.call(element, vmodel, options, vmodels)
+                }
             }
            
             vm.$remove = function() {
@@ -440,6 +445,8 @@ define(["avalon", "text!./avalon.tooltip.html", "text!./avalon.tooltip.css", "po
         "positionMy": false,    //@param tooltip元素的定位点，like: "left top+11"
         "positionAt": false,    //@param element元素的定位点，like: "left top+11",positionAt && positionMy时候忽略position设置
         "hiddenDelay": 64,    //@param tooltip自动隐藏时间，单位ms
+        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
+        onInit: avalon.noop,
         "contentGetter": function(elem) {
             if(elem.tagName.toLowerCase() != "a") return
             return elem.title

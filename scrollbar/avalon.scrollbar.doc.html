@@ -15,7 +15,7 @@
             </tr>
             <!--auto doc start-->
 <tr>
-    <td>position</td><td> "right"</td><td> scrollbar出现的位置,right右侧，left左侧，top上侧，bottom下侧，可能同时出现多个方向滚动条</td></tr>
+    <td>position</td><td> "right"</td><td> scrollbar出现的位置,right右侧，bottom下侧，可能同时出现多个方向滚动条</td></tr>
 <tr>
     <td>scrollTop</td><td> 0</td><td> 竖直方向滚动初始值，负数会被当成0，设置一个极大值等价于将拖动头置于bottom</td></tr>
 <tr>
@@ -28,6 +28,14 @@
     <td>draggerHTML</td><td> ""</td><td> 滚动条拖动头里，注入的html碎片</td></tr>
 <tr>
     <td>type</td><td> "normal"</td><td> srollbar size,normal为10px，small为8px，large为14px</td></tr>
+<tr>
+    <td>onInit</td><td>配置函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+<tr>
+    <td>getTemplate</td><td>配置函数</td><td>getTemplate(tpl, opts) 定制修改模板接口</td></tr>
+<tr>
+    <td>getBars</td><td>接口函数</td><td>getBars()返回所有的滚动条元素</td></tr>
+<tr>
+    <td>getScroller</td><td>接口函数</td><td>getScroller()返回scroller</td></tr>
 <tr>
     <td>update</td><td>接口函数</td><td>update()更新滚动条状态，windowresize，内容高度变化等情况下调用，不能带参数</td></tr>
 <tr>

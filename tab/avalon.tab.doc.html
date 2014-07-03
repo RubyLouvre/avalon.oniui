@@ -49,6 +49,8 @@
 <tr>
     <td>tabpanels</td><td>undefined</td><td>  [{content:content or url, contentType: "content" or "ajax"}] 单个panel的contentType配置优先级高于组件的contentType</td></tr>
 <tr>
+    <td>onInit</td><td>配置函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+<tr>
     <td>tabContainerGetter</td><td>配置函数</td><td>tabContainerGetter(element) tab容器，如果指定，则到该容器内扫描tabs，参数为绑定组件的元素，默认返回element内第一个ul或者ol元素</td></tr>
 <tr>
     <td>panelContainerGetter</td><td>配置函数</td><td>panelContainerGetter(element)  panel容器，如果指定，则到该容器内扫描panel，参数为绑定组件的元素，默认返回第element内第一个div元素</td></tr>

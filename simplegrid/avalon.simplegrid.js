@@ -196,22 +196,27 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                 return avalon.vmodels["$simplegrid" + optId]
             }
             // update scrollbar
+            var scrollbarInited
             vm.updateScrollbar = function() {
-                var scrollbar = vmodel.getScrollbar()
+                var scrollbar = vmodel.getScrollbar(),
+                    scroller = scrollbar.getScroller()
                 if (scrollbar) {
                     scrollbar.update()
                     var bars = scrollbar.getBars()
                     // 更新滚动条附近的间距
                     avalon.each(bars, function(i, bar) {
-                        if (bar.hasClass("ui-scrollbar-right") || bar.hasClass("ui-scrollbar-left")) {
-                            vmodel.barRight = bar.data("ui-scrollbar-needed") ? bar.innerWidth() : 0
-                        } else if (bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")) {
-                            vmodel.paddingBottom = bar.data("ui-scrollbar-needed") ? bar.innerHeight() + 2 + "px" : "0"
+                        if(bar.hasClass("ui-scrollbar-right") || bar.hasClass("ui-scrollbar-left")) {
+                            // 竖直方向如果进入这个分支，只需要减一次滚动条的宽度即可
+                            if(scrollbarInited) return
+                            scrollbarInited = true
+                            vmodel.gridWidth = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ? scroller[0].scrollWidth - bar.width() : scroller[0].scrollWidth
+                        // 水平方向把这个滚动条宽度转移到大容器上
+                        } else if(bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")){
+                            vmodel.paddingBottom = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always"  ? bar.innerHeight() + 2 + "px" : "0"
                         }
                     })
                 }
             }
-
 
             vm.startResize = function(e, el) {
                 //当移动到表头的右侧,改变光标的形状,表示它可以拖动改变列宽
@@ -358,10 +363,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                         vmodel.cssLeft = n == void 0 ? "auto" : -n + "px"
                     }
                 },
-                // 表头不参与滚动，shit啊
-                viewHeightGetter: function(viewElement) {
-                    return viewElement.innerHeight() - vmodel.theadHeight
-                }
+                show: vm.showScrollbar
             }
         })
         //<-----------开始渲染分页栏----------
@@ -444,6 +446,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
     widget.defaults = {
         theadHeight: 35,
         tbodyScrollHeight: "auto",
+        showScrollbar: "always",//滚动条什么时候显示，默认一直，可设置为never，scrolling
         tbodyScrollTop: 0,
         tbodyHeight: "auto",
         _rowHeight: 35, //实际行高,包含border什么的

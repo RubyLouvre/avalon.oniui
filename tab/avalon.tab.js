@@ -101,8 +101,6 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
                 vm.tabpanels = options.tabpanels ? vm.tabpanels : tabpanels
                 vm.active = vm.active >= vm.tabs.length && vm.tabs.length - 1 || vm.active < 0 && 0 || parseInt(vm.active) >> 0
 
-
-                
                 avalon.nextTick(function() {
                     avalon(element).addClass("ui-tab ui-widget ui-widget-content" + (vm.event == "click" ? " ui-tab-click" : "") + (vm.dir == "v" ? " ui-tab-vertical" : "") + (vm.dir != "v" && vm.uiSize == "small" ? " ui-tab-small" : ""))
                     // tab列表
@@ -115,6 +113,11 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
 
                     if(vm.autoSwitch) {
                         vm.$autoSwitch();
+                    }
+                    // callback after inited
+                    if(typeof options.onInit === "function" ) {
+                        //vmodels是不包括vmodel的 
+                        options.onInit.call(element, vmodel, options, vmodels)
                     }
                 })
             }
@@ -326,7 +329,8 @@ define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "te
         forceCut: false,        //@param  强制截断，因为竖直方向默认是不截取的，因此添加一个强制截断，使得在纵向排列的时候title也可以被截断
         //tabs:undefined,              //@param  [{title:"xx", disabled:boolen, removable:boolen}]，单个tabs元素的removable针对该元素的优先级会高于组件的removable设置
         //tabpanels:undefined,         //@param  [{content:content or url, contentType: "content" or "ajax"}] 单个panel的contentType配置优先级高于组件的contentType
-
+        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
+        onInit: avalon.noop,
         tabContainerGetter: function(element) {
             return element.getElementsByTagName("ul")[0] || element.getElementsByTagName("ol")[0]
         }, //@optMethod tabContainerGetter(element) tab容器，如果指定，则到该容器内扫描tabs，参数为绑定组件的元素，默认返回element内第一个ul或者ol元素

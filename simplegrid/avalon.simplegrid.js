@@ -198,18 +198,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
             // update scrollbar
             vm.updateScrollbar = function() {
                 var scrollbar = vmodel.getScrollbar()
-                if (scrollbar) {
-                    scrollbar.update()
-                    // var bars = scrollbar.getBars()
-                    // // 更新滚动条附近的间距
-                    // avalon.each(bars, function(i, bar) {
-                    //     if(bar.hasClass("ui-scrollbar-right") || bar.hasClass("ui-scrollbar-left")) {
-                    //         vmodel.barRight = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ? bar.innerWidth() : 0
-                    //     } else if(bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")){
-                    //         vmodel.paddingBottom = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always"  ? bar.innerHeight() + 2 + "px" : "0"
-                    //     }
-                    // })
-                }
+                scrollbar && scrollbar.update()
             }
 
             vm.startResize = function(e, el) {
@@ -354,7 +343,6 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                         }, 20)
                         // 水平方向
                     } else {
-                        console.log(n + " " + o)
                         vmodel.cssLeft = n == void 0 ? "auto" : -n + "px"
                     }
                 },

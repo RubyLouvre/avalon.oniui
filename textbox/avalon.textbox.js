@@ -115,6 +115,10 @@ define(["./avalon.suggest", "text!./avalon.textbox.html"], function(avalon, sour
                     }
                     avalon.scan(sourceList, models);
                     avalon.scan(element, models);
+                    if(typeof vmodel.onInit === "function" ){
+                        //vmodels是不包括vmodel的
+                         vmodel.onInit.calll(element, vmodel, options, vmodels)
+                    }
                     // 如果输入域有值，则隐藏占位符，否则显示，默认显示
                     vm.elementDisabled = element.disabled;
                     vm.toggle = element.value != "" ? false : true;

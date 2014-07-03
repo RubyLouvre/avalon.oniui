@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>accordion demo </title>
+<script src="../avalon.js"></script>
+<script src="../avalon.replace.js"></script>
+</head>
+<body class="ms-controller" ms-controller="demo">
+ 
+    <div ms-widget="accordion" ms-each-el="data" data-accordion-width="300">
+        <sub class="title">{{el.title}}</sub>
+        <sub class="content">{{el.content}}</sub>
+    </div>
+    <script> 
+        require(["accordion/avalon.accordion"], function($$) {
+            $$.define('demo',function(vm){
+
+                vm.data = [{
+                    'title': '标题1',
+                    'content': '正文1'
+                }, {
+                    'title': '标题2',
+                    'content': '正文2'
+                }];
+            });
+            avalon.scan();
+        })
+    </script>
+</body>
+</html>
+

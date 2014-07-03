@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo </title>
+<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+<script src="../avalon.js"></script>
+<script src="../avalon.replace.js"></script>
+</head>
+<body class="ms-controller" ms-controller="demo2">
+    <div class="wrapper">
+        <h1>datepicker demo</h1>
+        <div class="demoShow" ms-controller="demo">
+<!--             <fieldset>
+                <legend>单日历框</legend>
+                <input ms-widget="datepicker" ms-duplex="data1" data-datepicker-disabled="disabled1"/>
+
+                {{data1}}
+            </fieldset>
+
+            <fieldset>
+                <legend>单日历框(设置change回调——通过vm中配置项)</legend>
+                <input ms-widget="datepicker,changeEp,changeEp1"/>
+            </fieldset>
+
+            <fieldset>
+                <legend>单日历框(设置change回调——通过配置参数)</legend>
+                <input ms-widget="datepicker,changeEp2" data-datepicker-change="changeEp2"/>
+            </fieldset> -->
+
+            <!-- <fieldset>
+                <legend>双日历框</legend>
+                    <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from, to" data-coupledatepicker-disabled="disabled2" class="ui-coupledatepicker">
+                    <div class="ui-coupledatepicker-item"></div>
+                    <span class="label">-</span>
+                    <div class="ui-coupledatepicker-item"></div>
+            </div>
+
+            <button ms-click="toggle2">toggle disabled 状态</button>
+
+            {{from}}
+            {{to}}
+
+            </fieldset>
+
+            <fieldset>
+                <legend>双日历框 配置参数</legend>
+                <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from4, to4" data-coupledatepicker-rules="opts" class="ui-coupledatepicker">
+                <div class="ui-coupledatepicker-item"></div>
+                <span class="label">-</span>
+                <div class="ui-coupledatepicker-item"></div>
+                </div>
+
+                {{from4}}
+                {{to4}}
+
+            </fieldset>
+ -->
+            <fieldset>
+                <legend>日期范围框</legend>
+                <div ms-widget="daterangepicker" data-daterangepicker-duplex="from2, to2" data-daterangepicker-disabled="disabled3"/>
+
+                {{from2}}
+                {{to2}}
+            </fieldset>
+            
+            <fieldset>
+                <legend>日期范围框 配置参数</legend>
+                <div ms-widget="daterangepicker,$,rangeOpts" data-daterangepicker-duplex="from5, to5" data-daterangepicker-select="select"/>
+
+                {{from5}}
+                {{to5}}
+            </fieldset>
+
+            <fieldset>
+                <legend>日期范围框 默认值为空</legend>
+                <div ms-widget="daterangepicker" data-daterangepicker-duplex="fromEmpty, toEmpty" data-daterangepicker-rules="opts2"/>
+
+                {{fromEmpty}}
+                {{toEmpty}}
+            </fieldset>
+
+            <fieldset>
+                <legend>日期范围框</legend>
+                <div ms-widget="daterangepicker, df3" data-daterangepicker-duplex="from3, to3"/>
+
+                {{from3}}
+                {{to3}}
+
+                <button ms-click="setdates">设置时间为'2013-09-09', '2014-09-09'</button>
+                <button ms-click="setlabel">设置标签为'我是label'</button>
+            </fieldset>
+
+            <fieldset>
+                <legend>日期范围框 配置初始化label显示 支持select回调函数</legend>
+                <div ms-widget="daterangepicker" data-daterangepicker-duplex="from6, to6" data-daterangepicker-select="select" data-daterangepicker-label="xxx" data-daterangepicker-rules="$rulesxx"/>
+            </fieldset>
+
+            <fieldset>
+                <legend>日期范围框显示内容的自定义（日期显示，弹层上的日期范围显示）</legend>
+                <div ms-widget="daterangepicker,$,customOpts" data-daterangepicker-label="自定义日期范围框显示内容"/>
+            </fieldset>
+
+            <script> 
+                require(["datepicker/avalon.daterangepicker"], function(avalon) {
+                    avalon.define('demo2', function(vm) {
+                        vm.setdates = function() {
+                            $$.$ui('df3').setDates('2013-09-09', '2014-09-09');
+                        };
+                        vm.setlabel = function() {
+                            $$.$ui('df3').setLabel('我是label');
+                        };
+                    });
+                    var dmo = $$.define('demo',function(vm){
+                        vm.$skipArray = ['customOpts'];
+                        vm.data1 = '2014-01-02';
+                        vm.from = '2014-01-02';
+                        vm.to = '2014-01-15';
+                        vm.from2 = '2014-01-02';
+                        vm.to2 = '2014-01-15';
+                        vm.from3 = '2014-01-05';
+                        vm.to3 = '2014-01-11';
+                        vm.from4 = '2014-02-15';
+                        vm.to4 = '2014-02-15';
+                        vm.from5 = '2014-02-15';
+                        vm.to5 = '2014-02-21';
+                        vm.from6 = '2014-02-14';
+                        vm.to6 = '2014-02-24';
+                        vm.$rulesxx = {
+                            rules: 'null, 0D'
+                        };
+                        vm.v = true;
+                        vm.b = true;
+                        vm.disabled1 = true;
+                        vm.disabled2 = false;
+                        vm.disabled3 = true;
+                        vm.$watch('b', function(n, o) {
+                            vm.v = n;
+                        });
+                        vm.toggle1 = function() {
+                            vm.b = !vm.b;
+                        };
+                        vm.toggle2 = function() {
+                            vm.disabled2 = !vm.disabled2;
+                        };
+
+                        function changeCallback() {
+                            console.log(arguments);
+                        }
+
+                        vm.changeEp1 = {
+                            change: changeCallback
+                        };
+                        vm.changeEp2 = changeCallback;
+
+                            //最小开始日期为2014-02-14，两天最小相隔0天
+                        vm.opts = {
+                            rules : 'null, 0D',
+                            fromMinDate: '2014-02-14'
+                        };
+
+                        //最小开始日期为2014-02-14，两天最小相隔5天，最大相隔10天
+                        vm.opts2 = {
+                            rules : 'null, 5D, 10D',
+                            fromMinDate: '2014-02-14'
+                        };
+
+                        //daterangepicker支持select回调函数
+                        vm.select = function(from, to) {
+                            window.console && console.log(arguments);
+                        };
+
+                        //初始化daterangePicker时from和to的值为空
+                        vm.fromEmpty = null;
+                        vm.toEmpty = null;
+
+                        vm.rangeOpts = {
+                            opts: {
+                                msgFormat: function(from, to) {
+                                    return '已选时间段：' + from.getRawValue() + ' 至 ' + to.getRawValue() + ' 共计' + (Math.floor( (to.getDate().getTime() - from.getDate().getTime())/1000/60/60/24 + 1 ) - 1) + '晚';
+                                }
+                            },
+                            rules: {
+                                rules : 'null, 5D, 10D',
+                                fromMinDate: '2014-02-14'
+                            }
+                        };
+
+                        vm.customOpts = {
+                            opts: {
+                                msgFormat: function(from, to) {
+                                    return '已选时间段：' + from.getRawValue() + ' 至 ' + to.getRawValue() + ' 共计' + (Math.floor( (to.getDate().getTime() - from.getDate().getTime())/1000/60/60/24 + 1 ) - 1) + '晚';
+                                },
+                                datesDisplayFormat: function(label, fromDate, toDate) {
+                                    return '从 ' + fromDate + ' 到 ' + toDate;
+                                }
+                            }
+                        };
+
+                    });
+                    setTimeout(function() {
+                        dmo.data1 = '2014-01-22';
+                        dmo.from = '2014-02-03';
+                        dmo.from2 = '2013-02-14';
+                        dmo.to = '2015-02-03';
+                        dmo.to2 = '2014-02-14';
+                        dmo.b = false;
+                        dmo.disabled2 = false;
+                        dmo.disabled3 = false;
+                        dmo.disabled1 = false;
+                    }, 3000);
+                    avalon.scan();
+                })
+            </script>
+        </div>
+    </div>
+</body>
+</html>
+

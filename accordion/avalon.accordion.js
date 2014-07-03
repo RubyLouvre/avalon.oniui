@@ -1,4 +1,4 @@
-define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) {
+define(["avalon.getModel", "text!./avalon.accordion.html"], function(avalon, sourceHTML) {
     var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],
         cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
         styleEl = document.getElementById("avalonStyle"),
@@ -12,7 +12,6 @@ define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) 
     } catch (e) {
         styleEl.styleSheet.cssText += cssText;
     }
-
     var widget = avalon.ui.accordion = function(element, data, vmodels) {
         accordionNum++ ;
         var options = data.accordionOptions;
@@ -24,7 +23,19 @@ define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) 
         // 根据mode的不同使用不同的template
         var template = options.mode=="caret" ? caretTemplate : options.mode=="nav" ? navTemplate : options.template;
         options.template = options.getTemplate(template, options);
-        
+        var msData = Object.keys(element.msData),
+            _data = [],
+            dataVM = [];
+        msData.forEach(function(item, index){
+            if(item.indexOf("ms-each") === 0) {
+                _data = element.msData[item];
+                dataVM = avalon.getModel(_data, vmodels);
+                _data = dataVM[1][dataVM[0]];
+                element.removeAttribute(item);
+                return false;
+            }
+        })
+        options.data = !options.data.length ? _data.$model || _data: options.data;
         var vmodel = avalon.define(data.accordionId, function(vm) {
             avalon.mix(vm, options);
             vm.$skipArray = ["widgetElement", "rendered","autoRun","template","container","controlCls","currentTrigge","initIndex","multiple","trigger","triggerType","data"];
@@ -71,6 +82,10 @@ define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) 
                     vm.currentIndex = options.initIndex;
                 }
                 avalon.scan(element, [vmodel].concat(vmodels));
+                if(typeof vmodel.onInit === "function" ){
+                    //vmodels是不包括vmodel的
+                     vmodel.onInit.calll(element, vmodel, options, vmodels)
+                }
                 vmodel.rendered = true;
                 setTimeout(function() { // 渲染完组件之后，将对应面板的header和panel分别保存
                     var len = accordionItems.length;
@@ -104,6 +119,31 @@ define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) 
                 }, 400);
             }
             vm.$init = function() {
+                if(!vmodel.data.length) {
+                    // 从dom中抓取数据
+                    var list = [],
+                        subEle;
+                    while(subEle = element.firstChild) {
+                        if(subEle.nodeType !==1) {
+                            element.removeChild(subEle);
+                            continue;
+                        }
+                        var next = subEle.nextSibling;
+                        while(next.nodeType !==1) {
+                            element.removeChild(next);
+                            next = subEle.nextSibling;
+                        }
+                        if(avalon(subEle).hasClass("title")) {
+                            list.push({
+                                title: subEle.innerHTML.trim(),
+                                content: next.innerHTML.trim()
+                            })
+                        }
+                        element.removeChild(subEle);
+                        element.removeChild(next);
+                    }
+                    vmodel.data = list;
+                }
                 if (options.autoRun) {
                     vm._renderView();
                 }
@@ -217,7 +257,8 @@ define(["avalon", "text!./avalon.accordion.html"], function(avalon, sourceHTML) 
         width: '100%',
         currentIndex: -1, // 当前点击的面板的索引值
         beforeSwitch: avalon.noop,
-        onSwitch: avalon.noop
+        onSwitch: avalon.noop,
+        onInit: avalon.noop
     }
     return avalon;
 });

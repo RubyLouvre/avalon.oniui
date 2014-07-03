@@ -128,7 +128,8 @@
   .ui-scrollbar-scroller {
     /*position: absolute;
     left: 0;
-    top: 0;*/ }
+    top: 0;*/
+    overflow: hidden; }
   .ui-scrollbar-left {
     left: 0;
     right: auto; }

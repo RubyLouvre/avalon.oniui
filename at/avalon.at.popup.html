@@ -2,8 +2,8 @@
     <li class="ui-at-item" 
         ms-repeat-item="_datalist" 
         ms-class="hover:activeIndex == $index"
-        ms-mouseenter="$hover($event,$index)"
-        ms-click="$select"
+        ms-mouseenter="_hover($event,$index)"
+        ms-click="_select"
         >{{item | html}}</li>
 </ul>
 MS_OPTION_STYLE

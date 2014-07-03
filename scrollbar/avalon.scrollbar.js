@@ -112,13 +112,13 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                             } else{
                                 var diretion = k in {33: 1, 36: 1} ? "up" : "down"
                                 wheelLike(diretion, vs, e, function(obj) {
-                                    var _top = -(parseInt(scroller.css("top"))) >> 0
+                                    var _top = scroller[0].scrollTop
                                     // home, pageup
                                     if(k in {33: 1, 36: 1}) {
                                         if(_top) e.preventDefault()
                                     // end, pagedown
                                     } else {
-                                        if(_top < obj.scrollerH - obj.viewH) event.preventDefault()
+                                        if(_top < obj.scrollerH - obj.viewH) e.preventDefault()
                                     }
                                     // home or end
                                     if(k in {36: 1, 35: 1}) {
@@ -298,8 +298,13 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 if(vmodel.viewElement != vmodel.widgetElement) {
                     p.match(/right|left/g) && avalon(vmodel.widgetElement).css("height", barH + "px")
                 }
+                var hPadding = scroller.height() - scroller.innerHeight(),
+                    vPadding = scroller.width() - scroller.innerWidth()
+                scroller.css("height", h + vPadding + "px")
+                scroller.css("width", w + hPadding  + "px")
                 avalon.each(vmodel._position, function(i, item) {
                     var bar = bars[i],
+                        isVertical = item.match(/left|right/),
                         dragger
                     if(bar) {
                         dragger = avalon(getByClassName("ui-scrollbar-dragger", bar.element)[0])
@@ -333,7 +338,6 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                     if(bar) {
                         var bh = sh = bar.height(),
                             bw = sw = bar.width(),
-                            isVertical = item.match(/left|right/),
                             draggerpar = avalon(getByClassName("ui-scrollbar-draggerpar", bar[0])[0]),
                             headerLength = vmodel.showBarHeader ? 2 : 0
                         // 更新滚动条没有两端的箭头的时候依旧要重新计算相邻两个bar的间隔
@@ -377,6 +381,14 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                                 ]
                             }
                         }
+                        var ex
+                        if(isVertical) {
+                            ex = vmodel.show == "always" ? bw : 0
+                            scroller.css("width", w + vPadding - ex + "px")
+                        } else {
+                            ex = vmodel.show == "always" ? bh : 0
+                            scroller.css("height", h + hPadding - ex + "px")
+                        }
                         avalon.each(draggerParCss, function(index, css) {
                             draggerpar.css.apply(draggerpar, css)
                         })
@@ -395,7 +407,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                                 ["height", draggerHeight + "px"],
                                 ["top", draggerTop + "px"]
                             ]
-                            y = y > 0 ? (y > viewH - h ?  viewH - h : y) : 0
+                            y = y > 0 ? (y > viewH - h + ex ?  viewH - h + ex : y) : 0
                         } else {
                             var draggerLeft = x,
                                 draggerWidth = w * sw / viewW
@@ -407,7 +419,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                                 ["width", draggerWidth + "px"],
                                 ["left", draggerLeft + "px"]
                             ]
-                            x = x > 0 ? (x > viewW - w ? viewW - w : x) : 0
+                            x = x > 0 ? (x > viewW - w + ex ? viewW - w + ex : x) : 0
                         }
                         avalon.each(draggerCss, function(index, css) {
                             dragger.css.apply(dragger, css)
@@ -502,8 +514,10 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                     obj.up = avalon(getByClassName("ui-scrollbar-arrow-up", bar[0])[0])
                     obj.down = avalon(getByClassName("ui-scrollbar-arrow-down", bar[0])[0])
                     obj.viewer = avalon(vmodel.viewElement)
-                    obj.viewH = vmodel.viewHeightGetter(obj.viewer)
-                    obj.viewW = vmodel.viewWidthGetter(obj.viewer)
+                    // obj.viewH = vmodel.viewHeightGetter(obj.viewer)
+                    // obj.viewW = vmodel.viewWidthGetter(obj.viewer)
+                    obj.viewH = vmodel.viewHeightGetter(scroller)
+                    obj.viewW = vmodel.viewWidthGetter(scroller)
                     obj.scrollerH = scroller[0].scrollHeight
                     obj.scrollerW = scroller[0].scrollWidth
                     obj.step = isVertical ? 40 * (obj.draggerparHeight - obj.draggerHeight) / obj.scrollerH : 40 * (obj.draggerparWidth - obj.draggerWidth) / obj.scrollerW
@@ -556,9 +570,11 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 if(x != void 0) vmodel.scrollLeft = x
                 if(y != void 0) vmodel.scrollTop = y// 更新视窗
                 if(y != void 0) {
-                    scroller[0].style.marginTop = -vmodel.scrollTop + "px"
+                    // scroller[0].style.marginTop = -vmodel.scrollTop + "px"
+                    scroller[0].scrollTop = vmodel.scrollTop
                 } else if(x != void 0) {
-                    scroller[0].style.marginLeft = -vmodel.scrollLeft + "px"
+                    // scroller[0].style.marginLeft = -vmodel.scrollLeft + "px"
+                    scroller[0].scrollLeft = vmodel.scrollLeft
                 }
             }
 
@@ -602,7 +618,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
     //argName: defaultValue, \/\/@param description
     //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
-        position: "right", //@param scrollbar出现的位置,right右侧，left左侧，top上侧，bottom下侧，可能同时出现多个方向滚动条
+        position: "right", //@param scrollbar出现的位置,right右侧，bottom下侧，可能同时出现多个方向滚动条
         scrollTop: 0, //@param 竖直方向滚动初始值，负数会被当成0，设置一个极大值等价于将拖动头置于bottom
         scrollLeft: 0, //@param 水平方向滚动初始值，负数会被当成0处理，极大值等价于拖动头置于right
         show: "always", //@param never一直不可见，scrolling滚动和hover时候可见，always一直可见

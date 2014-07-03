@@ -8,8 +8,7 @@
              ms-css-width="gridWidth" 
              >
             <table class="ui-grid-thead" 
-            ms-css-margin-left="cssLeft" 
-            ms-css-width="gridWidth-barRight">
+            ms-css-margin-left="cssLeft" >
                 <tr>
                     MS_OPTION_THEAD_BEGIN
                     <td data-repeat-rendered="_theadRenderedCallback"
@@ -35,8 +34,7 @@
                 </tr>
             </table>
             <table class="ui-grid-tbody" 
-            ms-css-margin-left="cssLeft" 
-            ms-css-width="gridWidth-barRight">
+            ms-css-margin-left="cssLeft" >
                 <tr data-repeat-rendered="_tbodyRenderedCallback"
                     ms-repeat-row="_data"
                     >
@@ -54,8 +52,10 @@
                 </tr>
             </table>
         </div>
-        <div class="ui-grid-scroll-marker ui-scrollbar-scroller" ms-css-height="getScrollerHeight()" 
-        ms-css-width="gridWidth">
+        <div class="ui-scrollbar-scroller">
+            <div class="ui-grid-scroll-marker" ms-css-height="getScrollerHeight()" 
+            ms-css-width="gridWidth">
+        </div>
 
         </div>
     </div>

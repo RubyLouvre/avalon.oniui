@@ -349,6 +349,10 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/a
                     $element.attr('ms-enabled', 'enable');
                     $element.attr('ms-duplex', 'value');
                     avalon.scan(element, [vmodel].concat(vmodels));
+                    if(typeof options.onInit === "function" ){
+                        //vmodels是不包括vmodel的
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 });
 
                 if(!vmodel.multiple) {
@@ -396,7 +400,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/a
 
                 vmodel.toggle = false;
                 vmodel.onSelect.call(this, e, listNode);
-                titleNode.focus();
+                titleNode && titleNode.focus();
             };
 
             vm.$listenter = function() {
@@ -439,23 +443,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/a
                     //根据键盘行为设置组件value
                     if(up !== void 0) {
                         vmodel.toggle = true;
-                        if(vmodel.activeIndex == void 0) {
-                            avalon.each(vmodel.data, function(i, item) {
-                                if(firstItemIndex === void 0 && item.item) {
-                                    firstItemIndex = i;
-                                }
-                                if(item.item && item.value === vmodel.value) {
-                                    selectedItemIndex = i;
-                                    return false;
-                                }
-                                return true;
-                            });
-
-                            if(!selectedItemIndex) {
-                                selectedItemIndex = firstItemIndex;
-                            }
-                            vmodel.activeIndex = selectedItemIndex;
-                        }
                         if(up) {
                             nextItem = vmodel.data.slice(0, vmodel.activeIndex).reverse();
                             step = -1;
@@ -498,6 +485,30 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/a
                         display: 'none'
                     });
                 } else {
+                    var firstItemIndex, selectedItemIndex, value = vmodel.value;
+
+                    if(avalon.type(value) !== 'array') {
+                        value = [value];
+                    }
+
+                    //计算activeIndex的值
+                    if(vmodel.activeIndex == void 0) {
+                        avalon.each(vmodel.data, function(i, item) {
+                            if(firstItemIndex === void 0 && item.item && item.enable) {
+                                firstItemIndex = i;
+                            }
+                            if(item.item && item.value === value[0]) {
+                                selectedItemIndex = i;
+                                return false;
+                            }
+                            return true;
+                        });
+
+                        if(!selectedItemIndex) {
+                            selectedItemIndex = firstItemIndex;
+                        }
+                        vmodel.activeIndex = selectedItemIndex;
+                    }
                     vmodel.$position();
                     $listNode.css({
                         display: 'block'
@@ -505,13 +516,14 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/a
                     // update scrollbar while showing
                     var scrollbar = avalon.vmodels["$dropdown" + optId];
                     scrollbar && scrollbar.update();
+                    titleNode && titleNode.focus();
                 }
             };
 
             vm.$getLabel = function(value) {
                 var v = avalon.type(value) === 'array' ? value[0] : value,
                     label = vmodel.data.filter(function(option) {
-                        return option.value == v;
+                        return option.item && option.value == v;
                     });
 
                 if(label.length > 0) {
@@ -549,7 +561,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/a
                 }
 
                 //修正由于边框带来的重叠样式
-                css.top = css.top - $sourceNode.css('borderTop').replace(/^(\d+)\w.*$/, '$1');
+                css.top = css.top - $sourceNode.css('borderBottomWidth').replace(/^(\d+)\w.*$/, '$1');
                 css.left = offset.left;
 
                 //显示浮层
@@ -616,7 +628,8 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/a
         onSelect: avalon.noop,               //多选模式下显示的条数
         getTemplate: function(str, options) {
             return str
-        }
+        },
+        onInit: avalon.noop     //初始化时执行方法
     };
 
     return avalon;

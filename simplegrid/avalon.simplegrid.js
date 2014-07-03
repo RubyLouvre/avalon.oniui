@@ -122,7 +122,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                     _vmodels = [vmodel].concat(vmodels)
                     avalon.scan(element, _vmodels)
                     if (typeof options.onInit === "function") {
-                        options.onInit.calll(element, vmodel, options, vmodels)
+                        options.onInit.call(element, vmodel, options, vmodels)
                     }
                 })
 

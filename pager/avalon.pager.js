@@ -55,7 +55,7 @@ define(["avalon", "text!./avalon.pager.html"], function(avalon, tmpl) {
                 element.innerHTML = pageHTML
                 avalon.scan(element, [vmodel].concat(vmodels))
                 if (typeof options.onInit === "function") {
-                    options.onInit.calll(element, vmodel, options, vmodels)
+                    options.onInit.call(element, vmodel, options, vmodels)
                 }
             }
             vm.$remove = function() {

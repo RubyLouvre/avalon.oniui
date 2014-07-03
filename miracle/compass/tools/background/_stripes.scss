@@ -13,7 +13,7 @@
 // @author Mason Wendell mason@canarypromo.com @canarymason for the sass mixin
 ///
 
-@import "compass/css3/images";
+@import "../../css3/images";
 
 @mixin background-stripes-straight($dir: left, $bg-color: gray, $stripe-color:  rgba(white, 0.5), $size: 50px) {
     $transparent: rgba(black, 0);

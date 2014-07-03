@@ -7,7 +7,7 @@
 // @author Mason Wendell mason@canarypromo.com @canarymason for the sass mixin
 ///
 
-@import "compass/css3/images";
+@import "../../css3/images";
 
 @mixin background-houndstooth($color-1: white, $color-2:  black, $size: 2em) {
     $transparent: rgba(black, 0);

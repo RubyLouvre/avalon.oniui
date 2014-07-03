@@ -28,7 +28,7 @@
 // The direction of the gradient.
 ///
 
-@import "compass/css3/images";
+@import "../../css3/images";
 
 @mixin background-gradient($bg-color, $type: null, $direction: top) {
     background: $bg-color; // fallback

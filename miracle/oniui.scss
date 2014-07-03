@@ -1,7 +1,8 @@
 @charset "UTF-8";
+@import "compass/css3";
 @import "compass/config";
 @import "compass/tools";
-@import "compass/css3";
+
 /*!
 miracle 中译：神迹
 by 司徒正美 2014.6.28 拉萨开往西宁的火车上
@@ -56,7 +57,7 @@ by 司徒正美 2014.6.28 拉萨开往西宁的火车上
     background-color: $ui-widget-content-background-color;
     color: $ui-widget-content-color;
     a {
-         color:$ui-widget-content-color;
+        color:$ui-widget-content-color;
     }
 }
 .ui-widget-header {
@@ -65,7 +66,7 @@ by 司徒正美 2014.6.28 拉萨开往西宁的火车上
     color: $ui-widget-header-color;
     font-weight: bold;
     a {
-         color: $ui-widget-header-color;
+        color: $ui-widget-header-color;
     }
 }
 
@@ -73,8 +74,13 @@ by 司徒正美 2014.6.28 拉萨开往西宁的火车上
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
-	border: 1px solid $ui-state-default-border-color;
-	background-color: $ui-state-default-background-color;
-	font-weight: normal;
-	color: $ui-state-default-color;
+    border: 1px solid $ui-state-default-border-color;
+    background-color: $ui-state-default-background-color;
+    font-weight: normal;
+    color: $ui-state-default-color;
+}
+
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited{
+    color: $ui-state-default-color;
+    text-decoration: none;
 }

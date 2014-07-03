@@ -38,7 +38,7 @@ $removed-bg-color:      #990000 !default;
 //字体设置
 $oniui-font-size: 1em;
 $oniui-font-weight: normal;
-$oniui-font-family: unquote('Helvetica,Arial,Sans-serif');
+$oniui-font-family: Helvetica,Arial,Sans-serif;
 
 
 $ui-widget-content-border-color: #aaa;
@@ -54,8 +54,15 @@ $ui-state-default-background-color: #e6e6e6;
 $ui-state-default-border-color: #d3d3d3;
 $ui-state-default-color: #555;
 
+$ui-state-hover-background-color: #dadada;
+$ui-state-hover-border-color: #999;
+$ui-state-hover-color: #212121;
 
+$ui-state-focus-background-color: #dadada;
+$ui-state-focus-border-color: #999;
+$ui-state-focus-color: #212121;
 
-$ui-state-error-color: #cd0a0a;
-
+$ui-state-active-background-color: #dadada;
+$ui-state-active-border-color: #999;
+$ui-state-active-color: #212121;
 

@@ -8,7 +8,7 @@
 // @thanks Simurai @simurai
 ///
 
-@import "compass/tools/pseudo-element";
+@import "../pseudo-element";
 
 @mixin effect-glass(
     $color: rgba(#fff, .12),

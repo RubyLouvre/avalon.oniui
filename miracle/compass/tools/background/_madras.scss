@@ -12,7 +12,7 @@
 // @author Mason Wendell mason@canarypromo.com @canarymason for the sass mixin
 ///
 
-@import "compass/css3/images";
+@import "../../css3/images";
 
 @mixin background-madras($bg-color: hsl(34, 53%, 82%), $color1: $bg-color, $color2: $bg-color, $color3: $bg-color) {
     $transparent: rgba(black, 0);

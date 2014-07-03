@@ -178,3 +178,33 @@ body {
   -ms-transform: rotate(-45deg) skew(0deg, 0deg);
   -o-transform: rotate(-45deg) skew(0deg, 0deg);
   transform: rotate(-45deg) skew(0deg, 0deg); }
+
+.yin-yang {
+  width: 9.6em;
+  height: 4.8em;
+  background: white;
+  border-color: black;
+  border-style: solid;
+  border-width: 0.2em 0.2em 5em 0.2em;
+  position: relative; }
+  .yin-yang, .yin-yang:before, .yin-yang:after {
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+    border-radius: 100%; }
+  .yin-yang:before, .yin-yang:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    border: 1.8em solid;
+    width: 1.2em;
+    height: 1.2em; }
+  .yin-yang:before {
+    left: 0;
+    background: white;
+    border-color: black; }
+  .yin-yang:after {
+    left: 50%;
+    background: black;
+    border-color: white; }

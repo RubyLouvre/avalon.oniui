@@ -1,4 +1,4 @@
-define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(avalon, $$, tmpl) {
+define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/avalon.scrollbar'], function(avalon, $$, tmpl) {
     var arr = tmpl.split("MS_OPTION_STYLE");
     var cssText = arr[1].replace(/<\/?style>/g, "");
     var styleEl = document.getElementById("avalonStyle");
@@ -215,7 +215,8 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
             optionsModel,
             templates, titleTemplate, listTemplate, optionsTemplate,
             scrollHandler,
-            resizeHandler;
+            resizeHandler,
+            optId = +(new Date());
 
         //将option适配为更适合vm的形式
         function _buildOptions(opt) {
@@ -260,7 +261,7 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
         }
 
         //读取template
-        templates = options.template = options.getTemplate(template).split('MS_OPTION_TEMPLATE');
+        templates = options.template = options.getTemplate(template).replace(/\{\{\MS_OPTION_ID}\}/g, optId).split('MS_OPTION_TEMPLATE');
         titleTemplate = templates[0];
         listTemplate = templates[1];
         optionsTemplate = templates[2];
@@ -348,6 +349,10 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
                     $element.attr('ms-enabled', 'enable');
                     $element.attr('ms-duplex', 'value');
                     avalon.scan(element, [vmodel].concat(vmodels));
+                    if(typeof options.onInit === "function" ){
+                        //vmodels是不包括vmodel的
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 });
 
                 if(!vmodel.multiple) {
@@ -597,6 +602,12 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
 
         });
 
+        // update scrollbar, if data changed
+        vmodel.data.$watch('length', function() {
+            var scrollbar = avalon.vmodels["$dropdown" + optId];
+            scrollbar && scrollbar.update();
+        })
+
         return vmodel;
     };
 
@@ -620,7 +631,8 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html'], function(av
         onSelect: avalon.noop,               //多选模式下显示的条数
         getTemplate: function(str, options) {
             return str
-        }
+        },
+        onInit: avalon.noop     //初始化时执行方法
     };
 
     return avalon;

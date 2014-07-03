@@ -13,8 +13,22 @@
                 <blockquote>
                     需要值得注意的是,$remove操作会在元素移出DOM树时触发,但普通的移动节点操作也会让元素离开DOM树,这时就会引发$remove操作,
                     导致元素上面的组件被销毁.为防止误杀,我们在移动节点时,可以在元素定义msRetain属性,elem.msRetain = true,待到移动后再置为false
-                </blockquote>>
+                </blockquote>
             </li>
+             <li>
+                组件的$init方法里面, 在扫描后最好再调用一个onInit回调,传入当前组件的 vmodel, options, vmodels, this指向当前元素 
+               <blockquote>
+                   $init: function(){
+                        element.innerHTML = "ui-template"
+                        avalon.scan(element, _vmodels)
+                        if(typeof options.onInit === "function" ){
+                        //vmodels是不包括vmodel的
+                             options.onInit.calll(element, vmodel, options, vmodels)
+                        }
+                    }
+                </blockquote>
+                <p>这样用户就不需要定义组件的$id了</p>
+             </li>
             <li>
                 组件要最大程度兼容之前的，不行就两个，一个是兼容的，一个无牵制的
             </li>

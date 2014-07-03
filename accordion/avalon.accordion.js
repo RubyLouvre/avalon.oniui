@@ -82,9 +82,9 @@ define(["avalon.getModel", "text!./avalon.accordion.html"], function(avalon, sou
                     vm.currentIndex = options.initIndex;
                 }
                 avalon.scan(element, [vmodel].concat(vmodels));
-                if(typeof vmodel.onInit === "function" ){
+                if(typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
-                     vmodel.onInit.calll(element, vmodel, options, vmodels)
+                    options.onInit.call(element, vmodel, options, vmodels)
                 }
                 vmodel.rendered = true;
                 setTimeout(function() { // 渲染完组件之后，将对应面板的header和panel分别保存

@@ -238,9 +238,9 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
                     avalon.scan(maskLayer, [vmodel].concat(vmodels));
                 }
                 avalon.scan(element, [vmodel].concat(vmodels));
-                if(typeof vmodel.onInit === "function" ){
+                if(typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
-                     vmodel.onInit.calll(element, vmodel, options, vmodels)
+                    options.onInit.call(element, vmodel, options, vmodels)
                 }
             };
             vm.$remove = function() {

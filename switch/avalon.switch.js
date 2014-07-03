@@ -167,6 +167,12 @@ define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "drag
 
                 vmodel.$draw()
 
+                // callback after inited
+                if(typeof options.onInit === "function" ) {
+                    //vmodels是不包括vmodel的 
+                    options.onInit.call(element, vmodel, options, vmodels)
+                }
+
             }
             vm.$remove = function() {
                 newDiv.parentNode.insertBefore(inputEle, newDiv)
@@ -344,6 +350,8 @@ define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "drag
         height: 18,   //@param normal size高度，会尝试自动到样式文件里面提取
         width: 35,    //@param normal size宽度，会尝试自动到样式文件里面提取
         css3support: false,
+        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
+        onInit: avalon.noop,
         //@optMethod $animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]
         $animateArrMaker: function(from, to) {
             var arr = []
@@ -362,7 +370,7 @@ define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "drag
         //@optMethod getTemplate(tmp, opts) 用于修改模板的接口，默认不做修改
         getTemplate: function(tmpl, opts) {
             return tmpl
-        },
+        },//@optMethod getTemplate(tpl, opts) 定制修改模板接口
         $author: "skipper@123"
     }
 })

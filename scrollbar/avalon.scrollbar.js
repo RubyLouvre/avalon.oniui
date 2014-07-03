@@ -44,7 +44,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
             vm.widgetElement = element
             vm.draggerHeight = vm.draggerWidth = ""
             vm.inFocuse = false
-            vm.$position = []
+            vm._position = []
             vm.viewElement = element
             vm.dragging = false
 
@@ -59,7 +59,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 vmodel.viewElement = vmodel.widgetElement == document.body ? document.getElementsByTagName(
                     "html")[0] : vmodel.widgetElement
                 vmodel.viewElement.style.overflow = "hidden"
-                vmodel.$position = vmodel.position.split(",")
+                vmodel._position = vmodel.position.split(",")
 
                 var frag = avalon.parseHTML(options.template)
                 vmodel.widgetElement.appendChild(frag)
@@ -76,7 +76,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 // 竖直方向支持滚轮事件
                 if(vmodel.position.match(/left|right/g)) {
                     var vs = [],hs = []
-                    avalon.each(vmodel.$position, function(i, item) {
+                    avalon.each(vmodel._position, function(i, item) {
                         if(item.match(/left|right/g)) {
                             vs.push([i, item])
                         } else {
@@ -87,8 +87,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                     function wheelLike(diretion, arr, e, func) {
                         avalon.each(arr, function(i, item) {
                             if(!bars[i].data("ui-scrollbar-needed")) return
-                            vmodel.$computer(func || function(obj) {
-                                return vmodel.$clickComputer(obj, diretion)
+                            vmodel._computer(func || function(obj) {
+                                return vmodel._clickComputer(obj, diretion)
                             }, item[0], item[1], function(breakOut) {
                                 if(!breakOut) e.preventDefault()
                             })
@@ -128,7 +128,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                                     // pageup or pagedown
                                     // a frame
                                     } else {
-                                        return vmodel.$clickComputer(obj, diretion, obj.draggerHeight)
+                                        return vmodel._clickComputer(obj, diretion, obj.draggerHeight)
                                     }
                                 })
                             }
@@ -183,14 +183,20 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
 
                 avalon.bind(element, "mouseenter", function() {
                     avalon.each(bars, function(i, item) {
-                        vmodel.$show("e", false, item)
+                        vmodel._show("e", false, item)
                     })
                 })
                 avalon.bind(element, "mouseleave", function() {
-                    vmodel.$hide()
+                    vmodel._hide()
                 })
 
                 vmodel.update("init")
+                
+                // callback after inited
+                if(typeof options.onInit === "function" ) {
+                    //vmodels是不包括vmodel的 
+                    options.onInit.call(element, vmodel, options, vmodels)
+                }
             }
 
             vm.beforeStartFn = function() {
@@ -201,7 +207,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
 
             vm.dragFn = function(e, data) {
                 var dr = avalon(data.element)
-                vmodel.$computer(function(obj) {
+                vmodel._computer(function(obj) {
                     return {
                         x: parseInt(dr.css("left")) >> 0,
                         y: parseInt(dr.css("top")) >> 0
@@ -216,7 +222,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 vmodel.dragging = false
                 avalon(data.element).removeClass("ui-scrollbar-dragger-onmousedown")
             }
-            vm.$remove = function() {
+            vm._remove = function() {
                 avalon.each(bars, function(i, bar) {
                     bar[0] && bar[0].parentNode && bar[0].parentNode.removeChild(bar)
                 })
@@ -225,10 +231,10 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
             vm._onScroll = function() {
                 if(vmodel.show != "scrolling") return     
                 avalon.each(bars, function(i, item) {
-                    vmodel.$show("e", false, item)
+                    vmodel._show("e", false, item)
                 })
             }
-            vm.$show = function(e, always, index) {
+            vm._show = function(e, always, index) {
                 if(vmodel.show != "scrolling") return
                 e.stopPropagation && e.stopPropagation()
                 var item = index.css ? index : bars[index]
@@ -243,7 +249,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                     }
                 }
             }
-            vm.$hide = function(e,index) {
+            vm._hide = function(e,index) {
                 if(vmodel.show != "scrolling") return
                 if(index && bars[index]) {
                     bars[index].css("opacity", 0)
@@ -291,7 +297,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 if(vmodel.viewElement != vmodel.widgetElement) {
                     p.match(/right|left/g) && avalon(vmodel.widgetElement).css("height", barH + "px")
                 }
-                avalon.each(vmodel.$position, function(i, item) {
+                avalon.each(vmodel._position, function(i, item) {
                     var bar = bars[i],
                         dragger
                     if(bar) {
@@ -406,9 +412,9 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                             dragger.css.apply(dragger, css)
                         })
                         if(isVertical) {
-                            vmodel.$scrollTo(void 0, y)
+                            vmodel._scrollTo(void 0, y)
                         } else {
-                            vmodel.$scrollTo(x, void 0)
+                            vmodel._scrollTo(x, void 0)
                         }
                         if(vmodel.showBarHeader) {
                             if(y == 0 && isVertical || !isVertical && x == 0) {
@@ -427,13 +433,13 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
             }
 
             // 点击箭头
-            vm.$arrClick = function(e, diretion, position, barIndex) {
-                vmodel.$computer(function(obj) {
-                    return vmodel.$clickComputer(obj, diretion)
+            vm._arrClick = function(e, diretion, position, barIndex) {
+                vmodel._computer(function(obj) {
+                    return vmodel._clickComputer(obj, diretion)
                 }, barIndex, position)
             }
 
-            vm.$clickComputer = function(obj, diretion, step) {
+            vm._clickComputer = function(obj, diretion, step) {
                 var step = step || obj.step || 40,
                     l = parseInt(obj.dragger.css("left")) >> 0,
                     r = parseInt(obj.dragger.css("top")) >> 0,
@@ -445,7 +451,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 }
             }
             // 长按
-            vm.$arrDown = function($event, diretion, position, barIndex,ismouseup) {
+            vm._arrDown = function($event, diretion, position, barIndex,ismouseup) {
                 var se = this,
                     ele = avalon(se)
                 clearInterval(ele.data("mousedownTimer"))
@@ -458,8 +464,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 ele.data("setTimer", setTimeout(function(){
                     ele.addClass("ui-scrollbar-arrow-onmousedown")
                     ele.data("mousedownTimer", setInterval(function() {
-                        return vmodel.$computer(function(obj) {
-                                return vmodel.$clickComputer(obj, diretion)
+                        return vmodel._computer(function(obj) {
+                                return vmodel._clickComputer(obj, diretion)
                             }, barIndex, position ,function(breakOut) {
                                 if(!breakOut) return
                                 clearInterval(ele.data("mousedownTimer"))
@@ -469,10 +475,10 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 }, 10))
             }
             // 点击滚动条
-            vm.$barClick = function(e, position, barIndex) {
+            vm._barClick = function(e, position, barIndex) {
                 var ele = avalon(this)
                 if(ele.hasClass("ui-scrollbar-dragger")) return
-                vmodel.$computer(function(obj) {
+                vmodel._computer(function(obj) {
                     return {
                         x: e.pageX - obj.offset.left - obj.draggerWidth / 2,
                         y : e.pageY - obj.offset.top - obj.draggerHeight / 2
@@ -480,7 +486,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 }, barIndex, position)
             }
             // 计算滚动条位置
-            vm.$computer = function(axisComputer, barIndex, position, callback) {
+            vm._computer = function(axisComputer, barIndex, position, callback) {
                 var bar = bars[barIndex]
                 if(bar) {
                     var obj = {},
@@ -520,7 +526,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                             obj.down.removeClass("ui-scrollbar-arrow-disabled")
                         }
                         obj.dragger.css("top", xy.y + "px")
-                        vmodel.$scrollTo(void 0, (obj.scrollerH - obj.viewH) * xy.y / (obj.draggerparHeight - obj.draggerHeight))
+                        vmodel._scrollTo(void 0, (obj.scrollerH - obj.viewH) * xy.y / (obj.draggerparHeight - obj.draggerHeight))
                     } else {
                         if(xy.x < 0) {
                             xy.x = 0
@@ -537,7 +543,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                             obj.down.removeClass("ui-scrollbar-arrow-disabled")
                         }
                         obj.dragger.css("left", xy.x + "px")
-                        vmodel.$scrollTo((obj.scrollerW - obj.viewW) * xy.x / (obj.draggerparWidth - obj.draggerWidth), void 0)
+                        vmodel._scrollTo((obj.scrollerW - obj.viewW) * xy.x / (obj.draggerparWidth - obj.draggerWidth), void 0)
                     }
 
                 }
@@ -545,7 +551,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 callback && callback(breakOut)
                 vmodel.breakOutCallback && vmodel.breakOutCallback(breakOut, vmodel)
             }
-            vm.$scrollTo = function(x, y) {
+            vm._scrollTo = function(x, y) {
                 if(x != void 0) vmodel.scrollLeft = x
                 if(y != void 0) vmodel.scrollTop = y// 更新视窗
                 if(y != void 0) {
@@ -560,14 +566,14 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 vmodel.update(false, x, y)
             }
 
-            vm.$initWheel = function(e, type) {
+            vm._initWheel = function(e, type) {
                 if(type == "enter") {
                     vmodel.inFocuse = true
                 } else {
                     vmodel.inFocuse = false
                 }
             }
-            vm.$draggerDown = function(e, isdown) {
+            vm._draggerDown = function(e, isdown) {
                 var ele = avalon(this)
                 if(isdown) {
                     ele.addClass("ui-scrollbar-dragger-onmousedown")
@@ -575,7 +581,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                     ele.removeClass("ui-scrollbar-dragger-onmousedown")
                 }
             }
-            vm.$stopPropagation = function(e) {
+            vm._stopPropagation = function(e) {
                 e.stopPropagation()
             }
         })
@@ -602,6 +608,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
         showBarHeader: true,//@param 是否显示滚动条两端的上下箭头
         draggerHTML: "", //@param 滚动条拖动头里，注入的html碎片
         breakOutCallback: false, //@optMethod 滚动到极限位置的回调，用来实现无线下拉等效果 breakOutCallback(["h", "up"], vmodel) 第一个参数是一个数组，分别是滚动条方向【h水平，v竖直】和超出极限的方向【up是向上或者向左，down是向右或者向下】
+        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
+        onInit: avalon.noop,
         viewHeightGetter: function(viewElement) {
             return viewElement.innerHeight()
         }, //@optMethod 配置计算视窗高度计函数，默认返回innerHeight
@@ -610,7 +618,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
         }, //@optMethod 配置计算视窗宽度计函数，默认返回innerWidth
         getTemplate: function(tmpl, opts) {
             return tmpl
-        },
+        },//@optMethod getTemplate(tpl, opts) 定制修改模板接口
         onScroll: function(newValue, oldValue, diretion, vmodel) {
 
         },//@optMethod 滚动回调,scrollLeft or scrollTop变化的时候触发，参数为newValue, oldValue, diretion, vmodel diretion = h 水平方向，= v 竖直方向

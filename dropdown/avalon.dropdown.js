@@ -502,6 +502,9 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/a
                     $listNode.css({
                         display: 'block'
                     });
+                    // update scrollbar while showing
+                    var scrollbar = avalon.vmodels["$dropdown" + optId];
+                    scrollbar && scrollbar.update();
                 }
             };
 
@@ -589,12 +592,6 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.dropdown.html', 'scrollbar/a
             };
 
         });
-
-        // update scrollbar, if data changed
-        vmodel.data.$watch('length', function() {
-            var scrollbar = avalon.vmodels["$dropdown" + optId];
-            scrollbar && scrollbar.update();
-        })
 
         return vmodel;
     };

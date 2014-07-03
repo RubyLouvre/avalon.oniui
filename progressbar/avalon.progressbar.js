@@ -79,6 +79,12 @@ define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.c
                     })
                 }
                 vmodel.$simulater()
+
+                // callback after inited
+                if(typeof options.onInit === "function" ) {
+                    //vmodels是不包括vmodel的 
+                    options.onInit.call(element, vmodel, options, vmodels)
+                }
             }
             // 适用svg绘制圆圈的v生成方式
             // vml不走这个逻辑，有直接绘制圆弧的方法
@@ -211,6 +217,8 @@ define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.c
         cirecleRadius: 38,//@param 圆形的半径
         circleBorderWidth: 4, //@param 圆形的边框宽度
         success: false, //@param 是否完成，进度为100时或者外部将success置为true，用于打断模拟效果
+        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
+        onInit: avalon.noop,
         //@optMethod simulater(value, vmodel) 模拟进度进行效果函数，参数为当前进度和vmodel，默认return value + 5 * Math.random() >> 0
         simulater: function(i, vmodel) {
             if(vmodel.countDown) return i - 5 * Math.random() >> 0
@@ -219,7 +227,7 @@ define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.c
         //@optMethod getTemplate(tmp, opts) 用于修改模板的接口，默认不做修改
         getTemplate: function(tmpl, opts) {
             return tmpl
-        },
+        },//@optMethod getTemplate(tpl, opts) 定制修改模板接口
         //@optMethod onChange(value) value发生变化回调，this指向vmodel
         onChange: avalon.noop,
         //@optMethod onComplete() 完成回调，默认空函数，this指向vmodel

@@ -75,6 +75,10 @@
   background-color: #f8f8f8;
   border: 1px solid #cccccc; }
 
+/*button*/
+.ui-button {
+  cursor: pointer; }
+
 .ui-progressbar {
   width: 100%;
   position: relative;

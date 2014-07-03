@@ -93,9 +93,9 @@ define(["avalon", "text!./avalon.notice.html"], function(avalon, sourceHTML) {
                     avalon.scan(AffixPlaceholder, [vmodel]);
                 }
                 avalon.scan(templateView, [vmodel].concat(vmodels))
-                if(typeof vmodel.onInit === "function" ){
+                if(typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
-                     vmodel.onInit.calll(element, vmodel, options, vmodels)
+                    options.onInit.call(element, vmodel, options, vmodels)
                 }
             }
             vm.$remove = function() { //删除组件绑定元素后的自清理方法

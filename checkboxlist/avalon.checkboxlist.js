@@ -72,9 +72,9 @@ define(["avalon.getModel", "text!./avalon.checkboxlist.html"], function(avalon, 
                 options.template = options.template.replace("MS_OPTIONS_DUPLEX", options.duplex);
                 element.innerHTML = options.template;
                 avalon.scan(element, [vmodel].concat(vmodels));
-                if(typeof vmodel.onInit === "function" ){
+                if(typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
-                     vmodel.onInit.calll(element, vmodel, options, vmodels)
+                    options.onInit.call(element, vmodel, options, vmodels)
                 }
             };  
             vm.$remove = function() {

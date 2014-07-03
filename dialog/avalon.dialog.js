@@ -1,4 +1,4 @@
-define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
+define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
     var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],
         cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
         styleEl = document.getElementById("avalonStyle"),
@@ -22,11 +22,38 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
     var widget = avalon.ui.dialog = function(element, data, vmodels) {
         dialogNum++;
         var options = data.dialogOptions;
-        var len = vmodels.length;
+        if(avalon(element).data("custom")) { //兼容onion-adapter的自创建dialog
+            avalon.mix(options, avalon(element).data("config"));
+        }
+        var len = vmodels.length,
+            submit = options.submit ? (typeof options.submit ==="function") ? options.submit : options.submit.substring(0,options.submit.indexOf("(")) : null, //兼容onion-adapter可删掉
+            submitVM,
+            cancel = options.cancel ? typeof options.cancel === "function" ? options.cancel : options.cancel.substring(0,options.cancel.indexOf("(")) : null, //兼容onion-adapter可删掉
+            cancelVM,
+            confirm = options.confirm ? (typeof options.confirm ==="function") ? options.confirm : options.confirm.substring(0,options.confirm.indexOf("(")) : null, //兼容onion-adapter可删掉
+            confirmVM;
         // 当存在嵌套dialog时，vmodels的length>1(外层dialog controller 和用户定义的controller，显然用户的配置存在于用户定义的controller，也就是vmodels的最后一个数组元素)，而用户为内嵌dialog设置options无法自动应用，因此需要进行一下转换处理，务必确保用户外部定义配置项不可监控
         if (len > 1) {
             var dialogOpts = vmodels[len-1][data.value.split(',')[2]];
             avalon.mix(options, dialogOpts);
+        }
+        if(typeof submit === "string") {
+            submitVM = avalon.getModel(submit, vmodels);
+            options.submit = submitVM && submitVM[1][submitVM[0]].bind(vmodels) || avalon.noop;
+        } else {
+            options.submit = submit;
+        }
+        if(typeof cancel ==="string") {
+            cancelVM = avalon.getModel(cancel, vmodels);
+            options.cancel = cancelVM && cancelVM[1][cancelVM[0]].bind(vmodels) || avalon.noop;
+        } else {
+            options.cancel = cancel;
+        }
+        if(typeof confirm ==="string") {
+            confirmVM = avalon.getModel(confirm, vmodels);
+            options.confirm = confirmVM && confirmVM[1][confirmVM[0]].bind(vmodels) || avalon.noop;
+        } else {
+            options.confirm = confirm;
         }
         options.type = options.type.toLowerCase();
         options.template = options.getTemplate(template, options);
@@ -54,6 +81,12 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
             vm.$submit = function(e) {
                 if (typeof options.onSubmit != "function") {
                     throw new Error("onSubmit必须是一个回调方法");
+                }
+                if(vmodel.submit) {
+                    vmodel.submit(avalon.noop);
+                }
+                if(vmodel.confirm) {
+                    vmodel.confirm(avalon.noop);
                 }
                 // 在用户回调返回false时，不关闭弹窗
                 if(options.onSubmit.call(e.target, e, vmodel) !== false){
@@ -88,13 +121,15 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
                 }
                 options.onOpen.call(vmodel)
             }
+            vm.show = function() { // 显示dialog，可废弃，通过toggle控制显示隐藏
+                vmodel.toggle = true;
+            }
             // 隐藏dialog
             vm.$close = function(e) {//close
                 avalon.Array.remove(dialogShows, vm);
                 var len = dialogShows.length;
                 vmodel.toggle = false;
                 /* 处理层上层的情况，因为maskLayer公用，所以需要其以将要显示的dialog的toggle状态为准 */
-                
                 if (len && dialogShows[len-1].modal) {
                     maskLayer.setAttribute("ms-visible", "toggle");
                     avalon.scan(maskLayer, dialogShows[len - 1]);
@@ -123,6 +158,9 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
             vm.$cancel = function(e) {
                 if (typeof options.onCancel != "function") {
                     throw new Error("onCancel必须是一个回调方法");
+                }
+                if(vmodel.cancel) {
+                    vmodel.cancel(avalon.noop);
                 }
                 // 在用户回调返回false时，不关闭弹窗
                 if(options.onCancel.call(e.target, e, vmodel) !== false){
@@ -200,6 +238,10 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
                     avalon.scan(maskLayer, [vmodel].concat(vmodels));
                 }
                 avalon.scan(element, [vmodel].concat(vmodels));
+                if(typeof vmodel.onInit === "function" ){
+                    //vmodels是不包括vmodel的
+                     vmodel.onInit.calll(element, vmodel, options, vmodels)
+                }
             };
             vm.$remove = function() {
                 dialogNum--;
@@ -241,6 +283,10 @@ define(["avalon", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
         _widget = _widget.replace("MS_OPTION_ID", config.id).replace("MS_OPTION_OPTS", config.options).replace("MS_OPTION_DIALOG_CONTENT", config.content);
         var widget = avalon.parseHTML(_widget).firstChild;
         document.body.appendChild(widget);
+        if(!config.options) {
+            widget.setAttribute("data-custom", true);
+            widget.setAttribute("data-config", JSON.stringify(config));
+        }
         var model = findModel(config.model);
         avalon.scan(widget, model);
         return avalon.vmodels[config.id];

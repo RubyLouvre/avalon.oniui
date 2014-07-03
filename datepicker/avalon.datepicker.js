@@ -41,15 +41,17 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
             var date ;
             duplexVM[1].$watch(duplexVM[0], function(val) {
                 if(date=options.parseDate(val)) {
+                    var year, month, day;
                     year = vmodel.year = date.getFullYear();
                     month = vmodel.month = date.getMonth();
-                    vmodel.day = date.getDate();
+                    day = vmodel.day = date.getDate();
                     _value = element.value = val;
                     if(vmodel.numberOfMonths ===1) {
-                        vmodel.data[0] ? vmodel.data[0].rows = calendarDays(vmodel.month, vmodel.year)[0].rows : vmodel.data = calendarDays(vmodel.month, vmodel.year);
+                        vmodel.data[0] ? vmodel.data[0].rows = calendarDays(month, year)[0].rows : vmodel.data = calendarDays(month, year);
                     } else {
-                        vmodel.data = calendarDays(vmodel.month, vmodel.year);
+                        vmodel.data = calendarDays(month, year);
                     }
+                    vmodel.tip = getDateTip(cleanDate(new Date(year, month, day))).text;
                 }
             })
             _value = element.value = value;
@@ -159,13 +161,13 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                 avalon.scan(this, vmodel);
             }
             // 选择日期
-            vm._selectDate = function(year, month, day, dateDisabled, outerIndex, innerIndex) {
+            vm._selectDate = function(year, month, day, dateDisabled, outerIndex, innerIndex, event) {
                 if(month !== false && !dateDisabled) {
                     var formatDate = options.formatDate.bind(options),
                         _date = new Date(year, month, day),
                         date = formatDate(_date),
                         calendarWrapper = options.type ==="range" ? element["data-calenderwrapper"] : null;
-                    element.value = date;
+                    element.value = date; 
                     if(month !== vmodel.month) {
                         vmodel.month = _date.getMonth();
                         vmodel.year = _date.getFullYear();
@@ -197,6 +199,7 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                             }
                         }
                         vmodel.data[0].rows[outerIndex][innerIndex].selected = true;
+                        //duplexVM[1][duplexVM[0]] = date;
                     }
                     
                     vmodel.change.call(null, options.parseDate(date), data["datepickerId"], avalon(element).data())
@@ -257,7 +260,7 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                     elementPar.insertBefore(div,element);
                     element.msRetain = true;
                     div.appendChild(element);
-                    var tip = avalon.parseHTML("<div class='ui-datepicker-tip'>{{tip}}<i class='ui-datepicker-icon ui-icon ui-icon-calendar-o'>&#xf133;</i></div>");
+                    var tip = avalon.parseHTML("<div class='ui-datepicker-tip'>{{tip}}<i class='ui-icon ui-icon-calendar-o'>&#xf133;</i></div>");
                     div.appendChild(tip);
                     element.msRetain = false;
                     element.value = vmodel.allowBlank ? _value : _originValue;
@@ -276,6 +279,10 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                     avalon.scan(div, [vmodel]);
                 }
                 avalon.scan(calendar, [vmodel].concat(vmodels))
+                if(typeof vmodel.onInit === "function" ){
+                    //vmodels是不包括vmodel的
+                     vmodel.onInit.calll(element, vmodel, options, vmodels)
+                }
             }
             vm.$remove = function() {
                 var elementPar = element.parentNode,
@@ -332,14 +339,14 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
             var minDate = validateDate(val);
             vmodel.minDate = minDate && cleanDate(minDate);
             if(vmodel.numberOfMonths ===1) {
-                var data = vmodel.data[0];
-                data ? data.rows = calendarDays(vmodel.month, vmodel.year)[0].rows : vmodel.data = calendarDays(vmodel.month, vmodel.year);
+                var data = vmodel.data[0], _data = data;
+                _data = data ? (data.rows = calendarDays(vmodel.month, vmodel.year)[0].rows) && _data: (vmodel.data = calendarDays(vmodel.month, vmodel.year)) && vmodel.data[0];
                 // 为了避免有下拉框选择月份年份情况下通过prev、next切换月份时更新范围较大有跳动的感觉，遂考虑只更新日期部分，不更新下拉框部分。但如果更新minDate、输入域值的话相应的year、month可能会变，所以需要下面对month和year的更新处理
-                if(data.month !== vmodel.month) {
-                    data.month = vmodel.month;
+                if(_data.month !== vmodel.month) {
+                    _data.month = vmodel.month;
                 }
-                if(data.year !== vmodel.year) {
-                    data.year = vmodel.year;
+                if(_data.year !== vmodel.year) {
+                    _data.year = vmodel.year;
                 }
             } else {
                 vmodel.data = calendarDays(vmodel.month, vmodel.year);
@@ -349,12 +356,13 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
             var maxDate = validateDate(val);
             vmodel.maxDate = maxDate && cleanDate(maxDate);
             if(vmodel.numberOfMonths ===1) {
-                vmodel.data[0] ? vmodel.data[0].rows = calendarDays(vmodel.month, vmodel.year)[0].rows : vmodel.data = calendarDays(vmodel.month, vmodel.year);
-                if(data.month !== vmodel.month) {
-                    data.month = vmodel.month;
+                var data = vmodel.data[0], _data = data;
+                _data = data ? (data.rows = calendarDays(vmodel.month, vmodel.year)[0].rows) && _data : (vmodel.data = calendarDays(vmodel.month, vmodel.year)) && vmodel.data[0];
+                if(_data.month !== vmodel.month) {
+                    _data.month = vmodel.month;
                 }
-                if(data.year !== vmodel.year) {
-                    data.year = vmodel.year;
+                if(_data.year !== vmodel.year) {
+                    _data.year = vmodel.year;
                 }
             } else {
                 vmodel.data = calendarDays(vmodel.month, vmodel.year);

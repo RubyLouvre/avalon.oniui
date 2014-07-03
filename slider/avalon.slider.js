@@ -165,6 +165,10 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html"], function(
                     } 
                 }
                 avalon.scan(slider, [model].concat(vmodels))
+                if(typeof vmodel.onInit === "function" ){
+                    //vmodels是不包括vmodel的
+                     vmodel.onInit.calll(element, vmodel, options, vmodels)
+                }
             }
             vm.$remove = function() {
                 slider.innerHTML = slider.textContent = ""

@@ -57,7 +57,7 @@
                                 ms-class-1="ui-datepicker-day-none: item.month === false"
                                 ms-class-2="ui-datepicker-selected:item.selected"
                                 ms-class-3="ui-state-disabled:item.dateDisabled"
-                                ms-click="_selectDate(calendar.year, item.month, item.day, item.dateDisabled, $outer.$index, $index)"
+                                ms-click="_selectDate(calendar.year, item.month, item.day, item.dateDisabled, $outer.$index, $index, $event)"
                                 >{{item._day}}</td>
                         </tr>
                     </tbody>
@@ -91,7 +91,7 @@ MS_OPTION_STYLE
     vertical-align: middle;
     z-index: 999;
 }
-.ui-icon.ui-datepicker-icon.ui-icon-calendar-o {
+.ui-icon.ui-icon-calendar-o {
     padding: 0 6px;
     vertical-align: top;
 }

@@ -26,9 +26,9 @@
     </head>
     <body ms-controller="test">
         <h1>scrollbar-滚动条hover或者滚动时候可见，初始不可见</h1>
-        <div ms-widget="scrollbar" class="reset nobarbg" style="height:400px;border:1px solid #ccc;width:400px;overflow:hidden;" data-scrollbar-position="right,bottom" data-scrollbar-show="scrolling" data-scrollbar-show-bar-header="false">
-                <div class="ui-scrollbar-scroller reset" style="padding:0 18px 18px 0;">
-                    <p style="width:800px" ms-repeat="data" class="reset">left {{$index}} <span style="float:right;">right {{$index}} </span></p>
+        <div ms-widget="scrollbar" class="ui-helper-reset nobarbg" style="height:400px;border:1px solid #ccc;width:400px;overflow:hidden;" data-scrollbar-position="right,bottom" data-scrollbar-show="scrolling" data-scrollbar-show-bar-header="false">
+                <div class="ui-scrollbar-scroller ui-helper-reset" style="padding:0 18px 18px 0;">
+                    <p style="width:800px" ms-repeat="data" class="ui-helper-reset">left {{$index}} <span style="float:right;">right {{$index}} </span></p>
                 </div>
             </div>
         <pre class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
@@ -59,9 +59,9 @@
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
         &lt;h1&gt;scrollbar-滚动条hover或者滚动时候可见，初始不可见&lt;/h1&gt;
-        &lt;div ms-widget=&quot;scrollbar&quot; class=&quot;reset nobarbg&quot; style=&quot;height:400px;border:1px solid #ccc;width:400px;overflow:hidden;&quot; data-scrollbar-position=&quot;right,bottom&quot; data-scrollbar-show=&quot;scrolling&quot; data-scrollbar-show-bar-header=&quot;false&quot;&gt;
-                &lt;div class=&quot;ui-scrollbar-scroller reset&quot; style=&quot;padding:0 18px 18px 0;&quot;&gt;
-                    &lt;p style=&quot;width:800px&quot; ms-repeat=&quot;data&quot; class=&quot;reset&quot;&gt;left {{$index}} &lt;span style=&quot;float:right;&quot;&gt;right {{$index}} &lt;/span&gt;&lt;/p&gt;
+        &lt;div ms-widget=&quot;scrollbar&quot; class=&quot;ui-helper-reset nobarbg&quot; style=&quot;height:400px;border:1px solid #ccc;width:400px;overflow:hidden;&quot; data-scrollbar-position=&quot;right,bottom&quot; data-scrollbar-show=&quot;scrolling&quot; data-scrollbar-show-bar-header=&quot;false&quot;&gt;
+                &lt;div class=&quot;ui-scrollbar-scroller ui-helper-reset&quot; style=&quot;padding:0 18px 18px 0;&quot;&gt;
+                    &lt;p style=&quot;width:800px&quot; ms-repeat=&quot;data&quot; class=&quot;ui-helper-reset&quot;&gt;left {{$index}} &lt;span style=&quot;float:right;&quot;&gt;right {{$index}} &lt;/span&gt;&lt;/p&gt;
                 &lt;/div&gt;
             &lt;/div&gt;
         

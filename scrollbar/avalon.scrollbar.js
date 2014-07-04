@@ -29,6 +29,10 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
         }
     }
 
+    function strToNumber(s) {
+        return Math.round(parseFloat(s)) || 0
+    }
+
     // 响应wheel,binded
     var wheelBinded,
         wheelArr = [],
@@ -95,7 +99,6 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                             })
                         })
                     }
-
                     function myOnWheel(e) {
                         if(vmodel.inFocuse) {
                             wheelLike(e.wheelDelta > 0 ? "up" : "down", vs, e)
@@ -129,7 +132,9 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                                     // pageup or pagedown
                                     // a frame
                                     } else {
-                                        return vmodel._clickComputer(obj, diretion, obj.draggerHeight)
+                                        // frame 计算方式更新为百分比
+                                        var frame = (obj.draggerparHeight - obj.draggerHeight) * obj.viewH / (obj.scrollerH - obj.viewH)
+                                        return vmodel._clickComputer(obj, diretion, strToNumber(frame) || 1)
                                     }
                                 })
                             }
@@ -200,29 +205,34 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 }
             }
 
-            vm.beforeStartFn = function() {
-                vmodel.dragging = true
+            // data-draggable-before-start="beforeStartFn" 
+            // data-draggable-start="startFn" 
+            // data-draggable-drag="dragFn" 
+            // data-draggable-before-stop="beforeStopFn" 
+            // data-draggable-stop="stopFn" 
+            // data-draggable-containment="parent" 
+            vm.draggable = {
+                beforeStart: function() {
+                    vmodel.dragging = true
+                },
+                drag: function(e, data) {
+                    var dr = avalon(data.element)
+                    vmodel._computer(function(obj) {
+                        var a = {
+                            x: strToNumber(dr.css("left")) >> 0,
+                            y: strToNumber(dr.css("top")) >> 0
+                        }
+                        return a
+                    }, dr.attr("ui-scrollbar-index"), dr.attr("ui-scrollbar-pos"))
+                }, 
+                containment: "parent"
             }
-
-            vm.startFn = avalon.noop
-
-            vm.dragFn = function(e, data) {
-                var dr = avalon(data.element)
-                vmodel._computer(function(obj) {
-                    return {
-                        x: parseInt(dr.css("left")) >> 0,
-                        y: parseInt(dr.css("top")) >> 0
-                    }
-                }, dr.attr("ui-scrollbar-index"), dr.attr("ui-scrollbar-pos"))
-            }
-
-            vm.beforeStopFn = avalon.noop
-
-            vm.stopFn = function(e, data) {
-                vmodel.dragFn(e, data)
+            vm.draggable.stop = function(e, data) {
+                vmodel.draggable.drag(e, data)
                 vmodel.dragging = false
                 avalon(data.element).removeClass("ui-scrollbar-dragger-onmousedown")
             }
+
             vm._remove = function() {
                 avalon.each(bars, function(i, bar) {
                     bar[0] && bar[0].parentNode && bar[0].parentNode.removeChild(bar)
@@ -402,10 +412,13 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                         var draggerCss
                         if(isVertical) {
                             var draggerTop = y,
-                                draggerHeight = h * sh / viewH
+                                draggerHeight =strToNumber(h * sh / viewH)
+                                // 限定一个dragger的最小高度
+                                draggerHeight = vmodel.limitRateV * bw > draggerHeight && vmodel.limitRateV * bw || draggerHeight
                                 draggerTop = draggerTop < 0 ? 0 : draggerTop
                                 draggerTop = draggerTop > viewH - h ? viewH - h : draggerTop
-                                draggerTop = sh * draggerTop / viewH
+                                //draggerTop = sh * draggerTop / viewH
+                                draggerTop = strToNumber((sh - draggerHeight) * draggerTop / viewH)
                             draggerCss = [
                                 ["width", "100%"],
                                 ["height", draggerHeight + "px"],
@@ -414,10 +427,13 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                             y = y > 0 ? (y > viewH - h + ex ?  viewH - h + ex : y) : 0
                         } else {
                             var draggerLeft = x,
-                                draggerWidth = w * sw / viewW
+                                draggerWidth = strToNumber(w * sw / viewW)
+                                // limit width to limitRateH * bh
+                                draggerWidth = vmodel.limitRateH * bh > draggerWidth && vmodel.limitRateH * bh || draggerWidth
                                 draggerLeft = draggerLeft < 0 ? 0 : draggerLeft
                                 draggerLeft = draggerLeft > viewW - w ? viewW - w : draggerLeft
-                                draggerLeft = sw * draggerLeft / viewW
+                                // draggerLeft = sw * draggerLeft / viewW
+                                draggerLeft = strToNumber((sw - draggerWidth) * draggerLeft / viewW)
                             draggerCss = [
                                 ["height", "100%"],
                                 ["width", draggerWidth + "px"],
@@ -428,10 +444,12 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                         avalon.each(draggerCss, function(index, css) {
                             dragger.css.apply(dragger, css)
                         })
-                        if(isVertical) {
-                            vmodel._scrollTo(void 0, y)
-                        } else {
-                            vmodel._scrollTo(x, void 0)
+                        if(ifInit) {
+                            if(isVertical) {
+                                vmodel._scrollTo(void 0, y)
+                            } else {
+                                vmodel._scrollTo(x, void 0)
+                            }
                         }
                         if(vmodel.showBarHeader) {
                             if(y == 0 && isVertical || !isVertical && x == 0) {
@@ -458,8 +476,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
 
             vm._clickComputer = function(obj, diretion, step) {
                 var step = step || obj.step || 40,
-                    l = parseInt(obj.dragger.css("left")) >> 0,
-                    r = parseInt(obj.dragger.css("top")) >> 0,
+                    l = strToNumber(obj.dragger.css("left")) >> 0,
+                    r = strToNumber(obj.dragger.css("top")) >> 0,
                     x = diretion == "down" ? l + step : l - step,
                     y = diretion == "down" ? r + step : r - step
                 return {
@@ -497,23 +515,23 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 if(ele.hasClass("ui-scrollbar-dragger")) return
                 vmodel._computer(function(obj) {
                     return {
-                        x: e.pageX - obj.offset.left - obj.draggerWidth / 2,
-                        y : e.pageY - obj.offset.top - obj.draggerHeight / 2
+                        x: Math.ceil(e.pageX - obj.offset.left - obj.draggerWidth / 2),
+                        y : Math.ceil(e.pageY - obj.offset.top - obj.draggerHeight / 2)
                     }
                 }, barIndex, position)
             }
             // 计算滚动条位置
             vm._computer = function(axisComputer, barIndex, position, callback) {
                 var bar = bars[barIndex]
-                if(bar) {
+                if(bar && bar.data("ui-scrollbar-needed")) {
                     var obj = {},
                         isVertical = position.match(/left|right/g)
                     obj.dragger = avalon(getByClassName("ui-scrollbar-dragger", bar[0])[0])
-                    obj.draggerWidth = obj.dragger.innerWidth()
-                    obj.draggerHeight = obj.dragger.innerHeight()
+                    obj.draggerWidth = strToNumber(obj.dragger.css("width"))
+                    obj.draggerHeight = strToNumber(obj.dragger.css("height"))
                     obj.draggerpar = avalon(obj.dragger[0].parentNode)
-                    obj.draggerparWidth = obj.draggerpar.innerWidth()
-                    obj.draggerparHeight = obj.draggerpar.innerHeight()
+                    obj.draggerparWidth = strToNumber(obj.draggerpar.css("width"))
+                    obj.draggerparHeight = strToNumber(obj.draggerpar.css("height"))
                     obj.offset = obj.draggerpar.offset()
                     obj.up = avalon(getByClassName("ui-scrollbar-arrow-up", bar[0])[0])
                     obj.down = avalon(getByClassName("ui-scrollbar-arrow-down", bar[0])[0])
@@ -525,9 +543,12 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                     obj.scrollerH = scroller[0].scrollHeight
                     obj.scrollerW = scroller[0].scrollWidth
                     obj.step = isVertical ? 40 * (obj.draggerparHeight - obj.draggerHeight) / obj.scrollerH : 40 * (obj.draggerparWidth - obj.draggerWidth) / obj.scrollerW
+                    obj.step = strToNumber(obj.step) || 1
 
                     var xy = axisComputer(obj),
                         breakOut
+                        xy.x = strToNumber(xy.x)
+                        xy.y = strToNumber(xy.y)
 
                     if(isVertical) {
                         if(xy.y < 0) {
@@ -545,7 +566,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                             obj.down.removeClass("ui-scrollbar-arrow-disabled")
                         }
                         obj.dragger.css("top", xy.y + "px")
-                        vmodel._scrollTo(void 0, (obj.scrollerH - obj.viewH) * xy.y / (obj.draggerparHeight - obj.draggerHeight))
+                        vmodel._scrollTo(void 0, strToNumber((obj.scrollerH - obj.viewH) * xy.y / (obj.draggerparHeight - obj.draggerHeight)))
                     } else {
                         if(xy.x < 0) {
                             xy.x = 0
@@ -562,7 +583,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                             obj.down.removeClass("ui-scrollbar-arrow-disabled")
                         }
                         obj.dragger.css("left", xy.x + "px")
-                        vmodel._scrollTo((obj.scrollerW - obj.viewW) * xy.x / (obj.draggerparWidth - obj.draggerWidth), void 0)
+                        vmodel._scrollTo(strToNumber((obj.scrollerW - obj.viewW) * xy.x / (obj.draggerparWidth - obj.draggerWidth)), void 0)
                     }
 
                 }
@@ -584,7 +605,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
 
             //@method scrollTo(x,y) 滚动至 x,y
             vm.scrollTo = function(x, y) {
-                vmodel.update(false, x, y)
+                vmodel.update(!"ifInit", x, y)
+                vm._scrollTo(x, y)
             }
 
             vm._initWheel = function(e, type) {
@@ -623,6 +645,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
     //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
         position: "right", //@param scrollbar出现的位置,right右侧，bottom下侧，可能同时出现多个方向滚动条
+        limitRateV: 1.5, //@param 竖直方向，拖动头最小高度和拖动头宽度比率
+        limitRateH: 1.5, //@param 水平方向，拖动头最小宽度和高度的比率
         scrollTop: 0, //@param 竖直方向滚动初始值，负数会被当成0，设置一个极大值等价于将拖动头置于bottom
         scrollLeft: 0, //@param 水平方向滚动初始值，负数会被当成0处理，极大值等价于拖动头置于right
         show: "always", //@param never一直不可见，scrolling滚动和hover时候可见，always一直可见

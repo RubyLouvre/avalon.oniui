@@ -116,6 +116,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
             vm.cssLeft = "0"
             vm.barRight = 0
             vm.paddingBottom = "0"
+            vm.barUpdated = false
             vm.$init = function() {
                 avalon.ready(function() {
                     element.innerHTML = options.template.replace(/MS_OPTION_ID/g, vmodel.$id)
@@ -190,14 +191,16 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                     }, 100)
                 }
                 // update scrollbar, if tbody rendered
-                vmodel.updateScrollbar()
+                vmodel.updateScrollbar(!vmodel.barUpdated)
+                vmodel.barUpdated = true
             }
             vm.getScrollbar = function() {
                 return avalon.vmodels["$simplegrid" + optId]
             }
             // update scrollbar
             var scrollbarInited
-            vm.updateScrollbar = function() {
+            vm.updateScrollbar = function(force) {
+                if(!force) return
                 var scrollbar = vmodel.getScrollbar(),
                     scroller = scrollbar.getScroller()
                 if (scrollbar) {
@@ -239,7 +242,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                 if (options.canResize) {
                     options.canResize.css("cursor", options._cursor); //还原光标样式
                     // update scrollbar, after resize end
-                    vmodel.updateScrollbar()
+                    vmodel.updateScrollbar("forceUpdate")
                     delete options.canResize
                 }
             }
@@ -263,7 +266,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                             vm.gridWidth = gridWidth + change
                             el.width = cellWidth + change
                             // update scrollbar while table size changed right now
-                            vmodel.updateScrollbar()
+                            vmodel.updateScrollbar("forceUpdate")
                         }
                     })
 
@@ -342,7 +345,8 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                 return array.slice(vm.startIndex, vm.endIndex)
             }
             vm.getScrollerHeight = function() {
-                var h = vmodel.tbodyScrollHeight + vmodel.tbodyScrollTop,
+                var h = vmodel.tbodyScrollHeight + vmodel.tbodyScrollTop - vmodel.theadHeight,
+                // var h = vmodel.tbodyScrollHeight - vmodel.theadHeight,
                         max = vmodel._rowHeight * vmodel.data.length
                 // 设置一个上限，修复回滚bug
                 h = h > max ? max : h
@@ -357,10 +361,22 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                         clearTimeout(scrollbarTimer)
                         scrollbarTimer = setTimeout(function() {
                             vmodel.throttleRenderTbody(n, o)
+                            // 向上，update bar状态
+                            if(n < o) vmodel.updateScrollbar("forceUpdate")
                         }, 20)
-                        // 水平方向
+                    // 水平方向
                     } else {
                         vmodel.cssLeft = n == void 0 ? "auto" : -n + "px"
+                    }
+                },
+                viewHeightGetter: function(ele) {
+                    return ele.innerHeight() - vmodel.theadHeight
+                },
+                // 向下的时候，只有越界的时候才更新scrollbar状态
+                breakOutCallback: function(ifBreakOut, v, obj) {
+                    if(void 0 !== ifBreakOut && ifBreakOut[0] === "v" && ifBreakOut[1] === "down") {
+                        obj.down.removeClass("ui-scrollbar-arrow-disabled")
+                        vmodel.updateScrollbar("forceUpdate")
                     }
                 },
                 show: vm.showScrollbar
@@ -410,6 +426,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                 }
                 var length = vmodel.data.length, count = 0
                 if (scrollDir === "down") {
+                    var _data = [],l = vmodel._data.length
                     while (vmodel.endIndex + 1 < length) {
                         vmodel.endIndex += 1
                         vmodel.startIndex += 1
@@ -418,6 +435,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
 
                         vmodel._data.push(el)
                         vmodel._data.shift()
+                        // _data.push(el)
                         if (count === integer) {
                             break
                         }

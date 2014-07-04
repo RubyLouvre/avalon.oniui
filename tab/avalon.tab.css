@@ -1,12 +1,12 @@
-.clrfix {
+.ui-helper-clrfix {
   zoom: 1; }
-  .clrfix:before, .clrfix:after {
+  .ui-helper-clrfix:before, .ui-helper-clrfix:after {
     content: '';
     display: block; }
-  .clrfix:after {
+  .ui-helper-clrfix:after {
     clear: both; }
 
-.reset {
+.ui-helper-reset {
   margin: 0;
   padding: 0;
   border: 0;

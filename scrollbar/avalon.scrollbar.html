@@ -7,6 +7,7 @@
 		ms-mouseover="_show($event,'always',$index)" 
 		ms-mousedown="_draggerDown($event, true)" 
 		ms-mouseup="_draggerDown($event, false)" 
+		ms-mouseout="_draggerDown($event, false)" 
 		ms-hover="ui-scrollbar-dragger-hover ui-state-hover"
 		>{{draggerHTML | html}}</div>
 	</div>

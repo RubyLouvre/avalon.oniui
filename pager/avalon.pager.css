@@ -12,7 +12,12 @@
   font-size: 0;
   vertical-align: middle;
   white-space: nowrap;
-  /*!省略掉的页数*/ }
+  /*!省略掉的页数*/
+  /*!页面跳转部分的样式*/
+  /*!输入域的容器*/
+  /*!输入域*/
+  /*!里面的按钮的样式*/
+  /*!里面的文本全部包在一个容器内，以便实现居中*/ }
   .ui-pager .ui-pager-items {
     display: -moz-inline-stack;
     display: inline-block;
@@ -45,7 +50,10 @@
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -moz-user-select: none;
-    user-select: none; }
+    user-select: none;
+    /*!当前页,没有边框*/
+    /*!掠过*/
+    /*!禁用*/ }
     .ui-pager .ui-pager-prev.ui-state-active, .ui-pager .ui-pager-next.ui-state-active, .ui-pager .ui-pager-item.ui-state-active {
       color: #FF5555;
       border: 0 none;
@@ -87,61 +95,61 @@
     padding-left: 5px;
     padding-right: 5px;
     vertical-align: middle; }
-    .ui-pager .ui-pager-jump .ui-textbox {
-      display: -moz-inline-stack;
-      display: inline-block;
-      vertical-align: middle;
-      *vertical-align: auto;
-      zoom: 1;
-      *display: inline;
-      width: 26px;
-      margin-left: 5px;
-      margin-right: 5px;
-      padding: 3px 5px;
-      vertical-align: middle;
-      background-color: #ffffff;
-      border: 1px solid #cccccc;
-      font-size: 0;
-      outline: none; }
-    .ui-pager .ui-pager-jump .ui-textbox-input {
-      display: inline;
-      float: left;
-      position: relative;
-      width: 26px;
-      height: 18px;
-      line-height: 18px;
-      border: 0 none;
-      font-size: 12px;
-      outline: medium none;
-      vertical-align: middle;
-      text-align: center;
-      color: #333333;
-      background: #fff; }
-    .ui-pager .ui-pager-jump .ui-btn {
-      display: -moz-inline-stack;
-      display: inline-block;
-      vertical-align: middle;
-      *vertical-align: auto;
-      zoom: 1;
-      *display: inline;
-      overflow: visible;
-      _overflow-y: hidden;
-      height: 26px;
-      margin-left: 5px;
-      border: 1px solid #cccccc;
-      border-radius: 2px;
-      outline: none;
-      cursor: pointer;
-      font-size: 12px;
-      vertical-align: middle;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      user-select: none;
-      padding: 0 10px;
-      text-decoration: none;
-      background-color: #e6e6e6;
-      color: #555555; }
+  .ui-pager .ui-pager-textbox-wrapper {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    width: 26px;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 3px 5px;
+    vertical-align: middle;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    font-size: 0;
+    outline: none; }
+  .ui-pager .ui-pager-textbox {
+    display: inline;
+    float: left;
+    position: relative;
+    width: 26px;
+    height: 18px;
+    line-height: 18px;
+    border: 0 none;
+    font-size: 12px;
+    outline: medium none;
+    vertical-align: middle;
+    text-align: center;
+    color: #333333;
+    background: #fff; }
+  .ui-pager .ui-pager-button {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    overflow: visible;
+    _overflow-y: hidden;
+    height: 26px;
+    margin-left: 5px;
+    border: 1px solid #cccccc;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    font-size: 12px;
+    vertical-align: middle;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    padding: 0 10px;
+    text-decoration: none;
+    background-color: #e6e6e6;
+    color: #555555; }
   .ui-pager .ui-pager-text {
     display: -moz-inline-stack;
     display: inline-block;

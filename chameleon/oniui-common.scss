@@ -7,6 +7,25 @@
 chameleon
 by 司徒正美 2014.6.28 拉萨开往西宁的火车上
 这里放置所有组件都共用的类名，它们根据compass构建
+
+oinui的CSS规范
+
+不能出现大小,以连字符风格命名
+表示状态的应该用ui-state-*命名
+表示功能的应该用ui-helper-*命名
+表示布局的应用用ui-uiname-* 命名, 它的子元素应该全部包在 .ui-uiname这个根类下
+如 .ui-grid .ui-grid-tbody{ ... }
+如果某一个区域的背景要换肤,能用ui-widget-header或ui-widget-content就尽用
+其他细微之后的换肤,使用ui-state-*-?-color实现,或至少包在if(oniui-theme === xxx){}分支内
+
+
+样式规则的出现顺序
+1 display float position overflow表示布局的样式
+2 width height line-height 表示尺雨的样式
+3 margin border padding 表示盒子模型的样式
+4 cursor font-size vertical-align text-align user-select outline....装饰用的样式
+5 color background 表示换肤的样式(上面的bordrer-color outline-color也可以放到这里)
+
 */
 
 .ui-helper-hidden {

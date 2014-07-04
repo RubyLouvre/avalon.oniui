@@ -108,6 +108,7 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
         for(var i=1901; i<=2050; i++) {
             years.push(i);
         }
+        options.formatDate = options.formatDate.bind(options); //兼容IE6、7使得formatDate方法中的this指向options
         // 如果输入域初始值存在则验证其是否符合日期显示规则，不符合设element.value为null
         element.value = _originValue && options.formatDate(date);
         var vmodel = avalon.define(data.datepickerId, function(vm) {
@@ -175,7 +176,8 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                     vmodel.tip = getDateTip(cleanDate(new Date(year, month, day))).text;
                     vmodel.dateError = "#cccccc";
                     if(!calendarWrapper) {
-                        duplexVM[1][duplexVM[0]] = element.value = date;
+                        element.value = date;
+                        duplexVM ? duplexVM[1][duplexVM[0]] = date : "";
                         vmodel.toggle = false;
                         vmodel.data = calendarDays(vmodel.month, vmodel.year);
                     } else { // range datepicker时需要切换选中日期项的类名
@@ -257,11 +259,11 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                     div.setAttribute("ms-css-border-color", "dateError");
                     div.setAttribute("ms-hover", "ui-state-hover");
                     elementPar.insertBefore(div,element);
-                    element.msRetain = true;
+                    // element.msRetain = true;
                     div.appendChild(element);
                     var tip = avalon.parseHTML("<div class='ui-datepicker-tip'>{{tip}}<i class='ui-icon ui-icon-calendar-o'>&#xf133;</i></div>");
                     div.appendChild(tip);
-                    element.msRetain = false;
+                    // element.msRetain = false;
                     element.value = vmodel.allowBlank ? _value : _originValue;
                 }
                 div = options.type ==="range" ? element["data-calenderwrapper"] : div;

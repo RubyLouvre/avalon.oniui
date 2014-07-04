@@ -10,46 +10,48 @@
             <i class="ui-datepicker-icon ui-icon ui-icon-angle-down" ms-visible="!toggle">&#xf107;</i>
         </div>
     </div>
-    <div class="ui-datepicker-groups" 
-        ms-visible="toggle"
-        ms-click="_updateMsg">
-        <div class="ui-datepicker-group-first ui-datepicker-group">
-            <input style="display:none" 
-            data-datepicker-type="range" 
-            data-datepicker-allow-blank=true
-            data-datepicker-parse-date="parseDate"
-            data-datepicker-format-date="formatDate"
-            data-datepicker-change="fromSelectCal"
-            data-datepicker-min-date="rules.fromMinDate"
-            data-datepicker-max-date="rules.fromMaxDate"
-            data-datepicker-start-day="MS_OPTION_START_DAY"
-            ms-data-container="container"
-            ms-data-input="inputElement"
-            ms-data-calenderwrapper="calendarWrapper"
-            ms-data-datepicker-calendar-label="fromLabel"/>
-        </div>
-        <div class="ui-datepicker-group-second ui-datepicker-group">
-            <input style="display:none" 
-            ms-data-toggle="toggle" 
-            data-datepicker-type="range" 
-            data-datepicker-allow-blank=true
-            data-datepicker-parse-date="parseDate"
-            data-datepicker-format-date="formatDate"
-            data-datepicker-min-date="rules.toMinDate"
-            data-datepicker-max-date="rules.toMaxDate"
-            data-datepicker-start-day="MS_OPTION_START_DAY"
-            ms-data-container="container"
-            ms-data-input="inputElement"
-            ms-data-calenderwrapper="calendarWrapper"
-            ms-data-datepicker-calendar-label="toLabel"/>
-        </div>
-        <div class="ui-calendarbox-footer ui-calendarbox-footer-small clrfix">
-            <div class="ui-calendarbox-msg js-msg">{{msg}}</div>
-            <div class="ui-calendarbox-btns">
-                <button type="button" class="ui-btn ui-btn-primary ui-btn-small js-submit"
-                ms-click="_selectDate">确定</button>
-                <button type="button" class="ui-btn ui-btn-small js-cancel"
-                ms-click="_cancelSelectDate">取消</button>
+    <div class="ui-daterangepicker-content">
+        <div class="ui-datepicker-groups" 
+            ms-visible="toggle"
+            ms-click="_updateMsg">
+            <div class="ui-datepicker-group-first ui-datepicker-group">
+                <input style="display:none" 
+                data-datepicker-type="range" 
+                data-datepicker-allow-blank=true
+                data-datepicker-parse-date="parseDate"
+                data-datepicker-format-date="formatDate"
+                data-datepicker-change="fromSelectCal"
+                data-datepicker-min-date="rules.fromMinDate"
+                data-datepicker-max-date="rules.fromMaxDate"
+                data-datepicker-start-day="MS_OPTION_START_DAY"
+                ms-data-container="container"
+                ms-data-input="inputElement"
+                ms-data-calenderwrapper="calendarWrapper"
+                ms-data-datepicker-calendar-label="fromLabel"/>
+            </div>
+            <div class="ui-datepicker-group-second ui-datepicker-group">
+                <input style="display:none" 
+                ms-data-toggle="toggle" 
+                data-datepicker-type="range" 
+                data-datepicker-allow-blank=true
+                data-datepicker-parse-date="parseDate"
+                data-datepicker-format-date="formatDate"
+                data-datepicker-min-date="rules.toMinDate"
+                data-datepicker-max-date="rules.toMaxDate"
+                data-datepicker-start-day="MS_OPTION_START_DAY"
+                ms-data-container="container"
+                ms-data-input="inputElement"
+                ms-data-calenderwrapper="calendarWrapper"
+                ms-data-datepicker-calendar-label="toLabel"/>
+            </div>
+            <div class="ui-calendarbox-footer ui-calendarbox-footer-small clrfix">
+                <div class="ui-calendarbox-msg js-msg">{{msg}}</div>
+                <div class="ui-calendarbox-btns">
+                    <button type="button" class="ui-btn ui-btn-primary ui-btn-small js-submit"
+                    ms-click="_selectDate">确定</button>
+                    <button type="button" class="ui-btn ui-btn-small js-cancel"
+                    ms-click="_cancelSelectDate">取消</button>
+                </div>
             </div>
         </div>
     </div>
@@ -85,7 +87,7 @@ MS_OPTION_STYLE
   height: 26px;
   outline: none;
   overflow: visible;
-  _overflow-y: hidden;
+  *overflow-y: hidden;
   padding: 0 10px;
   text-decoration: none;
 }
@@ -104,6 +106,11 @@ MS_OPTION_STYLE
     width: 260px;
     font-size: 12px;
     line-height: 18px;
+}
+.ui-daterangepicker-content {
+    position: relative;
+    z-index: 1000;
+    zoom: 1;
 }
 .ui-datepicker-range-input {
     background-color: #ffffff;
@@ -151,16 +158,22 @@ MS_OPTION_STYLE
     border: 1px solid #cccccc;
     position: absolute;
     z-index: 1000;
+    zoom: 1;
+    font-size: 0;
+    padding-bottom: 39px;
 }
 .ui-datepicker-groups .ui-datepicker-wrapper {
     position: static;
     padding: 0;
     border: 0;
     box-shadow: 0 0 0 0 rgba(0,0,0,0);
+    font-size: 12px;
 }
 .ui-datepicker-group {
     position: relative;
     display: inline-block;
+    *display: inline;
+    zoom: 1;
 }
 .ui-daterangepicker .ui-datepicker-content {
     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); 
@@ -169,16 +182,18 @@ MS_OPTION_STYLE
     position: static;
 }
 .ui-calendarbox-footer-small {
-    padding: 4px 5px;
+    padding: 4px 0;
     background: #f8f8f8;
-    margin-top: 9px;
-    margin-left: -10px;
     height:22px;
     line-height: 22px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
 }
-.ui-calendarbox-footer-small .ui-calendarbox-msg {
+/*.ui-calendarbox-footer-small .ui-calendarbox-msg {
     float: left;
-}
+}*/
 .ui-calendarbox-footer-small .ui-btn {
     margin: 0 0 0 5px ;
 }
@@ -194,10 +209,14 @@ MS_OPTION_STYLE
 }
 .ui-calendarbox-btns {
     display: inline;
-    float: right;
+    /*float: right;*/
     font-size: 0;
+    position: absolute;
+    right: 10px;
+    top: 4px;
 }
 .ui-calendarbox-msg {
     font-size: 12px;
+    padding-left: 5px;
 }
 </style>

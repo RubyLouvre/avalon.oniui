@@ -13,6 +13,9 @@
                         onComplete: function() {
                             avalon.log(this)
                             avalon.log('this bar is complete')
+                        },
+                        onInit: function(v) {
+                            alert(v)
                         }
                     }
                     vm.$skipArray = ["progressbar"]
@@ -47,6 +50,9 @@
                         onComplete: function() {
                             avalon.log(this)
                             avalon.log('this bar is complete')
+                        },
+                        onInit: function(v) {
+                            alert(v)
                         }
                     }
                     vm.$skipArray = [&quot;progressbar&quot;]

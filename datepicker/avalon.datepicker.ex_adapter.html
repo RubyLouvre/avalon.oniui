@@ -12,7 +12,7 @@
     <div class="wrapper">
         <h1>datepicker demo</h1>
         <div class="demoShow" ms-controller="demo">
-<!--             <fieldset>
+            <fieldset>
                 <legend>单日历框</legend>
                 <input ms-widget="datepicker" ms-duplex="data1" data-datepicker-disabled="disabled1"/>
 
@@ -27,9 +27,9 @@
             <fieldset>
                 <legend>单日历框(设置change回调——通过配置参数)</legend>
                 <input ms-widget="datepicker,changeEp2" data-datepicker-change="changeEp2"/>
-            </fieldset> -->
+            </fieldset>
 
-            <!-- <fieldset>
+            <fieldset>
                 <legend>双日历框</legend>
                     <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from, to" data-coupledatepicker-disabled="disabled2" class="ui-coupledatepicker">
                     <div class="ui-coupledatepicker-item"></div>
@@ -56,7 +56,7 @@
                 {{to4}}
 
             </fieldset>
- -->
+
             <fieldset>
                 <legend>日期范围框</legend>
                 <div ms-widget="daterangepicker" data-daterangepicker-duplex="from2, to2" data-daterangepicker-disabled="disabled3"/>
@@ -77,16 +77,16 @@
                 <legend>日期范围框 默认值为空</legend>
                 <div ms-widget="daterangepicker" data-daterangepicker-duplex="fromEmpty, toEmpty" data-daterangepicker-rules="opts2"/>
 
-                {{fromEmpty}}
-                {{toEmpty}}
+                <p>fromEmpty: {{fromEmpty}}</p>
+                <p>toEmpty: {{toEmpty}}</p>
             </fieldset>
 
             <fieldset>
                 <legend>日期范围框</legend>
                 <div ms-widget="daterangepicker, df3" data-daterangepicker-duplex="from3, to3"/>
 
-                {{from3}}
-                {{to3}}
+                <p>from3: {{from3}}</p>
+                <p>to3: {{to3}}</p>
 
                 <button ms-click="setdates">设置时间为'2013-09-09', '2014-09-09'</button>
                 <button ms-click="setlabel">设置标签为'我是label'</button>
@@ -103,7 +103,7 @@
             </fieldset>
 
             <script> 
-                require(["datepicker/avalon.daterangepicker"], function(avalon) {
+                require(["datepicker/avalon.daterangepicker", "datepicker/avalon.coupledatepicker"], function(avalon) {
                     avalon.define('demo2', function(vm) {
                         vm.setdates = function() {
                             $$.$ui('df3').setDates('2013-09-09', '2014-09-09');

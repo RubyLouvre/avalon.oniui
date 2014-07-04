@@ -176,9 +176,9 @@ define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/aval
                     inputTo.setAttribute("data-toggle","toggle");
                     avalon.scan(inputFrom, [vmodel]);
                     avalon.scan(inputTo, [vmodel]);
-                    if(typeof vmodel.onInit === "function" ){
+                    if(typeof options.onInit === "function" ){
                         //vmodels是不包括vmodel的
-                         vmodel.onInit.calll(element, vmodel, options, vmodels)
+                        options.onInit.call(element, vmodel, options, vmodels)
                     }
                 })
             }

@@ -125,9 +125,9 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
                     element.appendChild(calendar);
                 }
                 avalon.scan(element, [vmodel].concat(vmodels));
-                if(typeof vmodel.onInit === "function" ){
+                if(typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
-                     vmodel.onInit.calll(element, vmodel, options, vmodels)
+                    options.onInit.call(element, vmodel, options, vmodels)
                 }
             };
             vm.$remove = function() {

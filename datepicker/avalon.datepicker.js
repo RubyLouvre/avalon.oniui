@@ -167,7 +167,6 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                         _date = new Date(year, month, day),
                         date = formatDate(_date),
                         calendarWrapper = options.type ==="range" ? element["data-calenderwrapper"] : null;
-                    element.value = date; 
                     if(month !== vmodel.month) {
                         vmodel.month = _date.getMonth();
                         vmodel.year = _date.getFullYear();
@@ -176,6 +175,7 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                     vmodel.tip = getDateTip(cleanDate(new Date(year, month, day))).text;
                     vmodel.dateError = "#cccccc";
                     if(!calendarWrapper) {
+                        duplexVM[1][duplexVM[0]] = element.value = date;
                         vmodel.toggle = false;
                         vmodel.data = calendarDays(vmodel.month, vmodel.year);
                     } else { // range datepicker时需要切换选中日期项的类名
@@ -199,9 +199,8 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                             }
                         }
                         vmodel.data[0].rows[outerIndex][innerIndex].selected = true;
-                        //duplexVM[1][duplexVM[0]] = date;
+                        element.value = date;
                     }
-                    
                     vmodel.change.call(null, options.parseDate(date), data["datepickerId"], avalon(element).data())
                 }
             }
@@ -279,9 +278,9 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                     avalon.scan(div, [vmodel]);
                 }
                 avalon.scan(calendar, [vmodel].concat(vmodels))
-                if(typeof vmodel.onInit === "function" ){
+                if(typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
-                     vmodel.onInit.calll(element, vmodel, options, vmodels)
+                    options.onInit.call(element, vmodel, options, vmodels)
                 }
             }
             vm.$remove = function() {

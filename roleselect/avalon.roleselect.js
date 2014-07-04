@@ -40,6 +40,11 @@ define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.dat
 
                 vmodel.$getSelect()
                 avalon.scan(element, [vmodel].concat(vmodels))
+                // callback after inited
+                if(typeof options.onInit === "function" ) {
+                    //vmodels是不包括vmodel的 
+                    options.onInit.call(element, vmodel, options, vmodels)
+                }
             }
             vm.$remove = function() {
                 element.innerHTML = element.textContent = ""
@@ -171,9 +176,11 @@ define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.dat
     //argName: defaultValue, \/\/@param description
     //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
+        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
+        onInit: avalon.noop,
         getTemplate: function(tmpl, opts, tplName) {
             return tmpl
-        },
+        },//@optMethod getTemplate(tpl, opts) 定制修改模板接口
         hideSelect: false, //@param 是否隐藏以选中的项目，默认不隐藏
         countLimit: function(select) {
             return true

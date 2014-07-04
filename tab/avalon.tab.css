@@ -16,6 +16,9 @@
   font-size: 100%;
   list-style: none; }
 
+.ui-helper-hidden {
+  display: none; }
+
 /*corner css*/
 .ui-corner-all,
 .ui-corner-top,
@@ -71,6 +74,10 @@
 .ui-widget-content {
   background-color: #f8f8f8;
   border: 1px solid #cccccc; }
+
+/*button*/
+.ui-button {
+  cursor: pointer; }
 
 .ui-state-default {
   font-size: 12px;

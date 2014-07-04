@@ -1,4 +1,4 @@
-define(["avalon", "text!./avalon.pager.html","css!./avalon.pager.css"], function(avalon, tmpl) {
+define(["avalon", "text!./avalon.pager.html", "css!../chameleon/oniui-common.css", "css!./avalon.pager.css"], function(avalon, tmpl) {
 
     var arr = tmpl.split("MS_OPTION_STYLE") || ["", ""]
     var cssText = arr[1].replace(/<\/?style>/g, "")

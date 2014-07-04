@@ -1,133 +1,129 @@
 @charset "utf-8";
-@import "../miracle/oniui";
+@import "../chameleon/oniui-theme";
 .ui-pager {
     @include inline-block();
     font-size: 0;
     vertical-align: middle;
     white-space: nowrap;
-}
-.ui-pager-items {
-     @include inline-block();
-    vertical-align: middle;
-}
-.ui-pager-prev, .ui-pager-next, .ui-pager-item {
-    @include inline-block();
-    -moz-user-select: none;
-    background-color: #FFFFFF;
-    border: 1px solid #CCCCCC;
-    border-radius: 2px;
-    cursor: pointer;
 
-    font-size: 12px;
-    height: 24px;
-    line-height: 24px;
-    margin-right: 5px;
-    padding: 0 10px;
-    vertical-align: middle;
-}
-.ui-pager-prev:hover, .ui-pager-next:hover, .ui-pager-item:hover {
-    border-color: #FF8888;
-}
-.ui-pager-current {
-    -moz-user-select: none;
-    color: #FF5555;
-    cursor: default;
-    @include inline-block();
-    font-size: 12px;
-    height: 24px;
-    line-height: 24px;
-    margin-right: 5px;
-    padding: 1px 11px;
-    vertical-align: middle;
-    border: 0 none;
-}
-.ui-pager-omit {
-    -moz-user-select: none;
-    cursor: default;
-    @include inline-block();
-    font-size: 12px;
-    height: 24px;
-    line-height: 24px;
-    margin-right: 5px;
-    padding: 1px 0;
-    vertical-align: middle;
-}
-.ui-pager-disabled {
-    background-color: #F5F5F5;
-    border-color: #D9D9D9;
-    color: #CCCCCC;
-    cursor: default;
-}
-.ui-pager-disabled:hover {
-    background-color: #F5F5F5;
-    border-color: #D9D9D9;
-    color: #CCCCCC;
-    cursor: default;
-}
-.ui-pager-jump {
-    @include inline-block();
-    vertical-align: middle;
-    padding-left:5px;
-    padding-right: 5px;
-    vertical-align: middle;
-}
-.ui-pager-jump .ui-textbox {
-    margin-left: 5px;
-    margin-right: 5px;
-}
-.ui-textbox {
-    @include inline-block();
-    vertical-align: middle;
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    font-size: 0;
-    outline: none;
-    width:26px;
-    padding: 3px 5px;
-}
-.ui-pager-jump .ui-textbox-input {
-    text-align: center;
-    width: 26px;
-}
-.ui-textbox-input {
-    display: inline;
-    float: left;
-    position: relative;
-    border: 0 none;
-    color: #333333;
-    background: #fff;
-    font-size: 12px;
-    height: 18px;
-    line-height: 18px;
-    outline: medium none;
+    .ui-pager-items {
+        @include inline-block();
+        vertical-align: middle;
+    }
+    .ui-pager-prev, .ui-pager-next, .ui-pager-item {
+        @include inline-block();
+        @if($oinui-theme == smoothness){
+            background-color: #FFFFFF;
+        }
+        height: 24px;
+        line-height: 24px;
+        margin-right: 5px;
+        border: 1px solid $ui-state-default-border-color;
+        padding: 0 10px;
+        @include border-radius(2px);
+        cursor: pointer;
+        font-size: 12px;
+        vertical-align: middle;
+        @include user-select(none);
+        //当前页,没有边框
+        &.ui-state-active {
+            @if($oinui-theme == smoothness){
+                color: #FF5555;
+            }
+            border: 0 none;
+            padding: 1px 11px;
+            cursor: default;
+        }
+        //掠过
+        &.ui-state-hover{
+            @if($oinui-theme == smoothness){
+                border-color: #FF8888;
+            }
+        }
+        //禁用
+        &.ui-state-disabled {
+            @if($oinui-theme == smoothness){
+                border-color: #D9D9D9;
+            }
+            background-color:$ui-state-hover-background-color;
+            color: $ui-state-hover-color;
+            cursor: default;
+        }
+    }
+    /*!省略掉的页数*/
+    .ui-pager-omit {
+        @include inline-block();
+        height: 24px;
+        line-height: 24px;
+        margin-right: 5px;
+        padding: 1px 0;
+        vertical-align: middle;
+        font-size: 12px;
+        @include user-select(none);
+        cursor: default;
+    }
 
-    vertical-align: middle;
+    .ui-pager-jump {
+        @include inline-block();
+        vertical-align: middle;
+        padding-left:5px;
+        padding-right: 5px;
+        vertical-align: middle;
+        .ui-textbox {
+            @include inline-block();
+            width:26px;
+            margin-left: 5px;
+            margin-right: 5px;
+            padding: 3px 5px;
+            vertical-align: middle;
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            font-size: 0;
+            outline: none;
+        }
+        .ui-textbox-input {
+            display: inline;
+            float: left;
+            position: relative;
+            width: 26px;
+            height: 18px;
+            line-height: 18px;
+            border: 0 none;
+            font-size: 12px;
+            outline: medium none;
+            vertical-align: middle;
+            text-align: center;
+            @if($oinui-theme == smoothness){
+                color: #333333;
+                background: #fff;
+            }
+        }
+        .ui-btn {
+            @include inline-block();
+            overflow: visible;
+            _overflow-y: hidden;
+            height: 26px;
+            margin-left: 5px;
+            border: 1px solid #cccccc;
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+            font-size: 12px;
+            vertical-align: middle;
+            @include user-select(none);
+            padding: 0 10px;
+            text-decoration: none;
+            background-color: $ui-state-default-background-color;
+            color:  $ui-state-default-color;
+        }
+    }
+
+    .ui-pager-text {
+        @include inline-block();
+        font-size: 12px;
+        vertical-align: middle;
+    }
 }
-.ui-pager-jump .ui-btn {
-    margin-left: 5px;
-}
-.ui-btn {
-    @include inline-block();
-    vertical-align: middle;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
-    background-color: #f8f8f8;
-    border: 1px solid #cccccc;
-    border-radius: 2px;
-    color: #333333;
-    cursor: pointer;
-    font-size: 12px;
-    height: 26px;
-    outline: none;
-    overflow: visible;
-    _overflow-y: hidden;
-    padding: 0 10px;
-    text-decoration: none;
-}
-.ui-pager-text {
-   @include inline-block();
-    font-size: 12px;
-    vertical-align: middle;
-}
+
+
+

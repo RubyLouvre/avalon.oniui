@@ -1,3 +1,4 @@
+@charset "utf-8";
 $font-color:     #333333 !default;
 $quiet-color:    lighten($font-color, 20%) !default;
 $loud-color:     darken($font-color, 13.33%) !default;
@@ -53,16 +54,27 @@ $ui-widget-header-color: #222;
 $ui-state-default-background-color: #e6e6e6;
 $ui-state-default-border-color: #d3d3d3;
 $ui-state-default-color: #555;
-
-$ui-state-hover-background-color: #dadada;
-$ui-state-hover-border-color: #999;
+//移上去时
+$ui-state-hover-background-color: #f8f8f8;
+$ui-state-hover-border-color: #bbb;
 $ui-state-hover-color: #212121;
-
+//点击时状态
 $ui-state-focus-background-color: #dadada;
 $ui-state-focus-border-color: #999;
 $ui-state-focus-color: #212121;
-
+//激活状态
 $ui-state-active-background-color: #dadada;
 $ui-state-active-border-color: #999;
 $ui-state-active-color: #212121;
+//disabled
+$ui-state-disabled-background-color: #F5F5F5;
+$ui-state-disabled-border-color: #D9D9D9;
+$ui-state-disabled-color: #CCCCCC;
+
+//error
+$ui-state-error-background-color: #dadada;
+$ui-state-error-border-color: #999;
+$ui-state-error-color: #212121;
+
+
 

@@ -1,0 +1,87 @@
+@charset "UTF-8";
+@import "compass/css3";
+@import "compass/config";
+@import "compass/tools";
+
+/*
+chameleon
+by 司徒正美 2014.6.28 拉萨开往西宁的火车上
+这里放置所有组件都共用的类名，它们根据compass构建
+*/
+
+.ui-helper-hidden {
+    display: none;
+}
+.ui-helper-hidden-accessible {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+.ui-helper-reset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    line-height: 1.3;
+    text-decoration: none;
+    font-size: 100%;
+    list-style: none;
+}
+.ui-helper-clearfix {
+    @include legacy-pie-clearfix();
+}
+
+.ui-icon {
+    display: block;
+    text-indent: -99999px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+}
+
+
+.ui-widget {
+    font-family: $oniui-font-size * 1.1;
+    font-size: $oniui-font-size;
+    .ui-widget, input, select, texteara, button {
+        font-size: $oniui-font-family;
+    }
+}
+
+
+.ui-widget-content {
+    border: 1px solid $ui-widget-content-border-color;
+    background-color: $ui-widget-content-background-color;
+    color: $ui-widget-content-color;
+    a {
+        color:$ui-widget-content-color;
+    }
+}
+.ui-widget-header {
+    border: 1px solid $ui-widget-header-color;
+    background-color: $ui-widget-header-background-color;
+    color: $ui-widget-header-color;
+    font-weight: bold;
+    a {
+        color: $ui-widget-header-color;
+    }
+}
+
+
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+    border: 1px solid $ui-state-default-border-color;
+    background-color: $ui-state-default-background-color;
+    font-weight: normal;
+    color: $ui-state-default-color;
+}
+
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited{
+    color: $ui-state-default-color;
+    text-decoration: none;
+}

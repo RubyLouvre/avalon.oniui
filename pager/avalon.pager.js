@@ -1,14 +1,4 @@
-define(["avalon", "text!./avalon.pager.html", "css!../chameleon/oniui-common.css", "css!./avalon.pager.css"], function(avalon, tmpl) {
-
-    var arr = tmpl.split("MS_OPTION_STYLE") || ["", ""]
-    var cssText = arr[1].replace(/<\/?style>/g, "")
-    var styleEl = document.getElementById("avalonStyle")
-    var template = arr[0]
-//    try {
-//        styleEl.innerHTML += cssText
-//    } catch (e) {
-//        styleEl.styleSheet.cssText += cssText
-//    }
+define(["avalon", "text!./avalon.pager.html", "css!../chameleon/oniui-common.css", "css!./avalon.pager.css"], function(avalon, template) {
 
     var widget = avalon.ui.pager = function(element, data, vmodels) {
         var options = data.pagerOptions

@@ -26,18 +26,14 @@
         @include user-select(none);
         /*!当前页,没有边框*/
         &.ui-state-active {
-            @if($oinui-theme == smoothness){
-                color: #FF5555;
-            }
+            color: $ui-widget-content-background-color;
             border: 0 none;
             padding: 1px 11px;
             cursor: default;
         }
         /*!掠过*/
         &.ui-state-hover{
-            @if($oinui-theme == smoothness){
-                border-color: #FF8888;
-            }
+            border-color:$ui-widget-content-background-color;
         }
         /*!禁用*/
         &.ui-state-disabled {
@@ -115,12 +111,15 @@
         cursor: pointer;
         font-size: 12px;
         vertical-align: middle;
-        @include user-select(none);
         padding: 0 10px;
         text-decoration: none;
-        border: 1px solid $ui-state-default-border-color;
-        background-color: $ui-state-default-background-color;
-        color:  $ui-state-default-color;
+        border: 1px solid $ui-widget-content-border-color;
+        background-color: $ui-widget-content-background-color;
+        color: $ui-widget-content-color;
+        &:hover{
+            border-color: lighten($ui-widget-content-border-color, 10%);
+            background-color: lighten($ui-widget-content-background-color, 10%);
+        }
     }
     /*!里面的文本全部包在一个容器内，以便实现居中*/
     .ui-pager-text {

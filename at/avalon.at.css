@@ -1883,159 +1883,23 @@ $removed-bg-color:      #990000 !default;*/
 /*
 这是每个都组件都应该引用的部分
 */
-.ui-pager {
-  display: -moz-inline-stack;
-  display: inline-block;
-  vertical-align: middle;
-  *vertical-align: auto;
-  zoom: 1;
-  *display: inline;
-  font-size: 0;
-  vertical-align: middle;
-  white-space: nowrap;
-  /*!省略掉的页数*/
-  /*!页面跳转部分的样式*/
-  /*!输入域的容器*/
-  /*!输入域*/
-  /*!里面的按钮的样式*/
-  /*!里面的文本全部包在一个容器内，以便实现居中*/ }
-  .ui-pager .ui-pager-items {
-    display: -moz-inline-stack;
-    display: inline-block;
-    vertical-align: middle;
-    *vertical-align: auto;
-    zoom: 1;
-    *display: inline;
-    vertical-align: middle; }
-  .ui-pager .ui-pager-prev, .ui-pager .ui-pager-next, .ui-pager .ui-pager-item {
-    display: -moz-inline-stack;
-    display: inline-block;
-    vertical-align: middle;
-    *vertical-align: auto;
-    zoom: 1;
-    *display: inline;
-    background-color: #FFFFFF;
+.ui-at {
+  font-size: 14px;
+  min-width: 150px;
+  width: auto !important;
+  width: 150px;
+  background: #fff;
+  border: 2px solid lightgray; }
+  .ui-at .ui-at-popup {
+    list-style: none;
+    margin: 0px;
+    padding: 0px; }
+  .ui-at .ui-at-item {
+    margin: 0px;
+    padding: 0px;
     height: 24px;
     line-height: 24px;
-    margin-right: 5px;
-    border: 1px solid lightgray;
-    padding: 0 10px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    -ms-border-radius: 2px;
-    -o-border-radius: 2px;
-    border-radius: 2px;
-    cursor: pointer;
-    font-size: 12px;
-    vertical-align: middle;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
-    /*!当前页,没有边框*/
-    /*!掠过*/
-    /*!禁用*/ }
-    .ui-pager .ui-pager-prev.ui-state-active, .ui-pager .ui-pager-next.ui-state-active, .ui-pager .ui-pager-item.ui-state-active {
-      color: #68c969;
-      border: 0 none;
-      padding: 1px 11px;
-      cursor: default; }
-    .ui-pager .ui-pager-prev.ui-state-hover, .ui-pager .ui-pager-next.ui-state-hover, .ui-pager .ui-pager-item.ui-state-hover {
-      border-color: #68c969; }
-    .ui-pager .ui-pager-prev.ui-state-disabled, .ui-pager .ui-pager-next.ui-state-disabled, .ui-pager .ui-pager-item.ui-state-disabled {
-      border-color: #D9D9D9;
-      background-color: #f8f8f8;
-      color: #212121;
-      cursor: default; }
-  .ui-pager .ui-pager-omit {
-    display: -moz-inline-stack;
-    display: inline-block;
-    vertical-align: middle;
-    *vertical-align: auto;
-    zoom: 1;
-    *display: inline;
-    height: 24px;
-    line-height: 24px;
-    margin-right: 5px;
-    padding: 1px 0;
-    vertical-align: middle;
-    font-size: 12px;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
-    cursor: default; }
-  .ui-pager .ui-pager-jump {
-    display: -moz-inline-stack;
-    display: inline-block;
-    vertical-align: middle;
-    *vertical-align: auto;
-    zoom: 1;
-    *display: inline;
-    vertical-align: middle;
-    padding-left: 5px;
-    padding-right: 5px;
-    vertical-align: middle; }
-  .ui-pager .ui-pager-textbox-wrapper {
-    display: -moz-inline-stack;
-    display: inline-block;
-    vertical-align: middle;
-    *vertical-align: auto;
-    zoom: 1;
-    *display: inline;
-    width: 26px;
-    margin-left: 5px;
-    margin-right: 5px;
-    padding: 3px 5px;
-    vertical-align: middle;
-    font-size: 0;
-    outline: none;
-    background-color: #fff;
-    border: 1px solid lightgray; }
-  .ui-pager .ui-pager-textbox {
-    display: inline;
-    float: left;
-    position: relative;
-    width: 26px;
-    height: 18px;
-    line-height: 18px;
-    border: 0 none;
-    font-size: 12px;
-    outline: medium none;
-    vertical-align: middle;
-    text-align: center;
-    color: #333333;
-    background: #fff; }
-  .ui-pager .ui-pager-button {
-    display: -moz-inline-stack;
-    display: inline-block;
-    vertical-align: middle;
-    *vertical-align: auto;
-    zoom: 1;
-    *display: inline;
-    overflow: visible;
-    _overflow-y: hidden;
-    height: 26px;
-    margin-left: 5px;
-    border-radius: 2px;
-    outline: none;
-    cursor: pointer;
-    font-size: 12px;
-    vertical-align: middle;
-    padding: 0 10px;
-    text-decoration: none;
-    border: 1px solid #3e973e;
-    background-color: #68c969;
-    color: white; }
-    .ui-pager .ui-pager-button:hover {
-      border-color: #51b751;
-      background-color: #8ed68e; }
-  .ui-pager .ui-pager-text {
-    display: -moz-inline-stack;
-    display: inline-block;
-    vertical-align: middle;
-    *vertical-align: auto;
-    zoom: 1;
-    *display: inline;
-    font-size: 12px;
-    vertical-align: middle; }
+    text-indent: 5px; }
+    .ui-at .ui-at-item.ui-state-hover {
+      background: #68c969;
+      color: white; }

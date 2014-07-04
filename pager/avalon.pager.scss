@@ -77,10 +77,13 @@
         margin-right: 5px;
         padding: 3px 5px;
         vertical-align: middle;
-        background-color: #ffffff;
-        border: 1px solid #cccccc;
         font-size: 0;
         outline: none;
+        @if($oinui-theme == smoothness){
+            background-color: #fff;
+        }
+        border: 1px solid $ui-state-default-border-color;
+
     }
     /*!输入域*/
     .ui-pager-textbox {
@@ -107,7 +110,6 @@
         _overflow-y: hidden;
         height: 26px;
         margin-left: 5px;
-        border: 1px solid #cccccc;
         border-radius: 2px;
         outline: none;
         cursor: pointer;
@@ -116,6 +118,7 @@
         @include user-select(none);
         padding: 0 10px;
         text-decoration: none;
+        border: 1px solid $ui-state-default-border-color;
         background-color: $ui-state-default-background-color;
         color:  $ui-state-default-color;
     }

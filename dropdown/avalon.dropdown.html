@@ -19,14 +19,14 @@
 MS_OPTION_TEMPLATE
 <div ms-class="ui-dropdown-menu:!multiple"
      ms-mouseenter="$listenter"
-     ms-mouseleave="$listleave"
-     ms-css-width="{{listWidth}}">
+     ms-css-width="{{listWidth}}"
+     ms-mouseleave="$listleave">
     <div class="ui-dropdown-menu-inner"
-         ms-css-height="height"
-         ms-mouseleave="$mouseleave" 
-         ms-widget="scrollbar,$dropdown{{MS_OPTION_ID}}">
+         ms-css-height="{{multiple&&height}}"
+         ms-mouseleave="$mouseleave"
+         ms-widget="scrollbar,$dropdown{{MS_OPTION_ID}}" ms-attr-id="{{menuId}}">
         <div class="ui-scrollbar-scroller"
-         ms-each-el="data">
+             ms-each-el="data" ms-attr-id="{{dropdownId}}">
             <div class="ui-dropdown-optGroup"
              ms-if="el.optGroup">{{el.text}}</div>
             <div class="ui-dropdown-item"

@@ -1,11 +1,12 @@
-@import "../style/default.scss";
-$pf : ".ui-tooltip";
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname : ".ui-tooltip";
 
 .ui-tooltip-hidden{
 	visibility: hidden;
 }
 
-#{$pf} {
+#{$uiname} {
 	// current style
 	padding: 10px;
 	position: absolute;

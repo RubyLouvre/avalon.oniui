@@ -1,10 +1,11 @@
-@import "../style/default.scss";
-$pf : ".ui-switch";
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname : ".ui-switch";
 v\:* { behavior: url(#default#VML);} 
-div#{$pf}{
+div#{$uiname}{
 	border: none;
 }
-#{$pf} {
+#{$uiname} {
 	position: relative;
 	z-index: 10;
 	height: 100%;
@@ -88,7 +89,7 @@ div#{$pf}{
 		background-position: -57px -36px;
 	}
 	&-large{
-		#{$pf}{
+		#{$uiname}{
 			&-dragger-ball{
 				height: 24px;
 				width: 24px;
@@ -140,30 +141,30 @@ div#{$pf}{
 	}
 	// do not use background-image
 	&-use-no-img{
-		#{$pf}-ico{
+		#{$uiname}-ico{
 			background-image: none;
 		}
-		#{$pf}-bg{
+		#{$uiname}-bg{
 			border-radius: 9px;
 			background-color: #45A846;
 		}
-		#{$pf}-dragger-ball{
+		#{$uiname}-dragger-ball{
 			background: #fff;
 			border-radius: 6px;
 		}
-		&#{$pf}-large{
-			#{$pf}-bg{
+		&#{$uiname}-large{
+			#{$uiname}-bg{
 				border-radius: 15px;
 			}
-			#{$pf}-dragger-ball{
+			#{$uiname}-dragger-ball{
 				border-radius: 12px;
 			}
 		}
-		#{$pf}-uckbg{
+		#{$uiname}-uckbg{
 			background-color: #bcbcbc;
 		}
 		&.ui-state-disabled{
-			#{$pf}-uckbg{
+			#{$uiname}-uckbg{
 				background-color: #dedede;
 				&-disabled{
 					background-color: #dedede;
@@ -179,7 +180,7 @@ div#{$pf}{
 }
 
 .ui-state-disabled ,.ui-state-hover{
-	#{$pf}-dragger-ball{
+	#{$uiname}-dragger-ball{
 		opacity: .4;
 	}
 	.oval-hd{
@@ -194,7 +195,7 @@ div#{$pf}{
 		cursor: default;
 		color: #fff;
 	}
-	#{$pf}-bg{
+	#{$uiname}-bg{
 		background-position: -57px -18px;
 	}
 	.oval-hd{
@@ -204,8 +205,8 @@ div#{$pf}{
 		display: none;
 	}
 }
-#{$pf}-large{
-	#{$pf}-uckbg-disabled {
+#{$uiname}-large{
+	#{$uiname}-uckbg-disabled {
 		background-position: 0 -30px;
 	}
 }

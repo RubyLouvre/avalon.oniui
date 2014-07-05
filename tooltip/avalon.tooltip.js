@@ -2,16 +2,7 @@
   * tooltip组件，
   *
   */
-define(["avalon", "text!./avalon.tooltip.html", "text!./avalon.tooltip.css", "position/avalon.position"], function(avalon, tmpl, css) {
-
-    var cssText = css
-    var styleEl = document.getElementById("avalonStyle")
-    var template = tmpl
-    try {
-        styleEl.innerHTML += cssText
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText
-    }
+define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "css!./avalon.tooltip.css","css!../chameleon/oniui-common.css"], function(avalon, template) {
 
     var widget = avalon.ui.tooltip = function(element, data, vmodels) {
         var options = data.tooltipOptions

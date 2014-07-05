@@ -1,7 +1,8 @@
-@import "../style/default.scss";
-$pf : ".ui-roleselect";
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname : ".ui-roleselect";
 
-#{$pf} {
+#{$uiname} {
 	// current style
 	// means #{$pr}-bar
 	font-size:12px;
@@ -42,7 +43,7 @@ $pf : ".ui-roleselect";
 		color: #cccccc;
 		background: #fff;
 	}
-	div.ui-button{
+	.ui-button{
 		height: 24px;
 		line-height: 24px;
 		background-color: #f8f8f8;

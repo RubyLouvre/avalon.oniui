@@ -1,7 +1,8 @@
-@import "../style/default.scss";
-$pf : ".ui-progressbar";
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname : ".ui-progressbar";
 
-#{$pf}{
+#{$uiname}{
 	width: 100%;
 	position: relative;
 	height: 6px;
@@ -20,7 +21,7 @@ $pf : ".ui-progressbar";
 	}
 	&-bar-right {
 		background: #ddd;
-		#{$pf}-label {
+		#{$uiname}-label {
 			color : blue;
 		}
 	}

@@ -1,8 +1,9 @@
-@import "../style/default.scss";
-$pf : ".ui-tab";
-$pf2 : ".ui-state";
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname : ".ui-tab";
+$uiname2 : ".ui-state";
 
-#{$pf2}-default{
+#{$uiname2}-default{
     font-size:12px;
     float: left;
     display: inline;
@@ -12,14 +13,14 @@ $pf2 : ".ui-state";
     border-right-width: 0;
     text-align: center;
 }
-#{$pf2}-active {
+#{$uiname2}-active {
 	border-bottom-color: #fff;
 }
-#{$pf} {
+#{$uiname} {
 	&-last{
 	    border-right-width:1px; 
 	}
-	&-click #{$pf2}-default{
+	&-click #{$uiname2}-default{
 	    cursor: pointer;
 	}
 	&-removable{
@@ -37,44 +38,44 @@ $pf2 : ".ui-state";
 	    border-right-width:0; 
 	    color: #666;
 	}
-	#{$pf2}-hover,#{$pf2}-active{
-	    #{$pf}-close{
+	#{$uiname2}-hover,#{$uiname2}-active{
+	    #{$uiname}-close{
 	    	border-color: #fff;
 	    }
 	}
 
-	&-close-hover, & #{$pf2}-active &-close-hover,& #{$pf2}-hover &-close-hover{
+	&-close-hover, & #{$uiname2}-active &-close-hover,& #{$uiname2}-hover &-close-hover{
 	    background: #fff;
 	    border-color: #dedede;
 	    cursor: pointer;
 	}
 	/*dir=v, small size*/
 	&-small {
-		#{$pf2}-default{
+		#{$uiname2}-default{
 		    border-right-width: 1px;
 		    margin-right: -1px;
 		    z-index: 1;
 		    padding: 7px 10px;
 		}
-		#{$pf2}-active{
+		#{$uiname2}-active{
 		    border-color: #3775C0;
 		    z-index: 10;
 		}
 	}
 	/*dir=v, normal size*/
 	&-vertical {
-		#{$pf2}-default{
+		#{$uiname2}-default{
 		    float:none;
 		    display: block;
 		    text-align: left;
 		    border-right-width: 1px;
 		    border-bottom-width: 0;
 		}
-		#{$pf2}-active{
+		#{$uiname2}-active{
 		    border-right-color: #fff;
 		    border-bottom-color: #dedede;
 		}
-		#{$pf}-last{
+		#{$uiname}-last{
 		    border-bottom-width: 1px;
 		}
 	}

@@ -2,16 +2,7 @@
   * scrollbar组件，
   *
   */
-define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css", "draggable/avalon.draggable"], function(avalon, tmpl, css) {
-
-    var cssText = css
-    var styleEl = document.getElementById("avalonStyle")
-    var template = tmpl
-    try {
-        styleEl.innerHTML += cssText
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText
-    }
+define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", "css!./avalon.scrollbar.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 
     // get by className, not strict
     function getByClassName(cname, par) {
@@ -237,7 +228,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                 avalon(data.element).removeClass("ui-scrollbar-dragger-onmousedown")
             }
 
-            vm._remove = function() {
+            vm.$remove = function() {
                 avalon.each(bars, function(i, bar) {
                     bar[0] && bar[0].parentNode && bar[0].parentNode.removeChild(bar)
                 })

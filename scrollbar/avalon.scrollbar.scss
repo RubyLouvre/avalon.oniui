@@ -1,7 +1,8 @@
-@import "../style/default.scss";
-$pf : ".ui-scrollbar";
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname : ".ui-scrollbar";
 
-#{$pf} {
+#{$uiname} {
 	width: 10px;
 	height: 100%;
 	position: absolute;
@@ -99,7 +100,7 @@ $pf : ".ui-scrollbar";
 		}
 	}
 	&-top,&-bottom {
-		#{$pf}{
+		#{$uiname}{
 			&-ragger {
 				height: 100%;
 				width: auto;
@@ -124,9 +125,9 @@ $pf : ".ui-scrollbar";
 		}
 	}
 }
-#{$pf}-large{
+#{$uiname}-large{
 	width: 14px;
-	#{$pf}{
+	#{$uiname}{
 		&-arrow{
 			width: 14px;
 			height: 14px;
@@ -136,18 +137,18 @@ $pf : ".ui-scrollbar";
 		}
 	}
 }
-#{$pf}-bottom-large{
+#{$uiname}-bottom-large{
 	height: 14px;
 }
-#{$pf}-small{
+#{$uiname}-small{
 	width: 8px;
-	#{$pf}{
+	#{$uiname}{
 		&-arrow{
 			width: 8px;
 			height: 8px;
 		}
 	}
 }
-#{$pf}-bottom-small{
+#{$uiname}-bottom-small{
 	height: 8px;
 }

@@ -362,7 +362,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                             vmodel.throttleRenderTbody(n, o)
                             // 向上，update bar状态
                             if(n < o) vmodel.updateScrollbar("forceUpdate")
-                        }, 20)
+                        }, 16)
                     // 水平方向
                     } else {
                         vmodel.cssLeft = n == void 0 ? "auto" : -n + "px"
@@ -423,7 +423,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                 if (decimal > 0.55) {//四舍五入
                     integer += 1 //要添加或删除的行数
                 }
-                var length = vmodel.data.length, count = 0, perPages = vmodel.pager.perPages
+                var length = vmodel.data.length, count = 0, showRows = vmodel.showRows
                 if (scrollDir === "down") {
                     while (vmodel.endIndex + 1 < length) {
                         vmodel.endIndex += 1
@@ -431,7 +431,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                         count += 1
                         var el = vmodel.data[vmodel.endIndex]
                         // 优化，避免过度操作_data
-                        if(integer - count <= perPages) {
+                        if(integer - count <= showRows) {
                             vmodel._data.push(el)
                             vmodel._data.shift()
                         }
@@ -448,7 +448,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                         var el = vmodel.data[vmodel.startIndex]
 
                         // 优化，避免过度操作_data
-                        if(integer - count <= perPages) {
+                        if(integer - count <= showRows) {
                             vmodel._data.unshift(el)
                             vmodel._data.pop()
                         }

@@ -2,16 +2,8 @@
   * progressbar组件，
   *
   */
-define(["avalon", "text!./avalon.progressbar.html", "text!./avalon.progressbar.css"], function(avalon, tmpl, css) {
+define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 
-    var cssText = css
-    var styleEl = document.getElementById("avalonStyle")
-    var template = tmpl
-    try {
-        styleEl.innerHTML += cssText
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText
-    }
     // 园的半径，边框宽度
     function circleValueList(r, bw) {
         var arr = [],

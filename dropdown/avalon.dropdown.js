@@ -8,95 +8,95 @@ define(['avalon',
 
 
     var styleReg = /^(\d+).*$/;
-    var MODEL_ITEM = {
-        value: '',
-        label: '',
-        enable: true,
-        item: false,
-        optGroup: false,
-        divider: false
-    };
 
     var widget = avalon.ui.dropdown = function(element, data, vmodels) {
         var $element = avalon(element),
                 elemParent = element.parentNode,
                 options = data.dropdownOptions,
-                modelPattern = false, //标志是否通过model值构建下拉列表
+                hasBuiltinTemplate = true, //标志是否通过model值构建下拉列表
                 dataSource,
                 dataModel,
                 optionsModel,
                 templates, titleTemplate, listTemplate, optionsTemplate,
                 scrollHandler,
-                resizeHandler,
-                optId = +(new Date());
+                resizeHandler
 
-        //将option适配为更适合vm的形式
+
         function _buildOptions(opt) {
-            //dropdown的valueVm有两种形式：
-            // 1，未配置duplex，使用内置vm，内置vm的取值参考页面select及options.value
-            // 2，配置duplex，使用duplex的数据
-            var duplexName = (element.msData['ms-duplex'] || '').trim(),
-                    duplexModel;
-
+            //为options添加value与duplexName
+            //如果原来的select元素绑定了ms-duplex，那么取得其值作value
+            //如果没有，则先从上层VM的配置对象中取，再没有则从内置模板里抽取
+            var duplexName = (element.msData['ms-duplex'] || '').trim()
+            var duplexModel
             if (duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
-                opt.value = duplexModel[1][duplexName];
-            } else if (modelPattern) {
-                if (avalon.type(opt.value) !== 'array') {
-                    opt.value = [opt.value || ''];
+                opt.value = duplexModel[1][duplexName]
+
+            } else if (!hasBuiltinTemplate) {
+                if (!Array.isArray(opt.value)) {
+                    opt.value = [opt.value || '']
                 }
             } else {
-                var options = element.getElementsByTagName('OPTION');
-                options = Array.prototype.filter.call(options, function(option) {
-                    return option.selected;
-                });
-                opt.value = Array.prototype.map.call(options, function(option) {
-                    return parseData(option.value);
-                });
+                var values = []
+                Array.prototype.forEach.call(element.options, function(option) {
+                    if (option.selected) {
+                        values.push(parseData(option.value))
+                    }
+                })
+                opt.value = values
             }
 
-            if (!opt.multiple && avalon.type(opt.value) === 'array') {
-                opt.value = opt.value[0] || "";
+            if (!opt.multiple && Array.isArray(opt.value)) {
+                opt.value = opt.value[0] || ""
             }
 
-            opt.duplexName = duplexName;
+            opt.label = opt.value + ""
+            opt.duplexName = duplexName
         }
 
         //将元素的属性值copy到options中
         "autofocus,multiple,size".replace(avalon.rword, function(name) {
-            options[name] = element[name];//固有属性总是存在的,因此不需要用hasAttribute来判定
+            if (hasAttribute(element, name)) {
+                options[name] = element[name]
+            }
         })
-
-        options.enable = !element.disabled;
+        //将元素的属性值copy到options中
+        options.enable = !element.disabled
 
         //读取template
-        templates = options.template = options.getTemplate(template).replace(/\{\{MS_OPTION_ID}\}/g, optId).split('MS_OPTION_TEMPLATE');
-        titleTemplate = templates[0];
-        listTemplate = templates[1];
-        optionsTemplate = templates[2];
-        dataSource = options.data.$model || options.data;
-        modelPattern = getSource(element).length === 0;
+        templates = options.template = options.getTemplate(template, options)
+                .replace(/MS_OPTION_ID/g, data.dropdownId).split('MS_OPTION_TEMPLATE')
+        titleTemplate = templates[0]
+        listTemplate = templates[1]
+
+        dataSource = options.data.$model || options.data
+
 
         //数据抽取
-        dataModel = getSource(element);
-//console.log(dataModel)
+        dataModel = getDataFromHTML(element)
+        hasBuiltinTemplate = !!dataModel.length
+
+
         if (dataModel.length === 0) {
-            optionsModel = getSelectModel(dataSource);
-            dataModel = optionsModel.data;
+            dataModel = getDataFromOption(dataSource);
         }
+
 
         avalon(element).css('display', 'none');
 
         //转换option
         _buildOptions(options);
-
+        for (var i = 0, n = dataModel.length; i < n; i++) {
+            if (dataModel[i].value == options.value) {
+                options.activeIndex = i
+                break;
+            }
+        }
+        var titleNode, listNode;
         var vmodel = avalon.define(data.dropdownId, function(vm) {
-
-            var titleNode, listNode, optionsNode;
-
             avalon.mix(vm, options);
-            vm.$skipArray = ['widgetElement', 'duplexName', 'menuId', 'dropdownId'];
+            vm.$skipArray = ['widgetElement', 'duplexName', "menuNode", "dropdownNode"];
             vm.widgetElement = element;
-            vm.activeIndex = null;
+
 
             vm.dataSource = dataSource;    //源节点的数据源，通过dataSource传递的值将完全模拟select
             vm.data = dataModel;           //下拉列表的渲染model
@@ -108,35 +108,26 @@ define(['avalon',
                 options: []
             };
 
-            //使用id，便于对节点的操作（好快省）
-            vm.menuId = 'MENU' + (Math.random() + '').replace(/\D/g, "");
-            vm.dropdownId = 'DROPDOWN' + (Math.random() + '').replace(/\D/g, "");
-
-            //对model的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
-            if (options.modleBind && vm.dataSource.$watch) {
-                vm.dataSource.$watch('length', function() {
-                    vmodel.data = getSelectModel(vmodel.dataSource.$model).data;
-                });
-            }
 
             vm.$init = function() {
                 if (vmodel.data.length === 0) {
                     throw new Error('the options is not enough for init a dropdown!');
                 }
-
                 //根据multiple的类型初始化组件
-                if (options.multiple) {
+                if (vmodel.multiple) {
+                    //创建菜单
                     listNode = vmodel.$createListNode();
                     elemParent.insertBefore(listNode, element);
-                } else {
+                } else {//如果是单选
                     var title, defaultOption;
                     titleNode = avalon.parseHTML(titleTemplate);
                     title = titleNode.firstChild;
                     elemParent.insertBefore(titleNode, element);
                     titleNode = title;
+
                     if (typeof vmodel.value === 'undefined') {
                         defaultOption = vmodel.data.filter(function(option) {
-                            return option.item === true;
+                            return !option.group
                         })[0];
 
                         vmodel.value = defaultOption.value;
@@ -147,10 +138,9 @@ define(['avalon',
                     }
                 }
 
-                //通过model构建的组件，需要同步select的结构
-                if (modelPattern) {
-                    optionsNode = avalon.parseHTML(optionsTemplate);
-                    element.appendChild(optionsNode);
+                //如果原来的select没有子节点，那么为它添加option与optgroup
+                if (!hasBuiltinTemplate) {
+                    element.appendChild(getFragmentFromData(dataModel));
                     avalon.each(['autofocus', 'multiple', 'size'], function(i, attr) {
                         avalon(element).attr('ms-attr-' + attr, attr);
                     });
@@ -158,17 +148,16 @@ define(['avalon',
 
                 avalon.ready(function() {
                     avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
-                    $element.attr('ms-enabled', 'enable');
-                    $element.attr('ms-duplex', 'value');
+                    $element.attr("ms-enabled", "enable");
+                    $element.attr('ms-duplex', "value");
                     avalon.scan(element, [vmodel].concat(vmodels));
                     if (typeof options.onInit === "function") {
-                        //vmodels是不包括vmodel的
                         options.onInit.call(element, vmodel, options, vmodels)
                     }
                 });
 
                 if (!vmodel.multiple) {
-                    var duplexName = (element.msData['ms-duplex'] || '').trim(),
+                    var duplexName = (element.msData['ms-duplex'] || "").trim(),
                             duplexModel;
 
                     if (duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
@@ -183,21 +172,24 @@ define(['avalon',
 
             };
 
-            vm.$hover = function(e, index) {
-                e.preventDefault();
-                vm.activeIndex = index;
+            vm.$remove = function() {
+                if (scrollHandler) {
+                    avalon.unbind(window, 'scroll', scrollHandler);
+                }
+                if (resizeHandler) {
+                    avalon.unbind(window, 'resize', resizeHandler);
+                }
+                vmodel.toggle = false;
+                avalon.log("dropdown $remove")
+
             };
 
-            vm.$mouseleave = function() {
-                vm.activeIndex = null;
-            };
 
-            vm.$select = function(e, option) {
+            vm._select = function(e, option) {
                 if (!option.enable) {
                     return;
                 }
                 var index;
-
                 //根据multiple区分对待, 多选时可以为空值
                 if (vmodel.multiple) {
                     index = vmodel.value.indexOf(option.value);
@@ -206,54 +198,55 @@ define(['avalon',
                     } else {
                         vmodel.value.push(option.value);
                     }
+
                 } else {
                     vmodel.value = option.value;
                 }
 
+                vmodel.label = vmodel.value + ""
+                //  console.log(vmodel.value)
                 vmodel.toggle = false;
                 vmodel.onSelect.call(this, e, listNode);
                 titleNode && titleNode.focus();
-            };
+            }
 
-            vm.$listenter = function() {
-                vmodel.__listenter__ = true;
-            };
 
-            vm.$listleave = function() {
-                vmodel.__listenter__ = false;
-            };
 
             vm.$createListNode = function() {
-                return avalon.parseHTML(listTemplate);
-            };
+                return avalon.parseHTML(listTemplate)
+            }
 
-            vm.menuNode = vm.dropdownNode = null;
-
-            vm.$keydown = function(e) {
-                e.preventDefault();
+            vm._keydown = function(e) {
+                e.preventDefault()
+                //如果是单选下拉框，可以通过键盘移动
                 if (!vmodel.multiple) {
-                    var up,
-                            selectedItemIndex, //选中项index
-                            firstItemIndex, //第一个可用的item index
-                            nextItem,
-                            enableItem,
-                            step, distance = 0;
-
+                    var index = vm.activeIndex || 0
+                    var max = vmodel.data.size()
                     //区分上下箭头和回车
                     switch (e.keyCode) {
                         case 38:
-                            up = true;
+                        case 63233: //safari 向上
+                            index = index - 1
+                            if (index < 0) {
+                                index = max - 1
+                            }
+                            vmodel.activeIndex = index
                             break;
                         case 40:
-                            up = false;
-                            break;
+                        case 63235: //safari 向下
+                            e.preventDefault();
+                            index = index + 1
+                            if (index === max) {
+                                index = 0
+                            }
+                            vmodel.activeIndex = index
                         case 13:
-                            vmodel.value = vmodel.data[vmodel.activeIndex].value;
+
                             vmodel.toggle = false;
                             break;
                         default:
                     }
-
+                    console.log(vmodel.activeIndex)
                     //根据键盘行为设置组件value
                     if (up !== void 0) {
                         vmodel.toggle = true;
@@ -277,7 +270,7 @@ define(['avalon',
                 }
             };
 
-            vm.$toggle = function(b) {
+            vm._toggle = function(b) {
                 if (!vmodel.enable || vmodel.readOnly) {
                     vmodel.toggle = false;
                     return;
@@ -286,15 +279,15 @@ define(['avalon',
                     vmodel.toggle = !vmodel.toggle;
                     return;
                 }
-                if (!listNode) {
+                if (!listNode) {//只有单选下拉框才存在显示隐藏的情况
                     var list;
                     listNode = vm.$createListNode();
                     list = listNode.firstChild;
-                    document.body.appendChild(listNode);
-                    avalon.scan(list, [vmodel].concat(vmodels));
-                    listNode = list;
-                    vmodel.menuNode = document.getElementById(vmodel.menuId);
-                    vmodel.dropdownNode = document.getElementById(vmodel.dropdownId);
+                    document.body.appendChild(listNode)
+                    avalon.scan(list, [vmodel].concat(vmodels))
+                    listNode = list
+                    vmodel.menuNode = document.getElementById("menu-" + vmodel.$id)
+                    vmodel.dropdownNode = document.getElementById("list-" + vmodel.$id)
                 }
                 var $listNode = avalon(listNode);
                 if (!b) {
@@ -332,25 +325,16 @@ define(['avalon',
                     $listNode.css({
                         display: 'block'
                     });
-                    var scrollbar = avalon.vmodels["$dropdown" + optId];
+                    var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
                     scrollbar && scrollbar.update();
                     titleNode && titleNode.focus();
                 }
             };
 
-            vm.$getLabel = function(value) {
-                var v = avalon.type(value) === 'array' ? value[0] : value,
-                        label = vmodel.data.filter(function(option) {
-                            return option.item && option.value == v;
-                        });
 
-                if (label.length > 0) {
-                    return label[0].label;
-                }
-            };
 
             vm.$watch('toggle', function(b) {
-                vmodel.$toggle(b);
+                vmodel._toggle(b);
             });
 
             vm.toggle = false;
@@ -384,24 +368,21 @@ define(['avalon',
 
                 //显示浮层
                 $listNode.css(css);
-            };
+            }
 
-            vm.$remove = function() {
-                if (scrollHandler) {
-                    avalon.unbind(window, 'scroll', scrollHandler);
-                }
-                if (resizeHandler) {
-                    avalon.unbind(window, 'resize', resizeHandler);
-                }
-                vmodel.toggle = false;
-                avalon.log("dropdown $remove")
-            };
+            //单选下拉框在失去焦点时会收起
+            vm._listenter = function() {
+                vmodel.__cursorInList__ = true
+            }
 
-            vm.$blur = function(e) {
-                if ((!vmodel.__listenter__ || !vmodel.data[vmodel.activeIndex].enable) && vmodel.toggle) {
-                    vmodel.toggle = false;
-                }
+            vm._listleave = function() {
+                vmodel.__cursorInList__ = false
             };
+            vm._blur = function() {
+                if (!vmodel.__cursorInList__ && !vmodel.multiple && vmodel.toggle) {
+                    vmodel.toggle = false
+                }
+            }
 
             vm.val = function(newValue) {
                 if (typeof newValue !== 'undefined') {
@@ -411,7 +392,7 @@ define(['avalon',
                     vmodel.value = newValue;
                 }
                 return vmodel.value;
-            };
+            }
 
             vm.isSelected = function(value) {
                 if (vmodel.multiple) {
@@ -419,7 +400,7 @@ define(['avalon',
                 } else {
                     return vmodel.value === value;
                 }
-            };
+            }
 
             //利用scrollbar的样式改变修正父节点的样式
             vm.$styleFix = function() {
@@ -440,9 +421,15 @@ define(['avalon',
 
         });
 
+        //对model的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
+        if (options.modleBind && vmodel.dataSource.$watch) {
+            vmodel.dataSource.$watch('length', function() {
+                vmodel.data = getDataFromOption(vmodel.dataSource.$model).data;
+            });
+        }
         // update scrollbar, if data changed
         vmodel.data.$watch('length', function() {
-            var scrollbar = avalon.vmodels["$dropdown" + optId];
+            var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
             scrollbar && scrollbar.update();
         })
 
@@ -464,7 +451,10 @@ define(['avalon',
         label: null, //设置组件的提示文案，可以是一个字符串，也可以是一个对象
         autofocus: false, //是否自动获取焦点
         multiple: false, //是否为多选模式
+        activeIndex: NaN,
         size: 1,
+        menuNode: {},
+        dropdownNode: {},
         position: true, //是否自动定位下拉列表
         onSelect: avalon.noop, //多选模式下显示的条数
         getTemplate: function(str, options) {
@@ -485,191 +475,106 @@ define(['avalon',
         return data
     }
 
-    //根据配置中textField及valueField做数据适配
-    function modelMatch(data, text, value) {
-        avalon.each(data, function(i, item) {
-            if (text !== 'text') {
-                if (avalon.type(text) === 'function') {
-                    item.text = text.call(item, item);
-                } else if (text in item) {
-                    item.text = item[text];
-                } else {
-                    throw new Error('textField设置无效！');
-                }
-            }
-            if (value !== 'value') {
-                if (value in item) {
-                    item.value = item[value];
-                } else {
-                    throw  new Error('valueField设置无效！');
-                }
-            }
-        });
-
-        return data;
-    }
-
     //根据dataSource构建数据结构
-    function getSelectModel(dataSource) {
-        var group = {},
-                groupSeq = [],
-                exportGroup = [],
-                options = [],
-                data = [],
-                hasGroup = false;
-
-        /**
-         * item can like this:
-         * {
-         *    value: '',    //option的值
-         *    label: '',    //option或者optGroup显示的label
-         *    optGroup: '', //是否属于某个group
-         *    enable: true
-         * }
-         * group can like this:
-         * {
-         *     label: '',
-         *     enable: true,
-         *     options: [
-         *          item
-         *     ]
-         * }
-         */
-        avalon.each(dataSource, function(i, item) {
-            //如果item为group，直接对group进行抽取
-            //如果item为option，对option进行抽取并分割成group组
-            var groupName,
-                    option,
-                    enable,
-                    opts = [];
-            if (item.options && item.options.length > 0) {
-                groupName = item.label;
-                enable = item.enable;
-                opts = item.options.map(function(option) {
-                    return avalon.mix(true, {}, MODEL_ITEM, option, {item: true});
-                });
-                opts = getOption(opts);
+    //从VM的配置对象提取数据源, dataSource为配置项的data数组，但它不能直接使用，需要转换一下
+    //它的每一个对象代表option或optGroup， 
+    //如果是option则包含label, enable, value
+    //如果是optGroup则包含label, enable, options(options则包含上面的option)
+    //每个对象中的enable如果不是布尔，则默认为true; group与parent则框架自动添加
+    function getDataFromOption(data, arr, parent) {
+        var ret = arr || []
+        parent = parent || null
+        for (var i = 0, el; el = data[i++]; ) {
+            if (Array.isArray(el.options)) {
+                ret.push({
+                    label: el.label,
+                    value: el.value,
+                    enable: ensureBool(el.enable, true),
+                    group: true,
+                    parent: parent
+                })
+                getDataFromOption(el.options, ret, el)
             } else {
-                groupName = item.optGroup;
-                option = avalon.mix(true, {}, MODEL_ITEM, item, {item: true});
-                opts.push(option);
+                ret.push({
+                    label: el.label,
+                    value: el.value,
+                    enable: ensureBool(el.enable, true),
+                    group: false,
+                    parent: parent
+                })
             }
-
-            //如果该item属于组，将该item放入组中
-            if (typeof groupName !== 'undefined') {
-                groupName = groupName.trim();
-                hasGroup = true;
-                if (!group[groupName]) {
-                    group[groupName] = [];
-                    groupSeq.push(groupName);
-                }
-                if (typeof enable === 'undefined') {
-                    enable = group[groupName].enable;
-                }
-                //如果已经通过options传递的有enable设置，使用该设置，否则使用保存的设置
-                group[groupName] = group[groupName].concat(opts);
-                group[groupName].enable = typeof enable === 'undefined' ? true : enable;
-
-            } else {
-                options = options.concat(opts);
-            }
-        });
-
-        avalon.each(groupSeq, function(i, seq) {
-
-            data.push({
-                text: seq,
-                items: false,
-                divider: false,
-                optGroup: true
-            });
-            data = data.concat(group[seq]);
-            data.push({
-                items: false,
-                divider: true,
-                optGroup: false
-            });
-            exportGroup.push({
-                label: seq,
-                enable: group[seq].enable,
-                options: group[seq]
-            });
-        });
-
-        data = data.concat(options);
-
-        return {
-            optGroup: exportGroup,
-            options: options,
-            data: data
-        };
-    }
-
-    //提取options中的数据
-    function getOption(options, isDom) {
-        var ret = [];
-
-        avalon.each(options, function(i, option) {
-            ret.push({
-                label: option.label.trim() || option.innerHTML || "",
-                value: isDom ? parseData(option.value) : option.value,
-                enable: isDom ? !option.disabled : option.enable,
-                item: true,
-                divider: false,
-                optGroup: false
-            });
-        });
-
-        return ret;
-    }
-
-    //提取select中的数据
-    function getSource(el) {
-        var ret = [],
-                groups = el.getElementsByTagName('optgroup'),
-                options = el.getElementsByTagName('option');
-
-        if (options.length === 0) {
-            return ret;
-        } else if (groups.length === 0) {
-            ret = ret.concat(getOption(options, true));
-        } else {
-            avalon.each(groups, function(i, group) {
-                var options = group.getElementsByTagName('option');
-                if (options.length > 0) {
-                    ret.push({
-                        text: group.label,
-                        label: group.label,
-                        enable: !group.disabled,
-                        items: false,
-                        //   divider: false,
-                        optGroup: true
-                    });
-                    ret = ret.concat(getOption(options, true));
-//                    ret.push({
-//                        items: false,
-//                        divider: true,
-//                        optGroup: false
-//                    });
-                }
-            });
-            ret = ret.concat(getOption([].filter.call(options, function(option) {
-                return option.parentNode.tagName !== 'OPTGROUP';
-            }), true));
         }
-
-        return ret;
+        return ret
+    }
+    function getFragmentFromData(data) {
+        var ret = document.createDocumentFragment(), parent, node
+        for (var i = 0, el; el = data[i++]; ) {
+            if (el.group) {
+                node = document.createElement("optgroup")
+                node.label = el.label
+                node.disabled = !el.enable
+                ret.appendChild(node)
+                parent = node
+            } else {
+                node = document.createElement("option")
+                node.text = el.label
+                node.value = el.value
+                node.disabled = !el.enable
+                if (el.parent && parent) {
+                    parent.appendChild(node)
+                } else {
+                    ret.appendChild(node)
+                }
+            }
+        }
+        return ret
     }
 
-    //判断节点是否有相应属性
+    function ensureBool(value, defaultValue) {
+        return typeof value === "boolean" ? value : defaultValue
+    }
 
-    var hasAttribute = !"1"[0] ? function(el, attr) {
+    //从页面的模板提取数据源, option元素的value会进一步被处理
+    //label： option或optgroup元素显示的文本
+    //value: 其value值，没有取innerHTML
+    //enable: 是否可用
+    //group: 对应的元素是否为optgroup
+    //parent: 是否位于分组内，是则为对应的对象
+    function getDataFromHTML(select, arr, parent) {
+        var ret = arr || []
+        var elems = select.children
+        parent = parent || null
+        for (var i = 0, el; el = elems[i++]; ) {
+            if (el.nodeType === 1) {//过滤注释节点
+                if (el.tagName === "OPTGROUP") {
+                    parent = {
+                        label: el.label,
+                        value: "",
+                        enable: !el.disabled,
+                        group: true,
+                        parent: false
+                    }
+                    ret.push(parent)
+                    getDataFromHTML(el, ret, parent)
+                } else if (el.tagName === "OPTION") {
+                    ret.push({
+                        label: el.text.trim(), //IE9-10有BUG，没有进行trim操作
+                        value: parseData(avalon(el).val()),
+                        enable: !el.disabled,
+                        group: false,
+                        parent: parent
+                    })
+                }
+            }
+        }
+        return ret
+    }
+    var hasAttribute = document.documentElement.hasAttribute ? function(el, attr) {
         return el.hasAttribute(attr)
-    } : function(el, attr) {
-        var val = el.attributes[attr]
-        return !!val && val.specified
+    } : function(el, attr) {//IE67
+        var outer = el.outerHTML, part = outer.slice(0, outer.search(/\/?['"]?>(?![^<]*<['"])/));
+        return new RegExp("\\s" + attr + "\\b", "i").test(part);
     }
-
     return avalon;
 
 });

@@ -15,6 +15,10 @@
                     vm.data = avalon.range(1,400)
                     vm.$index = 2
                     vm.$skipArray = ["scrollbar"]
+                    vm.up = function() {
+                        avalon.vmodels.$cc.update()
+                        avalon.vmodels.$dd.update()
+                    }
                 })
                 avalon.scan()
             })
@@ -27,11 +31,11 @@
     </head>
     <body ms-controller="test">
         <h1>scrollbar-带上下小箭头嵌套</h1>
-        <div ms-widget="scrollbar" class="reset" style="height:300px;border:1px solid #ccc;width:700px;overflow:hidden;" data-scrollbar-position="right,bottom">
-            <div class="ui-scrollbar-scroller reset">
-                <div ms-widget="scrollbar" class="reset" style="height:400px;border:1px solid #ccc;width:400px;overflow:hidden;" data-scrollbar-position="right,bottom">
-                    <div class="ui-scrollbar-scroller reset">
-                        <p style="width:800px" ms-repeat="data" class="reset">left {{$index}} <span style="float:right;">right {{$index}} </span></p>
+        <div ms-widget="scrollbar,$dd" class="ui-helper-reset" style="height:300px;border:1px solid #ccc;width:700px;overflow:hidden;" data-scrollbar-position="right,bottom">
+            <div class="ui-scrollbar-scroller ui-helper-reset">
+                <div ms-widget="scrollbar,$cc" class="ui-helper-reset" style="height:400px;border:1px solid #ccc;width:400px;overflow:hidden;" data-scrollbar-position="right,bottom">
+                    <div class="ui-scrollbar-scroller ui-helper-reset">
+                        <p style="width:800px" data-repeat-rendered="up" ms-repeat="data" class="ui-helper-reset">left {{$index}} <span style="float:right;">right {{$index}} </span></p>
                     </div>
                 </div>
             </div>
@@ -53,6 +57,10 @@
                     vm.data = avalon.range(1,400)
                     vm.$index = 2
                     vm.$skipArray = [&quot;scrollbar&quot;]
+                    vm.up = function() {
+                        avalon.vmodels.$cc.update()
+                        avalon.vmodels.$dd.update()
+                    }
                 })
                 avalon.scan()
             })
@@ -65,11 +73,11 @@
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
         &lt;h1&gt;scrollbar-带上下小箭头嵌套&lt;/h1&gt;
-        &lt;div ms-widget=&quot;scrollbar&quot; class=&quot;reset&quot; style=&quot;height:300px;border:1px solid #ccc;width:700px;overflow:hidden;&quot; data-scrollbar-position=&quot;right,bottom&quot;&gt;
-            &lt;div class=&quot;ui-scrollbar-scroller reset&quot;&gt;
-                &lt;div ms-widget=&quot;scrollbar&quot; class=&quot;reset&quot; style=&quot;height:400px;border:1px solid #ccc;width:400px;overflow:hidden;&quot; data-scrollbar-position=&quot;right,bottom&quot;&gt;
-                    &lt;div class=&quot;ui-scrollbar-scroller reset&quot;&gt;
-                        &lt;p style=&quot;width:800px&quot; ms-repeat=&quot;data&quot; class=&quot;reset&quot;&gt;left {{$index}} &lt;span style=&quot;float:right;&quot;&gt;right {{$index}} &lt;/span&gt;&lt;/p&gt;
+        &lt;div ms-widget=&quot;scrollbar,$dd&quot; class=&quot;ui-helper-reset&quot; style=&quot;height:300px;border:1px solid #ccc;width:700px;overflow:hidden;&quot; data-scrollbar-position=&quot;right,bottom&quot;&gt;
+            &lt;div class=&quot;ui-scrollbar-scroller ui-helper-reset&quot;&gt;
+                &lt;div ms-widget=&quot;scrollbar,$cc&quot; class=&quot;ui-helper-reset&quot; style=&quot;height:400px;border:1px solid #ccc;width:400px;overflow:hidden;&quot; data-scrollbar-position=&quot;right,bottom&quot;&gt;
+                    &lt;div class=&quot;ui-scrollbar-scroller ui-helper-reset&quot;&gt;
+                        &lt;p style=&quot;width:800px&quot; data-repeat-rendered=&quot;up&quot; ms-repeat=&quot;data&quot; class=&quot;ui-helper-reset&quot;&gt;left {{$index}} &lt;span style=&quot;float:right;&quot;&gt;right {{$index}} &lt;/span&gt;&lt;/p&gt;
                     &lt;/div&gt;
                 &lt;/div&gt;
             &lt;/div&gt;

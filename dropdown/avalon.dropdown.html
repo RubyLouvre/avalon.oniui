@@ -1,13 +1,13 @@
 <div class="ui-dropdown"
      ms-class="ui-dropdown-disabled:!enable"
      ms-css-width="{{width}}"
-     ms-click="$toggle"
-     ms-blur="$blur($event)"
-     ms-keydown="$keydown($event)"
+     ms-click="_toggle"
+     ms-blur="_blur"
+     ms-keydown="_keydown"
      tabindex="0">
     <div class="ui-dropdown-source">
         <div class="ui-dropdown-input"
-             ms-title="$getLabel(value)">{{$getLabel(value)}}</div>
+             ms-title="label">{{label}}</div>
         <div class="ui-dropdown-icon-wrap">
             <i class="ui-dropdown-icon ui-icon ui-icon-angle-up"
                ms-if="toggle">&#xf106;</i>
@@ -18,61 +18,25 @@
 </div>
 MS_OPTION_TEMPLATE
 <div ms-class="ui-dropdown-menu:!multiple"
-     ms-mouseenter="$listenter"
+     ms-mouseenter="_listenter"
      ms-css-width="{{listWidth}}"
-     ms-mouseleave="$listleave">
+     ms-mouseleave="_listleave">
     <div class="ui-dropdown-menu-inner"
          ms-css-height="{{multiple&&height}}"
-         ms-mouseleave="$mouseleave"
-         ms-widget="scrollbar,$dropdown{{MS_OPTION_ID}}" ms-attr-id="{{menuId}}">
+         ms-widget="scrollbar,scrollbar-MS_OPTION_ID" id="menu-MS_OPTION_ID">
         <div class="ui-scrollbar-scroller"
-             ms-attr-id="{{dropdownId}}">
+             id="list-MS_OPTION_ID">
 
             <div ms-repeat="data"  class="ui-dropdown-item"
-                 ms-click="$select($event, el)"
+                 ms-click-12="_select($event, el)"
                  ms-title="el.label"
                  ms-hover="ui-state-hover: el.enable"
-
                  ms-class-1="ui-state-disabled:!el.enable"
-                 ms-class-2="ui-dropdown-item-selected:isSelected(el.value) && el.enable && multiple"
-
-                 ms-class-4="ui-dropdown-group:el.optGroup"
+                 ms-class-2="ui-state-active:isSelected(el.value) && el.enable "
+                 ms-class-4="ui-dropdown-group:el.group"
                  ms-class-5="ui-dropdown-divider:el.optGroup && !$first"
                  >{{el.label}}</div>
 
         </div>
     </div>
 </div>
-MS_OPTION_TEMPLATE
-<optgroup ms-repeat="optionsModel.optGroup"
-          ms-disabled="!el.enable"
-          ms-attr-label="el.label"
-          ms-each-option="el.options">
-    <option ms-value="option.value"
-            ms-disabled="!option.enable"
-            ms-selected="option.selected"
-            ms-attr-label="option.label">{{option.label}}</option>
-</optgroup>
-<option ms-repeat-option="optionsModel.options"
-        ms-value="option.value"
-        ms-disabled="!option.enable"
-        ms-selected="option.selected"
-        ms-attr-label="option.label">{{option.label}}</option>
-MS_OPTION_STYLE
-<style>
-    /*
-           <div class="ui-dropdown-optGroup"
-             ms-if="el.optGroup">{{el.text}}</div> 
-    <div class="ui-dropdown-divider"
-                 ms-if="el.divider"></div>
-    */
-    html {
-        background: #ffffff none;
-        color: #333333;
-        font: normal 12px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif;
-        -ms-text-size-adjust: 100%;
-        -webkit-text-size-adjust: 100%;
-    }
-
-
-</style>

@@ -1,17 +1,9 @@
-define(["avalon.getModel", "text!./avalon.accordion.html"], function(avalon, sourceHTML) {
-    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],
-        cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
-        styleEl = document.getElementById("avalonStyle"),
-        template = arr[0],
+define(["avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/oniui-common.css", "css!./avalon.accordion.css"], function(avalon, sourceHTML) {
+    var template = sourceHTML,
         templateArr = template.split("MS_OPTION_MODE_CARET"),
         caretTemplate = templateArr[1],
         navTemplate = templateArr[0],
         accordionNum = 0;
-    try {
-        styleEl.innerHTML += cssText;
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText;
-    }
     var widget = avalon.ui.accordion = function(element, data, vmodels) {
         accordionNum++ ;
         var options = data.accordionOptions;
@@ -243,7 +235,7 @@ define(["avalon.getModel", "text!./avalon.accordion.html"], function(avalon, sou
         template: "", // 用户自定义template
         container: "", // accordion容器，最好使用widgetElement
         controlCls: "", // 为accordion容器自定义的class
-        currentTriggerCls: "ui-accordion-active", // 展开accordion面板时，header添加的class
+        currentTriggerCls: "ui-state-active ui-corner-top", // 展开accordion面板时，header添加的class
         data: [], // 渲染accordion的header和panel信息
         initIndex: null, // 初始打开的面板
         mode: "caret", // 有三种类型的template，分别是caret|nav|custom，当是custom需要用户传入合适template

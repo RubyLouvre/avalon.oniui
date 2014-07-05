@@ -31,11 +31,11 @@ MS_OPTION_TEMPLATE
             <div ms-repeat="data"  class="ui-dropdown-item"
                  ms-click="$select($event, el)"
                  ms-title="el.label"
-                 ms-hover="ui-dropdown-item-hover"
-                ms-class="ui-dropdown-item-hover:activeIndex == $index && el.enable"
-                 ms-class-1="ui-dropdown-item-disabled:!el.enable"
+                 ms-hover="ui-state-hover: el.enable"
+
+                 ms-class-1="ui-state-disabled:!el.enable"
                  ms-class-2="ui-dropdown-item-selected:isSelected(el.value) && el.enable && multiple"
-                 ms-class-3="ui-dropdown-item-disabled-selected:isSelected(el.value) && !el.enable"
+
                  ms-class-4="ui-dropdown-group:el.optGroup"
                  ms-class-5="ui-dropdown-divider:el.optGroup && !$first"
                  >{{el.label}}</div>
@@ -73,12 +73,6 @@ MS_OPTION_STYLE
         -ms-text-size-adjust: 100%;
         -webkit-text-size-adjust: 100%;
     }
-    @font-face {
-        font-family: fontawesome;
-        font-style: normal;
-        font-weight: normal;
-        src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?v=4.0.3');
-        src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?#iefix&v=4.0.3') format('embedded-opentype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.woff?v=4.0.3') format('woff'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.ttf?v=4.0.3') format('truetype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular') format('svg');
-    }
-    
+
+
 </style>

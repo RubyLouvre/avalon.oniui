@@ -34,15 +34,13 @@ $uiname: "ui-pager";
         }
         /*!掠过*/
         &.ui-state-hover{
-            border-color:$ui-widget-content-background-color;
+            border-color:$ui-state-hover-background-color;
         }
         /*!禁用*/
         &.ui-state-disabled {
-            @if($oinui-theme == smoothness){
-                border-color: #D9D9D9;
-            }
-            background-color:$ui-state-hover-background-color;
-            color: $ui-state-hover-color;
+            border-color:$ui-state-disabled-border-color;
+            background-color:$ui-state-disabled-background-color;
+            color: $ui-state-disabled-color;
             cursor: default;
         }
     }

@@ -108,3 +108,21 @@ http://cssshrink.com/
     color: $ui-state-default-color;
     text-decoration: none;
 }
+
+
+.ui-icon {
+    @include user-select(none);
+    cursor: default;
+    font-family: fontawesome !important;
+    font-size: 14px;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 18px;
+    vertical-align: middle;
+    z-index: 999;
+}
+a .ui-icon,.ui-btn .ui-icon {
+    cursor: pointer;
+}

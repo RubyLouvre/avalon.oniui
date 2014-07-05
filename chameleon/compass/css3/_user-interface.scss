@@ -9,7 +9,7 @@
 //
 // @param $select
 //   [ none | text | toggle | element | elements | all | inherit ]
-@mixin user-select($select) {
+@mixin user-select($select:none) {
     $select: unquote($select);
     //  http://stackoverflow.com/questions/15662578/flexible-box-model-display-flex-box-flexbox by RubyLouvre
     -webkit-touch-callout: $select;

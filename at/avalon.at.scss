@@ -1,0 +1,25 @@
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname: "ui-at";
+.#{$uiname} {
+    font-size: 14px;
+    @include min-width(150px);
+    background:#fff;
+    border: 2px solid $ui-state-default-border-color;
+    .#{$uiname}-popup {
+        list-style: none;
+        margin: 0px;
+        padding: 0px;
+    }
+    .#{$uiname}-item{
+        margin: 0px;
+        padding: 0px;
+        height: 24px;
+        line-height: 24px;
+        text-indent: 5px;
+        &.ui-state-hover{
+            background:$ui-widget-content-background-color;
+            color: $ui-widget-content-color;
+        }
+    }
+}

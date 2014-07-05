@@ -1,15 +1,16 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-.ui-pager {
+$uiname: "ui-pager";
+.#{$uiname} {
     @include inline-block();
     font-size: 0;
     vertical-align: middle;
     white-space: nowrap;
-    .ui-pager-items {
+    .#{$uiname}-items {
         @include inline-block();
         vertical-align: middle;
     }
-    .ui-pager-prev, .ui-pager-next, .ui-pager-item {
+    .#{$uiname}-prev, .#{$uiname}-next, .#{$uiname}-item {
         @include inline-block();
         @if($oinui-theme == smoothness){
             background-color: #FFFFFF;
@@ -46,7 +47,7 @@
         }
     }
     /*!省略掉的页数*/
-    .ui-pager-omit {
+    .#{$uiname}-omit {
         @include inline-block();
         height: 24px;
         line-height: 24px;
@@ -58,7 +59,7 @@
         cursor: default;
     }
     /*!页面跳转部分的样式*/
-    .ui-pager-jump {
+    .#{$uiname}-jump {
         @include inline-block();
         vertical-align: middle;
         padding-left:5px;
@@ -66,7 +67,7 @@
         vertical-align: middle;
     }
     /*!输入域的容器*/
-    .ui-pager-textbox-wrapper {
+    .#{$uiname}-textbox-wrapper {
         @include inline-block();
         width:26px;
         margin-left: 5px;
@@ -82,7 +83,7 @@
 
     }
     /*!输入域*/
-    .ui-pager-textbox {
+    .#{$uiname}-textbox {
         display: inline;
         float: left;
         position: relative;
@@ -100,7 +101,7 @@
         }
     }
     /*!里面的按钮的样式*/
-    .ui-pager-button {
+    .#{$uiname}-button {
         @include inline-block();
         overflow: visible;
         _overflow-y: hidden;
@@ -122,7 +123,7 @@
         }
     }
     /*!里面的文本全部包在一个容器内，以便实现居中*/
-    .ui-pager-text {
+    .#{$uiname}-text {
         @include inline-block();
         font-size: 12px;
         vertical-align: middle;

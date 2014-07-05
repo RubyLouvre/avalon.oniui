@@ -213,7 +213,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                             if(scrollbarInited) return
                             scrollbarInited = true
                             vmodel.gridWidth = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ? scroller[0].scrollWidth - bar.width() : scroller[0].scrollWidth
-                        // 水平方向把这个滚动条宽度转移到大容器上
+                        // 水平方向把这个滚动条高度转移到大容器上
                         } else if(bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")){
                             vmodel.paddingBottom = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always"  ? bar.innerHeight() + 2 + "px" : "0"
                         }
@@ -346,8 +346,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
             }
             vm.getScrollerHeight = function() {
                 var h = vmodel.tbodyScrollHeight + vmodel.tbodyScrollTop - vmodel.theadHeight,
-                // var h = vmodel.tbodyScrollHeight - vmodel.theadHeight,
-                        max = vmodel._rowHeight * vmodel.data.length
+                    max = vmodel._rowHeight * vmodel.data.length
                 // 设置一个上限，修复回滚bug
                 h = h > max ? max : h
                 return h
@@ -424,18 +423,18 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                 if (decimal > 0.55) {//四舍五入
                     integer += 1 //要添加或删除的行数
                 }
-                var length = vmodel.data.length, count = 0
+                var length = vmodel.data.length, count = 0, perPages = vmodel.pager.perPages
                 if (scrollDir === "down") {
-                    var _data = [],l = vmodel._data.length
                     while (vmodel.endIndex + 1 < length) {
                         vmodel.endIndex += 1
                         vmodel.startIndex += 1
                         count += 1
                         var el = vmodel.data[vmodel.endIndex]
-
-                        vmodel._data.push(el)
-                        vmodel._data.shift()
-                        // _data.push(el)
+                        // 优化，避免过度操作_data
+                        if(integer - count <= perPages) {
+                            vmodel._data.push(el)
+                            vmodel._data.shift()
+                        }
                         if (count === integer) {
                             break
                         }
@@ -447,8 +446,12 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                         vmodel.startIndex -= 1
                         count += 1
                         var el = vmodel.data[vmodel.startIndex]
-                        vmodel._data.unshift(el)
-                        vmodel._data.pop()
+
+                        // 优化，避免过度操作_data
+                        if(integer - count <= perPages) {
+                            vmodel._data.unshift(el)
+                            vmodel._data.pop()
+                        }
                         if (count === integer) {
                             break
                         }

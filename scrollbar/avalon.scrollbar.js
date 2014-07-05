@@ -304,8 +304,6 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                     barMinus = {},
                     y = y == void 0 ? vmodel.scrollTop : y,
                     x = x == void 0 ? vmodel.scrollLeft : x
-                    console.log("update y is " + y)
-                    console.log("update vmodel.scrollTop is " + vmodel.scrollTop)
                 // if(vmodel.showBarHeader && bars.length > 1) {
                 if(bars.length > 1) {
                     var ps = ["top", "right", "bottom", "left"]
@@ -550,7 +548,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                     // obj.viewW = vmodel.viewWidthGetter(scroller)
                     obj.scrollerH = scroller[0].scrollHeight
                     obj.scrollerW = scroller[0].scrollWidth
-                    obj.step = isVertical ? 40 * (obj.draggerparHeight - obj.draggerHeight) / obj.scrollerH : 40 * (obj.draggerparWidth - obj.draggerWidth) / obj.scrollerW
+                    obj.step = isVertical ? 40 * (obj.draggerparHeight - obj.draggerHeight) / (obj.scrollerH - obj.viewH) : 40 * (obj.draggerparWidth - obj.draggerWidth) / (obj.scrollerW - obj.viewW)
                     obj.step = strToNumber(obj.step) || 1
 
                     var xy = axisComputer(obj),
@@ -573,6 +571,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "text!./avalon.scrollbar.css",
                         } else {
                             obj.down.removeClass("ui-scrollbar-arrow-disabled")
                         }
+                        var c = strToNumber((obj.scrollerH - obj.viewH) * xy.y / (obj.draggerparHeight - obj.draggerHeight)) - vmodel.scrollTop
                         obj.dragger.css("top", xy.y + "px")
                         vmodel._scrollTo(void 0, strToNumber((obj.scrollerH - obj.viewH) * xy.y / (obj.draggerparHeight - obj.draggerHeight)))
                     } else {

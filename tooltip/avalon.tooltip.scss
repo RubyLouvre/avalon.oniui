@@ -1,96 +1,84 @@
-@import "../style/default.scss";
-$pf : ".ui-tooltip";
-
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname : ".ui-tooltip";
+@if($oinui-theme == smoothness) {
+	$tooltip: (
+		bg: #FFE44F,
+		borderColor:#FFC805,
+		fontColor:#A65A00
+	) !global
+}
 .ui-tooltip-hidden{
 	visibility: hidden;
 }
-
-#{$pf} {
+div#{$uiname}{
 	// current style
 	padding: 10px;
 	position: absolute;
 	z-index: 9999;
 	max-width: 300px;
-	font-size: 12px;
 	overflow: visible;
-	background: #FFE44F;
-	border-color: #FFC805;
-	color: #A65A00;
+	background: map-get($tooltip, bg);
+	border-color: map-get($tooltip, borderColor);
+	color: map-get($tooltip, fontColor);
+	font-size: 12px;
 	border-radius: 0 0 0 0;
 	a{
-		color: #A65A00;
+		color: map-get($tooltip, fontColor);
 	}
-	.in, .out{
-	    font-family: simsun;
-	    font-size: 0;
-	    line-height: 0;
-	    height: 0;
+	#{$uiname}-arrow-in, #{$uiname}-arrow-out{
 	    overflow: visible;
 	    position: absolute;
-	    width: 0;
 	}
+}
+#{$uiname} {
 	&-top {
-		.in{
-			border-style: dashed dashed solid;
-			border-color: transparent transparent #FFE44F;
-		    border-width: 0 4px 5px;
+		#{$uiname}-arrow-in{
+		    @include triangle($direction: top, $width: 8px, $height: 5px, $color: map-get($tooltip, bg));
 		    left: 29px;
 		    top: -5px;
 		}	
-		.out{
-			border-style: dashed dashed solid;
-			border-color: transparent transparent #FFC805;
-		    border-width: 0 5px 6px;
+		#{$uiname}-arrow-out{
+		    @include triangle($direction: top, $width: 10px, $height: 6px, $color: map-get($tooltip, borderColor));
 		    left: 28px;
 		    top: -6px;
 		}
 	}
 	&-right{
-		.in{
-			border-style: dashed dashed dashed solid;
-		    border-color: transparent transparent transparent #FFE44F;
-		    border-width: 5px 0 4px 4px;
+		#{$uiname}-arrow-in{
+			@include triangle($direction: right, $width: 8px, $height: 5px, $color: map-get($tooltip, bg));
 		    right: -4px;
 		    top: 29px;
 		}
-		.out{
-			border-style: dashed dashed dashed solid;
-		    border-color: transparent transparent transparent #FFC805;
-		    border-width: 6px 0 5px 5px;
+		#{$uiname}-arrow-out{
+			@include triangle($direction: right, $width: 10px, $height: 6px, $color: map-get($tooltip, borderColor));
+			left: auto;
 		    right: -5px;
 		    top: 28px;
 		}
 	}
 	&-bottom{
-		.in{
-			border-style: solid dashed dashed;
-		    border-color: #FFE44F transparent transparent;
-		    border-width: 5px 4px 0;
+		#{$uiname}-arrow-in{
+		    @include triangle($direction: bottom, $width: 8px, $height: 5px, $color: map-get($tooltip, bg));
 		    bottom: -5px;
 		    left: 29px;
 		    top: auto;
 		}
-		.out{
-			border-style: solid dashed dashed;
-			border-color: #FFC805 transparent transparent;
-		    border-width: 6px 5px 0;
+		#{$uiname}-arrow-out{
+		    @include triangle($direction: bottom, $width: 10px, $height: 6px, $color: map-get($tooltip, borderColor));
 		    bottom: -6px;
 		    left: 28px;
 		    top: auto;
 		}
 	}
 	&-left{
-		.in{
-			border-style: dashed solid dashed dashed;
-			border-color: transparent #FFE44F transparent transparent;
-		    border-width: 4px 5px 4px 0;
+		#{$uiname}-arrow-in{
+			@include triangle($direction: left, $width: 8px, $height: 5px, $color: map-get($tooltip, bg));
 		    left: -4px;
 		    top: 29px;
 		}
-		.out{
-			border-style: dashed solid dashed dashed;
-		    border-color: transparent #FFC805 transparent transparent;
-		    border-width: 5px 6px 5px 0;
+		#{$uiname}-arrow-out{
+			@include triangle($direction: left, $width: 10px, $height: 6px, $color: map-get($tooltip, borderColor));
 		    left: -5px;
 		    top: 28px;
 		}

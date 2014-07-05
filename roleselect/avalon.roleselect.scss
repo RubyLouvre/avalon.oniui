@@ -1,15 +1,28 @@
-@import "../style/default.scss";
-$pf : ".ui-roleselect";
-
-#{$pf} {
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname : ".ui-roleselect";
+@if($oinui-theme == smoothness) {
+	$roleselect: (
+		fontColor: #000, 
+		menuBg: #fff,
+		hoverBg: #f8f8f8, 
+		activeBg: #58b359,
+		disableBg: #fff,
+		buttonBg: #f8f8f8
+	) !global;
+} @else {
+}
+#{$uiname} {
 	// current style
 	// means #{$pr}-bar
 	font-size:12px;
+}
+#{$uiname} {
 	&-menu {
 		width: 180px;
 		height: 190px;
-		border: 1px solid #cccccc;
-		background: #fff;
+		border: 1px solid $ui-state-default-border-color;
+		background: map-get($roleselect, menuBg);
 		float: left;
 		display: inline;
 	}
@@ -29,27 +42,29 @@ $pf : ".ui-roleselect";
 		list-style: none;
 		padding: 3px 6px;
 		cursor: pointer;
+		color: map-get($roleselect, fontColor);
 	}
 	li.ui-state-hover{
-		background-color: #f8f8f8;
+		background-color: map-get($roleselect, hoverBg);
 	}
 	li.ui-state-active{
-		background-color: #58b359;
-		color: #fff;
+		background-color: map-get($roleselect, activeBg);
+		color: $ui-state-active-color;
 	}
 	li.ui-state-disabled{
 		cursor: default;
-		color: #cccccc;
-		background: #fff;
+		color: $ui-state-disabled-color;
+		background: map-get($roleselect, disableBg);
 	}
-	div.ui-button{
+	.ui-button{
 		height: 24px;
 		line-height: 24px;
-		background-color: #f8f8f8;
-		border: 1px solid #cccccc;
+		background-color: map-get($roleselect, buttonBg);
+		border: 1px solid $ui-state-default-border-color;
 		border-radius: 2px;
-		color: #333333;
+		color: map-get($roleselect, fontColor);
 		text-align: center;
 		margin-top: 10px;
+		cursor: pointer;
 	}
 }

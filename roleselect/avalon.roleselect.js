@@ -2,16 +2,7 @@
   * roleselect组件，
   *
   */
-define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.data.html", "text!./avalon.roleselect.css", "scrollbar/avalon.scrollbar"], function(avalon, tmpl, dataTpl, css) {
-
-    var cssText = css
-    var styleEl = document.getElementById("avalonStyle")
-    var template = tmpl
-    try {
-        styleEl.innerHTML += cssText
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText
-    }
+define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.data.html", "scrollbar/avalon.scrollbar", "css!./avalon.roleselect.css", "css!../chameleon/oniui-common.css"], function(avalon, template, dataTpl) {
 
     var widget = avalon.ui.roleselect = function(element, data, vmodels) {
         var options = data.roleselectOptions
@@ -22,7 +13,7 @@ define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.dat
         var vmodel = avalon.define(data.roleselectId, function(vm) {
             vm.data = []
             vm.select = []
-            vm._select = []
+            vm._selectData = []
             avalon.mix(vm, options)
             vm.widgetElement = element
             vm.$skipArray = ["widgetElement", "template"]
@@ -33,12 +24,12 @@ define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.dat
                 if(inited) return
                 inited = true
 
-                var dataTemplate = vmodel.$getTemplate("data"),
-                    selectTemplate = vmodel.$getTemplate("select")
+                var dataTemplate = vmodel._getTemplate("data"),
+                    selectTemplate = vmodel._getTemplate("select")
                 vmodel.template = vmodel.template.replace(/\{\{MS_OPTION_SELECT\}\}/g, selectTemplate).replace(/\{\{MS_OPTION_DATA\}\}/g, dataTemplate).replace(/\{\{MS_OPTION_ID\}\}/g, id)
                 element.innerHTML = vmodel.template
 
-                vmodel.$getSelect()
+                vmodel._getSelect()
                 avalon.scan(element, [vmodel].concat(vmodels))
                 // callback after inited
                 if(typeof options.onInit === "function" ) {
@@ -50,8 +41,8 @@ define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.dat
                 element.innerHTML = element.textContent = ""
             }
 
-            vm.$getTemplate = function(tplName) {
-                var sourceTpl = tmpl
+            vm._getTemplate = function(tplName) {
+                var sourceTpl = template
                 if(tplName === "data") {
                     sourceTpl = dataTpl.replace(/\{\{MS_OPTION_TYPE\}\}/g, "data")
                 } else if(tplName === "select") {
@@ -60,31 +51,33 @@ define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.dat
 
                 return vmodel.getTemplate(sourceTpl, options, tplName)
             }
-            vm.$itemSelected = function(item, type) {
+            vm._itemSelected = function(item, type) {
                 for(var i = 0, len = vmodel.select; i < len; i++) {
                     if(vmodel.select[i] == item.value) return true && type == "data"
                 }
                 return false
             }
-            vm.$itemShow = function(item, type) {
-                return vmodel.hideSelect && vmodel.$itemSelected(item, type)
+            vm._itemShow = function(item, type) {
+                return vmodel.hideSelect && vmodel._itemSelected(item, type)
             }
-            vm.$getSelect = function() {
-                vmodel._select = []
+            vm._getSelect = function() {
+                vmodel._selectData = []
                 avalon.each(vmodel.select, function(i, item) {
                     avalon.each(vmodel.data, function(si, sitem) {
-                        if(item == sitem.value) vmodel._select.push(sitem)
+                        if(item == sitem.value) vmodel._selectData.push(sitem)
                     })
                     var ele = avalon(document.getElementById("data" + item + vmodel.$uid))
                     // 重置样式
                     ele.removeClass("ui-state-active").addClass("ui-state-disabled")
                     if(vmodel.hideSelect) ele.addClass("ui-helper-hidden")
                 })
+            }
+            vm.updateScrollbar = function() {
                 // 更新滚动区域
                 avalon.vmodels["$left" + vmodel.$uid] && avalon.vmodels["$left" + vmodel.$uid].update()
                 avalon.vmodels["$right" + vmodel.$uid] && avalon.vmodels["$right" + vmodel.$uid].update()
             }
-            vm.$removeFrom = function(v, isSelected) {
+            vm._removeFrom = function(v, isSelected) {
                 var tar = isSelected ? selectTmpSelect : dataTmpSelect
                 for(var i = 0, len = tar.length; i < len; i++) {
                     if(v == tar[i]) {
@@ -94,7 +87,7 @@ define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.dat
                 }
             }
             // 响应点击事件
-            vm.$select = function(e, item, type) {
+            vm._select = function(e, item, type) {
                 var ele = avalon(this),
                     data = ele.data()
                 if(ele.hasClass("ui-state-disabled")) return
@@ -102,7 +95,7 @@ define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.dat
                 if(type == "select") {
                     if(ele.hasClass("ui-state-active")) {
                         ele.removeClass("ui-state-active")
-                        vmodel.$removeFrom(data.value, "fromSelected")
+                        vmodel._removeFrom(data.value, "fromSelected")
                     } else {
                         ele.addClass("ui-state-active")
                         selectTmpSelect.push(data.value)
@@ -111,7 +104,7 @@ define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.dat
                 // 待选区域的点击
                     if(ele.hasClass("ui-state-active")) {
                         ele.removeClass("ui-state-active")
-                        vmodel.$removeFrom(data.value)
+                        vmodel._removeFrom(data.value)
                     } else {
                         ele.addClass("ui-state-active")
                         dataTmpSelect.push(data.value)
@@ -119,7 +112,7 @@ define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.dat
                 }
             }
             // 更新状态
-            vm.$update = function($event, addOrDelete) {
+            vm._update = function($event, addOrDelete) {
                 var tar = addOrDelete === "delete" ? selectTmpSelect : dataTmpSelect
                 if(tar.length == 0) return
                 if(addOrDelete === "delete") {
@@ -154,14 +147,14 @@ define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.dat
                 }
                 selectTmpSelect = []
                 dataTmpSelect = []
-                vmodel.$getSelect()
+                vmodel._getSelect()
             }
             //@method reset 重置
             vm.reset = function() {
                 selectTmpSelect = []
                 dataTmpSelect = []
                 vmodel.select = []
-                vmodel.$getSelect()
+                vmodel._getSelect()
             }
 
         })

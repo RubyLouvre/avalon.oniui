@@ -2,16 +2,8 @@
   * switch组件，
   *
   */
-define(["avalon", "text!./avalon.switch.html", "text!./avalon.switch.css", "draggable/avalon.draggable"], function(avalon, tmpl, css) {
+define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable", "css!./avalon.switch.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 
-    var cssText = css
-    var styleEl = document.getElementById("avalonStyle")
-    var template = tmpl
-    try {
-        styleEl.innerHTML += cssText
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText
-    }
     var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect,
         radiusSupport =typeof avalon.cssName("border-radius") == "string"
 

@@ -1,134 +1,37 @@
-.clrfix {
-  zoom: 1; }
-  .clrfix:before, .clrfix:after {
-    content: '';
-    display: block; }
-  .clrfix:after {
-    clear: both; }
-
-.reset {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  line-height: 100%;
-  text-decoration: none;
-  font-size: 100%;
-  list-style: none; }
-
-.ui-helper-hidden {
-  display: none; }
-
-/*corner css*/
-.ui-corner-all,
-.ui-corner-top,
-.ui-corner-left,
-.ui-corner-tl {
-  border-top-left-radius: 4px; }
-
-.ui-corner-all,
-.ui-corner-top,
-.ui-corner-right,
-.ui-corner-tr {
-  border-top-right-radius: 4px; }
-
-.ui-corner-all,
-.ui-corner-bottom,
-.ui-corner-left,
-.ui-corner-bl {
-  border-bottom-left-radius: 4px; }
-
-.ui-corner-all,
-.ui-corner-bottom,
-.ui-corner-right,
-.ui-corner-br {
-  border-bottom-right-radius: 4px; }
-
-/*state css*/
-.ui-state-default {
-  color: #333;
-  background-color: #f8f8f8;
-  border: 1px solid #cccccc; }
-  .ui-state-default a {
-    color: #333;
-    text-decoration: none; }
-
-.ui-state-hover {
-  background: #fff; }
-  .ui-state-hover a {
-    text-decoration: none; }
-    .ui-state-hover a:hover {
-      text-decoration: none; }
-
-.ui-state-active {
-  background: #fff; }
-
-.ui-state-disabled {
-  color: #aaa;
-  cursor: default; }
-  .ui-state-disabled a {
-    color: #aaa;
-    cursor: default; }
-
-/*content*/
-.ui-widget-content {
-  background-color: #f8f8f8;
-  border: 1px solid #cccccc; }
-
-/*button*/
-.ui-button {
-  cursor: pointer; }
-
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
 .ui-progressbar {
   width: 100%;
   position: relative;
   height: 6px;
   border: none;
-  background-color: #DEDEDE;
-  font-family: Verdana,Arial,sans-serif;
-  /*	&-bg{
-  		width: 100%;
-  		height: 100%;
-  		position: absolute;
-  		left: 0;
-  		top: 0;
-  		background: #6AA5E9 repeat-x;
-  		background-size: 9px 9px;
-  		background-image: -webkit-gradient(linear, left top, right bottom,color-stop(.25, rgba(255, 255, 255, .15)), color-stop(.25, transparent),color-stop(.5, transparent), color-stop(.5, rgba(255, 255, 255, .15)),color-stop(.75, rgba(255, 255, 255, .15)), color-stop(.75, transparent),to(transparent));
-  		background-image: -webkit-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
-  		background-image: -moz-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
-  		background-image: -ms-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
-  		background-image: -o-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
-  		background-image: linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
-  		-moz-animation: animate-stripes 3s linear infinite;
-  		-webkit-animation: animate-stripes 3s linear infinite;
-  	}*/ }
+  background-color: #dedede;
+  font-family: Verdana,Arial,sans-serif; }
   .ui-progressbar-bar {
     z-index: 1;
     position: relative;
-    background-color: #619FE8;
+    background-color: #619fe8;
     height: 100%;
     width: 0;
     float: left;
     display: inline; }
   .ui-progressbar-bar-right {
-    background: #ddd; }
-    .ui-progressbar-bar-right .ui-progressbar-label {
-      color: blue; }
+    background: #dddddd; }
   .ui-progressbar-overlay {
     width: 100%;
-    background-color: #ddd;
     position: relative;
     z-index: 1;
     height: 100%;
     overflow: hidden;
-    background: url("indeterminate.gif") repeat-x; }
+    background: url("indeterminate.gif") repeat-x #dddddd; }
   .ui-progressbar-label {
     position: absolute;
     left: 50%;
     z-index: 10;
     margin: 0 auto;
-    color: #fff; }
+    color: white; }
   .ui-progressbar-circle {
     border: none;
     background-color: transparent; }
@@ -137,9 +40,9 @@
       left: 0;
       width: 100%;
       text-align: center;
-      color: #619FE8; }
+      color: #619fe8; }
   .ui-progressbar-normal .ui-progressbar-label {
-    background-color: #6AA5E9;
+    background-color: #6aa5e9;
     padding: 2px 4px;
     font-size: 13px;
     top: -25px;
@@ -151,32 +54,16 @@
   .ui-progressbar-right .ui-progressbar-label {
     left: 50%; }
   .ui-progressbar-arrow {
-    border-style: solid dashed dashed;
-    border-color: #6AA5E9 transparent transparent;
-    border-width: 6px 5px 0;
+    width: 0;
     height: 0;
-    overflow: hidden;
     line-height: 0;
     font-size: 0;
-    bottom: -6px;
+    border-top: 5px solid #6aa5e9;
+    border-right: 5px dashed transparent;
+    border-bottom: 0;
+    border-left: 5px dashed transparent;
+    overflow: hidden;
+    bottom: -5px;
     left: 50%;
     position: absolute;
-    margin-left: -6px; }
-
-/*@-moz-keyframes animate-stripes {
-	0% {
-		background-position: 0 0;
-	}
-	100% {
-		background-position: 60px 0;
-	}  
-}
-
-@-webkit-keyframes animate-stripes {
-	0% {
-	  background-position: 0 0;
-	}
-	100% {
-	  background-position: 60px 0;
-	}
-}*/
+    margin-left: -5px; }

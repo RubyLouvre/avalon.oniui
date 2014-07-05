@@ -1,4 +1,4 @@
-.clrfix {
+.ui-helper-clrfix {
    	zoom: 1;
    	&:before, &:after {
 		content: '';
@@ -8,7 +8,7 @@
 	    clear: both;
 	}
 }
-.reset {
+.ui-helper-reset {
 	margin: 0;
 	padding: 0;
 	border: 0;

@@ -47,11 +47,15 @@
 <tr>
     <td>width</td><td> 35</td><td> normal size宽度，会尝试自动到样式文件里面提取</td></tr>
 <tr>
+    <td>onInit</td><td>配置函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+<tr>
     <td>$animateArrMaker</td><td>配置函数</td><td>$animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]</td></tr>
 <tr>
     <td>onChange</td><td>配置函数</td><td>onChange(newValue, vmodel) 选中状态发生变化时触发，参数为当前的选中状态及vmodel对象</td></tr>
 <tr>
     <td>getTemplate</td><td>配置函数</td><td>getTemplate(tmp, opts) 用于修改模板的接口，默认不做修改</td></tr>
+<tr>
+    <td>getTemplate</td><td>配置函数</td><td>getTemplate(tpl, opts) 定制修改模板接口</td></tr>
 <tr>
     <td>toggle</td><td>接口函数</td><td>toggle 交替改变选中状态</td></tr>
 <tr>

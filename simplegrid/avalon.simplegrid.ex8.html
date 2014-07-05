@@ -31,10 +31,10 @@
                             {field: "xxx", text: "列一", resizable: true}
                         ],
                         getTemplate: function(str) {
-                            if (window.dispatchEvent) {
-                                return str//IE678不支持div:hover效果
+                            if (document.body.hasAttribue) {
+                                return str//IE67不支持div:hover效果
                             } else {
-                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-even="!($index % 2)" ms-class-odd="$index % 2"')
+                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-hover="hover"')
                             }
                         },
                         showRows: 10,
@@ -57,53 +57,43 @@
             #gridsample{
                 width:900px;
             }
-            .ui-grid-tbody tr.even td, .ui-grid-tbody tr.even td div{
-                background: #f2f2f2;
+            .ui-grid-tbody tr.hover td, .ui-grid-tbody tr.hover td div{
+                background: #356aa0;
+                color:#fff;
             }
-            .ui-grid-tbody tr.odd td, .ui-grid-tbody tr.odd td div{
-                background:#ffe862;
-            }
-            .ui-grid-tbody tr:nth-child(even) td, .ui-grid-tbody tr:nth-child(even) td div{
-                background: #f2f2f2;
-            }
-            .ui-grid-tbody tr:nth-child(odd) td, .ui-grid-tbody tr:nth-child(odd) td div{
-                background: #ffe862;
+            .ui-grid-tbody tr:hover td, .ui-grid-tbody tr:hover td div{
+                background:#356aa0;
+                color:#fff;
             }
         </style>
     </head>
     <body>
 
         <fieldset ms-controller="test">
-            <legend>演示斑马线效果</legend>
+            <legend>演示hover效果</legend>
 
             <div ms-widget="simplegrid" id="gridsample">
 
             </div>
             <div>
                 <h3>要点</h3>
-                <p>IE678下,需要通过getTemplate修改默认模板,为每一个tr加两个ms-class绑定,对应的类名自己在样式表添加</p>  
+                <p>IE67下,需要通过getTemplate修改默认模板,为每一个tr加一个ms-hover绑定,对应的类名自己在样式表添加</p>  
                 <pre class="brush:javascript;gutter:false;toolbar:false;">
-                        getTemplate: function(str) {
-                            if (window.dispatchEvent) {
-                                return str//IE678不支持div:hover效果
+                     getTemplate: function(str) {
+                            if (document.body.hasAttribue) {
+                                return str//IE67不支持div:hover效果
                             } else {
-                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-even="!($index % 2)" ms-class-odd="$index % 2"')
+                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-hover="hover"')
                             }
                         },
                 </pre>
                 <p>CSS</p>
                 <pre class="brush:css;gutter:false;toolbar:false;">
-            .ui-grid-tbody tr.even td, .ui-grid-tbody tr.even td div{
-                background: #f2f2f2;
+            .ui-grid-tbody tr.hover td,  .ui-grid-tbody tr.hover td div{
+                background: rgb(232,245,253)
             }
-            .ui-grid-tbody tr.odd td, .ui-grid-tbody tr.odd td div{
-                background:#ffe862;
-            }
-            .ui-grid-tbody tr:nth-child(even) td, .ui-grid-tbody tr:nth-child(even) td div{
-                background: #f2f2f2;
-            }
-            .ui-grid-tbody tr:nth-child(odd) td, .ui-grid-tbody tr:nth-child(odd) td div{
-                background: #ffe862;
+            .ui-grid-tbody tr:hover td,  .ui-grid-tbody tr:hover td div{
+                background: rgb(232,245,253)
             }
                 </pre>
             </div>

@@ -8,14 +8,6 @@
         <script src="../highlight/shCore.js">
 
         </script>
-        <script id="summarizing" type="summarizing">
-               <td></td> <td ms-repeat="columns"
-                    ms-css-width="el.width" 
-                    ms-css-text-align="el.align" 
-                    ms-visible="el.toggle" 
-                    >{{getSummarizing(summarizing, el.field) | html}}
-                </td>
-        </script>
         <script>
             avalon.config({debug: false})
             require(["simplegrid/avalon.simplegrid"], function() {
@@ -26,14 +18,12 @@
                     var array = []
                     for (var i = 0; i < n; i++) {
                         array.push({
-                            plan: "北上广经济型计划",
                             state: i % 2 === 0,
                             budget: range(3000, 6000),
                             emerge: range(70000, 200000),
                             click: range(3000, 50000),
                             consume: range(8000, 20000),
-                            clickprice: (1 + 3 * Math.random()).toFixed(2),
-                            checked: false
+                            clickprice: (1 + 3 * Math.random()).toFixed(2)
                         })
                     }
                     return array
@@ -42,80 +32,24 @@
                 avalon.define("test", function(vm) {
 
                     vm.simplegrid = {
-                        summarizing: {
-                            plan: "所有汇总",
-                            state: "",
-                            budget: "预算汇总<br/>￥38000",
-                            emerge: "展现汇总<br/>135346460",
-                            click: "平均点击率<br/>50.21%",
-                            consume: "消费汇总<br/>￥1135800",
-                            clickprice: "平均点击价格<br/>￥1.82"
-                        },
-                        theadRenderedCallback: function(vmodel) {
-                            var tbody = this
-                            var tr = document.createElement("tr")
-                            tr.className = "summarizing"
-                            tbody.appendChild(tr)
-                            avalon.innerHTML(tr, document.getElementById("summarizing").text)
-                            avalon.scan(tbody, vmodel)
-                            vmodel.theadHeight = 85;
-                        },
-                        getSummarizing: function(obj, key) {
-                            return obj[key]
-                        },
                         columns: [
-                            {field: "plan", text: "竞价计划推广", resizable: true, width: 180},
-                            {field: "state", text: "状态", resizable: true, align: "center", width: 80},
-                            {field: "budget", text: "预算", resizable: true, align: "right"},
-                            {field: "emerge", text: "展现", resizable: true, align: "right"},
-                            {field: "click", text: "点击", resizable: true, align: "right"},
-                            {field: "consume", text: "消费", resizable: true, align: "right"},
-                            {field: "clickprice", text: "平均点击价格", align: "right", resizable: true}
+                            {field: "state", text: "状态", resizable: true, align:"center",width:80},
+                            {field: "budget", text: "预算", resizable: true},
+                            {field: "emerge", text: "展现", resizable: true},
+                            {field: "click", text: "点击", resizable: true},
+                            {field: "consume", text: "消费", resizable: true},
+                            {field: "clickprice", text: "平均点击价格", resizable: true}
                         ],
-                        addUnit: function(val, name) {
+                        renderCell: function(val, name) {
                             switch (name) {
                                 case  "budget":
                                 case "clickprice":
-                                    return "￥" + val
+                                    return val + "￥"
                                 case "state":
                                     return val ? "√" : "×"
                                 default:
                                     return val
                             }
-                        },
-                        allchecked: false,
-                        getColumn: function(el) {
-                            el.checked = true
-                        },
-                        checkAll: function() {
-                            var vmodel = avalon.vmodels.xxx
-                            var bool = vmodel.allchecked = this.checked
-                            vmodel._data.forEach(function(el) {
-                                el.checked = bool
-                            })
-                            vmodel.data.forEach(function(el) {
-                                el.checked = bool
-                            })
-                        },
-                        checkOne: function(el, index) {
-                            var vmodel = avalon.vmodels.xxx
-                            index = vm.startIndex + index
-                            vmodel.data[index] = el.checked = this.checked
-                            if (!this.checked) {
-                                vmodel.allchecked = false
-                            } else {
-                                vmodel.allchecked = vmodel._data.every(function(el) {
-                                    return el.checked
-                                })
-                            }
-                        },
-                        theadTemplate: function(str) {
-                            return "<th style='width:60px'><input type='checkbox' ms-checked='allchecked' ms-click='checkAll'  /></th>" + str
-                        },
-                        tbodyTemplate: function() {
-                            return '<th style="width: 60px"><input type="checkbox" ms-checked="row.checked" ms-click="checkOne(row, $index)" '
-                                    + 'class="ui-helper-checkone"/></th><td class="ui-grid-td" data-with-sorted="getColumnsOrder" ms-repeat="row" ms-css-width="getCellProperty($key,\'width\')" ms-css-text-align="getCellProperty($key,\'align\')">{{addUnit($val,$key)}}</td>'
-
                         },
                         showRows: 10,
                         pageable: true,
@@ -125,7 +59,7 @@
                             showPages: 5,
                             options: [10, 20, 30, 40]
                         },
-                        columnsOrder: ["plan", "state", "budget", "emerge", "click", "consume", "clickprice"],
+                        columnsOrder: ["state", "budget", "emerge", "click", "consume", "clickprice"],
                         data: createData(100)
                     }
                     vm.$skipArray = ["simplegrid"]
@@ -144,76 +78,83 @@
             .ui-grid-tbody {
                 border-top: 0 none!important;
             }
-            .ui-grid-thead td,.ui-grid-thead th{
+            .ui-grid-thead td{
                 background: #f8f8f8;
-                border: 0 none;
-            }
-             .ui-grid-thead th{
-                background: #f8f8f8;
-                border-right:1px solid #000;
-            }
-            .summarizing td{
-                background:#edef7d;
-                color:rgb(136,136,136);
-                height: 50px;
+                border-left: 0 none;
+                border-right: 0 none;
             }
         </style>
     </head>
     <body>
 
         <fieldset ms-controller="test">
-            <legend>演示theadRenderedCallback的使用(汇总效果)</legend>
+            <legend>演示tbodyTemplate的使用</legend>
 
-            <div ms-widget="simplegrid,xxx" id="gridsample">
+            <div ms-widget="simplegrid" id="gridsample">
 
             </div>
             <div>
                 <h3>要点</h3>
-                <p>在theadRenderedCallback的回调里,给表头再插入一行,数据由后端计算好,然后调整表头的高度</p>  
-                <pre class="brush:javascript;gutter:false;toolbdar:false;">
-                   summarizing: {
-                            plan: "所有汇总",
-                            state: "",
-                            budget: "预算汇总<br/>￥38000",
-                            emerge: "展现汇总<br/>135346460",
-                            click: "平均点击率<br/>50.21%",
-                            consume: "消费汇总<br/>￥1135800",
-                            clickprice: "平均点击价格<br/>￥1.82"
+                <p>需要通过tbodyTemplate修改的行模板,为每一个tr加两个事件绑定,在移出移入操作类名</p>  
+                <pre class="brush:javascript;gutter:false;toolbar:false;">
+                      avalon.config({debug: false})
+            require(["simplegrid/avalon.simplegrid"], function() {
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
+                var createData = function(n) {
+                    var array = []
+                    for (var i = 0; i < n; i++) {
+                        array.push({
+                            state: i % 2 === 0,
+                            budget: range(3000, 6000),
+                            emerge: range(70000, 200000),
+                            click: range(3000, 50000),
+                            consume: range(8000, 20000),
+                            clickprice: (1 + 3 * Math.random()).toFixed(2)
+                        })
+                    }
+                    return array
+                }
+
+                avalon.define("test", function(vm) {
+
+                    vm.simplegrid = {
+                        columns: [
+                            {field: "state", text: "状态", resizable: true, align:"center",width:80},
+                            {field: "budget", text: "预算", resizable: true},
+                            {field: "emerge", text: "展现", resizable: true},
+                            {field: "click", text: "点击", resizable: true},
+                            {field: "consume", text: "消费", resizable: true},
+                            {field: "clickprice", text: "平均点击价格", resizable: true}
+                        ],
+                        renderCell: function(val, name) {
+                            switch (name) {
+                                case  "budget":
+                                case "clickprice":
+                                    return val + "￥"
+                                case "state":
+                                    return val ? "√" : "×"
+                                default:
+                                    return val
+                            }
                         },
-                        theadRenderedCallback: function(vmodel) {
-                            var tbody = this
-                            var tr = document.createElement("tr")
-                            tr.className = "summarizing"
-                            tbody.appendChild(tr)
-                            avalon.innerHTML(tr, document.getElementById("summarizing").text)
-                            avalon.scan(tbody, vmodel)
-                            vmodel.theadHeight = 85;
+              
+                        showRows: 10,
+                        pageable: true,
+                        pager: {
+                            perPages: 20,
+                            totalItems: 1000,
+                            showPages: 5,
+                            options: [10, 20, 30, 40]
                         },
-                        getSummarizing: function(obj, key) {
-                            return obj[key]
-                        },                 
-                </pre>
-                <p>CSS</p>
-                <pre class="brush:css;gutter:false;toolbar:false;">
-            #gridsample{
-                width:900px;
-            }
-            .ui-grid-tbody td{
-                border-left: 0 none;
-                border-right: 0 none;
-            }
-            .ui-grid-tbody {
-                border-top: 0 none!important;
-            }
-            .ui-grid-thead td{
-                background: #f8f8f8;
-                border: 0 none;
-            }
-            .summarizing td{
-                background:#edef7d;
-                color:rgb(136,136,136);
-                height: 50px;
-            }
+                        columnsOrder: ["state", "budget", "emerge", "click", "consume", "clickprice"],
+                        data: createData(100)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
                 </pre>
             </div>
         </fieldset>

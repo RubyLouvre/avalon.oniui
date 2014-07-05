@@ -10,16 +10,15 @@
         </script>
         <script>
             require(["simplegrid/avalon.simplegrid"], function() {
+                
+                
                 avalon.define("test", function(vm) {
-
                     vm.simplegrid = {
-                        columns: [
-                            {field: "zzz", text: "列三", resizable: true},
-                            {field: "yyy", text: "列二", resizable: true},
-                            {field: "xxx", text: "列一", resizable: true}
-                        ],
-                        columnsOrder: ["xxx", "yyy", "zzz"],
-                        data: [{
+                        columns: [{field: "xxx", width: "20%", text: "表头1(20%) "},
+                            {field: "yyy", width: "30%", text: "表头2(30%) "},
+                            {field: "zzz", width: "50%", text: "表头3(50%) "}],
+                        data: [
+                            {
                                 xxx: 10, yyy: 1, zzz: 1
                             },
                             {
@@ -31,9 +30,9 @@
                             {
                                 xxx: 40, yyy: 4, zzz: 4
                             }
-
                         ]
                     }
+
                     vm.$skipArray = ["simplegrid"]
                 })
                 avalon.scan()
@@ -41,14 +40,12 @@
         </script>
     </head>
     <body >
-      
-    <fieldset ms-controller="test">
-        <legend>允许通过拖动改变每一列的列宽</legend>
+        <fieldset ms-controller="test">
+            <legend>列宽以预定的百分比划分,不能改变列宽</legend>
+            <div ms-widget="simplegrid">
 
-        <div ms-widget="simplegrid">
-
-        </div>
-        <pre class="brush:html;gutter:false;toolbar:false;">
+            </div>
+            <pre class="brush:html;gutter:false;toolbar:false;">
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
@@ -62,15 +59,12 @@
         &lt;script&gt;
             require(["simplegrid/avalon.simplegrid"], function() {
                 avalon.define("test", function(vm) {
-
                     vm.simplegrid = {
-                        columns: [
-                            {field: "zzz", text: "列三", resizable: true},
-                            {field: "yyy", text: "列二", resizable: true},
-                            {field: "xxx", text: "列一", resizable: true}
-                        ],
-                        columnsOrder: ["xxx", "yyy", "zzz"],
-                        data: [{
+                        columns: [{field: "xxx", width: "20%", text: "表头1(20%) "},
+                            {field: "yyy", width: "30%", text: "表头1(30%) "},
+                            {field: "zzz", width: "50%", text: "表头1(50%) "}],
+                        data: [
+                            {
                                 xxx: 10, yyy: 1, zzz: 1
                             },
                             {
@@ -82,7 +76,6 @@
                             {
                                 xxx: 40, yyy: 4, zzz: 4
                             }
-
                         ]
                     }
                     vm.$skipArray = ["simplegrid"]
@@ -92,17 +85,19 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body &gt;
-      
-    &lt;fieldset ms-controller="test"&gt;
-        &lt;legend&gt;columns的配置项使用&lt;/legend&gt;
-      
-        &lt;div ms-widget="simplegrid"&gt;
+        &lt;fieldset ms-controller="test"&gt;
+            &lt;legend&gt;最简单的例子&lt;/legend&gt;
+            &lt;div ms-widget="simplegrid"&gt;
 
-        &lt;/div&gt;
-    &lt;/fieldset&gt;
-&lt;/body&gt;
+            &lt;/div&gt;
+        &lt;/fieldset&gt;
+
+    &lt;/body&gt;
 &lt;/html&gt;
-        </pre>
-    </fielset>
-</body>
+
+            </pre>
+        </fieldset>
+
+
+    </body>
 </html>

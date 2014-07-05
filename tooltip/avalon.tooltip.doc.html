@@ -41,6 +41,8 @@
 <tr>
     <td>hiddenDelay</td><td> 64</td><td> tooltip自动隐藏时间，单位ms</td></tr>
 <tr>
+    <td>onInit</td><td>配置函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+<tr>
     <td>contentGetter</td><td>配置函数</td><td>contentGetter() 获取内容接口，讲srcElement作为参数传递过来，默认是返回a标签的title，如果该函数返回为空，那么则不会显示tooltip</td></tr>
 <tr>
     <td>$animateArrMaker</td><td>配置函数</td><td>$animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]</td></tr>

@@ -1,12 +1,14 @@
 <div class="ui-grid">
     <div class="ui-grid-scroll-wrapper" 
-         ms-css-height="tbodyHeight+theadHeight"
-         ms-on-scroll-12="throttleRenderTbody"
-         >
-        <span class="ui-grid-wrapper"
-             ms-css-top="tbodyScrollTop"ms-css-width="gridWidth" 
+         ms-css-height="tbodyHeight+theadHeight" 
+         ms-widget="scrollbar,$simplegrid{{MS_OPTION_ID}}" 
+         ms-css-padding-bottom="paddingBottom"
+         data-scrollbar-position="right,bottom">
+        <div class="ui-grid-wrapper"  
+             ms-css-width="gridWidth" 
              >
-            <table class="ui-grid-thead"   >
+            <table class="ui-grid-thead" 
+            ms-css-margin-left="cssLeft" >
                 <tr>
                     MS_OPTION_THEAD_BEGIN
                     <td data-repeat-rendered="_theadRenderedCallback"
@@ -31,7 +33,8 @@
                     MS_OPTION_THEAD_END
                 </tr>
             </table>
-            <table class="ui-grid-tbody" >
+            <table class="ui-grid-tbody" 
+            ms-css-margin-left="cssLeft" >
                 <tr data-repeat-rendered="_tbodyRenderedCallback"
                     ms-repeat-row="_data"
                     >
@@ -42,15 +45,17 @@
                         ms-visible="getCellProperty($key,'toggle')" 
                         ms-css-width="getCellProperty($key,'width')"
                         ms-css-text-align="getCellProperty($key,'align')"
-                        ms-css-height="tbodyRowHeight" 
                         >
-                        {{$val}}
+                        {{ renderCell($val, $key, row) | html }}
                     </td>
                     MS_OPTION_TBODY_END
                 </tr>
             </table>
-        </span>
-        <div class="ui-grid-scroll-marker" ms-css-height="tbodyScrollHeight+theadHeight" >
+        </div>
+        <div class="ui-scrollbar-scroller">
+            <div class="ui-grid-scroll-marker" ms-css-height="getScrollerHeight()" 
+            ms-css-width="gridWidth">
+        </div>
 
         </div>
     </div>
@@ -154,6 +159,7 @@ MS_OPTION_STYLE
 
     .ui-grid-scroll-marker{
         width:100%;
+        z-index: -1;
     }
 
     .ui-grid-pager-wrapper{

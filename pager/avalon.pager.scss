@@ -1,0 +1,133 @@
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+.ui-pager {
+    @include inline-block();
+    font-size: 0;
+    vertical-align: middle;
+    white-space: nowrap;
+    .ui-pager-items {
+        @include inline-block();
+        vertical-align: middle;
+    }
+    .ui-pager-prev, .ui-pager-next, .ui-pager-item {
+        @include inline-block();
+        @if($oinui-theme == smoothness){
+            background-color: #FFFFFF;
+        }
+        height: 24px;
+        line-height: 24px;
+        margin-right: 5px;
+        border: 1px solid $ui-state-default-border-color;
+        padding: 0 10px;
+        @include border-radius(2px);
+        cursor: pointer;
+        font-size: 12px;
+        vertical-align: middle;
+        @include user-select(none);
+        /*!当前页,没有边框*/
+        &.ui-state-active {
+            color: $ui-widget-content-background-color;
+            border: 0 none;
+            padding: 1px 11px;
+            cursor: default;
+        }
+        /*!掠过*/
+        &.ui-state-hover{
+            border-color:$ui-widget-content-background-color;
+        }
+        /*!禁用*/
+        &.ui-state-disabled {
+            @if($oinui-theme == smoothness){
+                border-color: #D9D9D9;
+            }
+            background-color:$ui-state-hover-background-color;
+            color: $ui-state-hover-color;
+            cursor: default;
+        }
+    }
+    /*!省略掉的页数*/
+    .ui-pager-omit {
+        @include inline-block();
+        height: 24px;
+        line-height: 24px;
+        margin-right: 5px;
+        padding: 1px 0;
+        vertical-align: middle;
+        font-size: 12px;
+        @include user-select(none);
+        cursor: default;
+    }
+    /*!页面跳转部分的样式*/
+    .ui-pager-jump {
+        @include inline-block();
+        vertical-align: middle;
+        padding-left:5px;
+        padding-right: 5px;
+        vertical-align: middle;
+    }
+    /*!输入域的容器*/
+    .ui-pager-textbox-wrapper {
+        @include inline-block();
+        width:26px;
+        margin-left: 5px;
+        margin-right: 5px;
+        padding: 3px 5px;
+        vertical-align: middle;
+        font-size: 0;
+        outline: none;
+        @if($oinui-theme == smoothness){
+            background-color: #fff;
+        }
+        border: 1px solid $ui-state-default-border-color;
+
+    }
+    /*!输入域*/
+    .ui-pager-textbox {
+        display: inline;
+        float: left;
+        position: relative;
+        width: 26px;
+        height: 18px;
+        line-height: 18px;
+        border: 0 none;
+        font-size: 12px;
+        outline: medium none;
+        vertical-align: middle;
+        text-align: center;
+        @if($oinui-theme == smoothness){
+            color: #333333;
+            background: #fff;
+        }
+    }
+    /*!里面的按钮的样式*/
+    .ui-pager-button {
+        @include inline-block();
+        overflow: visible;
+        _overflow-y: hidden;
+        height: 26px;
+        margin-left: 5px;
+        border-radius: 2px;
+        outline: none;
+        cursor: pointer;
+        font-size: 12px;
+        vertical-align: middle;
+        padding: 0 10px;
+        text-decoration: none;
+        border: 1px solid $ui-widget-content-border-color;
+        background-color: $ui-widget-content-background-color;
+        color: $ui-widget-content-color;
+        &:hover{
+            border-color: lighten($ui-widget-content-border-color, 10%);
+            background-color: lighten($ui-widget-content-background-color, 10%);
+        }
+    }
+    /*!里面的文本全部包在一个容器内，以便实现居中*/
+    .ui-pager-text {
+        @include inline-block();
+        font-size: 12px;
+        vertical-align: middle;
+    }
+}
+
+
+

@@ -56,9 +56,10 @@ $pf : ".ui-scrollbar";
 	    }
 	}
 	&-scroller{
-		position: absolute;
+		/*position: absolute;
 		left: 0;
-		top: 0;
+		top: 0;*/
+		overflow: hidden;
 	}
 	&-left {
 		left: 0;

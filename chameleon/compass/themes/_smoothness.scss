@@ -1,0 +1,48 @@
+@charset "utf-8";
+
+
+//两种主色调 银灰与草绿
+
+//$ui-widget-font-widget: #000;
+//字体设置
+$oniui-font-size: 1em;
+$oniui-font-weight: normal;
+$oniui-font-family: Helvetica,Arial,Sans-serif;
+
+//绿色的亮色
+$ui-widget-content-border-color:#3e973e;
+$ui-widget-content-background-color:#68c969;
+$ui-widget-content-color:#fff;
+
+$ui-widget-header-border-color: #aaa;
+$ui-widget-header-background-color: rgb(223,223,223);
+$ui-widget-header-color: #fff;
+
+
+$ui-state-default-background-color: #e6e6e6;
+$ui-state-default-border-color: #d3d3d3;
+$ui-state-default-color: #555;
+//移上去时
+$ui-state-hover-background-color: #f8f8f8;
+$ui-state-hover-border-color: #bbb;
+$ui-state-hover-color: #212121;
+//点击时状态
+$ui-state-focus-background-color: #dadada;
+$ui-state-focus-border-color: #999;
+$ui-state-focus-color: #212121;
+//激活状态
+$ui-state-active-background-color: #dadada;
+$ui-state-active-border-color: #999;
+$ui-state-active-color: #212121;
+//禁用
+$ui-state-disabled-background-color: #F5F5F5;
+$ui-state-disabled-border-color: #D9D9D9;
+$ui-state-disabled-color: #CCCCCC;
+
+//error
+$ui-state-error-background-color: #dadada;
+$ui-state-error-border-color: #999;
+$ui-state-error-color: #212121;
+
+
+

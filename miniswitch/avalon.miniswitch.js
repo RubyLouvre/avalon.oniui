@@ -466,15 +466,15 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.miniswitch.html'], function(
             };
 
             vm.$getClass = function(value) {
-                    var v = avalon.type(value) === 'array' ? value[0] : value,
-                        cls = vmodel.data.filter(function(option) {
-                            return option.value == v;
-                        });
+                var v = avalon.type(value) === 'array' ? value[0] : value,
+                    cls = vmodel.data.filter(function(option) {
+                        return option.value == v;
+                    });
 
-                    if(cls.length > 0) {
-                        return cls[0].cls;
-                    }
-                    return "";
+                if(cls.length > 0) {
+                    return cls[0].cls;
+                }
+                return "";
             };
 
             vm.$getFont = function(value) {
@@ -584,13 +584,13 @@ define(['avalon', 'avalon.getModel', 'text!./avalon.miniswitch.html'], function(
             title: '启用',
             font: '&#xf111;'
         },
-        {
-            value: 2,
-            label : ' 暂停',
-            cls: 'g-icon-pause',
-            title: '暂停',
-            font: '&#xf04c;'
-        }]
+            {
+                value: 2,
+                label : ' 暂停',
+                cls: 'g-icon-pause',
+                title: '暂停',
+                font: '&#xf04c;'
+            }]
     };
 
     return avalon;

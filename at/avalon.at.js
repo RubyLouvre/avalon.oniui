@@ -1,14 +1,5 @@
 //avalon 1.2.5 2014.4.2
-define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
-    var arr = tmpl.split("MS_OPTION_STYLE")
-    var cssText = arr[1].replace(/<\/?style>/g, "")
-    var styleEl = document.getElementById("avalonStyle")
-    var template = arr[0]
-    try {
-        styleEl.innerHTML += cssText
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText
-    }
+define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", "css!./avalon.at.css"], function(avalon, template) {
 
     var widget = avalon.ui.at = function(element, data, vmodels) {
         var options = data.atOptions, $element = avalon(element), keyupCallback, blurCallback, popup
@@ -45,7 +36,7 @@ define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
                             str = str.replace(new RegExp(escapeRegExp("<wbr>" + at + "<wbr>"), "img"), "<" + bdoName + ">" + at + "</" + bdoName + ">")
 
                             //创建弹出层
-                            popup = vmodel.$popup.call(this, str)
+                            popup = vmodel._popup.call(this, str)
                             if (popup) {
                                 vmodel.activeIndex = 0 //重置高亮行
                                 avalon.scan(popup, _vmodels)
@@ -102,6 +93,9 @@ define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
 
                 })
                 avalon.scan(element, _vmodels)
+                if (typeof options.onInit === "function") {
+                    options.onInit.call(element, vmodel, options, vmodels)
+                }
             }
 
             vm.$remove = function() {
@@ -110,7 +104,7 @@ define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
                 avalon.log("at $remove")
             }
 
-            vm.$popup = function(str) {
+            vm._popup = function(str) {
                 //创建测量用的DIV,它与当前textara, input的大小样式完全相同
                 var fakeTextArea = document.createElement("pre")
                 fakeTextArea.innerHTML = str
@@ -169,7 +163,7 @@ define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
                 return popup
             }
 
-            vm.$hover = function(e, index) {
+            vm._hover = function(e, index) {
                 e.preventDefault()
                 var model = vmodel.$model
                 model.__mouseenter__ = true
@@ -183,7 +177,7 @@ define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
                     popup = null
                 }
             })
-            vm.$select = function(e) {
+            vm._select = function(e) {
                 e.stopPropagation()
                 e.preventDefault()
                 var query = vmodel._datalist[ vmodel.activeIndex ]
@@ -262,7 +256,7 @@ define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
         switch (e.keyCode) {
             case 13:
                 // enter
-                vmodel.$select(e)
+                vmodel._select(e)
                 break;
             case 9:
                 // tab

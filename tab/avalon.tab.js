@@ -2,16 +2,7 @@
   * tab组件，实现扫描DOM结构或者接受数组传参，生成tab，支持click、mouseenter事件响应切换，支持mouseenter情形延迟响应切换，支持click情形tab选中情况下再次点击回调，支持自动切换效果，支持tab增删禁用启用并可混合设置同步tab可删除状态，支持混合配制panel内容类型并支持panel内容是ajax配置回调
   *
   */
-define(["avalon", "text!./avalon.tab.html", "text!./avalon.tab.panels.html", "text!./avalon.tab.close.html", "text!./avalon.tab.css"], function(avalon, tmpl, panelTpl, closeTpl, css) {
-
-    var cssText = css
-    var styleEl = document.getElementById("avalonStyle")
-    var template = tmpl
-    try {
-        styleEl.innerHTML += cssText
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText
-    }
+define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "text!./avalon.tab.close.html", "css!./avalon.tab.css", "css!../chameleon/oniui-common.css"], function(avalon, template, panelTpl, closeTpl) {
 
     // 对模板进行转换
     function _getTemplate(tpl, vm) {

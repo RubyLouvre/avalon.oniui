@@ -26,20 +26,20 @@ MS_OPTION_TEMPLATE
          ms-mouseleave="$mouseleave"
          ms-widget="scrollbar,$dropdown{{MS_OPTION_ID}}" ms-attr-id="{{menuId}}">
         <div class="ui-scrollbar-scroller"
-             ms-each-el="data" ms-attr-id="{{dropdownId}}">
-            <div class="ui-dropdown-optGroup"
-             ms-if="el.optGroup">{{el.text}}</div>
-            <div class="ui-dropdown-item"
+             ms-attr-id="{{dropdownId}}">
+
+            <div ms-repeat="data"  class="ui-dropdown-item"
                  ms-click="$select($event, el)"
                  ms-title="el.label"
-                 ms-if="el.item"
-                 ms-mouseenter="$hover($event, $index)"
-                 ms-class="ui-dropdown-item-hover:activeIndex == $index && el.enable"
+                 ms-hover="ui-dropdown-item-hover"
+                ms-class="ui-dropdown-item-hover:activeIndex == $index && el.enable"
                  ms-class-1="ui-dropdown-item-disabled:!el.enable"
                  ms-class-2="ui-dropdown-item-selected:isSelected(el.value) && el.enable && multiple"
-                 ms-class-3="ui-dropdown-item-disabled-selected:isSelected(el.value) && !el.enable">{{el.label}}</div>
-            <div class="ui-dropdown-divider"
-                 ms-if="el.divider"></div>
+                 ms-class-3="ui-dropdown-item-disabled-selected:isSelected(el.value) && !el.enable"
+                 ms-class-4="ui-dropdown-group:el.optGroup"
+                 ms-class-5="ui-dropdown-divider:el.optGroup && !$first"
+                 >{{el.label}}</div>
+
         </div>
     </div>
 </div>
@@ -60,6 +60,12 @@ MS_OPTION_TEMPLATE
         ms-attr-label="option.label">{{option.label}}</option>
 MS_OPTION_STYLE
 <style>
+    /*
+           <div class="ui-dropdown-optGroup"
+             ms-if="el.optGroup">{{el.text}}</div> 
+    <div class="ui-dropdown-divider"
+                 ms-if="el.divider"></div>
+    */
     html {
         background: #ffffff none;
         color: #333333;
@@ -74,176 +80,5 @@ MS_OPTION_STYLE
         src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?v=4.0.3');
         src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?#iefix&v=4.0.3') format('embedded-opentype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.woff?v=4.0.3') format('woff'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.ttf?v=4.0.3') format('truetype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular') format('svg');
     }
-    .ui-icon {
-        -moz-user-select: none;
-        -ms-user-select: none;
-        -webkit-user-select: none;
-        user-select: none;
-        cursor: default;
-        font-family: fontawesome !important;
-        font-size: 14px;
-        -moz-osx-font-smoothing: grayscale;
-        -webkit-font-smoothing: antialiased;
-        font-style: normal;
-        font-weight: normal;
-        line-height: 18px;
-        vertical-align: middle;
-        z-index: 999;
-    }
-    a .ui-icon,
-    .ui-btn .ui-icon {
-        cursor: pointer;
-    }
-    .ui-dropdown {
-        display: inline-block;
-        *display: inline;
-        vertical-align: middle;
-        *zoom: 1;
-        font-size: 12px;
-        outline: none;
-    }
-    .ui-dropdown .ui-icon {
-        cursor: pointer;
-        font-size: 12px;
-        vertical-align: baseline;
-    }
-    .ui-dropdown-source {
-        background-color: #ffffff;
-        border: 1px solid #cccccc;
-        cursor: pointer;
-    }
-    .ui-dropdown-input {
-        -moz-user-select: none;
-        -ms-user-select: none;
-        -webkit-user-select: none;
-        user-select: none;
-        height: 18px;
-        overflow: hidden;
-        padding: 3px 21px 3px 6px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        word-break: normal;
-        word-wrap: normal;
-    }
-    .ui-dropdown-icon-wrap {
-        display: block;
-        height: 0;
-        position: relative;
-    }
-    .ui-dropdown-icon-wrap .ui-icon-angle-down, .ui-dropdown-icon-wrap .ui-icon-angle-up {
-        display: block;
-    }
-    .ui-dropdown-icon {
-        color: #b5b5b5;
-        cursor: pointer;
-        display: none;
-        padding: 0 6px;
-        position: absolute;
-        right: 0;
-        text-align: center;
-        top: -21px;
-    }
-    .ui-dropdown:hover .ui-dropdown-source {
-        border-color: #999999;
-    }
-    .ui-dropdown-focus .ui-dropdown-source {
-        border-color: #3775c0;
-    }
-    .ui-dropdown-focus:hover .ui-dropdown-source {
-        border-color: #3775c0;
-    }
-    .ui-dropdown-error .ui-dropdown-source {
-        border-color: #ff8888;
-    }
-    .ui-dropdown-error:hover .ui-dropdown-source {
-        border-color: #ff8888;
-    }
-    .ui-dropdown-disabled .ui-dropdown-source {
-        background-color: #f5f5f5;
-        border-color: #d9d9d9;
-        color: #cccccc;
-        cursor: default;
-    }
-    .ui-dropdown-disabled .ui-dropdown-icon {
-        cursor: default;
-    }
-    .ui-dropdown-disabled:hover .ui-dropdown-source {
-        background-color: #f5f5f5;
-        border-color: #d9d9d9;
-        color: #cccccc;
-        cursor: default;
-    }
-    .ui-dropdown-small .ui-dropdown-source {
-        border-radius: 2px;
-    }
-    .ui-dropdown-small .ui-dropdown-input {
-        padding-top: 1px;
-        padding-bottom: 1px;
-    }
-    .ui-dropdown-small .ui-dropdown-icon {
-        top: -19px;
-    }
-    /*.ui-dropdown-menu-wrap {
-        position: relative;
-        z-index: 1000;
-    }*/
-    .ui-dropdown-menu {
-        display: none;
-        left: 0;
-        position: absolute;
-        top: -1px;
-        width: 100%;
-        _width: auto !important;
-        z-index: 1001;
-    }
-    .ui-dropdown-menu-inner {
-        box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
-        background-color: #ffffff;
-        border: 1px solid #cccccc;
-        overflow-y: scroll;
-        padding: 3px 0;
-    }
-    .ui-dropdown-item, ui-dropdown-optGroup {
-        -moz-user-select: none;
-        -ms-user-select: none;
-        -webkit-user-select: none;
-        user-select: none;
-        cursor: pointer;
-        overflow: hidden;
-        padding: 3px 0;
-        text-indent: 20px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 100%;
-        word-break: normal;
-        word-wrap: normal;
-        *zoom: 1;
-    }
-    .ui-dropdown-optGroup {
-        font-size: 14px;
-        font-weight: bold;
-        text-indent: 10px;
-    }
-    .ui-dropdown-item-hover, .ui-dropdown-item-selected {
-        background-color: #58b359;
-        color: #ffffff;
-    }
-    .ui-dropdown-item-selected .ui-icon {
-        color: #ffffff;
-    }
-    .ui-dropdown-divider {
-        border-top: 1px solid #f2f2f2;
-        height: 0;
-        _height: auto;
-        margin: 3px 0;
-        overflow: hidden;
-        width: 100%;
-        _width: auto;
-    }
-    .ui-dropdown-item-disabled {
-        color: #999999;
-    }
-    .ui-dropdown-item-disabled-selected {
-        background-color: #f8f8f8;
-    }
+    
 </style>

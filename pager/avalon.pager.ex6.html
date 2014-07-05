@@ -12,12 +12,10 @@
         </script>
         <script>
             require(["pager/avalon.pager"], function() {
-              
                 avalon.define("test", function(vm) {
                     vm.pager = {
-                        currentPage: 8,
-                        totalItems: 150,
-                        showJumper: true
+                        alwaysShowNext: true,
+                        alwaysShowPrev: true
                     }
                     vm.$skipArray = ["pager"]
                 })
@@ -26,7 +24,7 @@
         </script>
     </head>
     <body ms-controller="test">
-        <h1>显示跳转台(点击确认或输入框里回车都能跳转页码)</h1>
+        <h1>总是显示上一页与下一页按钮</h1>
         <div ms-widget="pager"></div>
         <pre class="brush:html;gutter:false;toolbar:false">
 &lt;!DOCTYPE html&gt;
@@ -38,13 +36,15 @@
         &lt;script src="../avalon.js"&gt;
 
         &lt;/script&gt;
+        &lt;script src="../highlight/shCore.js"&gt;
+
+        &lt;/script&gt;
         &lt;script&gt;
             require(["pager/avalon.pager"], function() {
                 avalon.define("test", function(vm) {
                     vm.pager = {
-                        currentPage: 8,
-                        totalItems: 150,
-                        showJumper: true
+                        alwaysShowNext: true,
+                        alwaysShowPrev: true
                     }
                     vm.$skipArray = ["pager"]
                 })
@@ -53,12 +53,11 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body ms-controller="test"&gt;
-        &lt;h1&gt;显示跳转台&lt;/h1&gt;
+        &lt;h1&gt;总是显示上一页与下一页按钮&lt;/h1&gt;
         &lt;div ms-widget="pager"&gt;&lt;/div&gt;
-        
     &lt;/body&gt;
 &lt;/html&gt;
-
+           
         </pre>
     </body>
 </html>

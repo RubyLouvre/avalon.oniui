@@ -374,7 +374,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                 // 向下的时候，只有越界的时候才更新scrollbar状态
                 breakOutCallback: function(ifBreakOut, v, obj) {
                     if(void 0 !== ifBreakOut && ifBreakOut[0] === "v" && ifBreakOut[1] === "down") {
-                        obj.down.removeClass("ui-scrollbar-arrow-disabled")
+                        obj.down.removeClass("ui-state-disabled")
                         vmodel.updateScrollbar("forceUpdate")
                     }
                 },

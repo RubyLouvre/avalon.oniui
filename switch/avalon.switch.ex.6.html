@@ -30,7 +30,8 @@
                             if(elem.hasClass("ui-switch")) return "单击" + (elem.hasClass("checked") ? "关闭" : "打开")
                         },
                         position: "tc"
-                        , delegate: true
+                        , delegate: true,
+                        autohide: false
                     }
                     vm.$skipArray = ["switch"]
                 })
@@ -94,7 +95,8 @@
                             if(elem.hasClass(&quot;ui-switch&quot;)) return &quot;单击&quot; + (elem.hasClass(&quot;checked&quot;) ? &quot;关闭&quot; : &quot;打开&quot;)
                         },
                         position: &quot;tc&quot;
-                        , delegate: true
+                        , delegate: true,
+                        autohide: false
                     }
                     vm.$skipArray = [&quot;switch&quot;]
                 })

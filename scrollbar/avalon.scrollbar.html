@@ -8,8 +8,8 @@
 		ms-mousedown="_draggerDown($event, true)" 
 		ms-mouseup="_draggerDown($event, false)" 
 		ms-mouseout="_draggerDown($event, false)" 
-		ms-hover="ui-scrollbar-dragger-hover ui-state-hover"
+		ms-hover="ui-state-hover"
 		>{{draggerHTML | html}}</div>
 	</div>
-	<div ms-if="showBarHeader" class="ui-scrollbar-arrow ui-scrollbar-arrow-down" ms-click="_arrClick($event, 'down', pos, $index)" ms-mousedown="_arrDown($event,'down', pos, $index)" ms-mouseup="_arrDown($event,'down', pos, $index,'release')" ms-hover="ui-state-hover ui-scrollbar-arrow-hover"><b></b></div>
+	<div ms-if="showBarHeader" class="ui-scrollbar-arrow ui-scrollbar-arrow-down" ms-click="_arrClick($event, 'down', pos, $index)" ms-mousedown="_arrDown($event,'down', pos, $index)" ms-mouseup="_arrDown($event,'down', pos, $index,'release')" ms-hover="ui-state-hover"><b></b></div>
 </div>

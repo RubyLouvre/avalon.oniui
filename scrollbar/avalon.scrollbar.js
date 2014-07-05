@@ -225,7 +225,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
             vm.draggable.stop = function(e, data) {
                 vmodel.draggable.drag(e, data)
                 vmodel.dragging = false
-                avalon(data.element).removeClass("ui-scrollbar-dragger-onmousedown")
+                avalon(data.element).removeClass("ui-state-active")
             }
 
             vm.$remove = function() {
@@ -450,14 +450,14 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
                         }
                         if(vmodel.showBarHeader) {
                             if(y == 0 && isVertical || !isVertical && x == 0) {
-                                avalon(getByClassName("ui-scrollbar-arrow-up", bar[0])[0]).addClass("ui-scrollbar-arrow-disabled")
+                                avalon(getByClassName("ui-scrollbar-arrow-up", bar[0])[0]).addClass("ui-state-disabled")
                             } else {
-                                avalon(getByClassName("ui-scrollbar-arrow-up", bar[0])[0]).removeClass("ui-scrollbar-arrow-disabled")
+                                avalon(getByClassName("ui-scrollbar-arrow-up", bar[0])[0]).removeClass("ui-state-disabled")
                             }
                             if(y >= draggerpar.innerHeight() - dragger.innerHeight() && isVertical || !isVertical && x >= draggerpar.innerWidth() - dragger.innerWidth()) {
-                               !vmodel.breakOutCallback && avalon(getByClassName("ui-scrollbar-arrow-down", bar[0])[0]).addClass("ui-scrollbar-arrow-disabled")
+                               !vmodel.breakOutCallback && avalon(getByClassName("ui-scrollbar-arrow-down", bar[0])[0]).addClass("ui-state-disabled")
                             } else {
-                                avalon(getByClassName("ui-scrollbar-arrow-down", bar[0])[0]).removeClass("ui-scrollbar-arrow-disabled")
+                                avalon(getByClassName("ui-scrollbar-arrow-down", bar[0])[0]).removeClass("ui-state-disabled")
                             }
                         }
                     }
@@ -489,12 +489,12 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
                 clearInterval(ele.data("mousedownTimer"))
                 clearTimeout(ele.data("setTimer"))
                 var bar = bars[barIndex]
-                if(ismouseup || ele.hasClass("ui-scrollbar-arrow-disabled")) {
-                    return ele.removeClass("ui-scrollbar-arrow-onmousedown")
+                if(ismouseup || ele.hasClass("ui-state-disabled")) {
+                    return ele.removeClass("ui-state-active")
                 }
                 // 延时开启循环
                 ele.data("setTimer", setTimeout(function(){
-                    ele.addClass("ui-scrollbar-arrow-onmousedown")
+                    ele.addClass("ui-state-active")
                     ele.data("mousedownTimer", setInterval(function() {
                         return vmodel._computer(function(obj) {
                                 return vmodel._clickComputer(obj, diretion)
@@ -550,17 +550,17 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
                     if(isVertical) {
                         if(xy.y < 0) {
                             xy.y = 0
-                            obj.up.addClass("ui-scrollbar-arrow-disabled")
+                            obj.up.addClass("ui-state-disabled")
                             breakOut = ["v", "up"]
                         } else {
-                            obj.up.removeClass("ui-scrollbar-arrow-disabled")
+                            obj.up.removeClass("ui-state-disabled")
                         }
                         if(xy.y > obj.draggerparHeight - obj.draggerHeight) {
                             xy.y = obj.draggerparHeight - obj.draggerHeight
                             breakOut = ["v", "down"]
-                            obj.down.addClass("ui-scrollbar-arrow-disabled")
+                            obj.down.addClass("ui-state-disabled")
                         } else {
-                            obj.down.removeClass("ui-scrollbar-arrow-disabled")
+                            obj.down.removeClass("ui-state-disabled")
                         }
                         var c = strToNumber((obj.scrollerH - obj.viewH) * xy.y / (obj.draggerparHeight - obj.draggerHeight)) - vmodel.scrollTop
                         obj.dragger.css("top", xy.y + "px")
@@ -569,17 +569,17 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
                         if(xy.x < 0) {
                             xy.x = 0
                             breakOut = ["h", "up"]
-                            obj.up.addClass("ui-scrollbar-arrow-disabled")
+                            obj.up.addClass("ui-state-disabled")
                         } else {
-                            obj.up.removeClass("ui-scrollbar-arrow-disabled")
+                            obj.up.removeClass("ui-state-disabled")
                         }
                         if(xy.x > obj.draggerparWidth - obj.draggerWidth) {
                             xy.x = obj.draggerparWidth - obj.draggerWidth
                             breakOut = ["h", "down"]
                             // 有溢出检测回调，不disable
-                            !vmodel.breakOutCallback && obj.down.addClass("ui-scrollbar-arrow-disabled")
+                            !vmodel.breakOutCallback && obj.down.addClass("ui-state-disabled")
                         } else {
-                            obj.down.removeClass("ui-scrollbar-arrow-disabled")
+                            obj.down.removeClass("ui-state-disabled")
                         }
                         obj.dragger.css("left", xy.x + "px")
                         vmodel._scrollTo(strToNumber((obj.scrollerW - obj.viewW) * xy.x / (obj.draggerparWidth - obj.draggerWidth)), void 0)
@@ -617,9 +617,9 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
             vm._draggerDown = function(e, isdown) {
                 var ele = avalon(this)
                 if(isdown) {
-                    ele.addClass("ui-scrollbar-dragger-onmousedown")
+                    ele.addClass("ui-state-active")
                 } else {
-                    ele.removeClass("ui-scrollbar-dragger-onmousedown")
+                    ele.removeClass("ui-state-active")
                 }
             }
             vm._stopPropagation = function(e) {

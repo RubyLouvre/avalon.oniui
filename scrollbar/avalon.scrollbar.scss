@@ -1,16 +1,34 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
 $uiname : ".ui-scrollbar";
-
+@if($oinui-theme == smoothness) {
+	$scrollbar: (
+		bg: #f8f8f8,
+		arrColor: #FFE44F,
+		arrBg: #eee,
+		arrHoverBg: #aaa,
+		arrActiveBg: #999,
+		arrDisabledBg: #e9e9e9,
+		draggerBg: #bcbcbc,
+		draggerHoverBg: #aaa,
+		draggerActiveBg: #999
+	) !global;
+} @else {
+}
+div#{$uiname} {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
 #{$uiname} {
 	width: 10px;
 	height: 100%;
-	position: absolute;
 	left: auto;
 	right:0;
 	top:0;
 	bottom: auto;
-	background:#f8f8f8;
+	background:map-get($scrollbar, bg);
 	// fix ie8 opacity bug
 	z-index: 100;
 	transition:opacity .5s;
@@ -20,15 +38,13 @@ $uiname : ".ui-scrollbar";
 	-ms-transition:opacity .5s;
 	&-arrow{
 		position: absolute;
-		background:#eee;
+		background:map-get($scrollbar, arrBg);
 		top:0;
 		left: 0;
 		width: 10px;
 		height: 10px;
 	    b{
-	    	border-style: dashed dashed solid;
-			border-color: transparent transparent #FFE44F;
-			border-width: 0 4px 4px;
+	    	@include triangle($direction: top, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrColor));
 			position: absolute;
 			top: 50%;
 			left: 50%;
@@ -41,25 +57,21 @@ $uiname : ".ui-scrollbar";
 	    	top: auto;
 	    	bottom: 0;
 	    	b{
-	    		border-style: solid dashed dashed;
-		    	border-color: #FFE44F transparent transparent;
-				border-width: 4px 4px 0;
+	    		@include triangle($direction: bottom, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrColor));
+		    
 	    	}
 	    }
-	    div &-hover{
-	    	background: #aaa;
-	    }
-	    div &-onmousedown{
-	    	background: #999;
-	    }
-	    div &-disabled{
-	    	background: #e9e9e9;
-	    }
 	}
+    .ui-state-hover{
+    	background: map-get($scrollbar, arrHoverBg);
+    }
+    .ui-state-active{
+    	background: map-get($scrollbar, arrActiveBg);
+    }
+    .ui-state-disabled{
+    	background: map-get($scrollbar, arrDisabledBg);
+    }
 	&-scroller{
-		/*position: absolute;
-		left: 0;
-		top: 0;*/
 		overflow: hidden;
 	}
 	&-left {
@@ -86,17 +98,17 @@ $uiname : ".ui-scrollbar";
 		top:0;
 		width: 100%;
 		height: 100%;
-	}
-	div &-dragger{
-		position: absolute;
-		width: 100%;
-		left: 0;
-		background: #bcbcbc;
-		div &-hover{
-			background: #aaa;
+		#{$uiname}-dragger{
+			position: absolute;
+			width: 100%;
+			left: 0;
+			background: map-get($scrollbar, draggerBg);
+		}		
+		.ui-state-hover{
+			background: map-get($scrollbar, draggerHoverBg);
 		}
-		div &-onmousedown{
-			background:#999;
+		.ui-state-active{
+			background:map-get($scrollbar, draggerActiveBg);
 		}
 	}
 	&-top,&-bottom {
@@ -107,9 +119,7 @@ $uiname : ".ui-scrollbar";
 				top:0;
 			}
 			&-arrow b{
-				border-style: dashed solid dashed dashed;
-				border-color: transparent #FFE44F transparent transparent;
-				border-width: 4px 4px 4px 0;
+				@include triangle($direction: left, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrColor));
 				margin-top: -4px;
 				margin-left: -2px;
 			}
@@ -117,9 +127,7 @@ $uiname : ".ui-scrollbar";
 				right: 0;
 				left: auto;
 				b {
-					border-style: dashed dashed dashed solid;
-				    border-color: transparent transparent transparent #FFE44F;
-					border-width: 4px 0 4px 4px;
+					@include triangle($direction: right, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrColor));
 				}
 			}
 		}

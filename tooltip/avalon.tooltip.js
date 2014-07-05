@@ -170,9 +170,9 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
                         arrIn
                     for(var i = 0, len = bs.length; i < len; i++) {
                         var tb = avalon(bs[i])
-                        if(tb.hasClass("out")) {
+                        if(tb.hasClass("ui-tooltip-arrow-out")) {
                             arrOut = tb
-                        } else if(tb.hasClass("in")) {
+                        } else if(tb.hasClass("ui-tooltip-arrow-in")) {
                             arrIn = tb
                         }
                     }

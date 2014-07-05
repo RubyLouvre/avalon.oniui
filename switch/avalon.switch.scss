@@ -2,8 +2,27 @@
 @import "../chameleon/oniui-theme";
 $uiname : ".ui-switch";
 v\:* { behavior: url(#default#VML);} 
+@if($oinui-theme == smoothness) {
+	$switch: (
+		bg:#45A846,
+		disableBg: #dedede,
+		disableColor: #fff,
+		bgImg: url("bg.gif"),
+		onColor: #fff,
+		offColor: #9B9B9B,
+		ballColor:#fff
+	) !global
+}
 div#{$uiname}{
 	border: none;
+	background-color: transparent;
+    & label, & span{
+		cursor: pointer;
+		margin: 0;
+		top:0;
+		left:0;
+		position: relative;
+	}
 }
 #{$uiname} {
 	position: relative;
@@ -12,20 +31,11 @@ div#{$uiname}{
 	top:0;
 	overflow: hidden;
 	text-align: center;
-	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	border: none;
 	background: none;
 	
 	&-on{
-		background-image: url("bg.gif");
-	}
-
-    & label, & span{
-		cursor: pointer;
-		margin: 0;
-		top:0;
-		left:0;
-		position: relative;
+		background-image: map-get($switch, bgImg);
 	}
 	&-normal{
 	    width: 35px;
@@ -50,10 +60,11 @@ div#{$uiname}{
 	}
 	&-left, &-right{
 		width: 33%;
-		color:#fff;
+		color:map-get($switch, onColor);
+		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	}
 	&-right{
-		color: #9B9B9B;
+		color: map-get($switch, offColor);
 	}
 	&-dragger{
 		width: 34%;
@@ -120,12 +131,12 @@ div#{$uiname}{
 		float: left;
 		display: inline;
 		height: 18px;
-		line-height: 18px;
+		line-height: 20px;
 		font-weight: bolder;
 	}
 	&-large &-left, &-large &-right, &-large &-dragger{
 		height:30px;
-		line-height: 30px;
+		line-height: 32px;
 		font-size: 24px;
 	}
 	&-large &-right{
@@ -146,10 +157,10 @@ div#{$uiname}{
 		}
 		#{$uiname}-bg{
 			border-radius: 9px;
-			background-color: #45A846;
+			background-color: map-get($switch, bg);
 		}
 		#{$uiname}-dragger-ball{
-			background: #fff;
+			background: map-get($switch, ballColor);
 			border-radius: 6px;
 		}
 		&#{$uiname}-large{
@@ -165,9 +176,9 @@ div#{$uiname}{
 		}
 		&.ui-state-disabled{
 			#{$uiname}-uckbg{
-				background-color: #dedede;
+				background-color: map-get($switch, disableBg);
 				&-disabled{
-					background-color: #dedede;
+					background-color: map-get($switch, disableBg);
 				}
 			}
 		}
@@ -175,33 +186,29 @@ div#{$uiname}{
 }
 
 
-.hd{
-	display: none;
-}
-
-.ui-state-disabled ,.ui-state-hover{
+.ui-state-disabled, .ui-state-hover{
 	#{$uiname}-dragger-ball{
 		opacity: .4;
 	}
-	.oval-hd{
+	#{$uiname}-oval-hd{
 		display: block;
 	}
-	.oval-n{
+	#{$uiname}-oval-n{
 		display: none;
 	}
 }
 .ui-state-disabled{
-	& label, & span{
+	& #{$uiname}-bar label, & #{$uiname}-bar span{
 		cursor: default;
-		color: #fff;
+		color: map-get($switch, disableColor);
 	}
 	#{$uiname}-bg{
 		background-position: -57px -18px;
 	}
-	.oval-hd{
+	#{$uiname}-oval-hd{
 		display: block;
 	}
-	.oval-n {
+	#{$uiname}oval-n {
 		display: none;
 	}
 }

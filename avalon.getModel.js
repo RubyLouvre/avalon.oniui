@@ -1,12 +1,8 @@
 define(["avalon"], function(avalon) {
-    function testVM( expr , vm ) {
-        var t = vm,
-            pre;
-
+    function getChildVM( expr , vm ) {
+        var t = vm,   pre;
         for( var i = 0; i < expr.length; i++ ) {
-
             var k = expr[i];
-
             if( typeof t[k] !== 'undefined' ) {
                 pre = t;
                 t = t[k];
@@ -17,23 +13,16 @@ define(["avalon"], function(avalon) {
 
         return pre;
     }
-
-    /*
-        返回参数
-        [
-            expr以.分割的最后一位
-            expr最后一位的model，结合第一个元素就可以$watch
-            匹配expr的vmodel
-        ]
-    */
+   // 在一堆VM中，提取某一个VM的符合条件的子VM
+   // 比如 vm.aaa.bbb = {} ; 
+   // avalon.getModel("aaa.bbb", vmodels) ==> ["bbb", bbbVM, bbbVM所在的祖先VM（它位于vmodels中）]
     avalon.getModel = function( expr , vmodels ){
-
-        var e = expr.split('.');
+        var str = expr.split('.');
         for( var i = 0; i < vmodels.length; i++ ) {
-            var vm = vmodels[i];
-            var m = testVM( e , vm);
-
-            if( typeof m !== 'undefined' ) return [ e[e.length-1] , m , vm ];
+            var ancestor = vmodels[i];
+            var child = getChildVM( str , ancestor);
+            if( typeof child !== 'undefined' )
+                return [ str[str.length-1] , child , ancestor ];
         }
         return null;
     }

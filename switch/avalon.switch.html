@@ -1,5 +1,5 @@
-<div class="ui-switch ui-state-default reset ui-switch-use-no-img" ms-class-100="ui-switch-{{MS_OPTION_TYPE}} ui-switch-{{MS_OPTION_THEME}}" ms-class-100="ui-switch-off:$addThisClass()" ms-class-101="ui-state-disabled:disabled" ms-click="toggle" ms-hover="ui-state-hover">
-	<div class="ui-switch-bar clrfix" ms-class="ui-switch-animate:$css3support" ms-if="dir=='left'">
+<div class="ui-switch ui-state-default ui-helper-reset ui-switch-use-no-img" ms-class-100="ui-switch-{{MS_OPTION_TYPE}} ui-switch-{{MS_OPTION_THEME}}" ms-class-100="ui-switch-off:$addThisClass()" ms-class-101="ui-state-disabled:disabled" ms-click="toggle" ms-hover="ui-state-hover">
+	<div class="ui-switch-bar ui-helper-clearfix" ms-class="ui-switch-animate:$css3support" ms-if="dir=='left'">
 		<span class="ui-switch-left" ms-if="hdir">{{MS_OPTION_ON_TEXT|html}}</span>
 		<span class="ui-switch-right" ms-if="!hdir">{{MS_OPTION_OFF_TEXT|html}}</span>
 		<label class="ui-switch-dragger">
@@ -15,7 +15,7 @@
 					ms-attr-r="draggerR"  
 					ms-attr-fill="draggerColor"/>
 				</svg>
-				<v:oval class="oval-n"
+				<v:oval class="ui-switch-oval-n"
 			   	stroked="false" 
 			   	filled="true" 
 			    ms-css-height="draggerR*2+'px'" 
@@ -24,7 +24,7 @@
 			   	style="position:absolute;z-index:2;left:-1px;top:0;behavior: url(#default#VML)">
 				    <v:fill opacity="1"></v:fill>
 			    </v:oval>
-				<v:oval class="oval-hd"
+				<v:oval class="ui-switch-oval-hd"
 			   	stroked="false" 
 			   	filled="true" 
 			    ms-css-height="draggerR*2+'px'" 

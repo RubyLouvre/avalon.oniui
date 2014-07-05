@@ -1,20 +1,15 @@
-<div ms-repeat-pos="_position" class="ui-scrollbar reset clrfix ui-widget" ms-class-100="ui-scrollbar-{{pos}}" ms-class-101="ui-scrollbar-{{type}} ui-scrollbar-{{pos}}-{{type}}" ms-mouseenter="_show($event, 'always', $index)">
+<div ms-repeat-pos="_position" class="ui-scrollbar ui-helper-reset ui-helper-clearfix ui-widget" ms-class-100="ui-scrollbar-{{pos}}" ms-class-101="ui-scrollbar-{{type}} ui-scrollbar-{{pos}}-{{type}}" ms-mouseenter="_show($event, 'always', $index)">
 	<div ms-if="showBarHeader" class="ui-scrollbar-arrow ui-scrollbar-arrow-up" ms-click="_arrClick($event, 'up', pos, $index)" ms-mousedown="_arrDown($event,'up', pos, $index)" ms-mouseup="_arrDown($event,'up', pos, $index,'release')" ms-hover="ui-state-hover ui-scrollbar-arrow-hover"><b></b></div>
 	<div class="ui-scrollbar-draggerpar" ms-click="_barClick($event, pos, $index)">
 		<div class="ui-scrollbar-dragger"
 		ms-data-draggable-axis="pos == 'left' || pos == 'right' ? 'y' : 'x'" 
-		data-draggable-before-start="beforeStartFn" 
-		data-draggable-start="startFn" 
-		data-draggable-drag="dragFn" 
-		data-draggable-before-stop="beforeStopFn" 
-		data-draggable-stop="stopFn" 
-		data-draggable-containment="parent" 
 		ms-click="_stopPropagation($event)" 
 		ms-mouseover="_show($event,'always',$index)" 
 		ms-mousedown="_draggerDown($event, true)" 
 		ms-mouseup="_draggerDown($event, false)" 
-		ms-hover="ui-scrollbar-dragger-hover ui-state-hover"
+		ms-mouseout="_draggerDown($event, false)" 
+		ms-hover="ui-state-hover"
 		>{{draggerHTML | html}}</div>
 	</div>
-	<div ms-if="showBarHeader" class="ui-scrollbar-arrow ui-scrollbar-arrow-down" ms-click="_arrClick($event, 'down', pos, $index)" ms-mousedown="_arrDown($event,'down', pos, $index)" ms-mouseup="_arrDown($event,'down', pos, $index,'release')" ms-hover="ui-state-hover ui-scrollbar-arrow-hover"><b></b></div>
+	<div ms-if="showBarHeader" class="ui-scrollbar-arrow ui-scrollbar-arrow-down" ms-click="_arrClick($event, 'down', pos, $index)" ms-mousedown="_arrDown($event,'down', pos, $index)" ms-mouseup="_arrDown($event,'down', pos, $index,'release')" ms-hover="ui-state-hover"><b></b></div>
 </div>

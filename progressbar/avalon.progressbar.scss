@@ -1,62 +1,53 @@
-@import "../style/default.scss";
-$pf : ".ui-progressbar";
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname : ".ui-progressbar";
+@if($oinui-theme == smoothness) {
+	$progressbar: (
+		bg: #DEDEDE,
+		barBg: #619FE8,
+		rightBg: #ddd,
+		overlayBg:url("indeterminate.gif") repeat-x #ddd,
+		labelBg:#6AA5E9,
+		labelColor: #fff,
+		labelColor2: #619FE8
+	) !global
+}
 
-#{$pf}{
+#{$uiname}{
 	width: 100%;
 	position: relative;
 	height: 6px;
 	border:none;
-	background-color: #DEDEDE;
+	background-color: map-get($progressbar, bg);
 	font-family: Verdana,Arial,sans-serif;
 	// means #{$pr}-bar
 	&-bar{
 		z-index: 1;
 		position: relative;
-		background-color: #619FE8;
+		background-color: map-get($progressbar, barBg);
 		height: 100%;
 		width: 0;
 		float: left;
 		display: inline;
 	}
 	&-bar-right {
-		background: #ddd;
-		#{$pf}-label {
-			color : blue;
-		}
+		background: map-get($progressbar, rightBg);
 	}
 	&-overlay{
 		width: 100%;
-		background-color: #ddd;
 		position: relative;
 		z-index: 1;
 		height: 100%;
 		overflow: hidden;
-		background:url("indeterminate.gif") repeat-x;
+		background: map-get($progressbar, overlayBg);
 	}
-/*	&-bg{
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		left: 0;
-		top: 0;
-		background: #6AA5E9 repeat-x;
-		background-size: 9px 9px;
-		background-image: -webkit-gradient(linear, left top, right bottom,color-stop(.25, rgba(255, 255, 255, .15)), color-stop(.25, transparent),color-stop(.5, transparent), color-stop(.5, rgba(255, 255, 255, .15)),color-stop(.75, rgba(255, 255, 255, .15)), color-stop(.75, transparent),to(transparent));
-		background-image: -webkit-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
-		background-image: -moz-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
-		background-image: -ms-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
-		background-image: -o-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
-		background-image: linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
-		-moz-animation: animate-stripes 3s linear infinite;
-		-webkit-animation: animate-stripes 3s linear infinite;
-	}*/
 
 	&-label{
 		position: absolute;
 		left:50%;
 		z-index: 10;
 		margin: 0 auto;
-		color: #fff;
+		color: map-get($progressbar, labelColor);
 	}
 	&-circle{
 		border:none;
@@ -66,11 +57,11 @@ $pf : ".ui-progressbar";
 			left: 0;
 			width: 100%;
 			text-align: center;
-			color: #619FE8;
+			color: map-get($progressbar, labelColor2);
 		}
 	}
 	&-normal &-label{
-		background-color: #6AA5E9;
+		background-color: map-get($progressbar, labelBg);
 		padding: 2px 4px;
 		font-size: 13px;
 		top: -25px;
@@ -84,34 +75,11 @@ $pf : ".ui-progressbar";
 		left:50%;
 	}
 	&-arrow {
-		border-style: solid dashed dashed;
-		border-color: #6AA5E9 transparent transparent;
-		border-width: 6px 5px 0;
-		height: 0;
+		@include triangle($direction: bottom, $width: 10px, $height: 5px, $color: map-get($progressbar, labelBg));
 		overflow: hidden;
-		line-height: 0;
-		font-size: 0;
-		bottom: -6px;
+		bottom: -5px;
 		left: 50%;
 		position: absolute;
-		margin-left: -6px;
+		margin-left: -5px;
 	}
 }
-
-/*@-moz-keyframes animate-stripes {
-	0% {
-		background-position: 0 0;
-	}
-	100% {
-		background-position: 60px 0;
-	}  
-}
-
-@-webkit-keyframes animate-stripes {
-	0% {
-	  background-position: 0 0;
-	}
-	100% {
-	  background-position: 60px 0;
-	}
-}*/

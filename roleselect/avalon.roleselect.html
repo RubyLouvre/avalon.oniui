@@ -1,19 +1,19 @@
-<div class="ui-roleselect reset clrfix ui-widget">
+<div class="ui-roleselect ui-helper-reset ui-helper-clearfix ui-widget">
 	<div class="ui-roleselect-data ui-roleselect-menu ui-widget-content" ms-widget="scrollbar,$left{{MS_OPTION_ID}}">
-		<ul class="reset ui-scrollbar-scroller" ms-each-item="data">
+		<ul class="ui-helper-reset ui-scrollbar-scroller" ms-each-item="data">
 		{{MS_OPTION_DATA}}
 		</ul>
 	</div>
 	<div class="ui-roleselect-option">
-		<div class="ui-button" ms-click="$update($event,'add')">
-			<span>添加<i class="ui-icon ui-icon-chevron-right"></i></span>
+		<div class="ui-button" ms-click="_update($event,'add')">
+			<span>&nbsp;添加&nbsp;&gt;</span>
 		</div>
-		<div class="ui-button" ms-click="$update($event,'delete')">
-			<span><i class="ui-icon ui-icon-chevron-left"></i> 删除</span>
+		<div class="ui-button" ms-click="_update($event,'delete')">
+			<span>&lt;&nbsp;删除&nbsp;</span>
 		</div>
 	</div>
 	<div class="ui-roleselect-select ui-roleselect-menu ui-widget-content" ms-widget="scrollbar,$right{{MS_OPTION_ID}}">
-		<ul class="reset ui-scrollbar-scroller" ms-each-item="_select">
+		<ul class="ui-helper-reset ui-scrollbar-scroller" ms-each-item="_selectData" data-each-rendered="updateScrollbar">
 			{{MS_OPTION_SELECT}}
 		</ul>
 	</div>

@@ -25,25 +25,26 @@
     width: 0;
     height: 0;
     line-height:0;//fix IE6
+    font-size: 0;
 
     @if ($direction == top) {
-        // border-top
+        border-top:0;
         border-right: $width dashed transparent;
         border-bottom: $height solid $color;
         border-left: $width dashed transparent;
     }  @else if ($direction == bottom)  {
         border-top: $height solid $color;
         border-right: $width dashed transparent;
-        // border-bottom
+        border-bottom:0;
         border-left: $width dashed transparent;
     }  @else if ($direction == left) {
         border-top: $width dashed transparent;
         border-right: $height solid $color;
         border-bottom: $width dashed transparent;
-        // border-left
+        border-left:0;
     }   @else if ($direction == right)  {
         border-top: $width dashed transparent;
-        // border-right
+        border-right:0;
         border-bottom: $width dashed transparent;
         border-left: $height solid $color;
     }   @else if ($direction == top-left) {

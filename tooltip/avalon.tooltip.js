@@ -2,16 +2,7 @@
   * tooltip组件，
   *
   */
-define(["avalon", "text!./avalon.tooltip.html", "text!./avalon.tooltip.css", "position/avalon.position"], function(avalon, tmpl, css) {
-
-    var cssText = css
-    var styleEl = document.getElementById("avalonStyle")
-    var template = tmpl
-    try {
-        styleEl.innerHTML += cssText
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText
-    }
+define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "css!./avalon.tooltip.css","css!../chameleon/oniui-common.css"], function(avalon, template) {
 
     var widget = avalon.ui.tooltip = function(element, data, vmodels) {
         var options = data.tooltipOptions
@@ -179,9 +170,9 @@ define(["avalon", "text!./avalon.tooltip.html", "text!./avalon.tooltip.css", "po
                         arrIn
                     for(var i = 0, len = bs.length; i < len; i++) {
                         var tb = avalon(bs[i])
-                        if(tb.hasClass("out")) {
+                        if(tb.hasClass("ui-tooltip-arrow-out")) {
                             arrOut = tb
-                        } else if(tb.hasClass("in")) {
+                        } else if(tb.hasClass("ui-tooltip-arrow-in")) {
                             arrIn = tb
                         }
                     }

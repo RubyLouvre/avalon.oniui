@@ -1,9 +1,9 @@
-<li class="ui-roleselect-item" ms-class="ui-state-disabled:$itemSelected(item,'{{MS_OPTION_TYPE}}')" 
+<li class="ui-roleselect-item" ms-class="ui-state-disabled:_itemSelected(item,'{{MS_OPTION_TYPE}}')" 
 ms-data-value="item.value" 
 ms-data-name="item.name" 
 ms-hover="ui-state-hover" 
-ms-class-2="ui-helper-hidden:$itemShow(item,'{{MS_OPTION_TYPE}}')" 
-ms-click="$select($event, item,'{{MS_OPTION_TYPE}}')" 
+ms-class-2="ui-helper-hidden:_itemShow(item,'{{MS_OPTION_TYPE}}')" 
+ms-click="_select($event, item,'{{MS_OPTION_TYPE}}')" 
 ms-attr-id="'{{MS_OPTION_TYPE}}'+item.value+$uid">
 	{{ item.name | html }}
 </li>

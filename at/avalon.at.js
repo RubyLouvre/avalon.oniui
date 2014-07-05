@@ -1,14 +1,5 @@
 //avalon 1.2.5 2014.4.2
-define(["avalon", "text!./avalon.at.popup.html"], function(avalon, tmpl) {
-    var arr = tmpl.split("MS_OPTION_STYLE")
-    var cssText = arr[1].replace(/<\/?style>/g, "")
-    var styleEl = document.getElementById("avalonStyle")
-    var template = arr[0]
-    try {
-        styleEl.innerHTML += cssText
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText
-    }
+define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", "css!./avalon.at.css"], function(avalon, template) {
 
     var widget = avalon.ui.at = function(element, data, vmodels) {
         var options = data.atOptions, $element = avalon(element), keyupCallback, blurCallback, popup

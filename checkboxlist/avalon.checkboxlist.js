@@ -1,13 +1,5 @@
-define(["avalon.getModel", "text!./avalon.checkboxlist.html"], function(avalon, sourceHTML) {
-    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""];
-    var cssText = arr[1].replace(/<\/?style>/g, "");
-    var styleEl = document.getElementById("avalonStyle");
-    var template = arr[0];
-    try {
-        styleEl.innerHTML += cssText;
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText;
-    }
+define(["avalon.getModel", "text!./avalon.checkboxlist.html"], function(avalon, template) {
+
     var widget = avalon.ui.checkboxlist = function(element, data, vmodels) {
         // 获取配置项        
         var getVMFunc = (function(data){

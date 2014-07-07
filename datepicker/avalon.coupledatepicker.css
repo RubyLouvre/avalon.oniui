@@ -1,0 +1,7 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+.ui-coupledatepicker { font-size: 0; }
+.ui-coupledatepicker .ui-coupledatepicker-item { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; }
+.ui-coupledatepicker .label { font-size: 12px; vertical-align: middle; }

@@ -140,7 +140,7 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
                 if(vmodel.event == "mouseenter" && vmodel.delegate) {
                     vmodel.event = "mouseover"
                 }
-                element.setAttribute("ms-" + vmodel.event, "$show($event)")
+                element.setAttribute("ms-" + vmodel.event, "_show($event)")
                 tooltipElem = tooltipELementMaker()
                 avalon.scan(tooltipElem, [vmodel].concat(vmodels))
                 avalon.scan(element, [vmodel].concat(vmodels))
@@ -297,7 +297,7 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
                 if(vmodel.animated && !!-[1,]) {
                     clearInterval(animateTimer)
                     var now = (avalon(tooltipElem).css("opacity") * 100) >> 0
-                    dis = vmodel.$animateArrMaker(now, 100)
+                    dis = vmodel._animateArrMaker(now, 100)
                     avalon(tooltipElem).css("opacity", dis[0] / 100)
                     dis.splice(0, 1)
                     animateTimer = setInterval(function() {
@@ -316,7 +316,7 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
                 if(vmodel.animated && !!-[1,]) {
                     clearInterval(animateTimer)
                     var now = (avalon(tooltipElem).css("opacity") * 100) >> 0
-                    dis = vmodel.$animateArrMaker(now, 0)
+                    dis = vmodel._animateArrMaker(now, 0)
                     animateTimer = setInterval(function() {
                         if(dis.length <= 0) {
                             tooltipElem.style.display = "none"
@@ -331,7 +331,7 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
                 }
             }
 
-            vm.$show = function(e) {
+            vm._show = function(e) {
                 if(vmodel.disabled) return
                 var tar = this
                     , src = e.srcElement || e.target
@@ -384,7 +384,7 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
                 }
             }
 
-            vm.$isShown = function() {
+            vm._isShown = function() {
                 var elem = avalon(tooltipElem)
                 return elem.css("display") != "none" && !elem.hasClass("ui-tooltip-hidden")
             }
@@ -400,19 +400,19 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
         }
         vmodel.$watch("position", function(newValue) {
             _init(vmodel.position)
-            vmodel.$isShown() && vmodel.show()
+            vmodel._isShown() && vmodel.show()
         })
 
         vmodel.$watch("positionAt", function(newValue) {
             customAt = newValue
             _init(vmodel.position)
-            vmodel.$isShown() && vmodel.show()
+            vmodel._isShown() && vmodel.show()
         })
 
         vmodel.$watch("positionMy", function(newValue) {
             customMy = newValue
             _init(vmodel.position)
-            vmodel.$isShown() && vmodel.show()
+            vmodel._isShown() && vmodel.show()
         })
 
         return vmodel
@@ -442,8 +442,8 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
             if(elem.tagName.toLowerCase() != "a") return
             return elem.title
         }, //@optMethod contentGetter() 获取内容接口，讲srcElement作为参数传递过来，默认是返回a标签的title，如果该函数返回为空，那么则不会显示tooltip
-        //@optMethod $animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]
-        $animateArrMaker: function(from, to) {
+        //@optMethod _animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]
+        _animateArrMaker: function(from, to) {
             var arr = []
                 , dis = to - from
                 , d = dis > 0 ? 10 : -10

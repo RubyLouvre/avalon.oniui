@@ -1,0 +1,124 @@
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname : "ui-simplegrid";
+
+/*三种容器的规则*/
+.ui-helper-asc, .ui-helper-desc,  .ui-helper-ndb{
+    width:16px;
+    height:16px;
+    line-height: 1;
+    vertical-align: middle;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+}
+/*三种容器下三角形的共同点*/
+.ui-helper-asc span, .ui-helper-desc span, .ui-helper-ndb span{
+    width: 0px;
+    height: 0px;
+    line-height:0;
+    border-width: 6px;
+    position: absolute;
+    top: 0px;
+    left: 4px;
+}
+/*上三角*/
+.ui-helper-ndb .ui-helper-sort-top, .ui-helper-desc .ui-helper-sort-top{
+    border-color: transparent transparent #ccc transparent;
+    border-style: dashed dashed solid dashed;
+    top: -8px;
+}
+.ui-helper-asc .ui-helper-sort-top{
+    border-color: transparent transparent #000 transparent;
+    border-style: dashed dashed solid dashed;
+    top: -8px;
+}
+/*下三角*/
+.ui-helper-ndb .ui-helper-sort-bottom, .ui-helper-asc .ui-helper-sort-bottom{
+    border-color: #ccc transparent transparent transparent;
+    border-style: solid dashed dashed  dashed;
+    top: 8px;
+}
+.ui-helper-desc .ui-helper-sort-bottom{
+    border-color: #000 transparent transparent transparent;
+    border-style: solid dashed dashed  dashed;
+    top: 8px;
+}
+@if($oinui-theme == smoothness){
+   $ui-state-hover-background-color:#E8F5FD;
+}
+.#{$uiname}{
+    width:100%;
+    border: 1px solid $ui-state-default-border-color;
+    @extend %oniui-font-setting;
+    .#{$uiname}-scroll-wrapper{
+        width:100%;
+        overflow:auto;
+        position: relative;
+    }
+    .#{$uiname}-wrapper{
+        width:100%;
+        position: absolute;
+    }
+    .#{$uiname}-thead{
+        width: 100%;
+        @include user-select();
+        border-bottom: 1px solid $ui-state-default-border-color;
+        border-collapse: collapse;
+    }
+    .#{$uiname}-thead td,.#{$uiname}-thead th{
+        border: 0 none;
+        height: 35px;
+        line-height: 35px;
+        padding-left: 5px;
+        background-color:$ui-state-default-background-color;
+    }
+
+    .#{$uiname}-tbody{
+        width: 100%;
+        border: 1px solid $ui-state-default-border-color;
+        border-left:none;
+        border-right:none;
+        border-collapse: collapse;
+    }
+    %cell-style{
+        border: 0 none;
+        height: 35px;
+        line-height: 35px;
+        padding-left: 5px;
+    }
+    .#{$uiname}-tbody{
+        td{
+            @extend %cell-style;
+        }
+        td{
+            @extend %cell-style;
+        }
+        .ui-state-hover{
+            td, th{
+                background-color: $ui-state-hover-background-color;
+            }
+        }
+    } 
+
+    .#{$uiname}-scroll-marker{
+        width:100%;
+        z-index: -1;
+    }
+
+    .#{$uiname}-pager-wrapper{
+        width: 100%;
+        padding:2px 0px;
+        overflow:hidden;
+    }
+    .#{$uiname}-pager-options{
+        float: left;
+        height: 24px;
+        line-height: 24px;
+        padding-left: 5px;
+    }
+    .ui-pager{
+        float: right;
+    }
+}
+

@@ -33,10 +33,11 @@ http://cssshrink.com/
 
 .ui-helper-reset { margin: 0; padding: 0; border: 0; outline: 0; line-height: 1.3; text-decoration: none; font-size: 100%; list-style: none; }
 
+.ui-helper-noselect { -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; }
+.ui-helper-noselect img, .ui-helper-noselect a { -webkit-user-drag: none; pointer-events: none; }
+
 .ui-helper-clearfix { *zoom: 1; }
 .ui-helper-clearfix:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
-
-.ui-icon { display: block; text-indent: -99999px; overflow: hidden; background-repeat: no-repeat; }
 
 .ui-widget { font-family: 1.1em; font-size: 1em; }
 .ui-widget .ui-widget, .ui-widget input, .ui-widget select, .ui-widget texteara, .ui-widget button { font-size: Helvetica, Arial, Sans-serif; }
@@ -51,10 +52,7 @@ http://cssshrink.com/
 
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: #555555; text-decoration: none; }
 
+@font-face { font-family: fontawesome; font-style: normal; font-weight: normal; src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.eot?v=4.1.0"); src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.eot?#iefix&v=4.1.0") format("embedded-opentype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.woff?v=4.1.0") format("woff"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.ttf?v=4.1.0") format("truetype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular") format("svg"); }
 .ui-icon { -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; cursor: default; font-family: fontawesome !important; font-size: 14px; -moz-osx-font-smoothing: grayscale; -webkit-font-smoothing: antialiased; font-style: normal; font-weight: normal; line-height: 18px; vertical-align: middle; z-index: 999; }
 
 a .ui-icon, .ui-btn .ui-icon { cursor: pointer; }
-
-.ui-btn { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; vertical-align: middle; -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; cursor: pointer; outline: none; text-decoration: none; }
-
-@font-face { font-family: fontawesome; font-style: normal; font-weight: normal; src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?v=4.0.3"); src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?#iefix&v=4.0.3") format("embedded-opentype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.woff?v=4.0.3") format("woff"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.ttf?v=4.0.3") format("truetype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular") format("svg"); }

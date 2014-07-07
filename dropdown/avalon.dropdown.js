@@ -214,7 +214,6 @@ define(['avalon',
                 if (!vmodel.multiple) {
 
                     var index = vm.activeIndex || 0
-                    console.log(index + "================")
                     var max = vmodel.data.size()
                     //区分上下箭头和回车
                     switch (event.keyCode) {

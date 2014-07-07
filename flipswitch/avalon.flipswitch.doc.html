@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>switch组件</title>
+        <title>flipswitch组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../highlight/shCore.js"></script>
@@ -15,11 +15,11 @@
             </tr>
             <!--auto doc start-->
 <tr>
-    <td>onText</td><td> "<b class=\"ui-switch-on\"></b>"</td><td> 选中状态提示文字</td></tr>
+    <td>onText</td><td> "<b class=\"ui-flipswitch-on\"></b>"</td><td> 选中状态提示文字</td></tr>
 <tr>
     <td>offText</td><td> "&times;"</td><td> 未选中状态提示文字</td></tr>
 <tr>
-    <td>type</td><td> "normal"</td><td> 滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成ui-switch-{{type}}添加给switch模板容器</td></tr>
+    <td>type</td><td> "normal"</td><td> 滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成ui-flipswitch-{{type}}添加给flipswitch模板容器</td></tr>
 <tr>
     <td>theme</td><td> "normal"</td><td> 主题，normal,success,warning,danger</td></tr>
 <tr>
@@ -49,7 +49,7 @@
 <tr>
     <td>onInit</td><td>配置函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
-    <td>$animateArrMaker</td><td>配置函数</td><td>$animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]</td></tr>
+    <td>_animateArrMaker</td><td>配置函数</td><td>_animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]</td></tr>
 <tr>
     <td>onChange</td><td>配置函数</td><td>onChange(newValue, vmodel) 选中状态发生变化时触发，参数为当前的选中状态及vmodel对象</td></tr>
 <tr>
@@ -64,19 +64,19 @@
     <td>enable</td><td>接口函数</td><td>enable 启用组件</td></tr>
 <!--auto doc end-->
         </table>
-        <p>switch 组件有一个重要的xx方法,见源码：</p>
+        <p>flipswitch 组件有一个重要的xx方法,见源码：</p>
         <pre class="brush:js;gutter:false;toolbar:false;">
            
         </pre>
         <!--ex list start-->
 <ol>
-<li><a href="avalon.switch.ex.html">不同大小type，默认设置，选中状态</a></li>
-<li><a href="avalon.switch.ex.1.html">不同大小type，支持可拖动切换，选中状态</a></li>
-<li><a href="avalon.switch.ex.2.html">不同大小type，OFF-ON顺序排列，选中状态</a></li>
-<li><a href="avalon.switch.ex.3.html">不同大小type，disabled状态，选中状态</a></li>
-<li><a href="avalon.switch.ex.4.html">不同大小type，自定义ON-OFF文本，选中状态</a></li>
-<li><a href="avalon.switch.ex.5.html">不同大小type，通过接口修改状态，选中状态</a></li>
-<li><a href="avalon.switch.ex.6.html">switch + tooltip</a></li>
+<li><a href="avalon.flipswitch.ex.html">不同大小type，默认设置，选中状态</a></li>
+<li><a href="avalon.flipswitch.ex.1.html">不同大小type，支持可拖动切换，选中状态</a></li>
+<li><a href="avalon.flipswitch.ex.2.html">不同大小type，OFF-ON顺序排列，选中状态</a></li>
+<li><a href="avalon.flipswitch.ex.3.html">不同大小type，disabled状态，选中状态</a></li>
+<li><a href="avalon.flipswitch.ex.4.html">不同大小type，自定义ON-OFF文本，选中状态</a></li>
+<li><a href="avalon.flipswitch.ex.5.html">不同大小type，通过接口修改状态，选中状态</a></li>
+<li><a href="avalon.flipswitch.ex.6.html">flipswitch + tooltip</a></li>
 </ol>
 <!--ex list end-->
     </body>

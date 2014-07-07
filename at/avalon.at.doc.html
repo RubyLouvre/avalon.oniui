@@ -39,22 +39,28 @@
                 <td>maxLength</td><td>20</td> <td> @后的查询字符串只有出现了多少个字符后才显示弹出层</td> 
             </tr>
             <tr>   
-                <td>delay</td> <td>500</td><td> 我们是通过$update方法与后台进行AJAX连接，为了防止输入过快导致频繁，需要指定延时毫秒数</td> 
+                <td>delay</td> <td>500</td><td> 我们是通过updateData方法与后台进行AJAX连接，为了防止输入过快导致频繁，需要指定延时毫秒数</td> 
             </tr>
             <tr>   
-                <td>$update</td><td>空函数</td> <td> 远程更新函数, 与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行$filter、$highlight操作</td> 
+                <td>onInit</td> <td>配置函数</td><td> onInit(vmodel, options, vmodels)， 初始化时触发的回调</td> 
             </tr>
             <tr>   
-                <td>$filter</td> <td>defaults.$filter</td> <td> 用于对datalist进行过滤排序，将得到的新数组赋给_datalist，实现弹出层的更新</td>
+                <td>getTemplate</td> <td>配置函数</td><td> getTemplate(str, options)， 用于修改模板，传入默认模板与配置对象</td> 
             </tr>
             <tr>   
-                <td>$highlight</td><td>defaults.$highlight</td> <td> 用于对_datalist中的字符串进行高亮处理，item为_datalist中的每一项，str为查询字符串</td>  
+                <td>updateData</td><td>配置函数</td> <td> 远程更新函数, 与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行filterData、highlightData操作</td> 
+            </tr>
+            <tr>   
+                <td>filterData</td> <td>配置函数</td> <td> 用于对datalist进行过滤排序，将得到的新数组赋给_datalist，实现弹出层的更新</td>
+            </tr>
+            <tr>   
+                <td>highlightData</td><td>配置函数</td> <td> 用于对_datalist中的字符串进行高亮处理，item为_datalist中的每一项，str为查询字符串</td>  
             </tr>
 
         </table>
-        <p>$update是一个非常重要的配置项，用于与后端同步数据，下面是</p>
+        <p>updateData是一个非常重要的配置项，用于与后端同步数据，下面是</p>
         <pre class="brush:js;gutter:false;toolbar:false;">
-function $update(vmodel, callback) {
+function updateData(vmodel, callback) {
     var model = vmodel.$model
     jQuery.post("url", {limit: model.limit, query: model.query}, function(data) {
         vmodel.datalist = data.datalist

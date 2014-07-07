@@ -1,6 +1,6 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname : ".ui-switch";
+$uiname : ".ui-flipswitch";
 v\:* { behavior: url(#default#VML);} 
 @if($oinui-theme == smoothness) {
 	$switch: (
@@ -138,6 +138,9 @@ div#{$uiname}{
 		height:30px;
 		line-height: 32px;
 		font-size: 24px;
+	}
+	&-large &-left, &-large &-right {
+		
 	}
 	&-large &-right{
 		text-indent: -3px;

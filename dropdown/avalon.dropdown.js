@@ -100,14 +100,6 @@ define(['avalon',
 
             vm.dataSource = dataSource;    //源节点的数据源，通过dataSource传递的值将完全模拟select
             vm.data = dataModel;           //下拉列表的渲染model
-            vm.__listenter__ = false;      //是否当前鼠标在list区域
-
-            //当使用options.model生成相关结构时，使用下面的model同步element的节点
-            vm.optionsModel = optionsModel || {
-                optGroup: [],
-                options: []
-            };
-
 
             vm.$init = function() {
                 if (vmodel.data.length === 0) {
@@ -163,14 +155,13 @@ define(['avalon',
                     if (duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
                         duplexModel[1].$watch(duplexName, function(newValue) {
                             vmodel.value = newValue;
-                        });
+                        })
                         vmodel.$watch('value', function(newValue) {
-                            duplexModel[1][duplexName] = newValue;
-                        });
+                            duplexModel[1][duplexName] = newValue
+                        })
                     }
                 }
-
-            };
+            }
 
             vm.$remove = function() {
                 if (scrollHandler) {
@@ -182,21 +173,23 @@ define(['avalon',
                 vmodel.toggle = false;
                 avalon.log("dropdown $remove")
 
-            };
+            }
 
 
-            vm._select = function(e, option) {
-                if (!option.enable) {
+            vm._select = function(index, event) {
+                var option = vm.data[index]
+                if (!option || !option.enable) {
                     return;
                 }
-                var index;
+                event.stopPropagation()
+                event.preventDefault()
                 //根据multiple区分对待, 多选时可以为空值
                 if (vmodel.multiple) {
-                    index = vmodel.value.indexOf(option.value);
+                    index = vmodel.value.indexOf(option.value)
                     if (index > -1) {
-                        vmodel.value.splice(index, 1);
+                        vmodel.value.splice(index, 1)
                     } else {
-                        vmodel.value.push(option.value);
+                        vmodel.value.push(option.value)
                     }
 
                 } else {
@@ -204,10 +197,9 @@ define(['avalon',
                 }
 
                 vmodel.label = vmodel.value + ""
-                //  console.log(vmodel.value)
                 vmodel.toggle = false;
-                vmodel.onSelect.call(this, e, listNode);
-                titleNode && titleNode.focus();
+                vmodel.onSelect.call(this, event, listNode)
+                titleNode && titleNode.focus()
             }
 
 
@@ -216,59 +208,47 @@ define(['avalon',
                 return avalon.parseHTML(listTemplate)
             }
 
-            vm._keydown = function(e) {
-                e.preventDefault()
+            vm._keydown = function(event) {
+
                 //如果是单选下拉框，可以通过键盘移动
                 if (!vmodel.multiple) {
+
                     var index = vm.activeIndex || 0
                     var max = vmodel.data.size()
                     //区分上下箭头和回车
-                    switch (e.keyCode) {
+                    switch (event.keyCode) {
+                        case 9:
+                            // tab
+                        case 27:
+                            // escape
+                            event.preventDefault()
+                            break;
+                        case 13:
+                            vmodel._select(index, event)
+                            break;
                         case 38:
                         case 63233: //safari 向上
+                            event.preventDefault();
                             index = index - 1
                             if (index < 0) {
                                 index = max - 1
                             }
+                            vm.value = vm.data[index].value
                             vmodel.activeIndex = index
                             break;
                         case 40:
                         case 63235: //safari 向下
-                            e.preventDefault();
+                            event.preventDefault();
                             index = index + 1
                             if (index === max) {
                                 index = 0
                             }
+                            vm.value = vm.data[index].value
                             vmodel.activeIndex = index
-                        case 13:
-
-                            vmodel.toggle = false;
-                            break;
-                        default:
-                    }
-                    console.log(vmodel.activeIndex)
-                    //根据键盘行为设置组件value
-                    if (up !== void 0) {
-                        vmodel.toggle = true;
-                        if (up) {
-                            nextItem = vmodel.data.slice(0, vmodel.activeIndex).reverse();
-                            step = -1;
-                        } else {
-                            nextItem = vmodel.data.slice(vmodel.activeIndex + 1);
-                            step = 1;
-                        }
-
-                        do {
-                            distance += step;
-                            if (nextItem.length === 0)
-                                return;
-                            enableItem = nextItem.shift();
-                        } while (!enableItem.item || !enableItem.enable);
-
-                        vmodel.activeIndex += distance;
+                            break
                     }
                 }
-            };
+            }
 
             vm._toggle = function(b) {
                 if (!vmodel.enable || vmodel.readOnly) {
@@ -306,10 +286,10 @@ define(['avalon',
                     //计算activeIndex的值
                     if (vmodel.activeIndex == void 0) {
                         avalon.each(vmodel.data, function(i, item) {
-                            if (firstItemIndex === void 0 && item.item && item.enable) {
+                            if (firstItemIndex === void 0 && item.enable) {
                                 firstItemIndex = i;
                             }
-                            if (item.item && item.value === value[0]) {
+                            if (item.value === value[0]) {
                                 selectedItemIndex = i;
                                 return false;
                             }
@@ -369,6 +349,8 @@ define(['avalon',
                 //显示浮层
                 $listNode.css(css);
             }
+            //是否当前鼠标在list区域
+            vm.__cursorInList__ = false
 
             //单选下拉框在失去焦点时会收起
             vm._listenter = function() {
@@ -394,11 +376,12 @@ define(['avalon',
                 return vmodel.value;
             }
 
-            vm.isSelected = function(value) {
+            vm.isActive = function(el) {
+                var value = el.value, enable = el.enable
                 if (vmodel.multiple) {
-                    return vmodel.value.indexOf(value) > -1;
+                    return vmodel.value.indexOf(value) > -1 && enable;
                 } else {
-                    return vmodel.value === value;
+                    return vmodel.value === value && enable;
                 }
             }
 

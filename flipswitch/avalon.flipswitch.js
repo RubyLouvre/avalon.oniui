@@ -1,8 +1,8 @@
 /**
-  * switch组件，
+  * flipswitch组件，
   *
   */
-define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable", "css!./avalon.switch.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
+define(["avalon", "text!./avalon.flipswitch.html", "draggable/avalon.draggable", "css!./avalon.flipswitch.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 
     var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect,
         radiusSupport =typeof avalon.cssName("border-radius") == "string"
@@ -26,13 +26,13 @@ define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable", "cs
     }
 
     var css3support =typeof avalon.cssName("transition") == "string"
-    var widget = avalon.ui["switch"] = function(element, data, vmodels) {
-        var options = data.switchOptions
+    var widget = avalon.ui["flipswitch"] = function(element, data, vmodels) {
+        var options = data.flipswitchOptions
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
         var timer
 
-        var vmodel = avalon.define(data.switchId, function(vm) {
+        var vmodel = avalon.define(data.flipswitchId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
             vm.$css3support = css3support && vm.animated
@@ -62,21 +62,21 @@ define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable", "cs
                 "draxis": "x", 
                 "drStop": function(e, data) {
                     if(e.x == dragEvent.x) {
-                        vmodel.$toggle()
+                        vmodel._toggle()
                     } else {
                         var dis = dragEvent.x - e.x
-                        , dir = vmodel.$getDir()
+                        , dir = vmodel._getDir()
                         if(Math.abs(dis) >= dragger.offsetWidth * 2 / 5) {
                             // 右边拖动
                             if(dis > 0 && !dir || dis < 0 && dir) {
                                 vmodel.checked = !vmodel.checked
                             }
                         }
-                        to = vmodel.$getDir() ? -50 : 0
+                        to = vmodel._getDir() ? -50 : 0
                         if(css3support) {
                             bar.style[vmodel.dir] = to ? to + "%" : 0
                         } else {
-                            vm.$animate(-to)
+                            vm._animate(-to)
                         }
                     }
                 },
@@ -89,7 +89,7 @@ define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable", "cs
                     if(vmodel.disabled) {
                         return
                     } else if((e.target || e.srcElement) != dragger && (e.target || e.srcElement).parentNode != dragger && (e.target || e.srcElement).parentNode.parentNode != dragger) {
-                        vmodel.$toggle()
+                        vmodel._toggle()
                         return
                     } 
                     return dragger
@@ -135,14 +135,14 @@ define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable", "cs
                 bar = newDiv.firstChild
 
                 while(bar) {
-                    if(bar.className && bar.className.indexOf("ui-switch-bar") != -1) break
+                    if(bar.className && bar.className.indexOf("ui-flipswitch-bar") != -1) break
                     bar = bar.nextSibling
                 }
-                bar.style[vmodel.dir] = vmodel.$addthisCss()
+                bar.style[vmodel.dir] = vmodel._addthisCss()
                 if(vmodel.draggable) {
                     dragger = bar.firstChild
                     while(dragger) {
-                        if(dragger.className && dragger.className.indexOf("ui-switch-dragger") != -1) break
+                        if(dragger.className && dragger.className.indexOf("ui-flipswitch-dragger") != -1) break
                         dragger = dragger.nextSibling
                     }
                     if(dragger) {
@@ -157,7 +157,7 @@ define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable", "cs
 
                 avalon.scan(newDiv, [vmodel].concat(vmodels))
 
-                vmodel.$draw()
+                vmodel._draw()
 
                 // callback after inited
                 if(typeof options.onInit === "function" ) {
@@ -172,11 +172,11 @@ define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable", "cs
                 inputEle.style.display = "inline"
                 if(element.innerHTML) element.innerHTML = element.textContent = ""
             }
-            vm.$addThisClass = function() {
+            vm._addThisClass = function() {
                 if(!vmodel.checked && vmodel.hdir || vmodel.checked && !vmodel.hdir) return true
                 return false
             }
-            vm.$addthisCss = function() {
+            vm._addthisCss = function() {
                 if(vmodel.checked && !vmodel.hdir || !vmodel.checked && vmodel.hdir) return "-50%"
                 return "0"
             }
@@ -184,17 +184,17 @@ define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable", "cs
             //@method toggle 交替改变选中状态
             vm.toggle = function() {
                 if(vmodel.disabled || vmodel.draggable) return
-                vmodel.$toggle()
+                vmodel._toggle()
             }
-            vm.$toggle = function() {
+            vm._toggle = function() {
                 vmodel.checked = !vmodel.checked
-                vmodel.$animate()
+                vmodel._animate()
             }
-            vm.$getDir = function() {
+            vm._getDir = function() {
                 return vmodel.checked && !vmodel.hdir || !vmodel.checked && vmodel.hdir
             }
-            vm.$animate = function(to, fn) {
-                var dir = vmodel.$getDir()
+            vm._animate = function(to, fn) {
+                var dir = vmodel._getDir()
                     , lt = bar.style[vmodel.dir]
                 if(!css3support && vmodel.animated) {
                     clearTimeout(timer)
@@ -205,9 +205,9 @@ define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable", "cs
                     }
                     var distance
                     if(dir) {
-                        distance = vmodel.$animateArrMaker(lt, to == void 0 ? 50 : to)
+                        distance = vmodel._animateArrMaker(lt, to == void 0 ? 50 : to)
                     } else {
-                        distance = vmodel.$animateArrMaker(lt, to == void 0 ? 0 : to)
+                        distance = vmodel._animateArrMaker(lt, to == void 0 ? 0 : to)
                     }
                     bar.style[vmodel.dir] = -distance[0] + "%"
                     distance.splice(0, 1)
@@ -233,20 +233,20 @@ define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable", "cs
                 vmodel.disabled = false
             }
 
-            vm.$getFillColor = function() {
+            vm._getFillColor = function() {
                 return vmodel.disabled ? vmodel.disabledColor : (vmodel.checked ? vmodel.onColor : vmodel.offColor)
             }
 
-            vm.$shallDrawSvg = function() {
+            vm._shallDrawSvg = function() {
                 return vmodel.$svgSupport && !radiusSupport
             }
 
-            vm.$shallDrawVML = function() {
+            vm._shallDrawVML = function() {
                 return !vmodel.$svgSupport && !radiusSupport
             }
 
             // 根据样式绘制园，圆角等
-            vm.$draw = function() {
+            vm._draw = function() {
                 if(radiusSupport) return
                 var divs = newDiv.getElementsByTagName("div")
                     , bs = newDiv.getElementsByTagName("b")
@@ -254,11 +254,11 @@ define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable", "cs
                     , ball
                 avalon.each(divs, function(i, item) {
                     var ae = avalon(item)
-                    if(ae.hasClass("ui-switch-bg")) bg = ae
+                    if(ae.hasClass("ui-flipswitch-bg")) bg = ae
                 }) 
                 avalon.each(bs, function(i, item) {
                     var ae = avalon(item)
-                    if(ae.hasClass("ui-switch-dragger-ball")) ball = ae
+                    if(ae.hasClass("ui-flipswitch-dragger-ball")) ball = ae
                 }) 
                 if(bg) {
                     var par = avalon(newDiv),
@@ -323,9 +323,9 @@ define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable", "cs
     }
 
     widget.defaults = {
-        onText: "<b class=\"ui-switch-on\"></b>",           //@param 选中状态提示文字
+        onText: "<b class=\"ui-flipswitch-on\"></b>",           //@param 选中状态提示文字
         offText: "&times;",         //@param 未选中状态提示文字
-        type: "normal",         //@param 滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成ui-switch-{{type}}添加给switch模板容器
+        type: "normal",         //@param 滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成ui-flipswitch-{{type}}添加给flipswitch模板容器
         theme: "normal",        //@param 主题，normal,success,warning,danger
         draggable: false,       //@param 是否支持拖动切换状态
         disabled: false,        //@param 禁用
@@ -344,8 +344,8 @@ define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable", "cs
         css3support: false,
         //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
-        //@optMethod $animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]
-        $animateArrMaker: function(from, to) {
+        //@optMethod _animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]
+        _animateArrMaker: function(from, to) {
             var arr = []
                 , dis = to - from
             while(from != to) {
@@ -363,6 +363,6 @@ define(["avalon", "text!./avalon.switch.html", "draggable/avalon.draggable", "cs
         getTemplate: function(tmpl, opts) {
             return tmpl
         },//@optMethod getTemplate(tpl, opts) 定制修改模板接口
-        $author: "skipper@123"
+        _author: "skipper@123"
     }
 })

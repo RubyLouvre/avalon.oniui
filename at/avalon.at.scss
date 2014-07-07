@@ -2,7 +2,7 @@
 @import "../chameleon/oniui-theme";
 $uiname: "ui-at";
 .#{$uiname} {
-    font-size: 14px;
+    @extend %oniui-font-setting;
     @include min-width(150px);
     background:#fff;
     border: 2px solid $ui-state-default-border-color;
@@ -18,8 +18,8 @@ $uiname: "ui-at";
         line-height: 24px;
         text-indent: 5px;
         &.ui-state-hover{
-            background:$ui-widget-content-background-color;
-            color: $ui-widget-content-color;
+            background:$ui-state-hover-background-color;
+            color: $ui-state-hover-color;
         }
     }
 }

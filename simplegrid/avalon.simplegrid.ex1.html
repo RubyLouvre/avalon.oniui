@@ -40,7 +40,49 @@
 
             </div>
             <pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;simplegrid&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script&gt;
+            require(["simplegrid/avalon.simplegrid"], function() {
+                function getData(n) {
+                    var ret = []
+                    for (var i = 0; i &lt; n; i++) {
+                        ret.push({
+                            symbol: Math.random().toString(32).slice(4, 10),
+                            price: range(100, 200),
+                            change: Math.random().toFixed(2) * (Math.random() &gt; 0.5 ? 1 : -1)
+                        })
+                    }
+                    return ret
+                }
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
+                avalon.define("test", function(vm) {
+                    vm.simplegrid = {
+                        columns: ["symbol", "price", "change"],
+                        data: getData(10)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="test" &gt;
+       
+            &lt;div ms-widget="simplegrid" style="width:70%"&gt;
 
+            &lt;/div&gt;
+         
+        &lt;/fieldset&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
             </pre>
         </fieldset>
     </body>

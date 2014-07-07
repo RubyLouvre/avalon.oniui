@@ -9,7 +9,7 @@ $pager-active-color: $ui-state-active-color;
 }
 .#{$uiname} {
     @include inline-block();
-    font-size: 0;
+    @extend %oniui-font-setting;
     vertical-align: middle;
     white-space: nowrap;
     .#{$uiname}-items {

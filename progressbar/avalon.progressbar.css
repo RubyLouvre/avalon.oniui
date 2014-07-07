@@ -2,6 +2,10 @@
 /*
 这是每个都组件都应该引用的部分
 */
+div.ui-progressbar-circle {
+  border: none;
+  background-color: transparent; }
+
 .ui-progressbar {
   width: 100%;
   position: relative;
@@ -32,15 +36,23 @@
     z-index: 10;
     margin: 0 auto;
     color: white; }
-  .ui-progressbar-circle {
-    border: none;
-    background-color: transparent; }
-    .ui-progressbar-circle .ui-progressbar-label {
-      font-size: 13px;
-      left: 0;
-      width: 100%;
-      text-align: center;
-      color: #619fe8; }
+  .ui-progressbar-circle .ui-progressbar-label {
+    font-size: 13px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #619fe8; }
+  .ui-progressbar-circle-bar {
+    border: 4px solid #619fe8;
+    position: absolute;
+    color: white;
+    background-color: #619fe8;
+    width: 38px;
+    height: 38px;
+    z-index: -1;
+    visibility: hidden;
+    padding: 0;
+    margin: 0; }
   .ui-progressbar-normal .ui-progressbar-label {
     background-color: #6aa5e9;
     padding: 2px 4px;

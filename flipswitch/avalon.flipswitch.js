@@ -38,8 +38,8 @@ define(["avalon", "text!./avalon.flipswitch.html", "draggable/avalon.draggable",
             vm.$css3support = css3support && vm.animated
             vm.$skipArray = ["widgetElement", "template"]
             vm.$svgSupport = svgSupport
-            if(vm.type == "large") {
-                vm.draggerR = 12
+            if(vm.size == "large") {
+                vm.draggerRadius = 12
                 vm.height = 30
                 vm.width = 57
             }
@@ -49,15 +49,6 @@ define(["avalon", "text!./avalon.flipswitch.html", "draggable/avalon.draggable",
                 dragger, 
                 dragEvent = {}
 
-            function getElementLeft(element){
-        　　　　var actualLeft = element.offsetLeft;
-        　　　　var current = element.offsetParent;
-        　　　　while (current !== null){
-        　　　　　　actualLeft += current.offsetLeft;
-        　　　　　　current = current.offsetParent;
-        　　　　}
-        　　　　return actualLeft;
-        　　}
             var attrMaps = {
                 "draxis": "x", 
                 "drStop": function(e, data) {
@@ -72,7 +63,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "draggable/avalon.draggable",
                                 vmodel.checked = !vmodel.checked
                             }
                         }
-                        to = vmodel._getDir() ? -50 : 0
+                        var to = vmodel._getDir() ? -50 : 0
                         if(css3support) {
                             bar.style[vmodel.dir] = to ? to + "%" : 0
                         } else {
@@ -245,28 +236,36 @@ define(["avalon", "text!./avalon.flipswitch.html", "draggable/avalon.draggable",
                 return !vmodel.$svgSupport && !radiusSupport
             }
 
-            // 根据样式绘制园，圆角等
+            // 根据样式绘制圆，圆角等
+            //@method _draw() 动态更换皮肤后，可以调用这个方法更新提取switch样式
             vm._draw = function() {
                 if(radiusSupport) return
                 var divs = newDiv.getElementsByTagName("div")
                     , bs = newDiv.getElementsByTagName("b")
                     , bg
                     , ball
-                avalon.each(divs, function(i, item) {
-                    var ae = avalon(item)
-                    if(ae.hasClass("ui-flipswitch-bg")) bg = ae
-                }) 
-                avalon.each(bs, function(i, item) {
-                    var ae = avalon(item)
-                    if(ae.hasClass("ui-flipswitch-dragger-ball")) ball = ae
-                }) 
+                if(vmodel.getStyleFromSkin) {
+                    avalon.each(divs, function(i, item) {
+                        var ae = avalon(item)
+                        if(ae.hasClass("ui-flipswitch-bg")) bg = ae
+                    }) 
+                    avalon.each(bs, function(i, item) {
+                        var ae = avalon(item)
+                        if(ae.hasClass("ui-flipswitch-dragger-ball")) ball = ae
+                    }) 
+                }
                 if(bg) {
+                    // 从css里面提取颜色等设置，写入vmodel
                     var par = avalon(newDiv),
                         bgColor = bg.css("background-color"),
                         offColor = bgColor,
                         disabledColor = bgColor,
                         w = bg.css("width"),
                         h = bg.css("height")
+                    // 防止由于样式没有加载成功造成无法获取正确的样式
+                    if(!parseInt(h)) {
+                        return setTimeout(vmodel._draw, 16)
+                    }
                     if(vmodel.disabled) {
                         vmodel.disabled = false
                         if(vmodel.checked) {
@@ -307,7 +306,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "draggable/avalon.draggable",
                     var bbColor = ball.css("background-color"),
                         bw = parseInt(ball.css("width")) >> 0
                     vmodel.draggerColor = bbColor
-                    vmodel.draggerR = bw / 2
+                    vmodel.draggerRadius = bw / 2
                     ball.css("background-color", "transparent")
                 }
             }
@@ -325,7 +324,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "draggable/avalon.draggable",
     widget.defaults = {
         onText: "<b class=\"ui-flipswitch-on\"></b>",           //@param 选中状态提示文字
         offText: "&times;",         //@param 未选中状态提示文字
-        type: "normal",         //@param 滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成ui-flipswitch-{{type}}添加给flipswitch模板容器
+        size: "normal",         //@param 滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成ui-flipswitch-{{size}}添加给flipswitch模板容器
         theme: "normal",        //@param 主题，normal,success,warning,danger
         draggable: false,       //@param 是否支持拖动切换状态
         disabled: false,        //@param 禁用
@@ -333,14 +332,15 @@ define(["avalon", "text!./avalon.flipswitch.html", "draggable/avalon.draggable",
         animated: true,         //@param 是否开启切换动画效果
         hdir: true,         //@param 开启、关闭选项排列顺序默认为true，即on-off,false为off-on
         dir: "left",            //\@param 组件排列方向,left,to
-        draggerColor: "#ffffff", //@param 推动头颜色，会尝试自动到样式文件里面提取
-        draggerHoverColor: "#ffffff",
-        onColor: "#45A846", //@param 选中情况颜色，会尝试自动到样式文件里面提取
-        offColor: "#D5D5D5", //@param 未选中情况颜色，会尝试自动到样式文件里面提取
-        disabledColor: "#DEDEDE",//@param 禁用情况颜色，会尝试自动到样式文件里面提取
-        draggerR: 7, //@param normal size拖动头半径，会尝试自动到样式文件里面提取
-        height: 18,   //@param normal size高度，会尝试自动到样式文件里面提取
-        width: 35,    //@param normal size宽度，会尝试自动到样式文件里面提取
+        getStyleFromSkin: true, //\@param 是否从皮肤的css里面计算获取圆形进度条样式，默认为true，设置为true的时候，将忽略下面draggerColor,draggerRadius,onColor,offColor,height,width,draggerRadius样式设置
+        draggerColor: "#ffffff", //\@param 推动头颜色，会尝试自动到样式文件里面提取
+        // draggerHoverColor: "#ffffff",
+        onColor: "#45A846", //\@param 选中情况颜色，会尝试自动到样式文件里面提取
+        offColor: "#D5D5D5", //\@param 未选中情况颜色，会尝试自动到样式文件里面提取
+        disabledColor: "#DEDEDE",//\@param 禁用情况颜色，会尝试自动到样式文件里面提取
+        draggerRadius: 7, //\@param normal size拖动头半径，会尝试自动到样式文件里面提取
+        height: 18,   //\@param normal size高度，会尝试自动到样式文件里面提取
+        width: 305,    //\@param normal size宽度，会尝试自动到样式文件里面提取
         css3support: false,
         //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,

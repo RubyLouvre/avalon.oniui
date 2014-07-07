@@ -41,7 +41,7 @@ avalon.oniui
                 <td>according</td><td>完成</td><td>田</td>
             </tr>
             <tr>
-                <td>slider</td><td>完成</td><td>杨 </td>
+                <td>slider</td><td>完成</td><td>田 </td>
             </tr>
             <tr>
                 <td>tooltip</td><td>完成</td><td>杨 </td>

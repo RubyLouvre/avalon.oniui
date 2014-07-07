@@ -50,6 +50,15 @@ http://cssshrink.com/
   font-size: 100%;
   list-style: none; }
 
+.ui-helper-noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none; }
+  .ui-helper-noselect img, .ui-helper-noselect a {
+    -webkit-user-drag: none;
+    pointer-events: none; }
+
 .ui-helper-clearfix {
   *zoom: 1; }
   .ui-helper-clearfix:after {
@@ -59,12 +68,6 @@ http://cssshrink.com/
     clear: both;
     overflow: hidden;
     visibility: hidden; }
-
-.ui-icon {
-  display: block;
-  text-indent: -99999px;
-  overflow: hidden;
-  background-repeat: no-repeat; }
 
 .ui-widget {
   font-family: 1.1em;
@@ -99,6 +102,12 @@ http://cssshrink.com/
   color: #555555;
   text-decoration: none; }
 
+@font-face {
+  font-family: fontawesome;
+  font-style: normal;
+  font-weight: normal;
+  src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.eot?v=4.1.0");
+  src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.eot?#iefix&v=4.1.0") format("embedded-opentype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.woff?v=4.1.0") format("woff"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.ttf?v=4.1.0") format("truetype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular") format("svg"); }
 .ui-icon {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -117,10 +126,3 @@ http://cssshrink.com/
 
 a .ui-icon, .ui-btn .ui-icon {
   cursor: pointer; }
-
-@font-face {
-  font-family: fontawesome;
-  font-style: normal;
-  font-weight: normal;
-  src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?v=4.0.3");
-  src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?#iefix&v=4.0.3") format("embedded-opentype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.woff?v=4.0.3") format("woff"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.ttf?v=4.0.3") format("truetype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular") format("svg"); }

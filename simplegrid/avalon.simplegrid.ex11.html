@@ -33,7 +33,7 @@
 
                     vm.simplegrid = {
                         columns: [
-                            {field: "state", text: "状态", resizable: true, align:"center",width:80},
+                            {field: "state", text: "状态", resizable: true, align: "center", width: 80},
                             {field: "budget", text: "预算", resizable: true},
                             {field: "emerge", text: "展现", resizable: true},
                             {field: "click", text: "点击", resizable: true},
@@ -67,44 +67,36 @@
                 avalon.scan()
             })
         </script>
-        <style>
-            #gridsample{
-                width:900px;
-            }
-            .ui-grid-tbody td{
-                border-left: 0 none;
-                border-right: 0 none;
-            }
-            .ui-grid-tbody {
-                border-top: 0 none!important;
-            }
-            .ui-grid-thead td{
-                background: #f8f8f8;
-                border-left: 0 none;
-                border-right: 0 none;
-            }
-        </style>
+
     </head>
     <body>
 
         <fieldset ms-controller="test">
-            <legend>演示tbodyTemplate的使用</legend>
+            <legend>演示renderCell的使用</legend>
 
-            <div ms-widget="simplegrid" id="gridsample">
+            <div ms-widget="simplegrid" style="width:70%">
 
             </div>
             <div>
-                <h3>要点</h3>
-                <p>需要通过tbodyTemplate修改的行模板,为每一个tr加两个事件绑定,在移出移入操作类名</p>  
-                <pre class="brush:javascript;gutter:false;toolbar:false;">
-                      avalon.config({debug: false})
+              
+                <pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;simplegrid&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+
+        &lt;script&gt;
+            avalon.config({debug: false})
             require(["simplegrid/avalon.simplegrid"], function() {
                 function range(s, b) {
                     return s + Math.floor((b - s) * Math.random())
                 }
                 var createData = function(n) {
                     var array = []
-                    for (var i = 0; i < n; i++) {
+                    for (var i = 0; i &lt; n; i++) {
                         array.push({
                             state: i % 2 === 0,
                             budget: range(3000, 6000),
@@ -121,7 +113,7 @@
 
                     vm.simplegrid = {
                         columns: [
-                            {field: "state", text: "状态", resizable: true, align:"center",width:80},
+                            {field: "state", text: "状态", resizable: true, align: "center", width: 80},
                             {field: "budget", text: "预算", resizable: true},
                             {field: "emerge", text: "展现", resizable: true},
                             {field: "click", text: "点击", resizable: true},
@@ -139,7 +131,6 @@
                                     return val
                             }
                         },
-              
                         showRows: 10,
                         pageable: true,
                         pager: {
@@ -155,6 +146,15 @@
                 })
                 avalon.scan()
             })
+        &lt;/script&gt;
+
+    &lt;/head&gt;
+    &lt;body&gt;
+       &lt;div ms-controller="test" ms-widget="simplegrid" style="width:70%"&gt;
+       &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+
                 </pre>
             </div>
         </fieldset>

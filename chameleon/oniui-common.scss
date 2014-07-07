@@ -67,12 +67,6 @@ http://cssshrink.com/
     @include legacy-pie-clearfix();
 }
 
-.ui-icon {
-    display: block;
-    text-indent: -99999px;
-    overflow: hidden;
-    background-repeat: no-repeat;
-}
 
 
 .ui-widget {
@@ -118,6 +112,18 @@ http://cssshrink.com/
 }
 
 
+@font-face {
+  font-family: fontawesome;
+  font-style: normal;
+  font-weight: normal;
+  src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.eot?v=4.1.0');
+  src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.eot?#iefix&v=4.1.0') 
+      format('embedded-opentype'), 
+      url('http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.woff?v=4.1.0') format('woff'),
+      url('http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.ttf?v=4.1.0') format('truetype'),
+      url('http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular') format('svg');
+}
+
 .ui-icon {
     @include user-select(none);
     cursor: default;
@@ -131,14 +137,8 @@ http://cssshrink.com/
     vertical-align: middle;
     z-index: 999;
 }
+
 a .ui-icon,.ui-btn .ui-icon {
     cursor: pointer;
 }
 
-@font-face {
-    font-family: fontawesome;
-    font-style: normal;
-    font-weight: normal;
-    src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?v=4.0.3');
-    src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?#iefix&v=4.0.3') format('embedded-opentype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.woff?v=4.0.3') format('woff'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.ttf?v=4.0.3') format('truetype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular') format('svg');
-}

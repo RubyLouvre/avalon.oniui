@@ -50,7 +50,7 @@ $uiname : "ui-simplegrid";
 .#{$uiname}{
     width:100%;
     border: 1px solid $ui-state-default-border-color;
-    font-size:12px;
+    @extend %oniui-font-setting;
     .#{$uiname}-scroll-wrapper{
         width:100%;
         overflow:auto;

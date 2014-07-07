@@ -17,7 +17,9 @@
                         array.push({
                             xxx: Math.random().toString(36).substring(4, 10),
                             yyy: Math.random().toString(36).substring(4, 10),
-                            www: 1 + 10,
+                            aaa: 1 + 10,
+                            bbb: Math.random().toString(36).substring(4, 10),
+                            ccc: Math.random().toString(36).substring(4, 10),
                             zzz: i
                         })
                     }
@@ -28,13 +30,15 @@
 
                     vm.simplegrid = {
                         columns: [
-                            {field: "www", text: "紫薯", resizable: true, align:"center"},
-                            {field: "zzz", text: "石榴", resizable: true, align:"center"},
-                            {field: "yyy", text: "雪梨", resizable: true, align:"center"},
-                            {field: "xxx", text: "苹果", resizable: true, align:"center"}
+                            {field: "aaa", text: "紫薯", resizable: true, align: "center"},
+                            {field: "zzz", text: "石榴", resizable: true, align: "center"},
+                            {field: "yyy", text: "雪梨", resizable: true, align: "center"},
+                            {field: "xxx", text: "苹果", resizable: true, align: "center"},
+                            {field: "bbb", text: "南瓜", resizable: true, align: "center"},
+                            {field: "ccc", text: "西红柿", resizable: true, align: "center"}
                         ],
                         tbodyTemplate: function(str) {
-                            return str.replace('class="ui-grid-td"', 'class="ui-grid-td" ms-mouseenter="addCross" ms-mouseleave="removeCross"')
+                            return str.replace('class="ui-simplegrid-td"', 'class="ui-simplegrid-td" ms-mouseenter="addCross" ms-mouseleave="removeCross"')
                         },
                         addCross: function() {
                             avalon(this.parentNode).addClass("hcross")
@@ -61,7 +65,7 @@
                             showPages: 5,
                             options: [10, 20, 30, 40]
                         },
-                        columnsOrder: ["xxx", "yyy", "zzz", "www"],
+                        columnsOrder: ["aaa", "bbb", "ccc", "xxx", "yyy", "zzz"],
                         data: createData(100)
                     }
                     vm.$skipArray = ["simplegrid"]
@@ -70,16 +74,11 @@
             })
         </script>
         <style>
-            #gridsample{
-                width:900px;
+            .ui-simplegrid-tbody tr.hcross td{
+                background:#FF8888!important;
             }
-            .ui-grid-tbody tr.hcross td{
-                background:yellow;
-                color:#fff;
-            }
-            .ui-grid-tbody .vcross{
-                background:gold;
-                 color:#fff;
+            .ui-simplegrid-tbody .vcross{
+                background:#FF8888;
             }
         </style>
     </head>
@@ -88,7 +87,7 @@
         <fieldset ms-controller="test">
             <legend>演示十字线效果</legend>
 
-            <div ms-widget="simplegrid" id="gridsample">
+            <div ms-widget="simplegrid" style="width:70%">
 
             </div>
             <div>
@@ -96,7 +95,7 @@
                 <p>需要通过tbodyTemplate修改的行模板,为每一个tr加两个事件绑定,在移出移入操作类名</p>  
                 <pre class="brush:javascript;gutter:false;toolbar:false;">
                         tbodyTemplate: function(str) {
-                            return str.replace('class="ui-grid-td"', 'class="ui-grid-td" ms-mouseenter="addCross" ms-mouseleave="removeCross"')
+                            return str.replace('class="ui-simplegrid-td"', 'class="ui-simplegrid-td" ms-mouseenter="addCross" ms-mouseleave="removeCross"')
                         },
                         addCross: function() {
                             avalon(this.parentNode).addClass("hcross")
@@ -116,16 +115,102 @@
                             })
                         },
                 </pre>
-                <p>CSS</p>
-                <pre class="brush:css;gutter:false;toolbar:false;">
-            .ui-grid-tbody tr.hcross td{
-                background:yellow;
-                color:#fff;
+                <br/>
+                <pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;simplegrid&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+
+        &lt;script&gt;
+            avalon.config({debug: false})
+            require(["simplegrid/avalon.simplegrid"], function() {
+                var createData = function(n) {
+                    var array = []
+                    for (var i = 0; i &lt; n; i++) {
+                        array.push({
+                            xxx: Math.random().toString(36).substring(4, 10),
+                            yyy: Math.random().toString(36).substring(4, 10),
+                            aaa: 1 + 10,
+                            bbb: Math.random().toString(36).substring(4, 10),
+                            ccc: Math.random().toString(36).substring(4, 10),
+                            zzz: i
+                        })
+                    }
+                    return array
+                }
+                var cols
+                avalon.define("test", function(vm) {
+
+                    vm.simplegrid = {
+                        columns: [
+                            {field: "aaa", text: "紫薯", resizable: true, align: "center"},
+                            {field: "zzz", text: "石榴", resizable: true, align: "center"},
+                            {field: "yyy", text: "雪梨", resizable: true, align: "center"},
+                            {field: "xxx", text: "苹果", resizable: true, align: "center"},
+                            {field: "bbb", text: "南瓜", resizable: true, align: "center"},
+                            {field: "ccc", text: "西红柿", resizable: true, align: "center"}
+                        ],
+                        tbodyTemplate: function(str) {
+                            return str.replace('class="ui-simplegrid-td"', 'class="ui-simplegrid-td" ms-mouseenter="addCross" ms-mouseleave="removeCross"')
+                        },
+                        addCross: function() {
+                            avalon(this.parentNode).addClass("hcross")
+                            var index = this.cellIndex
+
+                            var tbody = this.parentNode.parentNode
+                            Array.prototype.forEach.call(tbody.rows, function(row) {
+                                avalon(row.cells[index]).addClass("vcross")
+                            })
+                        },
+                        removeCross: function() {
+                            avalon(this.parentNode).removeClass("hcross")
+                            var index = this.cellIndex
+                            var tbody = this.parentNode.parentNode
+                            Array.prototype.forEach.call(tbody.rows, function(row) {
+                                avalon(row.cells[index]).removeClass("vcross")
+                            })
+                        },
+                        showRows: 10,
+                        pageable: true,
+                        pager: {
+                            perPages: 20,
+                            totalItems: 1000,
+                            showPages: 5,
+                            options: [10, 20, 30, 40]
+                        },
+                        columnsOrder: ["aaa", "bbb", "ccc", "xxx", "yyy", "zzz"],
+                        data: createData(100)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+        &lt;style&gt;
+            .ui-simplegrid-tbody tr.hcross td{
+                background:#FF8888!important;
             }
-            .ui-grid-tbody .vcross{
-                background:gold;
-                 color:#fff;
+            .ui-simplegrid-tbody .vcross{
+                background:#FF8888;
             }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+
+
+            &lt;div ms-widget="simplegrid" style="width:70%"&gt;
+
+            &lt;/div&gt;
+           
+     
+    &lt;/body&gt;
+&lt;/html&gt;
+
+
                 </pre>
             </div>
         </fieldset>

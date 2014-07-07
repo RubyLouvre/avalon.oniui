@@ -1,14 +1,14 @@
-<div class="ui-grid">
-    <div class="ui-grid-scroll-wrapper" 
+<div class="ui-simplegrid">
+    <div class="ui-simplegrid-scroll-wrapper" 
          ms-css-height="tbodyHeight+theadHeight" 
          ms-widget="scrollbar,$simplegrid{{MS_OPTION_ID}}" 
          ms-css-padding-bottom="paddingBottom"
          data-scrollbar-position="right,bottom">
-        <div class="ui-grid-wrapper"  
+        <div class="ui-simplegrid-wrapper"  
              ms-css-width="gridWidth" 
              >
-            <table class="ui-grid-thead" 
-            ms-css-margin-left="cssLeft" >
+            <table class="ui-simplegrid-thead" 
+                   ms-css-margin-left="cssLeft" >
                 <tr>
                     MS_OPTION_THEAD_BEGIN
                     <td data-repeat-rendered="_theadRenderedCallback"
@@ -33,15 +33,17 @@
                     MS_OPTION_THEAD_END
                 </tr>
             </table>
-            <table class="ui-grid-tbody" 
-            ms-css-margin-left="cssLeft" >
+            <table class="ui-simplegrid-tbody" 
+                   ms-css-margin-left="cssLeft" >
                 <tr data-repeat-rendered="_tbodyRenderedCallback"
                     ms-repeat-row="_data"
+                    ms-hover="ui-state-hover"
                     >
                     MS_OPTION_TBODY_BEGIN
-                    <td class="ui-grid-td"
+                    <td class="ui-simplegrid-td"
                         data-with-sorted="getColumnsOrder"
                         ms-repeat="row" 
+
                         ms-visible="getCellProperty($key,'toggle')" 
                         ms-css-width="getCellProperty($key,'width')"
                         ms-css-text-align="getCellProperty($key,'align')"
@@ -53,128 +55,13 @@
             </table>
         </div>
         <div class="ui-scrollbar-scroller">
-            <div class="ui-grid-scroll-marker" ms-css-height="getScrollerHeight()" 
-            ms-css-width="gridWidth">
-        </div>
+            <div class="ui-simplegrid-scroll-marker" ms-css-height="getScrollerHeight()" 
+                 ms-css-width="gridWidth">
+            </div>
 
         </div>
     </div>
-    <div class="ui-grid-pager-wrapper"  ms-if="pageable" id="pager-MS_OPTION_ID" >
+    <div class="ui-simplegrid-pager-wrapper"  ms-if="pageable" id="pager-MS_OPTION_ID" >
 
     </div>
 </div>
-MS_OPTION_STYLE
-<style>
-
-    /*三种容器的规则*/
-    .ui-helper-asc, .ui-helper-desc,  .ui-helper-ndb{
-        width:16px;
-        height:16px;
-        line-height: 1;
-        vertical-align: middle;
-        display: inline-block;
-        position: relative;
-        cursor: pointer;
-    }
-    /*三种容器下三角形的共同点*/
-    .ui-helper-asc span, .ui-helper-desc span, .ui-helper-ndb span{
-        width: 0px;
-        height: 0px;
-        line-height:0;
-        border-width: 6px;
-        position: absolute;
-        top: 0px;
-        left: 4px;
-    }
-    /*上三角*/
-    .ui-helper-ndb .ui-helper-sort-top, .ui-helper-desc .ui-helper-sort-top{
-        border-color: transparent transparent #ccc transparent;
-        border-style: dashed dashed solid dashed;
-        top: -8px;
-    }
-    .ui-helper-asc .ui-helper-sort-top{
-        border-color: transparent transparent #000 transparent;
-        border-style: dashed dashed solid dashed;
-        top: -8px;
-    }
-    /*下三角*/
-    .ui-helper-ndb .ui-helper-sort-bottom, .ui-helper-asc .ui-helper-sort-bottom{
-        border-color: #ccc transparent transparent transparent;
-        border-style: solid dashed dashed  dashed;
-        top: 8px;
-    }
-    .ui-helper-desc .ui-helper-sort-bottom{
-        border-color: #000 transparent transparent transparent;
-        border-style: solid dashed dashed  dashed;
-        top: 8px;
-    }
-    .ui-grid{
-        width:100%;
-        border: 1px solid #000;
-    }
-    .ui-grid-scroll-wrapper{
-        width:100%;
-        overflow:auto;
-        position: relative;
-    }
-    .ui-grid-wrapper{
-        width:100%;
-        position: absolute;
-    }
-    .ui-grid-thead{
-        width: 100%;
-        /*        position: absolute;*/
-        background: #fff;
-        border: 1px solid black;
-        border-collapse: collapse;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        /*http://bbs.csdn.net/topics/390117581*/
-        background-image:url(about:blank);
-        background-attachment:fixed;
-    }
-    .ui-grid-thead td,.ui-grid-thead th{
-        border: 1px solid black;
-        height: 35px;
-        overflow: hidden;
-    }
-
-    .ui-grid-tbody{
-        width: 100%;
-        /*        position: absolute;*/
-        border: 1px solid black;
-        border-collapse: collapse;
-    }
-
-    .ui-grid-tbody  td, .ui-grid-tbody th{
-        border: 1px solid black;
-        height: 35px;
-        overflow: hidden;
-    }
-
-
-    .ui-grid-scroll-marker{
-        width:100%;
-        z-index: -1;
-    }
-
-    .ui-grid-pager-wrapper{
-        width: 100%;
-        border: 1px solid black;
-        padding:2px 0px;
-        overflow:hidden;
-    }
-    .ui-grid-pager-options{
-        float: left;
-        height: 24px;
-        line-height: 24px;
-        padding-left: 5px;
-    }
-    .ui-pager{
-        float: right;
-    }
-</style>

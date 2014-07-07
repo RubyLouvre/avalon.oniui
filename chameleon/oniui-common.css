@@ -50,6 +50,15 @@ http://cssshrink.com/
   font-size: 100%;
   list-style: none; }
 
+.ui-helper-noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none; }
+  .ui-helper-noselect img, .ui-helper-noselect a {
+    -webkit-user-drag: none;
+    pointer-events: none; }
+
 .ui-helper-clearfix {
   *zoom: 1; }
   .ui-helper-clearfix:after {

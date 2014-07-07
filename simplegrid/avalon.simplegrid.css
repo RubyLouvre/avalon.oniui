@@ -1,0 +1,98 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+/*三种容器的规则*/
+.ui-helper-asc, .ui-helper-desc, .ui-helper-ndb {
+  width: 16px;
+  height: 16px;
+  line-height: 1;
+  vertical-align: middle;
+  display: inline-block;
+  position: relative;
+  cursor: pointer; }
+
+/*三种容器下三角形的共同点*/
+.ui-helper-asc span, .ui-helper-desc span, .ui-helper-ndb span {
+  width: 0px;
+  height: 0px;
+  line-height: 0;
+  border-width: 6px;
+  position: absolute;
+  top: 0px;
+  left: 4px; }
+
+/*上三角*/
+.ui-helper-ndb .ui-helper-sort-top, .ui-helper-desc .ui-helper-sort-top {
+  border-color: transparent transparent #ccc transparent;
+  border-style: dashed dashed solid dashed;
+  top: -8px; }
+
+.ui-helper-asc .ui-helper-sort-top {
+  border-color: transparent transparent #000 transparent;
+  border-style: dashed dashed solid dashed;
+  top: -8px; }
+
+/*下三角*/
+.ui-helper-ndb .ui-helper-sort-bottom, .ui-helper-asc .ui-helper-sort-bottom {
+  border-color: #ccc transparent transparent transparent;
+  border-style: solid dashed dashed  dashed;
+  top: 8px; }
+
+.ui-helper-desc .ui-helper-sort-bottom {
+  border-color: #000 transparent transparent transparent;
+  border-style: solid dashed dashed  dashed;
+  top: 8px; }
+
+.ui-simplegrid {
+  width: 100%;
+  border: 1px solid lightgray;
+  font-size: 12px; }
+  .ui-simplegrid .ui-simplegrid-scroll-wrapper {
+    width: 100%;
+    overflow: auto;
+    position: relative; }
+  .ui-simplegrid .ui-simplegrid-wrapper {
+    width: 100%;
+    position: absolute; }
+  .ui-simplegrid .ui-simplegrid-thead {
+    width: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    border-bottom: 1px solid lightgray;
+    border-collapse: collapse; }
+  .ui-simplegrid .ui-simplegrid-thead td, .ui-simplegrid .ui-simplegrid-thead th {
+    border: 0 none;
+    height: 35px;
+    line-height: 35px;
+    padding-left: 5px;
+    background-color: #e6e6e6; }
+  .ui-simplegrid .ui-simplegrid-tbody {
+    width: 100%;
+    border: 1px solid lightgray;
+    border-left: none;
+    border-right: none;
+    border-collapse: collapse; }
+  .ui-simplegrid .ui-simplegrid-tbody td {
+    border: 0 none;
+    height: 35px;
+    line-height: 35px;
+    padding-left: 5px; }
+  .ui-simplegrid .ui-simplegrid-tbody .ui-state-hover td, .ui-simplegrid .ui-simplegrid-tbody .ui-state-hover th {
+    background-color: #e8f5fd; }
+  .ui-simplegrid .ui-simplegrid-scroll-marker {
+    width: 100%;
+    z-index: -1; }
+  .ui-simplegrid .ui-simplegrid-pager-wrapper {
+    width: 100%;
+    padding: 2px 0px;
+    overflow: hidden; }
+  .ui-simplegrid .ui-simplegrid-pager-options {
+    float: left;
+    height: 24px;
+    line-height: 24px;
+    padding-left: 5px; }
+  .ui-simplegrid .ui-pager {
+    float: right; }

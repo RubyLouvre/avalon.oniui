@@ -34,7 +34,7 @@
                             if (window.dispatchEvent) {
                                 return str//IE678不支持div:hover效果
                             } else {
-                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-even="!($index % 2)" ms-class-odd="$index % 2"')
+                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-even="!($index % 2)" ')
                             }
                         },
                         showRows: 10,
@@ -54,21 +54,14 @@
             })
         </script>
         <style>
-            #gridsample{
-                width:900px;
+
+            .ui-simplegrid-tbody tr.even td, .ui-simplegrid-tbody tr.even td div{
+                background:rgb(247,247,247);
             }
-            .ui-grid-tbody tr.even td, .ui-grid-tbody tr.even td div{
-                background: #f2f2f2;
+            .ui-simplegrid-tbody tr:nth-child(even) td, .ui-simplegrid-tbody tr:nth-child(even) td div{
+                background:rgb(247,247,247);
             }
-            .ui-grid-tbody tr.odd td, .ui-grid-tbody tr.odd td div{
-                background:#ffe862;
-            }
-            .ui-grid-tbody tr:nth-child(even) td, .ui-grid-tbody tr:nth-child(even) td div{
-                background: #f2f2f2;
-            }
-            .ui-grid-tbody tr:nth-child(odd) td, .ui-grid-tbody tr:nth-child(odd) td div{
-                background: #ffe862;
-            }
+
         </style>
     </head>
     <body>
@@ -76,35 +69,97 @@
         <fieldset ms-controller="test">
             <legend>演示斑马线效果</legend>
 
-            <div ms-widget="simplegrid" id="gridsample">
+            <div ms-widget="simplegrid" style="width:70%">
 
             </div>
             <div>
                 <h3>要点</h3>
-                <p>IE678下,需要通过getTemplate修改默认模板,为每一个tr加两个ms-class绑定,对应的类名自己在样式表添加</p>  
+                <p>IE678下,需要通过getTemplate修改默认模板,为每一个tr加一个ms-class绑定,对应的类名自己在样式表添加</p>  
                 <pre class="brush:javascript;gutter:false;toolbar:false;">
                         getTemplate: function(str) {
                             if (window.dispatchEvent) {
                                 return str//IE678不支持div:hover效果
                             } else {
-                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-even="!($index % 2)" ms-class-odd="$index % 2"')
+                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-even="!($index % 2)" ')
                             }
                         },
                 </pre>
-                <p>CSS</p>
-                <pre class="brush:css;gutter:false;toolbar:false;">
-            .ui-grid-tbody tr.even td, .ui-grid-tbody tr.even td div{
-                background: #f2f2f2;
+                <br/>
+                <pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;simplegrid&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script&gt;
+            avalon.config({debug: false})
+            require(["simplegrid/avalon.simplegrid"], function() {
+                var createData = function(n) {
+                    var array = []
+                    for (var i = 0; i &lt; n; i++) {
+                        array.push({
+                            xxx: Math.random().toString(36).substring(4, 10),
+                            yyy: Math.random().toString(36).substring(4, 10),
+                            zzz: i
+                        })
+                    }
+                    return array
+                }
+                avalon.define("test", function(vm) {
+
+                    vm.simplegrid = {
+                        columns: [
+                            {field: "zzz", text: "列三", resizable: true},
+                            {field: "yyy", text: "列二", resizable: true},
+                            {field: "xxx", text: "列一", resizable: true}
+                        ],
+                        getTemplate: function(str) {
+                            if (window.dispatchEvent) {
+                                return str//IE678不支持div:hover效果
+                            } else {
+                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-even="!($index % 2)" ')
+                            }
+                        },
+                        showRows: 10,
+                        pageable: true,
+                        pager: {
+                            perPages: 20,
+                            totalItems: 1000,
+                            showPages: 5,
+                            options: [10, 20, 30, 40]
+                        },
+                        columnsOrder: ["xxx", "yyy", "zzz"],
+                        data: createData(100)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+        &lt;style&gt;
+
+            .ui-simplegrid-tbody tr.even td, .ui-simplegrid-tbody tr.even td div{
+                background:rgb(247,247,247);
             }
-            .ui-grid-tbody tr.odd td, .ui-grid-tbody tr.odd td div{
-                background:#ffe862;
+            .ui-simplegrid-tbody tr:nth-child(even) td, .ui-simplegrid-tbody tr:nth-child(even) td div{
+                background:rgb(247,247,247);
             }
-            .ui-grid-tbody tr:nth-child(even) td, .ui-grid-tbody tr:nth-child(even) td div{
-                background: #f2f2f2;
-            }
-            .ui-grid-tbody tr:nth-child(odd) td, .ui-grid-tbody tr:nth-child(odd) td div{
-                background: #ffe862;
-            }
+
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+
+       
+
+            &lt;div ms-widget="simplegrid" style="width:70%"&gt;
+
+            &lt;/div&gt;
+            
+     
+    &lt;/body&gt;
+&lt;/html&gt;
                 </pre>
             </div>
         </fieldset>

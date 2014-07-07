@@ -55,6 +55,14 @@ http://cssshrink.com/
     font-size: 100%;
     list-style: none;
 }
+//禁止文字被选中，禁止图片被拖动
+.ui-helper-noselect {
+    @include user-select();
+    img, a{
+        -webkit-user-drag:none; 
+        pointer-events:none;
+    }
+}
 .ui-helper-clearfix {
     @include legacy-pie-clearfix();
 }

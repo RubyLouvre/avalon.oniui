@@ -31,31 +31,9 @@
                     }
                     vm.$skipArray = ["simplegrid"]
                 })
-                function getData2(n) {
-                    var ret = []
-                    for (var i = 0; i < n; i++) {
-                        var random = Math.random()
-                        var factor = random > 0.5 ? 1 : -1
-                        ret.push({
-                            symbol: '<a href="javascript:alert(1)">' + random.toString(32).slice(4, 10) + "</b>",
-                            price: range(100, 200),
-                            change: "<span onclick='alert(2)' style='color:" + (factor === 1 ? 'green' : 'red') + "'>" + random.toFixed(2) * factor + "</span>"
-                        })
-                    }
-                    return ret
-                }
+               
 
-                avalon.define("test2", function(vm) {
-                    vm.simplegrid = {
-                        columns: ["symbol", "price", "change"],
-                        tbodyTemplate: function(str){
-                           return str.replace(/\|\s*html/, "|sanitize|html")
-                        },
-                        showRows: 15,
-                        data: getData2(1000)
-                    }
-                    vm.$skipArray = ["simplegrid"]
-                })
+  
                 avalon.scan()
             })
         </script>
@@ -108,7 +86,6 @@
     &lt;/head&gt;
     &lt;body &gt;
         &lt;fieldset ms-controller="test"&gt;
-            &lt;legend&gt;最简单的例子&lt;/legend&gt;
             &lt;div ms-widget="simplegrid" style="width:70%"&gt;
 
             &lt;/div&gt;
@@ -117,12 +94,8 @@
     &lt;/body&gt;
 &lt;/html&gt;
             </pre>
-            <p>如果数据是用户输入的,可存在的跨域攻击的危险,因此需要过滤一下,我们可以用tbodyTemplate修改一下。tbodyTemplate可以函数也可以是字符串，
-                在这里我们只需要用正则修改一下原模板就行了，无需自己模仿着原来的格式写这么长的字符串。
-            </p>
-            <div ms-controller="test2" ms-widget="simplegrid" style="width:70%">
+          
 
-            </div>
         </fieldset>
     </body>
 </html>

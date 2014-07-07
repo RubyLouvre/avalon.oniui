@@ -5,17 +5,17 @@
 v\:* {
   behavior: url(#default#VML); }
 
-div.ui-switch {
+div.ui-flipswitch {
   border: none;
   background-color: transparent; }
-  div.ui-switch label, div.ui-switch span {
+  div.ui-flipswitch label, div.ui-flipswitch span {
     cursor: pointer;
     margin: 0;
     top: 0;
     left: 0;
     position: relative; }
 
-.ui-switch {
+.ui-flipswitch {
   position: relative;
   z-index: 10;
   height: 100%;
@@ -24,34 +24,34 @@ div.ui-switch {
   text-align: center;
   border: none;
   background: none; }
-  .ui-switch-on {
+  .ui-flipswitch-on {
     background-image: url("bg.gif"); }
-  .ui-switch-normal {
+  .ui-flipswitch-normal {
     width: 35px;
     height: 18px; }
-  .ui-switch-large {
+  .ui-flipswitch-large {
     width: 57px;
     height: 30px; }
-  .ui-switch-bar {
+  .ui-flipswitch-bar {
     position: absolute;
     z-index: 10;
     width: 150%;
     left: 0; }
-  .ui-switch-animate {
+  .ui-flipswitch-animate {
     transition: all .5s;
     -webkit-transition: all .5s;
     -moz-transition: all .5s;
     -o-transition: all .5s;
     -ms-transition: all .5s; }
-  .ui-switch-left, .ui-switch-right {
+  .ui-flipswitch-left, .ui-flipswitch-right {
     width: 33%;
     color: white;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
-  .ui-switch-right {
+  .ui-flipswitch-right {
     color: #9b9b9b; }
-  .ui-switch-dragger {
+  .ui-flipswitch-dragger {
     width: 34%; }
-    .ui-switch-dragger-ball {
+    .ui-flipswitch-dragger-ball {
       width: 14px;
       height: 14px;
       left: 50%;
@@ -60,9 +60,9 @@ div.ui-switch {
       margin-top: -7px;
       position: absolute;
       background-position: -57px -54px; }
-      .ui-switch-dragger-ball-unchecked {
+      .ui-flipswitch-dragger-ball-unchecked {
         margin-left: -6px; }
-  .ui-switch-on {
+  .ui-flipswitch-on {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -72,83 +72,83 @@ div.ui-switch {
     overflow: hidden;
     margin-left: -4px;
     margin-top: -3px; }
-  .ui-switch-bg {
+  .ui-flipswitch-bg {
     background-position: -57px 0; }
-  .ui-switch-uckbg {
+  .ui-flipswitch-uckbg {
     background-position: -57px -36px; }
-  .ui-switch-large .ui-switch-dragger-ball {
+  .ui-flipswitch-large .ui-flipswitch-dragger-ball {
     height: 24px;
     width: 24px;
     margin-left: -13px;
     margin-top: -12px;
     background-position: -69px -67px; }
-    .ui-switch-large .ui-switch-dragger-ball-unchecked {
+    .ui-flipswitch-large .ui-flipswitch-dragger-ball-unchecked {
       margin-left: -10px; }
-  .ui-switch-large .ui-switch-on {
+  .ui-flipswitch-large .ui-flipswitch-on {
     background-position: -71px -54px;
     width: 14px;
     height: 11px;
     overflow: hidden;
     margin-left: -7px;
     margin-top: -5px; }
-  .ui-switch-large .ui-switch-bg {
+  .ui-flipswitch-large .ui-flipswitch-bg {
     background-position: 0 0; }
-  .ui-switch-large .ui-switch-uckbg {
+  .ui-flipswitch-large .ui-flipswitch-uckbg {
     background-position: 0 -60px; }
-  .ui-switch-left, .ui-switch-right, .ui-switch-dragger {
+  .ui-flipswitch-left, .ui-flipswitch-right, .ui-flipswitch-dragger {
     float: left;
     display: inline;
     height: 18px;
     line-height: 20px;
     font-weight: bolder; }
-  .ui-switch-large .ui-switch-left, .ui-switch-large .ui-switch-right, .ui-switch-large .ui-switch-dragger {
+  .ui-flipswitch-large .ui-flipswitch-left, .ui-flipswitch-large .ui-flipswitch-right, .ui-flipswitch-large .ui-flipswitch-dragger {
     height: 30px;
     line-height: 32px;
     font-size: 24px; }
-  .ui-switch-large .ui-switch-right {
+  .ui-flipswitch-large .ui-flipswitch-right {
     text-indent: -3px; }
-  .ui-switch-bg {
+  .ui-flipswitch-bg {
     position: absolute;
     z-index: 1;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%; }
-  .ui-switch-use-no-img .ui-switch-ico {
+  .ui-flipswitch-use-no-img .ui-flipswitch-ico {
     background-image: none; }
-  .ui-switch-use-no-img .ui-switch-bg {
+  .ui-flipswitch-use-no-img .ui-flipswitch-bg {
     border-radius: 9px;
     background-color: #45a846; }
-  .ui-switch-use-no-img .ui-switch-dragger-ball {
+  .ui-flipswitch-use-no-img .ui-flipswitch-dragger-ball {
     background: white;
     border-radius: 6px; }
-  .ui-switch-use-no-img.ui-switch-large .ui-switch-bg {
+  .ui-flipswitch-use-no-img.ui-flipswitch-large .ui-flipswitch-bg {
     border-radius: 15px; }
-  .ui-switch-use-no-img.ui-switch-large .ui-switch-dragger-ball {
+  .ui-flipswitch-use-no-img.ui-flipswitch-large .ui-flipswitch-dragger-ball {
     border-radius: 12px; }
-  .ui-switch-use-no-img .ui-switch-uckbg {
+  .ui-flipswitch-use-no-img .ui-flipswitch-uckbg {
     background-color: #bcbcbc; }
-  .ui-switch-use-no-img.ui-state-disabled .ui-switch-uckbg {
+  .ui-flipswitch-use-no-img.ui-state-disabled .ui-flipswitch-uckbg {
     background-color: #dedede; }
-    .ui-switch-use-no-img.ui-state-disabled .ui-switch-uckbg-disabled {
+    .ui-flipswitch-use-no-img.ui-state-disabled .ui-flipswitch-uckbg-disabled {
       background-color: #dedede; }
 
-.ui-state-disabled .ui-switch-dragger-ball, .ui-state-hover .ui-switch-dragger-ball {
+.ui-state-disabled .ui-flipswitch-dragger-ball, .ui-state-hover .ui-flipswitch-dragger-ball {
   opacity: .4; }
-.ui-state-disabled .ui-switch-oval-hd, .ui-state-hover .ui-switch-oval-hd {
+.ui-state-disabled .ui-flipswitch-oval-hd, .ui-state-hover .ui-flipswitch-oval-hd {
   display: block; }
-.ui-state-disabled .ui-switch-oval-n, .ui-state-hover .ui-switch-oval-n {
+.ui-state-disabled .ui-flipswitch-oval-n, .ui-state-hover .ui-flipswitch-oval-n {
   display: none; }
 
-.ui-state-disabled .ui-switch-bar label, .ui-state-disabled .ui-switch-bar span {
+.ui-state-disabled .ui-flipswitch-bar label, .ui-state-disabled .ui-flipswitch-bar span {
   cursor: default;
   color: white; }
-.ui-state-disabled .ui-switch-bg {
+.ui-state-disabled .ui-flipswitch-bg {
   background-position: -57px -18px; }
-.ui-state-disabled .ui-switch-oval-hd {
+.ui-state-disabled .ui-flipswitch-oval-hd {
   display: block; }
-.ui-state-disabled .ui-switchoval-n {
+.ui-state-disabled .ui-flipswitchoval-n {
   display: none; }
 
-.ui-switch-large .ui-switch-uckbg-disabled {
+.ui-flipswitch-large .ui-flipswitch-uckbg-disabled {
   background-position: 0 -30px; }

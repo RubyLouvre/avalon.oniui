@@ -1,0 +1,62 @@
+<div class="ui-flipswitch ui-state-default ui-helper-reset ui-flipswitch-use-no-img" ms-class-100="ui-flipswitch-{{MS_OPTION_TYPE}} ui-flipswitch-{{MS_OPTION_THEME}}" ms-class-100="ui-flipswitch-off:_addThisClass()" ms-class-101="ui-state-disabled:disabled" ms-click="toggle" ms-hover="ui-state-hover">
+	<div class="ui-flipswitch-bar ui-helper-clearfix" ms-class="ui-flipswitch-animate:$css3support" ms-if="dir=='left'">
+		<span class="ui-flipswitch-left" ms-if="hdir">{{MS_OPTION_ON_TEXT|html}}</span>
+		<span class="ui-flipswitch-right" ms-if="!hdir">{{MS_OPTION_OFF_TEXT|html}}</span>
+		<label class="ui-flipswitch-dragger">
+		   	<b class="ui-flipswitch-dragger-ball ui-flipswitch-ico" ms-class-103="ui-flipswitch-dragger-ball-unchecked:!checked">
+				<svg ms-if="_shallDrawSvg()" version="1.1" 
+				width="100%" 
+				height="100%" 
+				style="position:absolute;z-index:3;left:0;" 
+				xmlns="http://www.w3.org/2000/svg">
+					<circle stroked="false" 
+					ms-attr-cx="draggerR" 
+					ms-attr-cy="draggerR" 
+					ms-attr-r="draggerR"  
+					ms-attr-fill="draggerColor"/>
+				</svg>
+				<v:oval class="ui-flipswitch-oval-n"
+			   	stroked="false" 
+			   	filled="true" 
+			    ms-css-height="draggerR*2+'px'" 
+			    ms-css-width="draggerR*2+'px'" 
+			   	ms-attr-fillcolor="draggerColor" 
+			   	style="position:absolute;z-index:2;left:-1px;top:0;behavior: url(#default#VML)">
+				    <v:fill opacity="1"></v:fill>
+			    </v:oval>
+				<v:oval class="ui-flipswitch-oval-hd"
+			   	stroked="false" 
+			   	filled="true" 
+			    ms-css-height="draggerR*2+'px'" 
+			    ms-css-width="draggerR*2+'px'" 
+			   	ms-attr-fillcolor="draggerColor" 
+			   	style="position:absolute;z-index:2;left:-1px;top:0;behavior: url(#default#VML);">
+				    <v:fill opacity="0.4"></v:fill>
+			    </v:oval>
+		   	</b>
+		</label>
+		<span class="ui-flipswitch-left" ms-if="!hdir">{{MS_OPTION_ON_TEXT|html}}</span>
+		<span class="ui-flipswitch-right" ms-if="hdir">{{MS_OPTION_OFF_TEXT|html}}</span>
+	</div>
+	<div class="ui-flipswitch-bg ui-flipswitch-ico" ms-class-101="ui-flipswitch-uckbg:!checked" ms-class-102="ui-flipswitch-uckbg-disabled:disabled"><svg ms-if="_shallDrawSvg()" version="1.1" 
+		width="100%" 
+		height="100%" 
+		style="position:absolute;z-index:3;left:0;top:0;" 
+		xmlns="http://www.w3.org/2000/svg">
+			<rect x="0" y="0" 
+			ms-attr-rx="height/2" 
+			ms-attr-ry="height/2" 
+			width="100%" 
+			height="100%" 
+			ms-attr-fill="_getFillColor()"/>
+		</svg>
+		<v:roundrect ms-if="_shallDrawVML()" style="behavior:url(#default#VML);position:absolute;left:-1px;top:0;" 
+		stroked="false"  
+		filled="t" 
+		arcsize="100%" 
+		ms-attr-fillcolor="_getFillColor()" 
+	    ms-css-height="height+'px'" 
+	    ms-css-width="width+'px'">
+		</v:roundrect>
+	</div>
+</div>

@@ -56,13 +56,13 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                             var query = vmodel.query = match[0]//取得查询字符串
                             function callback() {
                                 //对请求回来的数据进笨过滤排序
-                                var datalist = vmodel.$filter(vmodel)
+                                var datalist = vmodel.filterData(vmodel)
                                 var toString = datalist.join(",")
                                 //只有发生改动才同步视图
                                 if (vmodel.$model.__toString__ !== toString) {
                                     //添加高亮
                                     datalist = datalist.map(function(el) {
-                                        return vmodel.$highlight(el, query)
+                                        return vmodel.highlightData(el, query)
                                     })
                                     vmodel._datalist = datalist
                                     vmodel.$model.__toString__ = toString
@@ -74,9 +74,9 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                             }
 
                             var now = new Date//时间闸
-                            if (lastModified - now > vmodel.delay && typeof vmodel.$update === "function") {
-                                //远程请求数据，自己实现remoteFetch方法，主要是改变datalist数组，然后在调用callback
-                                vmodel.$update(callback)
+                            if (lastModified - now > vmodel.delay && typeof vmodel.updateData === "function") {
+                                //远程请求数据，自己实现updateData方法，主要是改变datalist数组，然后在调用callback
+                                vmodel.updateData(callback)
                                 lastModified = now
                             }
                             callback()
@@ -212,12 +212,12 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
         minLength: 1, //@后的查询字符串只有出现了多少个字符后才显示弹出层
         delay: 500, //我们是通过$update方法与后台进行AJAX连接，为了防止输入过快导致频繁，需要指定延时毫秒数
         //远程更新函数,与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行$filter、$highlight操作
-        $update: avalon.noop,
+        updateData: avalon.noop,
         getTemplate: function(str, options) {
             return str
         },
         //用于对datalist进行过滤排序，将得到的新数组赋给_datalist，实现弹出层的更新
-        $filter: function(opts) {
+        filterData: function(opts) {
             //opts实质上就是vmodel，但由于在IE6-8下，this不指向调用者，因此需要手动传vmodel
             var unique = {}, query = opts.query, lowquery = query.toLowerCase()
             //精确匹配的项放在前面
@@ -240,7 +240,7 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
             return datalist.slice(0, opts.limit) //对显示个数进行限制
         },
         //用于对_datalist中的字符串进行高亮处理，item为_datalist中的每一项，str为查询字符串
-        $highlight: function(item, str) {
+        highlightData: function(item, str) {
             var query = escapeRegExp(str)
             return item.replace(new RegExp('(' + query + ')', 'ig'), function($1, match) {
                 return '<strong style="color:#FF6600;">' + match + '</strong>'
@@ -290,9 +290,9 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
     return avalon
 })
 /*
- //$update的例子，里面是一个AJAX回调，成功后更新VM的datalist，并执行回调
+ //updateData的例子，里面是一个AJAX回调，成功后更新VM的datalist，并执行回调
  
- function $update(vmodel, callback){ 
+ function updateData(vmodel, callback){ 
  var model = vmodel.$model
  jQuery.post("url", { limit: model.limit, query: model.query}, function(data){
  vmodel.datalist = data.datalist

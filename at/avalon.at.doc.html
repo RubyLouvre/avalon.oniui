@@ -42,19 +42,19 @@
                 <td>delay</td> <td>500</td><td> 我们是通过$update方法与后台进行AJAX连接，为了防止输入过快导致频繁，需要指定延时毫秒数</td> 
             </tr>
             <tr>   
-                <td>$update</td><td>空函数</td> <td> 远程更新函数, 与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行$filter、$highlight操作</td> 
+                <td>updateData</td><td>空函数</td> <td> 远程更新函数, 与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行filterData、highlightData操作</td> 
             </tr>
             <tr>   
-                <td>$filter</td> <td>defaults.$filter</td> <td> 用于对datalist进行过滤排序，将得到的新数组赋给_datalist，实现弹出层的更新</td>
+                <td>filterData</td> <td>defaults.filterData</td> <td> 用于对datalist进行过滤排序，将得到的新数组赋给_datalist，实现弹出层的更新</td>
             </tr>
             <tr>   
-                <td>$highlight</td><td>defaults.$highlight</td> <td> 用于对_datalist中的字符串进行高亮处理，item为_datalist中的每一项，str为查询字符串</td>  
+                <td>highlightData</td><td>defaults.highlightData</td> <td> 用于对_datalist中的字符串进行高亮处理，item为_datalist中的每一项，str为查询字符串</td>  
             </tr>
 
         </table>
-        <p>$update是一个非常重要的配置项，用于与后端同步数据，下面是</p>
+        <p>updateData是一个非常重要的配置项，用于与后端同步数据，下面是</p>
         <pre class="brush:js;gutter:false;toolbar:false;">
-function $update(vmodel, callback) {
+function updateData(vmodel, callback) {
     var model = vmodel.$model
     jQuery.post("url", {limit: model.limit, query: model.query}, function(data) {
         vmodel.datalist = data.datalist

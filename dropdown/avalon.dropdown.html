@@ -3,6 +3,7 @@
      ms-css-width="{{width}}"
      ms-click="_toggle"
      ms-blur="_blur"
+     ms-hover="ui-state-hover"
      ms-keydown="_keydown"
      tabindex="0">
     <div class="ui-dropdown-source">
@@ -17,9 +18,10 @@
     </div>
 </div>
 MS_OPTION_TEMPLATE
-<div ms-class="ui-dropdown-menu:!multiple"
-     ms-mouseenter="_listenter"
+<div class="ui-dropdown"
+     ms-class="ui-dropdown-menu:!multiple"
      ms-css-width="{{listWidth}}"
+     ms-mouseenter="_listenter"
      ms-mouseleave="_listleave">
     <div class="ui-dropdown-menu-inner"
          ms-css-height="{{multiple&&height}}"
@@ -28,13 +30,13 @@ MS_OPTION_TEMPLATE
              id="list-MS_OPTION_ID">
 
             <div ms-repeat="data"  class="ui-dropdown-item"
-                 ms-click-12="_select($event, el)"
+                 ms-click-12="_select($index, $event)"
                  ms-title="el.label"
                  ms-hover="ui-state-hover: el.enable"
                  ms-class-1="ui-state-disabled:!el.enable"
-                 ms-class-2="ui-state-active:isSelected(el.value) && el.enable "
+                 ms-class-2="ui-state-active:isActive(el) "
                  ms-class-4="ui-dropdown-group:el.group"
-                 ms-class-5="ui-dropdown-divider:el.optGroup && !$first"
+                 ms-class-5="ui-dropdown-divider:el.group && !$first"
                  >{{el.label}}</div>
 
         </div>

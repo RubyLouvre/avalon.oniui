@@ -1,6 +1,12 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
 $uiname: "ui-pager";
+$pager-background-color: #FFFFFF;
+$pager-active-color: $ui-state-active-color;
+@if($oinui-theme == smoothness){
+    $pager-background-color: #FFFFFF;
+    $pager-active-color: #ff8888;
+}
 .#{$uiname} {
     @include inline-block();
     font-size: 0;
@@ -12,9 +18,7 @@ $uiname: "ui-pager";
     }
     .#{$uiname}-prev, .#{$uiname}-next, .#{$uiname}-item {
         @include inline-block();
-        @if($oinui-theme == smoothness){
-            background-color: #FFFFFF;
-        }
+        background-color: $pager-background-color;
         height: 24px;
         line-height: 24px;
         margin-right: 5px;
@@ -27,14 +31,14 @@ $uiname: "ui-pager";
         @include user-select(none);
         /*!当前页,没有边框*/
         &.ui-state-active {
-            color: $ui-widget-content-background-color;
+            color: $pager-active-color;
             border: 0 none;
             padding: 1px 11px;
             cursor: default;
         }
         /*!掠过*/
         &.ui-state-hover{
-            border-color:$ui-state-hover-background-color;
+            border-color:$pager-active-color;
         }
         /*!禁用*/
         &.ui-state-disabled {
@@ -74,9 +78,7 @@ $uiname: "ui-pager";
         vertical-align: middle;
         font-size: 0;
         outline: none;
-        @if($oinui-theme == smoothness){
-            background-color: #fff;
-        }
+        background-color:$pager-background-color; 
         border: 1px solid $ui-state-default-border-color;
 
     }

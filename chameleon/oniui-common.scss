@@ -126,6 +126,14 @@ http://cssshrink.com/
 a .ui-icon,.ui-btn .ui-icon {
     cursor: pointer;
 }
+.ui-btn {
+    @include inline-block();
+    vertical-align: middle;
+    @include user-select(none);
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+}
 
 @font-face {
     font-family: fontawesome;

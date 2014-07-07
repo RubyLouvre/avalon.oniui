@@ -1,19 +1,10 @@
-define(["../draggable/avalon.draggable", "text!./avalon.slider.html"], function(avalon, sourceHTML) {
-    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],
-        cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
-        styleEl = document.getElementById("avalonStyle"),
-        template = arr[0];
-    try {
-        styleEl.innerHTML += cssText;
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText;
-    }
+define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../chameleon/oniui-common.css", "css!./avalon.slider.css"], function(avalon, sourceHTML) {
     /**
      * @global Handlers ： 保存页面上所有滑动手柄
      * @global Index :点中手柄在Handlers中的索引，或滑动手柄在handlers中的索引 
      * @gloabal focusElement: 页面上点中的手柄元素的引用，当按下方向键时，滑动作用域此元素
      **/
-    var Handlers = [], Index = 0, FocusElement
+    var Handlers = [], Index = 0, FocusElement, template = sourceHTML;
     var widget = avalon.ui["slider"] = function(element, data, vmodels) {
 
         var $element = avalon(element)

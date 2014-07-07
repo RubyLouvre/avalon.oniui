@@ -1,0 +1,76 @@
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname: "ui-textbox";
+.#{$uiname} {
+    @include inline-block();
+    outline: medium none;
+    font-size: 0;
+    padding: 3px 5px;
+    @if($oinui-theme == smoothness) {
+        background-color: #FFFFFF;
+        border: 1px solid #CCCCCC;
+    }
+    &.ui-state-hover {
+        @if($oinui-theme == smoothness) {
+            border-color: #999999;
+        }
+    }
+    .#{$uiname}-input-wrap {
+        position: relative;
+        @include inline-block();
+        .#{$uiname}-input {
+            position: relative;
+            float: left;
+            display: inline;
+            vertical-align: middle;
+            height: 18px;
+            line-height: 18px;
+            outline: medium none;
+            font-size: 12px;
+            @if($oinui-theme == smoothness) {
+                background-color: #FFFFFF;
+                border: 0 none;
+                color: #333333;
+            }
+        }
+        textarea.#{$uiname}-input {
+            height: 60px;
+            resize: none;
+        }
+    }
+    .#{$uiname}-placeholder {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 1;
+        @if($oinui-theme == smoothness) {
+            color: #999999;
+        }
+    }
+    .#{$uiname}-suggest {
+        position: relative;
+        z-index: 1000;
+    }
+    &.#{$uiname}-disabled {
+        background-color: $ui-state-disabled-background-color;
+        border-color: $ui-state-disabled-border-color;
+        cursor: default;
+        .#{$uiname}-placeholder {
+            @if($oinui-theme == smoothness) {
+                color: #CCCCCC;
+            }
+        }
+        .#{$uiname}-input {
+            cursor: default;
+            background-color: $ui-state-disabled-background-color;
+            @if($oinui-theme == smoothness) {
+                color: #CCCCCC;
+            }
+        }
+    }
+}
+

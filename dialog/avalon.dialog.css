@@ -1,0 +1,28 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+.ui-btn { height: 26px; overflow: visible; _overflow-y: hidden; padding: 0 10px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; border-radius: 2px; font-size: 12px; color: #333333; background-color: #f8f8f8; border: 1px solid #cccccc; }
+
+.ui-btn:hover { box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1); background-color: #f8f8f8; border-color: #bbbbbb; color: #333333; }
+
+.ui-btn-primary { background-color: #58b359; border-color: #45a846; color: white; }
+
+.ui-btn-primary:hover { background-color: #68c969; border-color: #3e973e; color: white; }
+
+.clrfix { overflow: hidden; *zoom: 1; *zoom: 1; }
+.clrfix:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
+
+.ui-dialog { position: absolute; }
+.ui-dialog .ui-dialog-inner { box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1); background-color: #ffffff; border: 1px solid #cccccc; }
+.ui-dialog .ui-dialog-inner .ui-dialog-header { background-color: #f3f3f3; }
+.ui-dialog .ui-dialog-inner .ui-dialog-header .ui-dialog-close { display: inline; display: inline; float: right; padding: 1px 10px 1px 9px; margin-top: 5px; cursor: pointer; background-color: #f3f3f3; color: #666666; }
+.ui-dialog .ui-dialog-inner .ui-dialog-header .ui-dialog-close .ui-icon { cursor: pointer; }
+.ui-dialog .ui-dialog-inner .ui-dialog-header .ui-dialog-close:hover { border-right: 0; padding: 0 10px 0 8px; background-color: #ffffff; border: 1px solid #dedede; }
+.ui-dialog .ui-dialog-inner .ui-dialog-header .ui-dialog-title { padding: 7px 10px; font-size: 12px; font-weight: 700; }
+.ui-dialog .ui-dialog-inner .ui-dialog-content { font-size: 12px; padding: 17px 20px; }
+.ui-dialog .ui-dialog-inner .ui-dialog-footer { padding: 8px 5px; background-color: #f8f8f8; }
+.ui-dialog .ui-dialog-inner .ui-dialog-footer .ui-dialog-btns { display: inline; display: inline; float: right; font-size: 0; }
+.ui-dialog .ui-dialog-inner .ui-dialog-footer .ui-dialog-btns .ui-btn { margin-left: 10px; }
+
+.ui-dialog-layout { display: none; position: absolute; left: 0; top: 0; bottom: 0; right: 0; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; zoom: 1; z-index: 1; background: #000; }

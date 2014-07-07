@@ -1,15 +1,12 @@
-define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.datepicker.html", "dropdown/avalon.dropdown.js"], function(avalon, holidayDate, sourceHTML) {
-    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],  
-        calendarTemplate = arr[0],
-        cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
-        styleEl = document.getElementById("avalonStyle"),
+define(["avalon.getModel", 
+        "datepicker/avalon.datepicker.lang",
+        "text!./avalon.datepicker.html", 
+        "dropdown/avalon.dropdown.js",
+        "css!../chameleon/oniui-common.css", 
+        "css!./avalon.datepicker.css"], function(avalon, holidayDate, sourceHTML) {
+    var calendarTemplate = sourceHTML,
         HOLIDAYS,
         ONE_DAY = 24 * 60 * 60 * 1000;
-    try {
-        styleEl.innerHTML += cssText;
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText;
-    }
     var widget = avalon.ui.datepicker = function(element, data, vmodels) {
         var options = data.datepickerOptions,
             parseDateVm,

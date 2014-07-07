@@ -28,7 +28,7 @@
     font-size: 0;
 
     @if ($direction == top) {
-        border-top:0;
+        border-top:0 none;
         border-right: $width dashed transparent;
         border-bottom: $height solid $color;
         border-left: $width dashed transparent;

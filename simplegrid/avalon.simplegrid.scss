@@ -2,51 +2,11 @@
 @import "../chameleon/oniui-theme";
 $uiname : "ui-simplegrid";
 
-/*三种容器的规则*/
-.ui-helper-asc, .ui-helper-desc,  .ui-helper-ndb{
-    width:16px;
-    height:16px;
-    line-height: 1;
-    vertical-align: middle;
-    display: inline-block;
-    position: relative;
-    cursor: pointer;
-}
-/*三种容器下三角形的共同点*/
-.ui-helper-asc span, .ui-helper-desc span, .ui-helper-ndb span{
-    width: 0px;
-    height: 0px;
-    line-height:0;
-    border-width: 6px;
-    position: absolute;
-    top: 0px;
-    left: 4px;
-}
-/*上三角*/
-.ui-helper-ndb .ui-helper-sort-top, .ui-helper-desc .ui-helper-sort-top{
-    border-color: transparent transparent #ccc transparent;
-    border-style: dashed dashed solid dashed;
-    top: -8px;
-}
-.ui-helper-asc .ui-helper-sort-top{
-    border-color: transparent transparent #000 transparent;
-    border-style: dashed dashed solid dashed;
-    top: -8px;
-}
-/*下三角*/
-.ui-helper-ndb .ui-helper-sort-bottom, .ui-helper-asc .ui-helper-sort-bottom{
-    border-color: #ccc transparent transparent transparent;
-    border-style: solid dashed dashed  dashed;
-    top: 8px;
-}
-.ui-helper-desc .ui-helper-sort-bottom{
-    border-color: #000 transparent transparent transparent;
-    border-style: solid dashed dashed  dashed;
-    top: 8px;
-}
+
 @if($oinui-theme == smoothness){
-   $ui-state-hover-background-color:#E8F5FD;
+    $ui-state-hover-background-color:#E8F5FD;
 }
+
 .#{$uiname}{
     width:100%;
     border: 1px solid $ui-state-default-border-color;
@@ -55,6 +15,7 @@ $uiname : "ui-simplegrid";
         width:100%;
         overflow:auto;
         position: relative;
+
     }
     .#{$uiname}-wrapper{
         width:100%;
@@ -117,8 +78,46 @@ $uiname : "ui-simplegrid";
         line-height: 24px;
         padding-left: 5px;
     }
+
+    //====================
+    /*三种容器的规则*/
+    .ui-helper-asc, .ui-helper-desc,  .ui-helper-ndb{
+        width:16px;
+        height:16px;
+        line-height: 1;
+        vertical-align: middle;
+        @include inline-block();
+        //display: inline-block;
+        position: relative;
+        cursor: pointer;
+    }
+    /*三种容器下三角形的共同点*/
+    .ui-helper-asc span, .ui-helper-desc span, .ui-helper-ndb span{
+        position: absolute;
+        top: 0px;
+        left: 4px;
+    }
+    /*上三角*/
+    .ui-helper-ndb .ui-helper-sort-top, .ui-helper-desc .ui-helper-sort-top{
+        @include triangle(top, 12px, half, #ccc);
+        top: 0px;
+    }
+    .ui-helper-asc .ui-helper-sort-top{
+        @include triangle(top, 12px, half, #000);
+        top: 0px;
+    }
+    /*下三角*/
+    .ui-helper-ndb .ui-helper-sort-bottom, .ui-helper-asc .ui-helper-sort-bottom{
+        @include triangle(bottom, 12px, half, #ccc);
+        top: 8px;
+    }
+    .ui-helper-desc .ui-helper-sort-bottom{
+        @include triangle(bottom, 12px, half, #000);
+        top: 8px;
+    }
+
     .ui-pager{
-        float: right;
+        @include float-right();
     }
 }
 

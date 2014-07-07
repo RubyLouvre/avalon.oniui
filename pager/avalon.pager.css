@@ -33,7 +33,7 @@
     *vertical-align: auto;
     zoom: 1;
     *display: inline;
-    background-color: #FFFFFF;
+    background-color: white;
     height: 24px;
     line-height: 24px;
     margin-right: 5px;
@@ -55,12 +55,12 @@
     /*!掠过*/
     /*!禁用*/ }
     .ui-pager .ui-pager-prev.ui-state-active, .ui-pager .ui-pager-next.ui-state-active, .ui-pager .ui-pager-item.ui-state-active {
-      color: #68c969;
+      color: #ff8888;
       border: 0 none;
       padding: 1px 11px;
       cursor: default; }
     .ui-pager .ui-pager-prev.ui-state-hover, .ui-pager .ui-pager-next.ui-state-hover, .ui-pager .ui-pager-item.ui-state-hover {
-      border-color: #68c969; }
+      border-color: #ff8888; }
     .ui-pager .ui-pager-prev.ui-state-disabled, .ui-pager .ui-pager-next.ui-state-disabled, .ui-pager .ui-pager-item.ui-state-disabled {
       border-color: #d9d9d9;
       background-color: whitesmoke;
@@ -109,7 +109,7 @@
     vertical-align: middle;
     font-size: 0;
     outline: none;
-    background-color: #fff;
+    background-color: white;
     border: 1px solid lightgray; }
   .ui-pager .ui-pager-textbox {
     display: inline;

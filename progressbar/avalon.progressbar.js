@@ -38,12 +38,13 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                 simulateTimer,
                 barElement,
                 labelElement,
-                barParElement,
-                d = svgSupport && vm.circle && circleValueList(options.cirecleRadius, options.circleBorderWidth) || []
+                barParElement
+
+            vm.$d = svgSupport && vm.circle && circleValueList(options.circleRadius, options.circleBorderWidth) || []
             vm.$skipArray = ["widgetElement", "template", "svgSupport"]
             vm.ended = false
             // svg绘制一个圆，路径数据
-            vm.circleCoordinates = d.join("")
+            vm.circleCoordinates = ""
             // svg绘制扇形，进度条效果，路径数据
             vm.barCoordinates = ""
             vm.angel = options.value || 0
@@ -56,27 +57,38 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
             vm.$init = function() {
                 if(inited) return
                 inited = true
-                vmodel.circleBar()
                 newElem.innerHTML = vmodel.template
                 avalon.scan(element, [vmodel].concat(vmodels))
-                if(vmodel.label && !vmodel.circle) {
+                if(vmodel.label) {
                     var nodes = newElem.getElementsByTagName("div")
                     avalon.each(nodes, function(i, item) {
-                        if(item.className.indexOf("ui-progressbar-label") != -1) {
-                            labelElement = item
-                        } else if(item.className.indexOf("ui-progressbar-bar") != -1) {
-                            barElement = item
-                            barParElement = item.parentNode
+                        var ele = avalon(item)
+                        if(vmodel.circle) {
+                            if(ele.hasClass("ui-progressbar-circle-par")) {
+                                barParElement = ele
+                            } else if(ele.hasClass("ui-progressbar-circle-bar")) {
+                                barElement = ele
+                            }
+                        } else {
+                            if(ele.hasClass("ui-progressbar-label")) {
+                                labelElement = item
+                            } else if(ele.hasClass("ui-progressbar-bar")) {
+                                barElement = item
+                                barParElement = item.parentNode
+                            }
                         }
                     })
                 }
-                vmodel.$simulater()
-
+                // get Css from skin
+                vmodel._computeCss()
+                if(!vmodel.getStyleFromSkin) vmodel.circleBar()
                 // callback after inited
                 if(typeof options.onInit === "function" ) {
                     //vmodels是不包括vmodel的 
                     options.onInit.call(element, vmodel, options, vmodels)
                 }
+                // 开启模拟效果
+                vmodel._simulater()
             }
             // 适用svg绘制圆圈的v生成方式
             // vml不走这个逻辑，有直接绘制圆弧的方法
@@ -84,12 +96,12 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                 if(vmodel.circle || !svgSupport) {
                     var v = v || vmodel.value || 0
                     v = v > 100 ? 100 : v > 0 ? v : 0
-                    vmodel.barCoordinates = v == 100 ? vmodel.circleCoordinates : d.slice(0, v+1).join("") + (v < 100 && v ? "" : "")
+                    vmodel.barCoordinates = v == 100 ? vmodel.circleCoordinates : vmodel.$d.slice(0, v+1).join("") + (v < 100 && v ? "" : "Z")
                 }
             }
             // 计算label tip的位置
-            vm.$getLeft = function() {
-                if(!labelElement || vmodel.inTwo) return
+            vm._getLeft = function() {
+                if(vmodel.circle || !labelElement || vmodel.inTwo) return
                 var bw = barElement && barElement.offsetWidth || 0,
                     lw = labelElement.offsetWidth || 0,
                     bpw = barParElement && barParElement.offsetWidth || 0,
@@ -99,7 +111,7 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
             }
 
             // 进度条模拟
-            vm.$simulater = function() {
+            vm._simulater = function() {
                 if(vmodel.simulate !== false && !vmodel.indeterminate) {
                     clearTimeout(simulateTimer)
                     simulateTimer = setTimeout(function() {
@@ -126,21 +138,21 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                 element.innerHTML = element.textContent = ""
             }
             // 设置bar元素宽度
-            vm.$cssMaker = function(inTwo) {
+            vm._cssMaker = function(inTwo) {
                 if(vmodel.value === false && vmodel.indeterminate || vmodel.value == 100) return inTwo ? 0 : "100%"
                 return inTwo ? 100 - (vmodel.value || 0) + "%" : (vmodel.value || 0) + "%"
             }
 
             // 不知当前进度
-            vm.$indeterminate = function() {
+            vm._indeterminate = function() {
                 return vmodel.indeterminate && vmodel.value == false && !vmodel.inTwo
             }
             // 进度条分成左右两段显示的时候是否显示label
-            vm.$showLabel = function(label, inTwo) {
+            vm._showLabel = function(label, inTwo) {
                 return label && inTwo
             }
             // 展示label
-            vm.$labelShower = function(value) {
+            vm._labelShower = function(value) {
                 return vmodel.labelShower.call(vmodel, arguments[0], arguments[1], vmodel)
             }
 
@@ -148,7 +160,7 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
             vm.start = function() {
                 vmodel.indeterminate = false
                 vmodel.ended = false
-                vmodel.$simulater()
+                vmodel._simulater()
             }
 
             //@method end(value) 结束进度推进，该接口适用于模拟进度条，value为100表示结束，failed表示失败，undefine等于pause，其他则终止于value，并在label上显示
@@ -158,22 +170,42 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                 if(value != void 0) vmodel.value = value
             }
 
-            //@method reset() 重置设置项
-            vm.reset = function() {
+            //@method reset(value) 重置设置项，参数可选，为需要重设的值
+            vm.reset = function(value) {
                 var obj = {}
                 avalon.mix(obj, {
-                    value: widget.defaults.value
+                    value: value != void 0 ? value : widget.defaults.value
                     , indeterminate: widget.defaults.indeterminate
                     , success: false
                 }, options)
                 avalon.mix(vmodel, obj)
                 vmodel.ended = false
-                vmodel.$simulater()
+                vmodel._simulater()
             }
 
             //@method progress(value) 设置value值，其实也可以直接设置vmodel.value
             vm.progress = function(value) {
                 vmodel.value = value
+            }
+            // get css from css file
+            //@method _computeCss 动态切换皮肤之后，如果需要更新提取圆形进度条的样式，可以调用这个方法
+            vm._computeCss = function() {
+                if(vmodel.circle && vmodel.getStyleFromSkin) {
+                    if(barElement && barParElement) {
+                        var radius = barElement.height(),
+                            outerHeight = barElement.outerHeight()
+                        // wait utill element is rendered
+                        if(!radius) return setTimeout(vmodel._computeCss, 16)
+                        vmodel.circleColor = barElement.css("color")
+                        vmodel.circleBorderColor = barParElement.css("background-color")
+                        vmodel.circleBarColor = barElement.css("background-color")
+                        vmodel.circleBorderWidth = parseInt((outerHeight - radius) / 2) || 1
+                        vmodel.circleRadius = radius
+                        vmodel.$d = svgSupport && vmodel.circle && circleValueList(vmodel.circleRadius, vmodel.circleBorderWidth) || []
+                        vmodel.circleBar()
+                        vmodel.circleCoordinates =vmodel.$d.join("")
+                    }
+                }
             }
 
         })
@@ -185,7 +217,7 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
         vmodel.$watch("value", function(newValue) {
             if(newValue == vmodel.successValue) vmodel.success = true
             vmodel.circle && vmodel.circleBar()
-            vmodel.$getLeft()
+            vmodel._getLeft()
             vmodel.angel = 360 * newValue / 100
             vmodel.onChange && vmodel.onChange.call(vmodel, newValue)
         })
@@ -203,11 +235,12 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
         countDown: false,//@param 倒计时
         inTwo: false, //@param 是否显示左右两段
         circle: false,//@param 圆形
-        circleColor: "#ffffff",//@param 圆形填充色彩
-        circleBorderColor: "#dedede",//@param 圆形边框颜色
-        circleBarColor: "#619FE8",//@param 圆形进度条边框颜色
-        cirecleRadius: 38,//@param 圆形的半径
-        circleBorderWidth: 4, //@param 圆形的边框宽度
+        getStyleFromSkin: true,//@param 是否从皮肤的css里面计算获取圆形进度条样式，默认为true，设置为true的时候，将忽略下面所有circle*样式设置
+        circleColor: "#ffffff",//@param 圆形填充色彩，可以配制为从皮肤中提取，只在初始化的时候提取
+        circleBorderColor: "#dedede",//@param 圆形边框颜色，，可以配制为从皮肤中提取，只在初始化的时候提取
+        circleBarColor: "#619FE8",//@param 圆形进度条边框颜色，可以配制为从皮肤中提取，只在初始化的时候提取
+        circleRadius: 0,//@param 圆形的半径，可以配制为从皮肤中提取，只在初始化的时候提取
+        circleBorderWidth: 0, //@param 圆形的边框宽度，可以配制为从皮肤中提取，只在初始化的时候提取
         success: false, //@param 是否完成，进度为100时或者外部将success置为true，用于打断模拟效果
         //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,

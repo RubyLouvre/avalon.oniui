@@ -3,14 +3,14 @@
     <li class="ui-state-default" 
         ms-repeat-tab="tabs" 
         ms-class="ui-tab-item"  
-        ms-class-1="ui-state-active:!!$canActive(tab, $index)" 
+        ms-class-1="ui-state-active:!!_canActive(tab, $index)" 
         ms-class-2="ui-state-disabled:tab.disabled" 
         ms-class-3="ui-tab-last:$last" 
-        ms-class-4="ui-tab-removable:!!$canRemove(tab)" 
+        ms-class-4="ui-tab-removable:!!_canRemove(tab)" 
         ms-hover="ui-state-hover:!tab.disabled" 
         ms-MS_OPTION_EVENT="activate($event, $index)" 
         > 
-        <a ms-href="tab.href?tab.href:'#'">{{$tabTitle(tab.title, tab, (dir == "h" || forceCut) && titleCutCount, cutEnd) | html}}</a>
+        <a ms-href="tab.href?tab.href:'#'">{{_tabTitle(tab.title, tab, _cutCounter(), cutEnd) | html}}</a>
         MS_OPTION_REMOVABLE
     </li>
 </ul>

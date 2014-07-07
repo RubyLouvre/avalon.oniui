@@ -1,4 +1,4 @@
-<div class="ui-flipswitch ui-state-default ui-helper-reset ui-flipswitch-use-no-img" ms-class-100="ui-flipswitch-{{MS_OPTION_TYPE}} ui-flipswitch-{{MS_OPTION_THEME}}" ms-class-100="ui-flipswitch-off:_addThisClass()" ms-class-101="ui-state-disabled:disabled" ms-click="toggle" ms-hover="ui-state-hover">
+<div class="ui-flipswitch ui-state-default ui-helper-reset ui-flipswitch-use-no-img" ms-class-100="ui-flipswitch-{{MS_OPTION_SIZE}} ui-flipswitch-{{MS_OPTION_THEME}}" ms-class-100="ui-flipswitch-off:_addThisClass()" ms-class-101="ui-state-disabled:disabled" ms-click="toggle" ms-hover="ui-state-hover">
 	<div class="ui-flipswitch-bar ui-helper-clearfix" ms-class="ui-flipswitch-animate:$css3support" ms-if="dir=='left'">
 		<span class="ui-flipswitch-left" ms-if="hdir">{{MS_OPTION_ON_TEXT|html}}</span>
 		<span class="ui-flipswitch-right" ms-if="!hdir">{{MS_OPTION_OFF_TEXT|html}}</span>
@@ -10,25 +10,27 @@
 				style="position:absolute;z-index:3;left:0;" 
 				xmlns="http://www.w3.org/2000/svg">
 					<circle stroked="false" 
-					ms-attr-cx="draggerR" 
-					ms-attr-cy="draggerR" 
-					ms-attr-r="draggerR"  
+					ms-attr-cx="draggerRadius" 
+					ms-attr-cy="draggerRadius" 
+					ms-attr-r="draggerRadius"  
 					ms-attr-fill="draggerColor"/>
 				</svg>
-				<v:oval class="ui-flipswitch-oval-n"
+				<v:oval class="ui-flipswitch-oval-n" 
+				ms-if="_shallDrawVML()"
 			   	stroked="false" 
 			   	filled="true" 
-			    ms-css-height="draggerR*2+'px'" 
-			    ms-css-width="draggerR*2+'px'" 
+			    ms-css-height="draggerRadius*2+'px'" 
+			    ms-css-width="draggerRadius*2+'px'" 
 			   	ms-attr-fillcolor="draggerColor" 
 			   	style="position:absolute;z-index:2;left:-1px;top:0;behavior: url(#default#VML)">
 				    <v:fill opacity="1"></v:fill>
 			    </v:oval>
-				<v:oval class="ui-flipswitch-oval-hd"
+				<v:oval class="ui-flipswitch-oval-hd" 
+				ms-if="_shallDrawVML()"
 			   	stroked="false" 
 			   	filled="true" 
-			    ms-css-height="draggerR*2+'px'" 
-			    ms-css-width="draggerR*2+'px'" 
+			    ms-css-height="draggerRadius*2+'px'" 
+			    ms-css-width="draggerRadius*2+'px'" 
 			   	ms-attr-fillcolor="draggerColor" 
 			   	style="position:absolute;z-index:2;left:-1px;top:0;behavior: url(#default#VML);">
 				    <v:fill opacity="0.4"></v:fill>

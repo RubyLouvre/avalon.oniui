@@ -1,21 +1,23 @@
 <div ms-if="!circle" class="ui-progressbar ui-helper-reset ui-helper-clearfix ui-widget ui-widget-content ui-progressbar-normal" ms-class-100="ui-progressbar-indeterminate:indeterminate" ms-class-101="ui-progressbar-haslabel:label" ms-class-102="ui-progressbar-right:inTwo">
-	<div ms-class-100="ui-helper-hidden:inTwo" class="ui-progressbar-label" ms-if="label">{{$labelShower(value, 'l1') | html}}
+	<div ms-class-100="ui-helper-hidden:inTwo" class="ui-progressbar-label" ms-if="label">{{_labelShower(value, 'l1') | html}}
 		<b ms-if="!inTwo" class="ui-progressbar-arrow"></b>
 	</div>
-	<div class="ui-progressbar-bar" ms-css-width="{{$cssMaker()}}">
-		<div class="ui-progressbar-label" ms-if="$showLabel(label, inTwo)">{{$labelShower(value) | html}}
+	<div class="ui-progressbar-bar" ms-css-width="{{_cssMaker()}}">
+		<div class="ui-progressbar-label" ms-if="_showLabel(label, inTwo)">{{_labelShower(value) | html}}
 		<b ms-if="inTwo" class="ui-progressbar-arrow"></b></div>
-		<div class="ui-progressbar-overlay" ms-if="$indeterminate()">       
+		<div class="ui-progressbar-overlay" ms-if="_indeterminate()">       
 		</div>
 	</div>
-	<div class="ui-progressbar-bar ui-progressbar-bar-right" ms-if="inTwo" ms-css-width="{{$cssMaker('inTwo')}}">
-		<div class="ui-progressbar-label" ms-if="$showLabel(label, inTwo)">
-		<div class="ui-progressbar-overlay" ms-if="$indeterminate()">
-		</div>{{$labelShower(value, "inTwo") | html}}
+	<div class="ui-progressbar-bar ui-progressbar-bar-right" ms-if="inTwo" ms-css-width="{{_cssMaker('inTwo')}}">
+		<div class="ui-progressbar-label" ms-if="_showLabel(label, inTwo)">
+		<div class="ui-progressbar-overlay" ms-if="_indeterminate()">
+		</div>{{_labelShower(value, "inTwo") | html}}
 		<b ms-if="inTwo" class="ui-progressbar-arrow"></b></div>
 	</div>
 </div>
-<div ms-if="circle" class="ui-progressbar ui-helper-reset ui-helper-clearfix ui-widget ui-widget-content ui-progressbar-circle" ms-class-100="ui-progressbar-indeterminate:indeterminate" ms-class-101="ui-progressbar-haslabel:label" ms-css-height="cirecleRadius*2+'px'" ms-css-width="cirecleRadius*2+'px'">
+<div ms-if="circle" class="ui-progressbar ui-helper-reset ui-helper-clearfix ui-widget ui-widget-content ui-progressbar-circle" ms-class-100="ui-progressbar-indeterminate:indeterminate" ms-class-101="ui-progressbar-haslabel:label" ms-css-height="circleRadius*2+'px'" ms-css-width="circleRadius*2+'px'">
+	<div class="ui-helper-hidden ui-progressbar ui-progressbar-circle-par"></div>
+	<div class="ui-progressbar-hidden ui-progressbar-circle-bar"></div>
 	<svg ms-if="svgSupport"
 	width="100%" 
 	height="100%" 
@@ -23,6 +25,7 @@
 	version="1.1" 
 	xmlns="http://www.w3.org/2000/svg">
 		<path ms-attr-d="circleCoordinates" 
+		ms-if="circleCoordinates" 
 		ms-attr-stroke="circleBorderColor" 
 		ms-attr-stroke-width="circleBorderWidth" 
 		stroke-linejoin="round" ms-attr-fill="circleColor"></path>
@@ -38,8 +41,8 @@
     stroked="true" 
     ms-css-left="circleBorderWidth+'px'" 
     ms-css-top="circleBorderWidth+'px'" 
-    ms-css-height="(cirecleRadius-circleBorderWidth)*2+'px'" 
-    ms-css-width="(cirecleRadius-circleBorderWidth)*2+'px'" 
+    ms-css-height="(circleRadius-circleBorderWidth)*2+'px'" 
+    ms-css-width="(circleRadius-circleBorderWidth)*2+'px'" 
     ms-attr-strokecolor="circleBarColor" 
     ms-attr-strokeweight="circleBorderWidth" 
     style="position:absolute;z-index:3;behavior:url(#default#VML);text-indent:-1000px;overflow:hidden;" 
@@ -50,13 +53,13 @@
 	stroked="true" 
     ms-css-left="circleBorderWidth+'px'" 
     ms-css-top="circleBorderWidth+'px'" 
-	ms-css-height="(cirecleRadius-circleBorderWidth)*2+'px'" 
-	ms-css-width="(cirecleRadius-circleBorderWidth)*2+'px'" 
+	ms-css-height="(circleRadius-circleBorderWidth)*2+'px'" 
+	ms-css-width="(circleRadius-circleBorderWidth)*2+'px'" 
 	ms-attr-fillcolor="circleColor" 
 	ms-attr-strokecolor="circleBorderColor" 
 	ms-attr-strokeweight="circleBorderWidth" 
 	style="position:absolute;z-index:2;behavior:url(#default#VML);"></v:oval>
     <div class="ui-progressbar-label" 
-	ms-css-line-height="cirecleRadius*2-4+'px'" 
-    ms-if="label">{{$labelShower(value) | html}}</div>
+	ms-css-line-height="circleRadius*2-4+'px'" 
+    ms-if="label">{{_labelShower(value) | html}}</div>
 </div>

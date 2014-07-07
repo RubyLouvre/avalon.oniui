@@ -95,15 +95,15 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                 avalon.nextTick(function() {
                     avalon(element).addClass("ui-tab ui-widget ui-widget-content" + (vm.event == "click" ? " ui-tab-click" : "") + (vm.dir == "v" ? " ui-tab-vertical" : "") + (vm.dir != "v" && vm.uiSize == "small" ? " ui-tab-small" : ""))
                     // tab列表
-                    var tabFrag = _getTemplate(vm.$getTemplate(0, vm), vm)
-                        , panelFrag = _getTemplate(vm.$getTemplate("panel", vm), vm)
+                    var tabFrag = _getTemplate(vm._getTemplate(0, vm), vm)
+                        , panelFrag = _getTemplate(vm._getTemplate("panel", vm), vm)
 
                     element.innerHTML = vmodel.bottom ? panelFrag + tabFrag : tabFrag + panelFrag
                    
                     avalon.scan(element, [vmodel].concat(vmodels))
 
                     if(vm.autoSwitch) {
-                        vm.$autoSwitch();
+                        vm._autoSwitch();
                     }
                     // callback after inited
                     if(typeof options.onInit === "function" ) {
@@ -113,7 +113,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                 })
             }
 
-            vm.$clearTimeout = function() {
+            vm._clearTimeout = function() {
                 clearTimeout(switchTimer)
             }
 
@@ -165,7 +165,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
             }
 
             // 自动切换效果
-            vm.$autoSwitch = function() {
+            vm._autoSwitch = function() {
                 clearTimeout(switchTimer)
                 if(vm.tabs.length < 2) return
                 switchTimer = setTimeout(function() {
@@ -178,7 +178,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                         }
                         if(!vm.tabs[i].disabled) {
                             vm.active = i
-                            vm.$autoSwitch()
+                            vm._autoSwitch()
                             break
                         }
                         i++
@@ -258,16 +258,19 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                 vm.bottom = options.bottom
             }
 
-            vm.$canRemove = function(tab) {
+            vm._canRemove = function(tab) {
                 return (tab.removable == true || tab.removable !== false && vm.removable) && !tab.disabled && vm.dir != "v"
             }
 
-            vm.$canActive = function(tab, $index) {
+            vm._canActive = function(tab, $index) {
                 return vm.active == $index && !tab.disabled
             }
 
-            vm.$isAjax = function(panel) {
+            vm._isAjax = function(panel) {
                 return vm.contentType=="content" && !panel.contentType || panel.contentType=="content"
+            }
+            vm._cutCounter = function() {
+                return (vmodel.dir == "h" || vmodel.forceCut) && vmodel.titleCutCount
             }
             return vm
         })
@@ -277,23 +280,23 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
             /*
             vmodel.tabs.$watch("length", function(value, oldValue) {
                 if(value < 2) {
-                    vmodel.$clearTimeout()
+                    vmodel._clearTimeout()
                 } else {
-                    vmodel.$autoSwitch()
+                    vmodel._autoSwitch()
                 }
             })
             */
             avalon.bind(element, "mouseenter", function() {
-                vmodel.$clearTimeout()
+                vmodel._clearTimeout()
             })
             avalon.bind(element, "mouseleave", function() {
-                vmodel.$clearTimeout()
-                vmodel.$autoSwitch()
+                vmodel._clearTimeout()
+                vmodel._autoSwitch()
             })
             vmodel.$watch("autoSwitch", function(value, oldValue) {
-                vmodel.$clearTimeout()
+                vmodel._clearTimeout()
                 if(value) {
-                    vmodel.$autoSwitch()
+                    vmodel._autoSwitch()
                 }
             })
         }
@@ -332,7 +335,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         onClickActive: avalon.noop, //@optMethod onClickActive(event, vmode)  点击选中的tab，适用于event是"click"的情况，this指向对应的li元素，参数是事件对象，vm对象 fn(event, vmode)，默认为avalon.noop
         onAjaxCallback: avalon.noop, //@optMethod onAjaxCallback  panel内容是ajax，ajax响应后的回调函数，this指向对应的panel元素，无参数，默认为空函数
         // 获取模板，防止用户自定义的getTemplate方法没有返回有效的模板
-        $getTemplate: function (tplName, vm) {
+        _getTemplate: function (tplName, vm) {
             var tpl
                 , defineTpl
             if(tplName == "panel") {
@@ -348,7 +351,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         getTemplate: function (template, vm, tplName) {
             return template
         }, //@optMethod getTemplate(template, vm, tplName)  修改模板的接口，参数分别是模板字符串，vm对象，模板名字，返回如果是空字符串则对应的tplName(close,panel,tab)返回为空，return false,null,undedined等于返回组件自带的模板，其他情况为返回值，默认返回组件自带的模板
-        $tabTitle : function (title, tab, count, end) {
+        _tabTitle : function (title, tab, count, end) {
             var cut
             if(tab.titleCutCount != void 0) {
                 cut = tab.titleCutCount

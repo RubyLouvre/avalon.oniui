@@ -29,15 +29,17 @@
 <tr>
     <td>circle</td><td> false</td><td> 圆形</td></tr>
 <tr>
-    <td>circleColor</td><td> "#ffffff"</td><td> 圆形填充色彩</td></tr>
+    <td>getStyleFromSkin</td><td> true</td><td> 是否从皮肤的css里面计算获取圆形进度条样式，默认为true，设置为true的时候，将忽略下面所有circle*样式设置</td></tr>
 <tr>
-    <td>circleBorderColor</td><td> "#dedede"</td><td> 圆形边框颜色</td></tr>
+    <td>circleColor</td><td> "#ffffff"</td><td> 圆形填充色彩，可以配制为从皮肤中提取，只在初始化的时候提取</td></tr>
 <tr>
-    <td>circleBarColor</td><td> "#619FE8"</td><td> 圆形进度条边框颜色</td></tr>
+    <td>circleBorderColor</td><td> "#dedede"</td><td> 圆形边框颜色，，可以配制为从皮肤中提取，只在初始化的时候提取</td></tr>
 <tr>
-    <td>cirecleRadius</td><td> 38</td><td> 圆形的半径</td></tr>
+    <td>circleBarColor</td><td> "#619FE8"</td><td> 圆形进度条边框颜色，可以配制为从皮肤中提取，只在初始化的时候提取</td></tr>
 <tr>
-    <td>circleBorderWidth</td><td> 4</td><td> 圆形的边框宽度</td></tr>
+    <td>circleRadius</td><td> 0</td><td> 圆形的半径，可以配制为从皮肤中提取，只在初始化的时候提取</td></tr>
+<tr>
+    <td>circleBorderWidth</td><td> 0</td><td> 圆形的边框宽度，可以配制为从皮肤中提取，只在初始化的时候提取</td></tr>
 <tr>
     <td>success</td><td> false</td><td> 是否完成，进度为100时或者外部将success置为true，用于打断模拟效果</td></tr>
 <tr>
@@ -59,9 +61,11 @@
 <tr>
     <td>end</td><td>接口函数</td><td>end(value) 结束进度推进，该接口适用于模拟进度条，value为100表示结束，failed表示失败，undefine等于pause，其他则终止于value，并在label上显示</td></tr>
 <tr>
-    <td>reset</td><td>接口函数</td><td>reset() 重置设置项</td></tr>
+    <td>reset</td><td>接口函数</td><td>reset(value) 重置设置项，参数可选，为需要重设的值</td></tr>
 <tr>
     <td>progress</td><td>接口函数</td><td>progress(value) 设置value值，其实也可以直接设置vmodel.value</td></tr>
+<tr>
+    <td>_computeCss</td><td>接口函数</td><td>_computeCss 动态切换皮肤之后，如果需要更新提取圆形进度条的样式，可以调用这个方法</td></tr>
 <!--auto doc end-->
         </table>
         <p>progressbar 组件有一个重要的labelShower方法，用于配置格式化label显示,见源码：</p>

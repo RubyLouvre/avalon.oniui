@@ -311,6 +311,10 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
                     vPadding = scroller.width() - scroller.innerWidth()
                 scroller.css("height", h + vPadding + "px")
                 scroller.css("width", w + hPadding  + "px")
+                // 根据实际视窗计算，计算更新scroller的宽高
+                // 更新视窗
+                h = scroller.innerHeight()
+                w = scroller.innerWidth()
                 avalon.each(vmodel._position, function(i, item) {
                     var bar = bars[i],
                         isVertical = item.match(/left|right/),
@@ -533,10 +537,14 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
                     obj.up = avalon(getByClassName("ui-scrollbar-arrow-up", bar[0])[0])
                     obj.down = avalon(getByClassName("ui-scrollbar-arrow-down", bar[0])[0])
                     obj.viewer = avalon(vmodel.viewElement)
-                    obj.viewH = vmodel.viewHeightGetter(obj.viewer)
-                    obj.viewW = vmodel.viewWidthGetter(obj.viewer)
+                    // obj.viewH = vmodel.viewHeightGetter(obj.viewer)
+                    // obj.viewW = vmodel.viewWidthGetter(obj.viewer)
+                    // 更新的时候要用viewer先计算
+                    // 计算的时候直接用scroller作为视窗计算宽高
                     // obj.viewH = vmodel.viewHeightGetter(scroller)
                     // obj.viewW = vmodel.viewWidthGetter(scroller)
+                    obj.viewH = scroller.innerHeight()
+                    obj.viewW = scroller.innerWidth()
                     obj.scrollerH = scroller[0].scrollHeight
                     obj.scrollerW = scroller[0].scrollWidth
                     obj.step = isVertical ? 40 * (obj.draggerparHeight - obj.draggerHeight) / (obj.scrollerH - obj.viewH) : 40 * (obj.draggerparWidth - obj.draggerWidth) / (obj.scrollerW - obj.viewW)

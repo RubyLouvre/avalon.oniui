@@ -1,5 +1,14 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-.ui-pager {
-
+$uiname: "ui-coupledatepicker";
+.ui-coupledatepicker {
+    font-size: 0;
+    .ui-coupledatepicker-item {
+        @include inline-block();
+    }
+    .label {
+        font-size: 12px;
+        vertical-align: middle;
+    }
 }
+

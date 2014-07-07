@@ -50,6 +50,9 @@ $uiname: "ui-datepicker";
     tr, td, th {
         border: 0;
     }
+    .ui-icon {
+        text-indent: 0;
+    }
     .ui-datepicker-wrapper {
         padding: 9px 0 9px 10px;
         border: 1px solid #cccccc;
@@ -63,6 +66,7 @@ $uiname: "ui-datepicker";
         font-size: 12px;
         margin-right: 10px;
         background: #fff;
+
     }
     .ui-datepicker-label {
         background-color: #f8f8f8;
@@ -136,6 +140,9 @@ $uiname: "ui-datepicker";
         line-height: 18px;
         padding: 3px 0;
     }
+    .ui-state-default {
+        background: #fff;
+    }
     .ui-datepicker-day-hover  {
         background: #dbebff;
     }
@@ -161,18 +168,17 @@ $uiname: "ui-datepicker";
         background: #3775c0;
         color: #fff;
     }
-    .ui-dropdown-input {
-        padding: 0 21px 0 6px;
-        line-height: 20px;
-        height: 20px;
-
-    }
     .ui-dropdown-source {
-        margin-top: -3px;
-    }
-    .ui-dropdown-icon {
-        top: -20px;
-        line-height: 20px;
+        margin-top: -2px;
+        .ui-dropdown-input {
+            padding: 0 21px 0 6px;
+            line-height: 20px;
+            height: 20px;
+        }
+        .ui-dropdown-icon {
+            top: -20px;
+            line-height: 20px;
+        }
     }
     &.ui-datepicker-multiple {
         .ui-datepicker-content {
@@ -183,19 +189,24 @@ $uiname: "ui-datepicker";
         }
     }
 }
-.ui-dropdown-item {
-    color: #333333;
-    font-size: 12px;
-}
-.ui-dropdown-item-hover {
-    background: #f5f5f5;
-}
-.ui-dropdown-item-selected {
-    background: #3775c0;
-}
-.ui-dropdown:hover .ui-dropdown-source {
-    border-color: #3775c0;
-    border-bottom-color: #cccccc;
+.ui-dropdown-menu {
+    height: 200px;
+    .ui-dropdown-item {
+        color: #333333;
+        font-size: 12px;
+        padding: 0;
+    }
+    .ui-dropdown-item-hover {
+        background: #f5f5f5;
+    }
+    .ui-dropdown-item-selected {
+        background: #3775c0;
+    }
+    .ui-dropdown:hover .ui-dropdown-source {
+        border-color: #3775c0;
+        border-bottom-color: #cccccc;
+    }
+
 }
 
 

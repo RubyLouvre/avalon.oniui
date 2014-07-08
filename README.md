@@ -132,7 +132,7 @@ avalon.oniui
         <td> uploader</td><td>UI组件</td><td></td><td> 上传</td>
     </tr>
     <tr>
-        <td> imagepreview</td><td>UI组件</td><td></td><td> 图片预览</td>
+        <td>preview</td><td>UI组件</td><td>完成</td><td>钟， 图片预览</td>
     </tr>
     <tr>
         <td> imagecropper</td><td>UI组件</td><td></td><td> 图片剪切</td>

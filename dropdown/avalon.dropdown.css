@@ -35,6 +35,10 @@
       white-space: nowrap;
       word-break: normal;
       word-wrap: normal; }
+  .ui-dropdown .ui-icon {
+    cursor: pointer;
+    font-size: 12px;
+    vertical-align: baseline; }
   .ui-dropdown.ui-state-hover .ui-dropdown-source {
     border-color: #999999; }
   .ui-dropdown.ui-state-disabled .ui-dropdown-source {
@@ -121,7 +125,11 @@
       border-color: #45a846;
       background-color: #58b359;
       color: white; }
+      .ui-dropdown .ui-dropdown-item.ui-state-active .ui-icon {
+        color: white; }
     .ui-dropdown .ui-dropdown-item.ui-state-hover {
       border-color: #3e973e;
       background-color: #68c969;
       color: white; }
+      .ui-dropdown .ui-dropdown-item.ui-state-hover .ui-icon {
+        color: white; }

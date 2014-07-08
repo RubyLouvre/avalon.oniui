@@ -16,9 +16,9 @@ $uiname: "ui-dropdown";
 //source结构相应的样式
 $ui-source-state-default-background-color: #fff;
 $ui-source-state-hover-border-color: #999;
-$ui-source-menu-default-background-color: #fff;
 $ui-source-state-disabled-color: #ccc;
-
+//menu相应样式
+$ui-menu-state-default-background-color: #fff;
 //divider样式
 $ui-divider-state-default-color: #f2f2f2;
 
@@ -42,6 +42,11 @@ $ui-divider-state-default-color: #f2f2f2;
       word-wrap: normal;
 
     }
+  }
+  .ui-icon{
+    cursor: pointer;
+    font-size: 12px;
+    vertical-align: baseline;
   }
   //各种状态
   &.ui-state-hover {
@@ -117,7 +122,7 @@ $ui-divider-state-default-color: #f2f2f2;
 
   .#{$uiname}-menu-inner {
     @include box-shadow();
-    background-color: $ui-source-menu-default-background-color;
+    background-color: $ui-menu-state-default-background-color;
     border: 1px solid $ui-state-default-border-color;
     overflow-y: scroll;
     padding: 3px 0;
@@ -145,9 +150,7 @@ $ui-divider-state-default-color: #f2f2f2;
     }
     //分组头带的特殊样式,用于分隔成一块一块
     &.#{$uiname}-divider {
-      @if($oinui-theme == smoothness){
-        border-top: 1px solid $ui-divider-state-default-color;
-      }
+      border-top: 1px solid $ui-divider-state-default-color;
     }
 
     //禁用
@@ -161,12 +164,18 @@ $ui-divider-state-default-color: #f2f2f2;
       border-color: $ui-state-active-border-color;
       background-color: $ui-state-active-background-color;
       color: $ui-state-active-color;
+      .ui-icon {
+        color: $oniui-icon-state-hover-color;
+      }
     }
     //掠过
     &.ui-state-hover {
       border-color: $ui-state-hover-border-color;
       background-color: $ui-state-hover-background-color;
       color: $ui-state-hover-color;
+      .ui-icon {
+        color: $oniui-icon-state-active-color;
+      }
     }
   }
 }

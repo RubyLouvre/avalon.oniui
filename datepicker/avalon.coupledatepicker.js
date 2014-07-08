@@ -1,13 +1,8 @@
-define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/avalon.datepicker"], function(avalon, sourceHTML) {
-    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],  
-        calendarTemplate = arr[0],
-        cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
-        styleEl = document.getElementById("avalonStyle");
-    try {
-        styleEl.innerHTML += cssText;
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText;
-    }
+define(["avalon.getModel",
+        "text!./avalon.coupledatepicker.html", 
+        "datepicker/avalon.datepicker",
+        "css!../chameleon/oniui-common.css", 
+        "css!./avalon.coupledatepicker.css"], function(avalon, sourceHTML) {
     var widget = avalon.ui.coupledatepicker = function(element, data, vmodels) {
         var options = data.coupledatepickerOptions,
             inputFrom,
@@ -20,7 +15,8 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
             rules = options.rules,
             _inputToValue = "",
             _toMinDate = "",
-            _toMaxDate = "";
+            _toMaxDate = "",
+            calendarTemplate = sourceHTML;
         var _c = {  
             '+M': function(time ,n) {
                 var _d = time.getDate();
@@ -109,6 +105,7 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
                     fromInput = null,
                     toInput = null,
                     calendarTemplate = "";
+                avalon(element).addClass("ui-coupledatepicker");
                 initValues();
                 applyRules(vmodel.inputFromValue && options.parseDate(vmodel.inputFromValue) || new Date());
                 calendarTemplate = vmodel.container.length ? inputOnlyTemp : containerTemp;

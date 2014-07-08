@@ -1,18 +1,9 @@
-define(["avalon", "text!./avalon.notice.html"], function(avalon, sourceHTML) {
-    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],
-        cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
-        template = arr[0],
-        styleEl = document.getElementById("avalonStyle");
-
-    try {
-        styleEl.innerHTML += cssText;
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText;
-    }
-    var containerMap = []; // 
-    var affixBoxs = []; // 存储吸顶的notice元素，且只保存弹出的notice
-    var affixHeights = []; //存储吸顶元素对应的height、width、offsetTop
-    var isIE6 = (window.navigator.userAgent || '').toLowerCase().indexOf('msie 6') !== -1;
+define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.css", "css!./avalon.notice.css"], function(avalon, sourceHTML) {
+    var template = sourceHTML,
+        containerMap = [],
+        affixBoxs = [], // 存储吸顶的notice元素，且只保存弹出的notice
+        affixHeights = [], //存储吸顶元素对应的height、width、offsetTop
+        isIE6 = (window.navigator.userAgent || '').toLowerCase().indexOf('msie 6') !== -1;
     var widget = avalon.ui.notice = function(element, data, vmodels) {
         var options = data.noticeOptions;
         options.template = template = options.getTemplate(template, options);

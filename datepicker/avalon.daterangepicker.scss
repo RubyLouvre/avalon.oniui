@@ -1,0 +1,151 @@
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname: "ui-daterangepicker";
+.clrfix {
+    @include clearfix();
+    @include legacy-pie-clearfix();
+}
+.ui-btn {
+    height: 26px;
+    overflow: visible;
+    _overflow-y: hidden;
+    padding: 0 10px;
+    @include border-radius(2px);
+    @if($oinui-theme == smoothness) {
+        font-size: 12px;
+        color: #333333;
+        background-color: #f8f8f8;
+        border: 1px solid #cccccc;
+    }
+}
+.ui-btn:hover {
+    box-shadow: 1px 1px 0 0 rgba(0,0,0,0.1);
+    @if($oinui-theme == smoothness) {
+        background-color: #f8f8f8;
+        border-color: #bbbbbb;
+        color: #333333;
+    }
+}
+.ui-daterangepicker {
+    width: 260px;
+    font-size: 12px;
+    line-height: 18px;
+    .ui-btn-small {
+        height: 22px;
+        padding: 0 5px;
+        font-size: 12px;
+    }
+    .ui-btn-primary {
+        background-color: $ui-state-active-background-color;
+        border-color: $ui-state-active-border-color;
+        color: $ui-state-active-color;
+    }
+    .ui-btn-primary:hover {
+        background-color: $ui-widget-content-background-color;
+        border-color: $ui-widget-content-border-color;
+        color: $ui-widget-content-color;
+    }
+    .ui-daterangepicker-content {
+        position: relative;
+        z-index: 1000;
+        zoom: 1;
+        .ui-datepicker-groups {
+            position: absolute;
+            z-index: 1000;
+            zoom: 1;
+            padding: 9px 0 39px 10px;
+            border: 1px solid #cccccc;
+            box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+            font-size: 0;
+            white-space: nowrap;
+            @if($oinui-theme == smoothness) {
+                background: #ffffff;
+            }
+            .ui-datepicker-group {
+                position: relative;
+                @include inline-block();
+                .ui-datepicker-content {
+                    position: static;
+                    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); 
+                }
+            }
+            .ui-calendarbox-footer-small {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                height:22px;
+                line-height: 22px;
+                width: 100%;
+                padding: 4px 0;
+                @if($oinui-theme == smoothness) {
+                    background: #f8f8f8;
+                }
+                .ui-calendarbox-btns {
+                    position: absolute;
+                    right: 10px;
+                    top: 4px;
+                    display: inline;
+                    font-size: 0;
+                    .ui-btn {
+                        margin: 0 0 0 5px ;
+                    }
+                }
+                .ui-calendarbox-msg {
+                    padding-left: 5px;
+                    font-size: 12px;
+                }
+            }
+            .ui-datepicker-wrapper {
+                position: static;
+                padding: 0;
+                border: 0;
+                box-shadow: 0 0 0 0 rgba(0,0,0,0);
+                font-size: 12px;
+            }
+        }
+    }
+    .ui-datepicker-range-input {
+        cursor: pointer;
+        border: 1px solid #cccccc;
+        @if($oinui-theme == smoothness) {
+            background-color: #ffffff;
+        }
+        .ui-datepicker-input {
+            height: 18px;
+            overflow: hidden;
+            padding: 3px 21px 3px 6px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        &.ui-state-hover {
+            border: 1px solid #999;
+        }
+        &.ui-state-active {
+            border-color: #3775c0;
+            border-bottom: 0;
+        }
+    }
+    .ui-datepicker-icon-wrap {
+        position: relative;
+        display: block;
+        height: 0;
+        .ui-datepicker-icon {
+            position: absolute;
+            right: 0;
+            top: -21px;
+            display: none;
+            cursor: pointer;
+            padding: 0 6px;
+            text-align: center;
+            text-indent: 0;
+            @if($oinui-theme == smoothness) {
+                color: #b5b5b5;
+            }
+            &.ui-icon-angle-down, &.ui-icon-angle-up {
+                display: block;
+            }
+        }
+    }
+}
+
+

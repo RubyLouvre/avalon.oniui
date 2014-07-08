@@ -1,15 +1,7 @@
-define(["avalon", "text!./avalon.spinner.html"], function(avalon, sourceHTML) {
-    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],
-        cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
-        styleEl = document.getElementById("avalonStyle"),
-        template = arr[0];
-    try {
-        styleEl.innerHTML += cssText;
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText;
-    }
+define(["avalon", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.css", "css!./avalon.spinner.css"], function(avalon, sourceHTML) {
     var widget = avalon.ui.spinner = function(element, data, vmodels) {
-        var options = data.spinnerOptions;
+        var options = data.spinnerOptions,
+            template = sourceHTML;
         options.template = options.getTemplate(template, options);
         var vmodel = avalon.define(data.spinnerId, function(vm) {
             avalon.mix(vm, options);

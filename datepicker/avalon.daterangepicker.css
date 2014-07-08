@@ -1,0 +1,31 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+.clrfix { overflow: hidden; *zoom: 1; *zoom: 1; }
+.clrfix:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
+
+.ui-btn { height: 26px; overflow: visible; _overflow-y: hidden; padding: 0 10px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; border-radius: 2px; font-size: 12px; color: #333333; background-color: #f8f8f8; border: 1px solid #cccccc; }
+
+.ui-btn:hover { box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1); background-color: #f8f8f8; border-color: #bbbbbb; color: #333333; }
+
+.ui-daterangepicker { width: 260px; font-size: 12px; line-height: 18px; }
+.ui-daterangepicker .ui-btn-small { height: 22px; padding: 0 5px; font-size: 12px; }
+.ui-daterangepicker .ui-btn-primary { background-color: #58b359; border-color: #45a846; color: white; }
+.ui-daterangepicker .ui-btn-primary:hover { background-color: #68c969; border-color: #3e973e; color: white; }
+.ui-daterangepicker .ui-daterangepicker-content { position: relative; z-index: 1000; zoom: 1; }
+.ui-daterangepicker .ui-daterangepicker-content .ui-datepicker-groups { position: absolute; z-index: 1000; zoom: 1; padding: 9px 0 39px 10px; border: 1px solid #cccccc; box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1); font-size: 0; white-space: nowrap; background: #ffffff; }
+.ui-daterangepicker .ui-daterangepicker-content .ui-datepicker-groups .ui-datepicker-group { position: relative; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; }
+.ui-daterangepicker .ui-daterangepicker-content .ui-datepicker-groups .ui-datepicker-group .ui-datepicker-content { position: static; box-shadow: 0 0 0 0 transparent; }
+.ui-daterangepicker .ui-daterangepicker-content .ui-datepicker-groups .ui-calendarbox-footer-small { position: absolute; bottom: 0; left: 0; height: 22px; line-height: 22px; width: 100%; padding: 4px 0; background: #f8f8f8; }
+.ui-daterangepicker .ui-daterangepicker-content .ui-datepicker-groups .ui-calendarbox-footer-small .ui-calendarbox-btns { position: absolute; right: 10px; top: 4px; display: inline; font-size: 0; }
+.ui-daterangepicker .ui-daterangepicker-content .ui-datepicker-groups .ui-calendarbox-footer-small .ui-calendarbox-btns .ui-btn { margin: 0 0 0 5px; }
+.ui-daterangepicker .ui-daterangepicker-content .ui-datepicker-groups .ui-calendarbox-footer-small .ui-calendarbox-msg { padding-left: 5px; font-size: 12px; }
+.ui-daterangepicker .ui-daterangepicker-content .ui-datepicker-groups .ui-datepicker-wrapper { position: static; padding: 0; border: 0; box-shadow: 0 0 0 0 transparent; font-size: 12px; }
+.ui-daterangepicker .ui-datepicker-range-input { cursor: pointer; border: 1px solid #cccccc; background-color: #ffffff; }
+.ui-daterangepicker .ui-datepicker-range-input .ui-datepicker-input { height: 18px; overflow: hidden; padding: 3px 21px 3px 6px; text-overflow: ellipsis; white-space: nowrap; }
+.ui-daterangepicker .ui-datepicker-range-input.ui-state-hover { border: 1px solid #999; }
+.ui-daterangepicker .ui-datepicker-range-input.ui-state-active { border-color: #3775c0; border-bottom: 0; }
+.ui-daterangepicker .ui-datepicker-icon-wrap { position: relative; display: block; height: 0; }
+.ui-daterangepicker .ui-datepicker-icon-wrap .ui-datepicker-icon { position: absolute; right: 0; top: -21px; display: none; cursor: pointer; padding: 0 6px; text-align: center; text-indent: 0; color: #b5b5b5; }
+.ui-daterangepicker .ui-datepicker-icon-wrap .ui-datepicker-icon.ui-icon-angle-down, .ui-daterangepicker .ui-datepicker-icon-wrap .ui-datepicker-icon.ui-icon-angle-up { display: block; }

@@ -1,17 +1,6 @@
-define(["./avalon.suggest", "text!./avalon.textbox.html"], function(avalon, sourceHTML) {
-    var parseHtmlStruction = sourceHTML.split("MS_OPTION_STYLE"),
-        
-        cssText = parseHtmlStruction[1].replace(/<\/?style>/g, ""),
-        styleEl = document.getElementById("avalonStyle"),
-        htmlStructArray = parseHtmlStruction[0].split("MS_OPTION_SUGGEST"),
+define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui-common.css", "css!./avalon.textbox.css"], function(avalon, sourceHTML) {
+    var htmlStructArray = sourceHTML.split("MS_OPTION_SUGGEST"),
         suggestHTML = htmlStructArray[1];
-
-    try {
-        styleEl.innerHTML += cssText ;
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText ;
-    }
-
     var widget = avalon.ui.textbox = function(element, data, vmodels) {
         var elemParent = element.parentNode,
             $element = avalon(element),
@@ -19,8 +8,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html"], function(avalon, sour
             vmSub = "",
             sourceList = "",
             inputWraper = "",
-            placeholder = "",
-            sourceHTML = parseHtmlStruction[0];
+            placeholder = "";
         // 解析html并获取需要的Dom对象引用
         sourceHTML = sourceHTML.replace(/MS_OPTION_DISABLEDCLASS/gm, options.disabledClass);
         sourceList = avalon.parseHTML(sourceHTML).firstChild ;

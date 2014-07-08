@@ -1,13 +1,9 @@
-define(["avalon.getModel","text!./avalon.daterangepicker.html", "datepicker/avalon.datepicker"], function(avalon, sourceHTML) {
-    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],  
-        calendarTemplate = arr[0],
-        cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
-        styleEl = document.getElementById("avalonStyle");
-    try {
-        styleEl.innerHTML += cssText;
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText;
-    }
+define(["avalon.getModel",
+        "text!./avalon.daterangepicker.html", 
+        "datepicker/avalon.datepicker",
+        "css!../chameleon/oniui-common.css", 
+        "css!./avalon.daterangepicker.css"], function(avalon, sourceHTML) {
+    var calendarTemplate = sourceHTML;
     var widget = avalon.ui.daterangepicker = function(element, data, vmodels) {
         var options = data.daterangepickerOptions,
             inputFrom, //绑定datepicker组件的初始日期输入域元素的引用

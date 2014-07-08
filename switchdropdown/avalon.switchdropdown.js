@@ -72,6 +72,7 @@ define(['avalon',
     //设置option的label
     function setItemLabel(items) {
         avalon.each(items, function(i, item) {
+            item.text = item.label;
             item.label = ['<i class="ui-icon ', item.cls, '">', item.font, '</i>', item.label].join('');
         });
         return items;

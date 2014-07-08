@@ -171,7 +171,6 @@ define(['avalon',
                 }
                 vmodel.toggle = false;
                 avalon.log("dropdown $remove")
-
             }
 
 
@@ -482,7 +481,8 @@ define(['avalon',
                     title: el.title,
                     enable: ensureBool(el.enable, true),
                     group: false,
-                    parent: parent
+                    parent: parent,
+                    data: el            //只有在dataModel的模式下有效
                 })
             }
         }

@@ -63,10 +63,10 @@ avalon.oniui
         <td>dropdown</td><td>UI组件</td><td>完成</td><td>姚，下拉框</td>
     </tr>   
     <tr>
-        <td>switchdropdown</td><td>UI组件</td><td>完成</td><td>姚，切换下拉框</td>
+        <td>switchdropdown</td><td>UI组件</td><td>完成</td><td>姚，切换下拉框(图标加提示)</td>
     </tr>
     <tr>
-        <td>miniswitch</td><td>UI组件</td><td>完成</td><td>姚， 迷你下拉框</td>
+        <td>miniswitch</td><td>UI组件</td><td>完成</td><td>姚， 迷你下拉框(只有图标)</td>
     </tr>
     <tr>
         <td>tooltip</td><td>UI组件</td><td>完成</td><td>杨，气泡提示（有小三角，围绕元素的任意位置出现） </td>
@@ -84,10 +84,16 @@ avalon.oniui
         <td>scrollbar</td><td>UI组件</td><td>完成</td><td>杨， 滚动条</td>
     </tr>
     <tr>
-        <td>cookie</td><td>功能组件</td><td></td><td>cookie</td>
+        <td colspan=4>第2期</td>
+    </tr>
+   <tr>
+        <td>json</td><td>功能组件</td><td>缺文档示例</td><td>钟，json2</td>
     </tr>
     <tr>
-        <td>store</td><td>功能组件</td><td></td><td>本地储存</td>
+        <td>cookie</td><td>功能组件</td><td>缺文档示例</td><td>钟，cookie</td>
+    </tr>
+    <tr>
+        <td>store</td><td>功能组件</td><td>缺文档示例</td><td>钟，本地储存</td>
     </tr>
     <tr>
         <td>lazyload</td><td>功能组件</td><td></td><td>懒加载</td>

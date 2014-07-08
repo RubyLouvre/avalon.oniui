@@ -126,3 +126,9 @@ http://cssshrink.com/
 
 a .ui-icon, .ui-btn .ui-icon {
   cursor: pointer; }
+
+.g-icon-start {
+  color: #58b359; }
+
+.g-icon-pause {
+  color: #333333; }

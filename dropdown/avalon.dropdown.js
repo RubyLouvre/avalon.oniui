@@ -16,8 +16,7 @@ define(['avalon',
             hasBuiltinTemplate = true, //标志是否通过model值构建下拉列表
             dataSource,
             dataModel,
-            optionsModel,
-            templates, titleTemplate, listTemplate, optionsTemplate,
+            templates, titleTemplate, listTemplate,
             scrollHandler,
             resizeHandler;
 
@@ -70,7 +69,6 @@ define(['avalon',
 
         dataSource = options.data.$model || options.data
 
-
         //数据抽取
         dataModel = getDataFromHTML(element)
         hasBuiltinTemplate = !!dataModel.length
@@ -88,6 +86,7 @@ define(['avalon',
         for (var i = 0, n = dataModel.length; i < n; i++) {
             if (dataModel[i].value == options.value) {
                 options.activeIndex = i
+                options.currentOption = dataModel[i];
                 break;
             }
         }
@@ -196,6 +195,7 @@ define(['avalon',
                     vmodel.value = option.value;
                 }
 
+                vmodel.currentOption = option;
                 vmodel.label = vmodel.value + ""
                 vmodel.toggle = false;
                 vmodel.onSelect.call(this, event, listNode)
@@ -479,6 +479,7 @@ define(['avalon',
                 ret.push({
                     label: el.label,
                     value: el.value,
+                    title: el.title,
                     enable: ensureBool(el.enable, true),
                     group: false,
                     parent: parent
@@ -540,6 +541,7 @@ define(['avalon',
                 } else if (el.tagName === "OPTION") {
                     ret.push({
                         label: el.text.trim(), //IE9-10有BUG，没有进行trim操作
+                        title: el.title.trim(),
                         value: parseData(avalon(el).val()),
                         enable: !el.disabled,
                         group: false,

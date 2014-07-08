@@ -1,15 +1,12 @@
-define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.datepicker.html", "dropdown/avalon.dropdown.js"], function(avalon, holidayDate, sourceHTML) {
-    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],  
-        calendarTemplate = arr[0],
-        cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
-        styleEl = document.getElementById("avalonStyle"),
+define(["avalon.getModel", 
+        "datepicker/avalon.datepicker.lang",
+        "text!./avalon.datepicker.html", 
+        "dropdown/avalon.dropdown.js",
+        "css!../chameleon/oniui-common.css", 
+        "css!./avalon.datepicker.css"], function(avalon, holidayDate, sourceHTML) {
+    var calendarTemplate = sourceHTML,
         HOLIDAYS,
         ONE_DAY = 24 * 60 * 60 * 1000;
-    try {
-        styleEl.innerHTML += cssText;
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText;
-    }
     var widget = avalon.ui.datepicker = function(element, data, vmodels) {
         var options = data.datepickerOptions,
             parseDateVm,
@@ -127,12 +124,10 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
             vm.year = year;
             vm.day = day;
             vm.years = years;
-            vm.calendars = [1,2,3];
             vm.months = [1,2,3,4,5,6,7,8,9,10,11,12];
             vm.$yearOpts = {
                 width: 60,
                 listWidth: 60,
-                height: 150,
                 onSelect: function(e, listNode) {
                     e.stopPropagation();
                 }
@@ -396,6 +391,7 @@ define(["avalon.getModel", "datepicker/avalon.datepicker.lang","text!./avalon.da
                 if(options.type==="range" && (element["data-container"].contains(target) || element["data-calenderwrapper"].contains(target))) {
                     return ;
                 } 
+
                 if(!calendar.contains(target) && !tipContainer.contains(target) && vmodel.toggle) {
                     vmodel.toggle = false;
                     toggleVM ? toggleVM[1][toggleVM[0]] = false : 0;

@@ -1,8 +1,5 @@
-define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, sourceHTML) {
-    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],
-        cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
-        styleEl = document.getElementById("avalonStyle"),
-        template = arr[0],
+define(["avalon.getModel", "text!./avalon.dialog.html","css!../chameleon/oniui-common.css", "css!./avalon.dialog.css"], function(avalon, sourceHTML) {
+    var template = sourceHTML,
         widgetArr = template.split("MS_OPTION_WIDGET"),
         _maskLayer = widgetArr[0], // 遮罩层html(string)
         maskLayerExist = false, // 页面不存在遮罩层就添加maskLayer节点，存在则忽略
@@ -13,11 +10,6 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
         maxZIndex = getMaxZIndex(),// 保存body直接子元素中最大的z-index值， 保证dialog在最上层显示
         isIE6 = (window.navigator.userAgent || '').toLowerCase().indexOf('msie 6') !== -1,
         iFrame = null;
-    try {
-        styleEl.innerHTML += cssText;
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText;
-    }
     var body = (document.compatMode && document.compatMode.toLowerCase() == "css1compat") ? document.documentElement : document.body;
     var widget = avalon.ui.dialog = function(element, data, vmodels) {
         dialogNum++;
@@ -67,10 +59,27 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
             _innerWrapper = _innerWraperArr[1], // inner wrapper html
             _lastContent = "", // dialog content html
             lastContent = "", // dialog content node
-            $element = avalon(element)
-
+            $element = avalon(element),
+            eleChildren = element.childNodes,
+            hasSubDialog = false;
+        for(var i=0, len=eleChildren.length; i<len; i++) {
+            var subEle = eleChildren[i],
+                widget;
+            if(subEle.nodeType === 1) {
+                widget = avalon(subEle).attr("ms-widget");
+                if(widget && widget.split(",")[0]==="dialog") {
+                    hasSubDialog = true;
+                    break;
+                }
+            } 
+        }
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options);
+            if(!hasSubDialog) { //显示dialog，可废弃，用来兼容onion-adapter，规范的方式是通过toggle切换dialog的显示与隐藏
+                vm.show = function() { 
+                    vmodel.toggle = true;
+                }
+            }
             vm.$skipArray = ["widgetElement", "template","submitBtnClick","cancelBtnClick"];
             vm.width = options.width;
             vm.submitBtnClick = false;
@@ -97,8 +106,6 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
 
             /**
              * desc: 显示dialogmask
-             * @param event: 当参数个数为2时，event为要显示的dialog的id，参数个数为1时event为事件对象
-             * @param scope: 当存在层中层时，才可能有2个参数，此时scope是用户定义的controller的id 
              **/
             vm.$open = function() {//open
                 var len = 0;
@@ -121,9 +128,7 @@ define(["avalon.getModel", "text!./avalon.dialog.html"], function(avalon, source
                 }
                 options.onOpen.call(vmodel)
             }
-            vm.show = function() { // 显示dialog，可废弃，通过toggle控制显示隐藏
-                vmodel.toggle = true;
-            }
+            
             // 隐藏dialog
             vm.$close = function(e) {//close
                 avalon.Array.remove(dialogShows, vm);

@@ -29,7 +29,8 @@ MS_OPTION_TEMPLATE
         <div class="ui-scrollbar-scroller"
              id="list-MS_OPTION_ID">
 
-            <div ms-repeat="data"  class="ui-dropdown-item"
+            <div ms-repeat="data"  class="ui-dropdown-item" 
+                 data-repeat-rendered="updateScrollbar" 
                  ms-click-12="_select($index, $event)"
                  ms-title="el.label"
                  ms-hover="ui-state-hover: el.enable"

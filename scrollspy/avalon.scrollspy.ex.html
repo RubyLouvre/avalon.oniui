@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>scrollspy组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["scrollspy/avalon.scrollspy", "scrollbar/avalon.scrollbar", "tab/avalon.tab", "ready!"], function() {
+                var v = avalon.define("test", function(vm) {
+                    vm.scrollspy = {
+                    }
+                    vm.scrollbar = {
+                        onInit: function(v) {
+                            vm.bar = v
+                            v.update()
+                        }
+                    }
+                    vm.tab = {
+                        onClickActive: function(e) {
+                            e.preventDefault()
+                        },
+                        panelContainerGetter: function() {
+                            return 0
+                        },
+                        onInit: function() {
+                            this.getElementsByTagName("ul")[0].id = "nav" + this.getAttribute("rank")
+                        }
+                    }
+                    vm.bar = ""
+                    vm.list = avalon.range(0, 100)
+                    vm.up = function() {
+                        //avalon.vmodels.$hehe.update()
+                        if(!vm.bar) return setTimeout(vm.up, 16)
+                        vm.bar.update()
+                    }
+                    vm.$skipArray = ["scrollspy"]
+                })
+                avalon.scan()
+            })
+        </script>
+        <style type="text/css">
+            li{
+            }
+            li.ui-state-active{
+                color: #fff;
+                background: 
+            }
+        </style>
+    </head>
+    <body ms-controller="test">
+        <h1>scrollspy</h1>
+        <div ms-widget="tab" rank="1">
+            <ul class="ui-helper-reset ui-helper-clearfix">
+                <li href="#item0">item 0</li>
+                <li href="#item25">item 25</li>
+                <li href="#item50">item 50</li>
+                <li href="#item75">item 75</li>
+            </ul>
+        </div>
+        <div id="rank1" data-scrollspy-spytarget="nav1" style="height:400px;overflow-y:scroll;">
+            <div ms-repeat="list" data-repeat-rendered="up" ms-attr-id="item{{$index}}">
+                this is div {{$index}}
+                <h5 style="height:200px;"></h5>
+            </div>
+        </div>
+        <hr>
+        <div ms-widget="tab" rank="2">
+            <ul class="ui-helper-reset ui-helper-clearfix">
+                <li href="#item20">item 0</li>
+                <li href="#item225">item 25</li>
+                <li href="#item250">item 50</li>
+                <li href="#item275">item 75</li>
+            </ul>
+        </div>
+        <div id="rank2" data-scrollspy-spytarget="nav2" ms-widget="scrollbar" style="height:400px;overflow-y:scroll;">
+            <div class="ui-scrollbar-scroller">
+                <div ms-repeat="list" data-repeat-rendered="up" ms-attr-id="item2{{$index}}">
+                    this is div {{$index}}
+                    <h5 style="height:200px;"></h5>
+                </div>
+            </div>
+        </div>
+        <pre class="brush:html;gutter:false;toolbar:false">
+        </pre>
+    </body>
+</html>

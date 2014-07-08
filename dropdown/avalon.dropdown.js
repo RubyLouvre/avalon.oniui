@@ -305,8 +305,7 @@ define(['avalon',
                     $listNode.css({
                         display: 'block'
                     });
-                    var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
-                    scrollbar && scrollbar.update();
+                    vm.updateScrollbar()
                     titleNode && titleNode.focus();
                 }
             };
@@ -402,6 +401,12 @@ define(['avalon',
                 $menu.css(css)
             };
 
+            // update scrollbar
+            vm.updateScrollbar = function() {
+                var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
+                scrollbar && scrollbar.update();
+            }
+
         });
 
         //对model的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
@@ -410,11 +415,6 @@ define(['avalon',
                 vmodel.data = getDataFromOption(vmodel.dataSource.$model).data;
             });
         }
-        // update scrollbar, if data changed
-        vmodel.data.$watch('length', function() {
-            var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
-            scrollbar && scrollbar.update();
-        })
 
         return vmodel;
     };

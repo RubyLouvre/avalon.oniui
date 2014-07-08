@@ -69,7 +69,11 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         if(options.tabpanels == void 0) {
             panelsParent = options.panelContainerGetter(element)
             tabpanels = _getData(panelsParent, "div")
-            if(options.distroyDom) element.removeChild(panelsParent)
+            if(options.distroyDom) {
+                try{
+                    element.removeChild(panelsParent)
+                }catch(e){}
+            }
         }
 
         var vmodel = avalon.define(data["tabId"], function(vm) {

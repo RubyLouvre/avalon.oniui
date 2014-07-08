@@ -9,7 +9,7 @@ define(["avalon"], function(avalon) {
         }
         var isLegalFile = false
         try {
-            if (file.nodeType === 1 && file.tagName === "INPUT" && file.type == "file") {
+            if (file.nodeType === 1 && file.tagName === "INPUT" && file.type === "file") {
                 isLegalFile = true
             }
         } catch (e) {

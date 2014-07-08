@@ -5,8 +5,6 @@ define(["avalon.getModel",
         "css!./avalon.coupledatepicker.css"], function(avalon, sourceHTML) {
     var widget = avalon.ui.coupledatepicker = function(element, data, vmodels) {
         var options = data.coupledatepickerOptions,
-            inputFrom,
-            inputTo,
             disabled = options.disabled.toString(),
             disabledVM = avalon.getModel(disabled, vmodels),
             duplex = options.duplex && options.duplex.split(","),
@@ -71,10 +69,8 @@ define(["avalon.getModel",
         var container = options.container;
         if(typeof container==="string") {
             container = container.split(",")
-            avalon.each(container, function(item, index) {
-                container[0] = document.getElementById(container[0]);
-                container[1] = document.getElementById(container[1]);
-            });
+            container[0] = document.getElementById(container[0]);
+            container[1] = document.getElementById(container[1]);
         }
         if(!container.length) {
             container = element.getElementsByTagName("div");
@@ -196,13 +192,13 @@ define(["avalon.getModel",
             }
             if(minDate){
                 var toMinDateFormat = options.formatDate(minDate);
-                vmodel.rules.toMinDate = toMinDateFormat;
+                rules.toMinDate = toMinDateFormat;
                 if(!vmodel.inputToValue) {
                     vmodel.inputToValue = toMinDateFormat;
                 }
             }
             if(maxDate) {
-                vmodel.rules.toMaxDate = options.formatDate(maxDate);
+                rules.toMaxDate = options.formatDate(maxDate);
             }
 
             var inputToDate = vmodel.inputToValue && vmodel.parseDate(vmodel.inputToValue);
@@ -232,13 +228,6 @@ define(["avalon.getModel",
                 _c[key](_date ,arr[2] * 1);
             }
             return _date;
-        }
-        function cleanDate( date ){
-            date.setHours(0);
-            date.setMinutes(0);
-            date.setSeconds(0);
-            date.setMilliseconds(0);
-            return date;
         }
         return vmodel;
     }

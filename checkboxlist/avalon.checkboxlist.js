@@ -23,7 +23,7 @@ define(["avalon.getModel", "text!./avalon.checkboxlist.html"], function(avalon, 
             vm.alltext = options.alltext !== undefined ? options.alltext : options.allText;
             // 判断是否全部选中
             vm.isAll = function() {
-                var arr = vm.data.$model.map(function(obj, index){
+                var arr = vm.data.$model.map(function(obj){
                     return obj.value || obj.name;
                 });
                 var allChecked = true
@@ -39,7 +39,7 @@ define(["avalon.getModel", "text!./avalon.checkboxlist.html"], function(avalon, 
             // 点击全选按钮之后的回调
             vm.clickAll = function(event) {
                 var checkStatus = event.target.checked;
-                avalon.each(vm.checkStatus.$model, function(key, value) {
+                avalon.each(vm.checkStatus.$model, function(key) {
                     vm.checkStatus[key] = checkStatus;
                 })
                 if (options.duplex) {
@@ -154,7 +154,7 @@ define(["avalon.getModel", "text!./avalon.checkboxlist.html"], function(avalon, 
             var duplex_list = modelArr[1][arr[0]];
             duplex_list = duplex_list && duplex_list.$model ? duplex_list.$model : [];
             var obj = {}
-            avalon.each( vmodel.data.$model , function(idx,o){
+            avalon.each(vmodel.data.$model, function(idx,o){
                 var key = o.value || o.text;
                 // 按位取反运算符,实际就是原值+1取负
                 obj[ key ] = ~duplex_list.indexOf(key);

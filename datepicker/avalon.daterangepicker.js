@@ -94,7 +94,7 @@ define(["avalon.getModel",
             vm.inputFromValue = ""
             vm.inputToValue = "";
             // 切换组件的显示隐藏
-            vm._toggleDatepicker = function(val, event) {
+            vm._toggleDatepicker = function(val) {
                 if(!vmodel.disabled) {
                     vmodel.toggle = !val;
                 }
@@ -270,13 +270,13 @@ define(["avalon.getModel",
             }
             if(minDate){
                 var toMinDateFormat = options.formatDate(minDate);
-                vmodel.rules.toMinDate = toMinDateFormat;
+                rules.toMinDate = toMinDateFormat;
                 if(!vmodel.inputToValue) {
                     vmodel.inputToValue = toMinDateFormat;
                 }
             }
             if(maxDate) {
-                vmodel.rules.toMaxDate = options.formatDate(maxDate);
+                rules.toMaxDate = options.formatDate(maxDate);
             }
             var inputToDate = vmodel.inputToValue && vmodel.parseDate(vmodel.inputToValue);
             if(inputToDate && isDateDisabled(inputToDate, minDate, maxDate)) {

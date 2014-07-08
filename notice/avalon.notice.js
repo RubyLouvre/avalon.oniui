@@ -119,20 +119,19 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
         vmodel.$watch("type", function(v) { //改变type影响notice的显示类型
             vmodel.typeClass = vmodel[v+"Class"];
         })
-        vmodel.$watch("successClass", function(v) {
+        vmodel.$watch("successClass", function() {
             vmodel.typeClass = vmodel.successClass;
         })
-        vmodel.$watch("errorClass", function(v) {
+        vmodel.$watch("errorClass", function() {
             vmodel.typeClass = vmodel.errorClass;
         })
-        vmodel.$watch("infoClass", function(v) {
+        vmodel.$watch("infoClass", function() {
             vmodel.typeClass = vmodel.infoClass;
         })
         // 如果配置了timer，则在notice显示timer时间后自动隐藏
         function _timerClose() { 
             if (!options.timer) { return; }
             window.clearTimeout(vmodel.$closeTimer);
-            var self = this;
             vmodel.$closeTimer = window.setTimeout(function(){
                 vmodel.toggle = false;
             }, options.timer);
@@ -260,7 +259,7 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
         }
     }
     avalon.notice = {
-        show: function(id, content, type, callbacks) {
+        show: function(id, content, type) {
             if( !id || !avalon.vmodels[id]) return;
             var notice = avalon.vmodels[id];
             notice.setContent(content);
@@ -277,7 +276,7 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
             if(!id || !avalon.vmodels[id]) return;
             avalon.vmodels[id].$close();
         },
-        go: function(id, cb) {
+        go: function(id) {
             if(!id || !avalon.vmodels[id]) return;
             var notice = avalon.vmodels[id];
             var toff = avalon(notice.widgetElement).offset();

@@ -9,7 +9,10 @@ avalon.oniui
 </ul>
 <table border="1" width="90%">
     <tr>
-        <td>名称</td><td>类别</td><td>状态</td><td>说明</td>
+        <th>名称</th><th>类别</th><th>状态</th><th>说明</th>
+    </tr>
+    <tr>
+        <td colspan=4>第1期</td>
     </tr>
     <tr>
         <td>hotkeys</td><td>功能组件</td><td>完成</td><td>钟，组合键</td>

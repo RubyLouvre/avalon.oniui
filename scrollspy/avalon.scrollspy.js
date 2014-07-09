@@ -8,11 +8,13 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
     var defaults = {
         //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
-        getTemplate: function(tmpl, opts, tplName) {
-            return tmpl
-        },//@optMethod getTemplate(tpl, opts, tplName) 定制修改模板接口
+        onChange: avalon.noop,//@optMethod onChange(index, ele, widgetElement) 滚动到应该显示那个tab的index，以及这个tab的li元素，以及绑定scrollspy的元素
+        axis: "y",//@param 滚动条滚动的方向，默认是竖直方向y，取值为x的时候，表示水平方向
         spytarget: void 0,
         $author: "skipper@123"
+    }
+    function getById(id) {
+        return document.getElementById(id)
     }
     avalon.bindingHandlers.scrollspy = function(data, vmodels) {
         var args = data.value.match(avalon.rword) || ["$", "scrollspy"]
@@ -37,49 +39,68 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
         }
         var element = data.element,
             options = avalon.mix({}, defaults, vmOptions || {}, data[opts] || {}, avalon.getWidgetData(element, "scrollspy")),
-            spytarget = document.getElementById(options.spytarget),
             msData = element.msData,
-            // 滚动导致的切换元素
-            $element = avalon(spytarget)
-            
+            $element = avalon(element)
+
         function getAllTargets() {
-            var a = spytarget ? spytarget.getElementsByTagName("a") : false,
+            var spytarget = getById(options.spytarget),
+            u = spytarget ? spytarget.getElementsByTagName("li") : false,
                 arr = []
-            avalon.each(a, function(i, item) {
-                var href = item.href, id
-                if(id = href.match(/^#[\s]+/g)) {
+            avalon.each(u, function(i, item) {
+                var a = item.getElementsByTagName("a")[0],
+                    href = a.getAttribute("href"), id
+                if(id = href.match(/^#[\S]+/g)) {
                     arr.push(id[0].substring(1))
                 }
             })
             return arr
         }
         // do something while scrolling
-        function onScroll(x, y) {
-            var list = getAllTargets()
-            if(x != void 0) {
-
+        function onScroll(x, y, scroller) {
+            var list = getAllTargets(),
+                scrollerOffset = scroller.offset()
+            for(var i = 0; list[i++];) {
+                var id = list[i - 1],
+                    ele = getById(id),
+                    $ele = avalon(ele),
+                    offset = $ele.offset(),
+                    height = $ele.innerHeight(),
+                    width = $ele.innerWidth()
+                if(options.axis == "x") {
+                    if(offset.left <= scrollerOffset.left && offset.left + width >= scrollerOffset.left) {
+                        break
+                    }
+                } else {
+                    if(offset.top <= scrollerOffset.top && offset.top + height >= scrollerOffset.top) {
+                        break
+                    }
+                }
             }
-            if (y != void 0) {
-
-            }
-            console.log(list)
+            options.onChange && options.onChange(i - 1, list[i - 1], element)
         }
+        var initTop = element.scrollTop,
+            initLeft = element.scrollLeft,
+            scroller = $element
         // 原生滚动事件
         avalon.bind(element, "scroll", function(e) {
-            onScroll(element.scrollTop, element.scrollLeft)
+            onScroll(element.scrollLeft, element.scrollTop, $element)
         })
         // if scrollbar is used
         if(msData && msData["ms-widget"] == "scrollbar") {
             var myScroll = avalon.vmodels[msData["ms-widget-id"]]
+            initTop = myScroll.scrollTop
+            initLeft = myScroll.scrollLeft
+            scroller = myScroll.getScroller()
             myScroll.$watch("scrollLeft", function(n, o) {
-                onScroll(n, void 0)
+                onScroll(n, void 0, scroller)
             })
             myScroll.$watch("scrollTop", function(n, o) {
-                onScroll(void 0, n)
+                onScroll(void 0, n, scroller)
             })
         }
         // callback after inited
         if(typeof options.onInit === "function" ) {
+            onScroll(initTop, initLeft, scroller)
             //vmodels是不包括vmodel的 
             options.onInit.call(element, vmodel, options, vmodels)
         }

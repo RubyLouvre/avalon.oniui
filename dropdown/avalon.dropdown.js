@@ -11,15 +11,14 @@ define(['avalon',
 
     var widget = avalon.ui.dropdown = function(element, data, vmodels) {
         var $element = avalon(element),
-                elemParent = element.parentNode,
-                options = data.dropdownOptions,
-                hasBuiltinTemplate = true, //标志是否通过model值构建下拉列表
-                dataSource,
-                dataModel,
-                optionsModel,
-                templates, titleTemplate, listTemplate, optionsTemplate,
-                scrollHandler,
-                resizeHandler
+            elemParent = element.parentNode,
+            options = data.dropdownOptions,
+            hasBuiltinTemplate = true, //标志是否通过model值构建下拉列表
+            dataSource,
+            dataModel,
+            templates, titleTemplate, listTemplate,
+            scrollHandler,
+            resizeHandler;
 
 
         function _buildOptions(opt) {
@@ -64,12 +63,11 @@ define(['avalon',
 
         //读取template
         templates = options.template = options.getTemplate(template, options)
-                .replace(/MS_OPTION_ID/g, data.dropdownId).split('MS_OPTION_TEMPLATE')
+            .replace(/MS_OPTION_ID/g, data.dropdownId).split('MS_OPTION_TEMPLATE')
         titleTemplate = templates[0]
         listTemplate = templates[1]
 
         dataSource = options.data.$model || options.data
-
 
         //数据抽取
         dataModel = getDataFromHTML(element)
@@ -88,6 +86,7 @@ define(['avalon',
         for (var i = 0, n = dataModel.length; i < n; i++) {
             if (dataModel[i].value == options.value) {
                 options.activeIndex = i
+                options.currentOption = dataModel[i];
                 break;
             }
         }
@@ -108,7 +107,7 @@ define(['avalon',
                 //根据multiple的类型初始化组件
                 if (vmodel.multiple) {
                     //创建菜单
-                    listNode = vmodel.$createListNode();
+                    listNode = createListNode();
                     elemParent.insertBefore(listNode, element);
                 } else {//如果是单选
                     var title, defaultOption;
@@ -150,7 +149,7 @@ define(['avalon',
 
                 if (!vmodel.multiple) {
                     var duplexName = (element.msData['ms-duplex'] || "").trim(),
-                            duplexModel;
+                        duplexModel;
 
                     if (duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
                         duplexModel[1].$watch(duplexName, function(newValue) {
@@ -172,13 +171,12 @@ define(['avalon',
                 }
                 vmodel.toggle = false;
                 avalon.log("dropdown $remove")
-
             }
 
 
             vm._select = function(index, event) {
                 var option = vm.data[index]
-                if (!option || !option.enable) {
+                if (!option || !option.enable || option.group) {
                     return;
                 }
                 event.stopPropagation()
@@ -196,16 +194,11 @@ define(['avalon',
                     vmodel.value = option.value;
                 }
 
+                vmodel.currentOption = option;
                 vmodel.label = vmodel.value + ""
                 vmodel.toggle = false;
                 vmodel.onSelect.call(this, event, listNode)
                 titleNode && titleNode.focus()
-            }
-
-
-
-            vm.$createListNode = function() {
-                return avalon.parseHTML(listTemplate)
             }
 
             vm._keydown = function(event) {
@@ -218,7 +211,7 @@ define(['avalon',
                     //区分上下箭头和回车
                     switch (event.keyCode) {
                         case 9:
-                            // tab
+                        // tab
                         case 27:
                             // escape
                             event.preventDefault()
@@ -261,7 +254,7 @@ define(['avalon',
                 }
                 if (!listNode) {//只有单选下拉框才存在显示隐藏的情况
                     var list;
-                    listNode = vm.$createListNode();
+                    listNode = createListNode();
                     list = listNode.firstChild;
                     document.body.appendChild(listNode)
                     avalon.scan(list, [vmodel].concat(vmodels))
@@ -301,7 +294,7 @@ define(['avalon',
                         }
                         vmodel.activeIndex = selectedItemIndex;
                     }
-                    vmodel.$position();
+                    vmodel._position();
                     $listNode.css({
                         display: 'block'
                     });
@@ -319,17 +312,17 @@ define(['avalon',
 
             vm.toggle = false;
 
-            vm.$position = function() {
+            vm._position = function() {
                 var $titleNode = avalon(titleNode);
                 //计算浮层当前位置，对其进行定位，默认定位正下方
                 //获取title元素的尺寸及位置
                 var offset = $titleNode.offset(),
-                        outerHeight = $titleNode.outerHeight(true),
-                        $listNode = avalon(listNode),
-                        $sourceNode = avalon(titleNode.firstChild),
-                        listHeight = $listNode.height(),
-                        $window = avalon(window),
-                        css = {};
+                    outerHeight = $titleNode.outerHeight(true),
+                    $listNode = avalon(listNode),
+                    $sourceNode = avalon(titleNode.firstChild),
+                    listHeight = $listNode.height(),
+                    $window = avalon(window),
+                    css = {};
 
                 while ($sourceNode.element && $sourceNode.element.nodeType != 1) {
                     $sourceNode = avalon($sourceNode.element.nextSibling);
@@ -377,21 +370,21 @@ define(['avalon',
             }
 
             vm.isActive = function(el) {
-                var value = el.value, enable = el.enable
+                var value = el.value, enable = el.enable, group = el.group;
                 if (vmodel.multiple) {
-                    return vmodel.value.indexOf(value) > -1 && enable;
+                    return vmodel.value.indexOf(value) > -1 && enable && !group;
                 } else {
-                    return vmodel.value === value && enable;
+                    return vmodel.value === value && enable && !group;
                 }
             }
 
             //利用scrollbar的样式改变修正父节点的样式
             vm.$styleFix = function() {
                 var MAX_HEIGHT = 200,
-                        $menu = avalon(vmodel.menuNode),
-                        $dropdown = avalon(vmodel.dropdownNode),
-                        height = $dropdown.height(),
-                        css = {};
+                    $menu = avalon(vmodel.menuNode),
+                    $dropdown = avalon(vmodel.dropdownNode),
+                    height = $dropdown.height(),
+                    css = {};
 
                 css.width = vmodel.listWidth - $menu.css('borderLeftWidth').replace(styleReg, '$1') - $menu.css('borderRightWidth').replace(styleReg, '$1');
                 if (height > MAX_HEIGHT) {
@@ -415,6 +408,10 @@ define(['avalon',
             var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
             scrollbar && scrollbar.update();
         })
+
+        function createListNode() {
+            return avalon.parseHTML(listTemplate);
+        }
 
         return vmodel;
     };
@@ -450,9 +447,9 @@ define(['avalon',
     function parseData(data) {
         try {
             data = data === "true" ? true :
-                    data === "false" ? false :
+                data === "false" ? false :
                     data === "null" ? null :
-                    +data + "" === data ? +data : data;
+                        +data + "" === data ? +data : data;
         } catch (e) {
         }
         return data
@@ -481,9 +478,11 @@ define(['avalon',
                 ret.push({
                     label: el.label,
                     value: el.value,
+                    title: el.title,
                     enable: ensureBool(el.enable, true),
                     group: false,
-                    parent: parent
+                    parent: parent,
+                    data: el            //只有在dataModel的模式下有效
                 })
             }
         }
@@ -534,7 +533,7 @@ define(['avalon',
                         label: el.label,
                         value: "",
                         enable: !el.disabled,
-                        group: true,
+                        group: true,        //group不能添加ui-state-active
                         parent: false
                     }
                     ret.push(parent)
@@ -542,6 +541,7 @@ define(['avalon',
                 } else if (el.tagName === "OPTION") {
                     ret.push({
                         label: el.text.trim(), //IE9-10有BUG，没有进行trim操作
+                        title: el.title.trim(),
                         value: parseData(avalon(el).val()),
                         enable: !el.disabled,
                         group: false,

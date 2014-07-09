@@ -1,162 +1,183 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
+
 $uiname: "ui-dropdown";
-@font-face {
-    font-family: fontawesome;
-    font-style: normal;
-    font-weight: normal;
-    src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?v=4.0.3');
-    src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?#iefix&v=4.0.3') format('embedded-opentype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.woff?v=4.0.3') format('woff'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.ttf?v=4.0.3') format('truetype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular') format('svg');
+
+//内容边框样式
+@mixin content-border {
+  border: 1px solid #cccccc;
 }
 
+//阴影样式
+@mixin box-shadow {
+  box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+}
 
-.#{$uiname}{
-    @include inline-block();
+//source结构相应的样式
+$ui-source-state-default-background-color: #fff;
+$ui-source-state-hover-border-color: #999;
+$ui-source-state-disabled-color: #ccc;
+//menu相应样式
+$ui-menu-state-default-background-color: #fff;
+//divider样式
+$ui-divider-state-default-color: #f2f2f2;
+
+.#{$uiname} {
+  @extend %oniui-font-setting;
+  @include inline-block();
+  outline: none;
+  //上方的显示区
+  .#{$uiname}-source {
+    background-color: $ui-source-state-default-background-color;
+    @include content-border();
+    cursor: pointer;
+    .#{$uiname}-input {
+      @include inline-block();
+      overflow: hidden;
+      height: 18px;
+      padding: 3px 21px 3px 6px;
+      @include ellipsis();
+      @include nowrap();
+      word-break: normal;
+      word-wrap: normal;
+
+    }
+  }
+  .ui-icon{
+    cursor: pointer;
     font-size: 12px;
-    outline: none;
-    //上方的显示区
+    vertical-align: baseline;
+  }
+  //各种状态
+  &.ui-state-hover {
     .#{$uiname}-source {
-        background-color: #ffffff;
-        border: 1px solid #cccccc;
-        cursor: pointer;
-        .#{$uiname}-input {
-            @include inline-block();
-            overflow: hidden;
-            height: 18px;
-            padding: 3px 21px 3px 6px;
-            @include ellipsis();
-            white-space: nowrap;
-            word-break: normal;
-            word-wrap: normal;
-        }
+      border-color: $ui-source-state-hover-border-color;
     }
-    //各种状态
-    &.ui-state-hover {
-        .#{$uiname}-source {
-            border-color: #999999;
-        }
+  }
+  &.ui-state-disabled {
+    .#{$uiname}-source {
+      background-color: $ui-state-disabled-background-color;
+      border-color: $ui-state-disabled-border-color;
+      color: $ui-source-state-disabled-color;
+      cursor: default;
     }
-    &.ui-state-disabled {
-        .#{$uiname}-source {
-            background-color: #f5f5f5;
-            border-color: #d9d9d9;
-            color: #cccccc;
-            cursor: default;
-        }
-        .#{$uiname}-icon {
-            cursor: default;
-        }
-    }
-    &.ui-state-small {
-        .#{$uiname}-source {
-            border-radius: 2px;
-        }
-        .#{$uiname}-input {
-            padding-top: 1px;
-            padding-bottom: 1px;
-        }
-        .#{$uiname}-icon {
-            top: -19px;
-        }
-    }
-    &.ui-state-error  {
-        .#{$uiname}-source{
-            border-color: $ui-state-error-border-color;
-        }
-    }
-    &.ui-state-error:hover{ 
-        .#{$uiname}-source {
-            border-color:$ui-state-error-border-color;
-        }
-    }
-
     .#{$uiname}-icon {
-        display: none;
-        color: #b5b5b5;
-        cursor: pointer;
-        padding: 0 6px;
-        position: absolute;
-        right: 0;
-        text-align: center;
-        top: -21px;
+      cursor: default;
     }
-    .#{$uiname}-icon-wrap {
-        display: block;
-        position: relative;
-        height: 0;
-        .ui-icon-angle-down{
-            display: block;
-        }
-        .ui-icon-angle-up{
-            display: block;
-        }
+  }
+  &.ui-state-small {
+    .#{$uiname}-source {
+      border-radius: 2px;
+    }
+    .#{$uiname}-input {
+      padding-top: 1px;
+      padding-bottom: 1px;
+    }
+    .#{$uiname}-icon {
+      top: -19px;
+    }
+  }
+  &.ui-state-error {
+    .#{$uiname}-source {
+      border-color: $ui-state-error-border-color;
+    }
+  }
+  &.ui-state-error:hover {
+    .#{$uiname}-source {
+      border-color: $ui-state-error-border-color;
+    }
+  }
+
+  .#{$uiname}-icon {
+    display: none;
+    color: #b5b5b5;
+    cursor: pointer;
+    padding: 0 6px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: -21px;
+  }
+  .#{$uiname}-icon-wrap {
+    display: block;
+    position: relative;
+    height: 0;
+    .ui-icon-angle-down {
+      display: block;
+    }
+    .ui-icon-angle-up {
+      display: block;
+    }
+  }
+
+  &.#{$uiname}-menu {
+    display: none;
+    left: 0;
+    position: absolute;
+    top: -1px;
+    width: 100%;
+    _width: auto !important;
+    z-index: 1001;
+  }
+
+  .#{$uiname}-menu-inner {
+    @include box-shadow();
+    background-color: $ui-menu-state-default-background-color;
+    border: 1px solid $ui-state-default-border-color;
+    overflow-y: scroll;
+    padding: 3px 0;
+  }
+  //下拉项的样式
+  .#{$uiname}-item {
+    overflow: hidden;
+    width: 100%;
+    padding: 3px 0;
+    @include ellipsis();
+    @include user-select();
+    height: 24px;
+    line-height: 24px;
+    text-indent: 20px;
+    @include nowrap();
+    cursor: pointer;
+    word-break: normal;
+    word-wrap: normal;
+    *zoom: 1;
+    //分组头
+    &.#{$uiname}-group {
+      font-size: 14px;
+      font-weight: bold;
+      text-indent: 10px;
+    }
+    //分组头带的特殊样式,用于分隔成一块一块
+    &.#{$uiname}-divider {
+      border-top: 1px solid $ui-divider-state-default-color;
     }
 
-    &.#{$uiname}-menu {
-        display: none;
-        left: 0;
-        position: absolute;
-        top: -1px;
-        width: 100%;
-        _width: auto !important;
-        z-index: 1001;
+    //禁用
+    &.ui-state-disabled {
+      border-color: $ui-state-disabled-border-color;
+      background-color: $ui-state-disabled-background-color;
+      color: $ui-state-disabled-color;
     }
-
-    .#{$uiname}-menu-inner {
-        box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
-        background-color: #ffffff;
-        border: 1px solid $ui-state-default-border-color;
-        overflow-y: scroll;
-        padding: 3px 0;
+    //选中
+    &.ui-state-active {
+      border-color: $ui-state-active-border-color;
+      background-color: $ui-state-active-background-color;
+      color: $ui-state-active-color;
+      .ui-icon {
+        color: $oniui-icon-state-hover-color;
+      }
     }
-    //下拉项的样式
-    .#{$uiname}-item {
-        overflow: hidden;
-        width: 100%;
-        padding: 3px 0;
-        @include ellipsis();
-        @include user-select();
-        height:24px;
-        line-height: 24px;
-        text-indent: 20px;
-        white-space: nowrap;
-        cursor: pointer;
-        word-break: normal;
-        word-wrap: normal;
-        font-size: 12px;
-        *zoom: 1;
-        //分组头
-        &.#{$uiname}-group {
-            font-size: 14px;
-            font-weight: bold;
-            text-indent: 10px;
-        }
-        //分组头带的特殊样式,用于分隔成一块一块
-        &.#{$uiname}-divider {
-            @if($oinui-theme == smoothness){
-                border-top: 1px solid #f2f2f2;
-            }
-        }
-
-        //禁用
-        &.ui-state-disabled {
-            border-color:$ui-state-disabled-border-color;
-            background-color:$ui-state-disabled-background-color;
-            color: $ui-state-disabled-color;
-        }
-        //选中
-        &.ui-state-active{
-            border-color:$ui-state-active-border-color;
-            background-color:$ui-state-active-background-color;
-            color: $ui-state-active-color;
-        }
-        //掠过
-        &.ui-state-hover {
-            border-color:$ui-state-hover-border-color;
-            background-color:$ui-state-hover-background-color;
-            color: $ui-state-hover-color;
-        }
+    //掠过
+    &.ui-state-hover {
+      border-color: $ui-state-hover-border-color;
+      background-color: $ui-state-hover-background-color;
+      color: $ui-state-hover-color;
+      .ui-icon {
+        color: $oniui-icon-state-active-color;
+      }
     }
+  }
 }
 
 

@@ -69,48 +69,6 @@ http://cssshrink.com/
 
 
 
-.ui-widget {
-    font-family: $oniui-font-size * 1.1;
-    font-size: $oniui-font-size;
-    .ui-widget, input, select, texteara, button {
-        font-size: $oniui-font-family;
-    }
-}
-
-
-.ui-widget-content {
-    border: 1px solid $ui-widget-content-border-color;
-    background-color: $ui-widget-content-background-color;
-    color: $ui-widget-content-color;
-    a {
-        color:$ui-widget-content-color;
-    }
-}
-.ui-widget-header {
-    border: 1px solid $ui-widget-header-color;
-    background-color: $ui-widget-header-background-color;
-    color: $ui-widget-header-color;
-    font-weight: bold;
-    a {
-        color: $ui-widget-header-color;
-    }
-}
-
-
-.ui-state-default,
-.ui-widget-content .ui-state-default,
-.ui-widget-header .ui-state-default {
-    border: 1px solid $ui-state-default-border-color;
-    background-color: $ui-state-default-background-color;
-    font-weight: normal;
-    color: $ui-state-default-color;
-}
-
-.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited{
-    color: $ui-state-default-color;
-    text-decoration: none;
-}
-
 
 @font-face {
   font-family: fontawesome;
@@ -140,4 +98,11 @@ http://cssshrink.com/
 
 a .ui-icon,.ui-btn .ui-icon {
     cursor: pointer;
+}
+
+.g-icon-start {
+  color: $oniui-icon-start-color;
+}
+.g-icon-pause {
+  color: $oniui-icon-pause-color;
 }

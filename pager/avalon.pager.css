@@ -1,4 +1,7 @@
 @charset "UTF-8";
+.ui-pager {
+  font: normal 12px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif; }
+
 /*
 这是每个都组件都应该引用的部分
 */
@@ -9,7 +12,6 @@
   *vertical-align: auto;
   zoom: 1;
   *display: inline;
-  font-size: 0;
   vertical-align: middle;
   white-space: nowrap;
   /*!省略掉的页数*/

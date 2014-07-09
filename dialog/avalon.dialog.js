@@ -193,15 +193,8 @@ define(["avalon.getModel",
                 vm._RenderView();
                 document.body.appendChild(element);
                 // 当窗口尺寸发生变化时重新调整dialog的位置，始终使其水平垂直居中
-                element.resizeCallback = avalon(window).bind("resize", function() {
-                    resetCenter(vmodel, element);
-                })
-                element.scrollCallback = avalon.bind(window, "scroll", function() {  
-                    clearTimeout(element.timeId);
-                    element.timeId = setTimeout(function() {
-                        resetCenter(vmodel, element);
-                    }, 300)
-                })
+                element.resizeCallback = avalon(window).bind("resize", throttle(resetCenter, 50, 100, [vmodel, element]));
+                element.scrollCallback = avalon.bind(window, "scroll", throttle(resetCenter, 50, 100, [vmodel, element]));
                 if(!maskLayer.attributes["ms-visible"]) {
                     // 设置遮罩层的显示隐藏
                     maskLayer.setAttribute("ms-visible", "toggle");
@@ -273,6 +266,27 @@ define(["avalon.getModel",
         }
         return [].concat(model);
     }
+    // resize、scroll等频繁触发页面回流的操作要进行函数节流
+    var throttle = function(fn, delay, mustRunDelay, args){
+        var timer = null;
+        var t_start;
+        return function(){
+            var context = this, t_curr = +new Date();
+            clearTimeout(timer);
+            if(!t_start){
+                t_start = t_curr;
+            }
+            if(t_curr - t_start >= mustRunDelay){
+                fn.apply(context, args);
+                t_start = t_curr;
+            }
+            else {
+                timer = setTimeout(function(){
+                    fn.apply(context, args);
+                }, delay);
+            }
+        };
+     };
 
     // 使dialog始终出现在视窗中间
     function resetCenter(vmodel, target) {

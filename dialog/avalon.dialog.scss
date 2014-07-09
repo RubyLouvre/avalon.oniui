@@ -98,7 +98,8 @@ $uiname: "ui-dialog";
 }
 .#{$uiname}-layout {
     display: none;
-    position: absolute;
+    position: fixed;
+    *position: absolute;
     left: 0;
     top: 0;
     bottom: 0;

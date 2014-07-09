@@ -24,7 +24,10 @@ define(["avalon.getModel",
             dialogOptions = data.value.split(',')[2]; //确保存在嵌套dialog时能正确应用用户定义的配置对象
         dialogOptions = dialogOptions && avalon.getModel(dialogOptions, vmodels);
         if (dialogOptions) {
-            avalon.mix(options, dialogOptions[1][dialogOptions[0]]);
+            dialogOptions = dialogOptions[1][dialogOptions[0]];
+            // 确保dialogOptions是一个plainObject，如果是VM的话，vmodel.hasOwnProperty("$init")为false，组件就不会自执行$init方法
+            dialogOptions = dialogOptions.$model || dialogOptions;
+            avalon.mix(options, dialogOptions);
         }
 
         if (avalon(element).data("custom")) { //兼容onion-adapter的自创建dialog
@@ -69,6 +72,7 @@ define(["avalon.getModel",
             $element = avalon(element),
             eleChildren = element.childNodes, //兼容onion-adapter的辅助变量
             hasSubDialog = false; //兼容onion-adapter的辅助变量
+        
         // 判断绑定dialog组件元素内部是否有dialog绑定
         for (var i=0, len=eleChildren.length; i<len; i++) { //兼容onion-adapter 
             var subEle = eleChildren[i],
@@ -169,12 +173,13 @@ define(["avalon.getModel",
                     options.onClose.call(e.target, e, vmodel)
                 }
             };
+
             // 点击"取消"按钮，根据回调返回值是否为false决定是否关闭dialog
             vm._cancel = function(e) {
                 if (typeof options.onCancel != "function") {
                     throw new Error("onCancel必须是一个回调方法");
                 }
-                if(vmodel.cancel) {
+                if(vmodel.cancel) { //兼容onion-adapter
                     vmodel.cancel(avalon.noop);
                 }
                 // 在用户回调返回false时，不关闭弹窗
@@ -183,16 +188,21 @@ define(["avalon.getModel",
                     vmodel._close(e)
                 }
             }
+
+            // 打开dialog之后处理zIndex使dialog正常显示
             vm.$watch("toggle", function(val) {
                 if (val) {
                     vmodel._open();
                 }
             })
+
+            // 可以手动设置最大zIndex
             vm.$watch("zIndex", function(val) {
                 maxZIndex = val;
             })
+
             /**
-             * desc: 可以动态改变dialog的内容
+             * desc: 可以动态改变dialog的显示内容
              * @param content: 要替换的content，可以是已经渲染ok的view也可以是未解析渲染的模板
              * @param noScan: 当content是模板时noScan设为false或者不设置，组件会自动解析渲染模板，如果是已经渲染ok的，将noScan设为true，组件将不再进行解析操作
              */
@@ -203,10 +213,12 @@ define(["avalon.getModel",
                     avalon.scan(lastContent, [vmodel].concat(vmodels));
                 }
             };
+
             // 动态修改dialog的title
             vm.setTitle = function(title) {
                 vm.title = title;
             };
+
             // 重新渲染dialog
             vm.setModel = function(m) {
                 // 这里是为了充分利用vm._ReanderView方法，才提前设置一下element.innerHTML
@@ -219,9 +231,10 @@ define(["avalon.getModel",
                 }
                 avalon.scan(element, [vmodel].concat(findModel(m)).concat(vmodels));
             };
+
             // 将零散的模板(dialog header、dialog content、 dialog footer、 dialog wrapper)组合成完整的dialog
             vm._RenderView = function() {
-                var innerWrapper = ""; // 保存innerWraper元素节点
+                var innerWrapper = null; // 保存innerWraper元素节点
                 // 用户只能通过data-dialog-width配置width，不可以通过ms-css-width来配置，配置了也无效
                 element.setAttribute("ms-css-width", "width");
                 lastContent = avalon.parseHTML(_content).firstChild;
@@ -238,29 +251,42 @@ define(["avalon.getModel",
                     maskLayerExist = true;
                 }
             }
+
             vm.$init = function() {
                 $element.addClass("ui-dialog");
                 element.setAttribute("ms-visible", "toggle");
                 vm._RenderView();
                 document.body.appendChild(element);
                 // 当窗口尺寸发生变化时重新调整dialog的位置，始终使其水平垂直居中
-                avalon(window).bind("resize", function() {
+                element.resizeCallback = avalon(window).bind("resize", function() {
                     resetCenter(vmodel, element);
                 })
-                // 必须重新设置ms-visible属性，因为maskLayer为所有dialog所公用，第一次实例化dialog组件后maskLayer就失去了ms-visible属性
-                maskLayer.setAttribute("ms-visible", "toggle");
+                element.scrollCallback = avalon.bind(window, "scroll", function() {  
+                    clearTimeout(element.timeId);
+                    element.timeId = setTimeout(function() {
+                        resetCenter(vmodel, element);
+                    }, 300)
+                })
+                if(!maskLayer.attributes["ms-visible"]) {
+                    // 设置遮罩层的显示隐藏
+                    maskLayer.setAttribute("ms-visible", "toggle");
+                }
                 if (vmodel.modal) {
                     avalon.scan(maskLayer, [vmodel].concat(vmodels));
                 }
                 avalon.scan(element, [vmodel].concat(vmodels));
-                if(typeof options.onInit === "function" ){
+                if (typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
                     options.onInit.call(element, vmodel, options, vmodels)
                 }
             };
+
+            // 自动清理方法
             vm.$remove = function() {
                 dialogNum--;
                 element.innerHTML = "";
+                avalon.unbind(window, "resize", element.resizeCallback);
+                avalon.unbind(window, "scroll", element.scrollCallback);
                 if (!dialogNum) {
                     maskLayer.parentNode.removeChild(maskLayer);
                     maskLayerExist = false;
@@ -271,24 +297,24 @@ define(["avalon.getModel",
     }
     widget.version = 1.0
     widget.defaults = {
-        width: 480, // 默认dialog的width
-        title: "&nbsp;", // dialog的title
-        type: "confirm", // dialog的显示类型，prompt(有返回值) confirm(有两个按钮) alert(有一个按钮)
-        onSubmit: avalon.noop, // 点击"确定"按钮时的回调
-        onOpen: avalon.noop,
-        onCancel: avalon.noop,
-        onClose: avalon.noop,
-        setTitle: avalon.noop,
-        setContent: avalon.noop,
-        setModel: avalon.noop,
-        showClose: true,
-        toggle: false, // 通过此属性的决定dialog的显示或者隐藏状态
-        widgetElement: "",
+        width: 480, //默认dialog的width
+        title: "&nbsp;", //dialog的title
+        type: "confirm", //dialog的显示类型confirm(有两个按钮) alert(有一个按钮)
+        onSubmit: avalon.noop, //点击"确定"按钮时的回调
+        onOpen: avalon.noop, //显示dialog的回调 
+        onCancel: avalon.noop, //点击“取消”按钮的回调
+        onClose: avalon.noop, //点击右上角的“关闭”按钮的回调
+        setTitle: avalon.noop, //动态修改dialog的title
+        setContent: avalon.noop, //动态修改dialog的content
+        setModel: avalon.noop, //重新渲染dialog
+        showClose: true, //是否显示右上角的“关闭”按钮
+        toggle: false, //通过此属性的决定dialog的显示或者隐藏状态
+        widgetElement: "", //保存对绑定元素的引用
         getTemplate: function(str, options) {
             return str;
         },
-        modal: true,
-        zIndex: maxZIndex
+        modal: true, //是否显示遮罩
+        zIndex: maxZIndex //手动设置body直接子元素的最大z-index
     }
     // 动态创建dialog
     avalon.dialog = function(config) {
@@ -308,8 +334,8 @@ define(["avalon.getModel",
     }
     function findModel( m ) {
         var model = m;
-        if(model) { // 如果m为字符串参数，说明是要在已存在的vmodels中查找对应id的vmodel
-            if(avalon.type(model) === 'string') {
+        if (model) { // 如果m为字符串参数，说明是要在已存在的vmodels中查找对应id的vmodel
+            if (avalon.type(model) === 'string') {
                 model = avalon.vmodels[model];
             } 
         } else { // 如果没有传递参数m，则返回空vmodel
@@ -327,20 +353,39 @@ define(["avalon.getModel",
         }
         return [].concat(model);
     }
-    // 调整弹窗水平、垂直居中
+
+    // 使dialog始终出现在视窗中间
     function resetCenter(vmodel, target) {
-        var bodyHeight = Math.max(body.clientHeight, body.scrollHeight),
-            scrollTop = Math.max(document.body.scrollTop, document.documentElement.scrollTop),
-            scrollLeft = Math.max(document.body.scrollLeft, document.documentElement.scrollLeft);
+        var bodyHeight = body.scrollHeight,
+            scrollTop = document.body.scrollTop + document.documentElement.scrollTop,
+            scrollLeft = body.scrollLeft,
+            clientWidth = avalon(window).width(),
+            clientHeight = avalon(window).height(),
+            targetOffsetHeight = target.offsetHeight,
+            targetOffsetWidth = target.offsetWidth,
+            t = 0,
+            l = 0;
         if (vmodel.toggle) {
-            maskLayer.style.width = avalon(window).width() + "px";
+            maskLayer.style.width = clientWidth + "px";
             maskLayer.style.height = bodyHeight + "px";
-            var l = ((avalon(window).width() - target.offsetWidth) / 2) + scrollLeft;
-            var t = (avalon(window).height() - target.offsetHeight) / 2 + scrollTop - 10;
-            target.style.left = l + "px"
-            target.style.top = t + "px"
+            target.style.overflow = "auto";
+            if (clientHeight < targetOffsetHeight) {
+                target.style.height = clientHeight + "px";
+                t = scrollTop;
+            } else {
+                t = (clientHeight - targetOffsetHeight) / 2 + scrollTop;
+            }
+            if(clientWidth < targetOffsetWidth) {
+                l = scrollLeft;
+                target.style.width = clientWidth + "px";
+            } else {
+                l = (clientWidth - targetOffsetWidth) / 2 + scrollLeft;
+            }
+            target.style.left = l + "px";
+            target.style.top = t + "px";
         }
     }
+
     // 获取body子元素最大的z-index
     function getMaxZIndex() {
         var children = document.body.children,

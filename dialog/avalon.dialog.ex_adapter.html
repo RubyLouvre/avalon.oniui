@@ -53,11 +53,11 @@
                 <button ms-click="changeTitle">改变对话框title</button>
                 <button ms-click="changeModel">改变对话框model</button>
             </fieldset>
+            <button ms-click="changeId">changeId</button>
             <script> 
                 require("dialog/avalon.dialog", function(avalon) {
                     $$.define('demo',function(vm){
                         window.dialog = null;
-
                         vm.opts = {
                             type: 'alert',
                             title: 'xxx'

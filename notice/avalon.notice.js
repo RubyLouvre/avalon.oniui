@@ -33,12 +33,6 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
                 _affix(); 
                 vmodel.onShow.call(element, data, vmodels); // 用户回调
             }
-            vm.show = function() { //兼容onion-adapter,规范的方式是使用toggle来切换notice的显示与隐藏
-                vmodel.toggle = true;
-            }
-            vm.$close = function() {
-                vmodel.toggle =false;
-            }
             vm._close = function() { //close按钮click时的监听处理函数
                 vmodel.toggle = false;
             }
@@ -57,9 +51,6 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
                     } 
                 }
                 vmodel.onHide.call(element, data, vmodels); //用户回调
-            }
-            vm.setType = function(type) { //兼容onion-adapter，标准的用法是改变type控制notice的类型
-                vmodel.type = type;
             }
             vm.setContent = function(content) {
                 vmodel.content = content;

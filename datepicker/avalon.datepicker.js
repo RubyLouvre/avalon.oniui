@@ -85,9 +85,9 @@ define(["avalon.getModel",
                 maxDate = validateDate(maxDateVM[1][maxDateVM[0]]);
             }
         }
-        if(typeof options.change === "string") {
-            var changeVM = avalon.getModel(options.change, vmodels);
-            options.change = changeVM[1][changeVM[0]];
+        if(typeof options.onSelect === "string") {
+            var changeVM = avalon.getModel(options.onSelect, vmodels);
+            options.onSelect = changeVM[1][changeVM[0]];
         }
 
         options.minDate = minDate && cleanDate(minDate);
@@ -128,6 +128,7 @@ define(["avalon.getModel",
             vm.$yearOpts = {
                 width: 60,
                 listWidth: 60,
+                position: false,
                 onSelect: function(e) {
                     e.stopPropagation();
                 }
@@ -136,6 +137,7 @@ define(["avalon.getModel",
                 width: 40,
                 height: 150,
                 listWidth: 40,
+                position: false,
                 onSelect: function(e) {
                     e.stopPropagation();
                 }
@@ -198,7 +200,7 @@ define(["avalon.getModel",
                         vmodel.data[0].rows[outerIndex][innerIndex].selected = true;
                         element.value = date;
                     }
-                    vmodel.change.call(null, options.parseDate(date), data["datepickerId"], avalon(element).data())
+                    vmodel.onSelect.call(null, options.parseDate(date), data["datepickerId"], avalon(element).data())
                 }
             }
             // 点击prev按钮切换到当前月的上个月，如当前月存在minDate则prev按钮点击无效
@@ -610,7 +612,7 @@ define(["avalon.getModel",
         separator: "-",
         calendarLabel: "选择日期",
         onChangeMonthYear: avalon.noop, 
-        change: avalon.noop, //将废弃,相当于onSelect
+        onSelect: avalon.noop, //将废弃,相当于onSelect
         onClose: avalon.noop,
         parseDate: function(str){
             var separator = this.separator;

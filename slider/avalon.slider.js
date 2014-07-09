@@ -95,11 +95,11 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
                 data.dragX = data.dragY = false
                 Index = handlers.indexOf(data.element)
                 data.$element.addClass("ui-state-active")
-                options.ondragstart.call(null, event, data);
+                options.onDragStart.call(null, event, data);
             }
             vm.dragend = function(event, data) {
                 data.$element.removeClass("ui-state-active")
-                options.ondragend.call(null, event, data);
+                options.onDragEnd.call(null, event, data);
             }
             vm.drag = function(event, data, keyVal) {
                 if (isFinite(keyVal)) {
@@ -140,7 +140,7 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
                     vmodel.value = val
                     vmodel.percent = value2Percent(val)
                 }
-                options.ondrag.call(null, vmodel, data);
+                options.onDrag.call(null, vmodel, data);
             }
             vm.$init = function() {
                 var a = slider.getElementsByTagName("b")
@@ -176,9 +176,9 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
         value: 0,
         values: null,
         disabled: false,
-        ondragstart: avalon.noop,
-        ondrag: avalon.noop,
-        ondragend: avalon.noop,
+        onDragStart: avalon.noop,
+        onDrag: avalon.noop,
+        onDragEnd: avalon.noop,
         getTemplate: function(str, options) {
             return str;
         }

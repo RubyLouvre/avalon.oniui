@@ -43,7 +43,7 @@ define(["avalon", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.c
                 wrapper.innerHTML = wrapper.textContent = "";
                 wrapper.parentNode.removeChild(wrapper);
             }
-            vm.$add = function(event) { // add number by step
+            vm._add = function(event) { // add number by step
                 var value = Number(element.value),
                     subValue = 0;
                 subValue = value + (options.step || 1);
@@ -53,9 +53,9 @@ define(["avalon", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.c
                 }
                 subValue = checkNum(subValue);
                 element.value = subValue;
-                options.onadd.call(event.target, subValue);
+                options.onIncrease.call(event.target, subValue);
             }
-            vm.$sub = function(event) { // minus number by step
+            vm._sub = function(event) { // minus number by step
                 var value = Number(element.value),
                     subValue = 0;
                 subValue = value - (options.step || 1);
@@ -64,7 +64,7 @@ define(["avalon", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.c
                 }
                 subValue = checkNum(subValue);
                 element.value = subValue;
-                options.onsub.call(event.target, subValue);
+                options.onDecrease.call(event.target, subValue);
             }
             function decorateElement() {
                 var $element = avalon(element);
@@ -84,10 +84,10 @@ define(["avalon", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.c
                 $element.bind("keydown", function(event) {
                     switch( event.which ) {
                         case 38: // up
-                            vmodel.$add(event);
+                            vmodel._add(event);
                             return false;
                         case 40: // down
-                            vmodel.$sub(event);
+                            vmodel._sub(event);
                             return false;
                     }
                 })
@@ -119,8 +119,8 @@ define(["avalon", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.c
         getTemplate: function(str, options) {
             return str;
         },
-        onsub: avalon.noop,
-        onadd: avalon.noop
+        onDecrease: avalon.noop,
+        onIncrease: avalon.noop
     }
     return avalon;
 })

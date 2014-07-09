@@ -20,44 +20,8 @@ define(["avalon.getModel",
 
     var widget = avalon.ui.dialog = function(element, data, vmodels) {
         dialogNum++;
-        var options = data.dialogOptions,
-            dialogOptions = data.value.split(',')[2]; //确保存在嵌套dialog时能正确应用用户定义的配置对象
-        dialogOptions = dialogOptions && avalon.getModel(dialogOptions, vmodels);
-        if (dialogOptions) {
-            dialogOptions = dialogOptions[1][dialogOptions[0]];
-            // 确保dialogOptions是一个plainObject，如果是VM的话，vmodel.hasOwnProperty("$init")为false，组件就不会自执行$init方法
-            dialogOptions = dialogOptions.$model || dialogOptions;
-            avalon.mix(options, dialogOptions);
-        }
-
-        if (avalon(element).data("custom")) { //兼容onion-adapter的自创建dialog
-            avalon.mix(options, avalon(element).data("config"));
-        }
-        var submit = options.submit ? (typeof options.submit ==="function") ? options.submit : options.submit.substring(0,options.submit.indexOf("(")) : null, //兼容onion-adapter可删掉
-            submitVM = null,
-            cancel = options.cancel ? typeof options.cancel === "function" ? options.cancel : options.cancel.substring(0,options.cancel.indexOf("(")) : null, //兼容onion-adapter可删掉
-            cancelVM = null,
-            confirm = options.confirm ? (typeof options.confirm ==="function") ? options.confirm : options.confirm.substring(0,options.confirm.indexOf("(")) : null, //兼容onion-adapter可删掉
-            confirmVM = null;
-        if (typeof submit === "string") {
-            submitVM = avalon.getModel(submit, vmodels);
-            options.submit = submitVM && submitVM[1][submitVM[0]].bind(vmodels) || avalon.noop;
-        } else {
-            options.submit = submit;
-        }
-        if (typeof cancel ==="string") {
-            cancelVM = avalon.getModel(cancel, vmodels);
-            options.cancel = cancelVM && cancelVM[1][cancelVM[0]].bind(vmodels) || avalon.noop;
-        } else {
-            options.cancel = cancel;
-        }
-        if(typeof confirm ==="string") {
-            confirmVM = avalon.getModel(confirm, vmodels);
-            options.confirm = confirmVM && confirmVM[1][confirmVM[0]].bind(vmodels) || avalon.noop;
-        } else {
-            options.confirm = confirm;
-        }
-        options.type = options.type.toLowerCase(); //兼容onion-adapter的ALERT大写方式
+        var options = data.dialogOptions;
+        options.type = options.type.toLowerCase(); 
         options.template = options.getTemplate(template, options);
         var _footerArr = options.template.split("MS_OPTION_FOOTER"),
             _contentArr = _footerArr[0].split("MS_OPTION_CONTENT"),
@@ -69,30 +33,10 @@ define(["avalon.getModel",
             _innerWrapper = _innerWraperArr[1], //inner wrapper html
             _lastContent = "", //dialog content html
             lastContent = "", //dialog content node
-            $element = avalon(element),
-            eleChildren = element.childNodes, //兼容onion-adapter的辅助变量
-            hasSubDialog = false; //兼容onion-adapter的辅助变量
-        
-        // 判断绑定dialog组件元素内部是否有dialog绑定
-        for (var i=0, len=eleChildren.length; i<len; i++) { //兼容onion-adapter 
-            var subEle = eleChildren[i],
-                widget;
-            if (subEle.nodeType === 1) {
-                widget = avalon(subEle).attr("ms-widget");
-                if (widget && widget.split(",")[0]==="dialog") {
-                    hasSubDialog = true;
-                    break;
-                }
-            } 
-        }
+            $element = avalon(element);
 
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options);
-            if (!hasSubDialog) { //显示dialog，可废弃，用来兼容onion-adapter，规范的方式是通过toggle切换dialog的显示与隐藏
-                vm.show = function() { 
-                    vmodel.toggle = true;
-                }
-            }
             vm.$skipArray = ["widgetElement", "template","submitBtnClick","cancelBtnClick"];
             vm.submitBtnClick = false;
             vm.cancelBtnClick = false;
@@ -104,12 +48,6 @@ define(["avalon.getModel",
             vm._submit = function(e) {
                 if (typeof options.onSubmit !== "function") {
                     throw new Error("onSubmit必须是一个回调方法");
-                }
-                if (vmodel.submit) { //兼容onion-adapter
-                    vmodel.submit(avalon.noop);
-                }
-                if (vmodel.confirm) { //兼容onion-adapter
-                    vmodel.confirm(avalon.noop);
                 }
                 // 在用户回调返回false时，不关闭弹窗
                 if(options.onSubmit.call(e.target, e, vmodel) !== false){
@@ -178,9 +116,6 @@ define(["avalon.getModel",
             vm._cancel = function(e) {
                 if (typeof options.onCancel != "function") {
                     throw new Error("onCancel必须是一个回调方法");
-                }
-                if(vmodel.cancel) { //兼容onion-adapter
-                    vmodel.cancel(avalon.noop);
                 }
                 // 在用户回调返回false时，不关闭弹窗
                 if(options.onCancel.call(e.target, e, vmodel) !== false){
@@ -316,23 +251,8 @@ define(["avalon.getModel",
         modal: true, //是否显示遮罩
         zIndex: maxZIndex //手动设置body直接子元素的最大z-index
     }
-    // 动态创建dialog
-    avalon.dialog = function(config) {
-        if (avalon.type(config.id) === 'undefined') {
-            config.id = generateID();
-        }
-        _widget = _widget.replace("MS_OPTION_ID", config.id).replace("MS_OPTION_OPTS", config.options).replace("MS_OPTION_DIALOG_CONTENT", config.content);
-        var widget = avalon.parseHTML(_widget).firstChild;
-        document.body.appendChild(widget);
-        if(!config.options) {
-            widget.setAttribute("data-custom", true);
-            widget.setAttribute("data-config", JSON.stringify(config));
-        }
-        var model = findModel(config.model);
-        avalon.scan(widget, model);
-        return avalon.vmodels[config.id];
-    }
-    function findModel( m ) {
+    // 获取重新渲染dialog的vmodel对象
+    function findModel(m) {
         var model = m;
         if (model) { // 如果m为字符串参数，说明是要在已存在的vmodels中查找对应id的vmodel
             if (avalon.type(model) === 'string') {

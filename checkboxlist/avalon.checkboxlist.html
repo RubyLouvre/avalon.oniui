@@ -1,16 +1,21 @@
-<li class="item all" ms-if="!!alltext">
+<li class="ui-checkboxlist-item ui-checkboxlist-all" 
+    ms-css-float="vertical? 'none': 'left'" 
+    ms-if="!!alltext"
+    ms-class="fl:!vertical">
     <label>
         <input type="checkbox" 
-               ms-click="clickAll($event)" 
+               ms-click="_clickAll($event)" 
                ms-duplex-radio="all" 
-               class="checkbox" /> {{alltext}} 
+               class="checkbox" /> {{alltext}}
     </label>
 </li>
-<li ms-repeat-cpitem="data" class="item">
+<li ms-repeat-cpitem="data" class="ui-checkboxlist-item" 
+    ms-css-float="vertical? 'none': 'left'"
+    ms-class="fl:!vertical">
     <label>
         <input type="checkbox" 
                ms-checked="checkStatus[cpitem.value||cpitem.text]" 
-               ms-click="clickOne($event, $index)"
+               ms-click="_clickOne($event, $index)"
                ms-duplex-text="MS_OPTIONS_DUPLEX"
                ms-value="{{cpitem.value||cpitem.text}}" 
                class="checkbox" /> 

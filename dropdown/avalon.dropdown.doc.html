@@ -47,48 +47,9 @@
                 <td>是否要在model更新时通知列表更新</td>
             </tr>
             <tr>
-                <td>labelFiled(new)</td>
-                <td>"label"||"name"(对上一版本进行兼容)</td>
-                <td>模型数据项中对应显示text的字段,可以传function，根据数据源对text值进行格式化<br>
-                    <pre>
-    function(item) {
-        return item.text;
-    }
-                    </pre>
-                </td>
-            </tr>
-            <tr>
-                <td>valueField(new)</td>
-                <td>"value"</td>
-                <td>模型数据项中对应value的字段</td>
-            </tr>
-            <tr>
                 <td>value</td>
                 <td>model中第一个数据项的value</td>
                 <td>设置组件的初始值</td>
-            </tr>
-            <tr>
-                <td>label</td>
-                <td>""</td>
-                <td>设置组件的提示文案，可以是一个字符串，也可以是一个对象 <br/>
-                    <pre>
-    {
-        label: "This is a label..."
-    }
-                    </pre>
-                    或者是
-                    <pre>
-    {
-        model: [],
-        textField: 'text',
-        valueField: 'value',
-        label: {
-            text: 'This is a label...',
-            value: ''
-        }
-    }
-                    </pre>
-                </td>
             </tr>
             <tr>
                 <td>autofocus</td>
@@ -104,6 +65,21 @@
                 <td>size</td>
                 <td>1</td>
                 <td>尺寸大小</td>
+            </tr>
+            <tr>
+                <td>onShow</td>
+                <td></td>
+                <td>dropdown展开时的回调函数</td>
+            </tr>
+            <tr>
+                <td>onHide</td>
+                <td></td>
+                <td>dropdown隐藏时的回调函数</td>
+            </tr>
+            <tr>
+                <td>onSelect</td>
+                <td></td>
+                <td>dropdown被选中时的回调函数</td>
             </tr>
         </table>
 

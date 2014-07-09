@@ -1,18 +1,18 @@
 define(['avalon',
     'text!./avalon.miniswitch.html',
     '../switchdropdown/avalon.switchdropdown',
-    'avalon.getModel',
-    'css!./avalon.miniswitch.css'], function(avalon, tmpl) {
+    'avalon.getModel'], function(avalon, tmpl) {
 
     //使用switchdropdown做代理，包装option，内部使用dropdown组件实现
     var widget = avalon.ui.miniswitch = function(element, data, vmodels) {
 
         var options = data.miniswitchOptions;
-
         var vmodel = avalon.define('miniswitch' + setTimeout("1"), function(vm) {
             vm.$opts = options;
         });
         avalon(element).attr('ms-widget', ['switchdropdown', data.miniswitchId, '$opts'].join());
+
+        //由于对数据做预先处理，使用option模式传递数据，将element的内容清空
         element.innerHTML = "";
         avalon.scan(element, [vmodel].concat(vmodels));
         return vmodel;

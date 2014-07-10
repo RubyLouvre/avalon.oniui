@@ -7,7 +7,6 @@
   border-color: rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.25); }
   .ui-button-primary.ui-button {
     color: white;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #006ccc;
     background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
@@ -21,15 +20,14 @@
     *background-color: #0044cc;
     /* Darken IE7 buttons by default so they stand out more given they won't have borders */
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); }
-    .ui-button-primary.ui-button:hover, .ui-button-primary.ui-button:active, .ui-button-primary.active.ui-button, .ui-button-primary.ui-state-disabled.ui-button, .ui-button-primary[disabled].ui-button {
+    .ui-button-primary.ui-button:hover, .ui-button-primary.ui-state-hover.ui-button, .ui-button-primary.ui-button:active, .ui-button-primary.ui-state-active.ui-button, .ui-button-primary[disabled].ui-button, .ui-button-primary.ui-state-disabled.ui-button {
       color: white;
       background-color: #0044cc;
       *background-color: #003bb3; }
-    .ui-button-primary.ui-button:active, .ui-button-primary.active.ui-button {
+    .ui-button-primary.ui-button:active, .ui-button-primary.ui-state-active.ui-button {
       background-color: #003399 \9; }
   .ui-button-warning.ui-button {
     color: white;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #f9a732;
     background-image: -moz-linear-gradient(top, #fbb450, #f89406);
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fbb450), to(#f89406));
@@ -43,15 +41,14 @@
     *background-color: #f89406;
     /* Darken IE7 buttons by default so they stand out more given they won't have borders */
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); }
-    .ui-button-warning.ui-button:hover, .ui-button-warning.ui-button:active, .ui-button-warning.active.ui-button, .ui-button-warning.ui-state-disabled.ui-button, .ui-button-warning[disabled].ui-button {
+    .ui-button-warning.ui-button:hover, .ui-button-warning.ui-state-hover.ui-button, .ui-button-warning.ui-button:active, .ui-button-warning.ui-state-active.ui-button, .ui-button-warning[disabled].ui-button, .ui-button-warning.ui-state-disabled.ui-button {
       color: white;
       background-color: #f89406;
       *background-color: #df8505; }
-    .ui-button-warning.ui-button:active, .ui-button-warning.active.ui-button {
+    .ui-button-warning.ui-button:active, .ui-button-warning.ui-state-active.ui-button {
       background-color: #c67605 \9; }
   .ui-button-danger.ui-button {
     color: white;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #da4e49;
     background-image: -moz-linear-gradient(top, #ee5f5b, #bd362f);
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));
@@ -65,15 +62,14 @@
     *background-color: #bd362f;
     /* Darken IE7 buttons by default so they stand out more given they won't have borders */
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); }
-    .ui-button-danger.ui-button:hover, .ui-button-danger.ui-button:active, .ui-button-danger.active.ui-button, .ui-button-danger.ui-state-disabled.ui-button, .ui-button-danger[disabled].ui-button {
+    .ui-button-danger.ui-button:hover, .ui-button-danger.ui-state-hover.ui-button, .ui-button-danger.ui-button:active, .ui-button-danger.ui-state-active.ui-button, .ui-button-danger[disabled].ui-button, .ui-button-danger.ui-state-disabled.ui-button {
       color: white;
       background-color: #bd362f;
       *background-color: #a9302a; }
-    .ui-button-danger.ui-button:active, .ui-button-danger.active.ui-button {
+    .ui-button-danger.ui-button:active, .ui-button-danger.ui-state-active.ui-button {
       background-color: #942a25 \9; }
   .ui-button-success.ui-button {
     color: white;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #5bb65b;
     background-image: -moz-linear-gradient(top, #62c462, #51a351);
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351));
@@ -87,15 +83,14 @@
     *background-color: #51a351;
     /* Darken IE7 buttons by default so they stand out more given they won't have borders */
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); }
-    .ui-button-success.ui-button:hover, .ui-button-success.ui-button:active, .ui-button-success.active.ui-button, .ui-button-success.ui-state-disabled.ui-button, .ui-button-success[disabled].ui-button {
+    .ui-button-success.ui-button:hover, .ui-button-success.ui-state-hover.ui-button, .ui-button-success.ui-button:active, .ui-button-success.ui-state-active.ui-button, .ui-button-success[disabled].ui-button, .ui-button-success.ui-state-disabled.ui-button {
       color: white;
       background-color: #51a351;
       *background-color: #499249; }
-    .ui-button-success.ui-button:active, .ui-button-success.active.ui-button {
+    .ui-button-success.ui-button:active, .ui-button-success.ui-state-active.ui-button {
       background-color: #408140 \9; }
   .ui-button-info.ui-button {
     color: white;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #49afcd;
     background-image: -moz-linear-gradient(top, #5bc0de, #2f96b4);
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5bc0de), to(#2f96b4));
@@ -109,15 +104,14 @@
     *background-color: #2f96b4;
     /* Darken IE7 buttons by default so they stand out more given they won't have borders */
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); }
-    .ui-button-info.ui-button:hover, .ui-button-info.ui-button:active, .ui-button-info.active.ui-button, .ui-button-info.ui-state-disabled.ui-button, .ui-button-info[disabled].ui-button {
+    .ui-button-info.ui-button:hover, .ui-button-info.ui-state-hover.ui-button, .ui-button-info.ui-button:active, .ui-button-info.ui-state-active.ui-button, .ui-button-info[disabled].ui-button, .ui-button-info.ui-state-disabled.ui-button {
       color: white;
       background-color: #2f96b4;
       *background-color: #2a85a0; }
-    .ui-button-info.ui-button:active, .ui-button-info.active.ui-button {
+    .ui-button-info.ui-button:active, .ui-button-info.ui-state-active.ui-button {
       background-color: #24748c \9; }
   .ui-button-inverse.ui-button {
     color: white;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #363636;
     background-image: -moz-linear-gradient(top, #444444, #222222);
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#444444), to(#222222));
@@ -131,12 +125,68 @@
     *background-color: #222222;
     /* Darken IE7 buttons by default so they stand out more given they won't have borders */
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); }
-    .ui-button-inverse.ui-button:hover, .ui-button-inverse.ui-button:active, .ui-button-inverse.active.ui-button, .ui-button-inverse.ui-state-disabled.ui-button, .ui-button-inverse[disabled].ui-button {
+    .ui-button-inverse.ui-button:hover, .ui-button-inverse.ui-state-hover.ui-button, .ui-button-inverse.ui-button:active, .ui-button-inverse.ui-state-active.ui-button, .ui-button-inverse[disabled].ui-button, .ui-button-inverse.ui-state-disabled.ui-button {
       color: white;
       background-color: #222222;
       *background-color: #151515; }
-    .ui-button-inverse.ui-button:active, .ui-button-inverse.active.ui-button {
+    .ui-button-inverse.ui-button:active, .ui-button-inverse.ui-state-active.ui-button {
       background-color: #090909 \9; }
+  .ui-button-flat.ui-button {
+    background-color: #eeeeee;
+    background-image: none;
+    border-color: #eeeeee; }
+    .ui-button-flat.ui-button:hover, .ui-button-flat.ui-button .ui-state-hover {
+      background-color: #eeeeee;
+      background-image: none;
+      border-color: #eeeeee; }
+  .ui-button-primary-flat.ui-button {
+    background-color: #0088cc;
+    background-image: none;
+    border-color: #0088cc; }
+    .ui-button-primary-flat.ui-button:hover, .ui-button-primary-flat.ui-button .ui-state-hover {
+      background-color: #0088cc;
+      background-image: none;
+      border-color: #0088cc; }
+  .ui-button-warning-flat.ui-button {
+    background-color: #fbb450;
+    background-image: none;
+    border-color: #fbb450; }
+    .ui-button-warning-flat.ui-button:hover, .ui-button-warning-flat.ui-button .ui-state-hover {
+      background-color: #fbb450;
+      background-image: none;
+      border-color: #fbb450; }
+  .ui-button-danger-flat.ui-button {
+    background-color: #ee5f5b;
+    background-image: none;
+    border-color: #ee5f5b; }
+    .ui-button-danger-flat.ui-button:hover, .ui-button-danger-flat.ui-button .ui-state-hover {
+      background-color: #ee5f5b;
+      background-image: none;
+      border-color: #ee5f5b; }
+  .ui-button-success-flat.ui-button {
+    background-color: #62c462;
+    background-image: none;
+    border-color: #62c462; }
+    .ui-button-success-flat.ui-button:hover, .ui-button-success-flat.ui-button .ui-state-hover {
+      background-color: #62c462;
+      background-image: none;
+      border-color: #62c462; }
+  .ui-button-info-flat.ui-button {
+    background-color: #5bc0de;
+    background-image: none;
+    border-color: #5bc0de; }
+    .ui-button-info-flat.ui-button:hover, .ui-button-info-flat.ui-button .ui-state-hover {
+      background-color: #5bc0de;
+      background-image: none;
+      border-color: #5bc0de; }
+  .ui-button-inverse-flat.ui-button {
+    background-color: #444444;
+    background-image: none;
+    border-color: #444444; }
+    .ui-button-inverse-flat.ui-button:hover, .ui-button-inverse-flat.ui-button .ui-state-hover {
+      background-color: #444444;
+      background-image: none;
+      border-color: #444444; }
 
 .ui-button {
   display: -moz-inline-stack;
@@ -154,7 +204,6 @@
   *border: 0;
   border-bottom-color: #a2a2a2;
   color: #333333;
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
   background-color: whitesmoke;
   background-image: -moz-linear-gradient(top, white, #e6e6e6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(white), to(#e6e6e6));
@@ -180,20 +229,19 @@
   text-align: center;
   vertical-align: middle;
   cursor: pointer; }
-  .ui-button:hover, .ui-button:active, .ui-button.active, .ui-button.ui-state-disabled, .ui-button[disabled] {
+  .ui-button:hover, .ui-button.ui-state-hover, .ui-button:active, .ui-button.ui-state-active, .ui-button[disabled], .ui-button.ui-state-disabled {
     color: #333333;
     background-color: #e6e6e6;
     *background-color: #d9d9d9; }
-  .ui-button:active, .ui-button.active {
+  .ui-button:active, .ui-button.ui-state-active {
     background-color: #cccccc \9; }
   .ui-button:first-child {
     *margin-left: 0; }
-  .ui-button:hover {
+  .ui-button:hover, .ui-button.ui-state-hover {
     color: #333333;
     text-decoration: none;
-    background-color: #e6e6e6;
-    *background-color: #d9d9d9;
-    /* Buttons in IE7 don't get borders, so darken on hover */
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
+    opacity: 0.8;
     background-position: 0 -15px;
     -webkit-transition: background-position 0.1s linear;
     -moz-transition: background-position 0.1s linear false;
@@ -212,7 +260,7 @@
     -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05); }
   .ui-button.ui-state-disabled, .ui-button[disabled] {
-    cursor: default;
+    cursor: not-allowed;
     background-color: #e6e6e6;
     background-image: none;
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=65);

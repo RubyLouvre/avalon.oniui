@@ -267,6 +267,7 @@ define(['avalon',
                     $listNode.css({
                         display: 'none'
                     });
+                    vmodel.onHide.call(this, listNode);
                 } else {
                     var firstItemIndex, selectedItemIndex, value = vmodel.value;
 
@@ -301,6 +302,7 @@ define(['avalon',
                     var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
                     scrollbar && scrollbar.update();
                     titleNode && titleNode.focus();
+                    vmodel.onShow.call(this, listNode);
                 }
             };
 
@@ -437,6 +439,8 @@ define(['avalon',
         dropdownNode: {},
         position: true, //是否自动定位下拉列表
         onSelect: avalon.noop, //多选模式下显示的条数
+        onShow: avalon.noop,    //下拉框展示的回调函数
+        onHide: avalon.noop,    //下拉框隐藏的回调函数
         getTemplate: function(str, options) {
             return str
         },

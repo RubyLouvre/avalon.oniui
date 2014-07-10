@@ -14,8 +14,8 @@
   *display: inline;
   outline: none; }
   .ui-dropdown .ui-dropdown-source {
-    background-color: white;
     border: 1px solid #cccccc;
+    background-color: white;
     cursor: pointer; }
     .ui-dropdown .ui-dropdown-source .ui-dropdown-input {
       display: -moz-inline-stack;
@@ -24,15 +24,15 @@
       *vertical-align: auto;
       zoom: 1;
       *display: inline;
-      overflow: hidden;
-      height: 18px;
-      padding: 3px 21px 3px 6px;
+      white-space: nowrap;
       white-space: nowrap;
       overflow: hidden;
       -ms-text-overflow: ellipsis;
       -o-text-overflow: ellipsis;
       text-overflow: ellipsis;
-      white-space: nowrap;
+      overflow: hidden;
+      height: 18px;
+      padding: 3px 21px 3px 6px;
       word-break: normal;
       word-wrap: normal; }
   .ui-dropdown .ui-icon {
@@ -91,9 +91,6 @@
     overflow-y: scroll;
     padding: 3px 0; }
   .ui-dropdown .ui-dropdown-item {
-    overflow: hidden;
-    width: 100%;
-    padding: 3px 0;
     white-space: nowrap;
     overflow: hidden;
     -ms-text-overflow: ellipsis;
@@ -103,14 +100,17 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    *zoom: 1;
+    width: 100%;
+    padding: 3px 0;
     height: 24px;
     line-height: 24px;
     text-indent: 20px;
-    white-space: nowrap;
     cursor: pointer;
     word-break: normal;
-    word-wrap: normal;
-    *zoom: 1; }
+    word-wrap: normal; }
     .ui-dropdown .ui-dropdown-item.ui-dropdown-group {
       font-size: 14px;
       font-weight: bold;

@@ -13,7 +13,6 @@ define(['avalon',
      * title: option的title
      * font: option webfont的字符
      */
-
     var defaultData = [{
             value: 1,
             label : ' 启用',
@@ -36,12 +35,13 @@ define(['avalon',
 
         //mix defaultData, getDataFromHTML, options.data
         options.data = setItemLabel( avalon.mix(true, defaultData, getDataFromHTML(element), options.data) );
-
         options.value = options.data[0].value;
         var vmodel = avalon.define('switchdropdown' + setTimeout("1"), function(vm) {
             vm.$opts = options;
         });
         avalon(element).attr('ms-widget', ['dropdown', data.switchdropdownId, '$opts'].join());
+
+        //由于对数据做预先处理，使用option模式传递数据，将element的内容清空
         element.innerHTML = "";
         avalon.scan(element, [vmodel].concat(vmodels));
         return vmodel;

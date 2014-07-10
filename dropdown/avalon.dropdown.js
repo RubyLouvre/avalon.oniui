@@ -73,11 +73,9 @@ define(['avalon',
         dataModel = getDataFromHTML(element)
         hasBuiltinTemplate = !!dataModel.length
 
-
         if (dataModel.length === 0) {
             dataModel = getDataFromOption(dataSource);
         }
-
 
         avalon(element).css('display', 'none');
 
@@ -95,8 +93,8 @@ define(['avalon',
             avalon.mix(vm, options);
             vm.$skipArray = ['widgetElement', 'duplexName', "menuNode", "dropdownNode"];
             vm.widgetElement = element;
-
-
+            vm.menuWidth = 'auto';   //下拉列表框宽度
+            vm.menuHeight = vm.height;  //下拉列表框高度
             vm.dataSource = dataSource;    //源节点的数据源，通过dataSource传递的值将完全模拟select
             vm.data = dataModel;           //下拉列表的渲染model
 
@@ -177,8 +175,6 @@ define(['avalon',
             vm._select = function(index, event) {
                 var option = vm.data[index]
                 if (option && option.enable && !option.group) {
-                    event.stopPropagation()
-                    event.preventDefault()
                     //根据multiple区分对待, 多选时可以为空值
                     if (vmodel.multiple) {
                         index = vmodel.value.indexOf(option.value)
@@ -196,8 +192,13 @@ define(['avalon',
                     vmodel.toggle = false;
                     vmodel.onSelect.call(this, event, listNode)
                 }
-                titleNode && titleNode.focus()
             }
+
+            vm._listClick = function() {
+                event.stopPropagation();
+                event.preventDefault();
+                titleNode && titleNode.focus();
+            };
 
             vm._keydown = function(event) {
 
@@ -240,15 +241,14 @@ define(['avalon',
                     }
                 }
             }
+            //下拉列表的显示依赖toggle值，该函数用来处理下拉列表的初始化，定位
             vm._toggle = function(b) {
                 if (!vmodel.enable || vmodel.readOnly) {
                     vmodel.toggle = false;
                     return;
                 }
-                if (typeof b !== 'boolean') {
-                    vmodel.toggle = !vmodel.toggle;
-                    return;
-                }
+
+                //为了防止显示时调整高度造成的抖动，将节点初始化放在改变toggle值之前
                 if (!listNode) {//只有单选下拉框才存在显示隐藏的情况
                     var list;
                     listNode = createListNode();
@@ -256,18 +256,20 @@ define(['avalon',
                     document.body.appendChild(listNode)
                     avalon.scan(list, [vmodel].concat(vmodels))
                     listNode = list
-                    vmodel.menuNode = document.getElementById("menu-" + vmodel.$id)
-                    vmodel.dropdownNode = document.getElementById("list-" + vmodel.$id)
+                    vmodel.menuNode = document.getElementById("menu-" + vmodel.$id)     //下拉列表框内层容器 （包裹滚动条部分的容器）
+                    vmodel.dropdownNode = document.getElementById("list-" + vmodel.$id) //下拉列表框内容（有滚动条的部分）
                 }
-                var $listNode = avalon(listNode);
+
+                //如果参数b不为布尔值，对toggle值进行取反
+                if (typeof b !== 'boolean') {
+                    vmodel.toggle = !vmodel.toggle;
+                    return;
+                }
+
                 if (!b) {
-                    $listNode.css({
-                        display: 'none'
-                    });
                     vmodel.onHide.call(this, listNode);
                 } else {
                     var firstItemIndex, selectedItemIndex, value = vmodel.value;
-
                     if (avalon.type(value) !== 'array') {
                         value = [value];
                     }
@@ -291,9 +293,6 @@ define(['avalon',
                         vmodel.activeIndex = selectedItemIndex;
                     }
                     vmodel._position();
-                    $listNode.css({
-                        display: 'block'
-                    });
                     titleNode && titleNode.focus();
                     vmodel.onShow.call(this, listNode);
                 }
@@ -349,8 +348,6 @@ define(['avalon',
             vm._blur = function() {
                 if (!vmodel.__cursorInList__ && !vmodel.multiple && vmodel.toggle) {
                     vmodel.toggle = false;
-                } else {
-                    titleNode && titleNode.focus();
                 }
             }
 
@@ -377,24 +374,24 @@ define(['avalon',
             vm.$styleFix = function() {
                 var MAX_HEIGHT = options.height || 200,
                     $menu = avalon(vmodel.menuNode),
-                    height = vmodel.dropdownNode.scrollHeight,
-                    css = {};
+                    height = vmodel.dropdownNode.scrollHeight;
 
-                css.width = vmodel.listWidth - $menu.css('borderLeftWidth').replace(styleReg, '$1') - $menu.css('borderRightWidth').replace(styleReg, '$1');
+                vmodel.menuWidth = vmodel.listWidth - $menu.css('borderLeftWidth').replace(styleReg, '$1') - $menu.css('borderRightWidth').replace(styleReg, '$1');
                 if (height > MAX_HEIGHT) {
                     height = MAX_HEIGHT;
                 }
-                css.height = height;
-
-                $menu.css(css)
+                vmodel.menuHeight = height;
             };
 
+            //当下拉列表中的项目发生改变时，调用该函数修正显示，顺序是修正下拉框高宽 --> 滚动条更新显示 --> 定位下拉框
             vm.updateScrollbar = function() {
                 var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
-                vmodel.$styleFix();
+                //修正下拉框的高度和宽度
+                !vmodel.multiple && vmodel.$styleFix();
                 scrollbar && scrollbar.update();
+                //定位下拉框
+                !vmodel.multiple &&vmodel._position();
             }
-
         });
 
         //对model的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变

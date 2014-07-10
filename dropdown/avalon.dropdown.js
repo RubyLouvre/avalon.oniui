@@ -242,7 +242,6 @@ define(['avalon',
                     }
                 }
             }
-
             vm._toggle = function(b) {
                 if (!vmodel.enable || vmodel.readOnly) {
                     vmodel.toggle = false;
@@ -305,8 +304,6 @@ define(['avalon',
                     vmodel.onShow.call(this, listNode);
                 }
             };
-
-
 
             vm.$watch('toggle', function(b) {
                 vmodel._toggle(b);

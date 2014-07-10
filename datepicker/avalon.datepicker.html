@@ -17,7 +17,7 @@
                         ms-class="ui-datepicker-prev-disabled:!prevMonth">&#xf053;</i>
                     <i class="ui-datepicker-next ui-icon ui-icon-chevron-right"    ms-click="_next(nextMonth, $event)"
                         ms-class="ui-datepicker-next-disabled:!nextMonth">&#xf054;</i>
-                    <div class="ui-datepicker-title">
+                    <div class="ui-datepicker-title" ms-click="_selectYearMonth">
                         <!-- <span >{{year}}年</span> -->
                         <select ms-each="years" data-each-rendered="_afterYearRendered">
                             <option ms-value="el">{{el}}</option>

@@ -203,6 +203,9 @@ define(["avalon.getModel",
                     vmodel.onSelect.call(null, options.parseDate(date), data["datepickerId"], avalon(element).data())
                 }
             }
+            vm._selectYearMonth = function(event) {
+                event.stopPropagation();
+            }
             // 点击prev按钮切换到当前月的上个月，如当前月存在minDate则prev按钮点击无效
             vm._prev = function(prevFlag, event) {
                 if(!prevFlag) {

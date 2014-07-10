@@ -128,6 +128,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                 if (vm.tabs[index].disabled === true) {
                     return
                 }
+                var el = this
                 // event是click，点击激活状态tab
                 if (vm.event === "click" && vm.active === index) {
                     // 去除激活状态
@@ -135,16 +136,14 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                         vm.active = NaN
                     // 调用点击激活状态tab回调
                     } else {
-                        var el = this
                         options.onClickActive.call(el, event, vmodel)
                     }
                     return
                 }
                 if (vm.active !== index) {
                     avalon.nextTick(function() {
-                        var elem = this
                         vm.active = index
-                        options.onActivate.call(elem, event, vmodel)
+                        options.onActivate.call(el, event, vmodel)
                     })
                 }
             }
@@ -276,6 +275,9 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
             vm._cutCounter = function() {
                 return (vmodel.dir == "h" || vmodel.forceCut) && vmodel.titleCutCount
             }
+            vm._shallPanelAlwaysShow = function($index) {
+                return vmodel.shallPanelAlwaysShow || $index === vmodel.active
+            }
             return vm
         })
 
@@ -312,6 +314,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
     widget.defaults = {
         autoSwitch: false,      //@param 是否自动切换，默认否，如果需要设置自动切换，请传递整数，例如200，即200ms
         active: 0,              //@param 默认选中的tab，默认第一个tab
+        shallPanelAlwaysShow: false,//@param shallPanelAlwaysShow() panel不通过display:none,block来切换，而是一直显示，通过其他方式切换到视野，默认为false
         event: "mouseenter",    //@param  tab选中事件，默认mouseenter
         removable: false,      //@param  是否支持删除，默认否，另外可能存在某些tab可以删除，某些不可以删除的情况，如果某些tab不能删除则需要在li元素或者tabs数组里给对应的元素指定removable : false，例如 li data-removable="false" or {title: "xxx", removable: false}
         activeDelay: 0,         //@param  比较适用于mouseenter事件情形，延迟切换tab，例如200，即200ms

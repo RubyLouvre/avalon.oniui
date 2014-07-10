@@ -1,13 +1,10 @@
 @charset "UTF-8";
+.ui-dropdown {
+  font: normal 12px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif; }
+
 /*
 这是每个都组件都应该引用的部分
 */
-@font-face {
-  font-family: fontawesome;
-  font-style: normal;
-  font-weight: normal;
-  src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?v=4.0.3");
-  src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?#iefix&v=4.0.3") format("embedded-opentype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.woff?v=4.0.3") format("woff"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.ttf?v=4.0.3") format("truetype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular") format("svg"); }
 .ui-dropdown {
   display: -moz-inline-stack;
   display: inline-block;
@@ -15,11 +12,10 @@
   *vertical-align: auto;
   zoom: 1;
   *display: inline;
-  font-size: 12px;
   outline: none; }
   .ui-dropdown .ui-dropdown-source {
-    background-color: #ffffff;
     border: 1px solid #cccccc;
+    background-color: white;
     cursor: pointer; }
     .ui-dropdown .ui-dropdown-source .ui-dropdown-input {
       display: -moz-inline-stack;
@@ -28,21 +24,25 @@
       *vertical-align: auto;
       zoom: 1;
       *display: inline;
-      overflow: hidden;
-      height: 18px;
-      padding: 3px 21px 3px 6px;
+      white-space: nowrap;
       white-space: nowrap;
       overflow: hidden;
       -ms-text-overflow: ellipsis;
       -o-text-overflow: ellipsis;
       text-overflow: ellipsis;
-      white-space: nowrap;
+      overflow: hidden;
+      height: 18px;
+      padding: 3px 21px 3px 6px;
       word-break: normal;
       word-wrap: normal; }
+  .ui-dropdown .ui-icon {
+    cursor: pointer;
+    font-size: 12px;
+    vertical-align: baseline; }
   .ui-dropdown.ui-state-hover .ui-dropdown-source {
     border-color: #999999; }
   .ui-dropdown.ui-state-disabled .ui-dropdown-source {
-    background-color: #f5f5f5;
+    background-color: whitesmoke;
     border-color: #d9d9d9;
     color: #cccccc;
     cursor: default; }
@@ -86,14 +86,11 @@
     z-index: 1001; }
   .ui-dropdown .ui-dropdown-menu-inner {
     box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
+    background-color: white;
     border: 1px solid lightgray;
     overflow-y: scroll;
     padding: 3px 0; }
   .ui-dropdown .ui-dropdown-item {
-    overflow: hidden;
-    width: 100%;
-    padding: 3px 0;
     white-space: nowrap;
     overflow: hidden;
     -ms-text-overflow: ellipsis;
@@ -103,15 +100,17 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    *zoom: 1;
+    width: 100%;
+    padding: 3px 0;
     height: 24px;
     line-height: 24px;
     text-indent: 20px;
-    white-space: nowrap;
     cursor: pointer;
     word-break: normal;
-    word-wrap: normal;
-    font-size: 12px;
-    *zoom: 1; }
+    word-wrap: normal; }
     .ui-dropdown .ui-dropdown-item.ui-dropdown-group {
       font-size: 14px;
       font-weight: bold;
@@ -126,7 +125,11 @@
       border-color: #45a846;
       background-color: #58b359;
       color: white; }
+      .ui-dropdown .ui-dropdown-item.ui-state-active .ui-icon {
+        color: white; }
     .ui-dropdown .ui-dropdown-item.ui-state-hover {
       border-color: #3e973e;
       background-color: #68c969;
       color: white; }
+      .ui-dropdown .ui-dropdown-item.ui-state-hover .ui-icon {
+        color: white; }

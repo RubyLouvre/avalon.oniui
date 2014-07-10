@@ -34,7 +34,7 @@ div.ui-scrollbar {
       height: 0;
       line-height: 0;
       font-size: 0;
-      border-top: 0;
+      border-top: 0 none;
       border-right: 4px dashed transparent;
       border-bottom: 4px solid #bcbcbc;
       border-left: 4px dashed transparent;
@@ -68,7 +68,7 @@ div.ui-scrollbar {
     height: 0;
     line-height: 0;
     font-size: 0;
-    border-top: 0;
+    border-top: 0 none;
     border-right: 4px dashed transparent;
     border-bottom: 4px solid white;
     border-left: 4px dashed transparent; }

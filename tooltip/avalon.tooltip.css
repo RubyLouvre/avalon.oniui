@@ -12,12 +12,13 @@ div.ui-tooltip {
   max-width: 300px;
   overflow: visible;
   background: #ffe44f;
-  border-color: #ffc805;
+  border: 1px solid #ffc805;
   color: #a65a00;
   font-size: 12px;
   border-radius: 0 0 0 0; }
-  div.ui-tooltip a {
-    color: #a65a00; }
+  div.ui-tooltip a, div.ui-tooltip a:link, div.ui-tooltip a:hover {
+    color: #a65a00;
+    cursor: pointer; }
   div.ui-tooltip .ui-tooltip-arrow-in, div.ui-tooltip .ui-tooltip-arrow-out {
     overflow: visible;
     position: absolute; }
@@ -27,7 +28,7 @@ div.ui-tooltip {
   height: 0;
   line-height: 0;
   font-size: 0;
-  border-top: 0;
+  border-top: 0 none;
   border-right: 4px dashed transparent;
   border-bottom: 5px solid #ffe44f;
   border-left: 4px dashed transparent;
@@ -38,7 +39,7 @@ div.ui-tooltip {
   height: 0;
   line-height: 0;
   font-size: 0;
-  border-top: 0;
+  border-top: 0 none;
   border-right: 5px dashed transparent;
   border-bottom: 6px solid #ffc805;
   border-left: 5px dashed transparent;

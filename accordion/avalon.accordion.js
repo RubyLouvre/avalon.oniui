@@ -18,7 +18,7 @@ define(["avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/oni
         var msData = Object.keys(element.msData),
             _data = [],
             dataVM = [];
-        msData.forEach(function(item, index){
+        msData.forEach(function(item){
             if(item.indexOf("ms-each") === 0) {
                 _data = element.msData[item];
                 dataVM = avalon.getModel(_data, vmodels);
@@ -80,7 +80,6 @@ define(["avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/oni
                 }
                 vmodel.rendered = true;
                 setTimeout(function() { // 渲染完组件之后，将对应面板的header和panel分别保存
-                    var len = accordionItems.length;
                     for (var i=0, el; el = accordionItems[i++];) {
                         var $el = avalon(el);
                         if ($el.hasClass("ui-accordion-header")) {

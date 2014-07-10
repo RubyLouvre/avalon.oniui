@@ -1,22 +1,20 @@
 @import "shared";
 @import "../tools/hacks";
 
+@function -compass-list($list){
+    $ret: ();
+    @if(type-of($list) == list){
+        @return $list
+    }@else{
+        @return append($ret, $list, comma);
+    }
+    
+}
+
 // Background property support for vendor prefixing within values.
-@mixin background(
-  $background-1,
-  $background-2: false,
-  $background-3: false,
-  $background-4: false,
-  $background-5: false,
-  $background-6: false,
-  $background-7: false,
-  $background-8: false,
-  $background-9: false,
-  $background-10: false
-) {
-  $backgrounds: compact($background-1, $background-2, $background-3, $background-4, $background-5,
-                        $background-6, $background-7, $background-8, $background-9, $background-10);
-  $mult-bgs: -compass-list-size($backgrounds) > 1;
+@mixin background($args...) {
+  $backgrounds: compact($args);
+  $mult-bgs: length($backgrounds) > 1;
   $add-pie-bg: prefixed(-pie,   $backgrounds) or $mult-bgs;
   @if $experimental-support-for-svg          and prefixed(-svg,    $backgrounds) {      background:    -svg($backgrounds); }
   @if $support-for-original-webkit-gradients and prefixed(-owg,    $backgrounds) {      background:    -owg($backgrounds); }
@@ -41,7 +39,7 @@
 ) {
   $backgrounds: compact($background-1, $background-2, $background-3, $background-4, $background-5,
                         $background-6, $background-7, $background-8, $background-9, $background-10);
-  $mult-bgs: -compass-list-size($backgrounds) > 1;
+  $mult-bgs: length($backgrounds) > 1;
   $simple-background: if($mult-bgs or prefixed(-css2, $backgrounds), -css2(-compass-nth($backgrounds, last)), false);
   @if not blank($simple-background) { background: $simple-background; }
   @include background($background-1, $background-2, $background-3, $background-4, $background-5,
@@ -63,7 +61,7 @@
   $image-10: false
 ) {
   $images: compact($image-1, $image-2, $image-3, $image-4, $image-5, $image-6, $image-7, $image-8, $image-9, $image-10);
-  $add-pie-bg: prefixed(-pie,   $images) or -compass-list-size($images) > 1;
+  $add-pie-bg: prefixed(-pie,   $images) or length($images) > 1;
 
   @if $experimental-support-for-svg          and prefixed(-svg,    $images) { background-image:    -svg($images); background-size: 100%; }
   @if $support-for-original-webkit-gradients and prefixed(-owg,    $images) { background-image:    -owg($images); }

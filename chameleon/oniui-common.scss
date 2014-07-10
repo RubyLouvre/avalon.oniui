@@ -55,60 +55,32 @@ http://cssshrink.com/
     font-size: 100%;
     list-style: none;
 }
+//禁止文字被选中，禁止图片被拖动
+.ui-helper-noselect {
+    @include user-select();
+    img, a{
+        -webkit-user-drag:none; 
+        pointer-events:none;
+    }
+}
 .ui-helper-clearfix {
     @include legacy-pie-clearfix();
 }
 
-.ui-icon {
-    display: block;
-    text-indent: -99999px;
-    overflow: hidden;
-    background-repeat: no-repeat;
+
+
+
+@font-face {
+  font-family: fontawesome;
+  font-style: normal;
+  font-weight: normal;
+  src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.eot?v=4.1.0');
+  src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.eot?#iefix&v=4.1.0') 
+      format('embedded-opentype'), 
+      url('http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.woff?v=4.1.0') format('woff'),
+      url('http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.ttf?v=4.1.0') format('truetype'),
+      url('http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular') format('svg');
 }
-
-
-.ui-widget {
-    font-family: $oniui-font-size * 1.1;
-    font-size: $oniui-font-size;
-    .ui-widget, input, select, texteara, button {
-        font-size: $oniui-font-family;
-    }
-}
-
-
-.ui-widget-content {
-    border: 1px solid $ui-widget-content-border-color;
-    background-color: $ui-widget-content-background-color;
-    color: $ui-widget-content-color;
-    a {
-        color:$ui-widget-content-color;
-    }
-}
-.ui-widget-header {
-    border: 1px solid $ui-widget-header-color;
-    background-color: $ui-widget-header-background-color;
-    color: $ui-widget-header-color;
-    font-weight: bold;
-    a {
-        color: $ui-widget-header-color;
-    }
-}
-
-
-.ui-state-default,
-.ui-widget-content .ui-state-default,
-.ui-widget-header .ui-state-default {
-    border: 1px solid $ui-state-default-border-color;
-    background-color: $ui-state-default-background-color;
-    font-weight: normal;
-    color: $ui-state-default-color;
-}
-
-.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited{
-    color: $ui-state-default-color;
-    text-decoration: none;
-}
-
 
 .ui-icon {
     @include user-select(none);
@@ -123,14 +95,14 @@ http://cssshrink.com/
     vertical-align: middle;
     z-index: 999;
 }
+
 a .ui-icon,.ui-btn .ui-icon {
     cursor: pointer;
 }
 
-@font-face {
-    font-family: fontawesome;
-    font-style: normal;
-    font-weight: normal;
-    src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?v=4.0.3');
-    src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.eot?#iefix&v=4.0.3') format('embedded-opentype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.woff?v=4.0.3') format('woff'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.ttf?v=4.0.3') format('truetype'), url('http://simg4.qunarzz.com/fonts/fontawesome/4.0.3/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular') format('svg');
+.g-icon-start {
+  color: $oniui-icon-start-color;
+}
+.g-icon-pause {
+  color: $oniui-icon-pause-color;
 }

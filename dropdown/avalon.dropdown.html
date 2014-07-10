@@ -28,17 +28,16 @@ MS_OPTION_TEMPLATE
          ms-widget="scrollbar,scrollbar-MS_OPTION_ID" id="menu-MS_OPTION_ID">
         <div class="ui-scrollbar-scroller"
              id="list-MS_OPTION_ID">
-
             <div ms-repeat="data"  class="ui-dropdown-item" 
                  data-repeat-rendered="updateScrollbar" 
                  ms-click-12="_select($index, $event)"
-                 ms-title="el.label"
+                 ms-title="el.title||el.label"
                  ms-hover="ui-state-hover: el.enable"
                  ms-class-1="ui-state-disabled:!el.enable"
                  ms-class-2="ui-state-active:isActive(el) "
                  ms-class-4="ui-dropdown-group:el.group"
                  ms-class-5="ui-dropdown-divider:el.group && !$first"
-                 >{{el.label}}</div>
+                 >{{el.label|sanitize|html}}</div>
 
         </div>
     </div>

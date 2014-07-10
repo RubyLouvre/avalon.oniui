@@ -1,15 +1,7 @@
-define(["avalon", "text!./avalon.spinner.html"], function(avalon, sourceHTML) {
-    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],
-        cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
-        styleEl = document.getElementById("avalonStyle"),
-        template = arr[0];
-    try {
-        styleEl.innerHTML += cssText;
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText;
-    }
+define(["avalon", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.css", "css!./avalon.spinner.css"], function(avalon, sourceHTML) {
     var widget = avalon.ui.spinner = function(element, data, vmodels) {
-        var options = data.spinnerOptions;
+        var options = data.spinnerOptions,
+            template = sourceHTML;
         options.template = options.getTemplate(template, options);
         var vmodel = avalon.define(data.spinnerId, function(vm) {
             avalon.mix(vm, options);
@@ -51,7 +43,7 @@ define(["avalon", "text!./avalon.spinner.html"], function(avalon, sourceHTML) {
                 wrapper.innerHTML = wrapper.textContent = "";
                 wrapper.parentNode.removeChild(wrapper);
             }
-            vm.$add = function(event) { // add number by step
+            vm._add = function(event) { // add number by step
                 var value = Number(element.value),
                     subValue = 0;
                 subValue = value + (options.step || 1);
@@ -61,9 +53,9 @@ define(["avalon", "text!./avalon.spinner.html"], function(avalon, sourceHTML) {
                 }
                 subValue = checkNum(subValue);
                 element.value = subValue;
-                options.onadd.call(event.target, subValue);
+                options.onIncrease.call(event.target, subValue);
             }
-            vm.$sub = function(event) { // minus number by step
+            vm._sub = function(event) { // minus number by step
                 var value = Number(element.value),
                     subValue = 0;
                 subValue = value - (options.step || 1);
@@ -72,7 +64,7 @@ define(["avalon", "text!./avalon.spinner.html"], function(avalon, sourceHTML) {
                 }
                 subValue = checkNum(subValue);
                 element.value = subValue;
-                options.onsub.call(event.target, subValue);
+                options.onDecrease.call(event.target, subValue);
             }
             function decorateElement() {
                 var $element = avalon(element);
@@ -92,10 +84,10 @@ define(["avalon", "text!./avalon.spinner.html"], function(avalon, sourceHTML) {
                 $element.bind("keydown", function(event) {
                     switch( event.which ) {
                         case 38: // up
-                            vmodel.$add(event);
+                            vmodel._add(event);
                             return false;
                         case 40: // down
-                            vmodel.$sub(event);
+                            vmodel._sub(event);
                             return false;
                     }
                 })
@@ -127,8 +119,8 @@ define(["avalon", "text!./avalon.spinner.html"], function(avalon, sourceHTML) {
         getTemplate: function(str, options) {
             return str;
         },
-        onsub: avalon.noop,
-        onadd: avalon.noop
+        onDecrease: avalon.noop,
+        onIncrease: avalon.noop
     }
     return avalon;
 })

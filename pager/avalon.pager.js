@@ -1,4 +1,8 @@
-define(["avalon", "text!./avalon.pager.html", "css!../chameleon/oniui-common.css", "css!./avalon.pager.css"], function(avalon, template) {
+define(["avalon",
+    "text!./avalon.pager.html",
+    "css!../chameleon/oniui-common.css",
+    "css!./avalon.pager.css"
+], function(avalon, template) {
 
     var widget = avalon.ui.pager = function(element, data, vmodels) {
         var options = data.pagerOptions

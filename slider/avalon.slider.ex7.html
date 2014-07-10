@@ -141,7 +141,7 @@
                                     var model = avalon.define("theme", function(vm) {
                                         vm.scrollMarginLeft = 0
                                         vm.$aaaOpts = {
-                                            ondrag: function(sliderModel, data) {
+                                            onDrag: function(sliderModel, data) {
                                                 model.scrollMarginLeft = -(sliderModel.percent / 100 * scrollWidth) 
                                             }
                                         }
@@ -194,7 +194,7 @@
                         var model = avalon.define("theme", function(vm) {
                             vm.scrollMarginLeft = 0
                             vm.$aaaOpts = {
-                                ondrag: function(sliderModel, data) {
+                                onDrag: function(sliderModel, data) {
                                     model.scrollMarginLeft = -(sliderModel.percent / 100 * scrollWidth) 
                                 }
                             }

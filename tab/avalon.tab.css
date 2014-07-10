@@ -18,8 +18,12 @@ div.ui-tab {
     position: relative;
     background-color: #f8f8f8;
     cursor: pointer;
+    border: 1px solid lightgray;
     border-right-width: 0;
     color: black; }
+  .ui-tab .ui-tab-nav .ui-state-default a, .ui-tab .ui-tab-nav .ui-state-default:link, .ui-tab .ui-tab-nav .ui-state-default a:hover {
+    color: black;
+    text-decoration: none; }
   .ui-tab .ui-tab-nav .ui-state-hover {
     color: black;
     background: white; }

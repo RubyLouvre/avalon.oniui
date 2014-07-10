@@ -1,19 +1,19 @@
-define(["avalon.getModel", "text!./avalon.checkboxlist.html"], function(avalon, template) {
+define(["avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chameleon/oniui-common.css", "css!./avalon.checkboxlist.css"], function(avalon, template) {
 
     var widget = avalon.ui.checkboxlist = function(element, data, vmodels) {
         // 获取配置项        
         var getVMFunc = (function(data){
-            return function ( name , isGetSet ) {
-                if( !options[name] ) return avalon.noop;
+            return function (name , isGetSet) {
+                if(!options[name] ) return avalon.noop;
                 avalon.mix(vmodels, data);
-                avalon.parseExprProxy( options[name] , vmodels , data , isGetSet ? 'duplex' : null );
+                avalon.parseExprProxy(options[name] , vmodels , data , isGetSet ? 'duplex' : null);
                 
-                return data.evaluator.apply( 0 , data.args );
+                return data.evaluator.apply(0, data.args);
             }
         })(data);
         var options = data.checkboxlistOptions;
         var onfetch = getVMFunc('fetch');
-        var onselect = getVMFunc('select');
+        var onselect = getVMFunc('onSelect');
         options.template = options.getTemplate(template, options);
 
         var vmodel = avalon.define(data.checkboxlistId, function(vm) {
@@ -23,7 +23,7 @@ define(["avalon.getModel", "text!./avalon.checkboxlist.html"], function(avalon, 
             vm.alltext = options.alltext !== undefined ? options.alltext : options.allText;
             // 判断是否全部选中
             vm.isAll = function() {
-                var arr = vm.data.$model.map(function(obj, index){
+                var arr = vm.data.$model.map(function(obj){
                     return obj.value || obj.name;
                 });
                 var allChecked = true
@@ -37,9 +37,9 @@ define(["avalon.getModel", "text!./avalon.checkboxlist.html"], function(avalon, 
                 return allChecked;
             }
             // 点击全选按钮之后的回调
-            vm.clickAll = function(event) {
+            vm._clickAll = function(event) {
                 var checkStatus = event.target.checked;
-                avalon.each(vm.checkStatus.$model, function(key, value) {
+                avalon.each(vm.checkStatus.$model, function(key) {
                     vm.checkStatus[key] = checkStatus;
                 })
                 if (options.duplex) {
@@ -56,12 +56,13 @@ define(["avalon.getModel", "text!./avalon.checkboxlist.html"], function(avalon, 
                 onselect.apply(0, [vm.data.$model, checkStatus, event.target]);
             }
             // 选中某一项之后的回调操作
-            vm.clickOne = function(event,index) {
+            vm._clickOne = function(event,index) {
                 vm.checkStatus[vm.data[index].$model.value] = event.target.checked;
                 onselect.apply(0, [vm.data.$model, event.target.checked, event.target]);
             }
             vm.$init = function() {
                 options.template = options.template.replace("MS_OPTIONS_DUPLEX", options.duplex);
+                element.className += " ui-checkboxlist ui-checkboxlist-list ui-helper-clearfix";
                 element.innerHTML = options.template;
                 avalon.scan(element, [vmodel].concat(vmodels));
                 if(typeof options.onInit === "function" ){
@@ -154,7 +155,7 @@ define(["avalon.getModel", "text!./avalon.checkboxlist.html"], function(avalon, 
             var duplex_list = modelArr[1][arr[0]];
             duplex_list = duplex_list && duplex_list.$model ? duplex_list.$model : [];
             var obj = {}
-            avalon.each( vmodel.data.$model , function(idx,o){
+            avalon.each(vmodel.data.$model, function(idx,o){
                 var key = o.value || o.text;
                 // 按位取反运算符,实际就是原值+1取负
                 obj[ key ] = ~duplex_list.indexOf(key);
@@ -183,10 +184,11 @@ define(["avalon.getModel", "text!./avalon.checkboxlist.html"], function(avalon, 
             ]
         */
         fetch: "", 
-        select: "", // 通过配置select来进行选中或者不选中选框的回调操作
+        onSelect: "", // 通过配置onSelect来进行选中或者不选中选框的回调操作
         getTemplate: function(tmpl, options) {
             return tmpl
-        }
+        },
+        vertical: true
     }
     return avalon;
 });

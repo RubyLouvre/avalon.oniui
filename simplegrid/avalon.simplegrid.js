@@ -1,33 +1,14 @@
 //avalon 1.3.2 2014.4.2
-define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scrollbar/avalon.scrollbar"], function(avalon, tmpl) {
+define(["avalon",
+    "text!./avalon.simplegrid.html",
+    "pager/avalon.pager",
+    "scrollbar/avalon.scrollbar",
+    "css!../chameleon/oniui-common.css",
+    "css!./avalon.simplegrid.css"
+], function(avalon, tmpl) {
 
-    var arr = tmpl.split("MS_OPTION_STYLE") || ["", ""]
-    var cssText = arr[1].replace(/<\/?style>/g, "")
-    //添加grid的样式
-    var styleEl = document.getElementById("avalonStyle")
-    try {
-        styleEl.innerHTML += cssText
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText
-    }
-
-    //拖动时禁止文字被选中，禁止图片被拖动
-    var cssText = ".ui-helper-global-drag *{ -webkit-touch-callout: none;" +
-            "-khtml-user-select: none;" +
-            "-moz-user-select: none;" +
-            "-ms-user-select: none;" +
-            "user-select: none;}" +
-            ".ui-helper-global-drag img{-webkit-user-drag:none; " +
-            "pointer-events:none;}"
-    if (styleEl.innerHTML.indexOf("ui-helper-global-drag") > 0) {
-        try {
-            styleEl.innerHTML += cssText;
-        } catch (e) {
-            styleEl.styleSheet.cssText += cssText;
-        }
-    }
     //切割出表头与表身的模板
-    var gridTemplate = arr[0], theadTemplate, tbodyTemplate
+    var gridTemplate = tmpl, theadTemplate, tbodyTemplate
     gridTemplate = gridTemplate.replace(/MS_OPTION_THEAD_BEGIN([\s\S]+)MS_OPTION_THEAD_END/, function(a, b) {
         theadTemplate = b
         return "MS_OPTION_THEAD_HOLDER"
@@ -67,8 +48,8 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
         pager.prevText = pager.prevText || "上一页"
         if (Array.isArray(pager.options)) {
             pager.getTemplate = typeof pager.getTemplate === "function" ? pager.getTemplate : function(tmpl) {
-                return "<div class='ui-grid-pager-options'>每页显示<select ms-duplex='perPages'><option ms-repeat='options' ms-el.value>{{el.text}}</options></select>条,共{{totalItems}}条结果</div>"
-                        + tmpl
+                return tmpl+ "<div class='ui-simplegrid-pager-options'>每页显示<select ms-duplex='perPages'><option ms-repeat='options' ms-el.value>{{el.text}}</options></select>条,共{{totalItems}}条结果</div>"
+                     
             }
         }
         makeBool(pager, "showJumper", true)
@@ -166,22 +147,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                     var borderHeight = Math.max(avalon.css(cell, "borderTopWidth", true),
                             avalon.css(cell, "borderBottomWidth", true))
                     vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
-                    //如果同时出现两个滚动条
 
-                    // var panel = vm.scrollPanel
-
-                    // if (hasScroll(panel, "y", vmodel)) {
-                    //     r = panel.scrollHeight - panel.clientHeight
-                    //     if (r > 0 && r <= scrollbarHeight) {
-                    //         // vm.theadHeight += r
-                    //     }
-                    // }
-                    // if (hasScroll(panel, "x", vmodel)) {
-                    //     var r = panel.scrollWidth - panel.clientWidth
-                    //     if (r > 0 && r <= scrollbarWidth) {
-                    //         vm.gridWidth = panel.scrollWidth - 17
-                    //     }
-                    // }
 
                     vm.tbodyRenderedCallback.call(tbody, vmodel, options, vmodels)
 
@@ -200,22 +166,26 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
             // update scrollbar
             var scrollbarInited
             vm.updateScrollbar = function(force) {
-                if(!force) return
+                if (!force)
+                    return
                 var scrollbar = vmodel.getScrollbar(),
-                    scroller = scrollbar.getScroller()
+                        scroller = scrollbar.getScroller()
                 if (scrollbar) {
                     scrollbar.update()
                     var bars = scrollbar.getBars()
                     // 更新滚动条附近的间距
                     avalon.each(bars, function(i, bar) {
-                        if(bar.hasClass("ui-scrollbar-right") || bar.hasClass("ui-scrollbar-left")) {
+                        if (bar.hasClass("ui-scrollbar-right") || bar.hasClass("ui-scrollbar-left")) {
                             // 竖直方向如果进入这个分支，只需要减一次滚动条的宽度即可
-                            if(scrollbarInited) return
+                            if (scrollbarInited)
+                                return
                             scrollbarInited = true
-                            vmodel.gridWidth = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ? scroller[0].scrollWidth - bar.width() : scroller[0].scrollWidth
-                        // 水平方向把这个滚动条高度转移到大容器上
-                        } else if(bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")){
-                            vmodel.paddingBottom = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always"  ? bar.innerHeight() + 2 + "px" : "0"
+                            vmodel.gridWidth = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ? 
+                            scroller[0].scrollWidth - bar.width() : scroller[0].scrollWidth
+                            // 水平方向把这个滚动条高度转移到大容器上
+                        } else if (bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")) {
+                            vmodel.paddingBottom = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
+                            bar.innerHeight() + 2 + "px" : "0"
                         }
                     })
                 }
@@ -346,7 +316,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
             }
             vm.getScrollerHeight = function() {
                 var h = vmodel.tbodyScrollHeight + vmodel.tbodyScrollTop - vmodel.theadHeight,
-                    max = vmodel._rowHeight * vmodel.data.length
+                        max = vmodel._rowHeight * vmodel.data.length
                 // 设置一个上限，修复回滚bug
                 h = h > max ? max : h
                 return h
@@ -361,9 +331,10 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                         scrollbarTimer = setTimeout(function() {
                             vmodel.throttleRenderTbody(n, o)
                             // 向上，update bar状态
-                            if(n < o) vmodel.updateScrollbar("forceUpdate")
+                            if (n < o)
+                                vmodel.updateScrollbar("forceUpdate")
                         }, 16)
-                    // 水平方向
+                        // 水平方向
                     } else {
                         vmodel.cssLeft = n == void 0 ? "auto" : -n + "px"
                     }
@@ -373,7 +344,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                 },
                 // 向下的时候，只有越界的时候才更新scrollbar状态
                 breakOutCallback: function(ifBreakOut, v, obj) {
-                    if(void 0 !== ifBreakOut && ifBreakOut[0] === "v" && ifBreakOut[1] === "down") {
+                    if (void 0 !== ifBreakOut && ifBreakOut[0] === "v" && ifBreakOut[1] === "down") {
                         obj.down.removeClass("ui-state-disabled")
                         vmodel.updateScrollbar("forceUpdate")
                     }
@@ -388,7 +359,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                 var elem = document.getElementById("pager-" + vmodel.$id)
                 if (elem && !flagPager) {
                     elem.setAttribute("ms-widget", "pager,pager-" + vmodel.$id)
-                    avalon(elem).addClass("ui-grid-pager-wrapper")
+                    avalon(elem).addClass("ui-simplegrid-pager-wrapper")
                     avalon.scan(elem, vmodel)
                     flagPager = true
                 }
@@ -431,7 +402,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                         count += 1
                         var el = vmodel.data[vmodel.endIndex]
                         // 优化，避免过度操作_data
-                        if(integer - count <= showRows) {
+                        if (integer - count <= showRows) {
                             vmodel._data.push(el)
                             vmodel._data.shift()
                         }
@@ -448,7 +419,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
                         var el = vmodel.data[vmodel.startIndex]
 
                         // 优化，避免过度操作_data
-                        if(integer - count <= showRows) {
+                        if (integer - count <= showRows) {
                             vmodel._data.unshift(el)
                             vmodel._data.pop()
                         }
@@ -467,7 +438,7 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
     widget.defaults = {
         theadHeight: 35,
         tbodyScrollHeight: "auto",
-        showScrollbar: "always",//滚动条什么时候显示，默认一直，可设置为never，scrolling
+        showScrollbar: "always", //滚动条什么时候显示，默认一直，可设置为never，scrolling
         tbodyScrollTop: 0,
         tbodyHeight: "auto",
         _rowHeight: 35, //实际行高,包含border什么的
@@ -532,10 +503,10 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
     }
 
     var fixUserSelect = function() {
-        avalon(body).addClass("ui-helper-global-drag")
+        avalon(body).addClass("ui-helper-noselect")
     }
     var restoreUserSelect = function() {
-        avalon(body).removeClass("ui-helper-global-drag")
+        avalon(body).removeClass("ui-helper-noselect")
     }
     if (window.VBArray && !("msUserSelect" in document.documentElement.style)) {
         var _ieSelectBack;//fix IE6789
@@ -577,31 +548,8 @@ define(["avalon", "text!./avalon.simplegrid.html", "pager/avalon.pager", "scroll
         elem[name] = typeof elem[name] === "boolean" ? elem[name] : value
     }
 
-    var scrollbarHeight, scrollbarWidth;
-    (function() {
-        var node = document.createElement("div")
-        node.style.cssText = "position: absolute;  width: 100px; height: 100px; overflow: scroll;background:red;"
-        document.body.appendChild(node)
-        scrollbarHeight = node.offsetHeight - node.clientHeight;
-        scrollbarWidth = node.offsetWidth - node.clientWidth;
-        document.body.removeChild(node)
-    })();
-    // console.log(scrollbarHeight+":"+ scrollbarWidth)
-    function hasScroll(el, a, vmodel) {
-        //判定是否存在水平或垂直滚动条
-        if (avalon(el).css("overflow") === "hidden") {
-            return false
-        }
-        var scroll = (a && a === "x") ? "scrollLeft" : "scrollTop"
-        if (el[ scroll ] > 0) {
-            return true
-        }
-        if (scroll === "scrollLeft") {
-            return el.scrollWidth > el.clientWidth
-        } else {
-            return el.scrollHeight > el.clientHeight
-        }
-    }
+
+
     function makeTemplate(opts, name, value) {
         opts[name] = typeof opts[name] === "function" ? opts[name](value, opts) :
                 (typeof opts[name] === "string" ? opts[name] : value)

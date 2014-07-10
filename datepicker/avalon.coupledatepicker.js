@@ -1,17 +1,10 @@
-define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/avalon.datepicker"], function(avalon, sourceHTML) {
-    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],  
-        calendarTemplate = arr[0],
-        cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
-        styleEl = document.getElementById("avalonStyle");
-    try {
-        styleEl.innerHTML += cssText;
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText;
-    }
+define(["avalon.getModel",
+        "text!./avalon.coupledatepicker.html", 
+        "datepicker/avalon.datepicker",
+        "css!../chameleon/oniui-common.css", 
+        "css!./avalon.coupledatepicker.css"], function(avalon, sourceHTML) {
     var widget = avalon.ui.coupledatepicker = function(element, data, vmodels) {
         var options = data.coupledatepickerOptions,
-            inputFrom,
-            inputTo,
             disabled = options.disabled.toString(),
             disabledVM = avalon.getModel(disabled, vmodels),
             duplex = options.duplex && options.duplex.split(","),
@@ -20,7 +13,8 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
             rules = options.rules,
             _inputToValue = "",
             _toMinDate = "",
-            _toMaxDate = "";
+            _toMaxDate = "",
+            calendarTemplate = sourceHTML;
         var _c = {  
             '+M': function(time ,n) {
                 var _d = time.getDate();
@@ -75,10 +69,8 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
         var container = options.container;
         if(typeof container==="string") {
             container = container.split(",")
-            avalon.each(container, function(item, index) {
-                container[0] = document.getElementById(container[0]);
-                container[1] = document.getElementById(container[1]);
-            });
+            container[0] = document.getElementById(container[0]);
+            container[1] = document.getElementById(container[1]);
         }
         if(!container.length) {
             container = element.getElementsByTagName("div");
@@ -109,6 +101,7 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
                     fromInput = null,
                     toInput = null,
                     calendarTemplate = "";
+                avalon(element).addClass("ui-coupledatepicker");
                 initValues();
                 applyRules(vmodel.inputFromValue && options.parseDate(vmodel.inputFromValue) || new Date());
                 calendarTemplate = vmodel.container.length ? inputOnlyTemp : containerTemp;
@@ -199,13 +192,13 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
             }
             if(minDate){
                 var toMinDateFormat = options.formatDate(minDate);
-                vmodel.rules.toMinDate = toMinDateFormat;
+                rules.toMinDate = toMinDateFormat;
                 if(!vmodel.inputToValue) {
                     vmodel.inputToValue = toMinDateFormat;
                 }
             }
             if(maxDate) {
-                vmodel.rules.toMaxDate = options.formatDate(maxDate);
+                rules.toMaxDate = options.formatDate(maxDate);
             }
 
             var inputToDate = vmodel.inputToValue && vmodel.parseDate(vmodel.inputToValue);
@@ -235,13 +228,6 @@ define(["avalon.getModel","text!./avalon.coupledatepicker.html", "datepicker/ava
                 _c[key](_date ,arr[2] * 1);
             }
             return _date;
-        }
-        function cleanDate( date ){
-            date.setHours(0);
-            date.setMinutes(0);
-            date.setSeconds(0);
-            date.setMilliseconds(0);
-            return date;
         }
         return vmodel;
     }

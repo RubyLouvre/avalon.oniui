@@ -30,15 +30,15 @@
                 var model = avalon.define("theme", function(vm) {
                     vm.percent = 0
                     vm.$aaaOpts = {
-                        ondragstart: function(){
+                        onDragStart: function(){
                             avalon.log("start dragging");
                             avalon.log(arguments);
                         },
-                        drag: function() {
+                        onDrag: function() {
                             avalon.log("dragging");
                             avalon.log(arguments);
                         },
-                        dragend: function() {
+                        onDragEnd: function() {
                             avalon.log("dragend");
                             avalon.log(arguments);
                         },

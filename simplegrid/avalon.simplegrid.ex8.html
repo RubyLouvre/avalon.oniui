@@ -11,42 +11,74 @@
         <script>
             avalon.config({debug: false})
             require(["simplegrid/avalon.simplegrid"], function() {
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
                 var createData = function(n) {
                     var array = []
                     for (var i = 0; i < n; i++) {
                         array.push({
-                            xxx: Math.random().toString(36).substring(4, 10),
-                            yyy: Math.random().toString(36).substring(4, 10),
-                            zzz: i
+                            xxx: range(3000, 20000),
+                            yyy: range(8000, 90000),
+                            zzz: range(5000, 60000),
+                            checked: false
                         })
                     }
                     return array
                 }
-                avalon.define("test", function(vm) {
 
+                avalon.define("test", function(vm) {
                     vm.simplegrid = {
-                        columns: [
-                            {field: "zzz", text: "列三", resizable: true},
-                            {field: "yyy", text: "列二", resizable: true},
-                            {field: "xxx", text: "列一", resizable: true}
-                        ],
-                        getTemplate: function(str) {
-                            if (document.body.hasAttribue) {
-                                return str//IE67不支持div:hover效果
+                        allchecked: false,
+                        getColumn: function(el) {
+                            el.checked = false
+                        },
+                        checkAll: function() {
+                            var vmodel = avalon.vmodels.xxx
+                            var bool = vmodel.allchecked = this.checked
+                            vmodel._data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                            vmodel.data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                        },
+                        checkOne: function(el, index) {
+                            var vmodel = avalon.vmodels.xxx
+                            index = vm.startIndex + index
+                            vmodel.data[index] = el.checked = this.checked
+                            if (!this.checked) {
+                                vmodel.allchecked = false
                             } else {
-                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-hover="hover"')
+                                vmodel.allchecked = vmodel._data.every(function(el) {
+                                    return el.checked
+                                })
                             }
                         },
+                        theadTemplate: function(str) {
+                            return "<th style='width:80px'><input type='checkbox' ms-checked='allchecked' ms-click='checkAll'  /></th>" + str
+                        },
+                        tbodyTemplate: function(str) {
+                            return "<th style='width: 80px'><input type=\"checkbox\" ms-checked='row.checked' ms-click='checkOne(row, $index)' class='ui-helper-checkone'/></th>" + str
+                        },
+                        getTemplate: function(str){
+                            return  str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-12="ui-state-acitve:row.checked" ')
+                        },
+                        columns: [
+                            {field: "zzz", text: "生成订单量", resizable: true},
+                            {field: "yyy", text: "访问量", resizable: true},
+                            {field: "xxx", text: "确认订单量", resizable: true}
+                        ],
                         showRows: 10,
                         pageable: true,
                         pager: {
-                            perPages: 20,
+                            perPages: 30,
                             totalItems: 1000,
                             showPages: 5,
                             options: [10, 20, 30, 40]
                         },
                         columnsOrder: ["xxx", "yyy", "zzz"],
-                        data: createData(100)
+                        data: createData(30)
                     }
                     vm.$skipArray = ["simplegrid"]
                 })
@@ -54,49 +86,127 @@
             })
         </script>
         <style>
-            #gridsample{
-                width:900px;
-            }
-            .ui-grid-tbody tr.hover td, .ui-grid-tbody tr.hover td div{
-                background: #356aa0;
-                color:#fff;
-            }
-            .ui-grid-tbody tr:hover td, .ui-grid-tbody tr:hover td div{
-                background:#356aa0;
-                color:#fff;
+            .ui-simplegrid tr.ui-state-acitve td, .ui-simplegrid tr.ui-state-acitve th{
+               background-color:#FFF7E6;
             }
         </style>
     </head>
     <body>
 
         <fieldset ms-controller="test">
-            <legend>演示hover效果</legend>
-
-            <div ms-widget="simplegrid" id="gridsample">
+            <legend >左边添加一个全选非全选的checkbox栏</legend>
+            <div ms-widget="simplegrid, xxx" style="width:900px">
 
             </div>
             <div>
                 <h3>要点</h3>
-                <p>IE67下,需要通过getTemplate修改默认模板,为每一个tr加一个ms-hover绑定,对应的类名自己在样式表添加</p>  
-                <pre class="brush:javascript;gutter:false;toolbar:false;">
-                     getTemplate: function(str) {
-                            if (document.body.hasAttribue) {
-                                return str//IE67不支持div:hover效果
+                <p>通过theadTemplate方法修改表头的那一行的模板</p>
+                <p>通过tbodyTemplate方法修改表身的那一行的模板</p>
+                <p>通过getColumn方法为每一列的数据添加checked属性，默认为false</p>
+                <p>为了方便操作，需要用户在定义ms-widget="simplegrid,?"时指定ID</p>
+                <p>添加一个allchecked属性，默认为false</p>
+                <p>row为每一行的引用名，row.checked与allchecked通过ms-checked绑在复选框上。</p>
+                <p>自己细细品味checkAll, checkOne的实现</p>
+            </div>
+            <pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;simplegrid&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;/script&gt;
+        &lt;script&gt;
+            avalon.config({debug: false})
+            require(["simplegrid/avalon.simplegrid"], function() {
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
+                var createData = function(n) {
+                    var array = []
+                    for (var i = 0; i &lt; n; i++) {
+                        array.push({
+                            xxx: range(3000, 20000),
+                            yyy: range(8000, 90000),
+                            zzz: range(5000, 60000),
+                            checked: false
+                        })
+                    }
+                    return array
+                }
+
+                avalon.define("test", function(vm) {
+                    vm.simplegrid = {
+                        allchecked: false,
+                        getColumn: function(el) {
+                            el.checked = false
+                        },
+                        checkAll: function() {
+                            var vmodel = avalon.vmodels.xxx
+                            var bool = vmodel.allchecked = this.checked
+                            vmodel._data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                            vmodel.data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                        },
+                        checkOne: function(el, index) {
+                            var vmodel = avalon.vmodels.xxx
+                            index = vm.startIndex + index
+                            vmodel.data[index] = el.checked = this.checked
+                            if (!this.checked) {
+                                vmodel.allchecked = false
                             } else {
-                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-hover="hover"')
+                                vmodel.allchecked = vmodel._data.every(function(el) {
+                                    return el.checked
+                                })
                             }
                         },
-                </pre>
-                <p>CSS</p>
-                <pre class="brush:css;gutter:false;toolbar:false;">
-            .ui-grid-tbody tr.hover td,  .ui-grid-tbody tr.hover td div{
-                background: rgb(232,245,253)
+                        theadTemplate: function(str) {
+                            return "&lt;th style='width:80px'&gt;&lt;input type='checkbox' ms-checked='allchecked' ms-click='checkAll'  /&gt;&lt;/th&gt;" + str
+                        },
+                        tbodyTemplate: function(str) {
+                            return "&lt;th style='width: 80px'&gt;&lt;input type=\"checkbox\" ms-checked='row.checked' ms-click='checkOne(row, $index)' class='ui-helper-checkone'/&gt;&lt;/th&gt;" + str
+                        },
+                        getTemplate: function(str){
+                            return  str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-12="ui-state-acitve:row.checked" ')
+                        },
+                        columns: [
+                            {field: "zzz", text: "生成订单量", resizable: true},
+                            {field: "yyy", text: "访问量", resizable: true},
+                            {field: "xxx", text: "确认订单量", resizable: true}
+                        ],
+                        showRows: 10,
+                        pageable: true,
+                        pager: {
+                            perPages: 30,
+                            totalItems: 1000,
+                            showPages: 5,
+                            options: [10, 20, 30, 40]
+                        },
+                        columnsOrder: ["xxx", "yyy", "zzz"],
+                        data: createData(30)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+        &lt;style&gt;
+            .ui-simplegrid tr.ui-state-acitve td, .ui-simplegrid tr.ui-state-acitve th{
+               background-color:#FFF7E6;
             }
-            .ui-grid-tbody tr:hover td,  .ui-grid-tbody tr:hover td div{
-                background: rgb(232,245,253)
-            }
-                </pre>
-            </div>
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="test" &gt;
+        &lt;div ms-widget="simplegrid, xxx" style="width:900px"&gt;
+       &lt;/div&gt;      
+    &lt;/body&gt;
+&lt;/html&gt;
+               
+            </pre>
         </fieldset>
 
     </body>

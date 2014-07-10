@@ -1,18 +1,9 @@
-define(["avalon", "text!./avalon.notice.html"], function(avalon, sourceHTML) {
-    var arr = sourceHTML.split("MS_OPTION_STYLE") || ["", ""],
-        cssText = arr[1].replace(/<\/?style>/g, ""), // 组件的css
-        template = arr[0],
-        styleEl = document.getElementById("avalonStyle");
-
-    try {
-        styleEl.innerHTML += cssText;
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText;
-    }
-    var containerMap = []; // 
-    var affixBoxs = []; // 存储吸顶的notice元素，且只保存弹出的notice
-    var affixHeights = []; //存储吸顶元素对应的height、width、offsetTop
-    var isIE6 = (window.navigator.userAgent || '').toLowerCase().indexOf('msie 6') !== -1;
+define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.css", "css!./avalon.notice.css"], function(avalon, sourceHTML) {
+    var template = sourceHTML,
+        containerMap = [],
+        affixBoxs = [], // 存储吸顶的notice元素，且只保存弹出的notice
+        affixHeights = [], //存储吸顶元素对应的height、width、offsetTop
+        isIE6 = (window.navigator.userAgent || '').toLowerCase().indexOf('msie 6') !== -1;
     var widget = avalon.ui.notice = function(element, data, vmodels) {
         var options = data.noticeOptions;
         options.template = template = options.getTemplate(template, options);
@@ -42,12 +33,6 @@ define(["avalon", "text!./avalon.notice.html"], function(avalon, sourceHTML) {
                 _affix(); 
                 vmodel.onShow.call(element, data, vmodels); // 用户回调
             }
-            vm.show = function() { //兼容onion-adapter,规范的方式是使用toggle来切换notice的显示与隐藏
-                vmodel.toggle = true;
-            }
-            vm.$close = function() {
-                vmodel.toggle =false;
-            }
             vm._close = function() { //close按钮click时的监听处理函数
                 vmodel.toggle = false;
             }
@@ -66,9 +51,6 @@ define(["avalon", "text!./avalon.notice.html"], function(avalon, sourceHTML) {
                     } 
                 }
                 vmodel.onHide.call(element, data, vmodels); //用户回调
-            }
-            vm.setType = function(type) { //兼容onion-adapter，标准的用法是改变type控制notice的类型
-                vmodel.type = type;
             }
             vm.setContent = function(content) {
                 vmodel.content = content;
@@ -128,20 +110,19 @@ define(["avalon", "text!./avalon.notice.html"], function(avalon, sourceHTML) {
         vmodel.$watch("type", function(v) { //改变type影响notice的显示类型
             vmodel.typeClass = vmodel[v+"Class"];
         })
-        vmodel.$watch("successClass", function(v) {
+        vmodel.$watch("successClass", function() {
             vmodel.typeClass = vmodel.successClass;
         })
-        vmodel.$watch("errorClass", function(v) {
+        vmodel.$watch("errorClass", function() {
             vmodel.typeClass = vmodel.errorClass;
         })
-        vmodel.$watch("infoClass", function(v) {
+        vmodel.$watch("infoClass", function() {
             vmodel.typeClass = vmodel.infoClass;
         })
         // 如果配置了timer，则在notice显示timer时间后自动隐藏
         function _timerClose() { 
             if (!options.timer) { return; }
             window.clearTimeout(vmodel.$closeTimer);
-            var self = this;
             vmodel.$closeTimer = window.setTimeout(function(){
                 vmodel.toggle = false;
             }, options.timer);
@@ -269,7 +250,7 @@ define(["avalon", "text!./avalon.notice.html"], function(avalon, sourceHTML) {
         }
     }
     avalon.notice = {
-        show: function(id, content, type, callbacks) {
+        show: function(id, content, type) {
             if( !id || !avalon.vmodels[id]) return;
             var notice = avalon.vmodels[id];
             notice.setContent(content);
@@ -286,7 +267,7 @@ define(["avalon", "text!./avalon.notice.html"], function(avalon, sourceHTML) {
             if(!id || !avalon.vmodels[id]) return;
             avalon.vmodels[id].$close();
         },
-        go: function(id, cb) {
+        go: function(id) {
             if(!id || !avalon.vmodels[id]) return;
             var notice = avalon.vmodels[id];
             var toff = avalon(notice.widgetElement).offset();

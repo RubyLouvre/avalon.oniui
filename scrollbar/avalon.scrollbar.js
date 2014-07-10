@@ -307,8 +307,10 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
                 if(vmodel.viewElement != vmodel.widgetElement) {
                     p.match(/right|left/g) && avalon(vmodel.widgetElement).css("height", barH + "px")
                 }
-                var hPadding = scroller.height() - scroller.innerHeight(),
-                    vPadding = scroller.width() - scroller.innerWidth()
+                // 水平方向内间距
+                var hPadding = scroller.width() - scroller.innerWidth(),
+                    // 竖直方向内间距
+                    vPadding = scroller.height() - scroller.innerHeight()
                 scroller.css("height", h + vPadding + "px")
                 scroller.css("width", w + hPadding  + "px")
                 // 根据实际视窗计算，计算更新scroller的宽高

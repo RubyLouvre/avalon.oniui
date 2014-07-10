@@ -49,26 +49,31 @@
                 &lt;/html&gt;
             </pre>
         </div>
-        <div class="demoShow" ms-controller="demo">
-            <fieldset>  
-                <legend>基本的dialog组件</legend>
-                    <button ms-click="show('aa')">打开对话框</button>
-                    <div ms-widget="dialog,aa">
-                        呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
-                        <p>{{message}}</p>
-                    </div>
-            </fieldset>
-            <script> 
-                require("dialog/avalon.dialog", function(avalon) {
-                    avalon.define("demo", function(vm) {
-                        vm.message = "笑傻了吧！！";
-                        vm.show = function( id ){
-                            avalon.vmodels[id].toggle = true;
-                        }
+        <div ms-controller="test">
+            <div class="demoShow" ms-important="demo">
+                <fieldset>  
+                    <legend>基本的dialog组件</legend>
+                        <button ms-click="show('aa')">打开对话框</button>
+                        <div ms-widget="dialog,aa">
+                            呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+                            <p>{{message}}</p>
+                        </div>
+                </fieldset>
+                <script> 
+                    require("dialog/avalon.dialog", function(avalon) {
+                        avalon.define("test", function(vm) {
+                            vm.a = "test";
+                        })
+                        avalon.define("demo", function(vm) {
+                            vm.message = "笑傻了吧！！";
+                            vm.show = function( id ){
+                                avalon.vmodels[id].toggle = true;
+                            }
+                        })
+                        avalon.scan();
                     })
-                    avalon.scan();
-                })
-            </script>
+                </script>
+            </div>
         </div>
     </div>
 </body>

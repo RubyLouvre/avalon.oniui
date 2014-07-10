@@ -12,7 +12,7 @@
 <body>
     <div class="wrapper">
         <h1>spinner demo</h1>
-        <p class="example">可以添加onsub、onadd为spinner添加回调，onsub是用户点击了"-"更新spinner之后的回调，this是触发事件的元素，参数是新的spinner值，同理onadd是点击了"+"更新spinner之后的回调</p>
+        <p class="example">可以添加onDecrease、onIncrease为spinner添加回调，onDecrease是用户点击了"-"更新spinner之后的回调，this是触发事件的元素，参数是新的spinner值，同理onIncrease是点击了"+"更新spinner之后的回调</p>
         <div ms-skip>
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
@@ -35,13 +35,13 @@
                                     vm.$spinnerOpts = {
                                         min: 0,
                                         max: 5,
-                                        onsub : function(value) {
+                                        onDecrease : function(value) {
                                             avalon.log("this是触发事件的元素");
                                             avalon.log(this);
                                             avalon.log("value是spinner的当前数值");
                                             avalon.log(value);
                                         },
-                                        onadd : function(value) {
+                                        onIncrease : function(value) {
                                             avalon.log("this是触发事件的元素");
                                             avalon.log(this);
                                             avalon.log("value是spinner的当前数值");
@@ -69,13 +69,13 @@
                         vm.$spinnerOpts = {
                             min: 0,
                             max: 5,
-                            onsub : function(value) {
+                            onDecrease : function(value) {
                                 avalon.log("this是触发事件的元素");
                                 avalon.log(this);
                                 avalon.log("value是spinner的当前数值");
                                 avalon.log(value);
                             },
-                            onadd : function(value) {
+                            onIncrease : function(value) {
                                 avalon.log("this是触发事件的元素");
                                 avalon.log(this);
                                 avalon.log("value是spinner的当前数值");

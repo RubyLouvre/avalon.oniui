@@ -158,12 +158,12 @@ define(["avalon.getModel", "text!./avalon.suggest.html"], function(avalon, sourc
             if( !s ) return;
             vm.loading = true;
             // 根据提示类型提供的方法过滤的数据来渲染提示视图?
-            s( value , function( err , array ){
+            s(value, function(err, array){
                 vm.selectedIndex = 0;
                 vm.list.removeAll();
-                avalon.each( array , function( idx , val ){
+                avalon.each(array , function(idx, val){
                     if( typeof val == 'string' ) {
-                        vm.list.push({  text : val , value : val  });
+                        vm.list.push({text: val , value: val});
                     } else {
                         vm.list.push( val );
                     }

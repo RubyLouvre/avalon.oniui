@@ -10,7 +10,7 @@
     <body>
         <div class="wrapper">
             <h1>slider demo</h1>
-            <p class="example">基本的slider，step默认为1，min默认为0，max默认为100，默认水平拖动(orientation为“horizontal”)，range默认为false，这里配置了ondragstart、ondrag、ondragend回调，回调的参数都是对应事件的event对象和拖动的数据信息data，请打开控制台看看回调中打印的参数</p>
+            <p class="example">基本的slider，step默认为1，min默认为0，max默认为100，默认水平拖动(orientation为“horizontal”)，range默认为false，这里配置了onDragStart、onDrag、onDragEnd回调，回调的参数都是对应事件的event对象和拖动的数据信息data，请打开控制台看看回调中打印的参数</p>
             <div ms-skip>
                 <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                     &lt;!DOCTYPE HTML&gt;
@@ -30,17 +30,17 @@
                                 require("slider/avalon.slider", function() {
                                     var model = avalon.define("theme", function(vm) {
                                         vm.$aaaOpts = {
-                                            ondragstart: function(event, data){
+                                            onDragStart: function(event, data){
                                                 avalon.log("start dragging");
                                                 avalon.log(event);
                                                 avalon.log(data);
                                             },
-                                            ondrag: function(event, data) {
+                                            onDrag: function(event, data) {
                                                 avalon.log("dragging");
                                                 avalon.log(event);
                                                 avalon.log(data);
                                             },
-                                            ondragend: function(event, data) {
+                                            onDragEnd: function(event, data) {
                                                 avalon.log("dragend");
                                                 avalon.log(event);
                                                 avalon.log(data);
@@ -64,17 +64,17 @@
                     require("slider/avalon.slider", function() {
                         var model = avalon.define("theme", function(vm) {
                             vm.$aaaOpts = {
-                                ondragstart: function(event, data){
+                                onDragStart: function(event, data){
                                     avalon.log("start dragging");
                                     avalon.log(event);
                                     avalon.log(data);
                                 },
-                                ondrag: function(event, data) {
+                                onDrag: function(event, data) {
                                     avalon.log("dragging");
                                     avalon.log(event);
                                     avalon.log(data);
                                 },
-                                ondragend: function(event, data) {
+                                onDragEnd: function(event, data) {
                                     avalon.log("dragend");
                                     avalon.log(event);
                                     avalon.log(data);

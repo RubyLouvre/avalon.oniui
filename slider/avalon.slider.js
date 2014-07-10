@@ -70,7 +70,7 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
             val = valueMin + (valModStep * 2 >= step ? step * Math.ceil(n) : step * Math.floor(n))
             return val;
         }
-        var model = avalon.define(data.sliderId, function(vm) {
+        var vmodel = avalon.define(data.sliderId, function(vm) {
             avalon.mix(vm, options);
             vm.$skipArray = ["template", "widgetElement", "step"]
             vm.widgetElement = element
@@ -89,27 +89,26 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
             vm.$pixelTotal = 0
             
             vm.dragstart = function(event, data) {
-                model.$pixelTotal = isHorizontal ? slider.offsetWidth : slider.offsetHeight
+                vmodel.$pixelTotal = isHorizontal ? slider.offsetWidth : slider.offsetHeight
                 Handlers = handlers  // 很关键，保证点击的手柄始终在Handlers中，之后就可以通过键盘方向键进行操作
-                data.started = !model.disabled
+                data.started = !vmodel.disabled
                 data.dragX = data.dragY = false
                 Index = handlers.indexOf(data.element)
                 data.$element.addClass("ui-state-active")
-                options.ondragstart.call(null, event, data);
+                options.onDragStart.call(null, event, data);
             }
             vm.dragend = function(event, data) {
                 data.$element.removeClass("ui-state-active")
-                options.ondragend.call(null, event, data);
+                options.onDragEnd.call(null, event, data);
             }
             vm.drag = function(event, data, keyVal) {
-                var $handler = data.$element
                 if (isFinite(keyVal)) {
                     var val = keyVal
                 } else {
                     var prop = isHorizontal ? "left" : "top"
                     var pixelMouse = data[prop] + parseFloat(data.$element.css("border-top-width"))
                     //如果是垂直时,往上拖,值就越大
-                    var percent = (pixelMouse / model.$pixelTotal) //求出当前handler在slider的位置
+                    var percent = (pixelMouse / vmodel.$pixelTotal) //求出当前handler在slider的位置
                     if (!isHorizontal) { // 垂直滑块，往上拖动时pixelMouse变小，下面才是真正的percent，所以需要调整percent
                         percent = Math.abs(1 - percent)
                     }
@@ -123,30 +122,30 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
                 }
                 if (twohandlebars) { //水平时，小的0在左边，大的1在右边，垂直时，小的0在下边，大的1在上边
                     if (Index === 0) { 
-                        var check = model.values[1]
+                        var check = vmodel.values[1]
                         if (val > check) {
                             val = check
                         }
                     } else {
-                        check = model.values[0]
+                        check = vmodel.values[0]
                         if (val < check) {
                             val = check
                         }
                     }
-                    model.values[Index] = val
-                    model["percent" + Index] = value2Percent(val)
-                    model.value = model.values.join()
-                    model.percent = value2Percent(model.values[1] - model.values[0] + valueMin)
+                    vmodel.values[Index] = val
+                    vmodel["percent" + Index] = value2Percent(val)
+                    vmodel.value = vmodel.values.join()
+                    vmodel.percent = value2Percent(vmodel.values[1] - vmodel.values[0] + valueMin)
                 } else {
-                    model.value = val
-                    model.percent = value2Percent(val)
+                    vmodel.value = val
+                    vmodel.percent = value2Percent(val)
                 }
-                options.ondrag.call(null, model, data);
+                options.onDrag.call(null, vmodel, data);
             }
             vm.$init = function() {
                 var a = slider.getElementsByTagName("b")
                 for (var i = 0, el; el = a[i++]; ) {
-                    el.sliderModel = model
+                    el.sliderModel = vmodel
                     if (!twohandlebars && avalon(el).hasClass("hander___flag")) {
                         handlers.push(el);
                         avalon(el).removeClass("hander___flag")
@@ -155,7 +154,7 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
                         handlers.push(el);
                     } 
                 }
-                avalon.scan(slider, [model].concat(vmodels))
+                avalon.scan(slider, [vmodel].concat(vmodels))
                 if(typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
                     options.onInit.call(element, vmodel, options, vmodels)
@@ -166,7 +165,7 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
                 slider.parentNode.removeChild(slider);
             }
         })
-        return model
+        return vmodel
     }
     widget.defaults = {
         max: 100,
@@ -177,9 +176,9 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
         value: 0,
         values: null,
         disabled: false,
-        ondragstart: avalon.noop,
-        ondrag: avalon.noop,
-        ondragend: avalon.noop,
+        onDragStart: avalon.noop,
+        onDrag: avalon.noop,
+        onDragEnd: avalon.noop,
         getTemplate: function(str, options) {
             return str;
         }
@@ -196,29 +195,29 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
     })
     avalon(document).bind("keydown", function(e) { // 当选中某个手柄之后通过键盘上的方向键控制手柄的slider
         if (FocusElement) {
-            var model = FocusElement[0].sliderModel
-            var percent = Handlers.length == 1 ? model.percent : model["percent" + Index]
-            var val = model.$percent2Value(percent / 100), keyVal
+            var vmodel = FocusElement[0].sliderModel
+            var percent = Handlers.length == 1 ? vmodel.percent : vmodel["percent" + Index]
+            var val = vmodel.$percent2Value(percent / 100), keyVal
             switch (e.which) {
                 case 34 : // pageDown
                 case 39:  // right
                 case 40:  // down
-                    keyVal = Math.min(val + 1, model.$valueMax)
+                    keyVal = Math.min(val + 1, vmodel.$valueMax)
                     break;
                 case 33: // pageUp
                 case 37: // left
                 case 38: // up
-                    keyVal = Math.max(val - 1, model.$valueMin)
+                    keyVal = Math.max(val - 1, vmodel.$valueMin)
                     break
                 case 36: // home
-                    keyVal = model.$valueMin
+                    keyVal = vmodel.$valueMin
                     break
                 case 35: // end
-                    keyVal = model.$valueMax
+                    keyVal = vmodel.$valueMax
                     break
             }
             if (isFinite(keyVal)) {
-                model.drag(e, {}, keyVal)
+                vmodel.drag(e, {}, keyVal)
             }
         }
     })

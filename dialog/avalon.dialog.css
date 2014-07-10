@@ -25,4 +25,4 @@
 .ui-dialog .ui-dialog-inner .ui-dialog-footer .ui-dialog-btns { display: inline; display: inline; float: right; font-size: 0; }
 .ui-dialog .ui-dialog-inner .ui-dialog-footer .ui-dialog-btns .ui-btn { margin-left: 10px; }
 
-.ui-dialog-layout { display: none; position: absolute; left: 0; top: 0; bottom: 0; right: 0; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; zoom: 1; z-index: 1; background: #000; }
+.ui-dialog-layout { display: none; position: fixed; *position: absolute; left: 0; top: 0; bottom: 0; right: 0; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; zoom: 1; z-index: 1; background: #000; }

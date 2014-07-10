@@ -14,7 +14,7 @@ define(["avalon.getModel",
             duplexFrom,
             duplexTo,
             rules = options.rules, //日期选择框起始日期和结束日期之间关系的规则
-            selectFuncVM = typeof options.select ==="string" ? avalon.getModel(options.select, vmodels) : null, //得到select回调所在的VM域select值所组成的数组
+            selectFuncVM = typeof options.onSelect ==="string" ? avalon.getModel(options.onSelect, vmodels) : null, //得到onSelect回调所在的VM域onSelect值所组成的数组
             _confirmClick = false, //判断是否点击了确定按钮，没点击为false，点击为true
             _oldValue, //保存最近一次选择的起始日期和结束日期组成的日期对象数组，因为当选择了日期但没有点确定按钮时，日期选择范围不改变，相应的对应的日历默认输入域也应该恢复到最近一次的选择
             _toMinDate = "", //保存rules指向的对象的toMinDate属性值，以便于rules属性计算所得的minDate做比较
@@ -70,7 +70,7 @@ define(["avalon.getModel",
         }
         options.rules = rules;
         if(selectFuncVM) {
-            options.select = selectFuncVM[1][selectFuncVM[0]];
+            options.onSelect = selectFuncVM[1][selectFuncVM[0]];
         }
         // 如果disabled配置为字符串，说明是通过外部vm控制组件的禁用与否，取得外部disabled所在vm并监控
         if(disabled!=="true" && disabled!=="false" && disabledVM) {
@@ -94,7 +94,7 @@ define(["avalon.getModel",
             vm.inputFromValue = ""
             vm.inputToValue = "";
             // 切换组件的显示隐藏
-            vm._toggleDatepicker = function(val, event) {
+            vm._toggleDatepicker = function(val) {
                 if(!vmodel.disabled) {
                     vmodel.toggle = !val;
                 }
@@ -116,7 +116,7 @@ define(["avalon.getModel",
                 vmodel.label = options.datesDisplayFormat(options.defaultLabel,inputFromValue, inputToValue);
                 _confirmClick = true;
                 vmodel.toggle = false;
-                options.select.call(vmodel, inputFromDate, inputToDate, _oldValue, vmodel, avalon(element).data());
+                options.onSelect.call(vmodel, inputFromDate, inputToDate, _oldValue, vmodel, avalon(element).data());
                 _oldValue = [inputFromDate, inputToDate];
             }
             // 点击取消按钮隐藏日历框
@@ -270,13 +270,13 @@ define(["avalon.getModel",
             }
             if(minDate){
                 var toMinDateFormat = options.formatDate(minDate);
-                vmodel.rules.toMinDate = toMinDateFormat;
+                rules.toMinDate = toMinDateFormat;
                 if(!vmodel.inputToValue) {
                     vmodel.inputToValue = toMinDateFormat;
                 }
             }
             if(maxDate) {
-                vmodel.rules.toMaxDate = options.formatDate(maxDate);
+                rules.toMaxDate = options.formatDate(maxDate);
             }
             var inputToDate = vmodel.inputToValue && vmodel.parseDate(vmodel.inputToValue);
             if(inputToDate && isDateDisabled(inputToDate, minDate, maxDate)) {
@@ -380,7 +380,7 @@ define(["avalon.getModel",
         widgetElement: "", // accordion容器
         separator: "-",
         startDay: 1,    //星期开始时间
-        select: avalon.noop, //点击确定按钮选择日期后的回调
+        onSelect: avalon.noop, //点击确定按钮选择日期后的回调
         parseDate: function(str){
             var separator = this.separator;
             var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})$";

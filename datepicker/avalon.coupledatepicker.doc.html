@@ -10,7 +10,7 @@
     <div class="wrapper">
         <h1>coupledatepicker使用文档</h1>
         <p>coupledatepicker其实是普通日历的升级版，可以通过设置起始日期与结束日期的最小间隔天数和最大间隔天数将截止日期限制在一定的选择范围中</p>
-        <table>
+        <table class="table_doc">
             <caption class="example">coupledatepicker组件配置项说明：</caption>
             <thead>
                 <tr>
@@ -20,7 +20,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr class="odd">
                     <td>fromCalendarLabel</td>
                     <td>"选择起始日期" {{type: String}}</td>
                     <td>设置起始日期选择日历框的说明文字</td>
@@ -30,7 +30,7 @@
                     <td>"选择结束日期" {{type: String}}</td>
                     <td>设置结束日期选择日历框的说明文字</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>disabled</td>
                     <td>false {{type: Boolean}}</td>
                     <td>设置是否禁用组件</td>
@@ -40,7 +40,7 @@
                     <td>默认1， {{type: Number}}</td>
                     <td>设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推, 默认从周一开始</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>separator</td>
                     <td>"-"  {{type: String}}</td>
                     <td>日期格式的分隔符，可以是"/"或者你希望的符号，但如果是除了"-"和"/"之外的字符则需要和parseDate和formatDate配合使用，一边组件能正常运作</td>
@@ -64,7 +64,7 @@
                         toMaxDate代表结束日期可以设置的最大日期
                     </td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>parseDate</td>
                     <td>function(str){...}</td>
                     <td>将符合日期格式要求的字符串解析为date对象并返回，不符合格式的字符串返回null,用户可以根据自己需要自行配置解析过程

@@ -24,7 +24,6 @@ MS_OPTION_TEMPLATE
      ms-mouseenter="_listenter"
      ms-mouseleave="_listleave">
     <div class="ui-dropdown-menu-inner"
-         ms-css-height="{{multiple&&height}}"
          ms-widget="scrollbar,scrollbar-MS_OPTION_ID" id="menu-MS_OPTION_ID">
         <div class="ui-scrollbar-scroller"
              id="list-MS_OPTION_ID">
@@ -36,6 +35,7 @@ MS_OPTION_TEMPLATE
                  ms-class-2="ui-state-active:isActive(el) "
                  ms-class-4="ui-dropdown-group:el.group"
                  ms-class-5="ui-dropdown-divider:el.group && !$first"
+                 data-repeat-rendered="updateScrollbar"
                  >{{el.label|sanitize|html}}</div>
 
         </div>

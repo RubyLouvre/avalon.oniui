@@ -176,28 +176,26 @@ define(['avalon',
 
             vm._select = function(index, event) {
                 var option = vm.data[index]
-                if (!option || !option.enable || option.group) {
-                    return;
-                }
-                event.stopPropagation()
-                event.preventDefault()
-                //根据multiple区分对待, 多选时可以为空值
-                if (vmodel.multiple) {
-                    index = vmodel.value.indexOf(option.value)
-                    if (index > -1) {
-                        vmodel.value.splice(index, 1)
+                if (option && option.enable && !option.group) {
+                    event.stopPropagation()
+                    event.preventDefault()
+                    //根据multiple区分对待, 多选时可以为空值
+                    if (vmodel.multiple) {
+                        index = vmodel.value.indexOf(option.value)
+                        if (index > -1) {
+                            vmodel.value.splice(index, 1)
+                        } else {
+                            vmodel.value.push(option.value)
+                        }
+
                     } else {
-                        vmodel.value.push(option.value)
+                        vmodel.value = option.value;
                     }
-
-                } else {
-                    vmodel.value = option.value;
+                    vmodel.currentOption = option;
+                    vmodel.label = vmodel.value + ""
+                    vmodel.toggle = false;
+                    vmodel.onSelect.call(this, event, listNode)
                 }
-
-                vmodel.currentOption = option;
-                vmodel.label = vmodel.value + ""
-                vmodel.toggle = false;
-                vmodel.onSelect.call(this, event, listNode)
                 titleNode && titleNode.focus()
             }
 
@@ -270,8 +268,6 @@ define(['avalon',
                 } else {
                     var firstItemIndex, selectedItemIndex, value = vmodel.value;
 
-                    vmodel.$styleFix();
-
                     if (avalon.type(value) !== 'array') {
                         value = [value];
                     }
@@ -298,8 +294,6 @@ define(['avalon',
                     $listNode.css({
                         display: 'block'
                     });
-                    var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
-                    scrollbar && scrollbar.update();
                     titleNode && titleNode.focus();
                     vmodel.onShow.call(this, listNode);
                 }
@@ -354,7 +348,9 @@ define(['avalon',
             };
             vm._blur = function() {
                 if (!vmodel.__cursorInList__ && !vmodel.multiple && vmodel.toggle) {
-                    vmodel.toggle = false
+                    vmodel.toggle = false;
+                } else {
+                    titleNode && titleNode.focus();
                 }
             }
 
@@ -379,10 +375,9 @@ define(['avalon',
 
             //利用scrollbar的样式改变修正父节点的样式
             vm.$styleFix = function() {
-                var MAX_HEIGHT = 200,
+                var MAX_HEIGHT = options.height || 200,
                     $menu = avalon(vmodel.menuNode),
-                    $dropdown = avalon(vmodel.dropdownNode),
-                    height = $dropdown.height(),
+                    height = vmodel.dropdownNode.scrollHeight,
                     css = {};
 
                 css.width = vmodel.listWidth - $menu.css('borderLeftWidth').replace(styleReg, '$1') - $menu.css('borderRightWidth').replace(styleReg, '$1');
@@ -393,6 +388,12 @@ define(['avalon',
 
                 $menu.css(css)
             };
+
+            vm.updateScrollbar = function() {
+                var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
+                vmodel.$styleFix();
+                scrollbar && scrollbar.update();
+            }
 
         });
 

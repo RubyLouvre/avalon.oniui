@@ -123,9 +123,6 @@ avalon.oniui
         <td> carousel</td><td>UI组件</td><td></td><td>单个照片</td>
     </tr>
     <tr>
-        <td> scrollspy</td><td>UI组件</td><td></td><td> 滚动监听</td>
-    </tr>
-    <tr>
         <td> rating</td><td>UI组件</td><td></td><td> 星级评分</td>
     </tr>
     <tr>
@@ -135,7 +132,7 @@ avalon.oniui
         <td>preview</td><td>UI组件</td><td>完成</td><td>钟， 图片预览</td>
     </tr>  
     <tr>
-        <td>scrollspy</td><td>UI组件</td><td>完成</td><td>杨， 图片预览</td>
+        <td>scrollspy</td><td>UI组件</td><td>完成</td><td>杨， 滚动监听</td>
     </tr>
     <tr>
         <td> imagecropper</td><td>UI组件</td><td></td><td> 图片剪切</td>

@@ -38,6 +38,7 @@ $uiname: "ui-dialog";
 }
 .#{$uiname} {
     position: absolute;
+    text-align: left;
     .#{$uiname}-inner {
         box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
         @if($oinui-theme == smoothness) {

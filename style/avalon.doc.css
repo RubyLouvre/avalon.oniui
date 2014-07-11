@@ -9,9 +9,9 @@ h1 {
 }
 //doc table的样式
 .table-doc{  
-    border-collapse: collapse;  
     margin: 0 auto;  
     border: 1px solid #cad9ea;  
+    border-collapse: collapse;
     color: #666; 
     font-size: 14px;
 }  

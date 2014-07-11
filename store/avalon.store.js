@@ -1,4 +1,4 @@
-define(["avalon","json/avalon.json"], function(avalon) {
+define(["avalon", "json/avalon.json"], function(avalon) {
 
     var store = {
         //一些接口(空实现)
@@ -10,18 +10,6 @@ define(["avalon","json/avalon.json"], function(avalon) {
         remove: function(key) {
         },
         clear: function() {
-        },
-        transact: function(key, defaultVal, transactionFn) {
-            var val = store.get(key)
-            if (transactionFn == null) {
-                transactionFn = defaultVal
-                defaultVal = null
-            }
-            if (typeof val == 'undefined') {
-                val = defaultVal || {}
-            }
-            transactionFn(val)
-            store.set(key, val)
         },
         getAll: function() {
         },
@@ -52,7 +40,7 @@ define(["avalon","json/avalon.json"], function(avalon) {
     } catch (e) {
     }
 
-    if (supportLocalStorage) {
+    if (!supportLocalStorage) {
         storage = localStorage;
         avalon.mix(store, {//重写
             set: function(key, val) {
@@ -142,7 +130,10 @@ define(["avalon","json/avalon.json"], function(avalon) {
                 storage.addBehavior('#default#userData')
                 storage.load(localStorageName)
                 var result = storeFunction.apply(store, args)
-                storageOwner.removeChild(storage)
+                try {
+                    storageOwner.removeChild(storage)
+                } catch (e) {
+                }
                 return result
             }
         }
@@ -156,7 +147,7 @@ define(["avalon","json/avalon.json"], function(avalon) {
         avalon.mix(store, {//重写
             set: withIEStorage(function(storage, key, val) {
                 key = ieKeyFix(key)
-                if (val === undefined) {
+                if (val === void 0) {
                     return store.remove(key)
                 }
                 storage.setAttribute(key, store.serialize(val))
@@ -184,7 +175,7 @@ define(["avalon","json/avalon.json"], function(avalon) {
                 storage.load(localStorageName)
                 var ret = {}
                 for (var i = 0, attr; attr = attributes[i]; ++i) {
-                    ret[attr] = store.get(attr)
+                    ret[attr.name] = store.get(attr.name)
                 }
                 return ret
             })

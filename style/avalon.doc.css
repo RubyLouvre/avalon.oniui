@@ -11,6 +11,8 @@ table.table-doc{
     width:90%;
     margin: 10px auto;
     border: 1px solid #cad9ea;  
+    border-right: 2px outset;
+    border-bottom:2px outset;
     border-collapse: collapse;
     color: #666; 
     font-size: 14px;

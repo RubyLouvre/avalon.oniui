@@ -80,7 +80,7 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                     })
                 }
                 // get Css from skin
-                vmodel._computeCss()
+                vmodel._draw()
                 if(!vmodel.getStyleFromSkin) vmodel.circleBar()
                 // callback after inited
                 if(typeof options.onInit === "function" ) {
@@ -188,14 +188,14 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                 vmodel.value = value
             }
             // get css from css file
-            //@method _computeCss 动态切换皮肤之后，如果需要更新提取圆形进度条的样式，可以调用这个方法
-            vm._computeCss = function() {
+            //@method _draw 动态切换皮肤之后，如果需要更新提取圆形进度条的样式，可以调用这个方法
+            vm._draw = function() {
                 if(vmodel.circle && vmodel.getStyleFromSkin) {
                     if(barElement && barParElement) {
                         var radius = barElement.height(),
                             outerHeight = barElement.outerHeight()
                         // wait utill element is rendered
-                        if(!radius) return setTimeout(vmodel._computeCss, 16)
+                        if(!radius) return setTimeout(vmodel._draw, 16)
                         vmodel.circleColor = barElement.css("color")
                         vmodel.circleBorderColor = barParElement.css("background-color")
                         vmodel.circleBarColor = barElement.css("background-color")
@@ -221,13 +221,13 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
             vmodel.angel = 360 * newValue / 100
             vmodel.onChange && vmodel.onChange.call(vmodel, newValue)
         })
-
         return vmodel
     }
     //add args like this:
     //argName: defaultValue, \/\/@param description
     //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
+        toggle: true, //@param 组件是否显示，可以通过设置为false来隐藏组件
         value: false, //@param 当前进度值 0 - 100 or false
         label: true, //@param 是否在进度条上显示进度数字提示
         simulate: false, //@param 是否模拟进度条效果，默认为否，模拟的时候需要调用触发告知完成，模拟会采用模拟函数及算子进行模拟，取值为int表示动画效果间隔ms数

@@ -312,6 +312,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
     }
 
     widget.defaults = {
+        toggle: true, //@param 组件是否显示，可以通过设置为false来隐藏组件
         autoSwitch: false,      //@param 是否自动切换，默认否，如果需要设置自动切换，请传递整数，例如200，即200ms
         active: 0,              //@param 默认选中的tab，默认第一个tab，可以通过动态设置该参数的值来切换tab，并可通过vmodel.tabs.length来判断active是否越界
         shallPanelAlwaysShow: false,//@param shallPanelAlwaysShow() panel不通过display:none,block来切换，而是一直显示，通过其他方式切换到视野，默认为false

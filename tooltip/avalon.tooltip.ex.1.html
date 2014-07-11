@@ -26,7 +26,7 @@
                 vmodel = avalon.define("test", function(vm) {
                     vm.$qqOpt = {
                         "contentGetter": function(elem) {
-                            if(elem.tagName.toLowerCase() == 'input' || elem.getAttribute("tp")) return str + str + str + str + str + str + str + str + str + str + str
+                            if(elem && elem.tagName && (elem.tagName.toLowerCase() == 'input' || elem.getAttribute("tp"))) return str + str + str + str + str + str + str + str + str + str + str
                         }
                         , autohide: !true
                     }
@@ -70,7 +70,7 @@
                 vmodel = avalon.define(&quot;test&quot;, function(vm) {
                     vm.$qqOpt = {
                         &quot;contentGetter&quot;: function(elem) {
-                            if(elem.tagName.toLowerCase() == 'input' || elem.getAttribute(&quot;tp&quot;)) return str + str + str + str + str + str + str + str + str + str + str
+                            if(elem &amp;&amp; elem.tagName &amp;&amp; (elem.tagName.toLowerCase() == 'input' || elem.getAttribute(&quot;tp&quot;))) return str + str + str + str + str + str + str + str + str + str + str
                         }
                         , autohide: !true
                     }

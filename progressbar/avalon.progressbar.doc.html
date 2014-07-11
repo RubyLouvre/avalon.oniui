@@ -21,6 +21,8 @@
                 </thead>
                 <!--auto doc start-->
 <tr>
+    <td>toggle</td><td> true</td><td> 组件是否显示，可以通过设置为false来隐藏组件</td></tr>
+<tr>
     <td>value</td><td> false</td><td> 当前进度值 0 - 100 or false</td></tr>
 <tr>
     <td>label</td><td> true</td><td> 是否在进度条上显示进度数字提示</td></tr>
@@ -71,7 +73,7 @@
 <tr>
     <td>progress</td><td>接口函数</td><td>progress(value) 设置value值，其实也可以直接设置vmodel.value</td></tr>
 <tr>
-    <td>_computeCss</td><td>接口函数</td><td>_computeCss 动态切换皮肤之后，如果需要更新提取圆形进度条的样式，可以调用这个方法</td></tr>
+    <td>_draw</td><td>接口函数</td><td>_draw 动态切换皮肤之后，如果需要更新提取圆形进度条的样式，可以调用这个方法</td></tr>
 <!--auto doc end-->
             </table>
             <p>progressbar 组件有一个重要的labelShower方法，用于配置格式化label显示,见源码：</p>

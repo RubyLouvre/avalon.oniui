@@ -1,18 +1,9 @@
-define(["avalon.getModel", "text!./avalon.suggest.html"], function(avalon, sourceHTML) {
-
-    var parseHtmlStruction = sourceHTML.split("MS_OPTION_STYLE"),
-        cssText = parseHtmlStruction[1].replace(/<\/?style>/g, ""),
-        styleEl = document.getElementById("avalonStyle");
-    try {
-        styleEl.innerHTML += cssText ;
-    } catch (e) {
-        styleEl.styleSheet.cssText += cssText ;
-    }
+define(["avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oniui-common.css", "css!./avalon.suggest.css"], function(avalon, sourceHTML) {
     var widget = avalon.ui.suggest = function(element, data, vmodels) {
 
         var $element = avalon(element),
             options = data.suggestOptions ,
-            suggestHtml = avalon.parseHTML(parseHtmlStruction[0]).firstChild ,
+            suggestHtml = avalon.parseHTML(sourceHTML).firstChild ,
             dataValue = data.value.split(","),
             suggestOptions = !dataValue[2] ? 0 : avalon.getModel( dataValue[2] , vmodels ) || 0;
 

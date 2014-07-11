@@ -1,5 +1,5 @@
 /**
-  * flipswitch组件，
+  * @description flipswitch组件，将checkbox表单元素转化成富UI的开关
   *
   */
 define(["avalon", "text!./avalon.flipswitch.html", "draggable/avalon.draggable", "css!./avalon.flipswitch.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {

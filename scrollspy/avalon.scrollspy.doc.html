@@ -5,7 +5,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../highlight/shCore.js"></script>
-    </head>
+    <meta name="description" content="scrollspy组件，可通过监听元素原生的scroll事件或者结合scrollbar组件使用时，监听其scroll，根据scrollTop，scrollLeft计算判定配置指定的panel list应该切换到什么位置"/>
+</head>
     <body>
 
 
@@ -20,6 +21,14 @@
     <td>onInit</td><td>配置函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
     <td>onChange</td><td>配置函数</td><td>onChange(index, ele, widgetElement) 滚动到应该显示那个tab的index，以及这个tab的li元素，以及绑定scrollspy的元素</td></tr>
+<tr>
+    <td>targetListGetter</td><td>配置函数</td><td>targetListGetter() 获取tab list函数，元素是数字或者元素id索引，默认是元素id索引</td></tr>
+<tr>
+    <td>panelListGetter</td><td>配置函数</td><td>panelListGetter() 获取panel list函数，返回一个数组，元素是dom，或者返回空，默认返回空</td></tr>
+<tr>
+    <td>panelGetter</td><td>配置函数</td><td>panelGetter(pannelId, pannelIndex, panelsList, options) 获取panel函数，默认返回 panelsList[pannelIndex] || Id = pannelId</td></tr>
+<tr>
+    <td>scrollTo</td><td>接口函数</td><td>scrollTo(id, index) 滚动到panel位置，滚动到 panelList[index] || dom.id = id的元素的地方</td></tr>
 <!--auto doc end-->
         </table>
         <p>scrollspy 组件有一个重要的xx方法,见源码：</p>

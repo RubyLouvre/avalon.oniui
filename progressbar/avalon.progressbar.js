@@ -1,5 +1,5 @@
 /**
-  * progressbar组件，
+  * @description progressbar组件，可以通过接口控制或者随机模拟进度条效果，支持条形，圆形，倒计时等效果功能
   *
   */
 define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {

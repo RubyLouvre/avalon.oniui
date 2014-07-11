@@ -1,5 +1,5 @@
 /**
-  * roleselect组件，
+  * @description roleselect组件，以左右列表形式展示实现的复选组件
   *
   */
 define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.data.html", "scrollbar/avalon.scrollbar", "css!./avalon.roleselect.css", "css!../chameleon/oniui-common.css"], function(avalon, template, dataTpl) {

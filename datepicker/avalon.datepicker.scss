@@ -1,6 +1,8 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
 $uiname: "ui-datepicker";
+$uiname-dropdown: "ui-dropdown";
+
 .ui-icon.ui-icon-calendar-o {
     padding: 0 6px;
     vertical-align: top;
@@ -207,6 +209,12 @@ $uiname: "ui-datepicker";
         border-bottom-color: #cccccc;
     }
 
+}
+.#{$uiname-dropdown} {
+  //下拉项的样式
+  .#{$uiname-dropdown}-item {
+    text-indent: 6px;
+  }
 }
 
 

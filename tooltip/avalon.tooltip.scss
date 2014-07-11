@@ -19,12 +19,13 @@ div#{$uiname}{
 	max-width: 300px;
 	overflow: visible;
 	background: map-get($tooltip, bg);
-	border-color: map-get($tooltip, borderColor);
+	border:1px solid map-get($tooltip, borderColor);
 	color: map-get($tooltip, fontColor);
 	font-size: 12px;
 	border-radius: 0 0 0 0;
-	a{
+	a, a:link, a:hover{
 		color: map-get($tooltip, fontColor);
+		cursor: pointer;
 	}
 	#{$uiname}-arrow-in, #{$uiname}-arrow-out{
 	    overflow: visible;

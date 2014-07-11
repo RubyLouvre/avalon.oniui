@@ -10,7 +10,7 @@
             require(["scrollbar/avalon.scrollbar"], function() {
                 avalon.define("test", function(vm) {
                     vm.scrollbar = {
-                        type: "large"
+                        size: "large"
                     }
                     vm.data = avalon.range(1,100)
                     vm.$index = 2
@@ -35,7 +35,7 @@
                 <p style="width:65000px" ms-repeat="data" class="ui-helper-reset" data-repeat-rendered="up">left {{$index}} <span style="float:right;">right {{$index}} </span></p>
             </div>
         </div>
-        <pre class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;scrollbar组件&lt;/title&gt;
@@ -47,7 +47,7 @@
             require([&quot;scrollbar/avalon.scrollbar&quot;], function() {
                 avalon.define(&quot;test&quot;, function(vm) {
                     vm.scrollbar = {
-                        type: &quot;large&quot;
+                        size: &quot;large&quot;
                     }
                     vm.data = avalon.range(1,100)
                     vm.$index = 2

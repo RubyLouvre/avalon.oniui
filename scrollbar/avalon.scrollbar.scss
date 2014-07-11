@@ -4,7 +4,8 @@ $uiname : ".ui-scrollbar";
 @if($oinui-theme == smoothness) {
 	$scrollbar: (
 		bg: #f8f8f8,
-		arrColor: #FFE44F,
+		arrColor: #bcbcbc,
+		arrActiveColor:#fff,
 		arrBg: #eee,
 		arrHoverBg: #aaa,
 		arrActiveBg: #999,
@@ -70,6 +71,26 @@ div#{$uiname} {
     }
     .ui-state-disabled{
     	background: map-get($scrollbar, arrDisabledBg);
+    }
+    &-left,&-right{
+    	.ui-state-active {
+    		b#{$uiname}-trangle-up {
+				@include triangle($direction: top, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrActiveColor));
+    		}
+    		b#{$uiname}-trangle-down {
+				@include triangle($direction: bottom, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrActiveColor));
+    		}
+    	}
+    }
+    &-top,&-bottom{
+    	.ui-state-active {
+    		b#{$uiname}-trangle-up {
+				@include triangle($direction: left, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrActiveColor));
+    		}
+    		b#{$uiname}-trangle-down {
+				@include triangle($direction: right, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrActiveColor));
+    		}
+    	}
     }
 	&-scroller{
 		overflow: hidden;

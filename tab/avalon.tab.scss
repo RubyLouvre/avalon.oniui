@@ -34,8 +34,13 @@ div#{$uiname} {
 	    position: relative;
 	    background-color: map-get($tab, tabBg);
 	    cursor: pointer;
+	    border: 1px solid $ui-state-default-border-color;
 	    border-right-width: 0;
 	    color: map-get($tab, tabColor);
+	}
+	& &-nav .ui-state-default a,& &-nav .ui-state-default:link,& &-nav .ui-state-default a:hover{
+		color: map-get($tab, tabColor);
+		text-decoration: none;
 	}
 	& &-nav .ui-state-hover{
 		color: map-get($tab, tabHoverColor);

@@ -53,8 +53,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
                 //document body情形需要做一下修正
                 vmodel.viewElement = vmodel.widgetElement == document.body ? document.getElementsByTagName(
                     "html")[0] : vmodel.widgetElement
-                vmodel.viewElement.style.overflow = "hidden"
-                if(vmodel.widgetElement == document.body) vmodel.widgetElement.style.overflow = "hidden"
+                vmodel.viewElement.style.overflow = vmodel.viewElement.style.overflowX = vmodel.viewElement.style.overflowY = "hidden"
+                if(vmodel.widgetElement == document.body) vmodel.widgetElement.style.overflow = vmodel.widgetElement.style.overflowX = vmodel.widgetElement.style.overflowY = "hidden"
                 vmodel._position = vmodel.position.split(",")
 
                 var frag = avalon.parseHTML(options.template)
@@ -307,8 +307,10 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
                 if(vmodel.viewElement != vmodel.widgetElement) {
                     p.match(/right|left/g) && avalon(vmodel.widgetElement).css("height", barH + "px")
                 }
-                var hPadding = scroller.height() - scroller.innerHeight(),
-                    vPadding = scroller.width() - scroller.innerWidth()
+                // 水平方向内间距
+                var hPadding = scroller.width() - scroller.innerWidth(),
+                    // 竖直方向内间距
+                    vPadding = scroller.height() - scroller.innerHeight()
                 scroller.css("height", h + vPadding + "px")
                 scroller.css("width", w + hPadding  + "px")
                 // 根据实际视窗计算，计算更新scroller的宽高
@@ -349,8 +351,10 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
                         }
                     }
                     if(bar) {
-                        var bh = sh = strToNumber(bar.css("height")),
-                            bw = sw = strToNumber(bar.css("width")),
+                        var sh = strToNumber(bar.css("height")),
+                            sw = strToNumber(bar.css("width")),
+                            bh = sh,
+                            bw = sw,
                             draggerpar = avalon(getByClassName("ui-scrollbar-draggerpar", bar[0])[0]),
                             headerLength = vmodel.showBarHeader ? 2 : 0
                         // 更新滚动条没有两端的箭头的时候依旧要重新计算相邻两个bar的间隔
@@ -673,7 +677,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
         onScroll: function(newValue, oldValue, diretion, vmodel) {
 
         },//@optMethod 滚动回调,scrollLeft or scrollTop变化的时候触发，参数为newValue, oldValue, diretion, vmodel diretion = h 水平方向，= v 竖直方向
-        type: "normal", //@param srollbar size,normal为10px，small为8px，large为14px
+        size: "normal", //@param srollbar size,normal为10px，small为8px，large为14px
         $author: "skipper@123"
     }
 })

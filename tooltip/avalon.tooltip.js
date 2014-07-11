@@ -296,7 +296,7 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
                 // IE里面透明箭头显示有问题，屏蔽掉
                 if(vmodel.animated && !!-[1,]) {
                     clearInterval(animateTimer)
-                    var now = (avalon(tooltipElem).css("opacity") * 100) >> 0
+                    var now = (avalon(tooltipElem).css("opacity") * 100) >> 0,
                     dis = vmodel._animateArrMaker(now, 100)
                     avalon(tooltipElem).css("opacity", dis[0] / 100)
                     dis.splice(0, 1)
@@ -315,7 +315,7 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
                 if(!tooltipElem) return
                 if(vmodel.animated && !!-[1,]) {
                     clearInterval(animateTimer)
-                    var now = (avalon(tooltipElem).css("opacity") * 100) >> 0
+                    var now = (avalon(tooltipElem).css("opacity") * 100) >> 0,
                     dis = vmodel._animateArrMaker(now, 0)
                     animateTimer = setInterval(function() {
                         if(dis.length <= 0) {

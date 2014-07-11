@@ -10,7 +10,7 @@
             require(["scrollbar/avalon.scrollbar"], function() {
                 avalon.define("test", function(vm) {
                     vm.scrollbar = {
-                        type: "small"
+                        size: "small"
                     }
                     vm.data = avalon.range(1,400)
                     vm.$index = 2
@@ -40,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <pre class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;scrollbar组件&lt;/title&gt;
@@ -52,7 +52,7 @@
             require([&quot;scrollbar/avalon.scrollbar&quot;], function() {
                 avalon.define(&quot;test&quot;, function(vm) {
                     vm.scrollbar = {
-                        type: &quot;small&quot;
+                        size: &quot;small&quot;
                     }
                     vm.data = avalon.range(1,400)
                     vm.$index = 2

@@ -5,16 +5,21 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
     <meta name="description" content="flipswitch组件，将checkbox表单元素转化成富UI的开关"/>
 </head>
     <body>
-
-
-        <table width="90%" border="1">
-            <tr>
-                <th>名字</th><th>默认值</th> <th>说明</th>
-            </tr>
-            <!--auto doc start-->
+        <div class="wrapper">
+            <h1>flipswitch使用说明</h1>
+            <p class="doc-description">flipswitch组件，将checkbox表单元素转化成富UI的开关</p>
+            <table class="table-doc">
+                <caption class="example">flipswitch组件配置项说明：</caption>
+                <thead>
+                    <tr>
+                        <th width="25%">名字</th><th width="25%">默认值</th><th width="50%">说明</th>
+                    </tr>
+                </thead>
+                <!--auto doc start-->
 <tr>
     <td>onText</td><td> "<b class=\"ui-flipswitch-on\"></b>"</td><td> 选中状态提示文字</td></tr>
 <tr>
@@ -40,9 +45,7 @@
 <tr>
     <td>onChange</td><td>配置函数</td><td>onChange(newValue, vmodel) 选中状态发生变化时触发，参数为当前的选中状态及vmodel对象</td></tr>
 <tr>
-    <td>getTemplate</td><td>配置函数</td><td>getTemplate(tmp, opts) 用于修改模板的接口，默认不做修改</td></tr>
-<tr>
-    <td>getTemplate</td><td>配置函数</td><td>getTemplate(tpl, opts) 定制修改模板接口</td></tr>
+    <td>getTemplate</td><td>配置函数</td><td>getTemplate(tmpl, opts) 用于修改模板的接口，默认不做修改</td></tr>
 <tr>
     <td>toggle</td><td>接口函数</td><td>toggle 交替改变选中状态</td></tr>
 <tr>
@@ -52,12 +55,12 @@
 <tr>
     <td>_draw</td><td>接口函数</td><td>_draw() 动态更换皮肤后，可以调用这个方法更新提取switch样式</td></tr>
 <!--auto doc end-->
-        </table>
-        <p>flipswitch 组件有一个重要的xx方法,见源码：</p>
-        <pre class="brush:js;gutter:false;toolbar:false;">
-           
-        </pre>
-        <!--ex list start-->
+            </table>
+            <p>flipswitch 组件有一个重要的xx方法,见源码：</p>
+            <pre class="brush:js;gutter:false;toolbar:false;" ms-skip>
+               
+            </pre>
+            <!--ex list start-->
 <ol>
 <li><a href="avalon.flipswitch.ex.html">不同大小type，默认设置，选中状态</a></li>
 <li><a href="avalon.flipswitch.ex.1.html">不同大小size，支持可拖动切换，选中状态</a></li>
@@ -68,5 +71,6 @@
 <li><a href="avalon.flipswitch.ex.6.html">flipswitch + tooltip</a></li>
 </ol>
 <!--ex list end-->
+        </div>
     </body>
 </html>

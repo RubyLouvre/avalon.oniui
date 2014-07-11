@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Tab组件</title>
+        <title>tab组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
     <meta name="description" content="tab组件，实现扫描DOM结构或者接受数组传参，生成tab，支持click、mouseenter事件响应切换，支持mouseenter情形延迟响应切换，支持click情形tab选中情况下再次点击回调，支持自动切换效果，支持tab增删禁用启用并可混合设置同步tab可删除状态，支持混合配制panel内容类型并支持panel内容是ajax配置回调"/>
 </head>
     <body>
-
-
-        <table width="90%" border="1">
-            <tr>
-                <th>名字</th><th>默认值</th> <th>说明</th>
-            </tr>
-            <!--auto doc start-->
+        <div class="wrapper">
+            <h1>tab使用说明</h1>
+            <p class="doc-description">tab组件，实现扫描DOM结构或者接受数组传参，生成tab，支持click、mouseenter事件响应切换，支持mouseenter情形延迟响应切换，支持click情形tab选中情况下再次点击回调，支持自动切换效果，支持tab增删禁用启用并可混合设置同步tab可删除状态，支持混合配制panel内容类型并支持panel内容是ajax配置回调</p>
+            <table class="table-doc">
+                <caption class="example">tab组件配置项说明：</caption>
+                <thead>
+                    <tr>
+                        <th width="25%">名字</th><th width="25%">默认值</th><th width="50%">说明</th>
+                    </tr>
+                </thead>
+                <!--auto doc start-->
 <tr>
     <td>autoSwitch</td><td> false</td><td> 是否自动切换，默认否，如果需要设置自动切换，请传递整数，例如200，即200ms</td></tr>
 <tr>
-    <td>active</td><td> 0</td><td> 默认选中的tab，默认第一个tab</td></tr>
+    <td>active</td><td> 0</td><td> 默认选中的tab，默认第一个tab，可以通过动态设置该参数的值来切换tab，并可通过vmodel.tabs.length来判断active是否越界</td></tr>
 <tr>
     <td>shallPanelAlwaysShow</td><td> false</td><td> shallPanelAlwaysShow() panel不通过display:none,block来切换，而是一直显示，通过其他方式切换到视野，默认为false</td></tr>
 <tr>
@@ -37,8 +42,6 @@
     <td>dir</td><td> "h"</td><td>  tab排列方向，横向或纵向v - vertical，默认横向h - horizontal</td></tr>
 <tr>
     <td>callInit</td><td> true</td><td>  是否调用即初始化</td></tr>
-<tr>
-    <td>contentType</td><td> "content"</td><td>  静态内容，还是异步获取</td></tr>
 <tr>
     <td>titleCutCount</td><td> 8</td><td>  tab title截取长度，默认是8</td></tr>
 <tr>
@@ -74,18 +77,17 @@
 <tr>
     <td>remove</td><td>接口函数</td><td>remove(e, index) 删除索引指向的tab，绑定情形下ms-click="remove($event, index)"，js调用则是vm.remove(index)</td></tr>
 <!--auto doc end-->
-        </table>
-        <p>详细说明一下tab组件几个方法</p>
-        <p>getTemplate方法，用于修改默认模板，见一自定义例子，源码:</p>
-        <pre class="brush:js;gutter:false;toolbar:false;">
-           getTemplate: function(template, vm, tplName) {
-                if(tplName == "panel") {
-                    return template.replace("&lt;div", "&lt;div title='点击我，我被注入了' ms-click='$inject'")
-                }
-                return template
-            }
-        </pre>
-        <!--ex list start-->
+            </table>
+            <p>tab 组件有一个重要的getTemplate配置方法,见源码：</p>
+            <pre class="brush:js;gutter:false;toolbar:false;" ms-skip>
+                getTemplate: function(template, vm, tplName) {
+                     if(tplName == "panel") {
+                         return template.replace("&lt;div", "&lt;div title='点击我，我被注入了' ms-click='$inject'")
+                     }
+                     return template
+                 }
+            </pre>
+            <!--ex list start-->
 <ol>
 <li><a href="avalon.tab.ex.html">扫描dom树获取数据</a></li>
 <li><a href="avalon.tab.ex.1.html">传参配置数据 - mouseenter切换tab</a></li>
@@ -97,5 +99,6 @@
 <li><a href="avalon.tab.ex.7.html">传参配置数据 - click切换tab - 纵向排列字数多出强制截断并且不要省略号效果</a></li>
 </ol>
 <!--ex list end-->
+        </div>
     </body>
 </html>

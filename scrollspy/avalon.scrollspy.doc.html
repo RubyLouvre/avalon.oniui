@@ -5,16 +5,21 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
     <meta name="description" content="scrollspy组件，可通过监听元素原生的scroll事件或者结合scrollbar组件使用时，监听其scroll，根据scrollTop，scrollLeft计算判定配置指定的panel list应该切换到什么位置"/>
 </head>
     <body>
-
-
-        <table width="90%" border="1">
-            <tr>
-                <th>名字</th><th>默认值</th> <th>说明</th>
-            </tr>
-            <!--auto doc start-->
+        <div class="wrapper">
+            <h1>scrollspy使用说明</h1>
+            <p class="doc-description">scrollspy组件，可通过监听元素原生的scroll事件或者结合scrollbar组件使用时，监听其scroll，根据scrollTop，scrollLeft计算判定配置指定的panel list应该切换到什么位置</p>
+            <table class="table-doc">
+                <caption class="example">scrollspy组件配置项说明：</caption>
+                <thead>
+                    <tr>
+                        <th width="25%">名字</th><th width="25%">默认值</th><th width="50%">说明</th>
+                    </tr>
+                </thead>
+                <!--auto doc start-->
 <tr>
     <td>axis</td><td> "y"</td><td> 滚动条滚动的方向，默认是竖直方向y，取值为x的时候，表示水平方向</td></tr>
 <tr>
@@ -30,15 +35,16 @@
 <tr>
     <td>scrollTo</td><td>接口函数</td><td>scrollTo(id, index) 滚动到panel位置，滚动到 panelList[index] || dom.id = id的元素的地方</td></tr>
 <!--auto doc end-->
-        </table>
-        <p>scrollspy 组件有一个重要的xx方法,见源码：</p>
-        <pre class="brush:js;gutter:false;toolbar:false;">
-           
-        </pre>
-        <!--ex list start-->
+            </table>
+            <p>scrollspy 组件有一个重要的xx方法,见源码：</p>
+            <pre class="brush:js;gutter:false;toolbar:false;" ms-skip>
+               
+            </pre>
+            <!--ex list start-->
 <ol>
 <li><a href="avalon.scrollspy.ex.html">scrollspy- 结合tab + scrollbar使用</a></li>
 </ol>
 <!--ex list end-->
+        </div>
     </body>
 </html>

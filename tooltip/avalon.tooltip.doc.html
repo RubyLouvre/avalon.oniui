@@ -5,16 +5,21 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../highlight/shCore.js"></script>
-<meta name="description" content="tooltip组件，给一个元素或者给元素里满足配置条件的系列元素添加一个富UI及交互的气泡提示框"/>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <meta name="description" content="tooltip组件，给一个元素或者给元素里满足配置条件的系列元素添加一个富UI及交互的气泡提示框"/>
 </head>
     <body>
-
-
-        <table width="90%" border="1">
-            <tr>
-                <th>名字</th><th>默认值</th> <th>说明</th>
-            </tr>
-            <!--auto doc start-->
+        <div class="wrapper">
+            <h1>tooltip使用说明</h1>
+            <p class="doc-description">tooltip组件，给一个元素或者给元素里满足配置条件的系列元素添加一个富UI及交互的气泡提示框</p>
+            <table class="table-doc">
+                <caption class="example">tooltip组件配置项说明：</caption>
+                <thead>
+                    <tr>
+                        <th width="25%">名字</th><th width="25%">默认值</th><th width="50%">说明</th>
+                    </tr>
+                </thead>
+                <!--auto doc start-->
 <tr>
     <td>event</td><td> "mouseenter"</td><td> 显示tooltip的事件，默认hover的时候显示tooltip，为false的时候就不绑定事件，如果后面设置了自动隐藏，则mouseenter对应的是mouseleave,focus对应的是blur，进行自动隐藏事件侦听，使用代理的时候，目测不支持focus,blur</td></tr>
 <tr>
@@ -54,19 +59,19 @@
 <tr>
     <td>hide</td><td>接口函数</td><td>hide($event) 隐藏tooltip，参数是$event，可缺省</td></tr>
 <!--auto doc end-->
-        </table>
-        <p>
-        组件在不跟随鼠标移动时候，会自动将箭头对齐元素中间的位置，当tooltip没有元素高或者宽时，会自动调整tip显示在元素高度或者宽度居中的地方
-        </p>
-        <p>tooltip 组件有一个重要的contentGetter方法,见源码：</p>
-        <pre class="brush:js;gutter:false;toolbar:false;">
-           "contentGetter": function(elem) {
-                if(elem.tagName.toLowerCase() != "a") return
-                return elem.title
-            }
-        </pre>
-        <p>该函数有无返回值，将决定是否展示tooltip</p>
-        <!--ex list start-->
+            </table>
+            <p>
+            组件在不跟随鼠标移动时候，会自动将箭头对齐元素中间的位置，当tooltip没有元素高或者宽时，会自动调整tip显示在元素高度或者宽度居中的地方
+            </p>
+            <p>tooltip 组件有一个重要的contentGetter方法,见源码：</p>
+            <pre class="brush:js;gutter:false;toolbar:false;" ms-skip>
+               "contentGetter": function(elem) {
+                    if(elem.tagName.toLowerCase() != "a") return
+                    return elem.title
+                }
+            </pre>
+            <p>该函数有无返回值，将决定是否展示tooltip</p>
+            <!--ex list start-->
 <ol>
 <li><a href="avalon.tooltip.ex.html">input元素获取焦点显示tip</a></li>
 <li><a href="avalon.tooltip.ex.1.html">input元素hover显示tip-父容器做代理</a></li>
@@ -76,5 +81,6 @@
 <li><a href="avalon.tooltip.ex.5.html">鼠标跟随</a></li>
 </ol>
 <!--ex list end-->
+        </div>
     </body>
 </html>

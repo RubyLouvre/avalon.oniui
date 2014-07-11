@@ -5,16 +5,21 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
     <meta name="description" content="scrollbar组件，自定义滚动条样式"/>
 </head>
     <body>
-
-
-        <table width="90%" border="1">
-            <tr>
-                <th>名字</th><th>默认值</th> <th>说明</th>
-            </tr>
-            <!--auto doc start-->
+        <div class="wrapper">
+            <h1>scrollbar使用说明</h1>
+            <p class="doc-description">scrollbar组件，自定义滚动条样式</p>
+            <table class="table-doc">
+                <caption class="example">scrollbar组件配置项说明：</caption>
+                <thead>
+                    <tr>
+                        <th width="25%">名字</th><th width="25%">默认值</th><th width="50%">说明</th>
+                    </tr>
+                </thead>
+                <!--auto doc start-->
 <tr>
     <td>position</td><td> "right"</td><td> scrollbar出现的位置,right右侧，bottom下侧，可能同时出现多个方向滚动条</td></tr>
 <tr>
@@ -46,12 +51,12 @@
 <tr>
     <td>scrollTo</td><td>接口函数</td><td>scrollTo(x,y) 滚动至 x,y</td></tr>
 <!--auto doc end-->
-        </table>
-        <p>scrollbar 组件有一个重要的xx方法,见源码：</p>
-        <pre class="brush:js;gutter:false;toolbar:false;">
-           
-        </pre>
-        <!--ex list start-->
+            </table>
+            <p>scrollbar 组件有一个重要的xx方法,见源码：</p>
+            <pre class="brush:js;gutter:false;toolbar:false;" ms-skip>
+               
+            </pre>
+            <!--ex list start-->
 <ol>
 <li><a href="avalon.scrollbar.ex.html">scrollbar-document.body带上下小箭头</a></li>
 <li><a href="avalon.scrollbar.ex.1.html">scrollbar-元素带上下小箭头双滚动条</a></li>
@@ -61,5 +66,6 @@
 <li><a href="avalon.scrollbar.ex.5.html">scrollbar-滚动条不可见</a></li>
 </ol>
 <!--ex list end-->
+        </div>
     </body>
 </html>

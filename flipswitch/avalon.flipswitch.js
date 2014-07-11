@@ -359,10 +359,10 @@ define(["avalon", "text!./avalon.flipswitch.html", "draggable/avalon.draggable",
         },
         //@optMethod onChange(newValue, vmodel) 选中状态发生变化时触发，参数为当前的选中状态及vmodel对象
         onChange: avalon.noop,
-        //@optMethod getTemplate(tmp, opts) 用于修改模板的接口，默认不做修改
+        //@optMethod getTemplate(tmpl, opts) 用于修改模板的接口，默认不做修改
         getTemplate: function(tmpl, opts) {
             return tmpl
-        },//@optMethod getTemplate(tpl, opts) 定制修改模板接口
+        },
         _author: "skipper@123"
     }
 })

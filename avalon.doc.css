@@ -7,24 +7,24 @@ body {
 h1 {
     text-align: center;
 }
-.table_doc{  
+.table-doc{  
     border-collapse: collapse;  
     margin: 0 auto;  
     border: 1px solid #cad9ea;  
     color: #666; 
     font-size: 14px;
 }  
-.table_doc th {  
+.table-doc th {  
     background: url(th_bg1.gif);  
     background-repeat: repeat-x;
     height: 30px;  
 }  
-.table_doc td,.table_doc th{  
+.table-doc td,.table-doc th{  
     border: 1px solid #cad9ea;  
     padding: 0 1em 0;  
     line-height: 26px;
 }  
-.table_doc tr.odd{  
+.table-doc tr.odd{  
     background-color: #f5fafe;  
 }  
 .pad30 {
@@ -41,7 +41,7 @@ a {
 a:hover {
     color: blue;
 }
-.table_doc caption {
+.table-doc caption {
     color: #FF0000;
     text-align: left;
     line-height: 40px;

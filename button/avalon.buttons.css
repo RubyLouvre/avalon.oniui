@@ -5,6 +5,15 @@
 .ui-button {
   border-color: #c5c5c5;
   border-color: rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.25); }
+  .ui-button-small.ui-button {
+    padding: 4px  5px;
+    font-size: small; }
+  .ui-button-big.ui-button {
+    padding: 8px 15px;
+    font-size: large; }
+  .ui-button-large.ui-button {
+    padding: 12px 25px;
+    font-size: x-large; }
   .ui-button-primary.ui-button {
     color: white;
     background-color: #006ccc;
@@ -195,9 +204,9 @@
   *vertical-align: auto;
   zoom: 1;
   *display: inline;
-  padding: 4px 12px;
+  padding: 6px 12px;
   margin-bottom: 0;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 20px;
   *line-height: 20px;
   border: 1px solid #bbbbbb;

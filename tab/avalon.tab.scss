@@ -86,13 +86,13 @@ div#{$uiname} {
 	}
 	/*dir=v, small size*/
 	&-small {
-		&-nav .ui-state-default{
+		#{$uiname}-nav .ui-state-default{
 		    border-right-width: 1px;
 		    margin-right: -1px;
 		    z-index: 1;
 		    padding: 7px 10px;
 		}
-		&-nav .ui-state-active{
+		#{$uiname}-nav .ui-state-active{
 		    border-color: map-get($tab, smallActiveBorderColor);
 		    z-index: 10;
 		}

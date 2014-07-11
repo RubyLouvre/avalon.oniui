@@ -1,4 +1,6 @@
-<div class="ui-tab-panel-container" ms-each-panel="tabpanels" ms-if="tabpanels.length">
+<div class="ui-tab-panel-container" ms-each-panel="tabpanels"
+	 ms-visible="toggle"
+	 ms-if="tabpanels.length">
      <div class="ui-tab-panel ui-widget-content" 
           ms-visible="_shallPanelAlwaysShow($index)" 
           ms-if-loop="_isAjax(panel)">{{panel.content |html }}</div>

@@ -54,12 +54,12 @@ div.ui-tab {
       cursor: default; }
   .ui-tab .ui-tab-nav .ui-tab-last {
     border-right-width: 1px; }
-  .ui-tab-small-nav .ui-state-default {
+  .ui-tab-small .ui-tab-nav .ui-state-default {
     border-right-width: 1px;
     margin-right: -1px;
     z-index: 1;
     padding: 7px 10px; }
-  .ui-tab-small-nav .ui-state-active {
+  .ui-tab-small .ui-tab-nav .ui-state-active {
     border-color: #3775c0;
     z-index: 10; }
   .ui-tab-vertical .ui-tab-nav .ui-state-default {

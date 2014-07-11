@@ -4,13 +4,14 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
 <title>accordion文档说明</title>
+<meta name="description" content="accordion组件是在有限的区域显示可折叠内容面板的信息，通过不同的配置选项和丰富的api可以灵活的设置accordion,实现比如嵌套accordion的效果" />
 <link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
 </head>
 <body>
     <div class="wrapper">
         <h1>accordion使用说明</h1>
         <p>accordion组件是在有限的区域显示可折叠内容面板的信息，通过不同的配置选项和丰富的api可以灵活的设置和调用accordion，接下来对所有的配置项和可用的API做以说明</p>
-        <table>
+        <table class="table-doc">
             <caption class="example">accordion组件配置项说明：</caption>
             <thead>
                 <tr>
@@ -20,7 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr class="odd">
                     <td>autoRun</td>
                     <td>默认true，type:Boolean</td>
                     <td>告知组件是否自动渲染，设为false时需要手动调用refresh方法进行组件的解析渲染</td>
@@ -30,7 +31,7 @@
                     <td>调用组件元素的element</td>
                     <td>保存组件容器的引用，不可配置</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>controlCls</td>
                     <td>默认"",type: String</td>
                     <td>组件容器自定义className</td>
@@ -40,7 +41,7 @@
                     <td>默认"ui-accordion-active", type: String</td>
                     <td>组件展开时标题区域的className</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>data</td>
                     <td>默认[], type: Array</td>
                     <td>配置accordion组件要展示的数据对象，格式为
@@ -55,7 +56,7 @@
                     <td>默认null， type: Number|null </td>
                     <td>初始展开第几个面板</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>mode</td>
                     <td>{nav|caret|custom}</td>
                     <td>组件展开模式，取值说明："nav"=点击整个标题区域以展开面板，"caret"=点击标题区域中的图标以展开面板，"custom"=自定义面板展开方式</td>
@@ -65,7 +66,7 @@
                     <td>默认true type: Boolean</td>
                     <td>是否允许同时展开多个accordion面板</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>template</td>
                     <td>默认"" type: String</td>
                     <td>配置抽屉标题、面板区域的html模板,在mode为“custom”时有效
@@ -78,7 +79,7 @@
                     <td>默认"ui-accordion-trigger",type: String</td>
                     <td>组件模式(mode)设为"custorm|caret"时，指定触发面板展开的节点对象所对应的className</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>triggerType</td>
                     <td>默认“click”, type: String, 可选'click'|'mouseover'</td>
                     <td>配置面板展开、收起的触发方式："click"=点击触发，"mouseover"=鼠标悬停触发</td>
@@ -88,7 +89,7 @@
                     <td>默认："100%", type: Number|'100%'</td>
                     <td>配置组件宽度</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>beforeSwitch</td>
                     <td>type: Function</td>
                     <td>组件面板展开前回调函数，若函数返回false则不展开面板，传入参数：index=面板序号，header=标题区域节点对象，panel=面板区域节点对象，调用此方法的对象是触发事件的dom节点</td>
@@ -98,7 +99,7 @@
                     <td>type: Function</td>
                     <td>组件面板展开前回调函数，若函数返回false则不展开面板，传入参数：index=面板序号，header=标题区域节点对象，panel=面板区域节点对象，调用此方法的对象是触发事件的dom节点</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>rendered</td>
                     <td>false, type: Boolean</td>
                     <td>组件是否完成渲染</td>
@@ -108,7 +109,7 @@
                     <td>-1, type: Integer</td>
                     <td>组件最新展开的面板序号，不可配置</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>setData</td>
                     <td>type: Function</td>
                     <td>重定义组件配置数据对象，参数data的结构如下：
@@ -136,7 +137,7 @@
                         refresh方法仅供外部调用，不可配置   
                     </td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>getCurrentHeader</td>
                     <td>type: Function</td>
                     <td>获得当前展开的accordion标题对象，仅在config.multiple == false时有效；getCurrentHeader方法仅供外部调用，不可配置 </td>
@@ -146,7 +147,7 @@
                     <td></td>
                     <td>获得当前展开的accordion面板对象，仅在config.multiple == false时有效；getCurrentPanel方法仅供外部调用，不可配置 </td></td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>getHeader(1)</td>
                     <td>type: Function
                         <p>@param index: Integer</p>
@@ -160,7 +161,7 @@
                     </td>
                     <td>获得指定序号的accordion面板节点对象；此方法仅供外部调用，不可配置 </td></td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>getLength()</td>
                     <td>type: Function
                     </td>
@@ -173,7 +174,7 @@
                     </td>
                     <td>获得指定序号的accordion面板展开(1)/收起(0)状态；此方法仅供外部调用，不可配置 </td></td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>switchTo(1)</td>
                     <td>type: Function
                         <p>@param index: Integer</p>

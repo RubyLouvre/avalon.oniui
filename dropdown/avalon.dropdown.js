@@ -400,11 +400,6 @@ define(['avalon',
                 vmodel.data = getDataFromOption(vmodel.dataSource.$model).data;
             });
         }
-        // update scrollbar, if data changed
-        vmodel.data.$watch('length', function() {
-            var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
-            scrollbar && scrollbar.update();
-        })
 
         function createListNode() {
             return avalon.parseHTML(listTemplate);

@@ -1,6 +1,4 @@
 body {
-    /*background: none repeat scroll 0 0 #252525;*/
-    /*color: #F0E7D5;*/
     font: 14px/1.5 "微软雅黑","OpenSansRegular","Helvetica Neue",Helvetica,Arial,sans-serif;
     margin: 0;
     padding: 0 0 100px;
@@ -9,24 +7,26 @@ body {
 h1 {
     text-align: center;
 }
-table {
-    text-align: left;
-    border-collapse: collapse;
-}
-tr, td, th {
-    border: 1px solid #ccc;
-}
-tr {
-    width: 100%;
-}
-th {
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.4em;
-}
-td {
-    padding: 10px; 
-}
+.table-doc{  
+    border-collapse: collapse;  
+    margin: 0 auto;  
+    border: 1px solid #cad9ea;  
+    color: #666; 
+    font-size: 14px;
+}  
+.table-doc th {  
+    background: url(th_bg1.gif);  
+    background-repeat: repeat-x;
+    height: 30px;  
+}  
+.table-doc td,.table-doc th{  
+    border: 1px solid #cad9ea;  
+    padding: 0 1em 0;  
+    line-height: 26px;
+}  
+.table-doc tr.odd{  
+    background-color: #f5fafe;  
+}  
 .pad30 {
     padding: 30px;   
 }
@@ -38,11 +38,10 @@ a {
     line-height: 30px;
     display: inline-block;
 }
-
 a:hover {
     color: blue;
 }
-table caption {
+.table-doc caption {
     color: #FF0000;
     text-align: left;
     line-height: 40px;
@@ -80,15 +79,4 @@ p {
 }
 .warn {
     color: #f00;
-}
-.syntaxhighlighter {
-    padding: 10px !important;
-    width: auto !important;
-}
-.syntaxhighlighter, .syntaxhighlighter div, .syntaxhighlighter code, .syntaxhighlighter table, .syntaxhighlighter table td, .syntaxhighlighter table tr, .syntaxhighlighter table tbody,.syntaxhighlighter .line.alt1, .syntaxhighlighter .line.alt2 {
-    background: #1B2426 !important;
-}
-.ui-dialog {
-    color: #000;
-    text-align: left;
 }

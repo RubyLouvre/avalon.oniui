@@ -1,9 +1,9 @@
-<div ms-each-panel="tabpanels">
+<div class="ui-tab-panel-container" ms-each-panel="tabpanels" ms-if="tabpanels.length">
      <div class="ui-tab-panel ui-widget-content" 
-          ms-visible="active == $index" 
+          ms-visible="_shallPanelAlwaysShow($index)" 
           ms-if-loop="_isAjax(panel)">{{panel.content |html }}</div>
      <div class="ui-tab-panel ui-widget-content"
-          ms-visible="active == $index " 
+          ms-visible="_shallPanelAlwaysShow($index)" 
           ms-include-src="panel.content" 
           ms-if-loop="!_isAjax(panel)" data-include-rendered="onAjaxCallback">
      </div>

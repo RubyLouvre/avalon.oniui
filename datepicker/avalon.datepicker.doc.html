@@ -10,7 +10,7 @@
     <div class="wrapper">
         <h1>datepicker使用文档</h1>
         <p>datepicker组件方便快速创建功能齐备的日历组件，通过不同的配置日历可以满足显示多个月份、通过prev、next切换月份、或者通过下拉选择框切换日历的年份、月份，当然也可以手动输入日期，日历组件也会根据输入域中的日期值高亮显示对应日期等等各种需求</p>
-        <table>
+        <table class="table_doc">
             <caption class="example">datepicker组件配置项说明：</caption>
             <thead>
                 <tr>
@@ -20,7 +20,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr class="odd">
                     <td>dayNames</td>
                     <td>默认['日', '一', '二', '三', '四', '五', '六']</td>
                     <td>日期名列表，从周日开始，可以配置为["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]</td>
@@ -30,7 +30,7 @@
                     <td>默认""， {{type: String}}</td>
                     <td>日历组件的名字</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>startDay</td>
                     <td>默认1， {{type: Number}}</td>
                     <td>设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推, 默认从周一开始</td>
@@ -40,7 +40,7 @@
                     <td>false</td>
                     <td>是否可以通过下拉框选择月份或者年份</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>showOtherMonths</td>
                     <td>默认false {{type: Boolean}}</td>
                     <td>是否显示非当前月的日期</td>
@@ -50,7 +50,7 @@
                     <td>1 {{type: Number}}</td>
                     <td>一次显示的日历月份数, 默认一次显示一个</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>maxDate</td>
                     <td>null</td>
                     <td>最大的可选日期，默认null，可以任选，可以配置为Date对象，也可以是yyyy-mm-dd格式的字符串，或者当分隔符是“/”时，可以是yyyy/mm/dd格式的字符串</td>
@@ -60,7 +60,7 @@
                     <td>null</td>
                     <td>最小的可选日期，默认null，可以任选，可以配置为Date对象，也可以是yyyy-mm-dd格式的字符串，或者当分隔符是“/”时，可以是yyyy/mm/dd格式的字符串</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>stepMonths</td>
                     <td>1 {{type: Number}}</td>
                     <td>当点击next、prev链接时应该跳过几个月份, 默认一个月份</td>
@@ -70,7 +70,7 @@
                     <td>false {{type: Boolean}}</td>
                     <td>设置日历的显示或者隐藏，false隐藏，true显示</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>seperator</td>
                     <td>"-" {{type: String}}</td>
                     <td>日期格式的分隔符,默认“-”，可以配置为"/"，而且默认日期格式必须是yyyy-mm-dd</td>
@@ -80,7 +80,7 @@
                     <td>"选择日期" {{type: String}}</td>
                     <td>日历组件的说明label</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>onChangeMonthYear</td>
                     <td>avalon.noop</td>
                     <td>当month或者year更新时调用的回调。参数为year、month、日历组件实例</td>
@@ -90,7 +90,7 @@
                     <td>默认avalon.noop  {{type: Function}}</td>
                     <td>选中日期后的回调</td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>onClose</td>
                     <td></td>
                     <td>日历关闭的回调，this指向日历组件自生成的vmodel，参数分别是当前year， month，及this指向的vmodel</td>
@@ -110,7 +110,7 @@ parseDate : function(str){
 </pre>
                     </td>
                 </tr>
-                <tr>
+                <tr class="odd">
                     <td>formatDate</td>
                     <td>function(date){...}</td>
                     <td>将日期对象转换为符合要求的日期字符串，默认实现如下：

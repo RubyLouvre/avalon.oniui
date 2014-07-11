@@ -128,6 +128,7 @@ define(["avalon.getModel",
             vm.$yearOpts = {
                 width: 60,
                 listWidth: 60,
+                height: 160,
                 position: false,
                 onSelect: function(e) {
                     e.stopPropagation();
@@ -135,7 +136,7 @@ define(["avalon.getModel",
             }
             vm.$monthOpts = {
                 width: 40,
-                height: 150,
+                height: 160,
                 listWidth: 40,
                 position: false,
                 onSelect: function(e) {

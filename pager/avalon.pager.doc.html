@@ -4,7 +4,7 @@
         <title>分页组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        
+
 
         <script src="../highlight/shCore.js">
 
@@ -13,8 +13,8 @@
     </head>
     <body>
 
-
-        <table width="90%" class="table-doc">
+    <center>
+        <table class="table-doc">
             <tr>
                 <th>名字</th><th>默认值</th> <th>说明</th>
             </tr>
@@ -23,7 +23,7 @@
                 <td>200</td> 
                 <td>总条目数</td>
             </tr>
-               <tr>
+            <tr>
                 <td>totalpages</td>
                 <td>0</td> 
                 <td>总页数</td>
@@ -34,7 +34,7 @@
                 <td>每页显示的条目数
                 </td>
             </tr>
-             <tr>
+            <tr>
                 <td>options</td>
                 <td>[]</td> 
                 <td>数字数组或字符串数组或对象数组,但都转换为对象数组,每个对象都应包含text,value两个属性<br>
@@ -115,8 +115,9 @@
                 </td>
             </tr>
         </table>
-        <p>pager 组件有一个重要的jumpPage方法，用于决定它的跳转方式。它有两个参数，第一个事件对象，第二个是跳转方式，见源码：</p>
-        <pre class="brush:js;gutter:false;toolbar:false;">
+    </center>
+    <p>pager 组件有一个重要的jumpPage方法，用于决定它的跳转方式。它有两个参数，第一个事件对象，第二个是跳转方式，见源码：</p>
+    <pre class="brush:js;gutter:false;toolbar:false;">
            vm.jumpPage = function(event, page) {
                 event.preventDefault()
                 if (page !== vm.currentPage) {
@@ -147,14 +148,14 @@
                     efficientChangePages(vm.pages, getPages(vm))
                 }
             }
-        </pre>
-        <ol>
-            <li><a href="avalon.pager.ex1.html">显示跳转台</a></li>
-            <li><a href="avalon.pager.ex2.html">指定回调onJump</a></li>
-            <li><a href="avalon.pager.ex3.html">改变每页显示的数量</a></li>
-            <li><a href="avalon.pager.ex4.html">指定上一页,下一页的文本</a></li>
-            <li><a href="avalon.pager.ex5.html">通过左右方向键或滚轮改变页码</a></li>
-            <li><a href="avalon.pager.ex6.html">总是显示上一页与下一页按钮</a></li>
-        </ol>
-    </body>
+    </pre>
+    <ol>
+        <li><a href="avalon.pager.ex1.html">显示跳转台</a></li>
+        <li><a href="avalon.pager.ex2.html">指定回调onJump</a></li>
+        <li><a href="avalon.pager.ex3.html">改变每页显示的数量</a></li>
+        <li><a href="avalon.pager.ex4.html">指定上一页,下一页的文本</a></li>
+        <li><a href="avalon.pager.ex5.html">通过左右方向键或滚轮改变页码</a></li>
+        <li><a href="avalon.pager.ex6.html">总是显示上一页与下一页按钮</a></li>
+    </ol>
+</body>
 </html>

@@ -6,9 +6,10 @@ body {
 h1 {
     text-align: center;
 }
-//doc table的样式
-.table-doc{  
-    margin: 0 auto;  
+/*doc table的样式*/
+table.table-doc{  
+    width:90%;
+    margin: 10px auto;
     border: 1px solid #cad9ea;  
     border-collapse: collapse;
     color: #666; 
@@ -33,6 +34,7 @@ h1 {
     line-height: 40px;
     font-size: 16px;
 }
+
 
 .pad30 {
     padding: 30px;   
@@ -79,6 +81,6 @@ p {
 .use-description {
     color: #8A2BE2;
 }
-.warn {
+.warn, .warning {
     color: #f00;
 }

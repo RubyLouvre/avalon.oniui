@@ -1,0 +1,8 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+.ui-checkboxlist { list-style: none; padding: 0; }
+.ui-checkboxlist .ui-checkboxlist-item.fl { padding-right: 10px; }
+.ui-checkboxlist .ui-checkboxlist-item input { vertical-align: middle; margin-right: "5px"; }
+.ui-checkboxlist .ui-checkboxlist-all.fl { padding-right: 20px; }

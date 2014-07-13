@@ -13,7 +13,27 @@
     <div class="wrapper">
         <h1>dialog demo 10</h1>
         <p class="example">通过加载avalon.draggable实现拖拽（<span class="statement">ms-widget="dialog dialogId"</span>）</p>
-        <p><span class="useDescription">说明：</span>配置ms-widget="dialog,dialogId"就可实现一个简单的弹窗组件，组件默认有确定和取消按钮，点击任意按钮都会关闭弹窗，当然弹窗右上角也会显示关闭按钮，点击关闭弹窗，dialog的子元素可以是模板，组件会自动渲染</p>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset>
+                <legend>通过加载avalon.draggable实现拖拽</legend>
+                    <button ms-click="show('aa')">打开对话框</button>
+                    <div ms-widget="dialog,aa" data-dialog-modal="false" ms-draggable>
+                        呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+                        <p>{{message}}</p>
+                    </div>
+            </fieldset>
+            <script>
+                require(["dialog/avalon.dialog", "./draggable/avalon.draggable"], function(avalon) {
+                    avalon.define("demo", function(vm) {
+                        vm.message = "笑傻了吧！！";
+                        vm.show = function( id ){
+                            avalon.vmodels[id].toggle = true;
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
         <div ms-skip>
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
@@ -26,9 +46,9 @@
                 &lt;body&gt;
                     &lt;div class="demo-show" ms-controller="demo"&gt;
                         &lt;fieldset&gt;
-                            &lt;legend&gt;基本的dialog组件&lt;/legend&gt;
+                            &lt;legend&gt;通过加载avalon.draggable实现拖拽&lt;/legend&gt;
                                 &lt;button ms-click="show('aa')"&gt;打开对话框&lt;/button&gt;
-                                &lt;div ms-widget="dialog,aa"&gt;
+                                &lt;div ms-widget="dialog,aa" data-dialog-modal="false" ms-draggable&gt;
                                     呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
                                     &lt;p&gt;{{message}}&lt;/p&gt;
                                 &lt;/div&gt;
@@ -48,27 +68,6 @@
                 &lt;/body&gt;
                 &lt;/html&gt;
             </pre>
-        </div>
-        <div class="demo-show" ms-controller="demo">
-            <fieldset>
-                <legend>通过加载avalon.draggable实现拖拽</legend>
-                    <button ms-click="show('aa')">打开对话框</button>
-                    <div ms-widget="dialog,aa">
-                        呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
-                        <p>{{message}}</p>
-                    </div>
-            </fieldset>
-            <script>
-                require(["dialog/avalon.dialog", "./draggable/avalon.draggable"], function(avalon) {
-                    avalon.define("demo", function(vm) {
-                        vm.message = "笑傻了吧！！";
-                        vm.show = function( id ){
-                            avalon.vmodels[id].toggle = true;
-                        }
-                    })
-                    avalon.scan();
-                })
-            </script>
         </div>
     </div>
 </body>

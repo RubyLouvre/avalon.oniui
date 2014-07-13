@@ -60,6 +60,9 @@
                         </div>
                 </fieldset>
                 <script> 
+                    avalon.ui.css = {
+                        dialog: "dialog"
+                    };
                     require("dialog/avalon.dialog", function(avalon) {
                         avalon.define("test", function(vm) {
                             vm.a = "test";

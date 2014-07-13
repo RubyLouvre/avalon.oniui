@@ -13,7 +13,7 @@
     <div class="wrapper">
         <h1>dialog demo 2</h1>
         <p class="example">通过事件接口配置用户的回调操作</p>
-        <p><span class="useDescription">说明：</span>所有dialog的配置项都定义在一个统一的配置对象中传给dialog widget，比如:ms-widget="dialog,aa,$aaOpts",注意必须定义成以"$"开头或者放在controller的$skipArray中，防止avalon对其进行扫描而影响性能。onOpen属性定义open dialog时的回调，onSubmit定义点击确定按钮之后的回调，onClose定义点击“close”时的回调，onCancel定义点击“取消”按钮时的回调。</p>
+        <p><span class="useDescription">说明：</span>所有dialog的配置项都定义在一个统一的配置对象中传给dialog widget，比如:ms-widget="dialog,aa,$aaOpts",注意必须定义成以"$"开头或者放在controller的$skipArray中，防止avalon对其进行扫描而影响性能。onOpen属性定义open dialog时的回调，onConfirm定义点击确定按钮之后的回调，onClose定义点击“close”时的回调，onCancel定义点击“取消”按钮时的回调。</p>
         <div ms-skip>
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
@@ -43,7 +43,7 @@
                                         onOpen: function() {
                                             alert("open dialog");
                                         },
-                                        onSubmit: function(){
+                                        onConfirm: function(){
                                             alert('success')
                                         },
                                         onClose: function(){
@@ -78,7 +78,7 @@
                             onOpen: function() {
                                 alert("open dialog");
                             },
-                            onSubmit: function(){
+                            onConfirm: function(){
                                 alert('success')
                             },
                             onClose: function(){

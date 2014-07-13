@@ -94,7 +94,7 @@
                                 vm.message = "笑傻了吧！！";
                                 vm.callback = "";
                                 vm.$aaOpts = {
-                                    onSubmit: function(){
+                                    onConfirm: function(){
                                         model.callback = "fired!";
                                         setTimeout(function() {
                                             expect(dialogDiv.style.display).to.be("none");
@@ -233,7 +233,7 @@
                                 vm.tpl = '我是tpl';
                                 vm.tpl2 = '我是tpl2';
                                 vm.$aaOpts = {
-                                    onSubmit: function(){
+                                    onConfirm: function(){
                                         alert('success')
                                     },
                                     onClose: function() {
@@ -248,7 +248,7 @@
                                  */
                                 vm.customDialogOptions = {
                                     title: 'customShow',
-                                    onSubmit: function() {alert("success !")},
+                                    onConfirm: function() {alert("success !")},
                                     type: 'alert'
                                 };
                                 vm.customShow = function(id) {

@@ -31,7 +31,7 @@
                     <td>配置弹窗的类型，可以配置为alert来模拟浏览器的alert</td>
                 </tr>
                 <tr class="odd">
-                    <td>onSubmit</td>
+                    <td>onConfirm</td>
                     <td>type: function</td>
                     <td>定义点击"确定"按钮后的回调操作</td>
                 </tr>
@@ -107,35 +107,9 @@
                     <td>配置为false不显示遮罩层，默认显示遮罩层</td>
                 </tr>
                 <tr>
-                    <td>avalon.dialog</td>
-                    <td>
-                        <p>type：function</p>
-                        <p>@param config: 此参数定义动态dialog的id、options配置项、dialog主体内容content、以及打开dialog的controller对应的vmodel的id</p>
-                    </td>
-                    <td>
-                        当需要动态生成dialog时，需要调用此方法，config的配置项举例如下：
-                        <pre>
-var model = avalon.define("demo", function(vm) {
-    vm.$customDialogOptions = {
-        title: 'customShow',
-        onSubmit: function() {alert("success !")},
-        type: 'alert'
-    };
-    vm.show = function(id) {
-        avalon.vmodels[id].toggle = true;
-    }
-    vm.
-})
-var config = {
-    id: "dialogId",
-    model: "demo",
-    // dialog配置项的值必须是model下的对应配置属性名
-    options: "$customDialogOptions",
-    content: '呵呵呵呵 {{tpl}} '
-}
-dialog = avalon.dialog(config);
-                        </pre>
-                    </td>
+                    <td>context</td>
+                    <td>"" {{type: String}}</td>
+                    <td>dialog元素的上下文父元素，context必须dialog要appendTo的父元素的id</td>
                 </tr>
                 <tr class="odd">
                     <td>zIndex</td>
@@ -153,7 +127,7 @@ dialog = avalon.dialog(config);
             <li><a target="_blank" href="avalon.dialog.ex5.html">模拟alert</a></li>
             <li><a target="_blank" href="avalon.dialog.ex6.html">模拟alert，showClose配置无效</a></li>
             <li><a target="_blank" href="avalon.dialog.ex7.html">自定义dialog的width</a></li>
-            <li><a target="_blank" href="avalon.dialog.ex8.html">动态创建dialog</a></li>
+            <li><a target="_blank" href="avalon.dialog.ex8.html">通过context配置项设置dialog元素的上下文父元素</a></li>
             <li><a target="_blank" href="avalon.dialog.ex9.html">修改dialog的title、content、或者重新渲染dialog</a></li>
             <li><a target="_blank" href="avalon.dialog.ex10.html">通过加载avalon.draggable实现拖拽</a></li>
             <li><a target="_blank" href="avalon.dialog.ex11.html">改变dialog的z-index</a></li>

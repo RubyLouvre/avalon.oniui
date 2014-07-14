@@ -1,5 +1,5 @@
 /**
-  * tooltip组件，
+  * @description tooltip组件，给一个元素或者给元素里满足配置条件的系列元素添加一个富UI及交互的气泡提示框
   *
   */
 define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "css!./avalon.tooltip.css","css!../chameleon/oniui-common.css"], function(avalon, template) {
@@ -18,7 +18,10 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
             , arrW = 10
             , p = options.position
             , constantInited
+            , _event
             , ofElement
+            , _event_ele
+            , _track_event
         //方便用户对原始模板进行修改,提高定制性
         options.template = options.getTemplate(template, options)
 
@@ -127,7 +130,7 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
             vm.arrClass = "left"
             var tooltipElems = {}
             vm.$skipArray = ["widgetElement", "template", "delegate"]
-
+            vm.toggle = ""
             var inited
             vm.$init = function() {
                 if(inited) return
@@ -140,7 +143,7 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
                 if(vmodel.event == "mouseenter" && vmodel.delegate) {
                     vmodel.event = "mouseover"
                 }
-                element.setAttribute("ms-" + vmodel.event, "_show($event)")
+                element.setAttribute("ms-" + vmodel.event, "__show($event)")
                 tooltipElem = tooltipELementMaker()
                 avalon.scan(tooltipElem, [vmodel].concat(vmodels))
                 avalon.scan(element, [vmodel].concat(vmodels))
@@ -330,11 +333,28 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
                     tooltipElem.style.display = "none"
                 }
             }
-
+            // 为了实现通过toggle属性控制显示隐藏
+            vm.__hide = function() {
+                if(vmodel.toggle) {
+                    vmodel.toggle = false
+                } else {
+                    vmodel.hide()
+                }
+            }
+            vm.__show = function(event, force) {
+                if(event) {
+                    _event_ele = this
+                    _event = event
+                }
+                if(vmodel._isShown() || vmodel.toggle) {
+                    vmodel._show(_event)
+                } else {
+                    vmodel.toggle = true
+                }
+            }
             vm._show = function(e) {
-                if(vmodel.disabled) return
-                var tar = this
-                    , src = e.srcElement || e.target
+                var tar =  _event_ele || vmodel.widgetElement
+                    , src = e && (e.srcElement || e.target) || ofElement || vmodel.widgetElement
                     , content
                 // delegate情形下，从src->this找到符合要求的元素
                 if(vmodel.delegate) {
@@ -347,7 +367,10 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
                 } else {
                     content = vmodel.contentGetter.call(vmodel, tar)
                 }
-                if(content == void 0) return
+                if(content == void 0) {
+                    _event = ofElement
+                    return
+                }
                 clearTimeout(hideTimer)
                 clearTimeout(animateTimer)
                 var inited = tar.getAttribute("ui-tooltip-inited")
@@ -359,23 +382,25 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
                     tooltipElem = tooltipELementMaker()
                     avalon.scan(tooltipElem, [vmodel].concat(vmodels))
                 }
+                avalon(tooltipElem).removeClass("ui-tooltip-hidden")
                 // 减少抖动
                 if(!vmodel.track) {
-                    avalon(tooltipElem).removeClass("ui-tooltip-hidden")
                     _init(vmodel.arrClass)
                 }
-                vmodel.show(tar)
+                vmodel.show(vmodel.track ? e || tar : tar)
+                var inited = tar.getAttribute("ui-tooltip-inited")
                 if(!inited) {
                     tar.setAttribute("ui-tooltip-inited", 1)
                     // 自动隐藏
                     vmodel.autohide && avalon(tar).bind(vmodel.event != "focus" ? "mouseleave" : "blur", function(e) {
-                        clearTimeout(hideTimer)
                         if(oldTitle) tar.title = oldTitle
-                        if(vmodel.autohide) hideTimer = setTimeout(vmodel.hide, vmodel.hiddenDelay)
+                        clearTimeout(hideTimer)
+                        if(vmodel.autohide) hideTimer = setTimeout(vmodel.__hide, vmodel.hiddenDelay)
                     })
                     // 鼠标跟随
                     if(vmodel.track && (vmodel.event == "mouseover" || vmodel.event == "mouseenter")) {
                         avalon(tar).bind("mousemove", function(e) {
+                            _track_event = e
                             vmodel.show(e)
                             // 减少抖动
                             avalon(tooltipElem).removeClass("ui-tooltip-hidden")
@@ -415,6 +440,14 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
             vmodel._isShown() && vmodel.show()
         })
 
+        vmodel.$watch("toggle", function(n) {
+            if(n) {
+                vmodel._show(vmodel.track && _track_event || _event)
+            } else {
+                vmodel.hide()
+            }
+        })
+
         return vmodel
     }
 
@@ -422,6 +455,7 @@ define(["avalon", "text!./avalon.tooltip.html", "position/avalon.position",  "cs
     //argName: defaultValue, \/\/@param description
     //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
+        toggle: false, //@param 组件是否显示，可以通过设置为false来隐藏组件
         "event": "mouseenter",  //@param 显示tooltip的事件，默认hover的时候显示tooltip，为false的时候就不绑定事件，如果后面设置了自动隐藏，则mouseenter对应的是mouseleave,focus对应的是blur，进行自动隐藏事件侦听，使用代理的时候，目测不支持focus,blur
         //"content": "",        /\/\@param tooltip显示内容，默认去获取element的title属性
         "width": "auto",        //@param tip宽度，默认是auto

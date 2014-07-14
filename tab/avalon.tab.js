@@ -1,5 +1,5 @@
 /**
-  * tab组件，实现扫描DOM结构或者接受数组传参，生成tab，支持click、mouseenter事件响应切换，支持mouseenter情形延迟响应切换，支持click情形tab选中情况下再次点击回调，支持自动切换效果，支持tab增删禁用启用并可混合设置同步tab可删除状态，支持混合配制panel内容类型并支持panel内容是ajax配置回调
+  * @description tab组件，实现扫描DOM结构或者接受数组传参，生成tab，支持click、mouseenter事件响应切换，支持mouseenter情形延迟响应切换，支持click情形tab选中情况下再次点击回调，支持自动切换效果，支持tab增删禁用启用并可混合设置同步tab可删除状态，支持混合配制panel内容类型并支持panel内容是ajax配置回调
   *
   */
 define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "text!./avalon.tab.close.html", "css!./avalon.tab.css", "css!../chameleon/oniui-common.css"], function(avalon, template, panelTpl, closeTpl) {
@@ -312,8 +312,9 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
     }
 
     widget.defaults = {
+        toggle: true, //@param 组件是否显示，可以通过设置为false来隐藏组件
         autoSwitch: false,      //@param 是否自动切换，默认否，如果需要设置自动切换，请传递整数，例如200，即200ms
-        active: 0,              //@param 默认选中的tab，默认第一个tab
+        active: 0,              //@param 默认选中的tab，默认第一个tab，可以通过动态设置该参数的值来切换tab，并可通过vmodel.tabs.length来判断active是否越界
         shallPanelAlwaysShow: false,//@param shallPanelAlwaysShow() panel不通过display:none,block来切换，而是一直显示，通过其他方式切换到视野，默认为false
         event: "mouseenter",    //@param  tab选中事件，默认mouseenter
         removable: false,      //@param  是否支持删除，默认否，另外可能存在某些tab可以删除，某些不可以删除的情况，如果某些tab不能删除则需要在li元素或者tabs数组里给对应的元素指定removable : false，例如 li data-removable="false" or {title: "xxx", removable: false}
@@ -323,7 +324,6 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         bottom: false,          //@param  tab显示在底部
         dir: "h",          //@param  tab排列方向，横向或纵向v - vertical，默认横向h - horizontal
         callInit: true,         //@param  是否调用即初始化
-        contentType: "content", //@param  静态内容，还是异步获取
         titleCutCount: 8,       //@param  tab title截取长度，默认是8
         distroyDom: true,       //@param  扫描dom获取数据，是否销毁dom
         cutEnd: "...",          //@param  tab title截取字符后，连接的字符，默认为省略号

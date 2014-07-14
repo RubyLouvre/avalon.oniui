@@ -10,7 +10,7 @@
     }
 </style>
 <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
-<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
 <script src="../highlight/shCore.js"></script>
 <script src="../avalon.js"></script>
 </head>
@@ -18,7 +18,7 @@
     <div class="wrapper">
         <h1>accordion demo 2</h1>
         <p class="example">组件面板的title和content可更新</p>
-        <p><span class="useDescription">说明：</span>组件默认是“caret”mode，也就是对应caret模板，下面demo设置mode为“nav”，相应的也就应用了nav模板；并且设置autoRun为false，需要在合适的时机手动调用refresh方法渲染组件；通过调用setData方法可以重新渲染组件；调用refresh方法并传入格式正确的data也可以达到相同的效果</p>
+        <p><span class="use-description">说明：</span>组件默认是“caret”mode，也就是对应caret模板，下面demo设置mode为“nav”，相应的也就应用了nav模板；并且设置autoRun为false，需要在合适的时机手动调用refresh方法渲染组件；通过调用setData方法可以重新渲染组件；调用refresh方法并传入格式正确的data也可以达到相同的效果</p>
         <div ms-skip>
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
@@ -29,7 +29,7 @@
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body&gt;
-                    &lt;div class="demoShow" ms-controller="demo"&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
                         &lt;div ms-widget="accordion,aa,$aaOpts"&gt;
                         &lt;/div&gt;
                         &lt;input type="button" ms-click="setData" value="setData"/&gt;
@@ -98,7 +98,7 @@
                 &lt;/html&gt;
             </pre>
         </div>
-        <div class="demoShow" ms-controller="demo">
+        <div class="demo-show" ms-controller="demo">
             <div ms-widget="accordion,aa,$aaOpts">
             </div>
             <input type="button" ms-click="setData" value="setData"/>

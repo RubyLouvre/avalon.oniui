@@ -1,5 +1,5 @@
 /**
-  * scrollspy组件，
+  * @description scrollspy组件，可通过监听元素原生的scroll事件或者结合scrollbar组件使用时，监听其scroll，根据scrollTop，scrollLeft计算判定配置指定的panel list应该切换到什么位置
   *
   */
 define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"], function(avalon, template) {
@@ -11,7 +11,7 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
     var defaults = {
         //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
-        onChange: avalon.noop,//@optMethod onChange(index, ele, widgetElement) 滚动到应该显示那个tab的index，以及这个tab的li元素，以及绑定scrollspy的元素
+        onChange: avalon.noop,//@optMethod onChange(index, ele, widgetElement, options) 滚动到应该显示那个tab的index，以及targetListGetter返回的list[index]值，以及绑定scrollspy的元素，options
         axis: "y",//@param 滚动条滚动的方向，默认是竖直方向y，取值为x的时候，表示水平方向
         targetListGetter: function(spytarget) {
             var spytarget = getById(spytarget),
@@ -86,7 +86,7 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
                 }
             }
             if(i > list.length) i = 0
-            options.onChange && options.onChange(i - 1, list[i - 1], element)
+            options.onChange && options.onChange(i - 1, list[i - 1], element, options)
         }
         var initTop = element.scrollTop,
             initLeft = element.scrollLeft,
@@ -112,7 +112,7 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
                 onScroll(void 0, n, scroller)
             })
         }
-        //@method scrollTo(id, index) 滚动到panel位置，滚动到 panelList[index] || dom.id = id的元素的地方
+        //@method scrollTo(id, index) 滚动到panel位置，滚动到 panelList[index] || dom.id = id的元素的地方，该方法绑定在onInit的返回的options参数上返回，供调用
         options.scrollTo = function(id, index) {
             var panelList =  options.panelListGetter(options.spytarget, options),
                 ele = options.panelGetter(id, index, panelList, options),

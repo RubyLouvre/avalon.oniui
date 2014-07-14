@@ -5,7 +5,7 @@
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
 <title>dialog demo 9</title>
 <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
-<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
 <script src="../highlight/shCore.js"></script>
 <script src="../avalon.js"></script>
 </head>
@@ -24,7 +24,7 @@
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body&gt;
-                    &lt;div class="demoShow" ms-controller="demo"&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
                         &lt;fieldset&gt;  
                             &lt;legend&gt;动态修改dialog的title、content或者重新渲染&lt;/legend&gt;
                                 &lt;button ms-click="show('aa')"&gt;打开对话框&lt;/button&gt;
@@ -43,7 +43,7 @@
                                     vm.tpl2 = '我是tpl2';
                                     vm.$aaOpts = {
                                         title: "标题",
-                                        onSubmit: function(){
+                                        onConfirm: function(){
                                             alert('success')
                                         },
                                         onCancel: function(){
@@ -97,7 +97,7 @@
                 &lt;/html&gt;
             </pre>
         </div>
-        <div class="demoShow" ms-controller="demo">
+        <div class="demo-show" ms-controller="demo">
             <fieldset>  
                 <legend>动态修改dialog的title、content或者重新渲染</legend>
                     <button ms-click="show('aa')">打开对话框</button>
@@ -116,7 +116,7 @@
                         vm.tpl2 = '我是tpl2';
                         vm.$aaOpts = {
                             title: "标题",
-                            onSubmit: function(){
+                            onConfirm: function(){
                                 alert('success')
                             },
                             onCancel: function(){

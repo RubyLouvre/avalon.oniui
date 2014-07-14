@@ -1,0 +1,26 @@
+sc<!DOCTYPE html>
+<html>
+    <head>
+        <title>scrollspy组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["store/avalon.store"], function(store) {
+                store.set("aaa", "bbb")
+                store.set("bbb", "ccc")
+                store.set("ccc", "ddd")
+                avalon.log(store.getAll())
+                store.remove("bbb", "ccc")
+                avalon.log(store.get("bbb"))
+                avalon.log(store.get("aaa"))
+                store.clear()
+                avalon.log(store.get("aaa"))
+            })
+        </script>
+    </head>
+    <body>
+        <div>avalon本地储存组件</div>
+    </body>
+</html>

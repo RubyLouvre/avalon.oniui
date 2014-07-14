@@ -1,5 +1,5 @@
 /**
-  * roleselect组件，
+  * @description roleselect组件，以左右列表形式展示实现的复选组件
   *
   */
 define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.data.html", "scrollbar/avalon.scrollbar", "css!./avalon.roleselect.css", "css!../chameleon/oniui-common.css"], function(avalon, template, dataTpl) {
@@ -169,12 +169,13 @@ define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.dat
     //argName: defaultValue, \/\/@param description
     //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
+        toggle: true, //@param 组件是否显示，可以通过设置为false来隐藏组件
+        hideSelect: false, //@param 是否隐藏以选中的项目，默认不隐藏
         //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
         getTemplate: function(tmpl, opts, tplName) {
             return tmpl
         },//@optMethod getTemplate(tpl, opts) 定制修改模板接口
-        hideSelect: false, //@param 是否隐藏以选中的项目，默认不隐藏
         countLimit: function(select) {
             return true
         },//@optMethod countLimit(select) 选择条目限制，必须有return true or false，参数是当前已选中条数和add or delete操作

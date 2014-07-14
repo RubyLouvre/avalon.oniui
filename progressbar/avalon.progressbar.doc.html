@@ -5,15 +5,23 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../highlight/shCore.js"></script>
-    </head>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <meta name="description" content="progressbar组件，可以通过接口控制或者随机模拟进度条效果，支持条形，圆形，倒计时等效果功能"/>
+</head>
     <body>
-
-
-        <table width="90%" border="1">
-            <tr>
-                <th>名字</th><th>默认值</th> <th>说明</th>
-            </tr>
-            <!--auto doc start-->
+        <div class="wrapper">
+            <h1>progressbar使用说明</h1>
+            <p class="doc-description">progressbar组件，可以通过接口控制或者随机模拟进度条效果，支持条形，圆形，倒计时等效果功能</p>
+            <table class="table-doc">
+                <caption class="example">progressbar组件配置项说明：</caption>
+                <thead>
+                    <tr>
+                        <th width="25%">名字</th><th width="25%">默认值</th><th width="50%">说明</th>
+                    </tr>
+                </thead>
+                <!--auto doc start-->
+<tr>
+    <td>toggle</td><td> true</td><td> 组件是否显示，可以通过设置为false来隐藏组件</td></tr>
 <tr>
     <td>value</td><td> false</td><td> 当前进度值 0 - 100 or false</td></tr>
 <tr>
@@ -65,20 +73,21 @@
 <tr>
     <td>progress</td><td>接口函数</td><td>progress(value) 设置value值，其实也可以直接设置vmodel.value</td></tr>
 <tr>
-    <td>_computeCss</td><td>接口函数</td><td>_computeCss 动态切换皮肤之后，如果需要更新提取圆形进度条的样式，可以调用这个方法</td></tr>
+    <td>_draw</td><td>接口函数</td><td>_draw 动态切换皮肤之后，如果需要更新提取圆形进度条的样式，可以调用这个方法</td></tr>
 <!--auto doc end-->
-        </table>
-        <p>progressbar 组件有一个重要的labelShower方法，用于配置格式化label显示,见源码：</p>
-        <pre class="brush:js;gutter:false;toolbar:false;">
-            labelShower: function(value, l1) {
-                if(l1 && this.right) return ''
-                if(value === false) return 'loading…'
-                if(value === 'failed' || this.ended && this.value != 100) return 'failed!'
-                if(value == 100) return 'complete!'
-                return value + '%'
-            }
-        </pre>
-        <!--ex list start-->
+            </table>
+            <p>progressbar 组件有一个重要的labelShower方法，用于配置格式化label显示,见源码：</p>
+            <pre class="brush:js;gutter:false;toolbar:false;" ms-skip>
+                labelShower: function(value, l1) {
+                    if(l1 && this.right) return ''
+                    if(value === false) return 'loading…'
+                    if(value === 'failed' || this.ended && this.value != 100) return 'failed!'
+                    if(value == 100) return 'complete!'
+                    return value + '%'
+                }
+            </pre>
+            <h3>例子：</h3>
+<!--ex list start-->
 <ol>
 <li><a href="avalon.progressbar.ex.html">外部设置进度值</a></li>
 <li><a href="avalon.progressbar.ex.1.html">模拟进度条，带label</a></li>
@@ -90,5 +99,6 @@
 <li><a href="avalon.progressbar.ex.7.html">圆形进度条，外部设置进度值，带label，倒计时</a></li>
 </ol>
 <!--ex list end-->
+        </div>
     </body>
 </html>

@@ -13,7 +13,7 @@
 .clrfix { overflow: hidden; *zoom: 1; *zoom: 1; }
 .clrfix:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
 
-.ui-dialog { position: absolute; }
+.ui-dialog { position: absolute; text-align: left; }
 .ui-dialog .ui-dialog-inner { box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1); background-color: #ffffff; border: 1px solid #cccccc; }
 .ui-dialog .ui-dialog-inner .ui-dialog-header { background-color: #f3f3f3; }
 .ui-dialog .ui-dialog-inner .ui-dialog-header .ui-dialog-close { display: inline; display: inline; float: right; padding: 1px 10px 1px 9px; margin-top: 5px; cursor: pointer; background-color: #f3f3f3; color: #666666; }
@@ -25,4 +25,4 @@
 .ui-dialog .ui-dialog-inner .ui-dialog-footer .ui-dialog-btns { display: inline; display: inline; float: right; font-size: 0; }
 .ui-dialog .ui-dialog-inner .ui-dialog-footer .ui-dialog-btns .ui-btn { margin-left: 10px; }
 
-.ui-dialog-layout { display: none; position: fixed; *position: absolute; left: 0; top: 0; bottom: 0; right: 0; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; zoom: 1; z-index: 1; background: #000; }
+.ui-dialog-layout { display: none; *position: absolute; left: 0; top: 0; bottom: 0; right: 0; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; zoom: 1; z-index: 1; background: #000; }

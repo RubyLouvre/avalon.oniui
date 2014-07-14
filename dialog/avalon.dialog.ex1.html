@@ -5,7 +5,7 @@
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
 <title>dialog demo 1</title>
 <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
-<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
 <script src="../highlight/shCore.js"></script>
 <script src="../avalon.js"></script>
 </head>
@@ -24,7 +24,7 @@
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body&gt;
-                    &lt;div class="demoShow" ms-controller="demo"&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
                         &lt;fieldset&gt;  
                             &lt;legend&gt;基本的dialog组件&lt;/legend&gt;
                                 &lt;button ms-click="show('aa')"&gt;打开对话框&lt;/button&gt;
@@ -50,7 +50,7 @@
             </pre>
         </div>
         <div ms-controller="test">
-            <div class="demoShow" ms-important="demo">
+            <div class="demo-show" ms-important="demo">
                 <fieldset>  
                     <legend>基本的dialog组件</legend>
                         <button ms-click="show('aa')">打开对话框</button>
@@ -60,6 +60,9 @@
                         </div>
                 </fieldset>
                 <script> 
+                    avalon.ui.css = {
+                        dialog: "dialog"
+                    };
                     require("dialog/avalon.dialog", function(avalon) {
                         avalon.define("test", function(vm) {
                             vm.a = "test";

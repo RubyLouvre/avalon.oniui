@@ -1,6 +1,5 @@
 /**
-  * scrollbar组件，
-  *
+  * @description scrollbar组件，自定义滚动条样式
   */
 define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", "css!./avalon.scrollbar.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 
@@ -654,6 +653,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
     //argName: defaultValue, \/\/@param description
     //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
+        toggle: true, //@param 组件是否显示，可以通过设置为false来隐藏组件
         position: "right", //@param scrollbar出现的位置,right右侧，bottom下侧，可能同时出现多个方向滚动条
         limitRateV: 1.5, //@param 竖直方向，拖动头最小高度和拖动头宽度比率
         limitRateH: 1.5, //@param 水平方向，拖动头最小宽度和高度的比率

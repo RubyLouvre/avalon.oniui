@@ -1,4 +1,10 @@
-<div class="ui-flipswitch ui-state-default ui-helper-reset ui-flipswitch-use-no-img" ms-class-100="ui-flipswitch-{{MS_OPTION_SIZE}} ui-flipswitch-{{MS_OPTION_THEME}}" ms-class-100="ui-flipswitch-off:_addThisClass()" ms-class-101="ui-state-disabled:disabled" ms-click="toggle" ms-hover="ui-state-hover">
+<div class="ui-flipswitch ui-state-default ui-helper-reset ui-flipswitch-use-no-img" 
+	 ms-class-100="ui-flipswitch-{{MS_OPTION_SIZE}} ui-flipswitch-{{MS_OPTION_THEME}}" 
+	 ms-class-100="ui-flipswitch-off:_addThisClass()" 
+	 ms-class-101="ui-state-disabled:disabled" 
+	 ms-click="toggleStatus" 
+	 ms-hover="ui-state-hover" 
+	 ms-visible="toggle">
 	<div class="ui-flipswitch-bar ui-helper-clearfix" ms-class="ui-flipswitch-animate:$css3support" ms-if="dir=='left'">
 		<span class="ui-flipswitch-left" ms-if="hdir">{{MS_OPTION_ON_TEXT|html}}</span>
 		<span class="ui-flipswitch-right" ms-if="!hdir">{{MS_OPTION_OFF_TEXT|html}}</span>

@@ -1,4 +1,7 @@
-<div ms-if="!circle" class="ui-progressbar ui-helper-reset ui-helper-clearfix ui-widget ui-widget-content ui-progressbar-normal" ms-class-100="ui-progressbar-indeterminate:indeterminate" ms-class-101="ui-progressbar-haslabel:label" ms-class-102="ui-progressbar-right:inTwo">
+<div ms-if="!circle" class="ui-progressbar ui-helper-reset ui-helper-clearfix ui-widget ui-widget-content ui-progressbar-normal" 	  ms-class-100="ui-progressbar-indeterminate:indeterminate" 
+	 ms-class-101="ui-progressbar-haslabel:label" 
+	 ms-class-102="ui-progressbar-right:inTwo" 
+	 ms-visible="toggle">
 	<div ms-class-100="ui-helper-hidden:inTwo" class="ui-progressbar-label" ms-if="label">{{_labelShower(value, 'l1') | html}}
 		<b ms-if="!inTwo" class="ui-progressbar-arrow"></b>
 	</div>

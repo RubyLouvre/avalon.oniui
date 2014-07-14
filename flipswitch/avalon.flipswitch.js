@@ -1,5 +1,5 @@
 /**
-  * flipswitch组件，
+  * @description flipswitch组件，将checkbox表单元素转化成富UI的开关
   *
   */
 define(["avalon", "text!./avalon.flipswitch.html", "draggable/avalon.draggable", "css!./avalon.flipswitch.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
@@ -172,8 +172,8 @@ define(["avalon", "text!./avalon.flipswitch.html", "draggable/avalon.draggable",
                 return "0"
             }
 
-            //@method toggle 交替改变选中状态
-            vm.toggle = function() {
+            //@method toggleStatus 交替改变选中状态
+            vm.toggleStatus = function() {
                 if(vmodel.disabled || vmodel.draggable) return
                 vmodel._toggle()
             }
@@ -322,6 +322,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "draggable/avalon.draggable",
     }
 
     widget.defaults = {
+        toggle: true, //@param 组件是否显示，可以通过设置为false来隐藏组件
         onText: "<b class=\"ui-flipswitch-on\"></b>",           //@param 选中状态提示文字
         offText: "&times;",         //@param 未选中状态提示文字
         size: "normal",         //@param 滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成ui-flipswitch-{{size}}添加给flipswitch模板容器
@@ -359,10 +360,10 @@ define(["avalon", "text!./avalon.flipswitch.html", "draggable/avalon.draggable",
         },
         //@optMethod onChange(newValue, vmodel) 选中状态发生变化时触发，参数为当前的选中状态及vmodel对象
         onChange: avalon.noop,
-        //@optMethod getTemplate(tmp, opts) 用于修改模板的接口，默认不做修改
+        //@optMethod getTemplate(tmpl, opts) 用于修改模板的接口，默认不做修改
         getTemplate: function(tmpl, opts) {
             return tmpl
-        },//@optMethod getTemplate(tpl, opts) 定制修改模板接口
+        },
         _author: "skipper@123"
     }
 })

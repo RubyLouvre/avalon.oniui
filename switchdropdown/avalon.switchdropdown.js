@@ -95,7 +95,7 @@ define(['avalon',
     widget.defaults = {
         width: 100,             //自定义宽度
         listWidth: 100,         //自定义下拉列表的宽度
-        height: 44,             //下拉列表的高度
+        height: 60,             //下拉列表的高度
         enable: true,           //组件是否可用
         readOnly: false,        //组件是否只读
         data: [],               //下拉列表显示的数据模型

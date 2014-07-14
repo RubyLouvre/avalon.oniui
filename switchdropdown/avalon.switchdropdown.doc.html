@@ -1,53 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>dropdown</title>
-    <meta charset="UTF-8">
+    <title>swtichdropdown文档说明</title>
+    <meta name="description" content="switchdropdown基于dropdown实现下拉式开关。" />
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
 </head>
-<body>
-<h3> 默认参数</h3>
-<table width="80%" border="1">
-    <tr>
-        <th>名字</th><th>默认值</th> <th>说明</th>
-    </tr>
-    <tr>
-        <td>width</td>
-        <td></td>
-        <td>自定义宽度</td>
-    </tr>
-    <tr>
-        <td>listWidth</td>
-        <td></td>
-        <td>自定义下拉列表的宽度</td>
-    </tr>
-    <tr>
-        <td>height(new)</td>
-        <td>44</td>
-        <td>下拉列表的高度</td>
-    </tr>
-    <tr>
-        <td>enable(new)</td>
-        <td>true</td>
-        <td>组件是否可用</td>
-    </tr>
-    <tr>
-        <td>readonly(new)</td>
-        <td>false</td>
-        <td>组件是否只读</td>
-    </tr>
-    <tr>
-        <td>data</td>
-        <td>[]</td>
-        <td>下拉列表显示的数据模型</td>
-    </tr>
-    <tr>
-        <td>value</td>
-        <td>model中第一个数据项的value</td>
-        <td>设置组件的初始值</td>
-    </tr>
-</table>
-
-
+<body class="doc">
+    <div class="wrapper">
+        <h1>默认参数</h1>
+        <p>switchdropdown基于dropdown实现下拉式开关。</p>
+        <table class="table-doc">
+            <tr>
+                <th>名字</th><th>默认值</th> <th>说明</th>
+            </tr>
+            <tr>
+                <td>width</td>
+                <td>100</td>
+                <td>自定义宽度</td>
+            </tr>
+            <tr>
+                <td>listWidth</td>
+                <td>100</td>
+                <td>自定义下拉列表的宽度</td>
+            </tr>
+            <tr>
+                <td>height(new)</td>
+                <td>60</td>
+                <td>下拉列表的高度</td>
+            </tr>
+            <tr>
+                <td>enable(new)</td>
+                <td>true</td>
+                <td>组件是否可用</td>
+            </tr>
+            <tr>
+                <td>readonly(new)</td>
+                <td>false</td>
+                <td>组件是否只读</td>
+            </tr>
+            <tr>
+                <td>data</td>
+                <td>[]</td>
+                <td>下拉列表显示的数据模型</td>
+            </tr>
+            <tr>
+                <td>value</td>
+                <td>model中第一个数据项的value</td>
+                <td>设置组件的初始值</td>
+            </tr>
+        </table>
+        <h3>demo示例：</h3>
+        <ol>
+            <li><a target="_blank" href="avalon.switchdropdown.ex1.html">用空select节点使用默认配置生成组件</a></li>
+            <li><a target="_blank" href="avalon.switchdropdown.ex2.html">用select配置组件</a></li>
+            <li><a target="_blank" href="avalon.switchdropdown.ex3.html">用options配置组件</a></li>
+            <li><a target="_blank" href="avalon.switchdropdown.ex4.html">用options配置组件并设置duplex</a></li>
+        </ol>
+    </div>
 </body>
 </html>

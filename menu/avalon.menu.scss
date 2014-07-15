@@ -1,0 +1,70 @@
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname : ".ui-menu";
+@if($oinui-theme == smoothness) {
+	$menu: (
+		bg: #fff,
+		borderColor:$ui-state-default-border-color,
+		disabledColor:$ui-state-disabled-color
+	) !global
+}
+ul#{$uiname},ol#{$uiname}{
+	border: 1px solid $ui-state-default-border-color;
+	background:map-get($menu, bg);
+	overflow: visible;
+	font-size:12px;
+	padding: 0;
+}
+#{$uiname} {
+	// current style
+	// means #{$uiname}-bar
+	width:156px;
+	position:relative;
+	z-index:5;
+	zoom: 1;
+	& &-item {
+		position: relative;
+		list-style: none;
+		padding: 3px;
+		cursor: pointer;
+		color:#000;
+		font-size:12px;
+		margin: 0;
+		width: 150px;
+	}
+	& li.ui-state-active{
+		background: $ui-state-active-background-color;
+	}
+	& li#{$uiname}-with-sub{
+		background: map-get($menu, bg);
+	}
+	& &-sub{
+		margin: 0;
+		padding:0;
+		position: absolute;
+		left: 100%;
+		width: 100%;
+		top:0;
+	}
+	&-vertical &-item-1 {
+		border-right: 1px solid $ui-state-default-border-color;
+		border-left: 1px solid $ui-state-default-border-color;
+		margin-left: -1px;
+	}
+	&-vertical &-depth-2 {
+		left: -1px;
+		top:100%;
+	}
+	& .ui-state-disabled, & .ui-state-disabled a,& .ui-state-disabled a:link, & .ui-state-disabled a:hover{
+		color: map-get($menu, disabledColor);
+		cursor: default;
+	}
+	&-vertical{
+		width: auto;
+		& #{$uiname}-item{
+			float: left;
+			width: 150px;
+			display: inline;
+		}
+	}
+}

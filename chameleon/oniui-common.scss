@@ -67,7 +67,12 @@ http://cssshrink.com/
     @include legacy-pie-clearfix();
 }
 
-
+// max z-index
+.ui-helper-max-index{
+    html &,body &{
+        z-index:1000; 
+    }
+}
 
 
 @font-face {

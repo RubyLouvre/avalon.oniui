@@ -8,7 +8,7 @@
 .ui-roleselect-menu {
   width: 180px;
   height: 190px;
-  border: 1px solid lightgray;
+  border: 1px solid #d4d4d4;
   background: white;
   float: left;
   display: inline; }
@@ -40,7 +40,7 @@
   height: 24px;
   line-height: 24px;
   background-color: #f8f8f8;
-  border: 1px solid lightgray;
+  border: 1px solid #d4d4d4;
   border-radius: 2px;
   color: black;
   text-align: center;

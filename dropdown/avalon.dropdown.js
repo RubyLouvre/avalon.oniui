@@ -53,7 +53,7 @@ define(['avalon',
         }
 
         //将元素的属性值copy到options中
-        "autofocus,multiple,size".replace(avalon.rword, function(name) {
+        "multiple,size".replace(avalon.rword, function(name) {
             if (hasAttribute(element, name)) {
                 options[name] = element[name]
             }
@@ -130,7 +130,7 @@ define(['avalon',
                 //如果原来的select没有子节点，那么为它添加option与optgroup
                 if (!hasBuiltinTemplate) {
                     element.appendChild(getFragmentFromData(dataModel));
-                    avalon.each(['autofocus', 'multiple', 'size'], function(i, attr) {
+                    avalon.each(['multiple', 'size'], function(i, attr) {
                         avalon(element).attr('ms-attr-' + attr, attr);
                     });
                 }
@@ -395,7 +395,7 @@ define(['avalon',
         });
 
         //对model的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
-        if (options.modleBind && vmodel.dataSource.$watch) {
+        if (options.modelBind && vmodel.dataSource.$watch) {
             vmodel.dataSource.$watch('length', function() {
                 vmodel.data = getDataFromOption(vmodel.dataSource.$model).data;
             });
@@ -421,7 +421,6 @@ define(['avalon',
         valueField: 'value', //模型数据项中对应value的字段
         value: [], //设置组件的初始值
         label: null, //设置组件的提示文案，可以是一个字符串，也可以是一个对象
-        autofocus: false, //是否自动获取焦点
         multiple: false, //是否为多选模式
         activeIndex: NaN,
         size: 1,

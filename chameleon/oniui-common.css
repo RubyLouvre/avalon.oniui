@@ -69,6 +69,9 @@ http://cssshrink.com/
     overflow: hidden;
     visibility: hidden; }
 
+html .ui-helper-max-index, body .ui-helper-max-index {
+  z-index: 1000; }
+
 @font-face {
   font-family: fontawesome;
   font-style: normal;

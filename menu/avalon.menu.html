@@ -1,0 +1,24 @@
+<li class="ui-state-default ui-menu-item" 
+    data-repeat-rendered="_rescan" 
+    ms-repeat-menu="data"   
+    ms-class-11="ui-state-active:!!_canActive(menu, $index)" 
+    ms-class-12="ui-state-disabled:menu.disabled" 
+    ms-class-13="ui-menu-last:$last" 
+    ms-class-14="ui-menu-removable:!!_canRemove(menu)" 
+    ms-class-15="ui-menu-item-{{_depth}}" 
+    ms-class-16="ui-menu-with-sub-{{_depth}}:_outPutData(menu)"  
+    ms-hover-100="ui-state-hover:!menu.disabled" 
+    ms-click-101="__clickActive($event, $index)" 
+    ms-data-sub="_outPutData(menu)" 
+    ms-data-depth="_depth" 
+    ms-data-index="$index" 
+    ms-{{MS_OPTION_EVENT}}-100="activate($event, $index)" 
+    > 
+    {{_menuTitle(menu.title, menu, _cutCounter(), cutEnd) | html}}
+	<ul ms-if="_outPutData(menu)" class="ui-menu ui-menu-sub ui-helper-clearfix ui-helper-reset ui-helper-hidden" 
+		 ms-data-widget-index="$index" 
+		 ms-class-101="ui-menu-depth-{{_depth+1}}" 
+		 ms-visible="_canActive(menu, $index)" 
+		 ms-data-widget="'menu'">
+	</ul>
+</li>

@@ -15,7 +15,7 @@ $uiname : ".ui-tab";
 		tabColor:#000,
 		tabHoverColor:#000,
 		tabActiveColor:#000,
-		tabDisabledColor:#aaa
+		tabDisabledColor:$ui-state-disabled-color
 	) !global;
 } @else {
 }

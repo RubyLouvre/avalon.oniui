@@ -1,3 +1,16 @@
+/*
+    avalon.ui.css = {};
+    (function(cssName) {
+        define(["avalon.getModel",
+            "text!./avalon.dialog.html",
+            "css!../chamelon/oniui-common.css",
+            "css!.avalon."+cssName+".css"], function() {
+
+            // 函数体... 
+
+        })
+    })(avalon.ui.css.dialog || "dialog")
+*/
 define(["avalon.getModel", 
     "text!./avalon.dialog.html",
     "css!../chameleon/oniui-common.css", 
@@ -41,16 +54,17 @@ define(["avalon.getModel",
             vm.submitBtnClick = false;
             vm.cancelBtnClick = false;
             vm.widgetElement = element;
+            vm.position = "fixed";
             // 如果显示模式为alert或者配置了showClose为false，不显示关闭按钮
             vm.showClose = vm.type === "alert" ? false : options.showClose;
             
             // 点击确定按钮，根据回调返回值是否为false决定是否关闭弹窗
-            vm._submit = function(e) {
-                if (typeof options.onSubmit !== "function") {
-                    throw new Error("onSubmit必须是一个回调方法");
+            vm._confirm = function(e) {
+                if (typeof options.onConfirm !== "function") {
+                    throw new Error("onConfirm必须是一个回调方法");
                 }
                 // 在用户回调返回false时，不关闭弹窗
-                if(options.onSubmit.call(e.target, e, vmodel) !== false){
+                if(options.onConfirm.call(e.target, e, vmodel) !== false){
                     vmodel.submitBtnClick = true;
                     vmodel._close(e)
                 }
@@ -69,9 +83,9 @@ define(["avalon.getModel",
                 element.style.zIndex =  2 * len + maxZIndex;
                 resetCenter(vmodel, element);
                 // IE6下遮罩层无法覆盖select解决办法
-                if (isIE6 && selectLength && iFrame === null) {
+                if (isIE6 && selectLength && iFrame === null && vmodel.modal) {
                     iFrame = createIframe();
-                } else if(isIE6 && selectLength) { 
+                } else if(isIE6 && selectLength && vmodel.modal) { 
                     iFrame.style.display = "block";
                     iFrame.style.width = maskLayer.style.width;
                     iFrame.style.height = maskLayer.style.height;
@@ -123,18 +137,6 @@ define(["avalon.getModel",
                     vmodel._close(e)
                 }
             }
-
-            // 打开dialog之后处理zIndex使dialog正常显示
-            vm.$watch("toggle", function(val) {
-                if (val) {
-                    vmodel._open();
-                }
-            })
-
-            // 可以手动设置最大zIndex
-            vm.$watch("zIndex", function(val) {
-                maxZIndex = val;
-            })
 
             /**
              * desc: 可以动态改变dialog的显示内容
@@ -188,13 +190,16 @@ define(["avalon.getModel",
             }
 
             vm.$init = function() {
+                var context = options.context,
+                    // context必须是dom tree中某个元素节点对象或者元素的id，默认将dialog添加到body元素
+                    elementParent = ((avalon.type(context) === "object" && context.nodeType === 1 && document.body.contains(context)) ? context : document.getElementById(context)) || document.body;
                 $element.addClass("ui-dialog");
                 element.setAttribute("ms-visible", "toggle");
                 vm._RenderView();
-                document.body.appendChild(element);
+                elementParent.appendChild(element);
                 // 当窗口尺寸发生变化时重新调整dialog的位置，始终使其水平垂直居中
                 element.resizeCallback = avalon(window).bind("resize", throttle(resetCenter, 50, 100, [vmodel, element]));
-                element.scrollCallback = avalon.bind(window, "scroll", throttle(resetCenter, 50, 100, [vmodel, element]));
+                element.scrollCallback = avalon.bind(window, "scroll", throttle(resetCenter, 50, 100, [vmodel, element, true]));
                 if(!maskLayer.attributes["ms-visible"]) {
                     // 设置遮罩层的显示隐藏
                     maskLayer.setAttribute("ms-visible", "toggle");
@@ -220,6 +225,18 @@ define(["avalon.getModel",
                     maskLayerExist = false;
                 }
             }
+
+            // 打开dialog之后处理zIndex使dialog正常显示
+            vm.$watch("toggle", function(val) {
+                if (val) {
+                    vmodel._open();
+                }
+            })
+
+            // 可以手动设置最大zIndex
+            vm.$watch("zIndex", function(val) {
+                maxZIndex = val;
+            })
         });
         return vmodel;
     }
@@ -228,7 +245,7 @@ define(["avalon.getModel",
         width: 480, //默认dialog的width
         title: "&nbsp;", //dialog的title
         type: "confirm", //dialog的显示类型confirm(有两个按钮) alert(有一个按钮)
-        onSubmit: avalon.noop, //点击"确定"按钮时的回调
+        onConfirm: avalon.noop, //点击"确定"按钮时的回调
         onOpen: avalon.noop, //显示dialog的回调 
         onCancel: avalon.noop, //点击“取消”按钮的回调
         onClose: avalon.noop, //点击右上角的“关闭”按钮的回调
@@ -238,12 +255,14 @@ define(["avalon.getModel",
         showClose: true, //是否显示右上角的“关闭”按钮
         toggle: false, //通过此属性的决定dialog的显示或者隐藏状态
         widgetElement: "", //保存对绑定元素的引用
+        context: "body", //dialog放置的元素
         getTemplate: function(str, options) {
             return str;
         },
         modal: true, //是否显示遮罩
         zIndex: maxZIndex //手动设置body直接子元素的最大z-index
     }
+
     // 获取重新渲染dialog的vmodel对象
     function findModel(m) {
         var model = m;
@@ -266,8 +285,9 @@ define(["avalon.getModel",
         }
         return [].concat(model);
     }
+
     // resize、scroll等频繁触发页面回流的操作要进行函数节流
-    var throttle = function(fn, delay, mustRunDelay, args){
+    function throttle(fn, delay, mustRunDelay, args){
         var timer = null;
         var t_start;
         return function(){
@@ -289,7 +309,7 @@ define(["avalon.getModel",
      };
 
     // 使dialog始终出现在视窗中间
-    function resetCenter(vmodel, target) {
+    function resetCenter(vmodel, target, scroll) {
         var bodyHeight = body.scrollHeight,
             scrollTop = document.body.scrollTop + document.documentElement.scrollTop,
             scrollLeft = body.scrollLeft,
@@ -297,16 +317,32 @@ define(["avalon.getModel",
             clientHeight = avalon(window).height(),
             targetOffsetHeight = target.offsetHeight,
             targetOffsetWidth = target.offsetWidth,
+            targetOffsetMarginHeight,
             t = 0,
-            l = 0;
+            l = 0, 
+            margin = 0;
         if (vmodel.toggle) {
             maskLayer.style.width = clientWidth + "px";
             maskLayer.style.height = bodyHeight + "px";
             target.style.overflow = "auto";
             if (clientHeight < targetOffsetHeight) {
-                target.style.height = clientHeight + "px";
-                t = scrollTop;
+                vmodel.position = "absolute";
+                if(!scroll) {
+                    margin = scrollTop;
+                    targetOffsetMarginHeight = targetOffsetHeight + margin;
+                    if (targetOffsetMarginHeight > bodyHeight) {
+                        document.body.style.height = targetOffsetMarginHeight+"px";
+                    }
+                    target.style.marginTop = (margin + 10)+ "px";
+                } else {
+                    if(scrollTop > margin) {
+                        t = margin - scrollTop;
+                    } else {
+                        t = 0;
+                    }
+                }
             } else {
+                vmodel.position = isIE6 ? "absolute" : "fixed";
                 t = (clientHeight - targetOffsetHeight) / 2 + scrollTop;
             }
             if(clientWidth < targetOffsetWidth) {
@@ -342,10 +378,8 @@ define(["avalon.getModel",
         document.body.appendChild(iframe);
         return iframe;
     }
-    // 生成唯一id
-    function generateID() {
-        return "avalon" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-    }
+
     return avalon;
 });
+
 //弹出层的各种特效 http://tympanus.net/Development/ModalWindowEffects/

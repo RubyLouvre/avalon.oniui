@@ -1,16 +1,3 @@
-/*
-    avalon.ui.css = {};
-    (function(cssName) {
-        define(["avalon.getModel",
-            "text!./avalon.dialog.html",
-            "css!../chamelon/oniui-common.css",
-            "css!.avalon."+cssName+".css"], function() {
-
-            // 函数体... 
-
-        })
-    })(avalon.ui.css.dialog || "dialog")
-*/
 define(["avalon.getModel", 
     "text!./avalon.dialog.html",
     "css!../chameleon/oniui-common.css", 

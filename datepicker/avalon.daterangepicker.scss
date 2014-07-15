@@ -1,10 +1,6 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
 $uiname: "ui-daterangepicker";
-.clrfix {
-    @include clearfix();
-    @include legacy-pie-clearfix();
-}
 .ui-btn {
     height: 26px;
     overflow: visible;

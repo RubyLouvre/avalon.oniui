@@ -37,7 +37,8 @@
             })
         </script>
     </head>
-    <body class="ui-helper-reset" ms-controller="test">
+    <body class="ui-helper-reset">
+<div ms-controller="test">
         <h1>input元素获取焦点显示tip，不展示箭头</h1>
         <div>
             <input type="text" ms-widget="tooltip,pp, $ppOpt" data-tooltip-delegate="true" data-tooltip-position="tr" value="focus me"/>
@@ -81,14 +82,17 @@
             })
         &lt;/script&gt;
     &lt;/head&gt;
-    &lt;body class=&quot;ui-helper-reset&quot; ms-controller=&quot;test&quot;&gt;
+    &lt;body class=&quot;ui-helper-reset&quot;&gt;
+&lt;div ms-controller=&quot;test&quot;&gt;
         &lt;h1&gt;input元素获取焦点显示tip，不展示箭头&lt;/h1&gt;
         &lt;div&gt;
             &lt;input type=&quot;text&quot; ms-widget=&quot;tooltip,pp, $ppOpt&quot; data-tooltip-delegate=&quot;true&quot; data-tooltip-position=&quot;tr&quot; value=&quot;focus me&quot;/&gt;
         &lt;/div&gt;
         
-    &lt;/body&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
 &lt;/html&gt;
 </pre>
-    </body>
+    </div>
+</body>
 </html>

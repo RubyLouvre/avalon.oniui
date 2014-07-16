@@ -7,6 +7,15 @@
         <link type="text/css" rel="stylesheet" href="./style/avalon.doc.css" />
         <link type="text/css" rel="stylesheet" href="./style/avalon.index.css" />
         <script src="avalon.js"></script>
+        <script>
+            avalon.ready(function() {
+                var src = "avalon.accordion.ex4.html"
+                src.match(/avalon\.([^.]+)/)
+                var widget = RegExp.$1
+                console.log(widget)
+
+            })
+        </script>
     </head>
     <body>
         <div class="header">
@@ -39,7 +48,7 @@
         <script>
             avalon.ready(function() {
                 var docCssReg = /<link[^>]*style\/avalon\.doc\.css[^>]*\>/img,
-                    widgets = ["accordion", "tab", "spinner", "slider", "textbox", "dropdown", "datepicker", "dialog", "at", "button", "checkboxlist", "cookie", "draggable", "flipswitch", "hotkeys", "json", "miniswitch", "notice", "pager", "position", "preview", "progressbar", "resizable", "roleselect", "scrollbar", "scrollspy", "simplegrid", "store", "switchdropdown", "tooltip"].sort();
+                        widgets = ["accordion", "tab", "spinner", "slider", "textbox", "dropdown", "datepicker", "dialog", "at", "button", "checkboxlist", "cookie", "draggable", "flipswitch", "hotkeys", "json", "miniswitch", "notice", "pager", "position", "preview", "progressbar", "resizable", "roleselect", "scrollbar", "scrollspy", "simplegrid", "store", "switchdropdown", "tooltip"].sort();
                 var vmodel = avalon.define("avalonUiDocument", function(vm) {
                     vm.widgets = widgets;
                     vm.widget = "accordion";
@@ -56,6 +65,14 @@
                     };
                     vm.uiListRendered = function() {
                         vmodel.uiListHeight = avalon(this).height();
+                        if (document.querySelectorAll) {
+                            Array.prototype.forEach.call(document.querySelectorAll(".wrapper example-links li a"), function(link) {
+                                var href = link.getAttribute("href")
+                                var match = href.match(/avalon\.([^.]+)/) || ["", ""]
+                                link.setAttribute("href", match[1] + "/" + href)
+                            })
+                        }
+
                     }
                 })
                 avalon.scan();

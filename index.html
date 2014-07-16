@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>目录</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="./style/avalon.doc.css" />
+        <link type="text/css" rel="stylesheet" href="./style/avalon.index.css" />
+        <script src="avalon.js"></script>
+
+    </head>
+    <body>
+        <div class="header">
+            <div class="nav">
+                <ul>
+                    <li class="active">组件库</li>
+                    <li>字体图标</li>
+                </ul>
+                <div class="search">
+                    <input type="text"/>
+                </div>
+            </div>
+            <h1><span>Avalon新一代UI库： OniUI</span></h1>
+        </div>
+        <div class="content ms-controller" ms-css-min-height="{{uiListHeight}}" ms-controller ="avalonUiDocument">
+            <ul class="ui-list">
+                <li ms-repeat="widgets" data-repeat-rendered="uiListRendered"><a href="#" ms-class="active: $index===currentIndex" ms-click="showDocument(el, $event, $index)">{{el}}</a></li> 
+            </ul>
+            <div class="ui-doc" ms-include-src="href"  data-include-loaded="afterTemplateLoaded" data-include-rendered="adjustLinks"></div>
+        </div>
+        <div class="footer">
+            <ul>
+                <li><a href="#">关于AvalonUI</a></li>
+                <li><a href="#">联系我们</a></li>
+                <li><a href="#">业务合作</a></li>
+                <li><a href="#">常见问题</a></li>
+                <li class="last"><a href="#">友情链接</a></li>
+            </ul>
+        </div>
+        <script>
+avalon.ready(function() {
+    var docCssReg = /<link[^>]*style\/avalon\.doc\.css[^>]*\>/img,
+            widgets = ["accordion", "tab", "spinner", "slider", "textbox", "dropdown", "datepicker", "dialog", "at", "button", "checkboxlist", "cookie", "draggable", "flipswitch", "hotkeys", "json", "miniswitch", "notice", "pager", "position", "preview", "progressbar", "resizable", "roleselect", "scrollbar", "scrollspy", "simplegrid", "store", "switchdropdown", "tooltip"].sort();
+    var vmodel = avalon.define("avalonUiDocument", function(vm) {
+        vm.widgets = widgets;
+        vm.href = "accordion/avalon.accordion.doc.html";
+        vm.currentIndex = 0;
+        vm.uiListHeight = 0;
+        vm.showDocument = function(widget, event, index) {
+            event.preventDefault();
+            vmodel.href = widget + "/avalon." + widget + ".doc.html"
+            vmodel.currentIndex = index;
+        };
+        vm.afterTemplateLoaded = function(template) {
+            template = template.replace(docCssReg, "");
+            return template;
+        };
+        vm.uiListRendered = function() {
+            vmodel.uiListHeight = avalon(this).height();
+        }
+        vm.adjustLinks = function() {
+            if (document.querySelectorAll) {
+                Array.prototype.forEach.call(document.querySelectorAll(".wrapper .example-links li a"), function(link) {
+                    var href = link.getAttribute("href")
+                    var match = href.match(/avalon\.([^.]+)/) || ["", ""]
+                    
+                    link.href = "javascript:void 0"
+                    link.onclick = function(){
+                        vmodel.href = match[1] + "/" + href
+                    }
+                })
+            }
+        }
+    })
+    avalon.scan();
+})
+        </script>
+    </body>
+</html>

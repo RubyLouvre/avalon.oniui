@@ -8,8 +8,8 @@
 
 .ui-btn .ui-icon { line-height: 15px; text-indent: 0; }
 
-.ui-spinner { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; vertical-align: middle; font-size: 0; }
-.ui-spinner .ui-textbox { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; outline: none; vertical-align: middle; margin: 0 -1px; border: 1px solid #cccccc; padding: 3px 5px; font-size: 0; background-color: #ffffff; }
+.ui-spinner { font-size: 0; }
+.ui-spinner .ui-textbox { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; outline: none; vertical-align: top; margin: 0 -1px; border: 1px solid #cccccc; padding: 3px 5px; font-size: 0; background-color: #ffffff; }
 .ui-spinner .ui-textbox:hover { border-color: #999999; }
 .ui-spinner .ui-textbox .ui-textbox-input-wrap { position: relative; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; vertical-align: middle; }
 .ui-spinner .ui-textbox .ui-textbox-input-wrap .ui-textbox-input { position: relative; display: inline; float: left; top: 1px\9; _top: 0; outline: none; height: 18px; line-height: 18px; vertical-align: middle; font-size: 12px; border: 0 none; padding: 0; color: #333333; background-color: #ffffff; }

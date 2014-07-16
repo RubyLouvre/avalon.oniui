@@ -25,16 +25,21 @@ ul {
 .header .nav ul {
     margin: 0 auto;
     font-size: 16px;
-    width: 18em;
+    width: 24em;
 }
 .header .nav ul li {
     float: left;
     margin-right: 65px;
+}
+.header .nav ul li a {
     font-size: 16px;
     font-weight: bold;
     color: #555555;
+    display: block;
+    height: 60px;
+    line-height: 60px;
 }
-.header .nav ul li.active {
+.header .nav ul li.active a {
     color: #389576;
 }
 .header .search {

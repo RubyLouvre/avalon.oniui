@@ -8,116 +8,128 @@
 </head>
 <body class="doc">
     <div class="wrapper">
-        <h1>dialog使用说明</h1>
-        <p>dialog组件提供弹窗显示或者隐藏,通过简单配置可以水平居中显示dialog弹窗，此组件支持弹窗中再弹窗，也可以用来模拟alert的行为，非常方便，下面介绍下如何进行组件配置，可以通过提供的demo更明确的了解它的使用情况</p>
-        <table class="table-doc">
-            <caption class="example">dialog组件配置项说明：</caption>
-            <thead>
-                <tr>
-                    <th>name</th>
-                    <th>value</th>
-                    <th>description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="odd">
-                    <td>title</td>
-                    <td>默认"&nbsp;"</td>
-                    <td>设置弹窗的标题</td>
-                </tr>
-                <tr>
-                    <td>type</td>
-                    <td>默认"confirm"<div style="width:300px;height:1px;line-height:1px;"></td></td>
-                    <td>配置弹窗的类型，可以配置为alert来模拟浏览器的alert</td>
-                </tr>
-                <tr class="odd">
-                    <td>onConfirm</td>
-                    <td>type: function</td>
-                    <td>定义点击"确定"按钮后的回调操作</td>
-                </tr>
-                <tr>
-                    <td>onOpen</td>
-                    <td>type: function</td>
-                    <td>定义显示dialog时的回调</td>
-                </tr>
-                <tr class="odd">
-                    <td>onCancel</td>
-                    <td>type: function</td>
-                    <td>定义点击"取消"按钮后的回调操作</td>
-                </tr>
-                <tr>
-                    <td>onClose</td>
-                    <td>type: function</td>
-                    <td>定义点击"关闭"按钮后的回调操作</td>
-                </tr>
-                <tr class="odd">
-                    <td>setContent</td>
-                    <td>
-                        <p>type: function</p>
-                        <p>@param1 content: dialog的主体内容，可以是已经渲染好的view，也可以是模板，type:string</p>  
-                        <p>@param2 noScan: 判断content是否需要avalon渲染、解析生成对应的view，设为true则需要avalon进行解析，设为false不进行解析，直接展示</p>
-                    </td>
-                    <td>动态改变dialog的主体内容</td>
-                </tr>
-                <tr>
-                    <td>setTitle</td>
-                    <td>
-                        <p>type: function</p>
-                        <p>@param title: dialog要显示的title，type:string</p>
-                    </td>
-                    <td>动态修改dialog的title</td>
-                </tr>
-                <tr class="odd">
-                    <td>setModel</td>
-                    <td>
-                        <p>type: function</p>
-                        <p>@param m: 重新渲染dialog的配置对象，包括title、content、content中涉及的插值表达式，需要注意的是，title和content不是真正渲染的内容，所以不需要avalon进行扫描监控，定义的时候必须在其前面加上"$",否则组件不会渲染成想要的效果</p>
-                        <p></p>
-                    </td>
-                    <td>重新渲染模板</td>
-                </tr>
-                <tr>
-                    <td>width</td>
-                    <td>默认480</td>
-                    <td>设置dialog的width</td>
-                </tr>
-                <tr class="odd">
-                    <td>showClose</td>
-                    <td>true</td>
-                    <td>配置dialog是否显示"取消"按钮，但是如果type为alert，不论showClose为true or false都不会显示"取消"按钮</td>
-                </tr>
-                <tr>
-                    <td>toggle</td>
-                    <td>false</td>
-                    <td>通过此属性决定dialog和遮罩的显示或者隐藏状态,默认隐藏</td>
-                </tr>
-                <tr class="odd">
-                    <td>widgetElement</td>
-                    <td>element</td>
-                    <td>保留对使用dialog ui元素的引用</td>
-                </tr>
-                <tr>
-                    <td>getTemplate</td>
-                    <td>function</td>
-                    <td>通过此方法配置用户自己的模板</td>
-                </tr>
-                <tr class="odd">
-                    <td>modal</td>
-                    <td>默认true</td>
-                    <td>配置为false不显示遮罩层，默认显示遮罩层</td>
-                </tr>
-                <tr>
-                    <td>context</td>
-                    <td>"" {{type: String}}</td>
-                    <td>dialog元素的上下文父元素，context必须dialog要appendTo的父元素的id</td>
-                </tr>
-                <tr class="odd">
-                    <td>zIndex</td>
-                    <td>默认是body直接子元素中的最大z-index值，如果都没有设置就默认的为10</td>
-                    <td>通过设置vmodel的zIndex来改变dialog的z-index</td>
-                </tr>
-            </tbody>
-        </table>
+        <h2>dialog</h2>
+        <fieldset>
+            <legend>dialog</legend>
+            <p>
+                dialog组件提供弹窗显示或者隐藏,通过简单配置可以水平居中显示dialog弹窗，此组件支持弹窗中再弹窗，也可以用来模拟alert的行为，非常方便，下面介绍下如何进行组件配置，可以通过提供的demo更明确的了解它的使用情况
+            </p>
+        </fieldset>
+        <fieldset>
+            <legend>使用说明</legend>
+            <table class="table-doc">
+                <caption class="example">dialog组件配置项说明：</caption>
+                <thead>
+                    <tr>
+                        <th>名字</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3" align="center">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>title</td>
+                        <td>"&nbsp;"</td>
+                        <td>设置弹窗的标题</td>
+                    </tr>
+                    <tr>
+                        <td>type</td>
+                        <td>"confirm"</td>
+                        <td>配置弹窗的类型，可以配置为alert来模拟浏览器的alert</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>默认480</td>
+                        <td>设置dialog的width</td>
+                    </tr>
+                    <tr>
+                        <td>showClose</td>
+                        <td>true</td>
+                        <td>配置dialog是否显示"取消"按钮，但是如果type为alert，不论showClose为true or false都不会显示"取消"按钮</td>
+                    </tr>
+                    <tr>
+                        <td>toggle</td>
+                        <td>false</td>
+                        <td>通过此属性决定dialog和遮罩的显示或者隐藏状态,默认隐藏</td>
+                    </tr>
+                    <tr>
+                        <td>widgetElement</td>
+                        <td>element</td>
+                        <td>保留对使用dialog ui元素的引用</td>
+                    </tr>
+                    <tr>
+                        <td>modal</td>
+                        <td>true</td>
+                        <td>配置为false不显示遮罩层，默认显示遮罩层</td>
+                    </tr>
+                    <tr>
+                        <td>zIndex</td>
+                        <td>默认是body直接子元素中的最大z-index值，如果都没有设置就默认的为10</td>
+                        <td>通过设置vmodel的zIndex来改变dialog的z-index</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" align="center">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>context</td>
+                        <td>""</td>
+                        <td>dialog元素的上下文父元素，context必须是dialog要appendTo的父元素的id或者元素dom对象</td>
+                    </tr>
+                    <tr>
+                        <td>onConfirm</td>
+                        <td>onConfirm(event, vmodel)</td>
+                        <td>定义点击"确定"按钮后的回调操作</td>
+                    </tr>
+                    <tr>
+                        <td>onOpen</td>
+                        <td>onOpen()</td>
+                        <td>定义显示dialog时的回调</td>
+                    </tr>
+                    <tr>
+                        <td>onCancel(event, vmodel)</td>
+                        <td>type: function</td>
+                        <td>定义点击"取消"按钮后的回调操作</td>
+                    </tr>
+                    <tr>
+                        <td>onClose</td>
+                        <td>onClose(event, vmodel)</td>
+                        <td>定义点击"关闭"按钮后的回调操作</td>
+                    </tr>
+                    <tr>
+                        <td>setContent</td>
+                        <td>
+                            setContent(content, noScan)
+                        </td>
+                        <td>
+                            <p>动态改变dialog的主体内容</p>
+                            <p>@param1 content: dialog的主体内容，可以是已经渲染好的view，也可以是模板，type:string</p>  
+                            <p>@param2 noScan: 判断content是否需要avalon渲染、解析生成对应的view，设为true则需要avalon进行解析，设为false不进行解析，直接展示</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>setTitle</td>
+                        <td>setTitle(title)</td>
+                        <td>动态修改dialog的title</td>
+                    </tr>
+                    <tr>
+                        <td>setModel</td>
+                        <td>setModel(m)</td>
+                        <td>
+                            <p>重新渲染模板</p>
+                            <p>@param m: 重新渲染dialog的配置对象，包括title、content、content中涉及的插值表达式，需要注意的是，title和content不是真正渲染的内容，所以不需要avalon进行扫描监控，定义的时候必须在其前面加上"$",否则组件不会渲染成想要的效果</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate</td>
+                        <td>getTemplate(str)</td>
+                        <td>通过此方法配置用户自己的模板,必须有返回值，返回值就是用户自定义的模板</td>
+                    </tr>
+                </tbody>
+            </table>
+        <fieldset>
         <ol>
             <li><a target="_blank" href="avalon.dialog.ex.html">dialog功能全览</a></li>
             <li><a target="_blank" href="avalon.dialog.ex1.html">默认配置的dialog组件</a></li>

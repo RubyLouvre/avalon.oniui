@@ -63,7 +63,11 @@ avalon.ready(function() {
                 Array.prototype.forEach.call(document.querySelectorAll(".wrapper .example-links li a"), function(link) {
                     var href = link.getAttribute("href")
                     var match = href.match(/avalon\.([^.]+)/) || ["", ""]
-                    link.href = match[1] + "/" + href
+                    
+                    link.href = "javascript:void 0"
+                    link.onclick = function(){
+                        vmodel.href = match[1] + "/" + href
+                    }
                 })
             }
         }

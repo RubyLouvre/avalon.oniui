@@ -26,7 +26,8 @@
             })
         </script>
     </head>
-    <body ms-controller="test" class="ui-helper-reset">
+    <body class="ui-helper-reset">
+<div ms-controller="test">
         <h1>menu</h1>
         <h2>竖排</h2>
         <ul ms-widget="menu">
@@ -128,7 +129,142 @@
         <br/>
         <br/>
         <br/>
-        <pre class="brush:html;gutter:false;toolbar:false">
-        </pre>
-    </body>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;menu组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;menu/avalon.menu&quot;], function() {
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.menu = {
+                        onActivate: function(e, vmodel) {
+                            avalon.log(&quot;avtive&quot;)
+                        },
+                        onInit: function(vmodel) {
+                            // avalon.log(vmodel)
+                        },
+                        onClickActive: function() {
+                            avalon.log(&quot;click avtive&quot;)
+                        }
+                    }
+                    vm.$skipArray = [&quot;menu&quot;]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body class=&quot;ui-helper-reset&quot;&gt;
+&lt;div ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;menu&lt;/h1&gt;
+        &lt;h2&gt;竖排&lt;/h2&gt;
+        &lt;ul ms-widget=&quot;menu&quot;&gt;
+            &lt;li&gt;动物&lt;/li&gt;
+            &lt;li&gt;植物&lt;/li&gt;
+            &lt;li data-disabled=&quot;true&quot;&gt;X物&lt;/li&gt;
+            &lt;li&gt;人类
+                &lt;ul&gt;
+                    &lt;li data-disabled=&quot;true&quot;&gt;火星人&lt;/li&gt;
+                    &lt;li&gt;地球人
+                        &lt;ul&gt;
+                            &lt;li&gt;&lt;a href=&quot;#iddd&quot;&gt;白人&lt;/a&gt;&lt;/li&gt;
+                            &lt;li&gt;黑人&lt;/li&gt;
+                            &lt;li data-disabled=&quot;true&quot;&gt;灰人&lt;/li&gt;
+                        &lt;/ul&gt;
+                    &lt;/li&gt;
+                    &lt;li&gt;木星人&lt;/li&gt;
+                    &lt;li&gt;金星人&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;br/&gt;
+        &lt;h2&gt;横排&lt;/h2&gt;
+        &lt;ul ms-widget=&quot;menu&quot; data-menu-dir=&quot;v&quot; data-menu-event=&quot;click&quot;&gt;
+            &lt;li&gt;动物&lt;/li&gt;
+            &lt;li&gt;植物&lt;/li&gt;
+            &lt;li data-disabled=&quot;true&quot;&gt;X物&lt;/li&gt;
+            &lt;li data-active=&quot;true&quot;&gt;人类
+                &lt;ul&gt;
+                    &lt;li data-disabled=&quot;true&quot;&gt;火星人&lt;/li&gt;
+                    &lt;li&gt;地球人
+                        &lt;ul&gt;
+                            &lt;li&gt;&lt;a href=&quot;#iddd&quot;&gt;白人&lt;/a&gt;&lt;/li&gt;
+                            &lt;li&gt;黑人
+                                &lt;ul&gt;
+                                    &lt;li&gt;&lt;a href=&quot;#iddd&quot;&gt;白2人&lt;/a&gt;&lt;/li&gt;
+                                    &lt;li&gt;黑2人
+                                        &lt;ul&gt;
+                                            &lt;li&gt;&lt;a href=&quot;#iddd&quot;&gt;白22人&lt;/a&gt;&lt;/li&gt;
+                                            &lt;li&gt;黑22人&lt;/li&gt;
+                                            &lt;li data-disabled=&quot;true&quot;&gt;灰22人&lt;/li&gt;
+                                        &lt;/ul&gt;
+                                    &lt;/li&gt;
+                                    &lt;li&gt;灰2人
+                                        &lt;ul&gt;
+                                            &lt;li&gt;&lt;a href=&quot;#iddd&quot;&gt;白3人&lt;/a&gt;&lt;/li&gt;
+                                            &lt;li&gt;黑3人&lt;/li&gt;
+                                            &lt;li data-disabled=&quot;true&quot;&gt;灰3人&lt;/li&gt;
+                                        &lt;/ul&gt;
+                                    &lt;/li&gt;
+                                &lt;/ul&gt;
+                            &lt;/li&gt;
+                            &lt;li data-disabled=&quot;true&quot;&gt;灰人&lt;/li&gt;
+                        &lt;/ul&gt;
+                    &lt;/li&gt;
+                    &lt;li&gt;木星人&lt;/li&gt;
+                    &lt;li&gt;金星人&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        &lt;ul ms-widget=&quot;menu&quot; data-menu-dir=&quot;v&quot; data-menu-event=&quot;click&quot;&gt;
+            &lt;li&gt;动物&lt;/li&gt;
+            &lt;li&gt;植物&lt;/li&gt;
+            &lt;li data-disabled=&quot;true&quot;&gt;X物&lt;/li&gt;
+            &lt;li data-active=&quot;true&quot;&gt;人类
+                &lt;ul&gt;
+                    &lt;li data-disabled=&quot;true&quot;&gt;火星人&lt;/li&gt;
+                    &lt;li&gt;地球人
+                        &lt;ul&gt;
+                            &lt;li&gt;&lt;a href=&quot;#iddd&quot;&gt;白人&lt;/a&gt;&lt;/li&gt;
+                            &lt;li&gt;黑人
+                                &lt;ul&gt;
+                                    &lt;li&gt;&lt;a href=&quot;#iddd&quot;&gt;白2人&lt;/a&gt;&lt;/li&gt;
+                                    &lt;li&gt;黑2人
+                                        &lt;ul&gt;
+                                            &lt;li&gt;&lt;a href=&quot;#iddd&quot;&gt;白22人&lt;/a&gt;&lt;/li&gt;
+                                            &lt;li&gt;黑22人&lt;/li&gt;
+                                            &lt;li data-disabled=&quot;true&quot;&gt;灰22人&lt;/li&gt;
+                                        &lt;/ul&gt;
+                                    &lt;/li&gt;
+                                    &lt;li data-disabled=&quot;true&quot;&gt;灰2人&lt;/li&gt;
+                                &lt;/ul&gt;
+                            &lt;/li&gt;
+                            &lt;li data-disabled=&quot;true&quot;&gt;灰人&lt;/li&gt;
+                        &lt;/ul&gt;
+                    &lt;/li&gt;
+                    &lt;li&gt;木星人&lt;/li&gt;
+                    &lt;li&gt;金星人&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </div>
+</body>
 </html>

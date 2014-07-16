@@ -23,7 +23,8 @@
             })
         </script>
     </head>
-    <body ms-controller="test">
+    <body>
+<div ms-controller="test">
         <h1>模拟进度条，带label，进度indeterminate，接口调用</h1>
         <div ms-widget="progressbar,$aa" data-progressbar-simulate="100" data-progressbar-label="true" data-progressbar-indeterminate="true">
             
@@ -55,7 +56,8 @@
             })
         &lt;/script&gt;
     &lt;/head&gt;
-    &lt;body ms-controller=&quot;test&quot;&gt;
+    &lt;body&gt;
+&lt;div ms-controller=&quot;test&quot;&gt;
         &lt;h1&gt;模拟进度条，带label，进度indeterminate，接口调用&lt;/h1&gt;
         &lt;div ms-widget=&quot;progressbar,$aa&quot; data-progressbar-simulate=&quot;100&quot; data-progressbar-label=&quot;true&quot; data-progressbar-indeterminate=&quot;true&quot;&gt;
             
@@ -63,8 +65,10 @@
         &lt;p&gt;------------------------------------------------------------------------&lt;/p&gt;
         &lt;input value=&quot;终止&quot; type=&quot;button&quot; onclick=&quot;avalon.vmodels.$aa.end()&quot;&gt;&amp;nbsp;&amp;nbsp;&lt;input value=&quot;开始/继续&quot; type=&quot;button&quot; onclick=&quot;avalon.vmodels.$aa.start()&quot;&gt;&amp;nbsp;&amp;nbsp;&lt;input value=&quot;成功&quot; type=&quot;button&quot; onclick=&quot;avalon.vmodels.$aa.end(100)&quot;&gt;&amp;nbsp;&amp;nbsp;&lt;input value=&quot;重置&quot; type=&quot;button&quot; onclick=&quot;avalon.vmodels.$aa.ui-helper-reset()&quot;&gt;
         
-    &lt;/body&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
 &lt;/html&gt;
 </pre>
-    </body>
+    </div>
+</body>
 </html>

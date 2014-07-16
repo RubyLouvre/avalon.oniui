@@ -138,11 +138,10 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
                     if(e && vmodel.event === "click") {
                         // 已选中
                         if(vmodel._oldActive === _index) {
-                            return vmodel._onClickActive.call(this, e, vmodel.active, vmodel.data, !!node)
+                            
                         // 未选中
                         } else {
-                            // 阻止冒泡，重置子menu
-                            // node && e && e.stopPropagation()
+                            // 切换menu，重置子menu状态
                             vmodel.resetSubMenus()
                         }
                     }

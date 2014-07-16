@@ -6,7 +6,7 @@
     ms-class-13="ui-menu-last:$last" 
     ms-class-14="ui-menu-removable:!!_canRemove(menu)" 
     ms-class-15="ui-menu-item-{{_depth}}" 
-    ms-class-16="ui-menu-with-sub-{{_depth}}:_hasSubMenu(menu)"  
+    ms-class-16="ui-menu-with-sub ui-menu-with-sub-{{_depth}}:_hasSubMenu(menu)"  
     ms-hover-100="ui-state-hover:!menu.disabled" 
     ms-click-101="__clickActive($event, $index)" 
     ms-data-sub="_hasSubMenu(menu)" 
@@ -15,10 +15,10 @@
     ms-{{MS_OPTION_EVENT}}-100="activate($event, $index)" 
     > 
     {{_menuTitle(menu.title, menu, _cutCounter(), cutEnd) | html}}
-	<ul ms-if="_hasSubMenu(menu)" class="ui-menu ui-menu-sub ui-helper-clearfix ui-helper-reset ui-helper-hidden" 
+	<ul ms-if="_hasSubMenu(menu)" class="ui-menu ui-menu-sub ui-helper-clearfix ui-helper-reset" 
 		 ms-data-widget-index="$index" 
 		 ms-class-101="ui-menu-depth-{{_depth+1}}" 
-		 ms-visible="_canActive(menu, $index)" 
+		 ms-class-102="ui-helper-hidden:!_canActive(menu, $index)" 
 		 ms-data-widget="'menu'">
 	</ul>
 </li>

@@ -32,10 +32,6 @@ $uiname: "ui-dialog";
     border-color: $ui-state-hover-border-color;
     color: $ui-state-hover-color;
 }
-.clrfix {
-   @include clearfix();
-   @include legacy-pie-clearfix();
-}
 .#{$uiname} {
     position: absolute;
     text-align: left;

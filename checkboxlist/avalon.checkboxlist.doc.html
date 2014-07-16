@@ -8,79 +8,82 @@
 </head>
 <body class="doc">
     <div class="wrapper">
-        <h1>checkboxlist使用说明</h1>
-        <p>通过checkboxlist可以方便的实现选框的全选、全不选，并可通过简单配置进行选中操作的回调处理，也可以通过多种方式来提供渲染选项视图所需要的数据，下面对checkboxlist的一些配置参数做以说明，帮助大家更好的使用此组件</p>
-        <table class="table-doc">
-            <caption class="example">checkboxlist组件配置项说明：</caption>
-            <thead>
-                <tr>
-                    <th>name</th>
-                    <th>value</th>
-                    <th>description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="odd">
-                    <td>data</td>
-                    <td>默认[]</td>
-                    <td>所有选项值的集合，通过此数据来渲染初始视图</td>
-                </tr>
-                <tr>
-                    <td>all</td>
-                    <td>false</td>
-                    <td>默认不选中所有选项</td>
-                </tr>
-                <tr class="odd">
-                    <td>_val</td>
-                    <td>[]</td>
-                    <td>默认双向绑定的变量</td>
-                </tr>
-                <tr>
-                    <td>duplex</td>
-                    <td>_val</td>
-                    <td>通过此配置实现双向绑定，从而判断是否全选</td>
-                </tr>
-                <tr class="odd">
-                    <td>checkStatus</td>
-                    <td>{}</td>
-                    <td>通过此对象判断选框的选中状态，从而选中或者不选中对应选框,checkStatus中key分别代表每个选项，选中的选项对应key的value非0，没选中的value为0或者false</td>
-                </tr>
-                <tr>
-                    <td>alltext</td>
-                    <td>默认"全部"</td>
-                    <td>显示"全部"按钮，方便进行全选或者全不选操作,不需要全选操作的话可以设置alltext为""</td>
-                </tr>
-                <tr class="odd">
-                    <td>type</td>
-                    <td>默认""</td>
-                    <td>内置type为week时的data，用户只需配置type为week即可显示周一到周日的选项 </td>
-                </tr>
-                <tr>
-                    <td>fetch</td>
-                    <td>默认为""如果需要用户手动获取数据，需要配置对应的方法来取到数据</td>
-                    <td>
-                        通过配置fetch来获得要显示的数据，数据格式必须如下所示：
-                        [
-                            { text : '文字1' , value : 'w1' } ,
-                            { text : '文字2' , value : 'w2' } ,
-                            { text : '文字3' , value : 'w3' } ,
-                            { text : '文字4' , value : 'w4' }
-                        ]
-                        而且方法接受一个callback参数，获取到数据之后将数据作为参数传给callback
-                    </td>
-                </tr>
-                <tr class="odd">
-                    <td>onSelect</td>
-                    <td>默认""</td>
-                    <td>如果在选中选框或者取消选中之后需要做一些操作，可以配置此选项，执行一些回调操作</td>
-                </tr>
-                <tr>
-                    <td>vertical</td>
-                    <td>默认true</td>
-                    <td>如果希望选框水平排列则设置vertical为false，默认垂直排列</td>
-                </tr>
-            </tbody>
-        </table>
+        <h2>checkboxlist</h2>
+        <fieldset>
+            <legend>checkboxlist</legend>
+            <p>
+                通过checkboxlist可以方便的实现选框的全选、全不选，并可通过简单配置进行选中操作的回调处理，也可以通过多种方式来提供渲染选项视图所需要的数据，下面对checkboxlist的一些配置参数做以说明，帮助大家更好的使用此组件
+            </p>
+        </fieldset>
+        <fieldset>
+            <legend>使用说明</legend>
+            <table class="table-doc">
+                <thead>
+                    <tr>
+                        <th>名字</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3" align="center">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>all</td>
+                        <td>false</td>
+                        <td>默认不选中所有选项</td>
+                    </tr>
+                    <tr>
+                        <td>alltext</td>
+                        <td>"全部"</td>
+                        <td>显示"全部"按钮，方便进行全选或者全不选操作,不需要全选操作的话可以设置alltext为""</td>
+                    </tr>
+                    <tr>
+                        <td>type</td>
+                        <td>""</td>
+                        <td>内置type为week时的data，用户只需配置type为week即可显示周一到周日的选项 </td>
+                    </tr>
+                    <tr>
+                        <td>vertical</td>
+                        <td>true</td>
+                        <td>如果希望选框水平排列则设置vertical为false，默认垂直排列</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" align="center">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>data</td>
+                        <td>[]</td>
+                        <td>所有选项值的集合，通过此数据来渲染初始视图</td>
+                    </tr>
+                    <tr>
+                        <td>checkStatus</td>
+                        <td>{}</td>
+                        <td>通过此对象判断选框的选中状态，从而选中或者不选中对应选框,checkStatus中key分别代表每个选项，选中的选项对应key的value非0，没选中的value为0或者false</td>
+                    </tr>
+                    <tr>
+                        <td>fetch</td>
+                        <td>""</td>
+                        <td>
+                            通过配置fetch来获得要显示的数据，数据格式必须如下所示：
+                            [
+                                { text : '文字1' , value : 'w1' } ,
+                                { text : '文字2' , value : 'w2' } ,
+                                { text : '文字3' , value : 'w3' } ,
+                                { text : '文字4' , value : 'w4' }
+                            ]
+                            而且方法接受一个callback参数，获取到数据之后将数据作为参数传给callback
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onSelect</td>
+                        <td>""</td>
+                        <td>如果在选中选框或者取消选中之后需要做一些操作，可以配置此选项，执行一些回调操作</td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
         <p>demo示例</p>
         <ol>
             <li><a target="_blank" href="avalon.checkboxlist.ex.html">checkboxlist功能全览</a></li>

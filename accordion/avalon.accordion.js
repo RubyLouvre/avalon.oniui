@@ -30,8 +30,8 @@ define(["avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/oni
         options.data = !options.data.length ? _data.$model || _data: options.data;
         var vmodel = avalon.define(data.accordionId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "rendered","autoRun","template","container","controlCls","currentTrigge","initIndex","multiple","trigger","triggerType","data"];
-            vm.widgetElement = vm.container = element;
+            vm.$skipArray = ["widgetElement", "rendered","autoRun","template","controlCls","currentTrigge","initIndex","multiple","trigger","triggerType","data"];
+            vm.widgetElement = element;
             vm.$headers = []; // 保存所有面板的header
             vm.$panels = []; // 保存所有的面板content
             vm.$triggers = [];
@@ -232,7 +232,6 @@ define(["avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/oni
     widget.defaults = {
         autoRun: true, // 设为true自动渲染accordion组件，设为false不渲染，只在合适的时候手动调用refresh进行渲染
         template: "", // 用户自定义template
-        container: "", // accordion容器，最好使用widgetElement
         controlCls: "", // 为accordion容器自定义的class
         currentTriggerCls: "ui-state-active ui-corner-top", // 展开accordion面板时，header添加的class
         data: [], // 渲染accordion的header和panel信息

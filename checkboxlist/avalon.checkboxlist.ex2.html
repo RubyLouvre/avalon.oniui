@@ -65,7 +65,7 @@
                 </ul>
                 {{ val }}
                 <p>设置vertical为false，使得选框水平排列</p>
-                <ul ms-widget="checkboxlist" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部" data-checkboxlist-vertical="false">
+                <ul ms-widget="checkboxlist" data-checkboxlist-duplex="selectionList" data-checkboxlist-alltext="全部" data-checkboxlist-vertical="false">
                     <li><input type="checkbox" value="1">选项一</li>
                     <li><input type="checkbox" value="2">选项二</li>
                     <li><input type="checkbox" value="3">选项三</li>
@@ -79,6 +79,7 @@
             require("./checkboxlist/avalon.checkboxlist", function(avalon) {
                 var sss = avalon.define('demo2',function(vm){
                     vm.val = ["1", "2"];
+                    vm.selectionList = ["3", "5"];
                 });
                 setTimeout(function (){
                     sss.val = ["1","2","3","4","5","6"];

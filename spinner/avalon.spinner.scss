@@ -27,13 +27,11 @@ $uiname: "ui-spinner";
     text-indent: 0;
 }
 .ui-spinner {
-    @include inline-block();
-    vertical-align: middle;
     font-size: 0;
     .ui-textbox {
         @include inline-block();
         outline: none;
-        vertical-align: middle;
+        vertical-align: top;
         margin: 0 -1px;
         border: 1px solid #cccccc;
         padding: 3px 5px;

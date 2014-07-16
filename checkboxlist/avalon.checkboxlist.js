@@ -169,8 +169,6 @@ define(["avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chameleon/
     widget.defaults = {
         data: [], // 所有选项值的集合，通过此数据来渲染初始视图
         all: false, // 默认不选中所有选项
-        _val: [], // 默认双向绑定的变量
-        duplex: "_val", // 通过此配置实现双向绑定，从而判断是否全选
         checkStatus: {}, // 通过此对象判断选框的选中状态，从而选中或者不选中对应选框
         allText: "全部", // 显示"全部"按钮，方便进行全选或者全不选操作
         type: "" , // 内置type为week时的data，用户只需配置type为week即可显示周一到周日的选项 

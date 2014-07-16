@@ -3,12 +3,28 @@ body {
     margin: 0;
     padding: 0 0 100px;
 }
-h1 {
+h2 {
     text-align: center;
 }
+.wrapper {
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: 960px;
+    text-align: left;
+}
+.wrapper fieldset{
+    margin-top: 1em;
+}
+
+.wrapper fieldset legend {
+    padding: 0 12px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #28966f;
+    
+}
 /*doc table的样式*/
-table.table-doc{  
-    width:90%;
+table.table-doc {  
     margin: 10px auto;
     border: 1px solid #cad9ea;  
     border-collapse: collapse;
@@ -20,6 +36,9 @@ table.table-doc{
     background-repeat: repeat-x;
     height: 30px;  
 }  
+.table-doc th:nth-child(2) {
+    white-space: nowrap;
+}
 .table-doc td,.table-doc th{  
     border: 1px solid #cad9ea;  
     padding: 0 1em 0;  
@@ -48,7 +67,6 @@ a {
 a:hover {
     color: blue;
 }
-
 p {
     line-height: 30px;
     font-size: 16px;
@@ -58,12 +76,7 @@ p {
     font-weight: bold;
     font-size: 20px;
 }
-.wrapper {
-    margin: 0 auto;
-    padding: 0 20px;
-    width: 760px;
-    text-align: left;
-}
+
 .statement {
     color: green;
     padding: 0 10px;

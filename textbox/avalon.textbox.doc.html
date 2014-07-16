@@ -9,60 +9,65 @@
 </head>
 <body class="doc">
     <div class="wrapper">
-        <h1>textbox使用说明</h1>
-        <p>通过给简单的表单输入域设置不同的配置项可以使表单拥有舒服的视觉效果，也可以使其具有提示补全功能，接下来列出textbox组件可以使用的配置项，然后分别举例说明</p>
-        <table class="table-doc">
-            <caption class="example">textbox组件配置项说明：</caption>
-            <thead>
-                <tr>
-                    <th>name</th>
-                    <th>value</th>
-                    <th>description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="odd">
-                    <td>ms-widget</td>
-                    <td>textbox</td>
-                    <td>给输入域配置textbox ui</td>
-                </tr>
-                <tr>
-                    <td>data-textbox-placeholder</td>
-                    <td>456(or other 用户自定义的占位符配)</td>
-                    <td>置textbox输入框的初始占位符，存在则显示，不存在则隐藏，当focus时隐藏</td>
-                </tr>
-                <tr class="odd">
-                    <td>data-text-suggest</td>
-                    <td>"test" || "phone" || other </td>
-                    <td>配置输入框有自动提示补全功能，且提示类型为suggest的属性值，由用户自定义，默认配置为false，也就是不开启自动补全功能</td>
-                </tr>
-                <tr>
-                    <td>data-textbox-suggest-changed</td>
-                    <td>"changeCallback" or other 用户的定义</td>
-                    <td>配置提示补全时切换提示项之后的callback</td>
-                </tr>
-                <tr class="odd">
-                    <td>data-textbox-suggest-focus</td>
-                    <td>true</td>
-                    <td>特殊的suggest，当focus时即显示特定的提示列表</td>
-                </tr>
-                <tr>
-                    <td>tabIndex</td>
-                    <td>默认：-1</td>
-                    <td>配置textbox在进行tab切换时的tabIndex，切换顺序从值小的开始，必须配置为大于0的值</td>
-                </tr>
-                <tr class="odd">
-                    <td>width</td>
-                    <td>默认：200</td>
-                    <td>配置textbox的显示宽</td>
-                </tr>
-                <tr>
-                    <td>disabledClass</td>
-                    <td>默认："ui-textbox-disabled" {type: string}</td>
-                    <td>配置输入域disabled时组件包装元素设置的类，多个类以空格分隔</td>
-                </tr>
-            </tbody>
-        </table>
+        <h2>textbox</h2>
+        <fieldset>
+            <legend>textbox</legend>
+            <p>
+                通过给简单的表单输入域设置不同的配置项可以使表单拥有舒服的视觉效果，也可以使其具有提示补全功能，接下来列出textbox组件可以使用的配置项，然后分别举例说明
+            </p>
+        </fieldset>
+        <fieldset>
+            <legend>使用说明</legend>
+            <table class="table-doc">
+                <thead>
+                    <tr>
+                        <th>名字</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3" align="center">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>data-textbox-placeholder</td>
+                        <td>456</td>
+                        <td>置textbox输入框的初始占位符，存在则显示，不存在则隐藏，当focus时隐藏</td>
+                    </tr>
+                    <tr>
+                        <td>data-text-suggest</td>
+                        <td>"test" || "phone" || other </td>
+                        <td>配置输入框有自动提示补全功能，且提示类型为suggest的属性值，由用户自定义，默认配置为false，也就是不开启自动补全功能</td>
+                    </tr>
+                    <tr>
+                        <td>data-textbox-suggest-changed</td>
+                        <td>"changeCallback" or other 用户的定义</td>
+                        <td>配置提示补全时切换提示项之后的callback</td>
+                    </tr>
+                    <tr>
+                        <td>data-textbox-suggest-focus</td>
+                        <td>true</td>
+                        <td>特殊的suggest，当focus时即显示特定的提示列表</td>
+                    </tr>
+                    <tr>
+                        <td>tabIndex</td>
+                        <td>-1</td>
+                        <td>配置textbox在进行tab切换时的tabIndex，切换顺序从值小的开始，必须配置为大于0的值</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>200</td>
+                        <td>配置textbox的显示宽</td>
+                    </tr>
+                    <tr>
+                        <td>disabledClass</td>
+                        <td>"ui-textbox-disabled"</td>
+                        <td>配置输入域disabled时组件包装元素设置的类，多个类以空格分隔</td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
         <h3>demo示例：</h3>
         <ol>
             <li><a target="_blank" href="avalon.textbox.ex1.html">基本textbox、配置了width、tabIndex的textbox以及配置了disabledClass的textbox</a></li>

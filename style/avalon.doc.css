@@ -15,7 +15,10 @@ h2 {
 .wrapper fieldset{
     margin-top: 1em;
 }
-
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
 .wrapper fieldset legend {
     padding: 0 12px;
     font-size: 18px;

@@ -3,95 +3,107 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
+<meta name="description" content="notice组件用来向用户显示一些提示信息" />
 <title>notice文档说明</title>
 <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
 </head>
 <body class="doc">
     <div class="wrapper">
-        <h1>notice使用文档</h1>
-        <p>notice组件用来向用户显示一些提示信息</p>
-        <table class="table-doc">
-            <caption class="example">notice组件配置项说明：</caption>
-            <thead>
-                <tr>
-                    <th>name</th>
-                    <th>value</th>
-                    <th>description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="odd">
-                    <td>container</td>
-                    <td>默认为绑定组件的元素</td>
-                    <td>显示notice的容器，可以配置为自己想要包裹notice的元素对象或者元素id，id的话必须是"#ID"的格式</td>
-                </tr>
-                <tr>
-                    <td>type</td>
-                    <td>默认"info"</td>
-                    <td>notice类型,可以选择为"success"、"error"或者默认的"info"</td>
-                </tr>
-                <tr class="odd">
-                    <td>content</td>
-                    <td>默认为"notice content"</td>
-                    <td>要显示的内容,可以是DOM对象|String|DOM String</td>
-                </tr>
-                <tr>
-                    <td>header</td>
-                    <td>默认为"notice header"</td>
-                    <td>notice的标题</td>
-                </tr>
-                <tr class="odd">
-                    <td>timer</td>
-                    <td>默认为0</td>
-                    <td>notice显示之后自动隐藏的定时器，0表示不自动隐藏</td>
-                </tr>
-                <tr>
-                    <td>hasCloseBtn</td>
-                    <td>默认true</td>
-                    <td>是否显示关闭按钮，设为false不显示</td>
-                </tr>
-                <tr class="odd">
-                    <td>toggle</td>
-                    <td>默认false</td>
-                    <td>显示或隐藏notice， true显示，false隐藏</td>
-                </tr>
-                <tr>
-                    <td>isPlace</td>
-                    <td>true</td>
-                    <td>是否占位，false不占位，true占位，占位时notice显示在自定义的container中，不占位时append到body元素下</td>
-                </tr>
-                <tr class="odd">
-                    <td>isAffix</td>
-                    <td>false</td>
-                    <td>是否吸顶，非占位元素不吸顶，占位元素当滚动距离大于元素距页面顶部距离时吸顶，否则保持原位置</td>
-                </tr>
-                <tr>
-                    <td>successClass</td>
-                    <td>默认"ui-notice-info"</td>
-                    <td>type为success时的提示类名</td>
-                </tr>
-                <tr class="odd">
-                    <td>errorClass</td>
-                    <td>默认"ui-notice-danger"</td>
-                    <td>type为success时的提示类名</td>
-                </tr>
-                <tr>
-                    <td>infoClass</td>
-                    <td>默认""</td>
-                    <td>type为info时的提示类名</td>
-                </tr>
-                <tr class="odd">
-                    <td>onHide</td>
-                    <td>avalon.noop</td>
-                    <td>关闭回调</td>
-                </tr>
-                <tr>
-                    <td>onShow</td>
-                    <td></td>
-                    <td>显示回调</td>
-                </tr>
-            </tbody>
-        </table>
+        <h2>notice</h2>
+        <fieldset>
+            <legend>notice</legend>
+            <p>notice组件用来向用户显示一些提示信息</p>
+        </fieldset>
+        <fieldset>
+            <legend>使用说明</legend>
+            <table class="table-doc">
+                <thead>
+                    <tr>
+                        <th>名字</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3" align="center">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>type</td>
+                        <td>"info"</td>
+                        <td>notice类型,可以选择为"success"、"error"或者默认的"info"</td>
+                    </tr>
+                    <tr>
+                        <td>header</td>
+                        <td>"notice header"</td>
+                        <td>notice的标题</td>
+                    </tr>
+                    <tr>
+                        <td>timer</td>
+                        <td>默认为0</td>
+                        <td>notice显示之后自动隐藏的定时器，0表示不自动隐藏</td>
+                    </tr>
+                    <tr>
+                        <td>hasCloseBtn</td>
+                        <td>默认true</td>
+                        <td>是否显示关闭按钮，设为false不显示</td>
+                    </tr>
+                    <tr>
+                        <td>toggle</td>
+                        <td>默认false</td>
+                        <td>显示或隐藏notice， true显示，false隐藏</td>
+                    </tr>
+                    <tr>
+                        <td>isPlace</td>
+                        <td>true</td>
+                        <td>是否占位，false不占位，true占位，占位时notice显示在自定义的container中，不占位时append到body元素下</td>
+                    </tr>
+                    <tr>
+                        <td>isAffix</td>
+                        <td>false</td>
+                        <td>是否吸顶，非占位元素不吸顶，占位元素当滚动距离大于元素距页面顶部距离时吸顶，否则保持原位置</td>
+                    </tr>
+                    <tr>
+                        <td>successClass</td>
+                        <td>"ui-notice-info"</td>
+                        <td>type为success时的提示类名</td>
+                    </tr>
+                    <tr>
+                        <td>errorClass</td>
+                        <td>"ui-notice-danger"</td>
+                        <td>type为success时的提示类名</td>
+                    </tr>
+                    <tr>
+                        <td>infoClass</td>
+                        <td>""</td>
+                        <td>type为info时的提示类名</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" align="center">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>container</td>
+                        <td>默认为绑定组件的元素</td>
+                        <td>显示notice的容器，可以配置为自己想要包裹notice的元素对象或者元素id，id的话必须是"#ID"的格式</td>
+                    </tr>
+                    <tr>
+                        <td>content</td>
+                        <td>默认为"notice content"</td>
+                        <td>要显示的内容,可以是DOM对象|String|DOM String</td>
+                    </tr>
+                    <tr>
+                        <td>onHide</td>
+                        <td>onHide(data, vmodels)</td>
+                        <td>关闭回调</td>
+                    </tr>
+                    <tr>
+                        <td>onShow</td>
+                        <td>onShow(data, vmodels)</td>
+                        <td>显示回调</td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
         <h3>例子：</h3>
         <ol>
             <li><a target="_blank" href="avalon.notice.ex.html">notice组件概览，具体使用demo及说明请看avalon.notice.ex1...6</a></li>

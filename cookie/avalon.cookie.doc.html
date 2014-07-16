@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>cookie</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    </head>
+    <body>
+        <h2>cookie</h2>
+        <fieldset>
+            <legend>cookie</legend>
+            <p>一个操作cookie的工具集。
+            </p>
+        </fieldset>
+        <fieldset>
+            <legend>使用说明</legend>
+            <table class="table-doc">
+                <tr>
+                    <th>名字</th><th>默认值</th> <th>说明</th>
+                </tr>
+
+                <tr>
+                    <td colspan="3" align="center">接口方法与固有属性</td>
+                </tr>
+
+                <tr>  
+                    <td>get(key)</td><td></td> <td>取得某一cookie</td> 
+                </tr>
+                <tr>   
+                    <td>set(key, val, opts)</td> <td></td><td>设置一个cookie，opts为一个可选参数，用于进一步设置它的maxAge,domain,path, httpOnly,expires,secure</td> 
+                </tr>
+                <tr>   
+                    <td>clear()</td>  <td></td><td>请空所有cookie</td> 
+                </tr>
+                <tr>   
+                    <td>getAll()</td> <td></td> <td>取得所有cookie，以对象形式返回</td> 
+                </tr>
+
+            </table>
+        </fieldset>
+
+        <ul>
+            <li><a href="avalon.cookie.ex.html">例子</a></li>
+        </ul>
+    </body>
+</html>

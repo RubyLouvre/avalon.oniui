@@ -33,6 +33,7 @@ table.table-doc {
     border-collapse: collapse;
     color: #666; 
     font-size: 14px;
+    width: 100%;
 }  
 .table-doc th {  
     background: url(th_bg1.gif);  

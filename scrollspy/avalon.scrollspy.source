@@ -1,0 +1,14 @@
+<p>scrollspy 组件有以下几个重要的方法和回调,见：</p>
+<pre class="brush:js;gutter:false;toolbar:false;" ms-skip>
+    // 方法
+    option.scrollTo = function(id, index) {
+        // code 
+    }
+    // 回调
+    onChange = function(index, ele, widgetElement, options) {
+        xxxxx
+    }
+</pre>
+<p>1，通过scrollTo这个方法可以控制滚动条停留的位置，可以通过这个方法实现tab list => scroll方向上的联动</p>
+<p>2，可以通过onChange回调实现scroll => tab list方向上的联动</p>
+<h3>例子：</h3>

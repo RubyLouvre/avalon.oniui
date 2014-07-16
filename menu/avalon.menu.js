@@ -175,7 +175,7 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
                 var ele = avalon(this), d = ele.data()
                 vmodel._onClickActive.call(this, e, vmodel.active, vmodel.data, d && d.sub)
             }
-            // 获取选中的menu list
+            //@method getActiveList() 获取选中的menu list
             vm.getActiveList = function(arr) {
                 var data = arr || []
                 if(vmodel.active !== false && vmodel.data[vmodel.active]) {
@@ -191,7 +191,7 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
                 console.log(data)
                 return data
             }
-            //@method 设置级联menu的选项，可以一个数组，也可以使一个数字，或者"2,3,4"这样的字符串
+            //@method setActiveList(activeListArray) 设置级联menu的选项，可以一个数组，也可以使一个数字，或者"2,3,4"这样的字符串
             vm.setActiveList = function(arr) {
                 if(!arr) return
                 if(!Array.isArray(arr)) var arr = ([arr].join("").split(","))
@@ -274,7 +274,7 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
     //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
         active:false, //@param 将第几个项目设置为选中，级联情形下，会将设置应用给每一级menu，默认是false，一个都不选中
-        _avtive:[], //@param 
+        _avtive:[], //\@param 
         event: "mouseenter",    //@param  选中事件，默认mouseenter
         disabled: false,
         _depth: 1,

@@ -4,22 +4,25 @@
         <title>tab组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <script src="../highlight/shCore.js"></script>
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
     <meta name="description" content="tab组件，实现扫描DOM结构或者接受数组传参，生成tab，支持click、mouseenter事件响应切换，支持mouseenter情形延迟响应切换，支持click情形tab选中情况下再次点击回调，支持自动切换效果，支持tab增删禁用启用并可混合设置同步tab可删除状态，支持混合配制panel内容类型并支持panel内容是ajax配置回调，注意扫描dom情形下，会销毁原有的dom，且会忽略所有的ol，ul，li元素上原有的绑定"/>
 </head>
     <body>
         <div class="wrapper">
-            <h1>tab使用说明</h1>
-            <p class="doc-description">tab组件，实现扫描DOM结构或者接受数组传参，生成tab，支持click、mouseenter事件响应切换，支持mouseenter情形延迟响应切换，支持click情形tab选中情况下再次点击回调，支持自动切换效果，支持tab增删禁用启用并可混合设置同步tab可删除状态，支持混合配制panel内容类型并支持panel内容是ajax配置回调，注意扫描dom情形下，会销毁原有的dom，且会忽略所有的ol，ul，li元素上原有的绑定</p>
-            <table class="table-doc">
-                <caption class="example">tab组件配置项说明：</caption>
-                <thead>
+            <h2>tab</h2>
+            <fieldset>
+                <legend>tab组件</legend>
+                <p class="doc-description">tab组件，实现扫描DOM结构或者接受数组传参，生成tab，支持click、mouseenter事件响应切换，支持mouseenter情形延迟响应切换，支持click情形tab选中情况下再次点击回调，支持自动切换效果，支持tab增删禁用启用并可混合设置同步tab可删除状态，支持混合配制panel内容类型并支持panel内容是ajax配置回调，注意扫描dom情形下，会销毁原有的dom，且会忽略所有的ol，ul，li元素上原有的绑定</p>
+            </fieldset>
+            <fieldset>
+                <legend>使用说明</legend>
+                <table class="table-doc">
                     <tr>
                         <th width="25%">名字</th><th width="25%">默认值</th><th width="50%">说明</th>
                     </tr>
-                </thead>
-                <!--auto doc start-->
+                    <tr>
+                        <td colspan="3" aligin="center">配置参数</td>
+                    </tr>
+                    <!--auto doc start-->
 <tr>
     <td>toggle</td><td> true</td><td> 组件是否显示，可以通过设置为false来隐藏组件</td></tr>
 <tr>
@@ -79,19 +82,20 @@
 <tr>
     <td>remove</td><td>接口函数</td><td>remove(e, index) 删除索引指向的tab，绑定情形下ms-click="remove($event, index)"，js调用则是vm.remove(index)</td></tr>
 <!--auto doc end-->
-            </table>
-            <p>tab 组件有一个重要的getTemplate配置方法,见源码：</p>
-            <pre class="brush:js;gutter:false;toolbar:false;" ms-skip>
-                getTemplate: function(template, vm, tplName) {
-                     if(tplName == "panel") {
-                         return template.replace("&lt;div", "&lt;div title='点击我，我被注入了' ms-click='$inject'")
-                     }
-                     return template
-                 }
-            </pre>
-            <h3>例子：</h3>
-<!--ex list start-->
-<ol>
+                </table>
+            </fieldset>
+            <!--source start--><p>tab 组件有一个重要的getTemplate配置方法,见源码：</p>
+<pre class="brush:js;gutter:false;toolbar:false;" ms-skip>
+    getTemplate: function(template, vm, tplName) {
+         if(tplName == "panel") {
+             return template.replace("&lt;div", "&lt;div title='点击我，我被注入了' ms-click='$inject'")
+         }
+         return template
+     }
+</pre><!--source end-->
+            <h3>demo示例：</h3>
+            <!--ex list start-->
+<ul>
 <li><a href="avalon.tab.ex.html">扫描dom树获取数据</a></li>
 <li><a href="avalon.tab.ex.1.html">传参配置数据 - mouseenter切换tab</a></li>
 <li><a href="avalon.tab.ex.2.html">传参配置数据 - 点击切换tab</a></li>
@@ -100,7 +104,7 @@
 <li><a href="avalon.tab.ex.5.html">传参配置数据 - click切换tab，修改默认模板 - 纵向排列字数多出效果</a></li>
 <li><a href="avalon.tab.ex.6.html">传参配置数据 - mouseenter延迟切换tab - 小尺寸横向排列效果</a></li>
 <li><a href="avalon.tab.ex.7.html">传参配置数据 - click切换tab - 纵向排列字数多出强制截断并且不要省略号效果</a></li>
-</ol>
+</ul>
 <!--ex list end-->
         </div>
     </body>

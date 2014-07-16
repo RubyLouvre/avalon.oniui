@@ -5,16 +5,17 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../avalon.js">
-            
+
         </script>
         <script src="../highlight/shCore.js">
-            
+
         </script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
         <script>
-            require(["at/avalon.at"], function(){
-                avalon.define("test",function(vm){
+            require(["at/avalon.at"], function() {
+                avalon.define("test", function(vm) {
                     vm.at = {
-                        datalist : ["aaa", "aab", "aaaa", "aac", "ccc","cc1","ccaaccaa"],
+                        datalist: ["aaa", "aab", "aaaa", "aac", "ccc", "cc1", "ccaaccaa"],
                         minLength: 0
                     }
                     vm.$skipArray = ["at"]

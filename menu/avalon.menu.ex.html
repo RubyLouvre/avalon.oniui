@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>menu组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["menu/avalon.menu"], function() {
+                avalon.define("test", function(vm) {
+                    vm.menu = {
+                        onActivate: function(e, vmodel) {
+                            avalon.log("avtive")
+                        },
+                        onInit: function(vmodel) {
+                            // avalon.log(vmodel)
+                        },
+                        onClickActive: function() {
+                            avalon.log("click avtive")
+                        }
+                    }
+                    vm.$skipArray = ["menu"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test" class="ui-helper-reset">
+        <h1>menu</h1>
+        <h2>竖排</h2>
+        <ul ms-widget="menu">
+            <li>动物</li>
+            <li>植物</li>
+            <li data-disabled="true">X物</li>
+            <li>人类
+                <ul>
+                    <li data-disabled="true">火星人</li>
+                    <li>地球人
+                        <ul>
+                            <li><a href="#iddd">白人</a></li>
+                            <li>黑人</li>
+                            <li data-disabled="true">灰人</li>
+                        </ul>
+                    </li>
+                    <li>木星人</li>
+                    <li>金星人</li>
+                </ul>
+            </li>
+        </ul>
+        <br/>
+        <h2>横排</h2>
+        <ul ms-widget="menu" data-menu-dir="v" data-menu-event="click">
+            <li>动物</li>
+            <li>植物</li>
+            <li data-disabled="true">X物</li>
+            <li data-active="true">人类
+                <ul>
+                    <li data-disabled="true">火星人</li>
+                    <li>地球人
+                        <ul>
+                            <li><a href="#iddd">白人</a></li>
+                            <li>黑人
+                                <ul>
+                                    <li><a href="#iddd">白2人</a></li>
+                                    <li>黑2人</li>
+                                    <li data-disabled="true">灰2人</li>
+                                </ul>
+                            </li>
+                            <li data-disabled="true">灰人</li>
+                        </ul>
+                    </li>
+                    <li>木星人</li>
+                    <li>金星人</li>
+                </ul>
+            </li>
+        </ul>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <pre class="brush:html;gutter:false;toolbar:false">
+        </pre>
+    </body>
+</html>

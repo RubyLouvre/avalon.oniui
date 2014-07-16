@@ -7,59 +7,79 @@
         <script src="../highlight/shCore.js">
 
         </script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
     </head>
     <body>
-        <h3> 默认参数</h3>
-        <table width="80%" border="1">
-            <tr>
-                <th>名字</th><th>默认值</th> <th>说明</th>
-            </tr>
-            <tr>
-                <td>at</td><td>"@"</td> <td>默认的标识符,</td>
-            </tr>
-            <tr>  
-                <td>datalist</td><td>[]</td> <td>字符串数组，不可监控，(名字取自HTML的datalist同名元素)</td> 
-            </tr>
-            <tr>   
-                <td>template</td> <td>""</td><td>弹出层的模板，如果为空，使用默认模板，注意要在上面添加点击或hover处理</td> 
-            </tr>
-            <tr>   
-                <td>toggle</td>  <td>false</td><td>f用于控制弹出层的显示隐藏</td> 
-            </tr>
-            <tr>   
-                <td>limit</td> <td>5</td> <td>弹出层里面总共有多少个列表项</td> 
-            </tr>
-            <tr>   
-                <td>maxLength</td> <td>1</td> <td>  @后的查询字符串的最大长度，注意中间不能有空格</td>  
-            </tr>
-            <tr>   
-                <td>query</td>  <td>""</td><td>  @后的查询字符串</td> 
-            </tr>
-            <tr>   
-                <td>maxLength</td><td>20</td> <td> @后的查询字符串只有出现了多少个字符后才显示弹出层</td> 
-            </tr>
-            <tr>   
-                <td>delay</td> <td>500</td><td> 我们是通过updateData方法与后台进行AJAX连接，为了防止输入过快导致频繁，需要指定延时毫秒数</td> 
-            </tr>
-            <tr>   
-                <td>onInit</td> <td>配置函数</td><td> onInit(vmodel, options, vmodels)， 初始化时触发的回调</td> 
-            </tr>
-            <tr>   
-                <td>getTemplate</td> <td>配置函数</td><td> getTemplate(str, options)， 用于修改模板，传入默认模板与配置对象</td> 
-            </tr>
-            <tr>   
-                <td>updateData</td><td>配置函数</td> <td> 远程更新函数, 与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行filterData、highlightData操作</td> 
-            </tr>
-            <tr>   
-                <td>filterData</td> <td>配置函数</td> <td> 用于对datalist进行过滤排序，将得到的新数组赋给_datalist，实现弹出层的更新</td>
-            </tr>
-            <tr>   
-                <td>highlightData</td><td>配置函数</td> <td> 用于对_datalist中的字符串进行高亮处理，item为_datalist中的每一项，str为查询字符串</td>  
-            </tr>
-
-        </table>
-        <p>updateData是一个非常重要的配置项，用于与后端同步数据，下面是</p>
-        <pre class="brush:js;gutter:false;toolbar:false;">
+        <div class="wrapper">
+            <h2>at</h2>
+            <fieldset>
+                <legend>@提示列表</legend>
+                <p>经常使用微博的人会发现，当我们在输入框输入@然后敲一个人的名字，会弹出一个tip提示层。这是社交网站或应用最近非常流行的功能。
+                    当你发布“@昵称 ”的信息时，在这里的意思是“向某某人说”，对方能看到你说的话，并能够回复，实现一对一的沟通。
+                </p>
+            </fieldset>
+            <fieldset>
+                <legend>使用说明</legend>
+                <table class="table-doc">
+                    <tr>
+                        <th>名字</th><th nowrap >默认值</th><th>说明</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3" align="center">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>at</td><td>"@"</td> <td>默认的标识符,</td>
+                    </tr>
+                    <tr>  
+                        <td>datalist</td><td>[]</td> <td>字符串数组，不可监控，(名字取自HTML的datalist同名元素)</td> 
+                    </tr>
+                    <tr>   
+                        <td>template</td> <td>""</td><td>弹出层的模板，如果为空，使用默认模板，注意要在上面添加点击或hover处理</td> 
+                    </tr>
+                    <tr>   
+                        <td>toggle</td>  <td>false</td><td>f用于控制弹出层的显示隐藏</td> 
+                    </tr>
+                    <tr>   
+                        <td>limit</td> <td>5</td> <td>弹出层里面总共有多少个列表项</td> 
+                    </tr>
+                    <tr>   
+                        <td>maxLength</td> <td>1</td> <td>  @后的查询字符串的最大长度，注意中间不能有空格</td>  
+                    </tr>
+                    <tr>   
+                        <td>query</td>  <td>""</td><td>  @后的查询字符串</td> 
+                    </tr>
+                    <tr>   
+                        <td>maxLength</td><td>20</td> <td> @后的查询字符串只有出现了多少个字符后才显示弹出层</td> 
+                    </tr>
+                    <tr>   
+                        <td>delay</td> <td>500</td><td> 我们是通过updateData方法与后台进行AJAX连接，为了防止输入过快导致频繁，需要指定延时毫秒数</td> 
+                    </tr>
+                    <tr>   
+                        <td>onInit(vmodel, options, vmodels)</td> <td></td><td>  初始化时触发的回调</td> 
+                    </tr>
+                    <tr>   
+                        <td>getTemplate(str, options)</td> <td></td><td> ， 用于修改模板，传入默认模板与配置对象</td> 
+                    </tr>
+                    <tr>   
+                        <td>updateData</td><td></td> <td> 远程更新函数, 与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行filterData、highlightData操作</td> 
+                    </tr>
+                    <tr>   
+                        <td>filterData(opts)</td> <td></td> 
+                        <td>opts是框架自己传入一个配置对象，里面有query,datalist，limit等属性。
+                            我们在这方法里面对datalist进行过滤排序，最后返回一个新数组</td>
+                    </tr>
+                    <tr>   
+                        <td>highlightData(item, str)</td><td></td> <td> 用于对_datalist中的字符串进行高亮处理，item为_datalist中的每一项，str为查询字符串</td>  
+                    </tr>
+                    <tr>
+                        <td colspan="3" align="center">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>_datalist</td> <td></td><td> 实际是应用于模板上的字符串数组(不建议用户操作它)，它里面的字符可能做了高亮处理</td> 
+                    </tr>
+                </table>
+                <p>updateData是一个非常重要的配置项，用于与后端同步数据，下面是</p>
+                <pre class="brush:javascript;gutter:false;toolbar:false;">
 function updateData(vmodel, callback) {
     var model = vmodel.$model
     jQuery.post("url", {limit: model.limit, query: model.query}, function(data) {
@@ -67,9 +87,11 @@ function updateData(vmodel, callback) {
         callback()
     })
 }
-        </pre>
-        <ul>
-            <li><a href="avalon.at.ex.html">例子</a></li>
-        </ul>
+                </pre>
+            </fieldset>
+            <ul>
+                <li><a href="avalon.at.ex.html">例子</a></li>
+            </ul>
+        </div>
     </body>
 </html>

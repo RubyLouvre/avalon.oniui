@@ -18,7 +18,7 @@ div.ui-tab {
     position: relative;
     background-color: #f8f8f8;
     cursor: pointer;
-    border: 1px solid lightgray;
+    border: 1px solid #d4d4d4;
     border-right-width: 0;
     color: black; }
   .ui-tab .ui-tab-nav .ui-state-default a, .ui-tab .ui-tab-nav .ui-state-default:link, .ui-tab .ui-tab-nav .ui-state-default a:hover {
@@ -44,13 +44,13 @@ div.ui-tab {
     .ui-tab .ui-tab-nav .ui-state-active .ui-tab-close {
       border-color: white; }
   .ui-tab .ui-tab-nav .ui-state-disabled {
-    color: #aaaaaa;
+    color: #999999;
     cursor: default; }
     .ui-tab .ui-tab-nav .ui-state-disabled a {
-      color: #aaaaaa;
+      color: #999999;
       cursor: default; }
     .ui-tab .ui-tab-nav .ui-state-disabled a:link {
-      color: #aaaaaa;
+      color: #999999;
       cursor: default; }
   .ui-tab .ui-tab-nav .ui-tab-last {
     border-right-width: 1px; }
@@ -70,7 +70,7 @@ div.ui-tab {
     border-bottom-width: 0; }
   .ui-tab-vertical .ui-tab-nav .ui-state-active {
     border-right-color: white;
-    border-bottom-color: lightgray; }
+    border-bottom-color: #d4d4d4; }
   .ui-tab-vertical .ui-tab-nav .ui-tab-last {
     border-bottom-width: 1px; }
   .ui-tab-click .ui-state-default {
@@ -93,9 +93,9 @@ div.ui-tab {
     font-family: Helvetica, Arial, sans-serif; }
   .ui-tab .ui-tab-nav .ui-state-active .ui-tab-close-hover {
     background: white;
-    border-color: lightgray;
+    border-color: #d4d4d4;
     cursor: pointer; }
   .ui-tab .ui-tab-nav .ui-state-hover .ui-tab-close-hover {
     background: white;
-    border-color: lightgray;
+    border-color: #d4d4d4;
     cursor: pointer; }

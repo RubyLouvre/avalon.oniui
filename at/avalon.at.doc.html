@@ -79,7 +79,7 @@
                     </tr>
                 </table>
                 <p>updateData是一个非常重要的配置项，用于与后端同步数据，下面是</p>
-                <pre class="brush:js;gutter:false;toolbar:false;">
+                <pre class="brush:javascript;gutter:false;toolbar:false;">
 function updateData(vmodel, callback) {
     var model = vmodel.$model
     jQuery.post("url", {limit: model.limit, query: model.query}, function(data) {

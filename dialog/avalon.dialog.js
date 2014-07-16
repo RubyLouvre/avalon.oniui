@@ -37,9 +37,7 @@ define(["avalon.getModel",
 
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "template","submitBtnClick","cancelBtnClick"];
-            vm.submitBtnClick = false;
-            vm.cancelBtnClick = false;
+            vm.$skipArray = ["widgetElement", "template"];
             vm.widgetElement = element;
             vm.position = "fixed";
             // 如果显示模式为alert或者配置了showClose为false，不显示关闭按钮
@@ -52,7 +50,6 @@ define(["avalon.getModel",
                 }
                 // 在用户回调返回false时，不关闭弹窗
                 if(options.onConfirm.call(e.target, e, vmodel) !== false){
-                    vmodel.submitBtnClick = true;
                     vmodel._close(e)
                 }
             }
@@ -100,14 +97,7 @@ define(["avalon.getModel",
                 if (iFrame) {
                     iFrame.style.zIndex = layoutZIndex -1;
                 }
-                // 因为在submit操作之后也调用了_close方法来关闭弹窗，但是如果用户定义了onClose方法的话是不应该触发的，因此通过submitBtnClick这个开关来判断是点击了确定按钮还是点击了"取消"或者“关闭”按钮.
-                if (vmodel.submitBtnClick) {
-                    vmodel.submitBtnClick = false;
-                } else if (vmodel.cancelBtnClick) {
-                    vmodel.cancelBtnClick = false;
-                } else {
-                    options.onClose.call(e.target, e, vmodel)
-                }
+                options.onClose.call(e.target, e, vmodel)
             };
 
             // 点击"取消"按钮，根据回调返回值是否为false决定是否关闭dialog
@@ -117,7 +107,6 @@ define(["avalon.getModel",
                 }
                 // 在用户回调返回false时，不关闭弹窗
                 if(options.onCancel.call(e.target, e, vmodel) !== false){
-                    vmodel.cancelBtnClick = true;
                     vmodel._close(e)
                 }
             }

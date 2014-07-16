@@ -3,113 +3,127 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
+<meta name="description" content="daterangepicker是日期范围选择组件，可以通过设置起始日期与结束日期的最小间隔天数和最大间隔天数将截止日期限制在一定的选择范围中，同时通过点击确定按钮确定日期范围，在选择的时候日期范围框的下方会实时的说明当前选择情况" />
 <title>daterangepicker文档说明</title>
 <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
 </head>
 <body class="doc">
     <div class="wrapper">
-        <h1>daterangepicker使用文档</h1>
-        <p>daterangepicker是日期范围选择组件，可以通过设置起始日期与结束日期的最小间隔天数和最大间隔天数将截止日期限制在一定的选择范围中，同时通过点击确定按钮确定日期范围，在选择的时候日期范围框的下方会实时的说明当前选择情况</p>
-        <table class="table-doc">
-            <caption class="example">daterangepicker组件配置项说明：</caption>
-            <thead>
-                <tr>
-                    <th>name</th>
-                    <th>value</th>
-                    <th>description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="odd">
-                    <td>fromLabel</td>
-                    <td>"选择起始日期" {{type: String}}</td>
-                    <td>设置起始日期日历框的说明文字</td>
-                </tr>
-                <tr>
-                    <td>toLabel</td>
-                    <td>"选择结束日期" {{type: String}}</td>
-                    <td>设置结束日期日历框的说明文字</td>
-                </tr>
-                <tr class="odd">
-                    <td>label</td>
-                    <td>"" {{type: String}}</td>
-                    <td>模拟输入域的初始说明文字</td>
-                </tr>
-                <tr>
-                    <td>defaultLabel</td>
-                    <td>"日期范围" {{type: String}}</td>
-                    <td>选中日期之后，模拟输入域开始的说明文字</td>
-                </tr>
-                <tr class="odd">
-                    <td>disabled</td>
-                    <td>false {{type: Boolean}}</td>
-                    <td>设置是否禁用组件</td>
-                </tr>
-                <tr>
-                    <td>startDay</td>
-                    <td>默认1， {{type: Number}}</td>
-                    <td>设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推, 默认从周一开始</td>
-                </tr>
-                <tr class="odd">
-                    <td>separator</td>
-                    <td>"-"  {{type: String}}</td>
-                    <td>日期格式的分隔符，可以是"/"或者你希望的符号，但如果是除了"-"和"/"之外的字符则需要和parseDate和formatDate配合使用，一边组件能正常运作</td>
-                </tr>
-                <tr>
-                    <td>rules</td>
-                    <td>""  {{type: String | Object}}</td>
-                    <td>设置双日历框的工作规则
-                        {
-                            rules: 'null, 0D, 8D',
-                            fromMinDate: '2014-05-02',
-                            fromMaxDate: '2014-06-28',
-                            toMinDate: '2014-06-01',
-                            toMaxDate: '2014-07-12'
-                        }
-                        可以是绑定组件时定义的配置对象中的一个rules对象，也可以是一个字符串，指向一个上述对象。
-                        其中对象中的rules属性定义结束初始日期异常时默认显示的日期、初始日期和结束日子之间最小相隔天数、最大相隔天数，格式是[+-]\d[DMY]，分别代表几天、几个月或者几年，也可以附加+或者-号，+号表示正数几天，-号表示负数几天
-                        fromMinDate代表起始日期可以设置的最小日期
-                        fromMaxDate代表起始日期可以设置的最大日期
-                        toMinDate代表结束日期可以设置的最小日期
-                        toMaxDate代表结束日期可以设置的最大日期
-                    </td>
-                </tr>
-                <tr class="odd">
-                    <td>onSelect</td>
-                    <td>avalon.noop  {{type: Function}}</td>
-                    <td>点击日期范围框下方的确定按钮之后的回调</td>
-                </tr>
-                <tr>
-                    <td>parseDate</td>
-                    <td>function(str){...}</td>
-                    <td>将符合日期格式要求的字符串解析为date对象并返回，不符合格式的字符串返回null,用户可以根据自己需要自行配置解析过程
-<pre>
-parseDate : function(str){
-    var separator = this.separator;
-    var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})$";
-    reg = new RegExp(reg);
-    var x = str.match(reg);
-    return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
-</pre>
-                    </td>
-                </tr>
-                <tr class="odd">
-                    <td>formatDate</td>
-                    <td>function(date){...}</td>
-                    <td>将日期对象转换为符合要求的日期字符串，默认实现如下：
-<pre>
-formatDate : function(date){
-    var separator = this.separator,
-        year = date.getFullYear(), 
-        month = date.getMonth(), 
-        day = date.getDate();
-    return year + separator + formatNum( month + 1 , 2 ) + separator + formatNum( day , 2 );
-}    
-</pre>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <h2>daterangepicker</h2>
+        <fieldset>
+            <legend>日期范围框</legend>
+            <p>
+                daterangepicker是日期范围选择组件，可以通过设置起始日期与结束日期的最小间隔天数和最大间隔天数将截止日期限制在一定的选择范围中，同时通过点击确定按钮确定日期范围，在选择的时候日期范围框的下方会实时的说明当前选择情况
+            </p>
+        </fieldset>
+        <fieldset>
+            <legend>使用说明</legend>
+            <table class="table-doc">
+                <thead>
+                    <tr>
+                        <th>名字</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3" align="center">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>fromLabel</td>
+                        <td>"选择起始日期"</td>
+                        <td>设置起始日期日历框的说明文字</td>
+                    </tr>
+                    <tr>
+                        <td>toLabel</td>
+                        <td>"选择结束日期"</td>
+                        <td>设置结束日期日历框的说明文字</td>
+                    </tr>
+                    <tr>
+                        <td>label</td>
+                        <td>""</td>
+                        <td>模拟输入域的初始说明文字</td>
+                    </tr>
+                    <tr>
+                        <td>defaultLabel</td>
+                        <td>"日期范围"</td>
+                        <td>选中日期之后，模拟输入域开始的说明文字</td>
+                    </tr>
+                    <tr>
+                        <td>disabled</td>
+                        <td>false</td>
+                        <td>设置是否禁用组件</td>
+                    </tr>
+                    <tr>
+                        <td>startDay</td>
+                        <td>1</td>
+                        <td>设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推, 默认从周一开始</td>
+                    </tr>
+                    <tr>
+                        <td>separator</td>
+                        <td>"-"</td>
+                        <td>日期格式的分隔符，可以是"/"或者你希望的符号，但如果是除了"-"和"/"之外的字符则需要和parseDate和formatDate配合使用，一边组件能正常运作</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" align="center">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>rules</td>
+                        <td>""</td>
+                        <td>设置双日历框的工作规则
+                            {
+                                rules: 'null, 0D, 8D',
+                                fromMinDate: '2014-05-02',
+                                fromMaxDate: '2014-06-28',
+                                toMinDate: '2014-06-01',
+                                toMaxDate: '2014-07-12'
+                            }
+                            可以是绑定组件时定义的配置对象中的一个rules对象，也可以是一个字符串，指向一个上述对象。
+                            其中对象中的rules属性定义结束初始日期异常时默认显示的日期、初始日期和结束日子之间最小相隔天数、最大相隔天数，格式是[+-]\d[DMY]，分别代表几天、几个月或者几年，也可以附加+或者-号，+号表示正数几天，-号表示负数几天
+                            fromMinDate代表起始日期可以设置的最小日期
+                            fromMaxDate代表起始日期可以设置的最大日期
+                            toMinDate代表结束日期可以设置的最小日期
+                            toMaxDate代表结束日期可以设置的最大日期
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onSelect</td>
+                        <td>onSelect(inputFromDate, inputToDate, oldValue, vmodel, data)</td>
+                        <td>点击日期范围框下方的确定按钮之后的回调</td>
+                    </tr>
+                    <tr>
+                        <td>parseDate</td>
+                        <td>parseDate(str)</td>
+                        <td>将符合日期格式要求的字符串解析为date对象并返回，不符合格式的字符串返回null,用户可以根据自己需要自行配置解析过程
+    <pre>
+    parseDate : function(str){
+        var separator = this.separator;
+        var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})$";
+        reg = new RegExp(reg);
+        var x = str.match(reg);
+        return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
+    </pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>formatDate</td>
+                        <td>formatDate(date)</td>
+                        <td>将日期对象转换为符合要求的日期字符串，默认实现如下：
+    <pre>
+    formatDate : function(date){
+        var separator = this.separator,
+            year = date.getFullYear(), 
+            month = date.getMonth(), 
+            day = date.getDate();
+        return year + separator + formatNum( month + 1 , 2 ) + separator + formatNum( day , 2 );
+    }    
+    </pre>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>    
         <h3>例子：</h3>
         <ol>
             <li><a target="_blank" href="avalon.daterangepicker.ex1.html">基本配置的日期范围框，设置其初始说明文字、起始日历说明文字、结束日历说明文字</a></li>

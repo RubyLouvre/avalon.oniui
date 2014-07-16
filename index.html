@@ -4,63 +4,62 @@
         <title>目录</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <style>
-
-            h1{
-                text-align: center;
-            }
-            body{
-            }
-            .menu{
-                list-style: none;
-                overflow: hidden;
-            }
-            .menu li{
-                display: inline-block;
-                float: left;
-
-            }
-            .index a{
-                text-decoration: none;
-                color:goldenrod;
-            }
-        </style>
+        <link type="text/css" rel="stylesheet" href="./style/avalon.doc.css" />
+        <link type="text/css" rel="stylesheet" href="./style/avalon.index.css" />
         <script src="avalon.js"></script>
+    </head>
+    <body>
+        <div class="header">
+            <div class="nav">
+                <ul>
+                    <li class="active">组件库</li>
+                    <li>字体图标</li>
+                </ul>
+                <div class="search">
+                    <input type="text"/>
+                </div>
+            </div>
+            <h1><span>AvalonUI组件库</span></h1>
+        </div>
+        <div class="content ms-controller" ms-css-min-height="{{uiListHeight}}" ms-controller ="avalonUiDocument">
+            <ul class="ui-list">
+                <li ms-repeat="widgets" data-repeat-rendered="uiListRendered"><a href="#" ms-class="active: $index===currentIndex" ms-click="showDocument(el, $event, $index)">{{el}}</a></li> 
+            </ul>
+            <div class="ui-doc" ms-include-src="{{widget}}/avalon.{{widget}}.doc.html"  data-include-loaded="afterTemplateLoaded"></div>
+        </div>
+        <div class="footer">
+            <ul>
+                <li>关于AvalonUI</li>
+                <li>联系我们</li>
+                <li>业务合作</li>
+                <li>常见问题</li>
+                <li class="last">友情链接</li>
+            </ul>
+        </div>
         <script>
-            avalon.define("test", function(vm) {
-                vm.widgets = []
-                vm.widget = "tab"
+            avalon.ready(function() {
+                var docCssReg = /<link[^>]*style\/avalon\.doc\.css[^>]*\>/img,
+                    widgets = ["accordion", "tab", "spinner", "slider", "textbox", "dropdown", "datepicker", "dialog", "at", "button", "checkboxlist", "cookie", "draggable", "flipswitch", "hotkeys", "json", "miniswitch", "notice", "pager", "position", "preview", "progressbar", "resizable", "roleselect", "scrollbar", "scrollspy", "simplegrid", "store", "switchdropdown", "tooltip"].sort();
+                var vmodel = avalon.define("avalonUiDocument", function(vm) {
+                    vm.widgets = widgets;
+                    vm.widget = "accordion";
+                    vm.currentIndex = 0;
+                    vm.uiListHeight = 0;
+                    vm.showDocument = function(widget, event, index) {
+                        event.preventDefault();
+                        vmodel.widget = widget;
+                        vmodel.currentIndex = index;
+                    };
+                    vm.afterTemplateLoaded = function(template) {
+                        template = template.replace(docCssReg, "");
+                        return template;
+                    };
+                    vm.uiListRendered = function() {
+                        vmodel.uiListHeight = avalon(this).height();
+                    }
+                })
+                avalon.scan();
             })
         </script>
-    </head>
-    <body >
-        <h1>Oni UI</h1>
-        <!--        <ul class="menu">
-                    <li><a href="oni.standard.html">规范</a></li>
-                </ul>-->
-        <table ms-controller="test">
-            <tr>
-                <td valign="top">{{widget}}</td><td ms-include-src="{{widget}}/avalon.{{widget}}.doc.html"></td>
-            </tr>
-        </table>
-
-        <!--        <ul class="index">
-                    <li><a href="at/avalon.at.doc.html">新浪微博式的@提示菜单</a></li>
-                    <li><a href="textbox/avalon.textbox.doc.html">文本框组件（带placehoder与自动完成功能）</a></li>
-                    <li><a href="checkboxlist/avalon.checkboxlist.doc.html">复选框列表(带全选与非全选功能)</a></li>
-                    <li><a href="dialog/avalon.dialog.doc.html">弹出层</a></li>
-                    <li><a href="hotkeys/avalon.hotkeys.doc.html">组合键</a></li>
-                    <li><a href="pager/avalon.pager.doc.html">分页栏</a></li>
-                    <li><a href="notice/avalon.notice.doc.html">消息框（可以允许一个页面同时出现多个提示信息，上下排行一列，然后会自动消失）</a></li>
-                    <li><a href="progressbar/avalon.progressbar.doc.html">进度条（有条形的，圆形的）</a></li>
-                    <li><a href="spinner/avalon.spinner.doc.html">数字输入键</a></li>
-                    <li><a href="switch/avalon.switch.doc.html">滑动单选按钮</a></li>
-                    <li><a href="tooltip/avalon.tooltip.doc.html">提示框（带小三角，在八个方向出现）</a></li>
-                    <li><a href="simplegrid/avalon.simplegrid.doc.html">表格</a></li>
-                    <li><a href="slider/avalon.slider.doc.html">拖动条</a></li>
-                    <li><a href="tabs/avalon.tabs.doc.html">切换卡</a></li>
-                    <li><a href="hotkeys/avalon.hotkeys.doc.html">组合键</a></li>
-        
-                </ul>-->
     </body>
 </html>

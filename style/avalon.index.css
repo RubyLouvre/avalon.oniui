@@ -1,0 +1,111 @@
+body {
+    background: #eaeaea;
+    text-align: center;
+}
+body, div, ul, li, h1{
+    padding: 0;
+    margin: 0;
+}
+ul {
+    list-style: none;
+}
+.header {
+    background: #fff;
+}
+.header .nav {
+    position: relative;
+    width: 990px;
+    height: 60px;
+    line-height: 60px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 0 5px;
+    background: url(./avalonIcon.png) no-repeat;
+}
+.header .nav ul {
+    margin: 0 auto;
+    font-size: 16px;
+    width: 18em;
+}
+.header .nav ul li {
+    float: left;
+    margin-right: 65px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #555555;
+}
+.header .nav ul li.active {
+    color: #389576;
+}
+.header .search {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.header .search input {
+    border: 1px solid #547c73;
+    border-radius: 5px;
+    width: 185px;
+    height: 30px;
+    background: url(./searchIcon.png) 160px 50% no-repeat;
+}
+.header h1 {
+    height: 115px;
+    line-height: 115px;
+    color: #f0fffb;
+    background: #28966f;
+}
+.header h1 span {
+    display: block;
+    width: 990px;
+    text-align: left;
+    padding: 0 5px;
+    margin: 0 auto;
+}
+.content {
+    position: relative;
+    width: 990px;
+    padding: 50px 5px 80px 5px;
+    margin: 0 auto;
+    text-align: left;
+}
+.ui-list {
+    position: absolute;
+    width: 130px;
+    line-height: 24px;
+}
+.ui-list a {
+    text-decoration: none;
+    color: #2b2b2b;
+    font-size: 14px;
+    font-weight: bold;
+}
+.ui-list a.active {
+    color: #3a745c;
+}
+.ui-doc {
+    margin-left: 130px;
+    padding: 30px 50px;
+    background: #fff;
+}
+.footer {
+    background: #fff;
+    height: 110px;
+    padding-bottom: 10px;
+    line-height: 110px;
+}
+.footer ul {
+    padding: 45px 22px 0;
+    width: 600px;
+    margin: 0 auto;
+    height: 16px;
+    line-height: 16px;
+}
+.footer ul li{
+    float: left;
+    padding: 0 22px;
+    border-right: 1px solid black;
+}
+.footer ul li.last {
+    border-right-width: 0;
+}

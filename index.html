@@ -7,7 +7,7 @@
         <link type="text/css" rel="stylesheet" href="./style/avalon.doc.css" />
         <link type="text/css" rel="stylesheet" href="./style/avalon.index.css" />
         <script src="avalon.js"></script>
-
+        <script src="./highlight/shCore.js"></script>
     </head>
     <body>
         <div class="header">
@@ -63,12 +63,16 @@ avalon.ready(function() {
                 Array.prototype.forEach.call(document.querySelectorAll(".wrapper .example-links li a"), function(link) {
                     var href = link.getAttribute("href")
                     var match = href.match(/avalon\.([^.]+)/) || ["", ""]
-                    
-                    link.href = "javascript:void 0"
-                    link.onclick = function(){
+
+                    link.href = "#" + href
+                    link.target = ""
+                    link.onclick = function() {
                         vmodel.href = match[1] + "/" + href
                     }
                 })
+            }
+            if (window.SyntaxHighlighter) {
+                SyntaxHighlighter.highlight()
             }
         }
     })

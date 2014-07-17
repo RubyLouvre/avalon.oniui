@@ -33,18 +33,22 @@ define(["avalon"], function() {
             pairs.forEach(function(pair) {
                 var index = pair.indexOf("=")
                 var key = pair.substr(0, index).trim()
-                var val = pair.substr(++index, pair.length).trim()
-                if (val[0] === '"') {
-                    val = val.slice(1, -1)
-                }
-                if (obj[key] === void 0) {
-                    obj[key] = decode(val)
+                if (key) {
+                    var val = pair.substr(++index, pair.length).trim()
+                    if (val[0] === '"') {
+                        val = val.slice(1, -1)
+                    }
+                    if (obj[key] === void 0) {
+                        obj[key] = decode(val)
+                    }
                 }
             })
             return obj
         }
     }
-
+    Cookie.getAll = function() {
+        return Cookie.parse(String(document.cookie))
+    }
     Cookie.get = function(name) {
         var ret, m;
         if (/\S/.test(name)) {
@@ -61,8 +65,15 @@ define(["avalon"], function() {
     }
     // 置空，并立刻过期
     Cookie.remove = function(name, opt) {
-        Cookie.set.set(name, '', opt)
+        Cookie.set(name, '', opt)
     }
+
+    Cookie.clear = function(name, opt) {
+        var c = document.cookie.split("; ");
+        for (i in c)
+            document.cookie = /^[^=]+/.exec(c[i])[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
+
     return Cookie
 })
 //2012.8.19 (mass Framework) 全新cookie工具类

@@ -26,8 +26,8 @@
             <ul class="ui-list">
                 <li ms-repeat="widgets" data-repeat-rendered="uiListRendered"><a href="#" ms-class="active: $index===currentIndex" ms-click="showDocument(el, $event, $index)">{{el}}</a></li> 
             </ul>
-            <!-- <div class="ui-doc" ms-include-src="href"  data-include-loaded="afterTemplateLoaded" data-include-rendered="adjustLinks"></div> -->
-            <iframe id="doccanvas" scrolling="no" ms-attr-onload="setHeight(event)" name="doccanvas" class="ui-doc" style="width:760px;" frameborder="none" ms-attr-src="href"></iframe>
+            {{renderIframe() | html}}
+            <iframe ms-if="!hashchangeSupport" id="doccanvas" scrolling="no" name="doccanvas" class="ui-doc" style="width:760px;" ms-on-load="setHeight" frameborder="none" ms-attr-src="href"></iframe>
         </div>
         <div class="footer">
             <ul>
@@ -42,20 +42,31 @@
 avalon.ready(function() {
     var docCssReg = /<link[^>]*style\/avalon\.doc\.css[^>]*\>/img,
             widgets = ["accordion", "tab", "spinner", "slider", "textbox", "dropdown", "datepicker", "dialog", "at", "button", "checkboxlist", "cookie", "draggable", "flipswitch", "hotkeys", "json", "miniswitch", "notice", "pager", "position", "preview", "progressbar", "resizable", "roleselect", "scrollbar", "scrollspy", "simplegrid", "store", "switchdropdown", "tooltip"].sort();
-    var hash = location.hash.match(/avalon[\S]+\.html/g), oldHref
-    if(hash) {
-        hash = hash[0].split(".")[1] + "/" + hash[0]
+    var defaultHref = "accordion/avalon.accordion.doc.html";
+    function getHref(urlHash) {
+        var hash = (urlHash || location.hash).match(/avalon[\S]+\.html/g) || "";
+        if(hash) {
+            hash = hash[0].split(".")[1] + "/" + hash[0]
+        }
+        return hash
     }
-    var vmodel = avalon.define("avalonUiDocument", function(vm) {
+    function setHash(hash) {
+        if(!hash.match(/^#/g)) hash = "#" + defaultHref.split("/")[1]
+        location.hash = hash
+    }
+    var oldHref, vmodel = avalon.define("avalonUiDocument", function(vm) {
         vm.widgets = widgets;
-        vm.href = hash || "accordion/avalon.accordion.doc.html";
+        vm.href = getHref() || defaultHref;
         vm.currentIndex = 0;
         vm.uiListHeight = 0;
+        vm.hashchangeSupport = !navigator.userAgent.match(/MSIE [5-7]/);
         vm.timer = "";
         vm.showDocument = function(widget, event, index) {
             event.preventDefault();
-            vmodel.href = widget + "/avalon." + widget + ".doc.html"
-            location.hash = "#" + vmodel.href.split("/")[1];
+            if(!vmodel.hashchangeSupport) {
+                vmodel.href = widget + "/avalon." + widget + ".doc.html";
+            }
+            setHash("#avalon." + widget + ".doc.html");
             vmodel.currentIndex = index;
         };
         vm.afterTemplateLoaded = function(template) {
@@ -82,32 +93,69 @@ avalon.ready(function() {
                 SyntaxHighlighter.highlight()
             }
         }
-        vm.setHeight = function(e) {
-            clearInterval(vm.timer)
+        vm.renderIframe = function() {
+            if(!vmodel.hashchangeSupport) return "";
+            return '<iframe id="doccanvas" scrolling="no" name="doccanvas" class="ui-doc" style="width:760px;" frameborder="none" src="' + vmodel.href + '"></iframe>'
+        }
+        vm.setHeight = function() {
+            clearInterval(vm.timer);
+            var counter = 0;
             // 扫描，修改高度
             vmodel.timer = setInterval(function() {
                 var iframe = document.getElementById("doccanvas")
                 var nwindow = iframe.contentWindow
                 if(nwindow.document && nwindow.document.getElementsByTagName("body")[0]) {
                     nwindow = nwindow.document
-                    h = avalon(nwindow.body).outerHeight() + avalon(nwindow.body).offset().top;
-                    avalon(iframe).css("height", h + "px")
-                    if(oldHref !== nwindow.location.href) {
-                        oldHref = nwindow.location.href
-                        if(!oldHref.match(/avalon\.[\S]+\.doc\./g)) return
-                        var ols = nwindow.getElementsByTagName("ol")
-                        for(var i = 0, len = ols.length; i < len; i++) {
-                            var as = ols[i].getElementsByTagName("a")
-                            avalon.each(as, function(x, item) {
-                                item.setAttribute("target", "_self")
-                            })
+                    try{
+                        h = avalon(nwindow.body).outerHeight() + avalon(nwindow.body).offset().top;
+                        avalon(iframe).css("height", h + "px");
+                        counter++;
+                        if(counter > 50) clearInterval(vmodel.timer)
+                        if(oldHref !== nwindow.location.href) {
+                            oldHref = nwindow.location.href
+                            if(!oldHref.match(/avalon\.[\S]+\.doc\./g)) return;
+                            // 把iframe的src同步到父页面hash
+                            if(!vmodel.hashchangeSupport) {
+                                var h = oldHref.split("/")
+                                setHash("#" + h[h.length - 1]);
+                            }
+                            var ols = nwindow.getElementsByTagName("ol");
+                            if(!ols.length) ols = nwindow.getElementsByTagName("ul");
+                            for(var i = 0, len = ols.length; i < len; i++) {
+                                if(!ols[i].className.match(/example\-lists|example\-links/g)) continue;
+                                var as = ols[i].getElementsByTagName("a")
+                                avalon.each(as, function(x, item) {
+                                    item.onclick= function(e) {
+                                        var e = e || iframe.contentWindow.event;
+                                        e.preventDefault && e.preventDefault();
+                                        e.returnValue = false;
+                                        var h = item.getAttribute("href").split("/");
+                                        h = h[h.length - 1];
+                                        setHash("#" + (h.match(/avalon[\S]+\.html/g) || []).join(""));
+                                        if(!vmodel.hashchangeSupport) {
+                                            vmodel.href = h.split(".")[1] + "/" + h
+;                                        }
+                                    }
+                                })
+                            }
                         }
+                    }catch(e) {
+                        clearInterval(vmodel.timer)
                     }
                 }
             }, 100)
         }
     })
     avalon.scan();
+    if(vmodel.hashchangeSupport) {
+        vmodel.setHeight();
+        window.onhashchange = function(e) {
+            var hash = location.hash.split("#")[1];
+            hash = hash || defaultHref.split("/")[1];
+            vmodel.href = getHref(hash)
+            vmodel.setHeight()
+        }
+    }
 })
         </script>
     </body>

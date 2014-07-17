@@ -54,10 +54,18 @@ avalon.ready(function() {
         if(!hash.match(/^#/g)) hash = "#" + defaultHref.split("/")[1]
         location.hash = hash
     }
+    // decide currentIndex by vmodel.href 
+    function getcurrentIndex(hash) {
+        var widgetName = hash.split("/")[0];
+        for(var i = 0, len = widgets.length; i < len; i++) {
+            if(widgets[i] === widgetName) return i;
+        }
+        return 0
+    }
     var oldHref, vmodel = avalon.define("avalonUiDocument", function(vm) {
         vm.widgets = widgets;
         vm.href = getHref() || defaultHref;
-        vm.currentIndex = 0;
+        vm.currentIndex = getcurrentIndex(vm.href);
         vm.uiListHeight = 0;
         vm.hashchangeSupport = !navigator.userAgent.match(/MSIE [5-7]/);
         vm.timer = "";

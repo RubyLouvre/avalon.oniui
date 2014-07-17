@@ -102,13 +102,13 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>beforeSwitch</td>
                         <td>beforeSwitch(index, header, panel)</td>
+                        <td></td>
                         <td>组件面板展开前回调函数，若函数返回false则不展开面板，传入参数：index=面板序号，header=标题区域节点对象，panel=面板区域节点对象，调用此方法的对象是触发事件的dom节点</td>
                     </tr>
                     <tr>
-                        <td>onSwitch</td>
                         <td>onSwitch(index, header, panel)</td>
+                        <td></td>
                         <td>组件面板展开前回调函数，若函数返回false则不展开面板，传入参数：index=面板序号，header=标题区域节点对象，panel=面板区域节点对象，调用此方法的对象是触发事件的dom节点</td>
                     </tr>
                     <tr>
@@ -122,8 +122,8 @@
                         <td>组件最新展开的面板序号，不可配置</td>
                     </tr>
                     <tr>
-                        <td>setData</td>
                         <td>setData(data)</td>
+                        <td></td>
                         <td>重定义组件配置数据对象，参数data的结构如下：
                             [{
                                 title: "标题1",
@@ -137,8 +137,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>refresh</td>
                         <td>refresh(data)</td>
+                        <td></td>
                         <td>手工刷新组件视图,也可以传递参数data，重渲染组件视图
                             accordion.refresh({
                                 data: [{
@@ -150,23 +150,23 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>getCurrentHeader</td>
                         <td>getCurrentHeader()</td>
+                        <td></td>
                         <td>获得当前展开的accordion标题对象，仅在config.multiple == false时有效；getCurrentHeader方法仅供外部调用，不可配置 </td>
                     </tr>
                     <tr>
-                        <td>getCurrentPanel</td>
                         <td>getCurrentPanel()</td>
+                        <td></td>
                         <td>获得当前展开的accordion面板对象，仅在config.multiple == false时有效；getCurrentPanel方法仅供外部调用，不可配置 </td></td>
                     </tr>
                     <tr>
-                        <td>getHeader</td>
                         <td>getHeader(index)</td>
+                        <td></td>
                         <td>获得指定序号的accordion面板对应的标题节点对象；此方法仅供外部调用，不可配置 </td></td>
                     </tr>
                     <tr>
-                        <td>getPanel(1)</td>
                         <td>getPanel(index)</td>
+                        <td></td>
                         <td>获得指定序号的accordion面板节点对象；此方法仅供外部调用，不可配置 </td></td>
                     </tr>
                     <tr>

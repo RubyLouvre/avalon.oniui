@@ -14,8 +14,15 @@ a, a:active, a:hover {
     text-decoration: none;
     color: #333;
 }
+.fix {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+}
 .header {
     background: #fff;
+    z-index: 1000;
 }
 .header .nav {
     position: relative;
@@ -26,6 +33,11 @@ a, a:active, a:hover {
     text-align: center;
     padding: 0 5px;
     background: url(./avalonIcon.png) no-repeat;
+}
+.header .fix {
+    background: #fff;
+    z-index: 1000;
+    box-shadow: 0 2px 3px 0 rgba(74, 136, 115, 0.5);
 }
 .header .nav ul {
     margin: 0 auto;
@@ -50,7 +62,7 @@ a, a:active, a:hover {
 .header .search {
     position: absolute;
     right: 0;
-    top: 0;
+    top: 13px;
 }
 .header .search input {
     border: 1px solid #547c73;
@@ -64,6 +76,8 @@ a, a:active, a:hover {
     line-height: 115px;
     color: #f0fffb;
     background: #28966f;
+    margin-top: 60px;
+    box-shadow: 0 2px 0 0 #dafbf0;
 }
 .header h1 span {
     display: block;

@@ -8,7 +8,7 @@
     ms-class-15="ui-menu-item-{{_depth}}" 
     ms-class-16="ui-menu-with-sub ui-menu-with-sub-{{_depth}}:_hasSubMenu(menu)"  
     ms-hover-100="ui-state-hover:!menu.disabled" 
-    ms-click-101="__clickActive($event, $index)" 
+    ms-click-101="_ifEventIsMouseEnter($event, $index)" 
     ms-data-sub="_hasSubMenu(menu)" 
     ms-data-depth="_depth" 
     ms-data-index="$index" 

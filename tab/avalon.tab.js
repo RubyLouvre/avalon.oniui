@@ -328,8 +328,8 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         distroyDom: true,       //@param  扫描dom获取数据，是否销毁dom
         cutEnd: "...",          //@param  tab title截取字符后，连接的字符，默认为省略号
         forceCut: false,        //@param  强制截断，因为竖直方向默认是不截取的，因此添加一个强制截断，使得在纵向排列的时候title也可以被截断
-        //tabs:undefined,              //@param  [{title:"xx", disabled:boolen, removable:boolen}]，单个tabs元素的removable针对该元素的优先级会高于组件的removable设置
-        //tabpanels:undefined,         //@param  [{content:content or url, contentType: "content" or "ajax"}] 单个panel的contentType配置优先级高于组件的contentType
+        //tabs:undefined,              //@param  <pre>[/n{/ntitle:"xx",/n disabled:boolen,/n removable:boolen/n}/n]</pre>，单个tabs元素的removable针对该元素的优先级会高于组件的removable设置
+        //tabpanels:undefined,         //@param  <pre>[/n{/ncontent:content or url,/n contentType: "content" or "ajax"/n}/n]</pre> 单个panel的contentType配置优先级高于组件的contentType
         //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
         tabContainerGetter: function(element) {

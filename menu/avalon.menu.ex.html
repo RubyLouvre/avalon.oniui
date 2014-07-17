@@ -10,14 +10,9 @@
             require(["menu/avalon.menu"], function() {
                 avalon.define("test", function(vm) {
                     vm.menu = {
-                        onActivate: function(e, vmodel) {
-                            avalon.log("avtive")
-                        },
-                        onInit: function(vmodel) {
-                            // avalon.log(vmodel)
-                        },
-                        onClickActive: function() {
-                            avalon.log("click avtive")
+                        onSelect: function() {
+                            avalon.log(this)
+                            avalon.log(arguments)
                         }
                     }
                     vm.$skipArray = ["menu"]
@@ -63,7 +58,13 @@
                             <li><a href="#iddd">白人</a></li>
                             <li>黑人
                                 <ul>
-                                    <li><a href="#iddd">白2人</a></li>
+                                    <li><a href="#iddd">白2人</a>
+                                        <ul>
+                                            <li><a href="#iddd">白3人</a></li>
+                                            <li>黑3人</li>
+                                            <li data-disabled="true">灰3人</li>
+                                        </ul>
+                                    </li>
                                     <li>黑2人
                                         <ul>
                                             <li><a href="#iddd">白22人</a></li>
@@ -141,14 +142,9 @@
             require([&quot;menu/avalon.menu&quot;], function() {
                 avalon.define(&quot;test&quot;, function(vm) {
                     vm.menu = {
-                        onActivate: function(e, vmodel) {
-                            avalon.log(&quot;avtive&quot;)
-                        },
-                        onInit: function(vmodel) {
-                            // avalon.log(vmodel)
-                        },
-                        onClickActive: function() {
-                            avalon.log(&quot;click avtive&quot;)
+                        onSelect: function() {
+                            avalon.log(this)
+                            avalon.log(arguments)
                         }
                     }
                     vm.$skipArray = [&quot;menu&quot;]
@@ -194,7 +190,13 @@
                             &lt;li&gt;&lt;a href=&quot;#iddd&quot;&gt;白人&lt;/a&gt;&lt;/li&gt;
                             &lt;li&gt;黑人
                                 &lt;ul&gt;
-                                    &lt;li&gt;&lt;a href=&quot;#iddd&quot;&gt;白2人&lt;/a&gt;&lt;/li&gt;
+                                    &lt;li&gt;&lt;a href=&quot;#iddd&quot;&gt;白2人&lt;/a&gt;
+                                        &lt;ul&gt;
+                                            &lt;li&gt;&lt;a href=&quot;#iddd&quot;&gt;白3人&lt;/a&gt;&lt;/li&gt;
+                                            &lt;li&gt;黑3人&lt;/li&gt;
+                                            &lt;li data-disabled=&quot;true&quot;&gt;灰3人&lt;/li&gt;
+                                        &lt;/ul&gt;
+                                    &lt;/li&gt;
                                     &lt;li&gt;黑2人
                                         &lt;ul&gt;
                                             &lt;li&gt;&lt;a href=&quot;#iddd&quot;&gt;白22人&lt;/a&gt;&lt;/li&gt;

@@ -46,21 +46,21 @@
 <tr>
     <td>hdir</td><td> true</td><td> 开启、关闭选项排列顺序默认为true，即on-off,false为off-on</td></tr>
 <tr>
-    <td>onInit</td><td>配置函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+    <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
-    <td>_animateArrMaker</td><td>配置函数</td><td>_animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]</td></tr>
+    <td>_animateArrMaker</td><td>配置接口</td><td>_animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]</td></tr>
 <tr>
-    <td>onChange</td><td>配置函数</td><td>onChange(newValue, vmodel) 选中状态发生变化时触发，参数为当前的选中状态及vmodel对象</td></tr>
+    <td>onChange</td><td>回调函数</td><td>onChange(newValue, vmodel) 选中状态发生变化时触发，参数为当前的选中状态及vmodel对象</td></tr>
 <tr>
-    <td>getTemplate</td><td>配置函数</td><td>getTemplate(tmpl, opts) 用于修改模板的接口，默认不做修改</td></tr>
+    <td>getTemplate</td><td>配置接口</td><td>getTemplate(tmpl, opts) 用于修改模板的接口，默认不做修改</td></tr>
 <tr>
-    <td>toggleStatus</td><td>接口函数</td><td>toggleStatus 交替改变选中状态</td></tr>
+    <td>toggleStatus</td><td>接口调用</td><td>toggleStatus 交替改变选中状态</td></tr>
 <tr>
-    <td>disable</td><td>接口函数</td><td>disable 禁用组件</td></tr>
+    <td>disable</td><td>接口调用</td><td>disable 禁用组件</td></tr>
 <tr>
-    <td>enable</td><td>接口函数</td><td>enable 启用组件</td></tr>
+    <td>enable</td><td>接口调用</td><td>enable 启用组件</td></tr>
 <tr>
-    <td>_draw</td><td>接口函数</td><td>_draw() 动态更换皮肤后，可以调用这个方法更新提取switch样式</td></tr>
+    <td>_draw</td><td>接口调用</td><td>_draw() 动态更换皮肤后，可以调用这个方法更新提取switch样式</td></tr>
 <!--auto doc end-->
                 </table>
             </fieldset>

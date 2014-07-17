@@ -67,7 +67,7 @@
                 <li ms-repeat="widgets" data-repeat-rendered="uiListRendered"><a href="#" ms-class="active: $index===currentIndex" ms-click="showDocument(el, $event, $index)">{{el}}</a></li> 
             </ul>
             {{renderIframe() | html}}
-            <iframe ms-if="!hashchangeSupport" id="doccanvas" scrolling="no" name="doccanvas" class="ui-doc" ms-css-width="contentWidth" ms-on-load="setHeight" frameborder="none" ms-attr-src="href"></iframe>
+            <iframe ms-if="!hashchangeSupport" id="doccanvas" scrolling="no" name="doccanvas" class="ui-doc" style="border:none;"  ms-css-width="contentWidth" ms-on-load="setHeight" frameborder="none" ms-attr-src="href"></iframe>
         </div>
     </div>
     <div class="footer">
@@ -79,7 +79,6 @@
             <li class="last"><a href="#">友情链接</a></li>
         </ul>
     </div>
-
     <script src="static/dest/main.min.js"></script>
     <script>
         avalon.ready(function() {
@@ -188,7 +187,8 @@
                 }
                 vm.renderIframe = function() {
                     if(!vmodel.hashchangeSupport) return "";
-                    return '<iframe id="doccanvas" scrolling="no" name="doccanvas" ms-class="ui-doc:!page" frameborder="none" src="' + vmodel.href + '" ms-css-width="'+ vmodel.contentWidth +'"></iframe>'
+                    return '<iframe id="doccanvas" scrolling="no" name="doccanvas" ms-class="ui-doc:!page" style="border:none;" frameborder="none" src="' + vmodel.href + '" ms-css-width="'+ vmodel.contentWidth +'"></iframe>'
+
                 }
                 vm.setHeight = function() {
                     clearInterval(vm.timer);

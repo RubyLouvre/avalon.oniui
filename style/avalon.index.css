@@ -1,4 +1,5 @@
 body {
+    font: 14px/1.5 "微软雅黑","OpenSansRegular","Helvetica Neue",Helvetica,Arial,sans-serif;
     background: #eaeaea;
     text-align: center;
 }
@@ -8,6 +9,10 @@ body, div, ul, li, h1{
 }
 ul {
     list-style: none;
+}
+a, a:active, a:hover {
+    text-decoration: none;
+    color: #333;
 }
 .header {
     background: #fff;

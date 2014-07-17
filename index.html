@@ -243,7 +243,6 @@
             if(vmodel.hashchangeSupport) {
                 vmodel.setHeight();
                 window.onhashchange = function(e) {
-                    console.log("onhashchange called")
                     var hash = location.hash.split("#")[1],
                         hrefObj = {};
                     hash = hash || defaultHref.split("/")[1];

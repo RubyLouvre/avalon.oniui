@@ -68,9 +68,9 @@ define(["avalon"], function() {
         Cookie.set(name, '', opt)
     }
 
-    Cookie.clear = function(name, opt) {
+    Cookie.clear = function() {
         var c = document.cookie.split("; ");
-        for (i in c)
+        for (var i in c)
             document.cookie = /^[^=]+/.exec(c[i])[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
 

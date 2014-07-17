@@ -41,6 +41,7 @@ div#{$uiname} {
 	& &-nav .ui-state-default a,& &-nav .ui-state-default:link,& &-nav .ui-state-default a:hover{
 		color: map-get($tab, tabColor);
 		text-decoration: none;
+		font-size:12px;
 	}
 	& &-nav .ui-state-hover{
 		color: map-get($tab, tabHoverColor);

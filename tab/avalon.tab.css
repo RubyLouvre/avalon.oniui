@@ -23,7 +23,8 @@ div.ui-tab {
     color: black; }
   .ui-tab .ui-tab-nav .ui-state-default a, .ui-tab .ui-tab-nav .ui-state-default:link, .ui-tab .ui-tab-nav .ui-state-default a:hover {
     color: black;
-    text-decoration: none; }
+    text-decoration: none;
+    font-size: 12px; }
   .ui-tab .ui-tab-nav .ui-state-hover {
     color: black;
     background: white; }

@@ -26,27 +26,27 @@
                     </tr>
                     <!--auto doc start-->
 <tr>
-    <td>active</td><td>false</td><td> 将第几个项目设置为选中，级联情形下，会将设置应用给每一级menu，默认是false，一个都不选中</td></tr>
+    <td>active</td><td>false</td><td> 将第几个项目设置为选中，级联情形下，会将设置应用给每一级menu，默认是false，一个都不选中，建议不要通过修改这个值来修改menu的选中状态，而是通过setActiveList接口来做</td></tr>
+<tr>
+    <td>data</td><td> undefined</td><td> menu的数据项，如果没有配置这个项目，则默认扫描元素中的li，以及li中的ul或者ol来创建级联菜单，数据结构形式 <pre>[<br>{<br>title: "html",<br> data: [...],<br> active: false,<br> disabled: false<br>}<br>]</pre>，子元素如果包含有效的data属性表示拥有子菜单</td></tr>
 <tr>
     <td>event</td><td> "mouseenter"</td><td>  选中事件，默认mouseenter</td></tr>
 <tr>
     <td>dir</td><td> "h"</td><td> 方向，取值v,h，默认h是水平方向， v是竖直方向</td></tr>
 <tr>
-    <td>onInit</td><td>配置函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+    <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
-    <td>resetMenu</td><td>配置函数</td><td>resetMenu(vmodel) 重置menu的配置方法，默认是重置为一个都不选中</td></tr>
+    <td>resetMenu</td><td>配置接口</td><td>resetMenu(vmodel) 重置menu的配置方法，默认是重置为一个都不选中</td></tr>
 <tr>
-    <td>getTemplate</td><td>配置函数</td><td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td></tr>
+    <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td></tr>
 <tr>
-    <td>onActivate</td><td>配置函数</td><td>onActivate(event, index, data) 选中menu后的回调，this指向对应的menu li元素，参数是事件对象，索引，该级menu的data list fn(event, index, data)，默认为avalon.noop</td></tr>
+    <td>onSelect</td><td>回调函数</td><td>onSelect(vmodel, realSelect, _hasSubMenu) this指向选中的menu li元素，realSelect是选中menu项目的数组 <pre>[<br>[data, active],<br>[data2,active2]<br>]</pre>，对应每一级的数据，及每一级的active值，_hasSubMenu表示this元素有无包含子menu</td></tr>
 <tr>
-    <td>onClickActive</td><td>配置函数</td><td>onClickActive(event, index, data, hasSub)  点击选中的menu，this指向对应的menu li元素，参数是事件对象，索引，该级menu的data list，是否有子menu fn(event, index, data, hasSub)，默认为avalon.noop</td></tr>
+    <td>activate</td><td>接口调用</td><td>activate(index)展开菜单索引为index的项目，index置为false,undefined则不会展开任一项目</td></tr>
 <tr>
-    <td>activate</td><td>接口函数</td><td>activate(index)展开菜单索引为index的项目，index置为false,undefined则不会展开任一项目</td></tr>
+    <td>getActiveList</td><td>接口调用</td><td>getActiveList() 获取所有选中的menu list</td></tr>
 <tr>
-    <td>getActiveList</td><td>接口函数</td><td>getActiveList() 获取选中的menu list</td></tr>
-<tr>
-    <td>setActiveList</td><td>接口函数</td><td>setActiveList(activeListArray) 设置级联menu的选项，可以一个数组，也可以使一个数字，或者"2,3,4"这样的字符串</td></tr>
+    <td>setActiveList</td><td>接口调用</td><td>setActiveList(activeListArray) 设置级联menu的选项，可以一个数组，也可以使一个数字，或者"2,3,4"这样的字符串</td></tr>
 <!--auto doc end-->
                 </table>
             </fieldset>

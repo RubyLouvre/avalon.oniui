@@ -54,17 +54,17 @@
 <tr>
     <td>hiddenDelay</td><td> 64</td><td> tooltip自动隐藏时间，单位ms</td></tr>
 <tr>
-    <td>onInit</td><td>配置函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+    <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
-    <td>contentGetter</td><td>配置函数</td><td>contentGetter() 获取内容接口，讲srcElement作为参数传递过来，默认是返回a标签的title，如果该函数返回为空，那么则不会显示tooltip</td></tr>
+    <td>contentGetter</td><td>配置接口</td><td>contentGetter() 获取内容接口，讲srcElement作为参数传递过来，默认是返回a标签的title，如果该函数返回为空，那么则不会显示tooltip</td></tr>
 <tr>
-    <td>_animateArrMaker</td><td>配置函数</td><td>_animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]</td></tr>
+    <td>_animateArrMaker</td><td>配置接口</td><td>_animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]</td></tr>
 <tr>
-    <td>getTemplate</td><td>配置函数</td><td>getTemplate(tpl, opts) 定制修改模板接口</td></tr>
+    <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts) 定制修改模板接口</td></tr>
 <tr>
-    <td>show</td><td>接口函数</td><td>show(elem) 显示tooltip，相对于elem定位，elem为元素或者event事件对象，如果elem为空，则采用之前缓存的对象，两者都为空，则只展示，不改变位置</td></tr>
+    <td>show</td><td>接口调用</td><td>show(elem) 显示tooltip，相对于elem定位，elem为元素或者event事件对象，如果elem为空，则采用之前缓存的对象，两者都为空，则只展示，不改变位置</td></tr>
 <tr>
-    <td>hide</td><td>接口函数</td><td>hide($event) 隐藏tooltip，参数是$event，可缺省</td></tr>
+    <td>hide</td><td>接口调用</td><td>hide($event) 隐藏tooltip，参数是$event，可缺省</td></tr>
 <!--auto doc end-->
                 </table>
             </fieldset>

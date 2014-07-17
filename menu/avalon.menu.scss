@@ -32,11 +32,13 @@ ul#{$uiname},ol#{$uiname}{
 		margin: 0;
 		width: 150px;
 	}
+	& li.ui-state-hover{
+		background: $ui-state-active-background-color;
+	}
 	& li.ui-state-active{
 		background: $ui-state-active-background-color;
 	}
 	& li#{$uiname}-with-sub{
-		background: map-get($menu, bg);
 	}
 	& &-sub{
 		margin: 0;

@@ -7,7 +7,7 @@
         <link type="text/css" rel="stylesheet" href="./style/avalon.doc.css" />
         <link type="text/css" rel="stylesheet" href="./style/avalon.index.css" />
         <script src="avalon.js"></script>
-
+        <script src="./highlight/shCore.js"></script>
     </head>
     <body>
         <div class="header">
@@ -26,7 +26,8 @@
             <ul class="ui-list">
                 <li ms-repeat="widgets" data-repeat-rendered="uiListRendered"><a href="#" ms-class="active: $index===currentIndex" ms-click="showDocument(el, $event, $index)">{{el}}</a></li> 
             </ul>
-            <div class="ui-doc" ms-include-src="href"  data-include-loaded="afterTemplateLoaded" data-include-rendered="adjustLinks"></div>
+            <!-- <div class="ui-doc" ms-include-src="href"  data-include-loaded="afterTemplateLoaded" data-include-rendered="adjustLinks"></div> -->
+            <iframe id="doccanvas" scrolling="no" ms-attr-onload="setHeight(event)" name="doccanvas" class="ui-doc" style="width:760px;" frameborder="none" ms-attr-src="href"></iframe>
         </div>
         <div class="footer">
             <ul>
@@ -41,14 +42,20 @@
 avalon.ready(function() {
     var docCssReg = /<link[^>]*style\/avalon\.doc\.css[^>]*\>/img,
             widgets = ["accordion", "tab", "spinner", "slider", "textbox", "dropdown", "datepicker", "dialog", "at", "button", "checkboxlist", "cookie", "draggable", "flipswitch", "hotkeys", "json", "miniswitch", "notice", "pager", "position", "preview", "progressbar", "resizable", "roleselect", "scrollbar", "scrollspy", "simplegrid", "store", "switchdropdown", "tooltip"].sort();
+    var hash = location.hash.match(/avalon[\S]+\.html/g), oldHref
+    if(hash) {
+        hash = hash[0].split(".")[1] + "/" + hash[0]
+    }
     var vmodel = avalon.define("avalonUiDocument", function(vm) {
         vm.widgets = widgets;
-        vm.href = "accordion/avalon.accordion.doc.html";
+        vm.href = hash || "accordion/avalon.accordion.doc.html";
         vm.currentIndex = 0;
         vm.uiListHeight = 0;
+        vm.timer = "";
         vm.showDocument = function(widget, event, index) {
             event.preventDefault();
             vmodel.href = widget + "/avalon." + widget + ".doc.html"
+            location.hash = "#" + vmodel.href.split("/")[1];
             vmodel.currentIndex = index;
         };
         vm.afterTemplateLoaded = function(template) {
@@ -63,13 +70,41 @@ avalon.ready(function() {
                 Array.prototype.forEach.call(document.querySelectorAll(".wrapper .example-links li a"), function(link) {
                     var href = link.getAttribute("href")
                     var match = href.match(/avalon\.([^.]+)/) || ["", ""]
-                    
-                    link.href = "javascript:void 0"
-                    link.onclick = function(){
+
+                    link.href = "#" + href
+                    link.target = ""
+                    link.onclick = function() {
                         vmodel.href = match[1] + "/" + href
                     }
                 })
             }
+            if (window.SyntaxHighlighter) {
+                SyntaxHighlighter.highlight()
+            }
+        }
+        vm.setHeight = function(e) {
+            clearInterval(vm.timer)
+            // 扫描，修改高度
+            vmodel.timer = setInterval(function() {
+                var iframe = document.getElementById("doccanvas")
+                var nwindow = iframe.contentWindow
+                if(nwindow.document && nwindow.document.getElementsByTagName("body")[0]) {
+                    nwindow = nwindow.document
+                    h = avalon(nwindow.body).outerHeight() + avalon(nwindow.body).offset().top;
+                    avalon(iframe).css("height", h + "px")
+                    if(oldHref !== nwindow.location.href) {
+                        oldHref = nwindow.location.href
+                        if(!oldHref.match(/avalon\.[\S]+\.doc\./g)) return
+                        var ols = nwindow.getElementsByTagName("ol")
+                        for(var i = 0, len = ols.length; i < len; i++) {
+                            var as = ols[i].getElementsByTagName("a")
+                            avalon.each(as, function(x, item) {
+                                item.setAttribute("target", "_self")
+                            })
+                        }
+                    }
+                }
+            }, 100)
         }
     })
     avalon.scan();

@@ -8,81 +8,85 @@
         <meta name="viewport" content="width=device-width">
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
     </head>
-    <body class="doc">
+    <body>
         <div class="wrapper">
-            <h1>默认参数</h1>
-            <p>dropdown组件基于avalon对select控件进行扩展，优化展示效果，支持通过数据及html模板初始化下拉选项。</p>
-            <table class="table-doc">
-                <caption class="example">dropdown组件配置项说明：</caption>
-                <thead>
-                    <tr>
-                        <th>名字</th><th>默认值</th> <th>说明</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>width</td>
-                        <td>200</td>
-                        <td>自定义宽度</td>
-                    </tr>
-                    <tr>
-                        <td>listWidth</td>
-                        <td>200</td>
-                        <td>自定义下拉列表的宽度</td>
-                    </tr>
-                    <tr>
-                        <td>height</td>
-                        <td>200</td>
-                        <td>下拉列表的高度</td>
-                    </tr>
-                    <tr>
-                        <td>enable</td>
-                        <td>true</td>
-                        <td>组件是否可用</td>
-                    </tr>
-                    <tr>
-                        <td>readonly</td>
-                        <td>false</td>
-                        <td>组件是否只读</td>
-                    </tr>
-                    <tr>
-                        <td>model</td>
-                        <td>[]</td>
-                        <td>下拉列表显示的数据模型</td>
-                    </tr>
-                    <tr>
-                        <td>modelBind</td>
-                        <td>false</td>
-                        <td>是否要在model更新时通知列表更新</td>
-                    </tr>
-                    <tr>
-                        <td>value</td>
-                        <td>model中第一个数据项的value</td>
-                        <td>设置组件的初始值</td>
-                    </tr>
-                    <tr>
-                        <td>multiple</td>
-                        <td>false</td>
-                        <td>是否为多选模式</td>
-                    </tr>
-                    <tr>
-                        <td>size</td>
-                        <td>1</td>
-                        <td>尺寸大小</td>
-                    </tr>
-                </tbody>
-            </table>
-            <h3>demo示例：</h3>
-            <ol>
-                <li><a target="_blank" href="avalon.dropdown.ex1.html">使用html配置multiple组件</a></li>
-                <li><a target="_blank" href="avalon.dropdown.ex2.html">使用html配置multiple并使用双工绑定</a></li>
-                <li><a target="_blank" href="avalon.dropdown.ex3.html">使用option配置multiple并使用双工绑定</a></li>
-                <li><a target="_blank" href="avalon.dropdown.ex4.html">使用html配置dropdown组件</a></li>
-                <li><a target="_blank" href="avalon.dropdown.ex5.html">使用html配置dropdown并使用双工绑定</a></li>
-                <li><a target="_blank" href="avalon.dropdown.ex6.html">使用option配置dropdown并使用双工绑定</a></li>
-                <li><a target="_blank" href="avalon.dropdown.ex7.html">dropdown disabled</a></li>
-                <li><a target="_blank" href="avalon.dropdown.ex8.html">dropdown readOnly</a></li>
-            </ol>
+            <h1>dropdown</h1>
+            <fieldset>
+                <legend>自定义下拉框</legend>
+                <p>用于代替原生select控件,支持更多制定</p>
+            </fieldset>
+            <fieldset>
+                <legend>使用方法</legend>
+                <table class="table-doc">
+                    <thead>
+                        <tr>
+                            <th>名字</th><th>默认值</th> <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>width</td>
+                            <td>200</td>
+                            <td>自定义宽度</td>
+                        </tr>
+                        <tr>
+                            <td>listWidth</td>
+                            <td>200</td>
+                            <td>自定义下拉列表的宽度</td>
+                        </tr>
+                        <tr>
+                            <td>height</td>
+                            <td>200</td>
+                            <td>下拉列表的高度</td>
+                        </tr>
+                        <tr>
+                            <td>enable</td>
+                            <td>true</td>
+                            <td>组件是否可用</td>
+                        </tr>
+                        <tr>
+                            <td>readonly</td>
+                            <td>false</td>
+                            <td>组件是否只读</td>
+                        </tr>
+                        <tr>
+                            <td>model</td>
+                            <td>[]</td>
+                            <td>下拉列表显示的数据模型</td>
+                        </tr>
+                        <tr>
+                            <td>modelBind</td>
+                            <td>false</td>
+                            <td>是否要在model更新时通知列表更新</td>
+                        </tr>
+                        <tr>
+                            <td>value</td>
+                            <td>model中第一个数据项的value</td>
+                            <td>设置组件的初始值</td>
+                        </tr>
+                        <tr>
+                            <td>multiple</td>
+                            <td>false</td>
+                            <td>是否为多选模式</td>
+                        </tr>
+                        <tr>
+                            <td>size</td>
+                            <td>1</td>
+                            <td>尺寸大小</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+            <ul class="example-links">
+                <li><a href="avalon.dropdown.ex1.html">使用html配置multiple组件</a></li>
+                <li><a href="avalon.dropdown.ex2.html">使用html配置multiple并使用双工绑定</a></li>
+                <li><a href="avalon.dropdown.ex3.html">使用option配置multiple并使用双工绑定</a></li>
+                <li><a href="avalon.dropdown.ex4.html">使用html配置dropdown组件</a></li>
+                <li><a href="avalon.dropdown.ex5.html">使用html配置dropdown并使用双工绑定</a></li>
+                <li><a href="avalon.dropdown.ex6.html">使用option配置dropdown并使用双工绑定</a></li>
+                <li><a href="avalon.dropdown.ex7.html">dropdown disabled</a></li>
+                <li><a href="avalon.dropdown.ex8.html">dropdown readOnly</a></li>
+            </ul>
         </div>
     </body>
 </html>

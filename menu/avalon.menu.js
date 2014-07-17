@@ -33,6 +33,7 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
         return data
     }
 
+    // 格式化数据
     function formateData(data) {
         avalon.each(data, function(i, item) {
             if(!item || item.$id) return
@@ -66,46 +67,50 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
         var vmodel = avalon.define(data.menuId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
-            vm._subMenus = []
-            vm.$skipArray = ["widgetElement", "template", "_subMenus"]
+            vm._oldActive = options.active
+            vm._subMenus = [] // 维护一个子menu列表
+            vm.$skipArray = ["widgetElement", "template", "_subMenus", "_oldActive"]
 
-            var inited, outVmodel = vmodels[1], clickKey = "fromMenu" + uid
+            var inited, outVmodel = vmodels && vmodels[1], clickKey = "fromMenu" + uid
             vm.$init = function() {
                 if(inited) return
                 inited = true
 
+                // 子menu的层次+1
                 if(outVmodel && outVmodel._depth != void 0) {
                     vmodel._depth = outVmodel._depth + 1
                 }
 
                 element.innerHTML = vmodel.template
-                if(!(outVmodel && outVmodel._depth != void 0)) element.setAttribute("ms-hover-100", "ui-helper-max-index")
-                avalon(element).addClass("ui-menu ui-helper-clearfix ui-helper-reset" + (vmodel.dir === "v" ? " ui-menu-vertical" : ""))
+                if(vmodel._depth === 1) {
+                    element.setAttribute("ms-hover-100", "ui-helper-max-index")
+                    avalon(element).addClass("ui-menu ui-helper-clearfix ui-helper-reset" + (vmodel.dir === "v" ? " ui-menu-vertical" : ""))
+                }
                 avalon.scan(element, [vmodel].concat(vmodels))
+                // 只有第一级menu触发onInit
                 if(typeof options.onInit === "function" && vmodel._depth < 2) {
                     //vmodels是不包括vmodel的 
                     options.onInit.call(element, vmodel, options, vmodels)
                 }
                 // mouseleave重置menu
                 vmodel.event === "mouseenter" && avalon(element).bind("mouseleave", function(e) {
-                    vmodel.resetMenu(vmodel)
+                    vmodel._restMenu(vmodel)
                 })
                 // 点击选中事件的时候，重置menu
                 if(vmodel.event === "click") {
                     // 绑定一次
                     if(!widgetInit) {
                         widgetInit = {}
-                        avalon(document).bind("click", function(e) {
-                            bindClick(e)
-                        })
+                        avalon(document).bind("click", bindClick)
                     }
-                    avalon(element).bind("click", function(e) {
-                        e && e.stopPropagation()
-                    })
                     widgetInit[clickKey] = function(e) {
-                        vmodel.resetMenu(vmodel)
+                        vmodel._restMenu(vmodel)
                     }
                 }
+                // 各menu之间点击互不影响
+                vmodel._depth === 1 && avalon(element).bind("click", function(e) {
+                    e && e.stopPropagation()
+                })
             }
             vm.$remove = function() {
                 delete widgetInit[clickKey]
@@ -116,54 +121,101 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
                 return vmodel.active === index && !menu.disabled
             }
 
-            vm._canRemove = avalon.noop
-
             //@method activate(index)展开菜单索引为index的项目，index置为false,undefined则不会展开任一项目
             vm.activate = function(e, index) {
-                if(vmodel.data[index].disabled === true || vmodel.disabled) return
-                var node = this.getElementsByTagName("ul")[0] || this.getElementsByTagName("ol")[0]
-                if(node) {
-                    // 阻止默认事件
-                    // 展开子菜单
-                    e && e.preventDefault()
-                }
-                // 点击进入这个分支
-                if(e && vmodel.event === "click") {
-                    // 已选中
-                    if(vmodel.active === index) {
-                        // 阻止冒泡
-                        e && e.stopPropagation()
-                        return options.onClickActive.call(this, e, index)
-                    // 未选中
-                    } else {
-                        // 阻止冒泡，重置子menu
-                        node && e && e.stopPropagation()
-                        vmodel.resetSubMenus()
+                var _index = index === void 0 ? e : index
+                if(!vmodel.data[_index] || vmodel.data[_index].disabled === true || vmodel.disabled) return
+                vmodel._oldActive = vmodel.active
+                vmodel.active = _index
+                // 事件触发
+                if(e && index !== void 0) {
+                    var node = this.getElementsByTagName("ul")[0] || this.getElementsByTagName("ol")[0]
+                    if(node) {
+                        // 阻止默认事件,展开子菜单
+                        e && e.preventDefault()
+                    }
+                    // 点击进入这个分支
+                    if(e && vmodel.event === "click") {
+                        // 已选中
+                        if(vmodel._oldActive === _index) {
+                            
+                        // 未选中
+                        } else {
+                            // 切换menu，重置子menu状态
+                            vmodel.resetSubMenus()
+                        }
                     }
                 }
-                vmodel.active = index === void 0 ? e : index
-                options.onActivate.call(this, e, vmodel.active)
+                if(vmodel.active !== vmodel._oldActive) vmodel._onActivate.call(this, e, vmodel.active, vmodel.data)
             }
-
+            vm._onActivate = function(e, active, data) {
+                if(vmodel._depth === 1) {
+                    vmodel.getActiveList()
+                    options.onActivate.call(this, e, active, data)
+                }
+            }
+            vm._onClickActive = function(e, active, data, hasSub) {
+                if(vmodel._depth === 1) {
+                    // console.log(e.srcElement || e.target)
+                    vmodel.getActiveList()
+                    // options.onClickActive.call(this, e, active, data, hasSub)
+                }
+            }
             vm.__clickActive = function(e, index) {
-                if(vmodel.event === "click") return
+                if(vmodel.event === "click" || vmodel._depth !== 1) return
                 // event 为mouseenter的时候进入这个分支
-                options.onClickActive.call(this, e, index)
+                vmodel._clickActive.call(this, e, index)
             }
-
+            // event 为mouseenter的时候进入这个方法
             vm._clickActive = function(e, index) {
                 if(vmodel.active !== index) return
                 // 阻止冒泡
-                e && e.stopPropagation()
+                // e && e.stopPropagation()
                 var ele = avalon(this), d = ele.data()
-                options.onActivate.call(this, e, vmodel.active)
+                vmodel._onClickActive.call(this, e, vmodel.active, vmodel.data, d && d.sub)
+            }
+            //@method getActiveList() 获取选中的menu list
+            vm.getActiveList = function(arr) {
+                var data = arr || []
+                if(vmodel.active !== false && vmodel.data[vmodel.active]) {
+                    data.push(vmodel.data[vmodel.active].$model)
+                    for(var i = 0, len = vmodel._subMenus.length; i < len; i++) {
+                        var sub = vmodel._subMenus[i]
+                        if(sub && vmodel.active === sub.index) {
+                            sub.getActiveList(data)
+                            break
+                        }
+                    }
+                }
+                console.log(data)
+                return data
+            }
+            //@method setActiveList(activeListArray) 设置级联menu的选项，可以一个数组，也可以使一个数字，或者"2,3,4"这样的字符串
+            vm.setActiveList = function(arr) {
+                if(!arr) return
+                if(!Array.isArray(arr)) var arr = ([arr].join("").split(","))
+                if(!arr.length) return
+                vmodel.activate(eval(arr.splice(0, 1)[0]))
+                if(vmodel.active === false) {
+                    vmodel.resetSubMenus()
+                    return
+                }
+                if(!arr.length) return
+                for(var i = 0, len = vmodel._subMenus.length; i < len; i++) {
+                    var sub = vmodel._subMenus[i]
+                    if(sub && vmodel.active === sub.index) {
+                        sub.setActiveList(arr)
+                        break
+                    }
+                }
             }
 
-            vm._outPutData = function(menu) {
+            // 是否有子menu
+            vm._hasSubMenu = function(menu) {
                 return !!(menu && menu.data && Array.isArray(menu.data) && menu.data.length)
             }
 
-            // 处理嵌套
+            // 处理级联子menu
             vm._rescan = function() {
                 vmodel._subMenus = []
                 var nodes = vmodel.widgetElement.children
@@ -177,13 +229,13 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
                                 var opt = avalon.mix({}, options), 
                                     name = data.menuId + "r" + getCnt()
                                 menu.setAttribute("ms-widget", "menu, $" + uid + i)
-                                var subData = vmodel.data[d.widgetIndex], obj = {
-                                    }
+                                var subData = vmodel.data[d.widgetIndex], obj = {}
                                 if(subData) {
                                     obj = avalon.mix(opt, {
                                         data: subData.$model.data
                                     })
                                 }
+                                obj.index = d.widgetIndex
                                 var subVmodel = avalon.define(name, function(svm) {
                                     svm.menu = obj
                                     svm.$skipArray = ["menu"]
@@ -195,15 +247,22 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
                     }
                 }
             }
+
             // 重置所有子menu
             vm.resetSubMenus = function() {
                 avalon.each(vmodel._subMenus, function(i, item) {
-                    vmodel.resetMenu(item)
+                    vmodel._restMenu(item)
+                    // 迭代
                     item.resetSubMenus()
                 })
             }
+            vm._restMenu = function(model) {
+                model.resetMenu(model)
+                model._oldActive = model.active
+            }
+
             vm._cutCounter = avalon.noop
-            //@method apiName(argx) description
+            vm._canRemove = avalon.noop
 
         })
       
@@ -214,7 +273,7 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
     //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
         active:false, //@param 将第几个项目设置为选中，级联情形下，会将设置应用给每一级menu，默认是false，一个都不选中
-        _avtive:[], //@param 
+        _avtive:[], //\@param 
         event: "mouseenter",    //@param  选中事件，默认mouseenter
         disabled: false,
         _depth: 1,
@@ -231,8 +290,8 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
         _menuTitle: function (title, tab, count, end) {
             return title
         },
-        onActivate: avalon.noop,  //@optMethod onActivate(event, index) 选中menu后的回调，this指向对应的menu li元素，参数是事件对象，索引 fn(event, index)，默认为avalon.noop
-        onClickActive: avalon.noop, //@optMethod onClickActive(event, index)  点击选中的menu，this指向对应的menu li元素，参数是事件对象，索引 fn(event, index)，默认为avalon.noop
+        onActivate: avalon.noop,  //@optMethod onActivate(event, index, data) 选中menu后的回调，this指向对应的menu li元素，参数是事件对象，索引，该级menu的data list fn(event, index, data)，默认为avalon.noop
+        onClickActive: avalon.noop, //@optMethod onClickActive(event, index, data, hasSub)  点击选中的menu，this指向对应的menu li元素，参数是事件对象，索引，该级menu的data list，是否有子menu fn(event, index, data, hasSub)，默认为avalon.noop
         cutEnd: "",
         $author: "skipper@123"
     }

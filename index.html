@@ -27,7 +27,7 @@
                 <li ms-repeat="widgets" data-repeat-rendered="uiListRendered"><a href="#" ms-class="active: $index===currentIndex" ms-click="showDocument(el, $event, $index)">{{el}}</a></li> 
             </ul>
             {{renderIframe() | html}}
-            <iframe ms-if="!hashchangeSupport" id="doccanvas" scrolling="no" name="doccanvas" class="ui-doc" style="width:760px;" ms-on-load="setHeight" frameborder="none" ms-attr-src="href"></iframe>
+            <iframe ms-if="!hashchangeSupport" id="doccanvas" scrolling="no" name="doccanvas" class="ui-doc" style="width:760px;border:none;" ms-on-load="setHeight" frameborder="none" ms-attr-src="href"></iframe>
         </div>
         <div class="footer">
             <ul>
@@ -103,7 +103,7 @@ avalon.ready(function() {
         }
         vm.renderIframe = function() {
             if(!vmodel.hashchangeSupport) return "";
-            return '<iframe id="doccanvas" scrolling="no" name="doccanvas" class="ui-doc" style="width:760px;" frameborder="none" src="' + vmodel.href + '"></iframe>'
+            return '<iframe id="doccanvas" scrolling="no" name="doccanvas" class="ui-doc" style="width:760px;border:none;" frameborder="none" src="' + vmodel.href + '"></iframe>'
         }
         vm.setHeight = function() {
             clearInterval(vm.timer);

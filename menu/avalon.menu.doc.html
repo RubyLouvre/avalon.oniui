@@ -32,21 +32,17 @@
 <tr>
     <td>dir</td><td> "h"</td><td> 方向，取值v,h，默认h是水平方向， v是竖直方向</td></tr>
 <tr>
-    <td>onInit</td><td>配置函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+    <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
-    <td>resetMenu</td><td>配置函数</td><td>resetMenu(vmodel) 重置menu的配置方法，默认是重置为一个都不选中</td></tr>
+    <td>resetMenu</td><td>配置接口</td><td>resetMenu(vmodel) 重置menu的配置方法，默认是重置为一个都不选中</td></tr>
 <tr>
-    <td>getTemplate</td><td>配置函数</td><td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td></tr>
+    <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td></tr>
 <tr>
-    <td>onActivate</td><td>配置函数</td><td>onActivate(event, index, data) 选中menu后的回调，this指向对应的menu li元素，参数是事件对象，索引，该级menu的data list fn(event, index, data)，默认为avalon.noop</td></tr>
+    <td>activate</td><td>接口调用</td><td>activate(index)展开菜单索引为index的项目，index置为false,undefined则不会展开任一项目</td></tr>
 <tr>
-    <td>onClickActive</td><td>配置函数</td><td>onClickActive(event, index, data, hasSub)  点击选中的menu，this指向对应的menu li元素，参数是事件对象，索引，该级menu的data list，是否有子menu fn(event, index, data, hasSub)，默认为avalon.noop</td></tr>
+    <td>getActiveList</td><td>接口调用</td><td>getActiveList() 获取所有选中的menu list</td></tr>
 <tr>
-    <td>activate</td><td>接口函数</td><td>activate(index)展开菜单索引为index的项目，index置为false,undefined则不会展开任一项目</td></tr>
-<tr>
-    <td>getActiveList</td><td>接口函数</td><td>getActiveList() 获取选中的menu list</td></tr>
-<tr>
-    <td>setActiveList</td><td>接口函数</td><td>setActiveList(activeListArray) 设置级联menu的选项，可以一个数组，也可以使一个数字，或者"2,3,4"这样的字符串</td></tr>
+    <td>setActiveList</td><td>接口调用</td><td>setActiveList(activeListArray) 设置级联menu的选项，可以一个数组，也可以使一个数字，或者"2,3,4"这样的字符串</td></tr>
 <!--auto doc end-->
                 </table>
             </fieldset>

@@ -28,17 +28,17 @@
 <tr>
     <td>axis</td><td> "y"</td><td> 滚动条滚动的方向，默认是竖直方向y，取值为x的时候，表示水平方向</td></tr>
 <tr>
-    <td>onInit</td><td>配置函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+    <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
-    <td>onChange</td><td>配置函数</td><td>onChange(index, ele, widgetElement, options) 滚动到应该显示那个tab的index，以及targetListGetter返回的list[index]值，以及绑定scrollspy的元素，options</td></tr>
+    <td>onChange</td><td>回调函数</td><td>onChange(index, ele, widgetElement, options) 滚动到应该显示那个tab的index，以及targetListGetter返回的list[index]值，以及绑定scrollspy的元素，options</td></tr>
 <tr>
-    <td>targetListGetter</td><td>配置函数</td><td>targetListGetter() 获取tab list函数，元素是数字或者元素id索引，默认是元素id索引</td></tr>
+    <td>targetListGetter</td><td>配置接口</td><td>targetListGetter() 获取tab list函数，元素是数字或者元素id索引，默认是元素id索引</td></tr>
 <tr>
-    <td>panelListGetter</td><td>配置函数</td><td>panelListGetter() 获取panel list函数，返回一个数组，元素是dom，或者返回空，默认返回空</td></tr>
+    <td>panelListGetter</td><td>配置接口</td><td>panelListGetter() 获取panel list函数，返回一个数组，元素是dom，或者返回空，默认返回空</td></tr>
 <tr>
-    <td>panelGetter</td><td>配置函数</td><td>panelGetter(pannelId, pannelIndex, panelsList, options) 获取panel函数，默认返回 panelsList[pannelIndex] || Id = pannelId</td></tr>
+    <td>panelGetter</td><td>配置接口</td><td>panelGetter(pannelId, pannelIndex, panelsList, options) 获取panel函数，默认返回 panelsList[pannelIndex] || Id = pannelId</td></tr>
 <tr>
-    <td>scrollTo</td><td>接口函数</td><td>scrollTo(id, index) 滚动到panel位置，滚动到 panelList[index] || dom.id = id的元素的地方，该方法绑定在onInit的返回的options参数上返回，供调用</td></tr>
+    <td>scrollTo</td><td>接口调用</td><td>scrollTo(id, index) 滚动到panel位置，滚动到 panelList[index] || dom.id = id的元素的地方，该方法绑定在onInit的返回的options参数上返回，供调用</td></tr>
 <!--auto doc end-->
                 </table>
             </fieldset>

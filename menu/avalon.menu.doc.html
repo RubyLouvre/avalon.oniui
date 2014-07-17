@@ -26,7 +26,9 @@
                     </tr>
                     <!--auto doc start-->
 <tr>
-    <td>active</td><td>false</td><td> 将第几个项目设置为选中，级联情形下，会将设置应用给每一级menu，默认是false，一个都不选中</td></tr>
+    <td>active</td><td>false</td><td> 将第几个项目设置为选中，级联情形下，会将设置应用给每一级menu，默认是false，一个都不选中，建议不要通过修改这个值来修改menu的选中状态，而是通过setActiveList接口来做</td></tr>
+<tr>
+    <td>data</td><td> undefined</td><td> menu的数据项，如果没有配置这个项目，则默认扫描元素中的li，以及li中的ul或者ol来创建级联菜单，数据结构形式 <pre>[<br>{<br>title: "html",<br> data: [...],<br> active: false,<br> disabled: false<br>}<br>]</pre>，子元素如果包含有效的data属性表示拥有子菜单</td></tr>
 <tr>
     <td>event</td><td> "mouseenter"</td><td>  选中事件，默认mouseenter</td></tr>
 <tr>
@@ -37,6 +39,8 @@
     <td>resetMenu</td><td>配置接口</td><td>resetMenu(vmodel) 重置menu的配置方法，默认是重置为一个都不选中</td></tr>
 <tr>
     <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td></tr>
+<tr>
+    <td>onSelect</td><td>回调函数</td><td>onSelect(vmodel, realSelect, _hasSubMenu) this指向选中的menu li元素，realSelect是选中menu项目的数组 <pre>[<br>[data, active],<br>[data2,active2]<br>]</pre>，对应每一级的数据，及每一级的active值，_hasSubMenu表示this元素有无包含子menu</td></tr>
 <tr>
     <td>activate</td><td>接口调用</td><td>activate(index)展开菜单索引为index的项目，index置为false,undefined则不会展开任一项目</td></tr>
 <tr>

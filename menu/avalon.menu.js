@@ -303,7 +303,8 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
     //argName: defaultValue, \/\/@param description
     //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
-        active:false, //@param 将第几个项目设置为选中，级联情形下，会将设置应用给每一级menu，默认是false，一个都不选中
+        active:false, //@param 将第几个项目设置为选中，级联情形下，会将设置应用给每一级menu，默认是false，一个都不选中，建议不要通过修改这个值来修改menu的选中状态，而是通过setActiveList接口来做
+        //data: undefined, //@param menu的数据项，如果没有配置这个项目，则默认扫描元素中的li，以及li中的ul或者ol来创建级联菜单，数据结构形式 <pre>[/n{/ntitle: "html",/n data: [...],/n active: false,/n disabled: false/n}/n]</pre>，子元素如果包含有效的data属性表示拥有子菜单
         _avtive:[], //\@param 
         event: "mouseenter",    //@param  选中事件，默认mouseenter
         disabled: false,
@@ -321,9 +322,7 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
         _menuTitle: function (title, tab, count, end) {
             return title
         },
-        onSelect: function(vmodel) {
-
-        }, //@optMethod 
+        onSelect: avalon.noop, //@optMethod onSelect(vmodel, realSelect, _hasSubMenu) this指向选中的menu li元素，realSelect是选中menu项目的数组 <pre>[/n[data, active],/n[data2,active2]/n]</pre>，对应每一级的数据，及每一级的active值，_hasSubMenu表示this元素有无包含子menu
         cutEnd: "",
         $author: "skipper@123"
     }

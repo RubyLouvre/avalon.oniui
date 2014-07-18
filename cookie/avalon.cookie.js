@@ -65,6 +65,10 @@ define(["avalon"], function() {
     }
     // 置空，并立刻过期
     Cookie.remove = function(name, opt) {
+        opt = opt || {}
+        if (!opt.expires) {
+            opt.expires = new Date(1970, 0, 1)
+        }
         Cookie.set(name, '', opt)
     }
 

@@ -39,4 +39,4 @@
 .ui-accordion .ui-accordion-content.ui-state-default { border: 1px solid #aaa; background: #fff; color: #000; }
 .ui-accordion .ui-accordion-content.ui-state-active { background: #fff; border: 1px solid #aaa; }
 .ui-accordion .ui-accordion-content.ui-state-hover { border: 1px solid #999999; background: #dadada; font-weight: normal; color: #212121; }
-.ui-accordion .ui-accordion-content .ui-accordion-content { border: 1px solid #aaa; background: #fff; color: white; }
+.ui-accordion .ui-accordion-content .ui-accordion-content { border: 1px solid #aaa; background: #fff; color: #333; }

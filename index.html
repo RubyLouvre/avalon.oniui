@@ -148,8 +148,8 @@
                     clientHeight = avalon(window).height();
                 if ((scrollTop + clientHeight) > totalTop) {
                     vmodel.position = "fixed";
-                    vmodel.fixTop = 80;
-                    vmodel.fixBottom = "auto";
+                    vmodel.fixTop = "auto";
+                    vmodel.fixBottom = 0;
                 } else {
                     vmodel.position = "absolute";
                     vmodel.fixTop = 45;
@@ -157,9 +157,9 @@
                 }
                 // 避免滚动到最底部时，白色背景上导航的尴尬，且无法显示底部的组件列表
                 if ((scrollTop + clientHeight + 120) >= scrollHeight) {
-                    vmodel.position = "fixed";
+                    vmodel.position = "absolute";
                     vmodel.fixTop = "auto";
-                    vmodel.fixBottom = 190;
+                    vmodel.fixBottom = 80;
                 } 
             }
             avalon(window).bind("scroll", throttle(fixUiList, 50, 100));

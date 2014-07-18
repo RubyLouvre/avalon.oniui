@@ -23,7 +23,34 @@
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="noticeDemo" style="padding-bottom:300px"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;container test&lt;/legend&gt;
+                            &lt;div id="test"&gt;将notice a的container设为此#test元素id,并设置notice的isAffix吸顶为true，来演示notice的吸顶效果&lt;/div&gt;
+                        &lt;/fieldset&gt;
 
+                        &lt;div id="notice" ms-widget="notice,a" data-notice-is-affix=true data-notice-container="#test"&gt;因为notice组件默认占位也就是isPlace为true，所以此notice会有吸顶效果，默认无吸顶效果，可以切换到demo1看看默认的情况&lt;a href="avalon.notice.ex1.html" target="_blanck"&gt;notice demo ex1&lt;/a&gt;动动手试试看呢&lt;/div&gt;
+
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;container test1&lt;/legend&gt;
+                            &lt;div id="test1"&gt;将notice b的container设为此#test1元素id,并设置notice的isAffix吸顶为true，占位isPlace为false来演示notice在非占位情况下不吸顶&lt;/div&gt;
+                        &lt;/fieldset&gt;
+
+                        &lt;div ms-widget="notice,b" data-notice-is-affix=true data-notice-container="#test1" data-notice-is-place=false data-notice-type="success"&gt;因为notice组件非占位(isPlace为false)，所以此notice就算设置isAffix为true也不会有吸顶效果&lt;/div&gt;
+                        &lt;button ms-click="toggleNotice('a')"&gt;toggle notice a&lt;/button&gt;
+                        &lt;button ms-click="toggleNotice('b')"&gt;toggle notice b&lt;/button&gt;
+                        &lt;script&gt;
+                            require("notice/avalon.notice", function(avalon) {
+                                var model = avalon.define("noticeDemo", function(vm) {
+                                    vm.toggleNotice = function(id) {
+                                        var noticeVm = avalon.vmodels[id]
+                                        noticeVm.toggle = !noticeVm.toggle
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
                 &lt;/body&gt;
                 &lt;/html&gt;
             </pre>

@@ -84,25 +84,23 @@
                         <td>定义点击"确定"按钮后的回调操作</td>
                     </tr>
                     <tr>
-                        <td>onOpen</td>
                         <td>onOpen()</td>
+                        <td></td>
                         <td>定义显示dialog时的回调</td>
                     </tr>
                     <tr>
                         <td>onCancel(event, vmodel)</td>
-                        <td>type: function</td>
+                        <td></td>
                         <td>定义点击"取消"按钮后的回调操作</td>
                     </tr>
                     <tr>
-                        <td>onClose</td>
                         <td>onClose(event, vmodel)</td>
+                        <td></td>
                         <td>定义点击"关闭"按钮后的回调操作</td>
                     </tr>
                     <tr>
-                        <td>setContent</td>
-                        <td>
-                            setContent(content, noScan)
-                        </td>
+                        <td>setContent(content, noScan)</td>
+                        <td></td>
                         <td>
                             <p>动态改变dialog的主体内容</p>
                             <p>@param1 content: dialog的主体内容，可以是已经渲染好的view，也可以是模板，type:string</p>  
@@ -110,21 +108,21 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>setTitle</td>
                         <td>setTitle(title)</td>
+                        <td></td>
                         <td>动态修改dialog的title</td>
                     </tr>
                     <tr>
-                        <td>setModel</td>
                         <td>setModel(m)</td>
+                        <td></td>
                         <td>
                             <p>重新渲染模板</p>
                             <p>@param m: 重新渲染dialog的配置对象，包括title、content、content中涉及的插值表达式，需要注意的是，title和content不是真正渲染的内容，所以不需要avalon进行扫描监控，定义的时候必须在其前面加上"$",否则组件不会渲染成想要的效果</p>
                         </td>
                     </tr>
                     <tr>
-                        <td>getTemplate</td>
                         <td>getTemplate(str)</td>
+                        <td></td>
                         <td>通过此方法配置用户自己的模板,必须有返回值，返回值就是用户自定义的模板</td>
                     </tr>
                 </tbody>

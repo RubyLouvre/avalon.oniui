@@ -94,7 +94,6 @@ a, a:active, a:hover {
     text-align: left;
 }
 .ui-list {
-    position: absolute;
     width: 130px;
     line-height: 24px;
 }

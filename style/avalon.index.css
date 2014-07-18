@@ -1,0 +1,144 @@
+body {
+    font: 14px/1.5 "微软雅黑","OpenSansRegular","Helvetica Neue",Helvetica,Arial,sans-serif;
+    background: #eaeaea;
+    text-align: center;
+}
+body, div, ul, li, h1{
+    padding: 0;
+    margin: 0;
+}
+ul {
+    list-style: none;
+}
+a, a:active, a:hover {
+    text-decoration: none;
+    color: #333;
+}
+.fix {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+}
+.header {
+    background: #fff;
+    z-index: 1000;
+}
+.header .nav {
+    position: relative;
+    width: 990px;
+    height: 60px;
+    line-height: 60px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 0 5px;
+    background: url(./avalonIcon.png) no-repeat;
+}
+.header .fix {
+    background: #fff;
+    z-index: 1000;
+    box-shadow: 0 2px 3px 0 rgba(74, 136, 115, 0.5);
+}
+.header .nav ul {
+    margin: 0 auto;
+    font-size: 16px;
+    width: 24em;
+}
+.header .nav ul li {
+    float: left;
+    margin-right: 65px;
+}
+.header .nav ul li a {
+    font-size: 16px;
+    font-weight: bold;
+    color: #555555;
+    display: block;
+    height: 60px;
+    line-height: 60px;
+}
+.header .nav ul li.active a {
+    color: #389576;
+}
+.header .search {
+    position: absolute;
+    right: 0;
+    top: 13px;
+}
+.header .search input {
+    border: 1px solid #547c73;
+    border-radius: 5px;
+    width: 185px;
+    height: 30px;
+    background: url(./searchIcon.png) 160px 50% no-repeat;
+}
+.header h1 {
+    height: 115px;
+    line-height: 115px;
+    color: #f0fffb;
+    background: #28966f;
+    margin-top: 60px;
+    box-shadow: 0 2px 0 0 #dafbf0;
+}
+.header h1 span {
+    display: block;
+    width: 990px;
+    text-align: left;
+    padding: 0 5px;
+    margin: 0 auto;
+}
+.content {
+    position: relative;
+    width: 990px;
+    padding: 50px 5px 80px 5px;
+    margin: 0 auto;
+    text-align: left;
+}
+.ui-list {
+    width: 130px;
+    line-height: 24px;
+}
+.ui-list a {
+    text-decoration: none;
+    color: #2b2b2b;
+    font-size: 14px;
+    font-weight: bold;
+}
+.ui-list a.active {
+    color: #3a745c;
+}
+.ui-doc {
+    margin-left: 130px;
+    padding: 30px 50px;
+    background: #fff;
+}
+.footer {
+    background: #fff;
+    height: 110px;
+    padding-bottom: 10px;
+    line-height: 110px;
+}
+.footer ul {
+    padding: 45px 22px 0;
+    width: 600px;
+    margin: 0 auto;
+    height: 16px;
+    line-height: 16px;
+}
+.footer ul li{
+    float: left;
+    padding: 0 22px;
+    border-right: 1px solid black;
+}
+.footer ul li.last {
+    border-right-width: 0;
+}
+.footer ul li a {
+    line-height: 16px;
+    height: 16px;
+    font-size: 14px;
+    display: block;
+    float: left;
+}
+.footer ul li a:hover {
+    color: #28966f;
+}

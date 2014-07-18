@@ -1,16 +1,3 @@
-/*
-    avalon.ui.css = {};
-    (function(cssName) {
-        define(["avalon.getModel",
-            "text!./avalon.dialog.html",
-            "css!../chamelon/oniui-common.css",
-            "css!.avalon."+cssName+".css"], function() {
-
-            // 函数体... 
-
-        })
-    })(avalon.ui.css.dialog || "dialog")
-*/
 define(["avalon.getModel", 
     "text!./avalon.dialog.html",
     "css!../chameleon/oniui-common.css", 
@@ -50,9 +37,7 @@ define(["avalon.getModel",
 
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "template","submitBtnClick","cancelBtnClick"];
-            vm.submitBtnClick = false;
-            vm.cancelBtnClick = false;
+            vm.$skipArray = ["widgetElement", "template"];
             vm.widgetElement = element;
             vm.position = "fixed";
             // 如果显示模式为alert或者配置了showClose为false，不显示关闭按钮
@@ -65,7 +50,6 @@ define(["avalon.getModel",
                 }
                 // 在用户回调返回false时，不关闭弹窗
                 if(options.onConfirm.call(e.target, e, vmodel) !== false){
-                    vmodel.submitBtnClick = true;
                     vmodel._close(e)
                 }
             }
@@ -74,11 +58,9 @@ define(["avalon.getModel",
             vm._open = function() {
                 var len = 0, //当前显示的dialog的个数
                     selectLength = document.getElementsByTagName("select").length;
-                !isIE6 ? document.body.style.overflow = "hidden" : 0;
-                avalon.Array.ensure(dialogShows, vm);
+                avalon.Array.ensure(dialogShows, vmodel);
                 len = dialogShows.length;
                 // 通过zIndex的提升来调整遮罩层，保证层上层存在时遮罩层始终在顶层dialog下面(顶层dialog zIndex-1)但是在其他dialog上面
-                
                 maskLayer.style.zIndex = 2 * len + maxZIndex -1;
                 element.style.zIndex =  2 * len + maxZIndex;
                 resetCenter(vmodel, element);
@@ -107,7 +89,6 @@ define(["avalon.getModel",
                     if (iFrame !== null) {
                         iFrame.style.display = "none";
                     }
-                    !isIE6? document.body.style.overflow = "auto" : 0;
                     return ;
                 }
                 // 重置maskLayer的z-index,当最上层的dialog关闭，通过降低遮罩层的z-index来显示紧邻其下的dialog
@@ -116,13 +97,10 @@ define(["avalon.getModel",
                 if (iFrame) {
                     iFrame.style.zIndex = layoutZIndex -1;
                 }
-                // 因为在submit操作之后也调用了_close方法来关闭弹窗，但是如果用户定义了onClose方法的话是不应该触发的，因此通过submitBtnClick这个开关来判断是点击了确定按钮还是点击了"取消"或者“关闭”按钮.
-                if (vmodel.submitBtnClick) {
-                    vmodel.submitBtnClick = false;
-                } else if (vmodel.cancelBtnClick) {
-                    vmodel.cancelBtnClick = false;
+                if (e) {
+                    options.onClose.call(e.target, e, vmodel);
                 } else {
-                    options.onClose.call(e.target, e, vmodel)
+                    options.onClose.call(element, vmodel);
                 }
             };
 
@@ -133,7 +111,6 @@ define(["avalon.getModel",
                 }
                 // 在用户回调返回false时，不关闭弹窗
                 if(options.onCancel.call(e.target, e, vmodel) !== false){
-                    vmodel.cancelBtnClick = true;
                     vmodel._close(e)
                 }
             }
@@ -143,11 +120,12 @@ define(["avalon.getModel",
              * @param content: 要替换的content，可以是已经渲染ok的view也可以是未解析渲染的模板
              * @param noScan: 当content是模板时noScan设为false或者不设置，组件会自动解析渲染模板，如果是已经渲染ok的，将noScan设为true，组件将不再进行解析操作
              */
-            vm.setContent = function(content, noScan) {
+            vm.setContent = function(content, noScan, contentVmodels) {
+                var scanVmodels = contentVmodels ? contentVmodels : [vmodel].concat(vmodels);
                 _lastContent = content;
                 lastContent.innerHTML = _lastContent;
                 if (!noScan) {
-                    avalon.scan(lastContent, [vmodel].concat(vmodels));
+                    avalon.scan(lastContent, scanVmodels);
                 }
             };
 
@@ -160,13 +138,11 @@ define(["avalon.getModel",
             vm.setModel = function(m) {
                 // 这里是为了充分利用vm._ReanderView方法，才提前设置一下element.innerHTML
                 if (!!m.$content) {
-                    _lastContent = m.$content;
-                    lastContent.innerHTML = _lastContent;
+                    vmodel.setContent(m.$content, m.noScan, [vmodel].concat(findModel(m)).concat(vmodels));
                 }
                 if (!!m.$title) {
                     vmodel.title = m.$title;
                 }
-                avalon.scan(element, [vmodel].concat(findModel(m)).concat(vmodels));
             };
 
             // 将零散的模板(dialog header、dialog content、 dialog footer、 dialog wrapper)组合成完整的dialog
@@ -230,6 +206,8 @@ define(["avalon.getModel",
             vm.$watch("toggle", function(val) {
                 if (val) {
                     vmodel._open();
+                } else {
+                    vmodel._close();
                 }
             })
 
@@ -262,7 +240,13 @@ define(["avalon.getModel",
         modal: true, //是否显示遮罩
         zIndex: maxZIndex //手动设置body直接子元素的最大z-index
     }
-
+    avalon(window).bind("keydown", function(e) {
+        var keyCode = e.which,
+            dialogShowLen = dialogShows.length;
+        if (keyCode === 27 && dialogShowLen) {
+            dialogShows[dialogShowLen - 1].toggle = false;
+        }
+    })
     // 获取重新渲染dialog的vmodel对象
     function findModel(m) {
         var model = m;
@@ -324,10 +308,9 @@ define(["avalon.getModel",
         if (vmodel.toggle) {
             maskLayer.style.width = clientWidth + "px";
             maskLayer.style.height = bodyHeight + "px";
-            target.style.overflow = "auto";
             if (clientHeight < targetOffsetHeight) {
                 vmodel.position = "absolute";
-                if(!scroll) {
+                if (!scroll) {
                     margin = scrollTop;
                     targetOffsetMarginHeight = targetOffsetHeight + margin;
                     if (targetOffsetMarginHeight > bodyHeight) {
@@ -335,7 +318,7 @@ define(["avalon.getModel",
                     }
                     target.style.marginTop = (margin + 10)+ "px";
                 } else {
-                    if(scrollTop > margin) {
+                    if (scrollTop > margin) {
                         t = margin - scrollTop;
                     } else {
                         t = 0;
@@ -351,8 +334,7 @@ define(["avalon.getModel",
             } else {
                 l = (clientWidth - targetOffsetWidth) / 2 + scrollLeft;
             }
-            target.style.left = l + "px";
-            target.style.top = t + "px";
+            target.style.cssText += "left:" + l + "px;top:" + t +"px";
         }
     }
 
@@ -381,5 +363,3 @@ define(["avalon.getModel",
 
     return avalon;
 });
-
-//弹出层的各种特效 http://tympanus.net/Development/ModalWindowEffects/

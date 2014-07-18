@@ -1,0 +1,52 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+ul.ui-menu, ol.ui-menu {
+  border: 1px solid #d4d4d4;
+  background: white;
+  overflow: visible;
+  font-size: 12px;
+  padding: 0; }
+
+.ui-menu {
+  width: 156px;
+  position: relative;
+  z-index: 5;
+  zoom: 1; }
+  .ui-menu .ui-menu-item {
+    position: relative;
+    list-style: none;
+    padding: 3px;
+    cursor: pointer;
+    color: #000;
+    font-size: 12px;
+    margin: 0;
+    width: 150px; }
+  .ui-menu li.ui-state-hover {
+    background: #58b359; }
+  .ui-menu li.ui-state-active {
+    background: #58b359; }
+  .ui-menu .ui-menu-sub {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 100%;
+    width: 100%;
+    top: 0; }
+  .ui-menu-vertical .ui-menu-item-1 {
+    border-right: 1px solid #d4d4d4;
+    border-left: 1px solid #d4d4d4;
+    margin-left: -1px; }
+  .ui-menu-vertical .ui-menu-depth-2 {
+    left: -1px;
+    top: 100%; }
+  .ui-menu .ui-state-disabled, .ui-menu .ui-state-disabled a, .ui-menu .ui-state-disabled a:link, .ui-menu .ui-state-disabled a:hover {
+    color: #999999;
+    cursor: default; }
+  .ui-menu-vertical {
+    width: auto; }
+    .ui-menu-vertical .ui-menu-item {
+      float: left;
+      width: 150px;
+      display: inline; }

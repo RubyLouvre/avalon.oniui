@@ -10,16 +10,21 @@
 </head>
     <body>
         <div class="wrapper">
-            <h1>progressbar使用说明</h1>
-            <p class="doc-description">progressbar组件，可以通过接口控制或者随机模拟进度条效果，支持条形，圆形，倒计时等效果功能</p>
-            <table class="table-doc">
-                <caption class="example">progressbar组件配置项说明：</caption>
-                <thead>
+            <h2>progressbar</h2>
+            <fieldset>
+                <legend>progressbar组件</legend>
+                <p class="doc-description">progressbar组件，可以通过接口控制或者随机模拟进度条效果，支持条形，圆形，倒计时等效果功能</p>
+            </fieldset>
+            <fieldset>
+                <legend>使用说明</legend>
+                <table class="table-doc">
                     <tr>
                         <th width="25%">名字</th><th width="25%">默认值</th><th width="50%">说明</th>
                     </tr>
-                </thead>
-                <!--auto doc start-->
+                    <tr>
+                        <td colspan="3" aligin="center">配置参数</td>
+                    </tr>
+                    <!--auto doc start-->
 <tr>
     <td>toggle</td><td> true</td><td> 组件是否显示，可以通过设置为false来隐藏组件</td></tr>
 <tr>
@@ -51,44 +56,37 @@
 <tr>
     <td>success</td><td> false</td><td> 是否完成，进度为100时或者外部将success置为true，用于打断模拟效果</td></tr>
 <tr>
-    <td>onInit</td><td>配置函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+    <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
-    <td>simulater</td><td>配置函数</td><td>simulater(value, vmodel) 模拟进度进行效果函数，参数为当前进度和vmodel，默认return value + 5 * Math.random() >> 0</td></tr>
+    <td>simulater</td><td>配置接口</td><td>simulater(value, vmodel) 模拟进度进行效果函数，参数为当前进度和vmodel，默认return value + 5 * Math.random() >> 0</td></tr>
 <tr>
-    <td>getTemplate</td><td>配置函数</td><td>getTemplate(tmp, opts) 用于修改模板的接口，默认不做修改</td></tr>
+    <td>getTemplate</td><td>配置接口</td><td>getTemplate(tmp, opts) 用于修改模板的接口，默认不做修改</td></tr>
 <tr>
-    <td>getTemplate</td><td>配置函数</td><td>getTemplate(tpl, opts) 定制修改模板接口</td></tr>
+    <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts) 定制修改模板接口</td></tr>
 <tr>
-    <td>onChange</td><td>配置函数</td><td>onChange(value) value发生变化回调，this指向vmodel</td></tr>
+    <td>onChange</td><td>回调函数</td><td>onChange(value) value发生变化回调，this指向vmodel</td></tr>
 <tr>
-    <td>onComplete</td><td>配置函数</td><td>onComplete() 完成回调，默认空函数，this指向vmodel</td></tr>
+    <td>onComplete</td><td>回调函数</td><td>onComplete() 完成回调，默认空函数，this指向vmodel</td></tr>
 <tr>
-    <td>labelShower</td><td>配置函数</td><td>labelShower(value, isContainerLabel) 用于格式化进度条上label显示文字，默认value为false显示“loading…”，完成显示“complete!”，失败显示“failed!”，第二个参数是是否是居中显示的label，两段显示的时候，默认将这个label内容置空，只显示两边的label,this指向vmodel</td></tr>
+    <td>labelShower</td><td>配置接口</td><td>labelShower(value, isContainerLabel) 用于格式化进度条上label显示文字，默认value为false显示“loading…”，完成显示“complete!”，失败显示“failed!”，第二个参数是是否是居中显示的label，两段显示的时候，默认将这个label内容置空，只显示两边的label,this指向vmodel</td></tr>
 <tr>
-    <td>start</td><td>接口函数</td><td>start() 开始进度推进，该接口适用于模拟进度条</td></tr>
+    <td>start</td><td>接口调用</td><td>start() 开始进度推进，该接口适用于模拟进度条</td></tr>
 <tr>
-    <td>end</td><td>接口函数</td><td>end(value) 结束进度推进，该接口适用于模拟进度条，value为100表示结束，failed表示失败，undefine等于pause，其他则终止于value，并在label上显示</td></tr>
+    <td>end</td><td>接口调用</td><td>end(value) 结束进度推进，该接口适用于模拟进度条，value为100表示结束，failed表示失败，undefine等于pause，其他则终止于value，并在label上显示</td></tr>
 <tr>
-    <td>reset</td><td>接口函数</td><td>reset(value) 重置设置项，参数可选，为需要重设的值</td></tr>
+    <td>reset</td><td>接口调用</td><td>reset(value) 重置设置项，参数可选，为需要重设的值</td></tr>
 <tr>
-    <td>progress</td><td>接口函数</td><td>progress(value) 设置value值，其实也可以直接设置vmodel.value</td></tr>
+    <td>progress</td><td>接口调用</td><td>progress(value) 设置value值，其实也可以直接设置vmodel.value</td></tr>
 <tr>
-    <td>_draw</td><td>接口函数</td><td>_draw 动态切换皮肤之后，如果需要更新提取圆形进度条的样式，可以调用这个方法</td></tr>
+    <td>_draw</td><td>接口调用</td><td>_draw 动态切换皮肤之后，如果需要更新提取圆形进度条的样式，可以调用这个方法</td></tr>
 <!--auto doc end-->
-            </table>
-            <p>progressbar 组件有一个重要的labelShower方法，用于配置格式化label显示,见源码：</p>
-            <pre class="brush:js;gutter:false;toolbar:false;" ms-skip>
-                labelShower: function(value, l1) {
-                    if(l1 && this.right) return ''
-                    if(value === false) return 'loading…'
-                    if(value === 'failed' || this.ended && this.value != 100) return 'failed!'
-                    if(value == 100) return 'complete!'
-                    return value + '%'
-                }
-            </pre>
+                </table>
+            </fieldset>
+            <!--source start-->
+            <!--source end-->
             <h3>例子：</h3>
-<!--ex list start-->
-<ol>
+            <!--ex list start-->
+<ol class="example-links">
 <li><a href="avalon.progressbar.ex.html">外部设置进度值</a></li>
 <li><a href="avalon.progressbar.ex.1.html">模拟进度条，带label</a></li>
 <li><a href="avalon.progressbar.ex.2.html">外部设置进度值，带label</a></li>

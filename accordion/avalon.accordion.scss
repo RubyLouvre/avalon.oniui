@@ -152,7 +152,7 @@ $corner-radius: 4px;
             @if($oinui-theme == smoothness) {
                 border: 1px solid #aaa;
                 background: #fff;
-                color: $ui-widget-content-color;
+                color: #000;
             }
         }
         &.ui-state-active {

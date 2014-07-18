@@ -11,21 +11,33 @@ define(["avalon", "json/avalon.json"], function(avalon) {
         },
         clear: function() {
         },
+        forEach: function() {
+        },
         getAll: function() {
+            var ret = {}
+            store.forEach(function(key, val) {
+                ret[key] = val
+            })
+            return ret
         },
         serialize: function(value) {
             return JSON.stringify(value)
         },
         deserialize: function(value) {
-            if (typeof value != 'string') {
-                return undefined
+            if (typeof value !== 'string') {
+                return void 0
             }
-            return JSON.parse(value)
+            try {
+                return JSON.parse(value)
+            }
+            catch (e) {
+                return value || undefined
+            }
         }
     }
     //http://wojodesign.com/full-browser-support-for-localstorage-without-cookies/
     //http://mathiasbynens.be/notes/localstorage-pattern
-    var name = "test" + (new Date - 0), win = window, localStorageName = "localStorage", storage
+    var name = "test" + (new Date - 0), localStorageName = "localStorage", storage
     var supportLocalStorage = false;
     try {
         localStorage.setItem(name, "mass");
@@ -34,20 +46,15 @@ define(["avalon", "json/avalon.json"], function(avalon) {
     } catch (e) {
     }
 
-    var supportGlobalStorage = false;
-    try {
-        supportGlobalStorage = win["globalStorage"][win.location.hostname]
-    } catch (e) {
-    }
-
-    if (!supportLocalStorage) {
+    if (supportLocalStorage) {
         storage = localStorage;
         avalon.mix(store, {//重写
             set: function(key, val) {
-                if (val === undefined) {
+                if (val === void 0) {
                     return store.remove(key)
                 }
                 storage.setItem(key, store.serialize(val))
+                return val
             },
             get: function(key) {
                 return store.deserialize(storage.getItem(key))
@@ -58,43 +65,11 @@ define(["avalon", "json/avalon.json"], function(avalon) {
             clear: function() {
                 storage.clear()
             },
-            getAll: function() {
-                var ret = {}
-                for (var i = 0; i < storage.length; ++i) {
+            forEach: function(callback) {
+                for (var i = 0; i < storage.length; i++) {
                     var key = storage.key(i)
-                    ret[key] = store.get(key)
+                    callback(key, store.get(key))
                 }
-                return ret
-            }
-        })
-
-    } else if (supportGlobalStorage) {
-        storage = supportGlobalStorage
-        avalon.mix(store, {//重写
-            set: function(key, val) {
-                if (val === undefined) {
-                    return store.remove(key)
-                }
-                storage[key] = store.serialize(val)
-            },
-            get: function(key) {
-                return store.deserialize(storage[key] && storage[key].value)
-            },
-            remove: function(key) {
-                delete storage[key]
-            },
-            clear: function() {
-                for (var key in storage) {
-                    delete storage[key]
-                }
-            },
-            getAll: function() {
-                var ret = {}
-                for (var i = 0; i < storage.length; ++i) {
-                    var key = storage.key(i)
-                    ret[key] = store.get(key)
-                }
-                return ret
             }
         })
 
@@ -110,9 +85,10 @@ define(["avalon", "json/avalon.json"], function(avalon) {
         //因为iframe的访问规则允许直接访问和操纵文档中的元素，即使是404。
         //这文档可以用来代替当前文档（这被限制在当前路径）执行＃userData的存储。
         try {
+            var scriptTag = 'script'
             storageContainer = new ActiveXObject('htmlfile')
             storageContainer.open()
-            storageContainer.write('<s' + 'cript>document.w=window</s' + 'cript><iframe src="/favicon.ico"></frame>')
+            storageContainer.write('<' + scriptTag + '>document.w=window</' + scriptTag + '><iframe src="/favicon.ico"></iframe>')
             storageContainer.close()
             storageOwner = storageContainer.w.frames[0].document
             storage = storageOwner.createElement('div')
@@ -122,7 +98,7 @@ define(["avalon", "json/avalon.json"], function(avalon) {
         }
         function withIEStorage(storeFunction) {
             return function() {
-                var args = [].slice.call(arguments);
+                var args = Array.prototype.slice.call(arguments, 0)
                 args.unshift(storage)
                 //  http://msdn.microsoft.com/en-us/library/ms531081(v=VS.85).aspx
                 //  http://msdn.microsoft.com/en-us/library/ms531424(v=VS.85).aspx
@@ -140,9 +116,7 @@ define(["avalon", "json/avalon.json"], function(avalon) {
         // In IE7, keys may not contain special chars. See all of https://github.com/marcuswestin/store.js/issues/40
         var forbiddenCharsRegex = new RegExp("[!\"#$%&'()*+,/\\\\:;<=>?@[\\]^`{|}~]", "g")
         function ieKeyFix(key) {
-            // 不能以数字开头
-            // See https://github.com/marcuswestin/store.js/issues/40#issuecomment-4617842
-            return key.replace(forbiddenCharsRegex, '___')
+            return key.replace(/^d/, '___$&').replace(forbiddenCharsRegex, '___')
         }
         avalon.mix(store, {//重写
             set: withIEStorage(function(storage, key, val) {
@@ -152,6 +126,7 @@ define(["avalon", "json/avalon.json"], function(avalon) {
                 }
                 storage.setAttribute(key, store.serialize(val))
                 storage.save(localStorageName)
+                return val
             }),
             get: withIEStorage(function(storage, key) {
                 key = ieKeyFix(key)
@@ -162,22 +137,16 @@ define(["avalon", "json/avalon.json"], function(avalon) {
                 storage.removeAttribute(key)
                 storage.save(localStorageName)
             }),
-            clear: withIEStorage(function(storage) {
+            clear: function() {
+                store.forEach(function(name) {
+                    store.remove(name)
+                })
+            },
+            forEach: withIEStorage(function(storage, callback) {
                 var attributes = storage.XMLDocument.documentElement.attributes
-                storage.load(localStorageName)
-                for (var i = 0, attr; attr = attributes[i]; i++) {
-                    storage.removeAttribute(attr.name)
-                }
-                storage.save(localStorageName)
-            }),
-            getAll: withIEStorage(function(storage) {
-                var attributes = storage.XMLDocument.documentElement.attributes
-                storage.load(localStorageName)
-                var ret = {}
                 for (var i = 0, attr; attr = attributes[i]; ++i) {
-                    ret[attr.name] = store.get(attr.name)
+                    callback(attr.name, store.deserialize(storage.getAttribute(attr.name)))
                 }
-                return ret
             })
         })
     }

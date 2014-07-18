@@ -1,0 +1,10 @@
+<p>progressbar 组件有一个重要的labelShower方法，用于配置格式化label显示,见源码：</p>
+<pre class="brush:js;gutter:false;toolbar:false;" ms-skip>
+    labelShower: function(value, l1) {
+        if(l1 && this.right) return ''
+        if(value === false) return 'loading…'
+        if(value === 'failed' || this.ended && this.value != 100) return 'failed!'
+        if(value == 100) return 'complete!'
+        return value + '%'
+    }
+</pre>

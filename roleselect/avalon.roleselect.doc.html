@@ -10,39 +10,43 @@
 </head>
     <body>
         <div class="wrapper">
-            <h1>roleselect使用说明</h1>
-            <p class="doc-description">roleselect组件，以左右列表形式展示实现的复选组件</p>
-            <table class="table-doc">
-                <caption class="example">roleselect组件配置项说明：</caption>
-                <thead>
+            <h2>roleselect</h2>
+            <fieldset>
+                <legend>roleselect组件</legend>
+                <p class="doc-description">roleselect组件，以左右列表形式展示实现的复选组件</p>
+            </fieldset>
+            <fieldset>
+                <legend>使用说明</legend>
+                <table class="table-doc">
                     <tr>
                         <th width="25%">名字</th><th width="25%">默认值</th><th width="50%">说明</th>
                     </tr>
-                </thead>
-                <!--auto doc start-->
+                    <tr>
+                        <td colspan="3" aligin="center">配置参数</td>
+                    </tr>
+                    <!--auto doc start-->
 <tr>
     <td>toggle</td><td> true</td><td> 组件是否显示，可以通过设置为false来隐藏组件</td></tr>
 <tr>
     <td>hideSelect</td><td> false</td><td> 是否隐藏以选中的项目，默认不隐藏</td></tr>
 <tr>
-    <td>onInit</td><td>配置函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+    <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
-    <td>getTemplate</td><td>配置函数</td><td>getTemplate(tpl, opts) 定制修改模板接口</td></tr>
+    <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts) 定制修改模板接口</td></tr>
 <tr>
-    <td>countLimit</td><td>配置函数</td><td>countLimit(select) 选择条目限制，必须有return true or false，参数是当前已选中条数和add or delete操作</td></tr>
+    <td>countLimit</td><td>配置接口</td><td>countLimit(select) 选择条目限制，必须有return true or false，参数是当前已选中条数和add or delete操作</td></tr>
 <tr>
-    <td>change</td><td>配置函数</td><td>change(newValue, oldValue, vmodel) 所选变化的回调</td></tr>
+    <td>change</td><td>配置接口</td><td>change(newValue, oldValue, vmodel) 所选变化的回调</td></tr>
 <tr>
-    <td>reset</td><td>接口函数</td><td>reset 重置</td></tr>
+    <td>reset</td><td>接口调用</td><td>reset 重置</td></tr>
 <!--auto doc end-->
-            </table>
-            <p>roleselect 组件有一个重要的xx方法,见源码：</p>
-            <pre class="brush:js;gutter:false;toolbar:false;" ms-skip>
-               
-            </pre>
+                </table>
+            </fieldset>
+            <!--source start-->
+            <!--source end-->
             <h3>例子：</h3>
-<!--ex list start-->
-<ol>
+            <!--ex list start-->
+<ol class="example-links">
 <li><a href="avalon.roleselect.ex.html">roleselect-隐藏已选中条目，限制选中条数</a></li>
 <li><a href="avalon.roleselect.ex.1.html">roleselect-显示已选中条目，不限制选中条数</a></li>
 </ol>

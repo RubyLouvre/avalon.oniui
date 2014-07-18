@@ -4,7 +4,7 @@
 		if (!pro) return window.getComputedStyle(elem, null);
 		return window.getComputedStyle(elem, null).getPropertyValue(pro);
 	}
-	var scrollPx = document.body.scrollTop;
+	var scrollPx = document.body.scrollTop  || document.documentElement.scrollTop;
 	var action = '';
 	var parallaOffset = avalon(document.getElementById("parallax")).offset();
 	var ndP0 = getElementsByClassName('parallax0')[0];
@@ -25,7 +25,7 @@
 		var nlNodeToScroll = [];
 		var duration = 800; 
 		var timer;
-		var storeScrollTop = document.body.scrollTop;
+		var storeScrollTop = document.body.scrollTop || document.documentElement.scrollTop;
 		for(var i in window.indexData) {
 			if (indexData.hasOwnProperty(i)) {
 				months.push({
@@ -62,7 +62,7 @@
 			//	scrollEnd = true;
 			//	window.clearTimeout(timer);
 			//}, 50);
-			var sTop  = document.body.scrollTop;
+			var sTop  = document.body.scrollTop  || document.documentElement.scrollTop;
 			var delta = storeScrollTop >  sTop ? -1 : 1; //-1  线上滚动
 			storeScrollTop = sTop; 
 			if (supportTransition) {
@@ -156,7 +156,7 @@
 	　　		}
 		function scroll() {
 			var nd,
-				scrollTop = parseInt(document.body.scrollTop, 10);
+				scrollTop = parseInt((document.body.scrollTop  || document.documentElement.scrollTop), 10);
 
 			if (nlNodeToScroll.length < 1) return;
 				for (var i = 0; i < nlNodeToScroll.length; i++) {

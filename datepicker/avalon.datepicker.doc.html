@@ -96,23 +96,23 @@
                         <td>日期名列表，从周日开始，可以配置为["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]</td>
                     </tr>
                     <tr>
-                        <td>onChangeMonthYear</td>
                         <td>onChangeMonthYear(year, month, vmodel)</td>
+                        <td></td>
                         <td>当month或者year更新时调用的回调。参数为year、month、日历组件实例</td>
                     </tr>
                     <tr>
-                        <td>onSelect</td>
                         <td>onSelect(date, vmodelId, data)</td>
+                        <td></td>
                         <td>选中日期后的回调</td>
                     </tr>
                     <tr>
-                        <td>onClose</td>
                         <td>onClose(date, vmodel)</td>
+                        <td></td>
                         <td>日历关闭的回调，this指向日历组件自生成的vmodel，参数分别是当前year， month，及this指向的vmodel</td>
                     </tr>
                     <tr>
-                        <td>parseDate</td>
                         <td>parseDate(str)</td>
+                        <td></td>
                         <td>将符合日期格式要求的字符串解析为date对象并返回，不符合格式的字符串返回null,用户可以根据自己需要自行配置解析过程
     <pre>
     parseDate : function(str){
@@ -126,8 +126,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>formatDate</td>
                         <td>formatDate(date)</td>
+                        <td></td>
                         <td>将日期对象转换为符合要求的日期字符串，默认实现如下：
     <pre>
     formatDate : function(date){

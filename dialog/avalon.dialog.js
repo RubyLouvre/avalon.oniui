@@ -97,7 +97,11 @@ define(["avalon.getModel",
                 if (iFrame) {
                     iFrame.style.zIndex = layoutZIndex -1;
                 }
-                options.onClose.call(e.target, e, vmodel)
+                if (e) {
+                    options.onClose.call(e.target, e, vmodel);
+                } else {
+                    options.onClose.call(element, vmodel);
+                }
             };
 
             // 点击"取消"按钮，根据回调返回值是否为false决定是否关闭dialog
@@ -202,6 +206,8 @@ define(["avalon.getModel",
             vm.$watch("toggle", function(val) {
                 if (val) {
                     vmodel._open();
+                } else {
+                    vmodel._close();
                 }
             })
 
@@ -234,7 +240,13 @@ define(["avalon.getModel",
         modal: true, //是否显示遮罩
         zIndex: maxZIndex //手动设置body直接子元素的最大z-index
     }
-
+    avalon(window).bind("keydown", function(e) {
+        var keyCode = e.which,
+            dialogShowLen = dialogShows.length;
+        if (keyCode === 27 && dialogShowLen) {
+            dialogShows[dialogShowLen - 1].toggle = false;
+        }
+    })
     // 获取重新渲染dialog的vmodel对象
     function findModel(m) {
         var model = m;

@@ -63,7 +63,7 @@
             </div>
         </div>
         <div ms-if="canThisPageShow('pageUiLibrary')">
-            <ul class="ui-list" ms-visible="canThisPageShow('pageUiLibrary')">
+            <ul class="ui-list" ms-visible="canThisPageShow('pageUiLibrary')" ms-css-position="position" ms-css-top="fixTop" ms-css-bottom="fixBottom">
                 <li ms-repeat="widgets" data-repeat-rendered="uiListRendered"><a href="#" ms-class="active: $index===currentIndex" ms-click="showDocument(el, $event, $index)">{{el}}</a></li> 
             </ul>
             {{renderIframe() | html}}
@@ -120,6 +120,51 @@
                 }
                 return 0
             }
+            function throttle(fn, delay, mustRunDelay, args){
+                var timer = null;
+                var t_start;
+                return function(){
+                    var context = this, t_curr = +new Date();
+                    clearTimeout(timer);
+                    if(!t_start){
+                        t_start = t_curr;
+                    }
+                    if(t_curr - t_start >= mustRunDelay){
+                        fn.apply(context, args);
+                        t_start = t_curr;
+                    }
+                    else {
+                        timer = setTimeout(function(){
+                            fn.apply(context, args);
+                        }, delay);
+                    }
+                };
+            };
+            function fixUiList() {
+                var $uiLsit = avalon(vmodel.$uiLsit),
+                    uiListTop = $uiLsit.offset().top,
+                    totalTop = uiListTop + vmodel.uiListHeight,
+                    scrollTop = document.body.scrollTop + document.documentElement.scrollTop,
+                    scrollHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight),
+                    clientHeight = avalon(window).height();
+                if ((scrollTop + clientHeight) > totalTop) {
+                    console.log("吸顶")
+                    vmodel.position = "fixed";
+                    vmodel.fixTop = 80;
+                    vmodel.fixBottom = "auto";
+                } else {
+                    vmodel.position = "absolute";
+                    vmodel.fixTop = 45;
+                    vmodel.fixBottom = "auto";
+                }
+                // 避免滚动到最底部时，白色背景上导航的尴尬，且无法显示底部的组件列表
+                if ((scrollTop+clientHeight + 120) >= scrollHeight) {
+                    vmodel.position = "fixed";
+                    vmodel.fixTop = "auto";
+                    vmodel.fixBottom = 190;
+                } 
+            }
+            avalon(window).bind("scroll", throttle(fixUiList, 50, 100));
             var oldHref, vmodel = avalon.define("avalonUiDocument", function(vm) {
                 vm.widgets = widgets;
                 vm.href = getHref().hash || defaultHref;
@@ -146,11 +191,15 @@
                         pageName: "pageTimeline"
                     }
                 ];
+                // 保留历史功能
+                vm.currentPageIndex = getcurrentPageIndex(location.hash, vm.nav);
+                vm.position = "absolute";
+                vm.fixTop = 45;
+                vm.fixBottom = "auto";
+                vm.$uiList = null;
                 vm.canThisPageShow = function(pageName) {
                     return vmodel.nav[vmodel.currentPageIndex].pageName === pageName
                 }
-                // 保留历史功能
-                vm.currentPageIndex = getcurrentPageIndex(location.hash, vm.nav);
                 vm.changePage = function(event, href, index, item) {
                     event.preventDefault();
                     if(!vmodel.hashchangeSupport) {
@@ -185,6 +234,7 @@
                 };
                 vm.uiListRendered = function() {
                     vmodel.uiListHeight = avalon(this).height();
+                    vmodel.$uiList = this;
                 }
                 vm.renderIframe = function() {
                     if(!vmodel.hashchangeSupport) return "";
@@ -245,13 +295,14 @@
             if(vmodel.hashchangeSupport) {
                 vmodel.setHeight();
                 window.onhashchange = function(e) {
+                    vmodel.currentPageIndex = getcurrentPageIndex(location.hash, vmodel.nav);
                     var hash = location.hash.split("#")[1],
                         hrefObj = {};
                     hash = hash || defaultHref.split("/")[1];
                     hrefObj = getHref(hash);
                     vmodel.href = hrefObj.hash;
                     vmodel.contentWidth = hrefObj.page ? (vmodel.page=true) && 990 : (vmodel.page=false) || 760;
-                    vmodel.setHeight()
+                    !vmodel.page && vmodel.setHeight()
                 }
             }
         })

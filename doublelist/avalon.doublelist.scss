@@ -1,8 +1,8 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname : ".ui-roleselect";
+$uiname : ".ui-doublelist";
 @if($oinui-theme == smoothness) {
-	$roleselect: (
+	$doublelist: (
 		fontColor: #000, 
 		menuBg: #fff,
 		hoverBg: #f8f8f8, 
@@ -22,7 +22,7 @@ $uiname : ".ui-roleselect";
 		width: 180px;
 		height: 190px;
 		border: 1px solid $ui-state-default-border-color;
-		background: map-get($roleselect, menuBg);
+		background: map-get($doublelist, menuBg);
 		float: left;
 		display: inline;
 	}
@@ -42,27 +42,27 @@ $uiname : ".ui-roleselect";
 		list-style: none;
 		padding: 3px 6px;
 		cursor: pointer;
-		color: map-get($roleselect, fontColor);
+		color: map-get($doublelist, fontColor);
 	}
 	li.ui-state-hover{
-		background-color: map-get($roleselect, hoverBg);
+		background-color: map-get($doublelist, hoverBg);
 	}
 	li.ui-state-active{
-		background-color: map-get($roleselect, activeBg);
+		background-color: map-get($doublelist, activeBg);
 		color: $ui-state-active-color;
 	}
 	li.ui-state-disabled{
 		cursor: default;
 		color: $ui-state-disabled-color;
-		background: map-get($roleselect, disableBg);
+		background: map-get($doublelist, disableBg);
 	}
 	.ui-button{
 		height: 24px;
 		line-height: 24px;
-		background-color: map-get($roleselect, buttonBg);
+		background-color: map-get($doublelist, buttonBg);
 		border: 1px solid $ui-state-default-border-color;
 		border-radius: 2px;
-		color: map-get($roleselect, fontColor);
+		color: map-get($doublelist, fontColor);
 		text-align: center;
 		margin-top: 10px;
 		cursor: pointer;

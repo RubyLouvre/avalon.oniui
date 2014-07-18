@@ -137,14 +137,12 @@
                 };
             };
             function fixUiList() {
-                var $uiLsit = avalon(vmodel.$uiLsit),
-                    uiListTop = $uiLsit.offset().top,
+                var uiListTop = vmodel.uiListTop,
                     totalTop = uiListTop + vmodel.uiListHeight,
                     scrollTop = document.body.scrollTop + document.documentElement.scrollTop,
                     scrollHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight),
                     clientHeight = avalon(window).height();
                 if ((scrollTop + clientHeight) > totalTop) {
-                    console.log("吸顶")
                     vmodel.position = "fixed";
                     vmodel.fixTop = 80;
                     vmodel.fixBottom = "auto";
@@ -154,7 +152,7 @@
                     vmodel.fixBottom = "auto";
                 }
                 // 避免滚动到最底部时，白色背景上导航的尴尬，且无法显示底部的组件列表
-                if ((scrollTop+clientHeight + 120) >= scrollHeight) {
+                if ((scrollTop + clientHeight + 120) >= scrollHeight) {
                     vmodel.position = "fixed";
                     vmodel.fixTop = "auto";
                     vmodel.fixBottom = 190;
@@ -162,11 +160,13 @@
             }
             avalon(window).bind("scroll", throttle(fixUiList, 50, 100))
             var oldHref, vmodel = avalon.define("avalonUiDocument", function(vm) {
+                vm.$skipArray = ["uiListTop"];
                 vm.widgets = widgets;
                 vm.href = getHref().hash || defaultHref;
                 vm.contentWidth = 760;
                 vm.currentIndex = getcurrentIndex(vm.href);
                 vm.uiListHeight = 0;
+                vm.uiListTop = 0;
                 vm.hashchangeSupport = !navigator.userAgent.match(/MSIE [5-7]/);
                 vm.timer = "";
                 vm.page = false;
@@ -177,7 +177,6 @@
                 vm.position = "absolute";
                 vm.fixTop = 45;
                 vm.fixBottom = "auto";
-                vm.$uiList = null;
                 vm.changePage = function(event, href, index, item) {
                     event.preventDefault();
                     if(!vmodel.hashchangeSupport) {
@@ -216,7 +215,7 @@
                 };
                 vm.uiListRendered = function() {
                     vmodel.uiListHeight = avalon(this).height();
-                    vmodel.$uiList = this;
+                    vmodel.uiListTop = avalon(this).offset().top;
                 }
                 vm.adjustLinks = function() {
                     if (document.querySelectorAll) {

@@ -61,6 +61,9 @@
                     <div class="tree-foot"></div>
                 </div>
             </div>
+            <script src="doc/index.js"></script>
+            <script src="static/dest/bezier.js"></script>
+            <script src="static/dest/base.js"></script>
         </div>
         <div ms-if="canThisPageShow('pageUiLibrary')">
             <ul class="ui-list" ms-visible="canThisPageShow('pageUiLibrary')" ms-css-position="position" ms-css-top="fixTop" ms-css-bottom="fixBottom">
@@ -79,7 +82,7 @@
             <li class="last"><a href="#">友情链接</a></li>
         </ul>
     </div>
-    <script src="static/dest/main.min.js"></script>
+    
     <script>
         avalon.ready(function() {
             var docCssReg = /<link[^>]*style\/avalon\.doc\.css[^>]*\>/img,

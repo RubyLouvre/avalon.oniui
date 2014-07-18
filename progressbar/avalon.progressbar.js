@@ -42,13 +42,13 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
 
             vm.$d = svgSupport && vm.circle && circleValueList(options.circleRadius, options.circleBorderWidth) || []
             vm.$skipArray = ["widgetElement", "template", "svgSupport"]
+            vm.svgSupport = svgSupport
             vm.ended = false
             // svg绘制一个圆，路径数据
             vm.circleCoordinates = ""
             // svg绘制扇形，进度条效果，路径数据
             vm.barCoordinates = ""
             vm.angel = options.value || 0
-            vm.svgSupport = svgSupport
             vm.successValue = vm.countDown ? 0 : 100
             vm.value = vm.countDown ? 100 : vm.value
             vm.angel = vm.countDown ? 360 : 360 * vm.angel / 100
@@ -177,9 +177,11 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                     value: value != void 0 ? value : widget.defaults.value
                     , indeterminate: widget.defaults.indeterminate
                     , success: false
-                }, options)
+                })
                 avalon.mix(vmodel, obj)
                 vmodel.ended = false
+                vmodel.successValue = vmodel.countDown ? 0 : 100
+                vmodel.value = vmodel.countDown ? 100 : vmodel.value
                 vmodel._simulater()
             }
 

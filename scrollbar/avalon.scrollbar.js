@@ -86,7 +86,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
                                 return vmodel._clickComputer(obj, diretion)
                             }, item[0], item[1], function(breakOut) {
                                 if(!breakOut) e.preventDefault()
-                            })
+                            }, "breakOutCallbackCannotIgnore")
                         })
                     }
                     function myOnWheel(e) {
@@ -525,7 +525,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
                 }, barIndex, position)
             }
             // 计算滚动条位置
-            vm._computer = function(axisComputer, barIndex, position, callback) {
+            vm._computer = function(axisComputer, barIndex, position, callback, breakOutCallbackCannotIgnore) {
                 var bar = bars[barIndex]
                 if(bar && bar.data("ui-scrollbar-needed")) {
                     var obj = {},
@@ -598,7 +598,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
 
                 }
                 // 回调，溢出检测
-                !vmodel.breakOutCallback && callback && callback(breakOut)
+                (!vmodel.breakOutCallback || breakOutCallbackCannotIgnore) && callback && callback(breakOut)
                 vmodel.breakOutCallback && vmodel.breakOutCallback(breakOut, vmodel, obj)
             }
             vm._scrollTo = function(x, y) {

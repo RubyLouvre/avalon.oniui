@@ -32,9 +32,9 @@
     <body>
 <div ms-controller="test">
         <h1>scrollbar-带上下小箭头嵌套</h1>
-        <div ms-widget="scrollbar,$dd" class="ui-helper-reset" style="height:300px;border:1px solid #ccc;width:700px;overflow:hidden;" data-scrollbar-position="right,bottom">
+        <div ms-widget="scrollbar,$dd" class="ui-helper-reset" style="height:300px;border:1px solid #ccc;width:500px;overflow:hidden;" data-scrollbar-position="right,bottom">
             <div class="ui-scrollbar-scroller ui-helper-reset">
-                <div ms-widget="scrollbar,$cc" class="ui-helper-reset" style="height:400px;border:1px solid #ccc;width:400px;overflow:hidden;" data-scrollbar-position="right,bottom">
+                <div ms-widget="scrollbar,$cc" class="ui-helper-reset" style="height:400px;border:1px solid #ccc;width:300px;overflow:hidden;" data-scrollbar-position="right,bottom">
                     <div class="ui-scrollbar-scroller ui-helper-reset">
                         <p style="width:800px" data-repeat-rendered="up" ms-repeat="data" class="ui-helper-reset">left {{$index}} <span style="float:right;">right {{$index}} </span></p>
                     </div>

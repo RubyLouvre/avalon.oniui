@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>position2组件</title>
+        <title>position组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../avalon.js"></script>
@@ -87,11 +87,13 @@
                 overflow: hidden;
             }
             #within{
-                width:600px;
+                width:300px;
                 margin:20px auto;
-                height:400px;
+                height:200px;
                 border:1px solid #ccc;
-                position: relative;
+                position: absolute;
+                top:40px;
+                left: 220px;
             }
             #my{
                 width: 40px;
@@ -111,7 +113,7 @@
     <body ms-controller="test">
         <h1>position+spinner+dropdown+draggable</h1>
         <p ms-repeat-el="list">
-            <label style="display:inline-block;width:100px;">{{el}}</label>
+            <label style="display:inline-block;width:100px;">{{el}}</label><br>
             <select ms-widget="dropdown,$,opts" ms-attr-id="el+1">
             </select>
             <input ms-widget="spinner" ms-attr-id="{{el+'less'+1}}">

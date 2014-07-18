@@ -2,7 +2,6 @@
 @import "../chameleon/oniui-theme";
 $uiname: "ui-accordion";
 $corner-radius: 4px;
-
 .ui-widget {
     font-family: $oniui-font-size * 1.1;
     font-size: $oniui-font-size;
@@ -10,8 +9,6 @@ $corner-radius: 4px;
         font-size: $oniui-font-family;
     }
 }
-
-
 .ui-widget-content {
     border: 1px solid $ui-widget-content-border-color;
     background-color: $ui-widget-content-background-color;
@@ -29,8 +26,6 @@ $corner-radius: 4px;
         color: $ui-widget-header-color;
     }
 }
-
-
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
@@ -125,7 +120,6 @@ $corner-radius: 4px;
                 color: #212121;
             }
         }
-
     }
     .#{$uiname}-icons {
         padding-left: 2.2em;
@@ -173,7 +167,7 @@ $corner-radius: 4px;
             @if($oinui-theme == smoothness) {
                 border: 1px solid #aaa;
                 background: #fff;
-                color: $ui-widget-content-color;
+                color: #333;
             } 
         }
     }

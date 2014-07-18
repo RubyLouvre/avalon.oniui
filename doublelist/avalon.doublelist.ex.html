@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>roleselect组件</title>
+        <title>doublelist组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
         <script>
-            require(["roleselect/avalon.roleselect"], function() {
+            require(["doublelist/avalon.doublelist"], function() {
                 avalon.define("test", function(vm) {
-                    vm.roleselect = {
+                    vm.doublelist = {
                         data: [
                             {name: "Lily", value: 1},
                             {name: "Lucy", value: 2},
@@ -32,13 +32,13 @@
                     }
                     var i = 6
                     while(i < 200) {
-                        vm.roleselect.data.push({
+                        vm.doublelist.data.push({
                             name: "Hello Sang" + i,
                             value: i
                         })
                         i++
                     }
-                    vm.$skipArray = ["roleselect"]
+                    vm.$skipArray = ["doublelist"]
                 })
                 avalon.scan()
             })
@@ -46,20 +46,20 @@
     </head>
     <body>
 <div ms-controller="test">
-        <h1>roleselect-隐藏已选中条目，限制选中条数</h1>
-        <div ms-widget="roleselect"></div>
+        <h1>doublelist-隐藏已选中条目，限制选中条数</h1>
+        <div ms-widget="doublelist"></div>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
-        &lt;title&gt;roleselect组件&lt;/title&gt;
+        &lt;title&gt;doublelist组件&lt;/title&gt;
         &lt;meta charset=&quot;UTF-8&quot;&gt;
         &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
         &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
         
         &lt;script&gt;
-            require([&quot;roleselect/avalon.roleselect&quot;], function() {
+            require([&quot;doublelist/avalon.doublelist&quot;], function() {
                 avalon.define(&quot;test&quot;, function(vm) {
-                    vm.roleselect = {
+                    vm.doublelist = {
                         data: [
                             {name: &quot;Lily&quot;, value: 1},
                             {name: &quot;Lucy&quot;, value: 2},
@@ -82,13 +82,13 @@
                     }
                     var i = 6
                     while(i &lt; 200) {
-                        vm.roleselect.data.push({
+                        vm.doublelist.data.push({
                             name: &quot;Hello Sang&quot; + i,
                             value: i
                         })
                         i++
                     }
-                    vm.$skipArray = [&quot;roleselect&quot;]
+                    vm.$skipArray = [&quot;doublelist&quot;]
                 })
                 avalon.scan()
             })
@@ -96,8 +96,8 @@
     &lt;/head&gt;
     &lt;body&gt;
 &lt;div ms-controller=&quot;test&quot;&gt;
-        &lt;h1&gt;roleselect-隐藏已选中条目，限制选中条数&lt;/h1&gt;
-        &lt;div ms-widget=&quot;roleselect&quot;&gt;&lt;/div&gt;
+        &lt;h1&gt;doublelist-隐藏已选中条目，限制选中条数&lt;/h1&gt;
+        &lt;div ms-widget=&quot;doublelist&quot;&gt;&lt;/div&gt;
         
     &lt;/div&gt;
 &lt;/body&gt;

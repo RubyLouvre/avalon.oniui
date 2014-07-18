@@ -1,16 +1,16 @@
 /**
-  * @description roleselect组件，以左右列表形式展示实现的复选组件
+  * @description doublelist组件，以左右列表形式展示实现的复选组件
   *
   */
-define(["avalon", "text!./avalon.roleselect.html", "text!./avalon.roleselect.data.html", "scrollbar/avalon.scrollbar", "css!./avalon.roleselect.css", "css!../chameleon/oniui-common.css"], function(avalon, template, dataTpl) {
+define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.data.html", "scrollbar/avalon.scrollbar", "css!./avalon.doublelist.css", "css!../chameleon/oniui-common.css"], function(avalon, template, dataTpl) {
 
-    var widget = avalon.ui.roleselect = function(element, data, vmodels) {
-        var options = data.roleselectOptions
+    var widget = avalon.ui.doublelist = function(element, data, vmodels) {
+        var options = data.doublelistOptions
         //方便用户对原始模板进行修改,提高定制性
         options.template = options.getTemplate(template, options)
         var dataTmpSelect = [],
             selectTmpSelect = []
-        var vmodel = avalon.define(data.roleselectId, function(vm) {
+        var vmodel = avalon.define(data.doublelistId, function(vm) {
             vm.data = []
             vm.select = []
             vm._selectData = []

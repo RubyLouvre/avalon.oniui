@@ -5,8 +5,8 @@ $uiname : ".ui-doublelist";
 	$doublelist: (
 		fontColor: #000, 
 		menuBg: #fff,
-		hoverBg: #f8f8f8, 
-		activeBg: #58b359,
+		hoverBg: $ui-state-hover-background-color, 
+		activeBg: $ui-state-active-background-color,
 		disableBg: #fff,
 		buttonBg: #f8f8f8
 	) !global;

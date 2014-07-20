@@ -78,7 +78,7 @@ avalon.oniui
         <td>notice</td><td>UI组件</td><td>完成</td><td>田，信息提示（能并排出现）</td>
     </tr>
     <tr>
-        <td>roleselect</td><td>UI组件</td><td>完成</td><td>姚，角色选择</td>
+        <td>doublelist</td><td>UI组件</td><td>完成</td><td>姚，角色选择</td>
     </tr>
     <tr>
         <td>datepicker</td><td>UI组件</td><td>完成</td><td>田， 日期选框器</td>

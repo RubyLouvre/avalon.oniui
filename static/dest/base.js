@@ -47,11 +47,15 @@
 			}
 		}
 		vm.outerHeight =  ui.getComputedStyle(ndP0, 'height');
+		setFrame(function () {
+			vm.outerHeight =  ui.getComputedStyle(ndP0, 'height');
+		}, 300);
 		var scrollEnd = true;
 		var scrollTimer;
 		var timingFun;
 		timingFun = Bezier.unitBezier(0.18, 0.73, 0.25,1);
 		avalon.bind(window, 'scroll', function () {
+			console.log("scroll")
 			var sTop  = document.body.scrollTop  || document.documentElement.scrollTop;
 			var delta = storeScrollTop >  sTop ? -1 : 1; //-1  线上滚动
 			storeScrollTop = sTop; 
@@ -82,7 +86,8 @@
 
 						var outerHeight =  parseInt(ui.getComputedStyle(ndP0, 'height'));
 						vm.outerHeight = outerHeight;
-						if ((outerHeight - _ndTop) <= (parallaxInitTop * 2) && nd===ndP0 ) {
+						// fixed定位情况下，考虑元素距离页面顶部和底部的距离
+						if ((outerHeight - _ndTop) <= (parallaxInitTop * 2 + 120) && nd===ndP0 ) {
 							continue ;
 						}
 						nd.style.top = ndTop + 'px' 
@@ -153,7 +158,6 @@
 	　　　　		return actualTop;
 	　　		}
 		function scroll() {
-			console.log("scroll");
 			var nd,
 				scrollTop = parseInt((document.body.scrollTop  || document.documentElement.scrollTop), 10);
 
@@ -182,13 +186,11 @@
 		}
 		function setFrame(cb, frameNum) {
 			if (window.requestAnimationFrame && !frameNum) {
-				console.log("if one");
 				timer = window.requestAnimationFrame(function () {
 					cb();
 					timer = window.requestAnimationFrame(arguments.callee);
 				});
 			} else {
-				console.log("if t")
 				timer =  window.setTimeout(function () {
 					cb();
 					window.setTimeout(arguments.callee, 1000 /60);
@@ -203,7 +205,7 @@
 			}
 		}
 	});
-	avalon.scan();
+	// avalon.scan();
 	function getElementsByClassName(cn) {
 		if ('querySelector' in document && typeof document.querySelector === 'function') {
 				return document.querySelectorAll('.' + cn);

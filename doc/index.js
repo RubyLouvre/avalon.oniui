@@ -187,14 +187,7 @@ window.indexData = {
             "url": "avalon.oniui/position/avalon.position.doc.html",
             "title": "position2组件",
             "des": "暂无描述",
-            "cover": "doc/img/position.gif"
-        },
-        {
-            "name": "roleselect",
-            "url": "avalon.oniui/roleselect/avalon.roleselect.doc.html",
-            "title": "roleselect组件",
-            "des": "roleselect组件，以左右列表形式展示实现的复选组件",
-            "cover": "doc/img/roleselect.gif"
+            "cover": "doc/img/postion.gif"
         }
     ],
     "10": [

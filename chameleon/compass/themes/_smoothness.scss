@@ -1,10 +1,19 @@
 @charset "utf-8";
 
 
-//两种主色调 银灰浅蓝
+// 两种主色调 银灰浅蓝
 // 激活的蓝色为天蓝色 #3775c0   
+// hover上去为浅灰色 #f8f8f8
+// 普通的底色为银灰色 #d9d9d9
+// 银灰底色对应的边框色为深灰色:#cccccc;
+// 正常的字体颜色为黑色: #000;
+// slider的激活蓝色为 #22dddd;
 
-//$ui-widget-font-widget: #000;
+// 文本输入框的边框色     hover时  激活时  出错时
+// 文本输入框的文字色     hover时  激活时  出错时
+// 文本输入框的背景色     hover时  激活时  出错时
+
+
 //字体设置
 $oniui-font-size: 1em;
 $oniui-font-weight: normal;

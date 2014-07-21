@@ -18,7 +18,7 @@ $uiname: "ui-slider";
     position: relative;
     text-align: left;
     @if($oinui-theme == smoothness) {
-        background: #e7e7e7;
+        background:$ui-state-default-background-color;// #e7e7e7;
     }
     .#{$uiname}-handle {
         position: absolute;
@@ -31,11 +31,16 @@ $uiname: "ui-slider";
         @include border-radius(7px);
         font-size: 0px;
         @if($oinui-theme == smoothness) {
-            background: #619fea;
+            background: $ui-state-active-background-color;
         }
-        &.ui-state-focus, &.ui-state-hover{
+        &.ui-state-hover{
             @if($oinui-theme == smoothness) {
-                background: #79c9ec;
+                background: lighten( $ui-state-active-background-color, 20%);
+            }
+        }
+        &.ui-state-active{
+            @if($oinui-theme == smoothness) {
+                background:#22dddd!important;
             }
         }
     }

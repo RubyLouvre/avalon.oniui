@@ -183,16 +183,16 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
             return str;
         }
     }
-    avalon(document).bind("click", function(e) { // 当点击slider之外的区域取消选中状态
-        var el = e.target
-        var Index = Handlers.indexOf(el)
-        if (Index !== -1) {
-            FocusElement = avalon(el).addClass("ui-state-focus")
-        } else if (FocusElement) {
-            FocusElement.removeClass("ui-state-focus")
-            FocusElement = null
-        }
-    })
+//    avalon(document).bind("click", function(e) { // 当点击slider之外的区域取消选中状态
+//        var el = e.target
+//        var Index = Handlers.indexOf(el)
+//        if (Index !== -1) {
+//            FocusElement = avalon(el).addClass("ui-state-focus")
+//        } else if (FocusElement) {
+//            FocusElement.removeClass("ui-state-focus")
+//            FocusElement = null
+//        }
+//    })
     avalon(document).bind("keydown", function(e) { // 当选中某个手柄之后通过键盘上的方向键控制手柄的slider
         if (FocusElement) {
             var vmodel = FocusElement[0].sliderModel

@@ -163,8 +163,8 @@ $ui-divider-state-default-color: #f2f2f2;
         //掠过
         &.ui-state-hover {
             @if($oinui-theme == smoothness){
-                border-color: lighten( $ui-state-active-border-color, 10%);
-                background-color: lighten( $ui-state-active-border-color, 10%);
+                border-color:  $ui-state-hover-border-color;
+                background-color: $ui-state-hover-border-color;
                 color: $ui-state-hover-color;
             }
             .ui-icon {

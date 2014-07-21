@@ -33,7 +33,7 @@ ul#{$uiname},ol#{$uiname}{
 		width: 150px;
 	}
 	& li.ui-state-hover{
-		background: $ui-state-active-background-color;
+		background: $ui-state-hover-background-color;
 	}
 	& li.ui-state-active{
 		background: $ui-state-active-background-color;

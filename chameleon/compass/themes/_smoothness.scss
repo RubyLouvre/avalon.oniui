@@ -1,9 +1,28 @@
 @charset "utf-8";
 
 
-//两种主色调 银灰与草绿
+// 两种主色调 银灰浅蓝
+// 激活的蓝色为天蓝色 #3775c0   
+// hover上去为浅灰色  #f8f8f8
+// 普通的底色为银灰色 #d9d9d9
+// 银灰底色对应的边框色为深灰色:#cccccc;
 
-//$ui-widget-font-widget: #000;
+//两个用到的绿色 #3e973e(深) #68c969（浅）
+
+
+// 正常的字体颜色为黑色: #000;
+// slider的激活蓝色为 #22dddd;
+
+// input[type=text]，input[type=password],textarea的样式
+//┌───┬────┬────┬────┬────┬────┐
+//│状态  │default │ hover  │active  │diabled │error   │
+//├───┼────┼────┼────┼────┼────┤
+//│边框  │#cccccc │#999999 │active  │#3775c0 │#ff8888 │
+//├───┼────┼────┼────┼────┼────┤
+//│背景  │#ffffff │#ffffff │#ffffff │#f5f5f5 │#fffff  │
+//├───┼────┼────┼────┼────┼────┤
+//│文字  │#000000 │#000000 │#000000 │#999999 │#ff8888 │
+//└───┴────┴────┴────┴────┴────┘
 //字体设置
 $oniui-font-size: 1em;
 $oniui-font-weight: normal;
@@ -17,7 +36,7 @@ $oniui-icon-state-active-color: #fff;
 //通用阴影
 $oniui-shadow-box: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
 
-//绿色的亮色
+
 $ui-widget-content-border-color:#3e973e!global;
 $ui-widget-content-background-color:#68c969!global;
 $ui-widget-content-color:#fff!global;
@@ -25,7 +44,6 @@ $ui-widget-content-color:#fff!global;
 $ui-widget-header-border-color: #aaa!global;
 $ui-widget-header-background-color: rgb(223,223,223)!global;
 $ui-widget-header-color: #fff!global;
-
 
 $ui-state-default-background-color: #e6e6e6!global;
 $ui-state-default-border-color: #d4d4d4!global;
@@ -47,10 +65,11 @@ $ui-state-disabled-background-color: #F5F5F5!global;
 $ui-state-disabled-border-color: #D9D9D9!global;
 $ui-state-disabled-color: #999!global;
 
-//error
+//出错（红色）
 $ui-state-error-background-color: #ff8888!global;
 $ui-state-error-border-color: #ff8888!global;
 $ui-state-error-color: #ff8888!global;
+
 
 
 

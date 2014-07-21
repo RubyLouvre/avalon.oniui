@@ -24,9 +24,9 @@ ul.ui-menu, ol.ui-menu {
     margin: 0;
     width: 150px; }
   .ui-menu li.ui-state-hover {
-    background: #58b359; }
+    background: #f8f8f8; }
   .ui-menu li.ui-state-active {
-    background: #58b359; }
+    background: #3775c0; }
   .ui-menu .ui-menu-sub {
     margin: 0;
     padding: 0;

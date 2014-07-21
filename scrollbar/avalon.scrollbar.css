@@ -126,11 +126,11 @@ div.ui-scrollbar {
       position: absolute;
       width: 100%;
       left: 0;
-      background: #bcbcbc; }
+      background: #cccccc; }
     .ui-scrollbar-draggerpar .ui-state-hover {
-      background: #aaaaaa; }
-    .ui-scrollbar-draggerpar .ui-state-active {
       background: #999999; }
+    .ui-scrollbar-draggerpar .ui-state-active {
+      background: #888888; }
   .ui-scrollbar-top .ui-scrollbar-ragger, .ui-scrollbar-bottom .ui-scrollbar-ragger {
     height: 100%;
     width: auto;

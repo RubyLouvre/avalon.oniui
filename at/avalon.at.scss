@@ -18,8 +18,8 @@ $uiname: "ui-at";
         line-height: 24px;
         text-indent: 5px;
         &.ui-state-hover{
-            background:$ui-state-active-background-color;
-            color: $ui-state-active-color;
+            background:$ui-state-hover-background-color;
+            color: $ui-state-hover-color;
         }
     }
 }

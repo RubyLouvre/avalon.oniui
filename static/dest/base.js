@@ -82,7 +82,7 @@
 
 						var outerHeight =  parseInt(ui.getComputedStyle(ndP0, 'height'));
 						vm.outerHeight = outerHeight;
-						if ((outerHeight - _ndTop) < parallaxInitTop) {
+						if ((outerHeight - _ndTop) <= (parallaxInitTop * 2) && nd===ndP0 ) {
 							continue ;
 						}
 						nd.style.top = ndTop + 'px' 

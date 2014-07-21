@@ -12,7 +12,8 @@ $uiname : ".ui-scrollbar";
 		arrDisabledBg: #e9e9e9,
 		draggerBg: #ccc,
 		draggerHoverBg: #999,
-		draggerActiveBg: #888
+		draggerActiveBg: #888,
+		draggerDisabledBg:#e9e9e9
 	) !global;
 } @else {
 }
@@ -130,6 +131,9 @@ div#{$uiname} {
 		}
 		.ui-state-active{
 			background:map-get($scrollbar, draggerActiveBg);
+		}
+		.ui-state-disabled{
+			background: map-get($scrollbar, draggerDisabledBg);
 		}
 	}
 	&-top,&-bottom {

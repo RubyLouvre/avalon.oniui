@@ -116,6 +116,8 @@ a, a:active, a:hover {
     height: 110px;
     padding-bottom: 10px;
     line-height: 110px;
+    position: relative;
+    z-index: 10;
 }
 .footer ul {
     padding: 45px 22px 0;

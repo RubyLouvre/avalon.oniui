@@ -27,7 +27,7 @@
         </div>
         <h1><span>Avalon新一代UI库： OniUI</span></h1>
     </div>
-    <div class="content" ms-css-min-height="{{uiListHeight}}" >
+    <div class="content" ms-css-min-height="{{uiListHeight}}">
         <div ms-if="canThisPageShow('pageTimeline')" class="ms-controller" ms-controller="www_uiguide">
             <div id="parallax" class="parallax-container" ms-css-height="outerHeight">
                 <div class="parallax parallax2">
@@ -45,10 +45,10 @@
                         <div class="month-wrapper" ms-repeat-m="months">
                             <div class="tree__item"  data-repeat-rendered="cb"  ms-repeat-leaf="m.item" ms-class="{{(nowIndex[m.key]  + $index) % 2 === 0 ? ('tree__item--m' + m.key) : ('tree__item--m' + m.key + ' tree__item--right')}}">
                                 <div class="tree__item__main">
-                                    <a target="_blank" ms-href="{{leaf.url}}"><img width="400" height="245" ms-src="{{leaf.cover}}"/></a>
+                                    <a target="_blank" href="javascript:voild 0;"><img width="400" height="245" ms-src="{{leaf.cover}}"/></a>
                                     <div class="des">
                                         <div class="des__bg"></div>
-                                        <a ms-href="{{leaf.url}}" class="des__main" target="_blank">
+                                        <a href="javascript:voild 0;" class="des__main" target="_blank">
                                             <span class="des__title">{{leaf.title}}</span>
                                             <span class="des__content">{{leaf.des}}</span>
                                         </a>
@@ -61,6 +61,9 @@
                     <div class="tree-foot"></div>
                 </div>
             </div>
+            <script src="doc/index.js"></script>
+            <script src="static/dest/bezier.js"></script>
+            <script src="static/dest/base.js"></script>
         </div>
         <div ms-if="canThisPageShow('pageUiLibrary')">
             <ul class="ui-list" ms-visible="canThisPageShow('pageUiLibrary')" ms-css-position="position" ms-css-top="fixTop" ms-css-bottom="fixBottom">
@@ -79,11 +82,11 @@
             <li class="last"><a href="#">友情链接</a></li>
         </ul>
     </div>
-    <script src="static/dest/main.min.js"></script>
+    
     <script>
         avalon.ready(function() {
             var docCssReg = /<link[^>]*style\/avalon\.doc\.css[^>]*\>/img,
-                widgets = ["accordion", "tab", "spinner", "slider", "textbox", "dropdown", "datepicker", "dialog", "at", "checkboxlist", "cookie", "draggable", "flipswitch", "miniswitch", "notice", "pager", "position", "preview", "progressbar", "resizable", "roleselect", "scrollbar", "scrollspy", "simplegrid", "store", "switchdropdown", "tooltip"].sort(),
+                widgets = ["accordion", "tab", "spinner", "slider", "textbox", "dropdown", "datepicker", "dialog", "at", "checkboxlist", "cookie", "draggable", "flipswitch", "miniswitch", "notice", "pager", "position", "preview", "progressbar", "resizable", "doublelist", "scrollbar", "scrollspy", "simplegrid", "store", "switchdropdown", "tooltip"].sort(),
                 defaultHref = "accordion/avalon.accordion.doc.html";
 
             function getHref(urlHash) {

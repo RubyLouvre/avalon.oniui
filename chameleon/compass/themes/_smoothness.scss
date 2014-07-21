@@ -1,7 +1,8 @@
 @charset "utf-8";
 
 
-//两种主色调 银灰与草绿
+//两种主色调 银灰浅蓝
+// 激活的蓝色为天蓝色 #3775c0   
 
 //$ui-widget-font-widget: #000;
 //字体设置
@@ -17,7 +18,7 @@ $oniui-icon-state-active-color: #fff;
 //通用阴影
 $oniui-shadow-box: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
 
-//绿色的亮色
+
 $ui-widget-content-border-color:#3e973e!global;
 $ui-widget-content-background-color:#68c969!global;
 $ui-widget-content-color:#fff!global;
@@ -31,18 +32,18 @@ $ui-state-default-background-color: #e6e6e6!global;
 $ui-state-default-border-color: #d4d4d4!global;
 $ui-state-default-color: #555!global;
 //移上去时
-$ui-state-hover-background-color: #68c969!global;
-$ui-state-hover-border-color: #3e973e!global;
-$ui-state-hover-color: #fff!global;
+$ui-state-hover-background-color: #f8f8f8!global;
+$ui-state-hover-border-color: #f8f8f8!global;
+$ui-state-hover-color: #000!global;
 //点击时状态
 $ui-state-focus-background-color: #dadada!global;
 $ui-state-focus-border-color: #999!global;
 $ui-state-focus-color: #212121!global;
-//激活状态
-$ui-state-active-background-color: #58b359!global;
-$ui-state-active-border-color: #45a846!global;
+//激活状态(蓝色)
+$ui-state-active-background-color:#3775c0 !global;
+$ui-state-active-border-color: #3775c0!global;
 $ui-state-active-color: #fff!global;
-//禁用
+//禁用(灰色)
 $ui-state-disabled-background-color: #F5F5F5!global;
 $ui-state-disabled-border-color: #D9D9D9!global;
 $ui-state-disabled-color: #999!global;
@@ -51,6 +52,8 @@ $ui-state-disabled-color: #999!global;
 $ui-state-error-background-color: #ff8888!global;
 $ui-state-error-border-color: #ff8888!global;
 $ui-state-error-color: #ff8888!global;
+
+// 
 
 
 

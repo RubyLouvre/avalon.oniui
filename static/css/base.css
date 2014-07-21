@@ -32,9 +32,9 @@ html {
 	overflow:hidden;
 
 }
-.tree__item__main:hover .des {
+/*.tree__item__main:hover .des {
 	top:0;
-}
+}*/
 .tree__item__main .des {
 	position:absolute;
 	top:212px;
@@ -59,9 +59,9 @@ html {
 .tree__item__main .des__bg {
 	width:430px;
 	height:250px;
-	opacity:0.7;
+	/*opacity:0.7;*/
 	color:#FFF;
-	background:#000;
+	background:#28966f;
 }
 .tree__item__main .des__main {
 	position:absolute;

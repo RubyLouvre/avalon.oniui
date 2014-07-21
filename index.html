@@ -46,7 +46,7 @@
                         <div class="month-wrapper" ms-repeat-m="months">
                             <div class="tree__item"  data-repeat-rendered="cb"  ms-repeat-leaf="m.item" ms-class="{{(nowIndex[m.key]  + $index) % 2 === 0 ? ('tree__item--m' + m.key) : ('tree__item--m' + m.key + ' tree__item--right')}}">
                                 <div class="tree__item__main" ms-click="showBigPic(leaf.cover)">
-                                    <a target="_blank" href="javascript:void 0;"><img width="400" height="245" ms-src="{{leaf.cover}}"/></a>
+                                    <a target="_blank" href="javascript:void 0;"><img width="430" height="245" ms-src="{{leaf.cover}}"/></a>
                                     <div class="des">
                                         <div class="des__bg"></div>
                                         <a href="javascript:void 0;" class="des__main" target="_blank">
@@ -90,19 +90,27 @@
     <script>
     require("dialog/avalon.dialog.js", function(avalon) {
         var docCssReg = /<link[^>]*style\/avalon\.doc\.css[^>]*\>/img,
-            widgets = ["accordion", "tab", "spinner", "slider", "textbox", "dropdown", "datepicker", "dialog", "at", "checkboxlist", "cookie", "draggable", "flipswitch", "miniswitch", "notice", "pager", "position", "preview", "progressbar", "resizable", "doublelist", "scrollbar", "scrollspy", "simplegrid", "store", "switchdropdown", "tooltip"].sort(),
+            widgets = ["accordion", "tab", "spinner", "slider", "textbox", "dropdown", "datepicker", "coupledatepicker", "daterangepicker", "dialog", "at", "checkboxlist", "cookie", "draggable", "flipswitch", "miniswitch", "notice", "pager", "position", "preview", "progressbar", "resizable", "doublelist", "scrollbar", "scrollspy", "simplegrid", "store", "switchdropdown", "tooltip"].sort(),
             defaultHref = "accordion/avalon.accordion.doc.html";
 
         function getHref(urlHash) {
             var hash = (urlHash || location.hash).match(/avalon[\S]+\.html/g) || "",
-                page = false;
+                page = false,
+                widget = hash[0].split(".")[1];
+            switch (widget) {
+                case "coupledatepicker":
+                case "daterangepicker":
+                    widget = "datepicker";
+                break;
+            }
             if(hash) {
-                hash = hash[0].split(".")[1] + "/" + hash[0]
+                hash = widget + "/" + hash[0]
             }
             if (!hash && urlHash) {
                 hash = urlHash;
                 page = true;
             } 
+            console.log("getHref : "+hash)
             return {
                     page: page,
                     hash: hash
@@ -232,9 +240,20 @@
                 return template;
             };
             vm.showDocument = function(widget, event, index) {
+                console.log("showDocument")
                 event.preventDefault();
                 if(!vmodel.hashchangeSupport) {
-                    vmodel.href = widget + "/avalon." + widget + ".doc.html";
+                    switch (widget) {
+                        case "coupledatepicker":
+                            vmodel.href = "datepicker/avalon.coupledatepicker.doc.html";
+                        break;
+                        case "daterangepicker":
+                            vmodel.href = "datepicker/avalon.daterangepicker.doc.html";
+                        break;
+                        default:
+                            vmodel.href = widget + "/avalon." + widget + ".doc.html";
+                        break;
+                    }
                 }
                 setHash("#avalon." + widget + ".doc.html");
                 vmodel.currentIndex = index;
@@ -313,6 +332,7 @@
                 var hash = location.hash.split("#")[1],
                     hrefObj = {};
                 hash = hash || defaultHref.split("/")[1];
+                console.log("hash is : "+hash)
                 hrefObj = getHref(hash);
                 vmodel.href = hrefObj.hash;
                 vmodel.contentWidth = hrefObj.page ? (vmodel.page=true) && 990 : (vmodel.page=false) || 760;

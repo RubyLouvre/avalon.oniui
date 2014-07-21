@@ -13,17 +13,17 @@
     <div class="wrapper">
         <h1>coupledatepicker demo</h1>
         <div class="demo-show" ms-controller="demo">
-            <fieldset>
+<!--             <fieldset>
                 <legend>双日历框 两天最小相隔0天</legend>
                 <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from, to" data-coupledatepicker-rules="aOpts"></div>
                 <p>通过配置rules来设置起始日历和结束日历之间两天相隔的最小天数。初始日期设为2014-06-12，最小相隔日期0天，则结束日期的最小日期为2014-06-12，虽然结束日期初始设置为2014-06-02，但是组件会自动修正结束日期</p>
-            </fieldset>
+            </fieldset> -->
             <fieldset>
                 <legend>双日历框 两天最大相隔8天</legend>
                 <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from, to" data-coupledatepicker-rules="bOpts"></div>
                 <p>通过配置rules来设置起始日历和结束日历之间两天相隔的最小天数为0，最大天数为8</p>
             </fieldset>
-            <fieldset>
+            <!-- <fieldset>
                 <legend>双日历框 两天最小相隔0天，最大相隔8天</legend>
                 <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from, to1" data-coupledatepicker-rules="dOpts"></div>
                 <p>初始结束日期的初始日期为2014-06-20，在最小间隔天数和最大间隔天数所包含的日期，正常显示</p>
@@ -37,7 +37,7 @@
                 <legend>双日历框 结束初始日期异常时，rules defaultDate的设置</legend>
                 <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from, to2" data-coupledatepicker-rules="eOpts"></div>
                 <p>通过配置结束日期初始值异常时的默认值、最小间隔天数、最大间隔天数对应的rules属性，可以使结束日期初始为起始初始日期+2</p>
-            </fieldset>
+            </fieldset> -->
             <script> 
                 require("datepicker/avalon.coupledatepicker", function(avalon) {
                     var model = avalon.define("demo", function(vm) {

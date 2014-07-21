@@ -1,7 +1,8 @@
 @charset "utf-8";
 
 
-//两种主色调 银灰与草绿
+//两种主色调 银灰浅蓝
+// 激活的蓝色为天蓝色 #3775c0   
 
 //$ui-widget-font-widget: #000;
 //字体设置
@@ -17,7 +18,7 @@ $oniui-icon-state-active-color: #fff;
 //通用阴影
 $oniui-shadow-box: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
 
-//绿色的亮色
+
 $ui-widget-content-border-color:#3e973e!global;
 $ui-widget-content-background-color:#68c969!global;
 $ui-widget-content-color:#fff!global;
@@ -51,6 +52,8 @@ $ui-state-disabled-color: #999!global;
 $ui-state-error-background-color: #ff8888!global;
 $ui-state-error-border-color: #ff8888!global;
 $ui-state-error-color: #ff8888!global;
+
+// 
 
 
 

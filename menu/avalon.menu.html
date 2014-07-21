@@ -7,7 +7,8 @@
     ms-class-14="ui-menu-removable:!!_canRemove(menu)" 
     ms-class-15="ui-menu-item-{{_depth}}" 
     ms-class-16="ui-menu-with-sub ui-menu-with-sub-{{_depth}}:_hasSubMenu(menu)"  
-    ms-hover-100="ui-state-hover:!menu.disabled" 
+    ms-mouseenter-101="_dealClass($event, menu)" 
+    ms-mouseout-101="_dealClass($event, menu, 'leave')" 
     ms-click-101="_ifEventIsMouseEnter($event, $index)" 
     ms-data-sub="_hasSubMenu(menu)" 
     ms-data-depth="_depth" 
@@ -15,6 +16,7 @@
     ms-{{MS_OPTION_EVENT}}-100="activate($event, $index)" 
     > 
     {{_menuTitle(menu.title, menu, _cutCounter(), cutEnd) | html}}
+    <span ms-if="_hasSubMenu(menu)" class="ui-menu-icon">&gt;</span>
 	<ul ms-if="_hasSubMenu(menu)" class="ui-menu ui-menu-sub ui-helper-clearfix ui-helper-reset" 
 		 ms-data-widget-index="$index" 
 		 ms-class-101="ui-menu-depth-{{_depth+1}}" 

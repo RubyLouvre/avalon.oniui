@@ -34,8 +34,6 @@ div.ui-flipswitch {
     opacity: 0.4;
     background: #fff;
     filter: alpha(opacity=40); }
-  .ui-flipswitch-on {
-    /*background-image: map-get($switch, bgImg);*/ }
   .ui-flipswitch-normal {
     width: 35px;
     height: 18px; }

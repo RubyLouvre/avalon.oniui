@@ -178,6 +178,12 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
                     vmodel._restMenu(vmodel)
                 }
             }
+            // use mouseout instead of ms-hover or mouseleave to fix ie bug
+            vm._dealClass =function(e, menu, isLeave) {
+                if(menu.disabled) return
+                if(isLeave) return avalon(this).removeClass("ui-state-hover")
+                return avalon(this).addClass("ui-state-hover")
+            }
             // event 为mouseenter的时候，点击进入这个分支
             vm._ifEventIsMouseEnter = function(e, index) {
                 if(vmodel.event === "click" || vmodel._depth !== 1) return

@@ -2,49 +2,6 @@
 @import "../chameleon/oniui-theme";
 $uiname: "ui-accordion";
 $corner-radius: 4px;
-.ui-widget {
-    font-family: $oniui-font-size * 1.1;
-    font-size: $oniui-font-size;
-    .ui-widget, input, select, texteara, button {
-        font-size: $oniui-font-family;
-    }
-}
-.ui-widget-content {
-    border: 1px solid $ui-widget-content-border-color;
-    background-color: $ui-widget-content-background-color;
-    color: $ui-widget-content-color;
-    a {
-        color:$ui-widget-content-color;
-    }
-}
-.ui-widget-header {
-    border: 1px solid $ui-widget-header-color;
-    background-color: $ui-widget-header-background-color;
-    color: $ui-widget-header-color;
-    font-weight: bold;
-    a {
-        color: $ui-widget-header-color;
-    }
-}
-.ui-state-default,
-.ui-widget-content .ui-state-default,
-.ui-widget-header .ui-state-default {
-    
-}
-.ui-state-active, .ui-widget-header.ui-state-active, .ui-widget-content.ui-state-active {
-    @if($oinui-theme == smoothness) {
-        background: #fff;
-        border: 1px solid #aaa;
-    }
-}
-.ui-state-hover, .ui-widget-header.ui-state-hover, .ui-widget-content.ui-state-hover {
-    @if($oinui-theme == smoothness) {
-        border: 1px solid #999999;
-        background: #dadada;
-        font-weight: normal;
-        color: #212121;
-    }
-}
 .#{$uiname} {
     @include inline-block();
     vertical-align: middle;
@@ -90,7 +47,7 @@ $corner-radius: 4px;
         font-size: 100%;
         &.ui-state-default {
             border: 1px solid $ui-state-default-border-color;
-            background-color: $ui-state-default-background-color;
+            background-color: #d9d9d9;
             font-weight: normal;
             color: $ui-state-default-color;
         }
@@ -99,8 +56,9 @@ $corner-radius: 4px;
         }
         &.ui-state-active {
             @if($oinui-theme == smoothness) {
-                background: #fff;
+                background: lighten(#3775c0, 30%);
                 border: 1px solid #aaa;
+                color: #000;
             }
             .ui-icon-caret-down {
                 display: inline;
@@ -115,7 +73,7 @@ $corner-radius: 4px;
         &.ui-state-hover {
             @if($oinui-theme == smoothness) {
                 border: 1px solid #999999;
-                background: #dadada;
+                background: #f8f8f8;
                 font-weight: normal;
                 color: #212121;
             }

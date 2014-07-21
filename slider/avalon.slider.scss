@@ -38,7 +38,7 @@ $uiname: "ui-slider";
                 background: lighten( $ui-state-active-background-color, 20%);
             }
         }
-        &.ui-state-active{
+        &.ui-state-active, &.ui-state-focus {
             @if($oinui-theme == smoothness) {
                 background:#22dddd!important;
             }

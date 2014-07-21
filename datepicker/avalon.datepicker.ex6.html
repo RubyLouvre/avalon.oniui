@@ -46,8 +46,9 @@
             </fieldset>
             <fieldset>
                 <legend>allowBlank为false，自动更正初始值</legend>
-                <input ms-widget="datepicker"/>
+                <input ms-widget="datepicker" data-datepicker-watermark="false"/>
                 <p>说明：当allowBlank为默认false时，日历组件会在初始值不符合日期显示格式要求(date对象或者yyyy-mm-dd格式的字符串)的情况下自动修正初始值为“今天”的日期， 当前绑定datepicker的输入域没有初始值，所以将初试日期修正为今天的日期</p>
+                <p>如果不想显示水印效果，则配置watermark为false</p>
             </fieldset>
             <script> 
                 require("datepicker/avalon.datepicker", function(avalon) {

@@ -32,13 +32,12 @@
                     vm.tab = {
                         shallPanelAlwaysShow: true,
                         onClickActive: function(e, vmodel) {
-                            console.log(vmodel)
+                            avalon.log(vmodel)
                         },
                         onInit: function(vmodel) {
                             this.getElementsByTagName("ul")[0].id = "nav" + this.getAttribute("rank")
                             var rank = document.getElementById("rank" + this.getAttribute("rank")) || this.getElementsByTagName("div")[0],
                                 s = "$,$cc" + this.getAttribute("rank")
-                            console.log(s)
                             rank.setAttribute("ms-scrollspy", s)
                             if(this.getAttribute("rank") == "2") {
                                 v.tabVmodel2 = vmodel
@@ -215,13 +214,12 @@
                     vm.tab = {
                         shallPanelAlwaysShow: true,
                         onClickActive: function(e, vmodel) {
-                            console.log(vmodel)
+                            avalon.log(vmodel)
                         },
                         onInit: function(vmodel) {
                             this.getElementsByTagName(&quot;ul&quot;)[0].id = &quot;nav&quot; + this.getAttribute(&quot;rank&quot;)
                             var rank = document.getElementById(&quot;rank&quot; + this.getAttribute(&quot;rank&quot;)) || this.getElementsByTagName(&quot;div&quot;)[0],
                                 s = &quot;$,$cc&quot; + this.getAttribute(&quot;rank&quot;)
-                            console.log(s)
                             rank.setAttribute(&quot;ms-scrollspy&quot;, s)
                             if(this.getAttribute(&quot;rank&quot;) == &quot;2&quot;) {
                                 v.tabVmodel2 = vmodel

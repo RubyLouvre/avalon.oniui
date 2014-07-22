@@ -322,8 +322,7 @@ define(["avalon.getModel",
             vmodel.onChangeMonthYear(year, vmodel.month+1, vmodel);
         })
         vmodel.$watch("_month", function(month) {
-            vmodel.month = month -1;
-            avalon.scan(vmodel.$monthDom, vmodel);
+            vmodel.month = month - 1;
         })
         vmodel.$watch("month", function(month) {
             vmodel._month = month + 1;
@@ -625,6 +624,7 @@ define(["avalon.getModel",
         separator: "-",
         calendarLabel: "选择日期",
         onChangeMonthYear: avalon.noop, 
+        watermark: true,
         onSelect: avalon.noop, //将废弃,相当于onSelect
         onClose: avalon.noop,
         parseDate: function(str){

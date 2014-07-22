@@ -1,5 +1,5 @@
 /**
-  * @description scrollbar组件，自定义滚动条样式
+  * @description scrollbar组件，自定义滚动条样式，绑定ms-widget="scrollbar"的元素内必须包含一个class="ui-scrollbar-scroller"的视窗元素
   */
 define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", "css!./avalon.scrollbar.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 
@@ -90,11 +90,13 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
                         })
                     }
                     function myOnWheel(e) {
+                        if(vmodel.disabled) return
                         if(vmodel.inFocuse) {
                             wheelLike(e.wheelDelta > 0 ? "up" : "down", vs, e)
                         }
                     }
                     function myKeyDown(e) {
+                        if(vmodel.disabled) return
                         var k = e.keyCode
                         if(k > 32 && k < 41 & vmodel.inFocuse) {
                             // 方向按键
@@ -219,6 +221,9 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
                         return a
                     }, dr.attr("ui-scrollbar-index"), dr.attr("ui-scrollbar-pos"))
                 }, 
+                handle: function(e, data) {
+                    return !vmodel.disabled && this
+                },
                 containment: "parent"
             }
             vm.draggable.stop = function(e, data) {
@@ -274,6 +279,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
             }
             //@method update()更新滚动条状态，windowresize，内容高度变化等情况下调用，不能带参数
             vm.update = function(ifInit, x, y) {
+                if(vmodel.disabled) return
                 var ele = avalon(vmodel.viewElement),
                     // 滚动内容宽高
                     viewW = scroller[0].scrollWidth,
@@ -473,6 +479,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
 
             // 点击箭头
             vm._arrClick = function(e, diretion, position, barIndex) {
+                if(vmodel.disabled) return
                 vmodel._computer(function(obj) {
                     return vmodel._clickComputer(obj, diretion)
                 }, barIndex, position)
@@ -491,6 +498,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
             }
             // 长按
             vm._arrDown = function($event, diretion, position, barIndex,ismouseup) {
+                if(vmodel.disabled) return
                 var se = this,
                     ele = avalon(se)
                 clearInterval(ele.data("mousedownTimer"))
@@ -515,6 +523,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
             }
             // 点击滚动条
             vm._barClick = function(e, position, barIndex) {
+                if(vmodel.disabled) return
                 var ele = avalon(this)
                 if(ele.hasClass("ui-scrollbar-dragger")) return
                 vmodel._computer(function(obj) {
@@ -526,6 +535,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
             }
             // 计算滚动条位置
             vm._computer = function(axisComputer, barIndex, position, callback, breakOutCallbackCannotIgnore) {
+                if(vmodel.disabled) return
                 var bar = bars[barIndex]
                 if(bar && bar.data("ui-scrollbar-needed")) {
                     var obj = {},
@@ -626,6 +636,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
                 }
             }
             vm._draggerDown = function(e, isdown) {
+                if(vmodel.disabled) return
                 var ele = avalon(this)
                 if(isdown) {
                     ele.addClass("ui-state-active")
@@ -653,6 +664,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", 
     //argName: defaultValue, \/\/@param description
     //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
+        disabled: false, //@param 组件是否被禁用，默认为否
         toggle: true, //@param 组件是否显示，可以通过设置为false来隐藏组件
         position: "right", //@param scrollbar出现的位置,right右侧，bottom下侧，可能同时出现多个方向滚动条
         limitRateV: 1.5, //@param 竖直方向，拖动头最小高度和拖动头宽度比率

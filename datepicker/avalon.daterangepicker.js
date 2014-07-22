@@ -18,7 +18,8 @@ define(["avalon.getModel",
             _confirmClick = false, //判断是否点击了确定按钮，没点击为false，点击为true
             _oldValue, //保存最近一次选择的起始日期和结束日期组成的日期对象数组，因为当选择了日期但没有点确定按钮时，日期选择范围不改变，相应的对应的日历默认输入域也应该恢复到最近一次的选择
             _toMinDate = "", //保存rules指向的对象的toMinDate属性值，以便于rules属性计算所得的minDate做比较
-            _toMaxDate = ""; //保存rules指向的对象的toMaxDate属性值，以便于rules属性计算所得的maxDate做比较
+            _toMaxDate = "", //保存rules指向的对象的toMaxDate属性值，以便于rules属性计算所得的maxDate做比较
+            fromSelected = null;
         // 结束日期初始异常时默认日期、起始日期和结束日期最小相隔天数、最大相隔天数的设定形式的转化处理
         var _c = {  
             '+M': function(time ,n) { //+M表示相隔n个月
@@ -112,10 +113,15 @@ define(["avalon.getModel",
                 var inputFromValue = inputFrom.value,
                     inputToValue = inputTo.value,
                     inputFromDate = options.parseDate(inputFromValue),
-                    inputToDate = options.parseDate(inputToValue);
-                vmodel.label = options.datesDisplayFormat(options.defaultLabel,inputFromValue, inputToValue);
+                    inputToDate = options.parseDate(inputToValue),
+                    label = options.datesDisplayFormat(options.defaultLabel,inputFromValue, inputToValue),
+                    labelWidth = label.length * 10;
+                vmodel.label = label;
                 _confirmClick = true;
                 vmodel.toggle = false;
+                if (labelWidth > vmodel.dateRangeWidth) {
+                    vmodel.dateRangeWidth = labelWidth;
+                }
                 options.onSelect.call(vmodel, inputFromDate, inputToDate, _oldValue, vmodel, avalon(element).data());
                 _oldValue = [inputFromDate, inputToDate];
             }
@@ -146,6 +152,7 @@ define(["avalon.getModel",
             // 选择了初始日期之后根据rules的设置及时更新结束日期的选择范围
             vm.fromSelectCal = function(date) {
                 applyRules(date);
+                fromSelected = date;
             }
             vm.$init = function() {
                 options.template = options.template.replace(/MS_OPTION_START_DAY/g, vmodel.startDay);
@@ -319,12 +326,14 @@ define(["avalon.getModel",
             var msg = "",
                 day = 0,
                 inputToDate = options.parseDate(inputTo.value),
-                msgFormat = options.opts && options.opts.msgFormat;
+                msgFormat = options.opts && options.opts.msgFormat,
+                inputFromDate = null;
             if(inputTo.value && !inputToDate) {
                 vmodel.inputToValue = "";
             } 
-            if(inputTo.value && inputFrom.value) {
-                day = Math.floor(((inputToDate.getTime()-options.parseDate(inputFrom.value).getTime()))/1000/60/60/24 +1);
+            if(inputTo.value && (inputFrom.value || fromSelected)) {
+                inputFromDate = options.parseDate(inputFrom.value) || fromSelected;
+                day = Math.floor(((inputToDate.getTime()-inputFromDate.getTime()))/1000/60/60/24 +1);
                 if(msgFormat && typeof msgFormat === "function") {
                     var from = {
                             getRawValue: function() {
@@ -347,7 +356,9 @@ define(["avalon.getModel",
                     msg = "已选时间段："+inputFrom.value+" 至 "+inputTo.value+" 共计"+day+"天";
                 }
                 vmodel.msg = msg;
+                
             }
+            fromSelected ? fromSelected = null : 0;
         }
         // 将日期时间转为00:00:00
         function cleanDate( date ){
@@ -380,6 +391,7 @@ define(["avalon.getModel",
         widgetElement: "", // accordion容器
         separator: "-",
         startDay: 1,    //星期开始时间
+        dateRangeWidth: 260,
         onSelect: avalon.noop, //点击确定按钮选择日期后的回调
         parseDate: function(str){
             var separator = this.separator;

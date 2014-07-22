@@ -183,17 +183,21 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
             return str;
         }
     }
-//    avalon(document).bind("click", function(e) { // 当点击slider之外的区域取消选中状态
-//        var el = e.target
-//        var Index = Handlers.indexOf(el)
-//        if (Index !== -1) {
-//            FocusElement = avalon(el).addClass("ui-state-focus")
-//        } else if (FocusElement) {
-//            FocusElement.removeClass("ui-state-focus")
-//            FocusElement = null
-//        }
-//    })
+   avalon(document).bind("click", function(e) { // 当点击slider之外的区域取消选中状态
+        var el = e.target
+        var Index = Handlers.indexOf(el)
+        if (Index !== -1) {
+            if (FocusElement) {
+                FocusElement.removeClass("ui-state-focus");
+            }
+            FocusElement = avalon(el).addClass("ui-state-focus")
+        } else if (FocusElement) {
+            FocusElement.removeClass("ui-state-focus")
+            FocusElement = null
+        }
+   })
     avalon(document).bind("keydown", function(e) { // 当选中某个手柄之后通过键盘上的方向键控制手柄的slider
+        e.preventDefault();
         if (FocusElement) {
             var vmodel = FocusElement[0].sliderModel
             var percent = Handlers.length == 1 ? vmodel.percent : vmodel["percent" + Index]
@@ -201,12 +205,12 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
             switch (e.which) {
                 case 34 : // pageDown
                 case 39:  // right
-                case 40:  // down
+                case 38:  // down
                     keyVal = Math.min(val + 1, vmodel.$valueMax)
                     break;
                 case 33: // pageUp
                 case 37: // left
-                case 38: // up
+                case 40: // up
                     keyVal = Math.max(val - 1, vmodel.$valueMin)
                     break
                 case 36: // home

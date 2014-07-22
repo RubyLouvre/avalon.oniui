@@ -8,9 +8,9 @@
         ms-class-3="ui-tab-last:$last" 
         ms-class-4="ui-tab-removable:!!_canRemove(tab)" 
         ms-hover="ui-state-hover:!tab.disabled" 
-        ms-MS_OPTION_EVENT="activate($event, $index)" 
+        ms-{{MS_OPTION_EVENT}}="activate($event, $index)" 
         > 
         <a ms-href="tab.href?tab.href:'#'">{{_tabTitle(tab.title, tab, _cutCounter(), cutEnd) | html}}</a>
-        MS_OPTION_REMOVABLE
+        {{MS_OPTION_REMOVABLE}}
     </li>
 </ul>

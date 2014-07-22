@@ -8,7 +8,10 @@ $uiname: "ui-coupledatepicker";
     }
     .label {
         font-size: 12px;
-        vertical-align: middle;
+        vertical-align: top;
+        line-height: 28px;
+        height: 28px;
+        zoom: 1;
     }
 }
 

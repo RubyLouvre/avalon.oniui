@@ -95,12 +95,14 @@
         function getHref(urlHash) {
             var hash = (urlHash || location.hash).match(/avalon[\S]+\.html/g) || "",
                 page = false,
-                widget = hash[0].split(".")[1];
-            switch (widget) {
-                case "coupledatepicker":
-                case "daterangepicker":
-                    widget = "datepicker";
-                break;
+                widget = hash && hash[0].split(".")[1];
+            if (widget) {
+                switch (widget) {
+                    case "coupledatepicker":
+                    case "daterangepicker":
+                        widget = "datepicker";
+                    break;
+                }  
             }
             if(hash) {
                 hash = widget + "/" + hash[0]

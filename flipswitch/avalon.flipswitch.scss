@@ -4,7 +4,8 @@ $uiname : ".ui-flipswitch";
 v\:* { behavior: url(#default#VML);} 
 @if($oinui-theme == smoothness) {
 	$switch: (
-		bg:#45A846,
+		bg:#68c969,
+		offBg:#999,
 		disableBg: #dedede,
 		disableColor: #fff,
 		bgImg: url("bg.gif"),
@@ -33,9 +34,19 @@ div#{$uiname}{
 	text-align: center;
 	border: none;
 	background: none;
-	
+	&-modal{
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 10;
+		height: 100%;
+		width: 100%;
+		opacity: 0.4;
+		background: #fff;
+		filter:alpha(opacity=40); 
+	}
 	&-on{
-		background-image: map-get($switch, bgImg);
+		//background-image: map-get($switch, bgImg);
 	}
 	&-normal{
 	    width: 35px;
@@ -175,24 +186,24 @@ div#{$uiname}{
 			}
 		}
 		#{$uiname}-uckbg{
-			background-color: #bcbcbc;
+			background-color: map-get($switch, offBg);
 		}
 		&.ui-state-disabled{
-			#{$uiname}-uckbg{
+			/*#{$uiname}-uckbg{
 				background-color: map-get($switch, disableBg);
 				&-disabled{
 					background-color: map-get($switch, disableBg);
 				}
-			}
+			}*/
 		}
 	}
 }
 
 
 .ui-state-disabled, .ui-state-hover{
-	#{$uiname}-dragger-ball{
+	/*#{$uiname}-dragger-ball{
 		opacity: .4;
-	}
+	}*/
 	#{$uiname}-oval-hd{
 		display: block;
 	}

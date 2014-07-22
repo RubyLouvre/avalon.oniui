@@ -324,7 +324,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "draggable/avalon.draggable",
     widget.defaults = {
         toggle: true, //@param 组件是否显示，可以通过设置为false来隐藏组件
         onText: "<b class=\"ui-flipswitch-on\"></b>",           //@param 选中状态提示文字
-        offText: "&times;",         //@param 未选中状态提示文字
+        offText: "",//"&times;",         //@param 未选中状态提示文字
         size: "normal",         //@param 滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成ui-flipswitch-{{size}}添加给flipswitch模板容器
         theme: "normal",        //@param 主题，normal,success,warning,danger
         draggable: false,       //@param 是否支持拖动切换状态

@@ -24,8 +24,16 @@ div.ui-flipswitch {
   text-align: center;
   border: none;
   background: none; }
-  .ui-flipswitch-on {
-    background-image: url("bg.gif"); }
+  .ui-flipswitch-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    height: 100%;
+    width: 100%;
+    opacity: 0.4;
+    background: #fff;
+    filter: alpha(opacity=40); }
   .ui-flipswitch-normal {
     width: 35px;
     height: 18px; }
@@ -118,7 +126,7 @@ div.ui-flipswitch {
     background-image: none; }
   .ui-flipswitch-use-no-img .ui-flipswitch-bg {
     border-radius: 9px;
-    background-color: #45a846; }
+    background-color: #68c969; }
   .ui-flipswitch-use-no-img .ui-flipswitch-dragger-ball {
     background: white;
     border-radius: 6px; }
@@ -127,18 +135,23 @@ div.ui-flipswitch {
   .ui-flipswitch-use-no-img.ui-flipswitch-large .ui-flipswitch-dragger-ball {
     border-radius: 12px; }
   .ui-flipswitch-use-no-img .ui-flipswitch-uckbg {
-    background-color: #bcbcbc; }
-  .ui-flipswitch-use-no-img.ui-state-disabled .ui-flipswitch-uckbg {
-    background-color: #dedede; }
-    .ui-flipswitch-use-no-img.ui-state-disabled .ui-flipswitch-uckbg-disabled {
-      background-color: #dedede; }
+    background-color: #999999; }
+  .ui-flipswitch-use-no-img.ui-state-disabled {
+    /*.ui-flipswitch-uckbg{
+    	background-color: map-get($switch, disableBg);
+    	&-disabled{
+    		background-color: map-get($switch, disableBg);
+    	}
+    }*/ }
 
-.ui-state-disabled .ui-flipswitch-dragger-ball, .ui-state-hover .ui-flipswitch-dragger-ball {
-  opacity: .4; }
-.ui-state-disabled .ui-flipswitch-oval-hd, .ui-state-hover .ui-flipswitch-oval-hd {
-  display: block; }
-.ui-state-disabled .ui-flipswitch-oval-n, .ui-state-hover .ui-flipswitch-oval-n {
-  display: none; }
+.ui-state-disabled, .ui-state-hover {
+  /*.ui-flipswitch-dragger-ball{
+  	opacity: .4;
+  }*/ }
+  .ui-state-disabled .ui-flipswitch-oval-hd, .ui-state-hover .ui-flipswitch-oval-hd {
+    display: block; }
+  .ui-state-disabled .ui-flipswitch-oval-n, .ui-state-hover .ui-flipswitch-oval-n {
+    display: none; }
 
 .ui-state-disabled .ui-flipswitch-bar label, .ui-state-disabled .ui-flipswitch-bar span {
   cursor: default;

@@ -10,9 +10,9 @@
             require(["menu/avalon.menu"], function() {
                 avalon.define("test", function(vm) {
                     vm.menu = {
-                        onSelect: function() {
+                        onSelect: function(e, data) {
                             avalon.log(this)
-                            avalon.log(arguments)
+                            avalon.log(data.length)
                         }
                     }
                     vm.$skipArray = ["menu"]
@@ -142,9 +142,9 @@
             require([&quot;menu/avalon.menu&quot;], function() {
                 avalon.define(&quot;test&quot;, function(vm) {
                     vm.menu = {
-                        onSelect: function() {
+                        onSelect: function(e, data) {
                             avalon.log(this)
-                            avalon.log(arguments)
+                            avalon.log(data.length)
                         }
                     }
                     vm.$skipArray = [&quot;menu&quot;]

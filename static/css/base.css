@@ -30,11 +30,12 @@ html {
 	position:relative;
 	height:100%;
 	overflow:hidden;
-
 }
-/*.tree__item__main:hover .des {
-	top:0;
-}*/
+.tree__item__main img {
+	cursor: pointer;
+	cursor: -webkit-zoom-in;
+	cursor:zoom-in;
+}
 .tree__item__main .des {
 	position:absolute;
 	top:212px;

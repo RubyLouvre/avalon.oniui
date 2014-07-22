@@ -57,7 +57,8 @@ define(["avalon.getModel",
             // 显示dialogmask
             vm._open = function() {
                 var len = 0, //当前显示的dialog的个数
-                    selectLength = document.getElementsByTagName("select").length;
+                    selectLength = document.getElementsByTagName("select").length,
+                    maxZIndex = vmodel.zIndex;
                 avalon.Array.ensure(dialogShows, vmodel);
                 len = dialogShows.length;
                 // 通过zIndex的提升来调整遮罩层，保证层上层存在时遮罩层始终在顶层dialog下面(顶层dialog zIndex-1)但是在其他dialog上面
@@ -79,7 +80,8 @@ define(["avalon.getModel",
             // 隐藏dialog
             vm._close = function(e) {
                 avalon.Array.remove(dialogShows, vm);
-                var len = dialogShows.length;
+                var len = dialogShows.length,
+                    maxZIndex = vmodel.zIndex;
                 vmodel.toggle = false;
                 /* 处理层上层的情况，因为maskLayer公用，所以需要其以将要显示的dialog的toggle状态为准 */
                 if (len && dialogShows[len-1].modal) {
@@ -234,6 +236,8 @@ define(["avalon.getModel",
         toggle: false, //通过此属性的决定dialog的显示或者隐藏状态
         widgetElement: "", //保存对绑定元素的引用
         context: "body", //dialog放置的元素
+        confirmName: "确定",
+        cancelName: "取消",
         getTemplate: function(str, options) {
             return str;
         },

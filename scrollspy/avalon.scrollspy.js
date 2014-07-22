@@ -2,7 +2,7 @@
   * @description scrollspy组件，可通过监听元素原生的scroll事件或者结合scrollbar组件使用时，监听其scroll，根据scrollTop，scrollLeft计算判定配置指定的panel list应该切换到什么位置，绑定方式是ms-scrollspy=""，这样可以跟其他组件绑定在一个元素上
   *
   */
-define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"], function(avalon, template) {
+define(["avalon"], function(avalon) {
     function getById(id) {
         return document.getElementById(id)
     }
@@ -94,11 +94,12 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
             myScroll
         // 原生滚动事件
         avalon.bind(element, "scroll", function(e) {
-            if(options._lock) return
+            // 修复原生滚动事件执行顺序造成的问题
+            if(options._lock) return options._lock = false
             onScroll(element.scrollLeft, element.scrollTop, $element)
         })
         // if scrollbar is used
-        if(msData && msData["ms-widget"] == "scrollbar") {
+        if(msData && msData["ms-widget"].match(/scrollbar[,]?/g)) {
             myScroll = avalon.vmodels[msData["ms-widget-id"]]
             initTop = myScroll.scrollTop
             initLeft = myScroll.scrollLeft
@@ -128,11 +129,11 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
                 } else {
                     myScroll.scrollTo(void 0, myScroll["scroll" + dir] + offset[dir.toLowerCase()] - scrollerOffset[dir.toLowerCase()])
                 }
+                options._lock = false
                 // myScroll.update()
             } else {
                 element["scroll" + dir] += offset[dir.toLowerCase()] - scrollerOffset[dir.toLowerCase()]
             }
-            options._lock = false
         }
         // callback after inited
         if(typeof options.onInit === "function" ) {

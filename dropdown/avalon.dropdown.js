@@ -195,7 +195,7 @@ define(['avalon',
                 }
             }
 
-            vm._listClick = function() {
+            vm._listClick = function(event) {
                 event.stopPropagation();
                 event.preventDefault();
                 titleNode && titleNode.focus();

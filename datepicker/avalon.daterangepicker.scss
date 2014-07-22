@@ -50,7 +50,7 @@ $uiname: "ui-daterangepicker";
             position: absolute;
             z-index: 1000;
             zoom: 1;
-            padding: 9px 0 39px 10px;
+            padding: 9px 0 0 10px;
             border: 1px solid #cccccc;
             box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
             font-size: 0;
@@ -67,13 +67,12 @@ $uiname: "ui-daterangepicker";
                 }
             }
             .ui-calendarbox-footer-small {
-                position: absolute;
-                bottom: 0;
-                left: 0;
+                position: relative;
+                margin: 10px 0 0 -10px;
                 height:22px;
                 line-height: 22px;
-                width: 100%;
                 padding: 4px 0;
+                _width: 466px;
                 @if($oinui-theme == smoothness) {
                     background: #f8f8f8;
                 }
@@ -88,7 +87,7 @@ $uiname: "ui-daterangepicker";
                     }
                 }
                 .ui-calendarbox-msg {
-                    padding-left: 5px;
+                    padding-left: 10px;
                     font-size: 12px;
                 }
             }
@@ -116,7 +115,6 @@ $uiname: "ui-daterangepicker";
             &.ui-datepicker-input-disabled {
                 background: #ebebe4;
                 border-color: #cccccc;
-
             }
         }
         &.ui-state-hover {

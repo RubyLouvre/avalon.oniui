@@ -6,8 +6,8 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
 
     // 对模板进行转换
     function _getTemplate(tpl, vm) {
-        return tpl.replace(/MS_[A-Z_0-9]+/g, function(mat) {
-            var mat = (mat.split("MS_OPTION_")[1]||"").toLowerCase().replace(/_[^_]/g, function(mat) {
+        return tpl.replace(/\{\{MS_[A-Z_0-9]+\}\}/g, function(mat) {
+            var mat = (mat.split("{{MS_OPTION_")[1]||"").replace(/\}\}/g, "").toLowerCase().replace(/_[^_]/g, function(mat) {
                 return mat.replace(/_/g, "").toUpperCase()
             })
             // 防止事件绑定覆盖，可能匹配不对，但是不会影响实际效果

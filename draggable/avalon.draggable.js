@@ -108,6 +108,7 @@ define(["avalon"], function(avalon) {
 
             if (data.handle && fnObj) {// 实现手柄拖动
                 var handle = fnObj[data.handle]
+                handle = typeof handle === "function" ? handle : data.handle
                 if (typeof handle === "function") {
                     var checked = handle.call(element, e, data)//要求返回一节点
                     if (checked && checked.nodeType === 1) {

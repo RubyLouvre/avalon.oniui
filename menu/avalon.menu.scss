@@ -22,21 +22,37 @@ ul#{$uiname},ol#{$uiname}{
 	position:relative;
 	z-index:5;
 	zoom: 1;
+	// fix ie 7 can not repaint correctly bug
+	& ul.ui-helper-hidden{
+		visibility: hidden;
+	}
+	& &-icon{
+		position: absolute;
+		right: 3px;
+		left: auto;
+		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+		font-size: 12px;
+	}
 	& &-item {
 		position: relative;
 		list-style: none;
 		padding: 3px;
 		cursor: pointer;
-		color:#000;
+		color:$ui-state-default-color;
 		font-size:12px;
+		line-height: 18px;
 		margin: 0;
 		width: 150px;
+		a, a:hover, a:link{
+			text-decoration:none;
+		}
 	}
 	& li.ui-state-hover{
 		background: $ui-state-hover-background-color;
 	}
 	& li.ui-state-active{
 		background: $ui-state-active-background-color;
+		color: $ui-state-active-color;
 	}
 	& li#{$uiname}-with-sub{
 	}

@@ -1,11 +1,12 @@
-<div class="ui-daterangepicker">
+<div class="ui-daterangepicker"
+     ms-css-width="dateRangeWidth">
     <div class="ui-datepicker-range-input" 
         ms-click="_toggleDatepicker(toggle, $event)"
         ms-class="ui-state-active:toggle"
         ms-hover="ui-state-hover"
         >
         <div class="ui-datepicker-input js-input"
-            ms-class="ui-datepicker-input-disabled: disabled">{{label|html}}</div>
+             ms-class="ui-datepicker-input-disabled: disabled">{{label|html}}</div>
         <div class="ui-datepicker-icon-wrap">
             <i class="ui-datepicker-icon ui-icon ui-icon-angle-up" ms-visible="toggle">&#xf106;</i>
             <i class="ui-datepicker-icon ui-icon ui-icon-angle-down" ms-visible="!toggle">&#xf107;</i>

@@ -97,7 +97,6 @@
                 });
                 avalon.scan();
                 avalon.ui["suggest"].strategies['phone'] = function( value , done ) {
-                    console.log(value, done)
                     setTimeout(function(){
                         done( null , value ? [] : [
                             { value : '13800138000' , text : '<b>日审</b> 13800138000' } ,

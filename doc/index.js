@@ -107,6 +107,20 @@ window.indexData = {
             "cover": "doc/img/datepicker.gif"
         },
         {
+            "name": "coupledatepicker",
+            "url": "avalon.oniui/datepicker/avalon.coupledatepicker.doc.html",
+            "title": "coupledatepicker",
+            "des": "coupledatepicker其实是普通日历的升级版，可以通过设置起始日期与结束日期的最小间隔天数和最大间隔天数将截止日期限制在一定的选择范围中",
+            "cover": "doc/img/coupledatepicker.gif"
+        },
+        {
+            "name": "daterangepicker",
+            "url": "avalon.oniui/datepicker/avalon.daterangepicker.doc.html",
+            "title": "daterangepicker文档说明",
+            "des": "daterangepicker是日期范围选择组件，可以通过设置起始日期与结束日期的最小间隔天数和最大间隔天数将截止日期限制在一定的选择范围中，同时通过点击确定按钮确定日期范围，在选择的时候日期范围框的下方会实时的说明当前选择情况",
+            "cover": "doc/img/daterangepicker.gif"
+        },
+        {
             "name": "preview",
             "url": "avalon.oniui/preview/avalon.preview.doc.html",
             "title": "图片预览组件",

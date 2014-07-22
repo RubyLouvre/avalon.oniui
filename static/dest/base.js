@@ -55,7 +55,6 @@
 		var timingFun;
 		timingFun = Bezier.unitBezier(0.18, 0.73, 0.25,1);
 		avalon.bind(window, 'scroll', function () {
-			console.log("scroll")
 			var sTop  = document.body.scrollTop  || document.documentElement.scrollTop;
 			var delta = storeScrollTop >  sTop ? -1 : 1; //-1  线上滚动
 			storeScrollTop = sTop; 

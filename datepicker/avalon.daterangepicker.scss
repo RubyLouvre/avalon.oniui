@@ -113,6 +113,11 @@ $uiname: "ui-daterangepicker";
             padding: 3px 21px 3px 6px;
             text-overflow: ellipsis;
             white-space: nowrap;
+            &.ui-datepicker-input-disabled {
+                background: #ebebe4;
+                border-color: #cccccc;
+
+            }
         }
         &.ui-state-hover {
             border: 1px solid #999;

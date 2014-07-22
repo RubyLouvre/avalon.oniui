@@ -37,9 +37,6 @@ define(["avalon.getModel",
             var value = duplexVM[1][duplexVM[0]];
             var date ;
             duplexVM[1].$watch(duplexVM[0], function(val) {
-                console.log("date changed :" + val);
-                console.log(element)
-
                 if(date=options.parseDate(val)) {
                     var year, month, day;
                     year = vmodel.year = date.getFullYear();
@@ -98,8 +95,6 @@ define(["avalon.getModel",
         options.toggle = toggleVM && toggleVM[1][toggleVM[0]] || options.toggle;
         // disabled属性取自msDisabled，msDisabled为false时取配置项disabled，如果配置项仍为false，则取element的disabled属性
         options.disabled = msDisabled || options.disabled || element.disabled;
-        console.log(msDisabled);
-        console.log("msDisabledName is : "+msDisabledName)
         msDisabledName ? vmSub[1][vmSub[0]] = options.disabled : 0;
         var day, month, year, _originValue, years=[],// 手动输入时keydown的辅助值;
             date = _getDate(), //获取datepicker的初始选择日期

@@ -113,10 +113,15 @@ define(["avalon.getModel",
                 var inputFromValue = inputFrom.value,
                     inputToValue = inputTo.value,
                     inputFromDate = options.parseDate(inputFromValue),
-                    inputToDate = options.parseDate(inputToValue);
-                vmodel.label = options.datesDisplayFormat(options.defaultLabel,inputFromValue, inputToValue);
+                    inputToDate = options.parseDate(inputToValue),
+                    label = options.datesDisplayFormat(options.defaultLabel,inputFromValue, inputToValue),
+                    labelWidth = label.length * 10;
+                vmodel.label = label;
                 _confirmClick = true;
                 vmodel.toggle = false;
+                if (labelWidth > vmodel.dateRangeWidth) {
+                    vmodel.dateRangeWidth = labelWidth;
+                }
                 options.onSelect.call(vmodel, inputFromDate, inputToDate, _oldValue, vmodel, avalon(element).data());
                 _oldValue = [inputFromDate, inputToDate];
             }
@@ -351,6 +356,7 @@ define(["avalon.getModel",
                     msg = "已选时间段："+inputFrom.value+" 至 "+inputTo.value+" 共计"+day+"天";
                 }
                 vmodel.msg = msg;
+                
             }
             fromSelected ? fromSelected = null : 0;
         }
@@ -385,6 +391,7 @@ define(["avalon.getModel",
         widgetElement: "", // accordion容器
         separator: "-",
         startDay: 1,    //星期开始时间
+        dateRangeWidth: 260,
         onSelect: avalon.noop, //点击确定按钮选择日期后的回调
         parseDate: function(str){
             var separator = this.separator;

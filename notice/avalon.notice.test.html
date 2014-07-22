@@ -181,7 +181,6 @@
                                 }
                                 expect(noticeArr.length).to.be(1);
                                 expect(avalon(noticeContainerFlow).hasClass("ui-notice-flow")).to.be(true);
-                                console.log(bodyDetatch);
                                 expect(avalon(bodyDetatch).hasClass("ui-notice-detach")).to.be(true);
                                 expect(bodyDetatch.children[0].children[0].children[0].innerHTML).to.be("notice b title");
                                 avalon.vmodels["a"].toggle = true;

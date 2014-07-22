@@ -110,7 +110,6 @@
                 hash = urlHash;
                 page = true;
             } 
-            console.log("getHref : "+hash)
             return {
                     page: page,
                     hash: hash
@@ -136,7 +135,6 @@
             return 0
         }
         function throttleIndex(fn, delay, mustRunDelay, args){
-            console.log("throttle")
             var timer = null;
             var t_start;
             return function(){
@@ -240,7 +238,6 @@
                 return template;
             };
             vm.showDocument = function(widget, event, index) {
-                console.log("showDocument")
                 event.preventDefault();
                 if(!vmodel.hashchangeSupport) {
                     switch (widget) {
@@ -332,7 +329,6 @@
                 var hash = location.hash.split("#")[1],
                     hrefObj = {};
                 hash = hash || defaultHref.split("/")[1];
-                console.log("hash is : "+hash)
                 hrefObj = getHref(hash);
                 vmodel.href = hrefObj.hash;
                 vmodel.contentWidth = hrefObj.page ? (vmodel.page=true) && 990 : (vmodel.page=false) || 760;

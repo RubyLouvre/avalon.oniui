@@ -1,6 +1,6 @@
 
 avalon.oniui
-============
+==========================
 基于avalon的组件库,由<a href="http://www.qunar.com/">去哪儿网</a>前端架构组倾力打造
 <p>当前进度表</p>
 <ul>
@@ -141,10 +141,16 @@ avalon.oniui
         <td> validator</td><td>功能组件</td><td></td><td> 验证框架</td>
     </tr>
 </table>
+如何使用OniUI
+==========================
+<ul>
+   <li>将项目下载地本地</li>
+   <li>如果有netBeans的同学，可以直接新建一个项目，将它放在里面，然后点击上方的运行（R）菜单，设置项目浏览器，然后在IDE左方找到index.html文件，右键运行</li>
+   <li>其他同学可以到<a href="https://github.com/RubyLouvre/avalon">avalon项目</a>，将它的server.exe（一个迷你的.Net服务器）文件拷过来，然后运行它，选中index.html打开</li>
+</ul>
 
-
-<h1>如果为OniUI贡献一套新的皮肤</h1>
-
+如何为OniUI贡献一套新的皮肤
+==========================
 <b>chameleon</b>是OniUI的皮肤生成系统,基于sass的compass框架改写而成.
 直接路径下有oniui-theme.scss,oniui-common.scss这两个文件, 
 其中oniui-common.scss会生成oniui-common.css,这个文件所有UI组件都应该引用,如simplegrid.js就是这样引用

@@ -1,7 +1,7 @@
-define(["avalon.getModel", 
-        "datepicker/avalon.datepicker.lang",
-        "text!./avalon.datepicker.html", 
-        "dropdown/avalon.dropdown.js",
+define(["../avalon.getModel",
+        "./avalon.datepicker.lang",
+        "text!./avalon.datepicker.html",
+        "../dropdown/avalon.dropdown.js",
         "css!../chameleon/oniui-common.css", 
         "css!./avalon.datepicker.css"], function(avalon, holidayDate, sourceHTML) {
     var calendarTemplate = sourceHTML,

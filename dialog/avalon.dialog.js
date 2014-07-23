@@ -1,4 +1,4 @@
-define(["avalon.getModel", 
+define(["../avalon.getModel",
     "text!./avalon.dialog.html",
     "css!../chameleon/oniui-common.css", 
     "css!./avalon.dialog.css"

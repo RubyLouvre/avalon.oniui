@@ -1,7 +1,7 @@
-define(['avalon',
+define(['../avalon',
     'text!./avalon.dropdown.html',
-    'avalon.getModel',
-    'scrollbar/avalon.scrollbar',
+    '../avalon.getModel',
+    '../scrollbar/avalon.scrollbar',
     "css!../chameleon/oniui-common.css",
     "css!./avalon.dropdown.css"
 ], function(avalon, template) {

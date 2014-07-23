@@ -1,4 +1,4 @@
-define(["avalon",
+define(["../avalon",
     "text!./avalon.pager.html",
     "css!../chameleon/oniui-common.css",
     "css!./avalon.pager.css"

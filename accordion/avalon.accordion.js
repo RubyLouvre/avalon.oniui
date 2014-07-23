@@ -1,4 +1,4 @@
-define(["avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/oniui-common.css", "css!./avalon.accordion.css"], function(avalon, sourceHTML) {
+define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/oniui-common.css", "css!./avalon.accordion.css"], function(avalon, sourceHTML) {
     var template = sourceHTML,
         templateArr = template.split("MS_OPTION_MODE_CARET"),
         caretTemplate = templateArr[1],

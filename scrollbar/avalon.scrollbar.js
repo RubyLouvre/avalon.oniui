@@ -1,7 +1,7 @@
 /**
   * @description scrollbar组件，自定义滚动条样式
   */
-define(["avalon", "text!./avalon.scrollbar.html", "draggable/avalon.draggable", "css!./avalon.scrollbar.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
+define(["../avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable", "css!./avalon.scrollbar.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 
     // get by className, not strict
     function getByClassName(cname, par) {

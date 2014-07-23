@@ -1,4 +1,4 @@
-define(["avalon"], function() {
+define(["../avalon"], function() {
     var encode = encodeURIComponent
     var decode = decodeURIComponent
 

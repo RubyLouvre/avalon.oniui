@@ -141,3 +141,140 @@ avalon.oniui
         <td> validator</td><td>功能组件</td><td></td><td> 验证框架</td>
     </tr>
 </table>
+
+
+<h1>如果为OniUI贡献一套新的皮肤</h1>
+
+<b>chameleon</b>是OniUI的皮肤生成系统,基于sass的compass框架改写而成.
+直接路径下有oniui-theme.scss,oniui-common.scss这两个文件, 
+其中oniui-common.scss会生成oniui-common.css,这个文件所有UI组件都应该引用,如simplegrid.js就是这样引用
+```javascript
+
+define(["avalon",
+    "text!./avalon.simplegrid.html",
+    "pager/avalon.pager",
+    "scrollbar/avalon.scrollbar",
+    "css!../chameleon/oniui-common.css",
+    "css!./avalon.simplegrid.css"
+], function(avalon, tmpl) {
+   //....
+
+})
+
+```
+oniui-theme.scss是用于每个组件对应的scss文件引用的,如avalon.simplegrid.js
+肯定与一个叫avalon.simplegrid.scss文件放在一块,这scss里开头就是这样写的:
+```css
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname : "ui-simplegrid";
+
+.#{$uiname}{
+    width:100%;
+    border: 1px solid $ui-state-default-border-color;
+    @extend %oniui-font-setting;
+    .#{$uiname}-scroll-wrapper{
+        width:100%;
+        overflow:auto;
+        position: relative;
+
+    }
+   //....
+}
+
+```
+正通过这样严格的组件,我们的OniUI就可以<b>修改</b>两处实现全库的换肤功能
+第一处位于chameleon/compass/_config.scss文件中,里面有
+@import "themes/smoothness" ;
+$oinui-theme: smoothness !global;
+这两个地方修改
+
+第二处是chameleon/compass/theme目录中,因为我们现在的皮肤叫smoothness,
+那么就在它里面建一个叫smoothness.scss文件
+以后你要添加一个叫sunny的皮肤,那么对应处改成
+@import "themes/sunny" ;
+$oinui-theme: sunny !global;
+自己再建一个sunny.scss文件就行了
+
+我们再看一下这皮肤里面的规则是怎么搞的
+```csss
+@charset "utf-8";
+// 两种主色调 银灰浅蓝
+// 激活的蓝色为天蓝色 #3775c0   
+// hover上去为浅灰色  #f8f8f8
+// 普通的底色为银灰色 #d9d9d9
+// 银灰底色对应的边框色为深灰色:#cccccc;
+
+//两个用到的绿色 #3e973e(深) #68c969（浅）
+
+
+// 正常的字体颜色为黑色: #000;
+// slider的激活蓝色为 #22dddd;
+
+// input[type=text]，input[type=password],textarea的样式
+//┌───┬────┬────┬────┬────┬────┐
+//│状态  │default │ hover  │active  │diabled │error   │
+//├───┼────┼────┼────┼────┼────┤
+//│边框  │#cccccc │#999999 │active  │#3775c0 │#ff8888 │
+//├───┼────┼────┼────┼────┼────┤
+//│背景  │#ffffff │#ffffff │#ffffff │#f5f5f5 │#fffff  │
+//├───┼────┼────┼────┼────┼────┤
+//│文字  │#000000 │#000000 │#000000 │#999999 │#ff8888 │
+//└───┴────┴────┴────┴────┴────┘
+//字体设置
+$oniui-font-size: 1em;
+$oniui-font-weight: normal;
+$oniui-font-family: Helvetica,Arial,Sans-serif;
+
+$oniui-icon-start-color: #58b359;
+$oniui-icon-pause-color: #333;
+$oniui-icon-state-hover-color: #fff;
+$oniui-icon-state-active-color: #fff;
+
+//通用阴影
+$oniui-shadow-box: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+
+
+$ui-widget-content-border-color:#3e973e!global;
+$ui-widget-content-background-color:#68c969!global;
+$ui-widget-content-color:#fff!global;
+
+$ui-widget-header-border-color: #aaa!global;
+$ui-widget-header-background-color: rgb(223,223,223)!global;
+$ui-widget-header-color: #fff!global;
+
+$ui-state-default-background-color: #e6e6e6!global;
+$ui-state-default-border-color: #d4d4d4!global;
+$ui-state-default-color: #555!global;
+//移上去时
+$ui-state-hover-background-color: #f8f8f8!global;
+$ui-state-hover-border-color: #f8f8f8!global;
+$ui-state-hover-color: #000!global;
+//激活状态(蓝色)
+$ui-state-active-background-color:#3775c0 !global;
+$ui-state-active-border-color: #3775c0!global;
+$ui-state-active-color: #fff!global;
+//禁用(灰色)
+$ui-state-disabled-background-color: #F5F5F5!global;
+$ui-state-disabled-border-color: #D9D9D9!global;
+$ui-state-disabled-color: #999!global;
+
+//出错（红色）
+$ui-state-error-background-color: #ff8888!global;
+$ui-state-error-border-color: #ff8888!global;
+$ui-state-error-color: #ff8888!global;
+
+```
+你只要将对应位置的颜色值改一下就行了。avalon的组件是分成高亮区，底色区与可变区。
+
+高亮区通过添加.ui-widget-content类名标识，底色区添加.ui-widget-header类名标识；
+可变区通过添加不同的类名来判定它的状态实现，一般分正常，hover, 激活，禁用，禁用，出错这几种状态。
+它们分别添加.ui-state-default, .ui-state-hover, .ui-state-active, .ui-state-disabled, .ui-state-error类名实现。
+悄悄话一句，这其实是抄自jquery ui的皮肤系统。
+如果有的组件比较奇特，需要区别对待，那么我们可以在对应的scss文件中，如
+```scss
+@if($oinui-theme == smoothness){
+    $ui-state-hover-background-color:#E8F5FD;
+}
+```
+改成这些，重新编译一下就行了。

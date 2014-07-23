@@ -169,8 +169,13 @@ define(["../avalon.getModel",
 
             vm.$init = function() {
                 var context = options.context,
+                    clientHeight = body.clientHeight,
+                    docBody = document.body,
                     // context必须是dom tree中某个元素节点对象或者元素的id，默认将dialog添加到body元素
-                    elementParent = ((avalon.type(context) === "object" && context.nodeType === 1 && document.body.contains(context)) ? context : document.getElementById(context)) || document.body;
+                    elementParent = ((avalon.type(context) === "object" && context.nodeType === 1 && docBody.contains(context)) ? context : document.getElementById(context)) || docBody;
+                if (avalon(docBody).height() < clientHeight) {
+                    avalon(docBody).css("min-height", clientHeight);
+                }
                 $element.addClass("ui-dialog");
                 element.setAttribute("ms-visible", "toggle");
                 vm._RenderView();

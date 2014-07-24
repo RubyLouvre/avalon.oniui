@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>test</title>
+<script src="../avalon.js"></script>
+<style>
+body{
+	cursor: default;
+}
+		.ui-colorpicker-ip{
+			/*z-index: -1;*/
+		}
+		.ui-colorpicker-ctr{
+			position: relative;
+			cursor: crosshair;
+			width: 195px;
+			height: 195px;
+			background: #555;
+		}
+			.ui-colorpicker-wheel{
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background: url(img/wheel.png) no-repeat;
+				_background: none;
+				_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/wheel.png');
+			}
+			.ui-colorpicker-hue, .ui-colorpicker-overlay{
+				position: absolute;
+				width: 101px;
+				height: 101px;
+				top: 47px;
+				left: 47px;
+			}
+			.ui-colorpicker-overlay{
+				background: url(img/overlay.png) no-repeat;
+				_background: none;
+				_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/overlay.png');
+			}
+				.ui-colorpicker-marker{
+					position: absolute;
+					width: 17px;
+					height: 17px;
+					margin: -8px 0 0 -8px;
+					background: url(img/marker.png) no-repeat top left;
+					_background: none;
+					_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/marker.png');
+				}
+				.ui-colorpicker-overlay .ui-colorpicker-marker{
+					left: 70px;
+					top: 50px;
+				}
+
+	/* alwaysShow */
+	.cp-auto-hide{
+		position: relative;
+	}
+		.cp-auto-hide .ui-colorpicker-ctr{
+			position: absolute;
+			z-index: 10;
+			left: 0;
+		}
+</style>
+</head>
+<body ms-controller="test">
+<!-- 	<div class="ui-colorpicker cp-auto-hide"><input class="ui-colorpicker-ip" type="text" data-duplex-changed="setByIp" style="color: black; background-color: rgb(128, 140, 182);">
+	<div class="ui-colorpicker-ctr"><div class="ui-colorpicker-hue" style="background-color: rgb(0, 57, 255);"></div><div class="ui-colorpicker-wheel" data-draggable-before-start="wheelDragStart" data-draggable-drag="wheelDrag">
+<div class="ui-colorpicker-marker" style="left: 36px; top: 155px;"></div>
+</div><div class="ui-colorpicker-overlay" data-draggable-before-start="overlayDragStart" data-draggable-drag="overlayDrag">
+<div class="ui-colorpicker-marker" style="left: 73px; top: 39.2156862745098px;"></div>
+</div></div></div>
+
+<div class="ui-colorpicker cp-auto-hide" style="z-index: -1;">
+	<input class="ui-colorpicker-ip" type="text" data-duplex-changed="setByIp" style="color: black; background-color: rgb(128, 140, 182);">
+	</div>
+ -->
+	<input type="color">
+	<script>
+
+		/*avalon.define('test', function(vm){
+
+	        vm.focusFn = function(){
+	        	console.log(arguments);
+	        };
+	    });
+
+		p.addEventListener('click', handler, false);
+		p.addEventListener('click', handler2, false);
+		p.removeEventListener('click', handler, false);
+
+
+
+		function handler(){
+			console.log('p');
+		}
+		function handler2(){
+			console.log('p2');
+		}*/
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>colorpicker demo</title>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+<link rel="stylesheet" href="../style/avalon.doc.css"/>
+</head>
+<body ms-controller="demo">
+
+	<fieldset>  
+		<legend>默认设置</legend>
+		<input type="text" ms-widget="colorpicker">
+	</fieldset>
+	<fieldset>  
+		<legend>设置初始颜色</legend>
+		<input type="text" ms-duplex="color_1" ms-widget="colorpicker">
+	</fieldset>
+	<fieldset>  
+		<legend>关闭自动隐藏</legend>
+		<input type="text" ms-duplex="color_2" ms-widget="colorpicker, $, $cp_2">
+	</fieldset>
+    
+	<pre class="brush:html;gutter:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;title&gt;colorpicker&lt;/title&gt;
+&lt;script src="../avalon.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body ms-controller="demo"&gt;
+
+    &lt;fieldset&gt;  
+        &lt;legend&gt;默认设置&lt;/legend&gt;
+        &lt;input type="text" ms-widget="colorpicker"&gt;
+    &lt;/fieldset&gt;
+    &lt;fieldset&gt;  
+        &lt;legend&gt;设置初始颜色&lt;/legend&gt;
+        &lt;input type="text" ms-duplex="color_1" ms-widget="colorpicker"&gt;
+    &lt;/fieldset&gt;
+    &lt;fieldset&gt;  
+        &lt;legend&gt;关闭自动隐藏&lt;/legend&gt;
+        &lt;input type="text" ms-duplex="color_2" ms-widget="colorpicker, $, $cp_2"&gt;
+    &lt;/fieldset&gt;
+
+    &lt;script&gt;
+        require("colorpicker/avalon.colorpicker", function(){
+            var model = avalon.define("demo", function(vm){
+                
+                vm.color_1 = "#ff00ff";
+                vm.color_2 = "#0000ff";
+
+                vm.$cp_2 = {
+                    auto_hide: false
+                };
+
+            });
+            avalon.scan();
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+	</pre>
+	<script>
+		require("colorpicker/avalon.colorpicker", function(){
+			var model = avalon.define("demo", function(vm){
+				
+				vm.color_1 = "#ff00ff";
+				vm.color_2 = "#0000ff";
+
+				vm.$cp_2 = {
+					auto_hide: false
+				};
+
+			});
+			avalon.scan();
+		});
+	</script>
+</body>
+</html>

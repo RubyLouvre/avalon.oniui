@@ -33,8 +33,21 @@ define(["../avalon.getModel",
             _innerWrapper = _innerWraperArr[1], //inner wrapper html
             _lastContent = "", //dialog content html
             lastContent = "", //dialog content node
-            $element = avalon(element);
-
+            $element = avalon(element),
+            _onConfirm = options.onConfirm_onConfirm = options.onConfirm,
+            onConfirm = _onConfirm ? (typeof _onConfirm ==="function") ? _onConfirm : _onConfirm.substring(0,_onConfirm.indexOf("(")) : null, //兼容onion-adapter可删掉
+            onConfirmVM = null,
+            _onCancel = options.onCancel,
+            onCancel = _onCancel ? typeof _onCancel === "function" ? _onCancel : _onCancel.substring(0,_onCancel.indexOf("(")) : null, //兼容onion-adapter可删掉
+            onCancelVM = null;
+        if (typeof onConfirm === "string") {
+            onConfirmVM = avalon.getModel(onConfirm, vmodels);
+            options.onConfirm = onConfirmVM && onConfirmVM[1][onConfirmVM[0]].bind(vmodels) || avalon.noop;
+        }
+        if (typeof onCancel ==="string") {
+            onCancelVM = avalon.getModel(onCancel, vmodels);
+            options.onCancel = onCancelVM && onCancelVM[1][onCancelVM[0]].bind(vmodels) || avalon.noop;
+        }
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options);
             vm.$skipArray = ["widgetElement", "template"];

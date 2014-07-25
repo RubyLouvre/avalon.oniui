@@ -1,4 +1,4 @@
-define(["avalon",
+define(["../avalon",
     "text!./avalon.pager.html",
     "css!../chameleon/oniui-common.css",
     "css!./avalon.pager.css"
@@ -218,8 +218,8 @@ define(["avalon",
                 }
             }
         }
-        vm.firstPage = pages[0]
-        vm.lastPage = pages[pages.length - 1]
+        vm.firstPage = pages[0] | 1
+        vm.lastPage = pages[pages.length - 1] | 0
         return  pages//[0,1,2,3,4,5,6]
     }
     return avalon

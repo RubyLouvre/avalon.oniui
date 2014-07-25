@@ -249,30 +249,5 @@ define(["../avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common
             return str;
         }
     }
-    avalon.notice = {
-        show: function(id, content, type) {
-            if( !id || !avalon.vmodels[id]) return;
-            var notice = avalon.vmodels[id];
-            notice.setContent(content);
-            notice.setType(type || 'info');
-            avalon.scan(notice.widgetElement, [notice]);
-            notice.show();
-        },
-        setTitle: function(id, title) {
-            if(!id || !avalon.vmodels[id]) return;
-            var notice = avalon.vmodels[id];
-            notice.header = title;
-        },
-        hide: function(id){
-            if(!id || !avalon.vmodels[id]) return;
-            avalon.vmodels[id].$close();
-        },
-        go: function(id) {
-            if(!id || !avalon.vmodels[id]) return;
-            var notice = avalon.vmodels[id];
-            var toff = avalon(notice.widgetElement).offset();
-            window.scrollTo(toff.left, toff.top);
-        }     
-    }
     return avalon;
 })

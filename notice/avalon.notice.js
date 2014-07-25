@@ -1,4 +1,4 @@
-define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.css", "css!./avalon.notice.css"], function(avalon, sourceHTML) {
+define(["../avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.css", "css!./avalon.notice.css"], function(avalon, sourceHTML) {
     var template = sourceHTML,
         containerMap = [],
         affixBoxs = [], // 存储吸顶的notice元素，且只保存弹出的notice

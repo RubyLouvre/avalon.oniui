@@ -1,6 +1,6 @@
-define(["avalon.getModel",
+define(["../avalon.getModel",
         "text!./avalon.daterangepicker.html", 
-        "datepicker/avalon.datepicker",
+        "./avalon.datepicker",
         "css!../chameleon/oniui-common.css", 
         "css!./avalon.daterangepicker.css"], function(avalon, sourceHTML) {
     var calendarTemplate = sourceHTML;

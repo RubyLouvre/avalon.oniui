@@ -1,4 +1,4 @@
-define(["avalon.getModel", 
+define(["../avalon.getModel", 
     "text!./avalon.dialog.html",
     "css!../chameleon/oniui-common.css", 
     "css!./avalon.dialog.css"
@@ -33,8 +33,21 @@ define(["avalon.getModel",
             _innerWrapper = _innerWraperArr[1], //inner wrapper html
             _lastContent = "", //dialog content html
             lastContent = "", //dialog content node
-            $element = avalon(element);
-
+            $element = avalon(element),
+            _onConfirm = options.onConfirm_onConfirm = options.onConfirm,
+            onConfirm = _onConfirm ? (typeof _onConfirm ==="function") ? _onConfirm : _onConfirm.substring(0,_onConfirm.indexOf("(")) : null, //兼容onion-adapter可删掉
+            onConfirmVM = null,
+            _onCancel = options.onCancel,
+            onCancel = _onCancel ? typeof _onCancel === "function" ? _onCancel : _onCancel.substring(0,_onCancel.indexOf("(")) : null, //兼容onion-adapter可删掉
+            onCancelVM = null;
+        if (typeof onConfirm === "string") {
+            onConfirmVM = avalon.getModel(onConfirm, vmodels);
+            options.onConfirm = onConfirmVM && onConfirmVM[1][onConfirmVM[0]].bind(vmodels) || avalon.noop;
+        }
+        if (typeof onCancel ==="string") {
+            onCancelVM = avalon.getModel(onCancel, vmodels);
+            options.onCancel = onCancelVM && onCancelVM[1][onCancelVM[0]].bind(vmodels) || avalon.noop;
+        }
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options);
             vm.$skipArray = ["widgetElement", "template"];
@@ -169,8 +182,13 @@ define(["avalon.getModel",
 
             vm.$init = function() {
                 var context = options.context,
+                    clientHeight = body.clientHeight,
+                    docBody = document.body,
                     // context必须是dom tree中某个元素节点对象或者元素的id，默认将dialog添加到body元素
-                    elementParent = ((avalon.type(context) === "object" && context.nodeType === 1 && document.body.contains(context)) ? context : document.getElementById(context)) || document.body;
+                    elementParent = ((avalon.type(context) === "object" && context.nodeType === 1 && docBody.contains(context)) ? context : document.getElementById(context)) || docBody;
+                if (avalon(docBody).height() < clientHeight) {
+                    avalon(docBody).css("min-height", clientHeight);
+                }
                 $element.addClass("ui-dialog");
                 element.setAttribute("ms-visible", "toggle");
                 vm._RenderView();

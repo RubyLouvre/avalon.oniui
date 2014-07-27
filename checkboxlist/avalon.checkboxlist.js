@@ -1,4 +1,4 @@
-define(["avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chameleon/oniui-common.css", "css!./avalon.checkboxlist.css"], function(avalon, template) {
+define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chameleon/oniui-common.css", "css!./avalon.checkboxlist.css"], function(avalon, template) {
 
     var widget = avalon.ui.checkboxlist = function(element, data, vmodels) {
         // 获取配置项        

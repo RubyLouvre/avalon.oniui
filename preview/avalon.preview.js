@@ -1,5 +1,5 @@
 //avalon 1.2.5 2014.4.2
-define(["avalon"], function(avalon) {
+define(["../avalon"], function(avalon) {
 
     var widget = avalon.ui.preview = function(element, data, vmodels) {
         var options = data.previewOptions, fileChangeCallback

@@ -1,4 +1,4 @@
-define(["avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oniui-common.css", "css!./avalon.suggest.css"], function(avalon, sourceHTML) {
+define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oniui-common.css", "css!./avalon.suggest.css"], function(avalon, sourceHTML) {
     var widget = avalon.ui.suggest = function(element, data, vmodels) {
 
         var $element = avalon(element),

@@ -34,8 +34,10 @@
             })
 
 
-            require(["./mmRequest"], function(avalon) {
+            require(["./mmRequest","ready!"], function(avalon) {
                 avalonAjax = avalon.ajax
+                var form = document.getElementById("ttt")
+                console.log(avalon.serialize(form))
                 // avalon.log(avalonAjax)
             })
 
@@ -52,6 +54,16 @@
             <li>avalon.get</li>
             <li>avalon.upload</li>
         </ul>
+        <form ms-controller='article_form' ms-on-submit='articleAction' id="ttt">
+  <input type="hidden" ms-duplex='id'>
+  <label for="title">title</label>
+  <input type="text" id='title' name='title' ms-duplex='title'>
+  <br>
+  <label for="content">content</label>
+  <textarea id="content" name='content' cols="60" rows="10" ms-duplex='content'></textarea>
+  <br>
+  <button>submit</button>
+</form>
         <form action="/post"   ms-on-submit="ajax" >
             <div>帐号:<input name="username" ms-duplex="username"></div>
             <div>密码:<input name="password" ms-duplex="password"></div>

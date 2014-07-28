@@ -476,8 +476,8 @@ define("mmRequest", ["avalon", "mmDeferred"], function(avalon, mmDeferred) {
         serialize: function(form) { //表单元素变字符串
             var json = {};
             // 不直接转换form.elements，防止以下情况：   <form > <input name="elements"/><input name="test"/></form>
-            avalon.slice(form || []).filter(function(el) {
-                return el.name && !el.disabled && (el.checked === true || /radio|checkbox/.test(el.type))
+            Array.prototype.filter.call(form.getElementsByTagName("*"), function(el) {
+                return el.name && !el.disabled && (/radio|checkbox/.test(el.type) ? el.checked : true)
             }).forEach(function(el) {
                 var val = avalon(el).val(),
                         vs;

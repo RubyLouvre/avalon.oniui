@@ -478,9 +478,10 @@ define("mmRequest", ["avalon", "mmDeferred"], function(avalon, mmDeferred) {
         },
         serialize: function(form) { //表单元素变字符串
             var json = {};
+            
             // 不直接转换form.elements，防止以下情况：   <form > <input name="elements"/><input name="test"/></form>
             Array.prototype.filter.call(form.getElementsByTagName("*"), function(el) {
-                return el.name && !el.disabled && (/radio|checkbox/.test(el.type) ? el.checked : true)
+                return rinput.test(el.nodeName) && el.name && !el.disabled && (rcheckbox.test(el.type) ? el.checked : true)
             }).forEach(function(el) {
                 var val = avalon(el).val(),
                         vs;
@@ -495,6 +496,8 @@ define("mmRequest", ["avalon", "mmDeferred"], function(avalon, mmDeferred) {
             return avalon.param(json, false)  // 名值键值对序列化,数组元素名字前不加 []
         }
     })
+    var rinput = /select|input|button|textarea/i
+    var rcheckbox = /radio|checkbox/
     var transports = avalon.ajaxTransports;
     avalon.mix(transports.jsonp, transports.script)
     avalon.mix(transports.upload, transports.xhr)

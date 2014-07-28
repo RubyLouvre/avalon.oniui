@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.3.2 2014.7.11
+ avalon 1.3.2 2014.7.25
  ==================================================*/
 (function(DOC) {
     var prefix = "ms-"
@@ -3003,7 +3003,9 @@
                     }
                     if (supportMutationEvents) {
                         elem.addEventListener("DOMNodeRemoved", function(e) {
-                            if (e.target === this && !this.msRetain) {
+                            if (e.target === this && !this.msRetain &&
+                                    //#441 chrome浏览器对文本域进行Ctrl+V操作，会触发DOMNodeRemoved事件
+                                    (window.chrome ? this.tagName === "INPUT" && this.relatedNode.nodeType === 1 : 1)) {
                                 offTree()
                             }
                         })
@@ -3738,6 +3740,12 @@
             return target.length > length ? target.slice(0, length - truncation.length) + truncation : String(target)
         },
         camelize: camelize,
+        //https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
+        //    <a href="javasc&NewLine;ript&colon;alert('XSS')">chrome</a> 
+        //    <a href="data:text/html;base64, PGltZyBzcmM9eCBvbmVycm9yPWFsZXJ0KDEpPg==">chrome</a>
+        //    <a href="jav	ascript:alert('XSS');">IE67chrome</a>
+        //    <a href="jav&#x09;ascript:alert('XSS');">IE67chrome</a>
+        //    <a href="jav&#x0A;ascript:alert('XSS');">IE67chrome</a>
         sanitize: function(str) {
             return str.replace(rscripts, "").replace(ropen, function(a, b) {
                 if (raimg.test(a)) {

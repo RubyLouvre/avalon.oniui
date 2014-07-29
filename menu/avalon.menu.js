@@ -2,7 +2,7 @@
   * @description menu组件，实现扫描dom元素或者设置传参生成级联菜单的组件，注意扫描dom情形下，会销毁原有的dom，且会忽略所有的ol，ul，li元素上原有的绑定
   *
   */
-define(["../avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
+define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
     var counter = 0
     function getCnt() {
         return counter++

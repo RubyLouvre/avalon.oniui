@@ -1,4 +1,4 @@
-define(['../avalon',
+define(['avalon',
     'text!./avalon.dropdown.html',
     '../avalon.getModel',
     '../scrollbar/avalon.scrollbar',

@@ -1,4 +1,4 @@
-define(['../avalon',
+define(['avalon',
     'text!./avalon.switchdropdown.html',
     '../dropdown/avalon.dropdown',
     '../avalon.getModel',

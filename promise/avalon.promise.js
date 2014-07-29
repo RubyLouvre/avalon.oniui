@@ -8,9 +8,9 @@ define(["avalon"], function(avalon) {
         if (typeof executor !== 'function')
             throw new TypeError('not a function')
         executor(function(value) {
-            that._resolve(value)
+            _resolve(that, value)
         }, function(reason) {
-            that._reject(reason)
+            _reject(that, reason)
         })
     }
     var setImmediate = typeof window.setImmediate === "function" ? function(fn) {
@@ -18,53 +18,27 @@ define(["avalon"], function(avalon) {
     } : function(fn) {
         window.setTimeout(fn, 0)
     }
-
+    //返回一个已经处于`resolved`状态的Promise对象
     Promise.resolve = function(value) {
         return new Promise(function(resolve) {
             resolve(value)
         })
     }
+    //返回一个已经处于`rejected`状态的Promise对象
     Promise.reject = function(reason) {
         return new Promise(function(resolve, reject) {
             reject(reason)
         })
     }
-    function transmit(that, value) {
-        that._fired = true;
-        that._value = value;
-        setImmediate(function() {
-            that._callbacks.forEach(function(data) {
-                that._fire(data.onSuccess, data.onFail);
-            })
-        })
-    }
+
     Promise.prototype = {
-        _state: "pending", //判定当前状态
+        //一个Promise对象一共有3个状态：
+        //- `pending`：还处在等待状态，并没有明确最终结果
+        //- `resolved`：任务已经完成，处在成功状态
+        //- `rejected`：任务已经完成，处在失败状态
+        constructor: Promise,
+        _state: "pending",
         _fired: false, //判定是否已经被触发
-        _resolve: function(value) {
-            if (this._state !== "pending")
-                return;
-            this._state = "fulfilled"
-            var that = this
-            if (value && typeof value.then === "function") {
-                //thenable对象使用then，Promise实例使用_then
-                var method = this instanceof Promise ? "_then" : "then"
-                value[method](function(val) {
-                    transmit(that, val)
-                }, function(reason) {
-                    that._state = "rejected"
-                    transmit(that, reason)
-                });
-            } else {
-                transmit(that, value);
-            }
-        },
-        _reject: function(value) {
-            if (this._state !== "pending")
-                return;
-            this._state = "rejected"
-            transmit(this, value)
-        },
         _fire: function(onSuccess, onFail) {
             if (this._state === "rejected") {
                 if (typeof onFail === "function") {
@@ -126,8 +100,40 @@ define(["avalon"], function(avalon) {
             return this.then(null, onFail)
         }
     }
-
-    function some(any, promises) {
+    function _resolve(promise, value) {//触发成功回调
+        if (promise._state !== "pending")
+            return;
+        promise._state = "fulfilled"
+        if (value && typeof value.then === "function") {
+            //thenable对象使用then，Promise实例使用_then
+            var method = value instanceof Promise ? "_then" : "then"
+            value[method](function(val) {
+                _transmit(promise, val)
+            }, function(reason) {
+                promise._state = "rejected"
+                _transmit(promise, reason)
+            });
+        } else {
+            _transmit(promise, value);
+        }
+    }
+    function _reject(promise, value) {//触发失败回调
+        if (promise._state !== "pending")
+            return
+        promise._state = "rejected"
+        _transmit(promise, value)
+    }
+    //改变Promise的_fired值，并保持用户传参，触发所有回调
+    function _transmit(promise, value) {
+        promise._fired = true;
+        promise._value = value;
+        setImmediate(function() {
+            promise._callbacks.forEach(function(data) {
+                promise._fire(data.onSuccess, data.onFail);
+            })
+        })
+    }
+    function _some(any, promises) {
         var n = 0, result = [], end
         return new Promise(function(resolve, reject) {
             function loop(promise, index) {
@@ -152,10 +158,10 @@ define(["avalon"], function(avalon) {
     }
 
     Promise.all = function() {
-        return some(false, arguments)
+        return _some(false, arguments)
     }
     Promise.race = function() {
-        return some(true, arguments)
+        return _some(true, arguments)
     }
 
     var nativePromise = window.Promise

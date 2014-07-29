@@ -99,6 +99,12 @@ avalon.oniui
         <td>store</td><td>功能组件</td><td>完成</td><td>钟，本地储存</td>
     </tr>
     <tr>
+        <td>promise</td><td>功能组件</td><td>开发中</td><td>钟, es6的Promise组件</td>
+    </tr>
+    <tr>
+        <td>colorpicker</td><td>UI组件</td><td>完成</td><td>王，颜色选择器</td>
+    </tr>
+    <tr>
         <td>lazyload</td><td>功能组件</td><td></td><td>懒加载</td>
     </tr>
     <tr>

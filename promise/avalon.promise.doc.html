@@ -58,7 +58,48 @@
                         <td>实例的私自方法，非标准实现，executor中的reject的真身
                         </td>
                     </tr>
-
+                    <tr>
+                        <td>Promise.resolve(value)</td>
+                        <td>静态方法</td> 
+                        <td>将一个值转换为一个Promise对象,如<br/>
+                            Promise.resolve(123).then(alert)  <br/>
+                            相当于<br/>
+                            Promise.resolve(Promise.resolve(123)).then(alert) 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>then(onSuccess, onFail)</td>
+                        <td>原型方法</td> 
+                        <td>添加各种回调
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>catch( onFail)</td>
+                        <td>原型方法</td> 
+                        <td>添加失败回调
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Promise.reject(value)</td>
+                        <td>静态方法</td> 
+                        <td>将一个值转换为一个Promise对象,如<br/>
+                            Promise.reject(123).catch(alert)  <br/>
+                            相当于<br/>
+                            Promise.reject(Promise.reject(123)).catch(alert) 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Promise.all(array)</td>
+                        <td>静态方法</td> 
+                        <td>待到数组的所有Promise都resolve后，执行新Promise的then方法中的resolve回调
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Promise.race(array)</td>
+                        <td>静态方法</td> 
+                        <td>只要数组中有一个Promise被resolve后，执行新Promise的then方法中的resolve回调
+                        </td>
+                    </tr>
                 </table>
             </fieldset>
             <ul>
@@ -71,6 +112,7 @@
                 <li><a href="avalon.promise.ex7.html">每一个Promise总以上一个Promise作为参数传入resolve方法中</a></li>
                 <li><a href="avalon.promise.ex8.html">Promise.all</a></li>
                 <li><a href="avalon.promise.ex9.html">Promise.race</a></li>
+                <li><a href="avalon.promise.ex10.html">Promise.prototype.reject</a></li>
             </ul>
         </div>
 

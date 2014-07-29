@@ -29,6 +29,9 @@
                 </blockquote>
                 <p>这样用户就不需要定义组件的$id了</p>
              </li>
+             <li>
+                 组件在引入avalon的依赖时,直接define(["avalon"], fn)就行了,不需define(["../avalon"],fn)或define(["./ddd/avalon"],fn),因为avalon是一个核心模块，框架内部对它做了处理
+             </li>
             <li>
                 组件要最大程度兼容之前的，不行就两个，一个是兼容的，一个无牵制的
             </li>

@@ -53,6 +53,14 @@ define(["avalon"], function(avalon) {
                     that._state = "rejected"
                     transmit(that, reason)
                 });
+
+            } else if (value && typeof value.then === "function") {
+                value.then.call(value, function(val) {
+                    transmit(that, val)
+                }, function(reason) {
+                    that._state = "rejected"
+                    transmit(that, reason)
+                })
             } else {
                 transmit(that, value);
             }
@@ -64,7 +72,7 @@ define(["avalon"], function(avalon) {
             transmit(this, value)
         },
         _fire: function(onSuccess, onFail) {
-            if (this._failed) {
+            if (this._state === "rejected") {
                 if (typeof onFail === "function")
                     onFail(this._value);
                 else
@@ -77,9 +85,9 @@ define(["avalon"], function(avalon) {
         _then: function(onSuccess, onFail) {
             if (this._fired) {
                 var that = this
-                setTimeout(function() {
+                setImmediate(function() {
                     that._fire(onSuccess, onFail)
-                }, 0);
+                });
             } else {
                 this._callbacks.push({onSuccess: onSuccess, onFail: onFail});
             }
@@ -114,6 +122,12 @@ define(["avalon"], function(avalon) {
         },
         "catch": function(onFail) {
             return this.then(null, onFail)
+        },
+        done: function(onSuccess) {
+            return this.then(onSuccess)
+        },
+        fail: function(onFail) {
+            return this.then(null, onFail)
         }
     }
 
@@ -140,26 +154,27 @@ define(["avalon"], function(avalon) {
             }
         })
     }
+
     Promise.all = function() {
         return some(false, arguments)
     }
     Promise.race = function() {
         return some(true, arguments)
     }
-
-
-    window.Promise = Object.prototype.toString.call(window.Promise) === "[object Promise]" ? window.Promise : Promise
-
-    Promise.any = Promise.race
     Promise.isPromise = function(obj) {
         return !!(obj && typeof obj.then === "function")
     }
-    Promise.prototype.done = function(onSuccess) {
-        return this.then(onSuccess)
+    var nativePromise = window.Promise
+    if (/native code/.test(window.Promise)) {
+        nativePromise.prototype.done = Promise.prototype.done
+        nativePromise.prototype.fail = Promise.prototype.fail
+        nativePromise.isPromise = Promise.isPromise
+        nativePromise.any = nativePromise.race
+    } else {
+        Promise.any = Promise.race
+        window.Promise = Promise
     }
-    Promise.prototype.fail = function(onFail) {
-        return this.then(null, onFail)
-    }
+    avalon.mmPromise = Promise
     return avalon
 })
 //https://github.com/ecomfe/er/blob/master/src/Deferred.js

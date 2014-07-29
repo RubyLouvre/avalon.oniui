@@ -2,7 +2,7 @@
   * @description doublelist组件，以左右列表形式展示实现的复选组件
   *
   */
-define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.data.html", "scrollbar/avalon.scrollbar", "css!./avalon.doublelist.css", "css!../chameleon/oniui-common.css"], function(avalon, template, dataTpl) {
+define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.data.html", "../scrollbar/avalon.scrollbar", "css!./avalon.doublelist.css", "css!../chameleon/oniui-common.css"], function(avalon, template, dataTpl) {
 
     var widget = avalon.ui.doublelist = function(element, data, vmodels) {
         var options = data.doublelistOptions

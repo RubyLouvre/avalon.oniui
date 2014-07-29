@@ -1,5 +1,5 @@
 define(["../avalon.getModel",
-        "text!./avalon.daterangepicker.html",
+        "text!./avalon.daterangepicker.html", 
         "./avalon.datepicker",
         "css!../chameleon/oniui-common.css", 
         "css!./avalon.daterangepicker.css"], function(avalon, sourceHTML) {

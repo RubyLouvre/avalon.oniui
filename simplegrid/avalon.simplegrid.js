@@ -1,8 +1,8 @@
 //avalon 1.3.2 2014.4.2
 define(["avalon",
     "text!./avalon.simplegrid.html",
-    "pager/avalon.pager",
-    "scrollbar/avalon.scrollbar",
+    "../pager/avalon.pager",
+    "../scrollbar/avalon.scrollbar",
     "css!../chameleon/oniui-common.css",
     "css!./avalon.simplegrid.css"
 ], function(avalon, tmpl) {

@@ -1,7 +1,7 @@
 define(['avalon',
     'text!./avalon.miniswitch.html',
     '../switchdropdown/avalon.switchdropdown',
-    'avalon.getModel'], function(avalon, tmpl) {
+    '../avalon.getModel'], function(avalon, tmpl) {
 
     //使用switchdropdown做代理，包装option，内部使用dropdown组件实现
     var widget = avalon.ui.miniswitch = function(element, data, vmodels) {

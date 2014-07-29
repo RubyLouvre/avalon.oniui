@@ -1,4 +1,4 @@
-define(["../avalon"], function(avalon) {
+define(["avalon"], function(avalon) {
     var defaults = {
         ghosting: false, //是否影子拖动，动态生成一个元素，拖动此元素，当拖动结束时，让原元素到达此元素的位置上,
         delay: 0,

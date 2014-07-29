@@ -1,4 +1,4 @@
-define(['../avalon',
+define(['avalon',
     'text!./avalon.miniswitch.html',
     '../switchdropdown/avalon.switchdropdown',
     '../avalon.getModel'], function(avalon, tmpl) {

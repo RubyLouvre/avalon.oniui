@@ -1,4 +1,4 @@
-define(["../avalon", "json/avalon.json"], function(avalon) {
+define(["avalon", "json/avalon.json"], function(avalon) {
 
     var store = {
         //一些接口(空实现)

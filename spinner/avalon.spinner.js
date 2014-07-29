@@ -1,4 +1,4 @@
-define(["../avalon", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.css", "css!./avalon.spinner.css"], function(avalon, sourceHTML) {
+define(["avalon", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.css", "css!./avalon.spinner.css"], function(avalon, sourceHTML) {
     var widget = avalon.ui.spinner = function(element, data, vmodels) {
         var options = data.spinnerOptions,
             template = sourceHTML;

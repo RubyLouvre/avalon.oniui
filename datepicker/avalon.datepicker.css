@@ -9,7 +9,7 @@
 .ui-datepicker-input-wrapper .ui-datepicker-tip { position: absolute; top: 3px; right: 0px; line-height: 18px; height: 18px; color: #b5b5b5; }
 .ui-datepicker-input-wrapper.ui-state-active { border-color: #3775c0; border-bottom: 0; }
 
-.ui-datepicker { font-size: 0; white-space: nowrap; color: #333; position: relative; z-index: 1000; width: auto; }
+.ui-datepicker { position: relative; display: block; font-size: 0; white-space: nowrap; color: #333; z-index: 1000; width: auto; }
 .ui-datepicker tr, .ui-datepicker td, .ui-datepicker th { border: 0; }
 .ui-datepicker .ui-icon { text-indent: 0; }
 .ui-datepicker .ui-datepicker-wrapper { padding: 9px 0 9px 10px; border: 1px solid #cccccc; box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1); position: absolute; background: #fff; z-index: 1000; }

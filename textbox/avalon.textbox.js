@@ -83,7 +83,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                     // 包装原始输入域
                     var tempDiv = document.createElement("div");
                     elemParent.insertBefore(tempDiv, element);
-                    vmodel.msRetain = true;
+                    element.msRetain = true;
                     inputWraper.appendChild(element);
                     if(~options.width) {
                         $element.width(options.width);
@@ -95,7 +95,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                         element.tabIndex = options.tabIndex;
                     }
                     elemParent.replaceChild(sourceList, tempDiv);
-                    vmodel.msRetain = false;
+                    element.msRetain = false;
                     // 如果存在自动补全配置项的话，添加自动补全widget
                     if (options.suggest) {
                         var suggest = avalon.parseHTML(suggestHTML).firstChild;

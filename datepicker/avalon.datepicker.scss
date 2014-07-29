@@ -44,10 +44,11 @@ $uiname-dropdown: "ui-dropdown";
 }
 
 .ui-datepicker {
+    position: relative;
+    display: block;
     font-size: 0;
     white-space: nowrap;
     color: #333;
-    position: relative;
     z-index: 1000;
     width: auto;
     tr, td, th {

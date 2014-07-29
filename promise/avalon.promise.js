@@ -1,7 +1,7 @@
 define(["avalon"], function(avalon) {
 
     var Promise = function(executor) {
-        this._callbacks = [];
+        this._callbacks = []
         var that = this
         if (typeof this !== 'object')
             throw new TypeError('Promises must be constructed via new')
@@ -21,14 +21,14 @@ define(["avalon"], function(avalon) {
 
     Promise.resolve = function(value) {
         return new Promise(function(resolve) {
-            resolve(value);
-        });
-    };
+            resolve(value)
+        })
+    }
     Promise.reject = function(reason) {
         return new Promise(function(resolve, reject) {
-            reject(reason);
-        });
-    };
+            reject(reason)
+        })
+    }
     function transmit(that, value) {
         that._fired = true;
         that._value = value;
@@ -46,21 +46,15 @@ define(["avalon"], function(avalon) {
                 return;
             this._state = "fulfilled"
             var that = this
-            if (value instanceof Promise) {
-                value._then(function(val) {
+            if (value && typeof value.then === "function") {
+                //thenable对象使用then，Promise实例使用_then
+                var method = this instanceof Promise ? "_then" : "then"
+                value[method](function(val) {
                     transmit(that, val)
                 }, function(reason) {
                     that._state = "rejected"
                     transmit(that, reason)
                 });
-
-            } else if (value && typeof value.then === "function") {
-                value.then.call(value, function(val) {
-                    transmit(that, val)
-                }, function(reason) {
-                    that._state = "rejected"
-                    transmit(that, reason)
-                })
             } else {
                 transmit(that, value);
             }
@@ -73,32 +67,34 @@ define(["avalon"], function(avalon) {
         },
         _fire: function(onSuccess, onFail) {
             if (this._state === "rejected") {
-                if (typeof onFail === "function")
-                    onFail(this._value);
-                else
-                    throw this._value;
+                if (typeof onFail === "function") {
+                    onFail(this._value)
+                } else {
+                    throw this._value
+                }
             } else {
-                if (typeof onSuccess === "function")
-                    onSuccess(this._value);
+                if (typeof onSuccess === "function") {
+                    onSuccess(this._value)
+                }
             }
         },
         _then: function(onSuccess, onFail) {
-            if (this._fired) {
+            if (this._fired) {//在已有Promise上添加回调
                 var that = this
                 setImmediate(function() {
                     that._fire(onSuccess, onFail)
                 });
             } else {
-                this._callbacks.push({onSuccess: onSuccess, onFail: onFail});
+                this._callbacks.push({onSuccess: onSuccess, onFail: onFail})
             }
         },
         then: function(onSuccess, onFail) {
-            var parent = this
+            var parent = this//在新的Promise上添加回调
             return new Promise(function(resolve, reject) {
                 parent._then(function(value) {
                     if (typeof onSuccess === "function") {
                         try {
-                            value = onSuccess(value);
+                            value = onSuccess(value)
                         } catch (e) {
                             reject(e)
                             return
@@ -117,16 +113,16 @@ define(["avalon"], function(avalon) {
                     } else {
                         reject(value)
                     }
-                });
-            });
+                })
+            })
         },
-        "catch": function(onFail) {
+        "catch": function(onFail) {//添加错误回调
             return this.then(null, onFail)
         },
-        done: function(onSuccess) {
+        done: function(onSuccess) {//添加与jQuery相仿的API
             return this.then(onSuccess)
         },
-        fail: function(onFail) {
+        fail: function(onFail) {//添加与jQuery相仿的API
             return this.then(null, onFail)
         }
     }
@@ -161,14 +157,11 @@ define(["avalon"], function(avalon) {
     Promise.race = function() {
         return some(true, arguments)
     }
-    Promise.isPromise = function(obj) {
-        return !!(obj && typeof obj.then === "function")
-    }
+
     var nativePromise = window.Promise
     if (/native code/.test(window.Promise)) {
         nativePromise.prototype.done = Promise.prototype.done
         nativePromise.prototype.fail = Promise.prototype.fail
-        nativePromise.isPromise = Promise.isPromise
         nativePromise.any = nativePromise.race
     } else {
         Promise.any = Promise.race

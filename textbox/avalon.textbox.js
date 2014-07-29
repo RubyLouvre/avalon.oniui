@@ -120,7 +120,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
         placeholder: "",
         widgetElement: "",
         tabIndex: -1,
-        width: 200,
+        width: -1,
         disabledClass: "ui-textbox-disabled"
     }
     return avalon ;

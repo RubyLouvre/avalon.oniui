@@ -166,10 +166,10 @@ define(["avalon"], function(avalon) {
     }
     var nativePromise = window.Promise
     if (/native code/.test(window.Promise)) {
-        nativePromise.prototype.done = Promise.prototype.done
-        nativePromise.prototype.fail = Promise.prototype.fail
-        nativePromise.isPromise = Promise.isPromise
-        nativePromise.any = nativePromise.race
+//        nativePromise.prototype.done = Promise.prototype.done
+//        nativePromise.prototype.fail = Promise.prototype.fail
+//        nativePromise.isPromise = Promise.isPromise
+//        nativePromise.any = nativePromise.race
     } else {
         Promise.any = Promise.race
         window.Promise = Promise

@@ -58,15 +58,20 @@
                         <td>实例的私自方法，非标准实现，executor中的reject的真身
                         </td>
                     </tr>
-                       <tr>
-                        <td>_fire(value)</td>
-                        <td></td> 
-                        <td>实例的私自方法，非标准实现，上面的_resolve,_reject方法内部都调用的一个核心方法，它会将
-                           _fired属性设置为true，value参数放到_value属性上，并且开始异步执行用then方法添加的所有回调
-                        </td>
-                    </tr>
+
                 </table>
             </fieldset>
+            <ul>
+                <li><a href="avalon.promise.ex1.html">没有延时的then链式调用</a></li>
+                <li><a href="avalon.promise.ex2.html">存在延时的then链式调用</a></li>
+                <li><a href="avalon.promise.ex3.html">第二个Promise以第一个Promise作为参数传入resolve方法中</a></li>
+                <li><a href="avalon.promise.ex4.html">第二个Promise以第一个Promise作为参数传入reject方法中</a></li>
+                <li><a href="avalon.promise.ex5.html">第二个Promise以第一个thenable对象作为参数传入resolve方法中</a></li>
+                <li><a href="avalon.promise.ex6.html">第二个Promise以第一个thenable对象作为参数传入reject方法中</a></li>
+                <li><a href="avalon.promise.ex7.html">每一个Promise总以上一个Promise作为参数传入resolve方法中</a></li>
+                <li><a href="avalon.promise.ex8.html">Promise.all</a></li>
+                <li><a href="avalon.promise.ex9.html">Promise.race</a></li>
+            </ul>
         </div>
 
     </body>

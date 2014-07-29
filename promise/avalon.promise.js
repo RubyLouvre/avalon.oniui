@@ -150,3 +150,4 @@ define(["avalon"], function(avalon) {
     window.Promise = Object.prototype.toString.call(window.Promise) === "[object Promise]" ? window.Promise : Promise
     return avalon
 })
+//https://github.com/ecomfe/er/blob/master/src/Deferred.js

@@ -1,9 +1,10 @@
 ~function () {
 	var ui = {};
-	ui. getComputedStyle = function(elem, pro) {
-		if (!pro) return window.getComputedStyle(elem, null);
-		return window.getComputedStyle(elem, null).getPropertyValue(pro);
-	}
+	// ui.getComputedStyle = function(elem, pro) {
+	// 	if (!pro) return window.getComputedStyle(elem, null);
+	// 	return window.getComputedStyle(elem, null).getPropertyValue(pro);
+	// }
+	ui.getComputedStyle = avalon.css
 	var scrollPx = document.body.scrollTop  || document.documentElement.scrollTop;
 	var action = '';
 	var parallaOffset = avalon(document.getElementById("parallax")).offset();
@@ -211,13 +212,15 @@
 			} else if ( 'getElementsByClassName' in document && typeof document.getElementsByClassName === 'function') {
 				return document.getElementsByClassName(cn);
 			} else {
-				elements = document.getElementsByTagName("*");
+				elements = document.all;//getElementsByTagName("*");
+				var results = [];
 				pattern = new RegExp("(^|\\s)" + cn + "(\\s|$)");
 				for (i = 0; i < elements.length; i++) {
 					if (pattern.test(elements[i].className) ) {
 						results.push(elements[i]);
 					}
 				}
+				return results
 			}
 	}
 }();

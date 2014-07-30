@@ -145,12 +145,12 @@
                     t_start = t_curr;
                 }
                 if(t_curr - t_start >= mustRunDelay){
-                    fn.apply(context, args);
+                    fn.apply(context, args || []);
                     t_start = t_curr;
                 }
                 else {
                     timer = setTimeout(function(){
-                        fn.apply(context, args);
+                        fn.apply(context, args || []);
                     }, delay);
                 }
             };

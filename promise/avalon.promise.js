@@ -1,16 +1,16 @@
 define(["avalon"], function(avalon) {
 
     var Promise = function(executor) {
-        this._callbacks = [];
+        this._callbacks = []
         var that = this
         if (typeof this !== 'object')
             throw new TypeError('Promises must be constructed via new')
         if (typeof executor !== 'function')
             throw new TypeError('not a function')
         executor(function(value) {
-            that._resolve(value)
+            _resolve(that, value)
         }, function(reason) {
-            that._reject(reason)
+            _reject(that, reason)
         })
     }
     var setImmediate = typeof window.setImmediate === "function" ? function(fn) {
@@ -18,79 +18,57 @@ define(["avalon"], function(avalon) {
     } : function(fn) {
         window.setTimeout(fn, 0)
     }
-
+    //返回一个已经处于`resolved`状态的Promise对象
     Promise.resolve = function(value) {
         return new Promise(function(resolve) {
-            resolve(value);
-        });
-    };
-    Promise.reject = function(reason) {
-        return new Promise(function(resolve, reject) {
-            reject(reason);
-        });
-    };
-    function transmit(that, value) {
-        that._fired = true;
-        that._value = value;
-        setImmediate(function() {
-            that._callbacks.forEach(function(data) {
-                that._fire(data.onSuccess, data.onFail);
-            })
+            resolve(value)
         })
     }
+    //返回一个已经处于`rejected`状态的Promise对象
+    Promise.reject = function(reason) {
+        return new Promise(function(resolve, reject) {
+            reject(reason)
+        })
+    }
+
     Promise.prototype = {
-        _state: "pending", //判定当前状态
+        //一个Promise对象一共有3个状态：
+        //- `pending`：还处在等待状态，并没有明确最终结果
+        //- `resolved`：任务已经完成，处在成功状态
+        //- `rejected`：任务已经完成，处在失败状态
+        constructor: Promise,
+        _state: "pending",
         _fired: false, //判定是否已经被触发
-        _resolve: function(value) {
-            if (this._state !== "pending")
-                return;
-            this._state = "fulfilled"
-            var that = this
-            if (value instanceof Promise) {
-                value._then(function(val) {
-                    transmit(that, val)
-                }, function(reason) {
-                    that._state = "rejected"
-                    transmit(that, reason)
-                });
-            } else {
-                transmit(that, value);
-            }
-        },
-        _reject: function(value) {
-            if (this._state !== "pending")
-                return;
-            this._state = "rejected"
-            transmit(this, value)
-        },
         _fire: function(onSuccess, onFail) {
-            if (this._failed) {
-                if (typeof onFail === "function")
-                    onFail(this._value);
-                else
-                    throw this._value;
+            if (this._state === "rejected") {
+                if (typeof onFail === "function") {
+                    onFail(this._value)
+                } else {
+                    throw this._value
+                }
             } else {
-                if (typeof onSuccess === "function")
-                    onSuccess(this._value);
+                if (typeof onSuccess === "function") {
+                    onSuccess(this._value)
+                }
             }
         },
         _then: function(onSuccess, onFail) {
-            if (this._fired) {
+            if (this._fired) {//在已有Promise上添加回调
                 var that = this
-                setTimeout(function() {
+                setImmediate(function() {
                     that._fire(onSuccess, onFail)
-                }, 0);
+                });
             } else {
-                this._callbacks.push({onSuccess: onSuccess, onFail: onFail});
+                this._callbacks.push({onSuccess: onSuccess, onFail: onFail})
             }
         },
         then: function(onSuccess, onFail) {
-            var parent = this
+            var parent = this//在新的Promise上添加回调
             return new Promise(function(resolve, reject) {
                 parent._then(function(value) {
                     if (typeof onSuccess === "function") {
                         try {
-                            value = onSuccess(value);
+                            value = onSuccess(value)
                         } catch (e) {
                             reject(e)
                             return
@@ -109,15 +87,53 @@ define(["avalon"], function(avalon) {
                     } else {
                         reject(value)
                     }
-                });
-            });
+                })
+            })
         },
-        "catch": function(onFail) {
+        "catch": function(onFail) {//添加错误回调
+            return this.then(null, onFail)
+        },
+        done: function(onSuccess) {//添加与jQuery相仿的API
+            return this.then(onSuccess)
+        },
+        fail: function(onFail) {//添加与jQuery相仿的API
             return this.then(null, onFail)
         }
     }
-
-    function some(any, promises) {
+    function _resolve(promise, value) {//触发成功回调
+        if (promise._state !== "pending")
+            return;
+        promise._state = "fulfilled"
+        if (value && typeof value.then === "function") {
+            //thenable对象使用then，Promise实例使用_then
+            var method = value instanceof Promise ? "_then" : "then"
+            value[method](function(val) {
+                _transmit(promise, val)
+            }, function(reason) {
+                promise._state = "rejected"
+                _transmit(promise, reason)
+            });
+        } else {
+            _transmit(promise, value);
+        }
+    }
+    function _reject(promise, value) {//触发失败回调
+        if (promise._state !== "pending")
+            return
+        promise._state = "rejected"
+        _transmit(promise, value)
+    }
+    //改变Promise的_fired值，并保持用户传参，触发所有回调
+    function _transmit(promise, value) {
+        promise._fired = true;
+        promise._value = value;
+        setImmediate(function() {
+            promise._callbacks.forEach(function(data) {
+                promise._fire(data.onSuccess, data.onFail);
+            })
+        })
+    }
+    function _some(any, promises) {
         var n = 0, result = [], end
         return new Promise(function(resolve, reject) {
             function loop(promise, index) {
@@ -140,26 +156,25 @@ define(["avalon"], function(avalon) {
             }
         })
     }
+
     Promise.all = function() {
-        return some(false, arguments)
+        return _some(false, arguments)
     }
     Promise.race = function() {
-        return some(true, arguments)
+        return _some(true, arguments)
     }
 
-
-    window.Promise = Object.prototype.toString.call(window.Promise) === "[object Promise]" ? window.Promise : Promise
-
-    Promise.any = Promise.race
-    Promise.isPromise = function(obj) {
-        return !!(obj && typeof obj.then === "function")
+    var nativePromise = window.Promise
+    if (/native code/.test(window.Promise)) {
+        nativePromise.prototype.done = Promise.prototype.done
+        nativePromise.prototype.fail = Promise.prototype.fail
+        nativePromise.any = nativePromise.race
+    } else {
+        Promise.any = Promise.race
+        window.Promise = Promise
     }
-    Promise.prototype.done = function(onSuccess) {
-        return this.then(onSuccess)
-    }
-    Promise.prototype.fail = function(onFail) {
-        return this.then(null, onFail)
-    }
+    avalon.mmPromise = Promise
     return avalon
 })
 //https://github.com/ecomfe/er/blob/master/src/Deferred.js
+//http://jser.info/post/77696682011/es6-promises

@@ -1,22 +1,22 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
 $uiname: "ui-slider";
-.ui-helper-hidden-accessible {
-    position: absolute;
-    height: 1px;
-    width: 1px;
-    overflow: hidden;
-    border: 0 none;
-    margin: -1px;
-    padding: 0;
-    clip: rect(0px 0px 0px 0px);
-}
-.ui-corner-all {
-    @include border-radius(5px);
-}
 .#{$uiname} {
     position: relative;
     text-align: left;
+    .ui-helper-hidden-accessible {
+        position: absolute;
+        height: 1px;
+        width: 1px;
+        overflow: hidden;
+        border: 0 none;
+        margin: -1px;
+        padding: 0;
+        clip: rect(0px 0px 0px 0px);
+    }
+    .ui-corner-all {
+        @include border-radius(5px);
+    }
     @if($oinui-theme == smoothness) {
         background:$ui-state-default-background-color;// #e7e7e7;
     }

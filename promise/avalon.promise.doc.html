@@ -46,27 +46,63 @@
                         <td>实例的私自属性，非标准实现，用于标识实例是否已经执行过resolve或reject方法
                         </td>
                     </tr>
+          
                     <tr>
-                        <td>_resolve(value)</td>
-                        <td></td> 
-                        <td>实例的私自方法，非标准实现，executor中的resolve的真身
+                        <td>Promise.resolve(value)</td>
+                        <td>静态方法</td> 
+                        <td>将一个值转换为一个Promise对象,如<br/>
+                            Promise.resolve(123).then(alert)  <br/>
+                            相当于<br/>
+                            Promise.resolve(Promise.resolve(123)).then(alert) 
                         </td>
                     </tr>
                     <tr>
-                        <td>_reject(reason)</td>
-                        <td></td> 
-                        <td>实例的私自方法，非标准实现，executor中的reject的真身
+                        <td>then(onSuccess, onFail)</td>
+                        <td>原型方法</td> 
+                        <td>添加各种回调
                         </td>
                     </tr>
-                       <tr>
-                        <td>_fire(value)</td>
-                        <td></td> 
-                        <td>实例的私自方法，非标准实现，上面的_resolve,_reject方法内部都调用的一个核心方法，它会将
-                           _fired属性设置为true，value参数放到_value属性上，并且开始异步执行用then方法添加的所有回调
+                    <tr>
+                        <td>catch( onFail)</td>
+                        <td>原型方法</td> 
+                        <td>添加失败回调
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Promise.reject(value)</td>
+                        <td>静态方法</td> 
+                        <td>将一个值转换为一个Promise对象,如<br/>
+                            Promise.reject(123).catch(alert)  <br/>
+                            相当于<br/>
+                            Promise.reject(Promise.reject(123)).catch(alert) 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Promise.all(array)</td>
+                        <td>静态方法</td> 
+                        <td>待到数组的所有Promise都resolve后，执行新Promise的then方法中的resolve回调
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Promise.race(array)</td>
+                        <td>静态方法</td> 
+                        <td>只要数组中有一个Promise被resolve后，执行新Promise的then方法中的resolve回调
                         </td>
                     </tr>
                 </table>
             </fieldset>
+            <ul>
+                <li><a href="avalon.promise.ex1.html">没有延时的then链式调用</a></li>
+                <li><a href="avalon.promise.ex2.html">存在延时的then链式调用</a></li>
+                <li><a href="avalon.promise.ex3.html">第二个Promise以第一个Promise作为参数传入resolve方法中</a></li>
+                <li><a href="avalon.promise.ex4.html">第二个Promise以第一个Promise作为参数传入reject方法中</a></li>
+                <li><a href="avalon.promise.ex5.html">第二个Promise以第一个thenable对象作为参数传入resolve方法中</a></li>
+                <li><a href="avalon.promise.ex6.html">第二个Promise以第一个thenable对象作为参数传入reject方法中</a></li>
+                <li><a href="avalon.promise.ex7.html">每一个Promise总以上一个Promise作为参数传入resolve方法中</a></li>
+                <li><a href="avalon.promise.ex8.html">Promise.all</a></li>
+                <li><a href="avalon.promise.ex9.html">Promise.race</a></li>
+                <li><a href="avalon.promise.ex10.html">Promise.prototype.reject</a></li>
+            </ul>
         </div>
 
     </body>

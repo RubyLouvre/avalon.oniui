@@ -34,11 +34,9 @@ define(["../avalon.getModel",
             _lastContent = "", //dialog content html
             lastContent = "", //dialog content node
             $element = avalon(element),
-            _onConfirm = options.onConfirm_onConfirm = options.onConfirm,
-            onConfirm = _onConfirm ? (typeof _onConfirm ==="function") ? _onConfirm : _onConfirm.substring(0,_onConfirm.indexOf("(")) : null, //兼容onion-adapter可删掉
+            onConfirm = options.onConfirm,
             onConfirmVM = null,
-            _onCancel = options.onCancel,
-            onCancel = _onCancel ? typeof _onCancel === "function" ? _onCancel : _onCancel.substring(0,_onCancel.indexOf("(")) : null, //兼容onion-adapter可删掉
+            onCancel = options.onCancel,
             onCancelVM = null;
         if (typeof onConfirm === "string") {
             onConfirmVM = avalon.getModel(onConfirm, vmodels);

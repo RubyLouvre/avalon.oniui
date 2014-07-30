@@ -53,6 +53,6 @@ $default-has-layout-approach: zoom !default;
 @mixin hack-ie6-max($property, $value) {
     @if $legacy-support-for-ie6 {
         $prop: if($property == "width" , scrollWidth , scrollHeight);
-        _#{$property}:expression(this.#{ $prop } > #{strip-units($value)} ? "#{$value}" : "auto")
+        _#{$property}:expression(this.#{ $prop } > #{strip-units($value)} ? "#{$value}" : "auto");
     }
 }

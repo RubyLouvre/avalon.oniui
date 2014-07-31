@@ -22,45 +22,59 @@
 		<legend>关闭自动隐藏</legend>
 		<input type="text" ms-duplex="color_2" ms-widget="colorpicker, $, $cp_2">
 	</fieldset>
+	<fieldset>  
+		<legend>更改默认颜色</legend>
+		<input type="text" ms-widget="colorpicker, $, $cp_3">
+	</fieldset>
     
 	<pre class="brush:html;gutter:false;">
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
 &lt;meta charset="utf-8"&gt;
-&lt;title&gt;colorpicker&lt;/title&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+&lt;title&gt;colorpicker demo&lt;/title&gt;
 &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="../style/avalon.doc.css"/&gt;
 &lt;/head&gt;
 &lt;body ms-controller="demo"&gt;
 
-    &lt;fieldset&gt;  
-        &lt;legend&gt;默认设置&lt;/legend&gt;
-        &lt;input type="text" ms-widget="colorpicker"&gt;
-    &lt;/fieldset&gt;
-    &lt;fieldset&gt;  
-        &lt;legend&gt;设置初始颜色&lt;/legend&gt;
-        &lt;input type="text" ms-duplex="color_1" ms-widget="colorpicker"&gt;
-    &lt;/fieldset&gt;
-    &lt;fieldset&gt;  
-        &lt;legend&gt;关闭自动隐藏&lt;/legend&gt;
-        &lt;input type="text" ms-duplex="color_2" ms-widget="colorpicker, $, $cp_2"&gt;
-    &lt;/fieldset&gt;
+	&lt;fieldset&gt;  
+		&lt;legend&gt;默认设置&lt;/legend&gt;
+		&lt;input type="text" ms-widget="colorpicker"&gt;
+	&lt;/fieldset&gt;
+	&lt;fieldset&gt;  
+		&lt;legend&gt;设置初始颜色&lt;/legend&gt;
+		&lt;input type="text" ms-duplex="color_1" ms-widget="colorpicker"&gt;
+	&lt;/fieldset&gt;
+	&lt;fieldset&gt;  
+		&lt;legend&gt;关闭自动隐藏&lt;/legend&gt;
+		&lt;input type="text" ms-duplex="color_2" ms-widget="colorpicker, $, $cp_2"&gt;
+	&lt;/fieldset&gt;
+	&lt;fieldset&gt;  
+		&lt;legend&gt;更改默认颜色&lt;/legend&gt;
+		&lt;input type="text" ms-widget="colorpicker, $, $cp_3"&gt;
+	&lt;/fieldset&gt;
 
-    &lt;script&gt;
-        require("colorpicker/avalon.colorpicker", function(){
-            var model = avalon.define("demo", function(vm){
-                
-                vm.color_1 = "#ff00ff";
-                vm.color_2 = "#0000ff";
+	&lt;script&gt;
+		require("colorpicker/avalon.colorpicker", function(){
+			var model = avalon.define("demo", function(vm){
+				
+				vm.color_1 = "#ff0000";
 
-                vm.$cp_2 = {
-                    auto_hide: false
-                };
+				vm.color_2 = "#ff0000";
+				vm.$cp_2 = {
+					auto_hide: false
+				};
 
-            });
-            avalon.scan();
-        });
-    &lt;/script&gt;
+				vm.$cp_3 = {
+					default_color: "#0000ff"
+				};
+
+			});
+			avalon.scan();
+		});
+	&lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 	</pre>
@@ -68,11 +82,15 @@
 		require("colorpicker/avalon.colorpicker", function(){
 			var model = avalon.define("demo", function(vm){
 				
-				vm.color_1 = "#ff00ff";
-				vm.color_2 = "#0000ff";
+				vm.color_1 = "#ff0000";
 
+				vm.color_2 = "#ff0000";
 				vm.$cp_2 = {
 					auto_hide: false
+				};
+
+				vm.$cp_3 = {
+					default_color: "#0000ff"
 				};
 
 			});

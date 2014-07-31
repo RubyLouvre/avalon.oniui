@@ -1,19 +1,6 @@
 define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./avalon.colorpicker.css"], function(avalon, sourceHTML){
 
 	var vm_temp = {};	//记录前一个被打开的ctr
-
-	//IE6,7判断
-	var browser = navigator.appName,
-		version = navigator.appVersion.split(";")[1],
-		trim_Version = version ? version.replace(/[ ]/g, "") : "";
-	if(browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0"){
-		browser = "IE6";
-	}else if(browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0"){
-		browser = "IE7";
-	}
-
-	// HACK IE6,7z中z-index bug
-	var zIndex = 100;
 	
 	var widget = avalon.ui.colorpicker = function(element, data, vmodels){
 		var vmodel = avalon.define(data.colorpickerId, function(vm){
@@ -34,7 +21,7 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 				$wheel,
 				$overlay;
 
-            vm.$skipArray = ["auto_hide"];
+			vm.$skipArray = ["auto_hide"];
 
 			//marker坐标
 			vm.wheel_m = {
@@ -48,14 +35,12 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 
 			// 如果用户未设置颜色，设置初始颜色
 			if(!("ms-duplex" in $element[0].msData)){
-				element.setAttribute("ms-duplex", "input_val");
-				vm.input_val = "#ffffff";
+				element.setAttribute("ms-duplex", "default_color");
 			}
 			vm.cp_color = "";			//最终颜色
 			vm.input_color = "";		//input字体颜色
 			vm.hue_color = "";			//overlay背景色，s=1, l=0.5
 
-			vm.auto_hide = true;
 			vm.toggle = false;
 
 			avalon.mix(vm, data.colorpickerOptions);
@@ -74,9 +59,8 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 
 			vm.setByIp = function(val){
 				if(val !== vm.cp_color){			//阻止从ctr改变element.value时触发函数
-					var	reg = /#[0-9,a-f]{6}$/i;	//正则匹配十六进制颜色表示
 
-					if(reg.test(val)){				//匹配成功
+					if(isHexColorValid(val)){
 						var r = parseInt(val.substr(1, 2), 16),
 							g = parseInt(val.substr(5, 2), 16),
 							b = parseInt(val.substr(3, 2), 16);
@@ -274,11 +258,6 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 					cp.setAttribute("ms-click", "cpClick");
 					element.setAttribute("ms-click", "ipClick");
 
-					if(browser === "IE6" || browser === "IE7"){
-						// element.style.zIndex = zIndex;
-						// zIndex--;
-					}
-
 					avalon.bind(document, "click", docClickHandler);
 
 					document.body.appendChild(cp);
@@ -308,16 +287,18 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 
 	};
 
-	function hslToRgb(h, s, l){
+	widget.version = 1.0;
+	widget.defaults = {
+		auto_hide: true,
+		default_color: "#ffffff"
+	};
 
-		function hueToRgb(p, q, t){
-			if(t < 0) t += 1;
-			if(t > 1) t -= 1;
-			if(t < 1/6) return p + (q - p) * 6 * t;
-			if(t < 1/2) return q;
-			if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-			return p;
-		}
+	function isHexColorValid(val){
+		//正则匹配十六进制颜色表示
+		var	reg = /#[0-9,a-f]{6}$/i;
+		return reg.test(val);
+	}
+	function hslToRgb(h, s, l){
 
 		var r, g, b;
 
@@ -335,6 +316,15 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 		}
 
 		return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+
+		function hueToRgb(p, q, t){
+			if(t < 0) t += 1;
+			if(t > 1) t -= 1;
+			if(t < 1/6) return p + (q - p) * 6 * t;
+			if(t < 1/2) return q;
+			if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+			return p;
+		}
 	}
 	function rgbToHsl(r, g, b){
 		r /= 255, g /= 255, b /= 255;

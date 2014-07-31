@@ -89,7 +89,7 @@
     <script>
     require("dialog/avalon.dialog.js", function(avalon) {
         var docCssReg = /<link[^>]*style\/avalon\.doc\.css[^>]*\>/img,
-            widgets = ["accordion", "tab", "colorpicker","spinner", "slider", "textbox", "dropdown", "datepicker", "coupledatepicker", "daterangepicker", "dialog", "at", "checkboxlist", "cookie", "draggable", "flipswitch", "miniswitch", "notice", "pager", "position", "preview", "progressbar", "resizable", "doublelist", "scrollbar", "scrollspy", "simplegrid", "store", "switchdropdown", "tooltip"].sort(),
+            widgets = ["accordion", "tab","promise", "colorpicker","spinner", "slider", "textbox", "dropdown", "datepicker", "coupledatepicker", "daterangepicker", "dialog", "at", "checkboxlist", "cookie", "draggable", "flipswitch", "miniswitch", "notice", "pager", "position", "preview", "progressbar", "resizable", "doublelist", "scrollbar", "scrollspy", "simplegrid", "store", "switchdropdown", "tooltip"].sort(),
             defaultHref = "accordion/avalon.accordion.doc.html";
 
         function getHref(urlHash) {
@@ -145,12 +145,12 @@
                     t_start = t_curr;
                 }
                 if(t_curr - t_start >= mustRunDelay){
-                    fn.apply(context, args);
+                    fn.apply(context, args || []);
                     t_start = t_curr;
                 }
                 else {
                     timer = setTimeout(function(){
-                        fn.apply(context, args);
+                        fn.apply(context, args || []);
                     }, delay);
                 }
             };
@@ -322,6 +322,7 @@
                 }, 100)
             }
         })
+        window.setHeight = vmodel.setHeight
         avalon.scan();
         if(vmodel.hashchangeSupport) {
             vmodel.setHeight();

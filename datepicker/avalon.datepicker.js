@@ -269,6 +269,9 @@ define(["../avalon.getModel",
                     // element.msRetain = false;
                     element.value = vmodel.allowBlank ? _value : _originValue;
                 }
+                if (~vmodel.zIndex) {
+                    calendar.style.zIndex = vmodel.zIndex;
+                }
                 div = options.type ==="range" ? element["data-calenderwrapper"] : div;
                 bindEvents(calendar, div);
                 // 如果输入域不允许为空，且_originValue不存在则强制更新element.value
@@ -625,6 +628,7 @@ define(["../avalon.getModel",
         calendarLabel: "选择日期",
         onChangeMonthYear: avalon.noop, 
         watermark: true,
+        zIndex: -1,
         onSelect: avalon.noop, //将废弃,相当于onSelect
         onClose: avalon.noop,
         parseDate: function(str){

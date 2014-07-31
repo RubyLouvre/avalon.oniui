@@ -111,6 +111,8 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 divCon = null
 
                 inputEle = element
+                // 阻止节点移除事件触发$destroy
+                inputEle.msRetain = true;
 
                 inputEle.parentNode.removeChild(inputEle)
                 inputEle.style.display = "none"
@@ -122,6 +124,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 inputEle.setAttribute("ms-checked", "checked")
 
                 newDiv.appendChild(inputEle)
+                inputEle.msRetain = false;
 
                 bar = newDiv.firstChild
 

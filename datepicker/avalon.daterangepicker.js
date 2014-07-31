@@ -115,7 +115,7 @@ define(["../avalon.getModel",
                     inputFromDate = options.parseDate(inputFromValue),
                     inputToDate = options.parseDate(inputToValue),
                     label = options.datesDisplayFormat(options.defaultLabel,inputFromValue, inputToValue),
-                    labelWidth = label.length * 10;
+                    labelWidth = label.length * 10 -20;
                 vmodel.label = label;
                 _confirmClick = true;
                 vmodel.toggle = false;

@@ -1,9 +1,10 @@
 ~function () {
 	var ui = {};
-	ui. getComputedStyle = function(elem, pro) {
-		if (!pro) return window.getComputedStyle(elem, null);
-		return window.getComputedStyle(elem, null).getPropertyValue(pro);
-	}
+	// ui.getComputedStyle = function(elem, pro) {
+	// 	if (!pro) return window.getComputedStyle(elem, null);
+	// 	return window.getComputedStyle(elem, null).getPropertyValue(pro);
+	// }
+	ui.getComputedStyle = avalon.css
 	var scrollPx = document.body.scrollTop  || document.documentElement.scrollTop;
 	var action = '';
 	var parallaOffset = avalon(document.getElementById("parallax")).offset();
@@ -111,16 +112,16 @@
 			if (!child) return;
 			var monthNum = child.className.match(/tree__item--m(\d+)/)[1]
 			var ndTarget = getElementsByClassName('month--m' + monthNum)[0];
-			var oStyle = ui.getComputedStyle(child);
+			// var oStyle = ui.getComputedStyle(child);
 			var viewTop  = getElementViewTop(child);
 			//根据月份下的第一个项目设置坐标位置
 			if (hasClass(child, 'tree__item--right')) {
 				ndTarget.style.left = getRandom(120, 250) + 'px';
 			} else {
-				ndTarget.style.left = (parseInt(oStyle.getPropertyValue('width'), 10) + getRandom(120, 250)) + 'px';
+				ndTarget.style.left = (parseInt(ui.getComputedStyle(child, 'width'), 10) + getRandom(120, 250)) + 'px';
 			}
 			viewTop = viewTop - parallaxInitTop;
-			ndTarget.style.top =  (viewTop - topEdge) * (cardinal[1] -1) + getRandom(viewTop, viewTop + parseInt(oStyle.getPropertyValue('height'), 10) - parseInt(ui.getComputedStyle(ndTarget, 'height'), 10))  + 'px';
+			ndTarget.style.top =  (viewTop - topEdge) * (cardinal[1] -1) + getRandom(viewTop, viewTop + parseInt(ui.getComputedStyle(child, 'height'), 10) - parseInt(ui.getComputedStyle(ndTarget, 'height'), 10))  + 'px';
 			index++;
 			avalon.Array.ensure(nlNodeToScroll, ndP0);
 			avalon.Array.ensure(nlNodeToScroll, ndP1);
@@ -211,13 +212,15 @@
 			} else if ( 'getElementsByClassName' in document && typeof document.getElementsByClassName === 'function') {
 				return document.getElementsByClassName(cn);
 			} else {
-				elements = document.getElementsByTagName("*");
+				elements = document.all;//getElementsByTagName("*");
+				var results = [];
 				pattern = new RegExp("(^|\\s)" + cn + "(\\s|$)");
 				for (i = 0; i < elements.length; i++) {
 					if (pattern.test(elements[i].className) ) {
 						results.push(elements[i]);
 					}
 				}
+				return results
 			}
 	}
 }();

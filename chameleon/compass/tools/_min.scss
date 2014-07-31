@@ -1,16 +1,26 @@
+@charset "UTF-8";
 @import "hacks";
 
-//**
-// Cross browser min-height mixin.
+// 全浏览器兼容min-height
 @mixin min-height($value) {
-  @include hacked-minimum(height, $value); }
+    min-height: $value;
+    @include hack-ie6-min(height, $value); 
+}
 
-//**
-// Cross browser min-width mixin.
+// 全浏览器兼容min-width
 @mixin min-width($value) {
-  @include hacked-minimum(width, $value); }
+    min-width: $value;
+    @include hack-ie6-min(width, $value); 
+}
 
-// @private This mixin is not meant to be used directly.
-@mixin hacked-minimum($property, $value) {
-  min-#{$property}: $value;
-  @include bang-hack($property, auto, $value); }
+// 全浏览器兼容max-height
+@mixin max-height($value) {
+    max-height: $value;
+    @include hack-ie6-max(height, $value); 
+}
+// 全浏览器兼容max-width
+@mixin max-width($value) {
+    max-width: $value;
+    @include hack-ie6-max(width, $value); 
+}
+

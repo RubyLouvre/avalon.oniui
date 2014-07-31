@@ -89,7 +89,12 @@
     <script>
     require("dialog/avalon.dialog.js", function(avalon) {
         var docCssReg = /<link[^>]*style\/avalon\.doc\.css[^>]*\>/img,
-            widgets = ["accordion", "tab","promise", "colorpicker","spinner", "slider", "textbox", "dropdown", "datepicker", "coupledatepicker", "daterangepicker", "dialog", "at", "checkboxlist", "cookie", "draggable", "flipswitch", "miniswitch", "notice", "pager", "position", "preview", "progressbar", "resizable", "doublelist", "scrollbar", "scrollspy", "simplegrid", "store", "switchdropdown", "tooltip"].sort(),
+            widgets = ["accordion", "at","browser", "checkboxlist", "colorpicker", "cookie", 
+                "coupledatepicker", "datepicker", "daterangepicker", "dialog",
+                "doublelist", "draggable", "dropdown", "flipswitch", "miniswitch",
+                "notice", "pager", "position", "preview", "progressbar", "promise",
+                "resizable", "scrollbar", "scrollspy", "simplegrid", "slider",
+                "spinner", "store", "switchdropdown", "tab", "textbox", "tooltip"].sort(),
             defaultHref = "accordion/avalon.accordion.doc.html";
 
         function getHref(urlHash) {
@@ -322,6 +327,7 @@
                 }, 100)
             }
         })
+        window.setHeight = vmodel.setHeight
         avalon.scan();
         if(vmodel.hashchangeSupport) {
             vmodel.setHeight();

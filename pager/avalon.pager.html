@@ -40,7 +40,7 @@
     <div class="ui-pager-jump" ms-if="showJumper">
         <span class="ui-pager-text">共{{totalPages}}页，到第</span>
         <div class="ui-pager-textbox-wrapper">
-            <input class="ui-pager-textbox" ms-duplex="_currentPage" ms-keyup="changeCurrentPage">
+            <input class="ui-pager-textbox" ms-duplex="_currentPage" data-duplex-event="change" ms-keyup="changeCurrentPage">
         </div>
         <span class="ui-pager-text">页</span>
         <button class="ui-pager-button" ms-click="changeCurrentPage" >确定</button>

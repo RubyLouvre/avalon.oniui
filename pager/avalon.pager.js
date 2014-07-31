@@ -95,12 +95,12 @@ define(["avalon",
             vm.$watch("currentPage", function(a) {
                 vmodel._currentPage = a
             })
-
+        
             vm.changeCurrentPage = function(e) {
                 if (e.type === "keyup" && e.keyCode !== 13)
                     return
                 //currentPage需要转换为Number类型 fix lb1064@qq.com
-                vmodel.currentPage = parseInt(vmodel._currentPage, 10)
+                vmodel.currentPage = parseInt(this.value, 10) || 1
                 vmodel.pages = getPages(vmodel)
             }
             vm.pages = []

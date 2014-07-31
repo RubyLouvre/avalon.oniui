@@ -171,6 +171,8 @@ define(["avalon",
         lastPage: 0, //当前可显示的最大页码，不能大于totalPages
         alwaysShowNext: false, //总是显示向后按钮
         alwaysShowPrev: false, //总是显示向前按钮
+        showFirstOmit: false,
+        showLastOmit: false,
         showJumper: false, //是否显示输入跳转台
         getTemplate: function(tmpl, opts) {
             return tmpl
@@ -218,8 +220,10 @@ define(["avalon",
                 }
             }
         }
-        vm.firstPage = pages[0] | 1
-        vm.lastPage = pages[pages.length - 1] | 0
+        vm.firstPage = pages[0] || 1
+        vm.lastPage = pages[pages.length - 1] || 1
+        vm.showFirstOmit = vm.firstPage > 2
+        vm.showLastOmit = vm.lastPage < max - 1
         return  pages//[0,1,2,3,4,5,6]
     }
     return avalon

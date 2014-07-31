@@ -248,8 +248,7 @@ define(['avalon',
                     vmodel.toggle = false;
                     return;
                 }
-                var height = vmodel.dropdownNode.scrollHeight;
-                vmodel.menuHeight = height;
+
                 //为了防止显示时调整高度造成的抖动，将节点初始化放在改变toggle值之前
                 if (!listNode) {//只有单选下拉框才存在显示隐藏的情况
                     var list;

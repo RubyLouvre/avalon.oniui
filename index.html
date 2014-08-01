@@ -279,7 +279,7 @@
             }
             vm.renderIframe = function() {
                 if(!vmodel.hashchangeSupport) return "";
-                return '<iframe id="doccanvas" scrolling="no" name="doccanvas" ms-class="ui-doc:!page" style="border:none;" frameborder="none" src="' + vmodel.href + '" ms-css-width="'+ vmodel.contentWidth +"; ></iframe>'
+                return '<iframe id="doccanvas" scrolling="no" name="doccanvas" ms-class="ui-doc:!page" style="border:none;" frameborder="none" src="' + vmodel.href + '" ms-css-width="'+ vmodel.contentWidth +'" height="700px;"></iframe>'
             }
             vm.showBigPic = function(url) {
                 vm.imgUrl = url;

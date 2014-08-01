@@ -354,7 +354,7 @@ define(["../avalon.getModel",
             } else {
                 l = (clientWidth - targetOffsetWidth) / 2 + scrollLeft;
             }
-            target.style.cssText += "left:" + l + "px;top:" + t +"px";
+            avalon(target).css({left:l, top: t})
         }
     }
 

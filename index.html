@@ -75,6 +75,9 @@
             {{renderIframe() | html}}
             <iframe ms-if="!hashchangeSupport" id="doccanvas" scrolling="no" name="doccanvas" class="ui-doc" style="border:none;"  ms-css-width="contentWidth" ms-on-load="setHeight" frameborder="none" ms-attr-src="href"></iframe>
         </div>
+        <div ms-if="canThisPageShow('apis')">
+            {{renderIframe() | html}}
+        </div>
     </div>
 
     <div class="footer">

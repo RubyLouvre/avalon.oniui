@@ -37,9 +37,9 @@ $uiname: "ui-daterangepicker";
         border-color: $ui-state-active-border-color;
         color: $ui-state-active-color;
     }
-    .ui-btn-primary:hover {
-        background-color: $ui-widget-content-background-color;
-        border-color: $ui-widget-content-border-color;
+    .ui-btn-primary.ui-state-hover {
+        background-color: lighten($ui-state-active-background-color, 10%);
+        border-color: lighten($ui-state-active-border-color, 10%);
         color: $ui-widget-content-color;
     }
     .ui-daterangepicker-content {

@@ -19,7 +19,9 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 				$element = avalon(element),
 				cp,
 				$wheel,
-				$overlay;
+				$overlay,
+
+				docClickCallback;
 
 			vm.$skipArray = ["auto_hide"];
 
@@ -54,7 +56,7 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 			};
 			vm.$remove = function(){
 				cp.innerHTML = "";
-				avalon.unbind(document, "click", docClickHandler);
+				avalon.unbind(document, "click", docClickCallback);
 			};
 
 			vm.setByIp = function(val){
@@ -258,7 +260,9 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 					cp.setAttribute("ms-click", "cpClick");
 					element.setAttribute("ms-click", "ipClick");
 
-					avalon.bind(document, "click", docClickHandler);
+					docClickCallback = avalon.bind(document, "click", function(){
+						vm.toggle = false;
+					});
 
 					document.body.appendChild(cp);
 
@@ -277,9 +281,7 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 				cp.style.top = element.offsetHeight + input_pos.top + "px";
 			}
 
-			function docClickHandler(){
-				vm.toggle = false;
-			}
+			
 		});
 		
 		//avalon.scan();

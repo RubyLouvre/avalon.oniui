@@ -77,40 +77,38 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                         type: "textbox"
                     }
                 }
-                avalon.ready(function() {
-                    var models = [vmodel].concat(vmodels);
-                    $element.addClass("ui-textbox-input");
-                    // 包装原始输入域
-                    var tempDiv = document.createElement("div");
-                    elemParent.insertBefore(tempDiv, element);
-                    element.msRetain = true;
-                    inputWraper.appendChild(element);
-                    if(~options.width) {
-                        $element.width(options.width);
-                    }
-                    if(~options.height) {
-                        $element.height(options.height);
-                    }
-                    if(~options.tabIndex) {
-                        element.tabIndex = options.tabIndex;
-                    }
-                    elemParent.replaceChild(sourceList, tempDiv);
-                    element.msRetain = false;
-                    // 如果存在自动补全配置项的话，添加自动补全widget
-                    if (options.suggest) {
-                        var suggest = avalon.parseHTML(suggestHTML).firstChild;
-                        sourceList.appendChild(suggest);
-                    }
-                    avalon.scan(sourceList, models);
-                    avalon.scan(element, models);
-                    if(typeof options.onInit === "function" ){
-                        //vmodels是不包括vmodel的
-                        options.onInit.call(element, vmodel, options, vmodels)
-                    }
-                    // 如果输入域有值，则隐藏占位符，否则显示，默认显示
-                    vm.elementDisabled = element.disabled;
-                    vm.toggle = element.value != "" ? false : true;
-                })
+                var models = [vmodel].concat(vmodels);
+                $element.addClass("ui-textbox-input");
+                // 包装原始输入域
+                var tempDiv = document.createElement("div");
+                elemParent.insertBefore(tempDiv, element);
+                element.msRetain = true;
+                inputWraper.appendChild(element);
+                if(~options.width) {
+                    $element.width(options.width);
+                }
+                if(~options.height) {
+                    $element.height(options.height);
+                }
+                if(~options.tabIndex) {
+                    element.tabIndex = options.tabIndex;
+                }
+                elemParent.replaceChild(sourceList, tempDiv);
+                element.msRetain = false;
+                // 如果存在自动补全配置项的话，添加自动补全widget
+                if (options.suggest) {
+                    var suggest = avalon.parseHTML(suggestHTML).firstChild;
+                    sourceList.appendChild(suggest);
+                }
+                avalon.scan(sourceList, models);
+                avalon.scan(element, models);
+                if(typeof options.onInit === "function" ){
+                    //vmodels是不包括vmodel的
+                    options.onInit.call(element, vmodel, options, vmodels)
+                }
+                // 如果输入域有值，则隐藏占位符，否则显示，默认显示
+                vm.elementDisabled = element.disabled;
+                vm.toggle = element.value != "" ? false : true;
             }
         })
         return vmodel

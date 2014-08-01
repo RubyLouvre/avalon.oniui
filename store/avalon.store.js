@@ -159,6 +159,8 @@ define(["avalon", "json/avalon.json"], function(avalon) {
     } catch (e) {
         store.disabled = true
     }
+    // add to avalon, easy for calling
+    avalon.store = store
 
     return store;
 })

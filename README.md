@@ -298,7 +298,6 @@ Oni日语为鬼, 可以美化一下叫英灵
 而吉尔伽美什对应的咒令就是 远坂时臣的那个
 <div><img src="http://i.imgur.com/jezsx.jpg"/></div>
 <div><img  src="http://i-7.vcimg.com/crop/26fb9dd7fa1a77169a869b31df5b576f12700(280x)/thumb.jpg"/></div>
-<div><a href="<div><a href=""><img width=400 height=300 src="http://www.fate-zero.jp/talksession/img/talk_bg-archer.jpg"/></a>/div>
-
+<div><a href="<div><a href=""><img width=400 height=300 src="http://www.fate-zero.jp/talksession/img/talk_bg-archer.jpg"/></a></div>
 http://baike.baidu.com/view/2850010.htm
 http://baike.baidu.com/subview/666734/7383298.htm?fromtitle=FateZero&fromid=5097473&type=syn#6_4

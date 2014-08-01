@@ -417,6 +417,7 @@ define(['avalon',
         height: 200, //下拉列表的高度
         enable: true, //组件是否可用
         readOnly: false, //组件是否只读
+        currentOption: null,  //组件当前的选项
         data: [], //下拉列表显示的数据模型
         textFiled: 'text', //模型数据项中对应显示text的字段,可以传function，根据数据源对text值进行格式化
         valueField: 'value', //模型数据项中对应value的字段

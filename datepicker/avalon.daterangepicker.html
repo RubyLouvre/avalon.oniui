@@ -49,8 +49,10 @@
             <div class="ui-calendarbox-footer ui-calendarbox-footer-small ui-helper-clearfix">
                 <div class="ui-calendarbox-msg js-msg">{{msg}}</div>
                 <div class="ui-calendarbox-btns">
-                    <button type="button" class="ui-btn ui-btn-primary ui-btn-small js-submit"
-                    ms-click="_selectDate">确定</button>
+                    <button type="button" 
+                            class="ui-btn ui-btn-primary ui-btn-small"
+                            ms-hover="ui-state-hover"
+                            ms-click="_selectDate">确定</button>
                     <button type="button" class="ui-btn ui-btn-small js-cancel"
                     ms-click="_cancelSelectDate">取消</button>
                 </div>

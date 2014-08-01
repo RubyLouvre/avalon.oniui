@@ -30,10 +30,10 @@ $uiname: "ui-dialog";
         border-color: $ui-state-active-border-color;
         color: $ui-state-active-color;
     }
-    .ui-btn-primary:hover {
-        background-color: $ui-state-hover-background-color;
-        border-color: $ui-state-hover-border-color;
-        color: $ui-state-hover-color;
+    .ui-btn-primary.ui-state-hover {
+        background-color: lighten($ui-state-active-background-color, 10%);
+        border-color: lighten($ui-state-active-border-color, 10%);
+        color: $ui-state-active-color;
     }
     .#{$uiname}-inner {
         box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);

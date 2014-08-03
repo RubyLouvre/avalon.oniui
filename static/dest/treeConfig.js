@@ -89,9 +89,17 @@ define(function() {
             "des": "datepicker组件方便快速创建功能齐备的日历组件，通过不同的配置日历可以满足显示多个月份、通过prev、next切换月份、或者通过下拉选择框切换日历的年份、月份，当然也可以手动输入日期，日历组件也会根据输入域中的日期值高亮显示对应日期等等各种需求\n            ",
             "cover": "doc/img/datepicker.gif"
         }, {
-            "name": "coupledatepicker"
+            "name": "coupledatepicker",
+            "url": "oniui/datepicker/avalon.coupledatepicker.doc.html",
+            "title": "coupledatepicker文档说明",
+            "des": "coupledatepicker其实是普通日历的升级版，可以通过设置起始日期与结束日期的最小间隔天数和最大间隔天数将截止日期限制在一定的选择范围中\n            ",
+            "cover": "doc/img/coupledatepicker.gif"
         }, {
-            "name": "daterangepicker"
+            "name": "daterangepicker",
+            "url": "oniui/datepicker/avalon.daterangepicker.doc.html",
+            "title": "daterangepicker文档说明",
+            "des": "daterangepicker是日期范围选择组件，可以通过设置起始日期与结束日期的最小间隔天数和最大间隔天数将截止日期限制在一定的选择范围中，同时通过点击确定按钮确定日期范围，在选择的时候日期范围框的下方会实时的说明当前选择情况\n            ",
+            "cover": "doc/img/daterangepicker.gif"
         }, {
             "name": "preview",
             "url": "oniui/preview/avalon.preview.doc.html",

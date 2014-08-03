@@ -1,5 +1,4 @@
-require(["static/dest/treeConfig", "dialog/avalon.dialog.js"], function (indexData, dialog) {
-    console.log(indexData);
+require(["static/dest/treeConfig", "static/dest/bezier", "dialog/avalon.dialog.js"], function (indexData, dialog) {
     var ui = {};
     ui.getComputedStyle = avalon.css
     var parallaOffset = avalon(document.getElementById("parallax")).offset();

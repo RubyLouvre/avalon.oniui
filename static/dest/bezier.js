@@ -257,3 +257,8 @@ var Bezier = (function(){
 		}
 	};
 })();
+
+//AMD adapter
+define(function() {
+    return Bezier;
+});

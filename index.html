@@ -1,356 +1,74 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" class="xjb_html">
-<head>
-    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>去哪儿avalon ui</title>
-    <link type="text/css" rel="stylesheet" href="./style/avalon.doc.css" />
-    <link type="text/css" rel="stylesheet" href="./style/avalon.index.css" />
-    <script src="avalon.js"></script>
-    <script src="./highlight/shCore.js"></script>
-    <link rel=stylesheet type=text/css href="static/css/base.css">
-</head>
-<body class="ms-controller" ms-controller ="avalonUiDocument">
-    <div class="header">
-        <div class="fix">
-            <div class="nav">
-                <ul>
-                    <li ms-repeat-item="nav" ms-class="active:$index===currentPageIndex">
-                        <a href="javascript:void 0;" ms-click="changePage($event, item.href, $index, item)">{{item.name}}</a>
-                    </li>
-                </ul>
-                <div class="search">
-                    <input type="text"/>
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <title>去哪儿avalon ui</title>
+        <link type="text/css" rel="stylesheet" href="./style/avalon.doc.css" />
+        <link type="text/css" rel="stylesheet" href="./style/avalon.index.css" />
+        <script src="avalon.js"></script>
+        <script src="./highlight/shCore.js"></script>
+        <link rel=stylesheet type=text/css href="static/css/base.css"/>
+
+        <script>
+            avalon.define("pages", function(vm) {
+                vm.pages = [{
+                        title: "组件库",
+                        href: "pages/library/index.html"
+                    },
+                    {
+                        title: "首件概览",
+                        href: "pages/timeline/index.html"
+                    },
+                    {
+                        title: "APIs",
+                        href: "pages/apis/index.html"
+                    },
+                    {
+                        title: "下载",
+                        href: "pages/download/index.html"
+                    }
+
+                ]
+                vm.changeActiveIndex = function(index) {
+                    vm.activeIndex = index
+                }
+                vm.activeIndex = 0
+            })
+        </script>
+    </head>
+    <body class="ms-controller" ms-controller="pages">
+        <div class="header">
+            <div class="fix">
+                <div class="nav">
+                    <ul>
+                        <li ms-repeat-page="pages" ms-class="active: $index == activeIndex" ms-click="changeActiveIndex($index)">
+                            <a ms-href="#{{page.href}}" >{{page.title | html}}</a>
+                        </li>
+                    </ul>
+                    <div class="search">
+                        <input type="text"/>
+                    </div>
                 </div>
+            </div>
+            <div class="placeHolder"></div>
+            <h1><span>Avalon新一代UI库： OniUI</span></h1>
+        </div>
+        <div class="content" >
+            <div ms-repeat-page="pages" ms-if-loop="$index == activeIndex"  ms-include-src="page.href">
+
             </div>
         </div>
-        <div class="placeHolder"></div>
-        <h1><span>Avalon新一代UI库： OniUI</span></h1>
-    </div>
-    <div class="content" ms-css-min-height="{{uiListHeight}}" ms-css-padding-bottom="padBottom">
-        <div ms-if="canThisPageShow('pageTimeline')" class="ms-controller" ms-controller="www_uiguide">
-            <div id="parallax" class="parallax-container" ms-css-height="outerHeight">
-                <div class="parallax parallax2">
-                    <div class="circle-box">
-                        <span ms-repeat="circles" ms-class="circle circle-{{$index + 1}}" data-repeat-rendered="circleCb"></span>
-                    </div>
-                </div>
-                <div class="parallax parallax1">
-                    <div class="month-box">
-                        <span ms-repeat-m="months" ms-class="month month--m{{m.key}}"></span>
-                    </div>
-                </div>
-                <div class="parallax parallax0">
-                    <div class="tree">
-                        <div class="month-wrapper" ms-repeat-m="months">
-                            <div class="tree__item"  data-repeat-rendered="cb"  ms-repeat-leaf="m.item" ms-class="{{(nowIndex[m.key]  + $index) % 2 === 0 ? ('tree__item--m' + m.key) : ('tree__item--m' + m.key + ' tree__item--right')}}">
-                                <div class="tree__item__main" ms-click="showBigPic(leaf.cover)">
-                                    <a target="_blank" href="javascript:void 0;"><img width="430" height="245" ms-src="{{leaf.cover}}"/></a>
-                                    <div class="des">
-                                        <div class="des__bg"></div>
-                                        <a href="javascript:void 0;" class="des__main" target="_blank">
-                                            <span class="des__title">{{leaf.title}}</span>
-                                            <span class="des__content">{{leaf.des}}</span>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="icon-1 icon__marker"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tree-foot"></div>
-                </div>
-            </div>
-            <script src="doc/index.js"></script>
-            <script src="static/dest/bezier.js"></script>
-            <script src="static/dest/base.js"></script>
-            <div ms-widget="dialog, treeLeafBig, $dialogOpts">
-                <img ms-src="imgUrl" width="800" height="500">
-            </div>
-        </div>
-        <div ms-if="canThisPageShow('pageUiLibrary')">
-            <ul class="ui-list" ms-visible="canThisPageShow('pageUiLibrary')" ms-css-position="position" ms-css-top="fixTop" ms-css-bottom="fixBottom">
-                <li ms-repeat="widgets" data-repeat-rendered="uiListRendered"><a href="#" ms-class="active: $index===currentIndex" ms-click="showDocument(el, $event, $index)">{{el}}</a></li> 
+
+        <div class="footer">
+            <ul>
+                <li><a href="#">关于AvalonUI</a></li>
+                <li><a href="#">联系我们</a></li>
+                <li><a href="#">业务合作</a></li>
+                <li><a href="#">常见问题</a></li>
+                <li class="last"><a href="#">友情链接</a></li>
             </ul>
-            {{renderIframe() | html}}
-            <iframe ms-if="!hashchangeSupport" id="doccanvas" scrolling="no" name="doccanvas" class="ui-doc" style="border:none;"  ms-css-width="contentWidth" ms-on-load="setHeight" frameborder="none" ms-attr-src="href"></iframe>
         </div>
-        <div ms-if="canThisPageShow('apis')">
-            {{renderIframe() | html}}
-        </div>
-    </div>
 
-    <div class="footer">
-        <ul>
-            <li><a href="#">关于AvalonUI</a></li>
-            <li><a href="#">联系我们</a></li>
-            <li><a href="#">业务合作</a></li>
-            <li><a href="#">常见问题</a></li>
-            <li class="last"><a href="#">友情链接</a></li>
-        </ul>
-    </div>
-    <script>
-    require("dialog/avalon.dialog.js", function(avalon) {
-        var docCssReg = /<link[^>]*style\/avalon\.doc\.css[^>]*\>/img,
-            widgets = ["accordion", "at","browser", "checkboxlist", "colorpicker", "cookie", 
-                "coupledatepicker", "datepicker", "daterangepicker", "dialog",
-                "doublelist", "draggable", "dropdown", "flipswitch", "miniswitch",
-                "notice", "pager", "position", "preview", "progressbar", "promise",
-                "resizable", "scrollbar", "scrollspy", "simplegrid", "slider",
-                "spinner", "store", "switchdropdown", "tab", "textbox", "tooltip"].sort(),
-            defaultHref = "accordion/avalon.accordion.doc.html";
-
-        function getHref(urlHash) {
-            var hash = (urlHash || location.hash).match(/avalon[\S]+\.html/g) || "",
-                page = false,
-                widget = hash && hash[0].split(".")[1];
-            if (widget) {
-                switch (widget) {
-                    case "coupledatepicker":
-                    case "daterangepicker":
-                        widget = "datepicker";
-                    break;
-                }  
-            }
-            if(hash) {
-                hash = widget + "/" + hash[0]
-            }
-            if (!hash && urlHash) {
-                hash = urlHash;
-                page = true;
-            } 
-            return {
-                    page: page,
-                    hash: hash
-                }
-        }
-        function setHash(hash) {
-            if(!hash.match(/^#/g)) hash = "#" + defaultHref.split("/")[1]
-            location.hash = hash
-        }
-        // decide currentIndex by vmodel.href 
-        function getcurrentIndex(hash) {
-            var widgetName = hash.split("/")[0];
-            for(var i = 0, len = widgets.length; i < len; i++) {
-                if(widgets[i] === widgetName) return i;
-            }
-            return 0
-        }
-        function getcurrentPageIndex(hash, nav) {
-            var hash = (hash || "").replace(/^#/g, "");
-            for(var i = 0, len = nav.length; i < len; i++) {
-                if(hash === nav[i].href) return i
-            }
-            return 0
-        }
-        function throttleIndex(fn, delay, mustRunDelay, args){
-            var timer = null;
-            var t_start;
-            return function(){
-                var context = this, t_curr = +new Date();
-                clearTimeout(timer);
-                if(!t_start){
-                    t_start = t_curr;
-                }
-                if(t_curr - t_start >= mustRunDelay){
-                    fn.apply(context, args || []);
-                    t_start = t_curr;
-                }
-                else {
-                    timer = setTimeout(function(){
-                        fn.apply(context, args || []);
-                    }, delay);
-                }
-            };
-        };
-        function fixUiList() {
-            var uiListTop = vmodel.uiListTop,
-                totalTop = uiListTop + vmodel.uiListHeight,
-                scrollTop = document.body.scrollTop + document.documentElement.scrollTop,
-                scrollHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight),
-                clientHeight = avalon(window).height();
-            if ((scrollTop + clientHeight) > totalTop) {
-                vmodel.position = "fixed";
-                vmodel.fixTop = "auto";
-                vmodel.fixBottom = 0;
-            } else {
-                vmodel.position = "absolute";
-                vmodel.fixTop = 45;
-                vmodel.fixBottom = "auto";
-            }
-            // 避免滚动到最底部时，白色背景上导航的尴尬，且无法显示底部的组件列表
-            if ((scrollTop + clientHeight + 120) >= scrollHeight) {
-                vmodel.position = "absolute";
-                vmodel.fixTop = "auto";
-                vmodel.fixBottom = 80;
-            } 
-        }
-        avalon(window).bind("scroll", throttleIndex(fixUiList, 50, 100));
-        var oldHref, vmodel = avalon.define("avalonUiDocument", function(vm) {
-            vm.$skipArray = ["uiListTop"];
-            vm.widgets = widgets;
-            vm.href = getHref().hash || defaultHref;
-            vm.contentWidth = 760;
-            vm.currentIndex = getcurrentIndex(vm.href);
-            vm.uiListHeight = 0;
-            vm.uiListTop = 0;
-            vm.hashchangeSupport = !navigator.userAgent.match(/MSIE [5-7]/);
-            vm.timer = "";
-            vm.page = false;
-            vm.nav = [
-                {
-                    href: defaultHref,
-                    name: "组件库", 
-                    pageName: "pageUiLibrary"
-                },
-                {
-                    href: "ui_timeline", 
-                    name: "组件概览", 
-                    pageName: "pageTimeline"
-                },
-                  {
-                    href: "pages/apis/index.html", 
-                    name: "APIs", 
-                    pageName: "apis"
-                }
-            ];
-            // 保留历史功能
-            vm.currentPageIndex = getcurrentPageIndex(location.hash, vm.nav);
-            vm.position = "absolute";
-            vm.fixTop = 45;
-            vm.fixBottom = "auto";
-            vm.$uiList = null;
-            vm.padBottom = location.hash === "#ui_timeline" ? 0 : 80;
-            vm.imgUrl = ""; // dialog的大图图片路径
-            vm.$dialogOpts = {
-                width: 840,
-                type: "alert",
-                title: "组件使用演示",
-                confirmName: "关闭"
-            }
-            vm.canThisPageShow = function(pageName) {
-                return vmodel.nav[vmodel.currentPageIndex].pageName === pageName
-            }
-            vm.changePage = function(event, href, index, item) {
-                event.preventDefault();
-                if(!vmodel.hashchangeSupport) {
-                    vmodel.href = href;
-                }
-                switch(item.pageName) {
-                    case "pageUiLibrary":
-                        vmodel.padBottom = 80;
-                    break;
-                    case "pageTimeline":
-                        vmodel.padBottom = 0;
-                    break;
-                }
-                setHash("#"+href);
-                vm.currentPageIndex = index;
-            }
-            vm.pageLoaded = function(template) {
-                template = template.replace(/"(static\/)/img, '"ui_timeline/$1')
-                return template;
-            };
-            vm.showDocument = function(widget, event, index) {
-                event.preventDefault();
-                if(!vmodel.hashchangeSupport) {
-                    switch (widget) {
-                        case "coupledatepicker":
-                            vmodel.href = "datepicker/avalon.coupledatepicker.doc.html";
-                        break;
-                        case "daterangepicker":
-                            vmodel.href = "datepicker/avalon.daterangepicker.doc.html";
-                        break;
-                        default:
-                            vmodel.href = widget + "/avalon." + widget + ".doc.html";
-                        break;
-                    }
-                }
-                setHash("#avalon." + widget + ".doc.html");
-                vmodel.currentIndex = index;
-            };
-            vm.afterTemplateLoaded = function(template) {
-                template = template.replace(docCssReg, "");
-                return template;
-            };
-            vm.uiListRendered = function() {
-                vmodel.uiListHeight = avalon(this).height();
-                vmodel.uiListTop = avalon(this).offset().top;
-            }
-            vm.renderIframe = function() {
-                if(!vmodel.hashchangeSupport) return "";
-                return '<iframe id="doccanvas" scrolling="no" name="doccanvas" ms-class="ui-doc:!page" style="border:none;" frameborder="none" src="' + vmodel.href + '" ms-css-width="'+ vmodel.contentWidth +'" height="700px;"></iframe>'
-            }
-            vm.showBigPic = function(url) {
-                vm.imgUrl = url;
-                avalon.vmodels.treeLeafBig.toggle = true;
-            }
-            vm.setHeight = function() {
-                clearInterval(vmodel.timer);
-                var counter = 0;
-                // 扫描，修改高度
-                vmodel.timer = setInterval(function() {
-                    var iframe = document.getElementById("doccanvas")
-                    if(!iframe) return clearInterval(vmodel.timer)
-                    var nwindow = iframe.contentWindow
-                    try{
-                        if(nwindow.document && nwindow.document.getElementsByTagName("body")[0]) {
-                            nwindow = nwindow.document
-                                h = avalon(nwindow.body).outerHeight() + avalon(nwindow.body).offset().top;
-                                avalon(iframe).css("height", h + "px");
-                                counter++;
-                                if(counter > 50) clearInterval(vmodel.timer)
-                                if(oldHref !== nwindow.location.href) {
-                                    oldHref = nwindow.location.href
-                                    if(!oldHref.match(/avalon\.[\S]+\.doc\./g)) return;
-                                    // 把iframe的src同步到父页面hash
-                                    if(!vmodel.hashchangeSupport) {
-                                        var h = oldHref.split("/")
-                                        setHash("#" + h[h.length - 1]);
-                                    }
-                                    var ols = nwindow.getElementsByTagName("ol");
-                                    if(!ols.length) ols = nwindow.getElementsByTagName("ul");
-                                    for(var i = 0, len = ols.length; i < len; i++) {
-                                        if(!ols[i].className.match(/example\-lists|example\-links/g)) continue;
-                                        var as = ols[i].getElementsByTagName("a")
-                                        avalon.each(as, function(x, item) {
-                                            item.onclick= function(e) {
-                                                var e = e || iframe.contentWindow.event;
-                                                e.preventDefault && e.preventDefault();
-                                                e.returnValue = false;
-                                                var h = item.getAttribute("href").split("/");
-                                                h = h[h.length - 1];
-                                                setHash("#" + (h.match(/avalon[\S]+\.html/g) || []).join(""));
-                                                if(!vmodel.hashchangeSupport) {
-                                                    vmodel.href = h.split(".")[1] + "/" + h
-        ;                                        }
-                                            }
-                                        })
-                                    }
-                                }
-                        }
-                    }catch(e) {
-                        clearInterval(vmodel.timer)
-                    }
-                }, 100)
-            }
-        })
-        window.setHeight = vmodel.setHeight
-        avalon.scan();
-        if(vmodel.hashchangeSupport) {
-            vmodel.setHeight();
-            window.onhashchange = function(e) {
-                vmodel.currentPageIndex = getcurrentPageIndex(location.hash, vmodel.nav);
-                var hash = location.hash.split("#")[1],
-                    hrefObj = {};
-                hash = hash || defaultHref.split("/")[1];
-                hrefObj = getHref(hash);
-                vmodel.href = hrefObj.hash;
-                vmodel.contentWidth = hrefObj.page ? (vmodel.page=true) && 990 : (vmodel.page=false) || 760;
-                !vmodel.page && vmodel.setHeight()
-            }
-        }
-    })
-    </script>
-</body>
+    </body>
 </html>

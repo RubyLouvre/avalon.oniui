@@ -8,7 +8,7 @@
         <link type="text/css" rel="stylesheet" href="./style/avalon.index.css" />
         <script src="avalon.js"></script>
         <script src="./highlight/shCore.js"></script>
-        <link rel=stylesheet type=text/css href="static/css/base.css"/>
+        <link rel=stylesheet type=text/css href="pages/timeline/css/base.css"/>
 
         <script>
             avalon.define("pages", function(vm) {
@@ -17,7 +17,7 @@
                         href: "pages/library/index.html"
                     },
                     {
-                        title: "首件概览",
+                        title: "组件概览",
                         href: "pages/timeline/index.html"
                     },
                     {
@@ -54,10 +54,8 @@
             <div class="placeHolder"></div>
             <h1><span>Avalon新一代UI库： OniUI</span></h1>
         </div>
-        <div class="content" >
-            <div ms-repeat-page="pages" ms-if-loop="$index == activeIndex"  ms-include-src="page.href">
-
-            </div>
+        <div class="content" ms-class="content{{activeIndex}}">
+            <div ms-repeat-page="pages" ms-if-loop="$index == activeIndex"  ms-include-src="page.href"></div>
         </div>
 
         <div class="footer">

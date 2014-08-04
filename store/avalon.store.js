@@ -160,7 +160,7 @@ define(["avalon", "json/avalon.json"], function(avalon) {
         store.disabled = true
     }
     avalon.store = store
-    return store;
+    return avalon;
 })
 /*这里提供了一个用cookie实现本地储存的方案 https://developer.mozilla.org/en/DOM/Storage
  其他有用的资料

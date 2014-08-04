@@ -17,13 +17,14 @@
         }
         vm.$watch("activeIndex", function(index) {
             var name = vm.widgets[index]
+            var prefix = name
             switch (name) {
                 case "coupledatepicker":
                 case "daterangepicker":
-                    name = "datepicker";
+                    prefix = "datepicker";
                     break;
             }
-            vm.widgetHref = name + "/avalon." + name + ".doc.html"
+            vm.widgetHref = prefix + "/avalon." + name + ".doc.html"
         })
 
     })

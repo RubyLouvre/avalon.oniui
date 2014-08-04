@@ -68,13 +68,13 @@
                         <li>
                             <div class="title">各种绑定</div>
                             <ul class="child-nav">
-                                <li ms-repeat="bindings">{{el}}</li>
+                                <li ms-repeat="bindings" ><a ms-href="#{{el}}">{{el}}</a></li>
                             </ul>
                         </li>
                         <li>
                             <div class="title">静态方法</div>
                             <ul class="child-nav">
-                                <li ms-repeat="statics">{{el}}</li>
+                                <li ms-repeat="statics"><a ms-href="#{{el}}">{{el}}</a></li>
                             </ul>
                         </li>
                     </ul>

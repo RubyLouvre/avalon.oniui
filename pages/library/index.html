@@ -27,9 +27,31 @@
         })
 
     })
+    function computeIndex() {
+        var url = location.hash.replace(/#/g, "") || vmodel.widgetHref;
+        for(var i = 0, len = widgets.length; i < len; i++) {
+            if(widgets[i] + "/avalon." + widgets[i] + ".doc.html" === url) {
+                vmodel.changeActiveIndex(i)
+            }
+        }
+    }
+    computeIndex();
+    var onloadBinded;
     avalon.ready(function() {
         setInterval(function() {
             var iframe = document.getElementById("widgetIrame")
+            if(!onloadBinded) {
+                avalon.bind(iframe, "load", function(e) {
+                    try{
+                        var parts = iframe.contentWindow.location.href.split("oniui/");
+                        if(parts[1]) {
+                            location.hash = "#" + parts[1];
+                            computeIndex();
+                        }
+                    }catch(e){}
+                });
+                onloadBinded = true
+            }
             if (iframe && iframe.contentWindow) {
                 //自适应高度
                 var doc = iframe.contentWindow.document

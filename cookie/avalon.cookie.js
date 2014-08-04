@@ -77,8 +77,8 @@ define(["avalon"], function() {
         for (var i in c)
             document.cookie = /^[^=]+/.exec(c[i])[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
-
-    return Cookie
+    avalon.cookie = Cookie
+    return avalon
 })
 //2012.8.19 (mass Framework) 全新cookie工具类
 //2014.7.8 移至avalon.ui

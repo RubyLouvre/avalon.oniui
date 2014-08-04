@@ -17,7 +17,8 @@
             }
         </style>
         <script>
-            require(["cookie/avalon.cookie"], function(cookie) {
+            require(["cookie/avalon.cookie"], function() {
+                var cookie = avalon.cookie
                 function getData() {
                     var array = []
                     avalon.each(cookie.getAll(), function(name, value) {

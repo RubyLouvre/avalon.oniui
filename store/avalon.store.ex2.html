@@ -17,7 +17,8 @@
             }
         </style>
         <script>
-            require(["store/avalon.store"], function(store) {
+            require(["store/avalon.store"], function() {
+                var store = avalon.store
                 function getData() {
                     var array = []
                     avalon.each(store.getAll(), function(name, value) {

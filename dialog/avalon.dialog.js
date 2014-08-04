@@ -37,18 +37,32 @@ define(["../avalon.getModel",
             onConfirm = options.onConfirm,
             onConfirmVM = null,
             onCancel = options.onCancel,
-            onCancelVM = null;
+            onCancelVM = null,
+            onOpen = options.onOpen,
+            onOpenVM = null,
+            onClose = options.onClose,
+            onCloseVM = null,
+            toggleClose = true;
+
         if (typeof onConfirm === "string") {
             onConfirmVM = avalon.getModel(onConfirm, vmodels);
-            options.onConfirm = onConfirmVM && onConfirmVM[1][onConfirmVM[0]].bind(vmodels) || avalon.noop;
+            options.onConfirm = onConfirmVM && onConfirmVM[1][onConfirmVM[0]] || avalon.noop;
         }
         if (typeof onCancel ==="string") {
             onCancelVM = avalon.getModel(onCancel, vmodels);
-            options.onCancel = onCancelVM && onCancelVM[1][onCancelVM[0]].bind(vmodels) || avalon.noop;
+            options.onCancel = onCancelVM && onCancelVM[1][onCancelVM[0]] || avalon.noop;
+        }
+        if (typeof onClose ==="string") {
+            onCloseVM = avalon.getModel(onClose, vmodels);
+            options.onClose = onCloseVM && onCloseVM[1][onCloseVM[0]] || avalon.noop;
+        }
+        if (typeof onOpen ==="string") {
+            onOpenVM = avalon.getModel(onOpen, vmodels);
+            options.onOpen = onOpenVM && onOpenVM[1][onOpenVM[0]] || avalon.noop;
         }
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "template", "context", "modal"];
+            vm.$skipArray = ["widgetElement", "template", "container", "modal"];
             vm.widgetElement = element;
             vm.position = "fixed";
             // 如果显示模式为alert或者配置了showClose为false，不显示关闭按钮
@@ -96,7 +110,11 @@ define(["../avalon.getModel",
                 avalon.Array.remove(dialogShows, vm);
                 var len = dialogShows.length,
                     maxZIndex = vmodel.zIndex;
+                if (e) {
+                    toggleClose = false;
+                }
                 vmodel.toggle = false;
+
                 /* 处理层上层的情况，因为maskLayer公用，所以需要其以将要显示的dialog的toggle状态为准 */
                 if (len && dialogShows[len-1].modal) {
                     maskLayer.setAttribute("ms-visible", "toggle");
@@ -179,11 +197,11 @@ define(["../avalon.getModel",
             }
 
             vm.$init = function() {
-                var context = options.context,
+                var container = options.container,
                     clientHeight = body.clientHeight,
                     docBody = document.body,
-                    // context必须是dom tree中某个元素节点对象或者元素的id，默认将dialog添加到body元素
-                    elementParent = ((avalon.type(context) === "object" && context.nodeType === 1 && docBody.contains(context)) ? context : document.getElementById(context)) || docBody;
+                    // container必须是dom tree中某个元素节点对象或者元素的id，默认将dialog添加到body元素
+                    elementParent = ((avalon.type(container) === "object" && container.nodeType === 1 && docBody.contains(container)) ? container : document.getElementById(container)) || docBody;
                 if (avalon(docBody).height() < clientHeight) {
                     avalon(docBody).css("min-height", clientHeight);
                 }
@@ -225,7 +243,11 @@ define(["../avalon.getModel",
                 if (val) {
                     vmodel._open();
                 } else {
-                    vmodel._close();
+                    if (toggleClose === false) {
+                        toggleClose = true;
+                    } else {
+                        vmodel._close();
+                    }
                 }
             })
 
@@ -251,7 +273,7 @@ define(["../avalon.getModel",
         showClose: true, //是否显示右上角的“关闭”按钮
         toggle: false, //通过此属性的决定dialog的显示或者隐藏状态
         widgetElement: "", //保存对绑定元素的引用
-        context: "body", //dialog放置的元素
+        container: "body", //dialog放置的元素
         confirmName: "确定",
         cancelName: "取消",
         getTemplate: function(str, options) {

@@ -115,8 +115,8 @@
             if(hash) {
                 hash = widget + "/" + hash[0]
             }
-            if (!hash && urlHash) {
-                hash = urlHash;
+            if (!hash && (urlHash || location.hash)) {
+                hash = urlHash || location.hash.replace(/^#/, "");
                 page = true;
             } 
             return {

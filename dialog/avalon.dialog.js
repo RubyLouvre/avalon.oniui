@@ -37,14 +37,28 @@ define(["../avalon.getModel",
             onConfirm = options.onConfirm,
             onConfirmVM = null,
             onCancel = options.onCancel,
-            onCancelVM = null;
+            onCancelVM = null,
+            onOpen = options.onOpen,
+            onOpenVM = null,
+            onClose = options.onClose,
+            onCloseVM = null,
+            toggleClose = true;
+
         if (typeof onConfirm === "string") {
             onConfirmVM = avalon.getModel(onConfirm, vmodels);
-            options.onConfirm = onConfirmVM && onConfirmVM[1][onConfirmVM[0]].bind(vmodels) || avalon.noop;
+            options.onConfirm = onConfirmVM && onConfirmVM[1][onConfirmVM[0]] || avalon.noop;
         }
         if (typeof onCancel ==="string") {
             onCancelVM = avalon.getModel(onCancel, vmodels);
-            options.onCancel = onCancelVM && onCancelVM[1][onCancelVM[0]].bind(vmodels) || avalon.noop;
+            options.onCancel = onCancelVM && onCancelVM[1][onCancelVM[0]] || avalon.noop;
+        }
+        if (typeof onClose ==="string") {
+            onCloseVM = avalon.getModel(onClose, vmodels);
+            options.onClose = onCloseVM && onCloseVM[1][onCloseVM[0]] || avalon.noop;
+        }
+        if (typeof onOpen ==="string") {
+            onOpenVM = avalon.getModel(onOpen, vmodels);
+            options.onOpen = onOpenVM && onOpenVM[1][onOpenVM[0]] || avalon.noop;
         }
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options);
@@ -96,7 +110,11 @@ define(["../avalon.getModel",
                 avalon.Array.remove(dialogShows, vm);
                 var len = dialogShows.length,
                     maxZIndex = vmodel.zIndex;
+                if (e) {
+                    toggleClose = false;
+                }
                 vmodel.toggle = false;
+
                 /* 处理层上层的情况，因为maskLayer公用，所以需要其以将要显示的dialog的toggle状态为准 */
                 if (len && dialogShows[len-1].modal) {
                     maskLayer.setAttribute("ms-visible", "toggle");
@@ -225,7 +243,11 @@ define(["../avalon.getModel",
                 if (val) {
                     vmodel._open();
                 } else {
-                    vmodel._close();
+                    if (toggleClose === false) {
+                        toggleClose = true;
+                    } else {
+                        vmodel._close();
+                    }
                 }
             })
 

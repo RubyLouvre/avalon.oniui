@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width">
         <script src="../../avalon.js">
         </script>
-        <script src="../../highlight/shCore.js">  </script>
+        <script src="../../highlight/shCore.js"></script>
         <script>
             if (self != top) {
                 setInterval(function() {
@@ -20,10 +20,11 @@
             avalon.define("apis", function(vm) {
                 vm.bindings = "ms-if, ms-text, ms-duplex, ms-html, ms-repeat".match(avalon.rword).sort()
                 vm.statics = "mix, bind, unbind, ready, scan, define".match(avalon.rword).sort()
-                vm.scrollToView = function(id){
+                vm.scrollToView = function(id) {
                     var el = document.getElementById(id)
-                    if(el && el.scrollToView){
-                        el.scrollToView(true)
+                    if (el) {
+                        var top = avalon(el).offset().top 
+                        avalon(window.parent).scrollTop(top)
                     }
                 }
                 vm.highlight = function() {

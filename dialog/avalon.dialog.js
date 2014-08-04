@@ -62,7 +62,7 @@ define(["../avalon.getModel",
         }
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "template", "context", "modal"];
+            vm.$skipArray = ["widgetElement", "template", "container", "modal"];
             vm.widgetElement = element;
             vm.position = "fixed";
             // 如果显示模式为alert或者配置了showClose为false，不显示关闭按钮
@@ -197,11 +197,11 @@ define(["../avalon.getModel",
             }
 
             vm.$init = function() {
-                var context = options.context,
+                var container = options.container,
                     clientHeight = body.clientHeight,
                     docBody = document.body,
-                    // context必须是dom tree中某个元素节点对象或者元素的id，默认将dialog添加到body元素
-                    elementParent = ((avalon.type(context) === "object" && context.nodeType === 1 && docBody.contains(context)) ? context : document.getElementById(context)) || docBody;
+                    // container必须是dom tree中某个元素节点对象或者元素的id，默认将dialog添加到body元素
+                    elementParent = ((avalon.type(container) === "object" && container.nodeType === 1 && docBody.contains(container)) ? container : document.getElementById(container)) || docBody;
                 if (avalon(docBody).height() < clientHeight) {
                     avalon(docBody).css("min-height", clientHeight);
                 }
@@ -273,7 +273,7 @@ define(["../avalon.getModel",
         showClose: true, //是否显示右上角的“关闭”按钮
         toggle: false, //通过此属性的决定dialog的显示或者隐藏状态
         widgetElement: "", //保存对绑定元素的引用
-        context: "body", //dialog放置的元素
+        container: "body", //dialog放置的元素
         confirmName: "确定",
         cancelName: "取消",
         getTemplate: function(str, options) {

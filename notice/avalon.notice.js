@@ -1,4 +1,4 @@
-define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.css", "css!./avalon.notice.css"], function(avalon, sourceHTML) {
+define(["avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oniui-common.css", "css!./avalon.notice.css"], function(avalon, sourceHTML) {
     var template = sourceHTML,
         containerMap = [],
         affixBoxs = [], // 存储吸顶的notice元素，且只保存弹出的notice
@@ -12,8 +12,20 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
         var noticeDefineContainer = options.container;
         // 根据配置值将container转换为完全的dom对象，如果用户未配置container，则container容器默认是应用绑定的元素
         options.container =  noticeDefineContainer ? noticeDefineContainer.nodeType === 1? noticeDefineContainer: document.getElementById(noticeDefineContainer.substr(1)) : element;
-        var templateView = null; // 保存模板解析后的dom对象的引用
-        var elementInnerHTML = element.innerHTML.trim(); //如果notice的container是默认配置也就是绑定元素本身，元素的innerHTML就是notice的content
+        var templateView = null, // 保存模板解析后的dom对象的引用
+            elementInnerHTML = element.innerHTML.trim(), //如果notice的container是默认配置也就是绑定元素本身，元素的innerHTML就是notice的content
+            onShow = options.onShow,
+            onShowVM = null,
+            onHide = options.onHide,
+            onHideVM = null;
+        if (typeof onShow === "string") {
+            onShowVM = avalon.getModel(onShow, vmodels);
+            options.onShow = onShowVM && onShowVM[1][onShowVM[0]] || avalon.noop;
+        }
+        if (typeof onHide ==="string") {
+            onHideVM = avalon.getModel(onHide, vmodels);
+            options.onHide = onHideVM && onHideVM[1][onHideVM[0]] || avalon.noop;
+        }
         element.innerHTML=""
         if (options.header !== "notice title" && options.title ==="notice title") {
             options.title = options.header
@@ -21,7 +33,7 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
         var vmodel = avalon.define(data.noticeId, function(vm) {
             avalon.mix(vm, options);          
             vm.$closeTimer = 0; // 定时器引用
-            vm.$skipArray = ["template","widgetElement", "_isAffix"];
+            vm.$skipArray = ["template", "widgetElement", "_isAffix", "container"];
             vm.content = vm.content || elementInnerHTML;
             vm._isAffix = vm.isPlace && vm.isAffix;
             vm.widgetElement = element;
@@ -125,6 +137,10 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
         })
         vmodel.$watch("infoClass", function() {
             vmodel.typeClass = vmodel.infoClass;
+        })
+        vmodel.$watch("zIndex", function(val) {
+            maxZIndex = val;
+            affixPosition()
         })
         // 如果配置了timer，则在notice显示timer时间后自动隐藏
         function _timerClose() { 

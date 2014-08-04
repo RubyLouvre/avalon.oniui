@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>cookie组件</title>
+        <title>browser组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../highlight/shCore.js">
@@ -12,11 +12,10 @@
     </head>
     <body>
         <div class="wrapper">
-            <h2>cookie</h2>
+            <h2>browser</h2>
             <fieldset>
-                <legend>cookie</legend>
-                <p>一个操作cookie的工具集。
-                </p>
+                <legend>浏览器检测模块</legend>
+                <p>一个检测浏览器类型与版本号，渲染引擎及操作系统的工具集。   </p>
             </fieldset>
             <fieldset>
                 <legend>使用说明</legend>
@@ -26,30 +25,33 @@
                     </tr>
 
                     <tr>
-                        <td colspan="3" align="center">接口方法与固有属性</td>
+                        <td colspan="3" align="center">静态属性</td>
                     </tr>
 
                     <tr>  
-                        <td>get(key)</td><td></td> <td>取得某一cookie</td> 
+                        <td>platform.name</td><td></td> <td>操作系统的名字</td> 
                     </tr>
                     <tr>   
-                        <td>getAll()</td> <td></td> <td>取得所有cookie，以对象形式返回</td> 
+                        <td>platform.version</td> <td></td> <td>操作系统的版本</td> 
+                    </tr>
+                    <tr>  
+                        <td>browser.name</td><td></td> <td>浏览器的名字</td> 
                     </tr>
                     <tr>   
-                        <td>set(key, val, opts)</td> <td></td><td>设置一个cookie，opts为一个可选参数，用于进一步设置它的maxAge,domain,path, httpOnly,expires,secure</td> 
+                        <td>browser.version</td> <td></td> <td>浏览器的版本</td> 
+                    </tr>
+                    <tr>  
+                        <td>engine.name</td><td></td> <td>渲染引擎的名字</td> 
                     </tr>
                     <tr>   
-                        <td>remove(key)</td>  <td></td><td>移除某一cookie</td> 
-                    </tr>
-                    <tr>   
-                        <td>clear()</td>  <td></td><td>移除所有cookie</td> 
+                        <td>engine.version</td> <td></td> <td>渲染引擎的版本</td> 
                     </tr>
 
                 </table>
             </fieldset>
 
             <ul class="example-links">
-                <li><a href="avalon.cookie.ex1.html">例子</a></li>
+                <li><a href="avalon.browser.ex.html">例子</a></li>
             </ul>
         </div>
     </body>

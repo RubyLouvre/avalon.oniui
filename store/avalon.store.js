@@ -159,9 +159,7 @@ define(["avalon", "json/avalon.json"], function(avalon) {
     } catch (e) {
         store.disabled = true
     }
-    // add to avalon, easy for calling
     avalon.store = store
-
     return store;
 })
 /*这里提供了一个用cookie实现本地储存的方案 https://developer.mozilla.org/en/DOM/Storage

@@ -7,7 +7,7 @@
 .ui-daterangepicker .ui-btn:hover { box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1); background-color: #f8f8f8; border-color: #bbbbbb; color: #333333; }
 .ui-daterangepicker .ui-btn-small { height: 22px; padding: 0 5px; font-size: 12px; }
 .ui-daterangepicker .ui-btn-primary { background-color: #3775c0; border-color: #3775c0; color: white; }
-.ui-daterangepicker .ui-btn-primary:hover { background-color: #68c969; border-color: #3e973e; color: white; }
+.ui-daterangepicker .ui-btn-primary.ui-state-hover { background-color: #5a8fd0; border-color: #5a8fd0; color: white; }
 .ui-daterangepicker .ui-daterangepicker-content { position: relative; z-index: 1000; zoom: 1; }
 .ui-daterangepicker .ui-daterangepicker-content .ui-datepicker-groups { position: absolute; z-index: 1000; zoom: 1; padding: 9px 0 0 10px; border: 1px solid #cccccc; box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1); font-size: 0; white-space: nowrap; background: #ffffff; }
 .ui-daterangepicker .ui-daterangepicker-content .ui-datepicker-groups .ui-datepicker-group { position: relative; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; }

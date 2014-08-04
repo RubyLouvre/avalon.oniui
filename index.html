@@ -75,6 +75,9 @@
             {{renderIframe() | html}}
             <iframe ms-if="!hashchangeSupport" id="doccanvas" scrolling="no" name="doccanvas" class="ui-doc" style="border:none;"  ms-css-width="contentWidth" ms-on-load="setHeight" frameborder="none" ms-attr-src="href"></iframe>
         </div>
+        <div ms-if="canThisPageShow('apis')">
+            {{renderIframe() | html}}
+        </div>
     </div>
 
     <div class="footer">
@@ -89,7 +92,12 @@
     <script>
     require("dialog/avalon.dialog.js", function(avalon) {
         var docCssReg = /<link[^>]*style\/avalon\.doc\.css[^>]*\>/img,
-            widgets = ["accordion", "tab","promise", "colorpicker","spinner", "slider", "textbox", "dropdown", "datepicker", "coupledatepicker", "daterangepicker", "dialog", "at", "checkboxlist", "cookie", "draggable", "flipswitch", "miniswitch", "notice", "pager", "position", "preview", "progressbar", "resizable", "doublelist", "scrollbar", "scrollspy", "simplegrid", "store", "switchdropdown", "tooltip"].sort(),
+            widgets = ["accordion", "at","browser", "checkboxlist", "colorpicker", "cookie", 
+                "coupledatepicker", "datepicker", "daterangepicker", "dialog",
+                "doublelist", "draggable", "dropdown", "flipswitch", "miniswitch",
+                "notice", "pager", "position", "preview", "progressbar", "promise",
+                "resizable", "scrollbar", "scrollspy", "simplegrid", "slider",
+                "spinner", "store", "switchdropdown", "tab", "textbox", "tooltip"].sort(),
             defaultHref = "accordion/avalon.accordion.doc.html";
 
         function getHref(urlHash) {
@@ -199,6 +207,11 @@
                     href: "ui_timeline", 
                     name: "组件概览", 
                     pageName: "pageTimeline"
+                },
+                  {
+                    href: "pages/apis/index.html", 
+                    name: "APIs", 
+                    pageName: "apis"
                 }
             ];
             // 保留历史功能
@@ -266,7 +279,7 @@
             }
             vm.renderIframe = function() {
                 if(!vmodel.hashchangeSupport) return "";
-                return '<iframe id="doccanvas" scrolling="no" name="doccanvas" ms-class="ui-doc:!page" style="border:none;" frameborder="none" src="' + vmodel.href + '" ms-css-width="'+ vmodel.contentWidth +'"></iframe>'
+                return '<iframe id="doccanvas" scrolling="no" name="doccanvas" ms-class="ui-doc:!page" style="border:none;" frameborder="none" src="' + vmodel.href + '" ms-css-width="'+ vmodel.contentWidth +'" height="700px;"></iframe>'
             }
             vm.showBigPic = function(url) {
                 vm.imgUrl = url;

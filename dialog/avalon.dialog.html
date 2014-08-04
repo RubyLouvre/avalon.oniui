@@ -2,7 +2,7 @@
 MS_OPTION_WIDGET
 <div ms-widget="dialog,MS_OPTION_ID,MS_OPTION_OPTS">MS_OPTION_DIALOG_CONTENT</div>
 MS_OPTION_INNERWRAPPER
-<div class="ui-dialog-inner" ms-draggable></div>
+<div class="ui-dialog-inner"></div>
 MS_OPTION_HEADER
 <div class="ui-dialog-header">
     <div class="ui-dialog-close" ms-click="_close" ms-if="showClose">
@@ -15,7 +15,7 @@ MS_OPTION_CONTENT
 MS_OPTION_FOOTER
 <div class="ui-dialog-footer ui-helper-clearfix">
     <div class="ui-dialog-btns">
-        <button class="ui-btn ui-btn-primary" ms-click="_confirm">{{confirmName}}</button>
+        <button class="ui-btn ui-btn-primary" ms-hover="ui-state-hover" ms-click="_confirm">{{confirmName}}</button>
         <button class="ui-btn" ms-if="type =='confirm'" ms-click="_cancel">{{cancelName}}</button>
     </div>
 </div>

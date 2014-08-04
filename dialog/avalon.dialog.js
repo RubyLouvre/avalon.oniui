@@ -48,7 +48,7 @@ define(["../avalon.getModel",
         }
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "template"];
+            vm.$skipArray = ["widgetElement", "template", "context", "modal"];
             vm.widgetElement = element;
             vm.position = "fixed";
             // 如果显示模式为alert或者配置了showClose为false，不显示关闭按钮
@@ -66,7 +66,7 @@ define(["../avalon.getModel",
             }
             
             // 显示dialogmask
-            vm._open = function() {
+            vm._open = function(updateZIndex) {
                 var len = 0, //当前显示的dialog的个数
                     selectLength = document.getElementsByTagName("select").length,
                     maxZIndex = vmodel.zIndex;
@@ -75,6 +75,9 @@ define(["../avalon.getModel",
                 // 通过zIndex的提升来调整遮罩层，保证层上层存在时遮罩层始终在顶层dialog下面(顶层dialog zIndex-1)但是在其他dialog上面
                 maskLayer.style.zIndex = 2 * len + maxZIndex -1;
                 element.style.zIndex =  2 * len + maxZIndex;
+                if(updateZIndex) {
+                    return ;
+                }
                 resetCenter(vmodel, element);
                 // IE6下遮罩层无法覆盖select解决办法
                 if (isIE6 && selectLength && iFrame === null && vmodel.modal) {
@@ -85,7 +88,7 @@ define(["../avalon.getModel",
                     iFrame.style.height = maskLayer.style.height;
                     iFrame.style.zIndex = maskLayer.style.zIndex -1;
                 }
-                options.onOpen.call(vmodel);
+                options.onOpen.call(element, vmodel);
             }
             
             // 隐藏dialog
@@ -102,6 +105,7 @@ define(["../avalon.getModel",
                     if (iFrame !== null) {
                         iFrame.style.display = "none";
                     }
+                    options.onClose.call(element, vmodel);
                     return ;
                 }
                 // 重置maskLayer的z-index,当最上层的dialog关闭，通过降低遮罩层的z-index来显示紧邻其下的dialog
@@ -110,11 +114,7 @@ define(["../avalon.getModel",
                 if (iFrame) {
                     iFrame.style.zIndex = layoutZIndex -1;
                 }
-                if (e) {
-                    options.onClose.call(e.target, e, vmodel);
-                } else {
-                    options.onClose.call(element, vmodel);
-                }
+                options.onClose.call(element, vmodel);
             };
 
             // 点击"取消"按钮，根据回调返回值是否为false决定是否关闭dialog
@@ -231,7 +231,7 @@ define(["../avalon.getModel",
 
             // 可以手动设置最大zIndex
             vm.$watch("zIndex", function(val) {
-                maxZIndex = val;
+                vmodel._open(true);
             })
         });
         return vmodel;
@@ -354,7 +354,7 @@ define(["../avalon.getModel",
             } else {
                 l = (clientWidth - targetOffsetWidth) / 2 + scrollLeft;
             }
-            target.style.cssText += "left:" + l + "px;top:" + t +"px";
+            avalon(target).css({left:l, top: t})
         }
     }
 

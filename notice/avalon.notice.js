@@ -15,6 +15,9 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
         var templateView = null; // 保存模板解析后的dom对象的引用
         var elementInnerHTML = element.innerHTML.trim(); //如果notice的container是默认配置也就是绑定元素本身，元素的innerHTML就是notice的content
         element.innerHTML=""
+        if (options.header !== "notice title" && options.title ==="notice title") {
+            options.title = options.header
+        }
         var vmodel = avalon.define(data.noticeId, function(vm) {
             avalon.mix(vm, options);          
             vm.$closeTimer = 0; // 定时器引用
@@ -111,7 +114,7 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
         vmodel.$watch("type", function(v) { //改变type影响notice的显示类型
             vmodel.typeClass = vmodel[v+"Class"];
         })
-        vmodel.$watch("header", function(v) { //改变type影响notice的显示类型
+        vmodel.$watch("header", function(v) { 
             vmodel.title = v;
         })
         vmodel.$watch("successClass", function() {

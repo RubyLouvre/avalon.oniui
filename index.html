@@ -1,94 +1,74 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" class="xjb_html">
-<head>
-    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>去哪儿avalon ui</title>
-    <link type="text/css" rel="stylesheet" href="./style/avalon.doc.css" />
-    <link type="text/css" rel="stylesheet" href="./style/avalon.index.css" />
-    <script src="avalon.js"></script>
-    <script src="./highlight/shCore.js"></script>
-    <link rel=stylesheet type=text/css href="static/css/base.css">
-</head>
-<body class="ms-controller" ms-controller ="avalonUiDocument">
-    <div class="header">
-        <div class="fix">
-            <div class="nav">
-                <ul>
-                    <li ms-repeat-item="nav" ms-class="active:$index===currentPageIndex">
-                        <a href="javascript:void 0;" ms-click="changePage($event, item.href, $index, item)">{{item.name}}</a>
-                    </li>
-                </ul>
-                <div class="search">
-                    <input type="text"/>
-                </div>
-            </div>
-        </div>
-        <div class="placeHolder"></div>
-        <h1><span>Avalon新一代UI库： OniUI</span></h1>
-    </div>
-    <div class="content" ms-css-min-height="{{uiListHeight}}" ms-css-padding-bottom="padBottom">
-        <div ms-if="canThisPageShow('pageTimeline')" class="ms-controller" ms-controller="www_uiguide">
-            <div id="parallax" class="parallax-container" ms-css-height="outerHeight">
-                <div class="parallax parallax2">
-                    <div class="circle-box">
-                        <span ms-repeat="circles" ms-class="circle circle-{{$index + 1}}" data-repeat-rendered="circleCb"></span>
-                    </div>
-                </div>
-                <div class="parallax parallax1">
-                    <div class="month-box">
-                        <span ms-repeat-m="months" ms-class="month month--m{{m.key}}"></span>
-                    </div>
-                </div>
-                <div class="parallax parallax0">
-                    <div class="tree">
-                        <div class="month-wrapper" ms-repeat-m="months">
-                            <div class="tree__item"  data-repeat-rendered="cb"  ms-repeat-leaf="m.item" ms-class="{{(nowIndex[m.key]  + $index) % 2 === 0 ? ('tree__item--m' + m.key) : ('tree__item--m' + m.key + ' tree__item--right')}}">
-                                <div class="tree__item__main" ms-click="showBigPic(leaf.cover)">
-                                    <a target="_blank" href="javascript:void 0;"><img width="430" height="245" ms-src="{{leaf.cover}}"/></a>
-                                    <div class="des">
-                                        <div class="des__bg"></div>
-                                        <a href="javascript:void 0;" class="des__main" target="_blank">
-                                            <span class="des__title">{{leaf.title}}</span>
-                                            <span class="des__content">{{leaf.des}}</span>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="icon-1 icon__marker"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tree-foot"></div>
-                </div>
-            </div>
-            <script src="doc/index.js"></script>
-            <script src="static/dest/bezier.js"></script>
-            <script src="static/dest/base.js"></script>
-            <div ms-widget="dialog, treeLeafBig, $dialogOpts">
-                <img ms-src="imgUrl" width="800" height="500">
-            </div>
-        </div>
-        <div ms-if="canThisPageShow('pageUiLibrary')">
-            <ul class="ui-list" ms-visible="canThisPageShow('pageUiLibrary')" ms-css-position="position" ms-css-top="fixTop" ms-css-bottom="fixBottom">
-                <li ms-repeat="widgets" data-repeat-rendered="uiListRendered"><a href="#" ms-class="active: $index===currentIndex" ms-click="showDocument(el, $event, $index)">{{el}}</a></li> 
-            </ul>
-            {{renderIframe() | html}}
-            <iframe ms-if="!hashchangeSupport" id="doccanvas" scrolling="no" name="doccanvas" class="ui-doc" style="border:none;"  ms-css-width="contentWidth" ms-on-load="setHeight" frameborder="none" ms-attr-src="href"></iframe>
-        </div>
-        <div ms-if="canThisPageShow('apis')">
-            {{renderIframe() | html}}
-        </div>
-    </div>
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <title>去哪儿avalon ui</title>
+        <link type="text/css" rel="stylesheet" href="./style/avalon.doc.css" />
+        <link type="text/css" rel="stylesheet" href="./style/avalon.index.css" />
+        <script src="avalon.js"></script>
+        <script src="./highlight/shCore.js"></script>
+        <link rel=stylesheet type=text/css href="static/css/base.css"/>
 
-    <div class="footer">
-        <ul>
-            <li><a href="#">关于AvalonUI</a></li>
-            <li><a href="#">联系我们</a></li>
-            <li><a href="#">业务合作</a></li>
-            <li><a href="#">常见问题</a></li>
-            <li class="last"><a href="#">友情链接</a></li>
-        </ul>
-    </div>
+        <script>
+            avalon.define("pages", function(vm) {
+                vm.pages = [{
+                        title: "组件库",
+                        href: "pages/library/index.html"
+                    },
+                    {
+                        title: "首件概览",
+                        href: "pages/timeline/index.html"
+                    },
+                    {
+                        title: "APIs",
+                        href: "pages/apis/index.html"
+                    },
+                    {
+                        title: "下载",
+                        href: "pages/download/index.html"
+                    }
+
+                ]
+                vm.changeActiveIndex = function(index) {
+                    vm.activeIndex = index
+                }
+                vm.activeIndex = 0
+            })
+        </script>
+    </head>
+    <body class="ms-controller" ms-controller="pages">
+        <div class="header">
+            <div class="fix">
+                <div class="nav">
+                    <ul>
+                        <li ms-repeat-page="pages" ms-class="active: $index == activeIndex" ms-click="changeActiveIndex($index)">
+                            <a ms-href="#{{page.href}}" >{{page.title | html}}</a>
+                        </li>
+                    </ul>
+                    <div class="search">
+                        <input type="text"/>
+                    </div>
+                </div>
+            </div>
+            <div class="placeHolder"></div>
+            <h1><span>Avalon新一代UI库： OniUI</span></h1>
+        </div>
+        <div class="content" >
+            <div ms-repeat-page="pages" ms-if-loop="$index == activeIndex"  ms-include-src="page.href">
+
+            </div>
+        </div>
+
+        <div class="footer">
+            <ul>
+                <li><a href="#">关于AvalonUI</a></li>
+                <li><a href="#">联系我们</a></li>
+                <li><a href="#">业务合作</a></li>
+                <li><a href="#">常见问题</a></li>
+                <li class="last"><a href="#">友情链接</a></li>
+            </ul>
+        </div>
     <script>
     require("dialog/avalon.dialog.js", function(avalon) {
         var docCssReg = /<link[^>]*style\/avalon\.doc\.css[^>]*\>/img,

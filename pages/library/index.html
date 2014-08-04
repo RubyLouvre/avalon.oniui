@@ -1,0 +1,113 @@
+<script>
+    var widgets = ["accordion", "at", "browser", "checkboxlist", "colorpicker", "cookie",
+        "coupledatepicker", "datepicker", "daterangepicker", "dialog",
+        "doublelist", "draggable", "dropdown", "flipswitch", "miniswitch",
+        "notice", "pager", "position", "preview", "progressbar", "promise",
+        "resizable", "scrollbar", "scrollspy", "simplegrid", "slider",
+        "spinner", "store", "switchdropdown", "tab", "textbox", "tooltip"].sort()
+    var vmodel = avalon.define("library", function(vm) {
+        vm.widgets = widgets
+        vm.activeIndex = NaN
+        vm.stickPosition = "absolute"
+        vm.stickTop = 0
+        vm.stickBottom = 0
+        vm.widgetHref = "accordion/avalon.accordion.doc.html"
+        vm.changeActiveIndex = function(index) {
+            vm.activeIndex = index
+        }
+        vm.$watch("activeIndex", function(index) {
+            var name = vm.widgets[index]
+            switch (name) {
+                case "coupledatepicker":
+                case "daterangepicker":
+                    name = "datepicker";
+                    break;
+            }
+            vm.widgetHref = name + "/avalon." + name + ".doc.html"
+        })
+
+    })
+    avalon.ready(function() {
+        setInterval(function() {
+            var iframe = document.getElementById("widgetIrame")
+            if (iframe && iframe.contentWindow) {
+                //自适应高度
+                var doc = iframe.contentWindow.document
+                avalon(iframe).height(avalon(doc).height())
+                //处理链接向往跳出
+                var as = doc.links
+                for (var i = 0, a; a = as[i++]; ) {
+                    as.target = ""
+                }
+            }
+        }, 500)
+    })
+
+
+
+    void function() {
+        function adjustMenuPostion() {
+            var menu = document.getElementById("widgetMenu")
+            if (menu) {
+                var top = avalon(menu).offset().top
+                var height = avalon(menu).height()
+                var bottom = top + height;
+                var scrollTop = document.body.scrollTop + document.documentElement.scrollTop
+                var scrollHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)
+                var clientHeight = avalon(window).height();
+                var stick
+                if ((scrollTop + clientHeight) > bottom) {
+                    stick = {
+                        stickPosition: "fixed",
+                        stickTop: "auto",
+                        stickBottom: 0
+                    }
+                } else {
+                    stick = {
+                        stickPosition: "absolute",
+                        stickTop: 45,
+                        stickBottom: "auto"
+                    }
+                }
+                // 避免滚动到最底部时，白色背景上导航的尴尬，且无法显示底部的组件列表
+                if ((scrollTop + clientHeight + 120) >= scrollHeight) {
+                    stick = {
+                        stickPosition: "absolute",
+                        stickTop: "top",
+                        stickBottom: 80
+                    }
+                }
+                for(var name in stick){
+                    vmodel[name] = stick[name]
+                }
+            }
+        }
+
+        var scrollIndex = 0
+        avalon(window).bind("scroll", function() {
+            scrollIndex = scrollIndex + 1;
+            if (scrollIndex % 3 === 0) {
+                adjustMenuPostion()
+            }
+        });
+    }()
+
+</script>
+<table width="100%" ms-controller="library">
+    <tr>
+        <td valign="top" style="width:130px">  
+            <ul class="ui-list" id="widgetMenu" ms-css-position="stickPosition" ms-css-bottom="stickBottom" ms-css-top="stickTop">
+                <li ms-repeat="widgets">
+                    <a ms-href="#{{widgetHref}}" 
+                       ms-class="active: $index===activeIndex" 
+                       ms-click="changeActiveIndex($index)">
+                        {{el}}
+                    </a>
+                </li> 
+            </ul>
+        </td>
+        <td valign="top">
+            <iframe ms-src="widgetHref" frameborder="0" width="100%" id="widgetIrame"></iframe>
+        </td>
+    </tr>
+</table>

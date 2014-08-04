@@ -20,6 +20,12 @@
             avalon.define("apis", function(vm) {
                 vm.bindings = "ms-if, ms-text, ms-duplex, ms-html, ms-repeat".match(avalon.rword).sort()
                 vm.statics = "mix, bind, unbind, ready, scan, define".match(avalon.rword).sort()
+                vm.scrollToView = function(id){
+                    var el = document.getElementById(id)
+                    if(el && el.scrollToView){
+                        el.scrollToView(true)
+                    }
+                }
                 vm.highlight = function() {
                     SyntaxHighlighter.highlight()
                 }
@@ -68,13 +74,13 @@
                         <li>
                             <div class="title">各种绑定</div>
                             <ul class="child-nav">
-                                <li ms-repeat="bindings" ><a ms-href="#{{el}}">{{el}}</a></li>
+                                <li ms-repeat="bindings" ms-click="scrollToView(el)">{{el}}</li>
                             </ul>
                         </li>
                         <li>
                             <div class="title">静态方法</div>
                             <ul class="child-nav">
-                                <li ms-repeat="statics"><a ms-href="#{{el}}">{{el}}</a></li>
+                                <li ms-repeat="statics" ms-click="scrollToView(el)">{{el}}</li>
                             </ul>
                         </li>
                     </ul>

@@ -1,8 +1,28 @@
 <script>
-    avalon.define("apis", function(vm) {
-        vm.bindings = "ms-if, ms-text, ms-duplex, ms-html, ms-repeat".match(avalon.rword).sort()
+    function idToHref(id) {
+        switch (id) {
+            case "ms-checked":
+            case "ms-disabled":
+            case "ms-enabled":
+            case "ms-selected":
+            case "ms-readonly":
+                return "bool-bindings"
+            case "ms-href":
+            case "ms-src":
+            case "ms-alt":
+            case "ms-title":
+            case  "ms-value":
+                return "string-bindings"
+
+        }
+        return id
+    }
+    var apisVM = avalon.define("apis", function(vm) {
+        vm.bindings = "ms-if, ms-text, ms-duplex,ms-data, ms-href, ms-src, ms-alt, ms-title, ms-value, ms-html, ms-repeat, ms-checked, ms-disabled, ms-selected,ms-readonly".match(avalon.rword).sort()
         vm.statics = "mix, bind, unbind, ready, scan, define".match(avalon.rword).sort()
+        vm.bindingIncludes = []
         vm.scrollToView = function(id) {
+            id = idToHref(id)
             var el = document.getElementById(id)
             if (el) {
                 var top = avalon(el).offset().top - 70
@@ -13,6 +33,14 @@
             SyntaxHighlighter.highlight()
         }
     })
+    var uniq = {}
+    apisVM.bindings.forEach(function(ID) {
+        var newID = idToHref(ID)
+        if (!uniq[newID]) {
+            apisVM.bindingIncludes.push(newID)
+            uniq[newID] = 1
+        }
+    })
 </script>
 <style>
     .apis-table{
@@ -20,10 +48,10 @@
     }
     .apis-list {
         width:150px;
-         background:rgb(221,221,204);
+        background:rgb(221,221,204);
     }
     .apis-details{
-         background:rgb(238,238,221);
+        background:rgb(238,238,221);
     }
     .apis-details p{
         text-indent: 2em;
@@ -75,7 +103,7 @@
             </ul>
         </td>
         <td class="apis-details">
-            <div ms-repeat="bindings" ms-include-src="pages/apis/bindings/{{el}}.html" data-include-rendered="highlight">
+            <div ms-repeat="bindingIncludes" ms-include-src="pages/apis/bindings/{{el}}.html" data-include-rendered="highlight">
 
             </div>
             <div ms-repeat="statics" ms-include-src="pages/apis/statics/{{el}}.html"  data-include-rendered="highlight">

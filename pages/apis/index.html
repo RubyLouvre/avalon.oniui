@@ -1,2 +1,87 @@
-<iframe src="pages/apis/_index.html" width="100%" frameborder="0" id="apisIframe">
-</ifame>
+<script>
+    avalon.define("apis", function(vm) {
+        vm.bindings = "ms-if, ms-text, ms-duplex, ms-html, ms-repeat".match(avalon.rword).sort()
+        vm.statics = "mix, bind, unbind, ready, scan, define".match(avalon.rword).sort()
+        vm.scrollToView = function(id) {
+            var el = document.getElementById(id)
+            if (el) {
+                var top = avalon(el).offset().top - 70
+                avalon(window.parent).scrollTop(top)
+            }
+        }
+        vm.highlight = function() {
+            SyntaxHighlighter.highlight()
+        }
+    })
+</script>
+<style>
+    .apis-table{
+        border-collapse: collapse;
+    }
+    .apis-list {
+        width:150px;
+         background:rgb(221,221,204);
+    }
+    .apis-details{
+         background:rgb(238,238,221);
+    }
+    .apis-details p{
+        text-indent: 2em;
+    }
+    .vnac {
+        list-style: none;
+        display:block;
+        margin:0px;
+        padding:0px;
+    }
+    .vnac li{
+        margin:0px;
+        padding:0px;
+        font-size: 12px;
+        line-height: 1.5;
+        color:#28966f;
+        display: block;
+    }
+    .vnac li .title{
+        font-size: 12px;
+        line-height: 1.5;
+        font-weight: 700;
+        color:#28966f;
+    }
+    .vnac ul.child-nav{
+        display:block;
+        list-style: none;
+        margin:5px 0px 5px 20px;;
+        padding:0px;
+    }
+</style>
+
+<table class="apis-table" ms-controller="apis">
+    <tr>
+        <td class="apis-list" valign="top">
+            <ul class="vnac">
+                <li>
+                    <div class="title">各种绑定</div>
+                    <ul class="child-nav">
+                        <li ms-repeat="bindings" ms-click="scrollToView(el)">{{el}}</li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="title">静态方法</div>
+                    <ul class="child-nav">
+                        <li ms-repeat="statics" ms-click="scrollToView(el)">{{el}}</li>
+                    </ul>
+                </li>
+            </ul>
+        </td>
+        <td class="apis-details">
+            <div ms-repeat="bindings" ms-include-src="pages/apis/bindings/{{el}}.html" data-include-rendered="highlight">
+
+            </div>
+            <div ms-repeat="statics" ms-include-src="pages/apis/statics/{{el}}.html"  data-include-rendered="highlight">
+
+            </div>
+        </td>
+    </tr>
+</table>
+

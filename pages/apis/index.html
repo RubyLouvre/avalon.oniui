@@ -20,6 +20,7 @@
     var apisVM = avalon.define("apis", function(vm) {
         vm.bindings = "ms-if, ms-text, ms-duplex,ms-data, ms-visible, ms-on, ms-href, ms-src, ms-alt, ms-title, ms-value, ms-html, ms-repeat, ms-checked, ms-disabled, ms-selected,ms-readonly".match(avalon.rword).sort()
         vm.statics = "mix, bind, unbind, ready, scan, define".match(avalon.rword).sort()
+        vm.callbacks = ["data-callback"]
         vm.bindingIncludes = []
         vm.scrollToView = function(id) {
             id = idToHref(id)
@@ -100,6 +101,12 @@
                         <li ms-repeat="statics" ms-click="scrollToView(el)">{{el}}</li>
                     </ul>
                 </li>
+                <li>
+                    <div class="title">各种回调</div>
+                    <ul class="child-nav">
+                        <li ms-repeat="callbacks" ms-click="scrollToView(el)">{{el}}</li>
+                    </ul>
+                </li>
             </ul>
         </td>
         <td class="apis-details">
@@ -107,6 +114,9 @@
 
             </div>
             <div ms-repeat="statics" ms-include-src="pages/apis/statics/{{el}}.html"  data-include-rendered="highlight">
+
+            </div>
+            <div ms-repeat="callbacks" ms-include-src="pages/apis/callbacks/{{el}}.html"  data-include-rendered="highlight">
 
             </div>
         </td>

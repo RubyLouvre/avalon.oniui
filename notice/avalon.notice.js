@@ -1,9 +1,10 @@
-define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.css", "css!./avalon.notice.css"], function(avalon, sourceHTML) {
+define(["avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oniui-common.css", "css!./avalon.notice.css"], function(avalon, sourceHTML) {
     var template = sourceHTML,
         containerMap = [],
         affixBoxs = [], // 存储吸顶的notice元素，且只保存弹出的notice
         affixHeights = [], //存储吸顶元素对应的height、width、offsetTop
-        isIE6 = (window.navigator.userAgent || '').toLowerCase().indexOf('msie 6') !== -1;
+        isIE6 = (window.navigator.userAgent || '').toLowerCase().indexOf('msie 6') !== -1,
+        maxZIndex = getMaxZIndex();
     var widget = avalon.ui.notice = function(element, data, vmodels) {
         var options = data.noticeOptions;
         options.template = template = options.getTemplate(template, options);
@@ -11,13 +12,28 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
         var noticeDefineContainer = options.container;
         // 根据配置值将container转换为完全的dom对象，如果用户未配置container，则container容器默认是应用绑定的元素
         options.container =  noticeDefineContainer ? noticeDefineContainer.nodeType === 1? noticeDefineContainer: document.getElementById(noticeDefineContainer.substr(1)) : element;
-        var templateView = null; // 保存模板解析后的dom对象的引用
-        var elementInnerHTML = element.innerHTML.trim(); //如果notice的container是默认配置也就是绑定元素本身，元素的innerHTML就是notice的content
+        var templateView = null, // 保存模板解析后的dom对象的引用
+            elementInnerHTML = element.innerHTML.trim(), //如果notice的container是默认配置也就是绑定元素本身，元素的innerHTML就是notice的content
+            onShow = options.onShow,
+            onShowVM = null,
+            onHide = options.onHide,
+            onHideVM = null;
+        if (typeof onShow === "string") {
+            onShowVM = avalon.getModel(onShow, vmodels);
+            options.onShow = onShowVM && onShowVM[1][onShowVM[0]] || avalon.noop;
+        }
+        if (typeof onHide ==="string") {
+            onHideVM = avalon.getModel(onHide, vmodels);
+            options.onHide = onHideVM && onHideVM[1][onHideVM[0]] || avalon.noop;
+        }
         element.innerHTML=""
+        if (options.header !== "notice title" && options.title ==="notice title") {
+            options.title = options.header
+        }
         var vmodel = avalon.define(data.noticeId, function(vm) {
             avalon.mix(vm, options);          
             vm.$closeTimer = 0; // 定时器引用
-            vm.$skipArray = ["template","widgetElement", "_isAffix"];
+            vm.$skipArray = ["template", "widgetElement", "_isAffix", "container"];
             vm.content = vm.content || elementInnerHTML;
             vm._isAffix = vm.isPlace && vm.isAffix;
             vm.widgetElement = element;
@@ -110,6 +126,9 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
         vmodel.$watch("type", function(v) { //改变type影响notice的显示类型
             vmodel.typeClass = vmodel[v+"Class"];
         })
+        vmodel.$watch("header", function(v) { 
+            vmodel.title = v;
+        })
         vmodel.$watch("successClass", function() {
             vmodel.typeClass = vmodel.successClass;
         })
@@ -119,13 +138,17 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
         vmodel.$watch("infoClass", function() {
             vmodel.typeClass = vmodel.infoClass;
         })
+        vmodel.$watch("zIndex", function(val) {
+            maxZIndex = val;
+            affixPosition()
+        })
         // 如果配置了timer，则在notice显示timer时间后自动隐藏
         function _timerClose() { 
-            if (!options.timer) { return; }
+            if (!vmodel.timer) { return; }
             window.clearTimeout(vmodel.$closeTimer);
             vmodel.$closeTimer = window.setTimeout(function(){
                 vmodel.toggle = false;
-            }, options.timer);
+            }, vmodel.timer);
         }
         // notice要求占位且吸顶则保存吸顶元素到affixBoxs中，将元素的width、height、offsetTop保存到affixHeights对应位置,并根据页面目前位置调整吸顶元素的位置
         function _affix(){
@@ -202,9 +225,10 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
     function affixPosition() { // 定位吸顶元素
         var scrollTop = avalon(document).scrollTop();
         for (var i=0,len=affixBoxs.length; i<len; i++) {
-            var notice = affixBoxs[i];
-            var style = notice.style;
-            var vmodel = notice.vmodel;
+            var notice = affixBoxs[i],
+                style = notice.style,
+                $notice = avalon(notice),
+                vmodel = notice.vmodel;
             // 如果滚动距离大于吸顶元素的offsetTop，将元素吸顶，否则保存元素在页面的位置不变
             if(scrollTop >= affixHeights[i][2]) { 
                 // IE6下fixed失效，使用absolute进行吸顶操作
@@ -216,17 +240,34 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
                     }
                     top = isIE6 ? scrollTop + top : top; 
                     left = affixHeights[i][3];
-                    style.width = affixHeights[i][1] + "px";
-                    style.top = top + "px";
-                    style.left = left + "px"
-                    style.position = isIE6 ? "absolute" : "fixed";
+                    $notice.css({
+                        width: affixHeights[i][1] + "px",
+                        top: top + "px",
+                        left: left + "px",
+                        position: (isIE6 ? "absolute" : "fixed"),
+                        "z-index": maxZIndex
+                    })
                     vmodel.affixPlaceholderDisplay = "block";
                 }
             } else { 
-                style.position = "static";
+                $notice.css("position", "static");
                 vmodel.affixPlaceholderDisplay = "none";
             }
         } 
+    }
+    function getMaxZIndex() {
+        var children = document.body.children,
+            maxIndex = 10, //当body子元素都未设置zIndex时，默认取10
+            zIndex;
+        for (var i = 0, el; el = children[i++];) {
+            if (el.nodeType === 1) {
+                zIndex = ~~avalon(el).css("z-index");
+                if (zIndex) {
+                    maxIndex = Math.max(maxIndex, zIndex);
+                }
+            }
+        }
+        return maxIndex + 1;
     }
     widget.version = 1.0
     widget.defaults = {
@@ -234,6 +275,7 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
         container: "", // 保存notice的容器
         type: "info", // 动态改变type影响notice的状态(success、error、info)
         header: "notice title", // 动态修改notice的header
+        title: "notice title",
         timer: 0, // notice显示之后自动隐藏的定时器
         hasCloseBtn: true, // 是否显示关闭按钮
         toggle: false, // 显示或隐藏notice
@@ -245,34 +287,10 @@ define(["avalon", "text!./avalon.notice.html", "css!../chameleon/oniui-common.cs
         errorClass: "ui-notice-danger", // error提示类名
         infoClass: "", // type为info时提示类名
         widgetElement: "", // accordion容器
+        zIndex: 'auto',
         getTemplate: function(str, options) {
             return str;
         }
-    }
-    avalon.notice = {
-        show: function(id, content, type) {
-            if( !id || !avalon.vmodels[id]) return;
-            var notice = avalon.vmodels[id];
-            notice.setContent(content);
-            notice.setType(type || 'info');
-            avalon.scan(notice.widgetElement, [notice]);
-            notice.show();
-        },
-        setTitle: function(id, title) {
-            if(!id || !avalon.vmodels[id]) return;
-            var notice = avalon.vmodels[id];
-            notice.header = title;
-        },
-        hide: function(id){
-            if(!id || !avalon.vmodels[id]) return;
-            avalon.vmodels[id].$close();
-        },
-        go: function(id) {
-            if(!id || !avalon.vmodels[id]) return;
-            var notice = avalon.vmodels[id];
-            var toff = avalon(notice.widgetElement).offset();
-            window.scrollTo(toff.left, toff.top);
-        }     
     }
     return avalon;
 })

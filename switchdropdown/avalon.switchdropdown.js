@@ -1,7 +1,7 @@
 define(['avalon',
     'text!./avalon.switchdropdown.html',
     '../dropdown/avalon.dropdown',
-    'avalon.getModel',
+    '../avalon.getModel',
     'css!./avalon.switchdropdown.css'], function(avalon, tmpl) {
 
     /**

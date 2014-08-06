@@ -1,0 +1,26 @@
+<ol id="data-callback">
+    <li>data-duplex-changed，用于ms-duplex绑定，值改变后触发；<br/>
+        参数：当前元素的值
+    </li>
+    <li>data-include-loaded，用于ms-include-src绑定，模板加载后触发，可以在这里修改模板<br/>
+        参数: tmpl，vmodel1, vmodel2 ...
+    </li>
+    <li>data-include-rendered，用于ms-include, ms-include-src绑定，模板渲染好后触发；<br/>没参数
+    </li>
+    <li>data-repeat-rendered，用ms-repeat绑定，当监控数组发生添加，删除，重排等操作时触发；<br/>
+        参数：当前操作名（"add","del","index","clear","move"）
+    </li>
+    <li>data-with-sorted，用ms-repeat, ms-with绑定，赶对象渲染之前触发，要求输出一个字符串数组，对象的键值对会根据它依次输出；<br/>
+        参数：原对象的所有键名构成的数组
+    </li>
+    <li>data-with-rendered，用ms-with绑定，当目标对象输出页面后触发；<br/>
+        参数：当前操作名（"add","del","index","clear","move"）
+    </li>
+    <li>data-each-rendered，用ms-each绑定，当监控数组发生添加，删除，重排等操作时触发；<br/>
+        参数：当前操作名（"add","del","index","clear","move"）
+    </li>
+</ol>
+
+
+
+

@@ -2,15 +2,11 @@
 /*
 这是每个都组件都应该引用的部分
 */
-.ui-btn { height: 26px; overflow: visible; _overflow-y: hidden; padding: 0 10px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; border-radius: 2px; font-size: 12px; color: #333333; background-color: #f8f8f8; border: 1px solid #cccccc; }
-
-.ui-btn:hover { box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1); background-color: #f8f8f8; border-color: #bbbbbb; color: #333333; }
-
-.ui-btn-primary { background-color: #3775c0; border-color: #3775c0; color: white; }
-
-.ui-btn-primary:hover { background-color: #f8f8f8; border-color: #f8f8f8; color: black; }
-
 .ui-dialog { position: absolute; text-align: left; }
+.ui-dialog .ui-btn { height: 26px; overflow: visible; _overflow-y: hidden; padding: 0 10px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; border-radius: 2px; font-size: 12px; color: #333333; background-color: #f8f8f8; border: 1px solid #cccccc; }
+.ui-dialog .ui-btn:hover { box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1); background-color: #f8f8f8; border-color: #bbbbbb; color: #333333; }
+.ui-dialog .ui-btn-primary { background-color: #3775c0; border-color: #3775c0; color: white; }
+.ui-dialog .ui-btn-primary.ui-state-hover { background-color: #5a8fd0; border-color: #5a8fd0; color: white; }
 .ui-dialog .ui-dialog-inner { box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1); background-color: #ffffff; border: 1px solid #cccccc; }
 .ui-dialog .ui-dialog-inner .ui-dialog-header { background-color: #f3f3f3; }
 .ui-dialog .ui-dialog-inner .ui-dialog-header .ui-dialog-close { display: inline; display: inline; float: right; padding: 1px 10px 1px 9px; margin-top: 5px; cursor: pointer; background-color: #f3f3f3; color: #666666; }

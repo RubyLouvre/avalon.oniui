@@ -1,4 +1,4 @@
-define(["avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oniui-common.css", "css!./avalon.suggest.css"], function(avalon, sourceHTML) {
+define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oniui-common.css", "css!./avalon.suggest.css"], function(avalon, sourceHTML) {
     var widget = avalon.ui.suggest = function(element, data, vmodels) {
 
         var $element = avalon(element),
@@ -33,16 +33,19 @@ define(["avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oniui-
             vm.selectedIndex = 0;
             // 监控toggle值变化，当toggle为true时更新提示框尺寸
             vm.$watch('toggle', function(v) {
-                var inputElement = options.inputElement;
+                var inputElement = options.inputElement,
+                    textboxContainer = options.textboxContainer,
+                    $inputElement = avalon(inputElement),
+                    $textboxContainer = avalon(textboxContainer);
                 if( v ) {
-                    if (options.textboxContainer === inputElement) {
+                    if (textboxContainer === inputElement) {
                         var offset = $element.offset(),
-                            suggestHtmlWidth = (inputElement.clientWidth+parseInt(avalon.css(inputElement,"padding-left"))+parseInt(avalon.css(inputElement,"padding-right")))+"px";
+                            suggestHtmlWidth = $inputElement.width()+"px";
                         element.style.cssText = "position: absolute; left:"+offset.left+"px;top:"+offset.top+"px;";
                         
                         suggestHtml.style.cssText = "margin:0;left:0;top:0;width:"+suggestHtmlWidth ;
                     }
-                    suggestHtml.style.width = options.textboxContainer.clientWidth+"px" ;
+                    suggestHtml.style.width = $textboxContainer.width()+"px" ;
                 }
             })
             // 监控searchText值的变化，及时更新提示列表?

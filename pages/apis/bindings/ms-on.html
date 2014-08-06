@@ -1,0 +1,63 @@
+<h3 id="ms-on">事件绑定(ms-on)</h3>
+<p>avalon通过ms-on-click或ms-click进行事件绑定，并在IE对事件对象进行修复，具体可看<a href="http://rubylouvre.github.io/mvvm/avalon.on.html">这里</a></p>
+<p>用法：ms-on-*="callback"，其中*为事件名， callback为VM中的函数，另callback后面可接小括号可不接，里面可以传入$event指向事件对象，不写默认第一个参数就是事件对象。回调中的this指向绑定回调的元素节点。</p>
+<p>avalon并没有像jQuery设计一个近九百行的事件系统，连事件回调的执行顺序都进行修复（IE6-8，attachEvent添加的回调在执行时并没有按先入先出的顺序执行），只是很薄的一层封装，因此性能很强。
+</p>
+<p>此外，avalon还提供了以下便捷的绑定来添加各种事件：</p>
+<ul>
+    <li>ms-click</li>
+    <li>ms-dblclick</li>
+    <li>ms-mouseout</li>
+    <li>ms-mouseover</li>
+    <li>ms-mousemove</li>
+    <li>ms-mouseenter</li>
+    <li>ms-mouseleave</li>
+    <li>ms-mouseup</li>
+    <li>ms-mousedown</li>
+    <li>ms-keypress</li>
+    <li>ms-keyup</li>
+    <li>ms-keydown</li>
+    <li>ms-focus</li>
+    <li>ms-blur</li>
+    <li>ms-change</li>
+    <li>ms-scroll</li>
+    <li>ms-animation</li>
+</ul>
+<p>avalon已经对滚轮事件mousewheel，文本变动事件input，移入移出事件mouseenter, mouseleave做了全浏览器兼容了。</p><pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;title&gt;有关事件回调传参&lt;/title&gt;
+        &lt;script src="avalon.js" type="text/javascript"&gt;&lt;/script&gt;
+        &lt;script&gt;
+
+            avalon.ready(function() {
+                var a = avalon.define("simple", function(vm) {
+                    vm.firstName = "司徒"
+                    vm.lastName = "正美"
+                    vm.array = ["aaa", "bbb", "ccc"]
+                    vm.argsClick = function(e, a, b) {
+                        alert(a+ "  "+b)
+                    }
+                    vm.loopClick = function(a) {
+                        alert(a)
+                    }
+                });
+                avalon.scan();
+            })
+
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;fieldset ms-controller="simple"&gt;
+            &lt;legend&gt;例子&lt;/legend&gt;
+            &lt;div ms-click="argsClick($event, 100, firstName)"&gt;点我&lt;/div&gt;
+            &lt;div ms-each-el="array" &gt;
+                &lt;p ms-click="loopClick(el)"&gt;{{el}}&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/fieldset&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+

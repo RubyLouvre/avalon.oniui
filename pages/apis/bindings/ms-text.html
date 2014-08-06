@@ -1,0 +1,47 @@
+<h3 id="ms-text">文本绑定(ms-text)</h3>
+<p>将VM中的一个字符串直接输出到页面，如果遇到诸如&gt;,&lt,等特殊字符，框架会对它们进行转义，如&ampgt;,&amplt;……</p>
+<p>文本绑定用在文本节点上，可以接过滤器，进行更便捷的格式化处理。</p>
+<pre class="brush:javascript;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;ms-duplex&lt;/title&gt;
+        &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div ms-controller="box"&gt;
+            &lt;ul&gt;
+                &lt;li&gt;&lt;input type="checkbox" ms-click="checkAll" ms-checked="checkAllbool"/&gt;全选&lt;/li&gt;
+                &lt;li ms-repeat="arr" &gt;&lt;input type="checkbox" ms-value="el" ms-duplex="selected"/&gt;{{el}}&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;script src="avalon.js" &gt;&lt;/script&gt;
+        &lt;script&gt;
+            var model = avalon.define("box", function(vm) {
+                vm.arr = ["1", '2', "3", "4"]
+                vm.selected = ["2", "3"]
+                vm.checkAllbool = vm.arr.length === vm.selected.length
+                vm.checkAll = function() {
+                    if (this.checked) {
+                        vm.selected = vm.arr
+                    } else {
+                        vm.selected.clear()
+                    }
+                }
+            })
+            model.selected.$watch("length", function(n) {
+                model.checkAllbool = n === model.arr.size()
+            })
+        &lt;/script&gt; 
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<p>对于非radio, checkbox, select的控件，我们可以通过data-duplex-changed来指定一个回调，传参为元素的value值，this指向元素本身，要求必须有返回值。</p>
+<pre class="brush:html;gutter:false;toolbar:false;">
+&lt;script&gt;
+avalon.define("test", function(vm){
+   vm.str = "&lt;p&gt;sss&lt;/p&gt;"
+})
+&lt;/script&gt;
+&lt;div ms-controller="test"&gt;{{str | uppercase }}&lt;/div&gt;
+</pre>

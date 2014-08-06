@@ -1,6 +1,6 @@
-define(["avalon.getModel",
+define(["../avalon.getModel",
         "text!./avalon.daterangepicker.html", 
-        "datepicker/avalon.datepicker",
+        "./avalon.datepicker",
         "css!../chameleon/oniui-common.css", 
         "css!./avalon.daterangepicker.css"], function(avalon, sourceHTML) {
     var calendarTemplate = sourceHTML;
@@ -115,7 +115,7 @@ define(["avalon.getModel",
                     inputFromDate = options.parseDate(inputFromValue),
                     inputToDate = options.parseDate(inputToValue),
                     label = options.datesDisplayFormat(options.defaultLabel,inputFromValue, inputToValue),
-                    labelWidth = label.length * 10;
+                    labelWidth = label.length * 10 -20;
                 vmodel.label = label;
                 _confirmClick = true;
                 vmodel.toggle = false;

@@ -1,7 +1,7 @@
-define(["avalon.getModel", 
-        "datepicker/avalon.datepicker.lang",
+define(["../avalon.getModel", 
+        "./avalon.datepicker.lang",
         "text!./avalon.datepicker.html", 
-        "dropdown/avalon.dropdown.js",
+        "../dropdown/avalon.dropdown.js",
         "css!../chameleon/oniui-common.css", 
         "css!./avalon.datepicker.css"], function(avalon, holidayDate, sourceHTML) {
     var calendarTemplate = sourceHTML,
@@ -268,6 +268,9 @@ define(["avalon.getModel",
                     div.appendChild(tip);
                     // element.msRetain = false;
                     element.value = vmodel.allowBlank ? _value : _originValue;
+                }
+                if (~vmodel.zIndex) {
+                    calendar.style.zIndex = vmodel.zIndex;
                 }
                 div = options.type ==="range" ? element["data-calenderwrapper"] : div;
                 bindEvents(calendar, div);
@@ -625,6 +628,7 @@ define(["avalon.getModel",
         calendarLabel: "选择日期",
         onChangeMonthYear: avalon.noop, 
         watermark: true,
+        zIndex: -1,
         onSelect: avalon.noop, //将废弃,相当于onSelect
         onClose: avalon.noop,
         parseDate: function(str){

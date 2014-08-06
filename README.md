@@ -90,13 +90,19 @@ avalon.oniui
         <td colspan=4>第2期</td>
     </tr>
    <tr>
-        <td>json</td><td>功能组件</td><td>缺文档示例</td><td>钟，json2</td>
+        <td>json</td><td>功能组件</td><td>完成</td><td>钟，json2</td>
     </tr>
     <tr>
         <td>cookie</td><td>功能组件</td><td>完成</td><td>钟，cookie</td>
     </tr>
     <tr>
         <td>store</td><td>功能组件</td><td>完成</td><td>钟，本地储存</td>
+    </tr>
+    <tr>
+        <td>promise</td><td>功能组件</td><td>完成</td><td>钟, es6的Promise组件</td>
+    </tr>
+    <tr>
+        <td>colorpicker</td><td>UI组件</td><td>完成</td><td>王，颜色选择器</td>
     </tr>
     <tr>
         <td>lazyload</td><td>功能组件</td><td></td><td>懒加载</td>
@@ -284,3 +290,14 @@ $ui-state-error-color: #ff8888!global;
 }
 ```
 改成这些，重新编译一下就行了。
+
+LOGO的来历
+==========================
+Oni日语为鬼, 可以美化一下叫英灵
+在fate/Zero这部动画中, 最强大的英灵就是"金闪闪"吉尔伽美什
+而吉尔伽美什对应的咒令就是 远坂时臣的那个
+<div><img src="http://i.imgur.com/jezsx.jpg"/></div>
+<div><img  src="http://i-7.vcimg.com/crop/26fb9dd7fa1a77169a869b31df5b576f12700(280x)/thumb.jpg"/></div>
+<div><a href="<div><a href=""><img width=400 height=300 src="http://www.fate-zero.jp/talksession/img/talk_bg-archer.jpg"/></a></div>
+http://baike.baidu.com/view/2850010.htm
+http://baike.baidu.com/subview/666734/7383298.htm?fromtitle=FateZero&fromid=5097473&type=syn#6_4

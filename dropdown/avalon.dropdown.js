@@ -1,7 +1,7 @@
 define(['avalon',
     'text!./avalon.dropdown.html',
-    'avalon.getModel',
-    'scrollbar/avalon.scrollbar',
+    '../avalon.getModel',
+    '../scrollbar/avalon.scrollbar',
     "css!../chameleon/oniui-common.css",
     "css!./avalon.dropdown.css"
 ], function(avalon, template) {
@@ -248,8 +248,7 @@ define(['avalon',
                     vmodel.toggle = false;
                     return;
                 }
-                var height = vmodel.dropdownNode.scrollHeight;
-                vmodel.menuHeight = height;
+
                 //为了防止显示时调整高度造成的抖动，将节点初始化放在改变toggle值之前
                 if (!listNode) {//只有单选下拉框才存在显示隐藏的情况
                     var list;
@@ -418,6 +417,7 @@ define(['avalon',
         height: 200, //下拉列表的高度
         enable: true, //组件是否可用
         readOnly: false, //组件是否只读
+        currentOption: null,  //组件当前的选项
         data: [], //下拉列表显示的数据模型
         textFiled: 'text', //模型数据项中对应显示text的字段,可以传function，根据数据源对text值进行格式化
         valueField: 'value', //模型数据项中对应value的字段

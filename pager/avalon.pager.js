@@ -95,12 +95,12 @@ define(["avalon",
             vm.$watch("currentPage", function(a) {
                 vmodel._currentPage = a
             })
-
+        
             vm.changeCurrentPage = function(e) {
                 if (e.type === "keyup" && e.keyCode !== 13)
                     return
                 //currentPage需要转换为Number类型 fix lb1064@qq.com
-                vmodel.currentPage = parseInt(vmodel._currentPage, 10)
+                vmodel.currentPage = parseInt(this.value, 10) || 1
                 vmodel.pages = getPages(vmodel)
             }
             vm.pages = []
@@ -171,6 +171,8 @@ define(["avalon",
         lastPage: 0, //当前可显示的最大页码，不能大于totalPages
         alwaysShowNext: false, //总是显示向后按钮
         alwaysShowPrev: false, //总是显示向前按钮
+        showFirstOmit: false,
+        showLastOmit: false,
         showJumper: false, //是否显示输入跳转台
         getTemplate: function(tmpl, opts) {
             return tmpl
@@ -218,8 +220,10 @@ define(["avalon",
                 }
             }
         }
-        vm.firstPage = pages[0]
-        vm.lastPage = pages[pages.length - 1]
+        vm.firstPage = pages[0] || 1
+        vm.lastPage = pages[pages.length - 1] || 1
+        vm.showFirstOmit = vm.firstPage > 2
+        vm.showLastOmit = vm.lastPage < max - 1
         return  pages//[0,1,2,3,4,5,6]
     }
     return avalon

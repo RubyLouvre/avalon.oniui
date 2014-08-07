@@ -1,0 +1,32 @@
+<h3 id="ms-data">数据绑定(ms-data)</h3>
+<p>用法为ms-data-name="value", 用于为元素节点绑定HTML5 data-*属性。</p>
+<pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;ms-data&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="avalon.js"&gt;&lt;/script&gt;
+        &lt;script&gt;
+            avalon.define("data", function(vm) {
+                vm.aaa = 1000
+                vm.vvv = {
+                    id: 44
+                }
+                vm.click = function() {
+                    var elem = this;
+                    alert(elem.getAttribute("data-aaa"))//"1000"
+                    alert(elem.getAttribute("data-bbb-ccc"))//"1"
+                    alert(elem.getAttribute("data-eee"))//null
+                    alert(elem["data-eee"]) // vm.vvv 对于对象属性, data-*无法序列化,可以通过这种方式来取
+                    avalon.log(elem["data-eee"])
+                }
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="data"&gt;
+        &lt;div ms-data-aaa="aaa" ms-data-bbb-ccc="1" ms-data-eee="vvv" ms-click="click"&gt;点我&lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>

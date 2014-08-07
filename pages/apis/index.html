@@ -1,8 +1,29 @@
 <script>
-    avalon.define("apis", function(vm) {
-        vm.bindings = "ms-if, ms-text, ms-duplex, ms-html, ms-repeat".match(avalon.rword).sort()
+    function idToHref(id) {
+        switch (id) {
+            case "ms-checked":
+            case "ms-disabled":
+            case "ms-enabled":
+            case "ms-selected":
+            case "ms-readonly":
+                return "bool-bindings"
+            case "ms-href":
+            case "ms-src":
+            case "ms-alt":
+            case "ms-title":
+            case  "ms-value":
+                return "string-bindings"
+
+        }
+        return id
+    }
+    var apisVM = avalon.define("apis", function(vm) {
+        vm.bindings = "ms-if, ms-text, ms-duplex,ms-data, ms-visible, ms-on, ms-href, ms-src, ms-alt, ms-title, ms-value, ms-html, ms-repeat, ms-checked, ms-disabled, ms-selected,ms-readonly".match(avalon.rword).sort()
         vm.statics = "mix, bind, unbind, ready, scan, define".match(avalon.rword).sort()
+        vm.callbacks = ["data-callback"]
+        vm.bindingIncludes = []
         vm.scrollToView = function(id) {
+            id = idToHref(id)
             var el = document.getElementById(id)
             if (el) {
                 var top = avalon(el).offset().top - 70
@@ -13,6 +34,14 @@
             SyntaxHighlighter.highlight()
         }
     })
+    var uniq = {}
+    apisVM.bindings.forEach(function(ID) {
+        var newID = idToHref(ID)
+        if (!uniq[newID]) {
+            apisVM.bindingIncludes.push(newID)
+            uniq[newID] = 1
+        }
+    })
 </script>
 <style>
     .apis-table{
@@ -20,10 +49,20 @@
     }
     .apis-list {
         width:150px;
-         background:rgb(221,221,204);
+        background:rgb(221,221,204);
+<<<<<<< HEAD
+        font-size: 14px;
+        line-height: 1.5;
     }
     .apis-details{
-         background:rgb(238,238,221);
+        padding:0 1em;
+        background:rgb(238,238,221);
+        font: 13px/1.5 "OpenSansRegular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+=======
+    }
+    .apis-details{
+        background:rgb(238,238,221);
+>>>>>>> 51621cd61dc3e4f1cfde1d953129d84746d28843
     }
     .apis-details p{
         text-indent: 2em;
@@ -72,13 +111,22 @@
                         <li ms-repeat="statics" ms-click="scrollToView(el)">{{el}}</li>
                     </ul>
                 </li>
+                <li>
+                    <div class="title">各种回调</div>
+                    <ul class="child-nav">
+                        <li ms-repeat="callbacks" ms-click="scrollToView(el)">{{el}}</li>
+                    </ul>
+                </li>
             </ul>
         </td>
         <td class="apis-details">
-            <div ms-repeat="bindings" ms-include-src="pages/apis/bindings/{{el}}.html" data-include-rendered="highlight">
+            <div ms-repeat="bindingIncludes" ms-include-src="pages/apis/bindings/{{el}}.html" data-include-rendered="highlight">
 
             </div>
             <div ms-repeat="statics" ms-include-src="pages/apis/statics/{{el}}.html"  data-include-rendered="highlight">
+
+            </div>
+            <div ms-repeat="callbacks" ms-include-src="pages/apis/callbacks/{{el}}.html"  data-include-rendered="highlight">
 
             </div>
         </td>

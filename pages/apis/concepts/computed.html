@@ -1,0 +1,63 @@
+<h3 id="c-computed">计算属性</h3>
+<p>计算属性，监控属性的一种，名字取自emberjs，相当于WPF的DependencyProperty（依赖属性），
+    意即它的值是根据其他两个或两个以上的监控属性计算出来。 </p>
+<p>它在VM定义时表现为一个拥有set与get(可选)方法的普通对象， 此外不能再有其他属性与方法。
+    它里面的<b>this</b>指向VM，不能用avalon.define(di, function(vm){})这里的vm。</p>
+<pre class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;计算属性&lt;/title&gt;
+        &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;
+        &lt;script src="avalon.js" &gt;&lt;/script&gt;
+ 
+        &lt;script&gt;
+            avalon.define("test", function(vm) {
+                vm.firstName = "司徒"
+                vm.lastName = "正美"
+                vm.fullName = {//一个包含set或get的对象
+                    set: function(val) {//里面必须用this指向vm，但不能使用vm
+                        var array = (val || "").split(" ");
+                        this.firstName = array[0] || "";
+                        this.lastName = array[1] || "";
+                    },
+                    get: function() {
+                        return this.firstName + " " + this.lastName;
+                    }
+                }
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div ms-controller="test"&gt;
+            &lt;p&gt;First name: &lt;input ms-duplex="firstName" /&gt;&lt;/p&gt;
+            &lt;p&gt;Last name: &lt;input ms-duplex="lastName"  /&gt;&lt;/p&gt;
+            &lt;p&gt;Hello,    &lt;input ms-duplex="fullName"&gt;&lt;/p&gt;
+            &lt;div&gt;{{firstName +" | "+ lastName }}&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<script>
+    avalon.define("c-compute", function(vm) {
+        vm.firstName = "司徒"
+        vm.lastName = "正美"
+        vm.fullName = {//一个包含set或get的对象
+            set: function(val) {//里面必须用this指向scope，不能使用scope
+                var array = (val || "").split(" ");
+                this.firstName = array[0] || "";
+                this.lastName = array[1] || "";
+            },
+            get: function() {
+                return this.firstName + " " + this.lastName;
+            }
+        }
+    })
+</script>
+<div ms-controller="c-compute">
+    <p>First name: <input ms-duplex="firstName" /></p>
+    <p>Last name: <input ms-duplex="lastName"  /></p>
+    <p>Hello,    <input ms-duplex="fullName"></p>
+    <div>{{firstName +" | "+ lastName }}</div>
+</div>
+

@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>avalon ui</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="dialog notice组件使用">
+    <meta name="keywords" content="dialog notice组件使用">
+    <meta name="author" content="Bootstrap中文网">
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="doc.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei UI","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
+        }
+        .ui-notice.ui-notice-info1 {
+            color: #3a87ad;
+            background-color: #d9edf7;
+            border-color: #bce8f1;
+        }
+        .ui-notice.ui-notice-success1 {
+            color: #fff;
+            background-color: #5bb75b;
+            border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
+        }
+        .ui-notice.ui-notice-error1 {
+            color: #b94a48;
+            background-color: #f2dede;
+            border-color: #eed3d7;
+        }
+    </style>
+    <script src="../avalon.js"></script>
+    <script src="jquery-1.10.2.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+    <![endif]-->
+</head>
+<body data-spy="scroll" data-target=".bs-docs-sidebar">
+<!-- 顶部导航 -->
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="active">
+                    <a href="http://hotelued.qunar.com/oniui/index.html" target="_blanck">AVALON UI</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <!-- 侧边导航 -->
+    <div class="row">
+        <div class="span3 bs-docs-sidebar">
+            <ul class="nav nav-list bs-docs-sidenav">
+                <li>
+                    <a href="#dialogNormal"><i class="icon-chevron-right"></i> dialog 规范用法</a>
+                </li>
+                <li>
+                    <a href="#dialogAbandon"><i class="icon-chevron-right"></i> dialog 废弃的用法</a>
+                </li>
+                <li>
+                    <a href="#dialogWarning"><i class="icon-chevron-right"></i> 升级dialog adapter 注意点</a>
+                </li>
+                <li>
+                    <a href="#noticeNormal"><i class="icon-chevron-right"></i> notice 规范用法</a>
+                </li>
+                <li>
+                    <a href="#noticeAbandon"><i class="icon-chevron-right"></i> notice 废弃的用法</a>
+                </li>
+                <li>
+                    <a href="#noticeWarning"><i class="icon-chevron-right"></i> 升级notice adapter 注意点</a>
+                </li>
+            </ul>
+        </div>
+        <div class="span9">
+            <!-- dialog 规范用法 -->
+            <section ms-controller="dialog" id="dialogNormal">
+                <div id="dialogContainer"></div>
+                <div class="page-header">
+                    <h1>Dialog 规范用法</h1>
+                </div>
+                <p>通过点击不同按钮了解dialog的使用方式。</p>
+                <p><span class="label label-info">注意：</span>配置方法最好放在配置对象;</p>
+                
+                <div class="bs-docs-example notFunc" style="padding-bottom: 24px;">
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('toggle')">toggle dialog</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('width', 800)">update width</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('title')">update title</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('showClose')">update showClose</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('confirmName')">update confirmName</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('cancelName')">update cancelName</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('zIndex')">update zIndex</a>
+                </div>
+                <h3>html</h3>
+<pre ms-skip>
+    &lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"dialog, diaA, $diaAOpts</span>" 
+         <span class="atn">data-dialog-title</span><span class="pun">=</span><span class="atv">"dialog使用演示"</span> 
+         <span class="atn">data-dialog-modal</span><span class="pun">=</span><span class="atv">"false"</span> 
+         <span class="atn">ms-draggable</span>&gt;
+        此元素内部的内容会成为dialog的对话框体
+    &lt;/div&gt;
+    &lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"dialog, diaB"</span> 
+         <span class="atn">data-dialog-title</span><span class="pun">=</span><span class="atv">"dialog B"</span>
+         <span class="atn">data-dialog-type</span><span class="pun">=</span><span class="atv">"alert"</span>
+         <span class="atn">data-dialog-on-close</span><span class="pun">=</span><span class="atv">"closeCallback</span>"&gt;
+        &lt;p&gt;在此dialog之上可以显示再显示dialog，点击下面按钮打开dialog c&lt;/p&gt;
+        &lt;p&gt;可以按照自己需要随便打开多少个dialog都行，步骤如斯&lt;/p&gt;
+        &lt;p&gt;建议大家把所有涉及到的dialog都放在页面最底部，便于集中查找和管理&lt;/p&gt;
+        &lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"showNestedDialog('diaC')"</span>&gt;open dialog c&lt;/button&gt;
+    &lt;/div&gt;
+</pre>
+                <div class="bs-docs-example func" style="padding-bottom: 24px;">
+                    <a href="javascript:void 0;" class="btn btn-inverse" ms-click="setContent1">setContent(content)</a>
+                    <a href="javascript:void 0;" class="btn btn-inverse large" ms-click="setContent2">setContent(content, noScan)</a>
+                    <a href="javascript:void 0;" class="btn btn-inverse large" ms-click="setContent3">setContent(content, noScan, vmodel)</a>
+                    <a href="javascript:void 0;" class="btn btn-inverse large" ms-click="setTitle">setTitle(title)--不推荐</a>
+                    <a href="javascript:void 0;" class="btn btn-inverse" ms-click="setModel">setModel(m)</a>
+                </div>
+                <h3>dialog A的配置对象</h3>
+<pre ms-skip>
+    vm.$diaAOpts = {
+        <span class="com">// modal: true,</span>
+        <span class="str">container</span>: "dialogContainer",
+        <span class="com">// type: "alert",</span>
+        <span class="str">onInit</span>: function(vmodel, options, vmodels) {
+            console.log("执行onInit回调")
+            console.log("arguments is : ")
+            console.log(arguments)
+            console.log("上下文this is :")
+            console.log(this)
+            diaAVM = vmodel
+        },
+        <span class="str">onOpen</span>: function(vmodel) {
+            console.log("执行onOpen回调") 
+            console.log("参数vmodel is : ") 
+            console.log(vmodel)
+            console.log("上下文this is :") 
+            console.log(this)
+        },
+        <span class="str">onConfirm</span>: function(event, vmodel) {
+            console.log("执行onConfirm回调") 
+            console.log("参数arguments is : ") 
+            console.log(arguments)
+            console.log("上下文this is :") 
+            console.log(this) 
+            setTimeout(function() {
+                console.log("onConfirm中有异步操作，如果onConfirm回调不显示return false，再次异步操作执行完之前dialog就已经关闭了")
+            },
+            2000);
+            console.log("close dialog done")
+        },
+        <span class="str">onCancel</span>: function(event, vmodel) {
+            console.log("执行onCancel回调") 
+            console.log("参数arguments is : ") 
+            console.log(arguments)
+            console.log("上下文this is :") 
+            console.log(this)
+        },
+        <span class="str">onClose</span>: function(vmodel) {
+            console.log("执行onClose回调") 
+            console.log("参数vmodel is : ") 
+            console.log(vmodel)
+            console.log("上下文this is :") 
+            console.log(this)
+        },
+        <span class="str">welcomeA</span>: function() {
+            alert("dialog 扩展功能1---->welcomeA")
+        }
+    }
+</pre>
+                <div class="bs-docs-example advanceUse" style="padding-bottom: 24px;">
+                    <a href="javascript:void 0;" class="btn" ms-click="showNestedDialog('diaB')">嵌套dialog</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="extendDialog('diaA')">扩展dialog行为</a>
+
+                </div>
+                <div ms-widget="dialog, diaA, $diaAOpts" 
+                     data-dialog-title="dialog使用演示" 
+                     data-dialog-modal='true' 
+                     ms-draggable>
+                    <p>此元素内部的内容会成为dialog的对话框体</p>
+                    
+                </div>
+                <div ms-widget="dialog, diaB" 
+                     data-dialog-title="dialog B"
+                     data-dialog-type='alert'
+                     data-dialog-on-close="closeCallback">
+                    <p>在此dialog之上可以显示再显示dialog，点击下面按钮打开dialog c</p>
+                    <p>可以按照自己需要随便打开多少个dialog都行，步骤如斯</p>
+                    <p>建议大家把所有涉及到的dialog都放在页面最底部，便于集中查找和管理</p>
+                    <button ms-click="showNestedDialog('diaC')">open dialog c</button>
+                </div>
+                <div ms-widget="dialog, diaC" 
+                     data-dialog-title="dialog C">
+                    <p>在此dialog之上还可以显示dialog，点击下面按钮打开dialog d</p>
+                    <p>在此dialog之上还可以显示dialog，点击下面按钮打开dialog d</p>
+                    <button ms-click="showNestedDialog('diaD')">open dialog d</button>
+                </div>
+                <div ms-widget="dialog, diaD" 
+                     data-dialog-title="dialog D">
+                    <p>层上层的dialog效果大家都看到了，怎样，try it</p>
+                </div>
+                <script>
+                    require(["dialog/avalon.dialog", "./draggable/avalon.draggable"],function(avalon) {
+                        var dialogVM = avalon.define("dialog", function(vm) {
+                            var diaAVM = null;
+                            vm.$diaAOpts = {
+                                modal: true,
+                                container: "dialogContainer",
+                                // type: "alert",
+                                onInit: function(vmodel, options, vmodels) {
+                                    console.log("执行onInit回调")
+                                    console.log("arguments is : ")
+                                    console.log(arguments)
+                                    console.log("上下文this is :")
+                                    console.log(this)
+                                    diaAVM = vmodel
+                                },
+                                onOpen: function(vmodel) {
+                                    console.log("执行onOpen回调") 
+                                    console.log("参数vmodel is : ") 
+                                    console.log(vmodel)
+                                    console.log("上下文this is :") 
+                                    console.log(this)
+                                },
+                                onConfirm: function(event, vmodel) {
+                                    console.log("执行onConfirm回调") 
+                                    console.log("参数arguments is : ") 
+                                    console.log(arguments)
+                                    console.log("上下文this is :") 
+                                    console.log(this) 
+                                    setTimeout(function() {
+                                        console.log("onConfirm中有异步操作，如果onConfirm回调不显示return false，再次异步操作执行完之前dialog就已经关闭了")
+                                        vmodel.toggle = false;
+                                        // close();
+                                    },
+                                    2000);
+                                    console.log("close dialog done")
+                                    return false;
+                                },
+                                onCancel: function(event, vmodel) {
+                                    console.log("执行onCancel回调") 
+                                    console.log("参数arguments is : ") 
+                                    console.log(arguments)
+                                    console.log("上下文this is :") 
+                                    console.log(this)
+                                },
+                                onClose: function(vmodel) {
+                                    console.log("执行onClose回调") 
+                                    console.log("参数vmodel is : ") 
+                                    console.log(vmodel)
+                                    console.log("上下文this is :") 
+                                    console.log(this)
+                                },
+                                welcomeA: function() {
+                                    alert("dialog 扩展功能1---->welcomeA")
+                                }
+                            }
+                            vm.closeCallback = function(vmodel) {
+                                console.log("通过data-dialog-on-close配置的回调") 
+                                console.log("参数vmodel is : ") 
+                                console.log(vmodel)
+                                console.log("上下文this is :") 
+                                console.log(this)
+                            }
+                            vm.changeConfigOpts = function(attr, status) {
+                                switch (attr) {
+                                case "width":
+                                    diaAVM.width = 800
+                                    break;
+                                case "title":
+                                    diaAVM.title = "动态修改title"
+                                    break;
+                                case "showClose":
+                                    diaAVM.showClose = false
+                                    break;
+                                case "confirmName":
+                                    diaAVM.confirmName = "提交"
+                                    break;
+                                case "cancelName":
+                                    diaAVM.cancelName = "撤销"
+                                    break;
+                                case "zIndex":
+                                    diaAVM.zIndex = 555
+                                    break;
+                                case "toggle":
+                                    diaAVM.toggle = !diaAVM.toggle
+                                    break;
+                                }
+                            }
+                            vm.setTitle = function() {
+                                diaAVM.setTitle("通过setTitle方法改变title")
+                            }
+                            vm.vmName = "dialog vmodel"
+                            vm.setContent1 = function() {
+                                diaAVM.setContent("<p>扫描此content的vmodel是<span class='text-success'>{{vmName}}</span></p>")
+                            }
+                            vm.setContent2 = function() {
+                                var content = "<p>此content不存在插值表达式，也不存在绑定属性，所以不需要扫描，设置第二个参数noScan为true {{vmName}}</p>"
+                                diaAVM.setContent(content, true);
+                            }
+                            vm.setContent3 = function() {
+                                var content = "<p>此content中存在插值表达式与绑定属性，明确声明用test vmodel为此content的作用域，且此content的vmodel是<span ms-class='text-info:cls'>{{vmName}}</span></p>"
+                                diaAVM.setContent(content, false, avalon.vmodels.test);
+                            }
+                            // setModel的参数必须是个不可监控的对象属性
+                            vm.$m = {
+                                tpl2: '我变了',
+                                cls: true,
+                                welcome: 'have a good time !',
+                                $title: "改变title并且改变模板然后重新渲染",
+                                $content: "<p>改变modal的content，of course <span ms-class='text-error:cls'>{{tpl2}}</span></p><p>welcome everyone , <span ms-class='text-warning:cls'>{{welcome}}</span></p>",
+                                $noScan: false // 是否需要扫描编译模板，需要编译则设为false或者不定义即可，不需要扫描设为true
+                            };
+                            vm.setModel = function() {
+                                diaAVM.setModel(dialogVM.$m)
+                            }
+                            vm.showNestedDialog = function(vmId) {
+                                avalon.vmodels[vmId].toggle = true;
+                            }
+                            vm.extendDialog = function(id) {
+                                var dialogVM = avalon.vmodels[id],
+                                    content = '<p><button ms-click="welcomeA">试试dialog的新功能welcome</button></p><p><button ms-click="executeWelB">execute 扩展功能2--->welcomeB</button></p>',
+                                    dialogExtendObj = {
+                                        welcomeB: function() {
+                                            alert("welcome everyone, 撒花欢迎！")
+                                        }
+                                    }
+                                avalon.mix(dialogVM, dialogExtendObj)
+                                dialogVM.setContent(content);
+                                dialogVM.toggle = true;
+                            }
+                            vm.executeWelB = function() {
+                                avalon.vmodels.diaA.welcomeB();
+                            }
+                        }) 
+                        var testVM = avalon.define("test", function(vm) {
+                            vm.vmName = "test vmodel"
+                            vm.cls = true
+                        }) 
+                        avalon.scan($("#dialogNormal")[0], dialogVM);
+                    })
+                </script>
+                
+                
+                <h3>vm的定义</h3>
+<pre ms-skip>
+    var dialogVM = avalon.define("dialog", function(vm) {
+        var diaAVM = null;
+        vm.<span class="str">$diaAOpts</span> = {<span class="str">......</span>}
+        vm.<span class="str">closeCallback</span> = function(vmodel) {
+            console.log("通过data-dialog-on-close配置的回调") 
+            console.log("参数vmodel is : ") 
+            console.log(vmodel)
+            console.log("上下文this is :") 
+            console.log(this)
+        }
+        vm.<span class="str">changeConfigOpts</span> = function(attr, status) {
+            switch (attr) {
+            case "width":
+                diaAVM.<span class="atn">width</span> = 800
+                break;
+            case "title":
+                diaAVM.<span class="atn">title</span> = "动态修改title"
+                break;
+            case "showClose":
+                diaAVM.<span class="atn">showClose</span> = false
+                break;
+            case "confirmName":
+                diaAVM.<span class="atn">confirmName</span> = "提交"
+                break;
+            case "cancelName":
+                diaAVM.<span class="atn">cancelName</span> = "撤销"
+                break;
+            case "zIndex":
+                diaAVM.<span class="atn">zIndex</span> = 555
+                break;
+            case "toggle":
+                diaAVM.<span class="atn">toggle</span> = !diaAVM.<span class="atn">toggle</span>
+                break;
+            }
+        }
+        vm.<span class="str">setTitle</span> = function() {
+            diaAVM.<span class="atn">setTitle</span>("通过setTitle方法改变title")
+        }
+        vm.<span class="str">vmName</span> = "dialog vmodel"
+        vm.<span class="str">setContent1</span> = function() {
+            diaAVM.<span class="atn">setContent</span>("&lt;p&gt;扫描此content的vmodel是&lt;span class='text-success'&gt;{{vmName}}&lt;/span&gt;&lt;/p&gt;")
+        }
+        vm.<span class="str">setContent2</span> = function() {
+            var content = "&lt;p&gt;此content不存在插值表达式，也不存在绑定属性，所以不需要扫描，设置第二个参数noScan为true {{vmName}}&lt;/p&gt;"
+            diaAVM.<span class="atn">setContent</span>(content, true);
+        }
+        vm.<span class="str">setContent3</span> = function() {
+            var content = "&lt;p&gt;此content中存在插值表达式与绑定属性，明确声明用test vmodel为此content的作用域，且此content的vmodel是<span ms-class='text-info:cls'>{{vmName}}</span>&lt;/p&gt;"
+            diaAVM.<span class="atn">setContent</span>(content, false, avalon.vmodels.test);
+        }
+        // setModel的参数必须是个不可监控的对象属性
+        vm.<span class="str">$m</span> = {
+            <span class="str">tpl2</span>: '我变了',
+            <span class="str">cls</span>: true,
+            <span class="str">welcome</span>: 'have a good time !',
+            <span class="str">$title</span>: "改变title并且改变模板然后重新渲染",
+            <span class="str">$content</span>: "&lt;p&gt;改变modal的content，of course <span ms-class='text-error:cls'>{{tpl2}}</span>&lt;/p&gt;&lt;p&gt;welcome everyone , <span ms-class='text-warning:cls'>{{welcome}}</span>&lt;/p&gt;",
+            <span class="str">$noScan</span>: false // 是否需要扫描编译模板，需要编译则设为false或者不定义即可，不需要扫描设为true
+        };
+        vm.<span class="str">setModel</span> = function() {
+            diaAVM.<span class="atn">setModel</span>(dialogVM.<span class="atn">$m</span>)
+        }
+        vm.<span class="str">showNestedDialog</span> = function(vmId) {
+            avalon.vmodels[vmId].<span class="atn">toggle</span> = true;
+        }
+        vm.<span class="str">extendDialog</span> = function(id) {
+            var dialogVM = avalon.vmodels[id],
+                content = '&lt;p&gt;&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"welcomeA"</span>&gt;试试dialog的新功能welcome&lt;/button&gt;&lt;/p&gt;&lt;p&gt;&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"executeWelB"</span>&gt;execute 扩展功能2---&gt;welcomeB&lt;/button&gt;&lt;/p&gt;',
+                dialogExtendObj = {
+                    welcomeB: function() {
+                        alert("welcome everyone, 撒花欢迎！")
+                    }
+                }
+                
+            avalon.<span class="str">mix</span>(dialogVM, dialogExtendObj)
+            dialogVM.<span class="str">setContent</span>(content);
+            dialogVM.<span class="str">toggle</span> = true;
+        }
+        vm.<span class="str">executeWelB</span> = function() {
+            avalon.vmodels.diaA.<span class="str">welcomeB</span>();
+        }
+    }) 
+    var testVM = avalon.define("test", function(vm) {
+        vm.<span class="str">vmName</span> = "test vmodel"
+        vm.<span class="str">cls</span> = true
+    }) 
+</pre>
+            </section>
+
+            <!-- dialog 废弃用法 -->
+            <section id="dialogAbandon">
+                <div class="page-header">
+                    <h1>Dialog 废弃用法</h1>
+                </div>
+                <h3>方法</h3>
+                <h4>diaVM.show()</h4>
+                <p>打开对话框</p>
+                <h4>diaVM.close()</h4>
+                <p>关闭对话框</p>
+                <h4>diaVM.setTitle()</h4>
+                <p>动态改变动画框的title</p>
+                <h3>事件回调</h3>
+                <h4>submit</h4>
+                <p>dialog type默认时确定按钮的回调</p>
+                <h4>cancel</h4>
+                <p>点击取消或者右上方关闭按钮的回调</p>
+                <h4>confirm</h4>
+                <p>dialog type为alert时点击确定按钮之后的回调</p>
+                <h3>组件配置方式</h3>
+                <h4>ms-widget="@dialog, @dialogId"</h4>
+                <p>组件命名不再以@开头</p>
+                <h4>data-@dialog-submit="submit(close[,...])"</h4>
+                <p>html结构中配置组件方法时不可添加参数</p>
+                <h4>data-@dialog-cancel="cancel(close[,...])"</h4>
+                <p>submit、cancel、confirm等回调的配置只配置vm中对应的属性名，不要添加参数</p>
+<pre ms-skip>   
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"@dialog, orderDialog"</span> <span class="atn">data-@dialog-title</span><span class="pun">=</span><span class="atv">"提示"</span> <span class="atn">data-@dialog-submit</span><span class="pun">=</span><span class="atv">"submit($event, close)"</span> <span class="atn">data-@dialog-cancel</span><span class="pun">=</span><span class="atv">"cancel(close)"</span>&gt;...&lt;/div&gt;
+&lt;div <span class="atn">data-@dialog-submit</span><span class="pun">=</span><span class="atv">"submit(submitBreakfastRule, close)"</span> <span class="atn">data-@dialog-title</span><span class="pun">=</span><span class="atv">"设置早餐"</span> <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"@dialog, dlgBreakfastRule"</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-dialog ms-controller"</span>&gt;...&lt;/div&gt;
+</pre>
+                <h4>avalon.dialog({...})</h4>
+                <p>组件自身不再提供avalon.dialog方法来动态生成dialog，业务中可以自己扩展，但是不建议</p>
+<pre>
+serviceTimeDialog = $$.dialog({
+    id: 'serviceTimeDiaId',
+    title: '含日期的服务时间设置',
+    content: SERVICE_TIME_TMPL,
+    width: 620,
+    confirm: 'closeServiceTimeDia( close )',
+    model: 'serviceTimeDia'
+});
+</pre>
+                <h4>avalon.showAlert({...})</h4>
+                <p>组件自身不再提供avalon.dialog方法来模拟警告对话框，业务中可以自己扩展，但是不建议</p>
+<pre>
+$$.showAlert('获取供应商信息失败' + data.status + ' ' + error);
+</pre>
+
+            </section>
+
+            <!-- dialog升级注意点 -->
+            <section id="dialogWarning">
+                <div class="page-header">
+                    <h1>升级dialog-adapter注意点</h1>
+                </div>
+                <h4>setContent  ms-include</h4>
+                <p>通过setContent设置了对话框内容时，如content中存在ms-include这种异步绑定，务必保证模板渲染完成之后再打开dialog，否则定位错误</p>
+                <h5>错误用法</h5>
+<pre>
+dlgRoleList = avalon.dialog({
+    model: 'roleList',
+    title: '快速复制角色权限',
+    type: 'confirm',
+    confirm: 'save(close)',
+    width: 485
+});
+avalon.nextTick(function () {
+    dlgRoleList.setContent("&lt;div <span class="atn">ms-include</span><span class="pun">=</span><span class="atv">\"'tpl'\"</span>&gt;&lt;/div&gt;");
+    dlgRoleList.<span class="str">show()</span>;
+    avalon.nextTick(function () {
+        $$.$ui('roleselect').refreshScrollBar();//刷新显示列表项
+    })
+});
+</pre>
+                <h5>正确用法</h5>
+<pre ms-skip>
+vm.<span class="str">dialogIncludeRenderd</span> = function() {
+    avalon.vmodels.roleCopy.<span class="str">toggle</span> = true;
+    $$.$ui('roleselect').refreshScrollBar();//刷新显示列表项
+}
+dlgRoleList = QTA.dialog({
+    model: 'roleList',
+    title: '快速复制角色权限',
+    id: 'roleCopy',
+    type: 'confirm',
+    options: '$roleListOpts'
+});
+avalon.nextTick(function () {
+    dlgRoleList.setContent("&lt;div <span class="atn">ms-include</span><span class="pun">=</span><span class="atv">\"'tpl'\"</span> <span class="atn">data-include-rendered</span><span class="pun">=</span><span class="atv">'dialogIncludeRenderd'</span>&gt;&lt;/div&gt;");
+});
+</pre>
+                <h4>onConfirm、onCancel回调中的异步操作</h4>
+                <p>如果用户自定义了onConfirm和onCancel的回调方法，如果回调中存在异步操作，比如点确定按钮时的数据验证，务必保证在回调方法末尾添加return false;否则点击确定dialog即关闭</p>
+                <p>以role下的members.js为例</p>
+            </section>
+
+            <!-- notice 规范用法 -->
+            <section ms-controller="notice" id="noticeNormal">
+                <div class="page-header">
+                    <h1>notice 规范用法</h1>
+                </div>
+                <p>通过点击不同按钮了解notice的使用方式。</p>
+                <p><span class="label label-info">注意：</span>配置方法最好放在配置对象;</p>
+                
+                <div class="bs-docs-example notFunc" style="padding-bottom: 24px;">
+                    <div ms-widget="notice, NA, $noticeAOpts" 
+                         data-notice-has-close-btn=true>
+                        配置notice 并动态改变notice的type 、header/title、 content、type、hasCloseBtn、infoClass、errorClass、successClass
+                     </div>
+                    <div ms-widget="notice, NB"
+                         data-notice-container="#noticeContainer"
+                         data-notice-is-affix='true'
+                         data-notice-is-place='true'
+                         data-notice-on-hide="hideCallback">
+                        设置notice的container为自定义的元素(元素id或元素对象)使notice显示在自定义的位置而不是绑定元素自身，notice默认是占位的，也就是说会根据container的定义显示在对应位置，但可以配置notice为非占位的，非占位的情况下notice append body元素后
+                    </div>
+                    <div ms-widget="notice, NC"
+                         data-notice-container="#noticeContainer"
+                         data-notice-timer='1000'
+                         data-notice-type="error">
+                        设置notice C在显示1s之后自动关闭
+                    </div>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('toggle')">toggle notice</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('type')">update type</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('content')">update content</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('header')">update header</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('title')">update title</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('hasCloseBtn')">update hasCloseBtn</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('timer')">update timer</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('infoClass')">update infoClass</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('errorClass')">update errorClass</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('successClass')">update successClass</a>
+                    <a href="javascript:void 0;" class="btn" ms-click="changeConfigOpts('zIndex')">update zIndex</a>
+                </div>
+                <h3>html</h3>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"notice, NA, $noticeAOpts"</span> 
+     <span class="atn">data-notice-has-close-btn</span><span class="pun">=</span><span class="atv">true</span>&gt;
+    配置notice 并动态改变notice的type 、header/title、 content、type、hasCloseBtn、infoClass、errorClass、successClass
+&lt;/div&gt;
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"notice, NB"</span>
+     <span class="atn">data-notice-container</span><span class="pun">=</span><span class="atv">"#noticeContainer"</span>
+     <span class="atn">data-notice-is-affix</span><span class="pun">=</span><span class="atv">'true'</span>
+     <span class="atn">data-notice-is-place</span><span class="pun">=</span><span class="atv">'true'</span>
+     <span class="atn">data-notice-on-hide</span><span class="pun">=</span><span class="atv">"hideCallback"</span>&gt;
+    设置notice的container为自定义的元素(元素id或元素对象)使notice显示在自定义的位置而不是绑定元素自身，notice默认是占位的，也就是说会根据container的定义显示在对应位置，但可以配置notice为非占位的，非占位的情况下notice append body元素后
+&lt;/div&gt;  
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"notice, NC"</span>
+     <span class="atn">data-notice-container</span><span class="pun">=</span><span class="atv">"#noticeContainer"</span>
+     <span class="atn">data-notice-type</span><span class="pun">=</span><span class="atv">"error"</span>
+     <span class="atn">data-notice-timer</span><span class="pun">=</span><span class="atv">'1000'</span>&gt;
+    设置notice C在显示1s之后自动关闭
+&lt;/div&gt;
+&lt;div <span class="atn">id</span><span class="pun">=</span><span class="atv">"noticeContainer"</span>&gt;&lt;/div&gt;  
+</pre>
+                <h3>notice A的配置对象</h3>
+<pre ms-skip>
+vm.<span class="str">$noticeAOpts</span> = {
+    <span class="com">// container: "",</span>
+    <span class="com">// timer: 200,</span>
+    <span class="com">// isPlace: true,</span>
+    <span class="com">// isAffix: false,</span>
+    <span class="str">onInit</span>: function(vmodel, options, vmodels) {
+        console.log("执行onInit回调")
+        console.log("arguments is : ")
+        console.log(arguments)
+        console.log("上下文this is :")
+        console.log(this)
+        noticeAVM = vmodel
+    },
+    <span class="str">onHide</span>: function(data, vmodels) {
+        console.log("执行onHide回调") 
+        console.log("参数arguments is : ") 
+        console.log(arguments)
+        console.log("上下文this is :") 
+        console.log(this)
+        number++;
+        noticeAVM.<span class="atn">content</span><span class="pun"> = </span><span class="atv">"隐藏notice后在回调里将其content修改这是第&nbsp;&nbsp;<b style='color:blue'>"+number+"</b>&nbsp;&nbsp;次修改"</span>
+    },
+    <span class="str">onShow</span>: function(data, vmodels) {
+        console.log("执行onShow回调") 
+        console.log("参数arguments is : ") 
+        console.log(arguments)
+        console.log("上下文this is :") 
+        console.log(this)
+        var typeArr = ["info", "success", "error"];
+        var index = Math.floor(Math.random()*3)
+        noticeAVM.<span class="atn">type</span><span class="pun"> =</span><span class="atv"> typeArr[index]</span>;
+    }
+}
+</pre>
+                <div class="bs-docs-example advanceUse" style="padding-bottom: 24px;">
+                    <div id="noticeContainer"></div>
+                    <a href="javascript:void 0;" class="btn large" ms-click="toggleNotice('NB')">toggle notice NB，让其可吸顶</a>
+                    <a href="javascript:void 0;" class="btn large" ms-click="toggleNotice('NC')">toggle notice NC，1s之后自动关闭</a>
+                </div>
+                <script>
+                    require(["notice/avalon.notice"],function(avalon) {
+                        var dialogVM = avalon.define("notice", function(vm) {
+                            var noticeAVM = null,
+                                number = 0;
+                            vm.$noticeAOpts = {
+                                // container: "",
+                                // timer: 200,
+                                // isPlace: true,
+                                // isAffix: false,
+                                onInit: function(vmodel, options, vmodels) {
+                                    console.log("执行onInit回调")
+                                    console.log("arguments is : ")
+                                    console.log(arguments)
+                                    console.log("上下文this is :")
+                                    console.log(this)
+                                    noticeAVM = vmodel
+                                },
+                                onHide: function(data, vmodels) {
+                                    console.log("执行onHide回调") 
+                                    console.log("参数arguments is : ") 
+                                    console.log(arguments)
+                                    console.log("上下文this is :") 
+                                    console.log(this)
+                                    number++;
+                                    noticeAVM.content = "隐藏notice后在回调里将其content修改这是第&nbsp;&nbsp;<b style='color:blue'>"+number+"</b>&nbsp;&nbsp;次修改"
+                                },
+                                onShow: function(data, vmodels) {
+                                    console.log("执行onShow回调") 
+                                    console.log("参数arguments is : ") 
+                                    console.log(arguments)
+                                    console.log("上下文this is :") 
+                                    console.log(this)
+                                    var typeArr = ["info", "success", "error"];
+                                    var index = Math.floor(Math.random()*3)
+                                    noticeAVM.type = typeArr[index];
+                                }
+                            }
+                            vm.hideCallback = function(vmodel) {
+                                console.log("执行data-notice-on-hide配置的onHide回调") 
+                                console.log("参数arguments is : ") 
+                                console.log(arguments)
+                                console.log("上下文this is :") 
+                                console.log(this)
+                            }
+                            vm.changeConfigOpts = function(attr, status) {
+                                switch (attr) {
+                                case "content":
+                                    noticeAVM.content = "new notice content, yeap !"
+                                    break;
+                                case "type":
+                                    var typeArr = ["info", "success", "error"];
+                                    var index = Math.floor(Math.random()*3)
+                                    noticeAVM.type = typeArr[index];
+                                    break;
+                                case "header":
+                                    noticeAVM.header = "new notice header"
+                                    break;
+                                case "title":
+                                    noticeAVM.header = "new notice title"
+                                    break;
+                                case "hasCloseBtn":
+                                    noticeAVM.hasCloseBtn = false
+                                    break;
+                                case "timer":
+                                    noticeAVM.timer = 1000
+                                    break;
+                                case "infoClass":
+                                    noticeAVM.type = "info"
+                                    noticeAVM.infoClass = "ui-notice-info1"
+                                    break;
+                                case "errorClass":
+                                    noticeAVM.type = "error"
+                                    noticeAVM.errorClass = "ui-notice-error1"
+                                    break;
+                                case "successClass":
+                                    noticeAVM.type = "success"
+                                    noticeAVM.successClass = "ui-notice-success1"
+                                    break;
+                                case "toggle":
+                                    noticeAVM.toggle = !noticeAVM.toggle
+                                    break;
+                                case "zIndex":
+                                    avalon.vmodels.NB.zIndex = 2000
+                                }
+                            }
+                            vm.toggleNotice = function(id) {
+                                var noticeVM = avalon.vmodels[id];
+                                noticeVM.toggle = !noticeVM.toggle;
+                            }
+                            
+                        }) 
+                        avalon.scan($("#noticeNormal")[0], dialogVM);
+                    })
+                </script>
+                
+                <h3>vm的定义</h3>
+<pre ms-skip>
+    var dialogVM = avalon.define("notice", function(vm) {
+        var noticeAVM = null,
+            number = 0;
+        vm.<span class="str">$noticeAOpts</span> = {<span class="str">......</span>}
+        vm.<span class="str">hideCallback</span> = function(vmodel) {
+            console.log("执行data-notice-on-hide配置的onHide回调") 
+            console.log("参数arguments is : ") 
+            console.log(arguments)
+            console.log("上下文this is :") 
+            console.log(this)
+        }
+        vm.<span class="str">changeConfigOpts</span> = function(attr, status) {
+            switch (attr) {
+            case "content":
+                noticeAVM.<span class="str">content</span> = "new notice content, yeap !"
+                break;
+            case "type":
+                var typeArr = ["info", "success", "error"];
+                var index = Math.floor(Math.random()*3)
+                noticeAVM.<span class="str">type</span> = typeArr[index];
+                break;
+            case "header":
+                noticeAVM.<span class="str">header</span> = "new notice header"
+                break;
+            case "title":
+                noticeAVM.<span class="str">title</span> = "new notice title"
+                break;
+            case "hasCloseBtn":
+                noticeAVM.<span class="str">hasCloseBtn</span> = false
+                break;
+            case "timer":
+                noticeAVM.<span class="str">timer</span> = 1000
+                break;
+            case "infoClass":
+                noticeAVM.<span class="str">type</span> = "info"
+                noticeAVM.<span class="str">infoClass</span> = "ui-notice-info"
+                break;
+            case "errorClass":
+                noticeAVM.<span class="str">type</span> = "error"
+                noticeAVM.<span class="str">errorClass</span> = "ui-notice-error"
+                break;
+            case "successClass":
+                noticeAVM.<span class="str">type</span> = "success"
+                noticeAVM.<span class="str">successClass</span> = "ui-notice-success"
+                break;
+            case "toggle":
+                noticeAVM.<span class="str">toggle</span> = !noticeAVM.toggle
+                break;
+            case "zIndex":
+                avalon.vmodels.NB.<span class="str">zIndex</span> = 2000
+            }
+        }
+        vm.<span class="str">toggleNotice</span> = function(id) {
+            var noticeVM = avalon.vmodels[id];
+            noticeVM.<span class="str">toggle</span> = !noticeVM.toggle;
+        }
+        
+    }) 
+    avalon.scan($("#noticeNormal")[0], dialogVM);
+</pre>
+            </section>
+
+            <!-- notice 废弃用法 -->
+            <section id="noticeAbandon">
+                <div class="page-header">
+                    <h1>notice 废弃用法</h1>
+                </div>
+                <h3>方法</h3>
+                <h4>noticeAVM.$instance.show()</h4>
+                <p>显示noticeAVM</p>
+                <h4>noticeAVM.$instance.hide()</h4>
+                <p>关闭noticeAVM</p>
+                <h4>noticeAVM.$instance.setContent(content)</h4>
+                <p>动态改变content</p>
+                <h4>noticeAVM.$instance.setType(type)</h4>
+                <p>动态改变type</p>
+                <h4>avalon.notice.show(id, msg, type, callbacks)</h4>
+                <p>打开vmodel为id的notice，并且更新content为msg，type为type，callbacks为显示notice后的回调</p>
+                <h4>avalon.notice.hide(id)</h4>
+                <p>关闭vmodel为id的提示</p>
+                <h4>avalon.notice.setTitle(id, title)</h4>
+                <p>动态改变vmodel为id的notice的title</p>
+                <h3>组件配置方式</h3>
+                <h4>ms-widget="@notice, @noticeId"</h4>
+                <p>组件命名不再以@开头</p>
+<pre ms-skip>   
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"@notice, vldNotice"</span> <span class="atn">data-@notice-title</span><span class="pun">=</span><span class="atv">"错误信息"</span> <span class="atn">data-@notice-is-affix</span><span class="pun">=</span><span class="atv">"true"</span>&gt;&lt;/div&gt;
+
+$$.notice.<span class="str">show</span>('noticewarning',stringArray.toString());
+$$.notice.<span class="str">setTitle</span>('noticewarning','温馨提示');
+$$.notice.<span class="str">hide</span>('info');
+</pre>
+                <h4>avalon.notice = {...}</h4>
+                <p>avalon上不定义notice对象，业务中可以自己扩展，但是不建议</p>
+            </section>
+        </div>
+    </div>
+</div>
+<!-- Footer
+================================================== -->
+<footer class="footer">
+    <div class="container">
+        <ul class="footer-links">
+            <li><a href="http://hotelued.qunar.com/oniui/index.html" target="_blanck">avalon ui</a></li>
+            <li class="muted">&middot;</li>
+            <li><a href="http://qtown.corp.qunar.com/activity/detail?activityId=39">avalon</a></li>
+        </ul>
+    </div>
+</footer>
+<div ms-controller="dialogDemo" id="demo"
+     ms-widget="dialog, dialogA, $dialogOpts" 
+     data-dialog-title="dialog title"
+     data-dialog-width="800"
+     data-dialog-type="alert">
+    ......
+</div>
+<script>
+require(["dialog/avalon.dialog"],function(avalon) {
+    var dialogDemoVM = avalon.define("dialogDemo", function(vm) {
+        vm.$dialogOpts = {
+            modal: false,
+            onInit: function() {
+                avalon.log("onInit 回调")
+            },
+            title: "配置对象中配置的title"
+        }
+    })
+    avalon.scan($("#demo")[0], dialogDemoVM);
+})
+</script>
+</body>
+</html>

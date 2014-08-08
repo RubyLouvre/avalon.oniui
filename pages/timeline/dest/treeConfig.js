@@ -15,26 +15,26 @@ define(function() {
         }, {
             "name": "textbox",
             "url": "oniui/textbox/avalon.textbox.doc.html",
-            "title": "textbox文档说明",
+            "title": "textbox组件",
             "des": "通过给简单的表单输入域设置不同的配置项可以使表单拥有舒服的视觉效果，也可以使其具有提示补全功能，接下来列出textbox组件可以使用的配置项，然后分别举例说明\n            ",
             "cover": "pages/timeline/img/textbox.gif"
         }],
         "2": [{
             "name": "accordion",
             "url": "oniui/accordion/avalon.accordion.doc.html",
-            "title": "accordion文档说明",
+            "title": "accordion组件",
             "des": "accordion组件是在有限的区域显示可折叠内容面板的信息，通过不同的配置选项和丰富的api可以灵活的设置和调用accordion，接下来对所有的配置项和可用的API做以说明\n            ",
             "cover": "pages/timeline/img/accordion.gif"
         }, {
             "name": "checkboxlist",
             "url": "oniui/checkboxlist/avalon.checkboxlist.doc.html",
-            "title": "checkboxlist文档说明",
+            "title": "checkboxlist组件",
             "des": "通过checkboxlist可以方便的实现选框的全选、全不选，并可通过简单配置进行选中操作的回调处理，也可以通过多种方式来提供渲染选项视图所需要的数据\n            ",
             "cover": "pages/timeline/img/checkboxlist.gif"
         }, {
             "name": "notice",
             "url": "oniui/notice/avalon.notice.doc.html",
-            "title": "notice文档说明",
+            "title": "notice组件",
             "des": "notice组件用来向用户显示一些提示信息",
             "cover": "pages/timeline/img/notice.gif"
         }],
@@ -53,7 +53,7 @@ define(function() {
         }, {
             "name": "miniswitch",
             "url": "oniui/miniswitch/avalon.miniswitch.doc.html",
-            "title": "miniswitch文档说明",
+            "title": "miniswitch组件",
             "des": "此组件基于switchdropdown",
             "cover": "pages/timeline/img/miniswitch.gif"
         }, {
@@ -66,13 +66,13 @@ define(function() {
         "4": [{
             "name": "spinner",
             "url": "oniui/spinner/avalon.spinner.doc.html",
-            "title": "spinner文档说明",
+            "title": "spinner组件",
             "des": "spinner组件是用来增强输入框的能力，使其可以通过上下按钮或者键盘上的up、down键来改变输入域的数值，而且确保输入域始终是数值字符，非数值字符无效，组件会默认将非数值字符转换为最近一次的输入域数值\n            ",
             "cover": "pages/timeline/img/spinner.gif"
         }, {
             "name": "switchdropdown",
             "url": "oniui/switchdropdown/avalon.switchdropdown.doc.html",
-            "title": "swtichdropdown文档说明",
+            "title": "swtichdropdown组件",
             "des": "此组件基于dropdown",
             "cover": "pages/timeline/img/switchdropdown.gif"
         }],
@@ -91,13 +91,13 @@ define(function() {
         }, {
             "name": "coupledatepicker",
             "url": "oniui/datepicker/avalon.coupledatepicker.doc.html",
-            "title": "coupledatepicker文档说明",
+            "title": "coupledatepicker组件",
             "des": "coupledatepicker其实是普通日历的升级版，可以通过设置起始日期与结束日期的最小间隔天数和最大间隔天数将截止日期限制在一定的选择范围中\n            ",
             "cover": "pages/timeline/img/coupledatepicker.gif"
         }, {
             "name": "daterangepicker",
             "url": "oniui/datepicker/avalon.daterangepicker.doc.html",
-            "title": "daterangepicker文档说明",
+            "title": "daterangepicker组件",
             "des": "daterangepicker是日期范围选择组件，可以通过设置起始日期与结束日期的最小间隔天数和最大间隔天数将截止日期限制在一定的选择范围中，同时通过点击确定按钮确定日期范围，在选择的时候日期范围框的下方会实时的说明当前选择情况\n            ",
             "cover": "pages/timeline/img/daterangepicker.gif"
         }, {
@@ -122,7 +122,7 @@ define(function() {
         }, {
             "name": "dropdown",
             "url": "oniui/dropdown/avalon.dropdown.doc.html",
-            "title": "dropdown文档说明",
+            "title": "dropdown组件",
             "des": "用于代替原生select控件,支持更多制定",
             "cover": "pages/timeline/img/dropdown.gif"
         }, {
@@ -153,7 +153,7 @@ define(function() {
         }, {
             "name": "slider",
             "url": "oniui/slider/avalon.slider.doc.html",
-            "title": "slider文档说明",
+            "title": "slider组件",
             "des": "slider组件用来拖动手柄选择数值，可以水平拖动、垂直拖动、设置range使得两边都可以拖动，或者根据设置的步长更新滑块数值\n            ",
             "cover": "pages/timeline/img/slider.gif"
         }],

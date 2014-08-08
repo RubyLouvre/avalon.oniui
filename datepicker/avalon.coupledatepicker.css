@@ -4,4 +4,4 @@
 */
 .ui-coupledatepicker { font-size: 0; }
 .ui-coupledatepicker .ui-coupledatepicker-item { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; }
-.ui-coupledatepicker .label { font-size: 12px; vertical-align: top; line-height: 28px; height: 28px; zoom: 1; }
+.ui-coupledatepicker .label { font-size: 12px; vertical-align: top; line-height: 26px; height: 26px; zoom: 1; background: #fff; color: #333; padding: 0; text-shadow: 0 0 0 rgba(0, 0, 0, 0.1); }

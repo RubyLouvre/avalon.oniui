@@ -11,7 +11,7 @@
             case "ms-src":
             case "ms-alt":
             case "ms-title":
-            case  "ms-value":
+            case "ms-value":
                 return "string-bindings"
 
         }
@@ -21,6 +21,35 @@
         vm.bindings = "ms-if, ms-text, ms-duplex,ms-data, ms-visible, ms-on, ms-href, ms-src, ms-alt, ms-title, ms-value, ms-html, ms-repeat, ms-checked, ms-disabled, ms-selected,ms-readonly".match(avalon.rword).sort()
         vm.statics = "mix, bind, unbind, ready, scan, define".match(avalon.rword).sort()
         vm.callbacks = ["data-callback"]
+        vm.concepts = [
+            {
+                name: "非监控属性",
+                id: "unobservable"
+            },
+            {
+                name: "监控属性",
+                id: "observable"
+            },
+            {
+                name: "监控数组",
+                id: "collection"
+            },
+            {
+                name: "计算属性",
+                id: "computed"
+            },
+            {
+                name: "$watch方法",
+                id: "$watch"
+            },
+            {
+                name: "视图模型",
+                id: "vmodel"
+            },
+            {
+                name: "数据模型",
+                id: "$model"
+            }]
         vm.bindingIncludes = []
         vm.scrollToView = function(id) {
             id = idToHref(id)
@@ -50,7 +79,6 @@
     .apis-list {
         width:150px;
         background:rgb(221,221,204);
-<<<<<<< HEAD
         font-size: 14px;
         line-height: 1.5;
     }
@@ -58,12 +86,7 @@
         padding:0 1em;
         background:rgb(238,238,221);
         font: 13px/1.5 "OpenSansRegular", "Helvetica Neue", Helvetica, Arial, sans-serif;
-=======
-    }
-    .apis-details{
-        background:rgb(238,238,221);
->>>>>>> 51621cd61dc3e4f1cfde1d953129d84746d28843
-    }
+
     .apis-details p{
         text-indent: 2em;
     }
@@ -100,6 +123,12 @@
         <td class="apis-list" valign="top">
             <ul class="vnac">
                 <li>
+                    <div class="title">核心概念</div>
+                    <ul class="child-nav">
+                        <li ms-repeat="concepts" ms-click="scrollToView('c-'+el.id)">{{el.name}}</li>
+                    </ul>
+                </li>
+                <li>
                     <div class="title">各种绑定</div>
                     <ul class="child-nav">
                         <li ms-repeat="bindings" ms-click="scrollToView(el)">{{el}}</li>
@@ -112,7 +141,7 @@
                     </ul>
                 </li>
                 <li>
-                    <div class="title">各种回调</div>
+                    <div class="title">核心方法</div>
                     <ul class="child-nav">
                         <li ms-repeat="callbacks" ms-click="scrollToView(el)">{{el}}</li>
                     </ul>
@@ -120,6 +149,9 @@
             </ul>
         </td>
         <td class="apis-details">
+            <div ms-repeat="concepts" ms-include-src="pages/apis/concepts/{{el.id}}.html"  data-include-rendered="highlight">
+
+            </div>
             <div ms-repeat="bindingIncludes" ms-include-src="pages/apis/bindings/{{el}}.html" data-include-rendered="highlight">
 
             </div>
@@ -129,6 +161,7 @@
             <div ms-repeat="callbacks" ms-include-src="pages/apis/callbacks/{{el}}.html"  data-include-rendered="highlight">
 
             </div>
+
         </td>
     </tr>
 </table>

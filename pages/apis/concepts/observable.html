@@ -1,0 +1,58 @@
+<h3 id="c-observable">监控属性</h3>
+<p>在VM中，改变它们会引起视图改变的属性。</p>
+<pre class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Avalon by RubyLouvre&lt;/title&gt;
+        &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;
+        &lt;script src="avalon.js" &gt;&lt;/script&gt;
+ 
+        &lt;script&gt;
+            avalon.define("test", function(vm) {
+                vm.string = "xxx"
+                vm.bool = true
+                vm.number = 100
+                vm.object = {
+                    aaa: "aaa",
+                    bbb: "bbb"
+                }
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div ms-controller="test"&gt;
+            &lt;input ms-duplex="string"&gt;{{string}}
+            &lt;input ms-duplex="bool" type="radio"&gt;{{bool}}
+            &lt;input ms-duplex="number" &gt;{{number}}
+            &lt;ul&gt;
+                &lt;li ms-repeat="object"&gt;{{$key}} --&gt; {{$val}}&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+ 
+</pre>
+<script>
+    avalon.define("c-observable", function(vm) {
+        vm.string = "xxx"
+        vm.bool = true
+        vm.number = 100
+        vm.object = {
+            aaa: "aaa",
+            bbb: "bbb"
+        }
+    })
+
+</script>
+<div ms-controller="c-observable">
+    <input ms-duplex="string">{{string}}
+    <input ms-duplex="bool" type="radio">{{bool}}
+    <input ms-duplex="number" >{{number}}
+    <ul>
+        <li ms-repeat="object">{{$key}} --> {{$val}}</li>
+    </ul>
+</div>
+
+
+

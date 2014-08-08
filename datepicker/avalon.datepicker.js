@@ -213,10 +213,9 @@ define(["../avalon.getModel",
                         vmodel.data[0].rows[outerIndex][innerIndex].selected = true;
                         element.value = date;
                     }
-                    
-                }
-                if(options.type === "range") {
-                    vmodel.onSelect.call(null, date, data["datepickerId"], avalon(element).data())
+                    if(options.type === "range") {
+                        vmodel.onSelect.call(null, date, data["datepickerId"], avalon(element).data())
+                    }
                 }
             }
             vm._selectYearMonth = function(event) {

@@ -115,10 +115,18 @@ define(["../avalon.getModel",
                     inputFromDate = options.parseDate(inputFromValue),
                     inputToDate = options.parseDate(inputToValue),
                     label = options.datesDisplayFormat(options.defaultLabel,inputFromValue, inputToValue),
-                    labelWidth = label.length * 10 -20;
+                    p = document.createElement("p"),
+                    $p = null,
+                    labelWidth = 0;
                 vmodel.label = label;
                 _confirmClick = true;
                 vmodel.toggle = false;
+                $p = avalon(p);
+                $p.css({position:"absolute",visibility:"hidden",height:0,"font-size": "12px"});
+                p.innerHTML = label;
+                document.body.appendChild(p);
+                labelWidth = $p.width() + 30;
+                document.body.removeChild(p);
                 if (labelWidth > vmodel.dateRangeWidth) {
                     vmodel.dateRangeWidth = labelWidth;
                 }
@@ -129,10 +137,17 @@ define(["../avalon.getModel",
             vm._cancelSelectDate = function() {
                 vmodel.toggle ? vmodel.toggle = false: 0;
             }
+            vm.getDates = function() {
+                var inputFromDate = vmodel.parseDate(vmodel.inputFromValue),
+                    inputToDate = vmodel.parseDate(vmodel.inputToValue);
+                return (inputFromDate && inputToDate && [inputFromDate, inputToDate]) || null;
+            }
             // 设置日期范围框的起始日期和结束日期
             vm.setDates = function(from, to, defaultLabel) {
                 var inputValues = to === void 0 ? [from] : [from, to],
-                    len = inputValues.length;
+                    len = inputValues.length,
+                    inputFromDate = avalon.type(from) === "date" ? from : options.parseDate(from),
+                    inputToDate = avalon.type(to) === "date" ? to : options.parseDate(to);
                 if(len) {
                     vmodel.defaultLabel = defaultLabel;
                     setValues(len, from, to);
@@ -140,6 +155,8 @@ define(["../avalon.getModel",
                     vmodel.label = "";
                 }
                 initMsgAndOldValue();
+                options.onSelect.call(vmodel, inputFromDate, inputToDate, _oldValue, vmodel, avalon(element).data());
+                _oldValue = [inputFromDate, inputToDate];
             }
             // 设置日期输入框的label
             vm.setLabel = function(str) {
@@ -166,6 +183,12 @@ define(["../avalon.getModel",
                 vmodel.inputElement = container;
                 vmodel.calendarWrapper = calendarWrapper;   
                 element.appendChild(daterangepicker);
+                avalon.bind(document, "click", function(event) {
+                    var target = event.target;
+                    if (!element.contains(target)) {
+                        vmodel.toggle = false;
+                    }
+                })
                 initValues();
                 applyRules(vmodel.inputFromValue && options.parseDate(vmodel.inputFromValue) || new Date());
                 avalon.scan(element, [vmodel].concat(vmodels)); 
@@ -335,28 +358,11 @@ define(["../avalon.getModel",
                 inputFromDate = options.parseDate(inputFrom.value) || fromSelected;
                 day = Math.floor(((inputToDate.getTime()-inputFromDate.getTime()))/1000/60/60/24 +1);
                 if(msgFormat && typeof msgFormat === "function") {
-                    var from = {
-                            getRawValue: function() {
-                                return inputFrom.value;
-                            },
-                            getDate: function() {
-                                return options.parseDate(inputFrom.value) || cleanDate(new Date());
-                            }
-                        },
-                        to = {
-                            getRawValue: function() {
-                                return inputTo.value;
-                            },
-                            getDate: function() {
-                                return inputToDate;
-                            }
-                        };
-                    msg = options.opts.msgFormat(from, to);
+                    msg = options.opts.msgFormat(inputFrom.vmodel, inputTo.vmodel);
                 } else {
                     msg = "已选时间段："+inputFrom.value+" 至 "+inputTo.value+" 共计"+day+"天";
                 }
                 vmodel.msg = msg;
-                
             }
             fromSelected ? fromSelected = null : 0;
         }

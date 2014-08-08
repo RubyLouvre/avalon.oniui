@@ -90,83 +90,88 @@
         padding:0 1em;
         background:rgb(238,238,221);
         font: 13px/1.5 "OpenSansRegular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    .apis-details p{
+        text-indent: 2em;
+    }
+    .vnac {
+        list-style: none;
+        display:block;
+        margin:0px;
+        padding:0px;
+    }
+    .vnac li{
+        margin:0px;
+        padding:0px;
+        line-height: 1.5;
+        display: block;
+    }
+    .vnac li .title{
+        line-height: 1.5;
+        font-weight: 700;
+        color:#28966f;
+    }
+    .vnac ul.child-nav{
+        display:block;
+        list-style: none;
+        margin:5px 0px 5px 10px;;
+        padding:0px;
+    }
+    .vnac ul.child-nav li{
+        text-indent: 1em;
+        cursor: pointer;
+    }
+    .vnac ul.child-nav li:hover{
+        color:#fff;
+        background-color:#28966f;
+    }
+</style>
 
-        .apis-details p{
-            text-indent: 2em;
-        }
-        .vnac {
-            list-style: none;
-            display:block;
-            margin:0px;
-            padding:0px;
-        }
-        .vnac li{
-            margin:0px;
-            padding:0px;
-            font-size: 12px;
-            line-height: 1.5;
-            color:#28966f;
-            display: block;
-        }
-        .vnac li .title{
-            font-size: 12px;
-            line-height: 1.5;
-            font-weight: 700;
-            color:#28966f;
-        }
-        .vnac ul.child-nav{
-            display:block;
-            list-style: none;
-            margin:5px 0px 5px 20px;;
-            padding:0px;
-        }
-    </style>
+<table class="apis-table" ms-controller="apis">
+    <tr>
+        <td class="apis-list" valign="top">
+            <ul class="vnac">
+                <li>
+                    <div class="title">核心概念</div>
+                    <ul class="child-nav">
+                        <li ms-repeat="concepts" ms-click="scrollToView('c-'+el.id)">{{el.name}}</li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="title">各种绑定</div>
+                    <ul class="child-nav">
+                        <li ms-repeat="bindings" ms-click="scrollToView(el)">{{el}}</li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="title">静态方法</div>
+                    <ul class="child-nav">
+                        <li ms-repeat="statics" ms-click="scrollToView(el)">{{el}}</li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="title">核心方法</div>
+                    <ul class="child-nav">
+                        <li ms-repeat="callbacks" ms-click="scrollToView(el)">{{el}}</li>
+                    </ul>
+                </li>
+            </ul>
+        </td>
+        <td class="apis-details">
+            <div ms-repeat="concepts" ms-include-src="pages/apis/concepts/{{el.id}}.html"  data-include-rendered="highlight">
 
-    <table class="apis-table" ms-controller="apis">
-        <tr>
-            <td class="apis-list" valign="top">
-                <ul class="vnac">
-                    <li>
-                        <div class="title">核心概念</div>
-                        <ul class="child-nav">
-                            <li ms-repeat="concepts" ms-click="scrollToView('c-'+el.id)">{{el.name}}</li>
-                        </ul>
-                    </li>
-                    <li>
-                        <div class="title">各种绑定</div>
-                        <ul class="child-nav">
-                            <li ms-repeat="bindings" ms-click="scrollToView(el)">{{el}}</li>
-                        </ul>
-                    </li>
-                    <li>
-                        <div class="title">静态方法</div>
-                        <ul class="child-nav">
-                            <li ms-repeat="statics" ms-click="scrollToView(el)">{{el}}</li>
-                        </ul>
-                    </li>
-                    <li>
-                        <div class="title">核心方法</div>
-                        <ul class="child-nav">
-                            <li ms-repeat="callbacks" ms-click="scrollToView(el)">{{el}}</li>
-                        </ul>
-                    </li>
-                </ul>
-            </td>
-            <td class="apis-details">
-                <div ms-repeat="concepts" ms-include-src="pages/apis/concepts/{{el.id}}.html"  data-include-rendered="highlight">
+            </div>
+            <div ms-repeat="bindingIncludes" ms-include-src="pages/apis/bindings/{{el}}.html" data-include-rendered="highlight">
 
-                </div>
-                <div ms-repeat="bindingIncludes" ms-include-src="pages/apis/bindings/{{el}}.html" data-include-rendered="highlight">
+            </div>
+            <div ms-repeat="statics" ms-include-src="pages/apis/statics/{{el}}.html"  data-include-rendered="highlight">
 
-                </div>
-                <div ms-repeat="statics" ms-include-src="pages/apis/statics/{{el}}.html"  data-include-rendered="highlight">
+            </div>
+            <div ms-repeat="callbacks" ms-include-src="pages/apis/callbacks/{{el}}.html"  data-include-rendered="highlight">
 
-                </div>
-                <div ms-repeat="callbacks" ms-include-src="pages/apis/callbacks/{{el}}.html"  data-include-rendered="highlight">
+            </div>
 
-                </div>
-
-            </td>
-        </tr>
-    </table>
+        </td>
+    </tr>
+</table>
 

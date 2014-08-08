@@ -21,7 +21,7 @@
 .ui-daterangepicker .ui-datepicker-range-input .ui-datepicker-input { height: 18px; overflow: hidden; padding: 3px 21px 3px 6px; text-overflow: ellipsis; white-space: nowrap; }
 .ui-daterangepicker .ui-datepicker-range-input .ui-datepicker-input.ui-datepicker-input-disabled { background: #ebebe4; border-color: #cccccc; }
 .ui-daterangepicker .ui-datepicker-range-input.ui-state-hover { border: 1px solid #999; }
-.ui-daterangepicker .ui-datepicker-range-input.ui-state-active { border-color: #3775c0; border-bottom: 0; }
+.ui-daterangepicker .ui-datepicker-range-input.ui-state-active { border-color: #3775c0; border-bottom-color: #fff; }
 .ui-daterangepicker .ui-datepicker-icon-wrap { position: relative; display: block; height: 0; }
 .ui-daterangepicker .ui-datepicker-icon-wrap .ui-datepicker-icon { position: absolute; right: 0; top: -21px; display: none; cursor: pointer; padding: 0 6px; text-align: center; text-indent: 0; color: #b5b5b5; }
 .ui-daterangepicker .ui-datepicker-icon-wrap .ui-datepicker-icon.ui-icon-angle-down, .ui-daterangepicker .ui-datepicker-icon-wrap .ui-datepicker-icon.ui-icon-angle-up { display: block; }

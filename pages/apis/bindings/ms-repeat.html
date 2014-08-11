@@ -1,7 +1,7 @@
 <h3 id="ms-repeat">循环绑定(ms-repeat)</h3>
-<p>用法为ms-repeat-xxx="array", 其中xxx可以随意命名（<span style="color:red">注意，不能出现大写，因为属性名在HTML规范中，会全部转换为小写，详见<a href="https://github.com/RubyLouvre/avalon/issues/354">这里</a></span>），如item, el。
-
-    array对应VM中的一个普通数组或一个监控数组。监控数组拥有原生数组的所有方法，并且比它还多了set, remove, removeAt, removeAll, ensure, pushArray与 clear方法 。详见<a href="http://rubylouvre.github.io/mvvm/avalon.each.html">这里</a>。</p>
+<p>用法为ms-repeat-xxx="array", 其中xxx可以随意命名（<span style="color:red">注意，不能出现大写，因为属性名在HTML规范中，
+        会全部转换为小写，详见<a href="https://github.com/RubyLouvre/avalon/issues/354">这里</a></span>），如item, el。
+  array对应VM中的一个普通数组或一个监控数组。监控数组拥有原生数组的所有方法，并且比它还多了set, remove, removeAt, removeAll, ensure, pushArray与 clear方法 。详见<a href="http://rubylouvre.github.io/mvvm/avalon.each.html">这里</a>。</p>
 <p>在早期，avalon提供了一个功能相似的ms-each绑定。ms-each与ms-repeat的不同之处在于，前者循环它的孩子(以下图为例，可能包含LI元素两边的空白)，后者循环它自身。</p>
 <center><img src="http://images.cnblogs.com/cnblogs_com/rubylouvre/495346/o_ms-each.jpg"></center>
 <p>注意，ms-each, ms-repeat会生成一个<strong style="color:red">新的代理VM对象</strong>放进当前的vmodels的前面，这个代理对象拥有el， $index, $first, $last, $remove, $outer， $itemName等属性。另一个会产生VM对象的绑定是ms-widget。</p>

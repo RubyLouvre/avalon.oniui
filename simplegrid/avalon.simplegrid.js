@@ -2,6 +2,7 @@
 define(["avalon",
     "text!./avalon.simplegrid.html",
     "../pager/avalon.pager",
+    "../loading/avalon.loading",
     "../scrollbar/avalon.scrollbar",
     "css!../chameleon/oniui-common.css",
     "css!./avalon.simplegrid.css"
@@ -86,10 +87,17 @@ define(["avalon",
         }
 
         var _vmodels
-
+        var loadingOpts = {
+                toggle: false,
+                onInit: function(vm, options, vmodels) {
+                    vmodel.loadingVModel = vm;
+                }
+            }
+        options.loading = avalon.type(options.loading) === "object" ? avalon.mix(options.loading, loadingOpts) : loadingOpts
         var vmodel = avalon.define(data.simplegridId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "data", "scrollPanel", "topTable", "bottomTable", "startIndex", "pager", "endIndex", "template"]
+            vm.$skipArray = ["widgetElement", "data", "scrollPanel", "topTable", "bottomTable", "startIndex", "pager", "endIndex", "template","loading", "loadingVModel"]
+            vm.loadingVModel = null
             vm.widgetElement = element
             vm.gridWidth = "100%"
             vm.startIndex = 0
@@ -512,6 +520,14 @@ define(["avalon",
                 ret.push(el)
             }
             return ret
+        },
+        showLoading: function(vm) {
+            var loadingVM = vm.loadingVModel;
+            loadingVM.toggle = true;
+        },
+        hideLoading: function(vm) {
+            var loadingVM = vm.loadingVModel;
+            loadingVM.toggle = false;
         }
     }
 

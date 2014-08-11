@@ -11,7 +11,8 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             "ball": {
                 "width": 46,
                 "widthInner": 6,
-                "count": 12
+                "count": 12,
+                "color": "#ffffff"
             }    
         }
         avalon.each(parts, function(i, item) {
@@ -69,6 +70,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             vm.$timer = ""
             vm.height = "auto"
             vm.width = "auto"
+            vm.$config = {}
             vm.$skipArray = ["widgetElement", "template"]
 
             var inited
@@ -90,6 +92,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                     radiusOut = _cf.width / 2
                     list = ComputePoints(_cf.count, radiusOut, radiusInner),
                     html = ""
+                vmodel.$config = _config
                 vmodel.data = list[0]
                 vmodel.opacities = list[1]
                 vmodel.width = _cf.width === void 0 ? _cf.height : _cf.width

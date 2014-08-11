@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>doublelist组件</title>
+        <title>loading组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../highlight/shCore.js"></script>
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
-    <meta name="description" content="doublelist组件，以左右列表形式展示实现的复选组件"/>
+    <meta name="description" content="loading组件，"/>
 </head>
     <body>
         <div class="wrapper">
-            <h2>doublelist</h2>
+            <h2>loading</h2>
             <fieldset>
-                <legend>doublelist组件</legend>
-                <p class="doc-description">doublelist组件，以左右列表形式展示实现的复选组件</p>
+                <legend>loading组件</legend>
+                <p class="doc-description">loading组件，</p>
             </fieldset>
             <fieldset>
                 <legend>使用说明</legend>
@@ -26,19 +26,27 @@
                     </tr>
                     <!--auto doc start-->
 <tr>
-    <td>toggle</td><td> true</td><td> 组件是否显示，可以通过设置为false来隐藏组件</td></tr>
+    <td>timer</td><td> 160</td><td> 毫秒数，动画效果帧间隔</td></tr>
 <tr>
-    <td>hideSelect</td><td> false</td><td> 是否隐藏以选中的项目，默认不隐藏</td></tr>
+    <td>type</td><td> "ball"</td><td> 类型，默认是ball，球，可以配置成 {"type": "ball", "widthInner": 3} ...</td></tr>
+<tr>
+    <td>toggle</td><td> true</td><td> 是否显示</td></tr>
+<tr>
+    <td>modal</td><td> true</td><td> 是否显示遮罩</td></tr>
+<tr>
+    <td>opacity</td><td> 0.1</td><td> 遮罩透明度</td></tr>
+<tr>
+    <td>container</td><td> void 0</td><td> loading效果显示的容器，默认是绑定widget的元素</td></tr>
 <tr>
     <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
-    <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts) 定制修改模板接口</td></tr>
+    <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td></tr>
 <tr>
-    <td>countLimit</td><td>配置接口</td><td>countLimit(select) 选择条目限制，必须有return true or false，参数是当前已选中条数和add or delete操作</td></tr>
+    <td>showLoading</td><td>接口调用</td><td>showLoading() 显示loading效果</td></tr>
 <tr>
-    <td>change</td><td>配置接口</td><td>change(newValue, oldValue, vmodel) 所选变化的回调</td></tr>
+    <td>hideLoading</td><td>接口调用</td><td>hideLoading() 隐藏loading</td></tr>
 <tr>
-    <td>reset</td><td>接口调用</td><td>reset 重置</td></tr>
+    <td>destroyLoading</td><td>接口调用</td><td>destroyLoading() 销毁loading</td></tr>
 <!--auto doc end-->
                 </table>
             </fieldset>
@@ -47,8 +55,7 @@
             <h3>例子：</h3>
             <!--ex list start-->
 <ol class="example-links">
-<li><a href="avalon.doublelist.ex.html">doublelist-隐藏已选中条目，限制选中条数</a></li>
-<li><a href="avalon.doublelist.ex.1.html">doublelist-显示已选中条目，不限制选中条数</a></li>
+<li><a href="avalon.loading.ex.html">loading</a></li>
 </ol>
 <!--ex list end-->
         </div>

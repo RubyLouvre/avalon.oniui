@@ -60,7 +60,7 @@ table.table-doc {
 .pad30 {
     padding: 30px;   
 }
-a {
+.nav li a {
     color: #000;
     font-weight: 400;
     text-decoration: none;

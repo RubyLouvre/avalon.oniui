@@ -86,20 +86,24 @@ define(["../avalon.getModel",
             vm.inputElement = null;
             vm.inputFromValue = "";
             vm.inputToValue = "";
-            vm.setDisabled = function(val) {
-                vmodel.disabled = val;
-            };
             vm.fromSelectCal = function(date) {
                 applyRules(date);
             };
+            vm.getDates = function() {
+                var inputFromDate = vmodel.parseDate(vmodel.inputFromValue),
+                    inputToDate = vmodel.parseDate(vmodel.inputToValue);
+                return (inputFromDate && inputToDate && [inputFromDate, inputToDate]) || null;
+            } 
             vm.$init = function() {
-                var template = options.template.replace(/MS_OPTION_FROM_LABEL/g,vmodel.fromCalendarLabel).replace(/MS_OPTION_TO_LABEL/g,vmodel.toCalendarLabel).replace(/MS_OPTION_START_DAY/g, vmodel.startDay).split("MS_OPTION_TEMPLATE"),
+                var template = options.template.replace(/MS_OPTION_FROM_LABEL/g,vmodel.fromLabel).replace(/MS_OPTION_TO_LABEL/g,vmodel.toLabel).replace(/MS_OPTION_START_DAY/g, vmodel.startDay).split("MS_OPTION_TEMPLATE"),
                     containerTemp = template[0],
                     inputOnlyTemp = template[1],
                     calendar = null,
                     inputOnly = null,
                     fromInput = null,
                     toInput = null,
+                    fromContainer = null,
+                    toContainer = null,
                     calendarTemplate = "";
                 avalon(element).addClass("ui-coupledatepicker");
                 initValues();
@@ -109,10 +113,14 @@ define(["../avalon.getModel",
                     inputOnly = avalon.parseHTML(inputOnlyTemp);
                     fromInput = inputOnly.firstChild;
                     toInput = inputOnly.lastChild;
-                    vmodel.containerFrom = vmodel.container[0];
-                    vmodel.containerTo = vmodel.container[1];
-                    vmodel.container[0].appendChild(fromInput);
-                    vmodel.container[1].appendChild(toInput);
+                    fromContainer = vmodel.container[0];
+                    toContainer = vmodel.container[1];
+                    vmodel.containerFrom = fromContainer;
+                    vmodel.containerTo = toContainer;
+                    fromContainer.appendChild(fromInput);
+                    toContainer.appendChild(toInput);
+                    avalon(fromContainer).addClass("ui-coupledatepicker-item");
+                    avalon(toContainer).addClass("ui-coupledatepicker-item");
                 } else {
                     calendar = avalon.parseHTML(calendarTemplate);
                     element.appendChild(calendar);
@@ -234,8 +242,8 @@ define(["../avalon.getModel",
     widget.version = 1.0
     widget.defaults = {
         container : [], //必选，渲染的容器，每个元素类型为 {Element|JQuery|String}
-        fromCalendarLabel : '选择起始日期',   // 起始日期日历框上方提示文字
-        toCalendarLabel : '选择结束日期',     // 结束日期日历框上方提示文字
+        fromLabel : '选择起始日期',   // 起始日期日历框上方提示文字
+        toLabel : '选择结束日期',     // 结束日期日历框上方提示文字
         widgetElement: "", // accordion容器
         disabled: false,
         startDay: 1,    //星期开始时间

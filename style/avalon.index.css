@@ -43,6 +43,7 @@ a, a:active, a:hover {
 .header .fix {
     background: #fff;
     box-shadow: 0 2px 3px 0 rgba(74, 136, 115, 0.5);
+    z-index: 120;
 }
 .header .nav ul {
     margin: 0 auto;
@@ -95,7 +96,6 @@ a, a:active, a:hover {
 .content {
     position: relative;
     width: 990px;
-    padding: 50px 5px 80px 5px;
     margin: 0 auto;
     text-align: left;
     background-color: #fff;

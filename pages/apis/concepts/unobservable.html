@@ -1,0 +1,41 @@
+<h3 id="c-unobservable">非监控属性</h3>
+<p>在VM中，改变它们不会引起视图改变的属性，这包括以$开头的属性，其名字放在$skipArray中的属性，函数。</p>
+<pre class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;unobservable&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="avalon.js"&gt;&lt;/script&gt;
+        &lt;script&gt;
+            avalon.define("test", function(vm) {
+                vm.$aaa = "sss"
+                vm.$skipArray = ["bbb", "ccc"]
+                vm.aaa = 1111
+                vm.bbb = 222
+                vm.ccc = 333
+                vm.fn = function() {
+                    return "函数"
+                }
+                vm.click = function(){
+                    vm.$aaa = vm.aaa = vm.bbb = vm.ccc = "change"
+                    vm.fn = function(){
+                        return "----------"
+                    }
+                }
+            })
+           
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="test"&gt;
+        &lt;p&gt;{{$aaa}}&lt;/p&gt;
+        &lt;p&gt;{{aaa}}&lt;/p&gt;
+        &lt;p&gt;{{bbb}}&lt;/p&gt;
+        &lt;p&gt;{{ccc}}&lt;/p&gt;
+        &lt;p&gt;{{fn()}}&lt;/p&gt;
+        &lt;button type="button" ms-click="click"&gt;点我&lt;/button&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+

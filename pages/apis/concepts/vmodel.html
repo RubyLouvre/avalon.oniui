@@ -1,0 +1,31 @@
+<h3 id='c-vmodel'>视图模型</h3>
+<p>简称为VM。是通过avalon.define方法返回的对象，
+这是利用Object.defineProperties(IE9+及W3C)与VBScript(IE6-8)技术生成的特殊对象.
+除此以外，它还添加$id, $watch, $unwatch, $fire, $model等方法，因此与原对象是完全不一样的。</p>
+
+<p>avalon.define方法拥有两个参数，第一个是ID，第二个构成函数，会传一个对象让你添加各种属性与方法。</p>
+<p>注意:avalon.define会将第2个参数执行两次，实现对VM的修正，因此不要在里面执行函数，否则会产生一些意外</p>
+<pre class='brush:javascript;gutter:false;toolbar:false;'>
+  var pagedData = {"fID": 51777,
+     "Number": "2014031751771",
+     "cName": "测试222222222222",
+     "tel": ["123213", "sdfdssfdss", "rrrrrr", "44444444", "99999999"],
+     "State": "成都悦好医学美容医院",
+     "fTime": "2014-03-17 11:17:03",
+     "ProjectsName": "双眼皮修复"}
+ 
+ function pagingFactory(data, n) {
+     var array = []
+     for (var i = 0; i < n; i++) {
+         var obj = {}
+         array.push(avalon.mix(true, obj, data))
+     }
+     return array
+ }
+ var bigData = pagingFactory(pagedData, 1000)
+ var model = avalon.define("followlist", function(vm) {
+     vm.items = bigData.splice(0, 100)//★★
+ })
+//这里bigData只剩下800个元素了，而不是900个！！！
+</pre>
+

@@ -44,8 +44,9 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                         element.style.cssText = "position: absolute; left:"+offset.left+"px;top:"+offset.top+"px;";
                         
                         suggestHtml.style.cssText = "margin:0;left:0;top:0;width:"+suggestHtmlWidth ;
+                        return ;
                     }
-                    suggestHtml.style.width = $textboxContainer.width()+"px" ;
+                    suggestHtml.style.width = ($textboxContainer.outerWidth()-2)+"px" ;
                 }
             })
             // 监控searchText值的变化，及时更新提示列表?
@@ -80,8 +81,8 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                     }
                 })
             }
-            if (options.changed) {
-                var arr = avalon.getModel( options.changed , vmodels );
+            if (options.onChange) {
+                var arr = avalon.getModel( options.onChange , vmodels );
                 var _onchange = vm.onchange;
                 vm.onchange = function(){
                     _onchange.apply( null , arguments );
@@ -152,7 +153,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
             if( !s ) return;
             vm.loading = true;
             // 根据提示类型提供的方法过滤的数据来渲染提示视图?
-            s(value, function(err, array){
+            s(value, function(array){
                 vm.selectedIndex = 0;
                 vm.list.removeAll();
                 avalon.each(array , function(idx, val){
@@ -188,7 +189,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
     // 根据提示类型的不同提供提示信息，也就是信息的过滤方式完全由用户自己决定?
     avalon.ui["suggest"].strategies = {
         __getVal: function(value, done) {
-            done( null , value ? [
+            done(value ? [
                 value + "1" ,
                 value + "2" ,
                 value + "3" ,

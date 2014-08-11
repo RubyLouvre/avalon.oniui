@@ -292,7 +292,8 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 	widget.version = 1.0;
 	widget.defaults = {
 		auto_hide: true,
-		default_color: "#ffffff"
+		default_color: "#ffffff",
+		bg_color: ""
 	};
 
 	function isHexColorValid(val){

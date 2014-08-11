@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>avalon ui</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="grid、textbox组件使用">
+    <meta name="keywords" content="grid、textbox">
+    <meta name="author" content="田莉莉">
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="doc.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei UI","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
+        }
+        .col1{
+            background: orange!important;
+        }
+        .col2{
+            background: orangered!important;
+        }
+        .col3{
+            background:violet!important;
+        }
+
+        .warning {
+            text-decoration: underline;
+            font-weight: bold;
+            font-style: italic
+        }
+        .label-info {
+            font-style: normal;
+        }
+        .btn {
+            margin-bottom: 0;
+        }
+        .padBom10 {
+            padding-bottom: 10px;
+        }
+        .inline {
+            display: inline-block;
+            vertical-align: middle;
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+        .ui-simplegrid-tbody tr.even td, .ui-simplegrid-tbody tr.even td div{
+            background:rgb(247,247,247);
+        }
+        .ui-simplegrid-tbody tr.hcross td{
+            background:#FF8888!important;
+        }
+        .ui-simplegrid-tbody .vcross{
+            background:#FF8888;
+        }
+        .ui-simplegrid tr.summarizing td{
+            background:rgb(253,253,253);
+            color:#999;
+            height: 40px!important;
+        }
+        .ui-simplegrid-tbody  td .datecell{
+            text-indent: 1em;
+        }
+        .ui-simplegrid .ui-simplegrid-pager-options select{
+            width: auto;
+            line-height: 24px;
+            height: auto;
+            padding: 0;
+            padding-left: 5px;
+            margin: 0;
+            border-radius: 0;
+            vertical-align: inherit;
+        }
+        .ui-simplegrid tr.ui-state-acitve td, .ui-simplegrid tr.ui-state-acitve th {
+            background-color: #FFF7E6;
+        }
+        .ui-simplegrid tr.ui-simplegrid-empty td{
+            text-align: center;
+            line-height: 100px;
+        }   
+    </style>
+    <script src="../avalon.js"></script>
+    <script src="jquery-1.10.2.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+    <![endif]-->
+</head>
+<body data-spy="scroll" data-target=".bs-docs-sidebar">
+<!-- 顶部导航 -->
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li>
+                        <a href="http://hotelued.qunar.com/oniui/index.html" target="_blanck">AVALON UI</a>
+                    </li>
+                    <li>
+                        <a href="#simplegrid">simplegrid用法详解</a>
+                    </li>
+                    <li>
+                        <a href="#textboxNormal">textbox用法详解</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <!-- 侧边导航 -->
+    <div class="row">
+        <div class="span12">
+            <!-- simplegrid 规范用法 -->
+            <section ms-controller="simplegrid" class="ms-controller" id="simplegrid">
+                <div class="page-header">
+                    <h1>simplegrid用法详解</h1>
+                </div>
+                <p class="warning"><span class="label label-info">注意：</span>&nbsp;&nbsp;配置方法最好放在配置对象;&nbsp;&nbsp;</p>
+                <div class="bs-docs-example" style="padding-bottom: 24px;">
+                    <div class="padBom10">
+                        <h3><span>具有基本配置的simplegrid A：</span></h3>
+                        <div ms-widget="simplegrid, simplegridA, $simplegridAOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"simplegrid, simplegridA, $simplegridAOpts"</span>&gt;&lt;/div&gt;
+</pre>
+<pre>
+function getData1(n) {
+    var ret = []
+    for (var i = 0; i &lt; n; i++) {
+        ret.push({
+            symbol: Math.random().toString(32).slice(4, 10),
+            price: range(100, 200),
+            change: Math.random().toFixed(2) * (Math.random() &gt; 0.5 ? 1 : -1),
+            checked: false
+        })
+    }
+    return ret
+}
+vm.<span class="str">$simplegridAOpts</span> = {
+    <span class="atn">columns</span>: ["symbol", "price", "change"],
+    <span class="atn">data</span>: getData1(5) 
+}
+</pre>
+                    <div class="padBom10">
+                        <h3><span>配置getTemplate实现showNoResult，以及onSort应用的simplegrid B：</span>
+                        <button ms-click="clearGridBData">clear data</button></h3>
+                        <div ms-widget="simplegrid, simplegridB, $simplegridBOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"clearGridBData"</span>&gt;clear data&lt;/button&gt;
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"simplegrid, simplegridB, $simplegridBOpts"</span>&gt;&lt;/div&gt;
+</pre>
+<pre>
+.ui-simplegrid tr.ui-simplegrid-empty td{
+    text-align: center;
+    line-height: 100px;
+} 
+</pre>
+<pre>
+vm.<span class="str">clearGridBData</span> = function() {
+    var gridBVM = avalon.vmodels.simplegridB;
+    var data = [];
+    gridBVM.<span class="str">reRender</span>(data, gridBVM);
+}
+vm.<span class="str">$simplegridBOpts</span> = { <span class="com">//设置无信息可显示</span>
+    <span class="atn">columns</span>: [{field:"symbol",<span class="str">localSort</span>:function(a,b,f){return a[f].localeCompare(b[f]);}}, "price", "change"],
+    <span class="atn">data</span>: getData1(5),
+    <span class="atn">getTemplate</span>: function(str, options) {
+        var noResultStr = "&lt;tr <span class="atn">class</span><span class="pun">=</span><span class="atv">'ui-simplegrid-empty'</span> <span class="atn">ms-if</span><span class="pun">=</span><span class="atv">'!_data.size()'</span>&gt;&lt;td <span class="atn">colspan</span><span class="pun">=</span><span class="atv">'3'</span>&gt;暂无结果&lt;/td&gt;&lt;/tr&gt;"
+        return str.replace(/&lt;table\s*<span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-simplegrid-tbody"</span>[\s\S]*&lt;\/tr&gt;/, "$&"+noResultStr);
+    },
+    onSort: function(vmodel) {
+        avalon.log("排序完成用户回调")
+    }
+}
+</pre>
+                    <h4>对比grid-adapter的showNoResult方法</h4>
+<pre>
+gridVM.showNoResult(content);
+</pre>
+                     <div class="padBom10">
+                        <h3><span>配置了pager和pageable的simplegrid C：</span></h3>
+                        <div ms-widget="simplegrid, simplegridC, $simplegridCOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"simplegrid, simplegridC, $simplegridCOpts"</span>&gt;&lt;/div&gt;
+</pre> 
+<pre>
+vm.<span class="str">$simplegridCOpts</span> = {
+    <span class="atn">columns</span>: ["symbol", "price", "change"],
+    <span class="atn">data</span>: getData1(20), 
+    <span class="atn">pageable</span>: true,
+    <span class="atn">pageSizeChangeCallback</span>: function() {
+        avalon.log("pagesize changed")
+        avalon.log(this.value)
+    },
+    <span class="atn">pager</span>: { <span class="com">//作为pager组件的配置对象存在，good use</span>
+        <span class="str">perPages</span>: 20,
+        <span class="str">totalItems</span>: 200,
+        <span class="str">showPages</span>: 5,
+        <span class="str">nextText</span>: "next",
+        <span class="str">prevText</span>: "prev",
+        <span class="str">getTemplate</span>: function(tmpl) {
+            return tmpl+ "&lt;div <span class="atn">class</span><span class="pun">=</span><span class="atv">'ui-simplegrid-pager-options'</span>&gt;每页显示&lt;select <span class="atn">ms-duplex</span><span class="pun">=</span><span class="atv">'perPages'</span> <span class="atn">ms-change</span><span class="pun">=</span><span class="atv">'pageSizeChangeCallback'</span>&gt;&lt;option <span class="atn">ms-repeat</span><span class="pun">=</span><span class="atv">'options'</span> <span class="atn">ms-value</span><span class="pun">=</span><span class="atv">'el.text'</span>&gt;{{el.text}}&lt;/options&gt;&lt;/select&gt;条,共{{totalItems}}条结果&lt;/div&gt;"
+        },
+        <span class="str">options</span>: [10, 20, 30, 40], <span class="com">//存在options就渲染grid左下角的perPages的选项</span>
+        <span class="str">onJump</span>: function(event, vmodel) {
+            avalon.log("点击了页数，当前page是: "+vmodel.<span class="str">currentPage</span>)
+        }
+    },
+    <span class="atn">showRows</span>: 5
+}
+</pre>  
+                    <h4>对比grid-adapter中的pageable配置和callback回调中的事件类型pageNumberChange(number)和pageSizeChange</h4>
+<pre>
+pageable: {
+    pageSize: 10,
+    canChangePageSize: true,
+    pageSizeList: [10, 20, 50, 100],
+    totalPage: 50
+    currentPage: 1
+}    
+
+vm.callback = function() {
+    if(arguments.length >= 0) {
+        switch(arguments[0][0].type) {
+            case <span class="str">'rowDataChange'</span>:
+                break;
+            case <span class="str">'pageNumberChange'</span>:
+                break;
+            case <span class="str">'pageSizeChange'</span>:
+                break;
+            case <span class="str">'columnSort'</span>:
+                break;
+            case <span class="str">'selectAll'</span>:
+                break;
+            case <span class="str">'rowSelect'</span>:
+                break;
+            default :
+        }
+    }
+};
+</pre>                 
+                    <div class="padBom10">
+                        <h3>
+                            <span>配置getTemplate方法修改模板实现斑马线效果的simplegrid D：</span>
+                        </h3>
+                        <div ms-widget="simplegrid, simplegridD, $simplegridDOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"simplegrid, simplegridD, $simplegridDOpts"</span>&gt;&lt;/div&gt;
+</pre> 
+<pre>
+vm.<span class="str">$simplegridDOpts</span> = {
+    <span class="atn">columns</span>: ["symbol", "price", "change"],
+    <span class="atn">data</span>: getData1(6), 
+    <span class="atn">getTemplate</span>: function(str) { <span class="com">//使用getTemplate演示添加斑马线</span>
+        return str.replace('<span class="atn">ms-repeat-row</span><span class="pun">=</span><span class="atv">"_data"</span>', '<span class="atn">ms-repeat-row</span><span class="pun">=</span><span class="atv">"_data"</span> <span class="atn">ms-class-even</span><span class="pun">=</span><span class="atv">"!($index % 2)"</span> ')
+    }
+}
+</pre>                   
+                    <div class="padBom10">
+                        <h3><span>配置columns各选项和columnsOrder、renderCell的simplegrid E：</span>
+                        <button ms-click="toggleColumn">toggle column 2</button></h3>
+                        <div ms-widget="simplegrid, simplegridE, $simplegridEOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"toggleColumn"</span>&gt;toggle column 2&lt;/button&gt;
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"simplegrid, simplegridE, $simplegridEOpts"</span>&gt;&lt;/div&gt;     
+</pre>  
+<pre>
+vm.<span class="str">toggleColumn</span> = function() {
+    avalon.vmodels.simplegridE.columns[1].toggle = columnShow;
+    columnShow = !columnShow;
+}
+vm.<span class="str">$simplegridEOpts</span> = {
+    <span class="com">/* columns中对应的属性意义：
+        field ----列名
+        text ----列输出文本
+        width ----列宽
+        align ----列对齐方式
+        toggle  --- 是否隐藏列
+        resizable  --- 是否允许改变列宽
+        sortable ---- 是否允许排序
+        title  ----通过getColumnTitle获得
+        className ---- 为列头定义的class
+        localSort ----自定义排序规则
+    */</span>
+    <span class="atn">columns</span>: [
+        {field: "change", width:"20%", text: "变化(20%)", className: "col3", align: "right", resizable: true,title: "change",sortable: false},
+        {field: "price", width: "30%", text: "价格(30%)", className: "col2", align: "center", resizable: true, title: "price"/*, toggle: "false"*/},
+        {field: "symbol", width: "50%", text: "符号(50%)", className: "col1", localSort: function(a, b, f) { <span class="com">//localeCompare方法是用本地特定的排序规则进行排序</span>
+                return a[f].localeCompare(b[f]);
+            }, resizable: true, title: "symbol"}
+    ],
+    <span class="atn">getColumnTitle</span>: function(item) { <span class="com">//要想title的设置有意义，需要配置getColumnTitle，传进来的参数是对应columns item对象，当然前提是不重写getColumns方法的情况下</span>
+        return item.title+"啦啦啦。。。"
+    },
+    <span class="atn">columnsOrder</span>: ["symbol", "price", "change"], <span class="com">// 控制列的出现顺序</span>
+    <span class="atn">renderCell</span>: function(val, key, row) {  <span class="com">// 为每一个单元格渲染内容,row是data item</span>
+        switch (key) {
+            case "symbol":
+                return  "&lt;b&gt;￥" + val + "&lt;/b&gt;"
+            case "change":
+                return  "&lt;span style='color:" + (val &gt; 0 ? 'green' </span>: 'red') + "'&gt;" + val + "&lt;/span&gt;"
+            default:
+                return val
+        }
+    },
+    <span class="atn">data</span>: getData1(5)
+}
+</pre>      
+                    <h4>对比gird-adapter的columns配置和setColumns方法</h4>
+<pre>
+columns: [{
+    key:key1,
+    name : name1,
+    title:key1,
+    type : String | Number | Control | Radio | Checkbox, <span class="com">//optionally,不同的类型样式有不同，比如Number的话text-align为right</span>
+    sortable : boolean,  <span class="com">//是否允许排序</span>
+    width : Number,
+}]
+
+gridVM.setColumns(columns, b);
+</pre>               
+                    <div class="padBom10">
+                        <h3><span>配置renderCell方法实现同比环比效果的simplegrid F：</span></h3>
+                        <div ms-widget="simplegrid, simplegridF, $simplegridFOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"simplegrid, simplegridF, $simplegridFOpts"</span>&gt;&lt;/div&gt;
+</pre> 
+<pre>
+var createData = function() {
+    var array = []
+    array.push({
+        date: "2014-03-07",
+        search: 800,
+        detail: 100000,
+        booing: 44432,
+        order: 589364,
+        visit: 5800,
+        affirm: 1800,
+        compare: {
+            lastyear: {
+                date: "2013-03-07",
+                search: 556,
+                detail: 80000,
+                booing: 4432,
+                order: 89364,
+                visit: 5200,
+                affirm: 1700
+            },
+            lastday: {
+                date: "2013-03-06",
+                search: 670,
+                detail: 125800,
+                booing: 4432,
+                order: 59364,
+                visit: 3800,
+                affirm: 800
+            }
+        }
+    },
+    {
+        date: "2014-03-08",
+        search: 800,
+        detail: 100000,
+        booing: 44432,
+        order: 589364,
+        visit: 5800,
+        affirm: 1800,
+        compare: {
+            lastyear: {
+                date: "2013-03-08",
+                search: 556,
+                detail: 80000,
+                booing: 4432,
+                order: 89364,
+                visit: 5200,
+                affirm: 1700
+            },
+            lastday: {
+                date: "2013-03-07",
+                search: 670,
+                detail: 125800,
+                booing: 4432,
+                order: 59364,
+                visit: 3800,
+                affirm: 800
+            }
+        }
+    },
+    {
+        date: "2014-03-09",
+        search: 800,
+        detail: 100000,
+        booing: 44432,
+        order: 589364,
+        visit: 5800,
+        affirm: 1800,
+        compare: {
+            lastyear: {
+                date: "2013-03-09",
+                search: 556,
+                detail: 80000,
+                booing: 4432,
+                order: 89364,
+                visit: 5200,
+                affirm: 1700
+            },
+            lastday: {
+                date: "2013-03-08",
+                search: 670,
+                detail: 125800,
+                booing: 4432,
+                order: 59364,
+                visit: 3800,
+                affirm: 800
+            }
+        }
+    },
+    {
+        date: "2014-03-03",
+        search: 800,
+        detail: 100000,
+        booing: 44432,
+        order: 589364,
+        visit: 5800,
+        affirm: 1800,
+        compare: {
+            lastyear: {
+                date: "2013-03-03",
+                search: 556,
+                detail: 80000,
+                booing: 4432,
+                order: 89364,
+                visit: 5200,
+                affirm: 1700
+            },
+            lastday: {
+                date: "2013-03-01",
+                search: 670,
+                detail: 125800,
+                booing: 4432,
+                order: 59364,
+                visit: 5500,
+                affirm: 800
+            }
+        }
+    },
+    {
+        date: "2014-02-09",
+        search: 800,
+        detail: 100000,
+        booing: 44432,
+        order: 589364,
+        visit: 5800,
+        affirm: 1800,
+        compare: {
+            lastyear: {
+                date: "2013-02-09",
+                search: 556,
+                detail: 80000,
+                booing: 4432,
+                order: 89364,
+                visit: 5200,
+                affirm: 1700
+            },
+            lastday: {
+                date: "2013-02-08",
+                search: 670,
+                detail: 125800,
+                booing: 4432,
+                order: 59364,
+                visit: 3800,
+                affirm: 800
+            }
+        }
+    })
+    return array
+}    
+vm.<span class="str">$simplegridFOpts</span> = {
+    <span class="atn">tbodyRowHeight</span>: 105,
+    <span class="atn">columns</span>: [
+        {field: "date", text: "日期", resizable: true, width: 210},
+        {field: "search", text: "曝光search量", resizable: true, align: "right"},
+        {field: "detail", text: "Detail页访问量", resizable: true, align: "right"},
+        {field: "booing", text: "Booing量", resizable: true, align: "right"},
+        {field: "order", text: "生成订单量", resizable: true, align: "right"},
+        {field: "visit", text: "访问量", resizable: true, align: "right"},
+        {field: "affirm", text: "确认订单量", align: "right", resizable: true}
+    ],
+    <span class="atn">renderCell</span>: function(val, name, obj) {
+        var compare = obj.compare
+        var lastyear = compare.lastyear
+        var lastday = compare.lastday
+        switch (name) {
+            case  "date":
+                return "&lt;div&gt;" + val + "&lt;/div&gt;&lt;div class='datecell'&gt;" + lastyear[name] + "&lt;span&gt;同比&lt;/span&gt;&lt;/div&gt;&lt;div class='datecell'&gt;" + lastday[name] + "&lt;span&gt;环比&lt;/span&gt;&lt;/div&gt;"
+            default:
+                return  "&lt;div&gt;" + val + "&lt;/div&gt;&lt;div&gt;" + lastyear[name] + "&lt;/div&gt;&lt;div&gt;" + lastday[name] + "&lt;/div&gt;"
+        }
+    },
+    <span class="atn">showRows</span>: 3,
+    <span class="atn">data</span>: createData(100)
+}
+</pre>                   
+                    <div class="padBom10">
+                        <h3><span>配置tbodyTemplate方法，避免跨域等攻击保证输入安全的simplegrid G：</span></h3>
+                        <div ms-widget="simplegrid, simplegridG, $simplegridGOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"simplegrid, simplegridG, $simplegridGOpts"</span>&gt;&lt;/div&gt;
+</pre> 
+<pre>
+function getData3(n) {
+    var ret = []
+    for (var i = 0; i &lt; n; i++) {
+        var random = Math.random()
+        var factor = random &gt; 0.5 ? 1 : -1
+        ret.push({
+            symbol: '&lt;a <span class="atn">href</span><span class="pun">=</span><span class="atv">"javascript:alert(1)"</span>&gt;' + random.toString(32).slice(4, 10) + "&lt;/b&gt;",
+            price: range(100, 200),
+            change: "&lt;span <span class="atn">onclick</span><span class="pun">=</span><span class="atv">'alert(2)'</span> style='color:" + (factor === 1 ? 'green' : 'red') + "'&gt;" + random.toFixed(2) * factor + "&lt;/span&gt;"
+        })
+    }
+    return ret
+}    
+vm.<span class="str">$simplegridGOpts</span> = {
+    <span class="atn">columns</span>: ["symbol", "price", "change"],
+    <span class="atn">tbodyTemplate</span>: function(str) {
+        return str.replace(/\|\s*html/, "|sanitize|html")
+    },
+    <span class="atn">showRows</span>: 5,
+    <span class="atn">data</span>: getData3(50)
+}
+</pre>                   
+                    <div class="padBom10">
+                        <h3><span>配置tbodyTemplate方法实现十字线效果的simplegrid H：</span></h3>
+                        <div ms-widget="simplegrid, simplegridH, $simplegridHOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"simplegrid, simplegridH, $simplegridHOpts"</span>&gt;&lt;/div&gt;
+</pre>   
+<pre>
+function getData4(n) {
+    var array = []
+    for (var i = 0; i &lt; n; i++) {
+        array.push({
+            xxx: Math.random().toString(36).substring(4, 10),
+            yyy: Math.random().toString(36).substring(4, 10),
+            aaa: 1 + 10,
+            bbb: Math.random().toString(36).substring(4, 10),
+            ccc: Math.random().toString(36).substring(4, 10),
+            zzz: i
+        })
+    }
+    return array
+}
+vm.<span class="str">$simplegridHOpts</span> = {
+    <span class="atn">columns</span>: [
+        {field: "aaa", text: "紫薯", resizable: true, align: "center"},
+        {field: "zzz", text: "石榴", resizable: true, align: "center"},
+        {field: "yyy", text: "雪梨", resizable: true, align: "center"},
+        {field: "xxx", text: "苹果", resizable: true, align: "center"},
+        {field: "bbb", text: "南瓜", resizable: true, align: "center"},
+        {field: "ccc", text: "西红柿", resizable: true, align: "center"}
+    ],
+    <span class="atn">tbodyTemplate</span>: function(str) {
+        return str.replace('<span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-simplegrid-td"</span>', '<span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-simplegrid-td"</span> <span class="atn">ms-mouseenter</span><span class="pun">=</span><span class="atv">"addCross"</span> <span class="atn">ms-mouseleave</span><span class="pun">=</span><span class="atv">"removeCross"</span>')
+    },
+    <span class="atn">addCross</span>: function() {
+        avalon(this.parentNode).addClass("hcross")
+        var index = this.cellIndex
+
+        var tbody = this.parentNode.parentNode
+        Array.prototype.forEach.call(tbody.rows, function(row) {
+            avalon(row.cells[index]).addClass("vcross")
+        })
+    },
+    <span class="atn">removeCross</span>: function() {
+        avalon(this.parentNode).removeClass("hcross")
+        var index = this.cellIndex
+        var tbody = this.parentNode.parentNode
+        Array.prototype.forEach.call(tbody.rows, function(row) {
+            avalon(row.cells[index]).removeClass("vcross")
+        })
+    },
+    <span class="atn">data</span>: getData4(10)
+}
+</pre>                 
+                    <div class="padBom10">
+                        <h3><span>结合getTemplate、tHeadTemplate、tBodyTemplate添加checkbox选项列的simplegrid I：</span>
+                        <div ms-widget="simplegrid, simplegridI, $simplegridIOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"simplegrid, simplegridI, $simplegridIOpts"</span>&gt;&lt;/div&gt;
+</pre>
+<pre>
+vm.<span class="str">addRow</span> = function() {
+    var data = getData1(1);
+    avalon.vmodels.simplegridI._data.push(data[0])
+}
+vm.<span class="str">$simplegridIOpts</span> = {
+    <span class="atn">allchecked</span>: false,
+    <span class="atn">getColumn</span>: function(el) { <span class="com">//通过getColumn方法丰富column item的选项</span>
+        el.checked = false
+    },
+    <span class="atn">checkAll</span>: function() {
+        var vmodel = avalon.vmodels.simplegridI
+        var bool = vmodel.allchecked = this.checked
+        vmodel._data.forEach(function(el) {
+            el.checked = bool
+        })
+        vmodel.data.forEach(function(el) {
+            el.checked = bool
+        })
+    },
+    <span class="atn">checkOne</span>: function(el, index) {
+        var vmodel = avalon.vmodels.simplegridI
+        index = vmodel.startIndex + index
+        vmodel.data[index] = el.checked = this.checked
+        if (!this.checked) {
+            vmodel.allchecked = false
+        } else {
+            vmodel.allchecked = vmodel._data.every(function(el) {
+                return el.checked
+            })
+        }
+    },
+    <span class="atn">theadTemplate</span>: function(str) { <span class="com">//修改表头的那一行的模板</span>
+        return "&lt;th <span class="atn">style</span><span class="pun">=</span><span class="atv">'width:80px'</span>&gt;&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">'checkbox'</span> <span class="atn">ms-checked</span><span class="pun">=</span><span class="atv">'allchecked'</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">'checkAll'</span>  /&gt;&lt;/td&gt;" + str + "&lt;td <span class="atn">style</span><span class="pun">=</span><span class="atv">'width:80px'</span>&gt;操作&lt;/td&gt;"
+    },
+    <span class="atn">tbodyTemplate</span>: function(str) { <span class="com">//修改表身那一行的模板</span>
+        return "&lt;th <span class="atn">style</span><span class="pun">=</span><span class="atv">'width: 80px'</span>&gt;&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">\"checkbox\"</span> ms-checked</span><span class="pun">=</span><span class="atv">'row.checked'</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">'checkOne(row, $index)'</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">'ui-helper-checkone'</span>/&gt;&lt;/th&gt;" + str + "&lt;td <span class="atn">style</span><span class="pun">=</span><span class="atv">'width:80px'</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">'$remove'</span>&gt;删除&lt;/td&gt;"
+    },
+    <span class="atn">getTemplate</span>: function(str){
+        return  str.replace('<span class="atn">ms-repeat-row</span><span class="pun">=</span><span class="atv">"_data"</span>', '<span class="atn">ms-repeat-row</span><span class="pun">=</span><span class="atv">"_data"</span> <span class="atn">ms-class-12</span><span class="pun">=</span><span class="atv">"ui-state-acitve:row.checked"</span> ')
+    },
+    <span class="atn">columns</span>: [
+        {field: "symbol", text: "生成订单量", resizable: true},
+        {field: "price", text: "访问量", resizable: true},
+        {field: "change", text: "确认订单量", resizable: true}
+    ],
+    <span class="atn">data</span>: getData1(6)
+}
+</pre>
+                    <h4>对比grid-adapter的selectAll、isSelectAll、selectable方法和配置</h4>
+<pre>
+girdVM.selectAll(b)
+gridVM.isSelectAll()
+"selectable": {
+    "type": "Radio" <span class="com">//（或者Checkbox）</span>
+}
+</pre>
+                    <div class="padBom10">
+                        <h3><span>配置theadRenderedCallback方法在表头添加summary的simplegrid J：</span></h3>
+                        <div ms-widget="simplegrid, simplegridJ, $simplegridJOpts"></div>
+                    </div>
+                    <script id="summarizing" type="summarizing">
+                        <td ms-repeat="columns"
+                        ms-css-width="el.width"
+                        ms-css-text-align="el.align"
+                        ms-visible="el.toggle"
+                        >{{getSummarizing(summarizing, el.field)|html }}
+                        </td>
+                    </script>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"simplegrid, simplegridJ, $simplegridJOpts"</span>&gt;&lt;/div&gt;
+&lt;script <span class="atn">id</span><span class="pun">=</span><span class="atv">"summarizing"</span> <span class="atn">type</span><span class="pun">=</span><span class="atv">"summarizing"</span>&gt;
+    &lt;td <span class="atn">ms-repeat</span><span class="pun">=</span><span class="atv">"columns"</span>
+        <span class="atn">ms-css-width</span><span class="pun">=</span><span class="atv">"el.width"</span>
+        <span class="atn">ms-css-text-align</span><span class="pun">=</span><span class="atv">"el.align"</span>
+        <span class="atn">ms-visible</span><span class="pun">=</span><span class="atv">"el.toggle"</span>
+    &gt;{{getSummarizing(summarizing, el.field)|html }}
+    &lt;/td&gt;
+&lt;/script&gt;
+</pre>   
+<pre>
+vm.<span class="str">$simplegridJOpts</span> = {
+    <span class="atn">summarizing</span>: {
+        aaa: "紫薯产量",
+        zzz: "石榴增产&lt;br/&gt;0",
+        yyy: "雪梨增产&lt;br/&gt;￥38000",
+        xxx: "苹果增产&lt;br/&gt;135346460",
+        bbb: "南瓜增产&lt;br/&gt;50.21%",
+        ccc: "西红柿增产&lt;br/&gt;￥1135800",
+    },
+    <span class="atn">theadRenderedCallback</span>: function(vmodel, options, vmodels) {
+        var tbody = this <span class="com">//注意此方法的context是tbody元素</span>
+        var tr = document.createElement("tr")
+        tr.className = "summarizing"
+        tbody.appendChild(tr)
+        avalon.innerHTML(tr, document.getElementById("summarizing").text)
+        avalon.scan(tbody, vmodel)
+        vmodel.theadHeight = 110;
+    },
+    <span class="atn">getSummarizing</span>: function(obj, key) {
+        return obj[key]
+    },
+    <span class="atn">columns</span>: [
+        {field: "aaa", text: "紫薯", resizable: true, align: "center"},
+        {field: "zzz", text: "石榴", resizable: true, align: "center"},
+        {field: "yyy", text: "雪梨", resizable: true, align: "center"},
+        {field: "xxx", text: "苹果", resizable: true, align: "center"},
+        {field: "bbb", text: "南瓜", resizable: true, align: "center"},
+        {field: "ccc", text: "西红柿", resizable: true, align: "center"}
+    ],
+    <span class="atn">showRows</span>: 5,
+    <span class="atn">data</span>: getData4(20)
+}
+</pre>                 
+                    <div class="padBom10">
+                        <h3><span>配置远程排序remoteSort及onSort回调的simplegrid K</span></h3>
+                        <div ms-widget="simplegrid, simplegridK, $simplegridKOpts"></div>
+                    </div> 
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"simplegrid, simplegridK, $simplegridKOpts"</span>&gt;&lt;/div&gt; 
+</pre> 
+<pre>
+vm.<span class="str">$simplegridKOpts</span> = {
+    <span class="atn">columns</span>: ["symbol", "price", "change"],
+    <span class="atn">data</span>: getData1(5),
+    <span class="atn">remoteSort</span>: function(field, trend, vmodel, callback) {
+        setTimeout(function() {
+            var data = [{symbol:"$",price:"100",change:"-0.5"},{symbol:"$",price:"200",change:"-0.3"},{symbol:"$",price:"300",change:"-0.2"},{symbol:"$",price:"400",change:"0.5"},{symbol:"￥",price:"500",change:"0.8"}];
+            <span class="atn">callback</span>(data);
+        }, 200)
+    },
+    <span class="atn">onSort</span>: function() {
+        avalon.log("sort callback called");
+    }
+}
+</pre>              
+                    <div class="padBom10">
+                        <h3>
+                            <span>调用showLoading、 hideLoading的simplegrid L</span>
+                            <button ms-click="showLoading">show loading</button>
+                            <button ms-click="hideLoading">hide loading</button>
+                        </h3>
+                        <div ms-widget="simplegrid, simplegridL, $simplegridLOpts"></div>
+                    </div> 
+<pre ms-skip>
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span>"showLoading"</span>&gt;show loading&lt;/button&gt;
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span>"hideLoading"</span>&gt;hide loading&lt;/button&gt;
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span>"simplegrid, simplegridL, $simplegridLOpts"</span>&gt;&lt;/div&gt; 
+</pre>
+<pre>
+vm.<span class="atn">showLoading</span> = function (){
+    var gridLVM = avalon.vmodels.simplegridL;
+    gridLVM.<span class="str">showLoading</span>(gridLVM);
+}
+vm.<span class="atn">hideLoading</span> = function() {
+    var gridLVM = avalon.vmodels.simplegridL;
+    gridLVM.<span class="str">hideLoading</span>(gridLVM);
+}
+vm.<span class="atn">$simplegridLOpts</span> = {
+    columns: ["symbol", "price", "change"],
+    data: getData1(5)
+}
+</pre>                    
+                </div>
+                <script>
+                    require(["simplegrid/avalon.simplegrid"],function(avalon) {
+                        function getData1(n) {
+                            var ret = []
+                            for (var i = 0; i < n; i++) {
+                                ret.push({
+                                    symbol: Math.random().toString(32).slice(4, 10),
+                                    price: range(100, 200),
+                                    change: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
+                                    checked: false
+                                })
+                            }
+                            return ret
+                        }
+                        function getData3(n) {
+                            var ret = []
+                            for (var i = 0; i < n; i++) {
+                                var random = Math.random()
+                                var factor = random > 0.5 ? 1 : -1
+                                ret.push({
+                                    symbol: '<a href="javascript:alert(1)">' + random.toString(32).slice(4, 10) + "</b>",
+                                    price: range(100, 200),
+                                    change: "<span onclick='alert(2)' style='color:" + (factor === 1 ? 'green' : 'red') + "'>" + random.toFixed(2) * factor + "</span>"
+                                })
+                            }
+                            return ret
+                        }
+                        function getData4(n) {
+                            var array = []
+                            for (var i = 0; i < n; i++) {
+                                array.push({
+                                    xxx: Math.random().toString(36).substring(4, 10),
+                                    yyy: Math.random().toString(36).substring(4, 10),
+                                    aaa: 1 + 10,
+                                    bbb: Math.random().toString(36).substring(4, 10),
+                                    ccc: Math.random().toString(36).substring(4, 10),
+                                    zzz: i
+                                })
+                            }
+                            return array
+                        }
+                        var cols
+                        var createData = function() {
+                            var array = []
+                            array.push({
+                                date: "2014-03-07",
+                                search: 800,
+                                detail: 100000,
+                                booing: 44432,
+                                order: 589364,
+                                visit: 5800,
+                                affirm: 1800,
+                                compare: {
+                                    lastyear: {
+                                        date: "2013-03-07",
+                                        search: 556,
+                                        detail: 80000,
+                                        booing: 4432,
+                                        order: 89364,
+                                        visit: 5200,
+                                        affirm: 1700
+                                    },
+                                    lastday: {
+                                        date: "2013-03-06",
+                                        search: 670,
+                                        detail: 125800,
+                                        booing: 4432,
+                                        order: 59364,
+                                        visit: 3800,
+                                        affirm: 800
+                                    }
+                                }
+                            },
+                            {
+                                date: "2014-03-08",
+                                search: 800,
+                                detail: 100000,
+                                booing: 44432,
+                                order: 589364,
+                                visit: 5800,
+                                affirm: 1800,
+                                compare: {
+                                    lastyear: {
+                                        date: "2013-03-08",
+                                        search: 556,
+                                        detail: 80000,
+                                        booing: 4432,
+                                        order: 89364,
+                                        visit: 5200,
+                                        affirm: 1700
+                                    },
+                                    lastday: {
+                                        date: "2013-03-07",
+                                        search: 670,
+                                        detail: 125800,
+                                        booing: 4432,
+                                        order: 59364,
+                                        visit: 3800,
+                                        affirm: 800
+                                    }
+                                }
+                            },
+                            {
+                                date: "2014-03-09",
+                                search: 800,
+                                detail: 100000,
+                                booing: 44432,
+                                order: 589364,
+                                visit: 5800,
+                                affirm: 1800,
+                                compare: {
+                                    lastyear: {
+                                        date: "2013-03-09",
+                                        search: 556,
+                                        detail: 80000,
+                                        booing: 4432,
+                                        order: 89364,
+                                        visit: 5200,
+                                        affirm: 1700
+                                    },
+                                    lastday: {
+                                        date: "2013-03-08",
+                                        search: 670,
+                                        detail: 125800,
+                                        booing: 4432,
+                                        order: 59364,
+                                        visit: 3800,
+                                        affirm: 800
+                                    }
+                                }
+                            },
+                            {
+                                date: "2014-03-03",
+                                search: 800,
+                                detail: 100000,
+                                booing: 44432,
+                                order: 589364,
+                                visit: 5800,
+                                affirm: 1800,
+                                compare: {
+                                    lastyear: {
+                                        date: "2013-03-03",
+                                        search: 556,
+                                        detail: 80000,
+                                        booing: 4432,
+                                        order: 89364,
+                                        visit: 5200,
+                                        affirm: 1700
+                                    },
+                                    lastday: {
+                                        date: "2013-03-01",
+                                        search: 670,
+                                        detail: 125800,
+                                        booing: 4432,
+                                        order: 59364,
+                                        visit: 5500,
+                                        affirm: 800
+                                    }
+                                }
+                            },
+                            {
+                                date: "2014-02-09",
+                                search: 800,
+                                detail: 100000,
+                                booing: 44432,
+                                order: 589364,
+                                visit: 5800,
+                                affirm: 1800,
+                                compare: {
+                                    lastyear: {
+                                        date: "2013-02-09",
+                                        search: 556,
+                                        detail: 80000,
+                                        booing: 4432,
+                                        order: 89364,
+                                        visit: 5200,
+                                        affirm: 1700
+                                    },
+                                    lastday: {
+                                        date: "2013-02-08",
+                                        search: 670,
+                                        detail: 125800,
+                                        booing: 4432,
+                                        order: 59364,
+                                        visit: 3800,
+                                        affirm: 800
+                                    }
+                                }
+                            })
+                            return array
+                        }
+                        function range(s, b) {
+                            return s + Math.floor((b - s) * Math.random())
+                        }
+                        var columnShow = false;
+                        var simpleGridVM = avalon.define("simplegrid", function(vm) {
+                            vm.$simplegridAOpts = {
+                                columns: ["symbol", "price", "change"],
+                                data: getData1(5) 
+                            }
+                            vm.clearGridBData = function() {
+                                var gridBVM = avalon.vmodels.simplegridB;
+                                var data = [];
+                                gridBVM.reRender(data, gridBVM);
+                            }
+                            vm.$simplegridBOpts = { //设置无信息可显示
+                                columns: [{field:"symbol",localSort:function(a,b,f){return a[f].localeCompare(b[f]);}}, "price", "change"],
+                                data: getData1(5),
+                                getTemplate: function(str, options) {
+                                    var noResultStr = "<tr class='ui-simplegrid-empty' ms-if='!_data.size()'><td colspan='3'>暂无结果</td></tr>"
+                                    return str.replace(/<table\s*class="ui-simplegrid-tbody"[\s\S]*<\/tr>/, "$&"+noResultStr);
+                                },
+                                onSort: function(vmodel) {
+                                    avalon.log("排序完成用户回调")
+                                }
+                            }
+                            vm.$simplegridCOpts = {
+                                columns: ["symbol", "price", "change"],
+                                data: getData1(20), 
+                                pageable: true,
+                                pageSizeChangeCallback: function() {
+                                    avalon.log("pagesize changed")
+                                    avalon.log(this.value)
+                                },
+                                pager: { //作为pager组件的配置对象存在，good use
+                                    perPages: 20,
+                                    totalItems: 200,
+                                    showPages: 5,
+                                    nextText: "next",
+                                    prevText: "prev",
+                                    getTemplate: function(tmpl) {
+                                        return tmpl+ "<div class='ui-simplegrid-pager-options'>每页显示<select ms-duplex='perPages' ms-change='pageSizeChangeCallback'><option ms-repeat='options' ms-value='el.text'>{{el.text}}</options></select>条,共{{totalItems}}条结果</div>"
+                                    },
+                                    options: [10, 20, 30, 40], //存在options就渲染grid左下角的perPages的选项
+                                    onJump: function(event, vmodel) {
+                                        avalon.log("点击了页数，当前page是: "+vmodel.currentPage)
+                                    }
+                                },
+                                showRows: 5
+                            }
+                            vm.$simplegridDOpts = {
+                                columns: ["symbol", "price", "change"],
+                                data: getData1(6), 
+                                getTemplate: function(str) { //使用getTemplate演示添加斑马线
+                                    return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-even="!($index % 2)" ')
+                                }
+                            }
+                            vm.toggleColumn = function() {
+                                avalon.vmodels.simplegridE.columns[1].toggle = columnShow;
+                                columnShow = !columnShow;
+                            }
+                            vm.$simplegridEOpts = {
+                                /* columns中对应的属性意义：
+                                    field ----列名
+                                    text ----列输出文本
+                                    width ----列宽
+                                    align ----列对齐方式
+                                    toggle  --- 是否隐藏列
+                                    resizable  --- 是否允许改变列宽
+                                    sortable ---- 是否允许排序
+                                    title  ----通过getColumnTitle获得
+                                    className ---- 为列头定义的class
+                                    localSort ----自定义排序规则
+                                */
+                                columns: [
+                                    {field: "change", width:"20%", text: "变化(20%)", className: "col3", align: "right", resizable: true,title: "change",sortable: false},
+                                    {field: "price", width: "30%", text: "价格(30%)", className: "col2", align: "center", resizable: true, title: "price"/*, toggle: "false"*/},
+                                    {field: "symbol", width: "50%", text: "符号(50%)", className: "col1", localSort: function(a, b, f) { //localeCompare方法是用本地特定的排序规则进行排序
+                                            return a[f].localeCompare(b[f]);
+                                        }, resizable: true, title: "symbol"}
+                                ],
+                                getColumnTitle: function(item) { //要想title的设置有意义，需要配置getColumnTitle，传进来的参数是对应columns item对象，当然前提是不重写getColumns方法的情况下
+                                    return item.title+"啦啦啦。。。"
+                                },
+                                columnsOrder: ["symbol", "price", "change"], // 控制列的出现顺序
+                                renderCell: function(val, key, row) {  // 为每一个单元格渲染内容,row是data item
+                                    switch (key) {
+                                        case "symbol":
+                                            return  "<b>￥" + val + "</b>"
+                                        case "change":
+                                            return  "<span style='color:" + (val > 0 ? 'green' : 'red') + "'>" + val + "</span>"
+                                        default:
+                                            return val
+                                    }
+                                },
+                                data: getData1(5)
+                            }
+                            vm.$simplegridFOpts = {
+                                tbodyRowHeight: 105,
+                                columns: [
+                                    {field: "date", text: "日期", resizable: true, width: 210},
+                                    {field: "search", text: "曝光search量", resizable: true, align: "right"},
+                                    {field: "detail", text: "Detail页访问量", resizable: true, align: "right"},
+                                    {field: "booing", text: "Booing量", resizable: true, align: "right"},
+                                    {field: "order", text: "生成订单量", resizable: true, align: "right"},
+                                    {field: "visit", text: "访问量", resizable: true, align: "right"},
+                                    {field: "affirm", text: "确认订单量", align: "right", resizable: true}
+                                ],
+                                renderCell: function(val, name, obj) {
+                                    var compare = obj.compare
+                                    var lastyear = compare.lastyear
+                                    var lastday = compare.lastday
+                                    switch (name) {
+                                        case  "date":
+                                            return "<div>" + val + "</div><div class='datecell'>" + lastyear[name] + "<span>同比</span></div><div class='datecell'>" + lastday[name] + "<span>环比</span></div>"
+                                        default:
+                                            return  "<div>" + val + "</div><div>" + lastyear[name] + "</div><div>" + lastday[name] + "</div>"
+                                    }
+                                },
+                                showRows: 3,
+                                data: createData(100)
+                            }
+                            vm.$simplegridGOpts = {
+                                columns: ["symbol", "price", "change"],
+                                tbodyTemplate: function(str) {
+                                    return str.replace(/\|\s*html/, "|sanitize|html")
+                                },
+                                showRows: 5,
+                                data: getData3(50)
+                            }
+                            vm.$simplegridHOpts = {
+                                columns: [
+                                    {field: "aaa", text: "紫薯", resizable: true, align: "center"},
+                                    {field: "zzz", text: "石榴", resizable: true, align: "center"},
+                                    {field: "yyy", text: "雪梨", resizable: true, align: "center"},
+                                    {field: "xxx", text: "苹果", resizable: true, align: "center"},
+                                    {field: "bbb", text: "南瓜", resizable: true, align: "center"},
+                                    {field: "ccc", text: "西红柿", resizable: true, align: "center"}
+                                ],
+                                tbodyTemplate: function(str) {
+                                    return str.replace('class="ui-simplegrid-td"', 'class="ui-simplegrid-td" ms-mouseenter="addCross" ms-mouseleave="removeCross"')
+                                },
+                                addCross: function() {
+                                    avalon(this.parentNode).addClass("hcross")
+                                    var index = this.cellIndex
+         
+                                    var tbody = this.parentNode.parentNode
+                                    Array.prototype.forEach.call(tbody.rows, function(row) {
+                                        avalon(row.cells[index]).addClass("vcross")
+                                    })
+                                },
+                                removeCross: function() {
+                                    avalon(this.parentNode).removeClass("hcross")
+                                    var index = this.cellIndex
+                                    var tbody = this.parentNode.parentNode
+                                    Array.prototype.forEach.call(tbody.rows, function(row) {
+                                        avalon(row.cells[index]).removeClass("vcross")
+                                    })
+                                },
+                                data: getData4(10)
+                            }
+                            vm.$simplegridIOpts = {
+                                allchecked: false,
+                                getColumn: function(el) { //通过getColumn方法丰富column item的选项
+                                    el.checked = false
+                                },
+                                checkAll: function() {
+                                    var vmodel = avalon.vmodels.simplegridI
+                                    var bool = vmodel.allchecked = this.checked
+                                    vmodel._data.forEach(function(el) {
+                                        el.checked = bool
+                                    })
+                                    vmodel.data.forEach(function(el) {
+                                        el.checked = bool
+                                    })
+                                },
+                                checkOne: function(el, index) {
+                                    var vmodel = avalon.vmodels.simplegridI
+                                    index = vmodel.startIndex + index
+                                    vmodel.data[index] = el.checked = this.checked
+                                    if (!this.checked) {
+                                        vmodel.allchecked = false
+                                    } else {
+                                        vmodel.allchecked = vmodel._data.every(function(el) {
+                                            return el.checked
+                                        })
+                                    }
+                                },
+                                theadTemplate: function(str) { //修改表头的那一行的模板
+                                    return "<th style='width:80px'><input type='checkbox' ms-checked='allchecked' ms-click='checkAll'  /></td>" + str
+                                },
+                                tbodyTemplate: function(str) { //修改表身那一行的模板
+                                    return "<th style='width: 80px'><input type=\"checkbox\" ms-checked='row.checked' ms-click='checkOne(row, $index)' class='ui-helper-checkone'/></th>" + str
+                                },
+                                getTemplate: function(str){
+                                    return  str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-12="ui-state-acitve:row.checked" ')
+                                },
+                                columns: [
+                                    {field: "symbol", text: "生成订单量", resizable: true},
+                                    {field: "price", text: "访问量", resizable: true},
+                                    {field: "change", text: "确认订单量", resizable: true}
+                                ],
+                                data: getData1(6)
+                            }
+                            
+                            vm.$simplegridJOpts = {
+                                summarizing: {
+                                    aaa: "紫薯产量",
+                                    zzz: "石榴增产<br/>0",
+                                    yyy: "雪梨增产<br/>￥38000",
+                                    xxx: "苹果增产<br/>135346460",
+                                    bbb: "南瓜增产<br/>50.21%",
+                                    ccc: "西红柿增产<br/>￥1135800",
+                                },
+                                theadRenderedCallback: function(vmodel, options, vmodels) {
+                                    var tbody = this //注意此方法的context是tbody元素
+                                    var tr = document.createElement("tr")
+                                    tr.className = "summarizing"
+                                    tbody.appendChild(tr)
+                                    avalon.innerHTML(tr, document.getElementById("summarizing").text)
+                                    avalon.scan(tbody, vmodel)
+                                    vmodel.theadHeight = 110;
+                                },
+                                getSummarizing: function(obj, key) {
+                                    return obj[key]
+                                },
+                                columns: [
+                                    {field: "aaa", text: "紫薯", resizable: true, align: "center"},
+                                    {field: "zzz", text: "石榴", resizable: true, align: "center"},
+                                    {field: "yyy", text: "雪梨", resizable: true, align: "center"},
+                                    {field: "xxx", text: "苹果", resizable: true, align: "center"},
+                                    {field: "bbb", text: "南瓜", resizable: true, align: "center"},
+                                    {field: "ccc", text: "西红柿", resizable: true, align: "center"}
+                                ],
+                                showRows: 5,
+                                data: getData4(20)
+                            }
+                            
+                            vm.$simplegridKOpts = {
+                                columns: ["symbol", "price", "change"],
+                                data: getData1(5),
+                                remoteSort: function(field, trend, vmodel, callback) {
+                                    setTimeout(function() {
+                                        var data = [{symbol:"$",price:"100",change:"-0.5"},{symbol:"$",price:"200",change:"-0.3"},{symbol:"$",price:"300",change:"-0.2"},{symbol:"$",price:"400",change:"0.5"},{symbol:"￥",price:"500",change:"0.8"}];
+                                        callback(data);
+                                    }, 200)
+                                },
+                                onSort: function() {
+                                    avalon.log("sort callback called");
+                                }
+                            }
+                            vm.showLoading = function (){
+                                var gridLVM = avalon.vmodels.simplegridL;
+                                gridLVM.showLoading(gridLVM);
+                            }
+                            vm.hideLoading = function() {
+                                var gridLVM = avalon.vmodels.simplegridL;
+                                gridLVM.hideLoading(gridLVM);
+                            }
+                            vm.$simplegridLOpts = {
+                                columns: ["symbol", "price", "change"],
+                                data: getData1(5)
+                            }
+                        })
+                        avalon.scan($("#simplegrid")[0], simpleGridVM);
+                    })
+                </script>
+                <h3>vm的定义</h3>
+<pre ms-skip>
+var <span class="str">simpleGridVM</span> = avalon.define("simplegrid", function(vm) {
+    vm.<span class="atn">$simplegridAOpts</span> = {<span class="str"> ...... </span>}
+    vm.<span class="atn">clearGridBData</span> = function() {<span class="str"> ...... </span>}
+    vm.<span class="atn">$simplegridBOpts</span> = {<span class="str"> ...... </span>}
+    vm.<span class="atn">$simplegridCOpts</span> = {<span class="str"> ...... </span>}
+    vm.<span class="atn">$simplegridDOpts</span> = {<span class="str"> ...... </span>}
+    vm.<span class="atn">toggleColumn</span> = function() {<span class="str"> ...... </span>}
+    vm.<span class="atn">$simplegridEOpts</span> = {<span class="str"> ...... </span>}
+    vm.<span class="atn">$simplegridFOpts</span> = {<span class="str"> ...... </span>}
+    vm.<span class="atn">$simplegridGOpts</span> = {<span class="str"> ...... </span>}
+    vm.<span class="atn">$simplegridHOpts</span> = {<span class="str"> ...... </span>}
+    vm.<span class="atn">addRow</span> = function() {<span class="str"> ...... </span>}
+    vm.<span class="atn">$simplegridIOpts</span> = {<span class="str"> ...... </span>}
+    vm.<span class="atn">$simplegridJOpts</span> = {<span class="str"> ...... </span>}
+    vm.<span class="atn">$simplegridKOpts</span> = {<span class="str"> ...... </span>}    
+    vm.<span class="atn">showLoading</span> = function (){<span class="str"> ...... </span>}
+    vm.<span class="atn">hideLoading</span> = function() {<span class="str"> ...... </span>}
+    vm.<span class="atn">$simplegridLOpts</span> = {<span class="str"> ...... </span>}
+})
+avalon.scan($("#simplegrid")[0], simpleGridVM);
+</pre>
+            </section>
+
+            <!-- textbox 规范用法 -->
+            <section ms-controller="textbox" class="ms-controller" id="textboxNormal">
+                <div class="page-header">
+                    <h1>textbox 用法详解</h1>
+                </div>
+                <div class="bs-docs-example" style="padding-bottom: 24px;">
+                    <div class="padBom10">
+                        <h3><span>默认配置的textbox A：</span>
+                        <input ms-widget="textbox" type="text"/></h3>
+                    </div>
+<pre ms-skip>
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"textbox"</span> <span class="atn">type</span><span class="pun">=</span><span class="atv">"text"</span>/&gt;
+</pre>
+                
+                    <div class="padBom10">
+                        <h3><span>自定义width，通过disable属性控制组件禁用与否的textbox B：</span></h3>
+                        <input ms-widget="textbox" type="text" 
+                               data-textbox-width="300" 
+                               ms-disabled="disable"/>
+                        <button ms-click="toggleDisabled">toggle disabled textbox</button>
+                    </div>
+<pre ms-skip>
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"textbox"</span> <span class="atn">type</span><span class="pun">=</span><span class="atv">"text"</span> 
+       <span class="atn">data-textbox-width</span><span class="pun">=</span><span class="atv">"300"</span> 
+       <span class="atn">ms-disabled</span><span class="pun">=</span><span class="atv">"disable"</span>/&gt;
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"toggleDisabled"</span>&gt;toggle disabled textbox&lt;/button&gt;
+</pre>
+<pre>
+vm.<span class="atn">disable</span> = false
+vm.<span class="atn">toggleDisabled</span> = function() {
+    textboxVM.<span class="atv">disable</span> = !textboxVM.<span class="atv">disable</span>
+}
+</pre>
+                    <div class="padBom10">
+                        <h3><span>拥有占位符placeholder的textbox C：</span></h3> 
+                        <input ms-widget="textbox" type="text" 
+                               ms-duplex="val" 
+                               data-textbox-placeholder="初始值为空占位符显示"/>
+                        <button ms-click="getVal">get val</button>  
+                    </div>
+<pre ms-skip>
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"textbox"</span> <span class="atn">type</span><span class="pun">=</span><span class="atv">"text"</span> 
+       <span class="atn">ms-duplex</span><span class="pun">=</span><span class="atv">"val"</span> 
+       <span class="atn">data-textbox-placeholder</span><span class="pun">=</span><span class="atv">"初始值为空占位符显示"</span>/&gt;
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"getVal"</span>&gt;get val&lt;/button&gt;
+</pre>                    
+                    <div class="padBom10">
+                        <h3><span>具有自动补全功能的textbox D：</span>
+                        <input ms-widget="textbox" type="text" 
+                               data-textbox-suggest="test"
+                               data-textbox-suggest-on-change="changeCallback"/></h3>
+                    </div>
+<pre ms-skip>
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"textbox"</span> <span class="atn">type</span><span class="pun">=</span><span class="atv">"text"</span> 
+       <span class="atn">data-textbox-suggest</span><span class="pun">=</span><span class="atv">"test"</span>
+       <span class="atn">data-textbox-suggest-on-change</span><span class="pun">=</span><span class="atv">"changeCallback"</span>/&gt;
+</pre>     
+<pre>
+vm.<span class="str">changeCallback</span> = function(value, $model, event) {
+    avalon.log("change")
+    avalon.log("arguments is :")
+    avalon.log(arguments)
+}  
+avalon.ui.suggest.strategies.<span class="str">test</span> = function(value, render) {
+    setTimeout(function() {
+        //render(err, arrayValue)
+        var data = !value.indexOf("x") ? ["xueer", "xueli", "xueyan"] : []
+        render(data)
+    }, 100)
+}  
+</pre>               
+<pre ms-skip>
+<span class="span">//自动提示账号名</span>
+$$.ui["@suggest"].strategies['suggestUserName'] = function (value, done) {
+    fetchEbUserName(value, done);
+};
+
+<span class="com">//获取账号名称列表</span>
+var fetchEbUserName = function (value, callback) {
+    var params = {
+        suffix: value,
+        source: RBAC_SOURCE
+    };
+    var ajax = $.ajax({
+        url: '/rbac/api/user/suggest.json',
+        cache: false,
+        contentType: 'application/json;charset=UTF-8',
+        data: params,
+        dataType: 'json',
+        type: 'get'
+    });
+
+    ajax.done(function (data) {
+        if (data.ret && data.data) {
+            callback(null, data.data);
+        }
+    })
+}
+</pre>                    
+                    <div class="padBom10">
+                        <h3><span>设置suggestFocus为true的textbox E：</span>
+                        <input ms-widget="textbox" type="text" 
+                               data-textbox-suggest="phone" 
+                               data-textbox-suggest-focus="true"/></h3>
+                    </div>
+<pre ms-skip>
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"textbox"</span> <span class="atn">type</span><span class="pun">=</span><span class="atv">"text"</span> 
+       <span class="atn">data-textbox-suggest</span><span class="pun">=</span><span class="atv">"phone"</span> 
+       <span class="atn">data-textbox-suggest-focus</span><span class="pun">=</span><span class="atv">"true"</span>/&gt;                               
+</pre> 
+<pre>
+avalon.ui.suggest.strategies.<span class="str">phone</span> = function(value, render) {
+    setTimeout(function(){
+        var data = value ? [] : [
+                { value : '13800138000' , text : '&lt;b&gt;日审&lt;/b&gt; 13800138000' } ,
+                { value : '13800138001' , text : '&lt;b&gt;夜审&lt;/b&gt; 13800138001' }
+            ]
+        render(data)
+    },100)
+}    
+</pre>                   
+                </div>
+                <script>
+                    require(["textbox/avalon.textbox"],function(avalon) {
+                        var textboxVM = avalon.define("textbox", function(vm) {
+                            vm.disable = false
+                            vm.toggleDisabled = function() {
+                                textboxVM.disable = !textboxVM.disable
+                            }
+                            vm.val = ""
+                            vm.getVal = function() {
+                                alert(textboxVM.val)
+                            }
+                            vm.changeCallback = function(value, $model, event) {
+                                avalon.log("change")
+                                avalon.log("arguments is :")
+                                avalon.log(arguments)
+                            }
+                        }) 
+                        avalon.scan($("#textboxNormal")[0], textboxVM);
+                        avalon.ui.suggest.strategies.test = function(value, render) {
+                            setTimeout(function() {
+                                //render(err, arrayValue)
+                                var data = !value.indexOf("x") ? ["xueer", "xueli", "xueyan"] : []
+                                render(data)
+                            }, 100)
+                        }
+                        avalon.ui.suggest.strategies.phone = function(value, render) {
+                            setTimeout(function(){
+                                var data = value ? [] : [
+                                        { value : '13800138000' , text : '<b>日审</b> 13800138000' } ,
+                                        { value : '13800138001' , text : '<b>夜审</b> 13800138001' }
+                                    ]
+                                render(data)
+                            },100)
+                        }
+                    })
+                </script>
+                <h3>vm的定义</h3>
+<pre ms-skip>
+var <span class="str">textboxVM</span> = avalon.define("textbox", function(vm) {
+    vm.<span class="atn">disable</span> = false
+    vm.<span class="atn">toggleDisabled</span> = function() {<span class="str"> ...... </span>}
+    vm.<span class="atn">val</span> = ""
+    vm.<span class="atn">getVal</span> = function() {<span class="str"> ...... </span>}
+    vm.<span class="atn">changeCallback</span> = function(value, $model, event) {<span class="str"> ...... </span>}
+}) 
+avalon.scan($("#textboxNormal")[0], textboxVM);
+avalon.ui.suggest.strategies.<span class="str">test</span> = function(value, render) {<span class="str"> ...... </span>}
+avalon.ui.suggest.strategies.<span class="str">phone</span> = function(value, render) {<span class="str"> ...... </span>}
+</pre>
+            </section>
+        </div>
+    </div>
+</div>
+<!-- Footer
+================================================== -->
+<footer class="footer">
+    <div class="container">
+        <ul class="footer-links">
+            <li><a href="http://hotelued.qunar.com/oniui/index.html" target="_blanck">avalon ui</a></li>
+            <li class="muted">&middot;</li>
+            <li><a href="http://qtown.corp.qunar.com/activity/detail?activityId=39">avalon</a></li>
+        </ul>
+    </div>
+</footer>
+</body>
+</html>

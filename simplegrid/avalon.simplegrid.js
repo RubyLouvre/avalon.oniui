@@ -48,8 +48,8 @@ define(["avalon",
         pager.prevText = pager.prevText || "上一页"
         if (Array.isArray(pager.options)) {
             pager.getTemplate = typeof pager.getTemplate === "function" ? pager.getTemplate : function(tmpl) {
-                return tmpl+ "<div class='ui-simplegrid-pager-options'>每页显示<select ms-duplex='perPages'><option ms-repeat='options' ms-el.value>{{el.text}}</options></select>条,共{{totalItems}}条结果</div>"
-                     
+                return tmpl + "<div class='ui-simplegrid-pager-options'>每页显示<select ms-duplex='perPages'><option ms-repeat='options' ms-el.value>{{el.text}}</options></select>条,共{{totalItems}}条结果</div>"
+
             }
         }
         makeBool(pager, "showJumper", true)
@@ -180,12 +180,12 @@ define(["avalon",
                             if (scrollbarInited)
                                 return
                             scrollbarInited = true
-                            vmodel.gridWidth = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ? 
-                            scroller[0].scrollWidth - bar.width() : scroller[0].scrollWidth
+                            vmodel.gridWidth = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
+                                    scroller[0].scrollWidth - bar.width() : scroller[0].scrollWidth
                             // 水平方向把这个滚动条高度转移到大容器上
                         } else if (bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")) {
                             vmodel.paddingBottom = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
-                            bar.innerHeight() + 2 + "px" : "0"
+                                    bar.innerHeight() + 2 + "px" : "0"
                         }
                     })
                 }
@@ -269,17 +269,28 @@ define(["avalon",
                 trend = trend ? 1 : -1
                 if (typeof opts.remoteSort === "function" && !remptyfn.test(opts.remoteSort)) {
                     //如果指定了回调函数,通过服务器端进行排数,那么能回调传入当前字段,状态,VM本身及callback
-                    function callback() {
-                        vmodel._data = opts.getStore(opts.data, opts)
+                    function callback(array) {
+                        vmodel.data = array
+                        vmodel._data = vmodel.getStore(array, vmodel)
+                        if (typeof vmodel.onSort === "function") {
+                            setTimeout(function() {
+                                vmodel.onSort(vmodel)
+                            }, 500)
+                        }
                     }
-                    vmodel.remoteSort(field, trend, opts, callback)
+                    //
+                    vmodel.remoteSort(field, trend, vmodel, callback)
                 } else if (typeof el.localSort === "function" && !remptyfn.test(el.localSort)) {// !isEmptyFn(el.localSort)
                     //如果要在本地排序,并且指定排数函数
                     vmodel._data.sort(function(a, b) {
                         return trend * el.localSort(a, b, field, opts) || 0
                     })
+                    if (typeof vmodel.onSort === "function") {
+                        setTimeout(function() {
+                            vmodel.onSort(vmodel)
+                        }, 500)
+                    }
                 } else {
-
                     //否则默认处理
                     vmodel._data.sort(function(a, b) {
                         return trend * (a[field] - b[field]) || 0
@@ -311,9 +322,7 @@ define(["avalon",
                 return vm.columnsOrder
             }
 
-            vm.getStore = function(array) {
-                return array.slice(vm.startIndex, vm.endIndex)
-            }
+
             vm.getScrollerHeight = function() {
                 var h = vmodel.tbodyScrollHeight + vmodel.tbodyScrollTop - vmodel.theadHeight,
                         max = vmodel._rowHeight * vmodel.data.length
@@ -465,8 +474,12 @@ define(["avalon",
         getTemplate: function(tmpl, options) {
             return tmpl
         },
-        getStore: function(array, options) {
-            return array.concat()
+        reRender: function(data, vm) {
+            vm.data = data;
+            vm._data = vm.getStore(data, vm);
+        },
+        getStore: function(array, vm) {
+            return array.slice(vm.startIndex, vm.endIndex)
         },
         getColumn: function(el, options) {
             return el

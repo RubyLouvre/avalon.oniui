@@ -43,7 +43,7 @@
 
                             avalon.ui["suggest"].strategies['phone'] = function( value , done ) {
                                 setTimeout(function(){
-                                    done( null , value ? [] : [
+                                    done(value ? [] : [
                                         { value : '13800138000' , text : '&lt;b&gt;日审&lt;/b&gt; 13800138000' } ,
                                         { value : '13800138001' , text : '&lt;b&gt;夜审&lt;/b&gt; 13800138001' }
                                     ])
@@ -72,7 +72,7 @@
                 avalon.scan();
                 avalon.ui["suggest"].strategies['phone'] = function( value , done ) {
                     setTimeout(function(){
-                        done( null , value ? [] : [
+                        done(value ? [] : [
                             { value : '13800138000' , text : '<b>日审</b> 13800138000' } ,
                             { value : '13800138001' , text : '<b>夜审</b> 13800138001' }
                         ])

@@ -114,6 +114,7 @@ $uiname-dropdown: "ui-dropdown";
         position: absolute;
         text-align: center;
         width: 20px;
+        z-index: 1;
     }
     .ui-datepicker-prev-disabled, .ui-datepicker-next-disabled {
         color: #cccccc;

@@ -24,12 +24,14 @@ $uiname : "ui-simplegrid";
         border-bottom: 1px solid $ui-state-default-border-color;
         border-collapse: collapse;
     }
-    .#{$uiname}-thead td,.#{$uiname}-thead th{
+    .#{$uiname}-thead td,.#{$uiname}-thead th {
         border: 0 none;
         height: 35px;
         line-height: 35px;
-        padding-left: 5px;
         background-color:$ui-state-default-background-color;
+    }
+    .#{$uiname}-thead td,.#{$uiname}-thead th, .#{$uiname}-tbody td, .#{$uiname}-tbody th{
+        padding-left: 5px;
     }
 
     .#{$uiname}-tbody{

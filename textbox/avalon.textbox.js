@@ -73,7 +73,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                         strategy : options.suggest , 
                         textboxContainer : sourceList ,
                         focus : options.suggestFocus ,
-                        changed : options.suggestChanged,
+                        onChange : options.suggestOnChange,
                         type: "textbox"
                     }
                 }

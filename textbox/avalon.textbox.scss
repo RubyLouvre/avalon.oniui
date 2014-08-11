@@ -6,6 +6,7 @@ $uiname: "ui-textbox";
     outline: medium none;
     font-size: 0;
     padding: 3px 5px;
+    line-height: 18px;
     @if($oinui-theme == smoothness) {
         background-color: #FFFFFF;
         border: 1px solid #CCCCCC;
@@ -18,6 +19,7 @@ $uiname: "ui-textbox";
     .#{$uiname}-input-wrap {
         position: relative;
         @include inline-block();
+        line-height: 18px;
         .#{$uiname}-input {
             position: relative;
             float: left;
@@ -27,6 +29,10 @@ $uiname: "ui-textbox";
             line-height: 18px;
             outline: medium none;
             font-size: 12px;
+            margin: 0;
+            padding: 0;
+            box-shadow: inset 0 0 0 rgba(0,0,0,0.75);
+            width: auto;
             @if($oinui-theme == smoothness) {
                 background-color: #FFFFFF;
                 border: 0 none;

@@ -1,0 +1,10 @@
+{{MS_WIDGET_BALL}}
+<v:oval style="{{MS_WIDGET_CSS_BALL}}position:absolute;BEHAVIOR:url(#default#VML)" stroked="false" {{MS_WIDGET_CSS_BINDINGS}}>
+</v:oval>
+{{MS_WIDGET_DIVIDER}}
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="white">
+	<circle style="{{MS_WIDGET_CSS_BALL}}" {{MS_WIDGET_CSS_BINDINGS}} 
+	        ms-repeat="data">
+	</circle>
+</svg>
+{{MS_WIDGET_TYPE}}

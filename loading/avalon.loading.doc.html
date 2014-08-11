@@ -6,14 +6,14 @@
         <meta name="viewport" content="width=device-width">
         <script src="../highlight/shCore.js"></script>
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
-    <meta name="description" content="loading组件，"/>
+    <meta name="description" content="loading组件，实现各种加载动画效果"/>
 </head>
     <body>
         <div class="wrapper">
             <h2>loading</h2>
             <fieldset>
                 <legend>loading组件</legend>
-                <p class="doc-description">loading组件，</p>
+                <p class="doc-description">loading组件，实现各种加载动画效果</p>
             </fieldset>
             <fieldset>
                 <legend>使用说明</legend>
@@ -26,15 +26,21 @@
                     </tr>
                     <!--auto doc start-->
 <tr>
-    <td>timer</td><td> 160</td><td> 毫秒数，动画效果帧间隔</td></tr>
+    <td>interval</td><td> 160</td><td> 毫秒数，动画效果帧间隔</td></tr>
 <tr>
-    <td>type</td><td> "ball"</td><td> 类型，默认是ball，球，可以配置成 {"type": "ball", "widthInner": 3} ...</td></tr>
+    <td>color</td><td> "#619FE8"</td><td> 效果的颜色</td></tr>
+<tr>
+    <td>width</td><td> 46</td><td> loading动画的宽度</td></tr>
+<tr>
+    <td>height</td><td> 46</td><td> loading动画的高度</td></tr>
+<tr>
+    <td>type</td><td> "ball"</td><td> 类型，默认是ball，球</td></tr>
 <tr>
     <td>toggle</td><td> true</td><td> 是否显示</td></tr>
 <tr>
     <td>modal</td><td> true</td><td> 是否显示遮罩</td></tr>
 <tr>
-    <td>opacity</td><td> 0.1</td><td> 遮罩透明度</td></tr>
+    <td>modalMpacity</td><td> 0.1</td><td> 遮罩透明度</td></tr>
 <tr>
     <td>container</td><td> void 0</td><td> loading效果显示的容器，默认是绑定widget的元素</td></tr>
 <tr>
@@ -55,7 +61,8 @@
             <h3>例子：</h3>
             <!--ex list start-->
 <ol class="example-links">
-<li><a href="avalon.loading.ex.html">loading</a></li>
+<li><a href="avalon.loading.ex.html">loading:ball</a></li>
+<li><a href="avalon.loading.ex.1.html">loading:spin</a></li>
 </ol>
 <!--ex list end-->
         </div>

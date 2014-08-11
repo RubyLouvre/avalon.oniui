@@ -7,11 +7,11 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         _key = (99999 - Math.random() * 10000) >> 0,
         templateCache = {},
         parts = ballTemplate.split("{{MS_WIDGET_TYPE}}"),
-        _config = {}, _drawer = {}, _effect = {}
+        _config = {}
     function addType(type, config, drawer, effect) {
+        config["drawer"] = drawer
+        config["effect"] = effect
         _config[type] = config
-        _drawer[type] = drawer
-        _effect[type] = effect
     }
     avalon.each(parts, function(i, item) {
         var type,
@@ -52,13 +52,14 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     // svg绘制圆
     function circleValueList(r, bw) {
         var arr = [],
+            count = 36,
             r = r - bw,
             arc,
             x,
             y,
             res
-        for(var i = 0; i <= 100; i++) {
-            arc = Math.PI / 2 - Math.PI / 50 * i
+        for(var i = 0; i <= count; i++) {
+            arc = Math.PI / 2 - Math.PI * 2 / count * i
             x = Math.cos(arc) * r + r * 1 + bw * 1
             y = (1 - Math.sin(arc).toFixed(4)) * r + bw * 1
             res = (i ? " L" : "M") + x + " " + y + (i == 100 ? "Z" : "")
@@ -69,12 +70,17 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     // 注册ball
     addType("ball", {
         "width": 46,
-        "widthInner": 6,
+        "widthInner": 40,
         "count": 12,
-        "color": "#619FE8"
-    }, function(cf, vmodel) {
-        return ComputePoints(cf.count, cf.width / 2, cf.widthInner / 2)
-    }, function(cf, vmodel, ele) {
+        "color": "#619FE8",
+        "data": [],
+        "opacities": [],
+        "interval": 120
+    }, function(vmodel) {
+       var list = ComputePoints(vmodel.count, vmodel.width / 2, (vmodel.width - vmodel.widthInner) / 2)
+       vmodel.data = list[0]
+       vmodel.opacities = list[1]
+    }, function(vmodel, ele) {
         ele = vmodel.svgSupport ? ele.getElementsByTagName("circle") : ele.getElementsByTagName("oval")
         var len = ele.length, index = 12, eles = []
         avalon.each(ele, function(i, item) {
@@ -93,7 +99,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                 index = len
             }
             for(var i = 0; i < len; i++) {
-                eles[i].css("opacity", vmodel.data2[(i + index) % len] * 100 / 100)
+                eles[i].css("opacity", vmodel.opacities[(i + index) % len] * 100 / 100)
             }
         }, vmodel.interval)
     })
@@ -102,24 +108,51 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         width: 46,
         widthInner: 36,
         angel:90,
+        arc: "",
+        circle: "",
+        radius: "",
         color: "#619FE8",
-        opacity: 0.2
-    }, function(cf, vmodel) {
+        opacity: 0.2,
+        startangle: 0,
+        endangle: 0,
+        interval: 36,
+        $circleData: "",
+        $partsData: ""
+    }, function(vmodel) {
+        vmodel.radius = vmodel.width / 2 - vmodel.widthInner / 2
         if(vmodel.svgSupport) {
-            var circle = circleValueList(cf.width / 2, cf.width / 2 - cf.widthInner / 2),
-            parts = circle.slice(0, Math.floor(cf.angel / 360 * (circle.length - 1)))
-            return [circle, parts]
+            var circle = vmodel.$circleData = circleValueList(vmodel.width / 2, vmodel.width / 2 - vmodel.widthInner / 2),
+            parts = vmodel.$partsData = circle.slice(0, Math.floor(vmodel.angel / 360 * (circle.length - 1)))
+            vmodel.arc = parts.join("")
+            vmodel.circle = circle.join("")
         } else {
-            return [void 0, [0, cf.angel]]
+            vmodel.startangle = 0
+            vmodel.endangle = vmodel.angel
         }
-    }, function(cf, vmodel, ele) {
-        var index = 0, tar = vmodel.svgSupport ? ele.getElementsByTagName("path")[0] : ele.getElementsByTagName("arc")[0], tar = avalon(tar)
+    }, function(vmodel, ele) {
+        clearInterval(vmodel.$timer)
+        var angel = stepper = vmodel.angel
         if(vmodel.svgSupport) {
-
-        } else {
-            clearInterval(vmodel.$timer)
+            var len = vmodel.$circleData.length
+            angel = stepper = Math.floor(vmodel.angel / 360 * len)
             vmodel.$timer = setInterval(function() {
-                
+                // 生成圆弧的点阵是36个点，因此步长用1就足够了
+                stepper+=1;
+                vmodel.$partsData.shift()
+                if(stepper >= len) stepper = 0
+                vmodel.$partsData.push(" " + vmodel.$circleData[stepper].replace(/^M/g, "L").replace(/^[\s]+/g," "))
+                vmodel.arc = vmodel.$partsData.join("").replace(/^[\s]*L/g, "M")
+            }, vmodel.interval)
+        } else {
+            vmodel.$timer = setInterval(function() {
+                stepper += 10
+                var startangle = stepper - angel
+                if(stepper > 360) {
+                    stepper = stepper - 360
+                    startangle = startangle - 360
+                }
+                vmodel.startangle = startangle
+                vmodel.endangle = stepper
             }, vmodel.interval)
         }
     })
@@ -129,23 +162,24 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         var options = data.loadingOptions
         //方便用户对原始模板进行修改,提高定制性
         options.template = options.getTemplate(template, options)
+        if(!templateCache[options.type]) {
+            options.type = "ball"
+        }
+        // 读入各种效果的配置
+        avalon.each(_config[options.type], function(i, item) {
+            if(options[i] === void 0) options[i] = item
+        })
 
         var vmodel = avalon.define(data.loadingId, function(vm) {
+            vm.height = ""
+            vm.width = ""
             avalon.mix(vm, options)
             vm.widgetElement = element
             vm.svgSupport = svgSupport
             vm.$loadingID = count + "" + _key
-            vm.data = []
-            vm.data2 = []
-            vm.data3 = []
-            vm.data4 = []
-            vm.html = ""
-            vm._type = ""
+            vm.data = ""
             vm.$timer = ""
-            vm.height = "auto"
-            vm.width = "auto"
-            vm.$config = {}
-            vm.$skipArray = ["widgetElement", "template", "data", "data2", "data3", "data4"]
+            vm.$skipArray = ["widgetElement", "template"]
 
             var inited
             vm.$init = function() {
@@ -154,26 +188,19 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                 var id,
                     container = options.container || vmodel.widgetElement,
                     elementParent = ((avalon.type(container) === "object" && container.nodeType === 1 && document.body.contains(container)) ? container : document.getElementById(container)) || document.body
-                vmodel._type = vmodel.type.type || vmodel.type
-                if(!templateCache[vmodel._type]) {
-                    vmodel._type = "ball"
-                }
-                var type = vmodel._type,
-                    _cf = avalon.mix({}, _config[type], vmodel.type),
-                    radiusInner = _cf.widthInner / 2,
-                    radiusOut = _cf.width / 2
-                    list = _drawer[type](_cf, vmodel),
+                var type = vmodel.type,
+                    radiusInner = (vmodel.width - vmodel.widthInner) / 2,
+                    radiusOut = vmodel.width / 2
+                    list = vmodel.drawer(vmodel),
                     html = ""
-                vmodel.$config = _cf
-                vmodel.data = list[0]
-                vmodel.data2 = list[1]
-                vmodel.width = _cf.width === void 0 ? _cf.height : _cf.width
-                vmodel.height = _cf.height === void 0 ? _cf.width : _cf.height
+                vmodel.width = vmodel.width == false ? vmodel.height : vmodel.width
+                vmodel.height = vmodel.height == false ? vmodel.width : vmodel.height
+                // 下面的条件判断目测只针对type=ball有效
                 if(vmodel.svgSupport) {
                     var tpl = templateCache[type]["svg"]
                     html += tpl.replace(/\{\{MS_WIDGET_CSS_BINDINGS\}\}/g, 
                             [
-                                "ms-css-opacity=\"data2[$index]\"",
+                                "ms-css-opacity=\"opacities[$index]\"",
                                 "ms-attr-r=\"data[$index].r\"",
                                 "ms-attr-cx=\"data[$index].x+" + radiusInner + "\"",
                                 "ms-attr-cy=\"data[$index].y+" + radiusInner + "\""
@@ -190,7 +217,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                                 "height:" + radiusInner * 2 + "px;"
                             ].join("")).replace(/\{\{MS_WIDGET_CSS_BINDINGS\}\}/g, 
                             [
-                                "ms-css-opacity=\"" + vmodel.getOpacity(i) + "\""
+                                "ms-css-opacity=\"" + vmodel.opacities[i] + "\""
                             ].join(" "))
                     })
                     html = html || tpl
@@ -200,19 +227,16 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                 if(typeof options.onInit === "function" ) {
                     //vmodels是不包括vmodel的 
                     options.onInit.call(element, vmodel, options, vmodels)
-                    vmodel.effect()
+                    vmodel._effect()
                 }
             }
-            vm.effect = function() {
+            vm._effect = function() {
                 if(vmodel.toggle) {
                     var ele = document.getElementById("ui-loading-" + vmodel.$loadingID)
                     if(ele) {
-                        _effect[vmodel._type] && _effect[vmodel._type](vmodel.$config ,vmodel, ele)
+                        vmodel.effect && vmodel.effect(vmodel, ele)
                     }
                 }
-            }
-            vm.getOpacity = function(index) {
-                return vmodel.data2[index]
             }
             vm.$remove = function() {
                 clearInterval(vmodel.$timer)
@@ -223,7 +247,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             vm.showLoading = function() {
                 if(vmodel.toggle) return
                 vmodel.toggle = true
-                vmodel.effect()
+                vmodel._effect()
             } 
             //@method hideLoading() 隐藏loading
             vm.hideLoading = function() {
@@ -255,11 +279,15 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     widget.defaults = {
         //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
-        interval: 160,//@param 毫秒数，动画效果帧间隔
-        type: "ball", //@param 类型，默认是ball，球，可以配置成 {"type": "ball", "widthInner": 3} ...
+        // interval: 160,//@param 毫秒数，动画效果帧间隔
+        // color: "#619FE8",//@param 效果的颜色
+        // width: 46, //@param loading动画的宽度
+        // height: 46, //@param loading动画的高度
+        // widthInner: 
+        type: "ball", //@param 类型，默认是ball，球
         toggle: true, //@param 是否显示
         modal: true, //@param 是否显示遮罩
-        opacity: 0.1,//@param 遮罩透明度
+        modalMpacity: 0.1,//@param 遮罩透明度
         container: void 0,//@param loading效果显示的容器，默认是绑定widget的元素
         getTemplate: function(tmpl, opts, tplName) {
             return tmpl

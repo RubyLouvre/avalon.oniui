@@ -20,11 +20,15 @@
 	</fieldset>
 	<fieldset>  
 		<legend>关闭自动隐藏</legend>
-		<input type="text" ms-duplex="color_2" ms-widget="colorpicker, $, $cp_2">
+		<input type="text" ms-widget="colorpicker, $, $cp_2">
 	</fieldset>
 	<fieldset>  
 		<legend>更改默认颜色</legend>
 		<input type="text" ms-widget="colorpicker, $, $cp_3">
+	</fieldset>
+	<fieldset>  
+		<legend>更改背景颜色</legend>
+		<input type="text" ms-widget="colorpicker, $, $cp_4">
 	</fieldset>
     
 	<pre class="brush:html;gutter:false;">
@@ -49,11 +53,15 @@
 	&lt;/fieldset&gt;
 	&lt;fieldset&gt;  
 		&lt;legend&gt;关闭自动隐藏&lt;/legend&gt;
-		&lt;input type="text" ms-duplex="color_2" ms-widget="colorpicker, $, $cp_2"&gt;
+		&lt;input type="text" ms-widget="colorpicker, $, $cp_2"&gt;
 	&lt;/fieldset&gt;
 	&lt;fieldset&gt;  
 		&lt;legend&gt;更改默认颜色&lt;/legend&gt;
 		&lt;input type="text" ms-widget="colorpicker, $, $cp_3"&gt;
+	&lt;/fieldset&gt;
+	&lt;fieldset&gt;  
+		&lt;legend&gt;更改背景颜色&lt;/legend&gt;
+		&lt;input type="text" ms-widget="colorpicker, $, $cp_4"&gt;
 	&lt;/fieldset&gt;
 
 	&lt;script&gt;
@@ -62,13 +70,16 @@
 				
 				vm.color_1 = "#ff0000";
 
-				vm.color_2 = "#ff0000";
 				vm.$cp_2 = {
-					auto_hide: false
+					autoHide: false
 				};
 
 				vm.$cp_3 = {
-					default_color: "#0000ff"
+					defaultColor: "#0000ff"
+				};
+				
+				vm.$cp_4 = {
+					bgColor: "#555"
 				};
 
 			});
@@ -84,13 +95,16 @@
 				
 				vm.color_1 = "#ff0000";
 
-				vm.color_2 = "#ff0000";
 				vm.$cp_2 = {
-					auto_hide: false
+					autoHide: false
 				};
 
 				vm.$cp_3 = {
-					default_color: "#0000ff"
+					defaultColor: "#0000ff"
+				};
+
+				vm.$cp_4 = {
+					bgColor: "#555"
 				};
 
 			});

@@ -23,7 +23,7 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 
 				docClickCallback;
 
-			vm.$skipArray = ["auto_hide"];
+			vm.$skipArray = ["autoHide"];
 
 			//marker坐标
 			vm.wheel_m = {
@@ -37,7 +37,7 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 
 			// 如果用户未设置颜色，设置初始颜色
 			if(!("ms-duplex" in $element[0].msData)){
-				element.setAttribute("ms-duplex", "default_color");
+				element.setAttribute("ms-duplex", "defaultColor");
 			}
 			vm.cp_color = "";			//最终颜色
 			vm.input_color = "";		//input字体颜色
@@ -252,7 +252,7 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 				
 				//构建colorpicker
 				//自动隐藏
-				if(vm.auto_hide){
+				if(vm.autoHide){
 
 					avalon(cp).addClass("ui-colorpicker-auto-hide");
 					
@@ -291,8 +291,9 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 
 	widget.version = 1.0;
 	widget.defaults = {
-		auto_hide: true,
-		default_color: "#ffffff"
+		autoHide: true,
+		defaultColor: "#ffffff",
+		bgColor: ""
 	};
 
 	function isHexColorValid(val){

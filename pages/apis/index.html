@@ -43,6 +43,10 @@
                 id: "$watch"
             },
             {
+                name: "$fire方法",
+                id: "$fire"
+            },
+            {
                 name: "视图模型",
                 id: "vmodel"
             },
@@ -86,7 +90,7 @@
         padding:0 1em;
         background:rgb(238,238,221);
         font: 13px/1.5 "OpenSansRegular", "Helvetica Neue", Helvetica, Arial, sans-serif;
-
+    }
     .apis-details p{
         text-indent: 2em;
     }
@@ -99,13 +103,10 @@
     .vnac li{
         margin:0px;
         padding:0px;
-        font-size: 12px;
         line-height: 1.5;
-        color:#28966f;
         display: block;
     }
     .vnac li .title{
-        font-size: 12px;
         line-height: 1.5;
         font-weight: 700;
         color:#28966f;
@@ -113,8 +114,16 @@
     .vnac ul.child-nav{
         display:block;
         list-style: none;
-        margin:5px 0px 5px 20px;;
+        margin:5px 0px 5px 10px;;
         padding:0px;
+    }
+    .vnac ul.child-nav li{
+        text-indent: 1em;
+        cursor: pointer;
+    }
+    .vnac ul.child-nav li:hover{
+        color:#fff;
+        background-color:#28966f;
     }
 </style>
 

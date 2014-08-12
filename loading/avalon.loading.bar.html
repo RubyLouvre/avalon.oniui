@@ -4,7 +4,11 @@
 </v:oval>
 {{MS_WIDGET_DIVIDER}}
 <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-	<circle style="{{MS_WIDGET_CSS_BALL}}" {{MS_WIDGET_CSS_BINDINGS}} 
+	<circle  
+			ms-css-opacity="opacities[$index]",
+	        ms-attr-r="data[$index].r",
+	        ms-attr-cx="data[$index].x+data[$index].r",
+	        ms-attr-cy="data[$index].y+data[$index].r" 
 	        ms-repeat="data" 
 	        ms-attr-fill="color">
 	</circle>
@@ -41,3 +45,20 @@
 		ms-css-opacity="opacity" 
 		fill="none"></path>
 	</svg>
+{{MS_WIDGET_TYPE}}
+{{MS_WIDGET_SPOKES}}
+<v:shape CoordSize="1,1" fillcolor="{{MS_WIDGET_COLOR}}"
+     style="position:absolute;left:0;top:0;width:1px;height:1px;BEHAVIOR:url(#default#VML)"
+     path="{{MS_WIDGET_SPOKES_PATH}}">
+     <v:fill type="gradient" color="{{MS_WIDGET_COLOR}}" />                 
+</v:shape>
+{{MS_WIDGET_DIVIDER}}
+<svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<path opacity=".1" ms-attr-d="svgPath" 
+  		ms-attr-transform="data[$index].rotate" 
+        ms-repeat="data" 
+		ms-attr-fill="color">
+		<animate attributeName="opacity" from="1" to=".1" repeatCount="indefinite" 
+		         ms-attr-dur="svgDur" 
+		         ms-attr-begin="data[$index].begin"/></path>
+  </svg>

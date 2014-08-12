@@ -450,6 +450,7 @@ define(["avalon",
         showScrollbar: "always", //滚动条什么时候显示，默认一直，可设置为never，scrolling
         tbodyScrollTop: 0,
         tbodyHeight: "auto",
+        evenClass: "even",
         _rowHeight: 35, //实际行高,包含border什么的
         _rowHeightNoBorders: 0,
         columnWidth: 160,

@@ -6,7 +6,7 @@
             case "ms-enabled":
             case "ms-selected":
             case "ms-readonly":
-                return "bool-bindings"
+                return "ms-attr"
             case "ms-href":
             case "ms-src":
             case "ms-alt":
@@ -18,7 +18,7 @@
         return id
     }
     var apisVM = avalon.define("apis", function(vm) {
-        vm.bindings = "ms-if, ms-text, ms-duplex,ms-data, ms-visible, ms-include, ms-on, ms-href, ms-src, ms-alt, ms-title, ms-value, ms-html, ms-repeat, ms-checked, ms-disabled, ms-selected,ms-readonly".match(avalon.rword).sort()
+        vm.bindings = "ms-if, ms-text, ms-attr, ms-include, ms-duplex, ms-data, ms-visible, ms-on, ms-href, ms-src, ms-alt, ms-title, ms-value, ms-html, ms-repeat, ms-checked, ms-disabled, ms-selected,ms-readonly".match(avalon.rword).sort()
         vm.statics = "mix, bind, unbind, ready, scan, define".match(avalon.rword).sort()
         vm.callbacks = ["data-callback"]
         vm.concepts = [

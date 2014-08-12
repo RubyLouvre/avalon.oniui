@@ -2,7 +2,7 @@
      ms-class-100="ui-helper-max-index:toggle" 
      ms-if="modal" 
      style="z-index:999;" 
-     ms-css-opacity="opacity" 
+     ms-css-opacity="modalMpacity" 
      ms-visible="toggle">
      <iframe allowTransparency="true" frameborder="none" src="javascript:''"></iframe>
      </div>

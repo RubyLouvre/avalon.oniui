@@ -51,8 +51,8 @@ $uiname: "ui-textbox";
         right: 0;
         bottom: 0;
         font-size: 12px;
-        white-space: nowrap;
         z-index: 1;
+        overflow: hidden;
         @if($oinui-theme == smoothness) {
             color: #999999;
         }

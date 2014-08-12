@@ -199,6 +199,12 @@ define(["avalon",
                 }
             }
 
+            vm.showLoading = function() {
+                vmodel.loadingVModel.toggle = true;
+            }
+            vm.hideLoading = function() {
+                vmodel.loadingVModel.toggle = false;
+            }
             vm.startResize = function(e, el) {
                 //当移动到表头的右侧,改变光标的形状,表示它可以拖动改变列宽
                 if (options._drag || !el.resizable)
@@ -276,18 +282,7 @@ define(["avalon",
                 var opts = vmodel.$model
                 trend = trend ? 1 : -1
                 if (typeof opts.remoteSort === "function" && !remptyfn.test(opts.remoteSort)) {
-                    //如果指定了回调函数,通过服务器端进行排数,那么能回调传入当前字段,状态,VM本身及callback
-                    function callback(array) {
-                        vmodel.data = array
-                        vmodel._data = vmodel.getStore(array, vmodel)
-                        if (typeof vmodel.onSort === "function") {
-                            setTimeout(function() {
-                                vmodel.onSort(vmodel)
-                            }, 500)
-                        }
-                    }
-                    //
-                    vmodel.remoteSort(field, trend, vmodel, callback)
+                    vmodel.remoteSort(field, trend, vmodel)
                 } else if (typeof el.localSort === "function" && !remptyfn.test(el.localSort)) {// !isEmptyFn(el.localSort)
                     //如果要在本地排序,并且指定排数函数
                     vmodel._data.sort(function(a, b) {
@@ -485,6 +480,11 @@ define(["avalon",
         reRender: function(data, vm) {
             vm.data = data;
             vm._data = vm.getStore(data, vm);
+            if (typeof vm.onSort === "function") {
+                setTimeout(function() {
+                    vm.onSort(vm)
+                }, 500)
+            }
         },
         getStore: function(array, vm) {
             return array.slice(vm.startIndex, vm.endIndex)
@@ -520,14 +520,6 @@ define(["avalon",
                 ret.push(el)
             }
             return ret
-        },
-        showLoading: function(vm) {
-            var loadingVM = vm.loadingVModel;
-            loadingVM.toggle = true;
-        },
-        hideLoading: function(vm) {
-            var loadingVM = vm.loadingVModel;
-            loadingVM.toggle = false;
         }
     }
 

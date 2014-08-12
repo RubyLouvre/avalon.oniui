@@ -8,9 +8,9 @@ $uiname: "ui-spinner";
         overflow: visible;
         _overflow-y: hidden;
         padding: 0 10px;
+        font-size: 0;
         @include border-radius(2px);
         @if($oinui-theme == smoothness) {
-            font-size: 12px;
             color: #333333;
             background-color: #f8f8f8;
             border: 1px solid #cccccc;
@@ -36,6 +36,7 @@ $uiname: "ui-spinner";
         border: 1px solid #cccccc;
         padding: 3px 5px;
         font-size: 0;
+        line-height: 18px;
         @if($oinui-theme == smoothness) {
             background-color: #ffffff;
         }

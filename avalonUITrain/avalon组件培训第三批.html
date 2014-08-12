@@ -602,10 +602,6 @@ vm.<span class="str">$simplegridHOpts</span> = {
 &lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"simplegrid, simplegridI, $simplegridIOpts"</span>&gt;&lt;/div&gt;
 </pre>
 <pre>
-vm.<span class="str">addRow</span> = function() {
-    var data = getData1(1);
-    avalon.vmodels.simplegridI._data.push(data[0])
-}
 vm.<span class="str">$simplegridIOpts</span> = {
     <span class="atn">allchecked</span>: false,
     <span class="atn">getColumn</span>: function(el) { <span class="com">//通过getColumn方法丰富column item的选项</span>
@@ -634,10 +630,10 @@ vm.<span class="str">$simplegridIOpts</span> = {
         }
     },
     <span class="atn">theadTemplate</span>: function(str) { <span class="com">//修改表头的那一行的模板</span>
-        return "&lt;th <span class="atn">style</span><span class="pun">=</span><span class="atv">'width:80px'</span>&gt;&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">'checkbox'</span> <span class="atn">ms-checked</span><span class="pun">=</span><span class="atv">'allchecked'</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">'checkAll'</span>  /&gt;&lt;/td&gt;" + str + "&lt;td <span class="atn">style</span><span class="pun">=</span><span class="atv">'width:80px'</span>&gt;操作&lt;/td&gt;"
+        return "&lt;th <span class="atn">style</span><span class="pun">=</span><span class="atv">'width:80px'</span>&gt;&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">'checkbox'</span> <span class="atn">ms-checked</span><span class="pun">=</span><span class="atv">'allchecked'</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">'checkAll'</span>  /&gt;&lt;/td&gt;" + str
     },
     <span class="atn">tbodyTemplate</span>: function(str) { <span class="com">//修改表身那一行的模板</span>
-        return "&lt;th <span class="atn">style</span><span class="pun">=</span><span class="atv">'width: 80px'</span>&gt;&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">\"checkbox\"</span> ms-checked</span><span class="pun">=</span><span class="atv">'row.checked'</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">'checkOne(row, $index)'</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">'ui-helper-checkone'</span>/&gt;&lt;/th&gt;" + str + "&lt;td <span class="atn">style</span><span class="pun">=</span><span class="atv">'width:80px'</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">'$remove'</span>&gt;删除&lt;/td&gt;"
+        return "&lt;th <span class="atn">style</span><span class="pun">=</span><span class="atv">'width: 80px'</span>&gt;&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">\"checkbox\"</span> ms-checked</span><span class="pun">=</span><span class="atv">'row.checked'</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">'checkOne(row, $index)'</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">'ui-helper-checkone'</span>/&gt;&lt;/th&gt;" + str
     },
     <span class="atn">getTemplate</span>: function(str){
         return  str.replace('<span class="atn">ms-repeat-row</span><span class="pun">=</span><span class="atv">"_data"</span>', '<span class="atn">ms-repeat-row</span><span class="pun">=</span><span class="atv">"_data"</span> <span class="atn">ms-class-12</span><span class="pun">=</span><span class="atv">"ui-state-acitve:row.checked"</span> ')
@@ -726,10 +722,10 @@ vm.<span class="str">$simplegridJOpts</span> = {
 vm.<span class="str">$simplegridKOpts</span> = {
     <span class="atn">columns</span>: ["symbol", "price", "change"],
     <span class="atn">data</span>: getData1(5),
-    <span class="atn">remoteSort</span>: function(field, trend, vmodel, callback) {
+    <span class="atn">remoteSort</span>: function(field, trend, vmodel) {
         setTimeout(function() {
             var data = [{symbol:"$",price:"100",change:"-0.5"},{symbol:"$",price:"200",change:"-0.3"},{symbol:"$",price:"300",change:"-0.2"},{symbol:"$",price:"400",change:"0.5"},{symbol:"￥",price:"500",change:"0.8"}];
-            <span class="atn">callback</span>(data);
+            vmodel.<span class="atn">reRender</span>(data,vmodel);
         }, 200)
     },
     <span class="atn">onSort</span>: function() {
@@ -753,11 +749,11 @@ vm.<span class="str">$simplegridKOpts</span> = {
 <pre>
 vm.<span class="atn">showLoading</span> = function (){
     var gridLVM = avalon.vmodels.simplegridL;
-    gridLVM.<span class="str">showLoading</span>(gridLVM);
+    gridLVM.<span class="str">showLoading</span>();
 }
 vm.<span class="atn">hideLoading</span> = function() {
     var gridLVM = avalon.vmodels.simplegridL;
-    gridLVM.<span class="str">hideLoading</span>(gridLVM);
+    gridLVM.<span class="str">hideLoading</span>();
 }
 vm.<span class="atn">$simplegridLOpts</span> = {
     columns: ["symbol", "price", "change"],
@@ -1196,10 +1192,10 @@ vm.<span class="atn">$simplegridLOpts</span> = {
                             vm.$simplegridKOpts = {
                                 columns: ["symbol", "price", "change"],
                                 data: getData1(5),
-                                remoteSort: function(field, trend, vmodel, callback) {
+                                remoteSort: function(field, trend, vmodel) {
                                     setTimeout(function() {
                                         var data = [{symbol:"$",price:"100",change:"-0.5"},{symbol:"$",price:"200",change:"-0.3"},{symbol:"$",price:"300",change:"-0.2"},{symbol:"$",price:"400",change:"0.5"},{symbol:"￥",price:"500",change:"0.8"}];
-                                        callback(data);
+                                        vmodel.reRender(data, vmodel);
                                     }, 200)
                                 },
                                 onSort: function() {
@@ -1208,11 +1204,11 @@ vm.<span class="atn">$simplegridLOpts</span> = {
                             }
                             vm.showLoading = function (){
                                 var gridLVM = avalon.vmodels.simplegridL;
-                                gridLVM.showLoading(gridLVM);
+                                gridLVM.showLoading();
                             }
                             vm.hideLoading = function() {
                                 var gridLVM = avalon.vmodels.simplegridL;
-                                gridLVM.hideLoading(gridLVM);
+                                gridLVM.hideLoading();
                             }
                             vm.$simplegridLOpts = {
                                 columns: ["symbol", "price", "change"],
@@ -1284,7 +1280,7 @@ vm.<span class="atn">toggleDisabled</span> = function() {
                         <h3><span>拥有占位符placeholder的textbox C：</span></h3> 
                         <input ms-widget="textbox" type="text" 
                                ms-duplex="val" 
-                               data-textbox-placeholder="初始值为空占位符显示"/>
+                               data-textbox-placeholder="初始值为空占位符显示初始值为空占位符显示"/>
                         <button ms-click="getVal">get val</button>  
                     </div>
 <pre ms-skip>

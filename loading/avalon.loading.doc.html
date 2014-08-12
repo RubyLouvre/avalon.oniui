@@ -26,15 +26,15 @@
                     </tr>
                     <!--auto doc start-->
 <tr>
-    <td>interval</td><td> 160</td><td> 毫秒数，动画效果帧间隔</td></tr>
-<tr>
     <td>color</td><td> "#619FE8"</td><td> 效果的颜色</td></tr>
 <tr>
-    <td>width</td><td> 46</td><td> loading动画的宽度</td></tr>
+    <td>width</td><td> 46</td><td> loading动画的宽度，圆形排列的外直径</td></tr>
 <tr>
-    <td>height</td><td> 46</td><td> loading动画的高度</td></tr>
+    <td>height</td><td> 46</td><td> loading动画的高度，如果不设置，默认等于width</td></tr>
 <tr>
-    <td>type</td><td> "ball"</td><td> 类型，默认是ball，球</td></tr>
+    <td>widthInner</td><td> 40</td><td> loading动画是圆形排列的时候，这个参数指的是内直径</td></tr>
+<tr>
+    <td>type</td><td> "ball"</td><td> 类型，默认是ball，球，可取spin,ball-line</td></tr>
 <tr>
     <td>toggle</td><td> true</td><td> 是否显示</td></tr>
 <tr>
@@ -43,6 +43,26 @@
     <td>modalMpacity</td><td> 0.1</td><td> 遮罩透明度</td></tr>
 <tr>
     <td>container</td><td> void 0</td><td> loading效果显示的容器，默认是绑定widget的元素</td></tr>
+<tr>
+    <td>count</td><td> 12</td><td> type=ball，loading效果组成的小图形个数</td></tr>
+<tr>
+    <td>interval</td><td> 120</td><td> type=ball，毫秒数，动画效果帧间隔</td></tr>
+<tr>
+    <td>circleMargin</td><td> 1</td><td> type=ball-line，小球之间的间距，单位是一倍小球半径</td></tr>
+<tr>
+    <td>count</td><td> 3</td><td> type=ball-line，小球个数</td></tr>
+<tr>
+    <td>height</td><td> 20</td><td> type=ball-line，高度</td></tr>
+<tr>
+    <td>interval</td><td> 360</td><td> type=ball-line，毫秒数，动画效果帧间隔</td></tr>
+<tr>
+    <td>angel</td><td>90</td><td> type=spin，转动的弧形的角度，单位是1度</td></tr>
+<tr>
+    <td>opacity</td><td> 0.2</td><td> type=spin，背景圆弧的透明度</td></tr>
+<tr>
+    <td>startangle</td><td> 0</td><td> type=spin，圆弧开始的角度，单位1度</td></tr>
+<tr>
+    <td>interval</td><td> 36</td><td> type=spin，毫秒数，动画效果帧间隔</td></tr>
 <tr>
     <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
@@ -63,6 +83,7 @@
 <ol class="example-links">
 <li><a href="avalon.loading.ex.html">loading:ball</a></li>
 <li><a href="avalon.loading.ex.1.html">loading:spin</a></li>
+<li><a href="avalon.loading.ex.2.html">loading:ball-line</a></li>
 </ol>
 <!--ex list end-->
         </div>

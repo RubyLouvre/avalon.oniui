@@ -30,21 +30,38 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     })
     // 计算每个loading效果单元的位置
     // 如下，是一个圆形排列阵列
-    function ComputePoints(point, radiusOut, radiusInner) {
+    // ballline 为真，则返回一个横线排列
+    function ComputePoints(vmodel, isBallLine) {
         var points = [],
             i = 0,
-            angel,
-            opacities = []
-        while( i < point) {
-            angel = (1 - i * 2 / point) * Math.PI
-            points.push(
-                {
+            angel = vmodel.angel,
+            opacities = [],
+            count = vmodel.count,
+            width = vmodel.width,
+            radiusOut = width / 2,
+            height = vmodel.height,
+            rate = 2 + vmodel.circleMargin,
+            radiusInner = (vmodel.width - vmodel.widthInner) / 2,
+            marginLeft = (width - radiusInner * ( 3 * count - 1)) / 2,
+            obj
+        while( i < count) {
+            angel = (1 - i * 2 / count) * Math.PI
+            if(isBallLine) {
+                obj = {
+                    "x": marginLeft + (i * rate * radiusInner),
+                    "y": height / 2 - radiusInner,
+                    "r": radiusInner
+                }
+                opacities.push(i ? 0 : 1)
+            } else {
+                obj = {
                     "x": (radiusOut - radiusInner) *　(Math.cos(angel) + 1),
                     "y": (radiusInner - radiusOut) * (Math.sin(angel) - 1),
                     "r": radiusInner
-                }
-            )
-            opacities.push((i / (point - 1)).toFixed(2))
+                } 
+                opacities.push((i / (count - 1)).toFixed(2))
+            }
+            points.push(obj)
             i = points.length
         }
         return [points, opacities]
@@ -67,22 +84,55 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         }
         return arr
     }
-    // 注册ball
+    // 静态模板
+    function tplReplacer(tpl, objectList, vmodel, index, item) {
+        var objectList = Array.isArray(objectList) ? objectList : [objectList]
+        var t = tpl.replace(/\{\{MS_[A-Z_0-9]+\}\}/g, function(mat) {
+            var mat = (mat.split("{{MS_WIDGET_")[1]||"").replace(/\}\}/g, "").toLowerCase().replace(/_[^_]/g, function(mat) {
+                return mat.replace(/_/g, "").toUpperCase()
+            })
+            for(var i = 0, len = objectList.length; i < len; i++) {
+                if(objectList[i][mat] != void 0) {
+                    var res = objectList[i][mat]
+                    if(typeof res === "function") {
+                        return res(objectList[i], index, mat)
+                    }
+                    return res
+                }
+            }
+            return mat
+        })
+        return t
+    }
+    // 注册ball，小球排列成一个圆
     addType("ball", {
         "width": 46,
         "widthInner": 40,
-        "count": 12,
-        "color": "#619FE8",
+        "count": 12, //@param type=ball，loading效果组成的小图形个数
+        "interval": 120,//@param type=ball，毫秒数，动画效果帧间隔
+        "circleMargin": 1,//@param type=ball-line，小球之间的间距，单位是一倍小球半径
         "data": [],
         "opacities": [],
-        "interval": 120
+        "tplFilter": function(tpl, vmodel, i, item) {
+            return tplReplacer(tpl, {
+                cssBall: [
+                    "left:" + item.x + "px;",
+                    "top:" + item.y + "px;",
+                    "width:" + item.r * 2 + "px;",
+                    "height:" + item.r * 2 + "px;"
+                ].join(""),
+                cssbindings: [
+                    "ms-css-opacity=\"" + vmodel.opacities[i] + "\""
+                ].join(" ")
+            }, vmodel, i, item)
+        }
     }, function(vmodel) {
-       var list = ComputePoints(vmodel.count, vmodel.width / 2, (vmodel.width - vmodel.widthInner) / 2)
+       var list = ComputePoints(vmodel)
        vmodel.data = list[0]
        vmodel.opacities = list[1]
     }, function(vmodel, ele) {
         ele = vmodel.svgSupport ? ele.getElementsByTagName("circle") : ele.getElementsByTagName("oval")
-        var len = ele.length, index = 12, eles = []
+        var len = ele.length, index = len, eles = [], flag
         avalon.each(ele, function(i, item) {
             eles.push(avalon(item))
             // fix ie 7-8 render bug...
@@ -92,30 +142,55 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             }
         })
         clearInterval(vmodel.$timer)
-        vmodel.$timer = setInterval(function() {
-            // 顺时针
-            index--;
-            if(index < 0) {
-                index = len
-            }
-            for(var i = 0; i < len; i++) {
-                eles[i].css("opacity", vmodel.opacities[(i + index) % len] * 100 / 100)
-            }
-        }, vmodel.interval)
+        if(vmodel.type === "ball") {
+            vmodel.$timer = setInterval(function() {
+                // 顺时针
+                index--
+                if(index < 0) {
+                    index = len - 1
+                }
+                for(var i = 0; i < len; i++) {
+                    var op = vmodel.opacities[(i + index) % len] * 100 / 100
+                    eles[i] && eles[i].css("opacity", op)
+                }
+            }, vmodel.interval)
+        } else if(vmodel.type === "ball-line") {
+            index = 0;
+            vmodel.$timer = setInterval(function() {
+                for(var i = 0; i < len; i++) {
+                    var op = i > index ? vmodel.opacities[1] : vmodel.opacities[0]
+                    eles[i] && eles[i].css("opacity", op)
+                }
+                index++
+                if(index >= len) {
+                    index = -1
+                }
+            }, vmodel.interval)
+        }
     })
-    // 注册spin
+    // 注册ball-line，小球排列成一行
+    addType("ball-line", avalon.mix({}, _config["ball"], {
+        count: 3,//@param type=ball-line，小球个数
+        height: 20,//@param type=ball-line，高度
+        interval: 360 //@param type=ball-line，毫秒数，动画效果帧间隔
+    }), function(vmodel) {
+        var list = ComputePoints(vmodel, true)
+        vmodel.data = list[0]
+        vmodel.opacities = list[1]
+    }, _config["ball"].effect)
+    templateCache["ball-line"] = templateCache["ball"]
+    // 注册spin，圆环转圈
     addType("spin", {
         width: 46,
         widthInner: 36,
-        angel:90,
+        angel:90,//@param type=spin，转动的弧形的角度，单位是1度
         arc: "",
         circle: "",
         radius: "",
-        color: "#619FE8",
-        opacity: 0.2,
-        startangle: 0,
+        opacity: 0.2,//@param type=spin，背景圆弧的透明度
+        startangle: 0,//@param type=spin，圆弧开始的角度，单位1度
         endangle: 0,
-        interval: 36,
+        interval: 36,//@param type=spin，毫秒数，动画效果帧间隔
         $circleData: "",
         $partsData: ""
     }, function(vmodel) {
@@ -156,6 +231,55 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             }, vmodel.interval)
         }
     })
+    // 注册小长方形圆形排列效果
+    addType("spokes", {
+        count: 8, //@param type=spokes，长方形个数
+        width: 32, //@param type=spokes，效果宽度,
+        spokesWidth: 4,//@param type=spokes，小长方形宽度
+        spokesHeight: 8,//@param type=spokes，小长方形高度
+        interval: 125,//@param type=spokes，效果动画间隔毫秒数
+        svgPath: "M14 0 H18 V8 H14 z",
+        svgDur: "1s",
+        "tplFilter": function(tpl, vmodel, i, item) {
+            return tplReplacer(tpl, [{
+
+            }, vmodel], vmodel, i, item)
+        },
+        "spokesPath": function(vmodel, i, mat) {
+            return vmodel.data[i].rotate
+        }
+    },function(vmodel) {
+        var data = [], count = vmodel.count,w = vmodel.width, sw = vmodel.spokesWidth, sh = vmodel.spokesHeight, index = 0, step = 360 / count, interval = vmodel.interval;
+        if(vmodel.svgSupport) {
+            while(index < count) {
+                data.push({
+                    "begin": [interval * index / 1000, "s"].join(""),
+                    "rotate": ["rotate(", index * step, " ", [w / 2, w / 2].join(" ") + ")"].join("")
+                })
+                index = data.length
+            }
+            vmodel.svgPath = ["M", (w - sw) / 2, " 0 H", (w + sw) / 2,  " V", sh, " H", (w - sw) / 2, " z"].join("")
+            vmodel.svgDur = interval * count / 1000 + "s"
+        } else {
+            var step = Math.PI * 2 / count, angel,halfSw = sw / 2  
+            while(index < count) {
+                angel = Math.PI / 2 - step * index
+                var vsin = Math.sin(angel),
+                    vcos = Math.cos(angel),
+                    p1 = [w * vcos - halfSw * vsin, w * vsin + halfSw * vcos].join(" "),
+                    p2 = [w * vcos + halfSw * vsin, w * vsin - halfSw * vcos].join(" "),
+                    p3 = [(w - sh) * vcos + halfSw * vsin, (w - sh) * vsin - halfSw * vcos].join(" "),
+                    p4 = [(w - sh) * vcos - halfSw * vsin, (w - sh) * vsin + halfSw * vcos].join(" ")
+                data.push({
+                    "rotate": ["M", p1, " L", p2, " L", p3, " L", p4, " L", p1, " Z"].join("")
+                })
+                index = data.length
+            }
+        }
+        vmodel.data = data
+    }, function(vmodel, ele) {
+
+    })
     var widget = avalon.ui.loading = function(element, data, vmodels) {
         var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect
         
@@ -174,6 +298,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             vm.height = ""
             vm.width = ""
             avalon.mix(vm, options)
+            if(!vm.tplFilter) vm.tplFilter = function(tpl) {return tpl}
             vm.widgetElement = element
             vm.svgSupport = svgSupport
             vm.$loadingID = count + "" + _key
@@ -189,7 +314,6 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                     container = options.container || vmodel.widgetElement,
                     elementParent = ((avalon.type(container) === "object" && container.nodeType === 1 && document.body.contains(container)) ? container : document.getElementById(container)) || document.body
                 var type = vmodel.type,
-                    radiusInner = (vmodel.width - vmodel.widthInner) / 2,
                     radiusOut = vmodel.width / 2
                     list = vmodel.drawer(vmodel),
                     html = ""
@@ -198,27 +322,12 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                 // 下面的条件判断目测只针对type=ball有效
                 if(vmodel.svgSupport) {
                     var tpl = templateCache[type]["svg"]
-                    html += tpl.replace(/\{\{MS_WIDGET_CSS_BINDINGS\}\}/g, 
-                            [
-                                "ms-css-opacity=\"opacities[$index]\"",
-                                "ms-attr-r=\"data[$index].r\"",
-                                "ms-attr-cx=\"data[$index].x+" + radiusInner + "\"",
-                                "ms-attr-cy=\"data[$index].y+" + radiusInner + "\""
-                            ].join(" "))
+                    html += tpl
                 } else {
                     var tpl = templateCache[type]["vml"]
                     // vml cloneNode有问题，用拼接字符串来解决
                     avalon.each(vmodel.data, function(i, item) {
-                        html += tpl.replace(/\{\{MS_WIDGET_CSS_BALL\}\}/g, 
-                            [
-                                "left:" + item.x + "px;",
-                                "top:" + item.y + "px;",
-                                "width:" + radiusInner * 2 + "px;",
-                                "height:" + radiusInner * 2 + "px;"
-                            ].join("")).replace(/\{\{MS_WIDGET_CSS_BINDINGS\}\}/g, 
-                            [
-                                "ms-css-opacity=\"" + vmodel.opacities[i] + "\""
-                            ].join(" "))
+                        html += vmodel.tplFilter(tpl, vmodel, i, item)
                     })
                     html = html || tpl
                 }
@@ -279,12 +388,11 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     widget.defaults = {
         //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
-        // interval: 160,//@param 毫秒数，动画效果帧间隔
-        // color: "#619FE8",//@param 效果的颜色
-        // width: 46, //@param loading动画的宽度
-        // height: 46, //@param loading动画的高度
-        // widthInner: 
-        type: "ball", //@param 类型，默认是ball，球
+        color: "#619FE8",//@param 效果的颜色
+        // width: 46, //@param loading动画的宽度，圆形排列的外直径
+        // height: 46, //@param loading动画的高度，如果不设置，默认等于width
+        // widthInner: 40,//@param loading动画是圆形排列的时候，这个参数指的是内直径
+        type: "ball", //@param 类型，默认是ball，球，可取spin,ball-line
         toggle: true, //@param 是否显示
         modal: true, //@param 是否显示遮罩
         modalMpacity: 0.1,//@param 遮罩透明度

@@ -60,12 +60,30 @@
         <div class="demo-show" ms-controller="pager">
             <fieldset>
                 <legend>有范围限制的spinner,最小0,最大5</legend>
-                    <input ms-duplex="p1" ms-widget="spinner, $spinner, $spinnerOpts" />
+                <input ms-duplex="p1" ms-widget="spinner, $spinner, $spinnerOpts" />
+                <p>p1 is : {{p1}}</p>
+            </fieldset>
+            <fieldset>
+                <legend>初始化spinner</legend>
+                <input ms-duplex="p2" ms-widget="spinner" />
+                <p>p2 is : {{p2}}</p>
+            </fieldset>
+            <fieldset>
+                <legend>初始化spinner</legend>
+                <input ms-duplex="p3" ms-widget="spinner" />
+                <p>p3 is : {{p3}}</p>
+            </fieldset>
+            <fieldset>
+                <legend>禁用spinner</legend>
+                <input value="3" ms-disabled="disable" ms-widget="spinner, spinner1"  />
             </fieldset>
             <script>
                 require(["spinner/avalon.spinner"], function(avalon) {
                     var pager = avalon.define('pager', function(vm) {
                         vm.p1 = 8;
+                        vm.p2 = 10
+                        vm.p3 = 2
+                        vm.disable = false
                         vm.$spinnerOpts = {
                             min: 0,
                             max: 5,

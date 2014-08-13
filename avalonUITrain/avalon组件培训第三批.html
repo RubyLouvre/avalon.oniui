@@ -75,10 +75,6 @@
         .ui-simplegrid tr.ui-state-acitve td, .ui-simplegrid tr.ui-state-acitve th {
             background-color: #FFF7E6;
         }
-        .ui-simplegrid tr.ui-simplegrid-empty td{
-            text-align: center;
-            line-height: 100px;
-        }   
     </style>
     <script src="../avalon.js"></script>
     <script src="jquery-1.10.2.js"></script>
@@ -146,19 +142,13 @@ vm.<span class="str">$simplegridAOpts</span> = {
 }
 </pre>
                     <div class="padBom10">
-                        <h3><span>配置getTemplate实现showNoResult，以及onSort应用的simplegrid B：</span>
+                        <h3><span>配置noResultContent和noResultHeight实现showNoResult，以及onSort应用的simplegrid B：</span>
                         <button ms-click="clearGridBData">clear data</button></h3>
                         <div ms-widget="simplegrid, simplegridB, $simplegridBOpts"></div>
                     </div>
 <pre ms-skip>
 &lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"clearGridBData"</span>&gt;clear data&lt;/button&gt;
 &lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"simplegrid, simplegridB, $simplegridBOpts"</span>&gt;&lt;/div&gt;
-</pre>
-<pre>
-.ui-simplegrid tr.ui-simplegrid-empty td{
-    text-align: center;
-    line-height: 100px;
-} 
 </pre>
 <pre>
 vm.<span class="str">clearGridBData</span> = function() {
@@ -169,10 +159,8 @@ vm.<span class="str">clearGridBData</span> = function() {
 vm.<span class="str">$simplegridBOpts</span> = { <span class="com">//设置无信息可显示</span>
     <span class="atn">columns</span>: [{field:"symbol",<span class="str">localSort</span>:function(a,b,f){return a[f].localeCompare(b[f]);}}, "price", "change"],
     <span class="atn">data</span>: getData1(5),
-    <span class="atn">getTemplate</span>: function(str, options) {
-        var noResultStr = "&lt;tr <span class="atn">class</span><span class="pun">=</span><span class="atv">'ui-simplegrid-empty'</span> <span class="atn">ms-if</span><span class="pun">=</span><span class="atv">'!_data.size()'</span>&gt;&lt;td <span class="atn">colspan</span><span class="pun">=</span><span class="atv">'3'</span>&gt;暂无结果&lt;/td&gt;&lt;/tr&gt;"
-        return str.replace(/&lt;table\s*<span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-simplegrid-tbody"</span>[\s\S]*&lt;\/tr&gt;/, "$&"+noResultStr);
-    },
+    <span class="atn">noResultContent</span>: "默认的是&lt;b style='color: red'&gt;‘暂无结果’&lt;/b&gt;，可配置，可以是&lt;b style='color: red'&gt;html字符串&lt;/b&gt;。高度默认是100，这里配置为200",
+    <span class="atn">noResultHeight</span>: 200,
     onSort: function(vmodel) {
         avalon.log("排序完成用户回调")
     }
@@ -767,10 +755,32 @@ vm.<span class="atn">$simplegridLOpts</span> = {
                             var ret = []
                             for (var i = 0; i < n; i++) {
                                 ret.push({
-                                    symbol: Math.random().toString(32).slice(4, 10),
+                                    symbol: Math.random().toString(32).slice(4, 10)+"fsasdffdsafsadfsadfsadfkljsldfjsdfsdafjsalkdfsadfsadfsdafsdaf",
                                     price: range(100, 200),
                                     change: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
-                                    checked: false
+                                    checked: false,
+                                    symbol1: Math.random().toString(32).slice(4, 10)+"fsasdffdsafsadfsadfsadfkljsldfjsdfsdafjsalkdfsadfsadfsdafsdaf",
+                                    price1: range(100, 200),
+                                    change1: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
+                                    symbol2: Math.random().toString(32).slice(4, 10)+"fsasdffdsafsadfsadfsadfkljsldfjsdfsdafjsalkdfsadfsadfsdafsdaf",
+                                    price2: range(100, 200),
+                                    change2: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
+                                    symbol3: Math.random().toString(32).slice(4, 10)+"fsasdffdsafsadfsadfsadfkljsldfjsdfsdafjsalkdfsadfsadfsdafsdaf",
+                                    price3: range(100, 200),
+                                    change3: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
+                                    symbol4: Math.random().toString(32).slice(4, 10),
+                                    price4: range(100, 200),
+                                    change4: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
+                                    symbol5: Math.random().toString(32).slice(4, 10)+"fsasdffdsafsadfsadfsadfkljsldfjsdfsdafjsalkdfsadfsadfsdafsdaf",
+                                    price5: range(100, 200),
+                                    change5: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
+                                    symbol6: Math.random().toString(32).slice(4, 10)+"fsasdffdsafsadfsadfsadfkljsldfjsdfsdafjsalkdfsadfsadfsdafsdaf",
+                                    price6: range(100, 200),
+                                    change6: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
+                                    symbol7: Math.random().toString(32).slice(4, 10),
+                                    price7: range(100, 200),
+                                    change7: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
+
                                 })
                             }
                             return ret
@@ -958,8 +968,8 @@ vm.<span class="atn">$simplegridLOpts</span> = {
                         var columnShow = false;
                         var simpleGridVM = avalon.define("simplegrid", function(vm) {
                             vm.$simplegridAOpts = {
-                                columns: ["symbol", "price", "change"],
-                                data: getData1(5) 
+                                columns: ["symbol", "price", "change","symbol1", "price1", "change1","symbol2", "price2", "change2","symbol3", "price3", "change3","symbol4", "price4", "change4","symbol5", "price5", "change5","symbol6", "price6", "change6","symbol7", "price7", "change7"],
+                                data: getData1(5) ,
                             }
                             vm.clearGridBData = function() {
                                 var gridBVM = avalon.vmodels.simplegridB;
@@ -969,10 +979,8 @@ vm.<span class="atn">$simplegridLOpts</span> = {
                             vm.$simplegridBOpts = { //设置无信息可显示
                                 columns: [{field:"symbol",localSort:function(a,b,f){return a[f].localeCompare(b[f]);}}, "price", "change"],
                                 data: getData1(5),
-                                getTemplate: function(str, options) {
-                                    var noResultStr = "<tr class='ui-simplegrid-empty' ms-if='!_data.size()'><td colspan='3'>暂无结果</td></tr>"
-                                    return str.replace(/<table\s*class="ui-simplegrid-tbody"[\s\S]*<\/tr>/, "$&"+noResultStr);
-                                },
+                                noResultContent: "默认的是<b style='color: red'>‘暂无结果’</b>，可配置，可以是<b style='color: red'>html字符串</b>。高度默认是100，这里配置为200",
+                                noResultHeight: 200,
                                 onSort: function(vmodel) {
                                     avalon.log("排序完成用户回调")
                                 }
@@ -1143,7 +1151,7 @@ vm.<span class="atn">$simplegridLOpts</span> = {
                                     return "<th style='width:80px'><input type='checkbox' ms-checked='allchecked' ms-click='checkAll'  /></td>" + str
                                 },
                                 tbodyTemplate: function(str) { //修改表身那一行的模板
-                                    return "<th style='width: 80px'><input type=\"checkbox\" ms-checked='row.checked' ms-click='checkOne(row, $index)' class='ui-helper-checkone'/></th>" + str
+                                    return "<th style='width: 80px'><input type=\"checkbox\" ms-checked='row.checked' ms-click='checkOne(row, $index)' class='ui-helper-checkone' ms-disabled='status'/></th>" + str
                                 },
                                 getTemplate: function(str){
                                     return  str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-12="ui-state-acitve:row.checked" ')

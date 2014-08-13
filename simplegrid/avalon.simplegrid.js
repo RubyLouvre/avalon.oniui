@@ -148,7 +148,9 @@ define(["avalon",
                 //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
                 if (cell) {
                     var table = vm.bottomTable = this.parentNode;
-                    vm.tbodyHeight = avalon(table).innerHeight() //求出可见区的总高度
+                    var noResultHeight = !vmodel._data.size() ? vmodel.noResultHeight : 0;
+                    vm.tbodyHeight = avalon(table).innerHeight() + noResultHeight//求出可见区的总高度
+
                     vm._rowHeight = vm.tbodyHeight / tbody.rows.length //求出每一行的高
                     var perPages = vm.pager.perPages
                     vm.tbodyScrollHeight = vm._rowHeight * perPages
@@ -449,6 +451,7 @@ define(["avalon",
     }
     widget.defaults = {
         theadHeight: 35,
+        noResultHeight: 100,
         tbodyScrollHeight: "auto",
         showScrollbar: "always", //滚动条什么时候显示，默认一直，可设置为never，scrolling
         tbodyScrollTop: 0,
@@ -465,6 +468,7 @@ define(["avalon",
         pageable: false,
         syncTheadColumnsOrder: true,
         remoteSort: avalon.noop, //远程排数函数
+        noResultContent: "暂无结果",
         theadRenderedCallback: function(tbody, vmodel, options, vmodels) {
         },
         tbodyRenderedCallback: function(tbody, vmodel, options, vmodels) {

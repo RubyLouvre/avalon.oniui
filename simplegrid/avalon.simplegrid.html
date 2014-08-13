@@ -53,6 +53,12 @@
                     MS_OPTION_TBODY_END
                 </tr>
             </table>
+            <div ms-if="!_data.size()" 
+                 ms-css-height="noResultHeight"
+                 ms-css-line-height="{{noResultHeight}}px"
+                 class="ui-simplegrid-empty">
+                {{noResultContent|html}}
+            </div>
         </div>
         <div class="ui-scrollbar-scroller">
             <div class="ui-simplegrid-scroll-marker" ms-css-height="getScrollerHeight()" 

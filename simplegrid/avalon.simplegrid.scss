@@ -119,5 +119,8 @@ $uiname : "ui-simplegrid";
     .ui-pager{
         @include float-right();
     }
+    .#{$uiname}-empty {
+        text-align: center;
+    }
 }
 

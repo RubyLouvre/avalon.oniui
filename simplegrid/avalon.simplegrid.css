@@ -23,3 +23,4 @@
 .ui-simplegrid .ui-helper-ndb .ui-helper-sort-bottom, .ui-simplegrid .ui-helper-asc .ui-helper-sort-bottom { width: 0; height: 0; line-height: 0; font-size: 0; border-top: 6px solid #cccccc; border-right: 6px dashed transparent; border-bottom: 0; border-left: 6px dashed transparent; top: 8px; }
 .ui-simplegrid .ui-helper-desc .ui-helper-sort-bottom { width: 0; height: 0; line-height: 0; font-size: 0; border-top: 6px solid black; border-right: 6px dashed transparent; border-bottom: 0; border-left: 6px dashed transparent; top: 8px; }
 .ui-simplegrid .ui-pager { display: inline; float: right; }
+.ui-simplegrid .ui-simplegrid-empty { text-align: center; }

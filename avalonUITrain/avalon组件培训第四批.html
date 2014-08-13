@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>avalon ui</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="pager、spinner、checkboxlist组件使用">
+    <meta name="keywords" content="pager、spinner、checkboxlist">
+    <meta name="author" content="田莉莉">
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="doc.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei UI","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
+        }
+        select {
+            width: auto;
+            border-radius: 0;
+            padding: 0;
+            line-height: 24px;
+        }
+        .col1{
+            background: orange!important;
+        }
+        .col2{
+            background: orangered!important;
+        }
+        .col3{
+            background:violet!important;
+        }
+
+        .warning {
+            text-decoration: underline;
+            font-weight: bold;
+            font-style: italic
+        }
+        .label-info {
+            font-style: normal;
+            vertical-align: middle;
+        }
+        .btn {
+            margin-bottom: 0;
+        }
+        .padBom10 {
+            padding-bottom: 10px;
+        }
+    </style>
+    <script src="../avalon.js"></script>
+    <script src="jquery-1.10.2.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+    <![endif]-->
+</head>
+<body data-spy="scroll" data-target=".bs-docs-sidebar">
+<!-- 顶部导航 -->
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li>
+                        <a href="http://hotelued.qunar.com/oniui/index.html" target="_blanck">AVALON UI</a>
+                    </li>
+                    <li>
+                        <a href="#pager">pager用法详解</a>
+                    </li>
+                    <li>
+                        <a href="#spinner">spinner用法详解</a>
+                    </li>
+                    <li>
+                        <a href="#checkboxlist">checkboxlist用法详解</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <!-- 侧边导航 -->
+    <div class="row">
+        <div class="span12">
+            <!-- pager 规范用法 -->
+            <section ms-controller="pager" class="ms-controller" id="pager">
+                <div class="page-header">
+                    <h1>pager用法详解</h1>
+                </div>
+                <p class="warning"><span class="label label-info">注意：</span>&nbsp;&nbsp;配置方法最好放在配置对象;&nbsp;&nbsp;</p>
+                <div class="bs-docs-example" style="padding-bottom: 24px;">
+                    <div class="padBom10">
+                        <h3><span>具有基本配置的pager A：</span></h3>
+                        <div ms-widget="pager"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"pager"</span>/&gt;&lt;/div&gt;
+</pre>
+                    <div class="padBom10">
+                        <h3><span>配置currentPage, totalItems, showJumper, onJump, nextText, preText的pager B：</span></h3>
+                        <div ms-widget="pager, pagerB, $pagerBOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"pager, pagerB, $pagerBOpts"</span>&gt;&lt;/div&gt;
+</pre>
+<pre>
+vm.<span class="atn">$pagerBOpts</span> = {
+    <span class="str">currentPage</span>: 8,
+    <span class="str">totalItems</span>: 150,
+    <span class="str">showJumper</span>: true,
+    <span class="str">onJump</span>: function(e, vmodel) {
+        location.href = "#page=" + vmodel.currentPage
+    },
+    <span class="str">nextText</span>: "下一页",
+    <span class="str">prevText</span>: "上一页"
+}
+</pre>
+                    <div class="padBom10">
+                        <h3>
+                            <span>通过左右方向键进行翻页的pager C：</span>
+                            <button ms-click="getTtalPages">get totalPages</button>
+                        </h3>
+                        <div ms-widget="pager, pagerC"></div>
+                    </div>
+<pre ms-skip>
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"getTtalPages"</span>&gt;get totalPages&lt;/button&gt;
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"pager, pagerC"</span>&gt;&lt;/div&gt;   
+</pre>
+<pre>
+vm.<span class="str">getTtalPages</span> = function() {
+    alert("pager C的totalPages is： "+avalon.vmodels.pagerC.totalPages)
+}
+
+avalon.bind(document, "keyup", function(e) {
+    if (e.which === 37 || e.which === 39) {
+        var pagerCVM = avalon.vmodels.pagerC
+        if (pagerCVM) {//jumpPage第二个参数可以是"next"、"prev"、"first"、"last"
+            pagerCVM.jumpPage(e, e.which === 39 ? "next" : "prev")
+        }
+    }
+})
+</pre>
+                    <div class="padBom10">
+                        <h3><span>通过鼠标滚轮进行翻页的pager D：</span></h3>
+                        <div ms-widget="pager, pagerD, $pagerDOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"pager, pagerD, $pagerDOpts"</span>&gt;&lt;/div&gt;
+</pre>
+<pre>
+avalon.bind(document, window.netscape ? "DOMMouseScroll" : "mousewheel", function(e) {
+    if (!avalon.vmodels.pagerD.$mouseEnter) return;
+    var dir = (e.wheelDelta || -e.detail) > 0 ? "prev" : "next"
+    var pagerDVM = avalon.vmodels.pagerD
+    if (pagerDVM) {
+        pagerDVM.jumpPage(e, dir)
+    }
+})
+
+vm.<span class="atn">$pagerDOpts</span> = {
+    <span class="str">$mouseEnter</span>: false,
+    <span class="str">enterCallback</span>: function(event) {
+        var vmodel = event.target.$vmodel;
+        vmodel.$mouseEnter = true
+    },
+    <span class="str">leaveCallback</span>: function(event) {
+        var vmodel = event.target.$vmodel;
+        vmodel.$mouseEnter = false
+    },
+    <span class="str">getTemplate</span>: function(str) {
+        var s = str.replace('class="ui-pager"', '$& ms-mouseenter="enterCallback" ms-mouseleave="leaveCallback"')
+        return s;
+    }
+} 
+</pre>
+                    <div class="padBom10">
+                        <h3><span>总是显示上一页下一页按钮的pager E：</span></h3>
+                        <div ms-widget="pager" 
+                             data-pager-always-show-next="true"
+                             data-pager-always-show-prev="true"
+                             data-pager-show-pages="6">
+                        </div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"pager"</span> 
+     <span class="atn">data-pager-always-show-next</span><span class="pun">=</span><span class="atv">"true"</span>
+     <span class="atn">data-pager-always-show-prev</span><span class="pun">=</span><span class="atv">"true"</span>&gt;
+     <span class="atn">data-pager-show-pages</span><span class="pun">=</span><span class="atv">"6"</span>
+&lt;/div&gt;
+</pre>                    
+                    <div class="padBom10">
+                        <h3><span>改变每页显示数量的pager F：</span></h3>
+                        <select ms-duplex="perPages" style="float:left;height:24px;">
+                            <option>5</option>
+                            <option>10</option>
+                            <option>15</option>
+                        </select>
+                        <div ms-widget="pager, pagerF, $pagerFOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;select <span class="atn">ms-duplex</span><span class="pun">=</span><span class="atv">"perPages"</span> <span class="atn">style</span><span class="pun">=</span><span class="atv">"float:left;height:24px;"</span>&gt;
+    &lt;option&gt;5&lt;/option&gt;
+    &lt;option&gt;10&lt;/option&gt;
+    &lt;option&gt;15&lt;/option&gt;
+&lt;/select&gt;
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"pager, pagerF, $pagerFOpts"</span>&gt;&lt;/div&gt;
+</pre>  
+<pre>
+vm.<span class="atn">perPages</span> = 5
+vm.<span class="atn">$pagerFOpts</span> = {
+    <span class="str">totalItems</span>: 150,
+    <span class="str">perPages</span>: 5
+}
+vm.$watch("perPages", function(perPages) {
+    var pagerFVM = avalon.vmodels.pagerF
+    if (pagerFVM) {
+        pagerFVM.perPages = perPages
+    }
+})     
+</pre>            
+                    <div class="padBom10">
+                        <h3><span>配置getTitle、ellipseText的pager G ：</span></h3>
+                        <div ms-widget="pager, pageG, $pagerGOpts" 
+                             data-pager-ellipse-text=".*.*.*">
+                        </div>
+                    </div>  
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"pager, pageG, $pagerGOpts"</span> 
+     <span class="atn">data-pager-ellipse-text</span><span class="pun">=</span><span class="atv">".*.*.*"</span>&gt;
+&lt;/div&gt;
+</pre> 
+<pre>
+vm.<span class="str">$pagerGOpts</span> = {
+    getTitle: function(page) {
+        switch (page) {
+            case "first":
+                return "跳到第一页"
+            case "prev":
+                return "跳到上一页"
+            case "next":
+                return "跳到下一页"
+            case "last":
+                return "跳到最后一页"
+            default:
+                return "跳到第" + page + "页"
+        }
+    }                                
+}    
+</pre>                       
+                </div>
+                <script>
+                    require(["pager/avalon.pager"],function(avalon) {
+                        var pagerVM = avalon.define("pager", function(vm) {
+                            vm.$pagerBOpts = {
+                                currentPage: 8,
+                                totalItems: 150,
+                                showJumper: true,
+                                onJump: function(e, vmodel) {
+                                    location.href = "#page=" + vmodel.currentPage
+                                },
+                                nextText: "下一页",
+                                prevText: "上一页"
+                            }
+                            vm.getTtalPages = function() {
+                                alert("pager C的totalPages is： "+avalon.vmodels.pagerC.totalPages)
+                            }
+                            vm.$pagerDOpts = {
+                                $mouseEnter: false,
+                                enterCallback: function(event) {
+                                    var vmodel = event.target.$vmodel;
+                                    vmodel.$mouseEnter = true
+                                },
+                                leaveCallback: function(event) {
+                                    var vmodel = event.target.$vmodel;
+                                    vmodel.$mouseEnter = false
+                                },
+                                getTemplate: function(str) {
+                                    var s = str.replace('class="ui-pager"', '$& ms-mouseenter="enterCallback" ms-mouseleave="leaveCallback"')
+                                    return s;
+                                }
+                            } 
+                            vm.perPages = 5
+                            vm.$pagerFOpts = {
+                                totalItems: 150,
+                                perPages: 5
+                            }
+                            vm.$watch("perPages", function(perPages) {
+                                var pagerFVM = avalon.vmodels.pagerF
+                                if (pagerFVM) {
+                                    pagerFVM.perPages = perPages
+                                }
+                            })
+                            vm.$pagerGOpts = {
+                                getTitle: function(page) {
+                                    switch (page) {
+                                        case "first":
+                                            return "跳到第一页"
+                                        case "prev":
+                                            return "跳到上一页"
+                                        case "next":
+                                            return "跳到下一页"
+                                        case "last":
+                                            return "跳到最后一页"
+                                        default:
+                                            return "跳到第" + page + "页"
+                                    }
+                                }                                
+                            }
+                        })
+
+                        avalon.bind(document, "keyup", function(e) {
+                            if (e.which === 37 || e.which === 39) {
+                                var pagerCVM = avalon.vmodels.pagerC
+                                if (pagerCVM) {//jumpPage第二个参数可以是"next"、"prev"、"first"、"last"
+                                    pagerCVM.jumpPage(e, e.which === 39 ? "next" : "prev")
+                                }
+                            }
+                        })
+
+                        avalon.bind(document, window.netscape ? "DOMMouseScroll" : "mousewheel", function(e) {
+                            if (!avalon.vmodels.pagerD.$mouseEnter) return;
+                            var dir = (e.wheelDelta || -e.detail) > 0 ? "prev" : "next"
+                            var pagerDVM = avalon.vmodels.pagerD
+                            if (pagerDVM) {
+                                pagerDVM.jumpPage(e, dir)
+                            }
+                        })
+
+                        avalon.scan($("#pager")[0], pagerVM);
+                    })
+                </script>
+                <h3>vm的定义</h3>
+<pre ms-skip>
+var <span class="atn">pagerVM</span> = avalon.define("pager", function(vm) {
+    vm.<span class="str">$pagerBOpts</span> = {<span class="str"> ...... </span>}
+    vm.<span class="str">getTtalPages</span> = function() {<span class="str"> ...... </span>}
+    vm.<span class="str">$pagerDOpts</span> = {<span class="str"> ...... </span>} 
+    vm.<span class="str">perPages</span> = 5
+    vm.<span class="str">$pagerFOpts</span> = {<span class="str"> ...... </span>}
+    vm.$watch("perPages", function(perPages) {<span class="str"> ...... </span>})
+    vm.<span class="str">$pagerGOpts</span> = {<span class="str"> ...... </span>}
+})
+avalon.scan($("#pager")[0], pagerVM);
+</pre>
+            </section>
+            <section ms-controller="spinner" class="ms-controller" id="spinner">
+                <div class="page-header">
+                    <h1>spinner用法详解</h1>
+                </div>
+                <p class="warning"><span class="label label-info">注意：</span>&nbsp;&nbsp;配置方法最好放在配置对象;&nbsp;&nbsp;</p>
+                <div class="bs-docs-example" style="padding-bottom: 24px;">
+                    <div class="padBom10">
+                        <h3>
+                            <span>默认配置的spinner A：</span>
+                            <input ms-widget="spinner" />
+                        </h3>
+                    </div>
+<pre ms-skip>
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"spinner"</span>/&gt;
+</pre>
+                    <div class="padBom10">
+                        <h3>
+                            <span>配置min、max的spinner B：</span>
+                            <input ms-widget="spinner" 
+                               data-spinner-min="5" 
+                               data-spinner-max="10"/>
+                        </h3>
+                    </div>
+<pre ms-skip>
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"spinner"</span> 
+       <span class="atn">data-spinner-min</span><span class="pun">=</span><span class="atv">"5"</span> 
+       <span class="atn">data-spinner-max</span><span class="pun">=</span><span class="atv">"10"</span>/&gt;
+</pre>
+                    <div class="padBom10">
+                        <h3>
+                            <span>配置步长step的spinner C：</span>
+                            <button ms-click="changeWidth">change width</button>
+                            <input ms-widget="spinner, spinnerC" data-spinner-step="2"/>
+                        </h3>
+                        <p>手动输入数值，如输入了非数字字符，组件将其置为最近一次的有效数值，如设置了min或者max，组件将输入值与mix、max对比，小于min则置为min，大于max则置为max</p>
+                    </div>
+<pre ms-skip>
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"changeWidth"</span>&gt;change width&lt;/button&gt;
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"spinner, spinnerC"</span> <span class="atn">data-spinner-step</span><span class="pun">=</span><span class="atv">"2"</span>/&gt;
+</pre> 
+<pre>
+vm.<span class="str">changeWidth</span> = function() {
+    avalon.vmodels.spinnerC.<span class="atn">width</span> = 40
+}
+</pre>                   
+                    <div class="padBom10">
+                        <h3>
+                            <span>配置onIncrease、onDecrease回调的spinner D：</span>
+                            <input ms-widget="spinner, spinnerD, $spinnerDOpts"/>
+                        </h3>
+                    </div>
+<pre ms-skip>
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"spinner, spinnerD, $spinnerDOpts"</span>/&gt;
+</pre>
+<pre>
+vm.<span class="str">$spinnerDOpts</span> = {
+    <span class="atn">onDecrease</span> : function(value) {
+        avalon.log("this是触发事件的元素");
+        avalon.log(this);
+        avalon.log("value是spinner的当前数值");
+        avalon.log(value);
+    },
+    <span class="atn">onIncrease</span> : function(value) {
+        avalon.log("this是触发事件的元素");
+        avalon.log(this);
+        avalon.log("value是spinner的当前数值");
+        avalon.log(value);
+    }
+}
+</pre>                    
+                    <div class="padBom10">
+                        <h3>
+                            <span>设置了初始化value的spinner E：</span>
+                            <button ms-click="getValue('spinnerE')">get value</button>
+                            <button ms-click="setValue('spinnerE')">set value</button>
+                            <input ms-widget="spinner, spinnerE" value="3"/>
+                        </h3>
+                    </div>
+<pre ms-skip>
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"getValue('spinnerE')"</span>&gt;get value&lt;/button&gt;
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"setValue('spinnerE')"</span>&gt;set value&lt;/button&gt;
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"spinner, spinnerE"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"3"</span>/&gt;
+</pre> 
+<pre>
+vm.<span class="str">getValue</span> = function(id) {
+    var vm = avalon.vmodels[id]
+    alert(vm.<span class="atn">value</span>);
+}
+vm.<span class="str">setValue</span> = function(id) {
+    var vm = avalon.vmodels[id]
+    vm.<span class="atn">value</span> = 20
+}
+</pre>                   
+                    <div class="padBom10">
+                        <h3>
+                            <span>通过ms-duplex初始化spinner F：</span>
+                            <button ms-click="getValue('spinnerF')">get value</button>
+                            <button ms-click="changeVal">change val</button>
+                            <span>val is : {{val}}</span>
+                            <input ms-widget="spinner, spinnerF" ms-duplex="val"/>
+                        </h3>
+                    </div>
+<pre ms-skip>
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"getValue('spinnerF')"</span>&gt;get value&lt;/button&gt;
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"changeVal"</span>&gt;change val&lt;/button&gt;
+&lt;span&gt;val is : {{val}}&lt;/span&gt;
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"spinner, spinnerF"</span> <span class="atn">ms-duplex</span><span class="pun">=</span><span class="atv">"val"</span>/&gt;
+</pre>     
+<pre>
+vm.<span class="str">val</span> = 10
+vm.<span class="str">changeVal</span> = function() {
+    spinnerVM.<span class="atn">val</span> = 50
+}
+</pre>               
+                    <div class="padBom10">
+                        <h3>
+                            <span>配置disabled禁用组件的spinner G：</span>
+                            <button ms-click="toggleDisabledOfG">toggle disabled</button>
+                            <input ms-widget="spinner, spinnerG" disabled/>
+                        </h3>
+                    </div>
+<pre ms-skip>
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"toggleDisabledOfG"</span>&gt;toggle disabled&lt;/button&gt;
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"spinner, spinnerG"</span> disabled/&gt;
+</pre>
+<pre>
+vm.<span class="str">toggleDisabledOfG</span> = function() {
+    var spinnerGVM = avalon.vmodels.spinnerG
+    spinnerGVM.<span class="atn">disabled</span> = !spinnerGVM.<span class="atn">disabled</span>
+}
+</pre>
+                    <div class="padBom10">
+                        <h3>
+                            <span>通过ms-disabled禁用组件的spinner H：</span>
+                            <button ms-click="toggleDisabledOfH">toggle disabled</button>
+                            <input ms-widget="spinner" ms-disabled="dis"/>
+                        </h3>
+                    </div>
+<pre ms-skip>
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"toggleDisabledOfH"</span>&gt;toggle disabled&lt;/button&gt;
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"spinner"</span> <span class="atn">ms-disabled</span><span class="pun">=</span><span class="atv">"dis"</span>/&gt;
+</pre>  
+<pre>
+vm.<span class="str">dis</span> = false
+vm.<span class="str">toggleDisabledOfH</span> = function() {
+    spinnerVM.<span class="atn">dis</span> = !spinnerVM.<span class="atn">dis</span>
+}
+</pre>                    
+                </div>
+                <script>
+                    require(["spinner/avalon.spinner"],function(avalon) {
+                        var spinnerVM = avalon.define("spinner", function(vm) {
+                            vm.changeWidth = function() {
+                                avalon.vmodels.spinnerC.width = 40
+                            }
+                            vm.$spinnerDOpts = {
+                                onDecrease : function(value) {
+                                    avalon.log("this是触发事件的元素");
+                                    avalon.log(this);
+                                    avalon.log("value是spinner的当前数值");
+                                    avalon.log(value);
+                                },
+                                onIncrease : function(value) {
+                                    avalon.log("this是触发事件的元素");
+                                    avalon.log(this);
+                                    avalon.log("value是spinner的当前数值");
+                                    avalon.log(value);
+                                }
+                            }
+                            vm.getValue = function(id) {
+                                var vm = avalon.vmodels[id]
+                                alert(vm.value);
+                            }
+                            vm.setValue = function(id) {
+                                var vm = avalon.vmodels[id]
+                                vm.value = 20
+                            }
+                            vm.val = 10
+                            vm.changeVal = function() {
+                                spinnerVM.val = 50
+                            }
+                            vm.toggleDisabledOfG = function() {
+                                var spinnerGVM = avalon.vmodels.spinnerG
+                                spinnerGVM.disabled = !spinnerGVM.disabled
+                            }
+                            vm.dis = false
+                            vm.toggleDisabledOfH = function() {
+                                spinnerVM.dis = !spinnerVM.dis
+                            }
+                        })
+                        avalon.scan($("#spinner")[0], spinnerVM);
+                    })
+                </script>
+                <h3>vm的定义</h3>
+<pre ms-skip>
+var <span class="atn">spinnerVM</span> = avalon.define("spinner", function(vm) {
+    vm.<span class="atv">changeWidth</span> = function() {<span class="str"> ...... </span>}
+    vm.<span class="atv">$spinnerDOpts</span> = {<span class="str"> ...... </span>}
+    vm.<span class="atv">getValue</span> = function(id) {<span class="str"> ...... </span>}
+    vm.<span class="atv">setValue</span> = function(id) {<span class="str"> ...... </span>}
+    vm.<span class="atv">val</span> = 10
+    vm.<span class="atv">changeVal</span> = function() {<span class="str"> ...... </span>}
+    vm.<span class="atv">toggleDisabledOfG</span> = function() {<span class="str"> ...... </span>}
+    vm.<span class="atv">dis</span> = false
+    vm.<span class="atv">toggleDisabledOfH</span> = function() {<span class="str"> ...... </span>}  
+})
+avalon.scan($("#spinner")[0], spinnerVM);
+</pre>
+            </section>
+            <section ms-controller="checkboxlist" class="ms-controller" id="checkboxlist">
+                <div class="page-header">
+                    <h1>checkboxlist用法详解(对应adapter的cboxpicker)</h1>
+                </div>
+                <p class="warning"><span class="label label-info">注意：</span>&nbsp;&nbsp;配置方法最好放在配置对象;&nbsp;&nbsp;</p>
+                <div class="bs-docs-example" style="padding-bottom: 24px;">
+                    <div class="padBom10">
+                        <h3><span>默认配置的checkboxlist A：</span></h3>
+                        <ul ms-widget="checkboxlist" data-checkboxlist-duplex="check1">
+                            <li><input type="checkbox" value="1">选项一</li>
+                            <li><input type="checkbox" value="2">选项二</li>
+                            <li><input type="checkbox" value="3">选项三</li>
+                        </ul>
+                    </div>
+<pre ms-skip>
+&lt;ul <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"checkboxlist"</span> <span class="atn">data-checkboxlist-duplex</span><span class="pun">=</span><span class="atv">"check1"</span>&gt;
+    &lt;li&gt;&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"1"</span>&gt;选项一&lt;/li&gt;
+    &lt;li&gt;&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"2"</span>&gt;选项二&lt;/li&gt;
+    &lt;li&gt;&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"3"</span>&gt;选项三&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+<pre>
+vm.<span class="str">check1</span> = ["1"];    
+</pre>
+                    <div class="padBom10">
+                        <h3><span>配置alltext的checkboxlist B：</span></h3>
+                        <ul ms-widget="checkboxlist" 
+                            data-checkboxlist-duplex="check1"
+                            data-checkboxlist-alltext="">
+                            <li><input type="checkbox" value="1">选项一</li>
+                            <li><input type="checkbox" value="2">选项二</li>
+                            <li><input type="checkbox" value="3">选项三</li>
+                        </ul>
+                    </div>
+<pre ms-skip>
+&lt;ul <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"checkboxlist"</span> 
+    <span class="atn">data-checkboxlist-duplex</span><span class="pun">=</span><span class="atv">"check1"</span>
+    <span class="atn">data-checkboxlist-alltext</span><span class="pun">=</span><span class="atv">""</span>&gt;
+    &lt;li&gt;&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"1"</span>&gt;选项一&lt;/li&gt;
+    &lt;li&gt;&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"2"</span>&gt;选项二&lt;/li&gt;
+    &lt;li&gt;&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"3"</span>&gt;选项三&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+                    <div class="padBom10">
+                        <h3>
+                            <span>水平排列的checkboxlist C：</span>
+                            <button ms-click="changeCheckValue">修改选中项</button>
+                        </h3>
+                        <ul ms-widget="checkboxlist" 
+                            data-checkboxlist-duplex="check2"
+                            data-checkboxlist-alltext="全选"
+                            data-checkboxlist-vertical="false">
+                            <li><input type="checkbox" value="1">选项一</li>
+                            <li><input type="checkbox" value="2">选项二</li>
+                            <li><input type="checkbox" value="3">选项三</li>
+                        </ul>
+                    </div>
+<pre ms-skip>
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"changeCheckValue"</span>&gt;修改选中项&lt;/button&gt;
+&lt;ul <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"checkboxlist"</span> 
+    <span class="atn">data-checkboxlist-duplex</span><span class="pun">=</span><span class="atv">"check2"</span>
+    <span class="atn">data-checkboxlist-alltext</span><span class="pun">=</span><span class="atv">"全选"</span>
+    <span class="atn">data-checkboxlist-vertical</span><span class="pun">=</span><span class="atv">"false"</span>&gt;
+    &lt;li&gt;&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"1"</span>&gt;选项一&lt;/li&gt;
+    &lt;li&gt;&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"2"</span>&gt;选项二&lt;/li&gt;
+    &lt;li&gt;&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"checkbox"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"3"</span>&gt;选项三&lt;/li&gt;
+&lt;/ul&gt;
+</pre>   
+<pre>
+vm.<span class="str">check2</span> = ["1", "2"]   
+vm.<span class="str">changeCheckValue</span> = function() {
+    vm.check2 = ["1", "2", "3"]
+} 
+</pre>                 
+                    <div class="padBom10">
+                        <h3>
+                            <span>配置type为week以及onSelect回调的checkboxlist D：</span>
+                            <button ms-click="getChecked">获取选中项</button>
+                            <button ms-click="getAll">是否全选</button>
+                        </h3>
+                        <ul ms-widget="checkboxlist, checkboxlistD" 
+                            data-checkboxlist-type="week" 
+                            data-checkboxlist-duplex="weeks"
+                            data-checkboxlist-vertical="false"
+                            data-checkboxlist-on-select="selectCallback">
+                        </ul>
+                        <p>选中日期是：{{weeks}}</p>
+                    </div>
+<pre ms-skip>
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"getChecked"</span>&gt;获取选中项&lt;/button&gt;
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"getAll"</span>&gt;是否全选&lt;/button&gt;
+&lt;ul <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"checkboxlist, checkboxlistD"</span> 
+    <span class="atn">data-checkboxlist-type</span><span class="pun">=</span><span class="atv">"week"</span> 
+    <span class="atn">data-checkboxlist-duplex</span><span class="pun">=</span><span class="atv">"weeks"</span>
+    <span class="atn">data-checkboxlist-vertical</span><span class="pun">=</span><span class="atv">"false"</span>
+    <span class="atn">data-checkboxlist-on-select</span><span class="pun">=</span><span class="atv">"selectCallback"</span>&gt;
+&lt;/ul&gt;
+</pre> 
+<pre>
+vm.<span class="str">weeks</span> = ["TUESDAY"]
+vm.<span class="str">getChecked</span> = function() {
+    alert("checkboxlist D的选中项是 : "+checkboxlistVM.weeks)
+}
+vm.<span class="str">getAll</span> = function() {
+    alert("checkboxlist D全选了吗？"+ (avalon.vmodels.checkboxlistD.all ? "yes" : "no"))
+}
+vm.<span class="str">selectCallback</span> = function(data, status, element) {
+    avalon.log("selectCallback argumnets is: ");
+    avalon.log(arguments);
+    alert("选中了："+arguments[2].value);
+}    
+</pre>                   
+                    <div class="padBom10">
+                        <h3>
+                            <span>配置fetch定义渲染内容的checkboxlist E：</span>
+                            <span class="label label-info">注意：duplex的值不要定义为data</span>
+                        </h3>
+                        <ul ms-widget="checkboxlist, checkboxlistE" 
+                            data-checkboxlist-fetch="getOptions" 
+                            data-checkboxlist-duplex="options">
+                        </ul>
+                        <p>选中项是：{{options}}</p>
+                    </div>
+<pre ms-skip>
+&lt;ul <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"checkboxlist, checkboxlistE"</span> 
+    <span class="atn">data-checkboxlist-fetch</span><span class="pun">=</span><span class="atv">"getOptions"</span> 
+    <span class="atn">data-checkboxlist-duplex</span><span class="pun">=</span><span class="atv">"options"</span>&gt;
+&lt;/ul&gt;
+</pre> 
+<pre>
+vm.<span class="str">options</span> = []
+vm.<span class="str">getOptions</span> = function(render) {
+    setTimeout(function(){
+        checkboxlistVM.options = ["w1", "w3"]
+        var data = [
+            { text : '文字1' , value : 'w1' } ,
+            { text : '文字2' , value : 'w2' } ,
+            { text : '文字3' , value : 'w3' } ,
+            { text : '文字4' , value : 'w4' }
+        ]
+        render(data);
+    },1000);
+}    
+</pre>                    
+                </div>
+                <script>
+                    require(["checkboxlist/avalon.checkboxlist"],function(avalon) {
+                        var checkboxlistVM = avalon.define("checkboxlist", function(vm) {
+                            vm.check1 = ["1"];
+                            vm.check2 = ["1", "2"]
+                            vm.changeCheckValue = function() {
+                                vm.check2 = ["1", "2", "3"]
+                            }
+                            vm.weeks = ["TUESDAY"]
+                            vm.getChecked = function() {
+                                alert("checkboxlist D的选中项是 : "+checkboxlistVM.weeks)
+                            }
+                            vm.getAll = function() {
+                                alert("checkboxlist D全选了吗？"+ (avalon.vmodels.checkboxlistD.all ? "yes" : "no"))
+                            }
+                            vm.selectCallback = function(data, status, element) {
+                                avalon.log("selectCallback argumnets is: ");
+                                avalon.log(arguments);
+                                alert("选中了："+arguments[2].value);
+                            }
+                            vm.options = []
+                            vm.getOptions = function(render) {
+                                setTimeout(function(){
+                                    checkboxlistVM.options = ["w1", "w3"]
+                                    var data = [
+                                        { text : '文字1' , value : 'w1' } ,
+                                        { text : '文字2' , value : 'w2' } ,
+                                        { text : '文字3' , value : 'w3' } ,
+                                        { text : '文字4' , value : 'w4' }
+                                    ]
+                                    render(data);
+                                },1000);
+                            }
+                        })
+                        avalon.scan($("#checkboxlist")[0], checkboxlistVM);
+                    })
+                </script>
+                <h3>vm的定义</h3>
+<pre ms-skip>
+var <span class="atn">checkboxlistVM</span> = avalon.define("checkboxlist", function(vm) {
+    vm.<span class="str">check1</span> = ["1"];
+    vm.<span class="str">check2</span> = ["1", "2"]
+    vm.<span class="str">changeCheckValue</span> = function() {<span class="str"> ...... </span>}
+    vm.<span class="str">weeks</span> = ["TUESDAY"]
+    vm.<span class="str">getChecked</span> = function() {<span class="str"> ...... </span>}
+    vm.<span class="str">getAll</span> = function() {<span class="str"> ...... </span>}
+    vm.<span class="str">selectCallback</span> = function(data, status, element) {<span class="str"> ...... </span>}
+    vm.<span class="str">options</span> = []
+    vm.<span class="str">getOptions</span> = function(render) {<span class="str"> ...... </span>}
+}) 
+avalon.scan($("#checkboxlist")[0], checkboxlistVM);
+</pre>
+            </section>
+        </div>
+    </div>
+</div>
+<!-- Footer
+================================================== -->
+<footer class="footer">
+    <div class="container">
+        <ul class="footer-links">
+            <li><a href="http://hotelued.qunar.com/oniui/index.html" target="_blanck">avalon ui</a></li>
+            <li class="muted">&middot;</li>
+            <li><a href="http://qtown.corp.qunar.com/activity/detail?activityId=39">avalon</a></li>
+        </ul>
+    </div>
+</footer>
+</body>
+</html>

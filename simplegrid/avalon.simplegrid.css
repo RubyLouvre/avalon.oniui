@@ -4,7 +4,7 @@
 /*
 这是每个都组件都应该引用的部分
 */
-.ui-simplegrid { width: 100%; border: 1px solid #d4d4d4; /*三种容器的规则*/ /*三种容器下三角形的共同点*/ /*上三角*/ /*下三角*/ }
+.ui-simplegrid { width: 100%; border: 1px solid #d4d4d4; position: relative; /*三种容器的规则*/ /*三种容器下三角形的共同点*/ /*上三角*/ /*下三角*/ }
 .ui-simplegrid .ui-simplegrid-scroll-wrapper { width: 100%; overflow: auto; position: relative; }
 .ui-simplegrid .ui-simplegrid-wrapper { width: 100%; position: absolute; }
 .ui-simplegrid .ui-simplegrid-thead { width: 100%; -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; border-bottom: 1px solid #d4d4d4; border-collapse: collapse; }

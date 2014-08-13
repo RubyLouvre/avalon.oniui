@@ -2,6 +2,7 @@
 define(["avalon",
     "text!./avalon.simplegrid.html",
     "../pager/avalon.pager",
+    "../loading/avalon.loading",
     "../scrollbar/avalon.scrollbar",
     "css!../chameleon/oniui-common.css",
     "css!./avalon.simplegrid.css"
@@ -86,10 +87,17 @@ define(["avalon",
         }
 
         var _vmodels
-
+        var loadingOpts = {
+                toggle: false,
+                onInit: function(vm, options, vmodels) {
+                    vmodel.loadingVModel = vm;
+                }
+            }
+        options.loading = avalon.type(options.loading) === "object" ? avalon.mix(options.loading, loadingOpts) : loadingOpts
         var vmodel = avalon.define(data.simplegridId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "data", "scrollPanel", "topTable", "bottomTable", "startIndex", "pager", "endIndex", "template"]
+            vm.$skipArray = ["widgetElement", "data", "scrollPanel", "topTable", "bottomTable", "startIndex", "pager", "endIndex", "template","loading", "loadingVModel"]
+            vm.loadingVModel = null
             vm.widgetElement = element
             vm.gridWidth = "100%"
             vm.startIndex = 0
@@ -191,6 +199,12 @@ define(["avalon",
                 }
             }
 
+            vm.showLoading = function() {
+                vmodel.loadingVModel.toggle = true;
+            }
+            vm.hideLoading = function() {
+                vmodel.loadingVModel.toggle = false;
+            }
             vm.startResize = function(e, el) {
                 //当移动到表头的右侧,改变光标的形状,表示它可以拖动改变列宽
                 if (options._drag || !el.resizable)
@@ -268,18 +282,7 @@ define(["avalon",
                 var opts = vmodel.$model
                 trend = trend ? 1 : -1
                 if (typeof opts.remoteSort === "function" && !remptyfn.test(opts.remoteSort)) {
-                    //如果指定了回调函数,通过服务器端进行排数,那么能回调传入当前字段,状态,VM本身及callback
-                    function callback(array) {
-                        vmodel.data = array
-                        vmodel._data = vmodel.getStore(array, vmodel)
-                        if (typeof vmodel.onSort === "function") {
-                            setTimeout(function() {
-                                vmodel.onSort(vmodel)
-                            }, 500)
-                        }
-                    }
-                    //
-                    vmodel.remoteSort(field, trend, vmodel, callback)
+                    vmodel.remoteSort(field, trend, vmodel)
                 } else if (typeof el.localSort === "function" && !remptyfn.test(el.localSort)) {// !isEmptyFn(el.localSort)
                     //如果要在本地排序,并且指定排数函数
                     vmodel._data.sort(function(a, b) {
@@ -478,6 +481,11 @@ define(["avalon",
         reRender: function(data, vm) {
             vm.data = data;
             vm._data = vm.getStore(data, vm);
+            if (typeof vm.onSort === "function") {
+                setTimeout(function() {
+                    vm.onSort(vm)
+                }, 500)
+            }
         },
         getStore: function(array, vm) {
             return array.slice(vm.startIndex, vm.endIndex)

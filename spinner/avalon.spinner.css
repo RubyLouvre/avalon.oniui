@@ -2,11 +2,15 @@
 /*
 这是每个都组件都应该引用的部分
 */
-.ui-spinner { font-size: 0; }
-.ui-spinner .ui-btn { height: 26px; overflow: visible; _overflow-y: hidden; padding: 0 10px; font-size: 0; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; border-radius: 2px; color: #333333; background-color: #f8f8f8; border: 1px solid #cccccc; }
+.ui-spinner { font-size: 0; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; }
+.ui-spinner .ui-btn { height: 26px; overflow: visible; _overflow-y: hidden; padding: 0 10px; font-size: 0; outline: 0; vertical-align: middle; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; border-radius: 2px; color: #333333; background-color: #f8f8f8; border: 1px solid #cccccc; }
+.ui-spinner .ui-btn:active { border-color: #fff; }
 .ui-spinner .ui-btn:hover { box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1); background-color: #f8f8f8; border-color: #bbbbbb; color: #333333; }
+.ui-spinner .ui-btn.ui-state-disabled, .ui-spinner .ui-btn.ui-state-disabled .ui-icon { background-color: whitesmoke; border-color: #d9d9d9; cursor: default; color: #ccc; }
 .ui-spinner .ui-btn .ui-icon { line-height: 15px; text-indent: 0; }
-.ui-spinner .ui-textbox { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; outline: none; vertical-align: top; margin: 0 -1px; border: 1px solid #cccccc; padding: 3px 5px; font-size: 0; line-height: 18px; background-color: #ffffff; }
+.ui-spinner .ui-textbox { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; outline: none; margin: 0 -1px; border: 1px solid #cccccc; padding: 3px 5px; font-size: 0; line-height: 18px; background-color: #ffffff; }
 .ui-spinner .ui-textbox:hover { border-color: #999999; }
+.ui-spinner .ui-textbox.ui-state-disabled { background-color: whitesmoke; border-color: #d9d9d9; cursor: default; }
 .ui-spinner .ui-textbox .ui-textbox-input-wrap { position: relative; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; vertical-align: middle; }
 .ui-spinner .ui-textbox .ui-textbox-input-wrap .ui-textbox-input { position: relative; display: inline; float: left; top: 1px\9; _top: 0; outline: none; height: 18px; line-height: 18px; vertical-align: middle; font-size: 12px; border: 0 none; padding: 0; color: #333333; background-color: #ffffff; }
+.ui-spinner .ui-textbox .ui-textbox-input-wrap .ui-textbox-input.ui-state-disabled { background-color: whitesmoke; border-color: #d9d9d9; cursor: default; color: #ccc; }

@@ -75,7 +75,7 @@
             </fieldset>
             <fieldset>
                 <legend>禁用spinner</legend>
-                <input value="3" ms-disabled="disable" ms-widget="spinner, spinner1"/>
+                <input value="3" ms-disabled="disable" ms-widget="spinner, spinner1"  />
             </fieldset>
             <script>
                 require(["spinner/avalon.spinner"], function(avalon) {
@@ -83,7 +83,7 @@
                         vm.p1 = 8;
                         vm.p2 = 10
                         vm.p3 = 2
-                        vm.disable = true
+                        vm.disable = false
                         vm.$spinnerOpts = {
                             min: 0,
                             max: 5,

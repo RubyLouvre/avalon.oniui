@@ -55,7 +55,7 @@
         <div class="demo-show" ms-controller="demo2">
             <fieldset>
                 <legend>data-checkboxlist-duplex="val"</legend>
-                <ul ms-widget="checkboxlist" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部">
+                <ul ms-widget="checkboxlist, a" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部">
                     <li><input type="checkbox" value="1">选项一</li>
                     <li><input type="checkbox" value="2">选项二</li>
                     <li><input type="checkbox" value="3">选项三</li>
@@ -81,9 +81,9 @@
                     vm.val = ["1", "2"];
                     vm.selectionList = ["3", "5"];
                 });
-                setTimeout(function (){
-                    sss.val = ["1","2","3","4","5","6"];
-                },10000);
+                // setTimeout(function (){
+                //     sss.val = ["1","2","3","4","5","6"];
+                // },10000);
                 avalon.scan();
             });
         </script>

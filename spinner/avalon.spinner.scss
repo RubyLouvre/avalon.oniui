@@ -3,25 +3,37 @@
 $uiname: "ui-spinner";
 .ui-spinner {
     font-size: 0;
+    @include inline-block();
     .ui-btn {
         height: 26px;
         overflow: visible;
         _overflow-y: hidden;
         padding: 0 10px;
         font-size: 0;
+        outline: 0;
+        vertical-align: middle;
         @include border-radius(2px);
         @if($oinui-theme == smoothness) {
             color: #333333;
             background-color: #f8f8f8;
             border: 1px solid #cccccc;
         }
-    }
-    .ui-btn:hover {
-        @if($oinui-theme == smoothness) {
-            box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1);
-            background-color: #f8f8f8;
-            border-color: #bbbbbb;
-            color: #333333;
+        &:active {
+            border-color: #fff;
+        }
+        &:hover {
+            @if($oinui-theme == smoothness) {
+                box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1);
+                background-color: #f8f8f8;
+                border-color: #bbbbbb;
+                color: #333333;
+            }
+        }
+        &.ui-state-disabled, &.ui-state-disabled .ui-icon {
+            background-color: whitesmoke;
+            border-color: #d9d9d9;
+            cursor: default;
+            color: #ccc;
         }
     }
     .ui-btn .ui-icon {
@@ -31,7 +43,6 @@ $uiname: "ui-spinner";
     .ui-textbox {
         @include inline-block();
         outline: none;
-        vertical-align: top;
         margin: 0 -1px;
         border: 1px solid #cccccc;
         padding: 3px 5px;
@@ -44,6 +55,11 @@ $uiname: "ui-spinner";
             @if($oinui-theme == smoothness) {
                 border-color: #999999;
             }
+        }
+        &.ui-state-disabled {
+            background-color: whitesmoke;
+            border-color: #d9d9d9;
+            cursor: default;
         }
         .ui-textbox-input-wrap {
             position: relative;
@@ -65,6 +81,12 @@ $uiname: "ui-spinner";
                 @if($oinui-theme == smoothness) {
                     color: #333333;
                     background-color: #ffffff;
+                }
+                &.ui-state-disabled {
+                    background-color: whitesmoke;
+                    border-color: #d9d9d9;
+                    cursor: default;
+                    color: #ccc;
                 }
             }
         }

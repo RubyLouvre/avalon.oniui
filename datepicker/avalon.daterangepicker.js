@@ -190,7 +190,7 @@ define(["../avalon.getModel",
                     }
                 })
                 initValues();
-                applyRules(vmodel.inputFromValue && options.parseDate(vmodel.inputFromValue) || new Date());
+                applyRules(vmodel.inputFromValue && options.parseDate(vmodel.inputFromValue));
                 avalon.scan(element, [vmodel].concat(vmodels)); 
                 // 扫描完daterangepicker组件之后才扫描datepicker
                 avalon.nextTick(function() {
@@ -246,7 +246,7 @@ define(["../avalon.getModel",
                 var duplexLen = duplex.length,
                     duplexVM1 = avalon.getModel(duplex[0].trim(), vmodels),
                     duplexVM2 = duplexLen === 1 ? null : avalon.getModel(duplex[1].trim(), vmodels),
-                    duplexVal1 = duplexVM1[1][duplexVM1[0]],
+                    duplexVal1 = duplexVM1 && duplexVM1[1][duplexVM1[0]] || "",
                     duplexVal2 = duplexVM2 ? duplexVM2[1][duplexVM2[0]] : "";
                 duplexFrom = duplexVM1;
                 duplexTo = duplexVM2;
@@ -295,9 +295,9 @@ define(["../avalon.getModel",
                 maxDateRule = df['maxDate'];
             minDate = (minDateRule ? minDateRule.getTime() : -1) > (minDate ? minDate.getTime() : -1) ? minDateRule : minDate ;
             maxDate = (maxDateRule ? maxDateRule.getTime() : Number.MAX_VALUE) > (maxDate ? maxDate.getTime() : Number.MAX_VALUE) ? maxDate : maxDateRule;
-            if(!vmodel.inputToValue && df["defaultDate"]){
-                vmodel.inputToValue = options.formatDate(df["defaultDate"]);
-            }
+            // if(duplexFrom[] && df["defaultDate"]){
+            //     vmodel.inputToValue = options.formatDate(df["defaultDate"]);
+            // }
             if(minDate){
                 var toMinDateFormat = options.formatDate(minDate);
                 rules.toMinDate = toMinDateFormat;

@@ -1,5 +1,6 @@
 <div class="ui-dropdown"
-     ms-class="ui-dropdown-disabled:!enable"
+     ms-class="ui-state-disabled:!enable"
+     ms-class-1="{{titleCls}}"
      ms-css-width="{{width}}"
      ms-click="_toggle"
      ms-blur="_blur"
@@ -20,6 +21,7 @@
 MS_OPTION_TEMPLATE
 <div class="ui-dropdown"
      ms-class="ui-dropdown-menu:!multiple"
+     ms-class-1="{{listCls}}"
      ms-css-width="{{listWidth}}"
      ms-mouseenter="_listenter"
      ms-mouseleave="_listleave"

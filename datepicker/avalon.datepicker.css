@@ -18,7 +18,7 @@
 .ui-datepicker .ui-datepicker-content-content { padding: 0 10px; width: 196px; position: relative; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; }
 .ui-datepicker .ui-datepicker-content-content .ui-datepicker-watermark { position: absolute; top: 60px; left: 10px; width: 196px; height: 150px; background: transparent; color: #000; _color: #f2f2f2; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=5); opacity: 0.05; font-size: 150px; line-height: 150px; text-align: center; }
 .ui-datepicker .ui-datepicker-header { position: relative; height: 30px; line-height: 30px; }
-.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next { color: #3775c0; cursor: pointer; height: 30px; line-height: 30px; position: absolute; text-align: center; width: 20px; }
+.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next { color: #3775c0; cursor: pointer; height: 30px; line-height: 30px; position: absolute; text-align: center; width: 20px; z-index: 1; }
 .ui-datepicker .ui-datepicker-prev-disabled, .ui-datepicker .ui-datepicker-next-disabled { color: #cccccc; cursor: default; }
 .ui-datepicker .ui-datepicker-prev { left: 0; }
 .ui-datepicker .ui-datepicker-next { right: 0; }

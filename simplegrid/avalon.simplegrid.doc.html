@@ -92,10 +92,16 @@
                     <tr>
                         <td>getColumn(el, options)</td> <td>函数</td>  <td>用于为每一列的数据添加更多自定义属性, el为columns中的某一个对象 </td> 
                     </tr>
-                     <tr>
+                    <tr>
                         <td>onSort(vmodel)</td> <td>函数</td>  <td>排序后执行的回调 </td> 
                     </tr>
-                      <tr>
+                     <tr>
+                        <td>evenClass</td> <td>"even"</td>  <td>为表身的偶数行添加一个类名，以实现斑马线效果。 </td> 
+                    </tr>
+                    <tr>
+                        <td>reRender(data,vmodel)</td> <td>函数</td>  <td>重新渲染数据 </td> 
+                    </tr>
+                    <tr>
                         <td>remoteSort(field, trend, vmodel, callback)</td> <td>函数</td>  <td>远程排序, 用户需要定义一个函数,框架会为它传入四个参数
                         field是要排序的值,trend为排序方向,vmodel为VM,callback是AJAX回调里需要执行的回调,要求传入一个数组
                         

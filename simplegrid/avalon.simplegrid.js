@@ -450,6 +450,7 @@ define(["avalon",
         showScrollbar: "always", //滚动条什么时候显示，默认一直，可设置为never，scrolling
         tbodyScrollTop: 0,
         tbodyHeight: "auto",
+        evenClass: "even",
         _rowHeight: 35, //实际行高,包含border什么的
         _rowHeightNoBorders: 0,
         columnWidth: 160,
@@ -474,11 +475,12 @@ define(["avalon",
         getTemplate: function(tmpl, options) {
             return tmpl
         },
+        reRender: function(data, vm) {
+            vm.data = data;
+            vm._data = vm.getStore(data, vm);
+        },
         getStore: function(array, vm) {
-
-            //   return        vm.getStore = function(array) {
             return array.slice(vm.startIndex, vm.endIndex)
-            //    }
         },
         getColumn: function(el, options) {
             return el

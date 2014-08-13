@@ -5,7 +5,7 @@
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
 <title>checkboxlist demo</title>
 <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
-<link type="text/css" rel="stylesheet" href="../avalon.doc.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
 <script src="../highlight/shCore.js"></script>
 <script src="../avalon.js"></script>
 </head>
@@ -49,13 +49,13 @@
             <fieldset>
                 <legend>ms-widget="checkboxlist"</legend>
                 <p>组件默认方式</p>
-                <ul ms-widget="checkboxlist">
+                <ul ms-widget="checkboxlist" data-checkboxlist-duplex="check1">
                     <li><input type="checkbox" value="1">选项一</li>
                     <li><input type="checkbox" value="2">选项二</li>
                     <li><input type="checkbox" value="3">选项三</li>
                 </ul>
                 <p>配置data-checkboxlist-alltext=""来取消“全部”选项。</p>
-                <ul ms-widget="checkboxlist" data-checkboxlist-alltext="">
+                <ul ms-widget="checkboxlist" data-checkboxlist-alltext="" data-checkboxlist-duplex="check2">
                     <li><input type="checkbox" value="1">选项一</li>
                     <li><input type="checkbox" value="2">选项二</li>
                     <li><input type="checkbox" value="3">选项三</li>
@@ -66,6 +66,8 @@
             require("./checkboxlist/avalon.checkboxlist", function(avalon) {
                 var sss = avalon.define('demo1',function(vm){
                     vm.name = "xueer";
+                    vm.check1 = [];
+                    vm.check2 = [];
                 });
                 avalon.scan();
             });

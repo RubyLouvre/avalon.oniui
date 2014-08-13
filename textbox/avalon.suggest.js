@@ -136,7 +136,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                         break;
                     }
                 })
-                avalon.bind(options.inputElement, "blur", vm.hidepromptinfo);
+                avalon.bind(document, "click", vm.hidepromptinfo);
                 avalon.nextTick(function() {
                     element.appendChild(suggestHtml);
                     avalon.scan(element, [vmodel].concat(vmodels)); 

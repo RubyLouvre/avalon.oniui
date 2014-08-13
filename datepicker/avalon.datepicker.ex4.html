@@ -28,11 +28,12 @@
                 <input ms-widget="datepicker" data-datepicker-min-date="2014-06-7" data-datepicker-max-date="2014-06-28" value="2014-06-23"/>
                 <p>说明：同时设置minDate和maxDate，并且设置初始化输入域</p>
             </fieldset>
+            
             <fieldset>
                 <legend>初始日期超出范围</legend>
                 <input ms-widget="datepicker" data-datepicker-min-date="2014-06-08" value="2014-06-05"/>
-                <p>说明：当输入域设置了初始值时，如初始值在minDate和maxDate范围内，则高亮输入域的日期，如果超出范围会警示说明初始日期超出日期范围</p>
-            </fieldset>
+                <p>说明：当输入域设置了初始值时，如初始值在minDate和maxDate范围内，则高亮输入域的日期，超出范围则自动修正，如果设了minDate则修正为minDate，没设minDate但设了maxDate则自动修正为maxDate</p>
+            </fieldset> 
             <script> 
                 require("datepicker/avalon.datepicker", function(avalon) {
                     var model = avalon.define("demo", function(vm) {

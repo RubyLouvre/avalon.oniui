@@ -1,7 +1,7 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
 $uiname: "ui-checkboxlist";
-$inputMarginRight: "5px";
+$inputMargin: 0 0 0 5px;
 .#{$uiname} {
     list-style: none;
     padding: 0;
@@ -11,7 +11,7 @@ $inputMarginRight: "5px";
         }
         input {
             vertical-align: middle;
-            margin-right: $inputMarginRight;
+            margin: $inputMargin;
         }
     }
     .#{$uiname}-all {

@@ -34,7 +34,7 @@
 <tr>
     <td>widthInner</td><td> 40</td><td> loading动画是圆形排列的时候，这个参数指的是内直径</td></tr>
 <tr>
-    <td>type</td><td> "ball"</td><td> 类型，默认是ball，球，可取spin,ball-line</td></tr>
+    <td>type</td><td> "ball"</td><td> 类型，默认是ball，球，可取spin,ticks</td></tr>
 <tr>
     <td>toggle</td><td> true</td><td> 是否显示</td></tr>
 <tr>
@@ -44,17 +44,17 @@
 <tr>
     <td>container</td><td> void 0</td><td> loading效果显示的容器，默认是绑定widget的元素</td></tr>
 <tr>
-    <td>count</td><td> 12</td><td> type=ball，loading效果组成的小图形个数</td></tr>
+    <td>count</td><td> 10</td><td> type=ball，loading效果组成的小图形个数</td></tr>
 <tr>
     <td>interval</td><td> 120</td><td> type=ball，毫秒数，动画效果帧间隔</td></tr>
 <tr>
-    <td>circleMargin</td><td> 1</td><td> type=ball-line，小球之间的间距，单位是一倍小球半径</td></tr>
+    <td>circleMargin</td><td> 1</td><td> type=ticks，小球之间的间距，单位是一倍小球半径</td></tr>
 <tr>
-    <td>count</td><td> 3</td><td> type=ball-line，小球个数</td></tr>
+    <td>count</td><td> 3</td><td> type=ticks，小球个数</td></tr>
 <tr>
-    <td>height</td><td> 20</td><td> type=ball-line，高度</td></tr>
+    <td>height</td><td> 20</td><td> type=ticks，高度</td></tr>
 <tr>
-    <td>interval</td><td> 360</td><td> type=ball-line，毫秒数，动画效果帧间隔</td></tr>
+    <td>interval</td><td> 360</td><td> type=ticks，毫秒数，动画效果帧间隔</td></tr>
 <tr>
     <td>angel</td><td>90</td><td> type=spin，转动的弧形的角度，单位是1度</td></tr>
 <tr>
@@ -63,6 +63,16 @@
     <td>startangle</td><td> 0</td><td> type=spin，圆弧开始的角度，单位1度</td></tr>
 <tr>
     <td>interval</td><td> 36</td><td> type=spin，毫秒数，动画效果帧间隔</td></tr>
+<tr>
+    <td>count</td><td> 8</td><td> type=spokes，长方形个数</td></tr>
+<tr>
+    <td>width</td><td> 32</td><td> type=spokes，效果宽度,</td></tr>
+<tr>
+    <td>spokesWidth</td><td> 4</td><td> type=spokes，小长方形宽度</td></tr>
+<tr>
+    <td>spokesHeight</td><td> 8</td><td> type=spokes，小长方形高度</td></tr>
+<tr>
+    <td>interval</td><td> 125</td><td> type=spokes，效果动画间隔毫秒数</td></tr>
 <tr>
     <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
@@ -83,7 +93,8 @@
 <ol class="example-links">
 <li><a href="avalon.loading.ex.html">loading:ball</a></li>
 <li><a href="avalon.loading.ex.1.html">loading:spin</a></li>
-<li><a href="avalon.loading.ex.2.html">loading:ball-line</a></li>
+<li><a href="avalon.loading.ex.2.html">loading:ticks</a></li>
+<li><a href="avalon.loading.ex.3.html">loading:spokes</a></li>
 </ol>
 <!--ex list end-->
         </div>

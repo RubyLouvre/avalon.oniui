@@ -37,12 +37,12 @@ define(["../avalon.getModel",
             var value = duplexVM[1][duplexVM[0]];
             var date ;
             duplexVM[1].$watch(duplexVM[0], function(val) {
+                _value = element.value = val;
                 if(date=options.parseDate(val)) {
                     var year, month, day;
                     year = vmodel.year = date.getFullYear();
                     month = vmodel.month = date.getMonth();
                     day = vmodel.day = date.getDate();
-                    _value = element.value = val;
                     vmodel.dateError = "#cccccc";
                     if(vmodel.numberOfMonths ===1) {
                         vmodel.data[0] ? vmodel.data[0].rows = calendarDays(month, year)[0].rows : vmodel.data = calendarDays(month, year);
@@ -128,10 +128,10 @@ define(["../avalon.getModel",
             vm.data = [];
             vm.prevMonth = -1; //控制prev class是否禁用
             vm.nextMonth = -1; //控制next class是否禁用
-            vm.month = month;
-            vm._month = vm.month + 1;
-            vm.year = year;
-            vm.day = day;
+            vm.month = 0;
+            vm._month = 0;
+            vm.year = 0;
+            vm.day = 0;
             vm.years = years;
             vm.months = [1,2,3,4,5,6,7,8,9,10,11,12];
             vm.$yearOpts = {
@@ -212,11 +212,10 @@ define(["../avalon.getModel",
                         }
                         vmodel.data[0].rows[outerIndex][innerIndex].selected = true;
                         element.value = date;
-                    }
-                    if(options.type === "range") {
-                        vmodel.onSelect.call(null, date, data["datepickerId"], avalon(element).data())
+                        duplexVM ? duplexVM[1][duplexVM[0]] = date : "";
                     }
                 }
+                vmodel.onSelect.call(null, date, data["datepickerId"], avalon(element).data())
             }
             vm._selectYearMonth = function(event) {
                 event.stopPropagation();
@@ -242,27 +241,7 @@ define(["../avalon.getModel",
                 calendar = avalon.parseHTML(calendarTemplate).firstChild;
                 elementPar.insertBefore(calendar, element);
                 elementPar.insertBefore(element, calendar);
-                if(_value) {
-                    if(!_originValue) {
-                        if(vmodel.allowBlank) {
-                            vmodel.tip = "格式错误";
-                            vmodel.dateError = "#ff8888";
-                            element.value = _value;
-                        } else {
-                            vmodel.tip = getDateTip(date).text;
-                        }
-                    } else {
-                        vmodel.tip = getDateTip(date).text;
-                        if(isDateDisabled(date, options)) {
-                            vmodel.tip = "超出范围";
-                            vmodel.dateError = "#ff8888";
-                        }
-                    }
-                } else {
-                    if(!vmodel.allowBlank) {
-                        vmodel.tip = getDateTip(date).text;
-                    }
-                }
+                
                 if(element.tagName === "INPUT" && vmodel.type!=="range") {
                     var div = document.createElement("div");
                     div.className = "ui-datepicker-input-wrapper";
@@ -270,13 +249,10 @@ define(["../avalon.getModel",
                     div.setAttribute("ms-css-border-color", "dateError");
                     div.setAttribute("ms-hover", "ui-state-hover");
                     elementPar.insertBefore(div,element);
-                    // element.msRetain = true;
                     div.appendChild(element);
                     var tip = avalon.parseHTML("<div class='ui-datepicker-tip'>{{tip}}<i class='ui-icon ui-icon-calendar-o'>&#xf133;</i></div>");
                     div.appendChild(tip);
                     div.appendChild(calendar);
-                    // element.msRetain = false;
-                    element.value = vmodel.allowBlank ? _value : _originValue;
                 }
                 if (~vmodel.zIndex) {
                     calendar.style.zIndex = vmodel.zIndex;
@@ -284,13 +260,33 @@ define(["../avalon.getModel",
                 div = options.type ==="range" ? element["data-calenderwrapper"] : div;
                 bindEvents(calendar, div);
                 // 如果输入域不允许为空，且_originValue不存在则强制更新element.value
-                if(!options.allowBlank && !_originValue) {
-                    element.value = vmodel.formatDate(new Date());
+                var value = "",
+                    _date = null,
+                    dateDisabled = isDateDisabled(date, vmodel);
+                if (dateDisabled) {
+                    _date = vmodel.minDate || vmodel.maxDate
+                } else {
+                    _date = date
+                } 
+                value = vmodel.formatDate(_date);
+                vmodel.tip = getDateTip(cleanDate(_date)).text;
+                if (vmodel.allowBlank) {
+                    if (_value && !_originValue) {
+                        vmodel.tip = "格式错误";
+                        vmodel.dateError = "#ff8888";
+                        value = _value;
+                    } else if (!_value){
+                        value = ""
+                        vmodel.tip = ""
+                    }
                 }
+                vmodel.year = _date.getFullYear();
+                vmodel.month = _date.getMonth();
+                vmodel.day = _date.getDate();
+                _value = element.value = value;
                 avalon(element).attr("name", options.name);
                 vmodel.weekNames = calendarHeader();
-                _value = element.value;
-                duplexVM && (duplexVM[1][duplexVM[0]] = element.value);
+                duplexVM && (duplexVM[1][duplexVM[0]] = value);
                 element.disabled = options.disabled;
                 if(vmodel.type!=="range") {
                     avalon.scan(div, [vmodel]);
@@ -420,9 +416,10 @@ define(["../avalon.getModel",
                 element.value = vmodel.formatDate(date);
                 vmodel.dateError = "#cccccc";
                 vmodel.tip = getDateTip(cleanDate(date)).text;
-                if (!duplexVM) {
-                    vmodel.onSelect.call(null, date, data["datepickerId"], avalon(element).data())
-                }
+                // if (!duplexVM && vmodel._dateSelected) {
+                //     vmodel.onSelect.call(null, date, data["datepickerId"], avalon(element).data())
+                //     vmodel._dateSelected = false;
+                // }
             })
             // 切换日期年月或者点击input输入域时不隐藏组件，选择日期或者点击文档的其他地方则隐藏日历组件
             avalon.bind(document, "click", function(e) {

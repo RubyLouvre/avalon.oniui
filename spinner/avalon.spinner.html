@@ -1,13 +1,19 @@
 <div class="ui-spinner ui-widget">
-    <button type="button" class="ui-btn" ms-click="_sub">
+    <button type="button" class="ui-btn" 
+            ms-click="_sub" 
+            ms-disabled="min==value || disabled"
+            ms-class="ui-state-disabled:min==value || disabled">
         <i class="ui-icon ui-icon-minus">&#xf068;</i>
     </button>
-    <div class="ui-textbox ui-widget-content">
+    <div class="ui-textbox ui-widget-content" ms-class="ui-state-disabled:disabled">
         <div class="ui-textbox-input-wrap">
             <b>tmp</b>
         </div>
     </div>
-    <button type="button" class="ui-btn" ms-click="_add">
+    <button type="button" class="ui-btn" 
+            ms-click="_add" 
+            ms-disabled="max==value || disabled"
+            ms-class="ui-state-disabled:max==value || disabled">
         <i class="ui-icon ui-icon-plus">&#xf067;</i>
     </button>
 </div>

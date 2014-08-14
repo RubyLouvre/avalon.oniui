@@ -2,6 +2,9 @@
 /*
 这是每个都组件都应该引用的部分
 */
+div.ui-loading {
+  position: absolute; }
+
 .ui-loading {
   position: absolute;
   left: 50%;
@@ -21,4 +24,5 @@
       top: 0;
       z-index: -1;
       zoom: 1;
-      background: transparent; }
+      background: transparent;
+      border: none; }

@@ -7,6 +7,7 @@ $uiname : "ui-simplegrid";
 .#{$uiname}{
     width:100%;
     border: 1px solid $ui-state-default-border-color;
+    position: relative;
     @extend %oniui-font-setting;
     .#{$uiname}-scroll-wrapper{
         width:100%;
@@ -117,6 +118,9 @@ $uiname : "ui-simplegrid";
 
     .ui-pager{
         @include float-right();
+    }
+    .#{$uiname}-empty {
+        text-align: center;
     }
 }
 

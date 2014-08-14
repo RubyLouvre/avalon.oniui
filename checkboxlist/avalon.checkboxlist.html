@@ -6,6 +6,7 @@
         <input type="checkbox" 
                ms-click="_clickAll($event)" 
                ms-duplex-radio="all" 
+               value = "all"
                class="checkbox" /> {{alltext}}
     </label>
 </li>
@@ -14,9 +15,8 @@
     ms-class="fl:!vertical">
     <label>
         <input type="checkbox" 
-               ms-checked="checkStatus[cpitem.value||cpitem.text]" 
                ms-click="_clickOne($event, $index)"
-               ms-duplex-text="MS_OPTIONS_DUPLEX"
+               ms-duplex="MS_OPTIONS_DUPLEX"
                ms-value="{{cpitem.value||cpitem.text}}" 
                class="checkbox" /> 
         {{cpitem.text||cpitem.html|html}}

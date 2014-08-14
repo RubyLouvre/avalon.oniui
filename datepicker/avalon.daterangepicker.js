@@ -136,6 +136,8 @@ define(["../avalon.getModel",
             // 点击取消按钮隐藏日历框
             vm._cancelSelectDate = function() {
                 vmodel.toggle ? vmodel.toggle = false: 0;
+                vmodel.inputFromValue = _oldValue[0] && vmodel.formatDate(_oldValue[0])  || ""
+                vmodel.inputToValue = _oldValue[1] && vmodel.formatDate(_oldValue[1])  || ""
             }
             vm.getDates = function() {
                 var inputFromDate = vmodel.parseDate(vmodel.inputFromValue),
@@ -189,7 +191,9 @@ define(["../avalon.getModel",
                         vmodel.toggle = false;
                     }
                 })
+
                 initValues();
+                element.init = true;
                 applyRules(vmodel.inputFromValue && options.parseDate(vmodel.inputFromValue));
                 avalon.scan(element, [vmodel].concat(vmodels)); 
                 // 扫描完daterangepicker组件之后才扫描datepicker
@@ -222,7 +226,7 @@ define(["../avalon.getModel",
             }
             if(duplexFrom) {
                 duplexFrom[1][duplexFrom[0]] = val;
-                setValues(duplexLen, val, vmodel.inputToValue);
+                // setValues(duplexLen, val, vmodel.inputToValue);
                 updateMsg();
             }
         })
@@ -236,7 +240,7 @@ define(["../avalon.getModel",
             }
             if(duplexTo) {
                 duplexTo[1][duplexTo[0]] = val;
-                setValues(duplexLen, vmodel.inputFromValue, val);
+                // setValues(duplexLen, vmodel.inputFromValue, val);
                 updateMsg();
             }
         })
@@ -275,7 +279,7 @@ define(["../avalon.getModel",
                 } else if(len==1){
                     vmodel.inputFromValue = inputFrom.value = from && options.parseDate(from) && from || "";
                 }
-                if(!vmodel.inputToValue) { // 只要inputTo.value为null都提示不限日期
+                if(!vmodel.inputToValue && !vmodel.inputFromValue) { // 只要inputTo.value为null都提示不限日期
                     vmodel.label = "不限日期";
                 }
             }
@@ -295,14 +299,22 @@ define(["../avalon.getModel",
                 maxDateRule = df['maxDate'];
             minDate = (minDateRule ? minDateRule.getTime() : -1) > (minDate ? minDate.getTime() : -1) ? minDateRule : minDate ;
             maxDate = (maxDateRule ? maxDateRule.getTime() : Number.MAX_VALUE) > (maxDate ? maxDate.getTime() : Number.MAX_VALUE) ? maxDate : maxDateRule;
-            // if(duplexFrom[] && df["defaultDate"]){
-            //     vmodel.inputToValue = options.formatDate(df["defaultDate"]);
-            // }
+            if (element.init) {
+                var initFromDate = vmodel.parseDate(vmodel.inputFromValue),
+                    inputToInitValue = duplexTo && duplexTo[1][duplexTo[0]] || "",
+                    initToDate = vmodel.parseDate(inputToInitValue);
+                if (initFromDate && inputToInitValue && !initToDate) {
+                    vmodel.inputToValue = options.formatDate(df["defaultDate"]);
+                    vmodel.label = options.datesDisplayFormat(options.defaultLabel,vmodel.inputFromValue, vmodel.inputToValue);
+                }
+            }
             if(minDate){
                 var toMinDateFormat = options.formatDate(minDate);
                 rules.toMinDate = toMinDateFormat;
-                if(!vmodel.inputToValue) {
+                if(!vmodel.inputToValue && !element.init) {
                     vmodel.inputToValue = toMinDateFormat;
+                } else if (element.init) {
+                    element.init = false
                 }
             }
             if(maxDate) {

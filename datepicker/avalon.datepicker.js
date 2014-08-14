@@ -37,12 +37,12 @@ define(["../avalon.getModel",
             var value = duplexVM[1][duplexVM[0]];
             var date ;
             duplexVM[1].$watch(duplexVM[0], function(val) {
+                _value = element.value = val;
                 if(date=options.parseDate(val)) {
                     var year, month, day;
                     year = vmodel.year = date.getFullYear();
                     month = vmodel.month = date.getMonth();
                     day = vmodel.day = date.getDate();
-                    _value = element.value = val;
                     vmodel.dateError = "#cccccc";
                     if(vmodel.numberOfMonths ===1) {
                         vmodel.data[0] ? vmodel.data[0].rows = calendarDays(month, year)[0].rows : vmodel.data = calendarDays(month, year);
@@ -212,6 +212,7 @@ define(["../avalon.getModel",
                         }
                         vmodel.data[0].rows[outerIndex][innerIndex].selected = true;
                         element.value = date;
+                        duplexVM ? duplexVM[1][duplexVM[0]] = date : "";
                     }
                 }
                 vmodel.onSelect.call(null, date, data["datepickerId"], avalon(element).data())

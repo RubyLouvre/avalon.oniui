@@ -13,7 +13,7 @@
     <div class="wrapper">
         <h1>daterangepicker demo</h1>
         <div class="demo-show ms-controller" ms-controller="demo">
-<!--             <fieldset>
+            <fieldset>
                 <legend>日期范围框 支持onSelect回调函数</legend>
                 <div ms-widget="daterangepicker" data-daterangepicker-on-select="select" data-daterangepicker-rules="$rules"></div>
                 <p>onSelect是在点击日历框下的确定按钮后的回调方法，参数分别是起始日期fromDate、 结束日期toDate、 上次选中的日期范围的起始日期和结束日期组成的数组、绑定元素生成的widget VM的引用 vmodel, 绑定元素上的配置数据形成的数据对象data</p>
@@ -22,7 +22,7 @@
                 <legend>日期范围框 显示格式</legend>
                 <div ms-widget="daterangepicker,$,customOpts"></div>
                 <p>datesDisplayFormat设置模拟的输入域的显示格式，msgFormat设置日历框下方动态显示选择日期的说明文字格式</p>
-            </fieldset>  -->
+            </fieldset> 
             <fieldset>
                 <legend>日期范围框 默认值为空</legend>
                 <div ms-widget="daterangepicker" data-daterangepicker-duplex="fromEmpty, toEmpty" data-daterangepicker-rules="opts2"></div>
@@ -30,14 +30,14 @@
                 <p>toEmpty is : {{toEmpty}}</p>
                 <p>初始日期和结束日期为空的情况下，模拟的输入域会显示"不限日期"的label</p>
             </fieldset>
-            <!-- <fieldset>
+            <fieldset>
                 <legend>日期范围框setDate</legend>
                 <div ms-widget="daterangepicker, dp" data-daterangepicker-duplex="from3, to3"></div>
                 {{from3}}
                 {{to3}}
                 <button ms-click="setdates">设置时间为'2013-09-09', '2014-09-09'</button>
                 <button ms-click="setlabel">设置标签为'我是label'</button>
-            </fieldset> -->
+            </fieldset>
             <script> 
                 require("datepicker/avalon.daterangepicker", function(avalon) {
                     var model = avalon.define("demo", function(vm) {

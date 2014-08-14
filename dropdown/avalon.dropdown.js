@@ -441,8 +441,8 @@ define(['avalon',
         value: [], //设置组件的初始值
         label: null, //设置组件的提示文案，可以是一个字符串，也可以是一个对象
         multiple: false, //是否为多选模式
-        listCls: '',   //列表添加自定义className来控制样式
-        titleCls: '',   //title添加自定义className来控制样式
+        listClass: '',   //列表添加自定义className来控制样式
+        titleClass: '',   //title添加自定义className来控制样式
         activeIndex: NaN,
         size: 1,
         menuNode: {},

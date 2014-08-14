@@ -7,7 +7,9 @@ $uiname : ".ui-loading";
 		borderColor:#aaaaaa
 	) !global
 }
-
+div#{$uiname} {
+	position: absolute;
+}
 #{$uiname} {
 	// current style
 	// means #{$uiname}-bar
@@ -33,6 +35,7 @@ $uiname : ".ui-loading";
 			z-index: -1;
 			zoom:1;
 			background: transparent;
+			border: none;
 		}
 	}
 }

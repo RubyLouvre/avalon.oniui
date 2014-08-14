@@ -1046,7 +1046,9 @@
     var ClassListMethods = {
         toString: function() {
             var node = this.node//IE6,7元素节点不存在hasAttribute方法
-            return (node.hasAttribute ? node.getAttribute("class") || "" : node.className).split(/\s+/).join(" ")
+            var cls = node.className
+            var str = typeof cls === "string" ? cls : cls.baseVal
+            return str.split(/\s+/).join(" ")
         },
         contains: function(cls) {
             return (" " + this + " ").indexOf(" " + cls + " ") > -1
@@ -1073,6 +1075,7 @@
             avalon.mix(node.classList = {
                 node: node
             }, ClassListMethods)
+            node.classList.toString = ClassListMethods.toString //fix IE
         }
         return node.classList
     }
@@ -1833,6 +1836,7 @@
             }
             //ms-important不包含父VM，ms-controller相反
             vmodels = node === b ? [newVmodel] : [newVmodel].concat(vmodels)
+
             elem.removeAttribute(node.name) //removeAttributeNode不会刷新[ms-controller]样式规则
             newVmodel.$events.element = elem
             avalon.bind(elem, "dataavailable", function(e) {
@@ -1842,6 +1846,7 @@
             })
             avalon(elem).removeClass(node.name)
         }
+
         scanAttr(elem, vmodels) //扫描特性节点
     }
 
@@ -1995,7 +2000,11 @@
 
         if (elem.patchRepeat) {
             elem.patchRepeat()
-            elem.patchRepeat = null
+            try {
+                elem.patchRepeat = ""
+                elem.removeAttribute("patchRepeat")
+            } catch (e) {
+            }
         }
 
     }
@@ -3627,10 +3636,77 @@
             })
         }
     }
-    //为ms-each, ms-with, ms-repeat要循环的元素外包一个msloop临时节点，ms-controller的值为代理VM的$id
+    function getAll(elem) {//VML的getElementsByTagName("*")不能取得所有元素节点
+        var ret = []
+        function get(parent, array) {
+            var nodes = parent.childNodes
+            for (var i = 0, el; el = nodes[i++]; ) {
+                if (el.nodeType === 1) {
+                    array.push(el)
+                    get(el, array)
+                }
+            }
+            return array
+        }
+        return get(elem, ret)
+    }
+    function fixCloneNode(src) {
+        var target = src.cloneNode(true)
+        if (window.VBArray) {//只处理IE
+            var srcAll = getAll(src)
+            var destAll = getAll(target)
+            for (var k = 0, src; src = srcAll[k]; k++) {
+                if (src.nodeType === 1) {
+                    var nodeName = src.nodeName
+                    var dest = destAll[k]
+                    if (nodeName === "INPUT" && /radio|checkbox/.test(src.type)) {
+                        dest.defaultChecked = dest.checked = src.checked
+                        if (dest.value !== src.value) {
+                            dest.value = src.value//IE67复制后，value从on变成""
+                        }
+                    } else if (nodeName === "OBJECT") {
+                        if (dest.parentNode) {//IE6-10拷贝子孙元素失败了
+                            dest.outerHTML = src.outerHTML
+                        }
+                    } else if (nodeName === "OPTION") {
+                        dest.defaultSelected = dest.selected = src.defaultSelected
+                    } else if (nodeName === "INPUT" || nodeName === "TEXTAREA") {
+                        dest.defaultValue = src.defaultValue
+                    } else if (src.tagUrn === "urn:schemas-microsoft-com:vml") {
+                        var props = {}//处理VML元素
+                        src.outerHTML.replace(/\s*=\s*/g, "=").replace(/(\w+)="([^"]+)"/g, function(a, prop, val) {
+                            props[prop] = val
+                        }).replace(/(\w+)='([^']+)'/g, function(a, prop, val) {
+                            props[prop] = val
+                        })
+                        dest.outerHTML.replace(/\s*=\s*/g, "=").replace(/(\w+)="/g, function(a, prop) {
+                            delete props[prop]
+                        }).replace(/(\w+)='/g, function(a, prop) {
+                            delete props[prop]
+                        })
+                        delete props.urn
+                        delete props.implementation
+                        for (var i in props) {
+                            dest.setAttribute(i, props[i])
+                        }
+                        fixVML(dest)
+                    }
+                }
+            }
+        }
+        return target
+    }
+    
+    function fixVML(node) {
+        if (node.currentStyle.behavior !== "url(#default#VML)") {
+            node.style.behavior = "url(#default#VML)"
+            node.style.zoom = 1 //hasLayout
+        }
+    }
 
+    //为ms-each, ms-with, ms-repeat要循环的元素外包一个msloop临时节点，ms-controller的值为代理VM的$id
     function shimController(data, transation, spans, proxy) {
-        var tview = data.template.cloneNode(true)
+        var tview = fixCloneNode(data.template)
         var id = proxy.$id
         var span = tview.firstChild
         if (!data.fastRepeat) {

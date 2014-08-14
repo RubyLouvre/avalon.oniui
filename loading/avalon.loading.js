@@ -16,6 +16,10 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         } catch (e) {
         }
     }
+    // 通过addtype注册新的效果
+    // config里面是每个type特有的配置或者方法，mix到vm里
+    // drawser方法在注入html之前执行，主要用于生成绘图需要的数据
+    // effect方法用于setinterval动画效果
     function addType(type, config, drawer, effect) {
         config["drawer"] = drawer
         config["effect"] = effect
@@ -94,26 +98,6 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         }
         return arr
     }
-    // 静态模板
-    function tplReplacer(tpl, objectList, vmodel, index, item) {
-        var objectList = Array.isArray(objectList) ? objectList : [objectList]
-        var t = tpl.replace(/\{\{MS_[A-Z_0-9]+\}\}/g, function(mat) {
-            var mat = (mat.split("{{MS_WIDGET_")[1] || "").replace(/\}\}/g, "").toLowerCase().replace(/_[^_]/g, function(mat) {
-                return mat.replace(/_/g, "").toUpperCase()
-            })
-            for (var i = 0, len = objectList.length; i < len; i++) {
-                if (objectList[i][mat] != void 0) {
-                    var res = objectList[i][mat]
-                    if (typeof res === "function") {
-                        return res(objectList[i], index, mat)
-                    }
-                    return res
-                }
-            }
-            return mat
-        })
-        return t
-    }
     // 注册ball，小球排列成一个圆
     addType("ball", {
         "width": 32,
@@ -123,20 +107,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         "circleMargin": 1,//@param type=ticks，小球之间的间距，单位是一倍小球半径
         "data": [],
         "svgDur": "1s",
-        "opacities": [],
-        "vmlTplFilter": function(tpl, vmodel, i, item) {
-            return tplReplacer(tpl, {
-                cssBall: [
-                    "left:" + item.x + "px;",
-                    "top:" + item.y + "px;",
-                    "width:" + item.r * 2 + "px;",
-                    "height:" + item.r * 2 + "px;"
-                ].join(""),
-                cssbindings: [
-                    "ms-css-opacity=\"" + vmodel.opacities[i] + "\""
-                ].join(" ")
-            }, vmodel, i, item)
-        }
+        "opacities": []
     }, function(vmodel) {
        var list = ComputePoints(vmodel)
        vmodel.svgDur = vmodel.interval * vmodel.count / 1000 + "s"
@@ -267,13 +238,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         interval: 125, //@param type=spokes，效果动画间隔毫秒数
         svgPath: "M14 0 H18 V8 H14 z",
         svgDur: "1s",
-        opacities:"",
-        "vmlTplFilter": function(tpl, vmodel, i, item) {
-            return tplReplacer(tpl, [vmodel.data[i], vmodel], vmodel, i, item)
-        },
-        "spokesPath": function(vmodel, i, mat) {
-            return vmodel.data[i].rotate
-        }
+        opacities:""
     },function(vmodel) {
         var data = [], count = vmodel.count,w = vmodel.width, sw = vmodel.spokesWidth, sh = vmodel.spokesHeight, index = 0, interval = vmodel.interval, opacities = [];
         if(vmodel.svgSupport) {
@@ -310,8 +275,11 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     }, function(vmodel, ele) {
         _config["ball"].effect(vmodel, ele, ["path", "rect"])
     })
+    var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect
+    if(!svgSupport &&  document.namespaces &&  !document.namespaces["v"]) {
+        document.namespaces.add("v", "urn:schemas-microsoft-com:vml")
+    }
     var widget = avalon.ui.loading = function(element, data, vmodels) {
-        var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect
 
         var options = data.loadingOptions
         //方便用户对原始模板进行修改,提高定制性
@@ -321,8 +289,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         }
         // 读入各种效果的配置
         avalon.each(_config[options.type], function(i, item) {
-            if (options[i] === void 0)
-                options[i] = item
+            if (options[i] === void 0) options[i] = item
         })
 
         var vmodel = avalon.define(data.loadingId, function(vm) {
@@ -348,21 +315,9 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                 var type = vmodel.type,
                         radiusOut = vmodel.width / 2
                 list = vmodel.drawer(vmodel),
-                        html = ""
+                        html = templateCache[type][vmodel.svgSupport ? "svg" : "vml"]
                 vmodel.width = vmodel.width == false ? vmodel.height : vmodel.width
                 vmodel.height = vmodel.height == false ? vmodel.width : vmodel.height
-                // 下面的条件判断目测只针对type=ball有效
-                if (vmodel.svgSupport) {
-                    var tpl = templateCache[type]["svg"]
-                    html += tpl
-                } else {
-                    var tpl = templateCache[type]["vml"]
-                    // vml cloneNode有问题，用拼接字符串来解决
-                    avalon.each(vmodel.data, function(i, item) {
-                        html += vmodel.vmlTplFilter(tpl, vmodel, i, item)
-                    })
-                    html = html || tpl
-                }
                 elementParent.appendChild(avalon.parseHTML(vmodel.template.replace("{{MS_WIDGET_HTML}}", html).replace("{{MS_WIDGET_ID}}", vmodel.$loadingID)))
                 avalon.scan(elementParent, [vmodel].concat(vmodels))
                 if (typeof options.onInit === "function") {
@@ -422,9 +377,9 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
         color: "#619FE8", //@param 效果的颜色
-        // width: 46, //@param loading动画的宽度，圆形排列的外直径
-        // height: 46, //@param loading动画的高度，如果不设置，默认等于width
-        // widthInner: 40,//@param loading动画是圆形排列的时候，这个参数指的是内直径
+        // width: 32, //@param loading动画的宽度，圆形排列的外直径
+        // height: 32, //@param loading动画的高度，如果不设置，默认等于width
+        // widthInner: 28,//@param loading动画是圆形排列的时候，这个参数指的是内直径
         type: "ball", //@param 类型，默认是ball，球，可取spin,ticks
         toggle: true, //@param 是否显示
         modal: true, //@param 是否显示遮罩

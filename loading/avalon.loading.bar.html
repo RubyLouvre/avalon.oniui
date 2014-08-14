@@ -1,6 +1,10 @@
 {{MS_WIDGET_BALL}}
-<v:oval class="vml" style="{{MS_WIDGET_CSS_BALL}}position:absolute;" stroked="false" 
-  ms-attr-fillcolor="color" {{MS_WIDGET_CSS_BINDINGS}}>
+<v:oval ms-repeat-item="data" class="vml" style="position:absolute;" stroked="false" 
+  ms-attr-fillcolor="color" 
+  ms-css-left="item.x + 'px'" 
+  ms-css-top="item.y + 'px'" 
+  ms-css-width="item.r * 2 + 'px'" 
+  ms-css-height="item.r * 2 + 'px'">
 </v:oval>
 {{MS_WIDGET_DIVIDER}}
 <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
@@ -55,8 +59,17 @@
   </svg>
 {{MS_WIDGET_TYPE}}
 {{MS_WIDGET_SPOKES}}
-<v:rect class="vml" style="position:absolute;left:{{MS_WIDGET_SPOKES_LEFT}}px;top:{{MS_WIDGET_SPOKES_TOP}}px;width:{{MS_WIDGET_SPOKES_WIDTH}}px;height:{{MS_WIDGET_SPOKES_HEIGHT}}px;BEHAVIOR:url(#default#VML);rotation:{{MS_WIDGET_SPOKES_ROTATION}};FILTER: alpha(opacity='{{MS_WIDGET_SPOKES_OPACITY}}');" stroked="false" fillcolor="{{MS_WIDGET_COLOR}}">
-  <v:fill opacity="{{MS_WIDGET_SPOKES_OPACITY}}"></v:fill>
+<v:rect class="vml" style="position:absolute;" stroked="false" 
+        ms-attr-fillcolor="color" 
+        ms-css-left="item.spokesLeft+'px'" 
+        ms-css-top="item.spokesTop+'px'"
+        ms-css-width="spokesWidth+'px'" 
+        ms-css-height="spokesHeight+'px'" 
+        ms-css-rotation="item.spokesRotation" 
+        ms-repeat-item="data">
+        <v:fill 
+                ms-attr-color="color" 
+                ms-attr-opacity="item.spokesOpacity"></v:fill>
   </v:rect>
 {{MS_WIDGET_DIVIDER}}
 <svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">

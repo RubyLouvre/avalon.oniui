@@ -194,14 +194,6 @@ define(['avalon',
                 }
             };
 
-            vm._getOption = function(value) {
-                var option = vmodel.data.$model.filter(function(item) {
-                    return item.value === value;
-                });
-
-                return option.length > 0 ? option[0] : null;
-            };
-
             vm._listClick = function(event) {
                 event.stopPropagation();
                 event.preventDefault();
@@ -418,9 +410,14 @@ define(['avalon',
         }
 
         function setLabel(n) {
-            var option = vmodel._getOption(n);
+            var option = vmodel.data.$model.filter(function(item) {
+                return item.value === n;
+            });
+
+            option = option.length > 0 ? option[0] : null
+
             if(!option) {
-                console.error('[log]','avalon.dropdown','设置label出错');
+                avalon.log('[log]','avalon.dropdown','设置label出错');
             } else {
                 vmodel.label = option.label;
             }

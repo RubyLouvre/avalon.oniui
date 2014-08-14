@@ -777,18 +777,16 @@
             dontEnumsLength = dontEnums.length;
     if (!Object.keys) {
         Object.keys = function(object) { //ecma262v5 15.2.3.14
-
-            var isFn = typeof object === "function"
             var theKeys = [];
-            var skipProto = hasProtoEnumBug && isFn;
+            var skipProto = hasProtoEnumBug && typeof object === "function"
             if (typeof object === "string" || (object && object.callee)) {
                 for (var i = 0; i < object.length; ++i) {
-                    theKeys.push(String(i));
+                    theKeys.push(String(i))
                 }
             } else {
                 for (var name in object) {
-                    if (!(skipProto && name === 'prototype') && ohasOwn.call(object, name)) {
-                        theKeys.push(String(name));
+                    if (!(skipProto && name === "prototype") && ohasOwn.call(object, name)) {
+                        theKeys.push(String(name))
                     }
                 }
             }
@@ -797,13 +795,13 @@
                 var ctor = object.constructor,
                         skipConstructor = ctor && ctor.prototype === object;
                 for (var j = 0; j < dontEnumsLength; j++) {
-                    var dontEnum = dontEnums[j];
-                    if (!(skipConstructor && dontEnum === 'constructor') && ohasOwn.call(object, dontEnum)) {
-                        theKeys.push(dontEnum);
+                    var dontEnum = dontEnums[j]
+                    if (!(skipConstructor && dontEnum === "constructor") && ohasOwn.call(object, dontEnum)) {
+                        theKeys.push(dontEnum)
                     }
                 }
             }
-            return theKeys;
+            return theKeys
         }
     }
     if (!Array.isArray) {
@@ -1925,6 +1923,7 @@
     var ons = oneObject("animationend,blur,change,input,click,dblclick,focus,keydown,keypress,keyup,mousedown,mouseenter,mouseleave,mousemove,mouseout,mouseover,mouseup,scroll,submit")
 
     function scanAttr(elem, vmodels) {
+        //防止setAttribute, removeAttribute时 attributes自动被同步,导致for循环出错
         var attributes = getAttributes ? getAttributes(elem) : avalon.slice(elem.attributes)
         var bindings = [],
                 msData = {},
@@ -3672,7 +3671,8 @@
                         dest.defaultSelected = dest.selected = src.defaultSelected
                     } else if (nodeName === "INPUT" || nodeName === "TEXTAREA") {
                         dest.defaultValue = src.defaultValue
-                    } else if (src.tagUrn === "urn:schemas-microsoft-com:vml") {
+                    } else if (nodeName.toLowerCase() === nodeName && src.localName && src.outerText === "") {
+                        //src.tagUrn === "urn:schemas-microsoft-com:vml"
                         var props = {}//处理VML元素
                         src.outerHTML.replace(/\s*=\s*/g, "=").replace(/(\w+)="([^"]+)"/g, function(a, prop, val) {
                             props[prop] = val
@@ -3696,10 +3696,11 @@
         }
         return target
     }
-    
+
     function fixVML(node) {
         if (node.currentStyle.behavior !== "url(#default#VML)") {
             node.style.behavior = "url(#default#VML)"
+            node.style.display = "inline-block"
             node.style.zoom = 1 //hasLayout
         }
     }

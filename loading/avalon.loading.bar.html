@@ -22,11 +22,12 @@
 {{MS_WIDGET_TYPE}}
 {{MS_WIDGET_SPIN}}
 <v:oval stroked="true" filled="F" 
-  ms-attr-strokecolor="color" 
-    ms-css-height="width+'px'" 
-    ms-css-width="width+'px'" 
-  ms-css-opacity="opacity" 
-  ms-attr-strokeweight="width / 2 - widthInner / 2+'px'" 
+        ms-attr-strokecolor="color" 
+        ms-css-height="width+'px'" 
+        ms-css-width="width+'px'" 
+        ms-css-opacity="opacity" 
+        ms-attr-strokeweight="width / 2 - widthInner / 2+'px'" 
+        ms-repeat="[1]" 
   style="position:absolute;z-index:2;left:0;top:0;"></v:oval>
 <v:arc stroked="true" filled="F" 
     ms-attr-strokecolor="color" 
@@ -35,7 +36,8 @@
     ms-attr-startangle="startangle" 
     ms-attr-endangle="endangle" 
     ms-css-height="width+'px'" 
-    ms-css-width="width+'px'" >
+    ms-css-width="width+'px'" 
+    ms-repeat="[1]">
   </v:arc>
 {{MS_WIDGET_DIVIDER}}
 <svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -68,8 +70,7 @@
         ms-css-rotation="item.spokesRotation" 
         ms-repeat-item="data">
         <v:fill 
-                ms-attr-color="color" 
-                ms-attr-opacity="item.spokesOpacity"></v:fill>
+                ms-attr-color="color"></v:fill>
   </v:rect>
 {{MS_WIDGET_DIVIDER}}
 <svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">

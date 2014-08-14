@@ -9,13 +9,6 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         templateCache = {},
         parts = ballTemplate.split("{{MS_WIDGET_TYPE}}"),
         _config = {}
-    // var avalonStyle = document.getElementById("avalonStyle")
-    // if (avalonStyle.innerHTML.indexOf(".vml") === -1) {
-    //     try {
-    //         avalonStyle.styleSheet.cssText += ".vml{behavior:url(#default#VML);display:inline-block;zoom:1;}"
-    //     } catch (e) {
-    //     }
-    // }
     // 通过addtype注册新的效果
     // config里面是每个type特有的配置或者方法，mix到vm里
     // drawser方法在注入html之前执行，主要用于生成绘图需要的数据
@@ -263,8 +256,8 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                 data.push({
                     "spokesRotation": 360 * index / count,
                     "spokesOpacity": op * 50,
-                    "spokesLeft":(w - 2 * sw) / 2 * (1 + vcos),
-                    "spokesTop": (w - 2 * sw) / 2 * (1 - vsin)
+                    "spokesLeft":(w / 2 - sw) * (1 + vcos),
+                    "spokesTop": (w /2 - sw)  * (1 - vsin)
                 })
                 opacities.push(op)
                 index = data.length

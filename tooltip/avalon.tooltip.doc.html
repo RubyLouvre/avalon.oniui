@@ -25,7 +25,7 @@
 <tr>
     <td>toggle</td><td> false</td><td> 组件是否显示，可以通过设置为false来隐藏组件</td></tr>
 <tr>
-    <td>event</td><td> "mouseenter"</td><td> 显示tooltip的事件，默认hover的时候显示tooltip，为false的时候就不绑定事件，如果后面设置了自动隐藏，则mouseenter对应的是mouseleave,focus对应的是blur，进行自动隐藏事件侦听，使用代理的时候，目测不支持focus,blur</td></tr>
+    <td>event</td><td> "mouseenter"</td><td> 显示tooltip的事件，默认hover的时候显示tooltip，为false的时候就不绑定事件，如果后面设置了自动隐藏，则mouseenter对应的是mouseleave,focus对应的是blur，进行自动隐藏事件侦听，使用代理的时候，目测不支持focus,blur，event可以配置为空，则不会添加事件侦听</td></tr>
 <tr>
     <td>width</td><td> "auto"</td><td> tip宽度，默认是auto</td></tr>
 <tr>
@@ -59,9 +59,11 @@
 <tr>
     <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts) 定制修改模板接口</td></tr>
 <tr>
-    <td>show</td><td>接口调用</td><td>show(elem) 显示tooltip，相对于elem定位，elem为元素或者event事件对象，如果elem为空，则采用之前缓存的对象，两者都为空，则只展示，不改变位置</td></tr>
+    <td>show</td><td>接口调用</td><td>show(elem) 不建议使用这个方法，请使用showBy({target: ele})显示tooltip，相对于elem定位，elem为元素或者event事件对象，如果elem为空，则采用之前缓存的对象，两者都为空，则只展示，不改变位置</td></tr>
 <tr>
     <td>hide</td><td>接口调用</td><td>hide($event) 隐藏tooltip，参数是$event，可缺省</td></tr>
+<tr>
+    <td>showBy</td><td>接口调用</td><td>showBy($event) 参数满足 {target: elem}这样，或者是一个elem元素亦可，tooltip会按照elem定位，并作为参数传递给contentGetter</td></tr>
 <!--auto doc end-->
                 </table>
             </fieldset>
@@ -79,12 +81,13 @@
             <h3>例子：</h3>
             <!--ex list start-->
 <ol class="example-links">
-<li><a href="avalon.tooltip.ex.html">input元素获取焦点显示tip</a></li>
+<li><a href="avalon.tooltip.ex.html">input元素不绑定事件，人工出发</a></li>
 <li><a href="avalon.tooltip.ex.1.html">input元素hover显示tip-父容器做代理</a></li>
 <li><a href="avalon.tooltip.ex.2.html">不使用代理，各个方向绑定，改变位置，点击展示</a></li>
 <li><a href="avalon.tooltip.ex.3.html">箭头位置自动调整，点击展示</a></li>
 <li><a href="avalon.tooltip.ex.4.html">input元素获取焦点显示tip，不展示箭头</a></li>
 <li><a href="avalon.tooltip.ex.5.html">鼠标跟随</a></li>
+<li><a href="avalon.tooltip.ex.6.html">input元素获取焦点显示tip</a></li>
 </ol>
 <!--ex list end-->
         </div>

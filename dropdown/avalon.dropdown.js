@@ -28,7 +28,7 @@ define(['avalon',
             var duplexName = (element.msData['ms-duplex'] || '').trim()
             var duplexModel
             if (duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
-                opt.value = duplexModel[1][duplexName]
+                opt.value = duplexModel[1][duplexModel[0]]
 
             } else if (!hasBuiltinTemplate) {
                 if (!Array.isArray(opt.value)) {
@@ -48,7 +48,6 @@ define(['avalon',
                 opt.value = opt.value[0] || ""
             }
 
-            opt.label = opt.value + ""
             opt.duplexName = duplexName
         }
 
@@ -126,6 +125,8 @@ define(['avalon',
                         })[0];
                     }
                 }
+                //设置label值
+                setLabel(vmodel.value);
 
                 //如果原来的select没有子节点，那么为它添加option与optgroup
                 if (!hasBuiltinTemplate) {
@@ -150,12 +151,11 @@ define(['avalon',
                         duplexModel;
 
                     if (duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
-                        duplexModel[1].$watch(duplexName, function(newValue) {
+                        duplexModel[1].$watch(duplexModel[0], function(newValue) {
                             vmodel.value = newValue;
-                            vmodel.label = newValue;
                         })
                         vmodel.$watch('value', function(newValue) {
-                            duplexModel[1][duplexName] = newValue
+                            duplexModel[1][duplexModel[0]] = newValue
                         })
                     }
                 }
@@ -189,11 +189,10 @@ define(['avalon',
                         vmodel.value = option.value;
                     }
                     vmodel.currentOption = option;
-                    vmodel.label = vmodel.value + ""
                     vmodel.toggle = false;
                     vmodel.onSelect.call(this, event, listNode)
                 }
-            }
+            };
 
             vm._listClick = function(event) {
                 event.stopPropagation();
@@ -402,8 +401,26 @@ define(['avalon',
             });
         }
 
+        vmodel.$watch('value', function(n) {
+            setLabel(n);
+        });
+
         function createListNode() {
             return avalon.parseHTML(listTemplate);
+        }
+
+        function setLabel(n) {
+            var option = vmodel.data.$model.filter(function(item) {
+                return item.value === n;
+            });
+
+            option = option.length > 0 ? option[0] : null
+
+            if(!option) {
+                avalon.log('[log]','avalon.dropdown','设置label出错');
+            } else {
+                vmodel.label = option.label;
+            }
         }
 
         return vmodel;
@@ -424,6 +441,8 @@ define(['avalon',
         value: [], //设置组件的初始值
         label: null, //设置组件的提示文案，可以是一个字符串，也可以是一个对象
         multiple: false, //是否为多选模式
+        listClass: '',   //列表添加自定义className来控制样式
+        titleClass: '',   //title添加自定义className来控制样式
         activeIndex: NaN,
         size: 1,
         menuNode: {},

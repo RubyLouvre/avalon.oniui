@@ -9,7 +9,7 @@
         <p><a href="http://www.cnblogs.com/rubylouvre/p/3573061.html"> avalonjs 组件编写指南</a></p>
         <ul>
             <li>
-                组件基于avalon1.2.5构建，每个必须有$init, $remove，方便让框架自行管理创建与销毁。$remove注意对存在子节点的元素进行内部清空，elem.innerHTML = elem.textContent = ""，注意移除组件内部绑定的事件回调。
+                组件基于avalon1.2.5构建，每个必须有$init, $remove，onInit方法， 以便让框架自行管理创建与销毁。$remove注意对存在子节点的元素进行内部清空，elem.innerHTML = elem.textContent = ""，注意移除组件内部绑定的事件回调。
                 <blockquote>
                     需要值得注意的是,$remove操作会在元素移出DOM树时触发,但普通的移动节点操作也会让元素离开DOM树,这时就会引发$remove操作,
                     导致元素上面的组件被销毁.为防止误杀,我们在移动节点时,可以在元素定义msRetain属性,elem.msRetain = true,待到移动后再置为false
@@ -68,7 +68,5 @@
         </ul>
 
 
-
-    </pre>
-</body>
+    </body>
 </html>

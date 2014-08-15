@@ -14,8 +14,14 @@
           ms-attr-cy="data[$index].y+data[$index].r" 
           ms-repeat="data" 
           ms-attr-fill="color">
-      <animate ms-if="type!='ticks'" attributeName="opacity" from="1" to=".1" repeatCount="indefinite" 
+      <animate attributeName="opacity" from="1" to=".1" repeatCount="indefinite" 
+               ms-if="type=='ball'" 
                ms-attr-dur="svgDur" 
+               ms-attr-begin="data[$index].begin"/>
+      <animate attributeName="r" repeatCount="indefinite" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" 
+               ms-attr-values="'0;'+data[$index].r+';0;0'"
+               ms-attr-dur="svgDur" 
+               ms-if="type=='bubbles'" 
                ms-attr-begin="data[$index].begin"/>
   </circle>
 </svg>

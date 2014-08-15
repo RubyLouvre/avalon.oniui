@@ -237,7 +237,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         if(vmodel.svgSupport) {
             var step = 360 / count
             while(index < count) {
-                data.push({
+                data.push({     
                     "begin": [interval * index / 1000, "s"].join(""),
                     "rotate": ["rotate(", index * step, " ", [w / 2, w / 2].join(" ") + ")"].join("")
                 })
@@ -268,6 +268,13 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     }, function(vmodel, ele) {
         _config["ball"].effect(vmodel, ele, ["path", "rect"])
     })
+    // 注册小球排列成一个圆，半径变化
+    addType("bubbles", avalon.mix({}, _config["ball"], {
+        width: 64,
+        widthInner: 54
+    }), _config["ball"].drawer, function(vmodel, ele) {
+
+    })
     var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect
     if(!svgSupport &&  document.namespaces &&  !document.namespaces["v"]) {
         document.namespaces.add("v", "urn:schemas-microsoft-com:vml")
@@ -277,7 +284,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         var options = data.loadingOptions
         //方便用户对原始模板进行修改,提高定制性
         options.template = options.getTemplate(template, options)
-        if (!templateCache[options.type]) {
+        if (!_config[options.type]) {
             options.type = "ball"
         }
         // 读入各种效果的配置
@@ -289,7 +296,6 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             vm.height = ""
             vm.width = ""
             avalon.mix(vm, options)
-            if(!vm.vmlTplFilter) vm.vmlTplFilter = function(tpl) {return tpl}
             vm.widgetElement = element
             vm.svgSupport = svgSupport
             vm.$loadingID = widgetCount + "" + _key
@@ -308,7 +314,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                 var type = vmodel.type,
                         radiusOut = vmodel.width / 2
                 list = vmodel.drawer(vmodel),
-                        html = templateCache[type][vmodel.svgSupport ? "svg" : "vml"]
+                        html = (templateCache[type]||templateCache["ball"])[vmodel.svgSupport ? "svg" : "vml"]
                 vmodel.width = vmodel.width == false ? vmodel.height : vmodel.width
                 vmodel.height = vmodel.height == false ? vmodel.width : vmodel.height
                 elementParent.appendChild(avalon.parseHTML(vmodel.template.replace("{{MS_WIDGET_HTML}}", html).replace("{{MS_WIDGET_ID}}", vmodel.$loadingID)))

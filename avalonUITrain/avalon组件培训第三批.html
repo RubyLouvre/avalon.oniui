@@ -755,32 +755,10 @@ vm.<span class="atn">$simplegridLOpts</span> = {
                             var ret = []
                             for (var i = 0; i < n; i++) {
                                 ret.push({
-                                    symbol: Math.random().toString(32).slice(4, 10)+"fsasdffdsafsadfsadfsadfkljsldfjsdfsdafjsalkdfsadfsadfsdafsdaf",
+                                    symbol: Math.random().toString(32).slice(4, 10),
                                     price: range(100, 200),
                                     change: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
                                     checked: false,
-                                    symbol1: Math.random().toString(32).slice(4, 10)+"fsasdffdsafsadfsadfsadfkljsldfjsdfsdafjsalkdfsadfsadfsdafsdaf",
-                                    price1: range(100, 200),
-                                    change1: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
-                                    symbol2: Math.random().toString(32).slice(4, 10)+"fsasdffdsafsadfsadfsadfkljsldfjsdfsdafjsalkdfsadfsadfsdafsdaf",
-                                    price2: range(100, 200),
-                                    change2: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
-                                    symbol3: Math.random().toString(32).slice(4, 10)+"fsasdffdsafsadfsadfsadfkljsldfjsdfsdafjsalkdfsadfsadfsdafsdaf",
-                                    price3: range(100, 200),
-                                    change3: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
-                                    symbol4: Math.random().toString(32).slice(4, 10),
-                                    price4: range(100, 200),
-                                    change4: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
-                                    symbol5: Math.random().toString(32).slice(4, 10)+"fsasdffdsafsadfsadfsadfkljsldfjsdfsdafjsalkdfsadfsadfsdafsdaf",
-                                    price5: range(100, 200),
-                                    change5: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
-                                    symbol6: Math.random().toString(32).slice(4, 10)+"fsasdffdsafsadfsadfsadfkljsldfjsdfsdafjsalkdfsadfsadfsdafsdaf",
-                                    price6: range(100, 200),
-                                    change6: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
-                                    symbol7: Math.random().toString(32).slice(4, 10),
-                                    price7: range(100, 200),
-                                    change7: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1),
-
                                 })
                             }
                             return ret
@@ -968,7 +946,7 @@ vm.<span class="atn">$simplegridLOpts</span> = {
                         var columnShow = false;
                         var simpleGridVM = avalon.define("simplegrid", function(vm) {
                             vm.$simplegridAOpts = {
-                                columns: ["symbol", "price", "change","symbol1", "price1", "change1","symbol2", "price2", "change2","symbol3", "price3", "change3","symbol4", "price4", "change4","symbol5", "price5", "change5","symbol6", "price6", "change6","symbol7", "price7", "change7"],
+                                columns: ["symbol", "price", "change"],
                                 data: getData1(5) ,
                             }
                             vm.clearGridBData = function() {

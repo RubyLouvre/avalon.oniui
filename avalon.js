@@ -1673,11 +1673,10 @@
             return this
         },
         $fire: function(type) {
-            var bubbling = false, broadcast = false
-            if (type.match(/^bubble!(\w+)$/)) {
-                bubbling = type = RegExp.$1
-            } else if (type.match(/^capture!(\w+)$/)) {
-                broadcast = type = RegExp.$1
+            var special
+            if (/^(\w+)!(\w+)$/.test(type)) {
+                special = RegExp.$1
+                type = RegExp.$2
             }
             var events = this.$events
             var callbacks = events[type] || []
@@ -1692,7 +1691,7 @@
             var element = events.element
             if (element) {
                 var detail = [type].concat(args)
-                if (bubbling) {
+                if (special === "up") {
                     if (W3C) {
                         W3CFire(element, "dataavailable", detail)
                     } else {
@@ -1700,7 +1699,7 @@
                         event.detail = detail
                         element.fireEvent("ondataavailable", event)
                     }
-                } else if (broadcast) {
+                } else if (special === "down") {
                     var alls = []
                     for (var i in avalon.vmodels) {
                         var v = avalon.vmodels[i]
@@ -1714,6 +1713,13 @@
                     alls.forEach(function(v) {
                         v.$fire.apply(v, detail)
                     })
+                } else if (special === "all") {
+                    for (var i in avalon.vmodels) {
+                        var v = avalon.vmodels[i]
+                        if (v !== this) {
+                            v.$fire.apply(v, detail)
+                        }
+                    }
                 }
             }
         }
@@ -3033,7 +3039,9 @@
                 data[widget + "Id"] = args[1]
                 data[widget + "Options"] = avalon.mix({}, constructor.defaults, vmOptions || {}, widgetData)
                 elem.removeAttribute("ms-widget")
+                data.element.removeAttribute(data.name)
                 var vmodel = constructor(elem, data, vmodels) || {} //防止组件不返回VM
+
                 data.evaluator = noop
                 elem.msData["ms-widget-id"] = vmodel.$id || ""
                 if (vmodel.hasOwnProperty("$init")) {
@@ -3671,7 +3679,7 @@
                         dest.defaultSelected = dest.selected = src.defaultSelected
                     } else if (nodeName === "INPUT" || nodeName === "TEXTAREA") {
                         dest.defaultValue = src.defaultValue
-                    } else if (nodeName.toLowerCase() === nodeName && src.scopeName && src.outerText === "" ) {
+                    } else if (nodeName.toLowerCase() === nodeName && src.scopeName && src.outerText === "") {
                         //src.tagUrn === "urn:schemas-microsoft-com:vml"//判定是否为VML元素
                         var props = {}//处理VML元素
                         src.outerHTML.replace(/\s*=\s*/g, "=").replace(/(\w+)="([^"]+)"/g, function(a, prop, val) {

@@ -1,0 +1,138 @@
+<h3 id="ms-class">class绑定(ms-css, ms-hover, ms-active)</h3>
+<p>ms-class="aaa"， xxx为类名， aaa为ViewModel的属性或表达式，
+    如ms-class="main:add"而vm.add = true，那么就为此元素添加上main这个类名。或者ms-class="red:1+1",1+1为2，是真值，因为此元素添加上red这个类名。
+    ms-class="aaa bbb ccc: true"，添加多个类名。如果想分开写，由于属性名不能重名，因此我们需要在后面加个数字，如
+</p>
+<div ms-skip>
+    <pre class="brush:html;gutter:false;toolbar:false">
+        &lt;div  ms-class="aaa"  ms-class-1="bbb"  ms-class-2="ccc"&gt;    &lt;/div&gt;
+        &lt;div  ms-class="aaa bbb ccc" &gt;    &lt;/div&gt;
+        &lt;div  ms-class="aaa bbb ccc:true" &gt;    &lt;/div&gt;
+    </pre>
+
+</div>
+<p>此外，它还支持在类名中添加插值表达式，如</p>
+<div ms-skip>
+    <pre class="brush:js;gutter:false;toolbar:false">
+        var a = avalon.define("xxx", function(vm){
+              vm.w = 400
+              vm.h = 1000
+              vm.addOrRemove = true
+         })
+    </pre>
+    <pre class="brush:html;gutter:false;toolbar:false">
+         &lt;div  ms-class="width{{w}} height{{h}}: addOrRemove" &gt;    &lt;/div&gt;
+    </pre>
+    <p>这样框架就为div添加width400 height1000这两个类名。</p>
+</div>
+<p>ms-hover="类名"，规则同ms-class， 当用户的鼠标悬浮在元素上方时，添加一个或多个类名，移走时移除它们。</p>
+<p>ms-active="类名"，规则同ms-class，当用户点击它时为它添加一个类名或多个类名，鼠标弹起时移除它们。</p>
+<div ms-skip>
+    <pre class="brush:html;gutter:false;toolbar:false">
+ &lt;table id="classtable" &gt;
+            &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;流程&lt;/th&gt;
+                    &lt;th&gt;启动人&lt;/th&gt;
+                    &lt;th&gt;启动时间&lt;/th&gt;
+                    &lt;th&gt;状态&lt;/th&gt;
+                &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody ms-each-row="rows" ms-controller="class" &gt;
+                &lt;tr ms-class="odd:$index % 2" 
+                    ms-class-1="even:!($index % 2)" 
+                    ms-hover="hover" 
+                    &gt;
+                    &lt;td&gt;&lt;a href="javascript:void(0)" ms-click="$remove"&gt;删除行{{$index}}&lt;/a&gt;&lt;/td&gt;
+                    &lt;td&gt;{{ Math.random().toString(36).substring(2, 15) }}&lt;/td&gt;
+                    &lt;td&gt;{{ new Date | date("yyyy-MM-dd HH:mm-ss") }}&lt;/td&gt;
+                    &lt;td&gt;{{ $first || $last }}&lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/tbody&gt;
+        &lt;/table&gt;
+    </pre>   
+    <pre class="brush:js;gutter:false;toolbar:false">
+            avalon.ready(function() {
+                avalon.define("class", function(vm) {
+                    vm.rows = avalon.range(0, 15)
+                });
+                avalon.scan();
+            })
+    </pre>   
+</div>
+<script>
+    avalon.define("c-ms-class", function(vm) {
+        vm.rows = avalon.range(0, 15)
+    });
+</script>
+<style>
+    #classtable{
+        border: 1px solid #333;
+        border-collapse: collapse;
+        width: 90%;
+    }
+    #classtable td,#classtable th{
+        border: 1px solid #333;
+        padding:4px;;
+    }
+ 
+    /*第二种颜色*/
+    #classtable tr.even{
+        background: #3671a5;
+    }
+    #classtable tr.hover{
+        background: #aabccd!important;
+    }
+
+</style>
+<table id="classtable" >
+    <thead>
+        <tr>
+            <th>流程</th>
+            <th>启动人</th>
+            <th>启动时间</th>
+            <th>状态</th>
+        </tr>
+    </thead>
+    <tbody ms-each-row="rows" ms-controller="c-ms-class"   >
+        <tr ms-class="odd:$index % 2" 
+            ms-class-1="even:!($index % 2)" 
+            ms-hover="hover" 
+            >
+            <td><a href="javascript:void(0)" ms-click="$remove">删除行{{$index}}</a></td>
+            <td>{{ Math.random().toString(36).substring(2, 15) }}</td>
+            <td>{{ new Date | date("yyyy-MM-dd HH:mm-ss") }}</td>
+            <td>{{ $first || $last }}</td>
+        </tr>
+    </tbody>
+</table>
+<fieldset>
+    <legend>ms-class的进化</legend>
+    <p>ms-class是avalon用得最多的几个绑定之一，也正因为如此其功能一直在扩充中。根据时期的不同，分为旧风格与新风格两种。</p>
+    <p>旧风格是指正在ms-class后面跟着类外，然后在绑定值中添加表达式，即ms-class-xxx="prop"。其中xxx为一个类名。在jQuery ui中，一些类名非常长，以-连接起来，如ui-widget-content，我们直接把它加在后面好了。比如下例：</p>
+    <pre class="brush:html;gutter:false;toolbar:false;">
+&lt;div 
+ ms-class-ui-datepicker-week-end="weekend"
+ ms-class-ui-state-disabled="disabled"
+ ms-class-ui-datepicker-unselectable="selected"&gt;{{date}}&lt;/div&gt;
+    </pre>
+    <p>旧风格使用简单，易上手，只要记得在ms-class-后加类名，=号加表达式，来控制它的添加移除就行了。但缺点也明显： </p>
+    <ul>
+        <li>每个ms-class只能控制一个类名，如果有N个类名其实都是由同一个绑定属性控制的，也不得分开写。</li>
+        <li>ms-class后面只能接受全部是小写的类名，因为在HTML 规范中，属性名都只能是小写，你就算大写了，它也会转换为小写 。</li>
+        <li>有些类名，我们想动态生成出来。</li>
+    </ul>
+    <p>针对它们，新风格搞出来，它要求ms-class后面什么也不写，或只跟着整数，然后在属性值的左边写类名，中间写一个冒号，右边写表达式。</p>
+    <p>比如第一个多类名控制的需求，可以这样做：ms-class="aaa bbb ccc:prop"</p>
+    <p>第2需求，可以这样做：ms-class="AAA className : 1+ 2"。</p>
+    <p>第3需求，可以这样做：ms-class="aaa width{{w}} height{{h}}: ddd"， 当w=200, h=300, ddd为true时，它会为绑定的元素节点添加三个类名，aaa，width200，height300。</p>
+    <p>如果要用到多个ms-class呢，新风格可以这样做</p>
+    <pre class="brush:html;gutter:false;toolbar:false;">
+&lt;div 
+ ms-class="aaa bbb"
+ ms-class="ui-state-disabled:disabled"
+ ms-class-="ui-state-disabled:disabled"
+ ms-class-1="ui-datepicker-ok:test"&gt;{{date}}&lt;/div&gt;
+    </pre>
+    <p>此外，在新风格中，如果类名是通过插值表达式实现，比如上面的ms-class="aaa width{{w}} height{{h}}: ddd"，当w=200时，它会为元素添加width200，然后过段时间，w变成300时，它会去掉之前的width200,再添加width300，非常人性化。<a href="https://github.com/RubyLouvre/avalon/issues/93">详见这里</a></p>
+</fieldset>

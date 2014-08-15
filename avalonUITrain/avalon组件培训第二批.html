@@ -860,7 +860,20 @@ vm.<span class="str">mRules</span> = {
 vm.<span class="atn">getDatesOfN</span> = function() {
     avalon.log(avalon.vmodels.coupledatepickerN.getDates());
 }  
-</pre>                          
+</pre>        
+                    <div class="padBom10">
+                        <span>配置changeMonthAndYear的coupledatepicker O：</span>
+                        <div ms-widget="coupledatepicker" 
+                             data-coupledatepicker-change-month-and-year="true"
+                             class="inline">
+                        </div>
+                    </div>   
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"coupledatepicker"</span> 
+     <span class="atn">data-coupledatepicker-change-month-and-year</span><span class="pun">=</span><span class="atv">"true"</span>
+     <span class="atn">class</span><span class="pun">=</span><span class="atv">"inline"</span>&gt;
+&lt;/div&gt;
+</pre>                                   
                 </div>
                 <script>
                     require(["datepicker/avalon.coupledatepicker"],function(avalon) {
@@ -1082,7 +1095,6 @@ vm.<span class="str">disableDaterangepickerH</span> = function() {
 </pre>                  
                     <div class="padBom10">
                         <span>自定义了解析规则和格式化规则的daterangepicker I：</span>
-                        <!-- 解析规则无效????? -->
                         <div ms-widget="daterangepicker, daterangepickerI, $daterangepickerIOpts" class="inline"></div>
                     </div>
 <pre ms-skip>
@@ -1207,6 +1219,9 @@ vm.<span class="str">mRules</span> = {
 vm.<span class="str">$daterangepickerNOpts</span> = {
     <span class="atn">opts</span>: {
         <span class="atv">msgFormat</span>: function(from, to) {
+            if (!from || !to) {
+                return
+            }
             return '已选时间段：' + from.getRawValue() + ' 至 ' + to.getRawValue() + ' 共计' + (Math.floor( (to.getDate().getTime() - from.getDate().getTime())/1000/60/60/24 + 1 ) - 1) + '晚';
         },
         <span class="atv">datesDisplayFormat</span>: function(label, fromDate, toDate) {
@@ -1374,6 +1389,9 @@ vm.<span class="atn">getDatesOfS</span> = function() {
                             vm.$daterangepickerNOpts = {
                                 opts: {
                                     msgFormat: function(from, to) {
+                                        if (!from || !to) {
+                                            return
+                                        }
                                         return '已选时间段：' + from.getRawValue() + ' 至 ' + to.getRawValue() + ' 共计' + (Math.floor( (to.getDate().getTime() - from.getDate().getTime())/1000/60/60/24 + 1 ) - 1) + '晚';
                                     },
                                     datesDisplayFormat: function(label, fromDate, toDate) {

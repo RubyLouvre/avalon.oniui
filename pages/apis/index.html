@@ -23,7 +23,7 @@
     }
     var apisVM = avalon.define("apis", function(vm) {
         vm.bindings = ("ms-alt,ms-attr,ms-checked,ms-class,ms-css,ms-data,ms-disabled,ms-duplex,ms-href,ms-html,ms-if,ms-include,ms-on," +
-                "ms-readonly,ms-repeat,ms-selected,ms-src,ms-text,ms-title,ms-value,ms-visible").match(avalon.rword).sort()
+                "ms-readonly,ms-repeat,ms-selected,ms-src,ms-text,ms-title,ms-value,ms-visible,ms-widget").match(avalon.rword).sort()
         vm.statics = "mix, bind, unbind, ready, scan, define".match(avalon.rword).sort()
         vm.callbacks = ["data-callback"]
         vm.supportSVG = !!window.SVGElement

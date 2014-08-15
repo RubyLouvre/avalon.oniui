@@ -28,11 +28,11 @@
 <tr>
     <td>color</td><td> "#619FE8"</td><td> 效果的颜色</td></tr>
 <tr>
-    <td>width</td><td> 46</td><td> loading动画的宽度，圆形排列的外直径</td></tr>
+    <td>width</td><td> 32</td><td> loading动画的宽度，圆形排列的外直径</td></tr>
 <tr>
-    <td>height</td><td> 46</td><td> loading动画的高度，如果不设置，默认等于width</td></tr>
+    <td>height</td><td> 32</td><td> loading动画的高度，如果不设置，默认等于width</td></tr>
 <tr>
-    <td>widthInner</td><td> 40</td><td> loading动画是圆形排列的时候，这个参数指的是内直径</td></tr>
+    <td>widthInner</td><td> 28</td><td> loading动画是圆形排列的时候，这个参数指的是内直径</td></tr>
 <tr>
     <td>type</td><td> "ball"</td><td> 类型，默认是ball，球，可取spin,ticks</td></tr>
 <tr>
@@ -56,7 +56,7 @@
 <tr>
     <td>interval</td><td> 360</td><td> type=ticks，毫秒数，动画效果帧间隔</td></tr>
 <tr>
-    <td>angel</td><td>90</td><td> type=spin，转动的弧形的角度，单位是1度</td></tr>
+    <td>angel</td><td> 90</td><td> type=spin，转动的弧形的角度，单位是1度</td></tr>
 <tr>
     <td>opacity</td><td> 0.2</td><td> type=spin，背景圆弧的透明度</td></tr>
 <tr>
@@ -73,6 +73,20 @@
     <td>spokesHeight</td><td> 8</td><td> type=spokes，小长方形高度</td></tr>
 <tr>
     <td>interval</td><td> 125</td><td> type=spokes，效果动画间隔毫秒数</td></tr>
+<tr>
+    <td>width</td><td> 64</td><td> type=spinning-bubbles 宽度，小球的个数继承自type=ball</td></tr>
+<tr>
+    <td>widthInner</td><td> 54</td><td> type=spinning-bubbles 内宽</td></tr>
+<tr>
+    <td>height</td><td> 30</td><td> type=bubbles 高度，宽度继承type=spinning-bubbles</td></tr>
+<tr>
+    <td>widthInner</td><td>50</td><td> type=bubbles 内宽</td></tr>
+<tr>
+    <td>count</td><td> 3</td><td> type=bubbles 球的个数</td></tr>
+<tr>
+    <td>interval</td><td> 360</td><td> type=bubbles 动画ms数</td></tr>
+<tr>
+    <td>circleMargin</td><td> 0.5</td><td> type=bubbles bubbles效果下个小球的间距</td></tr>
 <tr>
     <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
@@ -95,6 +109,8 @@
 <li><a href="avalon.loading.ex.1.html">loading:spin</a></li>
 <li><a href="avalon.loading.ex.2.html">loading:ticks</a></li>
 <li><a href="avalon.loading.ex.3.html">loading:spokes</a></li>
+<li><a href="avalon.loading.ex.4.html">loading:spinning-bubbles</a></li>
+<li><a href="avalon.loading.ex.5.html">loading:bubbles-这个只有在高级非IE浏览器上才能work good</a></li>
 </ol>
 <!--ex list end-->
         </div>

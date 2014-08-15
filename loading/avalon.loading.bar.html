@@ -21,8 +21,13 @@
       <animate attributeName="r" repeatCount="indefinite" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" 
                ms-attr-values="'0;'+data[$index].r+';0;0'"
                ms-attr-dur="svgDur" 
-               ms-if="type=='bubbles'" 
+               ms-if="type=='spinning-bubbles'" 
                ms-attr-begin="data[$index].begin"/>
+      <animate attributeName="r" repeatCount="indefinite" keytimes="0;0.2;0.7;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline" 
+        ms-if="type=='bubbles'"
+        ms-attr-begin="data[$index].begin"  
+        ms-attr-dur="svgDur" 
+        ms-attr-values="'0;'+data[$index].r+';0;0'" />
   </circle>
 </svg>
 {{MS_WIDGET_TYPE}}

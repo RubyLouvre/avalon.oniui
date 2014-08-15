@@ -33,46 +33,6 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             }
         }
     })
-    // 计算每个loading效果单元的位置
-    // 如下，是一个圆形排列阵列
-    // ballline 为真，则返回一个横线排列
-    function ComputePoints(vmodel, isBallLine) {
-        var points = [],
-            i = 0,
-            angel = vmodel.angel,
-            opacities = [],
-            count = vmodel.count,
-            width = vmodel.width,
-            radiusOut = width / 2,
-            height = vmodel.height,
-            interval = vmodel.interval,
-            rate = 2 + vmodel.circleMargin,
-            radiusInner = (vmodel.width - vmodel.widthInner) / 2,
-            marginLeft = (width - radiusInner * ( 3 * count - 1)) / 2,
-            obj
-        while( i < count) {
-            angel = Math.PI * (0.5 - 2 * i / count)
-            if(isBallLine) {
-                obj = {
-                    "x": marginLeft + (i * rate * radiusInner),
-                    "y": height / 2 - radiusInner,
-                    "r": radiusInner
-                }
-                opacities.push(i ? 0 : 1)
-            } else {
-                obj = {
-                    "x": (radiusOut - radiusInner) * 　(Math.cos(angel) + 1),
-                    "y": (radiusInner - radiusOut) * (Math.sin(angel) - 1),
-                    "r": radiusInner,
-                    "begin": [interval * i / 1000, "s"].join("")
-                } 
-                opacities.push((1 - i / count).toFixed(2))
-            }
-            points.push(obj)
-            i = points.length
-        }
-        return [points, opacities]
-    }
     // svg绘制圆弧
     function circleValueList(r, bw) {
         var arr = [],
@@ -102,11 +62,24 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         "svgDur": "1s",
         "opacities": []
     }, function(vmodel) {
-       var list = ComputePoints(vmodel)
-       vmodel.svgDur = vmodel.interval * vmodel.count / 1000 + "s"
-       vmodel.data = list[0]
-       vmodel.opacities = list[1]
-    }, function(vmodel, ele, tagList) {
+        var type = vmodel.type,
+            count = vmodel.count,
+            width = vmodel.width,
+            radiusOut = width / 2,
+            interval = vmodel.interval,
+            radiusInner = (width - vmodel.widthInner) / 2
+        if(type === "ball") vmodel.svgDur = interval * count / 1000 + "s"
+        return function(loop) {
+            var angel = Math.PI * (0.5 - 2 * loop / count)
+            vmodel.data.push({
+                "x": (radiusOut - radiusInner) * 　(Math.cos(angel) + 1),
+                "y": (radiusInner - radiusOut) * (Math.sin(angel) - 1),
+                "r": radiusInner,
+                "begin": [interval * loop / 1000, "s"].join("")
+            }) 
+            vmodel.opacities.push((1 - loop / count).toFixed(2))
+        }
+    }, function(vmodel, ele, tagList, callback) {
         // only for ie
         if(!isIE && vmodel.type !== "ticks") return
         var tagList = Array.isArray(tagList) ? tagList : ["circle", "oval"]
@@ -121,10 +94,9 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                 item.style.display = "block"
             }
         })
-        clearInterval(vmodel.$timer)
         if(vmodel.type === "ticks") {
             index = 0;
-            vmodel.$timer = setInterval(function() {
+            return function() {
                 for(var i = 0; i < len; i++) {
                     var op = i > index ? vmodel.opacities[1] : vmodel.opacities[0]
                     if(eles[i]) {
@@ -135,20 +107,23 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                 if(index >= len) {
                     index = -1
                 }
-            }, vmodel.interval)
-        } else {
-            // share for type=ball and type=spokes
-            vmodel.$timer = setInterval(function() {
-                // 顺时针
-                index--
-                if (index < 0) {
-                    index = len - 1
-                }
-                for (var i = 0; i < len; i++) {
+            }
+        } 
+        // share for type=ball and type=spokes
+        return function() {
+            // 顺时针
+            index--
+            if (index < 0) {
+                index = len - 1
+            }
+            for (var i = 0; i < len; i++) {
+                if(callback) {
+                    callback(eles[i], i, index)
+                } else {
                     var op = vmodel.opacities[(i + index) % len] * 100 / 100
                     eles[i] && eles[i].css("opacity", op)
                 }
-            }, vmodel.interval)
+            }
         }
     })
     // 注册ticks，小球排列成一行
@@ -157,9 +132,19 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         height: 20,//@param type=ticks，高度
         interval: 360 //@param type=ticks，毫秒数，动画效果帧间隔
     }), function(vmodel) {
-        var list = ComputePoints(vmodel, true)
-        vmodel.data = list[0]
-        vmodel.opacities = list[1]
+        var count = vmodel.count,
+            rate = 2 + vmodel.circleMargin,
+            radiusInner = (vmodel.width - vmodel.widthInner) / 2,
+            marginLeft = (vmodel.width - radiusInner * ( 3 * count - 1)) / 2
+        return function(loop) {
+            vmodel.data.push({
+                "x": marginLeft + (loop * rate * radiusInner),
+                "y": vmodel.height / 2 - radiusInner,
+                "r": radiusInner,
+                "begin": [vmodel.interval * loop / 1000, "s"].join("")
+            })
+            vmodel.opacities.push(loop ? 0 : 1)
+        }
     }, _config["ball"].effect)
     templateCache["ticks"] = templateCache["ball"]
     // 注册spin，圆环转圈
@@ -194,32 +179,27 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     }, function(vmodel, ele) {
         // only for ie
         if(!isIE) return
-        clearInterval(vmodel.$timer)
         var angel = stepper = vmodel.angel
         if(vmodel.svgSupport) {
             var len = vmodel.$circleData.length, ele = avalon(ele.getElementsByTagName("path")[0])
             angel = stepper = Math.floor(vmodel.angel / 360 * len)
-            vmodel.$timer = setInterval(function() {
+            return function() {
                 // 生成圆弧的点阵是36个点，因此步长用1就足够了
                 stepper+=1;
-                // vmodel.$partsData.shift()
                 if(stepper >= len) stepper = 0
-                // vmodel.$partsData.push(" " + vmodel.$circleData[stepper].replace(/^M/g, "L").replace(/^[\s]+/g," "))
-                // vmodel.arc = vmodel.$partsData.join("").replace(/^[\s]*L/g, "M")
                 // 改用rotate属性
                 ele.attr("transform", "rotate(" + stepper * 10 + " " + vmodel.spinPoint + ")")
-            }, vmodel.interval)
-        } else {
-            vmodel.$timer = setInterval(function() {
-                stepper += 10
-                var startangle = stepper - angel
-                if (stepper > 360) {
-                    stepper = stepper - 360
-                    startangle = startangle - 360
-                }
-                vmodel.startangle = startangle
-                vmodel.endangle = stepper
-            }, vmodel.interval)
+            }
+        }
+        return function() {
+            stepper += 10
+            var startangle = stepper - angel
+            if (stepper > 360) {
+                stepper = stepper - 360
+                startangle = startangle - 360
+            }
+            vmodel.startangle = startangle
+            vmodel.endangle = stepper
         }
     })
     // 注册小长方形圆形排列效果
@@ -231,50 +211,78 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         interval: 125, //@param type=spokes，效果动画间隔毫秒数
         svgPath: "M14 0 H18 V8 H14 z",
         svgDur: "1s",
-        opacities:""
+        opacities: []
     },function(vmodel) {
-        var data = [], count = vmodel.count,w = vmodel.width, sw = vmodel.spokesWidth, sh = vmodel.spokesHeight, index = 0, interval = vmodel.interval, opacities = [];
+        var count = vmodel.count,w = vmodel.width, sw = vmodel.spokesWidth, sh = vmodel.spokesHeight, index = 0, interval = vmodel.interval;
         if(vmodel.svgSupport) {
-            var step = 360 / count
-            while(index < count) {
-                data.push({     
-                    "begin": [interval * index / 1000, "s"].join(""),
-                    "rotate": ["rotate(", index * step, " ", [w / 2, w / 2].join(" ") + ")"].join("")
-                })
-                opacities.push((1 - index / count).toFixed(2))
-                index = data.length
-            }
             vmodel.svgPath = ["M", (w - sw) / 2, " 0 H", (w + sw) / 2, " V", sh, " H", (w - sw) / 2, " z"].join("")
             vmodel.svgDur = interval * count / 1000 + "s"
-        } else {
-            var step = Math.PI * 2 / count, angel, halfSw = sw / 2
-            while (index < count) {
-                angel = Math.PI / 2 - step * index
-                var vsin = Math.sin(angel),
-                    vcos = Math.cos(angel),
-                    op = (1 - index / count).toFixed(2)
-                data.push({
-                    "spokesRotation": 360 * index / count,
-                    "spokesOpacity": op * 50,
-                    "spokesLeft":(w / 2 - sw) * (1 + vcos),
-                    "spokesTop": (w /2 - sw)  * (1 - vsin)
+            var step = 360 / count
+            return function(loop) {
+                vmodel.data.push({     
+                    "begin": [interval * loop / 1000, "s"].join(""),
+                    "rotate": ["rotate(", loop * step, " ", [w / 2, w / 2].join(" ") + ")"].join("")
                 })
-                opacities.push(op)
-                index = data.length
+                vmodel.opacities.push((1 - loop / count).toFixed(2))
             }
         }
-        vmodel.data = data
-        vmodel.opacities = opacities
+        var step = Math.PI * 2 / count, angel, halfSw = sw / 2
+        return function(loop) {
+            angel = Math.PI / 2 - step * loop
+            var vsin = Math.sin(angel),
+                vcos = Math.cos(angel),
+                op = (1 - loop / count).toFixed(2)
+            vmodel.data.push({
+                "spokesRotation": 360 * loop / count,
+                "spokesOpacity": op * 50,
+                "spokesLeft":(w / 2 - sw) * (1 + vcos),
+                "spokesTop": (w /2 - sw)  * (1 - vsin)
+            })
+            vmodel.opacities.push(op)
+        }
     }, function(vmodel, ele) {
-        _config["ball"].effect(vmodel, ele, ["path", "rect"])
+        return _config["ball"].effect(vmodel, ele, ["path", "rect"])
     })
     // 注册小球排列成一个圆，半径变化
-    addType("bubbles", avalon.mix({}, _config["ball"], {
-        width: 64,
-        widthInner: 54
-    }), _config["ball"].drawer, function(vmodel, ele) {
-
+    addType("spinning-bubbles", avalon.mix({}, _config["ball"], {
+        width: 64,//@param type=spinning-bubbles 宽度，小球的个数继承自type=ball
+        widthInner: 54,//@param type=spinning-bubbles 内宽
+        $zooms: []
+    }), function(vmodel) {
+        var drawer = _config["ball"].drawer(vmodel), count = vmodel.count
+        if(count >= 7) {
+            vmodel.$zooms = [0.2, 0.4, 0.8, 1, 0.8, 0.4, 0.2]
+        } else if(count >= 5) {
+            vmodel.$zooms = [0.2, 0.8, 1, 0.8, 0.2]
+        } else {
+            vmodel.$zooms = [1, 0.1, 0.1, 0.1]
+        }
+        while(vmodel.$zooms.length < vmodel.count) {
+            vmodel.$zooms.push(0.1)
+        }
+        return function(loop) {
+            drawer(loop)
+        }
+    }, function(vmodel, ele) {
+        var r = (vmodel.width - vmodel.widthInner) / 2, count = vmodel.count
+        if(vmodel.svgSupport) return _config["ball"].effect(vmodel, ele, ["circle", "oval"], function(ele, loop, step) {
+            ele.attr("r", r * vmodel.$zooms[(loop + step) % count])
+        })
+        return _config["ball"].effect(vmodel, ele, ["circle", "oval"], function(ele, loop, step) {
+            ele.css("zoom", vmodel.$zooms[(loop + step) % vmodel.count])
+        })
     })
+    // 注册bubbles, 高级浏览器
+    addType("bubbles", avalon.mix({}, _config["spinning-bubbles"], {
+        height: 30, //@param type=bubbles 高度，宽度继承type=spinning-bubbles
+        widthInner:50,//@param type=bubbles 内宽
+        count: 3,//@param type=bubbles 球的个数
+        interval: 360,//@param type=bubbles 动画ms数
+        "circleMargin": 0.5//@param type=bubbles bubbles效果下个小球的间距
+    }), function(vmodel) {
+        _config["spinning-bubbles"].drawer(vmodel)
+        return _config["ticks"].drawer(vmodel)
+    }, _config["spinning-bubbles"].effect)
     var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect
     if(!svgSupport &&  document.namespaces &&  !document.namespaces["v"]) {
         document.namespaces.add("v", "urn:schemas-microsoft-com:vml")
@@ -299,9 +307,9 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             vm.widgetElement = element
             vm.svgSupport = svgSupport
             vm.$loadingID = widgetCount + "" + _key
-            vm.data = ""
+            vm.data = []
             vm.$timer = ""
-            vm.$skipArray = ["widgetElement", "template"]
+            vm.$skipArray = ["widgetElement", "template", "opacities", "data"]
 
             var inited
             vm.$init = function() {
@@ -309,14 +317,20 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                     return
                 inited = true
                 var id,
-                        container = options.container || vmodel.widgetElement,
-                        elementParent = ((avalon.type(container) === "object" && container.nodeType === 1 && document.body.contains(container)) ? container : document.getElementById(container)) || document.body
-                var type = vmodel.type,
-                        radiusOut = vmodel.width / 2
-                list = vmodel.drawer(vmodel),
-                        html = (templateCache[type]||templateCache["ball"])[vmodel.svgSupport ? "svg" : "vml"]
+                    container = options.container || vmodel.widgetElement,
+                    elementParent = ((avalon.type(container) === "object" && container.nodeType === 1 && document.body.contains(container)) ? container : document.getElementById(container)) || document.body,
+                    type = vmodel.type,
+                    // radiusOut = vmodel.width / 2,
+                    html = (templateCache[type]||templateCache["ball"])[vmodel.svgSupport ? "svg" : "vml"],
+                    index = 0
                 vmodel.width = vmodel.width == false ? vmodel.height : vmodel.width
                 vmodel.height = vmodel.height == false ? vmodel.width : vmodel.height
+                // 计算绘图数据
+                var loop = 0, drawer = vmodel.drawer(vmodel)
+                while(loop < vmodel.count) {
+                    drawer(loop)
+                    loop++
+                }
                 elementParent.appendChild(avalon.parseHTML(vmodel.template.replace("{{MS_WIDGET_HTML}}", html).replace("{{MS_WIDGET_ID}}", vmodel.$loadingID)))
                 avalon.scan(elementParent, [vmodel].concat(vmodels))
                 if (typeof options.onInit === "function") {
@@ -329,7 +343,11 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                 if (vmodel.toggle) {
                     var ele = document.getElementById("ui-loading-" + vmodel.$loadingID)
                     if (ele) {
-                        vmodel.effect && vmodel.effect(vmodel, ele)
+                        var effect = vmodel.effect && vmodel.effect(vmodel, ele)
+                        if(effect) {
+                            clearInterval(vmodel.$timer)
+                            vmodel.$timer = setInterval(effect, vmodel.interval)
+                        }
                     }
                 }
             }

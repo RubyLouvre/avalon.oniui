@@ -15,7 +15,7 @@
         <div class="demo-show" ms-controller="demo">
             <fieldset style="position:relative;">
                 <legend>切换日历的禁用与否</legend>
-                <input ms-widget="datepicker, a" disabled="disabled" />
+                <input ms-widget="datepicker, a" ms-disabled="disabled" />
                 <p>说明：初始禁用输入域，也就禁用了日历的显示，可以通过点击旁边的“切换禁用”按钮，使得日历可用</p>
                 <button ms-click="toggleDisabled" style="position:absolute;right:0;top: 20px;">切换禁用</button>
             </fieldset>
@@ -36,8 +36,6 @@
                     var model = avalon.define("demo", function(vm) {
                         vm.disabled = true;
                         vm.toggleDisabled = function() {
-                            var datepicker = avalon.vmodels.a;
-                            datepicker.setDisabled(!model.disabled);
                             model.disabled = !model.disabled;
                         }
                         vm.date = "2014-06-02";
@@ -64,7 +62,7 @@
                     &lt;div class="demo-show" ms-controller="demo"&gt;
                         &lt;fieldset style="position:relative;"&gt;
                             &lt;legend&gt;切换日历的禁用与否&lt;/legend&gt;
-                            &lt;input ms-widget="datepicker, a" disabled="disabled" /&gt;
+                            &lt;input ms-widget="datepicker, a" ms-disabled="disabled" /&gt;
                             &lt;p&gt;说明：初始禁用输入域，也就禁用了日历的显示，可以通过点击旁边的“切换禁用”按钮，使得日历可用&lt;/p&gt;
                             &lt;button ms-click="toggleDisabled" style="position:absolute;right:0;top: 20px;"&gt;切换禁用&lt;/button&gt;
                         &lt;/fieldset&gt;
@@ -85,8 +83,6 @@
                                 var model = avalon.define("demo", function(vm) {
                                     vm.disabled = true;
                                     vm.toggleDisabled = function() {
-                                        var datepicker = avalon.vmodels.a;
-                                        datepicker.setDisabled(!model.disabled);
                                         model.disabled = !model.disabled;
                                     }
                                     vm.date = "2014-06-02";

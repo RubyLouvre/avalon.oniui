@@ -29,12 +29,6 @@
                 <p>说明：配置disabled为一个变量名，点击右边的"切换禁用"按钮来切换双日历框的禁用与否</p>
                 <button ms-click="toggleDisabled" style="position:absolute;right:0;top: 20px;">切换禁用</button>
             </fieldset>
-            <fieldset style="position:relative;">
-                <legend>双日历框，禁用双日历框</legend>
-                <div ms-widget="coupledatepicker, a"></div>
-                <p>说明：关于禁用双日历框，也可以通过widget绑定生成的VM中setDisabled方法来禁用组件</p>
-                <button ms-click="setDisabled" style="position:absolute;right:0;top: 20px;">禁用组件</button>
-            </fieldset>
             <script> 
                 require("datepicker/avalon.coupledatepicker", function(avalon) {
                     var model = avalon.define("demo", function(vm) {
@@ -43,10 +37,6 @@
                         vm.disabled = true;
                         vm.toggleDisabled = function() {
                             vm.disabled = !vm.disabled;
-                        }
-                        vm.setDisabled = function() {
-                            var coupledatepickerVM = avalon.vmodels.a;
-                            coupledatepickerVM.setDisabled(true);
                         }
                     })
                     avalon.scan();
@@ -80,12 +70,6 @@
                             &lt;p&gt;说明：配置disabled为一个变量名，点击右边的"切换禁用"按钮来切换双日历框的禁用与否&lt;/p&gt;
                             &lt;button ms-click="toggleDisabled" style="position:absolute;right:0;top: 20px;"&gt;切换禁用&lt;/button&gt;
                         &lt;/fieldset&gt;
-                        &lt;fieldset style="position:relative;"&gt;
-                            &lt;legend&gt;双日历框，禁用双日历框&lt;/legend&gt;
-                            &lt;div ms-widget="coupledatepicker, a"&gt;&lt;/div&gt;
-                            &lt;p&gt;说明：关于禁用双日历框，也可以通过widget绑定生成的VM中setDisabled方法来禁用组件&lt;/p&gt;
-                            &lt;button ms-click="setDisabled" style="position:absolute;right:0;top: 20px;"&gt;禁用组件&lt;/button&gt;
-                        &lt;/fieldset&gt;
                         &lt;script&gt; 
                             require("datepicker/avalon.coupledatepicker", function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
@@ -94,10 +78,6 @@
                                     vm.disabled = true;
                                     vm.toggleDisabled = function() {
                                         vm.disabled = !vm.disabled;
-                                    }
-                                    vm.setDisabled = function() {
-                                        var coupledatepickerVM = avalon.vmodels.a;
-                                        coupledatepickerVM.setDisabled(true);
                                     }
                                 })
                                 avalon.scan();

@@ -553,8 +553,8 @@ define(["../avalon.getModel",
                 data = [],
                 valueDate = vmodel.parseDate(_value),
                 exitLoop = false,
-                prev = minDate ? (year-minDate.getFullYear())*12+month-minDate.getMonth() : true,
-                next = maxDate ? (maxDate.getFullYear()-year)*12+maxDate.getMonth()-month : true;
+                prev = minDate ? (year-minDate.getFullYear())*12+month-minDate.getMonth() > 0: true,
+                next = maxDate ? (maxDate.getFullYear()-year)*12+maxDate.getMonth()-month > 0: true;
             _cellDate = cellDate;
             vmodel.prevMonth = prev;
             vmodel.nextMonth = next;

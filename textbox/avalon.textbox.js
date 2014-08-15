@@ -32,16 +32,16 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                     })
                 }
             }
-            msData = element.msData["ms-disabled"] || element.msData["ms-enabled"];
-            if (msData) {
-                vmSub = avalon.getModel(msData, vmodels);
-                if (vmSub) {
-                    vmSub[1].$watch(vmSub[0], function() {
-                        vm.elementDisabled = element.disabled;
-                        vm.toggle = element.value != "" ? false : true;
-                    })
-                }
-            }
+            // msData = element.msData["ms-disabled"] || element.msData["ms-enabled"];
+            // if (msData) {
+            //     vmSub = avalon.getModel(msData, vmodels);
+            //     if (vmSub) {
+            //         vmSub[1].$watch(vmSub[0], function() {
+            //             vm.elementDisabled = element.disabled;
+            //             vm.toggle = element.value != "" ? false : true;
+            //         })
+            //     }
+            // }
             // input获得焦点时且输入域值为空时隐藏占位符?
             vm.hidePlaceholder = function() {
                 vm.toggle = false;
@@ -101,7 +101,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                     sourceList.appendChild(suggest);
                 }
                 avalon.scan(sourceList, models);
-                avalon.scan(element, models);
+                // avalon.scan(element, models);
                 if(typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
                     options.onInit.call(element, vmodel, options, vmodels)

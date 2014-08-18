@@ -29,7 +29,6 @@ define(['avalon',
             var duplexModel
             if (duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
                 opt.value = duplexModel[1][duplexModel[0]]
-
             } else if (!hasBuiltinTemplate) {
                 if (!Array.isArray(opt.value)) {
                     opt.value = [opt.value || '']
@@ -48,6 +47,12 @@ define(['avalon',
                 opt.value = opt.value[0] || ""
             }
 
+            //处理data-duplex-changed参数
+            var changedCallbackName = $element.attr('data-duplex-changed'),
+                changedCallbackModel;    //回调函数
+            if (changedCallbackName && (changedCallbackModel = avalon.getModel(changedCallbackName, vmodels))) {
+                opt.changedCallback = changedCallbackModel[1][changedCallbackModel[0]]
+            }
             opt.duplexName = duplexName
         }
 
@@ -126,7 +131,7 @@ define(['avalon',
                     }
                 }
                 //设置label值
-                setLabel(vmodel.value);
+                setLabelTitle(vmodel.value);
 
                 //如果原来的select没有子节点，那么为它添加option与optgroup
                 if (!hasBuiltinTemplate) {
@@ -159,6 +164,38 @@ define(['avalon',
                         })
                     }
                 }
+
+                //同步disabled或者enabled
+                var disabledAttr = element.msData['ms-disabled'],
+                    disabledModel,
+                    enabledAttr = element.msData['ms-enabled'],
+                    enabledModel;
+
+                if(disabledAttr && (disabledModel = avalon.getModel(disabledAttr, vmodels))) {
+                    disabledModel[1].$watch(disabledModel[0], function(n) {
+                        vmodel.enable = !n;
+                    });
+                    vmodel.enable = !disabledModel[1][disabledModel[0]];
+                }
+
+                if(enabledAttr && (enabledModel = avalon.getModel(enabledAttr, vmodels))) {
+                    enabledModel[1].$watch(enabledModel[0], function(n) {
+                        vmodel.enable = n;
+                    })
+                    vmodel.enable = enabledModel[1][enabledModel[0]];
+                }
+
+                //同步readOnly
+                var readOnlyAttr = vmodel.readonlyAttr,
+                    readOnlyModel;
+
+                if(readOnlyAttr && (readOnlyModel = avalon.getModel(readOnlyAttr, vmodels))) {
+                    readOnlyModel[1].$watch(readOnlyModel[0], function(n) {
+                        vmodel.readOnly = n;
+                    });
+                    vmodel.readOnly = readOnlyModel[1][readOnlyModel[0]];
+                }
+
             }
 
             vm.$remove = function() {
@@ -190,7 +227,9 @@ define(['avalon',
                     }
                     vmodel.currentOption = option;
                     vmodel.toggle = false;
-                    vmodel.onSelect.call(this, event, listNode)
+                    if(avalon.type(vmodel.onSelect) === 'function') {
+                        vmodel.onSelect.call(this, event, vmodel.value);
+                    }
                 }
             };
 
@@ -266,7 +305,7 @@ define(['avalon',
                     return;
                 }
 
-                if (!b) {
+                if (!b && avalon.type(vmodel.onHide) === 'function') {
                     vmodel.onHide.call(this, listNode);
                 } else {
                     var firstItemIndex, selectedItemIndex, value = vmodel.value;
@@ -294,7 +333,9 @@ define(['avalon',
                     }
                     vmodel._position();
                     titleNode && titleNode.focus();
-                    vmodel.onShow.call(this, listNode);
+                    if(avalon.type(vmodel.onShow) === 'function') {
+                        vmodel.onShow.call(this, listNode);
+                    }
                 }
             };
 
@@ -401,15 +442,32 @@ define(['avalon',
             });
         }
 
-        vmodel.$watch('value', function(n) {
-            setLabel(n);
+        vmodel.$watch('value', function(n, o) {
+            setLabelTitle(n);
+            //如果有onChange回调，则执行该回调
+            if(avalon.type(vmodel.onChange) === 'function') {
+                vmodel.onChange.call(element, n, o);
+            }
+        });
+
+        vmodel.$watch('enable', function(n) {
+            if(!n) {
+                vmodel.toggle = false;
+            }
+        });
+
+        vmodel.$watch('readOnly', function(n) {
+            if(!!n) {
+                vmodel.toggle = false;
+            }
         });
 
         function createListNode() {
             return avalon.parseHTML(listTemplate);
         }
 
-        function setLabel(n) {
+        //设置label以及title
+        function setLabelTitle(n) {
             var option = vmodel.data.$model.filter(function(item) {
                 return item.value === n;
             });
@@ -420,6 +478,7 @@ define(['avalon',
                 avalon.log('[log]','avalon.dropdown','设置label出错');
             } else {
                 vmodel.label = option.label;
+                vmodel.title = option.title;
             }
         }
 
@@ -434,6 +493,7 @@ define(['avalon',
         height: 200, //下拉列表的高度
         enable: true, //组件是否可用
         readOnly: false, //组件是否只读
+        readonlyAttr: null, //readonly依赖的属性
         currentOption: null,  //组件当前的选项
         data: [], //下拉列表显示的数据模型
         textFiled: 'text', //模型数据项中对应显示text的字段,可以传function，根据数据源对text值进行格式化
@@ -442,15 +502,17 @@ define(['avalon',
         label: null, //设置组件的提示文案，可以是一个字符串，也可以是一个对象
         multiple: false, //是否为多选模式
         listClass: '',   //列表添加自定义className来控制样式
+        title: '',
         titleClass: '',   //title添加自定义className来控制样式
         activeIndex: NaN,
         size: 1,
         menuNode: {},
         dropdownNode: {},
         position: true, //是否自动定位下拉列表
-        onSelect: avalon.noop, //多选模式下显示的条数
-        onShow: avalon.noop,    //下拉框展示的回调函数
-        onHide: avalon.noop,    //下拉框隐藏的回调函数
+        onSelect: null,  //点击选项时的回调
+        onShow: null,    //下拉框展示的回调函数
+        onHide: null,    //下拉框隐藏的回调函数
+        onChange: null,  //value改变时的回调函数
         getTemplate: function(str, options) {
             return str
         },
@@ -493,7 +555,7 @@ define(['avalon',
                     label: el.label,
                     value: el.value,
                     title: el.title,
-                    enable: ensureBool(el.enable, true),
+                    enable: ensureBool(parent && parent.enable, true) && ensureBool(el.enable, true),
                     group: false,
                     parent: parent,
                     data: el            //只有在dataModel的模式下有效
@@ -557,7 +619,7 @@ define(['avalon',
                         label: el.text.trim(), //IE9-10有BUG，没有进行trim操作
                         title: el.title.trim(),
                         value: parseData(avalon(el).val()),
-                        enable: !el.disabled,
+                        enable: ensureBool(parent && parent.enable, true) && !el.disabled,
                         group: false,
                         parent: parent
                     })

@@ -19,7 +19,7 @@
                 return "ms-class"
 
         }
-      
+
         return id
     }
     var apisVM = avalon.define("apis", function(vm) {
@@ -59,13 +59,13 @@
             "avalon.filters.lowercase(str)": "全部小写",
             "avalon.filters.truncate(str, length, truncation)": "length，新字符串长度，truncation，新字符串的结尾的字段",
             "avalon.filters.camelize(str)": "驼峰化",
-            "avalon.filters.escape(str)": "将字符串经过 html 转义得到适合在页面中显示的内容, 例如替换 < 为 &lt;",
+            "avalon.filters.escape(str)": "将字符串经过 html 转义得到适合在页面中显示的内容, 例如替换 &lt; 为 &amplt;",
             "avalon.filters.currency(str,symbol)": "货币处理，默认第2个参数为￥",
             "avalon.filters.number(str, decimals, dec_point, thousands_sep)": "数字格式化<br/>" +
-                    "str 必需 要格式化的数字<br/>。" +
-                    "decimals	可选，规定多少个小数位<br/>。" +
-                    "dec_point	可选，规定用作小数点的字符串（默认为 . ）<br/>。" +
-                    "thousands_sep 可选，规定用作千位分隔符的字符串（默认为','）。如果设置了该参数，那么所有其他参数都是必需的<br/>。"
+                    "str 必需 要格式化的数字<br/>" +
+                    "decimals	可选，规定多少个小数位<br/>" +
+                    "dec_point	可选，规定用作小数点的字符串（默认为 . ）<br/>" +
+                    "thousands_sep 可选，规定用作千位分隔符的字符串（默认为','）。如果设置了该参数，那么所有其他参数都是必需的"
 
         }
         vm.callbacks = ["data-callback"]
@@ -193,14 +193,18 @@
                         <li ms-repeat="bindings" ms-click="scrollToView(el)">{{el}}</li>
                     </ul>
                 </li>
+
+                <li>
+                    <div class="title">各种回调</div>
+                    <ul class="child-nav">
+                        <li ms-repeat="callbacks" ms-click="scrollToView(el)">{{el}}</li>
+                    </ul>
+                </li>
                 <li>
                     <div class="title">静态方法</div>
                 </li>
                 <li>
-                    <div class="title">核心方法</div>
-                    <ul class="child-nav">
-                        <li ms-repeat="callbacks" ms-click="scrollToView(el)">{{el}}</li>
-                    </ul>
+                    <div class="title">原型方法</div>
                 </li>
             </ul>
         </td>
@@ -215,13 +219,16 @@
             <div ms-repeat="bindingIncludes" ms-include-src="pages/apis/bindings/{{el}}.html"  data-include-rendered="highlight">
 
             </div>
-            <div ms-include-src="'pages/apis/statics/statics.html'"  data-include-rendered="highlight">
 
-            </div>
             <div ms-repeat="callbacks" ms-include-src="pages/apis/callbacks/{{el}}.html"  data-include-rendered="highlight">
 
             </div>
+            <div ms-include-src="'pages/apis/statics/statics.html'"  data-include-rendered="highlight">
 
+            </div>
+            <div ms-include-src="'pages/apis/prototypes/prototypes.html'"  data-include-rendered="highlight">
+
+            </div>
         </td>
     </tr>
 </table>

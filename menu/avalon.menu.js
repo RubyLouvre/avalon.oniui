@@ -233,11 +233,11 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
                 if(!arr.length) return
                 var sub = vmodel._subMenus[vmodel.active]
                 sub && sub.setActiveList(arr.slice(1))
-                if(vmodel._depth === 1) {
-                    vmodel._onSelect({
-                        srcElement: vmodel._getNodeByData(arr)
-                    }, vmodel.getActiveList())
-                }
+                // if(vmodel._depth === 1) {
+                //     vmodel._onSelect({
+                //         srcElement: vmodel._getNodeByData(arr)
+                //     }, vmodel.getActiveList())
+                // }
             }
 
             // 是否有子menu
@@ -288,7 +288,7 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
                 })
             }
             vm._restMenu = function(model) {
-                model.resetMenu(model)
+                model.menuResetter(model)
                 model._oldActive = model.active
             }
 
@@ -313,9 +313,9 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
         dir: "h", //@param 方向，取值v,h，默认h是水平方向， v是竖直方向
         //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
-        resetMenu: function(vmodel) {
+        menuResetter: function(vmodel) {
             vmodel.active = false
-        }, //@optMethod resetMenu(vmodel) 重置menu的配置方法，默认是重置为一个都不选中
+        }, //@optMethod menuResetter(vmodel) 选中某个menu项之后调用的这个restter，默认是把menu重置为不选中
         getTemplate: function(tmpl, opts, tplName) {
             return tmpl
         },//@optMethod getTemplate(tpl, opts, tplName) 定制修改模板接口

@@ -9,7 +9,7 @@
      tabindex="0">
     <div class="ui-dropdown-source">
         <div class="ui-dropdown-input"
-             ms-title="label">{{label}}</div>
+             ms-title="title">{{label|sanitize|html}}</div>
         <div class="ui-dropdown-icon-wrap">
             <i class="ui-dropdown-icon ui-icon ui-icon-angle-up"
                ms-if="toggle">&#xf106;</i>

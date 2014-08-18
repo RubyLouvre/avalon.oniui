@@ -38,7 +38,7 @@
         ms-css-width="width+'px'" 
         ms-css-opacity="opacity" 
         ms-attr-strokeweight="width / 2 - widthInner / 2+'px'" 
-        ms-repeat="[1]" 
+        ms-repeat="data" 
   style="position:absolute;z-index:2;left:0;top:0;"></v:oval>
 <v:arc stroked="true" filled="F" 
     ms-attr-strokecolor="color" 
@@ -48,7 +48,7 @@
     ms-attr-endangle="endangle" 
     ms-css-height="width+'px'" 
     ms-css-width="width+'px'" 
-    ms-repeat="[1]">
+    ms-repeat="data">
   </v:arc>
 {{MS_WIDGET_DIVIDER}}
 <svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -69,6 +69,34 @@
     ms-attr-stroke="color" 
     ms-css-opacity="opacity" 
     fill="none"></path>
+  </svg>
+{{MS_WIDGET_TYPE}}
+{{MS_WIDGET_SPINNING_SPIN}}
+<v:arc stroked="true" filled="F" 
+    ms-attr-strokecolor="color" 
+    ms-attr-strokeweight="radius+'px'" 
+    style="position:absolute;z-index:3;text-indent:-1000px;overflow:hidden;left:0;top:0;" 
+    ms-attr-startangle="item.startangle" 
+    ms-attr-endangle="item.endangle" 
+    ms-css-opacity="opacities[$index]" 
+    ms-css-height="width+'px'" 
+    ms-css-width="width+'px'" 
+    ms-repeat-item="data">
+  </v:arc>
+{{MS_WIDGET_DIVIDER}}
+<svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path 
+    ms-attr-d="arc" 
+    ms-attr-stroke="color" 
+    ms-attr-stroke-width="radius" 
+    ms-attr-transform="item.rotate" 
+    ms-repeat-item="data" 
+    ms-css-opacity="opacities[$index]" 
+    stroke-linejoin="round" fill="none">
+      <animate ms-if="0" attributeName="opacity" from="1" to=".2" repeatCount="indefinite" 
+               ms-attr-dur="svgDur" 
+               ms-attr-begin="item.begin"/>
+    </path>
   </svg>
 {{MS_WIDGET_TYPE}}
 {{MS_WIDGET_SPOKES}}

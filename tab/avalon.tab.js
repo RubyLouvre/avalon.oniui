@@ -28,7 +28,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         })
     }
 
-    function _getData(par, type) {
+    function _getData(par, type, target) {
         var res = []
         for (var i = 0; el = par && par.children[i++]; ) {
             if(el.tagName.toLowerCase() != type) continue
@@ -39,6 +39,8 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                 } : {
                     title: el.innerHTML,
                     removable: opt.removable,
+                    linkOnly: opt.linkOnly,
+                    target: opt.target || target || "_self",
                     disabled: opt.disabled == void 0 ? false : opt.disabled
                 }
             var href = opt.href || el.getAttribute("href")
@@ -61,7 +63,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         // 扫描获取tabs
         if(options.tabs == void 0) {
             tabsParent = options.tabContainerGetter(element)
-            tabs = _getData(tabsParent, "li")
+            tabs = _getData(tabsParent, "li", vm.target)
             // 销毁dom
             if(options.distroyDom) element.removeChild(tabsParent)
         }
@@ -96,7 +98,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                 vm.tabpanels = options.tabpanels ? vm.tabpanels : tabpanels
                 vm.active = vm.active >= vm.tabs.length && vm.tabs.length - 1 || vm.active < 0 && 0 || parseInt(vm.active) >> 0
 
-                avalon.nextTick(function() {
+                // avalon.nextTick(function() {
                     avalon(element).addClass("ui-tab ui-widget ui-widget-content" + (vm.event == "click" ? " ui-tab-click" : "") + (vm.dir == "v" ? " ui-tab-vertical" : "") + (vm.dir != "v" && vm.uiSize == "small" ? " ui-tab-small" : ""))
                     // tab列表
                     var tabFrag = _getTemplate(vm._getTemplate(0, vm), vm)
@@ -114,7 +116,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                         //vmodels是不包括vmodel的 
                         options.onInit.call(element, vmodel, options, vmodels)
                     }
-                })
+                // })
             }
 
             vm._clearTimeout = function() {
@@ -124,8 +126,8 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
             // 选中tab
             vm.activate = function(event, index, fix) {
                 // 猥琐的解决在ie里面报找不到成员的bug
-                !fix && event.preventDefault()
-                if (vm.tabs[index].disabled === true) {
+                // !fix && event.preventDefault()
+                if (vm.tabs[index].disabled === true || vm.tabs[index].linkOnly) {
                     return
                 }
                 var el = this
@@ -134,17 +136,19 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                     // 去除激活状态
                     if(vm.collapsible) {
                         vm.active = NaN
+                        event.preventDefault()
                     // 调用点击激活状态tab回调
                     } else {
-                        options.onClickActive.call(el, event, vmodel)
+                        if(!options.onClickActive.call(el, event, vmodel)) event.preventDefault()
                     }
                     return
                 }
+                if(vm.event === "click") event.preventDefault()
                 if (vm.active !== index) {
-                    avalon.nextTick(function() {
+                    // avalon.nextTick(function() {
                         vm.active = index
                         options.onActivate.call(el, event, vmodel)
-                    })
+                    // })
                 }
             }
             // 延迟切换效果
@@ -312,6 +316,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
     }
 
     widget.defaults = {
+        target: "_blank",//@param tab item链接打开的方式，可以使_blank,_self,_parent
         toggle: true, //@param 组件是否显示，可以通过设置为false来隐藏组件
         autoSwitch: false,      //@param 是否自动切换，默认否，如果需要设置自动切换，请传递整数，例如200，即200ms
         active: 0,              //@param 默认选中的tab，默认第一个tab，可以通过动态设置该参数的值来切换tab，并可通过vmodel.tabs.length来判断active是否越界
@@ -328,7 +333,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         distroyDom: true,       //@param  扫描dom获取数据，是否销毁dom
         cutEnd: "...",          //@param  tab title截取字符后，连接的字符，默认为省略号
         forceCut: false,        //@param  强制截断，因为竖直方向默认是不截取的，因此添加一个强制截断，使得在纵向排列的时候title也可以被截断
-        //tabs:undefined,              //@param  <pre>[/n{/ntitle:"xx",/n disabled:boolen,/n removable:boolen/n}/n]</pre>，单个tabs元素的removable针对该元素的优先级会高于组件的removable设置
+        //tabs:undefined,              //@param  <pre>[/n{/ntitle:"xx",/n linkOnly: false,/n disabled:boolen,/n target: "_self",/n removable:boolen/n}/n]</pre>，单个tabs元素的removable针对该元素的优先级会高于组件的removable设置，linkOnly表示这只是一个链接，不响应active事件，也不阻止默认事件，target对应的是链接打开方式_self默认，可以使_blank,_parent，tab里的target配置优先级高于vm的target配置，应用于某个tab上，可以在元素上 data-target="xxx" 这样配置
         //tabpanels:undefined,         //@param  <pre>[/n{/ncontent:content or url,/n contentType: "content" or "ajax"/n}/n]</pre> 单个panel的contentType配置优先级高于组件的contentType
         //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,

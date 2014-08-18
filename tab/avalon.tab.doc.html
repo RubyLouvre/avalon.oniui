@@ -23,6 +23,8 @@
                     </tr>
                     <!--auto doc start-->
 <tr>
+    <td>target</td><td> "_blank"</td><td> tab item链接打开的方式，可以使_blank,_self,_parent</td></tr>
+<tr>
     <td>toggle</td><td> true</td><td> 组件是否显示，可以通过设置为false来隐藏组件</td></tr>
 <tr>
     <td>autoSwitch</td><td> false</td><td> 是否自动切换，默认否，如果需要设置自动切换，请传递整数，例如200，即200ms</td></tr>
@@ -55,7 +57,7 @@
 <tr>
     <td>forceCut</td><td> false</td><td>  强制截断，因为竖直方向默认是不截取的，因此添加一个强制截断，使得在纵向排列的时候title也可以被截断</td></tr>
 <tr>
-    <td>tabs</td><td>undefined</td><td>  <pre>[<br>{<br>title:"xx",<br> disabled:boolen,<br> removable:boolen<br>}<br>]</pre>，单个tabs元素的removable针对该元素的优先级会高于组件的removable设置</td></tr>
+    <td>tabs</td><td>undefined</td><td>  <pre>[<br>{<br>title:"xx",<br> linkOnly: false,<br> disabled:boolen,<br> target: "_self",<br> removable:boolen<br>}<br>]</pre>，单个tabs元素的removable针对该元素的优先级会高于组件的removable设置，linkOnly表示这只是一个链接，不响应active事件，也不阻止默认事件，target对应的是链接打开方式_self默认，可以使_blank,_parent，tab里的target配置优先级高于vm的target配置，应用于某个tab上，可以在元素上 data-target="xxx" 这样配置</td></tr>
 <tr>
     <td>tabpanels</td><td>undefined</td><td>  <pre>[<br>{<br>content:content or url,<br> contentType: "content" or "ajax"<br>}<br>]</pre> 单个panel的contentType配置优先级高于组件的contentType</td></tr>
 <tr>

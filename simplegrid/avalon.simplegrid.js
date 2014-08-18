@@ -473,6 +473,7 @@ define(["avalon",
         theadRenderedCallback: function(tbody, vmodel, options, vmodels) {
         },
         tbodyRenderedCallback: function(tbody, vmodel, options, vmodels) {
+           window.scrollTo(0, avalon(vmodel.widgetElement).offset().top)
         },
         renderCell: function(val, key, row) {
             return val

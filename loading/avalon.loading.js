@@ -21,11 +21,11 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     avalon.each(parts, function(i, item) {
         var type,
                 item = item.trim().replace(/^\{\{MS_WIDGET_[^\}]+\}\}/g, function(mat) {
-            type = mat.replace(/\{\{MS_WIDGET_|\}\}/g, "")
+            type = mat.replace(/\{\{MS_WIDGET_|\}\}/g, "").replace(/_/g, "-").toLowerCase()
             return ""
         })
         if (type) {
-            type = type.toLowerCase()
+            type = type
             item = item.split("{{MS_WIDGET_DIVIDER}}")
             templateCache[type] = {
                 "svg": item[1],
@@ -34,9 +34,9 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         }
     })
     // svg绘制圆弧
-    function circleValueList(r, bw) {
+    function circleValueList(r, bw, ct) {
         var arr = [],
-                count = 36,
+                count = ct || 36,
                 r = r - bw,
                 arc,
                 x,
@@ -77,11 +77,11 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                 "r": radiusInner,
                 "begin": [interval * loop / 1000, "s"].join("")
             }) 
-            vmodel.opacities.push((1 - loop / count).toFixed(2))
+            vmodel.opacities.push((loop / count).toFixed(2))
         }
     }, function(vmodel, ele, tagList, callback) {
         // only for ie
-        if(!isIE && vmodel.type !== "ticks") return
+        if(!isIE && (vmodel.type !== "ticks") && vmodel.type != "spinning-spin") return
         var tagList = Array.isArray(tagList) ? tagList : ["circle", "oval"]
             , tag = vmodel.svgSupport ? tagList[0] : tagList[1] 
             , ele = ele.getElementsByTagName(tag)
@@ -162,7 +162,8 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         $circleData: "",
         $partsData: "",
         spinPoint: "23 23",
-        svgDur: "1s"
+        svgDur: "1s",
+        data: [1]
     }, function(vmodel) {
         vmodel.radius = vmodel.width / 2 - vmodel.widthInner / 2
         if(vmodel.svgSupport) {
@@ -223,7 +224,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                     "begin": [interval * loop / 1000, "s"].join(""),
                     "rotate": ["rotate(", loop * step, " ", [w / 2, w / 2].join(" ") + ")"].join("")
                 })
-                vmodel.opacities.push((1 - loop / count).toFixed(2))
+                vmodel.opacities.push((loop / count).toFixed(2))
             }
         }
         var step = Math.PI * 2 / count, angel, halfSw = sw / 2
@@ -231,7 +232,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             angel = Math.PI / 2 - step * loop
             var vsin = Math.sin(angel),
                 vcos = Math.cos(angel),
-                op = (1 - loop / count).toFixed(2)
+                op = (loop / count).toFixed(2)
             vmodel.data.push({
                 "spokesRotation": 360 * loop / count,
                 "spokesOpacity": op * 50,
@@ -283,6 +284,46 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         _config["spinning-bubbles"].drawer(vmodel)
         return _config["ticks"].drawer(vmodel)
     }, _config["spinning-bubbles"].effect)
+    // 注册spinning-spin
+    addType("spinning-spin", avalon.mix({}, _config["spin"], {
+        opacities: [],
+        data: [],
+        radius: 1,
+        interval: _config["ball"].interval, //@param type=spinning-spin 帧间隔，继承ball
+        count: 8, //@param type=spinning-spin 小圆弧个数，一般请保证 360 / 8 % padding = 0
+        width: 46, //@param type=spinning-spin 圆外直径
+        widthInner: 38, //@param type=spinning-spin 圆内直径
+        padding: 5//@param type=spinning-spin 小圆弧间间隔的角度数
+    }), function(vmodel) {
+        var ct = 360 / vmodel.padding * 3, r = vmodel.width / 2, dt = circleValueList(r, r - vmodel.widthInner / 2, ct), count = vmodel.count, interval = vmodel.interval, step = 360 / count
+        vmodel.radius = vmodel.width / 2 - vmodel.widthInner / 2
+        function writeOp(loop) {
+            var cp = (loop / count).toFixed(2)
+            cp = cp > 0.6 ? cp : 0.2
+            vmodel.opacities.push(cp)
+        }
+        if(vmodel.svgSupport) {
+            vmodel.svgDur = interval * count / 1000 + "s"
+            vmodel.arc = dt.slice(0, Math.floor((1 / count - vmodel.padding / 360 ) * dt.length)).join("")
+            return function(loop) {
+                vmodel.data.push({
+                    rotate: "rotate(" + step * loop + " " + r + " " + r + ")",
+                    begin: [interval * loop / 1000, "s"].join("")
+                })
+                writeOp(loop)
+            }
+        }
+        return function(loop) {
+            vmodel.data.push({
+                startangle: loop / count * 360,
+                endangle: (loop + 1) / count * 360 - 10
+            })
+            writeOp(loop)
+        }
+
+    }, function(vmodel, ele) {
+        return _config["ball"].effect(vmodel, ele, ["path", "arc"])
+    })
     var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect
     if(!svgSupport &&  document.namespaces &&  !document.namespaces["v"]) {
         document.namespaces.add("v", "urn:schemas-microsoft-com:vml")
@@ -303,11 +344,11 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         var vmodel = avalon.define(data.loadingId, function(vm) {
             vm.height = ""
             vm.width = ""
+            vm.data = []
             avalon.mix(vm, options)
             vm.widgetElement = element
             vm.svgSupport = svgSupport
             vm.$loadingID = widgetCount + "" + _key
-            vm.data = []
             vm.$timer = ""
             vm.$skipArray = ["widgetElement", "template", "opacities", "data"]
 
@@ -327,7 +368,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                 vmodel.height = vmodel.height == false ? vmodel.width : vmodel.height
                 // 计算绘图数据
                 var loop = 0, drawer = vmodel.drawer(vmodel)
-                while(loop < vmodel.count) {
+                while(loop < vmodel.count && drawer) {
                     drawer(loop)
                     loop++
                 }

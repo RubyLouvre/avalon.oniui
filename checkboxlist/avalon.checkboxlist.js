@@ -52,9 +52,7 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
             } else {
                 element.value = duplexVM[1][duplexVM[0]].join(",");
             }
-            avalon.nextTick(function() {
-                vmodel.all = (newValue == vmodel.data.length);
-            });
+            vmodel.all = (newValue == vmodel.data.length);
         })
         if (options.fetch) {
             /*

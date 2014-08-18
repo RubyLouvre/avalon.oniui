@@ -662,7 +662,7 @@ vm.<span class="str">getAll</span> = function() {
 vm.<span class="str">selectCallback</span> = function(data, status, element) {
     avalon.log("selectCallback argumnets is: ");
     avalon.log(arguments);
-    alert("选中了："+arguments[2].value);
+    alert("点击了："+arguments[2].value+"当前状态是： "+(status ? "选中状态" : "未选中状态"));
 }    
 </pre>                   
                     <div class="padBom10">
@@ -716,7 +716,7 @@ vm.<span class="str">getOptions</span> = function(render) {
                             vm.selectCallback = function(data, status, element) {
                                 avalon.log("selectCallback argumnets is: ");
                                 avalon.log(arguments);
-                                alert("选中了："+arguments[2].value);
+                                alert("点击了："+arguments[2].value+"当前状态是： "+(status ? "选中状态" : "未选中状态"));
                             }
                             vm.options = []
                             vm.getOptions = function(render) {

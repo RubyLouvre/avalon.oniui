@@ -139,6 +139,7 @@ define(["../avalon.getModel",
                 listWidth: 60,
                 height: 160,
                 position: false,
+                listClass: "ui-datepicker-dropdown",
                 onSelect: function(e) {
                     e.stopPropagation();
                 }
@@ -148,6 +149,7 @@ define(["../avalon.getModel",
                 height: 160,
                 listWidth: 40,
                 position: false,
+                listClass: "ui-datepicker-dropdown",
                 onSelect: function(e) {
                     e.stopPropagation();
                 }
@@ -241,7 +243,7 @@ define(["../avalon.getModel",
                 calendar = avalon.parseHTML(calendarTemplate).firstChild;
                 elementPar.insertBefore(calendar, element);
                 elementPar.insertBefore(element, calendar);
-                
+                avalon(element).attr("ms-css-width", "width")
                 if(element.tagName === "INPUT" && vmodel.type!=="range") {
                     var div = document.createElement("div");
                     div.className = "ui-datepicker-input-wrapper";
@@ -250,8 +252,12 @@ define(["../avalon.getModel",
                     div.setAttribute("ms-hover", "ui-state-hover");
                     elementPar.insertBefore(div,element);
                     div.appendChild(element);
-                    var tip = avalon.parseHTML("<div class='ui-datepicker-tip'>{{tip}}<i class='ui-icon ui-icon-calendar-o'>&#xf133;</i></div>");
-                    div.appendChild(tip);
+                    if (vmodel.showTip) {
+                        var tip = avalon.parseHTML("<div class='ui-datepicker-tip'>{{tip}}<i class='ui-icon ui-icon-calendar-o'>&#xf133;</i></div>");
+                        div.appendChild(tip);
+                    } else {
+                        element.style.paddingRight = "0px"
+                    }
                     div.appendChild(calendar);
                 }
                 if (~vmodel.zIndex) {
@@ -645,6 +651,8 @@ define(["../avalon.getModel",
     widget.defaults = {
         dayNames : ['日', '一', '二', '三', '四', '五', '六'],
         startDay: 1,
+        width: 90,
+        showTip: true,
         changeMonthAndYear: false,
         showOtherMonths: false,
         numberOfMonths: 1,

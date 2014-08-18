@@ -453,6 +453,7 @@ define(["avalon",
         theadHeight: 35,
         noResultHeight: 100,
         tbodyScrollHeight: "auto",
+        rowClass: "even",
         showScrollbar: "always", //滚动条什么时候显示，默认一直，可设置为never，scrolling
         tbodyScrollTop: 0,
         tbodyHeight: "auto",

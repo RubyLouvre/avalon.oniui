@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>avalon ui</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="menu、doublelist、accordion组件使用">
+    <meta name="keywords" content="menu、doublelist、accordion">
+    <meta name="author" content="田莉莉">
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="doc.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei UI","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
+        }
+        select {
+            width: auto;
+            border-radius: 0;
+            padding: 0;
+            line-height: 24px;
+        }
+        .col1{
+            background: orange!important;
+        }
+        .col2{
+            background: orangered!important;
+        }
+        .col3{
+            background:violet!important;
+        }
+
+        .warning {
+            text-decoration: underline;
+            font-weight: bold;
+            font-style: italic
+        }
+        .label-info {
+            font-style: normal;
+            vertical-align: middle;
+        }
+        .btn {
+            margin-bottom: 0;
+        }
+        .padBom10 {
+            padding-bottom: 10px;
+        }
+        .ui-accordion-cross {
+            float: right;
+            cursor: pointer;
+        }
+    </style>
+    <script src="../avalon.js"></script>
+    <script src="jquery-1.10.2.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+    <![endif]-->
+</head>
+<body data-spy="scroll" data-target=".bs-docs-sidebar">
+<!-- 顶部导航 -->
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li>
+                        <a href="http://hotelued.qunar.com/oniui/index.html" target="_blanck">AVALON UI</a>
+                    </li>
+                    <li>
+                        <a href="#menu">menu用法详解</a>
+                    </li>
+                    <li>
+                        <a href="#doublelist">doublelist用法详解</a>
+                    </li>
+                    <li>
+                        <a href="#accordion">accordion用法详解</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <!-- 侧边导航 -->
+    <div class="row">
+        <div class="span12">
+            <!-- pager 规范用法 -->
+            <section ms-controller="menu" class="ms-controller" id="menu">
+                <div class="page-header">
+                    <h1>menu用法详解</h1>
+                </div>
+                <p class="warning"><span class="label label-info">注意：</span>&nbsp;&nbsp;配置方法最好放在配置对象;&nbsp;&nbsp;</p>
+                <div class="bs-docs-example" style="padding-bottom: 24px;">
+                    <div class="padBom10">
+                        <h3><span>默认配置的menu A：</span></h3>
+                        <p>扫描dom情形下，会销毁原有的dom，且会忽略所有ol，ul，li元素上的原有绑定</p>
+                        <p>active将第几个项目设置为选中，级联情形下，会将设置应用给每一级menu，默认是false，一个都不选中，建议不要通过修改这个值来修改menu的选中状态，而是通过setActiveList接口来做</p>
+                        <ul ms-widget="menu, menuB">
+                            <li>动物</li>
+                            <li>植物</li>
+                            <li data-disabled="true">X物</li>
+                            <li>人类
+                                <ul>
+                                    <li data-disabled="true">火星人</li>
+                                    <li>地球人
+                                        <ul>
+                                            <li><a href="#iddd">白人</a></li>
+                                            <li>黑人</li>
+                                            <li data-disabled="true">灰人</li>
+                                        </ul>
+                                    </li>
+                                    <li>木星人</li>
+                                    <li>金星人</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="padBom10">
+                        <h3>
+                            <span>横排的menu B：</span>
+                            <button ms-click="activateMenuOfB">activate</button>
+                            <button ms-click="getActiveList">getActiveList</button>
+                            <button ms-click="setActiveList">setActiveList</button>
+                        </h3>
+                        <p>dir 取值v,h，默认h是水平方向， v是竖直方向</p>
+                        <p>onSelect(vmodel, realSelect, _hasSubMenu)</p>
+                        <p>activate(index) 展开菜单索引为index的项目，index为false或undefined则不会展开任一项目</p>
+                        <p>getActiveList()获取所有选中的menu list</p>
+                        <p>setActiveList(activeListArray)设计级联menu的选项，可以是数组、数字、或者逗号分隔的字符串</p>
+                        <ul ms-widget="menu" data-menu-dir="v" data-menu-event="click">
+                            <li>动物</li>
+                            <li>植物
+                                <ul>
+                                    <li data-disabled="true">灌木</li>
+                                    <li>藤类
+                                        <ul>
+                                            <li><a href="#iddd">紫藤</a></li>
+                                            <li>葡萄</li>
+                                            <li data-disabled="true">牵牛花</li>
+                                        </ul>
+                                    </li>
+                                    <li>地衣</li>
+                                    <li>蕨类</li>
+                                </ul>
+                            </li>
+                            <li>X物</li>
+                            <li data-active="true">人类
+                                <ul>
+                                    <li data-disabled="true">火星人</li>
+                                    <li>地球人
+                                        <ul>
+                                            <li><a href="#iddd" >白人</a></li>
+                                            <li>黑人</li>
+                                            <li data-disabled="true">灰人</li>
+                                        </ul>
+                                    </li>
+                                    <li>木星人</li>
+                                    <li>金星人</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="padBom10">
+                        <h3><span>默认配置的menu C：</span></h3>
+                        <p>扫描dom情形下，会销毁原有的dom，且会忽略所有ol，ul，li元素上的原有绑定</p>    
+                        <ul ms-widget="menu" data-menu-dir="v" data-menu-event="click">
+                            <li>动物</li>
+                            <li>植物</li>
+                            <li>X物</li>
+                            <li data-disabled="true">人类
+                                <ul>
+                                    <li data-disabled="true">火星人</li>
+                                    <li>地球人
+                                        <ul>
+                                            <li><a href="#iddd">白人</a></li>
+                                            <li>黑人
+                                                <ul>
+                                                    <li><a href="#iddd">白2人</a></li>
+                                                    <li>黑2人
+                                                        <ul>
+                                                            <li><a href="#iddd">白22人</a></li>
+                                                            <li>黑22人</li>
+                                                            <li data-disabled="true">灰22人</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li data-disabled="true">灰2人</li>
+                                                </ul>
+                                            </li>
+                                            <li data-disabled="true">灰人</li>
+                                        </ul>
+                                    </li>
+                                    <li>木星人</li>
+                                    <li>金星人</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>   
+                    <div class="padBom10">
+                        <h3><span>配置data数据项渲染menu的menu D：</span></h3>
+                        <p>组件可配置项</p>
+<pre>
+[{
+    title: "html", data: [...],
+    active: false,
+    disabled: false
+}]
+</pre>   
+                        <ul ms-widget="menu, menuD, $menuDOpts">
+                        </ul>
+                    </div>              
+                </div>
+                <script>
+                    require(["menu/avalon.menu"],function() {
+                        var menuVM = avalon.define("menu", function(vm) {
+
+                            vm.activateMenuOfB = function() {
+                                avalon.vmodels.menuB.activate(2)
+                            }
+                            vm.getActiveList = function() {
+                                avalon.log(avalon.vmodels.menuB.getActiveList())
+                            }
+                            vm.setActiveList = function() {
+                                avalon.vmodels.menuB.setActiveList(1)
+                            }
+                            vm.$menuDOpts = {
+                                data: [{
+                                    active: false,
+                                    title: "menu1",
+                                    disabled: false,
+                                    data: [{
+                                        active: true,
+                                        title: "menu1_1",
+                                        disabled: false
+                                    }, {
+                                        active: false,
+                                        title: "menu1_2",
+                                        disabled: false
+                                    }, {
+                                        active: false,
+                                        title: "menu1_3",
+                                        disabled: false
+                                    }]
+                                }, {
+                                    active: false,
+                                    title: "menu1",
+                                    disabled: false
+                                }, {
+                                    active: false,
+                                    title: "menu1",
+                                    disabled: false
+                                }]
+                            }
+                        })
+                        avalon.scan($("#menu")[0], menuVM);
+                    })
+                </script>
+                <h3>vm的定义</h3>
+<pre ms-skip>
+
+avalon.scan($("#menu")[0], menuVM);
+</pre>
+            </section>
+            <!-- <section ms-controller="doublelist" class="ms-controller" id="doublelist">
+                <div class="page-header">
+                    <h1>doublelist用法详解</h1>
+                </div>
+                <p class="warning"><span class="label label-info">注意：</span>&nbsp;&nbsp;配置方法最好放在配置对象;&nbsp;&nbsp;</p>
+                <div class="bs-docs-example" style="padding-bottom: 24px;">
+                    <div class="padBom10">
+                        <h3>
+                            <span>默认配置的doublelist A：</span>
+                            <div ms-widget="doublelist"></div>
+                        </h3>
+                    </div>
+                </div>
+                <script>
+                    require(["doublelist/avalon.doublelist"],function(avalon) {
+                        var doublelistVM = avalon.define("doublelist", function(vm) {
+                            vm.doublelist = {
+                                data: [
+                                    {name: "Lily", value: 1},
+                                    {name: "Lucy", value: 2},
+                                    {name: "Tom", value: 3},
+                                    {name: "Harry", value: 4},
+                                    {name: "Jim", value: 5}
+                                ],
+                                select: [5],
+                                change: function(newValue, oldValue, vmodel) {
+                                    avalon.log(vmodel.select)
+                                }
+                            }
+                            var i = 6
+                            while(i < 200) {
+                                vm.doublelist.data.push({
+                                    name: "Hello Sang" + i,
+                                    value: i
+                                })
+                                i++
+                            }
+                            vm.$skipArray = ["doublelist"]
+                        })
+                        avalon.scan($("#doublelist")[0], doublelistVM);
+                    })
+                </script>
+                <h3>vm的定义</h3>
+<pre ms-skip>
+avalon.scan($("#doublelist")[0], doublelistVM);
+</pre>
+            </section>
+
+-->
+           
+            <section ms-controller="accordion" class="ms-controller" id="accordion">
+                <div class="page-header">
+                    <h1>accordion用法详解(对应adapter的cboxpicker)</h1>
+                </div>
+                <p class="warning"><span class="label label-info">注意：</span>&nbsp;&nbsp;配置方法最好放在配置对象;&nbsp;&nbsp;</p>
+                <div class="bs-docs-example" style="padding-bottom: 24px;">
+                    <div class="padBom10">
+                        <h3><span>默认配置的accordion A：</span></h3>
+                        <div ms-widget="accordion,accordionA,$accordionAOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"accordion,accordionA,$accordionAOpts"</span>&gt;&lt;/div&gt;
+</pre>
+<pre>
+vm.<span class="atn">$accordionAOpts</span> = {
+    <span class="str">data</span>: [{
+        'title': '标题1',
+        'content': '正文1&lt;p&gt;fasdfsdaf&lt;/p&gt;'
+    }, {
+        'title': '标题2',
+        'content': '正文2'
+    }]
+}
+</pre>
+                    <div class="padBom10">
+                        <h3><span>配置width、accordionCls、initIndex、multiple的accordion B：</span></h3>
+                        <div ms-widget="accordion,accordionB,$accordionBOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"accordion,accordionB,$accordionBOpts"</span>&gt;&lt;/div&gt;
+</pre>
+<pre>
+vm.<span class="atn">$accordionBOpts</span> = {
+    words1: "hello every one",
+    words2: "撒花欢迎……",
+    <span class="str">data</span>: [{
+        'title': '标题1',
+        'content': 'accordion B content , it says {{words1}}'
+    }, {
+        'title': '标题2',
+        'content': 'accordion B content , it says {{words2}}'
+    }],
+    <span class="str">accordionCls</span>: "ui-accordion-customClass",
+    <span class="str">initIndex</span>: 1,
+    <span class="str">width</span>: 500,
+    <span class="str">multiple</span>: true
+}
+</pre>                    
+                    <div class="padBom10">
+                        <h3><span>配置各种回调的accordion C：</span></h3>
+                        <div ms-widget="accordion,accordionC,$accordionCOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"accordion,accordionC,$accordionCOpts"</span>&gt;&lt;/div&gt;
+</pre> 
+<pre>
+vm.<span class="atn">$accordionCOpts</span> = {
+    words1: "学习回调的使用",
+    words2: "Do you get it ? ",
+    <span class="str">data</span>: [{
+        'title': '标题1',
+        'content': 'accordion C content , it says:  <b>{{words1}}</b>'
+    }, {
+        'title': '标题2',
+        'content': 'accordion C content , it says : <b>{{words2}}</b>'
+    }],
+    <span class="str">beforeSwitch</span>: function(index, header, panel) {
+        avalon.log("beforeSwitch callback");
+        avalon.log(arguments);
+    },
+    <span class="str">onSwitch</span>: function(index, header, panel) {
+        avalon.log("onSwitch callback");
+        avalon.log(arguments);
+    },
+    <span class="str">onInit</span>: function(vmodel, options, vmodels) {
+        avalon.log("onInit callback");
+        avalon.log(arguments);
+    },
+    <span class="str">triggerType</span>: "mouseover"
+}
+</pre>                   
+                    <div class="padBom10">
+                        <h3><span>配置mode、triggerType的accordion D：</span></h3>
+                        <div ms-widget="accordion,accordionD,$accordionDOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"accordion,accordionD,$accordionDOpts"</span>&gt;&lt;/div&gt;
+</pre>
+<pre>
+vm.<span class="atn">$accordionDOpts</span> = {
+    words1: "组件默认调用caret模板",
+    words2: "通过配置mode修改组件模板",
+    <span class="str">data</span>: [{
+        'title': '标题1',
+        'content': 'accordion C content , it says:  <b>{{words1}}</b>'
+    }, {
+        'title': '标题2',
+        'content': 'accordion C content , it says : <b>{{words2}}</b>'
+    }],
+    <span class="str">mode</span>: "nav", <span class="com">//可选项：nav|caret|custom</span>
+    <span class="str">triggerType</span>: "mouseenter", <span class="com">//组件提供了click、mouseover两种方式</span>
+    <span class="str">mouseenterCallback</span>: function(event, index, vmodel) {
+        vmodel._eventCallback(event, index);
+    }
+}
+</pre>                    
+                    <div class="padBom10">
+                        <h3>
+                            <span>配置autoRun为false阻止组件自动渲染的accordion E：</span>
+                            <button ms-click="refresh">refresh</button>
+                            <button ms-click="setData">setData</button>
+                            <button ms-click="refreshData">refreshData</button>
+                        </h3>
+                        <div ms-widget="accordion,accordionE,$accordionEOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"refresh"</span>&gt;refresh</span>&lt;/button&gt;
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"setData"</span>&gt;setData</span>&lt;/button&gt;
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"refreshData"</span>&gt;refreshData</span>&lt;/button&gt;
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"accordion,accordionE,$accordionEOpts"</span>&gt;&lt;/div&gt;
+</pre> 
+<pre>
+vm.<span class="atn">$accordionEOpts</span> = {
+    words1: "配置autoRun阻止组件自动渲染",
+    words2: "自己控制渲染组件的时机",
+    <span class="str">data</span>: [{
+        'title': '标题1',
+        'content': 'accordion C content , it says:  <b>{{words1}}</b>'
+    }, {
+        'title': '标题2',
+        'content': 'accordion C content , it says : <b>{{words2}}</b>'
+    }],
+    <span class="str">mode</span>: "nav",
+    <span class="str">autoRun</span>: false
+}
+vm.<span class="atn">refresh</span> = function() {
+    avalon.vmodels.accordionE.refresh()
+}
+vm.<span class="atn">setData</span> = function() {
+    var data = [
+        {
+            title: "new title 1",
+            content: "new content 1"
+        },
+        {
+            title: "new title 2",
+            content: "new content 2"
+        },
+        {
+            title: "new title 3",
+            content: "new content 3"
+        },
+        {
+            title: "new title 4",
+            content: "new content 4"
+        }]
+    avalon.vmodels["accordionE"].<span class="str">setData</span>(data)
+}
+vm.<span class="atn">refreshData</span> = function() {
+    var data</span> = [
+        {
+            title: "refresh title one",
+            content: "refresh content one"
+        },{
+            title: "refresh title two",
+            content: "refresh content two"
+        },{
+            title: "refresh title three",
+            content: "refresh content three"
+        },{
+            title: "refresh title four",
+            content: "refresh content four"
+        },{
+            title: "refresh title five",
+            content: "refresh content five"
+        }]
+    avalon.vmodels["accordionE"].<span class="str">refresh</span>(data);
+}
+</pre>                   
+                    <div class="padBom10">
+                        <h3><span>嵌套accordion的accordion F：</span></h3>
+                        <div ms-widget="accordion,accordionF,$accordionFOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"accordion,accordionF,$accordionFOpts"</span>&gt;&lt;/div&gt;
+</pre> 
+<pre>
+vm.<span class="atn">$accordionFOpts</span> = {
+    <span class="str">data</span>: [{
+        'title': '标题1',
+        'content': '正文1&lt;p&gt;fasdfsdaf&lt;/p&gt;'
+    }, {
+        'title': '标题2',
+        'content': '正文2&lt;div ms-widget="accordion,accordionG,$accordionGOpts" id="test"&gt;&lt;/div&gt;'
+    }],
+    <span class="str">width</span>: "600"
+}
+vm.<span class="atn">$accordionGOpts</span> = {
+    <span class="str">data</span>:  [
+        {
+            title: "雪儿",
+            content: 'heelfifsfsd&lt;div ms-widget="accordion,accordionH,$accordionHOpts" id="test"&gt;&lt;/div&gt;'
+        },
+        {
+            title: "静儿",
+            content: '很好，我喜欢，继续额'
+        }
+    ],
+    <span class="str">multiple</span>: true
+}
+vm.<span class="atn">$accordionHOpts</span> = {
+    <span class="str">data</span>: [
+        {
+            title: "三层嵌套标题一",
+            content: "三层嵌套内容一"
+        },
+        {
+            title: "三层嵌套标题二",
+            content: "三层嵌套内容二"
+        },
+        {
+            title: "三层嵌套标题三",
+            content: "三层嵌套内容三"
+        }
+    ],
+    <span class="str">mode</span>: "nav"
+}
+</pre>                   
+                    <div class="padBom10">
+                        <h3>
+                            <span>自定义模板的accordion I：</span>
+                            <input type="button" ms-click="getCurrentHeader('accordionI')" value="getCurrentHeader('accordionI')"/>
+                            <input type="button" ms-click="getCurrentPanel('accordionI')" value="getCurrentPanel('accordionI')"/>
+                            <input type="button" ms-click="getHeader('accordionI',1)" value="getHeader('accordionI',1)"/>
+                            <input type="button" ms-click="getPanel('accordionI',1)" value="getPanel('accordionI',1)"/>
+                            <input type="button" ms-click="getLength('accordionI')" value="getLength('accordionI')"/>
+                            <input type="button" ms-click="getStatus('accordionI',1)" value="getStatus('accordionI',1)"/>
+                            <input type="button" ms-click="switchTo('accordionI',1)" value="switchTo('accordionI',1)"/>
+                            <input type="button" ms-click="getCurrentIndex" value="getCurrentIndex"/>
+                            
+                        </h3>
+                        <div ms-widget="accordion,accordionI,$accordionIOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"button"</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"getCurrentHeader('accordionI')"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"getCurrentHeader('accordionI')"</span>/&gt;
+&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"button"</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"getCurrentPanel('accordionI')"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"getCurrentPanel('accordionI')"</span>/&gt;
+&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"button"</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"getHeader('accordionI',1)"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"getHeader('accordionI',1)"</span>/&gt;
+&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"button"</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"getPanel('accordionI',1)"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"getPanel('accordionI',1)"</span>/&gt;
+&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"button"</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"getLength('accordionI')"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"getLength('accordionI')"</span>/&gt;
+&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"button"</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"getStatus('accordionI',1)"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"getStatus('accordionI',1)"</span>/&gt;
+&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"button"</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"switchTo('accordionI',1)"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"switchTo('accordionI',1)"</span>/&gt;
+&lt;input <span class="atn">type</span><span class="pun">=</span><span class="atv">"button"</span> <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"getCurrentIndex"</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"getCurrentIndex"</span>/&gt;
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"accordion,accordionI,$accordionIOpts"</span>&gt;&lt;/div&gt;
+</pre> 
+<pre>
+vm.<span class="atn">$accordionIOpts</span> = {
+    <span class="str">data</span>: [{
+        'title': '标题1',
+        'content': '正文1&lt;p&gt;fasdfsdaf&lt;/p&gt;'
+    }, {
+        'title': '标题2',
+        'content': '正文2'
+    }],
+    <span class="str">mode</span>: "custom",
+    <span class="str">template</span>: '&lt;div class="ui-accordion-inner" ms-each-item="data"&gt;&lt;h3 class="ui-accordion-header ui-state-default" ms-class="MS_OPTION_ACTIVECLASS:currentIndex == $index"&gt;{{item.title}}&lt;/h3&gt;&lt;div class="ui-accordion-content ui-state-default ui-widget-content" ms-visible="currentIndex == $index"&gt;{{item.content|html}}&lt;/div&gt;',
+}
+vm.<span class="atn">getCurrentHeader</span> = function(id) {
+    var currentHeader = avalon.vmodels[id].<span class="str">getCurrentHeader</span>();
+    avalon.log(currentHeader);
+}
+vm.<span class="atn">getCurrentPanel</span> = function(id) {
+    var currentPanel = avalon.vmodels[id].<span class="str">getCurrentPanel</span>();
+    avalon.log(currentPanel);
+}
+vm.<span class="atn">getHeader</span> = function(id, index) {
+    var header = avalon.vmodels[id].<span class="str">getHeader</span>(index);
+    avalon.log(header);
+}
+vm.<span class="atn">getPanel</span> = function(id, index) {
+    var panel = avalon.vmodels[id].<span class="str">getPanel</span>(index);
+    avalon.log(panel);
+}
+vm.<span class="atn">getLength</span> = function(id) {
+    var length = avalon.vmodels[id].<span class="str">getLength</span>();
+    avalon.log(length);
+}
+vm.<span class="atn">getStatus</span> = function(id, index) {
+    var status = avalon.vmodels[id].<span class="str">getStatus</span>(index);
+    avalon.log(status);
+}
+vm.<span class="atn">switchTo</span> = function(id, index) {
+    avalon.vmodels[id].<span class="str">switchTo</span>(index);
+}
+vm.<span class="atn">getCurrentIndex</span> = function() {
+    alert(avalon.vmodels.accordionI.<span class="str">currentIndex</span>)
+}
+</pre>                   
+                    <div class="padBom10">
+                        <h3><span>配置触发面板打开的class的accordion J：</span></h3>
+                        <div ms-widget="accordion,accordionJ,$accordionJOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"accordion,accordionJ,$accordionJOpts"</span>&gt;&lt;/div&gt;
+</pre>  
+<pre>
+vm.<span class="atn">$accordionJOpts</span> = {
+    words1: "组件默认调用caret模板",
+    words2: "通过配置mode修改组件模板",
+    <span class="str">data</span>: [{
+        'title': '标题J',
+        'content': 'accordion J content , it says:  &lt;b&gt;{{words1}}&lt;/b&gt;'
+    }, {
+        'title': '标题J',
+        'content': 'accordion J content , it says : &lt;b&gt;{{words2}}&lt;/b&gt;'
+    }],
+    <span class="str">trigger</span>: ""
+    <span class="com">//默认mode为caret，trigger为"ui-accordion-trigger"</span>
+}
+</pre>                  
+                    <div class="padBom10">
+                        <h3><span>使用getTemplate自定义模板，并设置trigger的accordion K：</span></h3>
+                        <div ms-widget="accordion,accordionK,$accordionKOpts"></div>
+                    </div>
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"accordion,accordionK,$accordionKOpts"</span>&gt;&lt;/div&gt;
+</pre>   
+<pre>
+vm.<span class="atn">$accordionKOpts</span> = {
+    words1: "通过getTemplate重写模板",
+    words2: "配置触发面板打开的class",
+    <span class="str">data</span>: [{
+        'title': '标题K',
+        'content': 'accordion K content , it says:  <b>{{words1}}</b>'
+    }, {
+        'title': '标题K',
+        'content': 'accordion K content , it says : <b>{{words2}}</b>'
+    }],
+    <span class="str">mode</span>: "nav",
+    <span class="str">getTemplate</span>: function(template) {
+        console.log(template)
+        return template.replace(/\{\{item.title\}\}/, "$& &lt;span class='ui-accordion-cross ui-icon'&gt;&#xf067;&lt;/span&gt;")
+    },
+    <span class="str">trigger</span>: "ui-accordion-cross"
+    <span class="com">//默认mode为caret，trigger为"ui-accordion-trigger"</span>
+}
+</pre>                  
+                </div>
+                <script>
+                    require(["accordion/avalon.accordion"],function(avalon) {
+                        var accordionVM = avalon.define("accordion", function(vm) {
+                            vm.$accordionAOpts = {
+                                data: [{
+                                    'title': '标题1',
+                                    'content': '正文1<p>fasdfsdaf</p>'
+                                }, {
+                                    'title': '标题2',
+                                    'content': '正文2'
+                                }]
+                            }
+                            vm.$accordionBOpts = {
+                                words1: "hello every one",
+                                words2: "撒花欢迎……",
+                                data: [{
+                                    'title': '标题1',
+                                    'content': 'accordion B content , it says {{words1}}'
+                                }, {
+                                    'title': '标题2',
+                                    'content': 'accordion B content , it says {{words2}}'
+                                }],
+                                accordionCls: "ui-accordion-customClass",
+                                initIndex: 1,
+                                width: 500,
+                                multiple: true
+                            }
+                            vm.$accordionCOpts = {
+                                words1: "学习回调的使用",
+                                words2: "Do you get it ? ",
+                                data: [{
+                                    'title': '标题1',
+                                    'content': 'accordion C content , it says:  <b>{{words1}}</b>'
+                                }, {
+                                    'title': '标题2',
+                                    'content': 'accordion C content , it says : <b>{{words2}}</b>'
+                                }],
+                                beforeSwitch: function(index, header, panel) {
+                                    avalon.log("beforeSwitch callback");
+                                    avalon.log(arguments);
+                                },
+                                onSwitch: function(index, header, panel) {
+                                    avalon.log("onSwitch callback");
+                                    avalon.log(arguments);
+                                },
+                                onInit: function(vmodel, options, vmodels) {
+                                    avalon.log("onInit callback");
+                                    avalon.log(arguments);
+                                },
+                                triggerType: "mouseover"
+                            }
+                            vm.$accordionDOpts = {
+                                words1: "组件默认调用caret模板",
+                                words2: "通过配置mode修改组件模板",
+                                data: [{
+                                    'title': '标题1',
+                                    'content': 'accordion C content , it says:  <b>{{words1}}</b>'
+                                }, {
+                                    'title': '标题2',
+                                    'content': 'accordion C content , it says : <b>{{words2}}</b>'
+                                }],
+                                mode: "nav", //可选项：nav|caret|custom
+                                triggerType: "mouseenter", //组件提供了click、mouseover两种方式
+                                mouseenterCallback: function(event, index, vmodel) {
+                                    vmodel._eventCallback(event, index);
+                                }
+                            }
+                            vm.$accordionEOpts = {
+                                words1: "配置autoRun阻止组件自动渲染",
+                                words2: "自己控制渲染组件的时机",
+                                data: [{
+                                    'title': '标题1',
+                                    'content': 'accordion C content , it says:  <b>{{words1}}</b>'
+                                }, {
+                                    'title': '标题2',
+                                    'content': 'accordion C content , it says : <b>{{words2}}</b>'
+                                }],
+                                mode: "nav",
+                                autoRun: false
+                            }
+                            vm.refresh = function() {
+                                avalon.vmodels.accordionE.refresh()
+                            }
+                            vm.setData = function() {
+                                var data = [
+                                    {
+                                        title: "new title 1",
+                                        content: "new content 1"
+                                    },
+                                    {
+                                        title: "new title 2",
+                                        content: "new content 2"
+                                    },
+                                    {
+                                        title: "new title 3",
+                                        content: "new content 3"
+                                    },
+                                    {
+                                        title: "new title 4",
+                                        content: "new content 4"
+                                    }]
+                                avalon.vmodels["accordionE"].setData(data)
+                            }
+                            vm.refreshData = function() {
+                                var data = [
+                                    {
+                                        title: "refresh title one",
+                                        content: "refresh content one"
+                                    },{
+                                        title: "refresh title two",
+                                        content: "refresh content two"
+                                    },{
+                                        title: "refresh title three",
+                                        content: "refresh content three"
+                                    },{
+                                        title: "refresh title four",
+                                        content: "refresh content four"
+                                    },{
+                                        title: "refresh title five",
+                                        content: "refresh content five"
+                                    }]
+                                avalon.vmodels["accordionE"].refresh(data);
+                            }
+                            vm.$accordionFOpts = {
+                                data: [{
+                                    'title': '标题1',
+                                    'content': '正文1<p>fasdfsdaf</p>'
+                                }, {
+                                    'title': '标题2',
+                                    'content': '正文2<div ms-widget="accordion,accordionG,$accordionGOpts" id="test"></div>'
+                                }],
+                                width: "600"
+                            }
+                            vm.$accordionGOpts = {
+                                data:  [
+                                    {
+                                        title: "雪儿",
+                                        content: 'heelfifsfsd<div ms-widget="accordion,accordionH,$accordionHOpts" id="test"></div>'
+                                    },
+                                    {
+                                        title: "静儿",
+                                        content: '很好，我喜欢，继续额'
+                                    }
+                                ],
+                                multiple: true
+                            }
+                            vm.$accordionHOpts = {
+                                data: [
+                                    {
+                                        title: "三层嵌套标题一",
+                                        content: "三层嵌套内容一"
+                                    },
+                                    {
+                                        title: "三层嵌套标题二",
+                                        content: "三层嵌套内容二"
+                                    },
+                                    {
+                                        title: "三层嵌套标题三",
+                                        content: "三层嵌套内容三"
+                                    }
+                                ],
+                                mode: "nav"
+                            }
+
+
+                            vm.$accordionIOpts = {
+                                data: [{
+                                    'title': '标题1',
+                                    'content': '正文1<p>fasdfsdaf</p>'
+                                }, {
+                                    'title': '标题2',
+                                    'content': '正文2'
+                                }],
+                                mode: "custom",
+                                template: '<div class="ui-accordion-inner" ms-each-item="data"><h3 class="ui-accordion-header ui-state-default" ms-class="MS_OPTION_ACTIVECLASS:currentIndex == $index">{{item.title}}</h3><div class="ui-accordion-content ui-state-default ui-widget-content" ms-visible="currentIndex == $index">{{item.content|html}}</div>',
+                            }
+                            vm.getCurrentHeader = function(id) {
+                                var currentHeader = avalon.vmodels[id].getCurrentHeader();
+                                avalon.log(currentHeader);
+                            }
+                            vm.getCurrentPanel = function(id) {
+                                var currentPanel = avalon.vmodels[id].getCurrentPanel();
+                                avalon.log(currentPanel);
+                            }
+                            vm.getHeader = function(id, index) {
+                                var header = avalon.vmodels[id].getHeader(index);
+                                avalon.log(header);
+                            }
+                            vm.getPanel = function(id, index) {
+                                var panel = avalon.vmodels[id].getPanel(index);
+                                avalon.log(panel);
+                            }
+                            vm.getLength = function(id) {
+                                var length = avalon.vmodels[id].getLength();
+                                avalon.log(length);
+                            }
+                            vm.getStatus = function(id, index) {
+                                var status = avalon.vmodels[id].getStatus(index);
+                                avalon.log(status);
+                            }
+                            vm.switchTo = function(id, index) {
+                                avalon.vmodels[id].switchTo(index);
+                            }
+                            vm.getCurrentIndex = function() {
+                                alert(avalon.vmodels.accordionI.currentIndex)
+                            }
+                            vm.$accordionJOpts = {
+                                words1: "组件默认调用caret模板",
+                                words2: "通过配置mode修改组件模板",
+                                data: [{
+                                    'title': '标题J',
+                                    'content': 'accordion J content , it says:  <b>{{words1}}</b>'
+                                }, {
+                                    'title': '标题J',
+                                    'content': 'accordion J content , it says : <b>{{words2}}</b>'
+                                }],
+                                trigger: ""
+                                //默认mode为caret，trigger为"ui-accordion-trigger"
+                            }
+                            vm.$accordionKOpts = {
+                                words1: "通过getTemplate重写模板",
+                                words2: "配置触发面板打开的class",
+                                data: [{
+                                    'title': '标题K',
+                                    'content': 'accordion K content , it says:  <b>{{words1}}</b>'
+                                }, {
+                                    'title': '标题K',
+                                    'content': 'accordion K content , it says : <b>{{words2}}</b>'
+                                }],
+                                mode: "nav",
+                                getTemplate: function(template) {
+                                    console.log(template)
+                                    return template.replace(/\{\{item.title\}\}/, "$& <span class='ui-accordion-cross ui-icon'>&#xf067;</span>")
+                                },
+                                trigger: "ui-accordion-cross"
+                                //默认mode为caret，trigger为"ui-accordion-trigger"
+                            }
+                        })
+                        avalon.scan($("#accordion")[0], accordionVM);
+                    })
+                </script>
+                <h3>vm的定义</h3>
+<pre ms-skip>
+var <span class="atn">accordionVM</span> = avalon.define("accordion", function(vm) {
+    
+})
+avalon.scan($("#accordion")[0], accordionVM);
+</pre>
+            </section>
+        </div>
+    </div>
+</div>
+<!-- Footer
+================================================== -->
+<footer class="footer">
+    <div class="container">
+        <ul class="footer-links">
+            <li><a href="http://hotelued.qunar.com/oniui/index.html" target="_blanck">avalon ui</a></li>
+            <li class="muted">&middot;</li>
+            <li><a href="http://qtown.corp.qunar.com/activity/detail?activityId=39">avalon</a></li>
+        </ul>
+    </div>
+</footer>
+</body>
+</html>

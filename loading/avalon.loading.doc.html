@@ -88,6 +88,16 @@
 <tr>
     <td>circleMargin</td><td> 0.5</td><td> type=bubbles bubbles效果下个小球的间距</td></tr>
 <tr>
+    <td>interval</td><td> _config["ball"].interval</td><td> type=spinning-spin 帧间隔，继承ball</td></tr>
+<tr>
+    <td>count</td><td> 8</td><td> type=spinning-spin 小圆弧个数，一般请保证 360 / 8 % padding = 0</td></tr>
+<tr>
+    <td>width</td><td> 46</td><td> type=spinning-spin 圆外直径</td></tr>
+<tr>
+    <td>widthInner</td><td> 38</td><td> type=spinning-spin 圆内直径</td></tr>
+<tr>
+    <td>padding</td><td> 5</td><td> type=spinning-spin 小圆弧间间隔的角度数</td></tr>
+<tr>
     <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
     <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td></tr>
@@ -111,6 +121,7 @@
 <li><a href="avalon.loading.ex.3.html">loading:spokes</a></li>
 <li><a href="avalon.loading.ex.4.html">loading:spinning-bubbles</a></li>
 <li><a href="avalon.loading.ex.5.html">loading:bubbles-这个只有在高级非IE浏览器上才能work good</a></li>
+<li><a href="avalon.loading.ex.6.html">loading:spinning-spin</a></li>
 </ol>
 <!--ex list end-->
         </div>

@@ -301,6 +301,7 @@ define(['avalon',
                     listNode = list
                     vmodel.menuNode = document.getElementById("menu-" + vmodel.$id)     //下拉列表框内层容器 （包裹滚动条部分的容器）
                     vmodel.dropdownNode = document.getElementById("list-" + vmodel.$id) //下拉列表框内容（有滚动条的部分）
+                    vmodel.updateScrollbar();
                 }
 
                 //如果参数b不为布尔值，对toggle值进行取反
@@ -335,7 +336,7 @@ define(['avalon',
                         }
                         vmodel.activeIndex = selectedItemIndex;
                     }
-                    vmodel.updateScrollbar();
+                    vmodel._styleFix();
                     vmodel._position();
                     titleNode && titleNode.focus();
                     if(avalon.type(vmodel.onShow) === 'function') {
@@ -425,7 +426,7 @@ define(['avalon',
             }
 
             //利用scrollbar的样式改变修正父节点的样式
-            vm.$styleFix = function() {
+            vm._styleFix = function() {
                 var MAX_HEIGHT = options.height || 200,
                     $menu = avalon(vmodel.menuNode),
                     height = vmodel.dropdownNode.scrollHeight;
@@ -435,13 +436,12 @@ define(['avalon',
                     height = MAX_HEIGHT;
                 }
                 vmodel.menuHeight = height;
+                vmodel.updateScrollbar();
             };
 
             //当下拉列表中的项目发生改变时，调用该函数修正显示，顺序是修正下拉框高宽 --> 滚动条更新显示 --> 定位下拉框
             vm.updateScrollbar = function() {
                 var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
-                //修正下拉框的高度和宽度
-                !vmodel.multiple && vmodel.$styleFix();
                 scrollbar && scrollbar.update();
             }
 

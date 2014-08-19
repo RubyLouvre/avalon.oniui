@@ -470,10 +470,10 @@ define(["avalon",
         syncTheadColumnsOrder: true,
         remoteSort: avalon.noop, //远程排数函数
         noResultContent: "暂无结果",
-        theadRenderedCallback: function(tbody, vmodel, options, vmodels) {
+        theadRenderedCallback: function(vmodel, options, vmodels) {
         },
-        tbodyRenderedCallback: function(tbody, vmodel, options, vmodels) {
-           window.scrollTo(0, avalon(vmodel.widgetElement).offset().top)
+        tbodyRenderedCallback: function(vmodel, options, vmodels) {
+            window.scrollTo(0, avalon(vmodel.widgetElement).offset().top - 60)
         },
         renderCell: function(val, key, row) {
             return val

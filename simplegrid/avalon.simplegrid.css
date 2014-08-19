@@ -11,7 +11,7 @@
 .ui-simplegrid .ui-simplegrid-thead td, .ui-simplegrid .ui-simplegrid-thead th { border: 0 none; height: 35px; line-height: 35px; background-color: #e6e6e6; }
 .ui-simplegrid .ui-simplegrid-thead td, .ui-simplegrid .ui-simplegrid-thead th, .ui-simplegrid .ui-simplegrid-tbody td, .ui-simplegrid .ui-simplegrid-tbody th { padding-left: 5px; }
 .ui-simplegrid .ui-simplegrid-tbody { width: 100%; border: 1px solid #d4d4d4; border-left: none; border-right: none; border-collapse: collapse; }
-.ui-simplegrid .ui-simplegrid-tbody tr.even td { background: #f7f7f7; }
+.ui-simplegrid .ui-simplegrid-tbody tr.even td, .ui-simplegrid .ui-simplegrid-tbody tr.even th { background: #f7f7f7; }
 .ui-simplegrid .ui-simplegrid-tbody td { border: 0 none; height: 35px; line-height: 35px; padding-left: 5px; }
 .ui-simplegrid .ui-simplegrid-tbody .ui-state-hover td, .ui-simplegrid .ui-simplegrid-tbody .ui-state-hover th { background-color: #f8f8f8; }
 .ui-simplegrid .ui-simplegrid-scroll-marker { width: 100%; z-index: -1; }

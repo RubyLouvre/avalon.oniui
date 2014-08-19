@@ -158,11 +158,13 @@ define(["../avalon.getModel",
                 if (!noScan) {
                     avalon.scan(lastContent, scanVmodels);
                 }
+                return vmodel;
             };
 
             // 动态修改dialog的title
             vm.setTitle = function(title) {
-                vm.title = title;
+                vmodel.title = title;
+                return vmodel;
             };
 
             // 重新渲染dialog
@@ -174,6 +176,7 @@ define(["../avalon.getModel",
                 if (!!m.$title) {
                     vmodel.title = m.$title;
                 }
+                return vmodel;
             };
 
             // 将零散的模板(dialog header、dialog content、 dialog footer、 dialog wrapper)组合成完整的dialog

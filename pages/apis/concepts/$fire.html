@@ -25,7 +25,7 @@
                 })
                 vm.click = function() {
                     avalon.log("向下广播")
-                    vm.$fire("capture!aaa", "capture")
+                    vm.$fire("down!aaa", "capture")
                 }
             })
             avalon.define("parent", function(vm) {
@@ -47,7 +47,7 @@
                 })
                 vm.click = function() {
                     console.log("向上冒泡")
-                    vm.$fire("bubble!aaa", "bubble")
+                    vm.$fire("up!aaa", "bubble")
                 }
             })
         &lt;/script&gt;
@@ -80,7 +80,7 @@
         })
         vm.click = function() {
             avalon.log("向下广播")
-            vm.$fire("capture!aaa", "capture")
+            vm.$fire("down!aaa", "capture")
         }
     })
     avalon.define("c-parent", function(vm) {
@@ -102,7 +102,7 @@
         })
         vm.click = function() {
             console.log("向上冒泡")
-            vm.$fire("bubble!aaa", "bubble")
+            vm.$fire("up!aaa", "bubble")
         }
     })
 </script>

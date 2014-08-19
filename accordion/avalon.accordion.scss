@@ -46,26 +46,13 @@ $corner-radius: 4px;
         cursor: pointer;
         font-size: 100%;
         &.ui-state-default {
-            border: 1px solid $ui-state-default-border-color;
-            background-color: #d9d9d9;
+            border: 1px solid #d3d3d3;
+            background-color: #e6e6e6;
             font-weight: normal;
-            color: $ui-state-default-color;
+            color: #555;
         }
         .ui-icon-caret-right {
             display: inline;
-        }
-        &.ui-state-active {
-            @if($oinui-theme == smoothness) {
-                background: lighten(#3775c0, 30%);
-                border: 1px solid #aaa;
-                color: #000;
-            }
-            .ui-icon-caret-down {
-                display: inline;
-            }
-            .ui-icon-caret-right {
-                display: none;
-            }
         }
         .ui-icon-caret-down {
             display: none;
@@ -73,9 +60,22 @@ $corner-radius: 4px;
         &.ui-state-hover {
             @if($oinui-theme == smoothness) {
                 border: 1px solid #999999;
-                background: #f8f8f8;
+                background: #dadada;
                 font-weight: normal;
                 color: #212121;
+            }
+        }
+        &.ui-state-active {
+            @if($oinui-theme == smoothness) {
+                background: #fff;
+                border: 1px solid #aaa;
+                color: #212121;
+            }
+            .ui-icon-caret-down {
+                display: inline;
+            }
+            .ui-icon-caret-right {
+                display: none;
             }
         }
     }

@@ -3005,9 +3005,16 @@
             if (!supportDisplay && !root.contains(elem)) { //fuck firfox 全家！
                 var display = parseDisplay(elem.tagName)
             }
-            display = display || avalon(elem).css("display")
-            data.display = display === "none" ? parseDisplay(elem.tagName) : display
-            parseExprProxy(data.value, vmodels, data)
+            function callback() {
+                display = display || avalon(elem).css("display")
+                data.display = display === "none" ? parseDisplay(elem.tagName) : display
+                parseExprProxy(data.value, vmodels, data)
+            }
+            if (elem.style.display == "") {
+                setTimeout(callback)
+            } else {
+                callback()
+            }
         },
         "widget": function(data, vmodels) {
             var args = data.value.match(rword)

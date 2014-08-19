@@ -7,7 +7,7 @@
           ms-hover="ui-state-hover:firstPage!=1" 
           >{{prevText}}</span>
     <span class="ui-pager-item"
-          ms-if="firstPage!==1" 
+          ms-visible="firstPage!==1" 
           ms-title="getTitle('first')" 
           ms-click="jumpPage($event,'first')" 
           ms-hover="ui-state-hover" >1</span>
@@ -25,7 +25,7 @@
           ms-if="showLastOmit" 
           >{{ellipseText}}</span>
     <span class="ui-pager-item "
-          ms-if="lastPage!==totalPages" 
+          ms-visible="lastPage!==totalPages" 
           ms-title="getTitle('last')" 
           ms-hover="ui-state-hover" 
           ms-click="jumpPage($event,'last')"  

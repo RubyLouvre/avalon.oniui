@@ -129,7 +129,11 @@ define(['avalon',
                             return option.value === vmodel.value[0];
                         })[0];
                     }
+
+                    //设置title宽度
+                    vmodel.titleWidth = computeTitleWidth();
                 }
+
                 //设置label值
                 setLabelTitle(vmodel.value);
 
@@ -305,8 +309,8 @@ define(['avalon',
                     return;
                 }
 
-                if (!b && avalon.type(vmodel.onHide) === 'function') {
-                    vmodel.onHide.call(this, listNode);
+                if (!b) {
+                    avalon.type(vmodel.onHide) === 'function' && vmodel.onHide.call(this, listNode);
                 } else {
                     var firstItemIndex, selectedItemIndex, value = vmodel.value;
                     if (avalon.type(value) !== 'array') {
@@ -331,6 +335,7 @@ define(['avalon',
                         }
                         vmodel.activeIndex = selectedItemIndex;
                     }
+                    vmodel.updateScrollbar();
                     vmodel._position();
                     titleNode && titleNode.focus();
                     if(avalon.type(vmodel.onShow) === 'function') {
@@ -430,15 +435,14 @@ define(['avalon',
                 //修正下拉框的高度和宽度
                 !vmodel.multiple && vmodel.$styleFix();
                 scrollbar && scrollbar.update();
-                //定位下拉框
-                !vmodel.multiple &&vmodel._position();
             }
+
         });
 
         //对model的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
         if (options.modelBind && vmodel.dataSource.$watch) {
             vmodel.dataSource.$watch('length', function() {
-                vmodel.data = getDataFromOption(vmodel.dataSource.$model).data;
+                vmodel.data = getDataFromOption(vmodel.dataSource.$model);
             });
         }
 
@@ -482,6 +486,12 @@ define(['avalon',
             }
         }
 
+        function computeTitleWidth() {
+            var title = document.getElementById('title-' + vmodel.$id),
+                $title = avalon(title);
+            return vmodel.width - $title.css('paddingLeft').replace(styleReg, '$1') - $title.css('paddingRight').replace(styleReg, '$1');
+        }
+
         return vmodel;
     };
 
@@ -490,6 +500,7 @@ define(['avalon',
     widget.defaults = {
         width: 200, //自定义宽度
         listWidth: 200, //自定义下拉列表的宽度
+        titleWidth: 0,  //title部分宽度
         height: 200, //下拉列表的高度
         enable: true, //组件是否可用
         readOnly: false, //组件是否只读

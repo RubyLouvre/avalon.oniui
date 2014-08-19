@@ -360,7 +360,9 @@ define(['avalon',
                     $sourceNode = avalon(titleNode.firstChild),
                     listHeight = $listNode.height(),
                     $window = avalon(window),
-                    css = {};
+                    css = {},
+                    offsetParent = listNode.offsetParent,
+                    $offsetParent = avalon(offsetParent);
 
                 while ($sourceNode.element && $sourceNode.element.nodeType != 1) {
                     $sourceNode = avalon($sourceNode.element.nextSibling);
@@ -373,9 +375,15 @@ define(['avalon',
                     css.top = offset.top + outerHeight;
                 }
 
-                //修正由于边框带来的重叠样式
-                css.top = css.top - $sourceNode.css('borderBottomWidth').replace(styleReg, '$1');
-                css.left = offset.left;
+                if(offsetParent) {
+                    //修正由于边框带来的重叠样式
+                    css.top = css.top - $sourceNode.css('borderBottomWidth').replace(styleReg, '$1') - $offsetParent.offset().top + listNode.offsetParent.scrollTop;
+                    css.left = offset.left - $offsetParent.offset().left + listNode.offsetParent.scrollLeft;
+                } else {
+                    //修正由于边框带来的重叠样式
+                    css.top = css.top - $sourceNode.css('borderBottomWidth').replace(styleReg, '$1');
+                    css.left = offset.left;
+                }
 
                 //显示浮层
                 $listNode.css(css);

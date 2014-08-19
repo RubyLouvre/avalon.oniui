@@ -54,6 +54,12 @@ define(['avalon',
                 opt.changedCallback = changedCallbackModel[1][changedCallbackModel[0]]
             }
             opt.duplexName = duplexName
+
+            //处理container
+            var docBody = document.body, container = options.container;
+
+            // container必须是dom tree中某个元素节点对象或者元素的id，默认将dialog添加到body元素
+            options.container = (avalon.type(container) === 'object' && container.nodeType === 1 && docBody.contains(container) ? container : document.getElementById(container)) || docBody;
         }
 
         //将元素的属性值copy到options中
@@ -296,7 +302,7 @@ define(['avalon',
                     var list;
                     listNode = createListNode();
                     list = listNode.firstChild;
-                    document.body.appendChild(listNode)
+                    vmodel.container.appendChild(listNode)
                     avalon.scan(list, [vmodel].concat(vmodels))
                     listNode = list
                     vmodel.menuNode = document.getElementById("menu-" + vmodel.$id)     //下拉列表框内层容器 （包裹滚动条部分的容器）
@@ -373,16 +379,15 @@ define(['avalon',
                 if (options.position && offset.top + outerHeight + listHeight > $window.scrollTop() + $window.height() && offset.top - listHeight > $window.scrollTop()) {
                     css.top = offset.top - listHeight;
                 } else {
-                    css.top = offset.top + outerHeight;
+                    css.top = offset.top + outerHeight - $sourceNode.css('borderBottomWidth').replace(styleReg, '$1');
                 }
 
-                if(offsetParent) {
+                if(offsetParent && offsetParent.tagName !== 'BODY') {
                     //修正由于边框带来的重叠样式
-                    css.top = css.top - $sourceNode.css('borderBottomWidth').replace(styleReg, '$1') - $offsetParent.offset().top + listNode.offsetParent.scrollTop;
+                    css.top = css.top  - $offsetParent.offset().top + listNode.offsetParent.scrollTop;
                     css.left = offset.left - $offsetParent.offset().left + listNode.offsetParent.scrollLeft;
                 } else {
                     //修正由于边框带来的重叠样式
-                    css.top = css.top - $sourceNode.css('borderBottomWidth').replace(styleReg, '$1');
                     css.left = offset.left;
                 }
 
@@ -506,6 +511,7 @@ define(['avalon',
     widget.version = "1.0";
 
     widget.defaults = {
+        container: null, //放置列表的容器
         width: 200, //自定义宽度
         listWidth: 200, //自定义下拉列表的宽度
         titleWidth: 0,  //title部分宽度

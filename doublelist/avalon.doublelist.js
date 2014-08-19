@@ -118,18 +118,19 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
             vm._update = function($event, addOrDelete) {
                 var tar = addOrDelete === "delete" ? selectTmpSelect : dataTmpSelect
                 if(tar.length == 0) return
+                if(!vmodel.countLimit(vmodel.select, addOrDelete, tar.length)) return
                 if(addOrDelete === "delete") {
                     for(var i = 0, len = tar.length; i < len; i++) {
-                        if(!vmodel.countLimit(vmodel.select, addOrDelete)) {
-                            break
-                        } else {
+                        // if(!vmodel.countLimit(vmodel.select, addOrDelete)) {
+                        //     break
+                        // } else {
                             for(var j = 0, jlen = vmodel.select.length; j < jlen; j++) {
                                 if(vmodel.select[j] == tar[i]) {
                                     vmodel.select.splice(j, 1)
                                     break
                                 }
                             }
-                        }
+                        // }
                     }
                     // free data select
                     avalon.each(dataTmpSelect, function(i, item) {
@@ -137,15 +138,15 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                     })
                 } else {
                     for(var i = 0, len = tar.length; i < len; i++) {
-                        if(!vmodel.countLimit(vmodel.select, addOrDelete)) {
-                            while(i < len) {
-                                avalon(document.getElementById("data" + tar[i] + vmodel.$uid)).removeClass("ui-state-active")
-                                i++
-                            }
-                            break
-                        } else {
+                        // if(!vmodel.countLimit(vmodel.select, addOrDelete)) {
+                        //     while(i < len) {
+                        //         avalon(document.getElementById("data" + tar[i] + vmodel.$uid)).removeClass("ui-state-active")
+                        //         i++
+                        //     }
+                        //     break
+                        // } else {
                             vmodel.select.push(tar[i])
-                        }
+                        // }
                     }
                 }
                 selectTmpSelect = []

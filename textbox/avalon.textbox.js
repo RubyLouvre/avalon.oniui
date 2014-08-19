@@ -2,6 +2,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
     var htmlStructArray = sourceHTML.split("MS_OPTION_SUGGEST"),
         suggestHTML = htmlStructArray[1];
     var widget = avalon.ui.textbox = function(element, data, vmodels) {
+        console.log(data)
         var elemParent = element.parentNode,
             $element = avalon(element),
             options = data.textboxOptions,

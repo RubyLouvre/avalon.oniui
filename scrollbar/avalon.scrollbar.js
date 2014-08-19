@@ -688,7 +688,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
         },//@optMethod getTemplate(tpl, opts) 定制修改模板接口
         onScroll: function(newValue, oldValue, diretion, vmodel) {
 
-        },//@optMethod 滚动回调,scrollLeft or scrollTop变化的时候触发，参数为newValue, oldValue, diretion, vmodel diretion = h 水平方向，= v 竖直方向
+        },//@optMethod onScroll(newValue, oldValue, diretion, vmodel) 滚动回调,scrollLeft or scrollTop变化的时候触发，参数为newValue, oldValue, diretion, vmodel diretion = h 水平方向，= v 竖直方向
         size: "normal", //@param srollbar size,normal为10px，small为8px，large为14px
         $author: "skipper@123"
     }

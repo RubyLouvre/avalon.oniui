@@ -2,7 +2,7 @@
 /*
 这是每个都组件都应该引用的部分
 */
-.ui-doublelist {
+div.ui-doublelist {
   font-size: 12px; }
 
 .ui-doublelist-menu {
@@ -38,6 +38,7 @@
   background: white; }
 .ui-doublelist .ui-button {
   height: 24px;
+  *height: auto;
   line-height: 24px;
   background-color: #f8f8f8;
   border: 1px solid #d4d4d4;

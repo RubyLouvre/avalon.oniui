@@ -15,6 +15,9 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
             vm.select = []
             vm._selectData = []
             avalon.mix(vm, options)
+            if(vm.change != avalon.noop && vm.onChange == avalon.noop) {
+                vm.onChange = vm.change
+            }
             vm.widgetElement = element
             vm.$skipArray = ["widgetElement", "template"]
 
@@ -160,7 +163,7 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
         })
         // change
         vmodel.select.$watch("length", function(newValue, oldValue) {
-            vmodel.change && vmodel.change(newValue, oldValue, vmodel)
+            vmodel.onChange && vmodel.onChange(newValue, oldValue, vmodel)
         })
 
         return vmodel
@@ -179,7 +182,8 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
         countLimit: function(select) {
             return true
         },//@optMethod countLimit(select) 选择条目限制，必须有return true or false，参数是当前已选中条数和add or delete操作
-        change: avalon.noop, //@optMethod change(newValue, oldValue, vmodel) 所选变化的回调
+        change: avalon.noop, //@optMethod change(newValue, oldValue, vmodel) 所选变化的回调，不建议使用，等价于onChange
+        onChange: avalon.noop,//@optMethod onChange(newValue, oldValue, vmodel) 所选变化的对调，同change，第一、二个参数分别是数组变化前后的长度
         $author: "skipper@123"
     }
 })

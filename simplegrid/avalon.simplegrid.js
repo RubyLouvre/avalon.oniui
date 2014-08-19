@@ -137,7 +137,7 @@ define(["avalon",
 
                 vm.scrollPanel = table.parentNode.parentNode//重置包含两个table的会出现滚动条的容器对象
 
-                vm.gridWidth = Math.min(table.offsetWidth, vm.scrollPanel.offsetWidth)
+                vm.gridWidth = Math.min(table.offsetWidth, vm.scrollPanel.offsetWidth) + 1
                 //console.log(table.offsetWidth, vm.scrollPanel.offsetWidth,vm.gridWidth)
                 vm.theadRenderedCallback.call(tbody, vmodel, options, vmodels)
             }

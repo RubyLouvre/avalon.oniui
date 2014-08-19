@@ -16,7 +16,7 @@
         <div class="ui-datepicker-groups" 
             ms-visible="toggle"
             ms-click="_updateMsg">
-            <div class="ui-daterangepicker-quick-operation">
+            <div class="ui-daterangepicker-quick-operation" ms-if="shortcut">
                 <span ms-click="quickOperation('today')">今天</span>
                 <span ms-click="quickOperation('lastDay')">昨天</span>
                 <span ms-click="quickOperation('lastSeventDays')">过去七天</span>

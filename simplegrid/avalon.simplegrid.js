@@ -41,6 +41,8 @@ define(["avalon",
         //<------开始配置分页的参数
         if (typeof options.pager !== "object") {
             options.pager = {}
+        } else {
+            options.pageable = true
         }
         var pager = options.pager
         //抽取要显示的数据(因为可能存在分页,不用全部显示,那么我们只将要显示的
@@ -88,15 +90,15 @@ define(["avalon",
 
         var _vmodels
         var loadingOpts = {
-                toggle: false,
-                onInit: function(vm, options, vmodels) {
-                    vmodel.loadingVModel = vm;
-                }
+            toggle: false,
+            onInit: function(vm, options, vmodels) {
+                vmodel.loadingVModel = vm;
             }
+        }
         options.loading = avalon.type(options.loading) === "object" ? avalon.mix(options.loading, loadingOpts) : loadingOpts
         var vmodel = avalon.define(data.simplegridId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "data", "scrollPanel", "topTable", "bottomTable", "startIndex", "pager", "endIndex", "template","loading", "loadingVModel"]
+            vm.$skipArray = ["widgetElement", "data", "scrollPanel", "topTable", "bottomTable", "startIndex", "pager", "endIndex", "template", "loading", "loadingVModel"]
             vm.loadingVModel = null
             vm.widgetElement = element
             vm.gridWidth = "100%"
@@ -135,7 +137,7 @@ define(["avalon",
 
                 vm.scrollPanel = table.parentNode.parentNode//重置包含两个table的会出现滚动条的容器对象
 
-                vm.gridWidth = Math.min(table.offsetWidth, vm.scrollPanel.offsetWidth)
+                vm.gridWidth = Math.min(table.offsetWidth, vm.scrollPanel.offsetWidth) + 1
                 //console.log(table.offsetWidth, vm.scrollPanel.offsetWidth,vm.gridWidth)
                 vm.theadRenderedCallback.call(tbody, vmodel, options, vmodels)
             }
@@ -453,6 +455,7 @@ define(["avalon",
         theadHeight: 35,
         noResultHeight: 100,
         tbodyScrollHeight: "auto",
+        rowClass: "even",
         showScrollbar: "always", //滚动条什么时候显示，默认一直，可设置为never，scrolling
         tbodyScrollTop: 0,
         tbodyHeight: "auto",
@@ -469,9 +472,10 @@ define(["avalon",
         syncTheadColumnsOrder: true,
         remoteSort: avalon.noop, //远程排数函数
         noResultContent: "暂无结果",
-        theadRenderedCallback: function(tbody, vmodel, options, vmodels) {
+        theadRenderedCallback: function(vmodel, options, vmodels) {
         },
-        tbodyRenderedCallback: function(tbody, vmodel, options, vmodels) {
+        tbodyRenderedCallback: function(vmodel, options, vmodels) {
+            window.scrollTo(0, avalon(vmodel.widgetElement).offset().top - 60)
         },
         renderCell: function(val, key, row) {
             return val

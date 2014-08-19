@@ -45,13 +45,10 @@
             word-break: break-all;
             word-wrap: break-word;
         }
-        .ui-simplegrid-tbody tr.even td, .ui-simplegrid-tbody tr.even td div{
-            background:rgb(247,247,247);
-        }
-        .ui-simplegrid-tbody tr.hcross td{
+        .ui-simplegrid .ui-simplegrid-tbody tr.hcross td{
             background:#FF8888!important;
         }
-        .ui-simplegrid-tbody .vcross{
+        .ui-simplegrid .ui-simplegrid-tbody td.vcross, .ui-simplegrid .ui-simplegrid-tbody tr.even td.vcross{
             background:#FF8888;
         }
         .ui-simplegrid tr.summarizing td{
@@ -235,22 +232,22 @@ vm.callback = function() {
 </pre>                 
                     <div class="padBom10">
                         <h3>
-                            <span>配置getTemplate方法修改模板实现斑马线效果的simplegrid D：</span>
+                            <span>配置rowClass去掉内置斑马线效果的simplegrid D：</span>
                         </h3>
-                        <div ms-widget="simplegrid, simplegridD, $simplegridDOpts"></div>
+                        <p>组件默认显示的斑马线的效果，如对配色不满意，可以配置rowClass来应用自己的类，或者配置为空去掉斑马效果</p>
+                        <div ms-widget="simplegrid, simplegridD, $simplegridDOpts"
+                             data-simplegrid-row-class=""></div>
                     </div>
 <pre ms-skip>
-&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"simplegrid, simplegridD, $simplegridDOpts"</span>&gt;&lt;/div&gt;
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"simplegrid, simplegridD, $simplegridDOpts"</span>
+     <span class="atn">data-simplegrid-row-class</span><span class="pun">=</span><span class="atv">""</span>&gt;&lt;/div&gt;
 </pre> 
 <pre>
 vm.<span class="str">$simplegridDOpts</span> = {
     <span class="atn">columns</span>: ["symbol", "price", "change"],
-    <span class="atn">data</span>: getData1(6), 
-    <span class="atn">getTemplate</span>: function(str) { <span class="com">//使用getTemplate演示添加斑马线</span>
-        return str.replace('<span class="atn">ms-repeat-row</span><span class="pun">=</span><span class="atv">"_data"</span>', '<span class="atn">ms-repeat-row</span><span class="pun">=</span><span class="atv">"_data"</span> <span class="atn">ms-class-even</span><span class="pun">=</span><span class="atv">"!($index % 2)"</span> ')
-    }
+    <span class="atn">data</span>: getData1(6)
 }
-</pre>                   
+</pre>
                     <div class="padBom10">
                         <h3><span>配置columns各选项和columnsOrder、renderCell的simplegrid E：</span>
                         <button ms-click="toggleColumn">toggle column 2</button></h3>
@@ -989,10 +986,7 @@ vm.<span class="atn">$simplegridLOpts</span> = {
                             }
                             vm.$simplegridDOpts = {
                                 columns: ["symbol", "price", "change"],
-                                data: getData1(6), 
-                                getTemplate: function(str) { //使用getTemplate演示添加斑马线
-                                    return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-even="!($index % 2)" ')
-                                }
+                                data: getData1(6)
                             }
                             vm.toggleColumn = function() {
                                 avalon.vmodels.simplegridE.columns[1].toggle = columnShow;
@@ -1349,7 +1343,28 @@ avalon.ui.suggest.strategies.<span class="str">phone</span> = function(value, re
         render(data)
     },100)
 }    
-</pre>                   
+</pre>            
+                    <div class="padBom10">
+                        <h3>
+                            <span>自定义了渲染补全信息所用renderItem方法的textbox F：</span>
+                            <input ms-widget="textbox, textboxF, $textboxFOpts"       type="text" 
+                                   data-textbox-suggest="test" 
+                                   data-textbox-suggest-focus="true"/>
+                        </h3>
+                    </div>   
+<pre>
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"textbox, textboxF, $textboxFOpts"</span>       
+       <span class="atn">type</span><span class="pun">=</span><span class="atv">"text"</span> 
+       <span class="atn">data-textbox-suggest</span><span class="pun">=</span><span class="atv">"test"</span> 
+       <span class="atn">data-textbox-suggest-focus</span><span class="pun">=</span><span class="atv">"true"</span>/&gt;
+</pre>
+<pre>
+vm.<span class="atn">$textboxFOpts</span> = {
+    <span class="str">renderItem</span>: function(item, vmodel) {
+        return item.replace(vmodel.searchText, "&lt;b style='color:goldenrod'&gt; $& &lt;/b&gt;")
+    }
+}
+</pre>
                 </div>
                 <script>
                     require(["textbox/avalon.textbox"],function(avalon) {
@@ -1366,6 +1381,11 @@ avalon.ui.suggest.strategies.<span class="str">phone</span> = function(value, re
                                 avalon.log("change")
                                 avalon.log("arguments is :")
                                 avalon.log(arguments)
+                            }
+                            vm.$textboxFOpts = {
+                                renderItem: function(item, vmodel) {
+                                    return item.replace(vmodel.searchText, "<b style='color:goldenrod'> $& </b>")
+                                }
                             }
                         }) 
                         avalon.scan($("#textboxNormal")[0], textboxVM);
@@ -1395,6 +1415,7 @@ var <span class="str">textboxVM</span> = avalon.define("textbox", function(vm) {
     vm.<span class="atn">val</span> = ""
     vm.<span class="atn">getVal</span> = function() {<span class="str"> ...... </span>}
     vm.<span class="atn">changeCallback</span> = function(value, $model, event) {<span class="str"> ...... </span>}
+    vm.<span class="atn">$textboxFOpts</span> = {<span class="str"> ...... </span>}
 }) 
 avalon.scan($("#textboxNormal")[0], textboxVM);
 avalon.ui.suggest.strategies.<span class="str">test</span> = function(value, render) {<span class="str"> ...... </span>}

@@ -132,8 +132,8 @@ define(["../avalon.getModel",
             // 点击取消按钮隐藏日历框
             vm._cancelSelectDate = function() {
                 vmodel.toggle ? vmodel.toggle = false: 0;
-                vmodel.inputFromValue = _oldValue[0] && vmodel.formatDate(_oldValue[0])  || ""
-                vmodel.inputToValue = _oldValue[1] && vmodel.formatDate(_oldValue[1])  || ""
+                vmodel.inputFromValue = _oldValue && _oldValue[0] && vmodel.formatDate(_oldValue[0])  || ""
+                vmodel.inputToValue = _oldValue && _oldValue[1] && vmodel.formatDate(_oldValue[1])  || ""
             }
             vm.getDates = function() {
                 var inputFromDate = vmodel.parseDate(vmodel.inputFromValue),
@@ -175,7 +175,8 @@ define(["../avalon.getModel",
                     minDate = vmodel.rules.fromMinDate,
                     maxDate = vmodel.rules.toMaxDate,
                     dateArr = [];
-
+                minDate = minDate && vmodel.parseDate(minDate) || null
+                maxDate = minDate && vmodel.parseDate(maxDate) || null
                 switch (instruction) {
                     case "lastDay" :
                         fromDate = toDate = new Date(now.setDate(now.getDate() - 1));
@@ -200,7 +201,7 @@ define(["../avalon.getModel",
                         toDate = dateArr[1];
                     break;
                     case "lastMonth" :
-                        defaultLabel = "上月";
+                        defaultLabel = "上个月";
                         toDate = new Date();
                         toDate = new Date(toDate.setDate(-1));
                         fromDate = new Date(new Date(toDate.getTime()).setDate(1));
@@ -210,6 +211,7 @@ define(["../avalon.getModel",
                     break;
                 }
                 vmodel.setDates(fromDate, toDate, defaultLabel);
+                vmodel.toggle = false
             }
             // 设置日期输入框的label
             vm.setLabel = function(str) {
@@ -457,6 +459,11 @@ define(["../avalon.getModel",
                 vmodel.inputToValue = inputTo.value;
                 _confirmClick = false;
             }
+            if (val) {
+                avalon.type(vmodel.onOpen) === "function" && vmodel.onOpen(vmodel);
+            } else {
+                avalon.type(vmodel.onClose) === "function" && vmodel.onClose(vmodel);
+            }
         })
         return vmodel;
     }
@@ -472,6 +479,9 @@ define(["../avalon.getModel",
         separator: "-",
         startDay: 1,    //星期开始时间
         dateRangeWidth: 260,
+        shortcut: false,
+        onOpen: avalon.noop, //打开daterangepicker后的回调
+        onClose: avalon.noop, //关闭daterangepicker后的回调
         onSelect: avalon.noop, //点击确定按钮选择日期后的回调
         parseDate: function(str){
             var separator = this.separator;

@@ -34,8 +34,12 @@
                         tbodyTemplate: function(str) {
                             return str.replace(/\|\s*html/, "|sanitize|html")
                         },
-                        showRows: 15,
-                        data: getData(1000)
+                        showRows: 60,
+                        data: getData(1000),
+                        pageable: true,
+                        pager: {
+                            totalItems: 2000,
+                        }
                     }
                     vm.$skipArray = ["simplegrid"]
                 })

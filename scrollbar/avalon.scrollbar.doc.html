@@ -6,12 +6,12 @@
         <meta name="viewport" content="width=device-width">
         <script src="../highlight/shCore.js"></script>
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
-    <meta name="description" content="scrollbar组件，自定义滚动条样式，绑定ms-widget="scrollbar"的元素内必须包含一个class="ui-scrollbar-scroller"的视窗元素"/>
+    <meta name="description" content="scrollbar组件，自定义滚动条样式，绑定ms-widget=&quot;scrollbar&quot;的元素内必须包含一个class=&quot;ui-scrollbar-scroller&quot;的视窗元素"/>
 </head>
     <body>
         <div class="wrapper">
             <h2>scrollbar</h2>
-            <fieldset>scrollbar组件，自定义滚动条样式</fieldset>
+            <fieldset>scrollbar组件，自定义滚动条样式，绑定ms-widget=&quot;scrollbar&quot;的元素内必须包含一个class=&quot;ui-scrollbar-scroller&quot;的视窗元素</fieldset>
             <fieldset>
                 <legend>使用说明</legend>
                 <table class="table-doc">
@@ -48,6 +48,8 @@
     <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
     <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts) 定制修改模板接口</td></tr>
+<tr>
+    <td>onScroll</td><td>回调函数</td><td>onScroll(newValue, oldValue, diretion, vmodel) 滚动回调,scrollLeft or scrollTop变化的时候触发，参数为newValue, oldValue, diretion, vmodel diretion = h 水平方向，= v 竖直方向</td></tr>
 <tr>
     <td>getBars</td><td>接口调用</td><td>getBars()返回所有的滚动条元素</td></tr>
 <tr>

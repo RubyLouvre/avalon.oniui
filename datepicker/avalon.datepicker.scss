@@ -212,22 +212,24 @@ $uiname-dropdown: "ui-dropdown";
         }
     }
 }
-.ui-dropdown-menu {
-    .ui-dropdown-item {
-        color: #333333;
-        font-size: 12px;
-        padding: 0;
-        text-indent: 0;
-        text-align: center;
-    }
-    .ui-dropdown-item-hover {
-        background: #f5f5f5;
-    }
-    .ui-dropdown-item-selected {
-        background: #3775c0;
-    }
-    .ui-dropdown:hover .ui-dropdown-source {
-        border-color: #3775c0;
-        border-bottom-color: #cccccc;
+.ui-datepicker-dropdown {
+    &.ui-dropdown-menu {
+        .ui-dropdown-item {
+            color: #333333;
+            font-size: 12px;
+            padding: 0;
+            text-indent: 0;
+            text-align: center;
+        }
+        .ui-dropdown-item-hover {
+            background: #f5f5f5;
+        }
+        .ui-dropdown-item-selected {
+            background: #3775c0;
+        }
+        .ui-dropdown:hover .ui-dropdown-source {
+            border-color: #3775c0;
+            border-bottom-color: #cccccc;
+        }
     }
 }

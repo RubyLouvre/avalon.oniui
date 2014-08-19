@@ -16,14 +16,20 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
         placeholder = sourceList.getElementsByTagName("span")[0];
 
         if (options.suggest) {
-            options.$suggestopts = {
-                inputElement : element , 
-                strategy : options.suggest , 
-                textboxContainer : sourceList ,
-                focus : options.suggestFocus ,
-                onChange : options.suggestOnChange,
-                type: "textbox"
+            var $suggestopts = {
+                    inputElement : element , 
+                    strategy : options.suggest , 
+                    textboxContainer : sourceList ,
+                    focus : options.suggestFocus ,
+                    onChange : options.suggestOnChange,
+                    type: "textbox",
+                },
+                renderItem = options.renderItem;
+
+            if (renderItem && avalon.type(renderItem) === "function") {
+                $suggestopts.renderItem = renderItem;
             }
+            options.$suggestopts = $suggestopts;
         }
         var vmodel = avalon.define(data.textboxId, function(vm) {
             avalon.mix(vm, options);

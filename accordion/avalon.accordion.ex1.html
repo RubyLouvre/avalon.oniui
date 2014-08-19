@@ -13,7 +13,7 @@
     <div class="wrapper">
         <h1>accordion demo1</h1>
         <p class="example">accordion组件的定义必须同时设置组件名、组件ID、组件配置项，比如：ms-widget="accordion, accordionId, accordionOpts",并且配置项最好以"$"开头，表示不被avalon扫描监控</p>
-        <p><span class="use-description">说明：</span>accordion组件默认全部关闭面板，下面实例设置initIndex为1表示初始打开第二个面板；accordion组件默认不可同时打开多个面板或者关闭全部面板，这里设置multiple为true，使得组件可以同时打开多个面板，也可以关闭全部面板；可以为accordion设置自己想要的class，通过controlCls配置;accordion组件默认宽度是"100%",下面的demo配置组件宽度为500px;在打开一个面板之前可以添加打开前的回调beforeSwtich，同样可以定义打开之后的回调onSwitch</p>
+        <p><span class="use-description">说明：</span>accordion组件默认全部关闭面板，下面实例设置initIndex为1表示初始打开第二个面板；accordion组件默认不可同时打开多个面板或者关闭全部面板，这里设置multiple为true，使得组件可以同时打开多个面板，也可以关闭全部面板；可以为accordion设置自己想要的class，通过accordionCls配置;accordion组件默认宽度是"100%",下面的demo配置组件宽度为500px;在打开一个面板之前可以添加打开前的回调beforeSwtich，同样可以定义打开之后的回调onSwitch</p>
         <div ms-skip>
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
@@ -38,7 +38,7 @@
                                             'title': '标题2',
                                             'content': '正文2'
                                         }],
-                                        controlCls: "ui-accordion-customClass",
+                                        accordionCls: "ui-accordion-customClass",
                                         initIndex: 1,
                                         width: "500",
                                         beforeSwitch: function() {
@@ -74,7 +74,7 @@
                                 'title': '标题2',
                                 'content': '正文2'
                             }],
-                            controlCls: "ui-accordion-customClass",
+                            accordionCls: "ui-accordion-customClass",
                             initIndex: 1,
                             width: "500",
                             beforeSwitch: function() {

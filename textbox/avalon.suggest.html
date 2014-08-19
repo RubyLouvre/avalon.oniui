@@ -3,6 +3,6 @@
         ms-click='clickcallback($index,$event)' 
         ms-class='ui-suggest-item-selected:list[selectedIndex] == item' tabindex='-1' 
         ms-hover='ui-suggest-item-selected'>
-            {{ item.text | html }}
+            {{ _renderItem(item.text) | html }}
     </li>
 </ul>

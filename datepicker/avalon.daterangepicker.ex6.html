@@ -14,8 +14,8 @@
         <h1>daterangepicker demo</h1>
         <div class="demo-show ms-controller" ms-controller="demo">
             <fieldset>
-                <legend>日期范围框 支持onSelect回调函数</legend>
-                <div ms-widget="daterangepicker" data-daterangepicker-on-select="select" data-daterangepicker-rules="$rules"></div>
+                <legend>日期范围框 支持onSelect、onOpen、onClose回调函数</legend>
+                <div ms-widget="daterangepicker, A, $AOpts" data-daterangepicker-on-select="select" data-daterangepicker-rules="$rules"></div>
                 <p>onSelect是在点击日历框下的确定按钮后的回调方法，参数分别是起始日期fromDate、 结束日期toDate、 上次选中的日期范围的起始日期和结束日期组成的数组、绑定元素生成的widget VM的引用 vmodel, 绑定元素上的配置数据形成的数据对象data</p>
             </fieldset>
             <fieldset>
@@ -41,6 +41,16 @@
             <script> 
                 require("datepicker/avalon.daterangepicker", function(avalon) {
                     var model = avalon.define("demo", function(vm) {
+                        vm.$AOpts = {
+                            onOpen: function(vmodel) {
+                                avalon.log("datepicker 的 open回调，参数是组件对应的vmodel")
+                                avalon.log(vmodel)
+                            },
+                            onClose: function(vmodel) {
+                                avalon.log("datepicker 的 close回调，参数是组件对应的vmodel")
+                                avalon.log(vmodel)
+                            }
+                        }
                         vm.select = function(fromDate, toDate, oldValue, vmodel, data) {
                             avalon.log("选择日期范围之后的回调");
                             avalon.log("fromDate");

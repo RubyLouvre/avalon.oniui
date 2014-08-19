@@ -10,7 +10,7 @@
         </script>
         <script>
             avalon.config({debug: false})
-            require(["simplegrid/avalon.simplegrid"], function() {
+            require(["simplegrid/avalon.simplegrid", "dialog/avalon.dialog"], function() {
                 function range(s, b) {
                     return s + Math.floor((b - s) * Math.random())
                 }
@@ -80,6 +80,10 @@
                         columnsOrder: ["xxx", "yyy", "zzz"],
                         data: createData(30)
                     }
+                    vm.showDialog = function() {
+                        avalon.vmodels.aa.toggle = true
+                    }
+                    vm.message = "hello"
                     vm.$skipArray = ["simplegrid"]
                 })
                 avalon.scan()
@@ -98,6 +102,11 @@
             <div ms-widget="simplegrid, xxx" style="width:99%">
 
             </div>
+            <div ms-widget="dialog,aa" data-dialog-z-index="101">
+                呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+                <p>{{message}}</p>
+            </div>
+            <button ms-click="showDialog">show dialog</button>
             <div>
                 <h3>要点</h3>
                 <p>通过theadTemplate方法修改表头的那一行的模板</p>

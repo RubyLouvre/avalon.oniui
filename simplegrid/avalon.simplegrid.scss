@@ -13,7 +13,7 @@ $uiname : "ui-simplegrid";
         width:100%;
         overflow:auto;
         position: relative;
-
+        z-index: 0;
     }
     .#{$uiname}-wrapper{
         width:100%;

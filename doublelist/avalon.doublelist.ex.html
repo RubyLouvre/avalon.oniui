@@ -23,7 +23,7 @@
                         },
                         hideSelect: true,
                         countLimit: function(select, action, change) {
-                            var len = action == "delete" ? select.length - change > 1 : select.length + change < 20
+                            var len = action == "delete" ? select.length - change >= 1 : select.length + change <= 20
                             if(!len) {
                                 alert("out of limit with length of " + select.length)
                             }

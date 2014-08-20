@@ -12,7 +12,7 @@
 	 ms-hover="ui-state-hover ui-scrollbar-arrow-hover"><b class="ui-scrollbar-trangle  ui-scrollbar-trangle-up"></b></div>
 	<div class="ui-scrollbar-draggerpar" ms-click="_barClick($event, pos, $index)">
 		<div class="ui-scrollbar-dragger"
-		ms-data-draggable-axis="pos == 'left' || pos == 'right' ? 'y' : 'x'" 
+		ms-attr-data-draggable-axis="pos == 'left' || pos == 'right' ? 'y' : 'x'" 
 		ms-click="_stopPropagation($event)" 
 		ms-class-100="ui-state-disabled:disabled" 
 		ms-mouseover="_show($event,'always',$index)" 

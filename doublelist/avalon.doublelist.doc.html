@@ -30,6 +30,8 @@
 <tr>
     <td>hideSelect</td><td> false</td><td> 是否隐藏以选中的项目，默认不隐藏</td></tr>
 <tr>
+    <td>select</td><td>[]</td><td> 选中的value list，[value1,value2]，取的是data 里面item的value</td></tr>
+<tr>
     <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
     <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts) 定制修改模板接口</td></tr>
@@ -40,7 +42,7 @@
 <tr>
     <td>onChange</td><td>回调函数</td><td>onChange(newValue, oldValue, vmodel) 所选变化的对调，同change，第一、二个参数分别是数组变化前后的长度</td></tr>
 <tr>
-    <td>reset</td><td>接口调用</td><td>reset 重置</td></tr>
+    <td>reset</td><td>接口调用</td><td>reset(data, select) 重置，用新的data和select渲染，如果data为空，则不修改左侧list；如果select为空或者空数组，则清空已选，否则置为已选</td></tr>
 <!--auto doc end-->
                 </table>
             </fieldset>

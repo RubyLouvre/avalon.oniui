@@ -132,7 +132,10 @@ define(["avalon",
                 var cellIndex = 0
                 for (var i = 0, cell; cell = cells[i++]; ) {
                     if (cell.nodeType === 1 && cell["data-vm"]) {
-                        vm.columns[cellIndex++].width = cell.offsetWidth
+                        var c = vm.columns[cellIndex++]
+                        if (String(c.width).indexOf("%") === -1) {
+                            c.width = cell.offsetWidth
+                        }
                     }
                 }
                 vm.topTable = table //重置真正的代表表头的table

@@ -4,7 +4,6 @@
           ms-if="isShowPrev()"
           ms-title="getTitle('prev')" 
           ms-click="jumpPage($event,'prev')" 
-          ms-hover="ui-state-hover:firstPage!=1" 
           >{{prevText}}</span>
     <span class="ui-pager-item"
           ms-visible="firstPage!==1" 
@@ -33,7 +32,6 @@
     <span class="ui-pager-next"
           ms-if="isShowNext()" 
           ms-title="getTitle('next')"
-          ms-hover="ui-state-hover:lastPage!=totalPages" 
           ms-click="jumpPage($event,'next')" 
           ms-class="ui-state-disabled:lastPage==totalPages"
           >{{nextText}}</span>

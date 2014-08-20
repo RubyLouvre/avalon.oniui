@@ -344,7 +344,7 @@ define(["avalon",
             }
             vm._data = vm.data.slice(vm.startIndex, vm.endIndex)
             // 自定义滚动条
-            vm.scrollbar = {
+            vm.$spgScrollbarOpts = {
                 onScroll: function(n, o, dir) {
                     // 竖直方向滚动
                     if (dir == "v") {

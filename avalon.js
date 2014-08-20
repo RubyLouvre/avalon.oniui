@@ -188,7 +188,7 @@
     avalon.mix({
         rword: rword,
         subscribers: subscribers,
-        version: 1.3,
+        version: 1.33,
         ui: {},
         log: log,
         slice: W3C ? function(nodes, start, end) {
@@ -378,19 +378,27 @@
     //avalon最核心的方法的两个方法之一（另一个是avalon.scan），返回一个ViewModel(VM)
     var VMODELS = avalon.vmodels = {}//所有vmodel都储存在这里
     avalon.define = function(id, factory) {
+        var $id = id.$id || id
+        if (!$id) {
+            log("warning: 必须指定$id")
+        }
         if (VMODELS[id]) {
-            log("warning: " + id + " 已经存在于avalon.vmodels中")
+            log("warning: " + $id + " 已经存在于avalon.vmodels中")
         }
-        var scope = {
-            $watch: noop
+        if (typeof id == "object") {
+            var model = modelFactory(id)
+        } else {
+            var scope = {
+                $watch: noop
+            }
+            factory(scope) //得到所有定义
+            model = modelFactory(scope) //偷天换日，将scope换为model
+            stopRepeatAssign = true
+            factory(model)
+            stopRepeatAssign = false
         }
-        factory(scope) //得到所有定义
-        var model = modelFactory(scope) //偷天换日，将scope换为model
-        stopRepeatAssign = true
-        factory(model)
-        stopRepeatAssign = false
-        model.$id = id
-        return VMODELS[id] = model
+        model.$id = $id
+        return VMODELS[$id] = model
     }
 
     function modelFactory(scope, model) {
@@ -1737,7 +1745,8 @@
                 data.handler()
             } else {
                 try {
-                    data.handler(fn.apply(0, data.args), data.element, data)
+                    var c = data.type === "on" ? data : fn.apply(0, data.args)
+                    data.handler(c, data.element, data)
                 } catch (e) {
                     delete data.evaluator
                     if (data.nodeType === 3) {
@@ -2155,9 +2164,9 @@
     var rcomma = /^,+|,+$/g
     var cacheVars = createCache(512)
     var getVariables = function(code) {
-        code = "," + code.trim()
-        if (cacheVars[code]) {
-            return cacheVars[code]
+        var key = "," + code.trim()
+        if (cacheVars[key]) {
+            return cacheVars[key]
         }
         var match = code
                 .replace(rrexpstr, "")
@@ -2174,7 +2183,7 @@
                 unique[variable] = vars.push(variable)
             }
         }
-        return cacheVars(code, vars)
+        return cacheVars(key, vars)
     }
 
     //添加赋值语句
@@ -2221,7 +2230,7 @@
     var rduplex = /\w\[.*\]|\w\.\w/
     var rproxy = /(\$proxy\$[a-z]+)\d+$/
 
-    function parseExpr(code, scopes, data, four) {
+    function parseExpr(code, scopes, data) {
         var dataType = data.type
         var filters = dataType == "html" || dataType === "text" ? data.filters : ""
         var exprId = scopes.map(function(el) {
@@ -2239,10 +2248,10 @@
                 var name = "vm" + expose + "_" + i
                 names.push(name)
                 args.push(scopes[i])
-                assigns.push.apply(assigns, addAssign(vars, scopes[i], name, four))
+                assigns.push.apply(assigns, addAssign(vars, scopes[i], name, dataType))
             }
         }
-        if (!assigns.length && four === "duplex") {
+        if (!assigns.length && dataType === "duplex") {
             return
         }
         //---------------args----------------
@@ -2296,14 +2305,14 @@
             return
         } else if (dataType === "on") { //事件绑定
             code = code.replace("(", ".call(this,")
-            if (four === "$event") {
-                names.push(four)
+            if (data.hasArgs === "$event") {
+                names.push("$event")
             }
             code = "\nreturn " + code + ";" //IE全家 Function("return ")出错，需要Function("return ;")
             var lastIndex = code.lastIndexOf("\nreturn")
             var header = code.slice(0, lastIndex)
             var footer = code.slice(lastIndex)
-            code = header + "\nif(avalon.openComputedCollect) return ;" + footer
+            code = header + "\n" + footer
         } else { //其他绑定
             code = "\nreturn " + code + ";" //IE全家 Function("return ")出错，需要Function("return ;")
         }
@@ -2317,25 +2326,30 @@
         }
     }
 
+    var meta = {
+        '\b': '\\b',
+        '\t': '\\t',
+        '\n': '\\n',
+        '\f': '\\f',
+        '\r': '\\r',
+        '"': '\\"',
+        '\\': '\\\\'
+    };
+    var quote = window.JSON && JSON.stringify || function() {
+        return   '"' + this.replace(/[\\\"\x00-\x1f]/g, function(a) {
+            var c = meta[a];
+            return typeof c === 'string' ? c :
+                    '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
+        }) + '"'
+    }
     //parseExpr的智能引用代理
-
     function parseExprProxy(code, scopes, data, tokens) {
         if (Array.isArray(tokens)) {
-            var array = tokens.map(function(token) {
-                var tmpl = {}
-                return token.expr ? parseExpr(token.value, scopes, tmpl) || tmpl : token.value
-            })
-            data.evaluator = function() {
-                var ret = ""
-                for (var i = 0, el; el = array[i++]; ) {
-                    ret += typeof el === "string" ? el : el.evaluator.apply(0, el.args)
-                }
-                return ret
-            }
-            data.args = []
-        } else {
-            parseExpr(code, scopes, data, tokens)
+            code = tokens.map(function(el) {
+                return el.expr ? "(" + el.value + ")" : quote(el.value)
+            }).join(" + ")
         }
+        parseExpr(code, scopes, data)
         if (data.evaluator) {
             data.handler = bindingExecutors[data.handlerName || data.type]
             data.evaluator.toString = function() {
@@ -3010,8 +3024,8 @@
                 data.display = display === "none" ? parseDisplay(elem.tagName) : display
                 parseExprProxy(data.value, vmodels, data)
             }
-            if (elem.style.display == "") {
-                setTimeout(callback)
+            if (elem.style.display == "") {//防止元素还没有应用样式就被取值，导致结果不正确
+                avalon.nextTick(callback)
             } else {
                 callback()
             }
@@ -3046,9 +3060,7 @@
                 data[widget + "Id"] = args[1]
                 data[widget + "Options"] = avalon.mix({}, constructor.defaults, vmOptions || {}, widgetData)
                 elem.removeAttribute("ms-widget")
-                data.element.removeAttribute(data.name)
                 var vmodel = constructor(elem, data, vmodels) || {} //防止组件不返回VM
-
                 data.evaluator = noop
                 elem.msData["ms-widget-id"] = vmodel.$id || ""
                 if (vmodel.hasOwnProperty("$init")) {

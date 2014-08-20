@@ -15,6 +15,9 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
             vm.select = []
             vm._selectData = []
             avalon.mix(vm, options)
+            if(vm.change != avalon.noop && vm.onChange == avalon.noop) {
+                vm.onChange = vm.change
+            }
             vm.widgetElement = element
             vm.$skipArray = ["widgetElement", "template"]
 
@@ -115,18 +118,19 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
             vm._update = function($event, addOrDelete) {
                 var tar = addOrDelete === "delete" ? selectTmpSelect : dataTmpSelect
                 if(tar.length == 0) return
+                if(!vmodel.countLimit(vmodel.select, addOrDelete, tar.length)) return
                 if(addOrDelete === "delete") {
                     for(var i = 0, len = tar.length; i < len; i++) {
-                        if(!vmodel.countLimit(vmodel.select, addOrDelete)) {
-                            break
-                        } else {
+                        // if(!vmodel.countLimit(vmodel.select, addOrDelete)) {
+                        //     break
+                        // } else {
                             for(var j = 0, jlen = vmodel.select.length; j < jlen; j++) {
                                 if(vmodel.select[j] == tar[i]) {
                                     vmodel.select.splice(j, 1)
                                     break
                                 }
                             }
-                        }
+                        // }
                     }
                     // free data select
                     avalon.each(dataTmpSelect, function(i, item) {
@@ -134,15 +138,15 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                     })
                 } else {
                     for(var i = 0, len = tar.length; i < len; i++) {
-                        if(!vmodel.countLimit(vmodel.select, addOrDelete)) {
-                            while(i < len) {
-                                avalon(document.getElementById("data" + tar[i] + vmodel.$uid)).removeClass("ui-state-active")
-                                i++
-                            }
-                            break
-                        } else {
+                        // if(!vmodel.countLimit(vmodel.select, addOrDelete)) {
+                        //     while(i < len) {
+                        //         avalon(document.getElementById("data" + tar[i] + vmodel.$uid)).removeClass("ui-state-active")
+                        //         i++
+                        //     }
+                        //     break
+                        // } else {
                             vmodel.select.push(tar[i])
-                        }
+                        // }
                     }
                 }
                 selectTmpSelect = []
@@ -160,7 +164,7 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
         })
         // change
         vmodel.select.$watch("length", function(newValue, oldValue) {
-            vmodel.change && vmodel.change(newValue, oldValue, vmodel)
+            vmodel.onChange && vmodel.onChange(newValue, oldValue, vmodel)
         })
 
         return vmodel
@@ -179,7 +183,8 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
         countLimit: function(select) {
             return true
         },//@optMethod countLimit(select) 选择条目限制，必须有return true or false，参数是当前已选中条数和add or delete操作
-        change: avalon.noop, //@optMethod change(newValue, oldValue, vmodel) 所选变化的回调
+        change: avalon.noop, //@optMethod change(newValue, oldValue, vmodel) 所选变化的回调，不建议使用，等价于onChange
+        onChange: avalon.noop,//@optMethod onChange(newValue, oldValue, vmodel) 所选变化的对调，同change，第一、二个参数分别是数组变化前后的长度
         $author: "skipper@123"
     }
 })

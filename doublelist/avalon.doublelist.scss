@@ -12,7 +12,7 @@ $uiname : ".ui-doublelist";
 	) !global;
 } @else {
 }
-#{$uiname} {
+div#{$uiname} {
 	// current style
 	// means #{$pr}-bar
 	font-size:12px;
@@ -58,6 +58,7 @@ $uiname : ".ui-doublelist";
 	}
 	.ui-button{
 		height: 24px;
+		*height: auto;
 		line-height: 24px;
 		background-color: map-get($doublelist, buttonBg);
 		border: 1px solid $ui-state-default-border-color;

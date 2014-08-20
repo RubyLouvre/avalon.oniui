@@ -121,6 +121,9 @@ define(["avalon",
             }
 
             vm._theadRenderedCallback = function() {
+                var fns = getHiddenParent(vm.widgetElement)
+                fns[0]()
+
                 //位于表头的data-repeat-rendered回调,用于得到table的宽度
                 var tr = this //这是TR元素
                 var tbody = this.parentNode//tbody
@@ -134,10 +137,10 @@ define(["avalon",
                 }
                 vm.topTable = table //重置真正的代表表头的table
                 vm.theadHeight = avalon(table).innerHeight()
-
                 vm.scrollPanel = table.parentNode.parentNode//重置包含两个table的会出现滚动条的容器对象
 
                 vm.gridWidth = Math.min(table.offsetWidth, vm.scrollPanel.offsetWidth) + 1
+                fns[1]()
                 //console.log(table.offsetWidth, vm.scrollPanel.offsetWidth,vm.gridWidth)
                 vm.theadRenderedCallback.call(tbody, vmodel, options, vmodels)
             }
@@ -149,6 +152,8 @@ define(["avalon",
 
                 //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
                 if (cell) {
+                    var fns = getHiddenParent(vm.widgetElement)
+                    fns[0]()
                     var table = vm.bottomTable = this.parentNode;
                     var noResultHeight = !vmodel._data.size() ? vmodel.noResultHeight : 0;
                     vm.tbodyHeight = avalon(table).innerHeight() + noResultHeight//求出可见区的总高度
@@ -159,7 +164,7 @@ define(["avalon",
                     var borderHeight = Math.max(avalon.css(cell, "borderTopWidth", true),
                             avalon.css(cell, "borderBottomWidth", true))
                     vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
-
+                    fns[1]()
 
                     vm.tbodyRenderedCallback.call(tbody, vmodel, options, vmodels)
 
@@ -577,7 +582,24 @@ define(["avalon",
         value = !!value
         elem[name] = typeof elem[name] === "boolean" ? elem[name] : value
     }
-
+    function getHiddenParent(parent) {
+        do {
+            if (avalon(parent).css("display") === "none") {
+                var oldV, $parent = avalon(parent)
+                return [function show() {
+                        $parent.css("display", "block")
+                        oldV = $parent.css("visibility")
+                    }, function hide() {
+                        $parent.css("display", "none")
+                        $parent.css("visibility", oldV)
+                    }]
+            }
+            if (parent.tagName === "BODY") {
+                break
+            }
+        } while (parent = parent.parentNode);
+        return [avalon.noop, avalon.noop]
+    }
 
 
     function makeTemplate(opts, name, value) {

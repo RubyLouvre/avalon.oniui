@@ -10,7 +10,6 @@
         <script src="history.js"></script>
         <script src="./highlight/shCore.js"></script>
         <link rel=stylesheet type=text/css href="pages/timeline/css/base.css"/>
-
         <script>
             var page = avalon.define("pages", function(vm) {
                 vm.pages = [{
@@ -48,9 +47,12 @@
                 }
             })
             page.activeIndex = page.computeActiveIndex();
+            require(["uptop/avalon.uptop"], function() {
+                avalon.scan(document.body, page)
+            })
         </script>
     </head>
-    <body class="ms-controller" ms-controller="pages">
+    <body class="ms-controller" ms-controller="pages" ms-uptop>
         <div class="header">
             <div class="fix">
                 <div class="nav">
@@ -81,7 +83,7 @@
             </ul>
         </div>
     <script>
-    require("dialog/avalon.dialog.js", function(avalon) {
+    require(["dialog/avalon.dialog.js"], function(avalon) {
         var docCssReg = /<link[^>]*style\/avalon\.doc\.css[^>]*\>/img,
             widgets = ["accordion", "at","browser", "checkboxlist", "colorpicker", "cookie", 
                 "coupledatepicker", "datepicker", "daterangepicker", "dialog",

@@ -95,7 +95,7 @@
                     <tr>
                         <td>onSort(vmodel)</td> <td>函数</td>  <td>排序后执行的回调 </td> 
                     </tr>
-                     <tr>
+                    <tr>
                         <td>evenClass</td> <td>"even"</td>  <td>为表身的偶数行添加一个类名，以实现斑马线效果。 </td> 
                     </tr>
                     <tr>
@@ -103,9 +103,9 @@
                     </tr>
                     <tr>
                         <td>remoteSort(field, trend, vmodel, callback)</td> <td>函数</td>  <td>远程排序, 用户需要定义一个函数,框架会为它传入四个参数
-                        field是要排序的值,trend为排序方向,vmodel为VM,callback是AJAX回调里需要执行的回调,要求传入一个数组
-                        
-                        <pre  class="brush:javascript;gutter:false;toolbar:false">
+                            field是要排序的值,trend为排序方向,vmodel为VM,callback是AJAX回调里需要执行的回调,要求传入一个数组
+
+                            <pre  class="brush:javascript;gutter:false;toolbar:false">
                             remoteSort: function(field, trend, vmodel, callback){
                                $.ajax({
                                    url: url,
@@ -120,8 +120,8 @@
                                     }
                                })
                              }
-                        </pre>
-                        
+                            </pre>
+
                         </td> 
                     </tr>
                     <tr>
@@ -167,6 +167,8 @@
                 <li><a href="avalon.simplegrid.ex11.html">演示tbodyTemplate的使用</a></li>
                 <li><a href="avalon.simplegrid.ex12.html">演示theadRenderedCallback的使用(数据汇总)</a></li>
                 <li><a href="avalon.simplegrid.ex13.html">演示环比同比表格</a></li>
+                <li><a href="avalon.simplegrid.ex14.html">切换卡(非组件)里面套着表格</a></li>
+                <li><a href="avalon.simplegrid.ex15.html">表格套textbox组件</a></li>
             </ul>
         </div>
     </body>

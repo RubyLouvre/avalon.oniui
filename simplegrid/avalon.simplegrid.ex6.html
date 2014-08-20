@@ -34,11 +34,11 @@
                         tbodyTemplate: function(str) {
                             return str.replace(/\|\s*html/, "|sanitize|html")
                         },
-                        showRows: 60,
+                        showRows: 10,
                         data: getData(1000),
                         pageable: true,
                         pager: {
-                            totalItems: 2000,
+                            totalItems: 2000
                         }
                     }
                     vm.$skipArray = ["simplegrid"]
@@ -53,7 +53,7 @@
         <fieldset ms-controller="test">
             <legend>演示无限拖</legend>
 
-            <div ms-widget="simplegrid" style="width:99%;">
+            <div ms-widget="simplegrid" style="width:70%;">
 
             </div>
             <p>如果数据是用户输入的,可存在的跨域攻击的危险,因此需要过滤一下,我们可以用tbodyTemplate修改一下。tbodyTemplate可以函数也可以是字符串，
@@ -94,7 +94,7 @@
                         tbodyTemplate: function(str) {
                             return str.replace(/\|\s*html/, "|sanitize|html")
                         },
-                        showRows: 15,
+                        showRows: 10,
                         data: getData(1000)
                     }
                     vm.$skipArray = ["simplegrid"]

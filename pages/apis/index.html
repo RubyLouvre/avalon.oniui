@@ -69,6 +69,8 @@
 
         }
         vm.callbacks = ["data-callback"]
+        vm.staticMethod = ["static-method"]
+        vm.prototypeMethod = ["prototype-method"]
         vm.supportSVG = !!window.SVGElement
         vm.concepts = [
             {
@@ -202,9 +204,15 @@
                 </li>
                 <li>
                     <div class="title">静态方法</div>
+                    <ul class="child-nav">
+                        <li ms-repeat="staticMethod" ms-click="scrollToView(el)">静态方法</li>
+                    </ul>
                 </li>
                 <li>
                     <div class="title">原型方法</div>
+                    <ul class="child-nav">
+                        <li ms-repeat="prototypeMethod" ms-click="scrollToView(el)">原型方法</li>
+                    </ul>
                 </li>
             </ul>
         </td>

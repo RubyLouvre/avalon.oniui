@@ -958,6 +958,10 @@ vm.<span class="atn">$simplegridLOpts</span> = {
                                 noResultHeight: 200,
                                 onSort: function(vmodel) {
                                     avalon.log("排序完成用户回调")
+                                },
+                                pageable: true,
+                                pager: {
+                                    totalItems: 200
                                 }
                             }
                             vm.$simplegridCOpts = {

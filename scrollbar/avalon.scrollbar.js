@@ -204,7 +204,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
             // data-draggable-before-stop="beforeStopFn" 
             // data-draggable-stop="stopFn" 
             // data-draggable-containment="parent" 
-            vm.draggable = {
+            vm.$draggableOpts = {
                 beforeStart: function() {
                     vmodel.dragging = true
                 },
@@ -226,8 +226,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                 },
                 containment: "parent"
             }
-            vm.draggable.stop = function(e, data) {
-                vmodel.draggable.drag(e, data)
+            vm.$draggableOpts.stop = function(e, data) {
+                vmodel.$draggableOpts.drag(e, data)
                 vmodel.dragging = false
                 avalon(data.element).removeClass("ui-state-active")
             }
@@ -331,7 +331,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                     }
                     // 拖动逻辑前移，确保一定是初始化了的
                     if(ifInit && dragger) {
-                        dragger.attr("ms-draggable", "")
+                        dragger.attr("ms-draggable", "$,$draggableOpts")
                         dragger.attr("ui-scrollbar-pos", item)
                         dragger.attr("ui-scrollbar-index", i)
                         avalon.scan(dragger[0], vmodel)

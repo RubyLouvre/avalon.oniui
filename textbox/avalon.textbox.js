@@ -40,11 +40,6 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
             vm.toggle = false;
             vm.placehold = options.placeholder;
             
-            // input获得焦点时且输入域值为空时隐藏占位符?
-            vm.hidePlaceholder = function() {
-                vm.toggle = false;
-                element.focus();
-            }
             vm.blur = function() {
                 // 切换input外层包装的div元素class(ui-textbox-disabled)的显示或隐藏
                 vmodel.elementDisabled = element.disabled;
@@ -89,6 +84,10 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                     var suggest = avalon.parseHTML(suggestHTML).firstChild;
                     sourceList.appendChild(suggest);
                 }
+                avalon.bind(element, "focus", function() {
+                    console.log("focus")
+                    vmodel.toggle = true
+                })
                 avalon.scan(sourceList, models);
                 avalon.scan(element, models);
                 if(typeof options.onInit === "function" ){
@@ -100,6 +99,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 vm.toggle = element.value != "" ? false : true;
             }
         })
+
         var msData = element.msData["ms-duplex"];
         if (msData) {
             vmSub = avalon.getModel(msData, vmodels);

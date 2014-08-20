@@ -2,6 +2,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
     var htmlStructArray = sourceHTML.split("MS_OPTION_SUGGEST"),
         suggestHTML = htmlStructArray[1];
     var widget = avalon.ui.textbox = function(element, data, vmodels) {
+        console.log(data)
         var elemParent = element.parentNode,
             $element = avalon(element),
             options = data.textboxOptions,
@@ -14,34 +15,31 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
         sourceList = avalon.parseHTML(sourceHTML).firstChild ;
         inputWraper = sourceList.getElementsByTagName("div")[0];
         placeholder = sourceList.getElementsByTagName("span")[0];
+
+        if (options.suggest) {
+            var $suggestopts = {
+                    inputElement : element , 
+                    strategy : options.suggest , 
+                    textboxContainer : sourceList ,
+                    focus : options.suggestFocus ,
+                    onChange : options.suggestOnChange,
+                    type: "textbox",
+                },
+                renderItem = options.renderItem;
+
+            if (renderItem && avalon.type(renderItem) === "function") {
+                $suggestopts.renderItem = renderItem;
+            }
+            options.$suggestopts = $suggestopts;
+        }
         var vmodel = avalon.define(data.textboxId, function(vm) {
-            var msData = element.msData["ms-duplex"];
             avalon.mix(vm, options);
             vm.$skipArray = ["widgetElement", "disabledClass"];
             vm.widgetElement = element;
             vm.elementDisabled = "";
             vm.toggle = false;
             vm.placehold = options.placeholder;
-            if (msData) {
-                vmSub = avalon.getModel(msData, vmodels);
-                if(vmSub) {
-                    // 根据对元素双向绑定的数据的监听来判断是显示还是隐藏占位符，并且判定元素的禁用与否
-                    vmSub[1].$watch(vmSub[0], function() {
-                        vm.elementDisabled = element.disabled;
-                        vm.toggle = element.value != "" ? false : true;
-                    })
-                }
-            }
-            msData = element.msData["ms-disabled"] || element.msData["ms-enabled"];
-            if (msData) {
-                vmSub = avalon.getModel(msData, vmodels);
-                if (vmSub) {
-                    vmSub[1].$watch(vmSub[0], function() {
-                        vm.elementDisabled = element.disabled;
-                        vm.toggle = element.value != "" ? false : true;
-                    })
-                }
-            }
+            
             // input获得焦点时且输入域值为空时隐藏占位符?
             vm.hidePlaceholder = function() {
                 vm.toggle = false;
@@ -67,16 +65,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                  * ms-widget="suggest,suggestId,$suggestopts"中的
                  * $suggestopts自动获取
                  **/
-                if (options.suggest) {
-                    vm.$suggestopts = {
-                        inputElement : element , 
-                        strategy : options.suggest , 
-                        textboxContainer : sourceList ,
-                        focus : options.suggestFocus ,
-                        onChange : options.suggestOnChange,
-                        type: "textbox"
-                    }
-                }
+                
                 var models = [vmodel].concat(vmodels);
                 $element.addClass("ui-textbox-input");
                 // 包装原始输入域
@@ -111,6 +100,28 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 vm.toggle = element.value != "" ? false : true;
             }
         })
+        var msData = element.msData["ms-duplex"];
+        if (msData) {
+            vmSub = avalon.getModel(msData, vmodels);
+            if(vmSub) {
+                // 根据对元素双向绑定的数据的监听来判断是显示还是隐藏占位符，并且判定元素的禁用与否
+                vmSub[1].$watch(vmSub[0], function() {
+                    vmodel.elementDisabled = element.disabled;
+                    vmodel.toggle = element.value != "" ? false : true;
+                })
+            }
+        }
+        msData = element.msData["ms-disabled"] || element.msData["ms-enabled"];
+        if (msData) {
+            vmSub = avalon.getModel(msData, vmodels);
+            if (vmSub) {
+                vmSub[1].$watch(vmSub[0], function() {
+                    vmodel.elementDisabled = element.disabled;
+                    vmodel.toggle = element.value != "" ? false : true;
+                })
+            }
+        }
+
         return vmodel
     } 
     widget.defaults = {

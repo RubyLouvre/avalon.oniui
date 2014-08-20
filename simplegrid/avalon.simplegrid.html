@@ -37,6 +37,7 @@
                    ms-css-margin-left="cssLeft" >
                 <tr data-repeat-rendered="_tbodyRenderedCallback"
                     ms-repeat-row="_data"
+                    ms-class="{{rowClass}}:!($index % 2)"
                     ms-hover="ui-state-hover"
                     >
                     MS_OPTION_TBODY_BEGIN
@@ -53,6 +54,12 @@
                     MS_OPTION_TBODY_END
                 </tr>
             </table>
+            <div ms-if="!_data.size()" 
+                 ms-css-height="noResultHeight"
+                 ms-css-line-height="{{noResultHeight}}px"
+                 class="ui-simplegrid-empty">
+                {{noResultContent|html}}
+            </div>
         </div>
         <div class="ui-scrollbar-scroller">
             <div class="ui-simplegrid-scroll-marker" ms-css-height="getScrollerHeight()" 
@@ -64,4 +71,5 @@
     <div class="ui-simplegrid-pager-wrapper"  ms-if="pageable" id="pager-MS_OPTION_ID" >
 
     </div>
+    <div ms-widget="loading"></div>
 </div>

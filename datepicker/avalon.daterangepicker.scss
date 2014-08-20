@@ -46,6 +46,18 @@ $uiname: "ui-daterangepicker";
         position: relative;
         z-index: 1000;
         zoom: 1;
+        .ui-daterangepicker-quick-operation {
+            font-size: 12px;
+            border-bottom: 1px solid #f2f2f2;
+            margin: -5px 0 10px -10px;
+            padding-left: 10px;
+            span {
+                color: #3775c0;
+                padding: 6px 10px 6px 0;
+                @include inline-block();
+                cursor: pointer;
+            }
+        }
         .ui-datepicker-groups {
             position: absolute;
             z-index: 1000;

@@ -412,7 +412,25 @@ vm.<span class="str">changeMaxDate</span> = function() {
     xVM.<span class="atv">maxDate</span> = new Date(new Date().setDate(new Date().getDate()+40))
 }
 </pre>   
-                    
+                    <div class="padBom10">
+                        <span>配置showTip为false的datepicker Y：</span>
+                        <input ms-widget="datepicker, datepickerY"
+                               data-datepicker-show-tip="false"
+                               />
+                        <button ms-click="changeWidth">change width</button>
+                        <p>可以配置showTip为false不显示输入框的提示信息，默认显示，也可以配置width控制日期显示框的width，当然也可以动态修改，默认width为90px</p>
+                    </div>
+<pre ms-skip>
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"datepicker, datepickerY"</span>
+       <span class="atn">data-datepicker-show-tip</span><span class="pun">=</span><span class="atv">"false"</span>
+       /&gt;
+&lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"changeWidth"</span>&gt;change width&lt;/button&gt;
+</pre>
+<pre>
+vm.<span class="str">changeWidth</span> = function() {
+    avalon.vmodels.datepickerY.<span class="atv">width</span> = 200
+}
+</pre>
                     <a href="javascript:void 0;" class="btn larger">console下查看datepicker W的wigetElement</a>
                 </div>
                 <script>
@@ -510,6 +528,9 @@ vm.<span class="str">changeMaxDate</span> = function() {
                                 var xVM = avalon.vmodels.datepickerX;
                                 xVM.maxDate = new Date(new Date().setDate(new Date().getDate()+40))
                             }
+                            vm.changeWidth = function() {
+                                avalon.vmodels.datepickerY.width = 200
+                            }
                             
                         }) 
                         avalon.scan($("#datepickerNormal")[0], datepickerVM);
@@ -541,6 +562,7 @@ require(["datepicker/avalon.datepicker"],function(avalon) {
         vm.<span class="str">changeDisabled</span> = function() {<span class="atn"> ...... </span>}    
         vm.<span class="str">changeMinDate</span> = function() {<span class="atn"> ...... </span>}
         vm.<span class="str">changeMaxDate</span> = function() {<span class="atn"> ...... </span>}
+        vm.<span class="str">changeWidth</span> = function() {<span class="atn"> ...... </span>}
     }) 
     avalon.scan($("#datepickerNormal")[0], datepickerVM);
 })
@@ -860,7 +882,20 @@ vm.<span class="str">mRules</span> = {
 vm.<span class="atn">getDatesOfN</span> = function() {
     avalon.log(avalon.vmodels.coupledatepickerN.getDates());
 }  
-</pre>                          
+</pre>        
+                    <div class="padBom10">
+                        <span>配置changeMonthAndYear的coupledatepicker O：</span>
+                        <div ms-widget="coupledatepicker" 
+                             data-coupledatepicker-change-month-and-year="true"
+                             class="inline">
+                        </div>
+                    </div>   
+<pre ms-skip>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"coupledatepicker"</span> 
+     <span class="atn">data-coupledatepicker-change-month-and-year</span><span class="pun">=</span><span class="atv">"true"</span>
+     <span class="atn">class</span><span class="pun">=</span><span class="atv">"inline"</span>&gt;
+&lt;/div&gt;
+</pre>                                   
                 </div>
                 <script>
                     require(["datepicker/avalon.coupledatepicker"],function(avalon) {
@@ -1082,7 +1117,6 @@ vm.<span class="str">disableDaterangepickerH</span> = function() {
 </pre>                  
                     <div class="padBom10">
                         <span>自定义了解析规则和格式化规则的daterangepicker I：</span>
-                        <!-- 解析规则无效????? -->
                         <div ms-widget="daterangepicker, daterangepickerI, $daterangepickerIOpts" class="inline"></div>
                     </div>
 <pre ms-skip>
@@ -1207,6 +1241,9 @@ vm.<span class="str">mRules</span> = {
 vm.<span class="str">$daterangepickerNOpts</span> = {
     <span class="atn">opts</span>: {
         <span class="atv">msgFormat</span>: function(from, to) {
+            if (!from || !to) {
+                return
+            }
             return '已选时间段：' + from.getRawValue() + ' 至 ' + to.getRawValue() + ' 共计' + (Math.floor( (to.getDate().getTime() - from.getDate().getTime())/1000/60/60/24 + 1 ) - 1) + '晚';
         },
         <span class="atv">datesDisplayFormat</span>: function(label, fromDate, toDate) {
@@ -1281,7 +1318,7 @@ vm.<span class="str">setlabelOfQ</span> = function() {
 </pre>  
 
                     <div class="padBom10">
-                        <span>支持onSelect回调的daterangepicker R：</span>
+                        <span>支持onSelect、onOpen、onClose回调的daterangepicker R：</span>
                         <div ms-widget="daterangepicker, daterangepickerR, $daterangepickerROpts" class="inline">
                         </div>
                     </div>
@@ -1303,6 +1340,14 @@ vm.<span class="str">$daterangepickerROpts</span> = {
         avalon.log(vmodel);
         avalon.log("data is : ");
         avalon.log(data);
+    },
+    <span class="atv">onOpen</span>: function(vmodel) {
+        avalon.log("打开daterangepicke的回调,参数vmodel")
+        avalon.log(vmodel)
+    },
+    <span class="atv">onClose</span>: function(vmodel) {
+        avalon.log("关闭daterangepicke的回调,参数vmodel")
+        avalon.log(vmodel)
     }
 }
 </pre>           
@@ -1319,7 +1364,19 @@ vm.<span class="str">$daterangepickerROpts</span> = {
 vm.<span class="atn">getDatesOfS</span> = function() {
     avalon.log(avalon.vmodels.daterangepickerS.getDates());
 }  
-</pre>         
+</pre>    
+                    <div class="padBom10">
+                        <span>设置shortcut为true来打开快捷选项的daterangepicker R：</span>
+                        <div ms-widget="daterangepicker, daterangepickerS" 
+                             data-daterangepicker-shortcut="true"
+                             class="inline"></div>
+                    </div> 
+<pre>
+&lt;div <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"daterangepicker, daterangepickerS"</span> 
+     <span class="atn">data-daterangepicker-shortcut</span><span class="pun">=</span><span class="atv">"true"</span>
+     <span class="atn">class</span><span class="pun">=</span><span class="atv">"inline"</span>&gt;
+&lt;/div&gt;    
+</pre>
                 </div>
                 <script>
                     require(["datepicker/avalon.daterangepicker"],function(avalon) {
@@ -1374,6 +1431,9 @@ vm.<span class="atn">getDatesOfS</span> = function() {
                             vm.$daterangepickerNOpts = {
                                 opts: {
                                     msgFormat: function(from, to) {
+                                        if (!from || !to) {
+                                            return
+                                        }
                                         return '已选时间段：' + from.getRawValue() + ' 至 ' + to.getRawValue() + ' 共计' + (Math.floor( (to.getDate().getTime() - from.getDate().getTime())/1000/60/60/24 + 1 ) - 1) + '晚';
                                     },
                                     datesDisplayFormat: function(label, fromDate, toDate) {
@@ -1407,6 +1467,14 @@ vm.<span class="atn">getDatesOfS</span> = function() {
                                     avalon.log(vmodel);
                                     avalon.log("data is : ");
                                     avalon.log(data);
+                                },
+                                onOpen: function(vmodel) {
+                                    avalon.log("打开daterangepicke的回调,参数vmodel")
+                                    avalon.log(vmodel)
+                                },
+                                onClose: function(vmodel) {
+                                    avalon.log("关闭daterangepicke的回调,参数vmodel")
+                                    avalon.log(vmodel)
                                 }
                             }
                             vm.datesChanged = function(fromDate, toDate, oldValue, vmodel, data) {

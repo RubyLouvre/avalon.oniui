@@ -42,7 +42,7 @@
             <fieldset>
                 <legend>allowBlank为true时，不同初始化日期的表现情况</legend>
                 <input ms-widget="datepicker" data-datepicker-allow-blank="true" value="2014-06-07" data-datepicker-min-date="2014-06-10" data-datepicker-max-date="2014-06-16"/>
-                <p>说明：allowBlank为true，minDate为2014-06-10，maxDate为2014-06-16；初始日期为2014-06-07，输入框警示超出范围</p>
+                <p>说明：allowBlank为true，minDate为2014-06-10，maxDate为2014-06-16；初始日期为2014-06-07，超出范围，组件自动修正为minDate || maxDate</p>
             </fieldset>
             <fieldset>
                 <legend>allowBlank为false，自动更正初始值</legend>

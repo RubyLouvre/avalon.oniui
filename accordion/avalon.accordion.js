@@ -28,9 +28,10 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
             }
         })
         options.data = !options.data.length ? _data.$model || _data: options.data;
+
         var vmodel = avalon.define(data.accordionId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "rendered","autoRun","template","controlCls","currentTrigge","initIndex","multiple","trigger","triggerType","data"];
+            vm.$skipArray = ["widgetElement", "rendered","autoRun","template","accordionCls","currentTrigge","initIndex","multiple","trigger","triggerType","data", "accordionVmodel"];
             vm.widgetElement = element;
             vm.$headers = []; // 保存所有面板的header
             vm.$panels = []; // 保存所有的面板content
@@ -39,7 +40,7 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
             vm._renderView = function() {
                 var template = options.template;
                 var accordionItems = "";
-                var elementClass = 'ui-accordion ui-accordion-mode-' + options.mode + ' js-accordion' + accordionNum+" "+options.controlCls;
+                var elementClass = 'ui-accordion ui-accordion-mode-' + options.mode + ' js-accordion' + accordionNum+" "+options.accordionCls;
                 var header, content, trigger;
                 avalon(element).addClass(elementClass);
                 element.setAttribute("ms-css-width","width");
@@ -59,9 +60,9 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
                     }
                 }
                 if (options.trigger && trigger) { // 如果设置了触发 面板切换事件的节点class，那么将事件绑定在对应节点
-                    trigger.setAttribute("ms-on-"+options.triggerType, options.triggerType+"Callback($event,$index)")
+                    trigger.setAttribute("ms-on-"+options.triggerType, options.triggerType+"Callback($event,$index,widgetElement.$vmodel)")
                 } else { // 未设置触发节点则在整个header上触发
-                    header.setAttribute("ms-on-"+options.triggerType, options.triggerType+"Callback($event,$index)");
+                    header.setAttribute("ms-on-"+options.triggerType, options.triggerType+"Callback($event,$index, widgetElement.$vmodel)");
                     avalon(header).css("cursor","pointer");
                 }
                 // 当设置multiple为true时模板中的规则将导致异常，所以需要撤销这些异常设置
@@ -135,17 +136,18 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
                     }
                     vmodel.data = list;
                 }
+                element.$vmodel = vmodel;
                 if (options.autoRun) {
                     vm._renderView();
                 }
             }
             // 点击面板header时的回调,设置triggerType为click时执行
-            vm.clickCallback = function(event,index) {
-                eventCallback(event, index);
+            vm.clickCallback = function(event,index, vmodel) {
+                vmodel._eventCallback(event, index);
             }
             // mouse over面板header时的回调，设置triggerType为mouseover时执行
-            vm.mouseoverCallback = function(event, index) {
-                eventCallback(event, index);
+            vm.mouseoverCallback = function(event, index, vmodel) {
+                vmodel._eventCallback(event, index);
             }
             vm.$remove = function() {
                 element.innerHTML = element.textContent = "";
@@ -204,35 +206,37 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
                     eventCallback(event, index);                    
                 }
             }
-            function eventCallback(event, index) {
-                var header = vmodel.getHeader(index),
-                    panel = vmodel.getPanel(index),
-                    headerActive = avalon(header).hasClass(options.currentTriggerCls);
-
-                header.headerActive = headerActive;
-                if (options.beforeSwitch.call(event.target, index, header, panel) === false) {
-                    return false;
-                }
-                if (options.multiple && !header.headerActive) {
-                    // 基数点击为展开
-                    avalon(header).addClass(options.currentTriggerCls);
-                    panel.style.display = "block";
-                } else if (options.multiple && header.headerActive) {
-                    // 偶数点击为收起
-                    avalon(header).removeClass(options.currentTriggerCls);
-                    panel.style.display = "none";
-                } 
-                vm.currentIndex = index;
-                options.onSwitch.call(event.target, index, header, panel);
-            }
+            vm._eventCallback = eventCallback
         });
+        function eventCallback(event, index) {
+            var header = vmodel.getHeader(index),
+                $header = avalon(header),
+                panel = vmodel.getPanel(index),
+                headerActive = (function() {return options.currentTriggerCls.trim().split(/\s/).every(function(c){return $header.hasClass(c)})}());
+
+            header.headerActive = headerActive;
+            if (options.beforeSwitch.call(event.target, index, header, panel) === false) {
+                return false;
+            }
+            if (options.multiple && !header.headerActive) {
+                // 基数点击为展开
+                avalon(header).addClass(options.currentTriggerCls);
+                panel.style.display = "block";
+            } else if (options.multiple && header.headerActive) {
+                // 偶数点击为收起
+                avalon(header).removeClass(options.currentTriggerCls);
+                panel.style.display = "none";
+            } 
+            vmodel.currentIndex = index;
+            options.onSwitch.call(event.target, index, header, panel);
+        }
         return vmodel;
     }
     widget.version = 1.0
     widget.defaults = {
         autoRun: true, // 设为true自动渲染accordion组件，设为false不渲染，只在合适的时候手动调用refresh进行渲染
         template: "", // 用户自定义template
-        controlCls: "", // 为accordion容器自定义的class
+        accordionCls: "", // 为accordion容器自定义的class
         currentTriggerCls: "ui-state-active ui-corner-top", // 展开accordion面板时，header添加的class
         data: [], // 渲染accordion的header和panel信息
         initIndex: null, // 初始打开的面板

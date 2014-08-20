@@ -29,23 +29,11 @@ define(["avalon",
         var vmodel = avalon.define(data.pagerId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
-            vm.$skipArray = ["showPages", "widgetElement", "template", "ellipseText", "alwaysShowPrev", "alwaysShowNext"]//这些属性不被监控
+            vm.$skipArray = ["showPages", "widgetElement", "template", "ellipseText", "alwaysShowPrev", "alwaysShowNext", "_inputPage"]
+            vm._inputPage = 0
+            //这些属性不被监控
             vm.$init = function() {
                 var pageHTML = options.template
-                if (vmodel.alwaysShowPrev) {
-                    pageHTML = pageHTML.replace('ms-if="firstPage!==1"', "")
-                }
-                if (vmodel.alwaysShowNext) {
-                    var index = 0
-                    pageHTML = pageHTML.replace(/ms-if="lastPage!==totalPages"/g, function(a) {
-                        index++
-                        if (index == 3) {
-                            return ""
-                        } else {
-                            return a
-                        }
-                    })
-                }
                 element.innerHTML = pageHTML
                 avalon.scan(element, [vmodel].concat(vmodels))
                 if (typeof options.onInit === "function") {
@@ -95,12 +83,29 @@ define(["avalon",
             vm.$watch("currentPage", function(a) {
                 vmodel._currentPage = a
             })
-        
+            vm.isShowPrev = function() {
+                var a = vm.alwaysShowPrev
+                var b = vm.firstPage
+                return a || b !== 1
+            }
+            vm.isShowNext = function() {
+                var a = vm.alwaysShowNext
+                var b = vm.lastPage
+                var c = vm.totalPages
+                return a || b !== c
+            }
+
             vm.changeCurrentPage = function(e) {
-                if (e.type === "keyup" && e.keyCode !== 13)
+                var value = 0
+                if (e.type === "keyup") {
+                    vmodel._inputPage = parseInt(this.value, 10) || 1;
+                    if (e.keyCode !== 13) return
+                }
+                value = vmodel._inputPage
+                if (value > vmodel.totalPages || value < vmodel.firstPage)
                     return
                 //currentPage需要转换为Number类型 fix lb1064@qq.com
-                vmodel.currentPage = parseInt(this.value, 10) || 1
+                vmodel.currentPage = value
                 vmodel.pages = getPages(vmodel)
             }
             vm.pages = []

@@ -1,0 +1,82 @@
+<h3 id="ms-include">模板绑定(ms-include & ms-include-src)</h3>
+<p>这里涉及两种模板， <b>内部模板</b>与<b>外部模板</b>。</p>
+<p>内部模板是指模板是放在页面一个特殊元素中， 如display:none的text元素， type属性乱串改了的script元素， 
+    或者不太常用但更简洁的noscript元素。这些元素需要添加一个ID，方便我们能引用到它。</p>
+<p>外部模板是指模板独立于当前页面的一个文件，它需要用ms-include-src引入。它通常用于多个页面的复用。</p>
+<p>注意，当你使用ms-include时， 如果你使用双重引号，表示这只是一个字符串；只有一个引号，表示这是VM的属性。</p>
+<p ms-skip>注意，当你使用ms-include-src时， 你可以使用{{}}插值表达式，进行更便捷的处理。</p>
+<p>如果大家想在模板加载后，加工一下模板，可以使用data-include-loaded来指定回调的名字。框架传入当前模板与相关VM给你加工它。</p>
+<p>如果大家想在模板扫描后，隐藏loading什么的，可以使用data-include-rendered来指定回调的名字。</p>
+<pre class="brush:javascript;gutter:false;toolbar:false">
+var vmodels = data.vmodels
+var rendered = getBindingCallback(elem.getAttribute("data-include-rendered"), vmodels)
+var loaded = getBindingCallback(elem.getAttribute("data-include-loaded"), vmodels)
+
+function scanTemplate(text) {
+    if (loaded) {
+        text = loaded.apply(elem, [text].concat(vmodels))
+    }
+    avalon.innerHTML(elem, text)
+    scanNodes(elem, vmodels)
+    rendered && checkScan(elem, function() {
+        rendered.call(elem)
+    })
+}
+</pre>
+<p>ms-include-src加载回来的所有模板，使用保存在avalon.templateCache对象上。如果你是使用了require.js或$.ajax自己预先加载了模板，
+    或想减少请求数将所有模板文件与JS文件都打包成一个文件，那么我们可以通过avalon.templateCache[url] = templateString，也能完美应用
+    ms-include-src。
+</p>
+<pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;avalon.templateCache的应用&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="avalon.js"&gt;&lt;/script&gt;
+        &lt;script&gt;
+            avalon.templateCache["aaa.html"] = "&lt;p&gt;这是第一个模板&lt;/p&gt;"
+            avalon.templateCache["bbb.html"] = "&lt;p&gt;This is the second template&lt;/p&gt;"
+
+            avalon.define("ms-include-test", function(vm) {
+                vm.adjust = function(tmpl){
+                    return "&lt;/p&gt;", " updated in "+(new Date - 0) +"&lt;/p&gt;")
+                }
+               vm.aaa = "aaa.html"
+               vm.toggle = function(){
+                     vm.aaa  = vm.aaa === "aaa.html" ? "bbb.html" : "aaa.html"
+               }
+            })
+
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="ms-include-test"&gt;
+        &lt;button type="button" ms-click="toggle"&gt;toggle&lt;/button&gt;
+        &lt;div ms-include-src="aaa" data-include-loaded="adjust"&gt;&lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<p>有关它的高级应用的例子可见这里利用<a href="https://github.com/RubyLouvre/avalon/issues/46">ms-include与监控数组实现一个树</a>。</p>
+<p>注意，ms-include-src需要后端服务器支持，因为用到同域的AJAX请求。</p>
+
+<script>
+    avalon.templateCache["aaa.html"] = "<p>这是第一个模板</p>"
+    avalon.templateCache["bbb.html"] = "<p>This is the second template</p>"
+    avalon.define("ms-include-test", function(vm) {
+        vm.adjust = function(tmpl) {
+            return tmpl.replace("</p>", " updated in "+(new Date - 0) +"</p>")
+        }
+        vm.toggle = function(){
+            vm.aaa  = vm.aaa === "aaa.html" ? "bbb.html" : "aaa.html"
+        }
+        vm.aaa = "aaa.html"
+    })
+</script>
+</head>
+<fieldset ms-controller="ms-include-test"><legend>示例</legend>
+    <button type="button" ms-click="toggle">toggle</button>
+    <span ms-include-src="aaa" data-include-loaded="adjust"></span>
+</fieldset>
+
+

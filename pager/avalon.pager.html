@@ -1,13 +1,13 @@
 <div class="ui-pager" onselectstart="return false;" unselectable="on">
     <span class="ui-pager-prev"
           ms-class="ui-state-disabled:firstPage==1"
-          ms-if="firstPage!==1" 
+          ms-if="isShowPrev()"
           ms-title="getTitle('prev')" 
           ms-click="jumpPage($event,'prev')" 
           ms-hover="ui-state-hover:firstPage!=1" 
           >{{prevText}}</span>
     <span class="ui-pager-item"
-          ms-if="firstPage!==1" 
+          ms-visible="firstPage!==1" 
           ms-title="getTitle('first')" 
           ms-click="jumpPage($event,'first')" 
           ms-hover="ui-state-hover" >1</span>
@@ -25,13 +25,13 @@
           ms-if="showLastOmit" 
           >{{ellipseText}}</span>
     <span class="ui-pager-item "
-          ms-if="lastPage!==totalPages" 
+          ms-visible="lastPage!==totalPages" 
           ms-title="getTitle('last')" 
           ms-hover="ui-state-hover" 
           ms-click="jumpPage($event,'last')"  
           >{{totalPages}}</span>
     <span class="ui-pager-next"
-          ms-if="lastPage!==totalPages" 
+          ms-if="isShowNext()" 
           ms-title="getTitle('next')"
           ms-hover="ui-state-hover:lastPage!=totalPages" 
           ms-click="jumpPage($event,'next')" 

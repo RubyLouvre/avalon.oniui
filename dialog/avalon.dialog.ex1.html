@@ -57,13 +57,18 @@
                         <div ms-widget="dialog,aa">
                             呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
                             <p>{{message}}</p>
+                            <ul ms-widget="checkboxlist" data-checkboxlist-duplex="check1">
+                                <li><input type="checkbox" value="1">选项一{{name}}</li>
+                                <li><input type="checkbox" value="2">选项二{{name}}</li>
+                                <li><input type="checkbox" value="3">选项三{{name}}</li>
+                            </ul>
                         </div>
                 </fieldset>
                 <script> 
                     avalon.ui.css = {
                         dialog: "dialog"
                     };
-                    require("dialog/avalon.dialog", function(avalon) {
+                    require(["dialog/avalon.dialog", "checkboxlist/avalon.checkboxlist"], function() {
                         avalon.define("test", function(vm) {
                             vm.a = "test";
                         })
@@ -72,6 +77,8 @@
                             vm.show = function( id ){
                                 avalon.vmodels[id].toggle = true;
                             }
+                            vm.name = "xueer";
+                            vm.check1 = ["1"];
                         })
                         avalon.scan();
                     })

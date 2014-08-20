@@ -2,17 +2,18 @@
 @import "../chameleon/oniui-theme";
 $uiname : "ui-simplegrid";
 
-
+        
 
 .#{$uiname}{
     width:100%;
     border: 1px solid $ui-state-default-border-color;
+    position: relative;
     @extend %oniui-font-setting;
     .#{$uiname}-scroll-wrapper{
         width:100%;
         overflow:auto;
         position: relative;
-
+        z-index: 0;
     }
     .#{$uiname}-wrapper{
         width:100%;
@@ -40,6 +41,9 @@ $uiname : "ui-simplegrid";
         border-left:none;
         border-right:none;
         border-collapse: collapse;
+        tr.even td, tr.even th {
+            background:rgb(247,247,247);
+        }
     }
     %cell-style{
         border: 0 none;
@@ -117,6 +121,9 @@ $uiname : "ui-simplegrid";
 
     .ui-pager{
         @include float-right();
+    }
+    .#{$uiname}-empty {
+        text-align: center;
     }
 }
 

@@ -34,7 +34,7 @@
                             if (window.dispatchEvent) {
                                 return str//IE678不支持div:hover效果
                             } else {
-                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-even="!($index % 2)" ')
+                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class="{{evenClass}}:$index % 2 == 0" ')
                             }
                         },
                         showRows: 10,
@@ -74,16 +74,8 @@
             </div>
             <div>
                 <h3>要点</h3>
-                <p>IE678下,需要通过getTemplate修改默认模板,为每一个tr加一个ms-class绑定,对应的类名自己在样式表添加</p>  
-                <pre class="brush:javascript;gutter:false;toolbar:false;">
-                        getTemplate: function(str) {
-                            if (window.dispatchEvent) {
-                                return str//IE678不支持div:hover效果
-                            } else {
-                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-even="!($index % 2)" ')
-                            }
-                        },
-                </pre>
+                <p>默认地,avalon会为表格的tbody偶数行添加一个even的类名,你也可以通过evenClass属性来配置它.</p>  
+  
                 <br/>
                 <pre class="brush:html;gutter:false;toolbar:false;">
 &lt;!DOCTYPE html&gt;
@@ -115,13 +107,7 @@
                             {field: "yyy", text: "列二", resizable: true},
                             {field: "xxx", text: "列一", resizable: true}
                         ],
-                        getTemplate: function(str) {
-                            if (window.dispatchEvent) {
-                                return str//IE678不支持div:hover效果
-                            } else {
-                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-even="!($index % 2)" ')
-                            }
-                        },
+                     
                         showRows: 10,
                         pageable: true,
                         pager: {

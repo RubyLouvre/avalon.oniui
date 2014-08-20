@@ -2,6 +2,7 @@
 define(["avalon",
     "text!./avalon.simplegrid.html",
     "../pager/avalon.pager",
+    "../loading/avalon.loading",
     "../scrollbar/avalon.scrollbar",
     "css!../chameleon/oniui-common.css",
     "css!./avalon.simplegrid.css"
@@ -40,6 +41,8 @@ define(["avalon",
         //<------开始配置分页的参数
         if (typeof options.pager !== "object") {
             options.pager = {}
+        } else {
+            options.pageable = true
         }
         var pager = options.pager
         //抽取要显示的数据(因为可能存在分页,不用全部显示,那么我们只将要显示的
@@ -86,10 +89,17 @@ define(["avalon",
         }
 
         var _vmodels
-
+        var loadingOpts = {
+            toggle: false,
+            onInit: function(vm, options, vmodels) {
+                vmodel.loadingVModel = vm;
+            }
+        }
+        options.loading = avalon.type(options.loading) === "object" ? avalon.mix(options.loading, loadingOpts) : loadingOpts
         var vmodel = avalon.define(data.simplegridId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "data", "scrollPanel", "topTable", "bottomTable", "startIndex", "pager", "endIndex", "template"]
+            vm.$skipArray = ["widgetElement", "data", "scrollPanel", "topTable", "bottomTable", "startIndex", "pager", "endIndex", "template", "loading", "loadingVModel"]
+            vm.loadingVModel = null
             vm.widgetElement = element
             vm.gridWidth = "100%"
             vm.startIndex = 0
@@ -111,6 +121,9 @@ define(["avalon",
             }
 
             vm._theadRenderedCallback = function() {
+                var fns = getHiddenParent(vm.widgetElement)
+                fns[0]()
+
                 //位于表头的data-repeat-rendered回调,用于得到table的宽度
                 var tr = this //这是TR元素
                 var tbody = this.parentNode//tbody
@@ -124,10 +137,10 @@ define(["avalon",
                 }
                 vm.topTable = table //重置真正的代表表头的table
                 vm.theadHeight = avalon(table).innerHeight()
-
                 vm.scrollPanel = table.parentNode.parentNode//重置包含两个table的会出现滚动条的容器对象
 
-                vm.gridWidth = Math.min(table.offsetWidth, vm.scrollPanel.offsetWidth)
+                vm.gridWidth = Math.min(table.offsetWidth, vm.scrollPanel.offsetWidth) + 1
+                fns[1]()
                 //console.log(table.offsetWidth, vm.scrollPanel.offsetWidth,vm.gridWidth)
                 vm.theadRenderedCallback.call(tbody, vmodel, options, vmodels)
             }
@@ -139,15 +152,19 @@ define(["avalon",
 
                 //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
                 if (cell) {
+                    var fns = getHiddenParent(vm.widgetElement)
+                    fns[0]()
                     var table = vm.bottomTable = this.parentNode;
-                    vm.tbodyHeight = avalon(table).innerHeight() //求出可见区的总高度
+                    var noResultHeight = !vmodel._data.size() ? vmodel.noResultHeight : 0;
+                    vm.tbodyHeight = avalon(table).innerHeight() + noResultHeight//求出可见区的总高度
+
                     vm._rowHeight = vm.tbodyHeight / tbody.rows.length //求出每一行的高
                     var perPages = vm.pager.perPages
                     vm.tbodyScrollHeight = vm._rowHeight * perPages
                     var borderHeight = Math.max(avalon.css(cell, "borderTopWidth", true),
                             avalon.css(cell, "borderBottomWidth", true))
                     vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
-
+                    fns[1]()
 
                     vm.tbodyRenderedCallback.call(tbody, vmodel, options, vmodels)
 
@@ -191,6 +208,12 @@ define(["avalon",
                 }
             }
 
+            vm.showLoading = function() {
+                vmodel.loadingVModel.toggle = true;
+            }
+            vm.hideLoading = function() {
+                vmodel.loadingVModel.toggle = false;
+            }
             vm.startResize = function(e, el) {
                 //当移动到表头的右侧,改变光标的形状,表示它可以拖动改变列宽
                 if (options._drag || !el.resizable)
@@ -268,18 +291,7 @@ define(["avalon",
                 var opts = vmodel.$model
                 trend = trend ? 1 : -1
                 if (typeof opts.remoteSort === "function" && !remptyfn.test(opts.remoteSort)) {
-                    //如果指定了回调函数,通过服务器端进行排数,那么能回调传入当前字段,状态,VM本身及callback
-                    function callback(array) {
-                        vmodel.data = array
-                        vmodel._data = vmodel.getStore(array, vmodel)
-                        if (typeof vmodel.onSort === "function") {
-                            setTimeout(function() {
-                                vmodel.onSort(vmodel)
-                            }, 500)
-                        }
-                    }
-                    //
-                    vmodel.remoteSort(field, trend, vmodel, callback)
+                    vmodel.remoteSort(field, trend, vmodel)
                 } else if (typeof el.localSort === "function" && !remptyfn.test(el.localSort)) {// !isEmptyFn(el.localSort)
                     //如果要在本地排序,并且指定排数函数
                     vmodel._data.sort(function(a, b) {
@@ -446,10 +458,13 @@ define(["avalon",
     }
     widget.defaults = {
         theadHeight: 35,
+        noResultHeight: 100,
         tbodyScrollHeight: "auto",
+        rowClass: "even",
         showScrollbar: "always", //滚动条什么时候显示，默认一直，可设置为never，scrolling
         tbodyScrollTop: 0,
         tbodyHeight: "auto",
+        evenClass: "even",
         _rowHeight: 35, //实际行高,包含border什么的
         _rowHeightNoBorders: 0,
         columnWidth: 160,
@@ -461,9 +476,11 @@ define(["avalon",
         pageable: false,
         syncTheadColumnsOrder: true,
         remoteSort: avalon.noop, //远程排数函数
-        theadRenderedCallback: function(tbody, vmodel, options, vmodels) {
+        noResultContent: "暂无结果",
+        theadRenderedCallback: function(vmodel, options, vmodels) {
         },
-        tbodyRenderedCallback: function(tbody, vmodel, options, vmodels) {
+        tbodyRenderedCallback: function(vmodel, options, vmodels) {
+            window.scrollTo(0, avalon(vmodel.widgetElement).offset().top - 60)
         },
         renderCell: function(val, key, row) {
             return val
@@ -477,6 +494,11 @@ define(["avalon",
         reRender: function(data, vm) {
             vm.data = data;
             vm._data = vm.getStore(data, vm);
+            if (typeof vm.onSort === "function") {
+                setTimeout(function() {
+                    vm.onSort(vm)
+                }, 500)
+            }
         },
         getStore: function(array, vm) {
             return array.slice(vm.startIndex, vm.endIndex)
@@ -560,7 +582,24 @@ define(["avalon",
         value = !!value
         elem[name] = typeof elem[name] === "boolean" ? elem[name] : value
     }
-
+    function getHiddenParent(parent) {
+        do {
+            if (avalon(parent).css("display") === "none") {
+                var oldV, $parent = avalon(parent)
+                return [function show() {
+                        $parent.css("display", "block")
+                        oldV = $parent.css("visibility")
+                    }, function hide() {
+                        $parent.css("display", "none")
+                        $parent.css("visibility", oldV)
+                    }]
+            }
+            if (parent.tagName === "BODY") {
+                break
+            }
+        } while (parent = parent.parentNode);
+        return [avalon.noop, avalon.noop]
+    }
 
 
     function makeTemplate(opts, name, value) {

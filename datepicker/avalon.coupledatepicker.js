@@ -95,7 +95,7 @@ define(["../avalon.getModel",
                 return (inputFromDate && inputToDate && [inputFromDate, inputToDate]) || null;
             } 
             vm.$init = function() {
-                var template = options.template.replace(/MS_OPTION_FROM_LABEL/g,vmodel.fromLabel).replace(/MS_OPTION_TO_LABEL/g,vmodel.toLabel).replace(/MS_OPTION_START_DAY/g, vmodel.startDay).split("MS_OPTION_TEMPLATE"),
+                var template = options.template.replace(/MS_OPTION_FROM_LABEL/g,vmodel.fromLabel).replace(/MS_OPTION_TO_LABEL/g,vmodel.toLabel).replace(/MS_OPTION_START_DAY/g, vmodel.startDay).replace(/MS_OPTION_CHANGE_MONTH_AND_YEAR/g, vmodel.changeMonthAndYear).split("MS_OPTION_TEMPLATE"),
                     containerTemp = template[0],
                     inputOnlyTemp = template[1],
                     calendar = null,
@@ -244,6 +244,7 @@ define(["../avalon.getModel",
         container : [], //必选，渲染的容器，每个元素类型为 {Element|JQuery|String}
         fromLabel : '选择起始日期',   // 起始日期日历框上方提示文字
         toLabel : '选择结束日期',     // 结束日期日历框上方提示文字
+        changeMonthAndYear: false,
         widgetElement: "", // accordion容器
         disabled: false,
         startDay: 1,    //星期开始时间

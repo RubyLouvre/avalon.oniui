@@ -4,5 +4,5 @@
 */
 .ui-checkboxlist { list-style: none; padding: 0; }
 .ui-checkboxlist .ui-checkboxlist-item.fl { padding-right: 10px; }
-.ui-checkboxlist .ui-checkboxlist-item input { vertical-align: middle; margin-right: "5px"; }
+.ui-checkboxlist .ui-checkboxlist-item input { vertical-align: middle; margin: 0 0 0 5px; }
 .ui-checkboxlist .ui-checkboxlist-all.fl { padding-right: 20px; }

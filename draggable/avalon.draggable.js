@@ -47,6 +47,7 @@ define(["avalon"], function(avalon) {
     }
 
     var draggable = avalon.bindingHandlers.draggable = function(data, vmodels) {
+        console.log(data)
         var args = data.value.match(avalon.rword) || ["$", "draggable"]
         var ID = args[0].trim(), opts = args[1], model, vmOptions
         if (ID && ID != "$") {

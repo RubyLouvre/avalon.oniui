@@ -1,13 +1,30 @@
-define(["avalon", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.css", "css!./avalon.spinner.css"], function(avalon, sourceHTML) {
+define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.css", "css!./avalon.spinner.css"], function(avalon, sourceHTML) {
     var widget = avalon.ui.spinner = function(element, data, vmodels) {
         var options = data.spinnerOptions,
-            template = sourceHTML;
+            template = sourceHTML,
+            duplex = element.msData["ms-duplex"],
+            duplexVM = duplex && avalon.getModel(duplex, vmodels) || null,
+            disabled = element.msData["ms-disabled"],
+            disabledVM = disabled && avalon.getModel(disabled, vmodels) || null;
+        if (duplexVM) {
+            duplexVM[1].$watch(duplexVM[0], function(val) {
+                vmodel.value = val;
+            })
+        }
+        if (disabledVM) {
+            disabledVM[1].$watch(disabledVM[0], function(val) {
+                vmodel.disabled = val;
+            })
+        }
+
         options.template = options.getTemplate(template, options);
+        options.value = options.value || element.value;
+        options.disabled = disabled && disabledVM && disabledVM[1][disabledVM[0]] || element.disabled || false;
         var vmodel = avalon.define(data.spinnerId, function(vm) {
             avalon.mix(vm, options);
             vm.$skipArray = ["min", "max", "widgetElement", "step"];
             vm.widgetElement = element;
-            var wrapper = null, focusValue = 0;
+            var wrapper = null/*, focusValue = 0*/;
             vm.$init = function() {
                 wrapper = avalon.parseHTML(options.template).firstChild;
                 var tmpBElement = wrapper.getElementsByTagName("b")[0],
@@ -21,6 +38,7 @@ define(["avalon", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.c
                 // 模板中插入临时DOM节点b，为了方便查找放置input的父节点，将element放到合适的位置之后要移除临时节点
                 tmpBParent.removeChild(tmpBElement);
                 elementParent.replaceChild(wrapper, tmpDiv);
+
                 avalon.scan(wrapper, [vmodel].concat(vmodels));
                 if(typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
@@ -36,7 +54,7 @@ define(["avalon", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.c
                     if( typeof max == 'number' && !isNaN(Number(max)) && value > max) {
                         value = max;
                     } 
-                    element.value  = value;
+                    vmodel.value = element.value  = value;
                 }, 400)
             }
             vm.$remove = function() {
@@ -48,11 +66,11 @@ define(["avalon", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.c
                     subValue = 0;
                 subValue = value + (options.step || 1);
                 // 如果subValue不是number类型说明value包含非数值字符，或者options.step包含非数值字符
-                if(isNaN(subValue)) {
-                    throw new Error("输入域的值非数值，或者step的设置为非数值，请检查");
-                }
+                // if(isNaN(subValue)) {
+                //     throw new Error("输入域的值非数值，或者step的设置为非数值，请检查");
+                // }
                 subValue = checkNum(subValue);
-                element.value = subValue;
+                vmodel.value = element.value = subValue;
                 options.onIncrease.call(event.target, subValue);
             }
             vm._sub = function(event) { // minus number by step
@@ -63,23 +81,28 @@ define(["avalon", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.c
                     throw new Error("输入域的值非数值，或者step的设置为非数值，请检查");
                 }
                 subValue = checkNum(subValue);
-                element.value = subValue;
+                vmodel.value = element.value = subValue;
                 options.onDecrease.call(event.target, subValue);
             }
+            vm.$watch("value", function(val) {
+                element.value = val;
+            })
             function decorateElement() {
                 var $element = avalon(element);
                 $element.addClass("ui-textbox-input");
-                $element.bind("focus", function() {
-                    focusValue = element.value;
-                })
+                $element.attr("ms-css-width", "width");
+                $element.attr("ms-class", "ui-state-disabled:disabled")
+                // $element.bind("focus", function() {
+                //     focusValue = element.value;
+                // })
                 $element.bind("blur", function() {
                     value = element.value;
-                    if(!isNaN(Number(value))) {
-                        value = checkNum(element.value);
-                    } else {
-                        value = focusValue;
-                    }
-                    element.value = value;
+                    // if(!isNaN(Number(value))) {
+                    //     value = checkNum(element.value);
+                    // } else {
+                    //     value = focusValue;
+                    // }
+                    vmodel.value = element.value = value;
                 })
                 $element.bind("keydown", function(event) {
                     switch( event.which ) {
@@ -115,6 +138,9 @@ define(["avalon", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.c
         min: NaN,
         max: NaN,
         step: 1,
+        width: "auto",
+        value: 0,
+        disabled: false,
         widgetElement: "", // accordion容器
         getTemplate: function(str, options) {
             return str;

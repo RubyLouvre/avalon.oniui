@@ -31,6 +31,10 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
             vm.toggle = false;
             vm.loading = false;
             vm.selectedIndex = 0;
+            vm._renderItem = function(item) {
+                return vmodel.renderItem(item, vmodel);
+            }
+            
             // 监控toggle值变化，当toggle为true时更新提示框尺寸
             vm.$watch('toggle', function(v) {
                 var inputElement = options.inputElement,
@@ -136,7 +140,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                         break;
                     }
                 })
-                avalon.bind(options.inputElement, "blur", vm.hidepromptinfo);
+                avalon.bind(document, "click", vm.hidepromptinfo);
                 avalon.nextTick(function() {
                     element.appendChild(suggestHtml);
                     avalon.scan(element, [vmodel].concat(vmodels)); 
@@ -184,7 +188,10 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
         strategy : "__getVal" , 
         textboxContainer : "" ,
         focus : false ,
-        changed : false
+        changed : false,
+        renderItem : function(item, vmodel) {
+            return item.replace(vmodel.searchText, "<b style='color:red'>$&</b>")
+        }
     };
     // 根据提示类型的不同提供提示信息，也就是信息的过滤方式完全由用户自己决定?
     avalon.ui["suggest"].strategies = {

@@ -353,7 +353,7 @@ define(["avalon",
                 // until change is applied to element, change scrollerHeight
                 setTimeout(function(loop) {
                     var _h = vmodel.getScrollbar().getScroller().css("height")
-                    if(h != h && !loop) {
+                    if(h != _h && !loop) {
                         arguments.callee(1)
                         return
                     }

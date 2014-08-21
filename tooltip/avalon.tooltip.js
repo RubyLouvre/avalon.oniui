@@ -143,7 +143,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                 if(vmodel.event == "mouseenter" && vmodel.delegate) {
                     vmodel.event = "mouseover"
                 }
-                window.event && element.setAttribute("ms-" + vmodel.event, "__show($event)")
+                vmodel.event && element.setAttribute("ms-" + vmodel.event, "__show($event)")
                 tooltipElem = tooltipELementMaker()
                 avalon.scan(tooltipElem, [vmodel].concat(vmodels))
                 avalon.scan(element, [vmodel].concat(vmodels))

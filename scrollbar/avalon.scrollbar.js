@@ -234,7 +234,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
 
             vm.$remove = function() {
                 avalon.each(bars, function(i, bar) {
-                    bar[0] && bar[0].parentNode && bar[0].parentNode.removeChild(bar)
+                    bar[0] && bar[0].parentNode && bar[0].parentNode.removeChild(bar[0])
                 })
             }
 

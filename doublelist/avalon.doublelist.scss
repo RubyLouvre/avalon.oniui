@@ -40,7 +40,7 @@ div#{$uiname} {
 	}
 	li {
 		list-style: none;
-		padding: 3px 6px;
+		padding: 5px 6px;
 		cursor: pointer;
 		color: map-get($doublelist, fontColor);
 	}
@@ -67,5 +67,9 @@ div#{$uiname} {
 		text-align: center;
 		margin-top: 10px;
 		cursor: pointer;
+	}
+	&-option div.ui-state-disabled{
+		border-color: #dedede;
+		color: #ccc;
 	}
 }

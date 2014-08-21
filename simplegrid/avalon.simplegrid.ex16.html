@@ -32,8 +32,10 @@
                             }, 3000)
                             setTimeout(function() {
                                 model.reRender(getData(20), model)
+                                console.log(model)
                             }, 8000)
                         },
+                        
                         data: getData(10)
                     }
                     vm.$skipArray = ["simplegrid"]

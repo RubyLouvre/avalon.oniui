@@ -72,8 +72,9 @@ $uiname : "ui-simplegrid";
 
     .#{$uiname}-pager-wrapper{
         width: 100%;
-        padding:2px 0px;
+        padding:5px 0px;
         overflow:hidden;
+        background-color: $ui-state-default-background-color;
     }
     .#{$uiname}-pager-options{
         float: left;

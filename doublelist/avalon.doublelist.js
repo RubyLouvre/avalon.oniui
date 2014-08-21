@@ -8,12 +8,14 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
         var options = data.doublelistOptions
         //方便用户对原始模板进行修改,提高定制性
         options.template = options.getTemplate(template, options)
-        var dataTmpSelect = [],
-            selectTmpSelect = []
+        // var dataTmpSelect = [],
+        //     selectTmpSelect = []
         var vmodel = avalon.define(data.doublelistId, function(vm) {
             vm.data = []
             vm.select = []
             vm._selectData = []
+            vm.dataTmpSelect = []
+            vm.selectTmpSelect = []
             avalon.mix(vm, options)
             if(vm.change != avalon.noop && vm.onChange == avalon.noop) {
                 vm.onChange = vm.change
@@ -90,7 +92,7 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                 avalon.vmodels["$right" + vmodel.$uid] && avalon.vmodels["$right" + vmodel.$uid].update()
             }
             vm._removeFrom = function(v, isSelected) {
-                var tar = isSelected ? selectTmpSelect : dataTmpSelect
+                var tar = isSelected ? vmodel.selectTmpSelect : vmodel.dataTmpSelect
                 for(var i = 0, len = tar.length; i < len; i++) {
                     if(v == tar[i]) {
                         tar.splice(i, 1)
@@ -109,8 +111,12 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                         ele.removeClass("ui-state-active")
                         vmodel._removeFrom(data.value, "fromSelected")
                     } else {
+                        // in case of duplication push
+                        for(var i = 0, len = vmodel.selectTmpSelect.length; i < len; i++) {
+                            if(vmodel.selectTmpSelect[i] == data.value) return
+                        }
                         ele.addClass("ui-state-active")
-                        selectTmpSelect.push(data.value)
+                        vmodel.selectTmpSelect.push(data.value)
                     }
                 } else {
                 // 待选区域的点击
@@ -118,14 +124,18 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                         ele.removeClass("ui-state-active")
                         vmodel._removeFrom(data.value)
                     } else {
+                        // in case of duplication push
+                        for(var i = 0, len = vmodel.dataTmpSelect.length; i < len; i++) {
+                            if(vmodel.dataTmpSelect[i] == data.value) return
+                        }
                         ele.addClass("ui-state-active")
-                        dataTmpSelect.push(data.value)
+                        vmodel.dataTmpSelect.push(data.value)
                     }
                 }
             }
             // 更新状态
             vm._update = function($event, addOrDelete) {
-                var tar = addOrDelete === "delete" ? selectTmpSelect : dataTmpSelect
+                var tar = addOrDelete === "delete" ? vmodel.selectTmpSelect : vmodel.dataTmpSelect
                 if(tar.length == 0) return
                 if(!vmodel.countLimit(vmodel.select, addOrDelete, tar.length)) return
                 if(addOrDelete === "delete") {
@@ -142,7 +152,7 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                         // }
                     }
                     // free data select
-                    avalon.each(dataTmpSelect, function(i, item) {
+                    avalon.each(vmodel.dataTmpSelect, function(i, item) {
                         avalon(document.getElementById("data" + item + vmodel.$uid)).removeClass("ui-state-active")
                     })
                 } else {
@@ -158,8 +168,10 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                         // }
                     }
                 }
-                selectTmpSelect = []
-                dataTmpSelect = []
+                // selectTmpSelect = []
+                // dataTmpSelect = []
+                vmodel.selectTmpSelect.clear()
+                vmodel.dataTmpSelect.clear()
                 vmodel._getSelect()
             }
             //@method reset(data, select) 重置，用新的data和select渲染，如果data为空，则不修改左侧list；如果select为空或者空数组，则清空已选，否则置为已选
@@ -177,8 +189,10 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                     }
                     vmodel.select = select
                 } else {
-                    selectTmpSelect = []
-                    dataTmpSelect = []
+                    // selectTmpSelect = []
+                    // dataTmpSelect = []
+                    vmodel.selectTmpSelect.clear()
+                    vmodel.dataTmpSelect.clear()
                 }
                 vmodel._getSelect()
             }

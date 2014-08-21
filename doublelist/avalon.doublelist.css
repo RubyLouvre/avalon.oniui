@@ -24,7 +24,7 @@ div.ui-doublelist {
   margin-top: 40px; }
 .ui-doublelist li {
   list-style: none;
-  padding: 3px 6px;
+  padding: 5px 6px;
   cursor: pointer;
   color: black; }
 .ui-doublelist li.ui-state-hover {
@@ -47,3 +47,6 @@ div.ui-doublelist {
   text-align: center;
   margin-top: 10px;
   cursor: pointer; }
+.ui-doublelist-option div.ui-state-disabled {
+  border-color: #dedede;
+  color: #ccc; }

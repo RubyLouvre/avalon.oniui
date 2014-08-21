@@ -37,7 +37,7 @@
                    ms-css-margin-left="cssLeft" >
                 <tr data-repeat-rendered="_tbodyRenderedCallback"
                     ms-repeat-row="_data"
-                    ms-class="{{rowClass}}:!($index % 2)"
+                    ms-class="{{rowClass}}:!($index % 2) && _data.size()>=2"
                     ms-hover="ui-state-hover"
                     >
                     MS_OPTION_TBODY_BEGIN

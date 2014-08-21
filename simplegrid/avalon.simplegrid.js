@@ -150,35 +150,30 @@ define(["avalon",
             vm._tbodyRenderedCallback = function(a) {
                 //取得tbody每一行的高
                 var tbody = this
-                var cell = tbody.getElementsByTagName("td")[0] ||
-                        tbody.getElementsByTagName("th")[0]
-
-                //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
-                if (cell) {
+                function delay() {
+                    var cell = tbody.getElementsByTagName("td")[0] ||
+                            tbody.getElementsByTagName("th")[0]
                     var fns = getHiddenParent(vm.widgetElement)
                     fns[0]()
-                    var table = vm.bottomTable = this.parentNode;
+                    var table = vm.bottomTable = tbody.parentNode;
                     var noResultHeight = !vmodel._data.size() ? vmodel.noResultHeight : 0;
                     vm.tbodyHeight = avalon(table).innerHeight() + noResultHeight//求出可见区的总高度
-
                     vm._rowHeight = vm.tbodyHeight / tbody.rows.length //求出每一行的高
                     var perPages = vm.pager.perPages
                     vm.tbodyScrollHeight = vm._rowHeight * perPages
-                    var borderHeight = Math.max(avalon.css(cell, "borderTopWidth", true),
-                            avalon.css(cell, "borderBottomWidth", true))
+                    var borderHeight = cell ? Math.max(avalon.css(cell, "borderTopWidth", true),
+                            avalon.css(cell, "borderBottomWidth", true)) : 0
                     vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
                     fns[1]()
-
                     vm.tbodyRenderedCallback.call(tbody, vmodel, options, vmodels)
-
-                } else {
-                    setTimeout(function() {
-                        vmodel._tbodyRenderedCallback.call(tbody)
-                    }, 100)
+                    // update scrollbar, if tbody rendered
+                    vmodel.updateScrollbar(!vmodel.barUpdated)
+                    vmodel.barUpdated = true
                 }
-                // update scrollbar, if tbody rendered
-                vmodel.updateScrollbar(!vmodel.barUpdated)
-                vmodel.barUpdated = true
+                //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
+
+                setTimeout(delay, 100)
+
             }
             vm.getScrollbar = function() {
                 return avalon.vmodels["$simplegrid" + optId]

@@ -955,7 +955,7 @@ vm.<span class="atn">$simplegridLOpts</span> = {
                                 columns: [{field:"symbol",localSort:function(a,b,f){return a[f].localeCompare(b[f]);}}, "price", "change"],
                                 data: getData1(5),
                                 noResultContent: "默认的是<b style='color: red'>‘暂无结果’</b>，可配置，可以是<b style='color: red'>html字符串</b>。高度默认是100，这里配置为200",
-                                noResultHeight: 200,
+                                // noResultHeight: 200,
                                 onSort: function(vmodel) {
                                     avalon.log("排序完成用户回调")
                                 },

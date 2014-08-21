@@ -1,5 +1,5 @@
 /**
-  * @description doublelist组件，以左右列表形式展示实现的复选组件
+  * @description doublelist组件，以左右列表形式展示实现的复选组件，不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑
   *
   */
 define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.data.html", "../scrollbar/avalon.scrollbar", "css!./avalon.doublelist.css", "css!../chameleon/oniui-common.css"], function(avalon, template, dataTpl) {
@@ -26,6 +26,15 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
             vm.$init = function() {
                 if(inited) return
                 inited = true
+
+                var duplex = element.getAttribute("ms-duplex")
+                if(duplex && vmodels[0]) {
+                    element.removeAttribute("ms-duplex")
+                    // vmodel.$changeCBS.push(function(n, o, v) {
+                    //     vmodels[0][duplex] = v.select
+                    // })
+                    // vmodels[0][duplex].$watch("length")
+                }
 
                 var dataTemplate = vmodel._getTemplate("data"),
                     selectTemplate = vmodel._getTemplate("select")
@@ -153,11 +162,24 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                 dataTmpSelect = []
                 vmodel._getSelect()
             }
-            //@method reset 重置
-            vm.reset = function() {
-                selectTmpSelect = []
-                dataTmpSelect = []
-                vmodel.select = []
+            //@method reset(data, select) 重置，用新的data和select渲染，如果data为空，则不修改左侧list；如果select为空或者空数组，则清空已选，否则置为已选
+            vm.reset = function(data, select) {
+                if(data) {
+                    if(data.length == vmodel.data.length && data != vmodel.data) {
+                        vmodel.data.clear()
+                        vmodel.data = data
+                    }
+                    vmodel.data = data
+                }
+                if(select) {
+                    if(select.length == vmodel.select.length && select != vmodel.select) {
+                        vmodel.select.clear()
+                    }
+                    vmodel.select = select
+                } else {
+                    selectTmpSelect = []
+                    dataTmpSelect = []
+                }
                 vmodel._getSelect()
             }
 
@@ -165,6 +187,9 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
         // change
         vmodel.select.$watch("length", function(newValue, oldValue) {
             vmodel.onChange && vmodel.onChange(newValue, oldValue, vmodel)
+            avalon.each(vmodel.$changeCBS, function(i, item) {
+                item(newValue, oldValue, vmodel)
+            })
         })
 
         return vmodel
@@ -183,8 +208,10 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
         countLimit: function(select) {
             return true
         },//@optMethod countLimit(select) 选择条目限制，必须有return true or false，参数是当前已选中条数和add or delete操作
+        select:[],//@param 选中的value list，[value1,value2]，取的是data 里面item的value
         change: avalon.noop, //@optMethod change(newValue, oldValue, vmodel) 所选变化的回调，不建议使用，等价于onChange
         onChange: avalon.noop,//@optMethod onChange(newValue, oldValue, vmodel) 所选变化的对调，同change，第一、二个参数分别是数组变化前后的长度
+        $changeCBS: [],
         $author: "skipper@123"
     }
 })

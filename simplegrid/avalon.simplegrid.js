@@ -46,7 +46,7 @@ define(["avalon",
         }
         var pager = options.pager
         //抽取要显示的数据(因为可能存在分页,不用全部显示,那么我们只将要显示的
-        pager.perPages = pager.perPages || options.data.length
+        pager.perPages = options.pageable ? pager.perPages || options.data.length : options.data.length
         pager.nextText = pager.nextText || "下一页"
         pager.prevText = pager.prevText || "上一页"
         if (Array.isArray(pager.options)) {
@@ -150,35 +150,38 @@ define(["avalon",
             vm._tbodyRenderedCallback = function(a) {
                 //取得tbody每一行的高
                 var tbody = this
-                var cell = tbody.getElementsByTagName("td")[0] ||
-                        tbody.getElementsByTagName("th")[0]
-
-                //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
-                if (cell) {
+                function delay() {
+                    var cell = tbody.getElementsByTagName("td")[0] ||
+                            tbody.getElementsByTagName("th")[0]
                     var fns = getHiddenParent(vm.widgetElement)
                     fns[0]()
-                    var table = vm.bottomTable = this.parentNode;
+                    var table = vm.bottomTable = tbody.parentNode;
                     var noResultHeight = !vmodel._data.size() ? vmodel.noResultHeight : 0;
-                    vm.tbodyHeight = avalon(table).innerHeight() + noResultHeight//求出可见区的总高度
-
-                    vm._rowHeight = vm.tbodyHeight / tbody.rows.length //求出每一行的高
-                    var perPages = vm.pager.perPages
+                    //求出可见区的总高度
+                    vm.tbodyHeight = avalon(table).innerHeight() + noResultHeight
+                    //取得总行数,以免行数为0时, vm.tbodyHeight / rowCount 得出Infinite
+                    var rowCount = tbody.rows.length
+                    //求出每一行的高
+                    vm._rowHeight = rowCount ? vm.tbodyHeight / rowCount : 35
+                    //根据是否分页, 求得每页的行数
+                    var perPages = vm.pageable ? vm.pager.perPages : vm.data.length
                     vm.tbodyScrollHeight = vm._rowHeight * perPages
-                    var borderHeight = Math.max(avalon.css(cell, "borderTopWidth", true),
-                            avalon.css(cell, "borderBottomWidth", true))
+                    var borderHeight = cell ? Math.max(avalon.css(cell, "borderTopWidth", true),
+                            avalon.css(cell, "borderBottomWidth", true)) : 0
                     vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
                     fns[1]()
-
                     vm.tbodyRenderedCallback.call(tbody, vmodel, options, vmodels)
-
-                } else {
+                    // update scrollbar, if tbody rendered
                     setTimeout(function() {
-                        vmodel._tbodyRenderedCallback.call(tbody)
-                    }, 100)
+                        vmodel.updateScrollbar(!vmodel.barUpdated)
+                        vmodel.barUpdated = true
+                    })
+
                 }
-                // update scrollbar, if tbody rendered
-                vmodel.updateScrollbar(!vmodel.barUpdated)
-                vmodel.barUpdated = true
+                //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
+
+                setTimeout(delay, 100)
+
             }
             vm.getScrollbar = function() {
                 return avalon.vmodels["$simplegrid" + optId]
@@ -339,6 +342,7 @@ define(["avalon",
 
 
             vm.getScrollerHeight = function() {
+
                 var h = vmodel.tbodyScrollHeight + vmodel.tbodyScrollTop - vmodel.theadHeight,
                         max = vmodel._rowHeight * vmodel.data.length
                 // 设置一个上限，修复回滚bug

@@ -27,6 +27,11 @@
                         columns: ["symbol", "price", "change"],
                         data: getData(10)
                     }
+                    vm.resetData = function() {
+                        var data = getData(1);
+                        var vmodel = avalon.vmodels.simplegridA;
+                        vmodel.reRender(data, vmodel)
+                    }
                     vm.$skipArray = ["simplegrid"]
                 })
                 avalon.scan()
@@ -36,9 +41,10 @@
     <body >
         <fieldset ms-controller="test">
             <legend>最简单的例子</legend>
-            <div ms-widget="simplegrid" style="width:99%">
+            <div ms-widget="simplegrid, simplegridA" style="width:99%">
 
             </div>
+            <button ms-click="resetData">reset data</button>
             <pre class="brush:html;gutter:false;toolbar:false;">
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;

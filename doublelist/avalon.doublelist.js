@@ -1,5 +1,5 @@
 /**
-  * @description doublelist组件，以左右列表形式展示实现的复选组件
+  * @description doublelist组件，以左右列表形式展示实现的复选组件，不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑
   *
   */
 define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.data.html", "../scrollbar/avalon.scrollbar", "css!./avalon.doublelist.css", "css!../chameleon/oniui-common.css"], function(avalon, template, dataTpl) {
@@ -30,9 +30,10 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                 var duplex = element.getAttribute("ms-duplex")
                 if(duplex && vmodels[0]) {
                     element.removeAttribute("ms-duplex")
-                    vmodel.$changeCBS.push(function(n, o, v) {
-                        vmodels[0][duplex] = v.select
-                    })
+                    // vmodel.$changeCBS.push(function(n, o, v) {
+                    //     vmodels[0][duplex] = v.select
+                    // })
+                    // vmodels[0][duplex].$watch("length")
                 }
 
                 var dataTemplate = vmodel._getTemplate("data"),
@@ -164,14 +165,14 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
             //@method reset(data, select) 重置，用新的data和select渲染，如果data为空，则不修改左侧list；如果select为空或者空数组，则清空已选，否则置为已选
             vm.reset = function(data, select) {
                 if(data) {
-                    if(data.length == vmodel.data) {
+                    if(data.length == vmodel.data.length && data != vmodel.data) {
                         vmodel.data.clear()
                         vmodel.data = data
                     }
                     vmodel.data = data
                 }
                 if(select) {
-                    if(select.length == vmodel.select.length) {
+                    if(select.length == vmodel.select.length && select != vmodel.select) {
                         vmodel.select.clear()
                     }
                     vmodel.select = select

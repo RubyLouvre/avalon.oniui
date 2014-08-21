@@ -116,9 +116,8 @@ define(["../avalon.getModel",
         element.value = _originValue && options.formatDate(date);
         var vmodel = avalon.define(data.datepickerId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["container"];
+            vm.$skipArray = ["container", "showDatepickerAlways"];
             vm.$monthDom = null,
-
             vm.dateError = vm.dateError || "";
             vm.weekNames = [];
             vm.rows = [];
@@ -134,6 +133,7 @@ define(["../avalon.getModel",
             vm.day = 0;
             vm.years = years;
             vm.months = [1,2,3,4,5,6,7,8,9,10,11,12];
+            vm._position = "absolute";
             vm.$yearOpts = {
                 width: 60,
                 listWidth: 60,
@@ -175,7 +175,7 @@ define(["../avalon.getModel",
             }
             // 选择日期
             vm._selectDate = function(year, month, day, dateDisabled, outerIndex, innerIndex) {
-                if(month !== false && !dateDisabled) {
+                if(month !== false && !dateDisabled && !vmodel.showDatepickerAlways) {
                     var formatDate = options.formatDate.bind(options),
                         _date = new Date(year, month, day),
                         date = formatDate(_date),
@@ -217,7 +217,9 @@ define(["../avalon.getModel",
                         duplexVM ? duplexVM[1][duplexVM[0]] = date : "";
                     }
                 }
-                vmodel.onSelect.call(null, date, data["datepickerId"], avalon(element).data())
+                if (!vmodel.showDatepickerAlways) {
+                    vmodel.onSelect.call(null, date, data["datepickerId"], avalon(element).data())
+                }
             }
             vm._selectYearMonth = function(event) {
                 event.stopPropagation();
@@ -263,8 +265,18 @@ define(["../avalon.getModel",
                 if (~vmodel.zIndex) {
                     calendar.style.zIndex = vmodel.zIndex;
                 }
-                div = options.type ==="range" ? element["data-calenderwrapper"] : div;
-                bindEvents(calendar, div);
+                if (options.type === "range") {
+                    div = element["data-calenderwrapper"]
+                    vmodel._position = "static";
+                } 
+                if (vmodel.showDatepickerAlways) {
+                    element.style.display = "none";
+                    vmodel.toggle = true;
+                    vmodel._position = "relative";
+                    div.style.borderWidth = 0;
+                } else {
+                    bindEvents(calendar, div);
+                }
                 // 如果输入域不允许为空，且_originValue不存在则强制更新element.value
                 var value = "",
                     _date = null,
@@ -294,7 +306,7 @@ define(["../avalon.getModel",
                 vmodel.weekNames = calendarHeader();
                 duplexVM && (duplexVM[1][duplexVM[0]] = value);
                 element.disabled = options.disabled;
-                if(vmodel.type!=="range") {
+                if (vmodel.type!=="range") {
                     avalon.scan(div, [vmodel]);
                 }
                 element.vmodel = vmodel;
@@ -422,10 +434,6 @@ define(["../avalon.getModel",
                 element.value = vmodel.formatDate(date);
                 vmodel.dateError = "#cccccc";
                 vmodel.tip = getDateTip(cleanDate(date)).text;
-                // if (!duplexVM && vmodel._dateSelected) {
-                //     vmodel.onSelect.call(null, date, data["datepickerId"], avalon(element).data())
-                //     vmodel._dateSelected = false;
-                // }
             })
             // 切换日期年月或者点击input输入域时不隐藏组件，选择日期或者点击文档的其他地方则隐藏日历组件
             avalon.bind(document, "click", function(e) {
@@ -666,6 +674,7 @@ define(["../avalon.getModel",
         onChangeMonthYear: avalon.noop, 
         watermark: true,
         zIndex: -1,
+        showDatepickerAlways: false,
         onSelect: avalon.noop, //将废弃,相当于onSelect
         onClose: avalon.noop,
         parseDate: function(str){

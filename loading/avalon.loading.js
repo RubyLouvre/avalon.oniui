@@ -420,7 +420,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             if (!n) {
                 clearInterval(vmodel.$timer)
             } else {
-                vmodel.effect()
+                vmodel._effect()
             }
         })
       

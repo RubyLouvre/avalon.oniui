@@ -46,7 +46,7 @@ define(["avalon",
         }
         var pager = options.pager
         //抽取要显示的数据(因为可能存在分页,不用全部显示,那么我们只将要显示的
-        pager.perPages = pager.perPages || options.data.length
+        pager.perPages = options.pageable ? pager.perPages || options.data.length : options.data.length
         pager.nextText = pager.nextText || "下一页"
         pager.prevText = pager.prevText || "上一页"
         if (Array.isArray(pager.options)) {
@@ -106,6 +106,7 @@ define(["avalon",
             vm.endIndex = options.showRows
             vm.cssLeft = "0"
             vm.barRight = 0
+            vm.scrollerHeight = void 0
             vm.paddingBottom = "0"
             vm.barUpdated = false
             vm.$init = function() {
@@ -132,7 +133,10 @@ define(["avalon",
                 var cellIndex = 0
                 for (var i = 0, cell; cell = cells[i++]; ) {
                     if (cell.nodeType === 1 && cell["data-vm"]) {
-                        vm.columns[cellIndex++].width = cell.offsetWidth
+                        var c = vm.columns[cellIndex++]
+                        if (String(c.width).indexOf("%") === -1) {
+                            c.width = cell.offsetWidth
+                        }
                     }
                 }
                 vm.topTable = table //重置真正的代表表头的table
@@ -147,35 +151,38 @@ define(["avalon",
             vm._tbodyRenderedCallback = function(a) {
                 //取得tbody每一行的高
                 var tbody = this
-                var cell = tbody.getElementsByTagName("td")[0] ||
-                        tbody.getElementsByTagName("th")[0]
-
-                //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
-                if (cell) {
+                function delay() {
+                    var cell = tbody.getElementsByTagName("td")[0] ||
+                            tbody.getElementsByTagName("th")[0]
                     var fns = getHiddenParent(vm.widgetElement)
                     fns[0]()
-                    var table = vm.bottomTable = this.parentNode;
+                    var table = vm.bottomTable = tbody.parentNode;
                     var noResultHeight = !vmodel._data.size() ? vmodel.noResultHeight : 0;
-                    vm.tbodyHeight = avalon(table).innerHeight() + noResultHeight//求出可见区的总高度
-
-                    vm._rowHeight = vm.tbodyHeight / tbody.rows.length //求出每一行的高
-                    var perPages = vm.pager.perPages
+                    //求出可见区的总高度
+                    vm.tbodyHeight = avalon(table).innerHeight() + noResultHeight
+                    //取得总行数,以免行数为0时, vm.tbodyHeight / rowCount 得出Infinite
+                    var rowCount = tbody.rows.length
+                    //求出每一行的高
+                    vm._rowHeight = rowCount ? vm.tbodyHeight / rowCount : 35
+                    //根据是否分页, 求得每页的行数
+                    var perPages = vm.pageable ? vm.pager.perPages : vm.data.length
                     vm.tbodyScrollHeight = vm._rowHeight * perPages
-                    var borderHeight = Math.max(avalon.css(cell, "borderTopWidth", true),
-                            avalon.css(cell, "borderBottomWidth", true))
+                    var borderHeight = cell ? Math.max(avalon.css(cell, "borderTopWidth", true),
+                            avalon.css(cell, "borderBottomWidth", true)) : 0
                     vm._rowHeightNoBorders = vm._rowHeight - borderHeight * 2
                     fns[1]()
-
                     vm.tbodyRenderedCallback.call(tbody, vmodel, options, vmodels)
-
-                } else {
+                    // update scrollbar, if tbody rendered
                     setTimeout(function() {
-                        vmodel._tbodyRenderedCallback.call(tbody)
-                    }, 100)
+                        vmodel.updateScrollbar(!vmodel.barUpdated)
+                        vmodel.barUpdated = true
+                    })
+
                 }
-                // update scrollbar, if tbody rendered
-                vmodel.updateScrollbar(!vmodel.barUpdated)
-                vmodel.barUpdated = true
+                //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
+
+                setTimeout(delay, 100)
+
             }
             vm.getScrollbar = function() {
                 return avalon.vmodels["$simplegrid" + optId]
@@ -189,22 +196,24 @@ define(["avalon",
                         scroller = scrollbar.getScroller()
                 if (scrollbar) {
                     scrollbar.update()
-                    var bars = scrollbar.getBars()
+                    // var bars = scrollbar.getBars()
                     // 更新滚动条附近的间距
-                    avalon.each(bars, function(i, bar) {
-                        if (bar.hasClass("ui-scrollbar-right") || bar.hasClass("ui-scrollbar-left")) {
-                            // 竖直方向如果进入这个分支，只需要减一次滚动条的宽度即可
-                            if (scrollbarInited)
-                                return
-                            scrollbarInited = true
-                            vmodel.gridWidth = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
-                                    scroller[0].scrollWidth - bar.width() : scroller[0].scrollWidth
-                            // 水平方向把这个滚动条高度转移到大容器上
-                        } else if (bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")) {
-                            vmodel.paddingBottom = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
-                                    bar.innerHeight() + 2 + "px" : "0"
-                        }
-                    })
+                    // avalon.each(bars, function(i, bar) {
+                        // if (bar.hasClass("ui-scrollbar-right") || bar.hasClass("ui-scrollbar-left")) {
+                        //     // 竖直方向如果进入这个分支，只需要减一次滚动条的宽度即可
+                        //     if (scrollbarInited)
+                        //         return
+                        //     scrollbarInited = true
+                        //     vmodel.gridWidth = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
+                        //             scroller[0].scrollWidth - bar.width() : scroller[0].scrollWidth
+                            
+                        // } else 
+                        // 水平方向把这个滚动条高度转移到大容器上
+                        // if (bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")) {
+                        //     vmodel.paddingBottom = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
+                        //             bar.innerHeight() + 2 + "px" : "0"
+                        // }
+                    // })
                 }
             }
 
@@ -336,24 +345,35 @@ define(["avalon",
 
 
             vm.getScrollerHeight = function() {
+
                 var h = vmodel.tbodyScrollHeight + vmodel.tbodyScrollTop - vmodel.theadHeight,
                         max = vmodel._rowHeight * vmodel.data.length
                 // 设置一个上限，修复回滚bug
                 h = h > max ? max : h
+                // until change is applied to element, change scrollerHeight
+                setTimeout(function(loop) {
+                    var _h = vmodel.getScrollbar().getScroller().css("height")
+                    if(h != h && !loop) {
+                        arguments.callee(1)
+                        return
+                    }
+                    vmodel.scrollerHeight = h
+                }, 100)
                 return h
             }
             vm._data = vm.data.slice(vm.startIndex, vm.endIndex)
             // 自定义滚动条
-            vm.scrollbar = {
+            vm.$spgScrollbarOpts = {
                 onScroll: function(n, o, dir) {
                     // 竖直方向滚动
                     if (dir == "v") {
                         clearTimeout(scrollbarTimer)
                         scrollbarTimer = setTimeout(function() {
                             vmodel.throttleRenderTbody(n, o)
-                            // 向上，update bar状态
-                            if (n < o)
-                                vmodel.updateScrollbar("forceUpdate")
+                            // 已经去掉了无限下拉效果
+                            // 向上，update bar状态，并且是无限下拉效果
+                            // if (n < o)
+                            //     vmodel.updateScrollbar("forceUpdate")
                         }, 16)
                         // 水平方向
                     } else {
@@ -364,12 +384,12 @@ define(["avalon",
                     return ele.innerHeight() - vmodel.theadHeight
                 },
                 // 向下的时候，只有越界的时候才更新scrollbar状态
-                breakOutCallback: function(ifBreakOut, v, obj) {
-                    if (void 0 !== ifBreakOut && ifBreakOut[0] === "v" && ifBreakOut[1] === "down") {
-                        obj.down.removeClass("ui-state-disabled")
-                        vmodel.updateScrollbar("forceUpdate")
-                    }
-                },
+                // breakOutCallback: function(ifBreakOut, v, obj) {
+                //     if (void 0 !== ifBreakOut && ifBreakOut[0] === "v" && ifBreakOut[1] === "down") {
+                //         obj.down.removeClass("ui-state-disabled")
+                //         vmodel.updateScrollbar("forceUpdate")
+                //     }
+                // },
                 show: vm.showScrollbar
             }
         })
@@ -454,6 +474,18 @@ define(["avalon",
                 // lastRenderedScrollTop = panel.scrollTop = vmodel.tbodyScrollTop = vmodel.startIndex * rowHeight
             }
         }
+        // 监听这个改变更靠谱
+        vmodel.$watch("scrollerHeight", function(n) {
+            if(n > 0) {
+                vmodel.getScrollbar().disabled = false
+                vmodel.getScrollbar().toggle = true
+                vmodel.updateScrollbar("forceUpdate")
+            } else {
+                vmodel.getScrollbar().disabled = true
+                vmodel.getScrollbar().toggle = false
+            }
+        })
+
         return vmodel
     }
     widget.defaults = {

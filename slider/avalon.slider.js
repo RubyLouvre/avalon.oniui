@@ -197,7 +197,7 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
         }
    })
     avalon(document).bind("keydown", function(e) { // 当选中某个手柄之后通过键盘上的方向键控制手柄的slider
-        e.preventDefault();
+        // e.preventDefault();
         if (FocusElement) {
             var vmodel = FocusElement[0].sliderModel
             var percent = Handlers.length == 1 ? vmodel.percent : vmodel["percent" + Index]

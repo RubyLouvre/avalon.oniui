@@ -1,5 +1,5 @@
 /**
-  * @description flipswitch组件，将checkbox表单元素转化成富UI的开关
+  * @description flipswitch组件，将checkbox表单元素转化成富UI的开关，不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑
   *
   */
 define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggable", "css!./avalon.flipswitch.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {

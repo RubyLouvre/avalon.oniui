@@ -109,6 +109,7 @@ define(["avalon",
                 //currentPage需要转换为Number类型 fix lb1064@qq.com
                 vmodel.currentPage = value
                 vmodel.pages = getPages(vmodel)
+                vmodel.onJump.call(element, event, vm);
             }
             vm.pages = []
             vm.getPages = getPages

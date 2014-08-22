@@ -129,17 +129,17 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
         vmodel.$watch("header", function(v) { 
             vmodel.title = v;
         })
-        vmodel.$watch("successClass", function() {
-            vmodel.typeClass = vmodel.successClass;
+        vmodel.$watch("successClass", function(v) {
+            vmodel.typeClass = v
         })
-        vmodel.$watch("errorClass", function() {
-            vmodel.typeClass = vmodel.errorClass;
+        vmodel.$watch("errorClass", function(v) {
+            vmodel.typeClass = v
         })
-        vmodel.$watch("infoClass", function() {
-            vmodel.typeClass = vmodel.infoClass;
+        vmodel.$watch("infoClass", function(v) {
+            vmodel.typeClass = v
         })
-        vmodel.$watch("zIndex", function(val) {
-            maxZIndex = val;
+        vmodel.$watch("zIndex", function(v) {
+            maxZIndex = v;
             affixPosition()
         })
         // 如果配置了timer，则在notice显示timer时间后自动隐藏

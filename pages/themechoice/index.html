@@ -41,12 +41,18 @@
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                     </div>
                 </div>
-                <h2 class="demoHeaders">Simplegrid</h2>
-                <div ms-controller="simplegrid" ms-widget="simplegrid, simplegridB" id="simplegrid"></div>
                 <h2 class="demoHeaders">Daterangepicker</h2>
                 <div ms-controller="daterangepicker" ms-widget="daterangepicker" id="daterangepicker"></div>
                 <h2 class="demoHeaders">Doublelist</h2>
                 <div ms-controller="doublelist" ms-widget="doublelist,nimei" ms-duplex="select" id="doublelist"> </div>
+                <h2 class="demoHeaders">Loading</h2>
+                <div ms-controller="loading" id="loading" style="width:690px">
+                    <div ms-widget="loading" data-loading-type="ticks" style="width:100px;height:100px;position:relative;zoom:1;float: left"></div>
+                    <div ms-widget="loading" data-loading-type="spin" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
+                    <div ms-widget="loading" data-loading-type="spokes" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
+                    <div ms-widget="loading" data-loading-type="spinning-spin" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
+                    <div ms-widget="loading" data-loading-type="spinning-bubbles" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
+                </div>
             </td>
             <td style="width:235px">
                 <h2 class="demoHeaders">Textbox</h2>
@@ -76,6 +82,9 @@
                 </select>
                 <h2 class="demoHeaders">Menu</h2>
                 <ul ms-controller="menu" ms-widget="menu, menuA, $menuAOpts" id="menu" style="float:left"></ul>
+                <br style="clear:both"/>
+                <h2 class="demoHeaders">Flipswitch</h2>
+                <input ms-controller="flipswitch" checked="checked" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="large" data-flipswitch-draggable="true" id="flipswitch">
             </td>
         </tr>
     </table>
@@ -98,8 +107,7 @@
             var accordion = document.getElementById("accordion");
             avalon.scan(accordion, accordionVM);
         });
-
-        require(["tab/avalon.tab", "simplegrid/avalon.simplegrid"], function() {
+        require(["tab/avalon.tab", "simplegrid/avalon.simplegrid", "tooltip/avalon.tooltip"], function() {
             function getData(n) {
                 var ret = []
                 for (var i = 0; i < n; i++) {
@@ -123,23 +131,29 @@
                     , tabs : [{
                         title: "First",
                         name: "First",
-                        removable: false,
-                        href: "http://news.163.com/"
-                        },
-                        {
+                        target: "_self"
+                        }, {
                             title: "Second",
-                            name: "Second"
-                        },
-                        {
-                            title: "Third"
-                            , name: "Third"
+                            name: "Second",
+                            target: "_self"
+                        }, {
+                            title: "Third", 
+                            name: "Third",
+                            target: "_self"
                         }
                     ]
                     , tabpanels : [
-                        {content: '<div ms-widget="simplegrid, simplegridA"></div>'},
-                        {content: "<p>Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.</p>"},
+                        {content: '<h2 class="demoHeaders">Simplegrid</h2><div ms-widget="simplegrid, simplegridA" style="width:680px; margin: 0 auto;"></div>'},
+                        {content: '<p ms-widget="tooltip, tooltipA, $tooptipAOpts" data-tooltip-position="bl">Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.</p>'},
                         {content: "<p>Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</p>"}
                     ]
+                }
+                vm.$tooptipAOpts = {
+                    "contentGetter": function(elem) {
+                        var str = "请输入"
+                        return str + str + str + str + str + str + str + str + str + str + str
+                    }
+                    , autohide: !true
                 }
                 vm.simplegrid = {
                     columns: ["symbol", "price", "change"],
@@ -230,6 +244,14 @@
             })
             var doublelist = document.getElementById("doublelist");
             avalon.scan(doublelist, doublelistVM)
+        })
+
+        require(["loading/avalon.loading"], function() {
+            var loadingVM = avalon.define("loading", function(vm) {
+                
+            })
+            var loading = document.getElementById("loading");
+            avalon.scan(loading, loadingVM)
         })
 
         require(["menu/avalon.menu"], function() {
@@ -325,6 +347,13 @@
             var dropdown = document.getElementById("dropdown");
             avalon.scan(dropdown, dropdownVM);
         });
+
+        require(["flipswitch/avalon.flipswitch"], function() {
+            var flipswitchVM = avalon.define("flipswitch", function(vm) {
+            })
+            var flipswitch = document.getElementById("flipswitch");
+            avalon.scan(flipswitch, flipswitchVM);
+        })
     </script>
 </body>
 </html>

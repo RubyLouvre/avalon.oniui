@@ -234,7 +234,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
 
             vm.$remove = function() {
                 avalon.each(bars, function(i, bar) {
-                    bar[0] && bar[0].parentNode && bar[0].parentNode.removeChild(bar)
+                    bar[0] && bar[0].parentNode && bar[0].parentNode.removeChild(bar[0])
                 })
             }
 
@@ -282,8 +282,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                 if(vmodel.disabled) return
                 var ele = avalon(vmodel.viewElement),
                     // 滚动内容宽高
-                    viewW = scroller[0].scrollWidth,
-                    viewH = scroller[0].scrollHeight,
+                    viewW,
+                    viewH,
                     // 计算滚动条可以占据的宽或者高
                     barH = strToNumber(ele.css("height")),
                     barW = strToNumber(ele.css("width")),
@@ -291,23 +291,10 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                     h = vmodel.viewHeightGetter(ele),
                     w = vmodel.viewWidthGetter(ele),
                     p = vmodel.position,
-                    barDictionary = {
-                        "top": p.match(/top/g) && viewW > w,
-                        "right": p.match(/right/g) && viewH > h,
-                        "bottom": p.match(/bottom/g) && viewW > w,
-                        "left": p.match(/left/g) && viewH > h
-                    },
+                    barDictionary,
                     barMinus = {},
                     y = y == void 0 ? vmodel.scrollTop : y,
                     x = x == void 0 ? vmodel.scrollLeft : x
-                // if(vmodel.showBarHeader && bars.length > 1) {
-                if(bars.length > 1) {
-                    var ps = ["top", "right", "bottom", "left"]
-                    for(var i = 0; i < 4; i++) {
-                        barMinus[ps[i]] = [(barDictionary[i ? ps[i - 1] : ps[3]] && 1) >> 0, (barDictionary[i < 3 ? ps[i + 1] : ps[0]] && 1) >> 0]
-                        if(i > 1) barMinus[ps[i]] = barMinus[ps[i]].reverse()
-                    }
-                }
                 //document body情形需要做一下修正
                 if(vmodel.viewElement != vmodel.widgetElement) {
                     p.match(/right|left/g) && avalon(vmodel.widgetElement).css("height", barH + "px")
@@ -318,6 +305,21 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                     vPadding = scroller.height() - scroller.innerHeight()
                 scroller.css("height", h + vPadding + "px")
                 scroller.css("width", w + hPadding  + "px")
+                viewW = scroller[0].scrollWidth
+                viewH = scroller[0].scrollHeight
+                barDictionary = {
+                    "top": p.match(/top/g) && viewW > w,
+                    "right": p.match(/right/g) && viewH > h,
+                    "bottom": p.match(/bottom/g) && viewW > w,
+                    "left": p.match(/left/g) && viewH > h
+                }
+                if(bars.length > 1) {
+                    var ps = ["top", "right", "bottom", "left"]
+                    for(var i = 0; i < 4; i++) {
+                        barMinus[ps[i]] = [(barDictionary[i ? ps[i - 1] : ps[3]] && 1) >> 0, (barDictionary[i < 3 ? ps[i + 1] : ps[0]] && 1) >> 0]
+                        if(i > 1) barMinus[ps[i]] = barMinus[ps[i]].reverse()
+                    }
+                }
                 // 根据实际视窗计算，计算更新scroller的宽高
                 // 更新视窗
                 h = scroller.innerHeight()

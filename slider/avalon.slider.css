@@ -2,7 +2,7 @@
 /*
 这是每个都组件都应该引用的部分
 */
-.ui-slider { position: relative; text-align: left; background: #e6e6e6; }
+.ui-slider { position: relative; text-align: left; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; width: 100%; background: #e6e6e6; }
 .ui-slider .ui-helper-hidden-accessible { position: absolute; height: 1px; width: 1px; overflow: hidden; border: 0 none; margin: -1px; padding: 0; clip: rect(0px 0px 0px 0px); }
 .ui-slider .ui-corner-all { -webkit-border-radius: 5px; -moz-border-radius: 5px; -ms-border-radius: 5px; -o-border-radius: 5px; border-radius: 5px; }
 .ui-slider .ui-slider-handle { position: absolute; display: block; cursor: default; height: 14px; width: 14px; line-height: 0px; z-index: 2; -webkit-border-radius: 7px; -moz-border-radius: 7px; -ms-border-radius: 7px; -o-border-radius: 7px; border-radius: 7px; font-size: 0px; background: #3775c0; }

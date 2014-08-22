@@ -79,7 +79,17 @@ $uiname-dropdown: "ui-dropdown";
         padding: 7px 0;
         text-align: center;
     }
-      
+    .ui-datepicker-timer {
+        border-top: 1px solid #efefef;
+        padding: 5px 0;
+        label {
+            display: block;
+            span {
+                @include inline-block();
+                width: 50px;
+            }
+        }
+    }
     .ui-datepicker-content-content {
         padding: 0 10px;
         width: 196px;  

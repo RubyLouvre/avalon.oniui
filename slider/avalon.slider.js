@@ -154,8 +154,12 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
                         handlers.push(el);
                     } 
                 }
+                avalon(element).css({display: "none", height:0, width: 0, padding: 0})
+                if (~~vmodel.width) {
+                    slider.style.width = vmodel.width + "px";
+                }
                 avalon.scan(slider, [vmodel].concat(vmodels))
-                if(typeof options.onInit === "function" ){
+                if (typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
                     options.onInit.call(element, vmodel, options, vmodels)
                 }
@@ -170,6 +174,7 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
     widget.defaults = {
         max: 100,
         min: 0,
+        width: -1,
         orientation: "horizontal",
         range: false,
         step: 1,
@@ -183,7 +188,9 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
             return str;
         }
     }
-   avalon(document).bind("click", function(e) { // 当点击slider之外的区域取消选中状态
+    console.log("click 绑定")
+    avalon(document).bind("click", function(e) { // 当点击slider之外的区域取消选中状态
+        e.stopPropagation();
         var el = e.target
         var Index = Handlers.indexOf(el)
         if (Index !== -1) {

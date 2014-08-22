@@ -116,8 +116,8 @@ define(["../avalon.getModel",
         element.value = _originValue && options.formatDate(date);
         var vmodel = avalon.define(data.datepickerId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["container", "showDatepickerAlways"];
-            vm.$monthDom = null,
+            vm.$skipArray = ["container", "showDatepickerAlways", "timer", "_hourVM", "_minuteVM"];
+            vm.$monthDom = null;
             vm.dateError = vm.dateError || "";
             vm.weekNames = [];
             vm.rows = [];
@@ -703,7 +703,13 @@ define(["../avalon.getModel",
             return str;
         }
     }
-    
+    avalon.filters.timer = function(str) {
+        var num = +str;
+        if (num >= 0 && num <=9) {
+            str = "0" + str;
+        }
+        return str;
+    }
     function cleanDate( date ){
         date.setHours(0);
         date.setMinutes(0);

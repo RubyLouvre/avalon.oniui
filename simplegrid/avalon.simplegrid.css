@@ -15,7 +15,7 @@
 .ui-simplegrid .ui-simplegrid-tbody td { border: 0 none; height: 35px; line-height: 35px; padding-left: 5px; }
 .ui-simplegrid .ui-simplegrid-tbody .ui-state-hover td, .ui-simplegrid .ui-simplegrid-tbody .ui-state-hover th { background-color: #f8f8f8; }
 .ui-simplegrid .ui-simplegrid-scroll-marker { width: 100%; z-index: -1; }
-.ui-simplegrid .ui-simplegrid-pager-wrapper { width: 100%; padding: 2px 0px; overflow: hidden; border-top: 1px solid #d4d4d4; }
+.ui-simplegrid .ui-simplegrid-pager-wrapper { width: 100%; padding: 5px 0px; overflow: hidden; background-color: #e6e6e6; border-top: 1px solid #d4d4d4; }
 .ui-simplegrid .ui-simplegrid-pager-options { float: left; height: 24px; line-height: 24px; padding-left: 5px; }
 .ui-simplegrid .ui-helper-asc, .ui-simplegrid .ui-helper-desc, .ui-simplegrid .ui-helper-ndb { width: 16px; height: 16px; line-height: 1; vertical-align: middle; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; position: relative; cursor: pointer; }
 .ui-simplegrid .ui-helper-asc span, .ui-simplegrid .ui-helper-desc span, .ui-simplegrid .ui-helper-ndb span { position: absolute; top: 0px; left: 4px; }

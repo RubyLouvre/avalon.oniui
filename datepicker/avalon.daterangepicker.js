@@ -91,7 +91,6 @@ define(["../avalon.getModel",
             vm.container = null;
             vm.inputElement = null;
             vm.calendarWrapper = null;
-            vm.value = "";
             vm.inputFromValue = ""
             vm.inputToValue = "";
             // 切换组件的显示隐藏
@@ -480,6 +479,7 @@ define(["../avalon.getModel",
         startDay: 1,    //星期开始时间
         dateRangeWidth: 260,
         shortcut: false,
+        time: false,
         onOpen: avalon.noop, //打开daterangepicker后的回调
         onClose: avalon.noop, //关闭daterangepicker后的回调
         onSelect: avalon.noop, //点击确定按钮选择日期后的回调

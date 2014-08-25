@@ -116,8 +116,8 @@ define(["../avalon.getModel",
         element.value = _originValue && options.formatDate(date);
         var vmodel = avalon.define(data.datepickerId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["container", "showDatepickerAlways"];
-            vm.$monthDom = null,
+            vm.$skipArray = ["container", "showDatepickerAlways", "timer", "sliderMinuteOpts", "sliderHourOpts"];
+            vm.$monthDom = null;
             vm.dateError = vm.dateError || "";
             vm.weekNames = [];
             vm.rows = [];
@@ -134,6 +134,28 @@ define(["../avalon.getModel",
             vm.years = years;
             vm.months = [1,2,3,4,5,6,7,8,9,10,11,12];
             vm._position = "absolute";
+            vm.minute = 0;
+            vm.hour = 0;
+            vm.sliderMinuteOpts = {
+                onInit: function(sliderMinute, options, vmodels) {
+                    sliderMinute.$watch("value", function(val) {
+                        vmodel.minute = val;
+                    })
+                    vmodel.$watch("minute", function(val) {
+                        sliderMinute.value = val;
+                    })
+                }
+            }
+            vm.sliderHourOpts = {
+                onInit: function(sliderHour, options, vmodels) {    
+                    sliderHour.$watch("value", function(val) {
+                        vmodel.hour = val;
+                    })
+                    vmodel.$watch("hour", function(val) {
+                        sliderHour.value = val;
+                    })
+                }
+            }
             vm.$yearOpts = {
                 width: 60,
                 listWidth: 60,
@@ -175,6 +197,29 @@ define(["../avalon.getModel",
             }
             // 选择日期
             vm._selectDate = function(year, month, day, dateDisabled, outerIndex, innerIndex) {
+                var timerFilter = avalon.filters.timer;
+                function toggleActiveClass() {
+                    var colSelectFlag = false,
+                        rows = vmodel.data[0].rows; //rangedatepicker限制为单月份日历显示
+                    if(rows[outerIndex][innerIndex].selected) {
+                        return ;
+                    }
+                    for(var i=0, len=rows.length; i<len;i++) {
+                        var cols = rows[i];
+                        for(var j=0, colLen = cols.length; j<colLen;j++) {
+                            var colSelect = cols[j].selected;
+                            if(colSelect) {
+                                cols[j].selected = false;
+                                colSelectFlag = true;
+                                break;
+                            }
+                        }
+                        if(colSelectFlag) {
+                            break;
+                        }
+                    }
+                    vmodel.data[0].rows[outerIndex][innerIndex].selected = true;
+                }
                 if(month !== false && !dateDisabled && !vmodel.showDatepickerAlways) {
                     var formatDate = options.formatDate.bind(options),
                         _date = new Date(year, month, day),
@@ -187,38 +232,44 @@ define(["../avalon.getModel",
                     vmodel.day = day;
                     vmodel.tip = getDateTip(cleanDate(new Date(year, month, day))).text;
                     vmodel.dateError = "#cccccc";
-                    if(!calendarWrapper) {
+                    if(!calendarWrapper && !vmodel.timer) {
                         element.value = date;
-                        duplexVM ? duplexVM[1][duplexVM[0]] = date : "";
                         vmodel.toggle = false;
+                        duplexVM ? duplexVM[1][duplexVM[0]] = date : "";
                         vmodel.data = calendarDays(vmodel.month, vmodel.year);
                     } else { // range datepicker时需要切换选中日期项的类名
-                        var colSelectFlag = false,
-                            rows = vmodel.data[0].rows; //rangedatepicker限制为单月份日历显示
-                        if(rows[outerIndex][innerIndex].selected) {
-                            return ;
+                        
+                        if (vmodel.timer) {
+                            date = date + "  " + timerFilter(vmodel.hour) + ":" + timerFilter(vmodel.minute);
                         }
-                        for(var i=0, len=rows.length; i<len;i++) {
-                            var cols = rows[i];
-                            for(var j=0, colLen = cols.length; j<colLen;j++) {
-                                var colSelect = cols[j].selected;
-                                if(colSelect) {
-                                    cols[j].selected = false;
-                                    colSelectFlag = true;
-                                    break;
-                                }
-                            }
-                            if(colSelectFlag) {
-                                break;
-                            }
-                        }
-                        vmodel.data[0].rows[outerIndex][innerIndex].selected = true;
                         element.value = date;
+                        toggleActiveClass()
                         duplexVM ? duplexVM[1][duplexVM[0]] = date : "";
                     }
                 }
                 if (!vmodel.showDatepickerAlways) {
                     vmodel.onSelect.call(null, date, data["datepickerId"], avalon(element).data())
+                } else {
+                    toggleActiveClass()
+                }
+            }
+            vm._getNow = function() {
+                var date = new Date(),
+                    time = date.toTimeString(),
+                    now = time.substr(0, time.lastIndexOf(":"));
+                vmodel.hour = date.getHours();
+                vmodel.minute = date.getMinutes();
+                return now;
+            }
+            vm._selectTime = function() {
+                var timeFilter = avalon.filters.timer;
+                    hour = timeFilter(vmodel.hour),
+                    minute = timeFilter(vmodel.minute),
+                    time = hour + ":" + minute,
+                    _date = vmodel.formatDate(vmodel.parseDate(element.value));
+                element.value = _date + "  " + time;
+                if (!vmodel.showDatepickerAlways) {
+                    vmodel.toggle = false;
                 }
             }
             vm._selectYearMonth = function(event) {
@@ -277,6 +328,9 @@ define(["../avalon.getModel",
                 } else {
                     bindEvents(calendar, div);
                 }
+                if (vmodel.timer) {
+                    vmodel.width = 100;
+                }
                 // 如果输入域不允许为空，且_originValue不存在则强制更新element.value
                 var value = "",
                     _date = null,
@@ -301,6 +355,9 @@ define(["../avalon.getModel",
                 vmodel.year = _date.getFullYear();
                 vmodel.month = _date.getMonth();
                 vmodel.day = _date.getDate();
+                if (vmodel.timer) {
+                    value = value + " " + vmodel._getNow();
+                }
                 _value = element.value = value;
                 avalon(element).attr("name", options.name);
                 vmodel.weekNames = calendarHeader();
@@ -325,6 +382,7 @@ define(["../avalon.getModel",
                 eleParPar.removeChild(elementPar);
             }
         });
+
         getDateTip = getDateTip.bind(vmodel);
         vmodel.$watch("toggle", function(val) {
             if(val) {
@@ -429,19 +487,23 @@ define(["../avalon.getModel",
                 vmodel.toggle = true;
                 // e.stopPropagation();
             })
-            avalon.bind(element, "blur", function() {
-                var date = new Date(vmodel.year, vmodel.month, vmodel.day);
-                element.value = vmodel.formatDate(date);
-                vmodel.dateError = "#cccccc";
-                vmodel.tip = getDateTip(cleanDate(date)).text;
-            })
+            if (!vmodel.timer) {
+                avalon.bind(element, "blur", function() {
+                    var date = new Date(vmodel.year, vmodel.month, vmodel.day);
+                    element.value = vmodel.formatDate(date);
+                    vmodel.dateError = "#cccccc";
+                    vmodel.tip = getDateTip(cleanDate(date)).text;
+                })
+            } else {
+                return ;
+            }
             // 切换日期年月或者点击input输入域时不隐藏组件，选择日期或者点击文档的其他地方则隐藏日历组件
             avalon.bind(document, "click", function(e) {
                 var target = e.target;
                 if(options.type==="range") {
                     return ;
                 } 
-                if(!calendar.contains(target) && !tipContainer.contains(target) && vmodel.toggle) {
+                if(!calendar.contains(target) && !tipContainer.contains(target) && vmodel.toggle && !vmodel.timer) {
                     vmodel.toggle = false;
                     toggleVM ? toggleVM[1][toggleVM[0]] = false : 0;
                     return ;
@@ -672,14 +734,15 @@ define(["../avalon.getModel",
         separator: "-",
         calendarLabel: "选择日期",
         onChangeMonthYear: avalon.noop, 
-        watermark: true,
+        watermark: false,
         zIndex: -1,
         showDatepickerAlways: false,
+        timer: false,
         onSelect: avalon.noop, //将废弃,相当于onSelect
         onClose: avalon.noop,
         parseDate: function(str){
             var separator = this.separator;
-            var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})$";
+            var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})\\s[\\w\\W]*$";
             reg = new RegExp(reg);
             var x = str.match(reg);
             return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
@@ -703,7 +766,13 @@ define(["../avalon.getModel",
             return str;
         }
     }
-    
+    avalon.filters.timer = function(str) {
+        var num = +str;
+        if (num >= 0 && num <=9) {
+            str = "0" + str;
+        }
+        return str;
+    }
     function cleanDate( date ){
         date.setHours(0);
         date.setMinutes(0);

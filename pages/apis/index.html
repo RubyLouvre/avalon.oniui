@@ -46,7 +46,9 @@
             "scan(el?, vmodels?)": "★★★扫描DOM树，抽取绑定",
             "define(id?, deps?, factory)": "●一个全局方法，用于定义AMD规范的JS模块",
             "require(deps, callback)": "●一个全局方法，用于加载JS模块",
-            "css(node, name, value?)": "如果只有两个参数，读取元素的某个样式，三个参数时，设置元素某个样式",
+            "css(node, name, value?)": "如果只有两个参数，读取元素的某个样式，三个参数时，设置元素某个样式;<br/>"+
+                    "在设置样式时,如果是长宽等计量属性,你可以直接传一个数值,框架会自动帮你添加px单位;<br/>"+
+                    "如果是取值时,你的第三个参数是true,它会帮你去掉单位,转换为纯数值",
             "nextTick(fn)": "延迟执行某个函数，类似于setTimeout(fn, 0)",
             "contains(a, b)": "判定A元素包含B元素",
             "parseHTML(str)": "将一段字符串转换为文档碎片",
@@ -67,6 +69,9 @@
                     "dec_point	可选，规定用作小数点的字符串（默认为 . ）<br/>" +
                     "thousands_sep 可选，规定用作千位分隔符的字符串（默认为','）。如果设置了该参数，那么所有其他参数都是必需的"
 
+        }
+        vm.prototypes = {
+            bind: "绑定事件"
         }
         vm.callbacks = ["data-callback"]
         vm.staticMethod = ["static-method"]

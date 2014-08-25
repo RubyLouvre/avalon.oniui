@@ -45,26 +45,28 @@
                 <div ms-controller="daterangepicker" ms-widget="daterangepicker" id="daterangepicker"></div>
                 <h2 class="demoHeaders">Doublelist</h2>
                 <div ms-controller="doublelist" ms-widget="doublelist,nimei" ms-duplex="select" id="doublelist"> </div>
+                <h2 class="demoHeaders">Slier</h2>
+                <input ms-controller="slider" ms-widget="slider" data-slider-value="36" data-slider-values = "[40, 60]" data-slider-range="true" id="slider">
+                <h2 class="demoHeaders">Progressbar</h2>
+                <div ms-controller="progressbar" ms-widget="progressbar" data-progressbar-value="49" data-progressbar-label="true" data-progressbar-in-two="true" id="progressbar"></div>
                 <h2 class="demoHeaders">Loading</h2>
-                <div ms-controller="loading" id="loading" style="width:690px">
+                <div ms-controller="loading" id="loading" style="width:690px" class="ui-helper-clearfix">
                     <div ms-widget="loading" data-loading-type="ticks" style="width:100px;height:100px;position:relative;zoom:1;float: left"></div>
                     <div ms-widget="loading" data-loading-type="spin" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
                     <div ms-widget="loading" data-loading-type="spokes" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
                     <div ms-widget="loading" data-loading-type="spinning-spin" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
                     <div ms-widget="loading" data-loading-type="spinning-bubbles" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
-                </div>
+                </div> 
             </td>
             <td style="width:235px">
                 <h2 class="demoHeaders">Textbox</h2>
                 <input ms-controller="textbox" ms-widget="textbox" ms-duplex="val" data-textbox-suggest="test" id="textbox"/>
                 <h2 class="demoHeaders">Spinner</h2>
                 <input ms-controller="spinner" ms-widget="spinner" id="spinner"/>
-                <h2 class="demoHeaders">Slier</h2>
-                <input ms-controller="slider" ms-widget="slider" data-slider-value="36" data-slider-values = "[40, 60]" data-slider-range="true" id="slider">
+                
                 <h2 class="demoHeaders">Datepicker</h2>
-                <input ms-controller="datepicker" ms-widget="datepicker" id="datepicker" data-datepicker-show-datepicker-always="true"/>
-                <h2 class="demoHeaders">Progressbar</h2>
-                <div ms-controller="progressbar" ms-widget="progressbar" data-progressbar-value="49" data-progressbar-label="true" data-progressbar-in-two="true" id="progressbar"></div>
+                <input ms-controller="datepicker" ms-widget="datepicker" id="datepicker" data-datepicker-show-datepicker-always="true" data-datepicker-timer="true"/>
+                
                 <h2 class="demoHeaders">Dropdown</h2>
                 <select ms-controller="dropdown" ms-widget="dropdown" id="dropdown">
                     <optgroup label="group1">
@@ -80,11 +82,12 @@
                         <option value="value6">Value 6</option>
                     </optgroup>
                 </select>
+
                 <h2 class="demoHeaders">Menu</h2>
                 <ul ms-controller="menu" ms-widget="menu, menuA, $menuAOpts" id="menu" style="float:left"></ul>
                 <br style="clear:both"/>
                 <h2 class="demoHeaders">Flipswitch</h2>
-                <input ms-controller="flipswitch" checked="checked" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="large" data-flipswitch-draggable="true" id="flipswitch">
+                <input ms-controller="flipswitch" checked="checked" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="large" data-flipswitch-draggable="true" id="flipswitch"> 
             </td>
         </tr>
     </table>
@@ -124,6 +127,9 @@
             }
             var tabVM = avalon.define("tab", function(vm) {
                 vm.tab = {
+                    hideTooltip: function() {
+                        avalon.vmodels.tooltipA.toggle = false;
+                    },
                     onActivate : function(e) {
                         avalon.log("user define cc activate callback")
                     }
@@ -144,7 +150,7 @@
                     ]
                     , tabpanels : [
                         {content: '<h2 class="demoHeaders">Simplegrid</h2><div ms-widget="simplegrid, simplegridA" style="width:680px; margin: 0 auto;"></div>'},
-                        {content: '<p ms-widget="tooltip, tooltipA, $tooptipAOpts" data-tooltip-position="bl">Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.</p>'},
+                        {content: '<p ms-widget="tooltip, tooltipA, $tooptipAOpts" data-tooltip-position="bl" ms-mouseout="hideTooltip">Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.</p>'},
                         {content: "<p>Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</p>"}
                     ]
                 }

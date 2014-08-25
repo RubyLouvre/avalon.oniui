@@ -16,8 +16,11 @@
 .ui-datepicker .ui-datepicker-content { border: 1px solid #e5e5e5; font-size: 12px; margin-right: 10px; background: #fff; }
 .ui-datepicker .ui-datepicker-label { background-color: #f8f8f8; border-bottom: 1px solid #e5e5e5; font-weight: 700; padding: 7px 0; text-align: center; }
 .ui-datepicker .ui-datepicker-timer { border-top: 1px solid #efefef; padding: 5px 0; }
-.ui-datepicker .ui-datepicker-timer label { display: block; }
-.ui-datepicker .ui-datepicker-timer label span { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; width: 50px; }
+.ui-datepicker .ui-datepicker-timer .ui-btn { height: 26px; overflow: visible; _overflow-y: hidden; padding: 0 10px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; border-radius: 2px; font-size: 12px; color: #333333; background-color: #f8f8f8; border: 1px solid #cccccc; cursor: pointer; }
+.ui-datepicker .ui-datepicker-timer .ui-btn:hover { box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1); background-color: #f8f8f8; border-color: #bbbbbb; color: #333333; }
+.ui-datepicker .ui-datepicker-timer .ui-btn-small { height: 22px; padding: 0 5px; font-size: 12px; }
+.ui-datepicker .ui-datepicker-timer p, .ui-datepicker .ui-datepicker-timer label { margin: 0; }
+.ui-datepicker .ui-datepicker-timer p span, .ui-datepicker .ui-datepicker-timer label span { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; width: 50px; }
 .ui-datepicker .ui-datepicker-content-content { padding: 0 10px; width: 196px; position: relative; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; }
 .ui-datepicker .ui-datepicker-content-content .ui-datepicker-watermark { position: absolute; top: 60px; left: 10px; width: 196px; height: 150px; background: transparent; color: #000; _color: #f2f2f2; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=5); opacity: 0.05; font-size: 150px; line-height: 150px; text-align: center; }
 .ui-datepicker .ui-datepicker-header { position: relative; height: 30px; line-height: 30px; }

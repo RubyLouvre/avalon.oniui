@@ -155,6 +155,9 @@ avalon.oniui
    <li>其他同学可以到<a href="https://github.com/RubyLouvre/avalon">avalon项目</a>，将它的server.exe（一个迷你的.Net服务器）文件拷过来，然后运行它，选中index.html打开</li>
 </ul>
 <img src="https://raw.githubusercontent.com/RubyLouvre/avalon.oniui/master/style/homepage.jpg"/>
+license
+==========================
+MIT
 如何为OniUI贡献一套新的皮肤
 ==========================
 <b>chameleon</b>是OniUI的皮肤生成系统,基于sass的compass框架改写而成.

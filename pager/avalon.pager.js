@@ -104,7 +104,7 @@ define(["avalon",
                     if (e.keyCode !== 13) return
                 }
                 value = vmodel._inputPage
-                if (value > vmodel.totalPages || value < vmodel.firstPage)
+                if (value > vmodel.totalPages || value < options.firstPage)
                     return
                 //currentPage需要转换为Number类型 fix lb1064@qq.com
                 vmodel.currentPage = value

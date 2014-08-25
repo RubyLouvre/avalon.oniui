@@ -15,9 +15,10 @@
         <div class="demo-show" ms-controller="demo">
             <fieldset>
                 <legend>toggle切换日期的显示隐藏</legend>
-                <input ms-widget="datepicker" data-toggle ="toggle"/>
+                <input ms-widget="datepicker" data-toggle ="toggle" data-datepicker-timer="true"/>
                 <button ms-click="toggleDatepicker" style="float:right;">toggle calendar</button>
                 <p>说明：可以通过toggle切换datepicker的显示与隐藏，这需要在绑定datepicker时，设置ms-data-toggle属性指向demo controller中的属性</p>
+                <p>可以通过配置timer来使组件可选择时间</p>
             </fieldset>
             <fieldset>
                 <legend>calendarLabel配置日历的说明label</legend>
@@ -25,7 +26,7 @@
                 <p>说明：配置calendarLabel来显示你独特的日历说明</p>
             </fieldset>
             <script> 
-                require("datepicker/avalon.datepicker", function(avalon) {
+                require(["datepicker/avalon.datepicker", "slider/avalon.slider"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.toggle = false;
                         vm.toggleDatepicker = function(event) {
@@ -65,7 +66,7 @@
                             &lt;p&gt;说明：配置changeMonthAndYear为true使得用户可以通过下拉选项切换日历的月份和年份&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.datepicker", function(avalon) {
+                            require(["datepicker/avalon.datepicker", "slider/avalon.slider"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.toggle = false;
                                     vm.toggleDatepicker = function(event) {

@@ -91,7 +91,6 @@ define(["../avalon.getModel",
             vm.container = null;
             vm.inputElement = null;
             vm.calendarWrapper = null;
-            vm.value = "";
             vm.inputFromValue = ""
             vm.inputToValue = "";
             // 切换组件的显示隐藏

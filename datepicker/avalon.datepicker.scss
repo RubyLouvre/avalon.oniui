@@ -82,8 +82,35 @@ $uiname-dropdown: "ui-dropdown";
     .ui-datepicker-timer {
         border-top: 1px solid #efefef;
         padding: 5px 0;
-        label {
-            display: block;
+        .ui-btn {
+            height: 26px;
+            overflow: visible;
+            _overflow-y: hidden;
+            padding: 0 10px;
+            @include border-radius(2px);
+            @if($oinui-theme == smoothness) {
+                font-size: 12px;
+                color: #333333;
+                background-color: #f8f8f8;
+                border: 1px solid #cccccc;
+            }
+            cursor: pointer;
+        }
+        .ui-btn:hover {
+            box-shadow: 1px 1px 0 0 rgba(0,0,0,0.1);
+            @if($oinui-theme == smoothness) {
+                background-color: #f8f8f8;
+                border-color: #bbbbbb;
+                color: #333333;
+            }
+        }
+        .ui-btn-small {
+            height: 22px;
+            padding: 0 5px;
+            font-size: 12px;
+        }
+        p, label {
+            margin: 0;
             span {
                 @include inline-block();
                 width: 50px;

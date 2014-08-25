@@ -1935,7 +1935,7 @@
         "duplex": 2000,
         "on": 3000
     }
-    var ons = oneObject("animationend,blur,change,input,click,dblclick,focus,keydown,keypress,keyup,mousedown,mouseenter,mouseleave,mousemove,mouseout,mouseover,mouseup,scroll,submit")
+    var events = oneObject("animationend,blur,change,input,click,dblclick,focus,keydown,keypress,keyup,mousedown,mouseenter,mouseleave,mousemove,mouseout,mouseover,mouseup,scan,scroll,submit")
 
     function scanAttr(elem, vmodels) {
         //防止setAttribute, removeAttribute时 attributes自动被同步,导致for循环出错
@@ -1952,7 +1952,7 @@
                     var value = attr.value
                     var name = attr.name
                     msData[name] = value
-                    if (ons[type]) {
+                    if (events[type]) {
                         param = type
                         type = "on"
                     } else if (type === "enabled") {//吃掉ms-enabled绑定,用ms-disabled代替
@@ -2335,8 +2335,8 @@
         '"': '\\"',
         '\\': '\\\\'
     };
-    var quote = window.JSON && JSON.stringify || function() {
-        return   '"' + this.replace(/[\\\"\x00-\x1f]/g, function(a) {
+    var quote = window.JSON && JSON.stringify || function(str) {
+        return   '"' + str.replace(/[\\\"\x00-\x1f]/g, function(a) {
             var c = meta[a];
             return typeof c === 'string' ? c :
                     '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
@@ -2737,7 +2737,11 @@
             } else { //移出DOM树，放进ifSanctuary DIV中，并用注释节点占据原位置
                 if (data.msInDocument) {
                     data.msInDocument = false
-                    elem.parentNode.replaceChild(placehoder, elem)
+                    try {
+                        elem.parentNode.replaceChild(placehoder, elem)
+                    } catch (e) {
+                        log("debug: ms-if: elem.parentNode= " + elem.parentNode)
+                    }
                     placehoder.elem = elem
                     ifSanctuary.appendChild(elem)
                 }
@@ -2758,17 +2762,19 @@
             }
             elem.$vmodel = vmodels[0]
             elem.$vmodels = vmodels
-            data.param = data.param.replace(/-\d+$/, "") // ms-on-mousemove-10
-            if (typeof data.specialBind === "function") {
+            var eventType = data.param = data.param.replace(/-\d+$/, "") // ms-on-mousemove-10
+            if (eventType === "scan") {
+                callback.call(elem, {type: eventType})
+            } else if (typeof data.specialBind === "function") {
                 data.specialBind(elem, callback)
             } else {
-                var removeFn = avalon.bind(elem, data.param, callback)
+                var removeFn = avalon.bind(elem, eventType, callback)
             }
             data.rollback = function() {
                 if (typeof data.specialUnbind === "function") {
                     data.specialUnbind()
                 } else {
-                    avalon.unbind(elem, data.param, removeFn)
+                    avalon.unbind(elem, eventType, removeFn)
                 }
             }
             data.evaluator = data.handler = noop
@@ -3019,16 +3025,9 @@
             if (!supportDisplay && !root.contains(elem)) { //fuck firfox 全家！
                 var display = parseDisplay(elem.tagName)
             }
-            function callback() {
-                display = display || avalon(elem).css("display")
-                data.display = display === "none" ? parseDisplay(elem.tagName) : display
-                parseExprProxy(data.value, vmodels, data)
-            }
-            if (elem.style.display == "") {//防止元素还没有应用样式就被取值，导致结果不正确
-                avalon.nextTick(callback)
-            } else {
-                callback()
-            }
+            display = display || avalon(elem).css("display")
+            data.display = display === "none" ? parseDisplay(elem.tagName) : display
+            parseExprProxy(data.value, vmodels, data)
         },
         "widget": function(data, vmodels) {
             var args = data.value.match(rword)
@@ -3067,22 +3066,20 @@
                     vmodel.$init()
                 }
                 if (vmodel.hasOwnProperty("$remove")) {
-                    var offTree = function() {
-                        vmodel.$remove()
-                        elem.msData = {}
-                        delete VMODELS[vmodel.$id]
+                    function offTree() {
+                        if (!elem.msRetain && !root.contains(elem)) {
+                            vmodel.$remove()
+                            elem.msData = {}
+                            delete VMODELS[vmodel.$id]
+                            return false
+                        }
                     }
-                    if (supportMutationEvents) {
-                        elem.addEventListener("DOMNodeRemoved", function(e) {
-                            if (e.target === this && !this.msRetain &&
-                                    //#441 chrome浏览器对文本域进行Ctrl+V操作，会触发DOMNodeRemoved事件
-                                            (window.chrome ? this.tagName === "INPUT" && e.relatedNode.nodeType === 1 : 1)) {
-                                offTree()
-                            }
+                    if (window.chrome) {
+                        elem.addEventListener("DOMNodeRemovedFromDocument", function(){
+                            setTimeout(offTree)
                         })
                     } else {
-                        elem.offTree = offTree
-                        launchImpl(elem)
+                        avalon.tick(offTree)
                     }
                 }
             } else if (vmodels.length) { //如果该组件还没有加载，那么保存当前的vmodels
@@ -3090,9 +3087,6 @@
             }
         }
     }
-
-    var supportMutationEvents = W3C && DOC.implementation.hasFeature("MutationEvents", "2.0")
-
     //============================ class preperty binding  =======================
     "hover,active".replace(rword, function(method) {
         bindingHandlers[method] = bindingHandlers["class"]
@@ -3229,12 +3223,16 @@
                         })
                     }
                 }
-
             }
         }
-        element.onTree = onTree
-        launch(element)
         element.oldValue = element.value
+        launch(function() {
+            if (avalon.contains(root, element)) {
+                onTree.call(element)
+            } else if (!element.msRetain) {
+                return false
+            }
+        })
         registerSubscriber(data)
         var timer = setTimeout(function() {
             if (!firstTigger) {
@@ -3253,6 +3251,7 @@
         }
         el.dispatchEvent(event)
     }
+
     function onTree() { //disabled状态下改动不触发input事件
         if (!this.disabled && this.oldValue !== this.value) {
             if (W3C) {
@@ -3266,10 +3265,7 @@
     function ticker() {
         for (var n = ribbon.length - 1; n >= 0; n--) {
             var el = ribbon[n]
-            if (avalon.contains(root, el)) {
-                el.onTree && el.onTree()
-            } else if (!el.msRetain) {
-                el.offTree && el.offTree()
+            if (el() === false) {
                 ribbon.splice(n, 1)
             }
         }
@@ -3277,8 +3273,9 @@
             clearInterval(TimerID)
         }
     }
-    function launchImpl(el) {
-        if (ribbon.push(el) === 1) {
+
+    avalon.tick = function(fn) {
+        if (ribbon.push(fn) === 1) {
             TimerID = setInterval(ticker, 30)
         }
     }
@@ -3297,12 +3294,11 @@
             set: newSetter
         })
     } catch (e) {
-        launch = launchImpl
+        launch = avalon.tick
     }
 
     duplexBinding.SELECT = function(element, evaluator, data) {
         var $elem = avalon(element)
-
         function updateVModel() {
             if ($elem.data("duplex-observe") !== false) {
                 var val = $elem.val() //字符串或字符串数组

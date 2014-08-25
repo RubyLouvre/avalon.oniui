@@ -54,6 +54,12 @@ define(['avalon',
                 opt.changedCallback = changedCallbackModel[1][changedCallbackModel[0]]
             }
             opt.duplexName = duplexName
+
+            //处理container
+            var docBody = document.body, container = options.container;
+
+            // container必须是dom tree中某个元素节点对象或者元素的id，默认将dialog添加到body元素
+            options.container = (avalon.type(container) === 'object' && container.nodeType === 1 && docBody.contains(container) ? container : document.getElementById(container)) || docBody;
         }
 
         //将元素的属性值copy到options中
@@ -129,7 +135,11 @@ define(['avalon',
                             return option.value === vmodel.value[0];
                         })[0];
                     }
+
+                    //设置title宽度
+                    vmodel.titleWidth = computeTitleWidth();
                 }
+
                 //设置label值
                 setLabelTitle(vmodel.value);
 
@@ -236,7 +246,7 @@ define(['avalon',
             vm._listClick = function(event) {
                 event.stopPropagation();
                 event.preventDefault();
-                titleNode && titleNode.focus();
+                // titleNode && titleNode.focus();
             };
 
             vm._keydown = function(event) {
@@ -292,11 +302,12 @@ define(['avalon',
                     var list;
                     listNode = createListNode();
                     list = listNode.firstChild;
-                    document.body.appendChild(listNode)
+                    vmodel.container.appendChild(listNode)
                     avalon.scan(list, [vmodel].concat(vmodels))
                     listNode = list
                     vmodel.menuNode = document.getElementById("menu-" + vmodel.$id)     //下拉列表框内层容器 （包裹滚动条部分的容器）
                     vmodel.dropdownNode = document.getElementById("list-" + vmodel.$id) //下拉列表框内容（有滚动条的部分）
+                    vmodel.updateScrollbar();
                 }
 
                 //如果参数b不为布尔值，对toggle值进行取反
@@ -305,8 +316,8 @@ define(['avalon',
                     return;
                 }
 
-                if (!b && avalon.type(vmodel.onHide) === 'function') {
-                    vmodel.onHide.call(this, listNode);
+                if (!b) {
+                    avalon.type(vmodel.onHide) === 'function' && vmodel.onHide.call(this, listNode);
                 } else {
                     var firstItemIndex, selectedItemIndex, value = vmodel.value;
                     if (avalon.type(value) !== 'array') {
@@ -331,8 +342,9 @@ define(['avalon',
                         }
                         vmodel.activeIndex = selectedItemIndex;
                     }
+                    vmodel._styleFix();
                     vmodel._position();
-                    titleNode && titleNode.focus();
+                    // titleNode && titleNode.focus();
                     if(avalon.type(vmodel.onShow) === 'function') {
                         vmodel.onShow.call(this, listNode);
                     }
@@ -355,7 +367,9 @@ define(['avalon',
                     $sourceNode = avalon(titleNode.firstChild),
                     listHeight = $listNode.height(),
                     $window = avalon(window),
-                    css = {};
+                    css = {},
+                    offsetParent = listNode.offsetParent,
+                    $offsetParent = avalon(offsetParent);
 
                 while ($sourceNode.element && $sourceNode.element.nodeType != 1) {
                     $sourceNode = avalon($sourceNode.element.nextSibling);
@@ -365,12 +379,17 @@ define(['avalon',
                 if (options.position && offset.top + outerHeight + listHeight > $window.scrollTop() + $window.height() && offset.top - listHeight > $window.scrollTop()) {
                     css.top = offset.top - listHeight;
                 } else {
-                    css.top = offset.top + outerHeight;
+                    css.top = offset.top + outerHeight - $sourceNode.css('borderBottomWidth').replace(styleReg, '$1');
                 }
 
-                //修正由于边框带来的重叠样式
-                css.top = css.top - $sourceNode.css('borderBottomWidth').replace(styleReg, '$1');
-                css.left = offset.left;
+                if(offsetParent && offsetParent.tagName !== 'BODY') {
+                    //修正由于边框带来的重叠样式
+                    css.top = css.top  - $offsetParent.offset().top + listNode.offsetParent.scrollTop;
+                    css.left = offset.left - $offsetParent.offset().left + listNode.offsetParent.scrollLeft;
+                } else {
+                    //修正由于边框带来的重叠样式
+                    css.left = offset.left;
+                }
 
                 //显示浮层
                 $listNode.css(css);
@@ -412,7 +431,7 @@ define(['avalon',
             }
 
             //利用scrollbar的样式改变修正父节点的样式
-            vm.$styleFix = function() {
+            vm._styleFix = function() {
                 var MAX_HEIGHT = options.height || 200,
                     $menu = avalon(vmodel.menuNode),
                     height = vmodel.dropdownNode.scrollHeight;
@@ -422,23 +441,21 @@ define(['avalon',
                     height = MAX_HEIGHT;
                 }
                 vmodel.menuHeight = height;
+                vmodel.updateScrollbar();
             };
 
             //当下拉列表中的项目发生改变时，调用该函数修正显示，顺序是修正下拉框高宽 --> 滚动条更新显示 --> 定位下拉框
             vm.updateScrollbar = function() {
                 var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
-                //修正下拉框的高度和宽度
-                !vmodel.multiple && vmodel.$styleFix();
                 scrollbar && scrollbar.update();
-                //定位下拉框
-                !vmodel.multiple &&vmodel._position();
             }
+
         });
 
         //对model的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
         if (options.modelBind && vmodel.dataSource.$watch) {
             vmodel.dataSource.$watch('length', function() {
-                vmodel.data = getDataFromOption(vmodel.dataSource.$model).data;
+                vmodel.data = getDataFromOption(vmodel.dataSource.$model);
             });
         }
 
@@ -482,14 +499,22 @@ define(['avalon',
             }
         }
 
+        function computeTitleWidth() {
+            var title = document.getElementById('title-' + vmodel.$id),
+                $title = avalon(title);
+            return vmodel.width - $title.css('paddingLeft').replace(styleReg, '$1') - $title.css('paddingRight').replace(styleReg, '$1');
+        }
+
         return vmodel;
     };
 
     widget.version = "1.0";
 
     widget.defaults = {
+        container: null, //放置列表的容器
         width: 200, //自定义宽度
         listWidth: 200, //自定义下拉列表的宽度
+        titleWidth: 0,  //title部分宽度
         height: 200, //下拉列表的高度
         enable: true, //组件是否可用
         readOnly: false, //组件是否只读

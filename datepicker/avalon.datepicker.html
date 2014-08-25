@@ -1,7 +1,7 @@
 <div class="ui-datepicker ui-widget"
     ms-visible="toggle"
     ms-class="ui-datepicker-multiple:numberOfMonths!==1">
-    <div class="ui-datepicker-wrapper">
+    <div class="ui-datepicker-wrapper" ms-css-position="_position">
         <div class="ui-datepicker-content" >
             <div class="ui-datepicker-label" ms-if="numberOfMonths===1">{{calendarLabel}}</div>
             <i ms-if="numberOfMonths!==1" class="ui-datepicker-prev ui-icon ui-icon-chevron-left" 
@@ -61,6 +61,24 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="ui-datepicker-timer">
+                    <label>
+                        <span>时间</span>
+                        <b ms-controller="_sliderHour">{{value|timer}}</b>&nbsp;:
+                        <b ms-controller="_sliderMinute">{{value|timer}}</b>
+                    </label>
+                    <label>
+                        <span>时</span>
+                        <input ms-widget="slider, _sliderHour" data-slider-max="23" data-slider-min="0" data-slider-width="140"></label>
+                    <label>
+                        <span>分</span>
+                        <input ms-widget="slider, _sliderMinute" data-slider-max="59" data-slider-min="0" data-slider-width="140">
+                    </label>
+                </div>
+                <div class="ui-datepicker-timer">
+                    <button>现在</button>
+                    <button>确定</button>
+                </div>
                 <div class="ui-datepicker-watermark" ms-if="watermark">
                     {{calendar.month+1}}
                 </div>

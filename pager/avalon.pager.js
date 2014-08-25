@@ -35,7 +35,9 @@ define(["avalon",
             vm.$init = function() {
                 var pageHTML = options.template
                 element.innerHTML = pageHTML
-                avalon.scan(element, [vmodel].concat(vmodels))
+                setTimeout(function() {
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                }, 100)
                 if (typeof options.onInit === "function") {
                     options.onInit.call(element, vmodel, options, vmodels)
                 }

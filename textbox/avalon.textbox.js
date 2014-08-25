@@ -2,7 +2,6 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
     var htmlStructArray = sourceHTML.split("MS_OPTION_SUGGEST"),
         suggestHTML = htmlStructArray[1];
     var widget = avalon.ui.textbox = function(element, data, vmodels) {
-        console.log(data)
         var elemParent = element.parentNode,
             $element = avalon(element),
             options = data.textboxOptions,
@@ -45,6 +44,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 vm.toggle = false;
                 element.focus();
             }
+            
             vm.blur = function() {
                 // 切换input外层包装的div元素class(ui-textbox-disabled)的显示或隐藏
                 vmodel.elementDisabled = element.disabled;
@@ -89,6 +89,9 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                     var suggest = avalon.parseHTML(suggestHTML).firstChild;
                     sourceList.appendChild(suggest);
                 }
+                avalon.bind(element, "focus", function() {
+                    vmodel.toggle = false
+                })
                 avalon.scan(sourceList, models);
                 avalon.scan(element, models);
                 if(typeof options.onInit === "function" ){
@@ -100,6 +103,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 vm.toggle = element.value != "" ? false : true;
             }
         })
+
         var msData = element.msData["ms-duplex"];
         if (msData) {
             vmSub = avalon.getModel(msData, vmodels);

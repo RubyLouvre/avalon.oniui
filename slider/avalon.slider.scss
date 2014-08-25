@@ -4,6 +4,8 @@ $uiname: "ui-slider";
 .#{$uiname} {
     position: relative;
     text-align: left;
+    @include inline-block();
+    width: 100%;
     .ui-helper-hidden-accessible {
         position: absolute;
         height: 1px;

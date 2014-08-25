@@ -34,8 +34,7 @@ define(['avalon',
         var options = data.switchdropdownOptions;
 
         //mix defaultData, getDataFromHTML, options.data
-        options.data = setItemLabel( avalon.mix(true, defaultData, getDataFromHTML(element), options.data) );
-        options.value = options.data[0].value;
+        options.data = setItemLabel( avalon.mix(true, {}, defaultData, getDataFromHTML(element), options.data) );
         var vmodel = avalon.define('switchdropdown' + setTimeout("1"), function(vm) {
             vm.$opts = options;
         });
@@ -99,7 +98,7 @@ define(['avalon',
         enable: true,           //组件是否可用
         readOnly: false,        //组件是否只读
         data: [],               //下拉列表显示的数据模型
-        value: '',              //设置组件的初始值
+        value: 1,              //设置组件的初始值
         getTemplate: function() {
             return tmpl;
         }

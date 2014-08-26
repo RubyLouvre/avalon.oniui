@@ -37,7 +37,11 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
     }
     avalon.bindingHandlers.scrollspy = function(data, vmodels) {
         var args = data.value.match(avalon.rword) || ["$", "scrollspy"]
-        var ID = args[0].trim(), opts = args[1], vmodel, vmOptions
+        var ID = args[0].trim(), opts = args[1], vmodel, vmOptions,
+            element = data.element,
+            msData = element.msData,
+            $element = avalon(element),
+            scrollbarBinded = msData && msData["ms-widget"].match(/scrollbar[,]?/g)
         if (ID && ID != "$") {
             vmodel = avalon.vmodels[ID]//如果指定了此VM的ID
             if (!vmodel) {
@@ -46,7 +50,8 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
         }
         data.element.removeAttribute("ms-scrollspy")
         if (!vmodel) {//如果使用$或绑定值为空，那么就默认取最近一个VM，没有拉倒
-            vmodel = vmodels.length ? vmodels[0] : null
+            var vmodelIndex = scrollbarBinded ? 1 : 0
+            vmodel = vmodels.length ? vmodels[vmodelIndex] : null
         }
         var fnObj = vmodel || {}
         if (vmodel && typeof vmodel[opts] === "object") {//如果指定了配置对象，并且有VM
@@ -56,13 +61,11 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
             }
             fnObj = vmOptions
         }
-        var element = data.element,
-            options = avalon.mix({}, defaults, vmOptions || {}, data[opts] || {}, avalon.getWidgetData(element, "scrollspy")),
-            msData = element.msData,
-            $element = avalon(element)
+        var options = avalon.mix({}, defaults, vmOptions || {}, data[opts] || {}, avalon.getWidgetData(element, "scrollspy"))
 
         // do something while scrolling
         function onScroll(x, y, scroller) {
+            if(!scroller) return
             // 通过接口算出tab list
             var list = options.targetListGetter(options.spytarget, options),
             // 通过接口算出pannel list
@@ -70,8 +73,9 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
                 scrollerOffset = scroller.offset()
             for(var i = 0; list[i++];) {
                 var id = list[i - 1],
-                    ele = options.panelGetter(id, i - 1, panelList, options),
-                    $ele = avalon(ele),
+                    ele = options.panelGetter(id, i - 1, panelList, options)
+                if(!ele) return
+                var $ele = avalon(ele),
                     offset = $ele.offset(),
                     height = $ele.innerHeight(),
                     width = $ele.innerWidth()
@@ -99,7 +103,7 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
             onScroll(element.scrollLeft, element.scrollTop, $element)
         })
         // if scrollbar is used
-        if(msData && msData["ms-widget"].match(/scrollbar[,]?/g)) {
+        if(scrollbarBinded) {
             myScroll = avalon.vmodels[msData["ms-widget-id"]]
             initTop = myScroll.scrollTop
             initLeft = myScroll.scrollLeft
@@ -110,7 +114,7 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
             })
             myScroll.$watch("scrollTop", function(n, o) {
                 if(options._lock) return
-                onScroll(void 0, n, scroller)
+                onScroll(void 0, n, myScroll.getScroller() || scroller)
             })
         }
         //@method scrollTo(id, index) 滚动到panel位置，滚动到 panelList[index] || dom.id = id的元素的地方，该方法绑定在onInit的返回的options参数上返回，供调用
@@ -118,7 +122,10 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
             var panelList =  options.panelListGetter(options.spytarget, options),
                 ele = options.panelGetter(id, index, panelList, options),
                 $ele = avalon(ele)
-            if(!ele) return
+            if(!scroller && scrollbarBinded) {
+                scroller = myScroll.getScroller()
+            }
+            if(!ele || !scroller) return
             options._lock = true
             var scrollerOffset = scroller.offset(),
                 offset = $ele.offset(),

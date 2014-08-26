@@ -10,7 +10,17 @@
             require(["scrollbar/avalon.scrollbar"], function() {
                 avalon.define("test", function(vm) {
                     vm.scrollbar = {
+                        show: "scrolling",
+                        showBarHeader: false,
+                        onInit: function(vmodel) {
+
+                            vm.up = function() {
+                                debugger
+                                vmodel.update()
+                            }
+                        }
                     }
+                    vm.up = avalon.noop
                     vm.data = avalon.range(1,400)
                     vm.$index = 2
                     vm.$skipArray = ["scrollbar"]
@@ -27,7 +37,7 @@
     <body ms-controller="test" ms-widget="scrollbar" style="padding-bottom:0;" class="ui-helper-reset" data-scrollbar-position="right">
         <div class="ui-scrollbar-scroller ui-helper-reset">
             <h1>scrollbar-document.body带上下小箭头</h1>
-            <p style="width:800px" ms-repeat="data" class="ui-helper-reset">left {{$index}} <span style="float:right;">right {{$index}} </span></p>
+            <p style="width:800px" ms-repeat="data" class="ui-helper-reset">left {{$index}} <span style="float:right;" data-repeat-rendered="up">right {{$index}} </span></p>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;

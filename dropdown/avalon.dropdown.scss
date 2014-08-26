@@ -151,6 +151,14 @@ $ui-divider-state-default-color: #f2f2f2;
             background-color: $ui-state-disabled-background-color;
             color: $ui-state-disabled-color;
         }
+        //掠过
+        &.ui-state-hover {
+          @if($oinui-theme == smoothness){
+            border-color:  $ui-state-hover-border-color;
+            background-color: $ui-state-hover-border-color;
+            color: $ui-state-hover-color;
+          }
+        }
         //选中
         &.ui-state-active {
             border-color: $ui-state-active-border-color;
@@ -158,14 +166,6 @@ $ui-divider-state-default-color: #f2f2f2;
             color: $ui-state-active-color;
             .ui-icon {
                 color: $oniui-icon-state-hover-color;
-            }
-        }
-        //掠过
-        &.ui-state-hover {
-            @if($oinui-theme == smoothness){
-                border-color:  $ui-state-hover-border-color;
-                background-color: $ui-state-hover-border-color;
-                color: $ui-state-hover-color;
             }
         }
     }

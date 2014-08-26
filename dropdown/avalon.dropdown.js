@@ -216,6 +216,7 @@ define(['avalon',
                     avalon.unbind(window, 'resize', resizeHandler);
                 }
                 vmodel.toggle = false;
+                listNode && vmodel.container.removeChild(listNode);
                 avalon.log("dropdown $remove")
             }
 

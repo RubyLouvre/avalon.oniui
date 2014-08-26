@@ -63,7 +63,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         // 扫描获取tabs
         if(options.tabs == void 0) {
             tabsParent = options.tabContainerGetter(element)
-            tabs = _getData(tabsParent, "li", vm.target)
+            tabs = _getData(tabsParent, "li", options.target)
             // 销毁dom
             if(options.distroyDom) element.removeChild(tabsParent)
         }

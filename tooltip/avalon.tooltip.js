@@ -316,6 +316,9 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             //@method hide($event) 隐藏tooltip，参数是$event，可缺省
             vm.hide = function(e) {
                 e && e.preventDefault && e.preventDefault()
+                vmodel.toggle = false
+            }
+            vm._hide = function(e) {
                 if(!tooltipElem) return
                 if(vmodel.animated && !!-[1,]) {
                     clearInterval(animateTimer)
@@ -339,7 +342,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                 if(vmodel.toggle) {
                     vmodel.toggle = false
                 } else {
-                    vmodel.hide()
+                    vmodel._hide()
                 }
             }
             vm.__show = function(event, force) {
@@ -448,7 +451,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             if(n) {
                 vmodel._show(vmodel.track && _track_event || _event)
             } else {
-                vmodel.hide()
+                vmodel._hide()
             }
         })
 

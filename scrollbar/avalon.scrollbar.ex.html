@@ -10,10 +10,9 @@
             require(["scrollbar/avalon.scrollbar"], function() {
                 avalon.define("test", function(vm) {
                     vm.scrollbar = {
-                        show: "scrolling",
-                        showBarHeader: false,
+                        show: "always",
+                        showBarHeader: true,
                         onInit: function(vmodel) {
-
                             vm.up = function() {
                                 debugger
                                 vmodel.update()

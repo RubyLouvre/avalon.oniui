@@ -30,7 +30,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
 
     function _getData(par, type, target) {
         var res = []
-        for (var i = 0; el = par && par.children[i++]; ) {
+        for (var i = 0, el; el = par && par.children[i++]; ) {
             if(el.tagName.toLowerCase() != type) continue
             var opt = avalon(el).data()
                 , obj = type == "div" ? {

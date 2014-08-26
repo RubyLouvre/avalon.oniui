@@ -1,4 +1,4 @@
-define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../chameleon/oniui-common.css", "css!./avalon.slider.css"], function(avalon, sourceHTML) {
+define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../chameleon/oniui-common.css", "css!./avalon.slider.css", "../avalon.getModel"], function(avalon, sourceHTML) {
     /**
      * @global Handlers ： 保存页面上所有滑动手柄
      * @global Index :点中手柄在Handlers中的索引，或滑动手柄在handlers中的索引 
@@ -17,7 +17,13 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
         var oRange = options.range //true min max， 默认为false
         var values = options.values
         var twohandlebars = oRange === true
-        var value = options.value //第几等份
+        var value = Number(options.value) //第几等份
+        if (!value) {
+            var valVM = avalon.getModel(options.value, vmodels);
+            if (valVM) {
+                value = valVM[1][valVM[0]];
+            }
+        }
         options.template = options.getTemplate(template, options);
         // 固定最小的一边
         if (oRange === "min" && values) {
@@ -72,7 +78,7 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
         }
         var vmodel = avalon.define(data.sliderId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["template", "widgetElement", "step"]
+            vm.$skipArray = ["template", "widgetElement", "step", "_dragEnd"]
             vm.widgetElement = element
             vm.step = (options.step > 0) ? options.step : 1
             vm.disabled = element.disabled
@@ -87,7 +93,7 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
             vm.$twohandlebars = twohandlebars
             vm.$percent2Value = percent2Value
             vm.$pixelTotal = 0
-            
+            vm._dragEnd = false;
             vm.dragstart = function(event, data) {
                 vmodel.$pixelTotal = isHorizontal ? slider.offsetWidth : slider.offsetHeight
                 Handlers = handlers  // 很关键，保证点击的手柄始终在Handlers中，之后就可以通过键盘方向键进行操作
@@ -97,50 +103,16 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
                 data.$element.addClass("ui-state-active")
                 options.onDragStart.call(null, event, data);
             }
-            vm.dragend = function(event, data) {
+            vm.dragend = function(event, data, keyVal) {
                 data.$element.removeClass("ui-state-active")
+                // dragCaculate(event, data, keyVal)
                 options.onDragEnd.call(null, event, data);
+                vmodel._dragEnd = false; 
             }
             vm.drag = function(event, data, keyVal) {
-                if (isFinite(keyVal)) {
-                    var val = keyVal
-                } else {
-                    var prop = isHorizontal ? "left" : "top"
-                    var pixelMouse = data[prop] + parseFloat(data.$element.css("border-top-width"))
-                    //如果是垂直时,往上拖,值就越大
-                    var percent = (pixelMouse / vmodel.$pixelTotal) //求出当前handler在slider的位置
-                    if (!isHorizontal) { // 垂直滑块，往上拖动时pixelMouse变小，下面才是真正的percent，所以需要调整percent
-                        percent = Math.abs(1 - percent)
-                    }
-                    if (percent > 0.999) {
-                        percent = 1
-                    }
-                    if (percent < 0.001) {
-                        percent = 0
-                    }
-                    val = percent2Value(percent)
-                }
-                if (twohandlebars) { //水平时，小的0在左边，大的1在右边，垂直时，小的0在下边，大的1在上边
-                    if (Index === 0) { 
-                        var check = vmodel.values[1]
-                        if (val > check) {
-                            val = check
-                        }
-                    } else {
-                        check = vmodel.values[0]
-                        if (val < check) {
-                            val = check
-                        }
-                    }
-                    vmodel.values[Index] = val
-                    vmodel["percent" + Index] = value2Percent(val)
-                    vmodel.value = vmodel.values.join()
-                    vmodel.percent = value2Percent(vmodel.values[1] - vmodel.values[0] + valueMin)
-                } else {
-                    vmodel.value = val
-                    vmodel.percent = value2Percent(val)
-                }
+                dragCaculate(event, data, keyVal)
                 options.onDrag.call(null, vmodel, data);
+                vmodel._dragEnd = true;
             }
             vm.$init = function() {
                 var a = slider.getElementsByTagName("b")
@@ -154,8 +126,12 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
                         handlers.push(el);
                     } 
                 }
+                avalon(element).css({display: "none", height:0, width: 0, padding: 0})
+                if (~~vmodel.width) {
+                    slider.style.width = vmodel.width + "px";
+                }
                 avalon.scan(slider, [vmodel].concat(vmodels))
-                if(typeof options.onInit === "function" ){
+                if (typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
                     options.onInit.call(element, vmodel, options, vmodels)
                 }
@@ -165,11 +141,65 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
                 slider.parentNode.removeChild(slider);
             }
         })
+        vmodel.$watch("value", function(val) {
+            val = correctValue(Number(val) || 0);
+            if (!val || val < Number(vmodel.min)) {
+                val = 0;
+            } else if (val > Number(vmodel.max)) {
+                val = vmodel.max;
+            }
+            vmodel.value = val;
+            vmodel.percent = value2Percent(val)
+            if (!vmodel._dragEnd) {
+                options.onDragEnd.call(null, event, data);
+            }
+        })
+        function dragCaculate(event, data, keyVal) {
+            if (isFinite(keyVal)) {
+                var val = keyVal
+            } else {
+                var prop = isHorizontal ? "left" : "top"
+                var pixelMouse = data[prop] + parseFloat(data.$element.css("border-top-width"))
+                //如果是垂直时,往上拖,值就越大
+                var percent = (pixelMouse / vmodel.$pixelTotal) //求出当前handler在slider的位置
+                if (!isHorizontal) { // 垂直滑块，往上拖动时pixelMouse变小，下面才是真正的percent，所以需要调整percent
+                    percent = Math.abs(1 - percent)
+                }
+                if (percent > 0.999) {
+                    percent = 1
+                }
+                if (percent < 0.001) {
+                    percent = 0
+                }
+                val = percent2Value(percent)
+            }
+            if (twohandlebars) { //水平时，小的0在左边，大的1在右边，垂直时，小的0在下边，大的1在上边
+                if (Index === 0) { 
+                    var check = vmodel.values[1]
+                    if (val > check) {
+                        val = check
+                    }
+                } else {
+                    check = vmodel.values[0]
+                    if (val < check) {
+                        val = check
+                    }
+                }
+                vmodel.values[Index] = val
+                vmodel["percent" + Index] = value2Percent(val)
+                vmodel.value = vmodel.values.join()
+                vmodel.percent = value2Percent(vmodel.values[1] - vmodel.values[0] + valueMin)
+            } else {
+                vmodel.value = val
+                vmodel.percent = value2Percent(val)
+            }
+        }
         return vmodel
     }
     widget.defaults = {
         max: 100,
         min: 0,
+        width: -1,
         orientation: "horizontal",
         range: false,
         step: 1,
@@ -183,7 +213,8 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
             return str;
         }
     }
-   avalon(document).bind("click", function(e) { // 当点击slider之外的区域取消选中状态
+    avalon(document).bind("click", function(e) { // 当点击slider之外的区域取消选中状态
+        e.stopPropagation();
         var el = e.target
         var Index = Handlers.indexOf(el)
         if (Index !== -1) {

@@ -2175,15 +2175,7 @@
                 .replace(rnumber, "")
                 .replace(rcomma, "")
                 .split(/^$|,+/)
-        var vars = [],
-                unique = {}
-        for (var i = 0; i < match.length; ++i) {
-            var variable = match[i]
-            if (!unique[variable]) {
-                unique[variable] = vars.push(variable)
-            }
-        }
-        return cacheVars(key, vars)
+        return cacheVars(key, uniqSet(match))
     }
 
     //添加赋值语句
@@ -2203,20 +2195,21 @@
         return ret
     }
 
-    function uniqVmodels(arr) {
-        var uniq = {}
-        return arr.filter(function(el) {
-            if (!uniq[el.$id]) {
-                uniq[el.$id] = 1
-                return true
+    function uniqSet(array) {
+        var ret = [], unique = {}
+        for (var i = 0; i < array.length; i++) {
+            var el = array[i]
+            var id = el && typeof el.$id === "string" ? el.$id : el
+            if (!unique[id]) {
+                unique[id] = ret.push(el)
             }
-        })
+        }
+        return ret
     }
     //缓存求值函数，以便多次利用
 
     function createCache(maxLength) {
         var keys = []
-
         function cache(key, value) {
             if (keys.push(key) > maxLength) {
                 delete cache[keys.shift()]
@@ -2225,6 +2218,7 @@
         }
         return cache;
     }
+
     var cacheExprs = createCache(256)
     //取得求值函数及其传参
     var rduplex = /\w\[.*\]|\w\.\w/
@@ -2242,7 +2236,7 @@
                 args = [],
                 prefix = ""
         //args 是一个对象数组， names 是将要生成的求值函数的参数
-        scopes = uniqVmodels(scopes)
+        scopes = uniqSet(scopes)
         for (var i = 0, sn = scopes.length; i < sn; i++) {
             if (vars.length) {
                 var name = "vm" + expose + "_" + i
@@ -2762,7 +2756,7 @@
             }
             elem.$vmodel = vmodels[0]
             elem.$vmodels = vmodels
-            var eventType = data.param = data.param.replace(/-\d+$/, "") // ms-on-mousemove-10
+            var eventType = data.param.replace(/-\d+$/, "") // ms-on-mousemove-10
             if (eventType === "scan") {
                 callback.call(elem, {type: eventType})
             } else if (typeof data.specialBind === "function") {
@@ -3008,6 +3002,10 @@
         "on": function(data, vmodels) {
             var value = data.value,
                     four = "$event"
+            var eventType = data.param.replace(/-\d+$/, "") // ms-on-mousemove-10
+            if (typeof bindingHandlers.on[eventType + "Hook"] === "function") {
+               bindingHandlers.on[eventType + "Hook"](data)
+            }
             if (value.indexOf("(") > 0 && value.indexOf(")") > -1) {
                 var matched = (value.match(rdash) || ["", ""])[1].trim()
                 if (matched === "" || matched === "$event") { // aaa() aaa($event)当成aaa处理
@@ -3075,7 +3073,7 @@
                         }
                     }
                     if (window.chrome) {
-                        elem.addEventListener("DOMNodeRemovedFromDocument", function(){
+                        elem.addEventListener("DOMNodeRemovedFromDocument", function() {
                             setTimeout(offTree)
                         })
                     } else {
@@ -3828,8 +3826,8 @@
         for (var i = 0, n = eachProxyPool.length; i < n; i++) {
             var proxy = eachProxyPool[i]
             if (proxy.hasOwnProperty(param)) {
-                for (var i in source) {
-                    proxy[i] = source[i]
+                for (var k in source) {
+                    proxy[k] = source[k]
                 }
                 eachProxyPool.splice(i, 1)
                 return proxy

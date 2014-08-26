@@ -61,6 +61,25 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="ui-datepicker-timer" ms-if="timer">
+                    <label>
+                        <span>时间</span>
+                        <b>{{hour|timer}}</b>&nbsp;:
+                        <b>{{minute|timer}}</b>
+                    </label>
+                    <p>
+                        <span>时</span>
+                        <input ms-widget="slider, $, sliderHourOpts" data-slider-max="23" data-slider-min="0" data-slider-value="hour" data-slider-width="140">
+                    </p>
+                    <p>
+                        <span>分</span>
+                        <input ms-widget="slider, $, sliderMinuteOpts" data-slider-max="59" data-slider-min="0" data-slider-width="140" data-slider-value="minute">
+                    </p>
+                </div>
+                <div class="ui-datepicker-timer ui-helper-clearfix" ms-if="timer">
+                    <button type="button" class="ui-btn ui-btn-small" style="float: left" ms-click="_getNow">现在</button>
+                    <button type="button" class="ui-btn ui-btn-primary ui-btn-small" style="float:right" ms-click="_selectTime">确定</button>
+                </div>
                 <div class="ui-datepicker-watermark" ms-if="watermark">
                     {{calendar.month+1}}
                 </div>

@@ -216,6 +216,7 @@ define(['avalon',
                     avalon.unbind(window, 'resize', resizeHandler);
                 }
                 vmodel.toggle = false;
+                listNode && vmodel.container.removeChild(listNode);
                 avalon.log("dropdown $remove")
             }
 
@@ -246,7 +247,7 @@ define(['avalon',
             vm._listClick = function(event) {
                 event.stopPropagation();
                 event.preventDefault();
-                titleNode && titleNode.focus();
+                // titleNode && titleNode.focus();
             };
 
             vm._keydown = function(event) {
@@ -344,7 +345,7 @@ define(['avalon',
                     }
                     vmodel._styleFix();
                     vmodel._position();
-                    titleNode && titleNode.focus();
+                    // titleNode && titleNode.focus();
                     if(avalon.type(vmodel.onShow) === 'function') {
                         vmodel.onShow.call(this, listNode);
                     }

@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.3.2 2014.8.11
+ avalon 1.3.4 2014.8.26
  ==================================================*/
 (function(DOC) {
     /*********************************************************************
@@ -188,7 +188,7 @@
     avalon.mix({
         rword: rword,
         subscribers: subscribers,
-        version: 1.33,
+        version: 1.34,
         ui: {},
         log: log,
         slice: W3C ? function(nodes, start, end) {
@@ -3004,7 +3004,7 @@
                     four = "$event"
             var eventType = data.param.replace(/-\d+$/, "") // ms-on-mousemove-10
             if (typeof bindingHandlers.on[eventType + "Hook"] === "function") {
-               bindingHandlers.on[eventType + "Hook"](data)
+                bindingHandlers.on[eventType + "Hook"](data)
             }
             if (value.indexOf("(") > 0 && value.indexOf(")") > -1) {
                 var matched = (value.match(rdash) || ["", ""])[1].trim()
@@ -4164,6 +4164,8 @@
         locate.SHORTMONTH = locate.MONTH
         filters.date.locate = locate
     }
+
+
     /*********************************************************************
      *                      AMD加载器                                   *
      **********************************************************************/
@@ -4528,12 +4530,18 @@
     /*********************************************************************
      *                           DOMReady                               *
      **********************************************************************/
-    var ready = W3C ? "DOMContentLoaded" : "readystatechange"
 
+    var readyList = []
     function fireReady() {
         if (DOC.body) { //  在IE8 iframe中doScrollCheck可能不正确
-            modules["ready!"].state = 2
-            innerRequire.checkDeps()
+            if (innerRequire) {
+                modules["ready!"].state = 2
+                innerRequire.checkDeps()
+            } else {
+                readyList.forEach(function(a) {
+                    a(avalon)
+                })
+            }
             fireReady = noop //隋性函数，防止IE9二次调用_checkDeps
         }
     }
@@ -4550,25 +4558,32 @@
     if (DOC.readyState === "complete") {
         setTimeout(fireReady) //如果在domReady之外加载
     } else if (W3C) {
-        DOC.addEventListener(ready, fireReady)
-        window.addEventListener("load", fireReady)
+        DOC.addEventListener("DOMContentLoaded", fireReady)
     } else {
         DOC.attachEvent("onreadystatechange", function() {
             if (DOC.readyState === "complete") {
                 fireReady()
             }
         })
-        window.attachEvent("onload", fireReady)
         if (root.doScroll) {
             doScrollCheck()
         }
     }
+    avalon.bind(window, "load", fireReady)
+    
+    avalon.ready = function(fn) {
+        if (innerRequire) {
+            innerRequire("ready!", fn)
+        } else if (fireReady === noop) {
+            fn(avalon)
+        } else {
+            readyList.push(fn)
+        }
+    }
+
     avalon.config({
         loader: true
     })
-    avalon.ready = function(fn) {
-        innerRequire("ready!", fn)
-    }
 
     avalon.ready(function() {
         //IE6-9下这个通常只要1ms,而且没有副作用，不会发出请求，setImmediate如果只执行一次，与setTimeout一样要140ms上下

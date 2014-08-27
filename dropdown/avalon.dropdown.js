@@ -20,48 +20,6 @@ define(['avalon',
             scrollHandler,
             resizeHandler;
 
-
-        function _buildOptions(opt) {
-            //为options添加value与duplexName
-            //如果原来的select元素绑定了ms-duplex，那么取得其值作value
-            //如果没有，则先从上层VM的配置对象中取，再没有则从内置模板里抽取
-            var duplexName = (element.msData['ms-duplex'] || '').trim()
-            var duplexModel
-            if (duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
-                opt.value = duplexModel[1][duplexModel[0]]
-            } else if (!hasBuiltinTemplate) {
-                if (!Array.isArray(opt.value)) {
-                    opt.value = [opt.value || '']
-                }
-            } else {
-                var values = []
-                Array.prototype.forEach.call(element.options, function(option) {
-                    if (option.selected) {
-                        values.push(parseData(option.value))
-                    }
-                })
-                opt.value = values
-            }
-
-            if (!opt.multiple && Array.isArray(opt.value)) {
-                opt.value = opt.value[0] || ""
-            }
-
-            //处理data-duplex-changed参数
-            var changedCallbackName = $element.attr('data-duplex-changed'),
-                changedCallbackModel;    //回调函数
-            if (changedCallbackName && (changedCallbackModel = avalon.getModel(changedCallbackName, vmodels))) {
-                opt.changedCallback = changedCallbackModel[1][changedCallbackModel[0]]
-            }
-            opt.duplexName = duplexName
-
-            //处理container
-            var docBody = document.body, container = options.container;
-
-            // container必须是dom tree中某个元素节点对象或者元素的id，默认将dialog添加到body元素
-            options.container = (avalon.type(container) === 'object' && container.nodeType === 1 && docBody.contains(container) ? container : document.getElementById(container)) || docBody;
-        }
-
         //将元素的属性值copy到options中
         "multiple,size".replace(avalon.rword, function(name) {
             if (hasAttribute(element, name)) {
@@ -480,6 +438,51 @@ define(['avalon',
             }
         });
 
+        function _buildOptions(opt) {
+            //为options添加value与duplexName
+            //如果原来的select元素绑定了ms-duplex，那么取得其值作value
+            //如果没有，则先从上层VM的配置对象中取，再没有则从内置模板里抽取
+            var duplexName = (element.msData['ms-duplex'] || '').trim()
+            var duplexModel
+            if (duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
+                opt.value = duplexModel[1][duplexModel[0]]
+            } else if (!hasBuiltinTemplate) {
+                if (!Array.isArray(opt.value)) {
+                    opt.value = [opt.value || '']
+                }
+            } else {
+                var values = []
+                Array.prototype.forEach.call(element.options, function(option) {
+                    if (option.selected) {
+                        values.push(parseData(option.value))
+                    }
+                })
+                opt.value = values
+            }
+
+            if (!opt.multiple && Array.isArray(opt.value)) {
+                opt.value = opt.value[0] || ""
+            }
+
+            //处理data-duplex-changed参数
+            var changedCallbackName = $element.attr('data-duplex-changed'),
+                changedCallbackModel;    //回调函数
+            if (changedCallbackName && (changedCallbackModel = avalon.getModel(changedCallbackName, vmodels))) {
+                opt.changedCallback = changedCallbackModel[1][changedCallbackModel[0]]
+            }
+            opt.duplexName = duplexName
+
+            //处理container
+            var docBody = document.body, container = options.container;
+
+            // container必须是dom tree中某个元素节点对象或者元素的id，默认将dialog添加到body元素
+            options.container = (avalon.type(container) === 'object' && container.nodeType === 1 && docBody.contains(container) ? container : document.getElementById(container)) || docBody;
+        }
+
+        /**
+         * 生成下拉框节点
+         * @returns {*}
+         */
         function createListNode() {
             return avalon.parseHTML(listTemplate);
         }
@@ -500,6 +503,7 @@ define(['avalon',
             }
         }
 
+        //计算title的宽度
         function computeTitleWidth() {
             var title = document.getElementById('title-' + vmodel.$id),
                 $title = avalon(title);

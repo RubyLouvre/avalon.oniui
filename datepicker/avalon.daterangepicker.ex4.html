@@ -20,22 +20,24 @@
             </fieldset>
             <fieldset>
                 <legend>日期范围框 两天最大相隔8天</legend>
-                <div ms-widget="daterangepicker" data-daterangepicker-duplex="from, to" data-daterangepicker-rules="bOpts"></div>
+                <div ms-widget="daterangepicker" data-daterangepicker-duplex="fromB, toB" data-daterangepicker-rules="bOpts"></div>
                 <p>通过配置rules来设置起始日历和结束日历之间两天相隔的最小天数为0，最大天数为8</p>
             </fieldset>
             <fieldset>
                 <legend>日期范围框 两天最小相隔0天，最大相隔8天</legend>
-                <div ms-widget="daterangepicker" data-daterangepicker-duplex="from, to1" data-daterangepicker-rules="dOpts"></div>
+                <div ms-widget="daterangepicker" data-daterangepicker-duplex="fromC, to1" data-daterangepicker-rules="dOpts"></div>
                 <p>初始结束日期的初始日期为2014-06-20，在最小间隔天数和最大间隔天数所包含的日期，正常显示</p>
             </fieldset>
             <fieldset>
                 <legend>日期范围框 最小日期、最大日期</legend>
-                <div ms-widget="daterangepicker" data-daterangepicker-duplex="from, to" data-daterangepicker-rules="cOpts"></div>
+                <div ms-widget="daterangepicker" data-daterangepicker-duplex="fromD, toD" data-daterangepicker-rules="cOpts"></div>
                 <p>通过配置rules对象，设置初始日期的最小日期fromMinDate、最大日期fromMaxDate和结束日期的最小日期toMinDate和最大日期toMaxDate,在显式设置结束日历的最小日期和最大日期的情况下，当结束日期不在其最小和最大日期范围之内时，组件会将结束日期设为其最小日期</p>
+                {{cOpts.fromMinDate}}
+                {{cOpts.fromMaxDate}}
             </fieldset>
             <fieldset>
                 <legend>双日历框 结束初始日期异常时，rules defaultDate的设置</legend>
-                <div ms-widget="daterangepicker" data-daterangepicker-duplex="from, to2" data-daterangepicker-rules="eOpts"></div>
+                <div ms-widget="daterangepicker" data-daterangepicker-duplex="fromE, to2" data-daterangepicker-rules="eOpts"></div>
                 <p>通过配置结束日期初始值异常时的默认值、最小间隔天数、最大间隔天数对应的rules属性，可以使结束日期初始为起始初始日期+2</p>
             </fieldset>
             <script> 
@@ -43,7 +45,13 @@
                     var model = avalon.define("demo", function(vm) {
                         vm.from = "2014-06-12"
                         vm.to = "2014-06-02"
+                        vm.fromB = "2014-06-12"
+                        vm.toB = "2014-06-02"
+                        vm.fromC = "2014-06-12"
                         vm.to1 = "2014-06-15"
+                        vm.fromD = "2014-06-12"
+                        vm.toD = "2014-06-02"
+                        vm.fromE = "2014-06-12"
                         vm.to2 = "2014-06-dd"
                         vm.aOpts = {
                             rules: 'null, 0D'
@@ -110,7 +118,13 @@
                                 var model = avalon.define("demo", function(vm) {
                                     vm.from = "2014-06-12"
                                     vm.to = "2014-06-02"
+                                    vm.fromB = "2014-06-12"
+                                    vm.toB = "2014-06-02"
+                                    vm.fromC = "2014-06-12"
                                     vm.to1 = "2014-06-15"
+                                    vm.fromD = "2014-06-12"
+                                    vm.toD = "2014-06-02"
+                                    vm.fromE = "2014-06-12"
                                     vm.to2 = "2014-06-dd"
                                     vm.aOpts = {
                                         rules: 'null, 0D'

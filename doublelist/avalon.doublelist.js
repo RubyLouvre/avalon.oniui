@@ -174,7 +174,7 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                 vmodel.dataTmpSelect.clear()
                 vmodel._getSelect()
             }
-            //@method reset(data, select) 重置，用新的data和select渲染，如果data为空，则不修改左侧list；如果select为空或者空数组，则清空已选，否则置为已选
+            //@method reset(data, select) 重置，用新的data和select渲染，如果!data为真，则不修改左侧list；如果select为空或者空数组，则清空已选，否则将select中的项目置为已选
             vm.reset = function(data, select) {
                 if(data) {
                     if(data.length == vmodel.data.length && data != vmodel.data) {
@@ -223,6 +223,7 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
             return true
         },//@optMethod countLimit(select) 选择条目限制，必须有return true or false，参数是当前已选中条数和add or delete操作
         select:[],//@param 选中的value list，[value1,value2]，取的是data 里面item的value
+        data:[],//@param 配置左侧待选项列表，数据 [{value: xxx, name: xx}]
         change: avalon.noop, //@optMethod change(newValue, oldValue, vmodel) 所选变化的回调，不建议使用，等价于onChange
         onChange: avalon.noop,//@optMethod onChange(newValue, oldValue, vmodel) 所选变化的对调，同change，第一、二个参数分别是数组变化前后的长度
         $changeCBS: [],

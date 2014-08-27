@@ -27,7 +27,7 @@
     <table class="uiCollection">
         <tr>
             <td width="230px">
-                导航部分
+                <h2 class="demoHeaders" style="display: none">导航部分</h2>
             </td>
             <td style="padding: 0 20px; width: 700px">
                 <h2 class="demoHeaders">Accordion</h2>
@@ -60,13 +60,11 @@
             </td>
             <td style="width:235px">
                 <h2 class="demoHeaders">Textbox</h2>
-                <input ms-controller="textbox" ms-widget="textbox" ms-duplex="val" data-textbox-suggest="test" id="textbox"/>
+                <input ms-controller="textbox" ms-widget="textbox" ms-duplex="val" data-textbox-suggest="test" id="textbox" data-textbox-width="190"/>
                 <h2 class="demoHeaders">Spinner</h2>
                 <input ms-controller="spinner" ms-widget="spinner" id="spinner"/>
-                
                 <h2 class="demoHeaders">Datepicker</h2>
                 <input ms-controller="datepicker" ms-widget="datepicker" id="datepicker" data-datepicker-show-datepicker-always="true" data-datepicker-timer="true"/>
-                
                 <h2 class="demoHeaders">Dropdown</h2>
                 <select ms-controller="dropdown" ms-widget="dropdown" id="dropdown">
                     <optgroup label="group1">
@@ -82,7 +80,6 @@
                         <option value="value6">Value 6</option>
                     </optgroup>
                 </select>
-
                 <h2 class="demoHeaders">Menu</h2>
                 <ul ms-controller="menu" ms-widget="menu, menuA, $menuAOpts" id="menu" style="float:left"></ul>
                 <br style="clear:both"/>

@@ -277,18 +277,18 @@ vm.<span class="str">getDateOfZ</span> = function() {
 }
 </pre>
                     <div class="padBom10">
-                        <span class="label label-warning">推荐：</span><span>通过组件自身的disabled属性控制组件禁用与否的datepicker Y：</span>
-                        <input ms-widget="datepicker, datepickerY"/>
+                        <span class="label label-warning">推荐：</span><span>通过组件自身的disabled属性控制组件禁用与否的datepicker 0：</span>
+                        <input ms-widget="datepicker, datepicker0"/>
                         <button ms-click="changeDisabled">调用组件自身disabled属性</button>
                     </div>
 <pre ms-skip>
-&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"datepicker, datepickerY"</span>/&gt;   
+&lt;input <span class="atn">ms-widget</span><span class="pun">=</span><span class="atv">"datepicker, datepicker0"</span>/&gt;   
 &lt;button <span class="atn">ms-click</span><span class="pun">=</span><span class="atv">"changeDisabled"</span>&gt;调用组件自身disabled属性&lt;/button&gt; 
 </pre> 
 <pre>
 
 vm.<span class="str">changeDisabled</span> = function() {
-    var yVM = avalon.vmodels.datepickerY;
+    var yVM = avalon.vmodels.datepicker0;
     yVM.<span class="atv">disabled</span> = !yVM.disabled;
 }
 </pre>
@@ -517,7 +517,7 @@ vm.<span class="str">changeWidth</span> = function() {
                                 }
                             }
                             vm.changeDisabled = function() {
-                                var yVM = avalon.vmodels.datepickerY;
+                                var yVM = avalon.vmodels.datepicker0;
                                 yVM.disabled = !yVM.disabled;
                             }
                             vm.changeMinDate = function() {

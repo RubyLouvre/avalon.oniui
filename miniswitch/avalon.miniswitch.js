@@ -11,9 +11,6 @@ define(['avalon',
             vm.$opts = options;
         });
         avalon(element).attr('ms-widget', ['switchdropdown', data.miniswitchId, '$opts'].join());
-
-        //由于对数据做预先处理，使用option模式传递数据，将element的内容清空
-        element.innerHTML = "";
         avalon.scan(element, [vmodel].concat(vmodels));
         return vmodel;
     };

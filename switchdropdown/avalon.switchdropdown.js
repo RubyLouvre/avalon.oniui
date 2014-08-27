@@ -32,9 +32,24 @@ define(['avalon',
     var widget = avalon.ui.switchdropdown = function(element, data, vmodels) {
 
         var options = data.switchdropdownOptions;
-
         //mix defaultData, getDataFromHTML, options.data
-        options.data = setItemLabel( avalon.mix(true, {}, defaultData, getDataFromHTML(element), options.data) );
+        options.data = setItemLabel( avalon.mix(true, [], defaultData, getDataFromHTML(element), options.data) );
+
+        //检测options.value是否可以匹配到options.data中的选项
+        //如果不能匹配，首先找到selected的选项
+        //如果没有selected的选项，则把value设置为data中的第一项
+        for(var preSet = options.value, value = options.data[0].value, i = 0, len = options.data.length, item; i < len; i++) {
+            item = options.data[i];
+            if(item.value === preSet) {
+                value = preSet;
+                break;
+            }
+            if(item.selected) {
+                value = item.value;
+            }
+        }
+        options.value = value;
+
         var vmodel = avalon.define('switchdropdown' + setTimeout("1"), function(vm) {
             vm.$opts = options;
         });
@@ -59,6 +74,7 @@ define(['avalon',
                         value: parseData(avalon(el).val()),
                         enable: !el.disabled,
                         group: false,
+                        selected: el.selected,
                         parent: parent
                     });
                     if(ret.length === 2) break;

@@ -496,7 +496,7 @@ define(["avalon",
             option = option.length > 0 ? option[0] : null
 
             if(!option) {
-                avalon.log("[log]","avalon.dropdown","设置label出错");
+                avalon.log("[log] avalon.dropdown 设置label出错");
             } else {
                 vmodel.label = option.label;
                 vmodel.title = option.title;

@@ -87,7 +87,7 @@
                         getColumn: function(el) {
                             el.checked = true
                         },
-                        checkAll: function() {
+                          checkAll: function() {
                             var vmodel = avalon.vmodels.xxx
                             var bool = vmodel.allchecked = this.checked
                             vmodel._data.forEach(function(el) {
@@ -97,10 +97,10 @@
                                 el.checked = bool
                             })
                         },
-                        checkOne: function(el, index) {
+                        checkOne: function() {
                             var vmodel = avalon.vmodels.xxx
-                            index = vm.startIndex + index
-                            vmodel.data[index] = el.checked = this.checked
+                            var index =  vmodel.startIndex + (avalon(this).data("index") || 0)
+                            vmodel.data[index] = this.checked
                             if (!this.checked) {
                                 vmodel.allchecked = false
                             } else {
@@ -110,10 +110,10 @@
                             }
                         },
                         theadTemplate: function(str) {
-                            return "<th style='width:60px'><input type='checkbox' ms-checked='allchecked' ms-click='checkAll'  /></th>" + str
+                            return "<th style='width:60px'><input type='checkbox' ms-duplex-radio='allchecked' data-duplex-changed='checkAll' /></th>" + str
                         },
                         tbodyTemplate: function() {
-                            return '<th style="width: 60px"><input type="checkbox" ms-checked="row.checked" ms-click="checkOne(row, $index)" '
+                            return '<th style="width: 60px"><input type="checkbox" ms-duplex-radio="row.checked" ms-data-index="$index" data-duplex-changed="checkOne" '
                                     + 'class="ui-helper-checkone"/></th><td class="ui-grid-td" data-with-sorted="getColumnsOrder" ms-repeat="row" ms-css-width="getCellProperty($key,\'width\')" ms-css-text-align="getCellProperty($key,\'align\')">{{addUnit($val,$key)}}</td>'
 
                         },

@@ -9,21 +9,21 @@ define(['avalon',
      * @type {Array}
      * value: option的值
      * label: option的label
-     * cls: option webfont的样式
+     * class: option webfont的样式
      * title: option的title
      * font: option webfont的字符
      */
     var defaultData = [{
             value: 1,
             label : ' 启用',
-            cls: 'g-icon-start',
+            class: 'g-icon-start',
             title: '启用',
             font: '&#xf111;'
         },
         {
             value: 2,
             label : ' 暂停',
-            cls: 'g-icon-pause',
+            class: 'g-icon-pause',
             title: '暂停',
             font: '&#xf04c;'
         }];
@@ -72,7 +72,7 @@ define(['avalon',
     function setItemLabel(items) {
         avalon.each(items, function(i, item) {
             item.text = item.label;
-            item.label = ['<i class="ui-icon ', item.cls, '">', item.font, '</i>', item.label].join('');
+            item.label = ['<i class="ui-icon ', item.class, '">', item.font, '</i>', item.label].join('');
         });
         return items;
     }

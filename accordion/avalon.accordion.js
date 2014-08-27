@@ -31,7 +31,7 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
 
         var vmodel = avalon.define(data.accordionId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "rendered","autoRun","template","accordionCls","currentTrigge","initIndex","multiple","trigger","triggerType","data", "accordionVmodel"];
+            vm.$skipArray = ["widgetElement", "rendered","autoRun","template","accordionClass","currentTrigge","initIndex","multiple","trigger","triggerType","data", "accordionVmodel"];
             vm.widgetElement = element;
             vm.$headers = []; // 保存所有面板的header
             vm.$panels = []; // 保存所有的面板content
@@ -40,11 +40,11 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
             vm._renderView = function() {
                 var template = options.template;
                 var accordionItems = "";
-                var elementClass = 'ui-accordion ui-accordion-mode-' + options.mode + ' js-accordion' + accordionNum+" "+options.accordionCls;
+                var elementClass = 'ui-accordion ui-accordion-mode-' + options.mode + ' js-accordion' + accordionNum+" "+options.accordionClass;
                 var header, content, trigger;
                 avalon(element).addClass(elementClass);
                 element.setAttribute("ms-css-width","width");
-                template = template.replace(/MS_OPTION_ACTIVECLASS/g, options.currentTriggerCls);
+                template = template.replace(/MS_OPTION_ACTIVECLASS/g, options.currentTriggerClass);
                 element.innerHTML = template;
                 var accordionInnerWrapper = element.children[0]; // accordion wrapper
                 accordionItems = accordionInnerWrapper.children;
@@ -87,7 +87,7 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
                             vmodel.$headers.push(el);
                             // 当multiple为true时，如果设置了初始打开的面板，打开对应面板，否则全部收起
                             if(options.multiple && Math.floor(i/2)==options.initIndex) {
-                                avalon(el).addClass(options.currentTriggerCls);
+                                avalon(el).addClass(options.currentTriggerClass);
                             }
                             if(!!options.trigger) {
                                 var headerChildren = el.children;
@@ -212,7 +212,7 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
             var header = vmodel.getHeader(index),
                 $header = avalon(header),
                 panel = vmodel.getPanel(index),
-                headerActive = (function() {return options.currentTriggerCls.trim().split(/\s/).every(function(c){return $header.hasClass(c)})}());
+                headerActive = (function() {return options.currentTriggerClass.trim().split(/\s/).every(function(c){return $header.hasClass(c)})}());
 
             header.headerActive = headerActive;
             if (options.beforeSwitch.call(event.target, index, header, panel) === false) {
@@ -220,11 +220,11 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
             }
             if (options.multiple && !header.headerActive) {
                 // 基数点击为展开
-                avalon(header).addClass(options.currentTriggerCls);
+                avalon(header).addClass(options.currentTriggerClass);
                 panel.style.display = "block";
             } else if (options.multiple && header.headerActive) {
                 // 偶数点击为收起
-                avalon(header).removeClass(options.currentTriggerCls);
+                avalon(header).removeClass(options.currentTriggerClass);
                 panel.style.display = "none";
             } 
             vmodel.currentIndex = index;
@@ -236,8 +236,8 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
     widget.defaults = {
         autoRun: true, // 设为true自动渲染accordion组件，设为false不渲染，只在合适的时候手动调用refresh进行渲染
         template: "", // 用户自定义template
-        accordionCls: "", // 为accordion容器自定义的class
-        currentTriggerCls: "ui-state-active ui-corner-top", // 展开accordion面板时，header添加的class
+        accordionClass: "", // 为accordion容器自定义的class
+        currentTriggerClass: "ui-state-active ui-corner-top", // 展开accordion面板时，header添加的class
         data: [], // 渲染accordion的header和panel信息
         initIndex: null, // 初始打开的面板
         mode: "caret", // 有三种类型的template，分别是caret|nav|custom，当是custom需要用户传入合适template

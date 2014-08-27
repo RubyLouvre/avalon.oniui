@@ -67,7 +67,7 @@ define(["../avalon.getModel",
                 }
 
                 if (vmodel.numberOfMonths === 1 && date) {
-                    var rows = vmodel.data && vmodel.data[0].rows.$model,
+                    var rows = vmodel.data[0] && vmodel.data[0].rows.$model,
                         days,
                         day;
                     if (!rows) return 
@@ -342,10 +342,11 @@ define(["../avalon.getModel",
                     avalon.scan(div, [vmodel])
                 }
                 element.vmodel = vmodel
-                dataSet(vmodel.month, vmodel.year)
-                console.log("dataSet 执行")
+                setTimeout(function() {
+                    dataSet(vmodel.month, vmodel.year)
+                }, 0)
                 avalon.scan(calendar, [vmodel].concat(vmodels))
-                if(typeof options.onInit === "function" ){
+                if (typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
                     options.onInit.call(element, vmodel, options, vmodels)
                 }
@@ -362,7 +363,6 @@ define(["../avalon.getModel",
         })
         getDateTip = getDateTip.bind(vmodel)
         vmodel.$watch("toggle", function(val) {
-            console.log("toggle is "+val)
             if(val) {
                 _value = element.value
             } else {
@@ -379,7 +379,6 @@ define(["../avalon.getModel",
         vmodel.$watch("month", function(month) {
             vmodel._month = month + 1
             dataSet(month, vmodel.year)
-            console.log("dataSet 执行")
             vmodel.onChangeMonthYear(vmodel.year, month, vmodel)
         })
         // 这里的处理使得设置外部disabled或者组件VM的disabled同步
@@ -393,13 +392,11 @@ define(["../avalon.getModel",
             var minDate = validateDate(val)
             vmodel.minDate = minDate && cleanDate(minDate)
             dataSet(vmodel.month, vmodel.year)
-            console.log("dataSet 执行")
         })
         vmodel.$watch("maxDate", function(val) {
             var maxDate = validateDate(val);
             vmodel.maxDate = maxDate && cleanDate(maxDate);
             dataSet(vmodel.month, vmodel.year)
-            console.log("dataSet 执行");
         })
         function initValue() {
             // 如果输入域不允许为空，且_originValue不存在则强制更新element.value
@@ -572,8 +569,6 @@ define(["../avalon.getModel",
                     vmodel.day = date.getDate()
                     _value = value
                     dataSet(month, year)
-                    console.log("dataSet 执行");
-
                 } else {
                     vmodel.tip = "格式错误";
                     vmodel.dateError = "#ff8888";
@@ -608,7 +603,6 @@ define(["../avalon.getModel",
         }
         // 根据month、year得到要显示的日期数据
         function calendarDays (month, year) {
-            console.log("calendarDays");
             var startDay = vmodel.startDay,
                 firstDayOfMonth = new Date(year, month , 1),
                 minDate = vmodel.minDate,

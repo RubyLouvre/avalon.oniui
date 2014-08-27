@@ -161,13 +161,11 @@ define(["../avalon.getModel",
                 setValues(duplexLen, duplexVal1, duplexVal2)
                 if (duplexVM1) {
                     duplexVM1[1].$watch(duplexVM1[0], function(val) {
-                        console.log("duplexFrom changed")
                         vmodel.inputFromValue = val
                     })
                 }
                 if (duplexVM2) {
                     duplexVM2[1].$watch(duplexVM2[0], function(val) {
-                        console.log("duplexTo changed")
                         vmodel.inputToValue = val
                     })
                 }

@@ -11,87 +11,61 @@ define(["../avalon.getModel",
             duplexFrom,
             duplexTo,
             rules = options.rules,
-            _inputToValue = "",
             _toMinDate = "",
             _toMaxDate = "",
-            calendarTemplate = sourceHTML;
-        var _c = {  
-            '+M': function(time ,n) {
-                var _d = time.getDate();
-                time.setMonth(time.getMonth() + n);
-                if(time.getDate() !== _d) {
-                    time.setDate(0);
-                } 
-            },
-            '-M': function(time ,n) { 
-                var _d = time.getDate();
-                time.setMonth(time.getMonth() - n);
-                if(time.getDate() !== _d) {
-                    time.setDate(0);
-                }
-            },
-            '+D': function(time ,n) { 
-                time.setDate(time.getDate() + n); 
-            },
-            '-D': function(time ,n) { 
-                time.setDate(time.getDate() - n); 
-            },
-            '+Y': function(time ,n) { 
-                time.setFullYear(time.getFullYear() + n); 
-            },
-            '-Y': function(time ,n) { 
-                time.setFullYear(time.getFullYear() - n); 
-            }
-        };
-        options.template = options.getTemplate(calendarTemplate, options);
-        if(rules && avalon.type(rules) === 'string') {
-            var ruleVM = avalon.getModel(options.rules, vmodels);
-            rules = ruleVM[1][ruleVM[0]];
+            calendarTemplate = sourceHTML,
+            rangeRules = "",
+            container = options.container,
+            parseDate = options.parseDate.bind(options),
+            formatDate = options.formatDate.bind(options);
+
+        if (rules && avalon.type(rules) === 'string') {
+            var ruleVM = avalon.getModel(rules, vmodels)
+            rules = ruleVM[1][ruleVM[0]]
         }
-        rules = rules.$model || rules;
-        _toMinDate = rules.toMinDate; 
-        _toMaxDate = rules.toMaxDate; 
-        if(rules) {
-            rules.toMinDate = rules.toMinDate || "";
-            rules.toMaxDate = rules.toMaxDate || "";
-            rules.fromMinDate = rules.fromMinDate || "";
-            rules.fromMaxDate = rules.fromMaxDate || "";
+        rules = rules.$model || rules
+        if (rules) {
+            rules.toMinDate = rules.toMinDate || ""
+            rules.toMaxDate = rules.toMaxDate || ""
+            rules.fromMinDate = rules.fromMinDate || ""
+            rules.fromMaxDate = rules.fromMaxDate || ""
         }
-        options.rules = rules;
-        if(disabled!=="true" && disabled!=="false" && disabledVM) {
-            options.disabled = disabledVM[1][disabledVM[0]];
+        _toMinDate = rules.toMinDate 
+        _toMaxDate = rules.toMaxDate 
+        options.rules = rules
+        rangeRules = options.rules && options.rules.rules || ""
+        rangeRules = rangeRules.length > 0 ? rangeRules.split(",") : []
+        if (disabled !== "true" && disabled !== "false" && disabledVM) {
+            options.disabled = disabledVM[1][disabledVM[0]]
             disabledVM[1].$watch(disabledVM[0], function(val) {
-                vmodel.disabled = val;
-            });
+                vmodel.disabled = val
+            })
         }
-        var rangeRules = options.rules && options.rules.rules || "";
-        rangeRules = rangeRules.length>0 ? rangeRules.split(",") : [];
-        var container = options.container;
-        if(typeof container==="string") {
+        if (typeof container === "string") {
             container = container.split(",")
-            container[0] = document.getElementById(container[0]);
-            container[1] = document.getElementById(container[1]);
+            container[0] = document.getElementById(container[0])
+            container[1] = document.getElementById(container[1])
         }
-        if(!container.length) {
-            container = element.getElementsByTagName("div");
+        if (!container.length) {
+            container = element.getElementsByTagName("div")
         }
-        options.container = container= container.length ? [].slice.call(container) : container;
+        options.container = container = container.length ? [].slice.call(container) : container
+        calendarTemplate = options.template = options.getTemplate(calendarTemplate, options)
         var vmodel = avalon.define(data.coupledatepickerId, function(vm) {
-            avalon.mix(vm, options);
-            vm.msg = "";
-            vm.$skipArray = ["widgetElement","container","inputElement","calendarWrapper"];
-            vm.widgetElement = element;
-            vm.fromDisabled = options.disabled;
-            vm.toDisabled = options.disabled;
-            vm.inputElement = null;
-            vm.inputFromValue = "";
-            vm.inputToValue = "";
+            avalon.mix(vm, options)
+            vm.msg = ""
+            vm.$skipArray = ["widgetElement","container","calendarWrapper", "template", "changeMonthAndYear", "startDay", "fromLabel", "toLabel"]
+            vm.widgetElement = element
+            vm.fromDisabled = options.disabled
+            vm.toDisabled = options.disabled
+            vm.inputFromValue = ""
+            vm.inputToValue = ""
             vm.fromSelectCal = function(date) {
-                applyRules(date);
+                applyRules(date)
             };
             vm.getDates = function() {
-                var inputFromDate = vmodel.parseDate(vmodel.inputFromValue),
-                    inputToDate = vmodel.parseDate(vmodel.inputToValue);
+                var inputFromDate = parseDate(vmodel.inputFromValue),
+                    inputToDate = parseDate(vmodel.inputToValue);
                 return (inputFromDate && inputToDate && [inputFromDate, inputToDate]) || null;
             } 
             vm.$init = function() {
@@ -105,29 +79,28 @@ define(["../avalon.getModel",
                     fromContainer = null,
                     toContainer = null,
                     calendarTemplate = "";
-                avalon(element).addClass("ui-coupledatepicker");
-                initValues();
-                applyRules(vmodel.inputFromValue && options.parseDate(vmodel.inputFromValue) || new Date());
-                calendarTemplate = vmodel.container.length ? inputOnlyTemp : containerTemp;
-                if(vmodel.container.length) {
-                    inputOnly = avalon.parseHTML(inputOnlyTemp);
-                    fromInput = inputOnly.firstChild;
-                    toInput = inputOnly.lastChild;
-                    fromContainer = vmodel.container[0];
-                    toContainer = vmodel.container[1];
-                    vmodel.containerFrom = fromContainer;
-                    vmodel.containerTo = toContainer;
-                    fromContainer.appendChild(fromInput);
-                    toContainer.appendChild(toInput);
-                    avalon(fromContainer).addClass("ui-coupledatepicker-item");
-                    avalon(toContainer).addClass("ui-coupledatepicker-item");
+
+                avalon(element).addClass("ui-coupledatepicker")
+                initValues()
+                applyRules(vmodel.inputFromValue && parseDate(vmodel.inputFromValue) || new Date())
+                if (container.length) {
+                    calendarTemplate = inputOnlyTemp 
+                    inputOnly = avalon.parseHTML(inputOnlyTemp)
+                    fromInput = inputOnly.firstChild
+                    toInput = inputOnly.lastChild
+                    fromContainer = container[0]
+                    toContainer = container[1]
+                    fromContainer.appendChild(fromInput)
+                    toContainer.appendChild(toInput)
+                    avalon(fromContainer).addClass("ui-coupledatepicker-item")
+                    avalon(toContainer).addClass("ui-coupledatepicker-item")
                 } else {
-                    calendar = avalon.parseHTML(calendarTemplate);
-                    element.appendChild(calendar);
+                    calendarTemplate = containerTemp
+                    calendar = avalon.parseHTML(calendarTemplate)
+                    element.appendChild(calendar)
                 }
                 avalon.scan(element, [vmodel].concat(vmodels));
                 if(typeof options.onInit === "function" ){
-                    //vmodels是不包括vmodel的
                     options.onInit.call(element, vmodel, options, vmodels)
                 }
             };
@@ -136,108 +109,140 @@ define(["../avalon.getModel",
             };
         })
         vmodel.$watch("disabled", function(val) {
-            vmodel.fromDisabled = vmodel.toDisabled = val;
+            vmodel.fromDisabled = vmodel.toDisabled = val
         })
         vmodel.$watch("inputFromValue", function(val) {
             if(duplexFrom) {
-                duplexFrom[1][duplexFrom[0]] = val;
+                duplexFrom[1][duplexFrom[0]] = val
             }
         })
         vmodel.$watch("inputToValue", function(val) {
             if(duplexTo) {
-                duplexTo[1][duplexTo[0]] = val;
+                duplexTo[1][duplexTo[0]] = val
             }
         })
+        var _c = {  
+            '+M': function(time ,n) {
+                var _d = time.getDate()
+                time.setMonth(time.getMonth() + n)
+                if(time.getDate() !== _d) {
+                    time.setDate(0)
+                } 
+            },
+            '-M': function(time ,n) { 
+                var _d = time.getDate()
+                time.setMonth(time.getMonth() - n)
+                if(time.getDate() !== _d) {
+                    time.setDate(0)
+                }
+            },
+            '+D': function(time ,n) { 
+                time.setDate(time.getDate() + n)
+            },
+            '-D': function(time ,n) { 
+                time.setDate(time.getDate() - n)
+            },
+            '+Y': function(time ,n) { 
+                time.setFullYear(time.getFullYear() + n) 
+            },
+            '-Y': function(time ,n) { 
+                time.setFullYear(time.getFullYear() - n) 
+            }
+        };
         function initValues() {
-            if(duplex) {
+            if (duplex) {
                 var duplexLen = duplex.length,
                     duplexVM1 = avalon.getModel(duplex[0].trim(), vmodels),
                     duplexVM2 = duplexLen === 1 ? null : avalon.getModel(duplex[1].trim(), vmodels),
                     duplexVal1 = duplexVM1[1][duplexVM1[0]],
                     duplexVal2 = duplexVM2 ? duplexVM2[1][duplexVM2[0]] : "";
-                duplexFrom = duplexVM1;
-                duplexTo = duplexVM2;
-                setValues(duplexLen, duplexVal1, duplexVal2);
-                if(duplexVM1) {
+                duplexFrom = duplexVM1
+                duplexTo = duplexVM2
+                setValues(duplexLen, duplexVal1, duplexVal2)
+                if (duplexVM1) {
                     duplexVM1[1].$watch(duplexVM1[0], function(val) {
-                        vmodel.inputFromValue = val;
+                        vmodel.inputFromValue = val
                     })
                 }
-                if(duplexVM2) {
+                if (duplexVM2) {
                     duplexVM2[1].$watch(duplexVM2[0], function(val) {
-                        vmodel.inputToValue = val;
+                        vmodel.inputToValue = val
                     })
                 }
             } 
         }
         function setValues(len, from, to) {
-            if(len) {
-                if(len==2) {
-                    vmodel.inputFromValue = from && options.parseDate(from) && from || "";
-                    _inputToValue = to;
-                    vmodel.inputToValue = to && options.parseDate(to) && to || "";
-                } else if(len==1){
-                    vmodel.inputFromValue = from && options.parseDate(from) && from || "";
+            if (len) {
+                if (len == 2) {
+                    vmodel.inputFromValue = from && parseDate(from) && from || ""
+                    vmodel.inputToValue = to && parseDate(to) && to || ""
+                } else if ( len == 1){
+                    vmodel.inputFromValue = from && parseDate(from) && from || ""
                 }
             }
         }
         function applyRules(date) {
             var df = {},
-                rules = vmodel.rules;
-            for(var i = 0 , type = ['defaultDate', 'minDate', 'maxDate'] ; i < type.length ; i++){
+                rules = vmodel.rules,
+                minDate = _toMinDate && parseDate(_toMinDate), 
+                maxDate = _toMaxDate && parseDate(_toMaxDate),
+                minDateRule,
+                maxDateRule,
+                inputToDate;
+            for (var i = 0, type = ['defaultDate', 'minDate', 'maxDate']; i < type.length; i++) {
                 if (rangeRules[i]) {
-                    df[type[i]] = calcDate(rangeRules[i], date);
+                    df[type[i]] = calcDate(rangeRules[i], date)
                 }
             }
-            var minDate = _toMinDate && options.parseDate(_toMinDate), 
-                maxDate = _toMaxDate && options.parseDate(_toMaxDate),
-                minDateRule = df['minDate'],
-                maxDateRule = df['maxDate'];
-            minDate = (minDateRule ? minDateRule.getTime() : -1) > (minDate ? minDate.getTime() : -1) ? minDateRule : minDate ;
-            maxDate = (maxDateRule ? maxDateRule.getTime() : Number.MAX_VALUE) > (maxDate ? maxDate.getTime() : Number.MAX_VALUE) ? maxDate : maxDateRule;
+            minDateRule = df['minDate']
+            maxDateRule = df['maxDate']
+            minDate = (minDateRule ? minDateRule.getTime() : -1) > (minDate ? minDate.getTime() : -1) ? minDateRule : minDate
+            maxDate = (maxDateRule ? maxDateRule.getTime() : Number.MAX_VALUE) > (maxDate ? maxDate.getTime() : Number.MAX_VALUE) ? maxDate : maxDateRule
             if(!vmodel.inputToValue && df["defaultDate"]){
-                vmodel.inputToValue = options.formatDate(df["defaultDate"]);
+                vmodel.inputToValue = formatDate(df["defaultDate"])
             }
             if(minDate){
-                var toMinDateFormat = options.formatDate(minDate);
-                rules.toMinDate = toMinDateFormat;
+                var toMinDateFormat = formatDate(minDate)
+                rules.toMinDate = toMinDateFormat
                 if(!vmodel.inputToValue) {
-                    vmodel.inputToValue = toMinDateFormat;
+                    vmodel.inputToValue = toMinDateFormat
                 }
             }
             if(maxDate) {
-                rules.toMaxDate = options.formatDate(maxDate);
+                rules.toMaxDate = formatDate(maxDate)
             }
-
-            var inputToDate = vmodel.inputToValue && vmodel.parseDate(vmodel.inputToValue);
+            inputToDate = vmodel.inputToValue && parseDate(vmodel.inputToValue)
             if(inputToDate && isDateDisabled(inputToDate, minDate, maxDate)) {
-                vmodel.inputToValue = toMinDateFormat;
+                vmodel.inputToValue = toMinDateFormat
             }
         }
         // 根据minDate和maxDate的设置判断给定的日期是否不可选
         function isDateDisabled(date, minDate, maxDate){
-            var time = date.getTime();
+            var time = date.getTime()
             if(minDate && time < minDate.getTime()){
-                return true;
+                return true
             } else if(maxDate && time > maxDate.getTime()) {
-                return true;
+                return true
             }
-            return false;
+            return false
         }
-        function calcDate( desc , date ){
-            var time;
-            desc = ( desc || "" ).toString();
-            time = date ? date : new Date();
-            var _date = new Date(time);
-            var re = /([+-])?(\d+)([MDY])?/g , 
-                arr = re.exec(desc),
-                key = arr && ((arr[1] || '+') + (arr[3] || 'D'));
-            if(key && _c[key]){
-                _c[key](_date ,arr[2] * 1);
+        function calcDate(desc , date){
+            var time,
+                _date,
+                re = /([+-])?(\d+)([MDY])?/g, 
+                arr,
+                key;
+            desc = (desc || "").toString()
+            arr = re.exec(desc)
+            key = arr && ((arr[1] || '+') + (arr[3] || 'D'))
+            time = date ? date : new Date()
+            _date = new Date(time)
+            if (key && _c[key]) {
+                _c[key](_date ,arr[2] * 1)
             }
-            return _date;
+            return _date
         }
-        return vmodel;
+        return vmodel
     }
     widget.version = 1.0
     widget.defaults = {
@@ -251,29 +256,29 @@ define(["../avalon.getModel",
         separator: "-",
         rules: "",
         parseDate: function(str){
-            var separator = this.separator;
-            var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})$";
-            reg = new RegExp(reg);
-            var x = str.match(reg);
-            return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
+            var separator = this.separator
+            var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})$"
+            reg = new RegExp(reg)
+            var x = str.match(reg)
+            return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null
         },
         formatDate: function(date){
             var separator = this.separator,
                 year = date.getFullYear(), 
                 month = date.getMonth(), 
-                day = date.getDate();
-            return year + separator + this.formatNum( month + 1 , 2 ) + separator + this.formatNum(day , 2);
+                day = date.getDate()
+
+            return year + separator + this.formatNum( month + 1 , 2 ) + separator + this.formatNum(day , 2)
         },
         formatNum: function(n, length){
-            n = String(n);
-            for( var i = 0 , len = length - n.length ; i < len ; i++)
-                n = "0" + n;
-            return n;
+            n = String(n)
+            for( var i = 0 , len = length - n.length; i < len; i++)
+                n = "0" + n
+            return n
         },
         getTemplate: function(str, options) {
-            return str;
+            return str
         }
     }
-    
-    return avalon;
+    return avalon
 })

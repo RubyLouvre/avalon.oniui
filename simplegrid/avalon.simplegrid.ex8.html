@@ -43,10 +43,10 @@
                                 el.checked = bool
                             })
                         },
-                        checkOne: function(el, index) {
+                        checkOne: function() {
                             var vmodel = avalon.vmodels.xxx
-                            index = vm.startIndex + index
-                            vmodel.data[index] = el.checked = this.checked
+                            var index =  vmodel.startIndex + (avalon(this).data("index") || 0)
+                            vmodel.data[index] = this.checked
                             if (!this.checked) {
                                 vmodel.allchecked = false
                             } else {
@@ -56,10 +56,10 @@
                             }
                         },
                         theadTemplate: function(str) {
-                            return "<th style='width:80px'><input type='checkbox' ms-checked='allchecked' ms-click='checkAll'  /></th>" + str
+                            return "<th style='width:80px'><input type='checkbox' ms-duplex-radio='allchecked' data-duplex-changed='checkAll'  /></th>" + str
                         },
                         tbodyTemplate: function(str) {
-                            return "<th style='width: 80px'><input type=\"checkbox\" ms-checked='row.checked' ms-click='checkOne(row, $index)' class='ui-helper-checkone'/></th>" + str
+                            return "<th style='width: 80px'><input type=\"checkbox\"  ms-duplex-radio='row.checked' ms-data-index='$index' data-duplex-changed='checkOne' class='ui-helper-checkone'/></th>" + str
                         },
                         getTemplate: function(str){
                             return  str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-12="ui-state-acitve:row.checked" ')
@@ -163,8 +163,8 @@
                         },
                         checkOne: function(el, index) {
                             var vmodel = avalon.vmodels.xxx
-                            index = vm.startIndex + index
-                            vmodel.data[index] = el.checked = this.checked
+                            var index =  vmodel.startIndex + (avalon(this).data("index") || 0)
+                            vmodel.data[index] = this.checked
                             if (!this.checked) {
                                 vmodel.allchecked = false
                             } else {
@@ -174,10 +174,10 @@
                             }
                         },
                         theadTemplate: function(str) {
-                            return "&lt;th style='width:80px'&gt;&lt;input type='checkbox' ms-checked='allchecked' ms-click='checkAll'  /&gt;&lt;/th&gt;" + str
+                            return "&lt;th style='width:80px'&gt;&lt;input type='checkbox' ms-duplex-radio='allchecked' data-duplex-changed='checkAll'  /&gt;&lt;/th&gt;" + str
                         },
                         tbodyTemplate: function(str) {
-                            return "&lt;th style='width: 80px'&gt;&lt;input type=\"checkbox\" ms-checked='row.checked' ms-click='checkOne(row, $index)' class='ui-helper-checkone'/&gt;&lt;/th&gt;" + str
+                            return "&lt;th style='width: 80px'&gt;&lt;input type=\"checkbox\" ms-duplex-radio='row.checked' ms-data-index='$index' data-duplex-changed='checkOne' class='ui-helper-checkone'/&gt;&lt;/th&gt;" + str
                         },
                         getTemplate: function(str){
                             return  str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-12="ui-state-acitve:row.checked" ')

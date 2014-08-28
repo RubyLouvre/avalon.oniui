@@ -9,21 +9,21 @@ define(['avalon',
      * @type {Array}
      * value: option的值
      * label: option的label
-     * cls: option webfont的样式
+     * class: option webfont的样式
      * title: option的title
      * font: option webfont的字符
      */
     var defaultData = [{
             value: 1,
             label : ' 启用',
-            cls: 'g-icon-start',
+            class: 'g-icon-start',
             title: '启用',
             font: '&#xf111;'
         },
         {
             value: 2,
             label : ' 暂停',
-            cls: 'g-icon-pause',
+            class: 'g-icon-pause',
             title: '暂停',
             font: '&#xf04c;'
         }];
@@ -32,10 +32,24 @@ define(['avalon',
     var widget = avalon.ui.switchdropdown = function(element, data, vmodels) {
 
         var options = data.switchdropdownOptions;
-
         //mix defaultData, getDataFromHTML, options.data
-        options.data = setItemLabel( avalon.mix(true, defaultData, getDataFromHTML(element), options.data) );
-        options.value = options.data[0].value;
+        options.data = setItemLabel( avalon.mix(true, [], defaultData, getDataFromHTML(element), options.data) );
+
+        //检测options.value是否可以匹配到options.data中的选项
+        //如果不能匹配，首先找到selected的选项
+        //如果没有selected的选项，则把value设置为data中的第一项
+        for(var preSet = options.value, value = options.data[0].value, i = 0, len = options.data.length, item; i < len; i++) {
+            item = options.data[i];
+            if(item.value === preSet) {
+                value = preSet;
+                break;
+            }
+            if(item.selected) {
+                value = item.value;
+            }
+        }
+        options.value = value;
+
         var vmodel = avalon.define('switchdropdown' + setTimeout("1"), function(vm) {
             vm.$opts = options;
         });
@@ -60,6 +74,7 @@ define(['avalon',
                         value: parseData(avalon(el).val()),
                         enable: !el.disabled,
                         group: false,
+                        selected: el.selected,
                         parent: parent
                     });
                     if(ret.length === 2) break;
@@ -73,7 +88,7 @@ define(['avalon',
     function setItemLabel(items) {
         avalon.each(items, function(i, item) {
             item.text = item.label;
-            item.label = ['<i class="ui-icon ', item.cls, '">', item.font, '</i>', item.label].join('');
+            item.label = ['<i class="ui-icon ', item.class, '">', item.font, '</i>', item.label].join('');
         });
         return items;
     }
@@ -99,7 +114,7 @@ define(['avalon',
         enable: true,           //组件是否可用
         readOnly: false,        //组件是否只读
         data: [],               //下拉列表显示的数据模型
-        value: '',              //设置组件的初始值
+        value: 1,              //设置组件的初始值
         getTemplate: function() {
             return tmpl;
         }

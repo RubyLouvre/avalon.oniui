@@ -9,6 +9,7 @@
         <script>
             require(["scrollspy/avalon.scrollspy", "scrollbar/avalon.scrollbar", "tab/avalon.tab", "ready!"], function() {
                 var v = avalon.define("test", function(vm) {
+                    vm.cb = []
                     vm.scrollspy = {
                         onChange: function(index, tabElement, element) {
                             if(v.tabVmodel1) {
@@ -25,7 +26,7 @@
                     }
                     vm.scrollbar = {
                         onInit: function(vmodel) {
-                            vm.bar = vmodel
+                            v.bar = vmodel
                             vmodel.update()
                         }
                     }
@@ -38,7 +39,10 @@
                             this.getElementsByTagName("ul")[0].id = "nav" + this.getAttribute("rank")
                             var rank = document.getElementById("rank" + this.getAttribute("rank")) || this.getElementsByTagName("div")[0],
                                 s = "$,$cc" + this.getAttribute("rank")
-                            rank.setAttribute("ms-scrollspy", s)
+                            rank != 2 && v.cb.push(function() {
+                                rank.setAttribute("ms-scrollspy", s)
+                                avalon.scan(rank, [v])
+                            })
                             if(this.getAttribute("rank") == "2") {
                                 v.tabVmodel2 = vmodel
                             } else if(this.getAttribute("rank") == "1") {
@@ -46,8 +50,8 @@
                             }  else {
                                 v.tabVmodel0 = vmodel
                                 rank.setAttribute("data-scrollspy-spytarget", "nav0")
+                                v.cb[0]()
                             }
-                            avalon.scan(rank, [v])
                         },
                         onActivate: function(e, tabModel) {
                             var ele = tabModel.widgetElement
@@ -95,8 +99,12 @@
                     vm.list = avalon.range(0, 4)
                     vm.up = function() {
                         //avalon.vmodels.$hehe.update()
-                        if(!vm.bar) return setTimeout(vm.up, 16)
-                        vm.bar.update()
+                        if(!v.bar) return setTimeout(v.up, 16)
+                        var arg = this.id == "rank1" ? 1 : 2
+                        v.bar.update()
+                        if(arg in {"1": 1}) {
+                            v.cb[arg] && v.cb[arg]()
+                        }
                     }
                     vm.$skipArray = ["scrollspy"]
                 })
@@ -128,19 +136,19 @@
                 <li>item 3</li>
             </ul>
             <div>
-                <div data-repeat-rendered="up">
+                <div>
                     this is div 0
                     <h5 style="height:500px;" id="item00"></h5>
                 </div>
-                <div data-repeat-rendered="up">
+                <div>
                     this is div 1
                     <h5 style="height:500px;" id="item01"></h5>
                 </div>
-                <div data-repeat-rendered="up">
+                <div>
                     this is div 2
                     <h5 style="height:500px;" id="item02"></h5>
                 </div>
-                <div data-repeat-rendered="up">
+                <div>
                     this is div 3
                     <h5 style="height:500px;" id="item03"></h5>
                 </div>
@@ -172,9 +180,9 @@
                 <li href="#item23">item 3</li>
             </ul>
         </div>
-        <div id="rank2" data-scrollspy-spytarget="nav2" ms-widget="scrollbar" style="height:300px;overflow-y:scroll;">
+        <div id="rank2" data-scrollspy-spytarget="nav2" ms-widget="scrollbar" style="height:300px;overflow-y:scroll;" ms-scrollspy="$,$cc2">
             <div class="ui-scrollbar-scroller">
-                <div ms-repeat="list" data-repeat-rendered="up(2)" ms-attr-id="item2{{$index}}">
+                <div ms-repeat="list" data-repeat-rendered="up" ms-attr-id="item2{{$index}}">
                     this is div {{$index}}
                     <h5 style="height:500px;"></h5>
                 </div>
@@ -191,6 +199,7 @@
         &lt;script&gt;
             require([&quot;scrollspy/avalon.scrollspy&quot;, &quot;scrollbar/avalon.scrollbar&quot;, &quot;tab/avalon.tab&quot;, &quot;ready!&quot;], function() {
                 var v = avalon.define(&quot;test&quot;, function(vm) {
+                    vm.cb = []
                     vm.scrollspy = {
                         onChange: function(index, tabElement, element) {
                             if(v.tabVmodel1) {
@@ -207,7 +216,7 @@
                     }
                     vm.scrollbar = {
                         onInit: function(vmodel) {
-                            vm.bar = vmodel
+                            v.bar = vmodel
                             vmodel.update()
                         }
                     }
@@ -220,7 +229,10 @@
                             this.getElementsByTagName(&quot;ul&quot;)[0].id = &quot;nav&quot; + this.getAttribute(&quot;rank&quot;)
                             var rank = document.getElementById(&quot;rank&quot; + this.getAttribute(&quot;rank&quot;)) || this.getElementsByTagName(&quot;div&quot;)[0],
                                 s = &quot;$,$cc&quot; + this.getAttribute(&quot;rank&quot;)
-                            rank.setAttribute(&quot;ms-scrollspy&quot;, s)
+                            rank != 2 &amp;&amp; v.cb.push(function() {
+                                rank.setAttribute(&quot;ms-scrollspy&quot;, s)
+                                avalon.scan(rank, [v])
+                            })
                             if(this.getAttribute(&quot;rank&quot;) == &quot;2&quot;) {
                                 v.tabVmodel2 = vmodel
                             } else if(this.getAttribute(&quot;rank&quot;) == &quot;1&quot;) {
@@ -228,8 +240,8 @@
                             }  else {
                                 v.tabVmodel0 = vmodel
                                 rank.setAttribute(&quot;data-scrollspy-spytarget&quot;, &quot;nav0&quot;)
+                                v.cb[0]()
                             }
-                            avalon.scan(rank, [v])
                         },
                         onActivate: function(e, tabModel) {
                             var ele = tabModel.widgetElement
@@ -277,8 +289,12 @@
                     vm.list = avalon.range(0, 4)
                     vm.up = function() {
                         //avalon.vmodels.$hehe.update()
-                        if(!vm.bar) return setTimeout(vm.up, 16)
-                        vm.bar.update()
+                        if(!v.bar) return setTimeout(v.up, 16)
+                        var arg = this.id == &quot;rank1&quot; ? 1 : 2
+                        v.bar.update()
+                        if(arg in {&quot;1&quot;: 1}) {
+                            v.cb[arg] &amp;&amp; v.cb[arg]()
+                        }
                     }
                     vm.$skipArray = [&quot;scrollspy&quot;]
                 })
@@ -310,19 +326,19 @@
                 &lt;li&gt;item 3&lt;/li&gt;
             &lt;/ul&gt;
             &lt;div&gt;
-                &lt;div data-repeat-rendered=&quot;up&quot;&gt;
+                &lt;div&gt;
                     this is div 0
                     &lt;h5 style=&quot;height:500px;&quot; id=&quot;item00&quot;&gt;&lt;/h5&gt;
                 &lt;/div&gt;
-                &lt;div data-repeat-rendered=&quot;up&quot;&gt;
+                &lt;div&gt;
                     this is div 1
                     &lt;h5 style=&quot;height:500px;&quot; id=&quot;item01&quot;&gt;&lt;/h5&gt;
                 &lt;/div&gt;
-                &lt;div data-repeat-rendered=&quot;up&quot;&gt;
+                &lt;div&gt;
                     this is div 2
                     &lt;h5 style=&quot;height:500px;&quot; id=&quot;item02&quot;&gt;&lt;/h5&gt;
                 &lt;/div&gt;
-                &lt;div data-repeat-rendered=&quot;up&quot;&gt;
+                &lt;div&gt;
                     this is div 3
                     &lt;h5 style=&quot;height:500px;&quot; id=&quot;item03&quot;&gt;&lt;/h5&gt;
                 &lt;/div&gt;
@@ -354,9 +370,9 @@
                 &lt;li href=&quot;#item23&quot;&gt;item 3&lt;/li&gt;
             &lt;/ul&gt;
         &lt;/div&gt;
-        &lt;div id=&quot;rank2&quot; data-scrollspy-spytarget=&quot;nav2&quot; ms-widget=&quot;scrollbar&quot; style=&quot;height:300px;overflow-y:scroll;&quot;&gt;
+        &lt;div id=&quot;rank2&quot; data-scrollspy-spytarget=&quot;nav2&quot; ms-widget=&quot;scrollbar&quot; style=&quot;height:300px;overflow-y:scroll;&quot; ms-scrollspy=&quot;$,$cc2&quot;&gt;
             &lt;div class=&quot;ui-scrollbar-scroller&quot;&gt;
-                &lt;div ms-repeat=&quot;list&quot; data-repeat-rendered=&quot;up(2)&quot; ms-attr-id=&quot;item2{{$index}}&quot;&gt;
+                &lt;div ms-repeat=&quot;list&quot; data-repeat-rendered=&quot;up&quot; ms-attr-id=&quot;item2{{$index}}&quot;&gt;
                     this is div {{$index}}
                     &lt;h5 style=&quot;height:500px;&quot;&gt;&lt;/h5&gt;
                 &lt;/div&gt;

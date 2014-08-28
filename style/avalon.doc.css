@@ -68,13 +68,13 @@ table.table-doc {
     line-height: 30px;
     display: inline-block;
 }
-a:hover {
+/*a:hover {
     color: blue;
 }
 p {
     line-height: 30px;
     font-size: 16px;
-}
+}*/
 .demo {
     color:#f00; 
     font-weight: bold;

@@ -126,7 +126,7 @@ avalon.oniui
         <td> marquee</td><td>UI组件</td><td></td><td>多个照片</td>
     </tr>
     <tr>
-        <td> carousel</td><td>UI组件</td><td></td><td>单个照片</td>
+        <td> carousel</td><td>UI组件</td><td></td><td>单个照片http://owlgraphic.com/owlcarousel/demos/custom.html</td>
     </tr>
     <tr>
         <td> rating</td><td>UI组件</td><td></td><td> 星级评分</td>

@@ -204,7 +204,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
             // data-draggable-before-stop="beforeStopFn" 
             // data-draggable-stop="stopFn" 
             // data-draggable-containment="parent" 
-            vm.draggable = {
+            vm.$draggableOpts = {
                 beforeStart: function() {
                     vmodel.dragging = true
                 },
@@ -226,15 +226,15 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                 },
                 containment: "parent"
             }
-            vm.draggable.stop = function(e, data) {
-                vmodel.draggable.drag(e, data)
+            vm.$draggableOpts.stop = function(e, data) {
+                vmodel.$draggableOpts.drag(e, data)
                 vmodel.dragging = false
                 avalon(data.element).removeClass("ui-state-active")
             }
 
             vm.$remove = function() {
                 avalon.each(bars, function(i, bar) {
-                    bar[0] && bar[0].parentNode && bar[0].parentNode.removeChild(bar)
+                    bar[0] && bar[0].parentNode && bar[0].parentNode.removeChild(bar[0])
                 })
             }
 
@@ -282,8 +282,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                 if(vmodel.disabled) return
                 var ele = avalon(vmodel.viewElement),
                     // 滚动内容宽高
-                    viewW = scroller[0].scrollWidth,
-                    viewH = scroller[0].scrollHeight,
+                    viewW,
+                    viewH,
                     // 计算滚动条可以占据的宽或者高
                     barH = strToNumber(ele.css("height")),
                     barW = strToNumber(ele.css("width")),
@@ -291,16 +291,28 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                     h = vmodel.viewHeightGetter(ele),
                     w = vmodel.viewWidthGetter(ele),
                     p = vmodel.position,
-                    barDictionary = {
-                        "top": p.match(/top/g) && viewW > w,
-                        "right": p.match(/right/g) && viewH > h,
-                        "bottom": p.match(/bottom/g) && viewW > w,
-                        "left": p.match(/left/g) && viewH > h
-                    },
+                    barDictionary,
                     barMinus = {},
                     y = y == void 0 ? vmodel.scrollTop : y,
                     x = x == void 0 ? vmodel.scrollLeft : x
-                // if(vmodel.showBarHeader && bars.length > 1) {
+                //document body情形需要做一下修正
+                if(vmodel.viewElement != vmodel.widgetElement) {
+                    p.match(/right|left/g) && avalon(vmodel.widgetElement).css("height", barH)
+                }
+                // 水平方向内间距
+                var hPadding = scroller.width() - scroller.innerWidth(),
+                    // 竖直方向内间距
+                    vPadding = scroller.height() - scroller.innerHeight()
+                scroller.css("height", h + vPadding)
+                scroller.css("width", w + hPadding )
+                viewW = scroller[0].scrollWidth
+                viewH = scroller[0].scrollHeight
+                barDictionary = {
+                    "top": p.match(/top/g) && viewW > w,
+                    "right": p.match(/right/g) && viewH > h,
+                    "bottom": p.match(/bottom/g) && viewW > w,
+                    "left": p.match(/left/g) && viewH > h
+                }
                 if(bars.length > 1) {
                     var ps = ["top", "right", "bottom", "left"]
                     for(var i = 0; i < 4; i++) {
@@ -308,16 +320,6 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                         if(i > 1) barMinus[ps[i]] = barMinus[ps[i]].reverse()
                     }
                 }
-                //document body情形需要做一下修正
-                if(vmodel.viewElement != vmodel.widgetElement) {
-                    p.match(/right|left/g) && avalon(vmodel.widgetElement).css("height", barH + "px")
-                }
-                // 水平方向内间距
-                var hPadding = scroller.width() - scroller.innerWidth(),
-                    // 竖直方向内间距
-                    vPadding = scroller.height() - scroller.innerHeight()
-                scroller.css("height", h + vPadding + "px")
-                scroller.css("width", w + hPadding  + "px")
                 // 根据实际视窗计算，计算更新scroller的宽高
                 // 更新视窗
                 h = scroller.innerHeight()
@@ -331,7 +333,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                     }
                     // 拖动逻辑前移，确保一定是初始化了的
                     if(ifInit && dragger) {
-                        dragger.attr("ms-draggable", "")
+                        dragger.attr("ms-draggable", "$,$draggableOpts")
                         dragger.attr("ui-scrollbar-pos", item)
                         dragger.attr("ui-scrollbar-index", i)
                         avalon.scan(dragger[0], vmodel)
@@ -368,21 +370,21 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                             var barCss = [], minus = barMinus[item]
                             if(isVertical) {
                                 barCss = [
-                                    ["top", minus[0] * bw + "px"],
-                                    ["height", (barH - bw * (minus[0] + minus[1])) + "px"]
+                                    ["top", minus[0] * bw],
+                                    ["height", (barH - bw * (minus[0] + minus[1]))]
                                 ]
                                 draggerParCss = [
-                                    ["top", (headerLength/2) * bw + "px"],
-                                    ["height", (barH - bw * (minus[0] + minus[1] + headerLength)) + "px"]
+                                    ["top", (headerLength/2) * bw],
+                                    ["height", (barH - bw * (minus[0] + minus[1] + headerLength))]
                                 ]
                             } else {
                                 barCss = [
-                                    ["left", minus[0] * bh + "px"],
-                                    ["width", (barW - bh * (minus[0] + minus[1])) + "px"]
+                                    ["left", minus[0] * bh],
+                                    ["width", (barW - bh * (minus[0] + minus[1]))]
                                 ]
                                 draggerParCss = [
-                                    ["left", (headerLength/2) * bh + "px"],
-                                    ["width", (barW - bh * (headerLength + minus[0] + minus[1])) + "px"]
+                                    ["left", (headerLength/2) * bh],
+                                    ["width", (barW - bh * (headerLength + minus[0] + minus[1]))]
                                 ]
                             }
                             avalon.each(barCss, function(index, css) {
@@ -393,23 +395,23 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                         } else {
                             if(isVertical) {
                                 draggerParCss = [
-                                    ["top", bw + "px"],
-                                    ["height", (barH - bw * 2) + "px"]
+                                    ["top", bw],
+                                    ["height", (barH - bw * 2)]
                                 ]
                             } else {
                                 draggerParCss = [
-                                    ["left", bh + "px"],
-                                    ["width", (barW - bh * 2) + "px"]
+                                    ["left", bh],
+                                    ["width", (barW - bh * 2)]
                                 ]
                             }
                         }
                         var ex
                         if(isVertical) {
                             ex = vmodel.show == "always" ? bw : 0
-                            scroller.css("width", w + vPadding - ex + "px")
+                            scroller.css("width", w + vPadding - ex)
                         } else {
                             ex = vmodel.show == "always" ? bh : 0
-                            scroller.css("height", h + hPadding - ex + "px")
+                            scroller.css("height", h + hPadding - ex)
                         }
                         avalon.each(draggerParCss, function(index, css) {
                             draggerpar.css.apply(draggerpar, css)
@@ -430,8 +432,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                                 draggerTop = Math.min(sh - draggerHeight, draggerTop)
                             draggerCss = [
                                 ["width", "100%"],
-                                ["height", draggerHeight + "px"],
-                                ["top", draggerTop + "px"]
+                                ["height", draggerHeight],
+                                ["top", draggerTop]
                             ]
                             y = y > 0 ? (y > viewH - h + ex ?  viewH - h + ex : y) : 0
                         } else {
@@ -446,8 +448,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                                 draggerLeft = Math.min(sw - draggerWidth, draggerLeft)
                             draggerCss = [
                                 ["height", "100%"],
-                                ["width", draggerWidth + "px"],
-                                ["left", draggerLeft + "px"]
+                                ["width", draggerWidth],
+                                ["left", draggerLeft]
                             ]
                             x = x > 0 ? (x > viewW - w + ex ? viewW - w + ex : x) : 0
                         }
@@ -584,7 +586,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                             obj.down.removeClass("ui-state-disabled")
                         }
                         var c = strToNumber((obj.scrollerH - obj.viewH) * xy.y / (obj.draggerparHeight - obj.draggerHeight)) - vmodel.scrollTop
-                        obj.dragger.css("top", xy.y + "px")
+                        obj.dragger.css("top", xy.y)
                         vmodel._scrollTo(void 0, strToNumber((obj.scrollerH - obj.viewH) * xy.y / (obj.draggerparHeight - obj.draggerHeight)))
                     } else {
                         if(xy.x < 0) {
@@ -602,7 +604,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                         } else {
                             obj.down.removeClass("ui-state-disabled")
                         }
-                        obj.dragger.css("left", xy.x + "px")
+                        obj.dragger.css("left", xy.x)
                         vmodel._scrollTo(strToNumber((obj.scrollerW - obj.viewW) * xy.x / (obj.draggerparWidth - obj.draggerWidth)), void 0)
                     }
 

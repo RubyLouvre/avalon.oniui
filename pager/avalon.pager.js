@@ -29,13 +29,14 @@ define(["avalon",
         var vmodel = avalon.define(data.pagerId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
-            vm.$skipArray = ["showPages", "widgetElement", "template", "ellipseText", "alwaysShowPrev", "alwaysShowNext", "_inputPage"]
-            vm._inputPage = 0
+            vm.$skipArray = ["showPages", "widgetElement", "template", "ellipseText", "alwaysShowPrev", "alwaysShowNext"]
             //这些属性不被监控
             vm.$init = function() {
                 var pageHTML = options.template
                 element.innerHTML = pageHTML
-                avalon.scan(element, [vmodel].concat(vmodels))
+                setTimeout(function() {
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                }, 100)
                 if (typeof options.onInit === "function") {
                     options.onInit.call(element, vmodel, options, vmodels)
                 }
@@ -95,18 +96,21 @@ define(["avalon",
                 return a || b !== c
             }
 
-            vm.changeCurrentPage = function(e) {
-                var value = 0
+            vm.changeCurrentPage = function(e, value) {
                 if (e.type === "keyup") {
-                    vmodel._inputPage = parseInt(this.value, 10) || 1;
-                    if (e.keyCode !== 13) return
+                    value = this.value
+                    if (e.keyCode !== 13)
+                        return
+                } else {
+                    value = vmodel._currentPage
                 }
-                value = vmodel._inputPage
-                if (value > vmodel.totalPages || value < vmodel.firstPage)
+                value = parseInt(value, 10) || 1
+                if (value > vmodel.totalPages || value < 1)
                     return
                 //currentPage需要转换为Number类型 fix lb1064@qq.com
                 vmodel.currentPage = value
                 vmodel.pages = getPages(vmodel)
+                vmodel.onJump.call(element, e, vm);
             }
             vm.pages = []
             vm.getPages = getPages

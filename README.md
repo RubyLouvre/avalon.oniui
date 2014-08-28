@@ -126,7 +126,7 @@ avalon.oniui
         <td> marquee</td><td>UI组件</td><td></td><td>多个照片</td>
     </tr>
     <tr>
-        <td> carousel</td><td>UI组件</td><td></td><td>单个照片</td>
+        <td> carousel</td><td>UI组件</td><td></td><td>单个照片http://owlgraphic.com/owlcarousel/demos/custom.html</td>
     </tr>
     <tr>
         <td> rating</td><td>UI组件</td><td></td><td> 星级评分</td>
@@ -155,6 +155,9 @@ avalon.oniui
    <li>其他同学可以到<a href="https://github.com/RubyLouvre/avalon">avalon项目</a>，将它的server.exe（一个迷你的.Net服务器）文件拷过来，然后运行它，选中index.html打开</li>
 </ul>
 <img src="https://raw.githubusercontent.com/RubyLouvre/avalon.oniui/master/style/homepage.jpg"/>
+license
+==========================
+MIT
 如何为OniUI贡献一套新的皮肤
 ==========================
 <b>chameleon</b>是OniUI的皮肤生成系统,基于sass的compass框架改写而成.

@@ -32,6 +32,13 @@
             <li>
                 组件在引入avalon的依赖时,直接define(["avalon"], fn)就行了,不需define(["../avalon"],fn)或define(["./ddd/avalon"],fn),因为avalon是一个核心模块，框架内部对它做了处理
             </li>
+
+            <li>所有与类名相关的属性与方法 ,都改成Class, 不要用Cls, 你们看一下avalon都用hasClass, addClass, removeClass,要保持统一感
+                不打算暴露出来的方法与属性就不要放到VM上,以减轻以后升级的成本.我们可以在mix之前，将它们delete掉</li>
+            <li>私有方法应该尽量放在JS文件的下面，可以参看nodejs的库</li>
+            <li>字符串除非里面存在双引号才用单引号括起来，一般都是用双引号</li>
+            <li>能不写分号就不要写分号，了解JS自动添加分号的规则，当然你们改了要跑一遍，
+                参看这里<a href="http://www.zhihu.com/question/20298345"> http://www.zhihu.com/question/20298345/</a></li>
             <li>
                 组件要最大程度兼容之前的，不行就两个，一个是兼容的，一个无牵制的
             </li>

@@ -6,12 +6,8 @@ define(["avalon"], function(avalon) {
             width: 60,
             height: 60,
             animate: false, 
-            toggle: false
-        },
-        style = {
-            position: "fixed",
-            "background-image": "url(./uptop/up.png)",
-            cursor: "pointer"
+            toggle: false,
+            backgroundUrl: "up.png"
         },
         template = "<div ms-css-right='distanceToRight' ms-css-bottom='distanceToBottom' ms-title='title' ms-click='goTop' ms-css-width='width' ms-css-height='height' ms-visible='toggle' class='ui-icon'></div>",
         element = avalon.parseHTML(template).firstChild,
@@ -20,7 +16,6 @@ define(["avalon"], function(avalon) {
         vmodel = {};
 
     document.body.appendChild(element)
-    $element.css(style)
 
     var goTop = avalon.bindingHandlers.uptop = function(data, vmodels) {
         var args = data.value.match(avalon.rword) || ["$", "uptop"],
@@ -28,6 +23,7 @@ define(["avalon"], function(avalon) {
             opts = args[1], 
             model, 
             vmOptions,
+            style = {},
             options = {};
 
         if (ID && ID != "$") {
@@ -68,6 +64,12 @@ define(["avalon"], function(avalon) {
                 }
             }
         })
+        style = {
+                position: "fixed",
+                "background-image": "url("+vmodel.backgroundUrl+")",
+                cursor: "pointer"
+            }
+        $element.css(style)
         avalon.scan(element, vmodel);
     }
     

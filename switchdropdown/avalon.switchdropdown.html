@@ -8,8 +8,10 @@
      tabindex="0">
     <div class="ui-dropdown-source">
         <div class="ui-dropdown-input"
-             ms-title="label">
-            {{currentOption.label|sanitize|html}}
+             ms-title="title"
+             ms-css-width="titleWidth"
+             id="title-MS_OPTION_ID">
+            {{label|sanitize|html}}
         </div>
         <div class="ui-dropdown-icon-wrap">
             <i class="ui-dropdown-icon ui-icon ui-icon-angle-up"

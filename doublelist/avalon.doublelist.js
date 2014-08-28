@@ -188,12 +188,12 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                         vmodel.select.clear()
                     }
                     vmodel.select = select
-                } else {
+                } //else {
                     // selectTmpSelect = []
                     // dataTmpSelect = []
                     vmodel.selectTmpSelect.clear()
                     vmodel.dataTmpSelect.clear()
-                }
+                //}
                 vmodel._getSelect()
             }
 

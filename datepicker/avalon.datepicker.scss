@@ -165,6 +165,11 @@ $uiname-dropdown: "ui-dropdown";
             .ui-datepicker-prev-year, .ui-datepicker-next-year {
                 color: #999999;
             }
+            .ui-state-disabled {
+                color: #cccccc;
+                cursor: default;
+                background: transparent;
+            }
         }
     }
     .ui-datepicker-header {
@@ -196,6 +201,10 @@ $uiname-dropdown: "ui-dropdown";
         color: #3775c0;
         font-weight: 700;
         text-align: center;
+        span.ui-state-hover {
+            background: #dbebff;
+            padding: 5px 10px;
+        }
     }
     .ui-datepicker-calendar-days {
         height: 150px;

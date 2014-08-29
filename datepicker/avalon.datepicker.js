@@ -34,7 +34,9 @@ define(["../avalon.getModel",
             _originValue, 
             years=[],
             date, //获取datepicker的初始选择日期
-            calendar;
+            calendar,
+            firstYear = 1901,
+            lastYear = 2050;
 
         if(typeof parseDate ==="string") {
             parseDateVm = avalon.getModel(parseDate, vmodels);
@@ -122,17 +124,21 @@ define(["../avalon.getModel",
             var changeVM = avalon.getModel(onSelect, vmodels)
             onSelect = options.onSelect = changeVM && changeVM[1][changeVM[0]] || avalon.noop
         }
-        for(var i=1901; i<=2050; i++) {
+        
+        years = avalon.type(options.years) === "array" ? options.years : years
+        minDate = options.minDate = minDate && cleanDate(minDate)
+        maxDate = options.maxDate = maxDate && cleanDate(maxDate)
+        minDate ? firstYear = minDate.getFullYear() : 0
+        maxDate ? lastYear = maxDate.getFullYear() : 0
+        for (var i = firstYear; i <= lastYear; i++) {
             years.push(i)
         }
-        years = avalon.type(options.years) === "array" ? options.years : years
-        options.minDate = minDate && cleanDate(minDate)
-        options.maxDate = maxDate && cleanDate(maxDate)
         options.toggle = toggleVM && toggleVM[1][toggleVM[0]] || options.toggle
         // disabled属性取自disabledVal，disabledVal为false时取配置项disabled，如果配置项仍为false，则取element的disabled属性
         options.disabled = disabledVal || options.disabled || element.disabled
         msDisabledName ? disabledVM[1][disabledVM[0]] = options.disabled : 0
         calendarTemplate = options.template = options.getTemplate(calendarTemplate, options)
+        options.changeMonthAndYear ? options.mobileMonthAndYear = false : 0
         HOLIDAYS = initHoliday.call(options, holidayDate) || {}
         
         element.value = _originValue && formatDate(date)
@@ -211,13 +217,17 @@ define(["../avalon.getModel",
                 }
             }
             vm._selectMonths = function(event, year) {
+                if (year) {
+                    if (!vmodel.mobileYearDisabled(year)) {
+                        vmodel.year = year
+                    } else {
+                        return 
+                    }
+                }
                 if (vmodel.mobileMonthAndYear) {
                     vmodel._monthToggle = true
                     vmodel._yearToggle = false
                     vmodel._datepickerToggle = false
-                    if (year) {
-                        vmodel.year = year
-                    }
                 }
             }
             vm._selectYears = function() {
@@ -227,17 +237,39 @@ define(["../avalon.getModel",
                     vmodel._datepickerToggle = false
                 }
             }
-            vm._prevYear = function() {
+            vm._prevYear = function(year) {
+                if (year === vmodel.years[0]) {
+                    return
+                }
                 vmodel.year = vmodel.year - 1 
             }
-            vm._nextYear = function() {
+            vm._nextYear = function(year) {
+                if (year === vmodel.years[vmodel.years.length-1]) {
+                    return
+                }
                 vmodel.year = vmodel.year + 1
             }
-            vm._prevYears = function() {
+            vm._prevYears = function() { 
+                if (vmodel._years[0] <= vmodel.years[0]) {
+                    return
+                }
                 updateMobileYears(vmodel._years[0] - 1)
             }
             vm._nextYears = function() {
-                updateMobileYears(vmodel._years[9] + 1)
+                var _years = vmodel._years,
+                    years = vmodel.years;
+                if (_years[_years.length-1] >= years[years.length-1]) {
+                    return
+                }
+                updateMobileYears(_years[9] + 1)
+            }
+            vm.mobileYearDisabled = function(year) {
+                var years = vmodel.years
+                if (year < years[0] || year > years[years.length-1]) {
+                    return true
+                } else {
+                    return false
+                }
             }
             vm.getRawValue = function() {
                 return element.value

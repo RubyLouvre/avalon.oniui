@@ -35,8 +35,9 @@
                     <i class="ui-datepicker-next ui-icon ui-icon-chevron-right"    ms-click="_next(nextMonth, $event)"
                         ms-if="numberOfMonths===1 && !changeMonthAndYear"
                         ms-class="ui-datepicker-next-disabled:!nextMonth">&#xf054;</i>
-                    <div class="ui-datepicker-title" ms-click="_selectMonths">
-                        {{calendar.year}}年{{calendar.month+1}}月
+                    <div class="ui-datepicker-title"
+                         ms-click="_selectMonths">
+                        <span ms-hover="ui-state-hover:mobileMonthAndYear">{{calendar.year}}年{{calendar.month+1}}月</span>
                     </div> 
                 </div>
                 <table class="ui-datepicker-calendar-week">
@@ -85,19 +86,19 @@
                 </div>
             </div>
             <div class="ui-datepicker-content-content ui-datepicker-month-year" ms-visible="_monthToggle">
-                <table class="table-condensed">
+                <table>
                     <thead>
-                        <tr>
+                        <tr class="ui-datepicker-title">
                             <th class="prev" style="visibility: visible;text-align:left">
                                 <i class="ui-datepicker-prev ui-icon ui-icon-chevron-left" 
-                                    ms-click="_prevYear"
-                                    ms-class="ui-datepicker-prev-disabled:!prevMonth">&#xf053;</i>
+                                    ms-click="_prevYear(year)"
+                                    ms-class="ui-datepicker-prev-disabled:year===years[0]">&#xf053;</i>
                             </th>
-                            <th style="text-align:center" ms-click="_selectYears">{{year}}</th>
+                            <th style="text-align:center" ms-click="_selectYears" ms-hover="ui-state-hover:mobileMonthAndYear">{{year}}</th>
                             <th class="next" style="visibility: visible;text-align:right">
                                 <i class="ui-datepicker-next ui-icon ui-icon-chevron-right" 
-                                    ms-click="_nextYear"
-                                    ms-class="ui-datepicker-next-disabled:!nextMonth">&#xf054;</i>
+                                    ms-click="_nextYear(year)"
+                                    ms-class="ui-datepicker-prev-disabled:year===years[years.length-1]">&#xf054;</i>
                             </th>
                         </tr>
                     </thead>
@@ -123,19 +124,19 @@
             </div>
 
             <div class="ui-datepicker-content-content ui-datepicker-month-year" ms-visible="_yearToggle">
-                <table class="table-condensed">
+                <table>
                     <thead>
-                        <tr>
+                        <tr class="ui-datepicker-title">
                             <th class="prev" style="visibility: visible;text-align:left">
                                 <i class="ui-datepicker-prev ui-icon ui-icon-chevron-left" 
-                                    ms-click="_prevYears()" 
-                                    ms-class="ui-datepicker-prev-disabled:!prevMonth">&#xf053;</i>
+                                    ms-click="_prevYears" 
+                                    ms-class="ui-datepicker-prev-disabled:_years[0]<=years[0]">&#xf053;</i>
                             </th>
-                            <th style="text-align:center">{{_years[0]}}-{{_years[9]}}</th>
+                            <th style="text-align:center" ms-hover="ui-state-hover:mobileMonthAndYear">{{_years[0]}}-{{_years[9]}}</th>
                             <th class="next" style="visibility: visible;text-align:right">
                                 <i class="ui-datepicker-next ui-icon ui-icon-chevron-right" 
                                     ms-click="_nextYears"
-                                    ms-class="ui-datepicker-next-disabled:!nextMonth">&#xf054;</i>
+                                    ms-class="ui-datepicker-next-disabled:_years[_years.length-1]>=years[years.length-1]">&#xf054;</i>
                             </th>
                         </tr>
                     </thead>
@@ -144,16 +145,19 @@
                             <td colspan="3">
                                 <span class="ui-datepicker-prev-year"
                                       ms-class="ui-datepicker-selected: (_years[0]-1)===elementYear && month===elementMonth"
+                                      ms-class-1="ui-state-disabled:mobileYearDisabled(_years[0]-1)"
                                       ms-click="_selectMonths($event, _years[0]-1)"
                                       ms-hover="ui-datepicker-day-hover"
                                 >{{_years[0]-1}}</span>
                                 <span ms-repeat-y="_years" 
                                       ms-class="ui-datepicker-selected: y===elementYear && month===elementMonth"
+                                      ms-class-1="ui-state-disabled:mobileYearDisabled(y)"
                                       ms-click="_selectMonths($event, y)"
                                       ms-hover="ui-datepicker-day-hover"
                                 >{{y}}</span>
                                 <span class="ui-datepicker-next-year"
                                       ms-class="ui-datepicker-selected: (_years[9]+1)===elementYear && month===elementMonth"
+                                      ms-class-1="ui-state-disabled:mobileYearDisabled(_years[9]+1)"
                                       ms-click="_selectMonths($event, _years[9]+1)"
                                       ms-hover="ui-datepicker-day-hover"
                                 >{{_years[9]+1}}</span>

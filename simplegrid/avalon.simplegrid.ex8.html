@@ -11,27 +11,27 @@
         <script>
             avalon.config({debug: false})
             require(["simplegrid/avalon.simplegrid", "dialog/avalon.dialog"], function() {
-                function range(s, b) {
-                    return s + Math.floor((b - s) * Math.random())
-                }
-                var createData = function(n) {
-                    var array = []
-                    for (var i = 0; i < n; i++) {
-                        array.push({
-                            xxx: range(3000, 20000),
-                            yyy: range(8000, 90000),
-                            zzz: range(5000, 60000),
-                            checked: false
-                        })
-                    }
-                    return array
-                }
-
+                var simplegridVM
                 avalon.define("test", function(vm) {
+                    vm.$skipArray = ["simplegrid"]
                     vm.simplegrid = {
                         allchecked: false,
-                        getColumn: function(el) {
-                            el.checked = false
+                        onInit: function(gridVM) {
+                            simplegridVM = gridVM//方便外面调用
+                            gridVM.addColumn({
+                                sortable: false,
+                                defaultValue: false,
+                                field: "checked",
+                                align: "center",
+                                text: "<input type='checkbox' ms-duplex-radio='allchecked' data-duplex-changed='checkAll'  />",
+                                width: 80
+                            }, 0)
+                        },
+                        renderCell: function(val, key) {
+                            if (key === "checked") {
+                                return  "<input type='checkbox' ms-duplex-radio='row.checked' ms-data-index='$index' data-duplex-changed='checkOne' class='ui-helper-checkone'/>"
+                            }
+                            return val
                         },
                         checkAll: function() {
                             var vmodel = avalon.vmodels.xxx
@@ -45,8 +45,8 @@
                         },
                         checkOne: function() {
                             var vmodel = avalon.vmodels.xxx
-                            var index =  vmodel.startIndex + (avalon(this).data("index") || 0)
-                            vmodel.data[index] = this.checked
+                            var index = vmodel.startIndex + (avalon(this).data("index") || 0)
+                            vmodel.data[index].checked = this.checked
                             if (!this.checked) {
                                 vmodel.allchecked = false
                             } else {
@@ -54,15 +54,6 @@
                                     return el.checked
                                 })
                             }
-                        },
-                        theadTemplate: function(str) {
-                            return "<th style='width:80px'><input type='checkbox' ms-duplex-radio='allchecked' data-duplex-changed='checkAll'  /></th>" + str
-                        },
-                        tbodyTemplate: function(str) {
-                            return "<th style='width: 80px'><input type=\"checkbox\"  ms-duplex-radio='row.checked' ms-data-index='$index' data-duplex-changed='checkOne' class='ui-helper-checkone'/></th>" + str
-                        },
-                        getTemplate: function(str){
-                            return  str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-12="ui-state-acitve:row.checked" ')
                         },
                         columns: [
                             {field: "zzz", text: "生成订单量", resizable: true},
@@ -78,20 +69,26 @@
                             options: [10, 20, 30, 40]
                         },
                         columnsOrder: ["xxx", "yyy", "zzz"],
-                        data: createData(30)
+                        data: []//{xxx: 13223, yyy: "sdfdf", zzz: "dfsdf"}
                     }
                     vm.showDialog = function() {
                         avalon.vmodels.aa.toggle = true
                     }
+                    vm.addRow = function() {
+                        console.log("添加多一行")
+                        if (simplegridVM) {
+                            simplegridVM.data.push({xxx: new Date - 0, yyy: "sdfdf", zzz: "dfsdf"})
+                            simplegridVM.reRender(simplegridVM.data, simplegridVM)
+                        }
+                    }
                     vm.message = "hello"
-                    vm.$skipArray = ["simplegrid"]
                 })
                 avalon.scan()
             })
         </script>
         <style>
             .ui-simplegrid tr.ui-state-acitve td, .ui-simplegrid tr.ui-state-acitve th{
-               background-color:#FFF7E6;
+                background-color:#FFF7E6;
             }
         </style>
     </head>
@@ -99,23 +96,23 @@
 
         <fieldset ms-controller="test">
             <legend >左边添加一个全选非全选的checkbox栏</legend>
-            <div ms-widget="simplegrid, xxx" style="width:99%">
+            <div ms-widget="simplegrid, xxx" style="width:800px">
 
             </div>
             <div ms-widget="dialog,aa" >
                 呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
                 <p>{{message}}</p>
             </div>
+            <button ms-click="addRow">添加多一行</button>
             <button ms-click="showDialog">show dialog</button>
             <div>
                 <h3>要点</h3>
-                <p>通过theadTemplate方法修改表头的那一行的模板</p>
-                <p>通过tbodyTemplate方法修改表身的那一行的模板</p>
-                <p>通过getColumn方法为每一列的数据添加checked属性，默认为false</p>
                 <p>为了方便操作，需要用户在定义ms-widget="simplegrid,?"时指定ID</p>
-                <p>添加一个allchecked属性，默认为false</p>
-                <p>row为每一行的引用名，row.checked与allchecked通过ms-checked绑在复选框上。</p>
-                <p>自己细细品味checkAll, checkOne的实现</p>
+                <p>添加一个allchecked属性，这是用于控制表格的复选框，默认为false</p>
+                <p>在配置对象的onInit回调里，添加addColumn方法，第一个参数为新列的配置对象，第二个参数为要插入的行数</p>
+                <p>在配置对象里写renderCell方法，用于在表身对应的列中输出复选框</p>
+                <p>在配置对象上添加checkAll方法，绑定在表头的复选框上</p>
+                <p>在配置对象上添加checkOne方法，绑定在表身的复选框上</p>
             </div>
             <pre class="brush:html;gutter:false;toolbar:false;">
 &lt;!DOCTYPE html&gt;
@@ -125,31 +122,31 @@
         &lt;meta charset="UTF-8"&gt;
         &lt;meta name="viewport" content="width=device-width"&gt;
         &lt;script src="../avalon.js"&gt;&lt;/script&gt;
-        &lt;/script&gt;
+   
         &lt;script&gt;
             avalon.config({debug: false})
-            require(["simplegrid/avalon.simplegrid"], function() {
-                function range(s, b) {
-                    return s + Math.floor((b - s) * Math.random())
-                }
-                var createData = function(n) {
-                    var array = []
-                    for (var i = 0; i &lt; n; i++) {
-                        array.push({
-                            xxx: range(3000, 20000),
-                            yyy: range(8000, 90000),
-                            zzz: range(5000, 60000),
-                            checked: false
-                        })
-                    }
-                    return array
-                }
-
+            require(["simplegrid/avalon.simplegrid", "dialog/avalon.dialog"], function() {
+                var simplegridVM
                 avalon.define("test", function(vm) {
+                    vm.$skipArray = ["simplegrid"]
                     vm.simplegrid = {
                         allchecked: false,
-                        getColumn: function(el) {
-                            el.checked = false
+                        onInit: function(gridVM) {
+                            simplegridVM = gridVM//方便外面调用
+                            gridVM.addColumn({
+                                sortable: false,
+                                defaultValue: false,
+                                field: "checked",
+                                align: "center",
+                                text: "&lt;input type='checkbox' ms-duplex-radio='allchecked' data-duplex-changed='checkAll'  /&gt;",
+                                width: 80
+                            }, 0)
+                        },
+                        renderCell: function(val, key) {
+                            if (key === "checked") {
+                                return  "&lt;input type='checkbox' ms-duplex-radio='row.checked' ms-data-index='$index' data-duplex-changed='checkOne' class='ui-helper-checkone'/&gt;"
+                            }
+                            return val
                         },
                         checkAll: function() {
                             var vmodel = avalon.vmodels.xxx
@@ -161,10 +158,10 @@
                                 el.checked = bool
                             })
                         },
-                        checkOne: function(el, index) {
+                        checkOne: function() {
                             var vmodel = avalon.vmodels.xxx
-                            var index =  vmodel.startIndex + (avalon(this).data("index") || 0)
-                            vmodel.data[index] = this.checked
+                            var index = vmodel.startIndex + (avalon(this).data("index") || 0)
+                            vmodel.data[index].checked = this.checked
                             if (!this.checked) {
                                 vmodel.allchecked = false
                             } else {
@@ -172,15 +169,6 @@
                                     return el.checked
                                 })
                             }
-                        },
-                        theadTemplate: function(str) {
-                            return "&lt;th style='width:80px'&gt;&lt;input type='checkbox' ms-duplex-radio='allchecked' data-duplex-changed='checkAll'  /&gt;&lt;/th&gt;" + str
-                        },
-                        tbodyTemplate: function(str) {
-                            return "&lt;th style='width: 80px'&gt;&lt;input type=\"checkbox\" ms-duplex-radio='row.checked' ms-data-index='$index' data-duplex-changed='checkOne' class='ui-helper-checkone'/&gt;&lt;/th&gt;" + str
-                        },
-                        getTemplate: function(str){
-                            return  str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class-12="ui-state-acitve:row.checked" ')
                         },
                         columns: [
                             {field: "zzz", text: "生成订单量", resizable: true},
@@ -196,25 +184,47 @@
                             options: [10, 20, 30, 40]
                         },
                         columnsOrder: ["xxx", "yyy", "zzz"],
-                        data: createData(30)
+                        data: []//{xxx: 13223, yyy: "sdfdf", zzz: "dfsdf"}
                     }
-                    vm.$skipArray = ["simplegrid"]
+                    vm.showDialog = function() {
+                        avalon.vmodels.aa.toggle = true
+                    }
+                    vm.addRow = function() {
+                        console.log("添加多一行")
+                        if (simplegridVM) {
+                            simplegridVM.data.push({xxx: new Date - 0, yyy: "sdfdf", zzz: "dfsdf"})
+                            simplegridVM.reRender(simplegridVM.data, simplegridVM)
+                        }
+                    }
+                    vm.message = "hello"
                 })
                 avalon.scan()
             })
         &lt;/script&gt;
         &lt;style&gt;
             .ui-simplegrid tr.ui-state-acitve td, .ui-simplegrid tr.ui-state-acitve th{
-               background-color:#FFF7E6;
+                background-color:#FFF7E6;
             }
         &lt;/style&gt;
     &lt;/head&gt;
-    &lt;body ms-controller="test" &gt;
-        &lt;div ms-widget="simplegrid, xxx" style="width:99%"&gt;
-       &lt;/div&gt;      
+    &lt;body&gt;
+
+        &lt;fieldset ms-controller="test"&gt;
+            &lt;legend &gt;左边添加一个全选非全选的checkbox栏&lt;/legend&gt;
+            &lt;div ms-widget="simplegrid, xxx" style="width:800px"&gt;
+
+            &lt;/div&gt;
+            &lt;div ms-widget="dialog,aa" &gt;
+                呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+                &lt;p&gt;{{message}}&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;button ms-click="addRow"&gt;添加多一行&lt;/button&gt;
+            &lt;button ms-click="showDialog"&gt;show dialog&lt;/button&gt;
+
+        &lt;/fieldset&gt;
+
     &lt;/body&gt;
 &lt;/html&gt;
-               
             </pre>
         </fieldset>
 

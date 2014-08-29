@@ -28,6 +28,11 @@
                 <input ms-widget="datepicker" data-datepicker-change-month-and-year="true" />
                 <p>说明：配置changeMonthAndYear为true使得用户可以通过下拉选项切换月份和年份的显示</p>
             </fieldset>
+            <fieldset>
+                <legend>使日历可以通过下拉框切换月份和年份的显示</legend>
+                <input ms-widget="datepicker" data-datepicker-change-month-and-year="true" data-datepicker-min-date="2012-01-01" data-datepicker-max-date="2015-12-31"/>
+                <p>说明：根据minDate和maxDate配置可选的年份和月份</p>
+            </fieldset>
             <script> 
                 require("datepicker/avalon.datepicker", function(avalon) {
                     var model = avalon.define("demo", function(vm) {
@@ -64,6 +69,11 @@
                             &lt;legend&gt;使日历可以通过下拉框切换月份和年份的显示&lt;/legend&gt;
                             &lt;input ms-widget="datepicker" data-datepicker-change-month-and-year="true" /&gt;
                             &lt;p&gt;说明：配置changeMonthAndYear为true使得用户可以通过下拉选项切换月份和年份的显示&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;使日历可以通过下拉框切换月份和年份的显示&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-change-month-and-year="true" data-datepicker-min-date="2012-01-01" data-datepicker-max-date="2015-12-31"/&gt;
+                            &lt;p&gt;说明：根据minDate和maxDate配置可选的年份和月份&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
                             require("datepicker/avalon.datepicker", function(avalon) {

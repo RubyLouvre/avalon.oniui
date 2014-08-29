@@ -122,6 +122,8 @@ $uiname-dropdown: "ui-dropdown";
         width: 196px;  
         position: relative;
         @include inline-block();
+        white-space: normal;
+        word-break: break-word;
         .ui-datepicker-watermark {
             position: absolute;
             top: 60px;
@@ -136,8 +138,40 @@ $uiname-dropdown: "ui-dropdown";
             line-height: 150px;
             text-align: center;
         }
+        &.ui-datepicker-month-year {
+            span {
+                display: block;
+                width: 23%;
+                height: 42px;
+                line-height: 42px;
+                float: left;
+                margin: 1%;
+                cursor: pointer;
+                text-align: center;
+            }
+            .ui-datepicker-prev, .ui-datepicker-next {
+                height: auto;
+                line-height: auto;
+                position: relative;
+                width: auto;
+            }
+            .ui-datepicker-day-hover {
+                background: #dbebff;
+            }
+            .ui-datepicker-selected {
+                background: #3775c0;
+                color: #fff;
+            }
+            .ui-datepicker-prev-year, .ui-datepicker-next-year {
+                color: #999999;
+            }
+            .ui-state-disabled {
+                color: #cccccc;
+                cursor: default;
+                background: transparent;
+            }
+        }
     }
-    
     .ui-datepicker-header {
         position: relative;
         height: 30px;
@@ -167,6 +201,10 @@ $uiname-dropdown: "ui-dropdown";
         color: #3775c0;
         font-weight: 700;
         text-align: center;
+        span.ui-state-hover {
+            background: #dbebff;
+            padding: 5px 10px;
+        }
     }
     .ui-datepicker-calendar-days {
         height: 150px;

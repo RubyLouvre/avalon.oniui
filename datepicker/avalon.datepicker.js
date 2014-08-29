@@ -140,7 +140,6 @@ define(["../avalon.getModel",
         var vmodel = avalon.define(data.datepickerId, function(vm) {
             avalon.mix(vm, options)
             vm.$skipArray = ["container", "showDatepickerAlways", "timer", "sliderMinuteOpts", "sliderHourOpts", "template", "widgetElement", "dayNames", "allowBlank", "months", "years", "numberOfMonths", "showOtherMonths", "watermark", "weekNames", "stepMonths", "changeMonthAndYear", "startDay"]
-            vm.$monthDom = null
             vm.dateError = vm.dateError || ""
             vm.weekNames = []
             vm.tip = vm.tip || ""
@@ -157,6 +156,12 @@ define(["../avalon.getModel",
             vm._position = "absolute"
             vm.minute = 0
             vm.hour = 0
+            vm._datepickerToggle = true
+            vm._monthToggle = false
+            vm._yearToggle = false
+            vm._years = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019]
+            vm.elementYear = year
+            vm.elementMonth = month
             vm.sliderMinuteOpts = {
                 onInit: function(sliderMinute, options, vmodels) {
                     sliderMinute.$watch("value", function(val) {
@@ -197,6 +202,43 @@ define(["../avalon.getModel",
                     e.stopPropagation()
                 }
             }
+            vm._selectDates = function(month) {
+                if (vmodel.mobileMonthAndYear) {
+                    vmodel._monthToggle = false
+                    vmodel._yearToggle = false
+                    vmodel._datepickerToggle = true
+                    vmodel.month = month
+                }
+            }
+            vm._selectMonths = function(event, year) {
+                if (vmodel.mobileMonthAndYear) {
+                    vmodel._monthToggle = true
+                    vmodel._yearToggle = false
+                    vmodel._datepickerToggle = false
+                    if (year) {
+                        vmodel.year = year
+                    }
+                }
+            }
+            vm._selectYears = function() {
+                if (vmodel.mobileMonthAndYear) {
+                    vmodel._monthToggle = false
+                    vmodel._yearToggle = true
+                    vmodel._datepickerToggle = false
+                }
+            }
+            vm._prevYear = function() {
+                vmodel.year = vmodel.year - 1 
+            }
+            vm._nextYear = function() {
+                vmodel.year = vmodel.year + 1
+            }
+            vm._prevYears = function() {
+                updateMobileYears(vmodel._years[0] - 1)
+            }
+            vm._nextYears = function() {
+                updateMobileYears(vmodel._years[9] + 1)
+            }
             vm.getRawValue = function() {
                 return element.value
             }
@@ -207,7 +249,6 @@ define(["../avalon.getModel",
             vm._afterYearRendered = function() {
                 this.setAttribute("ms-widget", "dropdown,$,$yearOpts")
                 this.setAttribute("ms-duplex", "year")
-                vmodel.$monthDom = this
                 avalon.scan(this, vmodel)
             }
             // 月份选择器渲染ok之为其绑定dropdown组件并扫描渲染出dropdown
@@ -363,14 +404,18 @@ define(["../avalon.getModel",
         })
         getDateTip = getDateTip.bind(vmodel)
         vmodel.$watch("toggle", function(val) {
-            if(val) {
-                _value = element.value
+            var dateFormat = element.value,
+                date = parseDate(dateFormat);
+            if (val) {
+                vmodel.elementMonth = date && date.getMonth() || -1 
+                vmodel.elementYear = date && date.getFullYear() || -1
             } else {
                 vmodel.onClose(new Date(vmodel.year,vmodel.month+1,vmodel.day), vmodel)
             }
         })
         vmodel.$watch("year", function(year) {
             dataSet(vmodel.month, year)
+            updateMobileYears(year)
             vmodel.onChangeMonthYear(year, vmodel.month+1, vmodel)
         })
         vmodel.$watch("_month", function(month) {
@@ -424,6 +469,17 @@ define(["../avalon.getModel",
             month =  _date.getMonth()
             day = _date.getDate()
             _value = element.value = value
+        }
+        function updateMobileYears(year) {
+            var years = vmodel._years,
+                _year3 = (year + "").substr(0, 3),
+                newYears = [];
+            if (!~years.indexOf(year)) {
+                for (var i = 0; i <= 9; i++) {
+                    newYears.push(Number(_year3+i))
+                }
+                vmodel._years = newYears
+            } 
         }
         function toggleActiveClass(outerIndex, innerIndex) {
             var colSelectFlag = false,
@@ -710,6 +766,7 @@ define(["../avalon.getModel",
         width: 90,
         showTip: true,
         changeMonthAndYear: false,
+        mobileMonthAndYear: true,
         showOtherMonths: false,
         numberOfMonths: 1,
         allowBlank : false,

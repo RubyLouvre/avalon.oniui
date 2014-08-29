@@ -85,6 +85,7 @@ define(["../avalon.getModel",
                     selectLength = document.getElementsByTagName("select").length,
                     maxZIndex = vmodel.zIndex
                 avalon.Array.ensure(dialogShows, vmodel)
+                document.documentElement.style.overflow = "hidden"
                 len = dialogShows.length
                 // 通过zIndex的提升来调整遮罩层，保证层上层存在时遮罩层始终在顶层dialog下面(顶层dialog zIndex-1)但是在其他dialog上面
                 maskLayer.style.zIndex = 2 * len + maxZIndex -1
@@ -123,6 +124,7 @@ define(["../avalon.getModel",
                     if (iFrame !== null) {
                         iFrame.style.display = "none"
                     }
+                    document.documentElement.style.overflow = ""
                     options.onClose.call(element, vmodel)
                     return 
                 }
@@ -215,7 +217,6 @@ define(["../avalon.getModel",
                 elementParent.appendChild(element)
                 // 当窗口尺寸发生变化时重新调整dialog的位置，始终使其水平垂直居中
                 element.resizeCallback = avalon(window).bind("resize", throttle(resetCenter, 50, 100, [vmodel, element]))
-                element.scrollCallback = avalon.bind(window, "scroll", throttle(resetCenter, 50, 100, [vmodel, element, true]))
                 if(!maskLayer.attributes["ms-visible"]) {
                     // 设置遮罩层的显示隐藏
                     maskLayer.setAttribute("ms-visible", "toggle")
@@ -340,50 +341,47 @@ define(["../avalon.getModel",
 
     // 使dialog始终出现在视窗中间
     function resetCenter(vmodel, target, scroll) {
+        if (!vmodel.toggle) return
         var bodyHeight = body.scrollHeight,
-            scrollTop = document.body.scrollTop + document.documentElement.scrollTop,
-            scrollLeft = body.scrollLeft,
-            clientWidth = avalon(window).width(),
-            clientHeight = avalon(window).height(),
+            bodyWidth = body.scrollWidth,
+            clientWidth = document.documentElement.clientWidth,
+            clientHeight = document.documentElement.clientHeight,
             targetOffsetHeight = target.offsetHeight,
             targetOffsetWidth = target.offsetWidth,
-            targetOffsetMarginHeight,
+            scrollTop = document.body.scrollTop + document.documentElement.scrollTop,
+            scrollLeft = body.scrollLeft,
+            documentElementStyle = document.documentElement.style,
             t = 0,
             l = 0, 
-            margin = 0;
-        if (vmodel.toggle) {
-            maskLayer.style.width = clientWidth + "px"
-            maskLayer.style.height = bodyHeight + "px"
-            if (clientHeight < targetOffsetHeight) {
-                vmodel.position = "absolute"
-                if (!scroll) {
-                    margin = scrollTop
-                    targetOffsetMarginHeight = targetOffsetHeight + margin
-                    if (targetOffsetMarginHeight > bodyHeight) {
-                        document.body.style.height = targetOffsetMarginHeight+"px"
-                    }
-                    target.style.marginTop = (margin + 10)+ "px"
-                } else {
-                    if (scrollTop > margin) {
-                        t = margin - scrollTop
-                    } else {
-                        t = 0
-                    }
-                }
-            } else {
-                vmodel.position = isIE6 ? "absolute" : "fixed"
-                document.body.style.height = ""
-                t = (clientHeight - targetOffsetHeight) / 2 + (isIE6 ? scrollTop : 0)
-                target.style.marginTop = 0
-            }
-            if (clientWidth < targetOffsetWidth) {
-                l = scrollLeft
-                target.style.width = clientWidth + "px"
-            } else {
-                l = (clientWidth - targetOffsetWidth) / 2 + scrollLeft
-            }
-            avalon(target).css({left:l, top: t})
+            top = (clientHeight - targetOffsetHeight) / 2,
+            left = (clientWidth - targetOffsetWidth) / 2,
+            $target = avalon(target),
+            $maskLayer = avalon(maskLayer);
+
+        if (clientHeight < targetOffsetHeight || clientWidth < targetOffsetWidth) {
+            vmodel.position = "absolute"
+            documentElementStyle.overflow = ""
+        } else {
+            vmodel.position = isIE6 ? "absolute" : "fixed"
+            isIE6 ? documentElementStyle.overflow = "" : documentElementStyle.overflow = "hidden"
         }
+        if (clientHeight < targetOffsetHeight) {
+            t = scrollTop + 10
+            l = scrollLeft + 10
+            if (clientWidth > targetOffsetWidth) {
+                l = left + (isIE6 ? scrollLeft : 0)
+            }
+        } else {
+            t = top + (isIE6 ? scrollTop : 0)
+            l = left + (isIE6 ? scrollLeft : 0)
+            if (clientWidth < targetOffsetWidth) {
+                l = scrollLeft + 10
+            }
+        }
+        var maskHeight = bodyHeight > targetOffsetHeight ? bodyHeight : targetOffsetHeight + 10
+        var maskWidth = bodyWidth > targetOffsetWidth ? bodyWidth : targetOffsetWidth + 10
+        $maskLayer.css({height: maskHeight , width: maskWidth})
+        $target.css({left:l, top: t})
     }
 
     // 获取body子元素最大的z-index

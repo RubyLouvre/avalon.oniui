@@ -10,7 +10,7 @@
             <i ms-if="numberOfMonths!==1" class="ui-datepicker-next ui-icon ui-icon-chevron-right" 
                 ms-click="_next(nextMonth, $event)"
                 ms-class="ui-datepicker-next-disabled:!nextMonth" style="right:15px;">&#xf054;</i>
-            <div class="ui-datepicker-content-content" ms-repeat-calendar="data">
+            <div class="ui-datepicker-content-content" ms-repeat-calendar="data" ms-visible="_datepickerToggle">
                 <div class="ui-datepicker-header" ms-if="numberOfMonths===1 && changeMonthAndYear">
                     <i class="ui-datepicker-prev ui-icon ui-icon-chevron-left" 
                         ms-click="_prev(prevMonth, $event)"
@@ -35,7 +35,7 @@
                     <i class="ui-datepicker-next ui-icon ui-icon-chevron-right"    ms-click="_next(nextMonth, $event)"
                         ms-if="numberOfMonths===1 && !changeMonthAndYear"
                         ms-class="ui-datepicker-next-disabled:!nextMonth">&#xf054;</i>
-                    <div class="ui-datepicker-title">
+                    <div class="ui-datepicker-title" ms-click="_selectMonths">
                         {{calendar.year}}年{{calendar.month+1}}月
                     </div> 
                 </div>
@@ -83,6 +83,91 @@
                 <div class="ui-datepicker-watermark" ms-if="watermark">
                     {{calendar.month+1}}
                 </div>
+            </div>
+            <div class="ui-datepicker-content-content ui-datepicker-month-year" ms-visible="_monthToggle">
+                <table class="table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="prev" style="visibility: visible;text-align:left">
+                                <i class="ui-datepicker-prev ui-icon ui-icon-chevron-left" 
+                                    ms-click="_prevYear"
+                                    ms-class="ui-datepicker-prev-disabled:!prevMonth">&#xf053;</i>
+                            </th>
+                            <th style="text-align:center" ms-click="_selectYears">{{year}}</th>
+                            <th class="next" style="visibility: visible;text-align:right">
+                                <i class="ui-datepicker-next ui-icon ui-icon-chevron-right" 
+                                    ms-click="_nextYear"
+                                    ms-class="ui-datepicker-next-disabled:!nextMonth">&#xf054;</i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3">
+                                <span ms-repeat-m="months" 
+                                      ms-class="ui-datepicker-selected: (m-1)===elementMonth && year===elementYear"
+                                      ms-click="_selectDates(m-1)"
+                                      ms-hover="ui-datepicker-day-hover">{{m}}月</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3" class="today" style="display: none;">Today</th>
+                        </tr>
+                        <tr>
+                            <th colspan="3" class="clear" style="display: none;">Clear</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="ui-datepicker-content-content ui-datepicker-month-year" ms-visible="_yearToggle">
+                <table class="table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="prev" style="visibility: visible;text-align:left">
+                                <i class="ui-datepicker-prev ui-icon ui-icon-chevron-left" 
+                                    ms-click="_prevYears()" 
+                                    ms-class="ui-datepicker-prev-disabled:!prevMonth">&#xf053;</i>
+                            </th>
+                            <th style="text-align:center">{{_years[0]}}-{{_years[9]}}</th>
+                            <th class="next" style="visibility: visible;text-align:right">
+                                <i class="ui-datepicker-next ui-icon ui-icon-chevron-right" 
+                                    ms-click="_nextYears"
+                                    ms-class="ui-datepicker-next-disabled:!nextMonth">&#xf054;</i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3">
+                                <span class="ui-datepicker-prev-year"
+                                      ms-class="ui-datepicker-selected: (_years[0]-1)===elementYear && month===elementMonth"
+                                      ms-click="_selectMonths($event, _years[0]-1)"
+                                      ms-hover="ui-datepicker-day-hover"
+                                >{{_years[0]-1}}</span>
+                                <span ms-repeat-y="_years" 
+                                      ms-class="ui-datepicker-selected: y===elementYear && month===elementMonth"
+                                      ms-click="_selectMonths($event, y)"
+                                      ms-hover="ui-datepicker-day-hover"
+                                >{{y}}</span>
+                                <span class="ui-datepicker-next-year"
+                                      ms-class="ui-datepicker-selected: (_years[9]+1)===elementYear && month===elementMonth"
+                                      ms-click="_selectMonths($event, _years[9]+1)"
+                                      ms-hover="ui-datepicker-day-hover"
+                                >{{_years[9]+1}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3" class="today" style="display: none;">Today</th></tr>
+
+                            <tr><th colspan="3" class="clear" style="display: none;">Clear</th>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
     </div>

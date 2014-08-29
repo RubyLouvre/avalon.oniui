@@ -90,6 +90,12 @@ define(["../avalon.getModel",
                     $p = avalon(p),
                     labelWidth = 0;
                 vmodel.label = label
+                if (duplexFrom) {
+                    duplexFrom[1][duplexFrom[0]] = inputFromValue
+                }
+                if (duplexTo) {
+                    duplexTo[1][duplexTo[0]] = inputToValue
+                }
                 _confirmClick = true
                 vmodel.toggle = false
                 $p.css({position:"absolute",visibility:"hidden",height:0,"font-size": "12px"})
@@ -247,18 +253,9 @@ define(["../avalon.getModel",
             }
         })
         vmodel.$watch("inputFromValue", function(val) {
-            if(duplexFrom) {
-                duplexFrom[1][duplexFrom[0]] = val
-            }
-            vmodel.label = datesDisplayFormat(vmodel.defaultLabel,vmodel.inputFromValue, vmodel.inputToValue)
             updateMsg()
         })
         vmodel.$watch("inputToValue", function(val) {
-            if(duplexTo) {
-                duplexTo[1][duplexTo[0]] = val
-                
-            }
-            vmodel.label = datesDisplayFormat(vmodel.defaultLabel,vmodel.inputFromValue, vmodel.inputToValue)
             updateMsg()
         })
         var _c = {  
@@ -303,11 +300,13 @@ define(["../avalon.getModel",
                 if(duplexVM1) {
                     duplexVM1[1].$watch(duplexVM1[0], function(val) {
                         vmodel.inputFromValue = val
+                        vmodel.label = datesDisplayFormat(vmodel.defaultLabel,vmodel.inputFromValue, vmodel.inputToValue)
                     })
                 }
                 if(duplexVM2) {
                     duplexVM2[1].$watch(duplexVM2[0], function(val) {
                         vmodel.inputToValue = val
+                        vmodel.label = datesDisplayFormat(vmodel.defaultLabel,vmodel.inputFromValue, vmodel.inputToValue)
                     })
                 }
                 vmodel.label =  options.label ? options.label : vmodel.label
@@ -517,6 +516,9 @@ define(["../avalon.getModel",
             return n
         },
         datesDisplayFormat: function(label, fromDate, toDate) {
+            if (!fromDate && !toDate) {
+                return "不限日期"
+            }
             return label + "：" + fromDate + ' 至 ' + toDate
         },
         getTemplate: function(str, options) {

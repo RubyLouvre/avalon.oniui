@@ -116,10 +116,10 @@ define(["avalon",
                     _vmodels = [vmodel].concat(vmodels)
                     avalon.scan(element, _vmodels)
                     if (typeof options.onInit === "function") {
+                        console.log( options.onInit+"!")
                         options.onInit.call(element, vmodel, options, vmodels)
                     }
                 })
-
             }
 
             vm._theadRenderedCallback = function() {
@@ -182,45 +182,16 @@ define(["avalon",
                 //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
                 setTimeout(delay, 100)
             }
-            vm.getScrollbar = function() {
-                return avalon.vmodels["$simplegrid" + optId]
-            }
-            // update scrollbar
-            //     var scrollbarInited
-            vm.updateScrollbar = function(force) {
-                if (!force)
-                    return
-                var scrollbar = vmodel.getScrollbar(),
-                        scroller = scrollbar.getScroller()
-                if (scrollbar) {
-                    scrollbar.update()
-                    // var bars = scrollbar.getBars()
-                    // 更新滚动条附近的间距
-                    // avalon.each(bars, function(i, bar) {
-                    // if (bar.hasClass("ui-scrollbar-right") || bar.hasClass("ui-scrollbar-left")) {
-                    //     // 竖直方向如果进入这个分支，只需要减一次滚动条的宽度即可
-                    //     if (scrollbarInited)
-                    //         return
-                    //     scrollbarInited = true
-                    //     vmodel.gridWidth = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
-                    //             scroller[0].scrollWidth - bar.width() : scroller[0].scrollWidth
 
-                    // } else 
-                    // 水平方向把这个滚动条高度转移到大容器上
-                    // if (bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")) {
-                    //     vmodel.paddingBottom = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
-                    //             bar.innerHeight() + 2 + "px" : "0"
-                    // }
-                    // })
-                }
-            }
-
+            //::loading相关::
             vm.showLoading = function() {
                 vmodel.loadingVModel.toggle = true;
             }
             vm.hideLoading = function() {
                 vmodel.loadingVModel.toggle = false;
             }
+
+
             vm.startResize = function(e, el) {
                 //当移动到表头的右侧,改变光标的形状,表示它可以拖动改变列宽
                 if (options._drag || !el.resizable)
@@ -324,20 +295,19 @@ define(["avalon",
             vm.addColumn = function(obj, i) {
                 var el = options.getColumns([obj], vm)[0]
                 var field = el.field
-                console.log(field)
                 if (vm.columnsOrder.indexOf(field) === -1) {
                     var index = parseInt(i, 10) || 0
-                    console.log("------------")
                     var defaultValue = el.defaultValue || ""
                     vm.columns.splice(index, 0, el)
                     vm.columnsOrder.splice(index, 0, field)
                     vm.addColumnCallbacks[field] = function(array) {
                         array.forEach(function(elem) {
-                            elem[field] = defaultValue
+                            if (!elem.hasOwnProperty(field)) {
+                                elem[field] = defaultValue
+                            }
                         })
                     }
                 }
-
                 vm.reRender(vm.data, vm)
             }
 
@@ -358,9 +328,8 @@ define(["avalon",
                     reRenderTbody(n, o)
                 })
             }
-
+            //::与滚动条相关::计算滚动条的高
             vm.getScrollerHeight = function() {
-
                 var h = vmodel.tbodyScrollHeight + vmodel.tbodyScrollTop - vmodel.theadHeight,
                         max = vmodel._rowHeight * vmodel.data.length
                 // 设置一个上限，修复回滚bug
@@ -377,7 +346,7 @@ define(["avalon",
                 return h
             }
 
-            // 自定义滚动条
+            //::与滚动条相关:: 滚动条的相关配置项
             vm.$spgScrollbarOpts = {
                 onScroll: function(n, o, dir) {
                     // 竖直方向滚动
@@ -395,6 +364,7 @@ define(["avalon",
                         vmodel.cssLeft = n == void 0 ? "auto" : -n + "px"
                     }
                 },
+                //::与滚动条相关::得到表身的高?
                 viewHeightGetter: function(ele) {
                     return ele.innerHeight() - vmodel.theadHeight
                 },
@@ -406,6 +376,38 @@ define(["avalon",
                 //     }
                 // },
                 show: vm.showScrollbar
+            }
+            vm.getScrollbar = function() {
+                return avalon.vmodels["$simplegrid" + optId]
+            }
+            // update scrollbar
+            //     var scrollbarInited
+            vm.updateScrollbar = function(force) {
+                if (!force)
+                    return
+                var scrollbar = vmodel.getScrollbar(),
+                        scroller = scrollbar.getScroller()
+                if (scrollbar) {
+                    scrollbar.update()
+                    // var bars = scrollbar.getBars()
+                    // 更新滚动条附近的间距
+                    // avalon.each(bars, function(i, bar) {
+                    // if (bar.hasClass("ui-scrollbar-right") || bar.hasClass("ui-scrollbar-left")) {
+                    //     // 竖直方向如果进入这个分支，只需要减一次滚动条的宽度即可
+                    //     if (scrollbarInited)
+                    //         return
+                    //     scrollbarInited = true
+                    //     vmodel.gridWidth = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
+                    //             scroller[0].scrollWidth - bar.width() : scroller[0].scrollWidth
+
+                    // } else 
+                    // 水平方向把这个滚动条高度转移到大容器上
+                    // if (bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")) {
+                    //     vmodel.paddingBottom = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
+                    //             bar.innerHeight() + 2 + "px" : "0"
+                    // }
+                    // })
+                }
             }
         })
 

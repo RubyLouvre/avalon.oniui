@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -11,57 +10,115 @@
         </script>
         <script>
             avalon.config({debug: false})
-            require(["simplegrid/avalon.simplegrid"], function() {
+            require(["simplegrid/avalon.simplegrid", "dialog/avalon.dialog"], function() {
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
                 var createData = function(n) {
                     var array = []
                     for (var i = 0; i < n; i++) {
                         array.push({
-                            xxx: Math.random().toString(36).substring(4, 10),
-                            yyy: Math.random().toString(36).substring(4, 10),
-                            zzz: i
+                            xxx: range(3000, 20000),
+                            yyy: range(8000, 90000),
+                            zzz: range(5000, 60000),
+                            checked: false
                         })
                     }
                     return array
                 }
-                avalon.define("test", function(vm) {
 
+                avalon.define("test", function(vm) {
                     vm.simplegrid = {
+                        allchecked: false,
+                        checkAll: function() {
+                            var vmodel = avalon.vmodels.xxx
+                            var bool = vmodel.allchecked = this.checked
+                            vmodel._data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                            vmodel.data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                        },
+                        checkOne: function() {
+                            var vmodel = avalon.vmodels.xxx
+                            var index = vmodel.startIndex + (avalon(this).data("index") || 0)
+                            vmodel.data[index] = this.checked
+                            if (!this.checked) {
+                                vmodel.allchecked = false
+                            } else {
+                                vmodel.allchecked = vmodel._data.every(function(el) {
+                                    return el.checked
+                                })
+                            }
+                        },
+                        renderCell: function(val, key) {
+                            if (key === "checked") {
+                                return  "<input type='checkbox' ms-duplex-radio='row.checked' ms-data-index='$index' data-duplex-changed='checkOne' class='ui-helper-checkone'/>"
+                            }
+                            return val
+                        },
                         columns: [
-                            {field: "zzz", text: "列三", resizable: true},
-                            {field: "yyy", text: "列二", resizable: true},
-                            {field: "xxx", text: "列一", resizable: true}
+                            {field: "zzz", text: "生成订单量", resizable: true},
+                            {field: "yyy", text: "访问量", resizable: true},
+                            {field: "xxx", text: "确认订单量", resizable: true}
                         ],
                         showRows: 10,
                         pageable: true,
                         pager: {
-                            perPages: 20,
+                            perPages: 30,
                             totalItems: 1000,
                             showPages: 5,
                             options: [10, 20, 30, 40]
                         },
                         columnsOrder: ["xxx", "yyy", "zzz"],
-                        data: createData(1200),
-                        showScrollbar: "always"
+                        data: []//{xxx: 13223, yyy: "sdfdf", zzz: "dfsdf"}
                     }
+                    vm.showDialog = function() {
+                        avalon.vmodels.aa.toggle = true
+                    }
+                    vm.addRow = function() {
+                        console.log("添加多一行")
+                        var v = avalon.vmodels.xxx
+                        v.data.push({xxx: new Date -0, yyy: "sdfdf", zzz: "dfsdf"})
+                        console.log(v.data)
+                        v.addColumn({
+                            sortable: false,
+                            defaultValue: false,
+                            field: "checked",
+                            align: "center",
+                            text: "<input type='checkbox' ms-duplex-radio='allchecked' data-duplex-changed='checkAll'  />",
+                            width: 80
+                        }, 0)
+                        
+                     //   v.reRender(v.data, v)
+                    }
+                    vm.message = "hello"
                     vm.$skipArray = ["simplegrid"]
                 })
                 avalon.scan()
             })
         </script>
         <style>
-            #gridsample{
-                width:900px;
+            .ui-simplegrid tr.ui-state-acitve td, .ui-simplegrid tr.ui-state-acitve th{
+                background-color:#FFF7E6;
             }
         </style>
     </head>
     <body>
 
         <fieldset ms-controller="test">
-            <legend>演示大数据表格</legend>
-
-            <div ms-widget="simplegrid" id="gridsample">
+            <legend >左边添加一个全选非全选的checkbox栏</legend>
+            <div ms-widget="simplegrid, xxx" style="width:800px">
 
             </div>
+            <div ms-widget="dialog,aa" >
+                呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+                <p>{{message}}</p>
+            </div>
+            <button ms-click="addRow">添加多一行</button>
+            <button ms-click="showDialog">show dialog</button>
+
         </fieldset>
 
     </body>

@@ -98,7 +98,7 @@ define(["avalon",
         options.loading = avalon.type(options.loading) === "object" ? avalon.mix(options.loading, loadingOpts) : loadingOpts
         var vmodel = avalon.define(data.simplegridId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "data", "scrollPanel", "topTable", "bottomTable", "startIndex", "pager", "endIndex", "template", "loading", "loadingVModel"]
+            vm.$skipArray = ["widgetElement", "data", "addColumnCallbacks", "scrollPanel", "topTable", "bottomTable", "startIndex", "pager", "endIndex", "template", "loading", "loadingVModel"]
             vm.loadingVModel = null
             vm.widgetElement = element
             vm.gridWidth = "100%"
@@ -109,6 +109,7 @@ define(["avalon",
             vm.scrollerHeight = void 0
             vm.paddingBottom = "0"
             vm.barUpdated = false
+            vm._data = []
             vm.$init = function() {
                 avalon.ready(function() {
                     element.innerHTML = options.template.replace(/MS_OPTION_ID/g, vmodel.$id)
@@ -145,7 +146,6 @@ define(["avalon",
 
                 vm.gridWidth = Math.min(table.offsetWidth, vm.scrollPanel.offsetWidth) + 1
                 fns[1]()
-                //console.log(table.offsetWidth, vm.scrollPanel.offsetWidth,vm.gridWidth)
                 vm.theadRenderedCallback.call(tbody, vmodel, options, vmodels)
             }
             vm._tbodyRenderedCallback = function(a) {
@@ -180,15 +180,13 @@ define(["avalon",
 
                 }
                 //如果使用border-collapse: collapse,可能有一条边的高度被吞掉
-
                 setTimeout(delay, 100)
-
             }
             vm.getScrollbar = function() {
                 return avalon.vmodels["$simplegrid" + optId]
             }
             // update scrollbar
-            var scrollbarInited
+            //     var scrollbarInited
             vm.updateScrollbar = function(force) {
                 if (!force)
                     return
@@ -199,20 +197,20 @@ define(["avalon",
                     // var bars = scrollbar.getBars()
                     // 更新滚动条附近的间距
                     // avalon.each(bars, function(i, bar) {
-                        // if (bar.hasClass("ui-scrollbar-right") || bar.hasClass("ui-scrollbar-left")) {
-                        //     // 竖直方向如果进入这个分支，只需要减一次滚动条的宽度即可
-                        //     if (scrollbarInited)
-                        //         return
-                        //     scrollbarInited = true
-                        //     vmodel.gridWidth = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
-                        //             scroller[0].scrollWidth - bar.width() : scroller[0].scrollWidth
-                            
-                        // } else 
-                        // 水平方向把这个滚动条高度转移到大容器上
-                        // if (bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")) {
-                        //     vmodel.paddingBottom = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
-                        //             bar.innerHeight() + 2 + "px" : "0"
-                        // }
+                    // if (bar.hasClass("ui-scrollbar-right") || bar.hasClass("ui-scrollbar-left")) {
+                    //     // 竖直方向如果进入这个分支，只需要减一次滚动条的宽度即可
+                    //     if (scrollbarInited)
+                    //         return
+                    //     scrollbarInited = true
+                    //     vmodel.gridWidth = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
+                    //             scroller[0].scrollWidth - bar.width() : scroller[0].scrollWidth
+
+                    // } else 
+                    // 水平方向把这个滚动条高度转移到大容器上
+                    // if (bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")) {
+                    //     vmodel.paddingBottom = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
+                    //             bar.innerHeight() + 2 + "px" : "0"
+                    // }
                     // })
                 }
             }
@@ -318,6 +316,30 @@ define(["avalon",
                     })
                 }
             }
+            //得到要渲染出来的列的名字的数组
+            vm.getColumnsOrder = function() {
+                return vm.columnsOrder
+            }
+            //在指定列的位置添加一列
+            vm.addColumn = function(obj, i) {
+                var el = options.getColumns([obj], vm)[0]
+                var field = el.field
+                console.log(field)
+                if (vm.columnsOrder.indexOf(field) === -1) {
+                    var index = parseInt(i, 10) || 0
+                    console.log("------------")
+                    var defaultValue = el.defaultValue || ""
+                    vm.columns.splice(index, 0, el)
+                    vm.columnsOrder.splice(index, 0, field)
+                    vm.addColumnCallbacks[field] = function(array) {
+                        array.forEach(function(elem) {
+                            elem[field] = defaultValue
+                        })
+                    }
+                }
+
+                vm.reRender(vm.data, vm)
+            }
 
             //得到可视区某一个格子的显示情况,长度,align
             vm.getCellProperty = function(name, prop) {
@@ -328,21 +350,14 @@ define(["avalon",
                 }
             }
 
-
+            //重新渲染表身
             vm.throttleRenderTbody = function(n, o) {
-                // 不再读取元素的scrollTop了
-                // vmodel.tbodyScrollTop = this.scrollTop
                 vmodel.tbodyScrollTop = n
                 cancelAnimationFrame(requestID)
                 requestID = requestAnimationFrame(function() {
                     reRenderTbody(n, o)
                 })
             }
-
-            vm.getColumnsOrder = function() {
-                return vm.columnsOrder
-            }
-
 
             vm.getScrollerHeight = function() {
 
@@ -353,7 +368,7 @@ define(["avalon",
                 // until change is applied to element, change scrollerHeight
                 setTimeout(function(loop) {
                     var _h = vmodel.getScrollbar().getScroller().css("height")
-                    if(h != _h && !loop) {
+                    if (h != _h && !loop) {
                         arguments.callee(1)
                         return
                     }
@@ -361,7 +376,7 @@ define(["avalon",
                 }, 100)
                 return h
             }
-            vm._data = vm.data.slice(vm.startIndex, vm.endIndex)
+
             // 自定义滚动条
             vm.$spgScrollbarOpts = {
                 onScroll: function(n, o, dir) {
@@ -393,6 +408,9 @@ define(["avalon",
                 show: vm.showScrollbar
             }
         })
+
+
+        vmodel._data = vmodel.getStore(vmodel.data, vmodel)//.data.slice(vm.startIndex, vm.endIndex)
         //<-----------开始渲染分页栏----------
         if (vmodel.pageable) {
             var flagPager = false
@@ -476,7 +494,7 @@ define(["avalon",
         }
         // 监听这个改变更靠谱
         vmodel.$watch("scrollerHeight", function(n) {
-            if(n > 0) {
+            if (n > 0) {
                 vmodel.getScrollbar().disabled = false
                 vmodel.getScrollbar().toggle = true
                 vmodel.updateScrollbar("forceUpdate")
@@ -505,6 +523,7 @@ define(["avalon",
         topTable: {},
         bottomTable: {},
         scrollPanel: {},
+        addColumnCallbacks: {},
         pageable: false,
         syncTheadColumnsOrder: true,
         remoteSort: avalon.noop, //远程排数函数
@@ -524,8 +543,11 @@ define(["avalon",
             return tmpl
         },
         reRender: function(data, vm) {
-            vm.data = data;
-            vm._data = vm.getStore(data, vm);
+            avalon.each(vm.addColumnCallbacks, function(n, fn) {
+                fn(data)
+            })
+            vm.data = data
+            vm._data = vm.getStore(data, vm)
             if (typeof vm.onSort === "function") {
                 setTimeout(function() {
                     vm.onSort(vm)
@@ -533,7 +555,7 @@ define(["avalon",
             }
         },
         getStore: function(array, vm) {
-            return array.slice(vm.startIndex, vm.endIndex)
+            return  array.slice(vm.startIndex, vm.endIndex)
         },
         getColumn: function(el, options) {
             return el
@@ -562,7 +584,9 @@ define(["avalon",
                 makeBool(el, "toggle", true)//是否显示当前列
                 makeBool(el, "disabledToggle")//禁止改变当前列的显示状态
                 makeBool(el, "disabledResize")//禁止改变当前列的宽度
+
                 options.getColumn(el, options)
+
                 ret.push(el)
             }
             return ret

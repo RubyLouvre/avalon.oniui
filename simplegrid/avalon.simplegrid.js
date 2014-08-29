@@ -354,27 +354,17 @@ define(["avalon",
                         clearTimeout(scrollbarTimer)
                         scrollbarTimer = setTimeout(function() {
                             vmodel.throttleRenderTbody(n, o)
-                            // 已经去掉了无限下拉效果
-                            // 向上，update bar状态，并且是无限下拉效果
-                            // if (n < o)
-                            //     vmodel.updateScrollbar("forceUpdate")
                         }, 16)
-                        // 水平方向
+                    // 水平方向
                     } else {
                         vmodel.cssLeft = n == void 0 ? "auto" : -n + "px"
                     }
                 },
                 //::与滚动条相关::得到表身的高?
+                // 计算滚动视图区的高度，表格这边由于表头是不参与滚动的，所有视图区域高度是表格高度 - 表头高度
                 viewHeightGetter: function(ele) {
                     return ele.innerHeight() - vmodel.theadHeight
                 },
-                // 向下的时候，只有越界的时候才更新scrollbar状态
-                // breakOutCallback: function(ifBreakOut, v, obj) {
-                //     if (void 0 !== ifBreakOut && ifBreakOut[0] === "v" && ifBreakOut[1] === "down") {
-                //         obj.down.removeClass("ui-state-disabled")
-                //         vmodel.updateScrollbar("forceUpdate")
-                //     }
-                // },
                 show: vm.showScrollbar
             }
             vm.getScrollbar = function() {
@@ -389,24 +379,6 @@ define(["avalon",
                         scroller = scrollbar.getScroller()
                 if (scrollbar) {
                     scrollbar.update()
-                    // var bars = scrollbar.getBars()
-                    // 更新滚动条附近的间距
-                    // avalon.each(bars, function(i, bar) {
-                    // if (bar.hasClass("ui-scrollbar-right") || bar.hasClass("ui-scrollbar-left")) {
-                    //     // 竖直方向如果进入这个分支，只需要减一次滚动条的宽度即可
-                    //     if (scrollbarInited)
-                    //         return
-                    //     scrollbarInited = true
-                    //     vmodel.gridWidth = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
-                    //             scroller[0].scrollWidth - bar.width() : scroller[0].scrollWidth
-
-                    // } else 
-                    // 水平方向把这个滚动条高度转移到大容器上
-                    // if (bar.hasClass("ui-scrollbar-top") || bar.hasClass("ui-scrollbar-bottom")) {
-                    //     vmodel.paddingBottom = bar.data("ui-scrollbar-needed") && vmodel.showScrollbar == "always" ?
-                    //             bar.innerHeight() + 2 + "px" : "0"
-                    // }
-                    // })
                 }
             }
         })

@@ -99,6 +99,7 @@ define(["avalon",
                 }
 
                 //设置label值
+                  console.log(vmodel.value)
                 setLabelTitle(vmodel.value);
 
                 //如果原来的select没有子节点，那么为它添加option与optgroup
@@ -419,6 +420,7 @@ define(["avalon",
         }
 
         vmodel.$watch("value", function(n, o) {
+          
             setLabelTitle(n);
             //如果有onChange回调，则执行该回调
             if(avalon.type(vmodel.onChange) === "function") {

@@ -97,6 +97,7 @@ define(["../avalon.getModel",
                     duplexTo[1][duplexTo[0]] = inputToValue
                 }
                 _confirmClick = true
+                _oldValue = [inputFromDate, inputToDate]
                 vmodel.toggle = false
                 $p.css({position:"absolute",visibility:"hidden",height:0,"font-size": "12px"})
                 p.innerHTML = label
@@ -107,13 +108,11 @@ define(["../avalon.getModel",
                     vmodel.dateRangeWidth = labelWidth
                 }
                 options.onSelect.call(vmodel, inputFromDate, inputToDate, _oldValue, vmodel, avalon(element).data())
-                _oldValue = [inputFromDate, inputToDate]
             }
             // 点击取消按钮隐藏日历框
             vm._cancelSelectDate = function() {
+                fromSelected = false
                 vmodel.toggle ? vmodel.toggle = false : 0
-                vmodel.inputFromValue = _oldValue && _oldValue[0] && formatDate(_oldValue[0])  || ""
-                vmodel.inputToValue = _oldValue && _oldValue[1] && formatDate(_oldValue[1])  || ""
             }
             vm.getDates = function() {
                 var inputFromDate = parseDate(vmodel.inputFromValue),
@@ -436,22 +435,26 @@ define(["../avalon.getModel",
         function updateMsg() {
             var msg = "",
                 day = 0,
-                inputToDate = parseDate(inputTo.value),
+                inputToValue = vmodel.inputToValue,
+                inputFromValue = vmodel.inputFromValue,
+                inputToDate = parseDate(inputToValue),
                 msgFormat = options.opts && options.opts.msgFormat,
                 inputFromDate = null;
-            if(inputTo.value && !inputToDate) {
+            if(inputToValue && !inputToDate) {
                 vmodel.inputToValue = ""
             } 
-            if(inputTo.value && (inputFrom.value || fromSelected)) {
-                inputFromDate = parseDate(inputFrom.value) || fromSelected
+            if(inputToValue && (inputFromValue || fromSelected)) {
+                inputFromDate = parseDate(inputFromValue) || fromSelected
                 day = Math.floor(((inputToDate.getTime()-inputFromDate.getTime()))/1000/60/60/24 +1)
                 if(msgFormat && typeof msgFormat === "function") {
                     msg = options.opts.msgFormat(inputFrom.vmodel, inputTo.vmodel)
                 } else {
-                    msg = "已选时间段："+inputFrom.value+" 至 "+inputTo.value+" 共计"+day+"天"
-                }
-                vmodel.msg = msg
+                    msg = "已选时间段："+inputFromValue+" 至 "+inputToValue+" 共计"+day+"天"
+                } 
+            } else {
+                msg = ""     
             }
+            vmodel.msg = msg
             fromSelected ? fromSelected = null : 0
         }
         // 将日期时间转为00:00:00
@@ -464,8 +467,8 @@ define(["../avalon.getModel",
         }
         vmodel.$watch("toggle", function(val) {
             if(!val && !_confirmClick) {
-                inputFrom.value = vmodel.inputFromValue
-                inputTo.value = vmodel.inputToValue
+                inputFrom.value = vmodel.inputFromValue = formatDate(_oldValue && _oldValue[0] || "") 
+                inputTo.value = vmodel.inputToValue = formatDate(_oldValue && _oldValue[1] || "") 
             } else if(_confirmClick){
                 vmodel.inputFromValue = inputFrom.value
                 vmodel.inputToValue = inputTo.value
@@ -503,6 +506,7 @@ define(["../avalon.getModel",
             return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null
         },
         formatDate: function(date){
+            if (avalon.type(date) !== "date") return ""
             var separator = this.separator,
                 year = date.getFullYear(), 
                 month = date.getMonth(), 

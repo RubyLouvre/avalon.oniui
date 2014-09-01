@@ -22,7 +22,7 @@
                         ms-on-mousemove-10="startResize($event,el)"
                         ms-on-mousedown-10="resizeColumn($event,el)"
                         ms-on-mouseleave-10="stopResize"
-                        >{{el.text}}
+                        >{{el.text | html}}
                         <span  ms-click="sortColumn(el, $index)"
                                ms-if="el.sortable" 
                                ms-class="ui-helper-{{ getArrow(el, $index)}}">
@@ -44,7 +44,6 @@
                     <td class="ui-simplegrid-td"
                         data-with-sorted="getColumnsOrder"
                         ms-repeat="row" 
-
                         ms-visible="getCellProperty($key,'toggle')" 
                         ms-css-width="getCellProperty($key,'width')"
                         ms-css-text-align="getCellProperty($key,'align')"

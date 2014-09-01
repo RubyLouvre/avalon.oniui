@@ -8,13 +8,12 @@
     <script src="../avalon.js"></script>
     <script src="../highlight/shCore.js"></script>
     <script type="text/javascript">
-        require('dropdown/avalon.dropdown.js', function() {
-            avalon.ready(function() {
-                //multiple select vmodel
+        require(['dropdown/avalon.dropdown.js',"ready!"], function() {
+        
                 avalon.define('mulSelect', function(vm) {
                 });
                 avalon.scan();
-            });
+          
         });
     </script>
 </head>

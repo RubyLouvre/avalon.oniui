@@ -116,7 +116,6 @@ define(["avalon",
                     _vmodels = [vmodel].concat(vmodels)
                     avalon.scan(element, _vmodels)
                     if (typeof options.onInit === "function") {
-                        console.log( options.onInit+"!")
                         options.onInit.call(element, vmodel, options, vmodels)
                     }
                 })
@@ -444,7 +443,6 @@ define(["avalon",
                         }
                     }
                 } else {
-                    //  console.log("上移 " + integer + "行")
                     while (vmodel.startIndex >= 0) {
                         vmodel.endIndex -= 1
                         vmodel.startIndex -= 1

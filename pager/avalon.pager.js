@@ -29,15 +29,15 @@ define(["avalon",
         var vmodel = avalon.define(data.pagerId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
-            vm.toggle = false
             vm.$skipArray = ["showPages", "widgetElement", "template", "ellipseText", "alwaysShowPrev", "alwaysShowNext"]
             //这些属性不被监控
             vm.$init = function() {
                 var pageHTML = options.template
+                element.style.display = "none"
                 element.innerHTML = pageHTML
                 setTimeout(function() {
                     avalon.scan(element, [vmodel].concat(vmodels))
-                    vmodel.toggle = true
+                    element.style.display = "block"
                 }, 100)
                 if (typeof options.onInit === "function") {
                     options.onInit.call(element, vmodel, options, vmodels)

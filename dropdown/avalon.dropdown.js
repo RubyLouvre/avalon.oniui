@@ -398,6 +398,8 @@ define(["avalon",
                 vmodel.menuWidth = vmodel.listWidth - $menu.css("borderLeftWidth").replace(styleReg, "$1") - $menu.css("borderRightWidth").replace(styleReg, "$1");
                 if (height > MAX_HEIGHT) {
                     height = MAX_HEIGHT;
+                } else {
+                    vmodel._disabledScrollbar(true);
                 }
                 vmodel.menuHeight = height;
                 vmodel.updateScrollbar();
@@ -409,12 +411,18 @@ define(["avalon",
                 scrollbar && scrollbar.update();
             }
 
+            vm._disabledScrollbar = function(b) {
+                var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
+                scrollbar && (scrollbar.disabled = !!b);
+            }
+
         });
 
         //对model的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
         if (options.modelBind && vmodel.dataSource.$watch) {
             vmodel.dataSource.$watch("length", function() {
                 vmodel.data = getDataFromOption(vmodel.dataSource.$model);
+                vmodel._disabledScrollbar(false);
             });
         }
 

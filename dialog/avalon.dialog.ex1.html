@@ -85,6 +85,12 @@
                             vm.show = function( id ){
                                 avalon.vmodels[id].toggle = true;
                             }
+                            vm.dialog = {
+                                getTemplate: function(template) {
+                                    var reg = /<div\s*class="ui-dialog-btns">[\s\S]*<\/div>/
+                                    return template.replace(reg, "")
+                                }
+                            }
                             vm.name = "xueer";
                             vm.check1 = ["1"];
                         })

@@ -380,6 +380,9 @@ define(["avalon",
                     scrollbar.update()
                 }
             }
+            vm.$watch("showRows", function(rows) {
+                vmodel.endIndex = rows
+            })
         })
 
 

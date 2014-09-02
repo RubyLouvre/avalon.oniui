@@ -80,7 +80,7 @@ define(["avalon",
                 efficientChangePages(vm.pages, getPages(vm))
             })
             vm.$watch("perPages", function(a) {
-                vm.perPages = parseInt(vm.perPages, 10)
+                vm.currentPage = 1
                 efficientChangePages(vm.pages, getPages(vm))
             })
             vm.$watch("currentPage", function(a) {

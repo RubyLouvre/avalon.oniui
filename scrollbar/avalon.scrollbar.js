@@ -269,11 +269,11 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                     })
                 }
             }
-            //@method getBars()返回所有的滚动条元素
+            //@method getBars()返回所有的滚动条元素，avalon元素对象
             vm.getBars = function() {
                 return bars
             }
-            //@method getScroller()返回scroller
+            //@method getScroller()返回scroller avalon对象
             vm.getScroller = function() {
                 return scroller
             }
@@ -676,15 +676,15 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
         show: "always", //@param never一直不可见，scrolling滚动和hover时候可见，always一直可见
         showBarHeader: true,//@param 是否显示滚动条两端的上下箭头
         draggerHTML: "", //@param 滚动条拖动头里，注入的html碎片
-        breakOutCallback: false, //@optMethod 滚动到极限位置的回调，用来实现无线下拉等效果 breakOutCallback(["h", "up"], vmodel) 第一个参数是一个数组，分别是滚动条方向【h水平，v竖直】和超出极限的方向【up是向上或者向左，down是向右或者向下】，第三个参数是一个对象，包含滚动条的元素，宽高等信息
+        breakOutCallback: false, //@optMethod breakOutCallback(["h", "up"], vmodel) 滚动到极限位置的回调，用来实现无线下拉等效果 breakOutCallback(["h", "up"], vmodel) 第一个参数是一个数组，分别是滚动条方向【h水平，v竖直】和超出极限的方向【up是向上或者向左，down是向右或者向下】，第三个参数是一个对象，包含滚动条的元素，宽高等信息
         //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
         viewHeightGetter: function(viewElement) {
             return viewElement.innerHeight()
-        }, //@optMethod 配置计算视窗高度计函数，默认返回innerHeight
+        }, //@optMethod viewHeightGetter(viewElement) 配置计算视窗高度计函数，默认返回innerHeight
         viewWidthGetter: function(viewElement) {
             return viewElement.innerWidth()
-        }, //@optMethod 配置计算视窗宽度计函数，默认返回innerWidth
+        }, //@optMethod viewWidthGetter(viewElement) 配置计算视窗宽度计函数，默认返回innerWidth
         getTemplate: function(tmpl, opts) {
             return tmpl
         },//@optMethod getTemplate(tpl, opts) 定制修改模板接口

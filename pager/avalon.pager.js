@@ -33,9 +33,11 @@ define(["avalon",
             //这些属性不被监控
             vm.$init = function() {
                 var pageHTML = options.template
+                element.style.display = "none"
                 element.innerHTML = pageHTML
                 setTimeout(function() {
                     avalon.scan(element, [vmodel].concat(vmodels))
+                    element.style.display = "block"
                 }, 100)
                 if (typeof options.onInit === "function") {
                     options.onInit.call(element, vmodel, options, vmodels)
@@ -78,7 +80,7 @@ define(["avalon",
                 efficientChangePages(vm.pages, getPages(vm))
             })
             vm.$watch("perPages", function(a) {
-                vm.perPages = parseInt(vm.perPages, 10)
+                vm.currentPage = 1
                 efficientChangePages(vm.pages, getPages(vm))
             })
             vm.$watch("currentPage", function(a) {

@@ -85,7 +85,6 @@ define(["../avalon.getModel",
                     selectLength = document.getElementsByTagName("select").length,
                     maxZIndex = vmodel.zIndex
                 avalon.Array.ensure(dialogShows, vmodel)
-                document.documentElement.style.overflow = "hidden"
                 len = dialogShows.length
                 // 通过zIndex的提升来调整遮罩层，保证层上层存在时遮罩层始终在顶层dialog下面(顶层dialog zIndex-1)但是在其他dialog上面
                 maskLayer.style.zIndex = 2 * len + maxZIndex -1
@@ -360,10 +359,10 @@ define(["../avalon.getModel",
 
         if (clientHeight < targetOffsetHeight || clientWidth < targetOffsetWidth) {
             vmodel.position = "absolute"
-            documentElementStyle.overflow = ""
+            documentElementStyle.overflow = "auto"
         } else {
             vmodel.position = isIE6 ? "absolute" : "fixed"
-            isIE6 ? documentElementStyle.overflow = "" : documentElementStyle.overflow = "hidden"
+            isIE6 ? documentElementStyle.overflow = "auto" : documentElementStyle.overflow = "hidden"
         }
         if (clientHeight < targetOffsetHeight) {
             t = scrollTop + 10

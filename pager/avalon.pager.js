@@ -33,9 +33,11 @@ define(["avalon",
             //这些属性不被监控
             vm.$init = function() {
                 var pageHTML = options.template
+                element.style.display = "none"
                 element.innerHTML = pageHTML
                 setTimeout(function() {
                     avalon.scan(element, [vmodel].concat(vmodels))
+                    element.style.display = "block"
                 }, 100)
                 if (typeof options.onInit === "function") {
                     options.onInit.call(element, vmodel, options, vmodels)

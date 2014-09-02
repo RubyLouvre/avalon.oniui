@@ -37,7 +37,6 @@ define(["../avalon.getModel",
             calendar,
             firstYear = 1901,
             lastYear = 2050;
-
         if(typeof parseDate ==="string") {
             parseDateVm = avalon.getModel(parseDate, vmodels);
             parseDate = options.parseDate = parseDateVm[1][parseDateVm[0]];
@@ -83,6 +82,8 @@ define(["../avalon.getModel",
                             }
                         }
                     }
+                } else if (!date) {
+                    removeActiveClass()
                 }
             })
         }
@@ -272,10 +273,11 @@ define(["../avalon.getModel",
                 }
             }
             vm.getRawValue = function() {
-                return element.value
+                return duplexVM[1][duplexVM[0]] || element.value
             }
             vm.getDate =  function() {
-                return parseDate(element.value) || cleanDate(new Date())
+                var value = vmodel.getRawValue()
+                return parseDate(value) || cleanDate(new Date())
             }
             // 年份选择器渲染ok之后为其绑定dropdown组件并扫描渲染出dropdown
             vm._afterYearRendered = function() {
@@ -512,6 +514,19 @@ define(["../avalon.getModel",
                 }
                 vmodel._years = newYears
             } 
+        }
+        function removeActiveClass() {
+            var rows = vmodel.data[0].rows
+            for (var i = 0, len = rows.length; i < len; i++) {
+                var cols = rows[i]
+                for (var j = 0, colLen = cols.length; j<colLen;j++) {
+                    var colSelect = cols[j].selected
+                    if (colSelect) {
+                        cols[j].selected = false
+                        return 
+                    }
+                }
+            }
         }
         function toggleActiveClass(outerIndex, innerIndex) {
             var colSelectFlag = false,
@@ -798,7 +813,7 @@ define(["../avalon.getModel",
         width: 90,
         showTip: true,
         changeMonthAndYear: false,
-        mobileMonthAndYear: true,
+        mobileMonthAndYear: false,
         showOtherMonths: false,
         numberOfMonths: 1,
         allowBlank : false,
@@ -823,6 +838,7 @@ define(["../avalon.getModel",
             return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
         },
         formatDate: function(date){
+            if (avalon.type(date) !== "date") return ""
             var separator = this.separator,
                 year = date.getFullYear(),
                 month = date.getMonth(),

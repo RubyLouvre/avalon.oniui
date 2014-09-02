@@ -412,6 +412,7 @@ define(["avalon",
                 scrollbar && scrollbar.update();
             }
 
+            //禁用滚动条，当下拉列表的高度小于最大高度时，只显示当前高度，需要对滚动条做禁用
             vm._disabledScrollbar = function(b) {
                 var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
                 scrollbar && (scrollbar.disabled = !!b);

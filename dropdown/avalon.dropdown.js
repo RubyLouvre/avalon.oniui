@@ -34,8 +34,11 @@ define(["avalon",
             .replace(/MS_OPTION_ID/g, data.dropdownId).split("MS_OPTION_TEMPLATE")
         titleTemplate = templates[0]
         listTemplate = templates[1]
-
         dataSource = options.data.$model || options.data
+
+        //由于element本身存在ms-if或者内部包含ms-repeat等绑定，在抽取数据之前，先对element进行扫描
+        element.removeAttribute("ms-duplex");
+        avalon.scan(element, vmodels);
 
         //数据抽取
         dataModel = getDataFromHTML(element)
@@ -205,7 +208,6 @@ define(["avalon",
             vm._listClick = function(event) {
                 event.stopPropagation();
                 event.preventDefault();
-                // titleNode && titleNode.focus();
             };
 
             vm._keydown = function(event) {
@@ -303,7 +305,6 @@ define(["avalon",
                     }
                     vmodel._styleFix();
                     vmodel._position();
-                    // titleNode && titleNode.focus();
                     if(avalon.type(vmodel.onShow) === "function") {
                         vmodel.onShow.call(this, listNode);
                     }
@@ -418,13 +419,18 @@ define(["avalon",
 
         });
 
-        //对model的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
-        if (options.modelBind && vmodel.dataSource.$watch) {
-            vmodel.dataSource.$watch("length", function() {
-                vmodel.data = getDataFromOption(vmodel.dataSource.$model);
-                vmodel._disabledScrollbar(false);
-            });
-        }
+        //对data的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
+        vmodel.data.$watch('length', function(n) {
+            //当data改变时，解锁滚动条
+            vmodel._disabledScrollbar(false);
+            if(n > 0) {
+
+                //当data改变时，尝试使用之前的value对label和title进行赋值，如果失败，使用data第一项
+                if(!setLabelTitle(vmodel.value)) {
+                    setLabelTitle(vmodel.value = vmodel.data[0].value)
+                }
+            }
+        });
 
         vmodel.$watch("value", function(n, o) {
             setLabelTitle(n);
@@ -509,6 +515,8 @@ define(["avalon",
                 vmodel.label = option.label;
                 vmodel.title = option.title;
             }
+
+            return option;
         }
 
         //计算title的宽度

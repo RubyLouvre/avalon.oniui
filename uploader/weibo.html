@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多图上传（微博）</title>
+<script src="../avalon.js"></script>
+<style>
+	ul{
+		margin: 0;
+		padding: 0;
+	}
+	.imguploader{
+		overflow: hidden;
+	}
+		.imguploader li{
+			float: left;
+			margin-right: 5px;
+			margin-bottom: 5px;
+			cursor: pointer;
+			width: 100px;
+			height: 100px;
+			box-sizing: border-box;
+		}
+		.imguploader .preview{
+			background: no-repeat center center;
+			background-size: cover;
+		}
+		.imguploader .add{
+			border: 2px dashed #ccc;
+			position: relative;
+			text-align: center;
+			overflow: hidden;
+		}
+		.imguploader .add:hover{
+			border-color: #FFA306;
+		}
+			.imguploader .add input{
+				width: 200%;
+				height: 200%;
+				position: absolute;
+				right: 0px;
+				bottom: 0px;
+				opacity: 0;
+				cursor: pointer;
+			}
+			.imguploader .add .icon-add{
+				font-size: 40px;
+				line-height: 98px;
+				color: #ccc;
+			}
+			
+</style>
+</head>
+<body ms-controller="test">
+	
+		<h2>多图片上传（仿新浪微博）</h2>
+		<p>共{{fileSrcList.length}}张，还能上传{{max - fileSrcList.length}}张</p>
+		<ul class="imguploader">
+		   <li class="preview" ms-repeat="fileSrcList" ms-click="removeFile($index)" ms-css-background-image="'url(' + el + ')'"></li>
+		   <li class="add" ms-if="fileSrcList.length < max"><input type="file" multiple id="multi" /><span class="icon-add">✚</span></li>
+		</ul>
+		<p><button>上传</button></p>
+
+	<script>
+		var multi = document.querySelector('#multi');
+
+		var fileList = [];	// 存放file对象
+
+		var model = avalon.define("test", function(vm) {
+			vm.fileSrcList = [];
+			vm.max = 4;
+			vm.removeFile = function(index){
+				model.fileSrcList.removeAt(index);
+				fileList.splice(index, 1);
+			};
+		});
+
+		multi.onchange = function(e){
+
+			var files = this.files;
+			for(var i = 0, len = files.length; i < len; i++){
+				preViewImg(files[i]);
+			}
+
+			this.value = '';
+		};
+
+		function preViewImg(file){
+			
+			if(/image/.test(file.type)){
+				
+				var reader = new FileReader();
+				reader.readAsDataURL(file);
+				
+				reader.onprogress = function(e){
+					if(e.lengthComputable){
+						console.log('ok: ' + e.loaded + '/' + e.total);
+					}else{
+						console.log('no ok.');
+					}
+				};
+				reader.onload = function(){
+					if(model.fileSrcList.length < model.max){
+						model.fileSrcList.push(reader.result);
+						fileList.push(file);
+					}
+				};
+			}
+		}
+
+	</script>
+</body>
+</html>

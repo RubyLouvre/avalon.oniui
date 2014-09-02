@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>test</title>
+<script src="../avalon.js"></script>
+<style>
+	ul{
+		margin: 0;
+		padding: 0;
+	}
+	.preview{
+		overflow: hidden;
+	}
+
+		.preview li{
+			float: left;
+			margin-right: 5px;
+			cursor: pointer;
+		}
+		.preview li img{
+			height: 100px;
+		}
+</style>
+</head>
+<body ms-controller="test">
+	
+		<h2>单个文件上传</h2>
+		<input type="file" />
+
+		<h2>多个文件上传</h2>
+		<p><input type="file" multiple id="multi" /></p>
+		<p><button ms-click="test">test</button></p>
+		<ul class="preview">
+		   <li ms-repeat="fileList" ms-click="$remove"><img ms-src="{{el}}" alt="" /></li> 
+		</ul>
+		<p id="display"></p>
+
+		<p><input type="submit" /></p>
+
+
+	<script>
+		var multi = document.querySelector('#multi'),
+			display = document.querySelector('#display');
+
+		var model = avalon.define("test", function(vm) {
+			vm.fileList = [];
+			
+		});
+
+		multi.onchange = function(e){
+
+			var files = this.files;
+			for(var i = 0, len = files.length; i < len; i++){
+				preViewImg(files[i]);
+			}
+
+			this.value = '';
+		};
+
+		function preViewImg(file){
+			
+			if(/image/.test(file.type)){
+				
+				var reader = new FileReader();
+				
+				reader.readAsDataURL(file);
+				reader.onload = function(){
+					model.fileList.push(reader.result);
+					// display.innerHTML += "<img src='" + reader.result + "' />";
+					// console.log(reader.result);
+				};
+			}
+		}
+
+	</script>
+</body>
+</html>

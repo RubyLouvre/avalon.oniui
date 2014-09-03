@@ -39,7 +39,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
             vm.toggle = false;
             vm.placehold = options.placeholder;
             vm.focusClass = false
-            // input获得焦点时且输入域值为空时隐藏占位符?
+            // input获得焦点时且输入域值为空时隐藏占位符
             vm.hidePlaceholder = function() {
                 vm.toggle = false;
                 element.focus();

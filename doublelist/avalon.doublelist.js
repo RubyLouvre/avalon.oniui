@@ -124,6 +124,7 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                             if(vmodel.select[i] == data.value) {
                                 vmodel.select.removeAt(i)
                                 vmodel._removeFrom(data.value, "fromSelected")
+                                vmodel.selectTmpSelect.clear()
                                 vmodel._getSelect()
                                 return
                             }
@@ -152,6 +153,7 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                         }
                         vmodel.select.push(data.value)
                         vmodel._removeFrom(data.value)
+                        vmodel.selectTmpSelect.clear()
                         vmodel._getSelect()
                     }
                 }

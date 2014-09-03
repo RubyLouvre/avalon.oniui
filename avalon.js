@@ -444,8 +444,8 @@
         vmodel.$id = generateID()
         vmodel.$accessors = accessingProperties
         vmodel[subscribers] = []
-        for (var i in Events) {
-            var fn = Events [i]
+        for (var i in EventManager) {
+            var fn = EventManager [i]
             if (!W3C) { //在IE6-8下，VB对象的方法里的this并不指向自身，需要用bind处理一下
                 fn = fn.bind(vmodel)
             }
@@ -477,7 +477,7 @@
 
     function safeFire(a, b, c, d) {
         if (a.$events) {
-            Events.$fire.call(a, b, c, d)
+            EventManager.$fire.call(a, b, c, d)
         }
     }
     var descriptorFactory = W3C ? function(obj) {
@@ -1050,24 +1050,24 @@
     }
 
     var ClassListMethods = {
-        toString: function() {
+        _toString: function() {
             var node = this.node//IE6,7元素节点不存在hasAttribute方法
             var cls = node.className
             var str = typeof cls === "string" ? cls : cls.baseVal
             return str.split(/\s+/).join(" ")
         },
-        contains: function(cls) {
+        _contains: function(cls) {
             return (" " + this + " ").indexOf(" " + cls + " ") > -1
         },
-        add: function(cls) {
+        _add: function(cls) {
             if (!this.contains(cls)) {
                 this._set(this + " " + cls)
             }
         },
-        remove: function(cls) {
+        _remove: function(cls) {
             this._set((" " + this + " ").replace(" " + cls + " ", " ").trim())
         },
-        _set: function(cls) {
+        __set: function(cls) {
             var node = this.node
             if (typeof node.className == "string") {
                 node.className = cls
@@ -1078,13 +1078,16 @@
     }
     function ClassList(node) {
         if (!("classList" in node)) {
-            avalon.mix(node.classList = {
+            node.classList = {
                 node: node
-            }, ClassListMethods)
-            node.classList.toString = ClassListMethods.toString //fix IE
+            }
+            for (var k in ClassListMethods) {
+                node.classList[k.slice(1)] = ClassListMethods[k]
+            }
         }
         return node.classList
     }
+
 
     "add,remove".replace(rword, function(method) {
         avalon.fn[method + "Class"] = function(cls) {
@@ -1646,9 +1649,9 @@
         return node
     }
     /*********************************************************************
-     *                    自定义事件系统                                  *
+     *                            事件管理器                            *
      **********************************************************************/
-    var Events = {
+    var EventManager = {
         $watch: function(type, callback) {
             if (typeof callback === "function") {
                 var callbacks = this.$events[type]
@@ -1682,7 +1685,7 @@
         },
         $fire: function(type) {
             var special
-            if (/^(\w+)!(\w+)$/.test(type)) {
+            if (/^(\w+)!(\S+)$/.test(type)) {
                 special = RegExp.$1
                 type = RegExp.$2
             }
@@ -2359,30 +2362,6 @@
     /*********************************************************************
      *                     绑定处理系统                                    *
      **********************************************************************/
-    var cacheDisplay = oneObject("a,abbr,b,span,strong,em,font,i,kbd", "inline")
-    avalon.mix(cacheDisplay, oneObject("div,h1,h2,h3,h4,h5,h6,section,p", "block"))
-
-    function parseDisplay(nodeName, val) {
-        //用于取得此类标签的默认display值
-        nodeName = nodeName.toLowerCase()
-        if (!cacheDisplay[nodeName]) {
-            var node = DOC.createElement(nodeName)
-            root.appendChild(node)
-            if (W3C) {
-                val = getComputedStyle(node, null).display
-            } else {
-                val = node.currentStyle.display
-            }
-            root.removeChild(node)
-            cacheDisplay[nodeName] = val
-        }
-        return cacheDisplay[nodeName]
-    }
-    avalon.parseDisplay = parseDisplay
-    var supportDisplay = (function(td) {
-        return W3C ? getComputedStyle(td, null).display === "table-cell" : true
-    })(DOC.createElement("td"))
-
     var propMap = {//属性名映射
         "accept-charset": "acceptCharset",
         "char": "ch",
@@ -2391,13 +2370,14 @@
         "for": "htmlFor",
         "http-equiv": "httpEquiv"
     }
+
     var anomaly = "accessKey,allowTransparency,bgColor,cellPadding,cellSpacing,codeBase,codeType,colSpan,contentEditable,"
             + "dateTime,defaultChecked,defaultSelected,defaultValue,frameBorder,isMap,longDesc,maxLength,marginWidth,marginHeight,"
             + "noHref,noResize,noShade,readOnly,rowSpan,tabIndex,useMap,vSpace,valueType,vAlign"
     anomaly.replace(rword, function(name) {
         propMap[name.toLowerCase()] = name
     })
-    var rdash = /\(([^)]*)\)/
+
     var cssText = "<style id='avalonStyle'>.avalonHide{ display: none!important }</style>"
     head.insertBefore(avalon.parseHTML(cssText), head.firstChild) //避免IE6 base标签BUG
     var rnoscripts = /<noscript.*?>(?:[\s\S]+?)<\/noscript>/img
@@ -2427,6 +2407,7 @@
     } catch (e) {
         avalon.contains = fixContains
     }
+
     //这里的函数每当VM发生改变后，都会被执行（操作方为notifySubscribers）
     var bindingExecutors = avalon.bindingExecutors = {
         "attr": function(val, elem, data) {
@@ -2439,16 +2420,21 @@
                 // ms-attr-class="xxx" vm.xxx=false  清空元素的所有类名
                 // ms-attr-name="yyy"  vm.yyy="ooo" 为元素设置name属性
                 var toRemove = (val === false) || (val === null) || (val === void 0)
+                if (!W3C && propMap[attrName]) {//旧式IE下需要进行名字映射
+                    attrName = propMap[attrName]
+                    var isInnate = true
+                }
                 if (toRemove) {
-                    elem.removeAttribute(attrName)
-                } else if (!W3C) {
-                    attrName = propMap[attrName] || attrName
-                    if (toRemove) {
-                        elem.removeAttribute(attrName)
-                    } else {
-                        elem[attrName] = val
-                    }
-                } else if (!toRemove) {
+                    return elem.removeAttribute(attrName)
+                }
+                if (window.VBArray && !isInnate) {//IE下需要区分固有属性与自定义属性
+                    var attrs = elem.attributes || {}
+                    var attr = attrs[attrName]
+                    isInnate = attr ? attr.expando === false : attr === null
+                }
+                if (isInnate) {
+                    elem[attrName] = val
+                } else {
                     elem.setAttribute(attrName, val)
                 }
             } else if (method === "include" && val) {
@@ -2522,39 +2508,40 @@
         "class": function(val, elem, data) {
             var $elem = avalon(elem),
                     method = data.type
-            if (method === "class" && data.param) { //如果是旧风格
-                $elem.toggleClass(data.param, !!val)
+            if (method === "class" && data.oldStyle) { //如果是旧风格
+                $elem.toggleClass(data.oldStyle, !!val)
             } else {
-                var toggle = data._evaluator ? !!data._evaluator.apply(elem, data._args) : true
-                var className = data._class || val
+                //如果存在冒号就有求值函数
+                data.toggleClass = data._evaluator ? !!data._evaluator.apply(elem, data._args) : true
+                data.newClass = data.immobileClass || val
+                if (data.oldClass && data.newClass !== data.oldClass) {
+                    $elem.removeClass(data.oldClass)
+                }
+                data.oldClass = data.newClass
                 switch (method) {
                     case "class":
-                        if (toggle && data.oldClass) {
-                            $elem.removeClass(data.oldClass)
-                        }
-                        $elem.toggleClass(className, toggle)
-                        data.oldClass = className
-                        break;
+                        $elem.toggleClass(data.newClass, data.toggleClass)
+                        break
                     case "hover":
                     case "active":
-                        if (!data.init) { //确保只绑定一次
-                            if (method === "hover") { //在移出移入时切换类名
-                                var event1 = "mouseenter",
-                                        event2 = "mouseleave"
-                            } else { //在聚焦失焦中切换类名
+                        if (!data.hasBindEvent) { //确保只绑定一次
+                            var activate = "mouseenter" //在移出移入时切换类名
+                            var abandon = "mouseleave"
+                            if (method === "active") {//在聚焦失焦中切换类名
                                 elem.tabIndex = elem.tabIndex || -1
-                                event1 = "mousedown", event2 = "mouseup"
+                                activate = "mousedown"
+                                abandon = "mouseup"
                                 $elem.bind("mouseleave", function() {
-                                    toggle && $elem.removeClass(className)
+                                    data.toggleClass && $elem.removeClass(data.newClass)
                                 })
                             }
-                            $elem.bind(event1, function() {
-                                toggle && $elem.addClass(className)
+                            $elem.bind(activate, function() {
+                                data.toggleClass && $elem.addClass(data.newClass)
                             })
-                            $elem.bind(event2, function() {
-                                toggle && $elem.removeClass(className)
+                            $elem.bind(abandon, function() {
+                                data.toggleClass && $elem.removeClass(data.newClass)
                             })
-                            data.init = 1
+                            data.hasBindEvent = 1
                         }
                         break;
                 }
@@ -2719,10 +2706,8 @@
             if (val) { //插回DOM树
                 if (!data.msInDocument) {
                     data.msInDocument = true
-                    try {
+                    if (placehoder.parentNode) {
                         placehoder.parentNode.replaceChild(elem, placehoder)
-                    } catch (e) {
-                        log("debug: ms-if  " + e.message)
                     }
                 }
                 if (rbind.test(elem.outerHTML.replace(rlt, "<").replace(rgt, ">"))) {
@@ -2731,10 +2716,8 @@
             } else { //移出DOM树，放进ifSanctuary DIV中，并用注释节点占据原位置
                 if (data.msInDocument) {
                     data.msInDocument = false
-                    try {
+                    if (elem.parentNode) {
                         elem.parentNode.replaceChild(placehoder, elem)
-                    } catch (e) {
-                        log("debug: ms-if: elem.parentNode= " + elem.parentNode)
                     }
                     placehoder.elem = elem
                     ifSanctuary.appendChild(elem)
@@ -2797,10 +2780,29 @@
         },
         "widget": noop
     }
+
+    var rdash = /\(([^)]*)\)/
     var rwhitespace = /^\s+$/
+
+    function parseDisplay(nodeName, val) {
+        //用于取得此类标签的默认display值
+        var key = "_" + nodeName
+        if (!parseDisplay[key]) {
+            var node = DOC.createElement(nodeName)
+            root.appendChild(node)
+            if (W3C) {
+                val = getComputedStyle(node, null).display
+            } else {
+                val = node.currentStyle.display
+            }
+            root.removeChild(node)
+            parseDisplay[key] = val
+        }
+        return parseDisplay[key]
+    }
     //这里的函数只会在第一次被扫描后被执行一次，并放进行对应VM属性的subscribers数组内（操作方为registerSubscriber）
     var bindingHandlers = avalon.bindingHandlers = {
-        //这是一个字符串属性绑定的范本, 方便你在title, alt,  src, href, include, css添加插值表达式
+        //这是一个字符串属性绑定的范本, 方便你在title, alt, src, href, include, css添加插值表达式
         //<a ms-href="{{url.hostname}}/{{url.pathname}}.html">
         "attr": function(data, vmodels) {
             var text = data.value.trim(),
@@ -2844,10 +2846,11 @@
                 }
                 var hasExpr = rexpr.test(className) //比如ms-class="width{{w}}"的情况
                 if (!hasExpr) {
-                    data._class = className
+                    data.immobileClass = className
                 }
                 parseExprProxy("", vmodels, data, (hasExpr ? scanExpr(className) : null))
-            } else if (data.type === "class") {
+            } else {
+                data.immobileClass = data.oldStyle = data.param
                 parseExprProxy(text, vmodels, data)
             }
         },
@@ -3019,12 +3022,21 @@
             parseExprProxy(value, vmodels, data, four)
         },
         "visible": function(data, vmodels) {
-            var elem = data.element
-            if (!supportDisplay && !root.contains(elem)) { //fuck firfox 全家！
-                var display = parseDisplay(elem.tagName)
+            var elem = avalon(data.element)
+            var display = elem.css("display")
+            if (display === "none") {
+                var style = elem[0].style
+                var has = /visibility/i.test(style.cssText)
+                var visible = elem.css("visibility")
+                style.display = ""
+                style.visibility = "hidden"
+                display = elem.css("display")
+                if (display === "none") {
+                    display = parseDisplay(elem[0].nodeName)
+                }
+                style.visibility = has ? visible : ""
             }
-            display = display || avalon(elem).css("display")
-            data.display = display === "none" ? parseDisplay(elem.tagName) : display
+            data.display = display
             parseExprProxy(data.value, vmodels, data)
         },
         "widget": function(data, vmodels) {
@@ -3346,6 +3358,8 @@
             var box = doc.compatMode === "BackCompat" ? doc.body : doc.documentElement
             ret.pageX = event.clientX + (box.scrollLeft >> 0) - (box.clientLeft >> 0)
             ret.pageY = event.clientY + (box.scrollTop >> 0) - (box.clientTop >> 0)
+            ret.wheelDeltaY = ret.wheelDelta
+            ret.wheelDeltaX = 0
         }
         ret.timeStamp = new Date - 0
         ret.originalEvent = event
@@ -3411,11 +3425,14 @@
          firefox wheel detlaY 下3 上-3
          IE9-11 wheel deltaY 下40 上-40
          chrome wheel deltaY 下100 上-100 */
+        var fixWheelType = document.onwheel !== void 0 ? "wheel" : "DOMMouseScroll"
+        var fixWheelDelta = fixWheelType === "wheel" ? "deltaY" : "detail"
         eventHooks.mousewheel = {
-            type: "DOMMouseScroll",
+            type: fixWheelType,
             deel: function(elem, fn) {
                 return function(e) {
-                    e.wheelDelta = e.detail > 0 ? -120 : 120
+                    e.wheelDeltaY = e.wheelDelta = e[fixWheelDelta] > 0 ? -120 : 120
+                    e.wheelDeltaX = 0
                     if (Object.defineProperty) {
                         Object.defineProperty(e, "type", {
                             value: "mousewheel"
@@ -3443,8 +3460,8 @@
         array._.$watch("length", function(a, b) {
             array.$fire("length", a, b)
         })
-        for (var i in Events) {
-            array[i] = Events[i]
+        for (var i in EventManager) {
+            array[i] = EventManager[i]
         }
         avalon.mix(array, CollectionPrototype)
         return array
@@ -4570,7 +4587,7 @@
         }
     }
     avalon.bind(window, "load", fireReady)
-    
+
     avalon.ready = function(fn) {
         if (innerRequire) {
             innerRequire("ready!", fn)
@@ -4619,4 +4636,5 @@
 /**
  http://www.cnblogs.com/henryzhu/p/mvvm-1-why-mvvm.ht
  http://dev.oupeng.com/wp-content/uploads/20131109-kennyluck-optimizing-js-games.html#controls-slide
+ http://ps.p12345.com/
  */

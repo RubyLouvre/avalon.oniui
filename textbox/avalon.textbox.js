@@ -38,7 +38,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
             vm.elementDisabled = "";
             vm.toggle = false;
             vm.placehold = options.placeholder;
-            
+            vm.focusClass = false
             // input获得焦点时且输入域值为空时隐藏占位符?
             vm.hidePlaceholder = function() {
                 vm.toggle = false;
@@ -47,6 +47,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
             
             vm.blur = function() {
                 // 切换input外层包装的div元素class(ui-textbox-disabled)的显示或隐藏
+                vmodel.focusClass = false
                 vmodel.elementDisabled = element.disabled;
                 // 切换占位符的显示、隐藏
                 vmodel.toggle = element.value != "" ? false : true;
@@ -90,6 +91,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                     sourceList.appendChild(suggest);
                 }
                 avalon.bind(element, "focus", function() {
+                    vmodel.focusClass = true
                     vmodel.toggle = false
                 })
                 avalon.scan(sourceList, models);

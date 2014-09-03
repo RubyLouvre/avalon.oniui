@@ -16,7 +16,8 @@
 .ui-simplegrid .ui-simplegrid-tbody .ui-state-hover td, .ui-simplegrid .ui-simplegrid-tbody .ui-state-hover th { background-color: #f8f8f8; }
 .ui-simplegrid .ui-simplegrid-scroll-marker { width: 100%; z-index: -1; }
 .ui-simplegrid .ui-simplegrid-pager-wrapper { width: 100%; padding: 5px 0px; overflow: hidden; background-color: #e6e6e6; border-top: 1px solid #d4d4d4; }
-.ui-simplegrid .ui-simplegrid-pager-options { float: left; height: 24px; line-height: 24px; padding-left: 5px; }
+.ui-simplegrid .ui-simplegrid-pager-options { float: left; height: 26px; line-height: 26px; padding-left: 5px; }
+.ui-simplegrid .ui-simplegrid-pager-options .ui-dropdown { margin: 0 5px; vertical-align: top; }
 .ui-simplegrid .ui-helper-asc, .ui-simplegrid .ui-helper-desc, .ui-simplegrid .ui-helper-ndb { width: 16px; height: 16px; line-height: 1; vertical-align: middle; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; position: relative; cursor: pointer; }
 .ui-simplegrid .ui-helper-asc span, .ui-simplegrid .ui-helper-desc span, .ui-simplegrid .ui-helper-ndb span { position: absolute; top: 0px; left: 4px; }
 .ui-simplegrid .ui-helper-ndb .ui-helper-sort-top, .ui-simplegrid .ui-helper-desc .ui-helper-sort-top { width: 0; height: 0; line-height: 0; font-size: 0; border-top: 0 none; border-right: 6px dashed transparent; border-bottom: 6px solid #cccccc; border-left: 6px dashed transparent; top: 0px; }

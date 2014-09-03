@@ -33,7 +33,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
         }
         var vmodel = avalon.define(data.textboxId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "disabledClass"];
+            vm.$skipArray = ["widgetElement", "disabledClass", "autoTrim"];
             vm.widgetElement = element;
             vm.elementDisabled = "";
             vm.toggle = false;
@@ -50,6 +50,9 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 vmodel.focusClass = false
                 vmodel.elementDisabled = element.disabled;
                 // 切换占位符的显示、隐藏
+                if (options.autoTrim) {
+                    element.value = element.value.trim()
+                }
                 vmodel.toggle = element.value != "" ? false : true;
             }
             vm.$remove = function() {
@@ -132,6 +135,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
     } 
     widget.defaults = {
         suggest : false,
+        autoTrim: true,
         placeholder: "",
         widgetElement: "",
         tabIndex: -1,

@@ -39,8 +39,10 @@ define(["../avalon.getModel", 'text!./avalon.rating.html'],
             };
 
             vm.setByIp = function() {
-                var value = parseInt(element.value);
-                vm.value = vm.floatValue = (!value && value !== 0) ? options.defaultValue : value;
+                if (element.value) {
+                    var value = parseInt(element.value);
+                    vm.value = vm.floatValue = (!value && value !== 0) ? options.defaultValue : value;
+                }
             };
 
             vm.$init = function() {

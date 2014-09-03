@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>rating demo</title>
+    <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <script src="../highlight/shCore.js"></script>
+    <script src="../avalon.js"></script>
+</head>
+<body class="ms-controller">
+    <div class="wrapper">
+        <h1>rating demo</h1>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset>
+                <input  ms-widget="rating"/>
+            </fieldset>
+            <script>
+                require("rating/avalon.rating", function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.onSelect = function() {
+                            console.log('select', arguments);
+                        };
+                    });
+                    avalon.scan();
+                });
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+
+            </pre>
+        </div>
+    </div>
+</body>

@@ -2,7 +2,7 @@
     var widgets = ["accordion", "at", "browser", "checkboxlist", "colorpicker", "cookie",
         "coupledatepicker", "datepicker", "daterangepicker", "dialog",
         "doublelist", "draggable", "dropdown", "flipswitch","live", "miniswitch",
-        "notice", "pager", "position", "preview", "progressbar", "promise",
+        "notice", "pager", "position", "preview", "progressbar", "promise", "rating",
         "resizable", "scrollbar", "scrollspy", "simplegrid", "slider",
         "spinner", "store", "switchdropdown", "tab", "textbox", "tooltip"].sort()
     var vmodel = avalon.define("library", function(vm) {
@@ -118,15 +118,15 @@
 </script>
 <table width="100%" ms-controller="library">
     <tr>
-        <td valign="top" style="width:130px">  
+        <td valign="top" style="width:130px">
             <ul class="ui-list" id="widgetMenu" ms-css-position="stickPosition" ms-css-bottom="stickBottom" ms-css-top="stickTop">
                 <li ms-repeat="widgets">
-                    <a ms-href="#{{widgetHref}}" 
-                       ms-class="active: $index===activeIndex" 
+                    <a ms-href="#{{widgetHref}}"
+                       ms-class="active: $index===activeIndex"
                        ms-click="changeActiveIndex($index)">
                         {{el}}
                     </a>
-                </li> 
+                </li>
             </ul>
         </td>
         <td valign="top">

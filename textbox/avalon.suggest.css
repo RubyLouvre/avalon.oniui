@@ -2,8 +2,25 @@
 /*
 这是每个都组件都应该引用的部分
 */
-.ui-textbox-suggest { position: relative; z-index: 1000; }
+.ui-textbox-suggest {
+  position: relative;
+  z-index: 1000; }
 
-.ui-suggest { position: absolute; top: 3px; left: -6px; z-index: 1; border: 1px solid #cccccc; padding: 0; margin: 0; background-color: #ffffff; }
-.ui-suggest .ui-suggest-item { overflow: hidden; cursor: pointer; font-size: 12px; padding: 3px 5px; word-break: break-all; }
-.ui-suggest .ui-suggest-item.ui-suggest-item-selected { background-color: #3775c0; color: white; }
+.ui-suggest {
+  position: absolute;
+  top: 3px;
+  left: -6px;
+  z-index: 1;
+  border: 1px solid #cccccc;
+  padding: 0;
+  margin: 0;
+  background-color: #ffffff; }
+  .ui-suggest .ui-suggest-item {
+    overflow: hidden;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 3px 5px;
+    word-break: break-all; }
+    .ui-suggest .ui-suggest-item.ui-suggest-item-selected {
+      background-color: #3775c0;
+      color: white; }

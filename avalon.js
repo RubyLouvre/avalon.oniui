@@ -1749,9 +1749,6 @@
             } else {
                 try {
                     var c = data.type === "on" ? data : fn.apply(0, data.args)
-                    if (data.type === "include") {
-                        delete Registry[expose];
-                    }
                     data.handler(c, data.element, data)
                 } catch (e) {
                     delete data.evaluator

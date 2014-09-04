@@ -1,0 +1,9 @@
+<div ms-css-width="{{_size*_max}}" ms-on-mouseout="mouseout">
+    <img
+        ms-repeat="list"
+        ms-src="{{floatValue > $index ? _selectedImg : _notSelectedImg}}"
+        ms-css-width="{{_size}}"
+        ms-on-mouseover="mouseover($index)"
+        ms-click="select($index)"
+    />
+</div>

@@ -85,10 +85,10 @@
     <script>
     require(["dialog/avalon.dialog.js"], function(avalon) {
         var docCssReg = /<link[^>]*style\/avalon\.doc\.css[^>]*\>/img,
-            widgets = ["accordion", "at","browser", "checkboxlist", "colorpicker", "cookie", 
+            widgets = ["accordion", "at","browser", "checkboxlist", "colorpicker", "cookie",
                 "coupledatepicker", "datepicker", "daterangepicker", "dialog",
                 "doublelist", "draggable", "dropdown", "flipswitch", "miniswitch",
-                "notice", "pager", "position", "preview", "progressbar", "promise",
+                "notice", "pager", "position", "preview", "progressbar", "promise", "rating",
                 "resizable", "scrollbar", "scrollspy", "simplegrid", "slider",
                 "spinner", "store", "switchdropdown", "tab", "textbox", "tooltip"].sort(),
             defaultHref = "accordion/avalon.accordion.doc.html";
@@ -103,7 +103,7 @@
                     case "daterangepicker":
                         widget = "datepicker";
                     break;
-                }  
+                }
             }
             if(hash) {
                 hash = widget + "/" + hash[0]
@@ -111,7 +111,7 @@
             if (!hash && (urlHash || location.hash)) {
                 hash = urlHash || location.hash.replace(/^#/, "");
                 page = true;
-            } 
+            }
             return {
                     page: page,
                     hash: hash
@@ -121,7 +121,7 @@
             if(!hash.match(/^#/g)) hash = "#" + defaultHref.split("/")[1]
             location.hash = hash
         }
-        // decide currentIndex by vmodel.href 
+        // decide currentIndex by vmodel.href
         function getcurrentIndex(hash) {
             var widgetName = hash.split("/")[0];
             for(var i = 0, len = widgets.length; i < len; i++) {
@@ -176,7 +176,7 @@
                 vmodel.position = "absolute";
                 vmodel.fixTop = "auto";
                 vmodel.fixBottom = 80;
-            } 
+            }
         }
         avalon(window).bind("scroll", throttleIndex(fixUiList, 50, 100));
         var oldHref, vmodel = avalon.define("avalonUiDocument", function(vm) {
@@ -193,17 +193,17 @@
             vm.nav = [
                 {
                     href: defaultHref,
-                    name: "组件库", 
+                    name: "组件库",
                     pageName: "pageUiLibrary"
                 },
                 {
-                    href: "ui_timeline", 
-                    name: "组件概览", 
+                    href: "ui_timeline",
+                    name: "组件概览",
                     pageName: "pageTimeline"
                 },
                   {
-                    href: "pages/apis/index.html", 
-                    name: "APIs", 
+                    href: "pages/apis/index.html",
+                    name: "APIs",
                     pageName: "apis"
                 }
             ];

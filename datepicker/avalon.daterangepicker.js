@@ -88,14 +88,22 @@ define(["../avalon.getModel",
                     label = datesDisplayFormat(options.defaultLabel,inputFromValue, inputToValue),
                     p = document.createElement("p"),
                     $p = avalon(p),
-                    labelWidth = 0;
-                vmodel.label = label
+                    labelWidth = 0,
+                    msg = "";
+                
                 if (duplexFrom) {
                     duplexFrom[1][duplexFrom[0]] = inputFromValue
                 }
                 if (duplexTo) {
                     duplexTo[1][duplexTo[0]] = inputToValue
                 }
+                if (!inputToDate || !inputFromDate) {
+                    msg = (!inputFromDate && !inputToDate) ? "请选择起始日期和结束日期" : !inputFromDate ? "请选择起始日期" : "请选择结束日期"
+                    msg = "<span style='color:#f55'>" + msg + "</span>"
+                    vmodel.msg = msg
+                    return false
+                }
+                vmodel.label = label
                 _confirmClick = true
                 _oldValue = [inputFromDate, inputToDate]
                 vmodel.toggle = false

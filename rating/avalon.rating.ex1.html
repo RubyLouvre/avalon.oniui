@@ -32,6 +32,10 @@
                 <legend>设置默认星值</legend>
                 <div ms-widget="rating, $, $rating_4"></div>
             </fieldset>
+            <fieldset>
+                <legend>设置图标和颜色</legend>
+                <div ms-widget="rating, $, $rating_5"></div>
+            </fieldset>
             <script>
                 require("rating/avalon.rating", function(avalon) {
                     var model = avalon.define("demo", function(vm) {
@@ -48,6 +52,12 @@
 
                         vm.$rating_4 = {
                             defaultValue: 1
+                        };
+
+                        vm.$rating_5 = {
+                            selectedContent: '&#xf054;',
+                            selectedColor: 'red',
+                            notSelectedContent: '&#xf054;'
                         };
 
                         vm.onSelect = function() {
@@ -98,6 +108,10 @@
                 &lt;legend&gt;设置默认星值&lt;/legend&gt;
                 &lt;div ms-widget="rating, $, $rating_4"&gt;&lt;/div&gt;
             &lt;/fieldset&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;设置图标和颜色&lt;/legend&gt;
+                &lt;div ms-widget="rating, $, $rating_5"&gt;&lt;/div&gt;
+            &lt;/fieldset&gt;
             &lt;script&gt;
                 require("rating/avalon.rating", function(avalon) {
                     var model = avalon.define("demo", function(vm) {
@@ -116,6 +130,12 @@
                             defaultValue: 1
                         };
 
+                        vm.$rating_5 = {
+                            selectedContent: '&amp;#xf054;',
+                            selectedColor: 'red',
+                            notSelectedContent: '&amp;#xf054;'
+                        };
+
                         vm.onSelect = function() {
                             console.log('select', arguments);
                         };
@@ -131,7 +151,7 @@
         &lt;/div&gt;
     &lt;/div&gt;
 &lt;/body&gt;
-            </pre>
+            </pre>;
         </div>
     </div>
 </body>

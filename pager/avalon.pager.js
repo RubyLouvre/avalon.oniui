@@ -85,6 +85,9 @@ define(["avalon",
             })
             vm.$watch("currentPage", function(a) {
                 vmodel._currentPage = a
+                if (a == 1) {
+                    vmodel.firstPage = 1
+                }
             })
             vm.isShowPrev = function() {
                 var a = vm.alwaysShowPrev

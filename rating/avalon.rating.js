@@ -1,4 +1,4 @@
-define(["../avalon.getModel", 'text!./avalon.rating.html'],
+define(["../avalon.getModel", 'text!./avalon.rating.html', 'css!../chameleon/oniui-common.css'],
     function(avalon, sourceHTML) {
 
     var ratingTemplate = sourceHTML,
@@ -19,11 +19,10 @@ define(["../avalon.getModel", 'text!./avalon.rating.html'],
 
         var vmodel = avalon.define(data.ratingId, function(vm) {
 
+            avalon.mix(vm, options);
+
             vm.value = vm.floatValue = element.value;
-            vm._max = options.max;
-            vm._size = options.size;
-            vm._selectedImg = options.imgUrls[0];
-            vm._notSelectedImg = options.imgUrls[1];
+
             vm.list = new Array(options.max);
 
             vm.mouseover = function(index) {
@@ -39,9 +38,9 @@ define(["../avalon.getModel", 'text!./avalon.rating.html'],
             };
 
             vm.setByIp = function() {
-                if (element.value) {
-                    var value = parseInt(element.value);
-                    vm.value = vm.floatValue = (!value && value !== 0) ? options.defaultValue : value;
+                var value = parseInt(element.value);
+                if (value !== vm.value) {
+                    vm.value = vm.floatValue = value ? value : 0;
                 }
             };
 
@@ -56,7 +55,7 @@ define(["../avalon.getModel", 'text!./avalon.rating.html'],
                         element.value = v;
                     });
                 } else {
-                    vm.value = vm.floatValue = options.defaultValue;
+                    vm.value = vm.floatValue = vm.defaultValue;
                     element.appendChild(rating);
                 }
                 avalon.scan(rating.parentNode, [vmodel].concat(vmodels));
@@ -83,8 +82,12 @@ define(["../avalon.getModel", 'text!./avalon.rating.html'],
 
     widget.defaults = {
         defaultValue: 3,
-        imgUrls: ['rating_b.png', 'rating.png'],
         max: 5,
+        margin: 3,
+        notSelectedColor: '#CECECE',
+        notSelectedContent: '&#xf006;',
+        selectedColor: '#00A3C2',
+        selectedContent: '&#xf005;',
         size: 20
     };
 

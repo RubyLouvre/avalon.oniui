@@ -506,7 +506,7 @@ define(["avalon",
         theadRenderedCallback: function(vmodel, options, vmodels) {
         },
         tbodyRenderedCallback: function(vmodel, options, vmodels) {
-            window.scrollTo(0, avalon(vmodel.widgetElement).offset().top - 60)
+            vmodel.widgetElement.scrollIntoView()
         },
         renderCell: function(val, key, row) {
             return val

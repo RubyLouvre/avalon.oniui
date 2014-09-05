@@ -19,6 +19,7 @@ $pager-active-color: $ui-state-active-color;
     .#{$uiname}-prev, .#{$uiname}-next, .#{$uiname}-item {
         @include inline-block();
         background-color: $pager-background-color;
+        color: #333;
         height: 24px;
         line-height: 24px;
         margin-right: 5px;
@@ -35,6 +36,7 @@ $pager-active-color: $ui-state-active-color;
             border: 0 none;
             padding: 1px 11px;
             cursor: default;
+            background: transparent;
         }
         /*!掠过*/
         &.ui-state-hover{
@@ -115,12 +117,11 @@ $pager-active-color: $ui-state-active-color;
         vertical-align: middle;
         padding: 0 10px;
         text-decoration: none;
-        border: 1px solid $ui-widget-content-border-color;
-        background-color: $ui-widget-content-background-color;
-        color: $ui-widget-content-color;
+        border: 1px solid #ccc;
+        background-color: #f8f8f8;
+        color: #333;
         &:hover{
-            border-color: lighten($ui-widget-content-border-color, 10%);
-            background-color: lighten($ui-widget-content-background-color, 10%);
+            border-color: #bbb;
         }
     }
     /*!里面的文本全部包在一个容器内，以便实现居中*/

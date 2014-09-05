@@ -429,6 +429,8 @@ define(["avalon",
 
                 //当data改变时，尝试使用之前的value对label和title进行赋值，如果失败，使用data第一项
                 if(!setLabelTitle(vmodel.value)) {
+                    vmodel.currentOption = vmodel.data[0].$model;
+                    vmodel.activeIndex = 0;
                     setLabelTitle(vmodel.value = vmodel.data[0].value)
                 }
             }

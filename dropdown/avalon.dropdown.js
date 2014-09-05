@@ -68,7 +68,7 @@ define(["avalon",
             vm.menuHeight = vm.height;  //下拉列表框高度
             vm.dataSource = dataSource;    //源节点的数据源，通过dataSource传递的值将完全模拟select
             vm.data = dataModel;           //下拉列表的渲染model
-
+            vm.focusClass =  false
             vm.$init = function() {
                 if (vmodel.data.length === 0) {
                     throw new Error("the options is not enough for init a dropdown!");
@@ -312,6 +312,7 @@ define(["avalon",
             };
 
             vm.$watch("toggle", function(b) {
+                vmodel.focusClass = b
                 vmodel._toggle(b);
             });
 

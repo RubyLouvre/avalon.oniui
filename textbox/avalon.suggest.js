@@ -190,7 +190,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
         focus : false ,
         changed : false,
         renderItem : function(item, vmodel) {
-            return item.replace(vmodel.searchText, "<b style='color:red'>$&</b>")
+            return item.replace(vmodel.searchText, "<b style='color:#f55'>$&</b>")
         }
     };
     // 根据提示类型的不同提供提示信息，也就是信息的过滤方式完全由用户自己决定?

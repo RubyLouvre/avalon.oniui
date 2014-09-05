@@ -88,14 +88,22 @@ define(["../avalon.getModel",
                     label = datesDisplayFormat(options.defaultLabel,inputFromValue, inputToValue),
                     p = document.createElement("p"),
                     $p = avalon(p),
-                    labelWidth = 0;
-                vmodel.label = label
+                    labelWidth = 0,
+                    msg = "";
+                    
+                if (!inputToDate || !inputFromDate) {
+                    msg = (!inputFromDate && !inputToDate) ? "请选择起始日期和结束日期" : !inputFromDate ? "请选择起始日期" : "请选择结束日期"
+                    msg = "<span style='color:#f55'>" + msg + "</span>"
+                    vmodel.msg = msg
+                    return false
+                }
                 if (duplexFrom) {
                     duplexFrom[1][duplexFrom[0]] = inputFromValue
                 }
                 if (duplexTo) {
                     duplexTo[1][duplexTo[0]] = inputToValue
                 }
+                vmodel.label = label
                 _confirmClick = true
                 _oldValue = [inputFromDate, inputToDate]
                 vmodel.toggle = false
@@ -287,7 +295,7 @@ define(["../avalon.getModel",
         }
         // 初始化日期范围值
         function initValues() {
-            if(duplex) {
+            if (duplex) {
                 var duplexLen = duplex.length,
                     duplexVM1 = avalon.getModel(duplex[0].trim(), vmodels),
                     duplexVM2 = duplexLen === 1 ? null : avalon.getModel(duplex[1].trim(), vmodels),
@@ -296,16 +304,20 @@ define(["../avalon.getModel",
                 duplexFrom = duplexVM1
                 duplexTo = duplexVM2
                 setValues(duplexLen, duplexVal1, duplexVal2)
-                if(duplexVM1) {
+                if (duplexVM1) {
                     duplexVM1[1].$watch(duplexVM1[0], function(val) {
                         vmodel.inputFromValue = val
-                        vmodel.label = datesDisplayFormat(vmodel.defaultLabel,vmodel.inputFromValue, vmodel.inputToValue)
+                        if (parseDate(vmodel.inputToValue) && parseDate(val)) {
+                            vmodel.label = datesDisplayFormat(vmodel.defaultLabel,val, vmodel.inputToValue)
+                        }
                     })
                 }
-                if(duplexVM2) {
+                if (duplexVM2) {
                     duplexVM2[1].$watch(duplexVM2[0], function(val) {
                         vmodel.inputToValue = val
-                        vmodel.label = datesDisplayFormat(vmodel.defaultLabel,vmodel.inputFromValue, vmodel.inputToValue)
+                        if (parseDate(vmodel.inputFromValue) && parseDate(val)) { 
+                            vmodel.label = datesDisplayFormat(vmodel.defaultLabel,vmodel.inputFromValue, val)
+                        }
                     })
                 }
                 vmodel.label =  options.label ? options.label : vmodel.label

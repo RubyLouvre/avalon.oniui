@@ -16,6 +16,11 @@ $uiname: "ui-textbox";
             border-color: #999999;
         }
     }
+    &.ui-state-focus {
+        @if($oinui-theme == smoothness) {
+            border-color: #3775c0;
+        }
+    }
     .#{$uiname}-input-wrap {
         position: relative;
         @include inline-block();

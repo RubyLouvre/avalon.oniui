@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript" src="./avalon.js"></script>
+    <script type="text/javascript">
+        avalon.templateCache.test = "<div ms-widget='test'></div>";
+        var test = avalon.define("demo", function(vm) {
+            vm.content = "test";
+            vm.test = {
+                a:1,
+                b:2
+            };
+        });
+        avalon.ui.test = function(element, data, vmodels) {
+            console.log('hehe');
+            element.innerHTML = "{{a}}, {{b}}"
+            return avalon.define(data.testId, function(vm) {
+                avalon.mix(vm, data.testOptions);
+                vm.$init = function() {
+                    vm.a = 3;
+                }
+            });
+        };
+    </script>
+</head>
+<body ms-controller="demo">
+    <div ms-include-src="content"></div>
+</body>
+</html>

@@ -2,6 +2,7 @@
 define(["avalon",
     "text!./avalon.simplegrid.html",
     "../pager/avalon.pager",
+    "../dropdown/avalon.dropdown",
     "../loading/avalon.loading",
     "../scrollbar/avalon.scrollbar",
     "css!../chameleon/oniui-common.css",
@@ -51,8 +52,7 @@ define(["avalon",
         pager.prevText = pager.prevText || "上一页"
         if (Array.isArray(pager.options)) {
             pager.getTemplate = typeof pager.getTemplate === "function" ? pager.getTemplate : function(tmpl) {
-                return tmpl + "<div class='ui-simplegrid-pager-options'>每页显示<select ms-duplex='perPages'><option ms-repeat='options' ms-el.value>{{el.text}}</options></select>条,共{{totalItems}}条结果</div>"
-
+                return tmpl + '<div class="ui-simplegrid-pager-options">每页显示<select ms-widget="dropdown" data-dropdown-list-width="50" data-dropdown-width="50" ms-duplex="perPages"><option ms-repeat="options" ms-value="el.value">{{el.text}}</option></select>条,共{{totalItems}}条结果</div>'
             }
         }
         makeBool(pager, "showJumper", true)
@@ -506,7 +506,7 @@ define(["avalon",
         theadRenderedCallback: function(vmodel, options, vmodels) {
         },
         tbodyRenderedCallback: function(vmodel, options, vmodels) {
-            window.scrollTo(0, avalon(vmodel.widgetElement).offset().top - 60)
+            vmodel.widgetElement.scrollIntoView()
         },
         renderCell: function(val, key, row) {
             return val

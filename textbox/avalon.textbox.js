@@ -33,13 +33,13 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
         }
         var vmodel = avalon.define(data.textboxId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "disabledClass"];
+            vm.$skipArray = ["widgetElement", "disabledClass", "autoTrim"];
             vm.widgetElement = element;
             vm.elementDisabled = "";
             vm.toggle = false;
             vm.placehold = options.placeholder;
-            
-            // input获得焦点时且输入域值为空时隐藏占位符?
+            vm.focusClass = false
+            // input获得焦点时且输入域值为空时隐藏占位符
             vm.hidePlaceholder = function() {
                 vm.toggle = false;
                 element.focus();
@@ -47,8 +47,12 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
             
             vm.blur = function() {
                 // 切换input外层包装的div元素class(ui-textbox-disabled)的显示或隐藏
+                vmodel.focusClass = false
                 vmodel.elementDisabled = element.disabled;
                 // 切换占位符的显示、隐藏
+                if (options.autoTrim) {
+                    element.value = element.value.trim()
+                }
                 vmodel.toggle = element.value != "" ? false : true;
             }
             vm.$remove = function() {
@@ -90,6 +94,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                     sourceList.appendChild(suggest);
                 }
                 avalon.bind(element, "focus", function() {
+                    vmodel.focusClass = true
                     vmodel.toggle = false
                 })
                 avalon.scan(sourceList, models);
@@ -130,6 +135,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
     } 
     widget.defaults = {
         suggest : false,
+        autoTrim: true,
         placeholder: "",
         widgetElement: "",
         tabIndex: -1,

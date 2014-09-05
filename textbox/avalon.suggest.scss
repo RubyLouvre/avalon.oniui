@@ -9,13 +9,10 @@ $uiname: "ui-suggest";
     position: absolute;
     top: 3px;
     left: -6px;
-    max-height: 110px;
-    overflow-y: auto;
     z-index: 1;
     border: 1px solid #cccccc;
     padding: 0;
     margin: 0;
-    padding: 0;
     @if($oinui-theme == smoothness) {
         background-color: #ffffff;
     }

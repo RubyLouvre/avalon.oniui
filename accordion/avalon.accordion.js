@@ -234,6 +234,7 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
     }
     widget.version = 1.0
     widget.defaults = {
+        width: '100%',
         autoRun: true, // 设为true自动渲染accordion组件，设为false不渲染，只在合适的时候手动调用refresh进行渲染
         template: "", // 用户自定义template
         accordionClass: "", // 为accordion容器自定义的class
@@ -243,16 +244,16 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
         mode: "caret", // 有三种类型的template，分别是caret|nav|custom，当是custom需要用户传入合适template
         multiple: false, // 是否可以同时打开多个面板
         widgetElement: "", // accordion容器
-        getTemplate: function(str, options) {
-            return str;
-        },
         trigger: "ui-accordion-trigger", // 触发展开面板的dom节点对应class
         triggerType: 'click', // 触发展开面板的事件类型，可以是：click|mouseover
-        width: '100%',
         currentIndex: -1, // 当前点击的面板的索引值
+        direction: "vertical",
         beforeSwitch: avalon.noop,
         onSwitch: avalon.noop,
-        onInit: avalon.noop
+        onInit: avalon.noop,
+        getTemplate: function(str, options) {
+            return str;
+        }
     }
     return avalon;
 });

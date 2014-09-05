@@ -953,7 +953,8 @@ vm.<span class="atn">$simplegridLOpts</span> = {
                             }
                             vm.$simplegridBOpts = { //设置无信息可显示
                                 columns: [{field:"symbol",localSort:function(a,b,f){return a[f].localeCompare(b[f]);}}, "price", "change"],
-                                data: getData1(5),
+                                data: [],
+
                                 noResultContent: "默认的是<b style='color: red'>‘暂无结果’</b>，可配置，可以是<b style='color: red'>html字符串</b>。高度默认是100，这里配置为200",
                                 // noResultHeight: 200,
                                 onSort: function(vmodel) {
@@ -961,7 +962,8 @@ vm.<span class="atn">$simplegridLOpts</span> = {
                                 },
                                 pageable: true,
                                 pager: {
-                                    totalItems: 200
+                                    totalItems: 0
+                                    // totalItems: 200
                                 }
                             }
                             vm.$simplegridCOpts = {

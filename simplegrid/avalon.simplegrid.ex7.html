@@ -5,12 +5,10 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../avalon.js"></script>
-        <script src="../highlight/shCore.js">
-
-        </script>
+        <script src="../highlight/shCore.js"></script>
         <script>
             avalon.config({debug: false})
-            require(["simplegrid/avalon.simplegrid"], function() {
+            require(["simplegrid/avalon.simplegrid", "dropdown/avalon.dropdown"], function() {
                 var createData = function(n) {
                     var array = []
                     for (var i = 0; i < n; i++) {

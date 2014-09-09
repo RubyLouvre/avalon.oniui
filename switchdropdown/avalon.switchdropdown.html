@@ -1,5 +1,6 @@
 <div class="ui-dropdown"
      ms-class="ui-dropdown-disabled:!enable"
+     ms-class-1="ui-state-focus: focusClass"
      ms-css-width="{{width}}"
      ms-click="_toggle"
      ms-blur="_blur"
@@ -11,7 +12,7 @@
              ms-title="title"
              ms-css-width="titleWidth"
              id="title-MS_OPTION_ID">
-            {{label|sanitize|html}}
+            {{currentOption.data.titleValue|sanitize|html}}
         </div>
         <div class="ui-dropdown-icon-wrap">
             <i class="ui-dropdown-icon ui-icon ui-icon-angle-up"

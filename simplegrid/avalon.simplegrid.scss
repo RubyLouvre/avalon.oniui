@@ -79,9 +79,13 @@ $uiname : "ui-simplegrid";
     }
     .#{$uiname}-pager-options{
         float: left;
-        height: 24px;
-        line-height: 24px;
+        height: 26px;
+        line-height: 26px;
         padding-left: 5px;
+        .ui-dropdown {
+            margin: 0 5px;
+            vertical-align: top;
+        }
     }
 
     //====================

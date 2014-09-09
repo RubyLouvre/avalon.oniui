@@ -87,9 +87,10 @@ define(["avalon",
                 vmodel._currentPage = a
             })
             vm.isShowPrev = function() {
-                var a = vm.alwaysShowPrev
-                var b = vm.firstPage
-                return a || b !== 1
+                var a = vm.alwaysShowPrev;
+                var b = vm.firstPage;
+                var c = vm.currentPage;
+                return (a || b !== 1) && c !== 1;
             }
             vm.isShowNext = function() {
                 var a = vm.alwaysShowNext
@@ -192,15 +193,15 @@ define(["avalon",
         getTitle: function(a) {
             switch (a) {
                 case "first":
-                    return "Go To First Page"
+                    return "跳转到第一页"
                 case "prev":
-                    return "Go To Previous Page"
+                    return "跳转到上一页"
                 case "next":
-                    return "Go To Next Page"
+                    return "跳转到下一页"
                 case "last":
-                    return "Go To Last Page"
+                    return "跳转到最后一页"
                 default:
-                    return "Go to page " + a + ""
+                    return "跳转到第" + a + "页"
             }
         }
     }

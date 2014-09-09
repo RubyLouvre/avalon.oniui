@@ -87,9 +87,10 @@ define(["avalon",
                 vmodel._currentPage = a
             })
             vm.isShowPrev = function() {
-                var a = vm.alwaysShowPrev
-                var b = vm.firstPage
-                return a || b !== 1
+                var a = vm.alwaysShowPrev;
+                var b = vm.firstPage;
+                var c = vm.currentPage;
+                return (a || b !== 1) && c !== 1;
             }
             vm.isShowNext = function() {
                 var a = vm.alwaysShowNext

@@ -32,6 +32,26 @@
                         <td>告知组件是否自动渲染，设为false时需要手动调用refresh方法进行组件的解析渲染</td>
                     </tr>
                     <tr>
+                        <td>direction</td>
+                        <td>默认"vertical",type: String</td>
+                        <td>组件的展开方向，默认为垂直展开，也可以水平展开("horizontal")</td>
+                    </tr>
+                    <tr>
+                        <td>headerWidth</td>
+                        <td>默认30,type: Number</td>
+                        <td>组件水平展开时，头部的宽</td>
+                    </tr>
+                    <tr>
+                        <td>contentWidth</td>
+                        <td>默认400,type: Number</td>
+                        <td>组件水平展开时内容的宽</td>
+                    </tr>
+                    <tr>
+                        <td>headerAndContentHeight</td>
+                        <td>默认200,type: Number</td>
+                        <td>组件水平展开时的高度</td>
+                    </tr>
+                    <tr>
                         <td>accordionClass</td>
                         <td>默认"",type: String</td>
                         <td>组件容器自定义className</td>
@@ -48,8 +68,8 @@
                     </tr>
                     <tr>
                         <td>mode</td>
-                        <td>{nav|caret|custom}</td>
-                        <td>组件展开模式，取值说明："nav"=点击整个标题区域以展开面板，"caret"=点击标题区域中的图标以展开面板，"custom"=自定义面板展开方式</td>
+                        <td>{nav|caret}</td>
+                        <td>组件展开模式，取值说明："nav"=点击整个标题区域以展开面板，"caret"=点击标题区域中的图标以展开面板，当然也可以通过getTemplate自定义模板</td>
                     </tr>
                     <tr>
                         <td>multiple</td>
@@ -189,6 +209,8 @@
             <li><a href="avalon.accordion.ex2.html">使用setData或者refresh(data)重新渲染accordion</a></li>
             <li><a href="avalon.accordion.ex3.html">accordion提供的各种API</a></li>
             <li><a href="avalon.accordion.ex4.html">嵌套的accordion</a></li>
+            <li><a href="avalon.accordion.ex5.html">文字内容水平展开的accordion</a></li>
+            <li><a href="avalon.accordion.ex6.html">图片水平展开的accordion</a></li>
         </ol>
     </div>
 </body>

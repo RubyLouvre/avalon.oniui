@@ -393,12 +393,13 @@ define(["avalon",
             var intervalID = setInterval(function() {
                 var elem = document.getElementById("pager-" + vmodel.$id)
                 if (elem && !flagPager) {
+
                     elem.setAttribute("ms-widget", "pager,pager-" + vmodel.$id)
                     avalon(elem).addClass("ui-simplegrid-pager-wrapper")
                     avalon.scan(elem, vmodel)
                     flagPager = true
                 }
-                var pagerVM = avalon.vmodels["pager_" + vmodel.$id]
+                var pagerVM = avalon.vmodels["pager-" + vmodel.$id]
                 if (pagerVM) {
                     vmodel.pager = pagerVM
                     clearInterval(intervalID)

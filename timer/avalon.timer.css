@@ -1,0 +1,9 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+.ui-timer { overflow: hidden; }
+.ui-timer .ui-timer-date, .ui-timer .ui-timer-hour, .ui-timer .ui-timer-minute { float: left; }
+.ui-timer .ui-timer-date ul, .ui-timer .ui-timer-hour ul, .ui-timer .ui-timer-minute ul { font-size: 0; list-style: none; padding: 0; margin: 0; }
+.ui-timer .ui-timer-date ul li, .ui-timer .ui-timer-hour ul li, .ui-timer .ui-timer-minute ul li { font-size: 14px; color: #333; height: 30px; line-height: 30px; padding: 0 20px; margin: 0; }
+.ui-timer .ui-timer-date ul li.ui-state-active, .ui-timer .ui-timer-hour ul li.ui-state-active, .ui-timer .ui-timer-minute ul li.ui-state-active { border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; font-weight: bold; }

@@ -1,0 +1,17 @@
+<div class="ui-timer" ms-css-height="30*showItems">
+    <div class="ui-timer-date" ms-on-mousewheel="_mouseWheelCallback">
+        <ul>
+            <li ms-repeat-date="dates" ms-css-margin-top="dateMarginTop" ms-class="ui-state-active:dates.size() > showItems ? $index==Math.floor(showItems/2) : $index==1">{{date}}</li>
+        </ul>
+    </div>
+    <div class="ui-timer-hour" ms-on-mousewheel="_mouseWheelCallback">
+        <ul>
+            <li ms-repeat-hour="hours" ms-css-margin-top="hourMarginTop" ms-class="ui-state-active:hours.size() > showItems ? $index==Math.floor(showItems/2) : $index==1">{{hour}}</li>
+        </ul>
+    </div>
+    <div class="ui-timer-minute"  ms-on-mousewheel="_mouseWheelCallback">
+        <ul>
+            <li ms-repeat-minute="minutes" ms-css-margin-top="minuteMarginTop" ms-class="ui-state-active:minutes.size() > showItems ? $index==Math.floor(showItems/2) : $index==1">{{minute}}</li>
+        </ul>
+    </div>
+</div>

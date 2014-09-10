@@ -76,9 +76,9 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
                     }
                 }
                 if (options.trigger && trigger) { // 如果设置了触发 面板切换事件的节点class，那么将事件绑定在对应节点
-                    trigger.setAttribute("ms-on-"+options.triggerType, options.triggerType+"Callback($event,$index,widgetElement.$vmodel)")
+                    trigger.setAttribute("ms-on-"+options.triggerType, options.triggerType+"Callback($event,$index)")
                 } else { // 未设置触发节点则在整个header上触发
-                    header.setAttribute("ms-on-"+options.triggerType, options.triggerType+"Callback($event,$index, widgetElement.$vmodel)")
+                    header.setAttribute("ms-on-"+options.triggerType, options.triggerType+"Callback($event,$index)")
                     avalon(header).css("cursor","pointer")
                 }
                 // 当设置multiple为true时模板中的规则将导致异常，所以需要撤销这些异常设置
@@ -159,11 +159,11 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
                 }
             }
             // 点击面板header时的回调,设置triggerType为click时执行
-            vm.clickCallback = function(event,index, vmodel) {
+            vm.clickCallback = function(event,index) {
                 vmodel._eventCallback(event, index)
             }
             // mouse over面板header时的回调，设置triggerType为mouseover时执行
-            vm.mouseoverCallback = function(event, index, vmodel) {
+            vm.mouseoverCallback = function(event, index) {
                 vmodel._eventCallback(event, index)
             }
             vm.$remove = function() {

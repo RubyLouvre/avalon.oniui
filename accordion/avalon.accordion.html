@@ -5,7 +5,9 @@
         ms-class-2="ui-corner-all: direction==='vertical'"
         MS_OPTION_HORIZONTAL_HEADER_WIDTH_HEIGHT
         ms-hover="ui-state-hover">
-        <h2 MS_OPTION_HORIZONTAL_TITLE>{{item.title}}</h2>
+        <h2 ms-if="direction==='horizontal'" MS_OPTION_HORIZONTAL_TITLE>{{item.title}}</h2>
+        <span ms-if="direction==='vertical'">{{item.title}}</span>
+
     </div>
     <div class="ui-accordion-content ui-widget-content ui-state-default" 
          ms-visible="currentIndex === $index"

@@ -85,6 +85,7 @@ define(["avalon",
             })
             vm.$watch("currentPage", function(a) {
                 vmodel._currentPage = a
+                efficientChangePages(vm.pages, getPages(vm))
             })
             vm.isShowPrev = function() {
                 var a = vm.alwaysShowPrev;
@@ -190,17 +191,26 @@ define(["avalon",
             return tmpl
         },
         onJump: avalon.noop, //页面跳转时触发的函数
-        getTitle: function(a) {
+        getTitle: function(a, currentPage, totalPages) {
             switch (a) {
                 case "first":
+                    if (currentPage == 1) {
+                        return "当前页"
+                    }
                     return "跳转到第一页"
                 case "prev":
                     return "跳转到上一页"
                 case "next":
                     return "跳转到下一页"
                 case "last":
+                    if (currentPage == totalPages) {
+                        return "当前页"
+                    }
                     return "跳转到最后一页"
                 default:
+                    if (a === currentPage) {
+                        return "当前页"
+                    }
                     return "跳转到第" + a + "页"
             }
         }

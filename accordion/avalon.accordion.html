@@ -1,10 +1,18 @@
-<div class="ui-accordion-inner" ms-each-item="data">
-    <div class="ui-accordion-header ui-widget-header ui-state-default ui-accordion-trigger ui-corner-all"
+<div class="ui-accordion-inner" ms-each-item="data" ms-class="ui-accordion-horizontal: direction==='horizontal'">
+    <div class="ui-accordion-header ui-widget-header ui-state-default ui-accordion-trigger"
         ms-class="MS_OPTION_ACTIVECLASS:currentIndex === $index"
+        ms-class-1="ui-corner-top: direction=='vertical' && currentIndex === $index"
+        ms-class-2="ui-corner-all: direction==='vertical'"
+        MS_OPTION_HORIZONTAL_HEADER_WIDTH_HEIGHT
         ms-hover="ui-state-hover">
-        {{item.title}}
+        <h2 ms-if="direction==='horizontal'" MS_OPTION_HORIZONTAL_TITLE>{{item.title}}</h2>
+        <span ms-if="direction==='vertical'">{{item.title}}</span>
+
     </div>
-    <div class="ui-accordion-content ui-widget-content ui-state-default ui-corner-bottom" ms-visible="currentIndex === $index">
+    <div class="ui-accordion-content ui-widget-content ui-state-default" 
+         ms-visible="currentIndex === $index"
+         ms-class="ui-corner-bottom: direction==='vertical'"
+         MS_OPTION_HORIZONTAL_CONTENT_WIDTH_HEIGHT>
         {{item.content|html}}
     </div>
 </div>

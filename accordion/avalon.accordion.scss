@@ -30,6 +30,32 @@ $corner-radius: 4px;
             .#{$uiname}-header {
                 padding: 7px 10px;
             }
+            &.#{$uiname}-horizontal div {
+                float: left;
+                &.#{$uiname}-header {
+                    margin: 0;
+                    position: relative;
+                    h2 {
+                        -webkit-transform-origin: 0 0;
+                        -moz-transform-origin: 0 0;
+                        -ms-transform-origin: 0 0;
+                        -o-transform-origin: 0 0;
+                        transform-origin: 0 0;
+                        -webkit-transform: rotate(-90deg);
+                        -moz-transform: rotate(-90deg);
+                        -ms-transform: rotate(-90deg);
+                        -o-transform: rotate(-90deg);
+                        transform: rotate(-90deg);
+                        position: absolute;
+                        left: 10px;
+                        margin: 0;
+                        padding: 0;
+                    }
+                }
+                &.#{$uiname}-content {
+                    overflow: hidden;
+                }
+            }
         }
     }
     &.#{$uiname}-mode-caret {
@@ -42,7 +68,7 @@ $corner-radius: 4px;
         min-height: 0;
         position: relative;
         margin: 2px 0 0 0;
-        padding: .5em .5em .5em .7em;
+        padding: 7px 10px;
         cursor: pointer;
         font-size: 100%;
         &.ui-state-default {
@@ -97,7 +123,7 @@ $corner-radius: 4px;
     }
     .#{$uiname}-content {
         border-top: 0;
-        padding: 1em 2.2em;
+        padding: 7px 10px;
         overflow: auto;
         font-size: 12px;
         &.ui-state-default {

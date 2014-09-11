@@ -3,6 +3,7 @@
     <title>form</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script src="../../avalon.js"></script>
+    <script src="../../highlight/shCore.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
@@ -57,7 +58,48 @@
                 </form></div>
                 <div class="hint">
                     The only code required to achieve that (wording excluded) is the following: <br/><br/>
-                    <code class="code">{{formHtml}}</code>
+                    <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;form class=&quot;form&quot;&gt;
+    &lt;div class=&quot;item&quot;&gt;
+        &lt;label class=&quot;inb fl&quot;&gt;Name&lt;/label&gt;
+        &lt;div class=&quot;content inb&quot;&gt;
+            &lt;input type=&quot;text&quot; value=&quot;&quot; placeholder=&quot;Name&quot; ms-duplex=&quot;name&quot;&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;item&quot;&gt;
+        &lt;label class=&quot;inb fl&quot;&gt;Picture&lt;/label&gt;
+        &lt;div class=&quot;content inb&quot;&gt;
+            &lt;input type=&quot;text&quot; value=&quot;&quot; placeholder=&quot;Enter an image's URL to see magic&quot; ms-duplex=&quot;picture&quot;&gt;
+            &lt;img class=&quot;img-responsive inb&quot; ms-src=&quot;{{picture}}&quot; alt=&quot;&quot; onerror=&quot;this.src='./default-photo.jpg'&quot;&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;item&quot;&gt;
+        &lt;label class=&quot;inb fl&quot;&gt;Nationality&lt;/label&gt;
+        &lt;div class=&quot;content inb checkbox-wrap&quot; &gt;
+            &lt;label class=&quot;db&quot; ms-repeat=&quot;nationData&quot; ms-click=&quot;checkNation&quot;&gt;
+                &lt;input type=&quot;checkbox&quot; class=&quot;inb&quot; ms-duplex-radio=&quot;el.checked&quot;&gt;{{el.nation}}&lt;br/&gt;
+            &lt;/label&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;item&quot;&gt;
+        &lt;label class=&quot;inb fl&quot;&gt;Gender&lt;/label&gt;
+        &lt;div class=&quot;content inb&quot;&gt;
+            &lt;select ms-duplex=&quot;gender&quot;&gt;
+                &lt;option&gt;Female&lt;/option&gt;
+                &lt;option&gt;Male&lt;/option&gt;
+                &lt;option&gt;Other&lt;/option&gt;
+            &lt;/select&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;item&quot;&gt;
+        &lt;label class=&quot;inb fl&quot;&gt;Skills&lt;/label&gt;
+        &lt;div class=&quot;content inb normal-wrap&quot;&gt;
+            &lt;a ms-click=&quot;addSkill&quot;&gt;Add a skill&lt;/a&gt;&lt;br/&gt;
+            &lt;div class=&quot;skills-wrap&quot; ms-repeat=&quot;skillData&quot;&gt;
+                &lt;div ms-include-src=&quot;'includeskill.html'&quot;&gt;&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/form&gt;</pre>
                 </div>
             </div>
         </div>
@@ -66,7 +108,7 @@
                 This is the data stored in way.js
                 <span class="inb fr clear-data" ms-click="clearData()">Clear data</span>
             </div>
-            <pre id>{{formDataWrap}}</pre>
+            <pre >{{formDataWrap}}</pre>
         </div>
     </div>
     <script src="index.js"></script>

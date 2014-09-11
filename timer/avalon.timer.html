@@ -1,17 +1,20 @@
-<div class="ui-timer" ms-css-height="30*showItems">
-    <div class="ui-timer-date" ms-on-mousewheel="_mouseWheelCallback">
+<div class="ui-timer" ms-css-height="_timerHeight">
+    <div class="ui-timer-date" MS_OPTION_BIND_EVENTS>
         <ul>
-            <li ms-repeat-date="dates" ms-css-margin-top="dateMarginTop" ms-class="ui-state-active:dates.size() > showItems ? $index==Math.floor(showItems/2) : $index==1">{{date}}</li>
+            <li ms-repeat-item="dates" ms-class="ui-state-active:$index == _currentDateIndex" ms-css-color="item.color">{{item.date}}</li>
         </ul>
     </div>
-    <div class="ui-timer-hour" ms-on-mousewheel="_mouseWheelCallback">
+    <div class="ui-timer-hour" MS_OPTION_BIND_EVENTS ms-css-left="_hourLeft">
         <ul>
-            <li ms-repeat-hour="hours" ms-css-margin-top="hourMarginTop" ms-class="ui-state-active:hours.size() > showItems ? $index==Math.floor(showItems/2) : $index==1">{{hour}}</li>
+            <li ms-repeat-item="hours" ms-class="ui-state-active:$index == _currentHourIndex" ms-css-color="item.color">{{item.hour}}</li>
         </ul>
     </div>
-    <div class="ui-timer-minute"  ms-on-mousewheel="_mouseWheelCallback">
+    <div class="ui-timer-minute" MS_OPTION_BIND_EVENTS ms-css-left="_minuteLeft">
         <ul>
-            <li ms-repeat-minute="minutes" ms-css-margin-top="minuteMarginTop" ms-class="ui-state-active:minutes.size() > showItems ? $index==Math.floor(showItems/2) : $index==1">{{minute}}</li>
+            <li ms-repeat-item="minutes" ms-class="ui-state-active:$index == _currentMinuteIndex" ms-css-color="item.color">{{item.minute}}</li>
         </ul>
     </div>
+    <p class="ui-timer-mask" 
+       ms-css-top="Math.floor(showItems/2) * 30"
+       ms-css-width="_timerWidth"></p>
 </div>

@@ -6,13 +6,19 @@ $pager-active-color: $ui-state-active-color;
 
 .#{$uiname} {
     overflow: hidden;
+    position: relative;
     .#{$uiname}-date, .#{$uiname}-hour, .#{$uiname}-minute {
-        float: left;
+        position: absolute;
+        top: 0;
         ul {
             font-size: 0;
             list-style: none;
             padding: 0;
             margin: 0;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
             li {
                 font-size: 14px;
                 color: #333;
@@ -21,11 +27,18 @@ $pager-active-color: $ui-state-active-color;
                 padding: 0 20px;
                 margin: 0;
                 &.ui-state-active {
-                    border-top: 1px solid #ccc;
-                    border-bottom: 1px solid #ccc;
                     font-weight: bold;
                 }
             }
         }
+    }
+    .#{$uiname}-mask {
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        height: 30px;
+        line-height: 30px;
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
     }
 }

@@ -112,6 +112,11 @@
                         <td>选中日期后的回调</td>
                     </tr>
                     <tr>
+                        <td>onSelectTime(date, vmodelId, data)</td>
+                        <td></td>
+                        <td>在设置了timer为true时，选择日期、时间后的回调</td>
+                    </tr>
+                    <tr>
                         <td>onClose(date, vmodel)</td>
                         <td></td>
                         <td>日历关闭的回调，this指向日历组件自生成的vmodel，参数分别是当前year， month，及this指向的vmodel</td>
@@ -162,36 +167,8 @@
             <li><a href="avalon.datepicker.ex8.html">自定义parseDate、formatDate方法正确解析和显示日期</a></li>
             <li><a href="avalon.datepicker.ex9.html">切换日历组件的禁用与否，以及手动输入日期的结果</a></li>
             <li><a href="avalon.datepicker.ex10.html">移动端日期、年份选择</a></li>
+            <li><a href="avalon.datepicker.ex11.html">具有时间选择功能的datepicker</a></li>
         </ol>
     </div>
 </body>
 </html>
-<!-- 
-//设置日历框的规则
-        /**
-         var dateOpts = {
-                LANG_DAYS_NAMES : ['日', '一', '二', '三', '四', '五', '六'],
-                LANG_OUT_OF_RANGE : '超出范围',
-                LANG_ERR_FORMAT : '格式错误',
-                startDay: 1,    //星期开始时间
-                correctOnError: true,   //是否自动纠正错误的日期
-                fromMinDate : null,         //{String/Date} 最小日期
-                toMinDate : null,         //{String/Date} 最小日期
-                fromMaxDate : null,         //{String/Date} 最小日期
-                toMaxDate : null,         //{String/Date} 最小日期
-                formatMonth: function(date){    //{Function} 月份格式化函数
-                    return '<span class="year">' + date.getFullYear() + '年</span>' + (date.getMonth() + 1) + '月'
-                },
-                parseDate : function( str ){    //{Function} 日期解析函数
-                    var x = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-                    return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
-                },
-                formatDate : function( date ){  //{Function} 日期格式化函数
-                    return date.getFullYear() + "-" + formatNum( date.getMonth() + 1 , 2 ) + "-" + formatNum( date.getDate() , 2 );
-                },
-                now : function(){               //{Function} 获取当前时间函数
-                    return typeof SERVER_TIME !== 'undefined' && SERVER_TIME.getTime && new Date( SERVER_TIME.getTime() );
-                },
-                rules : '1D,+2D,3M' //{String} 逗号分隔的表达式，分别代表默认时间（如果日期非法时两个日历的默认间隔）、最小间隔、最大间隔。每个表达式格式为 [+-]\d[YMD]，YMD分别表示年月日
-            };
-         */ -->

@@ -273,7 +273,7 @@ define(["../avalon.getModel",
                 }
             }
             vm.getRawValue = function() {
-                return duplexVM[1][duplexVM[0]] || element.value
+                return duplexVM && duplexVM[1][duplexVM[0]] || element.value
             }
             vm.getDate =  function() {
                 var value = vmodel.getRawValue()
@@ -344,6 +344,9 @@ define(["../avalon.getModel",
                 element.value = _date + "  " + time
                 if (!vmodel.showDatepickerAlways) {
                     vmodel.toggle = false
+                }
+                if (options.onSelectTime && avalon.type(options.onSelectTime) === "function") {
+                    options.onSelectTime.call(vmodel, vmodel)
                 }
             }
             vm._selectYearMonth = function(event) {
@@ -830,6 +833,7 @@ define(["../avalon.getModel",
         timer: false,
         onSelect: avalon.noop, //将废弃,相当于onSelect
         onClose: avalon.noop,
+        onSelectTime: "",
         parseDate: function(str){
             var separator = this.separator;
             var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})[\\s\\w\\W]*$";

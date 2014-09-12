@@ -5,7 +5,9 @@ define(["avalon",
 ], function(avalon, template) {
     var initIndex = 0
     var widget = avalon.ui.timer = function(element, data, vmodels) {
-        var options = data.timerOptions
+        var options = data.timerOptions,
+            scrollElements = {};
+            
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
         avalon.mix(options, initDatas(options))
@@ -23,20 +25,14 @@ define(["avalon",
             vm._currentMinuteIndex = initIndex
             vm._eventCallback = function(eventType, event) {
                 var element = this
-                element.vmodel = vmodel
                 switch(eventType) {
                     case "mousewheel" :
-                        utils._wheel(element, event, vmodel.$model)
+                        handleEvent(element, scrollElements, vmodel, "_wheel", event)
                         break;
                     case "start" : 
-                        // utils._start()
-                        break;
                     case "move" :
-                        // utils._move()
-
-                        break;
                     case "end" :
-                        // utils._end()
+                        handleEvent(element, scrollElements, vmodel, "_"+eventType, event)
                         break;
                 }
             }
@@ -49,7 +45,6 @@ define(["avalon",
             //这些属性不被监控
             vm.$init = function() {
                 var template = options.template.replace(/MS_OPTION_BIND_EVENTS/mg, bindEvents(options.eventType))
-                console.log(template)
                 element.innerHTML = template
                 vmodel._timerHeight = 30 * options.showItems
                 renderTimer(vmodel, 0, "dates", "_currentDateIndex")
@@ -71,13 +66,16 @@ define(["avalon",
                         className = div.className
                         if (className.indexOf("ui-timer-date") != -1) {
                             dateElement = div
-                            div.date = true
+                            div._name = "date"
+                            div.vmodel = vmodel
                         } else if (className.indexOf("ui-timer-hour") != -1) {
                             hourElement = div
-                            div.hour = true
+                            div._name = "hour"
+                            div.vmodel = vmodel
                         } else if (className.indexOf("ui-timer-minute") != -1) {
                             minuteElement = div
-                            div.minute = true
+                            div._name = "minute"
+                            div.vmodel = vmodel
                         }
                     }
                     dateElementWidth = avalon(dateElement).outerWidth()
@@ -96,7 +94,7 @@ define(["avalon",
     widget.defaults = {
         showItems: 9,
         showYears: false,
-        eventType: "mousewheel",
+        eventType: "mousewheel__",
         mouseWheelSpeed: 20,
         useTransition: true,
         useTransform: true,
@@ -185,6 +183,7 @@ define(["avalon",
 
         vmodel[indexName] = currentIndex
         items = vmodel[dataName]
+        items[currentIndex].color = "rgb(51, 51, 51)"
         for (var i = initIndex; i > 0; i--) {
             prevIndex = currentIndex - i
             nextIndex = currentIndex + i
@@ -202,10 +201,18 @@ define(["avalon",
             }
         }
     } 
+    function handleEvent(element, scrollArr, vmodel, eventName, event) {
+        var name = element._name
+        if (!scrollArr[name]) {
+            scrollArr[name] = new Utils(vmodel.$model)
+            scrollArr[name][eventName](element, event)
+            return 
+        }
+        scrollArr[name][eventName](element, event)
+    }
 
-    var utils = (function() {
-        var scroll = {y: 0},
-            util = {},
+    var Utils = (function() {
+        var util = {},
             _elementStyle = document.createElement('div').style,
             _vendor = (function () {
                 var vendors = ['t', 'webkitT', 'MozT', 'msT', 'OT'],
@@ -281,79 +288,44 @@ define(["avalon",
             transform: _prefixStyle('transform')
         }
 
-        scroll.wheelTimeout = null
-        scroll._wheel = function (element, event, options) {
+        function Scroll(options) {
+            this.y = 0
+            this.initWheel = null
+            this.useTransition = options.useTransition && util.hasTransition
+            this.useTransform = options.useTransform && util.hasTransform
+            this.maxScrollY = 0
+            this.minScrollY = 0
+            this.options = options
+            this.endTime = 0
+            
+        }
+
+        Scroll.prototype._initMaxScroll = function(element, options) {
+            var $element = avalon(element),
+                halfTimerHeight = Math.floor(options.showItems / 2) * 30;
+
+            if (!this.maxScrollY) {
+                this.maxScrollY = halfTimerHeight + 30 - $element.height()
+                this.minScrollY = halfTimerHeight
+            }
+        }
+        Scroll.prototype._wheel = function (element, event) {
             event.preventDefault()
             event.stopPropagation()
 
             var that = element,
-                wheelDeltaX, wheelDeltaY,
-                newX, newY,
+                wheelDeltaY,
+                newY,
                 maxScrollY = 0,
                 minScrollY = 0,
-                $element = avalon(element),
-                halfTimerHeight = Math.floor(options.showItems / 2) * 30;
-
-            if (!this.initWheel) {
-                this.initWheel = function(options) {
-                    this.useTransition = options.useTransition && util.hasTransition
-                    this.useTransform = options.useTransform && util.hasTransform
-                }
-                this.initWheel(options)
-            }
-            if (!element.maxScrollY) {
-                element.maxScrollY = halfTimerHeight + 30 - $element.height()
-                element.minScrollY = halfTimerHeight
-            }
-            maxScrollY = element.maxScrollY
-            minScrollY = element.minScrollY
-
-            // if ( this.wheelTimeout === undefined ) {
-            //     that._execEvent('scrollStart');
-            // }
-
-            // Execute the scrollEnd event after 400ms the wheel stopped scrolling
-            // clearTimeout(this.wheelTimeout)
-            // this.wheelTimeout = setTimeout(function() {
-            //     that._execEvent('scrollEnd');
-            //     that.wheelTimeout = undefined;
-            // }, 400)
-
-            var dir = (event.wheelDelta || -event.detail) > 0 ? 1 : -1,
+                options = this.options,
+                dir = (event.wheelDelta || -event.detail) > 0 ? 1 : -1,
                 mouseWheelSpeed = options.mouseWheelSpeed;
 
-            wheelDeltaX = dir * mouseWheelSpeed
+            this._initMaxScroll(element, options)
+            maxScrollY = this.maxScrollY
+            minScrollY = this.minScrollY
             wheelDeltaY = dir * mouseWheelSpeed
-
-            // wheelDeltaX *= this.options.invertWheelDirection;
-            // wheelDeltaY *= this.options.invertWheelDirection;
-
-            // if ( !this.hasVerticalScroll ) {
-            //     wheelDeltaX = wheelDeltaY;
-            //     wheelDeltaY = 0;
-            // }
-
-            // if ( this.options.snap ) {
-            //     newX = this.currentPage.pageX;
-            //     newY = this.currentPage.pageY;
-
-            //     if ( wheelDeltaX > 0 ) {
-            //         newX--;
-            //     } else if ( wheelDeltaX < 0 ) {
-            //         newX++;
-            //     }
-
-            //     if ( wheelDeltaY > 0 ) {
-            //         newY--;
-            //     } else if ( wheelDeltaY < 0 ) {
-            //         newY++;
-            //     }
-
-            //     this.goToPage(newX, newY);
-
-            //     return;
-            // }
-
             newY = this.y + wheelDeltaY
 
             if ( newY > minScrollY ) {
@@ -361,11 +333,9 @@ define(["avalon",
             } else if ( newY < maxScrollY ) {
                 newY = maxScrollY
             }
-
             this._scrollTo(element, 0, newY, 0)
-
         }
-        scroll._scrollTo = function (element, x, y, time, easing) {
+        Scroll.prototype._scrollTo = function (element, x, y, time, easing) {
             easing = easing || util.ease.circular
 
             this.isInTransition = this.useTransition && time > 0
@@ -378,22 +348,28 @@ define(["avalon",
                 this._animate(element, x, y, time, easing.fn);
             }
         }
-        scroll._translate = function (element, x, y) {
+        Scroll.prototype._translate = function (element, x, y) {
             var index = Math.round(y / 30),
                 dataName = "",
                 indexName = "";
 
             y = index * 30 
-            if (element.date) {
-                dataName = "dates"
-                indexName = "_currentDateIndex"
-            } else if (element.hour) {
-                dataName = "hours"
-                indexName = "_currentHourIndex"
-            } else if (element.minute) {
-                dataName = "minutes"
-                indexName = "_currentMinuteIndex"
+
+            switch(element._name) {
+                case "date":
+                    dataName = "dates"
+                    indexName = "_currentDateIndex"
+                break;
+                case "hour":
+                    dataName = "hours"
+                    indexName = "_currentHourIndex"
+                break;
+                case "minute":
+                    dataName = "minutes"
+                    indexName = "_currentMinuteIndex"
+                break;
             }
+
             renderTimer(element.vmodel, index, dataName, indexName)
             
             if (this.useTransform) {
@@ -404,7 +380,7 @@ define(["avalon",
             }
             this.y = y
         }
-        scroll._animate = function (element, destX, destY, duration, easingFn) {
+        Scroll.prototype._animate = function (element, destX, destY, duration, easingFn) {
             var that = this,
                 startX = this.x,
                 startY = this.y,
@@ -419,258 +395,206 @@ define(["avalon",
                 if (now >= destTime) {
                     that.isAnimating = false
                     that._translate(element, destX, destY)
-
-                    // if (!that.resetPosition(that.options.bounceTime)) {
-                    //     that._execEvent('scrollEnd');
-                    // }
-                    return;
+                    return
                 }
 
                 now = (now - startTime) / duration
                 easing = easingFn(now)
                 newY = (destY - startY) * easing + startY
                 that._translate(element, newX, newY)
-
-                // if (that.isAnimating) {
-                //     rAF(step)
-                // }
             }
 
-            this.isAnimating = true;
-            step();
+            this.isAnimating = true
+            step()
         }
 
-        scroll._start = function (e) {
-            // React to left mouse button only
-            if ( utils.eventType[e.type] != 1 ) {
-                if ( e.button !== 0 ) {
-                    return;
-                }
+        Scroll.prototype._getComputedPosition = function () {
+            var matrix = window.getComputedStyle(this.scroller, null),
+                y;
+
+            if ( this.options.useTransform ) {
+                matrix = matrix[utils.style.transform].split(')')[0].split(', ');
+                y = +(matrix[13] || matrix[5]);
+            } else {
+                y = +matrix.top.replace(/[^-\d.]/g, '');
             }
 
-            if ( !this.enabled || (this.initiated && utils.eventType[e.type] !== this.initiated) ) {
-                return;
-            }
+            return { x: x, y: y };
+        }
 
-            if ( this.options.preventDefault && !utils.isBadAndroid && !utils.preventDefaultException(e.target, this.options.preventDefaultException) ) {
-                e.preventDefault();
-            }
 
-            var point = e.touches ? e.touches[0] : e,
-                pos;
+        Scroll.prototype._start = function (element, event) {
+            var point = event.touches ? event.touches[0] : event,
+                pos,
+                options = this.options;
 
-            this.initiated  = utils.eventType[e.type];
-            this.moved      = false;
-            this.distX      = 0;
-            this.distY      = 0;
-            this.directionX = 0;
-            this.directionY = 0;
-            this.directionLocked = 0;
+            this.moved      = false
+            this.distY      = 0
+            this.directionY = 0
+            this.directionLocked = 0
+            this.initiated = true
+            console.log("_start")
+            this._initMaxScroll(element, options)
+            // // this._transitionTime()
 
-            this._transitionTime();
+            this.startTime = util.getTime()
 
-            this.startTime = utils.getTime();
-
-            if ( this.options.useTransition && this.isInTransition ) {
-                this.isInTransition = false;
-                pos = this.getComputedPosition();
-                this._translate(Math.round(pos.x), Math.round(pos.y));
-                this._execEvent('scrollEnd');
-            } else if ( !this.options.useTransition && this.isAnimating ) {
+            if ( this.useTransition && this.isInTransition) {
+                // this.isInTransition = false;
+                // pos = this.getComputedPosition()
+                // this._translate(0, Math.round(pos.y))
+                // this._execEvent('scrollEnd');
+            } else if (!this.useTransition && this.isAnimating) {
                 this.isAnimating = false;
-                this._execEvent('scrollEnd');
+                // this._execEvent('scrollEnd');
             }
 
-            this.startX    = this.x;
-            this.startY    = this.y;
-            this.absStartX = this.x;
-            this.absStartY = this.y;
-            this.pointX    = point.pageX;
-            this.pointY    = point.pageY;
+            this.startY    = this.y
+            this.absStartY = this.y
+            this.pointY    = point.pageY
 
-            this._execEvent('beforeScrollStart');
+            // this._execEvent('beforeScrollStart');
         },
 
-        scroll._move = function (e) {
-            if ( !this.enabled || utils.eventType[e.type] !== this.initiated ) {
-                return;
+        Scroll.prototype._move = function (element, event) {
+            console.log("_move")
+            if (!this.initiated) {
+                return
             }
+            // if ( this.options.preventDefault ) {    // increases performance on Android? TODO: check!
+            //     e.preventDefault();
+            // }
 
-            if ( this.options.preventDefault ) {    // increases performance on Android? TODO: check!
-                e.preventDefault();
-            }
-
-            var point       = e.touches ? e.touches[0] : e,
-                deltaX      = point.pageX - this.pointX,
+            var point       = event.touches ? event.touches[0] : event,
                 deltaY      = point.pageY - this.pointY,
-                timestamp   = utils.getTime(),
-                newX, newY,
-                absDistX, absDistY;
+                timestamp   = util.getTime(),
+                newY,
+                absDistY;
 
-            this.pointX     = point.pageX;
-            this.pointY     = point.pageY;
+            this.pointY     = point.pageY
 
-            this.distX      += deltaX;
-            this.distY      += deltaY;
-            absDistX        = Math.abs(this.distX);
-            absDistY        = Math.abs(this.distY);
+            this.distY      += deltaY
+            absDistY        = Math.abs(this.distY)
 
             // We need to move at least 10 pixels for the scrolling to initiate
-            if ( timestamp - this.endTime > 300 && (absDistX < 10 && absDistY < 10) ) {
+            if (timestamp - this.endTime > 300 && absDistY < 10) {
                 return;
             }
 
-            // If you are scrolling in one direction lock the other
-            if ( !this.directionLocked && !this.options.freeScroll ) {
-                if ( absDistX > absDistY + this.options.directionLockThreshold ) {
-                    this.directionLocked = 'h';     // lock horizontally
-                } else if ( absDistY >= absDistX + this.options.directionLockThreshold ) {
-                    this.directionLocked = 'v';     // lock vertically
-                } else {
-                    this.directionLocked = 'n';     // no lock
-                }
-            }
+            newY = this.y + deltaY
 
-            if ( this.directionLocked == 'h' ) {
-                if ( this.options.eventPassthrough == 'vertical' ) {
-                    e.preventDefault();
-                } else if ( this.options.eventPassthrough == 'horizontal' ) {
-                    this.initiated = false;
-                    return;
-                }
 
-                deltaY = 0;
-            } else if ( this.directionLocked == 'v' ) {
-                if ( this.options.eventPassthrough == 'horizontal' ) {
-                    e.preventDefault();
-                } else if ( this.options.eventPassthrough == 'vertical' ) {
-                    this.initiated = false;
-                    return;
-                }
-
-                deltaX = 0;
-            }
-
-            deltaX = this.hasHorizontalScroll ? deltaX : 0;
-            deltaY = this.hasVerticalScroll ? deltaY : 0;
-
-            newX = this.x + deltaX;
-            newY = this.y + deltaY;
-
-            // Slow down if outside of the boundaries
-            if ( newX > 0 || newX < this.maxScrollX ) {
-                newX = this.options.bounce ? this.x + deltaX / 3 : newX > 0 ? 0 : this.maxScrollX;
-            }
             if ( newY > 0 || newY < this.maxScrollY ) {
                 newY = this.options.bounce ? this.y + deltaY / 3 : newY > 0 ? 0 : this.maxScrollY;
             }
 
-            this.directionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0;
             this.directionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0;
 
-            if ( !this.moved ) {
-                this._execEvent('scrollStart');
-            }
+            // if ( !this.moved ) {
+            //     this._execEvent('scrollStart');
+            // }
 
-            this.moved = true;
+            this.moved = true
 
-            this._translate(newX, newY);
-            if ( timestamp - this.startTime > 300 ) {
+            this._translate(element, 0, newY)
+
+            if (timestamp - this.startTime > 300) {
                 this.startTime = timestamp;
                 this.startX = this.x;
                 this.startY = this.y;
             }
-        },
-
-        scroll._end = function (e) {
-            if ( !this.enabled || utils.eventType[e.type] !== this.initiated ) {
-                return;
-            }
-
-            if ( this.options.preventDefault && !utils.preventDefaultException(e.target, this.options.preventDefaultException) ) {
-                e.preventDefault();
-            }
-
-            var point = e.changedTouches ? e.changedTouches[0] : e,
-                momentumX,
-                momentumY,
-                duration = utils.getTime() - this.startTime,
-                newX = Math.round(this.x),
-                newY = Math.round(this.y),
-                distanceX = Math.abs(newX - this.startX),
-                distanceY = Math.abs(newY - this.startY),
-                time = 0,
-                easing = '';
-
-            this.isInTransition = 0;
-            this.initiated = 0;
-            this.endTime = utils.getTime();
-
-            // reset if we are outside of the boundaries
-            if ( this.resetPosition(this.options.bounceTime) ) {
-                return;
-            }
-
-            this.scrollTo(newX, newY);  // ensures that the last position is rounded
-
-            // we scrolled less than 10 pixels
-            if ( !this.moved ) {
-                if ( this.options.tap ) {
-                    utils.tap(e, this.options.tap);
-                }
-
-                if ( this.options.click ) {
-                    utils.click(e);
-                }
-
-                this._execEvent('scrollCancel');
-                return;
-            }
-
-            if ( this._events.flick && duration < 200 && distanceX < 100 && distanceY < 100 ) {
-                this._execEvent('flick');
-                return;
-            }
-
-            // start momentum animation if needed
-            if ( this.options.momentum && duration < 300 ) {
-                momentumX = this.hasHorizontalScroll ? utils.momentum(this.x, this.startX, duration, this.maxScrollX, this.options.bounce ? this.wrapperWidth : 0, this.options.deceleration) : { destination: newX, duration: 0 };
-                momentumY = this.hasVerticalScroll ? utils.momentum(this.y, this.startY, duration, this.maxScrollY, this.options.bounce ? this.wrapperHeight : 0, this.options.deceleration) : { destination: newY, duration: 0 };
-                newX = momentumX.destination;
-                newY = momentumY.destination;
-                time = Math.max(momentumX.duration, momentumY.duration);
-                this.isInTransition = 1;
-            }
-
-
-            if ( this.options.snap ) {
-                var snap = this._nearestSnap(newX, newY);
-                this.currentPage = snap;
-                time = this.options.snapSpeed || Math.max(
-                        Math.max(
-                            Math.min(Math.abs(newX - snap.x), 1000),
-                            Math.min(Math.abs(newY - snap.y), 1000)
-                        ), 300);
-                newX = snap.x;
-                newY = snap.y;
-
-                this.directionX = 0;
-                this.directionY = 0;
-                easing = this.options.bounceEasing;
-            }
-            if ( newX != this.x || newY != this.y ) {
-                // change easing function when scroller goes out of the boundaries
-                if ( newX > 0 || newX < this.maxScrollX || newY > 0 || newY < this.maxScrollY ) {
-                    easing = utils.ease.quadratic;
-                }
-
-                this.scrollTo(newX, newY, time, easing);
-                return;
-            }
-            this._execEvent('scrollEnd');
         }
 
-        return scroll
+        Scroll.prototype._end = function (e) {
+            console.log("_end")
+            if (this.initiated) {
+                return
+            }
+
+            // if ( this.options.preventDefault && !utils.preventDefaultException(e.target, this.options.preventDefaultException) ) {
+            //     e.preventDefault();
+            // }
+
+            // var point = e.changedTouches ? e.changedTouches[0] : e,
+            //     momentumX,
+            //     momentumY,
+            //     duration = utils.getTime() - this.startTime,
+            //     newX = Math.round(this.x),
+            //     newY = Math.round(this.y),
+            //     distanceX = Math.abs(newX - this.startX),
+            //     distanceY = Math.abs(newY - this.startY),
+            //     time = 0,
+            //     easing = '';
+
+            // this.isInTransition = 0;
+            this.initiated = false
+            // this.endTime = utils.getTime();
+
+            // // reset if we are outside of the boundaries
+            // if ( this.resetPosition(this.options.bounceTime) ) {
+            //     return;
+            // }
+
+            // this.scrollTo(newX, newY);  // ensures that the last position is rounded
+
+            // // we scrolled less than 10 pixels
+            // if ( !this.moved ) {
+            //     if ( this.options.tap ) {
+            //         utils.tap(e, this.options.tap);
+            //     }
+
+            //     if ( this.options.click ) {
+            //         utils.click(e);
+            //     }
+
+            //     this._execEvent('scrollCancel');
+            //     return;
+            // }
+
+            // if ( this._events.flick && duration < 200 && distanceX < 100 && distanceY < 100 ) {
+            //     this._execEvent('flick');
+            //     return;
+            // }
+
+            // // start momentum animation if needed
+            // if ( this.options.momentum && duration < 300 ) {
+            //     momentumX = this.hasHorizontalScroll ? utils.momentum(this.x, this.startX, duration, this.maxScrollX, this.options.bounce ? this.wrapperWidth : 0, this.options.deceleration) : { destination: newX, duration: 0 };
+            //     momentumY = this.hasVerticalScroll ? utils.momentum(this.y, this.startY, duration, this.maxScrollY, this.options.bounce ? this.wrapperHeight : 0, this.options.deceleration) : { destination: newY, duration: 0 };
+            //     newX = momentumX.destination;
+            //     newY = momentumY.destination;
+            //     time = Math.max(momentumX.duration, momentumY.duration);
+            //     this.isInTransition = 1;
+            // }
+
+
+            // if ( this.options.snap ) {
+            //     var snap = this._nearestSnap(newX, newY);
+            //     this.currentPage = snap;
+            //     time = this.options.snapSpeed || Math.max(
+            //             Math.max(
+            //                 Math.min(Math.abs(newX - snap.x), 1000),
+            //                 Math.min(Math.abs(newY - snap.y), 1000)
+            //             ), 300);
+            //     newX = snap.x;
+            //     newY = snap.y;
+
+            //     this.directionX = 0;
+            //     this.directionY = 0;
+            //     easing = this.options.bounceEasing;
+            // }
+            // if ( newX != this.x || newY != this.y ) {
+            //     // change easing function when scroller goes out of the boundaries
+            //     if ( newX > 0 || newX < this.maxScrollX || newY > 0 || newY < this.maxScrollY ) {
+            //         easing = utils.ease.quadratic;
+            //     }
+
+            //     this.scrollTo(newX, newY, time, easing);
+            //     return;
+            // }
+            // this._execEvent('scrollEnd');
+        }
+
+        return Scroll
     })()
     return avalon
 })

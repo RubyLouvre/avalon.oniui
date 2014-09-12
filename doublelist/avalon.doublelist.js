@@ -104,6 +104,7 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
             vm._select = function(e, item, type, isdblClick) {
                 var ele = avalon(this),
                     data = ele.data()
+                e.preventDefault()
                 if(ele.hasClass("ui-state-disabled")) return
                 // 选中区域的点击
                 if(type == "select") {

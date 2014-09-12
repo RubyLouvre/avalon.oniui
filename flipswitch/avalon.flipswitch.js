@@ -39,9 +39,17 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
             vm.$skipArray = ["widgetElement", "template"]
             vm.$svgSupport = svgSupport
             if(vm.size == "large") {
-                vm.draggerRadius = 12
-                vm.height = 30
-                vm.width = 57
+                vm.draggerRadius = 19
+                vm.height = 38
+                vm.width = 76
+            } else if(vm.size == "mini") {
+                vm.draggerRadius = 7
+                vm.height = 12
+                vm.width = 28
+            } else if(vm.size == "small") {
+                vm.draggerRadius = 9
+                vm.height = 18
+                vm.width = 36
             }
             var newDiv, 
                 inputEle, 
@@ -343,8 +351,8 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
         offColor: "#D5D5D5", //\@param 未选中情况颜色，会尝试自动到样式文件里面提取
         disabledColor: "#DEDEDE",//\@param 禁用情况颜色，会尝试自动到样式文件里面提取
         draggerRadius: 7, //\@param normal size拖动头半径，会尝试自动到样式文件里面提取
-        height: 18,   //\@param normal size高度，会尝试自动到样式文件里面提取
-        width: 305,    //\@param normal size宽度，会尝试自动到样式文件里面提取
+        height: 24,   //\@param normal size高度，会尝试自动到样式文件里面提取
+        width: 48,    //\@param normal size宽度，会尝试自动到样式文件里面提取
         css3support: false,
         //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,

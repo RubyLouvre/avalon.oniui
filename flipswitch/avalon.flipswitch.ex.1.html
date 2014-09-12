@@ -62,7 +62,11 @@
                 avalon.define(&quot;test&quot;, function(vm) {
                     vm[&quot;flipswitch&quot;] = {
                     }
+                    vm.hehe = []
                     vm.$skipArray = [&quot;flipswitch&quot;]
+                })
+                avalon.vmodels[&quot;test&quot;].$watch(&quot;hehe&quot;, function(n){
+                    avalon.log(n)
                 })
                 avalon.scan()
             })
@@ -74,7 +78,7 @@
         &lt;div&gt;
             &lt;p&gt;---------size=normal---------&lt;/p&gt;
             &lt;div class=&quot;this-for-test-4&quot;&gt;
-                &lt;input checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;flipswitch&quot; data-flipswitch-size=&quot;normal&quot; data-flipswitch-draggable=&quot;true&quot;&gt;
+                &lt;input ms-duplex=&quot;hehe&quot; checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;flipswitch&quot; data-flipswitch-size=&quot;normal&quot; data-flipswitch-draggable=&quot;true&quot;&gt;
             &lt;/div&gt;
             &lt;p&gt;---------size=large---------&lt;/p&gt;
             &lt;div class=&quot;this-for-test-2&quot;&gt;

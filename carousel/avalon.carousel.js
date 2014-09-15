@@ -134,7 +134,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
         timeout: 2500, //@param timeout 切换时间间隔
         during: 300, //@param during 切换速度，越小越快，单位为毫秒
         alwaysShowArrow: true, //@param alwaysShowArrow 显示左右切换箭头
-        alwaysShowSelection: true, //@param alwaysShowSelection 显示左右切换箭头
+        alwaysShowSelection: true, //@param alwaysShowSelection 显示底部圆形切换部件
         autoSlide: true, //@param autoSlide 自动播放
         hoverStop: true, //@param autoSlide 鼠标经过停止播放
         onInit: avalon.noop, //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method

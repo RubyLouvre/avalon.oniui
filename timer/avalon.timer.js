@@ -3,10 +3,18 @@ define(["avalon",
     "css!../chameleon/oniui-common.css",
     "css!./avalon.timer.css"
 ], function(avalon, template) {
-    var initIndex = 0
+    var currentScroll = null,
+        touch = typeof window.ontouchstart !== 'undefined',
+        drag = {
+            eStart : (touch ? 'touchstart' : 'mousedown'),
+            eMove  : (touch ? 'touchmove' : 'mousemove'),
+            eEnd   : (touch ? 'touchend' : 'mouseup'),
+        };
+
     var widget = avalon.ui.timer = function(element, data, vmodels) {
         var options = data.timerOptions,
-            scrollElements = {};
+            scrollElements = {},
+            initIndex = 0;
             
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
@@ -15,7 +23,8 @@ define(["avalon",
         var vmodel = avalon.define(data.timerId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
-            vm.$skipArray = ["widgetElement", "eventType"]
+            vm.$skipArray = ["widgetElement", "eventType", "_initIndex"]
+            vm._initIndex = initIndex
             vm._timerHeight = 0
             vm._timerWidth = 0
             vm._hourLeft = 0
@@ -30,8 +39,6 @@ define(["avalon",
                         handleEvent(element, scrollElements, vmodel, "_wheel", event)
                         break;
                     case "start" : 
-                    case "move" :
-                    case "end" :
                         handleEvent(element, scrollElements, vmodel, "_"+eventType, event)
                         break;
                 }
@@ -70,7 +77,7 @@ define(["avalon",
                             div.vmodel = vmodel
                         } else if (className.indexOf("ui-timer-hour") != -1) {
                             hourElement = div
-                            div._name = "hour"
+                                div._name = "hour"
                             div.vmodel = vmodel
                         } else if (className.indexOf("ui-timer-minute") != -1) {
                             minuteElement = div
@@ -82,7 +89,6 @@ define(["avalon",
                     vmodel._hourLeft = dateElementWidth
                     hourElementWidth = vmodel._minuteLeft = dateElementWidth + avalon(hourElement).outerWidth()
                     vmodel._timerWidth = hourElementWidth + avalon(minuteElement).outerWidth()
-                    console.log(vmodel._timerWidth)
                 }, 100)
             }
             vm.$remove = function() {
@@ -94,7 +100,7 @@ define(["avalon",
     widget.defaults = {
         showItems: 9,
         showYears: false,
-        eventType: "mousewheel__",
+        eventType: "mousewheel_",
         mouseWheelSpeed: 20,
         useTransition: true,
         useTransform: true,
@@ -105,6 +111,16 @@ define(["avalon",
             return str
         }
     }
+    avalon.bind(document, drag.eMove, function(event) {
+        if (currentScroll) {
+            currentScroll._move(currentScroll.element, event)
+        }
+    })
+    avalon.bind(document, drag.eEnd, function(event) {
+        if (currentScroll) {
+            currentScroll._end(currentScroll.element, event)
+        }
+    })
     function formatNum(n, length){
         n = String(n)
         for (var i = 0, len = length - n.length; i < len; i++) {
@@ -159,34 +175,36 @@ define(["avalon",
         }
     } 
     function bindEvents(type) {
-        var touch = typeof window.ontouchstart !== 'undefined',
-            drag = {
-                eStart : (touch ? 'touchstart' : 'mousedown'),
-                eMove  : (touch ? 'touchmove' : 'mousemove'),
-                eEnd   : (touch ? 'touchend' : 'mouseup'),
-            },
-            eventStr = "";
+        var eventStr = "";
         if (type === "mousewheel") {
             eventStr = "ms-on-mousewheel='_eventCallback(" + '"' + type + '", $event' +  ")'"
         } else {
-            eventStr = "ms-on-" + drag.eStart + "='_eventCallback(" + '"start", $event'+ ")' ms-on-" + drag.eMove + "='_eventCallback(" + '"move", $event'+ ")' ms-on-" + drag.eEnd + "='_eventCallback(" + '"end", $event'+ ")'"
+            eventStr = "ms-on-" + drag.eStart + "='_eventCallback(" + '"start", $event'+ ")'"
         }
-
         return eventStr
     }
     function renderTimer(vmodel, index, dataName, indexName) {
-        var currentIndex = -index + initIndex,
+        var initIndex = vmodel._initIndex,
+            currentIndex = -index + initIndex,
             items,
             prevIndex = 0,
             nextIndex = 0,
-            color = 0;
-
+            color = 0,
+            itemsLen = 0;
+        
         vmodel[indexName] = currentIndex
         items = vmodel[dataName]
+        itemsLen = items.length
+        if (currentIndex < 0 || currentIndex >= itemsLen) {
+            return
+        }
         items[currentIndex].color = "rgb(51, 51, 51)"
         for (var i = initIndex; i > 0; i--) {
             prevIndex = currentIndex - i
             nextIndex = currentIndex + i
+            if (prevIndex < 0 || nextIndex < 0 || prevIndex >= itemsLen || nextIndex >= itemsLen) {
+                continue
+            }
             color = 0.2 * (4 - i + 1)
             if (color >= 1) {
                 color = 0.9
@@ -285,7 +303,9 @@ define(["avalon",
         util.hasTouch = "ontouchstart" in window
         util.getTime = Date.now || function getTime() { return new Date().getTime()}
         util.style = {
-            transform: _prefixStyle('transform')
+            transform: _prefixStyle('transform'),
+            transitionTimingFunction: _prefixStyle('transitionTimingFunction'),
+            transitionDuration: _prefixStyle('transitionDuration')
         }
         util.momentum = function (current, start, time, lowerMargin, wrapperSize, deceleration) {
             var distance = current - start,
@@ -304,7 +324,7 @@ define(["avalon",
                 duration = distance / speed
             } else if ( destination > 0 ) {
                 destination = wrapperSize ? wrapperSize / 2.5 * ( speed / 8 ) : 0;
-                distance = Math.abs(current) + destination;
+                distance = Math.abs(current) + destination
                 duration = distance / speed
             }
 
@@ -323,7 +343,12 @@ define(["avalon",
             this.minScrollY = 0
             this.options = options
             this.endTime = 0
+            this.bounce = true
+            this.bounceTime = 600
+            this.bounceEasing = ''
+            this.element = null
             this.momentum = options.momentum || true
+            this.momentHeight = 100
         }
 
         Scroll.prototype._initMaxScroll = function(element, options) {
@@ -333,6 +358,8 @@ define(["avalon",
             if (!this.maxScrollY) {
                 this.maxScrollY = halfTimerHeight + 30 - $element.height()
                 this.minScrollY = halfTimerHeight
+                this.maxMomentHeight = this.maxScrollY - this.momentHeight
+                this.minMomentHeight = this.minScrollY + this.momentHeight
             }
         }
         Scroll.prototype._wheel = function (element, event) {
@@ -347,7 +374,6 @@ define(["avalon",
                 options = this.options,
                 dir = (event.wheelDelta || -event.detail) > 0 ? 1 : -1,
                 mouseWheelSpeed = options.mouseWheelSpeed;
-
             this._initMaxScroll(element, options)
             maxScrollY = this.maxScrollY
             minScrollY = this.minScrollY
@@ -359,9 +385,9 @@ define(["avalon",
             } else if ( newY < maxScrollY ) {
                 newY = maxScrollY
             }
-            this._scrollTo(element, 0, newY, 0)
+            this._scrollTo(event, element, 0, newY, 0)
         }
-        Scroll.prototype._scrollTo = function (element, x, y, time, easing) {
+        Scroll.prototype._scrollTo = function (event, element, x, y, time, easing) {
             easing = easing || util.ease.circular
 
             this.isInTransition = this.useTransition && time > 0
@@ -369,18 +395,20 @@ define(["avalon",
             if (!time || (this.useTransition && easing.style)) {
                 // this._transitionTimingFunction(easing.style)
                 // this._transitionTime(time)
-                this._translate(element, x, y)
+                this._translate(element, x, y, event)
             } else {
-                this._animate(element, x, y, time, easing.fn);
+                this._animate(element, x, y, time, easing.fn, event);
             }
         }
-        Scroll.prototype._translate = function (element, x, y) {
+        Scroll.prototype._translate = function (element, x, y, event) {
+            console.log("translate")
             var index = Math.round(y / 30),
                 dataName = "",
-                indexName = "";
-
-            y = index * 30 
-
+                indexName = "",
+                type = event.type;
+            if (type === "mousewheel" || type === drag.eEnd) {
+                y = index * 30 
+            }
             switch(element._name) {
                 case "date":
                     dataName = "dates"
@@ -406,9 +434,9 @@ define(["avalon",
             }
             this.y = y
         }
-        Scroll.prototype._animate = function (element, destX, destY, duration, easingFn) {
+        Scroll.prototype._animate = function (element, destX, destY, duration, easingFn, event) {
+            console.log("_animate");
             var that = this,
-                startX = this.x,
                 startY = this.y,
                 startTime = util.getTime(),
                 destTime = startTime + duration;
@@ -420,65 +448,46 @@ define(["avalon",
 
                 if (now >= destTime) {
                     that.isAnimating = false
-                    that._translate(element, destX, destY)
+                    that._translate(element, destX, destY, event)
                     return
                 }
 
                 now = (now - startTime) / duration
                 easing = easingFn(now)
                 newY = (destY - startY) * easing + startY
-                that._translate(element, newX, newY)
+                that._translate(element, newX, newY, event)
             }
 
             this.isAnimating = true
             step()
         }
-
-        Scroll.prototype._getComputedPosition = function () {
-            var matrix = window.getComputedStyle(this.scroller, null),
-                y;
-
-            if ( this.options.useTransform ) {
-                matrix = matrix[utils.style.transform].split(')')[0].split(', ');
-                y = +(matrix[13] || matrix[5]);
-            } else {
-                y = +matrix.top.replace(/[^-\d.]/g, '');
-            }
-
-            return { x: x, y: y };
-        }
-
         Scroll.prototype._start = function (element, event) {
+            console.log("_start")
             var point = event.touches ? event.touches[0] : event,
                 options = this.options,
                 pos;
-
+            currentScroll = this
+            this.element = element
             this.distY = 0
+            
             this.initiated = true
             this._initMaxScroll(element, options)
-            // this._transitionTime()
             this.startTime = util.getTime()
-            if (this.useTransition && this.isInTransition) {
-                // this.isInTransition = false;
-                // pos = this.getComputedPosition()
-                // this._translate(0, Math.round(pos.y))
-                // this._execEvent('scrollEnd');
-            } else if (!this.useTransition && this.isAnimating) {
-                this.isAnimating = false;
-                // this._execEvent('scrollEnd');
-            }
             this.startY = this.y
-            this.absStartY = this.y
             this.pointY = point.pageY
         }
 
         Scroll.prototype._move = function (element, event) {
-            if (!this.initiated) return
+            console.log("_move")
+            // 如果start未触发，或者this.element未定义或者currentScroll为null都说明不是拖动状态
+            if (!this.initiated || !this.element || !currentScroll) return
             var point = event.touches ? event.touches[0] : event,
                 deltaY = point.pageY - this.pointY,
                 timestamp = util.getTime(),
                 newY,
-                absDistY;
+                absDistY,
+                minScrollY,
+                maxScrollY;
 
             this.pointY = point.pageY
             this.distY += deltaY
@@ -486,15 +495,16 @@ define(["avalon",
             // We need to move at least 10 pixels for the scrolling to initiate
             if (timestamp - this.endTime > 300 && absDistY < 10) return
             newY = this.y + deltaY
-            if ( newY > 0 || newY < this.maxScrollY ) {
-                newY = this.options.bounce ? this.y + deltaY / 3 : newY > 0 ? 0 : this.maxScrollY;
+            if (this.momentum) {
+                minScrollY = this.minMomentHeight
+                maxScrollY = this.maxMomentHeight
             }
-
-            this.directionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0;
-            this._translate(element, 0, newY)
+            if (newY > minScrollY || newY < maxScrollY) {
+                newY = this.bounce ? this.y + deltaY / 3 : newY > minScrollY ? minScrollY : maxScrollY
+            }
+            this._translate(element, 0, newY, event)
             if (timestamp - this.startTime > 300) {
                 this.startTime = timestamp;
-                this.startX = this.x;
                 this.startY = this.y;
             }
         }
@@ -509,31 +519,26 @@ define(["avalon",
                 time = 0,
                 easing = '';
 
-            // this.isInTransition = 0;
+            currentScroll = null
             this.initiated = false
             this.endTime = util.getTime()
-            // reset if we are outside of the boundaries
-            // if ( this.resetPosition(this.options.bounceTime) ) {
+            this._scrollTo(event, element, 0, newY)// ensures that the last position is rounded
+            console.log("newY is : "+newY)
+            //start momentum animation if needed
+            if (this.momentum && duration < 300) {
+                //current, start, time, lowerMargin, wrapperSize, deceleration
+                momentumY = util.momentum(this.y, this.startY, duration, this.maxMomentHeight, this.bounce ? this.options._timerHeight : 0, this.deceleration)
+                newY = momentumY.destination
+            }
+            console.log("newY is : "+newY)
+            // if (newY != this.y) {
+            //     // change easing function when scroller goes out of the boundaries
+            //     if (newY > this.minScrollY || newY < this.maxScrollY ) {
+            //         easing = util.ease.quadratic;
+            //     }
+            //     this._scrollTo(event, element, 0, newY, time, easing);
             //     return;
             // }
-            this._scrollTo(element, 0, newY)// ensures that the last position is rounded
-            // start momentum animation if needed
-            if (this.momentum && duration < 300) {
-                momentumY = util.momentum(this.y, this.startY, duration, this.maxScrollY, this.bounce ? this.options._timerHeight : 0, this.deceleration)
-
-                newY = momentumY.destination
-                this.isInTransition = 1
-            }
-
-            if (newY != this.y) {
-                // change easing function when scroller goes out of the boundaries
-                if (newY > this.minScrollY || newY < this.maxScrollY ) {
-                    easing = util.ease.quadratic;
-                }
-                this._scrollTo(element, 0, newY, time, easing);
-                return;
-            }
-            // this._execEvent('scrollEnd');
         }
 
         return Scroll

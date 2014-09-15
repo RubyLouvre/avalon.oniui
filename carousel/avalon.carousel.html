@@ -1,16 +1,17 @@
 <div class="ui-carousel" 
-	 ms-css-width="picWidth" 
-	 ms-css-height="picHeihgt" 
+	 ms-css-width="pictureWidth" 
+	 ms-css-height="pictureHeight" 
 	 ms-mouseenter="setArrowVisible" 
 	 ms-mouseleave="setArrowHidden"
 	 >
 	<div class="ui-carousel-panel" 
-		 ms-css-width="picWidth* picNum" 
+		 ms-css-width="pictureWidth* picNum" 
+		 ms-css-height="pictureHeight" 
 		 ms-css-left="panelOffsetX" 
 		 >
 		<div class="ui-carousel-item" 
-			 ms-repeat="picsrcs" 
-			 ms-css-width="picWidth"
+			 ms-repeat="pictures"
+			 ms-css-width="pictureWidth"
 			 >
 			<img ms-src="{{el}}" alt=""/>
 		</div>

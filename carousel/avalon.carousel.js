@@ -11,7 +11,6 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                 window.setTimeout(callback, 10)
             }
     })()
-
     var widget = avalon.ui.carousel = function(element, data, vmodels) {
         var options = data.carouselOptions
         options.template = options.getTemplate(template, options)
@@ -51,7 +50,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
             }
             vm.setArrowHidden = function() { //@method setArrowHidden() hover离开时使Arrow隐藏，重新开始轮播
                 vm.arrowVisible = false
-                autoPlay(vm)
+                vm.autoPlay(vm)
             }
             var animated = false
             vm.animate = function(direct, distance) { //@method animate(direct, distance) 图片滚动，direct为方向（1/-1），distance为距离（>0整数）
@@ -105,25 +104,26 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                 var direct = distance > 0 ? -1 : 1
                 vm.animate(direct, Math.abs(distance))
             }
+
+            var timer
+            vm.autoPlay = function() { //@method autoPlay(vmodel) 自动开始轮播,
+                if (vm.autoSlide) {
+                    timer = setTimeout(function() {
+                        vm.animate(1) //正方向移动
+                        vm.autoPlay()
+                    }, vm.timeout)
+                }
+            }
         })
 
         vmodel.pictures[vmodel.pictures.length] = vmodel.pictures[0] //将第一个元素加到图片数组末尾形成循环
-        autoPlay(vmodel) //自动开始轮播
+        vmodel.autoPlay(vmodel) //自动开始轮播
         return vmodel
     }
 
     function easeInOut(t, b, c, d) {
         if ((t /= d / 2) < 1) return c / 2 * t * t + b
         return -c / 2 * ((--t) * (t - 2) - 1) + b
-    }
-
-    function autoPlay(vm) { //@method autoPlay(vmodel) 自动开始轮播,
-        if (vm.autoSlide) {
-            timer = setTimeout(function() {
-                vm.animate(1) //正方向移动
-                autoPlay(vm)
-            }, vm.timeout)
-        }
     }
 
     widget.defaults = {

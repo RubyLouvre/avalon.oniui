@@ -6,24 +6,25 @@
         <meta name="viewport" content="width=device-width">
         <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
         <script>
             require(["carousel/avalon.carousel"], function() {
-                avalon.define("test", function(vm) {
+                avalon.define("demo", function(vm) {
                     vm.carousel = {
-                        picsrcs: [
+                        pictures: [
                         "http://placekitten.com/g/520/280",
                         "http://placekitten.com/g/520/290",
                         "http://placekitten.com/g/520/300", 
-                        "http://placekitten.com/g/600/300",
+                        "http://placekitten.com/g/600/400",
                         "http://placekitten.com/g/520/320"],
-                        picWidth: 520, //@param picWidth 图片展示宽度
-                        picHeihgt: 280, //@param picHeihgt 图片展示高度
+                        pictureWidth: 500, //@param pictureWidth 图片显示宽度
+                        pictureHeight: 280, //@param pictureHeight 图片显示高度
                         timeout: 2500, //@param timeout 切换时间间隔
                         during: 300, //@param during 切换速度，越小越快，单位为毫秒
                         alwaysShowArrow: true, //@param alwaysShowArrow 显示左右切换箭头
                         alwaysShowSelection: true, //@param alwaysShowSelection 显示底部圆形切换部件
                         autoSlide: true, //@param autoSlide 自动播放
-                        hoverStop: true, //@param autoSlide 鼠标经过停止播放
+                        hoverStop: true //@param autoSlide 鼠标经过停止播放
                     }
                     vm.$skipArray = ["carousel"]
                 })
@@ -31,9 +32,13 @@
             })
         </script>
     </head>
-    <body ms-controller="test">
-        <h1 id="title">carousel图片轮播组件</h1>
-        <div ms-widget="carousel"></div>
+    <body ms-controller="demo">
+        <div class="wrapper">
+        <h1>图片轮播组件</h1>
+        <fieldset>
+            <legend>默认配置图片轮播</legend>
+            <div ms-widget="carousel"></div>
+        </fieldset>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -43,24 +48,25 @@
         &lt;meta name="viewport" content="width=device-width"&gt;
         &lt;script src="../avalon.js"&gt;&lt;/script&gt;
         &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
         &lt;script&gt;
             require(["carousel/avalon.carousel"], function() {
                 avalon.define("test", function(vm) {
                     vm.carousel = {
-                        picsrcs: [
+                        pictures: [
                         "http://placekitten.com/g/520/280",
                         "http://placekitten.com/g/520/290",
                         "http://placekitten.com/g/520/300", 
-                        "http://placekitten.com/g/600/300",
+                        "http://placekitten.com/g/600/400",
                         "http://placekitten.com/g/520/320"],
-                        picWidth: 520, //@param picWidth 图片展示宽度
-                        picHeihgt: 280, //@param picHeihgt 图片展示高度
+                        pictureWidth: 500, //@param pictureWidth 图片显示宽度
+                        pictureHeight: 280, //@param pictureHeight 图片显示高度
                         timeout: 2500, //@param timeout 切换时间间隔
                         during: 300, //@param during 切换速度，越小越快，单位为毫秒
                         alwaysShowArrow: true, //@param alwaysShowArrow 显示左右切换箭头
-                        alwaysShowSelection: true, //@param alwaysShowSelection 显示左右切换箭头
+                        alwaysShowSelection: true, //@param alwaysShowSelection 显示底部圆形切换部件
                         autoSlide: true, //@param autoSlide 自动播放
-                        hoverStop: true, //@param autoSlide 鼠标经过停止播放
+                        hoverStop: true //@param autoSlide 鼠标经过停止播放
                     }
                     vm.$skipArray = ["carousel"]
                 })
@@ -69,10 +75,16 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body ms-controller="test"&gt;
-        &lt;h1 id="title"&gt;carousel图片轮播组件&lt;/h1&gt;
-        &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+        &lt;div class="wrapper"&gt;
+        &lt;h1&gt;图片轮播组件&lt;/h1&gt;
+        &lt;fieldset&gt;
+            &lt;legend&gt;默认配置图片轮播&lt;/legend&gt;
+            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+        &lt;/fieldset&gt;
+    &lt;/div&gt;
     &lt;/body&gt;
 &lt;/html&gt;
         </pre>
+    </div>
     </body>
 </html>

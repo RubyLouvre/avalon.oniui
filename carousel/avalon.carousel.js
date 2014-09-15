@@ -1,28 +1,27 @@
 /**
- * @description carousel组件，
+ * @carousel组件，
  **/
 
 define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
+    var requestAnimationFrame = (function() { //requestAnimationFrame 兼容
+        return window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            function(callback) {
+                window.setTimeout(callback, 10)
+            }
+    })()
     var widget = avalon.ui.carousel = function(element, data, vmodels) {
         var options = data.carouselOptions
         options.template = options.getTemplate(template, options)
 
-        window.requestAnimationFrame = (function() { //requestAnimationFrame 兼容
-            return window.requestAnimationFrame ||
-                window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame ||
-                function(callback) {
-                    window.setTimeout(callback, 1000 / 10)
-                }
-        })()
-
         var vmodel = avalon.define(data.carouselId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
-            vm.picNum = vm.picsrcs.length + 1 //图片数量（包括复制到末尾的第一个元素）
-            vm.selections = avalon.range(vm.picsrcs.length) //圆形选择的数据数组（不包括复制到末尾的第一个元素）
+            vm.picNum = vm.pictures.length + 1 //图片数量（包括复制到末尾的第一个元素）
+            vm.selections = avalon.range(vm.pictures.length) //圆形选择的数据数组（不包括复制到末尾的第一个元素）
             vm.selectionIndex = 0 // 圆形选择的index
-            vm.selectionWrapOffset = -vm.picsrcs.length * 20 / 2 //圆形选择CSS位置修正
+            vm.selectionWrapOffset = -vm.pictures.length * 20 / 2 //圆形选择CSS位置修正
             vm.panelOffsetX = 0 //长panel的X方向偏移，正向移动（右）时减小，反向移动（左）时增大
             vm.arrowVisible = false //箭头是否可见
             vm.$skipArray = ["widgetElement", "template", "selectionWrapOffset"]
@@ -51,7 +50,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
             }
             vm.setArrowHidden = function() { //@method setArrowHidden() hover离开时使Arrow隐藏，重新开始轮播
                 vm.arrowVisible = false
-                autoPlay(vm)
+                vm.autoPlay(vm)
             }
             var animated = false
             vm.animate = function(direct, distance) { //@method animate(direct, distance) 图片滚动，direct为方向（1/-1），distance为距离（>0整数）
@@ -60,33 +59,32 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                 }
 
                 //移动准备
-                var speed = vm.picWidth / (vm.during / 10) //图片移动速度
                 if (typeof distance === "undefined") { //设置默认距离为1
                     distance = 1
                 }
-                if (direct === 1 && vm.panelOffsetX === -vm.picWidth * (vm.picNum - 1)) { //点击为正方向且panel处于队列末尾，队列先回到0
+                if (direct === 1 && vm.panelOffsetX === -vm.pictureWidth * (vm.picNum - 1)) { //点击为正方向且panel处于队列末尾，队列先回到0
                     vm.panelOffsetX = 0
                 } else if (direct === -1 && vm.panelOffsetX === 0) { //点击为负方向且panel处于队列开始，队列先回到末尾
-                    vm.panelOffsetX = -vm.picWidth * (vm.picNum - 1)
+                    vm.panelOffsetX = -vm.pictureWidth * (vm.picNum - 1)
                 }
-                var offset = vm.panelOffsetX - vm.picWidth * direct * distance //设置移动终点位置
+                var offset = vm.panelOffsetX - vm.pictureWidth * direct * distance //设置移动终点位置
 
                 //进行移动
-                var currentTime = 0; //当前时间
-                var startpos = vm.panelOffsetX //属性初始值
-                var duringDistance = vm.picWidth * -direct * distance //属性变化量
-                var duringTime = vm.during / 10; //补间动画的时间长度
+                var currentTime = 0 //当前时间
+                var startpos = vm.panelOffsetX //位置初始值
+                var duringDistance = vm.pictureWidth * -direct * distance //位置变化量
+                var duringTime = vm.during / 10 //补间动画的时间长度
                 var go = function() {
                     animated = false
-                    if ((vm.panelOffsetX <= -vm.picWidth * (vm.picsrcs.length - 1)) && direct > 0) { //队列已到末尾位置，且将要往正方向移动，队列回到0
+                    if ((vm.panelOffsetX <= -vm.pictureWidth * (vm.pictures.length - 1)) && direct > 0) { //队列已到末尾位置，且将要往正方向移动，队列回到0
                         vm.panelOffsetX = 0
                     } else if ((vm.panelOffsetX >= 0) && direct < 0) { //队列已到开始位置，且将要往反方向移动，队列回到末尾
-                        vm.panelOffsetX = -vm.picWidth * (vm.picNum - 1)
+                        vm.panelOffsetX = -vm.pictureWidth * (vm.picNum - 1)
                     } else { //队列还未到终点，在移动过程中
                         vm.panelOffsetX = easeInOut(currentTime, startpos, duringDistance, duringTime) //移动
                         if (currentTime < duringTime) {
-                            currentTime++;
-                            window.requestAnimationFrame(go)
+                            currentTime++
+                            requestAnimationFrame(go)
                             animated = true
                         }
                     }
@@ -106,31 +104,32 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                 var direct = distance > 0 ? -1 : 1
                 vm.animate(direct, Math.abs(distance))
             }
+
+            var timer
+            vm.autoPlay = function() { //@method autoPlay(vmodel) 自动开始轮播,
+                if (vm.autoSlide) {
+                    timer = setTimeout(function() {
+                        vm.animate(1) //正方向移动
+                        vm.autoPlay()
+                    }, vm.timeout)
+                }
+            }
         })
 
-        vmodel.picsrcs[vmodel.picsrcs.length] = vmodel.picsrcs[0] //将第一个元素加到图片数组末尾形成循环
-        autoPlay(vmodel) //自动开始轮播
+        vmodel.pictures[vmodel.pictures.length] = vmodel.pictures[0] //将第一个元素加到图片数组末尾形成循环
+        vmodel.autoPlay(vmodel) //自动开始轮播
         return vmodel
     }
 
     function easeInOut(t, b, c, d) {
-        if ((t /= d / 2) < 1) return c / 2 * t * t + b;
-        return -c / 2 * ((--t) * (t - 2) - 1) + b;
-    }
-
-    function autoPlay(vm) { //@method autoPlay(vmodel) 自动开始轮播,
-        if (vm.autoSlide) {
-            timer = setTimeout(function() {
-                vm.animate(1) //正方向移动
-                autoPlay(vm)
-            }, vm.timeout)
-        }
+        if ((t /= d / 2) < 1) return c / 2 * t * t + b
+        return -c / 2 * ((--t) * (t - 2) - 1) + b
     }
 
     widget.defaults = {
-        picsrcs: [], //@param picsrcs 轮播图片素材
-        picWidth: 520, //@param picWidth 图片展示宽度
-        picHeihgt: 280, //@param picHeihgt 图片展示高度
+        pictures: [], //@param pictures 轮播图片素材
+        pictureWidth: 500, //@param pictureWidth 图片显示宽度
+        pictureHeight: 280, //@param pictureHeight 图片显示高度
         timeout: 2500, //@param timeout 切换时间间隔
         during: 300, //@param during 切换速度，越小越快，单位为毫秒
         alwaysShowArrow: true, //@param alwaysShowArrow 显示左右切换箭头

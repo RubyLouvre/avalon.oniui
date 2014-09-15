@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>carousel组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <meta name="description" content="carousel组件，"/>
+</head>
+    <body>
+        <div class="wrapper">
+            <h2>carousel</h2>
+            <fieldset>
+                <legend>carousel组件</legend>
+                <p class="doc-description">carousel组件，</p>
+            </fieldset>
+            <fieldset>
+                <legend>使用说明</legend>
+                <table class="table-doc">
+                    <tr>
+                        <th width="25%">名字</th><th width="25%">默认值</th><th width="50%">说明</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3" aligin="center">配置参数</td>
+                    </tr>
+                    <!--auto doc start-->
+<tr>
+    <td>picsrcs</td><td> []</td><td> picsrcs 轮播图片素材</td></tr>
+<tr>
+    <td>picWidth</td><td> 500</td><td> picWidth 图片展示宽度</td></tr>
+<tr>
+    <td>picHeihgt</td><td> 280</td><td> picHeihgt 图片展示高度</td></tr>
+<tr>
+    <td>timeout</td><td> 2500</td><td> timeout 切换时间间隔</td></tr>
+<tr>
+    <td>during</td><td> 250</td><td> during 切换速度，越小越快，单位为毫秒</td></tr>
+<tr>
+    <td>alwaysShowArrow</td><td> true</td><td> alwaysShowArrow 显示左右切换箭头</td></tr>
+<tr>
+    <td>alwaysShowSelection</td><td> true</td><td> alwaysShowSelection 显示左右切换箭头</td></tr>
+<tr>
+    <td>autoSlide</td><td> true</td><td> autoSlide 自动播放</td></tr>
+<tr>
+    <td>hoverStop</td><td> true</td><td> autoSlide 鼠标经过停止播放</td></tr>
+<tr>
+    <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+<tr>
+    <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td></tr>
+<tr>
+    <td>setArrowVisible</td><td>接口调用</td><td>setArrowVisible() hover在组件上时使Arrow显示，停止轮播</td></tr>
+<tr>
+    <td>setArrowHidden</td><td>接口调用</td><td>setArrowHidden() hover离开时使Arrow隐藏，重新开始轮播</td></tr>
+<tr>
+    <td>animate</td><td>接口调用</td><td>animate(direct, distance) 图片滚动，direct为方向（1/-1），distance为距离（>0整数）</td></tr>
+<tr>
+    <td>selectPic</td><td>接口调用</td><td>selectPic(index) 通过底部圆形选择图片</td></tr>
+<tr>
+    <td>autoPlay</td><td>接口调用</td><td>autoPlay(vmodel) 自动开始轮播,</td></tr>
+<!--auto doc end-->
+                </table>
+            </fieldset>
+            <!--source start-->
+            <!--source end-->
+            <h3>例子：</h3>
+            <!--ex list start-->
+<ol class="example-links">
+<li><a href="avalon.carousel.ex.html">carousel</a></li>
+</ol>
+<!--ex list end-->
+        </div>
+    </body>
+</html>

@@ -1,0 +1,70 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+.ui-carousel {
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+  -moz-user-select: none;
+  /*火狐*/
+  -webkit-user-select: none;
+  /*webkit浏览器*/
+  -ms-user-select: none;
+  /*IE10*/
+  -khtml-user-select: none;
+  /*早期浏览器*/
+  user-select: none; }
+  .ui-carousel .ui-carousel-panel {
+    position: absolute;
+    top: 0;
+    left: 0; }
+    .ui-carousel .ui-carousel-panel .ui-carousel-item {
+      display: -moz-inline-stack;
+      display: inline-block;
+      vertical-align: middle;
+      *vertical-align: auto;
+      zoom: 1;
+      *display: inline;
+      overflow: hidden; }
+  .ui-carousel .ui-carousel-selection-wrap {
+    position: absolute;
+    bottom: 7%;
+    left: 50%; }
+    .ui-carousel .ui-carousel-selection-wrap a {
+      display: -moz-inline-stack;
+      display: inline-block;
+      vertical-align: middle;
+      *vertical-align: auto;
+      zoom: 1;
+      *display: inline;
+      width: 10px;
+      height: 10px;
+      margin: 0 5px;
+      background-color: white;
+      background-color: rgba(255, 255, 255, 0.6);
+      border-radius: 50%;
+      cursor: pointer; }
+    .ui-carousel .ui-carousel-selection-wrap .selected {
+      background-color: #00a3c2; }
+  .ui-carousel .arrow {
+    position: absolute;
+    top: 50%;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    margin: -15px 0 0 -15px;
+    border-radius: 50%;
+    background-color: black;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer; }
+  .ui-carousel .prev {
+    left: 7%; }
+  .ui-carousel .after {
+    left: 93%; }
+
+/*# sourceMappingURL=avalon.carousel.css.map */

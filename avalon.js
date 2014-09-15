@@ -1,11 +1,11 @@
 /*==================================================
- Copyright 20013-2014 司徒正美 and other contributors
+ Copyright 2013-2014 司徒正美 and other contributors
  http://www.cnblogs.com/rubylouvre/
  https://github.com/RubyLouvre
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.3.4 2014.8.26
+ avalon 1.3.4 2014.9.15
  ==================================================*/
 (function(DOC) {
     /*********************************************************************
@@ -188,7 +188,7 @@
     avalon.mix({
         rword: rword,
         subscribers: subscribers,
-        version: 1.34,
+        version: 1.35,
         ui: {},
         log: log,
         slice: W3C ? function(nodes, start, end) {
@@ -385,7 +385,7 @@
         if (VMODELS[id]) {
             log("warning: " + $id + " 已经存在于avalon.vmodels中")
         }
-        if (typeof id == "object") {
+        if (typeof id === "object") {
             var model = modelFactory(id)
         } else {
             var scope = {
@@ -701,7 +701,7 @@
 
         function VBMediator(accessingProperties, name, value) {
             var accessor = accessingProperties[name]
-            if (typeof accessor == "function") {
+            if (typeof accessor === "function") {
                 if (arguments.length === 3) {
                     accessor(value)
                 } else {
@@ -748,7 +748,7 @@
             buffer.push("End Class")
             var code = buffer.join("\r\n"),
                     realClassName = window['findOrDefineVBClass'](className, code) //如果该VB类已定义，返回类名。否则用className创建一个新类。
-            if (realClassName == className) {
+            if (realClassName === className) {
                 window.parseVB([
                     "Function " + className + "Factory(a, b)", //创建实例并传入两个关键的参数
                     "\tDim o",
@@ -901,34 +901,33 @@
             return fixContains(this, b)
         }
     }
-    //IE9-11,firefox不支持SVG元素的innerHTML,outerHTML属性
     function outerHTML() {
         return new XMLSerializer().serializeToString(this)
     }
-    function enumerateNode(node, targetNode) {
-        if (node && node.childNodes) {
-            var nodes = node.childNodes
-            for (var i = 0, el; el = nodes[i++]; ) {
-                if (el.tagName) {
-                    var svg = document.createElementNS(svgns,
-                            el.tagName.toLowerCase())
-                    ap.forEach.call(el.attributes, function(attr) {
-                        svg.setAttribute(attr.name, attr.value)//复制属性
-                    })
-                    // 递归处理子节点
-                    enumerateNode(el, svg)
-                    targetNode.appendChild(svg)
+    if (window.SVGElement) {
+        var svgns = "http://www.w3.org/2000/svg"
+        var svg = document.createElementNS(svgns, "svg")
+        svg.innerHTML = '<circle cx="50" cy="50" r="40" fill="yellow" />'
+        if (svg.firstChild !== "[object SVGCircleElement]") {// #409
+            function enumerateNode(node, targetNode) {
+                if (node && node.childNodes) {
+                    var nodes = node.childNodes
+                    for (var i = 0, el; el = nodes[i++]; ) {
+                        if (el.tagName) {
+                            var svg = document.createElementNS(svgns,
+                                    el.tagName.toLowerCase())
+                            ap.forEach.call(el.attributes, function(attr) {
+                                svg.setAttribute(attr.name, attr.value)//复制属性
+                            })
+                            // 递归处理子节点
+                            enumerateNode(el, svg)
+                            targetNode.appendChild(svg)
+                        }
+                    }
                 }
             }
-        }
-    }
-    var svgns = "http://www.w3.org/2000/svg"
-    if (window.SVGElement) {
-        var svg = document.createElementNS(svgns, "svg")
-        svg.innerHTML = '<Rect width="300" height="100"/>'
-        if (!(svg.firstChild && svg.firstChild.tagName === "rect")) {
             Object.defineProperties(SVGElement.prototype, {
-                "outerHTML": {
+                "outerHTML": {//IE9-11,firefox不支持SVG元素的innerHTML,outerHTML属性
                     enumerable: true,
                     configurable: true,
                     get: outerHTML,
@@ -958,9 +957,11 @@
                         return  s.replace(ropen, "").replace(rclose, "")
                     },
                     set: function(html) {
-                        avalon.clearHTML(this)
-                        var frag = avalon.parseHTML(html)
-                        enumerateNode(frag, this)
+                        if (avalon.clearHTM) {
+                            avalon.clearHTML(this)
+                            var frag = avalon.parseHTML(html)
+                            enumerateNode(frag, this)
+                        }
                     }
                 }
             })
@@ -1070,7 +1071,7 @@
         },
         __set: function(cls) {
             var node = this.node
-            if (typeof node.className == "string") {
+            if (typeof node.className === "string") {
                 node.className = cls
             } else {//SVG元素的className是一个对象 SVGAnimatedString { baseVal="", animVal=""}，只能通过set/getAttribute操作
                 node.setAttribute("class", cls)
@@ -1094,7 +1095,7 @@
         avalon.fn[method + "Class"] = function(cls) {
             var el = this[0]
             //https://developer.mozilla.org/zh-CN/docs/Mozilla/Firefox/Releases/26
-            if (cls && typeof cls === "string" && el && el.nodeType == 1) {
+            if (cls && typeof cls === "string" && el && el.nodeType === 1) {
                 cls.replace(/\S+/g, function(c) {
                     ClassList(el)[method](c)
                 })
@@ -1404,7 +1405,7 @@
                 array.push(obj)
             }
             var parent = node.parentNode
-            if (parent && parent.nodeType == 1) {
+            if (parent && parent.nodeType === 1) {
                 showHidden(parent, array)
             }
         }
@@ -1804,14 +1805,23 @@
         if (list && list.length) {
             var args = aslice.call(arguments, 1)
             for (var i = list.length, fn; fn = list[--i]; ) {
-                var el = fn.element,
-                        remove
-                if (el && !avalon.contains(ifSanctuary, el)) {
-                    if (typeof el.sourceIndex == "number") { //IE6-IE11
-                        remove = el.sourceIndex === 0
-                    } else {
-                        remove = !avalon.contains(root, el)
+                var el = fn.element
+                if (el) {
+                    var inTree = avalon.contains(root, el)
+                    var remove = !ifSanctuary.contains(el) && !inTree
+                    var comment = fn.placehoder
+                    if (fn.type === "if" && comment) {
+                        var recycle = fn.msInDocument ? !inTree : !avalon.contains(root, comment)
+                        if (recycle) {
+                            if (!fn.msInDocument && comment.elem) {
+                                ifSanctuary.removeChild(comment.elem)
+                            }
+                            fn.placehoder = fn.msInDocument = comment.elem = null
+                            remove = true
+                        }
                     }
+                } else if (fn.type === "if") {
+                    remove = true
                 }
                 if (remove) { //如果它没有在DOM树
                     list.splice(i, 1)
@@ -1819,8 +1829,7 @@
                         recycleEachProxies(fn.proxies)
                         fn.proxies = fn.callbackElement = fn.template = fn.startRepeat = fn.endRepeat = null
                     }
-                    fn.vmodels.length = 0
-                    log("debug: remove " + fn.name)
+                    log("debug: remove " + fn.type)
                     fn = fn.element = fn.node = fn.evaluator = null
                 } else if (nofire === true) {
                     //nothing
@@ -2258,7 +2267,7 @@
 
     function parseExpr(code, scopes, data) {
         var dataType = data.type
-        var filters = dataType == "html" || dataType === "text" ? data.filters : ""
+        var filters = dataType === "html" || dataType === "text" ? data.filters : ""
         var exprId = scopes.map(function(el) {
             return el.$id.replace(rproxy, "$1")
         }) + code + dataType + filters
@@ -2402,9 +2411,9 @@
         "http-equiv": "httpEquiv"
     }
 
-    var anomaly = "accessKey,allowTransparency,bgColor,cellPadding,cellSpacing,codeBase,codeType,colSpan,contentEditable,"
-            + "dateTime,defaultChecked,defaultSelected,defaultValue,frameBorder,isMap,longDesc,maxLength,marginWidth,marginHeight,"
-            + "noHref,noResize,noShade,readOnly,rowSpan,tabIndex,useMap,vSpace,valueType,vAlign"
+    var anomaly = "accessKey,bgColor,cellPadding,cellSpacing,codeBase,codeType,colSpan,"
+            + "dateTime,defaultValue,frameBorder,longDesc,maxLength,marginWidth,marginHeight,"
+            + "rowSpan,tabIndex,useMap,vSpace,valueType,vAlign"
     anomaly.replace(rword, function(name) {
         propMap[name.toLowerCase()] = name
     })
@@ -2438,6 +2447,12 @@
     } catch (e) {
         avalon.contains = fixContains
     }
+    var bools = "autofocus,autoplay,async,allowTransparency,checked,controls,declare,disabled,defer,defaultChecked,defaultSelected" +
+            "contentEditable,isMap,loop,multiple,noHref,noResize,noShade,open,readOnly,selected"
+    var boolMap = {}
+    bools.replace(rword, function(name) {
+        boolMap[name.toLowerCase()] = name
+    })
 
     //这里的函数每当VM发生改变后，都会被执行（操作方为notifySubscribers）
     var bindingExecutors = avalon.bindingExecutors = {
@@ -2450,6 +2465,12 @@
                 // ms-attr-class="xxx" vm.xxx="aaa bbb ccc"将元素的className设置为aaa bbb ccc
                 // ms-attr-class="xxx" vm.xxx=false  清空元素的所有类名
                 // ms-attr-name="yyy"  vm.yyy="ooo" 为元素设置name属性
+                if (boolMap[attrName]) {
+                    var bool = boolMap[attrName]
+                    if (typeof elem[bool] === "boolean") {
+                        return elem[bool] = !!val
+                    }
+                }
                 var toRemove = (val === false) || (val === null) || (val === void 0)
                 if (!W3C && propMap[attrName]) {//旧式IE下需要进行名字映射
                     attrName = propMap[attrName]
@@ -2459,9 +2480,13 @@
                     return elem.removeAttribute(attrName)
                 }
                 if (window.VBArray && !isInnate) {//IE下需要区分固有属性与自定义属性
-                    var attrs = elem.attributes || {}
-                    var attr = attrs[attrName]
-                    isInnate = attr ? attr.expando === false : attr === null
+                    if (isVML(elem)) {
+                        isInnate = true
+                    } else if(window.SVGElement && !(elem instanceof SVGElement)) {
+                        var attrs = elem.attributes || {}
+                        var attr = attrs[attrName]
+                        isInnate = attr ? attr.expando === false : attr === null
+                    }
                 }
                 if (isInnate) {
                     elem[attrName] = val
@@ -2508,7 +2533,7 @@
                 } else {
                     //IE系列与够新的标准浏览器支持通过ID取得元素（firefox14+）
                     //http://tjvantoll.com/2012/07/19/dom-element-references-as-global-variables/
-                    var el = val && val.nodeType == 1 ? val : DOC.getElementById(val)
+                    var el = val && val.nodeType === 1 ? val : DOC.getElementById(val)
                     if (el) {
                         if (el.tagName === "NOSCRIPT" && !(el.innerHTML || el.fixIE78)) { //IE7-8 innerText,innerHTML都无法取得其内容，IE6能取得其innerHTML
                             var xhr = getXHR() //IE9-11与chrome的innerHTML会得到转义的内容，它们的innerText可以
@@ -2574,7 +2599,7 @@
                             $elem.bind(abandon, function() {
                                 data.toggleClass && $elem.removeClass(data.newClass)
                             })
-                            data.hasBindEvent = 1
+                            data.hasBindEvent = true
                         }
                         break;
                 }
@@ -2758,7 +2783,7 @@
                 return fn.apply(this, data.args.concat(e))
             }
             try {
-                if (!avalon.configs.dettachVModels) {
+                if (!avalon.config.dettachVModels) {
                     elem.$vmodel = vmodels[0]
                     elem.$vmodels = vmodels//IE11的IE8兼容模式会报错 SCRIPT438: 对象不支持此属性或方法
                 }
@@ -2923,7 +2948,7 @@
             try {
                 list = data.getter()
                 var xtype = avalon.type(list)
-                if (xtype == "object" || xtype == "array") {
+                if (xtype === "object" || xtype === "array") {
                     freturn = false
                 }
             } catch (e) {
@@ -3026,7 +3051,6 @@
             }
             data.vmodels = vmodels
             parseExprProxy(data.value, vmodels, data)
-
         },
         "on": function(data, vmodels) {
             var value = data.value
@@ -3169,8 +3193,9 @@
         //当model变化时,它就会改变value的值
         data.handler = function() {
             var val = evaluator()
+            val = val == null ? "" : val + ""
             if (val !== element.value) {
-                element.value = val + ""
+                element.value = val
             }
         }
 
@@ -3675,7 +3700,7 @@
     function expelFromSanctuary(parent) {
         var comments = queryComments(parent)
         for (var i = 0, comment; comment = comments[i++]; ) {
-            if (comment.nodeValue == "ms-if") {
+            if (comment.nodeValue === "ms-if") {
                 cinerator.appendChild(comment.elem)
             }
         }
@@ -3707,6 +3732,10 @@
         }
         return get(elem, ret)
     }
+    function isVML(src) {
+        var nodeName = src.nodeName
+        return  nodeName.toLowerCase() === nodeName && src.scopeName && src.outerText === ""
+    }
     function fixCloneNode(src) {
         var target = src.cloneNode(true)
         if (window.VBArray) {//只处理IE
@@ -3729,7 +3758,7 @@
                         dest.defaultSelected = dest.selected = src.defaultSelected
                     } else if (nodeName === "INPUT" || nodeName === "TEXTAREA") {
                         dest.defaultValue = src.defaultValue
-                    } else if (nodeName.toLowerCase() === nodeName && src.scopeName && src.outerText === "") {
+                    } else if (isVML(src)) {
                         //src.tagUrn === "urn:schemas-microsoft-com:vml"//判定是否为VML元素
                         var props = {}//处理VML元素
                         src.outerHTML.replace(/\s*=\s*/g, "=").replace(/(\w+)="([^"]+)"/g, function(a, prop, val) {
@@ -3809,7 +3838,7 @@
             pos += 1
             for (var i = 0; i < pos; i++) {
                 ret = ret.nextSibling
-                if (ret == end)
+                if (ret === end)
                     return end
             }
             return ret

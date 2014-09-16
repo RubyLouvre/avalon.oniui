@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>carousel组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script>
+            require(["carousel/avalon.carousel"], function() {
+                avalon.define("demo1", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placekitten.com/g/520/300", 
+                        "http://placekitten.com/g/600/400",
+                        "http://placekitten.com/g/520/320"],
+                        alwaysShowArrow: false, //@param alwaysShowArrow 显示左右切换箭头
+                        alwaysShowSelection: false //@param alwaysShowSelection 显示底部圆形切换部件
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.define("demo2", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placekitten.com/g/520/300", 
+                        "http://placekitten.com/g/600/400",
+                        "http://placekitten.com/g/520/320"],
+                        hoverStop: false //@param autoSlide 鼠标经过停止播放
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <div class="wrapper">
+        <h1>图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过继续播放</h1>
+        <fieldset ms-controller="demo1">
+            <legend>自定义不显示左右切换箭头和底部圆形选择部件</legend>
+            <div ms-widget="carousel"></div>
+        </fieldset>
+        <fieldset ms-controller="demo2">
+            <legend>自定义鼠标经过继续播放</legend>
+            <div ms-widget="carousel"></div>
+        </fieldset>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;carousel组件&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+        &lt;script&gt;
+            require(["carousel/avalon.carousel"], function() {
+                avalon.define("demo1", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placekitten.com/g/520/300", 
+                        "http://placekitten.com/g/600/400",
+                        "http://placekitten.com/g/520/320"],
+                        alwaysShowArrow: false, //@param alwaysShowArrow 显示左右切换箭头
+                        alwaysShowSelection: false //@param alwaysShowSelection 显示底部圆形切换部件
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.define("demo2", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placekitten.com/g/520/300", 
+                        "http://placekitten.com/g/600/400",
+                        "http://placekitten.com/g/520/320"],
+                        hoverStop: false //@param autoSlide 鼠标经过停止播放
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class="wrapper"&gt;
+        &lt;h1&gt;图片轮播组件&lt;/h1&gt;
+        &lt;fieldset ms-controller="demo1"&gt;
+            &lt;legend&gt;自定义不显示左右切换箭头和底部圆形选择部件&lt;/legend&gt;
+            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+        &lt;/fieldset&gt;
+        &lt;fieldset ms-controller="demo2"&gt;
+            &lt;legend&gt;自定义鼠标经过继续播放&lt;/legend&gt;
+            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+        &lt;/fieldset&gt;
+        &lt;pre ms-skip class="brush:html;gutter:false;toolbar:false"&gt;
+
+        &lt;/pre&gt;
+    &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+    </div>
+    </body>
+</html>

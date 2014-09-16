@@ -35,8 +35,6 @@ $uiname : "ui-carousel";
 			overflow: hidden;
 			text-align: center;
 			background-color: #f2f2f2;
-			background-repeat: no-repeat;
-			background-position: center center;
 
 			img{
 				position: absolute;
@@ -50,7 +48,7 @@ $uiname : "ui-carousel";
 	}
 	.#{$uiname}-selection-wrap{
 		position: absolute;
-		bottom: 5%;
+		bottom: 4%;
 		left: 50%;
 		a{
 			@include inline-block();
@@ -74,9 +72,6 @@ $uiname : "ui-carousel";
 		height: 30px;
 		line-height: 24px;
 		margin: -15px 0 0 -15px;
-		border-radius: 50%;
-		background-color: rgb(0,0,0);
-		background-color: rgba(0,0,0,0.6);
 		color: #fff;
 		text-align: center;
 		font-size: 28px;

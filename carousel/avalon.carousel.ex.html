@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>carousel组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script>
+            require(["carousel/avalon.carousel"], function() {
+                avalon.define("demo", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placekitten.com/g/520/280",
+                        "http://placekitten.com/g/520/290",
+                        "http://placekitten.com/g/520/300", 
+                        "http://placekitten.com/g/600/400",
+                        "http://placekitten.com/g/520/320"],
+                        pictureWidth: 500, //@param pictureWidth 图片显示宽度
+                        pictureHeight: 200, //@param pictureHeight 图片显示高度
+                        effect: "slide", //@param effect 图片切换类型，默认为"slide"，取值：none:无特效 / fade:渐隐 / slide:滑动
+                        easing: "easeInOut", //@param effect 缓动类型，默认为"easeInOut"，取值 linear:无缓动效果 / easeIn:在过渡的开始提供缓动效果 / easeOut:在过渡的结尾提供缓动效果 / easeInOut 在过渡的开始和结尾提供缓动效果
+                        timeout: 2500, //@param timeout 切换时间间隔
+                        during: 300, //@param during 切换速度，越小越快，单位为毫秒
+                        alwaysShowArrow: true, //@param alwaysShowArrow 显示左右切换箭头
+                        alwaysShowSelection: true, //@param alwaysShowSelection 显示底部圆形切换部件
+                        autoSlide: true, //@param autoSlide 自动播放
+                        hoverStop: true //@param autoSlide 鼠标经过停止播放
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="demo">
+        <div class="wrapper">
+        <h1>图片轮播组件-默认配置图片轮播</h1>
+        <fieldset>
+            <legend>默认配置图片轮播</legend>
+            <div ms-widget="carousel"></div>
+        </fieldset>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;carousel组件&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+        &lt;script&gt;
+            require(["carousel/avalon.carousel"], function() {
+                avalon.define("test", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placekitten.com/g/520/280",
+                        "http://placekitten.com/g/520/290",
+                        "http://placekitten.com/g/520/300", 
+                        "http://placekitten.com/g/600/400",
+                        "http://placekitten.com/g/520/320"],
+                        pictureWidth: 500, //@param pictureWidth 图片显示宽度
+                        pictureHeight: 280, //@param pictureHeight 图片显示高度
+                        timeout: 2500, //@param timeout 切换时间间隔
+                        during: 300, //@param during 切换速度，越小越快，单位为毫秒
+                        alwaysShowArrow: true, //@param alwaysShowArrow 显示左右切换箭头
+                        alwaysShowSelection: true, //@param alwaysShowSelection 显示底部圆形切换部件
+                        autoSlide: true, //@param autoSlide 自动播放
+                        hoverStop: true //@param autoSlide 鼠标经过停止播放
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="test"&gt;
+        &lt;div class="wrapper"&gt;
+        &lt;h1&gt;图片轮播组件&lt;/h1&gt;
+        &lt;fieldset&gt;
+            &lt;legend&gt;默认配置图片轮播&lt;/legend&gt;
+            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+        &lt;/fieldset&gt;
+    &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+    </div>
+    </body>
+</html>

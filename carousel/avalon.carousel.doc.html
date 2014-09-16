@@ -30,7 +30,11 @@
 <tr>
     <td>pictureWidth</td><td> 500</td><td> pictureWidth 图片显示宽度</td></tr>
 <tr>
-    <td>pictureHeight</td><td> 280</td><td> pictureHeight 图片显示高度</td></tr>
+    <td>pictureHeight</td><td> 200</td><td> pictureHeight 图片显示高度</td></tr>
+<tr>
+    <td>effect</td><td> "slide"</td><td> effect 图片切换类型，默认为"slide"，取值：none:无特效 / fade:渐隐 / slide:滑动</td></tr>
+<tr>
+    <td>easing</td><td> "easeInOut"</td><td> effect 缓动类型，默认为"easeInOut"，取值：linear:无缓动效果 / easeIn:在过渡的开始提供缓动效果 / easeOut:在过渡的结尾提供缓动效果 / easeInOut 在过渡的开始和结尾提供缓动效果</td></tr>
 <tr>
     <td>timeout</td><td> 2500</td><td> timeout 切换时间间隔</td></tr>
 <tr>
@@ -44,6 +48,14 @@
 <tr>
     <td>hoverStop</td><td> true</td><td> autoSlide 鼠标经过停止播放</td></tr>
 <tr>
+    <td>arrowLeftNormalSrc</td><td> "./images/arrows-left-icon.png"</td><td> arrowLeftNormalSrc 左箭头正常状态图标</td></tr>
+<tr>
+    <td>arrowRightNormalSrc</td><td> "./images/arrows-right-icon.png"</td><td> arrowLeftNormalSrc 右箭头正常状态图标</td></tr>
+<tr>
+    <td>arrowLeftHoverSrc</td><td> "./images/arrows-left-hover-icon.png"</td><td> arrowLeftNormalSrc 左箭头hover状态图标</td></tr>
+<tr>
+    <td>arrowRightHoverSrc</td><td> "./images/arrows-right-hover-icon.png"</td><td> arrowLeftNormalSrc 右箭头hover状态图标</td></tr>
+<tr>
     <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
 <tr>
     <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td></tr>
@@ -54,9 +66,15 @@
 <tr>
     <td>animate</td><td>接口调用</td><td>animate(direct, distance) 图片滚动，direct为方向（1/-1），distance为距离（>0整数）</td></tr>
 <tr>
+    <td>getOpacity</td><td>接口调用</td><td>getOpacity(index) fade effect 下改变前后图片透明度</td></tr>
+<tr>
     <td>selectPic</td><td>接口调用</td><td>selectPic(index) 通过底部圆形选择图片</td></tr>
 <tr>
-    <td>autoPlay</td><td>接口调用</td><td>autoPlay(vmodel) 自动开始轮播,</td></tr>
+    <td>arrowHover</td><td>接口调用</td><td>arrowHover(direction) 左右箭头hover事件</td></tr>
+<tr>
+    <td>arrowBlur</td><td>接口调用</td><td>arrowBlur(direction) 左右箭头blur事件</td></tr>
+<tr>
+    <td>autoPlay</td><td>接口调用</td><td>autoPlay(vmodel) 自动开始轮播</td></tr>
 <!--auto doc end-->
                 </table>
             </fieldset>
@@ -65,10 +83,12 @@
             <h3>例子：</h3>
             <!--ex list start-->
 <ol class="example-links">
-<li><a href="avalon.carousel.ex1.html">默认配置图片轮播</a></li>
-<li><a href="avalon.carousel.ex2.html">自定义宽高图片轮播以及自动播放</a></li>
-<li><a href="avalon.carousel.ex3.html">自定义图片切换时间间隔以及图片切换速度</a></li>
-<li><a href="avalon.carousel.ex4.html">自定义不显示左右切换箭头和底部圆形选择部件以及鼠标经过继续播放</a></li>
+<li><a href="avalon.carousel.ex.html">图片轮播组件-默认配置图片轮播</a></li>
+<li><a href="avalon.carousel.ex.1.html">图片轮播组件-自定义宽高图片轮播 / 自定义不自动播放</a></li>
+<li><a href="avalon.carousel.ex.2.html">图片轮播组件-自定义图片切换时间间隔 / 自定义图片切换速度</a></li>
+<li><a href="avalon.carousel.ex.3.html">图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过继续播放</a></li>
+<li><a href="avalon.carousel.ex.4.html">图片轮播组件-自定义effect</a></li>
+<li><a href="avalon.carousel.ex.5.html">图片轮播组件-自定义缓动类型</a></li>
 </ol>
 <!--ex list end-->
         </div>

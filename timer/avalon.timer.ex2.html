@@ -8,9 +8,16 @@
         <script src="../highlight/shCore.js"></script>
         <script>
             require(["timer/avalon.timer"], function() {
-              
+                var timerVM = null
                 avalon.define("test", function(vm) {
-                    
+                    vm.timer = {
+                        onInit: function(vmodel, options, vmodels) {
+                            timerVM = vmodel
+                        }
+                    }
+                    vm.getCurrentTime = function() {
+                        alert("当前选中日期为："+timerVM.getTime().toLocaleString())
+                    }
                 })
                 avalon.scan()
             })
@@ -18,6 +25,8 @@
     </head>
     <body ms-controller="test">
         <h1>移动端时间选择器</h1>
-        <input ms-widget="timer" type="text"/>
+        <div ms-widget="timer" data-timer-event-type="mousewheel"></div>
+
+        <button ms-click="getCurrentTime">get current time</button>
     </body>
 </html>

@@ -54,9 +54,6 @@ define(["avalon",
                 var template = options.template.replace(/MS_OPTION_BIND_EVENTS/mg, bindEvents(options.eventType))
                 element.innerHTML = template
                 vmodel._timerHeight = 30 * options.showItems
-                renderTimer(vmodel, 0, "dates", "_currentDateIndex")
-                renderTimer(vmodel, 0, "hours", "_currentHourIndex")
-                renderTimer(vmodel, 0, "minutes", "_currentMinuteIndex")
                 avalon.scan(element, [vmodel].concat(vmodels))
                 setTimeout(function() {
                     var divs = element.getElementsByTagName("div"),
@@ -75,20 +72,26 @@ define(["avalon",
                             dateElement = div
                             div._name = "date"
                             div.vmodel = vmodel
+                            handleEvent(dateElement, scrollElements, vmodel, "_initPosition")
                         } else if (className.indexOf("ui-timer-hour") != -1) {
                             hourElement = div
                                 div._name = "hour"
                             div.vmodel = vmodel
+                            handleEvent(hourElement, scrollElements, vmodel, "_initPosition")
                         } else if (className.indexOf("ui-timer-minute") != -1) {
                             minuteElement = div
                             div._name = "minute"
                             div.vmodel = vmodel
+                            handleEvent(minuteElement, scrollElements, vmodel, "_initPosition")
                         }
                     }
                     dateElementWidth = avalon(dateElement).outerWidth()
                     vmodel._hourLeft = dateElementWidth
                     hourElementWidth = vmodel._minuteLeft = dateElementWidth + avalon(hourElement).outerWidth()
                     vmodel._timerWidth = hourElementWidth + avalon(minuteElement).outerWidth()
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }, 100)
             }
             vm.$remove = function() {
@@ -100,13 +103,12 @@ define(["avalon",
     widget.defaults = {
         showItems: 9,
         showYears: false,
-        eventType: "mousewheel_",
+        eventType: "touch",
         mouseWheelSpeed: 20,
-        useTransition: true,
         useTransform: true,
-        getDates: function() {},
-        getHours: function() {},
-        getMinutes: function() {},
+        getDates: avalon.noop,
+        getHours: avalon.noop,
+        getMinutes: avalon.noop,
         getTemplate: function(str, options) {
             return str
         }
@@ -142,21 +144,21 @@ define(["avalon",
             minute = "",
             i,
             week = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
-        if (hours = !options.getHours()) {
+        if (!(hours = options.getHours())) {
             hours = []
             for (i = 0; i < 24; i ++) {
                 hour = formatNum(i, 2)
                 hours.push({hour: hour, _hour: i, color: "rgba(51, 51, 51, 1)"})
             }
         }
-        if (minutes = !options.getMinutes()) {
+        if (!(minutes = options.getMinutes())) {
             minutes = []
             for (i = 0; i < 60; i+=5) {
                 minute = formatNum(i, 2)
                 minutes.push({minute: minute, _minute: i, color: "rgba(51, 51, 51, 1)"})
             }
         }
-        if (dates = !options.getDates()) {
+        if (!(dates = options.getDates())) {
             dates = []
             for (i = 1; i < 60; i++) {
                 year = now.getFullYear()
@@ -202,19 +204,16 @@ define(["avalon",
         for (var i = initIndex; i > 0; i--) {
             prevIndex = currentIndex - i
             nextIndex = currentIndex + i
-            if (prevIndex < 0 || nextIndex < 0 || prevIndex >= itemsLen || nextIndex >= itemsLen) {
-                continue
-            }
             color = 0.2 * (4 - i + 1)
             if (color >= 1) {
                 color = 0.9
             } else if (color <= 0) {
                 color = 0.1
             }
-            if (prevIndex > -1) {
+            if (prevIndex > -1 && prevIndex < itemsLen) {
                 items[prevIndex].color = "rgba(51, 51, 51, " + color +")"
             } 
-            if (nextIndex < items.length) {
+            if (nextIndex > -1 && nextIndex < itemsLen) {
                 items[nextIndex].color = "rgba(51, 51, 51, " + color +")"
             }
         }
@@ -307,7 +306,7 @@ define(["avalon",
             transitionTimingFunction: _prefixStyle('transitionTimingFunction'),
             transitionDuration: _prefixStyle('transitionDuration')
         }
-        util.momentum = function (current, start, time, lowerMargin, wrapperSize, deceleration) {
+        util.momentum = function (current, start, time, lowerMargin, higherMargin, wrapperSize, deceleration) {
             var distance = current - start,
                 speed = Math.abs(distance) / time,
                 destination,
@@ -318,12 +317,12 @@ define(["avalon",
             destination = current + ( speed * speed ) / ( 2 * deceleration ) * ( distance < 0 ? -1 : 1 )
             duration = speed / deceleration
 
-            if ( destination < lowerMargin ) {
+            if (destination < lowerMargin) {
                 destination = wrapperSize ? lowerMargin - ( wrapperSize / 2.5 * ( speed / 8 ) ) : lowerMargin
                 distance = Math.abs(destination - current)
                 duration = distance / speed
-            } else if ( destination > 0 ) {
-                destination = wrapperSize ? wrapperSize / 2.5 * ( speed / 8 ) : 0;
+            } else if ( destination > higherMargin ) {
+                destination = wrapperSize ? wrapperSize / 2.5 * ( speed / 8 ) : higherMargin
                 distance = Math.abs(current) + destination
                 duration = distance / speed
             }
@@ -350,7 +349,49 @@ define(["avalon",
             this.momentum = options.momentum || true
             this.momentHeight = 100
         }
+        Scroll.prototype._initPosition = function(element) {
+            var vmodel = element.vmodel,
+                options = vmodel.$model,
+                initY = Math.floor(options.showItems / 2) * 30,
+                now = new Date(),
+                curHour = now.getHours(),
+                curMinute = now.getMinutes(),
+                dates = vmodel.dates,
+                hours = vmodel.hours,
+                minutes = vmodel.minutes;
+            switch(element._name) {
+                case "hour":
+                    for (var i = 0, len = hours.length; i < len; i++) {
+                        var hour = +hours[i]._hour
+                        if (hour === curHour) {
+                            initY = initY - (i * 30)
+                            break
+                        }
+                    }
+                break;
+                case "minute":
+                    for (var i = 0, len = minutes.length; i < len; i++) {
+                        var minute = +minutes[i]._minute,
+                            nextMinute = +(minutes[i+1] && minutes[i+1]._minute || 59),
+                            interval = Number((nextMinute - minute)/2);
 
+                        if (curMinute >= minute && curMinute <= nextMinute) {
+                            if ((curMinute + interval) > nextMinute) {
+                                if (i == len-1) {
+                                    initY = initY - i * 30
+                                } else {
+                                    initY = initY - (i + 1) * 30
+                                }
+                            } else {
+                                initY = initY - i * 30
+                            }
+                            break
+                        }
+                    }
+                break;
+            }
+            this._scrollTo(null, element, 0, initY)
+        }
         Scroll.prototype._initMaxScroll = function(element, options) {
             var $element = avalon(element),
                 halfTimerHeight = Math.floor(options.showItems / 2) * 30;
@@ -387,6 +428,25 @@ define(["avalon",
             }
             this._scrollTo(event, element, 0, newY, 0)
         }
+        Scroll.prototype._resetPosition = function (event, element, time) {
+            var y = this.y,
+                maxScrollY = this.maxScrollY,
+                minScrollY = this.minScrollY;
+
+            time = time || 0
+            
+            if (y > minScrollY) {
+                y = minScrollY
+            } else if (y < maxScrollY) {
+                y = maxScrollY
+            }
+
+            if (y == this.y ) {
+                return false
+            }
+            this._scrollTo(event, element, 0, y, time, this.bounceEasing)
+            return true
+        }
         Scroll.prototype._scrollTo = function (event, element, x, y, time, easing) {
             easing = easing || util.ease.circular
 
@@ -401,11 +461,10 @@ define(["avalon",
             }
         }
         Scroll.prototype._translate = function (element, x, y, event) {
-            console.log("translate")
             var index = Math.round(y / 30),
                 dataName = "",
                 indexName = "",
-                type = event.type;
+                type = event && event.type || "";
             if (type === "mousewheel" || type === drag.eEnd) {
                 y = index * 30 
             }
@@ -435,7 +494,6 @@ define(["avalon",
             this.y = y
         }
         Scroll.prototype._animate = function (element, destX, destY, duration, easingFn, event) {
-            console.log("_animate");
             var that = this,
                 startY = this.y,
                 startTime = util.getTime(),
@@ -449,6 +507,8 @@ define(["avalon",
                 if (now >= destTime) {
                     that.isAnimating = false
                     that._translate(element, destX, destY, event)
+                    that._resetPosition(event, element, that.bounceTime)
+                    // scrollEnd回调
                     return
                 }
 
@@ -462,14 +522,12 @@ define(["avalon",
             step()
         }
         Scroll.prototype._start = function (element, event) {
-            console.log("_start")
             var point = event.touches ? event.touches[0] : event,
                 options = this.options,
                 pos;
             currentScroll = this
             this.element = element
             this.distY = 0
-            
             this.initiated = true
             this._initMaxScroll(element, options)
             this.startTime = util.getTime()
@@ -478,7 +536,6 @@ define(["avalon",
         }
 
         Scroll.prototype._move = function (element, event) {
-            console.log("_move")
             // 如果start未触发，或者this.element未定义或者currentScroll为null都说明不是拖动状态
             if (!this.initiated || !this.element || !currentScroll) return
             var point = event.touches ? event.touches[0] : event,
@@ -510,35 +567,37 @@ define(["avalon",
         }
 
         Scroll.prototype._end = function (element, event) {
-            console.log("_end")
             var point = event.changedTouches ? event.changedTouches[0] : event,
                 momentumY,
                 duration = util.getTime() - this.startTime,
                 newY = Math.round(this.y),
                 distanceY = Math.abs(newY - this.startY),
                 time = 0,
-                easing = '';
+                easing = '',
+                minScrollY = this.minScrollY,
+                maxScrollY = this.maxScrollY;
 
             currentScroll = null
             this.initiated = false
             this.endTime = util.getTime()
+            if (this._resetPosition(event, element, this.bounceTime)) return
             this._scrollTo(event, element, 0, newY)// ensures that the last position is rounded
-            console.log("newY is : "+newY)
+            
             //start momentum animation if needed
             if (this.momentum && duration < 300) {
                 //current, start, time, lowerMargin, wrapperSize, deceleration
-                momentumY = util.momentum(this.y, this.startY, duration, this.maxMomentHeight, this.bounce ? this.options._timerHeight : 0, this.deceleration)
+                momentumY = util.momentum(this.y, this.startY, duration, maxScrollY, minScrollY, this.bounce ? this.options._timerHeight : 0, this.deceleration)
                 newY = momentumY.destination
             }
-            console.log("newY is : "+newY)
-            // if (newY != this.y) {
-            //     // change easing function when scroller goes out of the boundaries
-            //     if (newY > this.minScrollY || newY < this.maxScrollY ) {
-            //         easing = util.ease.quadratic;
-            //     }
-            //     this._scrollTo(event, element, 0, newY, time, easing);
-            //     return;
-            // }
+            
+            if (newY != this.y) {
+                // change easing function when scroller goes out of the boundaries
+                if (newY > minScrollY || newY < maxScrollY ) {
+                    easing = util.ease.quadratic;
+                }
+                this._scrollTo(event, element, 0, newY, time, easing);
+            }
+            this._scrollTo(event, element, 0, newY)
         }
 
         return Scroll

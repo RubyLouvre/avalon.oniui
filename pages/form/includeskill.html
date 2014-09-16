@@ -1,0 +1,16 @@
+<div class='item-entry-wrap clearfix' ms-visible="skillVisible[el]">
+    <div class='item-entry' ms-click="editSkill()" ms-keyup="editSkill()">
+        <input type='text' placeholder='Skill title' ms-duplex="skillTitles[el]">
+        <div class='radios-wrap'>
+            <b class='inb' >Level</b>
+            <label><input type='radio' ms-attr-name='Level{{el}}' ms-duplex-text="skillLevels[el]" value='noob' >Noob</label>
+            <label><input type='radio' ms-attr-name='Level{{el}}' ms-duplex-text="skillLevels[el]" value='intermediate'>Intermediate</label>
+            <label><input type='radio' ms-attr-name='Level{{el}}' ms-duplex-text="skillLevels[el]" value='advanced'>Advanced</label>
+            <label><input type='radio' ms-attr-name='Level{{el}}' ms-duplex-text="skillLevels[el]" value='god'>God</label>
+        </div>
+        <div class='upper-wrap'>
+            Name (uppercased): <span>{{name|uppercase}}</span>
+        </div>
+    </div>
+    <a class='fr inb' ms-click="removeSkill(el)">Remove</a>
+</div>

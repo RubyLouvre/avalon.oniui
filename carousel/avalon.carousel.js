@@ -57,6 +57,13 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                 element.innerHTML = pageHTML
                 avalon.scan(element, [vmodel].concat(vmodels))
                 element.style.display = "block"
+
+                if(vm.adaptiveWidth){//自动外围容器宽度
+                    var wrapWidth = element.offsetWidth
+                    vm.pictureWidth = wrapWidth
+                    console.log(wrapWidth)
+                }
+
                 if (typeof options.onInit === "function") {
                     options.onInit.call(element, vmodel, options, vmodels)
                 }
@@ -199,6 +206,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
         vmodel.pictures[vmodel.pictures.length] = vmodel.pictures[0] //将第一个元素加到图片数组末尾形成循环
         vmodel.autoPlay(vmodel) //自动开始轮播
         vmodel.$watch("$all", function() {})
+
+        
         return vmodel
     }
 
@@ -219,6 +228,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
         alwaysShowSelection: true, //@param alwaysShowSelection 显示底部圆形切换部件
         autoSlide: true, //@param autoSlide 自动播放
         hoverStop: false, //@param autoSlide 鼠标经过停止播放
+        adaptiveWidth: false, //@param adaptiveWidth 适应外围宽度，为true时指定的宽度不起作用
         arrowLeftNormalSrc: "./images/arrows-left-icon.png", //@param arrowLeftNormalSrc 左箭头正常状态图标
         arrowRightNormalSrc: "./images/arrows-right-icon.png", //@param arrowLeftNormalSrc 右箭头正常状态图标
         arrowLeftHoverSrc: "./images/arrows-left-hover-icon.png", //@param arrowLeftNormalSrc 左箭头hover状态图标

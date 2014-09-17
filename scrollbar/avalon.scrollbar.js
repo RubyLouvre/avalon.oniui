@@ -408,10 +408,10 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                         var ex
                         if(isVertical) {
                             ex = vmodel.show == "always" ? bw : 0
-                            scroller.css("width", w + vPadding - ex)
+                            scroller.css("width", w + hPadding - ex)
                         } else {
                             ex = vmodel.show == "always" ? bh : 0
-                            scroller.css("height", h + hPadding - ex)
+                            scroller.css("height", h + vPadding - ex)
                         }
                         avalon.each(draggerParCss, function(index, css) {
                             draggerpar.css.apply(draggerpar, css)

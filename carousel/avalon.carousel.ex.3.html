@@ -12,22 +12,21 @@
                 avalon.define("demo1", function(vm) {
                     vm.carousel = {
                         pictures: [
-                        "http://placekitten.com/g/520/280",
-                        "http://placekitten.com/g/520/290",
-                        "http://placekitten.com/g/520/320"],
-                        timeout: 1000, //@param timeout 切换时间间隔
-                        during: 300 //@param during 切换速度，越小越快，单位为毫秒
+                        "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
+                        "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
+                        "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"],
+                        alwaysShowArrow: false, //@param alwaysShowArrow 显示左右切换箭头
+                        alwaysShowSelection: false //@param alwaysShowSelection 显示底部圆形切换部件
                     }
                     vm.$skipArray = ["carousel"]
                 })
                 avalon.define("demo2", function(vm) {
                     vm.carousel = {
                         pictures: [
-                        "http://placekitten.com/g/520/280",
-                        "http://placekitten.com/g/520/290",
-                        "http://placekitten.com/g/520/320"],
-                        timeout: 2500, //@param timeout 切换时间间隔
-                        during: 1000 //@param during 切换速度，越小越快，单位为毫秒
+                        "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
+                        "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
+                        "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"],
+                        hoverStop: true //@param autoSlide 鼠标经过停止播放
                     }
                     vm.$skipArray = ["carousel"]
                 })
@@ -37,13 +36,13 @@
     </head>
     <body>
         <div class="wrapper">
-        <h1>图片轮播组件</h1>
+        <h1>图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过停止播放</h1>
         <fieldset ms-controller="demo1">
-            <legend>自定义图片切换时间间隔</legend>
+            <legend>自定义不显示左右切换箭头和底部圆形选择部件</legend>
             <div ms-widget="carousel"></div>
         </fieldset>
         <fieldset ms-controller="demo2">
-            <legend>自定义图片切换速度</legend>
+            <legend>自定义鼠标经过停止播放</legend>
             <div ms-widget="carousel"></div>
         </fieldset>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">
@@ -61,22 +60,21 @@
                 avalon.define("demo1", function(vm) {
                     vm.carousel = {
                         pictures: [
-                        "http://placekitten.com/g/520/280",
-                        "http://placekitten.com/g/520/290",
-                        "http://placekitten.com/g/520/320"],
-                        timeout: 1000, //@param timeout 切换时间间隔
-                        during: 300, //@param during 切换速度，越小越快，单位为毫秒
+                        "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
+                        "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
+                        "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"],
+                        alwaysShowArrow: false, //@param alwaysShowArrow 显示左右切换箭头
+                        alwaysShowSelection: false //@param alwaysShowSelection 显示底部圆形切换部件
                     }
                     vm.$skipArray = ["carousel"]
                 })
                 avalon.define("demo2", function(vm) {
                     vm.carousel = {
                         pictures: [
-                        "http://placekitten.com/g/520/280",
-                        "http://placekitten.com/g/520/290",
-                        "http://placekitten.com/g/520/320"],
-                        timeout: 2500, //@param timeout 切换时间间隔
-                        during: 1000, //@param during 切换速度，越小越快，单位为毫秒
+                        "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
+                        "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
+                        "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"],
+                        hoverStop: false //@param autoSlide 鼠标经过停止播放
                     }
                     vm.$skipArray = ["carousel"]
                 })
@@ -88,13 +86,16 @@
         &lt;div class="wrapper"&gt;
         &lt;h1&gt;图片轮播组件&lt;/h1&gt;
         &lt;fieldset ms-controller="demo1"&gt;
-            &lt;legend&gt;自定义图片切换时间间隔&lt;/legend&gt;
+            &lt;legend&gt;自定义不显示左右切换箭头和底部圆形选择部件&lt;/legend&gt;
             &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
         &lt;/fieldset&gt;
         &lt;fieldset ms-controller="demo2"&gt;
-            &lt;legend&gt;自定义图片切换速度&lt;/legend&gt;
+            &lt;legend&gt;自定义鼠标经过停止播放&lt;/legend&gt;
             &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
         &lt;/fieldset&gt;
+        &lt;pre ms-skip class="brush:html;gutter:false;toolbar:false"&gt;
+
+        &lt;/pre&gt;
     &lt;/div&gt;
     &lt;/body&gt;
 &lt;/html&gt;

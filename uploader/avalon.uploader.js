@@ -1,19 +1,16 @@
-define(["avalon", "text!./avalon.uploader.html", "uploader/plupload.dev", "css!./avalon.uploader.css"], function(avalon, sourceHTML){
+define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/plupload.dev", "css!./avalon.uploader.css"], function(avalon, sourceHTML){
 
 	var widget = avalon.ui.uploader = function(element, data, vmodels){
 
-		var input,			// input 控件
-			fileList = [];	// 存放file对象
+		var fileList = [],		// 存放file对象
+			browseButtonClick,	// browseButton 绑定的 click 事件
+			ie_version = avalon.browser.ie;
 
 		var vmodel = avalon.define(data.uploaderId, function(vm){
 
 			vm.fileSrcList = [];
 
 			avalon.mix(vm, data.uploaderOptions);
-
-			vm.browse = function(){
-				input.click();
-			};
 
 			vm.removeFile = function(index){
 				vmodel.fileSrcList.removeAt(index);
@@ -24,9 +21,7 @@ define(["avalon", "text!./avalon.uploader.html", "uploader/plupload.dev", "css!.
 			vm.$init = function(){
 
 				// 创建 input 元素
-				input = avalon.parseHTML(sourceHTML).firstChild;
-				// 隐藏
-				input.style.display = 'none';
+				var input = avalon.parseHTML(sourceHTML).firstChild;
 				// 绑定事件
 				input.onchange = function(e){
 
@@ -57,7 +52,7 @@ define(["avalon", "text!./avalon.uploader.html", "uploader/plupload.dev", "css!.
 					if(this.value){
 						var _tempForm = document.createElement('form'),
 							_nextElement = this.nextSibling,
-							_parentElement = this.nextSibling;
+							_parentElement = this.parentNode;
 
 						// 取出并清空该input
 						_tempForm.appendChild(this);
@@ -74,8 +69,23 @@ define(["avalon", "text!./avalon.uploader.html", "uploader/plupload.dev", "css!.
 
 				};
 
+				// 绑定 input click 事件
+				var browseButton = document.getElementById(vmodel.browseButton);
+				browseButtonClick = avalon.bind(browseButton, "click", function(){
+					input.click();
+				});
+
+
 				// 插入 input 元素
-				element.appendChild(input);
+				// ie9- 用其他异步事件来触发 input.click 无法取得文件本地路径
+				// 必须还是要点到 input 上，所以插到按钮内部
+				if(ie_version > 0 && ie_version < 10){
+					browseButton.appendChild(input);
+				}else{
+					// 隐藏
+					input.style.display = 'none';
+					element.appendChild(input);
+				}
 
 
 				avalon.scan(element, [vmodel].concat(vmodels));

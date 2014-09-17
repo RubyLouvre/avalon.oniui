@@ -13,20 +13,23 @@
 	li{
 		list-style: none;
 	}
-	
-	.preview{
-		float: left;
+	.browse{
+		overflow: hidden;
 	}
-		.preview img, .preview canvas, .add{
+		.browse li{
+			float: left;
 			margin-right: 5px;
 			margin-bottom: 5px;
 			cursor: pointer;
-		}
-		.add{
 			width: 100px;
 			height: 100px;
 			box-sizing: border-box;
-			display: inline-block;
+		}
+		.preview{
+			background: no-repeat center center;
+			background-size: cover;
+		}
+		.browse .add{
 			border: 2px dashed #ccc;
 			position: relative;
 			text-align: center;
@@ -34,10 +37,10 @@
 			*width: 96px;
 			*height: 96px;
 		}
-		.add:hover{
+		.browse .add:hover{
 			border-color: #FFA306;
 		}
-			.add .icon-add{
+			.browse .add .icon-add{
 				font-size: 40px;
 				line-height: 98px;
 				color: #ccc;
@@ -52,23 +55,24 @@
 
 
 	<div ms-widget="uploader, $, $opts">
-		
-		<div id="preview" class="preview">
-			
-		</div>
-		<span id="add" class="add">
-			<span class="icon-add">✚</span>
-		</span>
+		<ul class="browse">
+			<li class="preview" ms-repeat="fileSrcList" ms-click="removeFile($index)" ms-css-background-image="'url(' + el + ')'" ms-css-filter="'progid:DXImageTransform.Microsoft.AlphaImageLoader(src=' + el + ', sizingMethod=scale)'"></li>
+			<li class="add" ms-if="fileSrcList.length < max" ms-click="browse">
+				<span class="icon-add">✚</span>
+			</li>
+		</ul>
+		<p>共{{fileSrcList.length}}张，还能上传{{max - fileSrcList.length}}张</p>
 		
 	</div>
 
 	<script>
 		require("uploader/avalon.uploader", function(){
 			var model = avalon.define("demo", function(vm){
+
 				vm.$opts = {
-					browse_button : 'add',
-					preview: 'preview'
+					max: 3
 				};
+
 			});
 			avalon.scan();
 		});

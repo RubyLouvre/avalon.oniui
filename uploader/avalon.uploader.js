@@ -2,108 +2,86 @@ define(["avalon", "text!./avalon.uploader.html", "uploader/plupload.dev", "css!.
 
 	var widget = avalon.ui.uploader = function(element, data, vmodels){
 
-		var uploader = new plupload.Uploader({
-			runtimes : 'html5,flash,silverlight,html4',
-			browse_button : data.uploaderOptions.browse_button, // you can pass in id...
-			url : 'upload.php',
-			flash_swf_url : 'Moxie.swf',
-			silverlight_xap_url : 'Moxie.xap',
-			
-			filters : {
-				max_file_size : '10mb',
-				mime_types: [
-					{title : "Image files", extensions : "jpg,gif,png"},
-					{title : "Zip files", extensions : "zip"}
-				]
-			},
-
-			init: {
-				PostInit: function() {
-					/*ul_fileList.innerHTML = '';
-
-					ul_upload.onclick = function() {
-						uploader.start();
-						return false;
-					};*/
-				},
-
-				FilesAdded: function(up, files) {
-					plupload.each(files, function(file) {
-
-						// ul_fileList.innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
-
-						// window.file = file;
-						// console.log(file.getSource());
-
-						var img = new mOxie.Image();
-
-						img.onload = function() {
-							window.file = file;
-							// console.log(file);
-							this.embed(document.getElementById(data.uploaderOptions.preview), {
-								width: 100,
-								height: 100,
-								crop: true
-							});
-							console.log(file.name);
-						};
-
-						img.onembedded = function() {
-							this.destroy();
-						};
-
-						img.onerror = function() {
-							this.destroy();
-						};
-
-						img.load(file.getSource());        
-
-					});
-				},
-
-				UploadProgress: function(up, file) {
-					document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
-				},
-
-				Error: function(up, err) {
-					// ul_console.innerHTML += "\nError #" + err.code + ": " + err.message;
-				}
-			}
-		});
-
-		uploader.init();		
+		var input,			// input 控件
+			fileList = [];	// 存放file对象
 
 		var vmodel = avalon.define(data.uploaderId, function(vm){
 
+			vm.fileSrcList = [];
+
+			avalon.mix(vm, data.uploaderOptions);
+
 			vm.browse = function(){
-				uploader.addFile();
+				input.click();
 			};
 
+			vm.removeFile = function(index){
+				vmodel.fileSrcList.removeAt(index);
+				fileList.splice(index, 1);
+			};
+			
+
 			vm.$init = function(){
-/*
-				// 取 dom
-				var dom_arr = sourceHTML.split("MS_OPTION_COM").map(function(item){
-						return avalon.parseHTML(item).firstChild;
-					}),
-					ul = dom_arr[0],
-					ul_fileList = dom_arr[1],
-					ul_console = dom_arr[2],
-					ul_preview = dom_arr[3];
 
-				// 组装
-				ul.appendChild(ul_fileList);
-				ul.appendChild(ul_console);
-				ul.appendChild(ul_preview);
+				// 创建 input 元素
+				input = avalon.parseHTML(sourceHTML).firstChild;
+				// 隐藏
+				input.style.display = 'none';
+				// 绑定事件
+				input.onchange = function(e){
 
-				element.parentNode.replaceChild(ul, element);
-*/
-				// console.log(element);
+					var files = this.files;
+					
+					if(files){	// chrome, ff, ie10+
+						for(var i = 0, len = files.length; i < len; i++){
+							preViewImg(files[i]);
+						}
+					}else{		// ie9-
+						/*
+						 * 出于安全考虑浏览器一般会使用 fakepath 隐藏真实路径，
+						 * 所以下面这行代码无效：
+						 * vmodel.fileSrcList.push(this.value.replace(/\\/g, '/'));
+						 *
+						 * 参考：http://www.iefans.net/ie-shangchuan-bendi-lujing-fakepath/
+						 * 以下代码有效：
+						 * 但是，如果该 change 事件是由其他事情异步触发的，则无效。
+						 */
+						this.select();
+						this.blur();
+						vmodel.fileSrcList.push(document.selection.createRange().text);
+					}
 
+					// 清空input，保证下次change事件的触发
+					this.value = '';
+					// ie10-下无法清空，借用form的reset方法
+					if(this.value){
+						var _tempForm = document.createElement('form'),
+							_nextElement = this.nextSibling,
+							_parentElement = this.nextSibling;
+
+						// 取出并清空该input
+						_tempForm.appendChild(this);
+						_tempForm.reset();
+
+						// 放回该input
+						if(_nextElement){
+							_nextElement.parentNode.insertBefore(this, _nextElement);
+						}else{
+							// 如果不存在后节点，通过父节点放回
+							_parentElement.appendChild(this);
+						}
+					}
+
+				};
+
+				// 插入 input 元素
+				element.appendChild(input);
 
 
 				avalon.scan(element, [vmodel].concat(vmodels));
 
 			};
+
 			vm.$remove = function(){
 				
 			};
@@ -111,6 +89,29 @@ define(["avalon", "text!./avalon.uploader.html", "uploader/plupload.dev", "css!.
 		});
 		
 		return vmodel;
+
+		function preViewImg(file){
+					
+			if(/image/.test(file.type)){
+				
+				var reader = new FileReader();
+				reader.readAsDataURL(file);
+				
+				reader.onprogress = function(e){
+					/* if(e.lengthComputable){
+						console.log('ok: ' + e.loaded + '/' + e.total);
+					}else{
+						console.log('no ok.');
+					}*/
+				};
+				reader.onload = function(){
+					if(vmodel.fileSrcList.length < vmodel.max){
+						vmodel.fileSrcList.push(reader.result);
+						fileList.push(file);
+					}
+				};
+			}
+		}
 	};
 
 	widget.version = 1.0;

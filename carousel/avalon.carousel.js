@@ -58,10 +58,17 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                 avalon.scan(element, [vmodel].concat(vmodels))
                 element.style.display = "block"
 
-                if(vm.adaptiveWidth){//自动外围容器宽度
+                if (vm.adaptiveWidth) { //自动外围容器宽度
                     var wrapWidth = element.offsetWidth
                     vm.pictureWidth = wrapWidth
                     console.log(wrapWidth)
+                }
+
+                var images = vm.pictures //预加载图片
+                images.push(vm.arrowLeftNormalSrc, vm.arrowLeftHoverSrc, vm.arrowRightNormalSrc, vm.arrowRightHoverSrc)
+                for (var i = 0; i < images.length; i++) {
+                    var image_preload = new Image()
+                    image_preload.src = images[i]
                 }
 
                 if (typeof options.onInit === "function") {
@@ -207,7 +214,6 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
         vmodel.autoPlay(vmodel) //自动开始轮播
         vmodel.$watch("$all", function() {})
 
-        
         return vmodel
     }
 

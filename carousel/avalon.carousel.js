@@ -218,7 +218,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
         alwaysShowArrow: true, //@param alwaysShowArrow 显示左右切换箭头
         alwaysShowSelection: true, //@param alwaysShowSelection 显示底部圆形切换部件
         autoSlide: true, //@param autoSlide 自动播放
-        hoverStop: true, //@param autoSlide 鼠标经过停止播放
+        hoverStop: false, //@param autoSlide 鼠标经过停止播放
         arrowLeftNormalSrc: "./images/arrows-left-icon.png", //@param arrowLeftNormalSrc 左箭头正常状态图标
         arrowRightNormalSrc: "./images/arrows-right-icon.png", //@param arrowLeftNormalSrc 右箭头正常状态图标
         arrowLeftHoverSrc: "./images/arrows-left-hover-icon.png", //@param arrowLeftNormalSrc 左箭头hover状态图标

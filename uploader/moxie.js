@@ -3430,7 +3430,10 @@ define('moxie/file/FileInput', [
 
 					// re-position and resize shim container
 					self.bind('Refresh', function() {
-						var pos, size, browseButton, shimContainer;
+
+						// 不需要改变 input 的位置
+
+						/*var pos, size, browseButton, shimContainer;
 						
 						browseButton = Dom.get(options.browse_button);
 						shimContainer = Dom.get(runtime.shimid); // do not use runtime.getShimContainer(), since it will create container if it doesn't exist
@@ -3448,7 +3451,7 @@ define('moxie/file/FileInput', [
 								});
 							}
 						}
-						shimContainer = browseButton = null;
+						shimContainer = browseButton = null;*/
 					});
 					
 					runtime.exec.call(self, 'FileInput', 'init', options);

@@ -36,7 +36,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
             vm.$skipArray = ["widgetElement", "disabledClass", "autoTrim"];
             vm.widgetElement = element;
             vm.elementDisabled = "";
-            vm.toggle = false;
+            vm.toggle = true;
             vm.placehold = options.placeholder;
             vm.focusClass = false
             // input获得焦点时且输入域值为空时隐藏占位符
@@ -53,7 +53,11 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 if (options.autoTrim) {
                     element.value = element.value.trim()
                 }
-                vmodel.toggle = element.value != "" ? false : true;
+                if (element.value !="" || !vmodel.placehold.length) {
+                    vmodel.toggle = false
+                } else {
+                    vmodel.toggle = true
+                }
             }
             vm.$remove = function() {
                 var sourceListParent = sourceList.parentNode;
@@ -62,6 +66,11 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
             }           
             vm.$init = function() {
                 avalon.bind(element, "blur", vm.blur);
+                if (options.autoFocus) {
+                    avalon.bind(element, "mouseover", function() {
+                        element.focus()
+                    })
+                }
                 /**
                  * 如果存在suggest配置，说明需要自动补全功能，
                  * 此处将suggest需要的配置信息保存方便后续传给suggest widget，
@@ -97,6 +106,9 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                     vmodel.focusClass = true
                     vmodel.toggle = false
                 })
+                if (!vmodel.placehold.length || element.value != "") {
+                    vmodel.toggle = false
+                }
                 avalon.scan(sourceList, models);
                 avalon.scan(element, models);
                 if(typeof options.onInit === "function" ){
@@ -105,7 +117,6 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 }
                 // 如果输入域有值，则隐藏占位符，否则显示，默认显示
                 vm.elementDisabled = element.disabled;
-                vm.toggle = element.value != "" ? false : true;
             }
         })
 
@@ -116,7 +127,11 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 // 根据对元素双向绑定的数据的监听来判断是显示还是隐藏占位符，并且判定元素的禁用与否
                 vmSub[1].$watch(vmSub[0], function() {
                     vmodel.elementDisabled = element.disabled;
-                    vmodel.toggle = element.value != "" ? false : true;
+                    if (element.value !="" || !vmodel.placehold.length) {
+                        vmodel.toggle = false
+                    } else {
+                        vmodel.toggle = true
+                    }
                 })
             }
         }
@@ -126,7 +141,11 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
             if (vmSub) {
                 vmSub[1].$watch(vmSub[0], function() {
                     vmodel.elementDisabled = element.disabled;
-                    vmodel.toggle = element.value != "" ? false : true;
+                    if (element.value !="" || !vmodel.placehold.length) {
+                        vmodel.toggle = false
+                    } else {
+                        vmodel.toggle = true
+                    }
                 })
             }
         }
@@ -140,6 +159,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
         widgetElement: "",
         tabIndex: -1,
         width: -1,
+        autoFocus: false,
         disabledClass: "ui-textbox-disabled"
     }
     return avalon ;

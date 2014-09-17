@@ -1,0 +1,36 @@
+<div class="ui-carousel" 
+	 ms-css-width="pictureWidth" 
+	 ms-css-height="pictureHeight" 
+	 ms-mouseenter="setArrowVisible" 
+	 ms-mouseleave="setArrowHidden"
+	 >
+	<div class="ui-carousel-panel" 
+		 ms-css-width="pictureWidth* picNum" 
+		 ms-css-height="pictureHeight" 
+		 ms-css-left="panelOffsetX" 
+		 >
+		<div class="ui-carousel-item" 
+			 ms-repeat="pictures"
+			 ms-css-width="pictureWidth"
+			 >
+			<img ms-src="{{el}}" alt=""/>
+		</div>
+	</div>
+	<div class="ui-carousel-selection-wrap" 
+		 ms-visible="alwaysShowSelection"
+		 ms-css-margin-left="selectionWrapOffset"
+		 >
+		<a ms-class="selected:el==selectionIndex" 
+		 ms-click="selectPic($index)"
+		 ms-repeat="selections"
+			></a>
+	</div>
+	<a class="arrow prev"  
+	   ms-click="animate(-1)"
+	   ms-visible="arrowVisible" 
+		>&lt;</a>
+	<a class="arrow after" 
+	   ms-click="animate(1)"
+	   ms-visible="arrowVisible" 
+		>&gt;</a>
+</div>

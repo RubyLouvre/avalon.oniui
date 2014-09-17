@@ -25,6 +25,7 @@
 MS_OPTION_TEMPLATE
 <div class="ui-dropdown"
      ms-class="ui-dropdown-menu:!multiple"
+     ms-class-1="{{listClass}}"
      ms-css-width="{{listWidth}}"
      ms-mouseenter="_listenter"
      ms-mouseleave="_listleave"
@@ -37,7 +38,6 @@ MS_OPTION_TEMPLATE
         <div class="ui-scrollbar-scroller"
              id="list-MS_OPTION_ID">
             <div ms-repeat="data"  class="ui-dropdown-item"
-                 data-repeat-rendered="updateScrollbar"
                  ms-click-12="_select($index, $event)"
                  ms-title="el.title||el.label"
                  ms-hover="ui-state-hover: el.enable"

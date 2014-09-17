@@ -1,4 +1,5 @@
-<div ms-repeat-pos="_position" class="ui-scrollbar ui-helper-reset ui-helper-clearfix ui-widget" 
+<div ms-repeat-pos="_position" class="ui-scrollbar ui-helper-reset ui-helper-clearfix ui-widget"
+     ms-visible="!disabled"
 	 ms-class-100="ui-scrollbar-{{pos}}" 
 	 ms-class-101="ui-scrollbar-{{size}} ui-scrollbar-{{pos}}-{{size}}" 
 	 ms-class-102="ui-state-disabled:disabled" 
@@ -22,8 +23,8 @@
 		ms-hover="ui-state-hover"
 		>{{draggerHTML | html}}</div>
 	</div>
-	<div ms-if="showBarHeader" class="ui-scrollbar-arrow ui-scrollbar-arrow-down" 
-	 ms-click="_arrClick($event, 'down', pos, $index)" 
+	<div ms-if="showBarHeader" class="ui-scrollbar-arrow ui-scrollbar-arrow-down"
+	 ms-click="_arrClick($event, 'down', pos, $index)"
 	 ms-mousedown="_arrDown($event,'down', pos, $index)" 
 	 ms-mouseup="_arrDown($event,'down', pos, $index,'release')" 
 	 ms-class-100="ui-state-disabled:disabled" 

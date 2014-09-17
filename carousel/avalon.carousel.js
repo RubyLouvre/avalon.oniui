@@ -212,7 +212,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
         pictureWidth: 500, //@param pictureWidth 图片显示宽度
         pictureHeight: 200, //@param pictureHeight 图片显示高度
         effect: "slide", //@param effect 图片切换类型，默认为"slide"，取值：none:无特效 / fade:渐隐 / slide:滑动
-        easing: "easeInOut", //@param effect 缓动类型，默认为"easeInOut"，取值：linear:无缓动效果 / easeIn:在过渡的开始提供缓动效果 / easeOut:在过渡的结尾提供缓动效果 / easeInOut 在过渡的开始和结尾提供缓动效果
+        easing: "easeInOut", //@param effect 缓动类型，默认为"easeInOut"，取值 linear:无缓动效果 / easeIn:在过渡的开始提供缓动效果 / easeOut:在过渡的结尾提供缓动效果 / easeInOut 在过渡的开始和结尾提供缓动效果
         timeout: 2500, //@param timeout 切换时间间隔
         during: 300, //@param during 切换速度，越小越快，单位为毫秒
         alwaysShowArrow: true, //@param alwaysShowArrow 显示左右切换箭头

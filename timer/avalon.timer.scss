@@ -1,9 +1,31 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
 $uiname: "ui-timer";
-$pager-background-color: #FFFFFF;
-$pager-active-color: $ui-state-active-color;
-
+.ui-textbox {
+    @include inline-block();
+    outline: medium none;
+    font-size: 0;
+    padding: 3px 5px;
+    line-height: 18px;
+    @if($oinui-theme == smoothness) {
+        background-color: #FFFFFF;
+        border: 1px solid #CCCCCC;
+    }
+    .ui-textbox-input-wrap {
+        position: relative;
+        @include inline-block();
+        line-height: 18px;
+        span {
+            @include inline-block();
+            height: 18px;
+            line-height: 18px;
+            font-size: 12px;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+    }
+}
 .#{$uiname} {
     overflow: hidden;
     position: relative;

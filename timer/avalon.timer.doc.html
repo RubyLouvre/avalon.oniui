@@ -36,6 +36,36 @@
                         <td>日期部分是否显示年份</td>
                     </tr>
                     <tr>
+                        <td>dialog</td>
+                        <td>{title: "选择时间", width: 300, showClose: false}</td>
+                        <td>弹层dialog的配置项</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>180</td>
+                        <td>时间选择框的宽度</td>
+                    </tr>
+                    <tr>
+                        <td>placeHolder</td>
+                        <td>"请选择时间"</td>
+                        <td>配置时间选择器的提示文案</td>
+                    </tr>
+                    <tr>
+                        <td>getTimeText(timeDate, placeHolder)</td>
+                        <td>
+<pre>
+getTimeText: function(timeDate, placeHolder) {
+    var timeText = placeHolder
+    if (timeDate) {
+        timeText = timeDate.toLocaleString()
+    } 
+    return timeText
+}
+</pre>
+                        </td>
+                        <td>选择时间之后的展示格式, timeDate是当前选择时间，如果未选择则为null，选择的话是个Date对象，placeHolder参数是用户配置的时间选择器的提示文案，默认是"请选择时间"</td>
+                    </tr>
+                    <tr>
                         <td>eventType</td>
                         <td>"touch"</td>
                         <td>设置触发时间选择的事件，配置为"mousewheel"会通过鼠标滚动的方式触发，配置为""或者不配置，组件会根据浏览器支持选择鼠标拖动或者移动的touch事件</td>
@@ -122,12 +152,12 @@ function(str, options) {
                         <td>初始化时触发的回调</td> 
                     </tr>
                     <tr>
-                        <td colspan="3" align="center">外部调用接口的API</td>
+                        <td colspan="3" align="center">外部调用接口</td>
                     </tr>
                     <tr>
-                        <td>getTime()</td>
+                        <td>timeDate</td>
                         <td></td>
-                        <td>获取当前选择时间，返回的是个Date对象</td>
+                        <td>获取当前选择时间，返回的是个Date对象,如果没有选择时间，则返回null</td>
                     </tr>
                 </tbody>
             </table>

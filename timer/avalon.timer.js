@@ -1,7 +1,8 @@
 define(["avalon",
     "text!./avalon.timer.html",
     "css!../chameleon/oniui-common.css",
-    "css!./avalon.timer.css"
+    "css!./avalon.timer.css",
+    "../dialog/avalon.dialog"
 ], function(avalon, template) {
     var currentScroll = null,
         touch = typeof window.ontouchstart !== 'undefined',
@@ -9,12 +10,17 @@ define(["avalon",
             eStart : (touch ? 'touchstart' : 'mousedown'),
             eMove  : (touch ? 'touchmove' : 'mousemove'),
             eEnd   : (touch ? 'touchend' : 'mouseup'),
-        };
+        },
+        templateArr = template.split("MS_OPTION_TEXTBOX"),
+        template = templateArr[1],
+        textbox = templateArr[0];
 
     var widget = avalon.ui.timer = function(element, data, vmodels) {
         var options = data.timerOptions,
             scrollElements = {},
-            initIndex = 0;
+            initIndex = 0,
+            timerWrapper,
+            textboxWrapper = null;
             
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
@@ -23,7 +29,7 @@ define(["avalon",
         var vmodel = avalon.define(data.timerId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
-            vm.$skipArray = ["widgetElement", "eventType", "_initIndex"]
+            vm.$skipArray = ["widgetElement", "eventType", "_initIndex", "dialog", "_dialog", "textbox"]
             vm._initIndex = initIndex
             vm._timerHeight = 0
             vm._timerWidth = 0
@@ -32,6 +38,45 @@ define(["avalon",
             vm._currentDateIndex = initIndex
             vm._currentHourIndex = initIndex
             vm._currentMinuteIndex = initIndex
+            vm._dialog = null
+            vm._timeTextColor = "#999999"
+            vm.timeDate = null
+            vm._toggleDialog = function() {
+                var dialog = vmodel._dialog
+                if (dialog && !dialog.toggle) {
+                    dialog.toggle = true
+                }
+            }
+            vm.dialog.onInit = function(dialog) {
+                vmodel._dialog = dialog
+                dialog.$watch("toggle", function(val) {
+                    if (val) {
+                        var dateElementWidth = 0,
+                            hourElementWidth = 0,
+                            scrollEles = getScrollElements(timerWrapper),
+                            dateElement = scrollEles[0],
+                            hourElement = scrollEles[1],
+                            minuteElement = scrollEles[2];
+
+                        dateElement._name = "date"
+                        hourElement._name = "hour"
+                        minuteElement._name = "minute"
+                        handleEvent(dateElement, scrollElements, vmodel, "_initPosition")
+                        handleEvent(hourElement, scrollElements, vmodel, "_initPosition")
+                        handleEvent(minuteElement, scrollElements, vmodel, "_initPosition")
+
+                        dateElementWidth = avalon(dateElement).outerWidth()
+                        vmodel._hourLeft = dateElementWidth
+                        hourElementWidth = vmodel._minuteLeft = dateElementWidth + avalon(hourElement).outerWidth()
+                        vmodel._timerWidth = hourElementWidth + avalon(minuteElement).outerWidth()
+                    }
+                })
+            }
+            vm.dialog.onConfirm = function() {
+                var currentDate = vmodel.getTime()
+                vmodel.timeDate = currentDate
+                vmodel._timeTextColor = "#333"
+            }
             vm._eventCallback = function(eventType, event) {
                 var element = this
                 switch(eventType) {
@@ -51,57 +96,44 @@ define(["avalon",
             }
             //这些属性不被监控
             vm.$init = function() {
-                var template = options.template.replace(/MS_OPTION_BIND_EVENTS/mg, bindEvents(options.eventType))
-                element.innerHTML = template
+                var scrollEles = [],
+                    temporary = document.createElement("span");
+                element.style.display = "none"
+                timerWrapper = avalon.parseHTML(template).firstChild
+                element.parentNode.insertBefore(temporary, element)
+                textboxWrapper = avalon.parseHTML(textbox).firstChild
+                temporary.parentNode.replaceChild(textboxWrapper, temporary)
+                avalon.scan(textboxWrapper, vmodel)
+                document.body.appendChild(timerWrapper)
                 vmodel._timerHeight = 30 * options.showItems
-                avalon.scan(element, [vmodel].concat(vmodels))
-                setTimeout(function() {
-                    var divs = element.getElementsByTagName("div"),
-                        div = null,
-                        dateElement = null,
-                        hourElement = null,
-                        minuteElement = null,
-                        className = "",
-                        dateElementWidth = 0,
-                        hourElementWidth = 0;
-
-                    for (var i = 0, len = divs.length; i < len; i++) {
-                        div = divs[i]
-                        className = div.className
-                        if (className.indexOf("ui-timer-date") != -1) {
-                            dateElement = div
-                            div._name = "date"
-                            div.vmodel = vmodel
-                            handleEvent(dateElement, scrollElements, vmodel, "_initPosition")
-                        } else if (className.indexOf("ui-timer-hour") != -1) {
-                            hourElement = div
-                                div._name = "hour"
-                            div.vmodel = vmodel
-                            handleEvent(hourElement, scrollElements, vmodel, "_initPosition")
-                        } else if (className.indexOf("ui-timer-minute") != -1) {
-                            minuteElement = div
-                            div._name = "minute"
-                            div.vmodel = vmodel
-                            handleEvent(minuteElement, scrollElements, vmodel, "_initPosition")
-                        }
-                    }
-                    dateElementWidth = avalon(dateElement).outerWidth()
-                    vmodel._hourLeft = dateElementWidth
-                    hourElementWidth = vmodel._minuteLeft = dateElementWidth + avalon(hourElement).outerWidth()
-                    vmodel._timerWidth = hourElementWidth + avalon(minuteElement).outerWidth()
-                    if (typeof options.onInit === "function") {
-                        options.onInit.call(element, vmodel, options, vmodels)
-                    }
-                }, 100)
+                timerWrapper.setAttribute("ms-widget", "dialog")
+                scrollEles = getScrollElements(timerWrapper)
+                bindEvents(options.eventType, scrollEles)
+                avalon.scan(timerWrapper, [vmodel].concat(vmodels))
+                if (typeof options.onInit === "function") {
+                    options.onInit.call(element, vmodel, options, vmodels)
+                }
             }
             vm.$remove = function() {
-
+                timerWrapper.innerHTML = timerWrapper.textContent = ""
+                timerWrapper.parentNode.removeChild(timerWrapper)
+                textboxWrapper.innerHTML = textboxWrapper.textContent = ""
+                textboxWrapper.parentNode.removeChild(textboxWrapper)
             }
         })
         return vmodel
     }
     widget.defaults = {
         showItems: 9,
+        width: 180, // 时间显示框的宽度
+        placeHolder: "请选择时间",
+        getTimeText: function(timeDate, placeHolder) {
+            var timeText = placeHolder
+            if (timeDate) {
+                timeText = timeDate.toLocaleString()
+            } 
+            return timeText
+        },
         showYears: false,
         eventType: "touch",
         mouseWheelSpeed: 20,
@@ -109,20 +141,54 @@ define(["avalon",
         getDates: avalon.noop,
         getHours: avalon.noop,
         getMinutes: avalon.noop,
+        dialog: {title: "选择时间", width: 300, showClose: false},
         getTemplate: function(str, options) {
             return str
         }
     }
     avalon.bind(document, drag.eMove, function(event) {
+        var timerId = "",
+            timer = null;
         if (currentScroll) {
-            currentScroll._move(currentScroll.element, event)
+            timerId = currentScroll.timerId
+            timer = avalon.vmodels[timerId]
+            if (timer && timer.eventType != "mousewheel") {
+                currentScroll._move(currentScroll.element, event, timer)
+            }
         }
     })
     avalon.bind(document, drag.eEnd, function(event) {
+        var timerId = "",
+            timer = null;
         if (currentScroll) {
-            currentScroll._end(currentScroll.element, event)
+            timerId = currentScroll.timerId
+            timer = avalon.vmodels[timerId]
+            if (timer && timer.eventType != "mousewheel") {
+                currentScroll._end(currentScroll.element, event, timer)
+            }
         }
     })
+    function getScrollElements(timerWrapper) {
+        var divs = timerWrapper.getElementsByTagName("div"),
+            div = null,
+            dateElement = null,
+            hourElement = null,
+            minuteElement = null,
+            className = "";
+
+        for (var i = 0, len = divs.length; i < len; i++) {
+            div = divs[i]
+            className = div.className
+            if (className.indexOf("ui-timer-date") != -1) {
+                dateElement = div
+            } else if (className.indexOf("ui-timer-hour") != -1) {
+                hourElement = div
+            } else if (className.indexOf("ui-timer-minute") != -1) {
+                minuteElement = div
+            }
+        }
+        return [dateElement, hourElement, minuteElement]
+    }
     function formatNum(n, length){
         n = String(n)
         for (var i = 0, len = length - n.length; i < len; i++) {
@@ -176,14 +242,19 @@ define(["avalon",
             hours: hours
         }
     } 
-    function bindEvents(type) {
-        var eventStr = "";
-        if (type === "mousewheel") {
-            eventStr = "ms-on-mousewheel='_eventCallback(" + '"' + type + '", $event' +  ")'"
-        } else {
-            eventStr = "ms-on-" + drag.eStart + "='_eventCallback(" + '"start", $event'+ ")'"
-        }
-        return eventStr
+    function bindEvents(type, elements) {
+        var eventName = "",
+            eventValue = "";
+        elements.forEach(function(element, index) {
+            if (type === "mousewheel") {
+                eventName = "ms-on-mousewheel"
+                eventValue = "_eventCallback(" + '"' + type + '", $event)'
+            } else {
+                eventName = "ms-on-" + drag.eStart
+                eventValue = "_eventCallback(" + '"start", $event)'
+            }
+            element.setAttribute(eventName, eventValue)
+        })
     }
     function renderTimer(vmodel, index, dataName, indexName) {
         var initIndex = vmodel._initIndex,
@@ -222,11 +293,17 @@ define(["avalon",
         var name = element._name
         if (!scrollArr[name]) {
             scrollArr[name] = new Utils(vmodel.$model)
-            scrollArr[name][eventName](element, event)
+            scrollArr[name][eventName](element, event, vmodel)
             return 
         }
-        scrollArr[name][eventName](element, event)
+        scrollArr[name][eventName](element, event, vmodel)
     }
+    var rAF = window.requestAnimationFrame  ||
+        window.webkitRequestAnimationFrame  ||
+        window.mozRequestAnimationFrame     ||
+        window.oRequestAnimationFrame       ||
+        window.msRequestAnimationFrame      ||
+        function (callback) { window.setTimeout(callback, 1000 / 60); };
 
     var Utils = (function() {
         var util = {},
@@ -349,9 +426,8 @@ define(["avalon",
             this.momentum = options.momentum || true
             this.momentHeight = 100
         }
-        Scroll.prototype._initPosition = function(element) {
-            var vmodel = element.vmodel,
-                options = vmodel.$model,
+        Scroll.prototype._initPosition = function(element, event, vmodel) {
+            var options = vmodel.$model,
                 initY = Math.floor(options.showItems / 2) * 30,
                 now = new Date(),
                 curHour = now.getHours(),
@@ -390,7 +466,7 @@ define(["avalon",
                     }
                 break;
             }
-            this._scrollTo(null, element, 0, initY)
+            this._scrollTo(null, element, vmodel, 0, initY)
         }
         Scroll.prototype._initMaxScroll = function(element, options) {
             var $element = avalon(element),
@@ -403,7 +479,7 @@ define(["avalon",
                 this.minMomentHeight = this.minScrollY + this.momentHeight
             }
         }
-        Scroll.prototype._wheel = function (element, event) {
+        Scroll.prototype._wheel = function (element, event, vmodel) {
             event.preventDefault()
             event.stopPropagation()
 
@@ -426,9 +502,9 @@ define(["avalon",
             } else if ( newY < maxScrollY ) {
                 newY = maxScrollY
             }
-            this._scrollTo(event, element, 0, newY, 0)
+            this._scrollTo(event, element, vmodel, 0, newY, 0)
         }
-        Scroll.prototype._resetPosition = function (event, element, time) {
+        Scroll.prototype._resetPosition = function (event, element, vmodel, time) {
             var y = this.y,
                 maxScrollY = this.maxScrollY,
                 minScrollY = this.minScrollY;
@@ -444,23 +520,21 @@ define(["avalon",
             if (y == this.y ) {
                 return false
             }
-            this._scrollTo(event, element, 0, y, time, this.bounceEasing)
+            this._scrollTo(event, element, vmodel, 0, y, time, this.bounceEasing)
             return true
         }
-        Scroll.prototype._scrollTo = function (event, element, x, y, time, easing) {
+        Scroll.prototype._scrollTo = function (event, element, vmodel, x, y, time, easing) {
             easing = easing || util.ease.circular
-
-            this.isInTransition = this.useTransition && time > 0
 
             if (!time || (this.useTransition && easing.style)) {
                 // this._transitionTimingFunction(easing.style)
                 // this._transitionTime(time)
-                this._translate(element, x, y, event)
+                this._translate(element, vmodel, x, y, event)
             } else {
-                this._animate(element, x, y, time, easing.fn, event);
+                this._animate(element, vmodel, x, y, time, easing.fn, event);
             }
         }
-        Scroll.prototype._translate = function (element, x, y, event) {
+        Scroll.prototype._translate = function (element, vmodel, x, y, event) {
             var index = Math.round(y / 30),
                 dataName = "",
                 indexName = "",
@@ -483,7 +557,7 @@ define(["avalon",
                 break;
             }
 
-            renderTimer(element.vmodel, index, dataName, indexName)
+            renderTimer(vmodel, index, dataName, indexName)
             
             if (this.useTransform) {
                 element.style[util.style.transform] = 'translateY(' + y + 'px)'
@@ -493,7 +567,7 @@ define(["avalon",
             }
             this.y = y
         }
-        Scroll.prototype._animate = function (element, destX, destY, duration, easingFn, event) {
+        Scroll.prototype._animate = function (element, vmodel, destX, destY, duration, easingFn, event) {
             var that = this,
                 startY = this.y,
                 startTime = util.getTime(),
@@ -506,26 +580,28 @@ define(["avalon",
 
                 if (now >= destTime) {
                     that.isAnimating = false
-                    that._translate(element, destX, destY, event)
-                    that._resetPosition(event, element, that.bounceTime)
+                    that._translate(element, vmodel, destX, destY, event)
+                    that._resetPosition(event, element, vmodel, that.bounceTime)
                     // scrollEnd回调
                     return
                 }
-
                 now = (now - startTime) / duration
                 easing = easingFn(now)
                 newY = (destY - startY) * easing + startY
-                that._translate(element, newX, newY, event)
+                that._translate(element, vmodel, newX, newY, event)
+                if (that.isAnimating) {
+                    rAF(step)
+                }
             }
-
             this.isAnimating = true
             step()
         }
-        Scroll.prototype._start = function (element, event) {
+        Scroll.prototype._start = function (element, event, vmodel) {
             var point = event.touches ? event.touches[0] : event,
                 options = this.options,
                 pos;
             currentScroll = this
+            this.timerId = vmodel.$id
             this.element = element
             this.distY = 0
             this.initiated = true
@@ -535,7 +611,7 @@ define(["avalon",
             this.pointY = point.pageY
         }
 
-        Scroll.prototype._move = function (element, event) {
+        Scroll.prototype._move = function (element, event, vmodel) {
             // 如果start未触发，或者this.element未定义或者currentScroll为null都说明不是拖动状态
             if (!this.initiated || !this.element || !currentScroll) return
             var point = event.touches ? event.touches[0] : event,
@@ -559,14 +635,14 @@ define(["avalon",
             if (newY > minScrollY || newY < maxScrollY) {
                 newY = this.bounce ? this.y + deltaY / 3 : newY > minScrollY ? minScrollY : maxScrollY
             }
-            this._translate(element, 0, newY, event)
+            this._translate(element, vmodel, 0, newY, event)
             if (timestamp - this.startTime > 300) {
                 this.startTime = timestamp;
                 this.startY = this.y;
             }
         }
 
-        Scroll.prototype._end = function (element, event) {
+        Scroll.prototype._end = function (element, event, vmodel) {
             var point = event.changedTouches ? event.changedTouches[0] : event,
                 momentumY,
                 duration = util.getTime() - this.startTime,
@@ -580,8 +656,8 @@ define(["avalon",
             currentScroll = null
             this.initiated = false
             this.endTime = util.getTime()
-            if (this._resetPosition(event, element, this.bounceTime)) return
-            this._scrollTo(event, element, 0, newY)// ensures that the last position is rounded
+            if (this._resetPosition(event, element, vmodel, this.bounceTime)) return
+            this._scrollTo(event, element, vmodel, 0, newY)// ensures that the last position is rounded
             
             //start momentum animation if needed
             if (this.momentum && duration < 300) {
@@ -595,9 +671,9 @@ define(["avalon",
                 if (newY > minScrollY || newY < maxScrollY ) {
                     easing = util.ease.quadratic;
                 }
-                this._scrollTo(event, element, 0, newY, time, easing);
+                this._scrollTo(event, element, vmodel, 0, newY, time, easing);
             }
-            this._scrollTo(event, element, 0, newY)
+            this._scrollTo(event, element, vmodel, 0, newY)
         }
 
         return Scroll

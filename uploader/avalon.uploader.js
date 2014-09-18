@@ -8,12 +8,12 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/plupl
 
 		var vmodel = avalon.define(data.uploaderId, function(vm){
 
-			vm.fileSrcList = [];
+			vm.files = [];
 
 			avalon.mix(vm, data.uploaderOptions);
 
 			vm.removeFile = function(index){
-				vmodel.fileSrcList.removeAt(index);
+				vmodel.files.removeAt(index);
 				fileList.splice(index, 1);
 			};
 			
@@ -35,7 +35,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/plupl
 						/*
 						 * 出于安全考虑浏览器一般会使用 fakepath 隐藏真实路径，
 						 * 所以下面这行代码无效：
-						 * vmodel.fileSrcList.push(this.value.replace(/\\/g, '/'));
+						 * vmodel.files.push(this.value.replace(/\\/g, '/'));
 						 *
 						 * 参考：http://www.iefans.net/ie-shangchuan-bendi-lujing-fakepath/
 						 * 以下代码有效：
@@ -43,7 +43,9 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/plupl
 						 */
 						this.select();
 						this.blur();
-						vmodel.fileSrcList.push(document.selection.createRange().text);
+						vmodel.files.push({
+							src: document.selection.createRange().text
+						});
 					}
 
 					// 清空input，保证下次change事件的触发
@@ -115,8 +117,12 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/plupl
 					}*/
 				};
 				reader.onload = function(){
-					if(vmodel.fileSrcList.length < vmodel.max){
-						vmodel.fileSrcList.push(reader.result);
+					if(vmodel.files.length < vmodel.max){
+						vmodel.files.push({
+							src: reader.result,
+							name: file.name,
+							size: file.size
+						});
 						fileList.push(file);
 					}
 				};

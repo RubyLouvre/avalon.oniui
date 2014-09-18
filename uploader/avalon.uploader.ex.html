@@ -50,6 +50,23 @@
 					line-height: 98px;
 					color: #ccc;
 				}
+
+		.info{
+			border-collapse: collapse;
+			text-align: center;
+		}
+		.info caption{
+			font-style: italic;
+			font-weight: bold;
+			padding: 5px 0;
+		}
+		.info th{
+			font-weight: normal;
+		}
+		.info th, .info td{
+			border: 1px solid #000;
+			padding: 5px 10px;
+		}
 	
 </style>
 </head>
@@ -62,15 +79,34 @@
 	<div ms-widget="uploader, $, $opts">
 		<div class="browse">
 			<ul class="preview">
-				<li class="preview" ms-repeat="fileSrcList" ms-click="removeFile($index)" ms-css-background-image="'url(' + el + ')'" ms-css-filter="'progid:DXImageTransform.Microsoft.AlphaImageLoader(src=' + el + ', sizingMethod=scale)'"></li>
+				<li class="preview" ms-repeat="files" ms-click="removeFile($index)" ms-css-background-image="'url(' + el.src + ')'" ms-css-filter="'progid:DXImageTransform.Microsoft.AlphaImageLoader(src=' + el.src + ', sizingMethod=scale)'"></li>
 			</ul>
-			<span id="browse-btn" class="add" ms-if="fileSrcList.length < max">
+			<span id="browse-btn" class="add" ms-if="files.length < max">
 				<span class="icon-add">✚</span>
 			</span>
 		</div>
 	
-		<p>共{{fileSrcList.length}}张，还能上传{{max - fileSrcList.length}}张</p>
+		<p>共{{files.length}}张，还能上传{{max - files.length}}张</p>
 		
+		<table class="info">
+			<caption>图片信息</caption>
+		    <thead>
+		        <tr>
+		            <th>序号</th>
+		            <th>名字</th>
+		            <th>大小</th>
+		            <th>操作</th>
+		        </tr>
+		    </thead>
+		    <tbody>
+				<tr ms-repeat="files">
+					<td>{{$index}}</td>
+					<td>{{el.name}}</td>
+					<td>{{el.size}}</td>
+					<td><a href="javascript:;" ms-click="removeFile($index)">删除</a></td>
+				</tr>
+		    </tbody>
+		</table>
 	</div>
 
 	<script>

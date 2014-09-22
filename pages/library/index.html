@@ -96,9 +96,16 @@
             setTimeout(function() { //设置iframe高度
                 vmodel.frameContentHeight = iframe.contentDocument.body.offsetHeight + 50
             }, 100)
-            iframe.contentDocument.body.addEventListener('click', function() { //iframe内在的跳转，如示例页面链接，也要加入历史记录
-                updateHistory = true
-            })
+            if (iframe.attachEvent) { //iframe内在的跳转，如示例页面链接，也要加入历史记录
+                iframe.attachEvent("onclick", function() {
+                    updateHistory = true
+                })
+            } else {
+                iframe.contentDocument.body.addEventListener('click', function() { 
+                    updateHistory = true
+                })
+            }
+            
 
             //根据是否为示例页面更新url 
             var curLocation = iframe.contentWindow.location.href

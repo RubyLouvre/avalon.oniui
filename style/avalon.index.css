@@ -46,9 +46,20 @@ a, a:active, a:hover {
     z-index: 120;
 }
 .header .nav ul {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
     margin: 0 auto;
     font-size: 16px;
     width: 24em;
+}
+.header .nav ul:after { 
+    content: "."; 
+    display: block; 
+    clear: both; 
+    visibility: hidden; 
+    line-height: 0; 
+    height: 0; 
 }
 .header .nav ul li {
     float: left;
@@ -67,6 +78,7 @@ a, a:active, a:hover {
 }
 .header .search {
     position: absolute;
+    top: 0;
     right: 0;
 }
 .header .search input {

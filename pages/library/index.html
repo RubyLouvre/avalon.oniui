@@ -92,10 +92,8 @@
 
 
         function iframeLoaded() { //iframe load
-            console.log(1)
             iframe.contentDocument.body.style.overflow = "hidden" //重新设置overflow，使其不会出现滚动条
             setTimeout(function() { //设置iframe高度
-                console.log(iframe.contentDocument.body.offsetHeight)
                 vmodel.frameContentHeight = iframe.contentDocument.body.offsetHeight + 50
             }, 100)
             iframe.contentDocument.body.addEventListener('click', function() { //iframe内在的跳转，如示例页面链接，也要加入历史记录
@@ -125,7 +123,6 @@
                     "content": iframeContent //iframe此时content
                 }
                 historys[historyIndex] = newHistoryObj
-                console.log(historys)
             } else if (historyIndex !== -1) { //处理前进后退
                 if (historyIndex === 0) { //historyIndex=0，只可能是前进
                     movingfoward()
@@ -147,7 +144,7 @@
 
         function movingBack() { //历史记录后退
             historyIndex -= 1
-            console.log("后退", "historyIndex=" + historyIndex, historys[historyIndex].href)
+            // console.log("后退", "historyIndex=" + historyIndex, historys[historyIndex].href)
             if (history.pushState) {
                 replaceLocation(historys[historyIndex].href)
             }
@@ -155,7 +152,7 @@
 
         function movingfoward() { //历史记录前进
             historyIndex += 1
-            console.log("前进", "historyIndex=" + historyIndex, historys[historyIndex].href)
+            // console.log("前进", "historyIndex=" + historyIndex, historys[historyIndex].href)
             if (history.pushState) {
                 replaceLocation(historys[historyIndex].href)
             }

@@ -477,7 +477,7 @@ define(["avalon",
             }
 
             if (!opt.multiple && Array.isArray(opt.value)) {
-                opt.value = opt.value[0] || ""
+                opt.value = opt.value[0] !== void 0 ? opt.value[0] : ""
             }
 
             //处理data-duplex-changed参数

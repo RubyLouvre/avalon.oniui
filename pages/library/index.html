@@ -1,4 +1,5 @@
 <script>
+
     var widgets = ["accordion", "at", "browser", "carousel", "checkboxlist", "colorpicker", "cookie",
         "coupledatepicker", "datepicker", "daterangepicker", "dialog",
         "doublelist", "draggable", "dropdown", "flipswitch", "live", "miniswitch",
@@ -41,24 +42,26 @@
                 vm.widgetHref = prefix + "/avalon." + name + "." + window.location.href.split("example=")[1] + ".html" //寻找目录下示例页
             } else {
                 var curLocation = window.location.href.split("#")[0]
-                replaceLocation(curLocation + "#avalon." + name + ".doc.html")//doc页面
                 vm.widgetHref = prefix + "/avalon." + name + ".doc.html?ts=" + Date.parse(new Date()) //使页面刷新
+                replaceLocation(curLocation + "#avalon." + name + ".doc.html") //doc页面
             }
             updateHistory = true //需要更新入浏览历史
         }
     })
     
-    function replaceLocation(location){
-        if (history.pushState) {
+    function replaceLocation(location) {
+        if (history.replaceState) {
             history.replaceState("", "new state", location)
-        } else { //IE
-            window.location.hash = location.split("#")[1]
+        } else { //IE10以下
+            window.location.replace(location)
         }
     }
 
-    window.onload = function(){
-        init();
-    }
+    avalon.ready(function(){
+        setTimeout(function(){
+            init()
+        },0)
+    })
 
     function init() {
         var historys = [] //浏览历史
@@ -79,29 +82,33 @@
 
         //使点击顶部链接加入历史
         var nav = document.getElementById("nav")
-        var links = nav.getElementsByTagName("a")
-        var addUpdateHistory = function(nodes){
-            var i;
-            for(i = 0; i < nodes.length; i++){
-                nodes[i].onclick = function(e){
+        var addUpdateHistory = function(wrapper) {
+            var nodes = wrapper.getElementsByTagName("a")
+            var i
+            for (i = 0; i < nodes.length; i++) {
+                nodes[i].onclick = function(e) {
                     updateHistory = true //需要更新入浏览历史
                 }
             }
         }
-        addUpdateHistory(links);
-
+        addUpdateHistory(nav);
 
         function iframeLoaded() { //iframe load
-            iframe.contentDocument.body.style.overflow = "hidden" //重新设置overflow，使其不会出现滚动条
+            if(iframe.contentDocument){
+                var iframeBody = iframe.contentDocument.body
+            } else{
+                var iframeBody = iframe.contentWindow.document.body
+            }
+            iframeBody.style.overflow = "hidden" //重新设置overflow，使其不会出现滚动条
             setTimeout(function() { //设置iframe高度
-                vmodel.frameContentHeight = iframe.contentDocument.body.offsetHeight + 50
+                vmodel.frameContentHeight = iframeBody.offsetHeight + 50
             }, 100)
-            if (iframe.attachEvent) { //iframe内在的跳转，如示例页面链接，也要加入历史记录
-                iframe.attachEvent("onclick", function() {
+            if(iframe.addEventListener){
+                iframeBody.addEventListener('click', function() {
                     updateHistory = true
                 })
             } else {
-                iframe.contentDocument.body.addEventListener('click', function() { 
+                iframeBody.attachEvent('onclick', function() {
                     updateHistory = true
                 })
             }
@@ -116,7 +123,7 @@
             }
 
             //处理存入历史和页面前进后退
-            var iframeContent = iframe.contentDocument.body.innerHTML.substr(0, 100)
+            var iframeContent = iframeBody.innerHTML.substr(0, 100)
             if (updateHistory) { //存入历史
                 if (historyIndex === -1) {
                     scroll(0, 0) //第一次进入时页面到最顶端
@@ -151,19 +158,26 @@
 
         function movingBack() { //历史记录后退
             historyIndex -= 1
-            // console.log("后退", "historyIndex=" + historyIndex, historys[historyIndex].href)
+            console.log("后退", "historyIndex=" + historyIndex, historys[historyIndex].href)
             if (history.pushState) {
                 replaceLocation(historys[historyIndex].href)
+            }else{
+                replaceLocation(historys[historyIndex].href)
+                vmodel.activeIndex--
             }
         }
 
         function movingfoward() { //历史记录前进
             historyIndex += 1
-            // console.log("前进", "historyIndex=" + historyIndex, historys[historyIndex].href)
+            console.log("前进", "historyIndex=" + historyIndex, historys[historyIndex].href)
             if (history.pushState) {
                 replaceLocation(historys[historyIndex].href)
+            }else{
+                replaceLocation(historys[historyIndex].href)
+                vmodel.activeIndex++
             }
         }
+
     }
 </script>
 <table width="100%" ms-controller="library">

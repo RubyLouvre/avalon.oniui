@@ -68,7 +68,6 @@ a, a:active, a:hover {
 .header .search {
     position: absolute;
     right: 0;
-    top: 13px;
 }
 .header .search input {
     border: 1px solid #547c73;
@@ -106,12 +105,14 @@ a, a:active, a:hover {
 .ui-list {
     width: 130px;
     line-height: 24px;
+    padding: 20px 2px;
 }
 .ui-list a {
     text-decoration: none;
     color: #2b2b2b;
     font-size: 14px;
     font-weight: bold;
+    cursor: pointer;
 }
 .ui-list a.active {
     color: #3a745c;
@@ -122,19 +123,22 @@ a, a:active, a:hover {
     background: #fff;
 }
 .footer {
-    background: #fff;
-    height: 110px;
-    padding-bottom: 10px;
-    line-height: 110px;
     position: relative;
+    padding: 40px 0;
     z-index: 10;
+    background: #fff;
 }
 .footer ul {
-    padding: 45px 22px 0;
     width: 600px;
     margin: 0 auto;
-    height: 16px;
-    line-height: 16px;
+}
+.footer ul:after { 
+    content: "."; 
+    display: block; 
+    clear: both; 
+    visibility: hidden; 
+    line-height: 0; 
+    height: 0; 
 }
 .footer ul li{
     float: left;
@@ -156,4 +160,7 @@ a, a:active, a:hover {
 }
 .ui-dialog .ui-dialog-inner .ui-dialog-header .ui-dialog-title {
     font-size: 18px;
+}
+#widgetFrame{
+    height: 3500px;
 }

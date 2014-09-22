@@ -1,136 +1,182 @@
 <script>
     var widgets = ["accordion", "at", "browser", "carousel", "checkboxlist", "colorpicker", "cookie",
         "coupledatepicker", "datepicker", "daterangepicker", "dialog",
-        "doublelist", "draggable", "dropdown", "flipswitch","live", "miniswitch",
+        "doublelist", "draggable", "dropdown", "flipswitch", "live", "miniswitch",
         "notice", "pager", "position", "preview", "progressbar", "promise", "rating",
         "resizable", "scrollbar", "scrollspy", "simplegrid", "slider",
-        "spinner", "store", "switchdropdown", "tab", "textbox", "tooltip"].sort()
+        "spinner", "store", "switchdropdown", "tab", "textbox", "tooltip"
+    ].sort()
+    var updateHistory = false //将此url更新入浏览历史
     var vmodel = avalon.define("library", function(vm) {
         vm.widgets = widgets
-        vm.activeIndex = NaN
-        vm.stickPosition = "absolute"
-        vm.stickTop = 0
-        vm.stickBottom = 0
-        vm.widgetHref = "accordion/avalon.accordion.doc.html"
-        vm.changeActiveIndex = function(index) {
-            vm.activeIndex = index
-        }
-        vm.$watch("activeIndex", function(index) {
-            var name = vm.widgets[index]
-            var prefix = name
-            switch (name) {
-                case "coupledatepicker":
-                case "daterangepicker":
-                    prefix = "datepicker";
-                    break;
+        vm.activeIndex = 0
+        vm.widgetHref = ""
+        vm.frameContentHeight = 3500 //默认iframe高度，过后通过iframeLoaded重新设置
+        vm.changeActiveIndex = function(index) { //左侧边栏点击和页面初始化时，更新iframe的src以及页面url
+            var name, prefix
+            if (index !== -1) { //左侧边栏点击
+                vm.activeIndex = index
+                name = vm.widgets[index]
+            } else { //页面初始化
+                if (location.href.indexOf("#") > -1) { //ex: http.....avalon.oniui/index.html#avalon.datepicker.doc.html
+                    var curLocation = location.href.split("#")[1] //ex: avalon.datepicker.doc.html
+                    name = curLocation.split(".")[1] //ex: datepicker
+                    vm.activeIndex = vm.widgets.indexOf(name)
+                } else { //http:....../avalon.oniui/index.html
+                    name = "accordion"
+                }
             }
-            vm.widgetHref = prefix + "/avalon." + name + ".doc.html"
-        })
-
+            prefix = name //处理一般情况
+            switch (name) {
+                case "coupledatepicker": //都在datepicker目录下
+                case "daterangepicker":
+                    prefix = "datepicker"
+                    break
+                case "html": //处理默认无后缀情况
+                    name = "accordion"
+                    prefix = "accordion"
+                    break
+            }
+            if (window.location.href.indexOf("?ex") > -1 && index === -1) { //ex页面，ex:...avalon.oniui/index.html#avalon.datepicker.doc.html?ex=ex1
+                vm.widgetHref = prefix + "/avalon." + name + "." + window.location.href.split("example=")[1] + ".html" //寻找目录下示例页
+            } else {
+                var curLocation = window.location.href.split("#")[0]
+                replaceLocation(curLocation + "#avalon." + name + ".doc.html")//doc页面
+                vm.widgetHref = prefix + "/avalon." + name + ".doc.html?ts=" + Date.parse(new Date()) //使页面刷新
+            }
+            updateHistory = true //需要更新入浏览历史
+        }
     })
-    function computeIndex() {
-        var url = location.hash.replace(/#/g, "") || vmodel.widgetHref;
-        for(var i = 0, len = widgets.length; i < len; i++) {
-            if(widgets[i] + "/avalon." + widgets[i] + ".doc.html" === url) {
-                vmodel.changeActiveIndex(i)
+    
+    function replaceLocation(location){
+        if (history.pushState) {
+            history.replaceState("", "new state", location)
+        } else { //IE
+            window.location.hash = location.split("#")[1]
+        }
+    }
+
+    window.onload = function(){
+        init();
+    }
+
+    function init() {
+        var historys = [] //浏览历史
+        var historyIndex = -1
+        var iframe = document.getElementById("widgetFrame")
+
+        vmodel.changeActiveIndex(-1) //页面初始化
+
+        if (iframe.attachEvent) { //响应iframe load事件
+            iframe.attachEvent("onload", function() {
+                iframeLoaded()
+            })
+        } else {
+            iframe.onload = function() {
+                iframeLoaded()
+            }
+        }
+
+        //使点击顶部链接加入历史
+        var nav = document.getElementById("nav")
+        var links = nav.getElementsByTagName("a")
+        var addUpdateHistory = function(nodes){
+            var i;
+            for(i = 0; i < nodes.length; i++){
+                nodes[i].onclick = function(e){
+                    updateHistory = true //需要更新入浏览历史
+                }
+            }
+        }
+        addUpdateHistory(links);
+
+
+        function iframeLoaded() { //iframe load
+            console.log(1)
+            iframe.contentDocument.body.style.overflow = "hidden" //重新设置overflow，使其不会出现滚动条
+            setTimeout(function() { //设置iframe高度
+                console.log(iframe.contentDocument.body.offsetHeight)
+                vmodel.frameContentHeight = iframe.contentDocument.body.offsetHeight + 50
+            }, 100)
+            iframe.contentDocument.body.addEventListener('click', function() { //iframe内在的跳转，如示例页面链接，也要加入历史记录
+                updateHistory = true
+            })
+
+            //根据是否为示例页面更新url 
+            var curLocation = iframe.contentWindow.location.href
+            var locationSections = curLocation.split("/")
+            var match = locationSections[locationSections.length - 1].match(/ex(\d+|\.\d+)?/) //ex / ex3 / ex.3
+            if (match != null && window.location.href.indexOf("?example") === -1) {
+                replaceLocation(window.location.href + "?example=" + match[0])
+            }
+
+            //处理存入历史和页面前进后退
+            var iframeContent = iframe.contentDocument.body.innerHTML.substr(0, 100)
+            if (updateHistory) { //存入历史
+                if (historyIndex === -1) {
+                    scroll(0, 0) //第一次进入时页面到最顶端
+                } else {
+                    scroll(0, document.getElementById("avalon_oniui_banner").offsetHeight) //跨过banner
+                }
+                historyIndex += 1
+                var newHistoryObj = {
+                    "widget": vmodel.activeIndex, //组件index
+                    "href": location.href, //链接
+                    "content": iframeContent //iframe此时content
+                }
+                historys[historyIndex] = newHistoryObj
+                console.log(historys)
+            } else if (historyIndex !== -1) { //处理前进后退
+                if (historyIndex === 0) { //historyIndex=0，只可能是前进
+                    movingfoward()
+                    vmodel.activeIndex = historys[historyIndex].widget
+                    return
+                }
+                shortIframeContent = iframeContent
+                shortHistoryContent = historys[historyIndex - 1].content
+                if (shortIframeContent === shortHistoryContent) { //比较当前iframe内容与历史保存的内容
+                    movingBack()
+                } else {
+                    movingfoward()
+                }
+                vmodel.activeIndex = historys[historyIndex].widget //更新iframe组件index，继而更新右侧选项颜色
+                scroll(0, document.getElementById("avalon_oniui_banner").offsetHeight) //跨过banner
+            }
+            updateHistory = false
+        }
+
+        function movingBack() { //历史记录后退
+            historyIndex -= 1
+            console.log("后退", "historyIndex=" + historyIndex, historys[historyIndex].href)
+            if (history.pushState) {
+                replaceLocation(historys[historyIndex].href)
+            }
+        }
+
+        function movingfoward() { //历史记录前进
+            historyIndex += 1
+            console.log("前进", "historyIndex=" + historyIndex, historys[historyIndex].href)
+            if (history.pushState) {
+                replaceLocation(historys[historyIndex].href)
             }
         }
     }
-    computeIndex();
-    var onloadBinded;
-    avalon.ready(function() {
-        setInterval(function() {
-            var iframe = document.getElementById("widgetIrame")
-            if(!onloadBinded) {
-                avalon.bind(iframe, "load", function(e) {
-                    try{
-                        var parts = iframe.contentWindow.location.href.split("oniui/");
-                        if(parts[1]) {
-                            location.hash = "#" + parts[1];
-                            computeIndex();
-                        }
-                    }catch(e){}
-                });
-                onloadBinded = true
-            }
-            if (iframe && iframe.contentWindow) {
-                //自适应高度
-                var doc = iframe.contentWindow.document
-                avalon(iframe).height(avalon(doc).height())
-                //处理链接向往跳出
-                var as = doc.links
-                for (var i = 0, a; a = as[i++]; ) {
-                    as.target = ""
-                }
-            }
-        }, 500)
-    })
-
-
-
-    void function() {
-        function adjustMenuPostion() {
-            var menu = document.getElementById("widgetMenu")
-            if (menu) {
-                var top = avalon(menu).offset().top
-                var height = avalon(menu).height()
-                var bottom = top + height;
-                var scrollTop = document.body.scrollTop + document.documentElement.scrollTop
-                var scrollHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)
-                var clientHeight = avalon(window).height();
-                var stick
-                if ((scrollTop + clientHeight) > bottom) {
-                    stick = {
-                        stickPosition: "fixed",
-                        stickTop: "auto",
-                        stickBottom: 0
-                    }
-                } else {
-                    stick = {
-                        stickPosition: "absolute",
-                        stickTop: 45,
-                        stickBottom: "auto"
-                    }
-                }
-                // 避免滚动到最底部时，白色背景上导航的尴尬，且无法显示底部的组件列表
-                if ((scrollTop + clientHeight + 120) >= scrollHeight) {
-                    stick = {
-                        stickPosition: "absolute",
-                        stickTop: "top",
-                        stickBottom: 80
-                    }
-                }
-                for(var name in stick){
-                    vmodel[name] = stick[name]
-                }
-            }
-        }
-
-        var scrollIndex = 0
-        avalon(window).bind("scroll", function() {
-            scrollIndex = scrollIndex + 1;
-            if (scrollIndex % 3 === 0) {
-                adjustMenuPostion()
-            }
-        });
-    }()
-
 </script>
 <table width="100%" ms-controller="library">
     <tr>
         <td valign="top" style="width:130px">
-            <ul class="ui-list" id="widgetMenu" ms-css-position="stickPosition" ms-css-bottom="stickBottom" ms-css-top="stickTop">
+            <ul class="ui-list">
                 <li ms-repeat="widgets">
-                    <a ms-href="#{{widgetHref}}"
-                       ms-class="active: $index===activeIndex"
-                       ms-click="changeActiveIndex($index)">
+                    <a  href="javascript:void(0)"
+                        ms-class="active: $index===activeIndex"
+                        ms-click="changeActiveIndex($index)">
                         {{el}}
                     </a>
                 </li>
             </ul>
         </td>
         <td valign="top">
-            <iframe ms-src="widgetHref" frameborder="0" width="100%" id="widgetIrame"></iframe>
+            <iframe ms-src="widgetHref" frameborder="0" width="100%" ms-css-height="frameContentHeight" id="widgetFrame" ></iframe>
         </td>
     </tr>
 </table>

@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" class="xjb_html">
     <head>
         <meta http-equiv="content-type" content="text/html;charset=utf-8" />
@@ -48,6 +48,10 @@
             })
             page.activeIndex = page.computeActiveIndex();
             require(["uptop/avalon.uptop"], function() {
+                avalon.define("", function(vm) {
+                    vm.width = 120,
+                    vm.animate = true
+                })
                 avalon.scan(document.body, page)
             })
         </script>
@@ -55,7 +59,7 @@
     <body class="ms-controller" ms-controller="pages" ms-uptop data-uptop-background-url="uptop/up.png">
         <div class="header">
             <div class="fix">
-                <div class="nav">
+                <div id="nav" class="nav">
                     <ul>
                         <li ms-repeat-page="pages" ms-class="active: $index == activeIndex" ms-click="changeActiveIndex($index)">
                             <a ms-href="#{{page.href}}" >{{page.title | html}}</a>
@@ -67,7 +71,7 @@
                 </div>
             </div>
             <div class="placeHolder"></div>
-            <h1><span>Avalon新一代UI库： OniUI</span></h1>
+            <h1 id="avalon_oniui_banner"><span>Avalon新一代UI库： OniUI</span></h1>
         </div>
         <div class="content" ms-class="content{{activeIndex}}">
             <div ms-repeat-page="pages" ms-if-loop="$index == activeIndex"  ms-include-src="page.href"></div>
@@ -90,7 +94,8 @@
                 "doublelist", "draggable", "dropdown", "flipswitch", "miniswitch",
                 "notice", "pager", "position", "preview", "progressbar", "promise", "rating",
                 "resizable", "scrollbar", "scrollspy", "simplegrid", "slider",
-                "spinner", "store", "switchdropdown", "tab", "textbox", "tooltip"].sort(),
+                "spinner", "store", "switchdropdown", "tab", "textbox", "tooltip"
+            ].sort(),
             defaultHref = "accordion/avalon.accordion.doc.html";
 
         function getHref(urlHash) {
@@ -102,10 +107,10 @@
                     case "coupledatepicker":
                     case "daterangepicker":
                         widget = "datepicker";
-                    break;
+                        break;
                 }
             }
-            if(hash) {
+            if (hash) {
                 hash = widget + "/" + hash[0]
             }
             if (!hash && (urlHash || location.hash)) {
@@ -113,50 +118,55 @@
                 page = true;
             }
             return {
-                    page: page,
-                    hash: hash
-                }
+                page: page,
+                hash: hash
+            }
         }
+
         function setHash(hash) {
-            if(!hash.match(/^#/g)) hash = "#" + defaultHref.split("/")[1]
+            if (!hash.match(/^#/g)) hash = "#" + defaultHref.split("/")[1]
             location.hash = hash
         }
         // decide currentIndex by vmodel.href
         function getcurrentIndex(hash) {
             var widgetName = hash.split("/")[0];
-            for(var i = 0, len = widgets.length; i < len; i++) {
-                if(widgets[i] === widgetName) return i;
+            for (var i = 0, len = widgets.length; i < len; i++) {
+                if (widgets[i] === widgetName) return i;
             }
             return 0
         }
+
         function getcurrentPageIndex(hash, nav) {
             var hash = (hash || "").replace(/^#/g, "");
-            for(var i = 0, len = nav.length; i < len; i++) {
-                if(hash === nav[i].href) return i
+            for (var i = 0, len = nav.length; i < len; i++) {
+                if (hash === nav[i].href) return i
             }
             return 0
         }
-        function throttleIndex(fn, delay, mustRunDelay, args){
+
+        function throttleIndex(fn, delay, mustRunDelay, args) {
             var timer = null;
             var t_start;
-            return function(){
-                var context = this, t_curr = +new Date();
+            return function() {
+                var context = this,
+                    t_curr = +new Date();
                 clearTimeout(timer);
-                if(!t_start){
+                if (!t_start) {
                     t_start = t_curr;
                 }
-                if(t_curr - t_start >= mustRunDelay){
+                if (t_curr - t_start >= mustRunDelay) {
                     fn.apply(context, args || []);
                     t_start = t_curr;
-                }
-                else {
-                    timer = setTimeout(function(){
+                } else {
+                    timer = setTimeout(function() {
                         fn.apply(context, args || []);
                     }, delay);
                 }
             };
         };
+
         function fixUiList() {
+
             var uiListTop = vmodel.uiListTop,
                 totalTop = uiListTop + vmodel.uiListHeight,
                 scrollTop = document.body.scrollTop + document.documentElement.scrollTop,
@@ -190,23 +200,19 @@
             vm.hashchangeSupport = !navigator.userAgent.match(/MSIE [5-7]/);
             vm.timer = "";
             vm.page = false;
-            vm.nav = [
-                {
-                    href: defaultHref,
-                    name: "组件库",
-                    pageName: "pageUiLibrary"
-                },
-                {
-                    href: "ui_timeline",
-                    name: "组件概览",
-                    pageName: "pageTimeline"
-                },
-                  {
-                    href: "pages/apis/index.html",
-                    name: "APIs",
-                    pageName: "apis"
-                }
-            ];
+            vm.nav = [{
+                href: defaultHref,
+                name: "组件库",
+                pageName: "pageUiLibrary"
+            }, {
+                href: "ui_timeline",
+                name: "组件概览",
+                pageName: "pageTimeline"
+            }, {
+                href: "pages/apis/index.html",
+                name: "APIs",
+                pageName: "apis"
+            }];
             // 保留历史功能
             vm.currentPageIndex = getcurrentPageIndex(location.hash, vm.nav);
             vm.position = "absolute";
@@ -226,18 +232,18 @@
             }
             vm.changePage = function(event, href, index, item) {
                 event.preventDefault();
-                if(!vmodel.hashchangeSupport) {
+                if (!vmodel.hashchangeSupport) {
                     vmodel.href = href;
                 }
-                switch(item.pageName) {
+                switch (item.pageName) {
                     case "pageUiLibrary":
                         vmodel.padBottom = 80;
-                    break;
+                        break;
                     case "pageTimeline":
                         vmodel.padBottom = 0;
-                    break;
+                        break;
                 }
-                setHash("#"+href);
+                setHash("#" + href);
                 vm.currentPageIndex = index;
             }
             vm.pageLoaded = function(template) {
@@ -246,17 +252,17 @@
             };
             vm.showDocument = function(widget, event, index) {
                 event.preventDefault();
-                if(!vmodel.hashchangeSupport) {
+                if (!vmodel.hashchangeSupport) {
                     switch (widget) {
                         case "coupledatepicker":
                             vmodel.href = "datepicker/avalon.coupledatepicker.doc.html";
-                        break;
+                            break;
                         case "daterangepicker":
                             vmodel.href = "datepicker/avalon.daterangepicker.doc.html";
-                        break;
+                            break;
                         default:
                             vmodel.href = widget + "/avalon." + widget + ".doc.html";
-                        break;
+                            break;
                     }
                 }
                 setHash("#avalon." + widget + ".doc.html");
@@ -271,8 +277,8 @@
                 vmodel.uiListTop = avalon(this).offset().top;
             }
             vm.renderIframe = function() {
-                if(!vmodel.hashchangeSupport) return "";
-                return '<iframe id="doccanvas" scrolling="no" name="doccanvas" ms-class="ui-doc:!page" style="border:none;" frameborder="none" src="' + vmodel.href + '" ms-css-width="'+ vmodel.contentWidth +'"></iframe>'
+                if (!vmodel.hashchangeSupport) return "";
+                return '<iframe id="doccanvas" scrolling="no" name="doccanvas" ms-class="ui-doc:!page" style="border:none;" frameborder="none" src="' + vmodel.href + '" ms-css-width="' + vmodel.contentWidth + '"></iframe>'
             }
             vm.showBigPic = function(url) {
                 vm.imgUrl = url;
@@ -284,45 +290,45 @@
                 // 扫描，修改高度
                 vmodel.timer = setInterval(function() {
                     var iframe = document.getElementById("doccanvas")
-                    if(!iframe) return clearInterval(vmodel.timer)
+                    if (!iframe) return clearInterval(vmodel.timer)
                     var nwindow = iframe.contentWindow
-                    try{
-                        if(nwindow.document && nwindow.document.getElementsByTagName("body")[0]) {
+                    try {
+                        if (nwindow.document && nwindow.document.getElementsByTagName("body")[0]) {
                             nwindow = nwindow.document
-                                h = avalon(nwindow.body).outerHeight() + avalon(nwindow.body).offset().top;
-                                avalon(iframe).css("height", h + "px");
-                                counter++;
-                                if(counter > 50) clearInterval(vmodel.timer)
-                                if(oldHref !== nwindow.location.href) {
-                                    oldHref = nwindow.location.href
-                                    if(!oldHref.match(/avalon\.[\S]+\.doc\./g)) return;
-                                    // 把iframe的src同步到父页面hash
-                                    if(!vmodel.hashchangeSupport) {
-                                        var h = oldHref.split("/")
-                                        setHash("#" + h[h.length - 1]);
-                                    }
-                                    var ols = nwindow.getElementsByTagName("ol");
-                                    if(!ols.length) ols = nwindow.getElementsByTagName("ul");
-                                    for(var i = 0, len = ols.length; i < len; i++) {
-                                        if(!ols[i].className.match(/example\-lists|example\-links/g)) continue;
-                                        var as = ols[i].getElementsByTagName("a")
-                                        avalon.each(as, function(x, item) {
-                                            item.onclick= function(e) {
-                                                var e = e || iframe.contentWindow.event;
-                                                e.preventDefault && e.preventDefault();
-                                                e.returnValue = false;
-                                                var h = item.getAttribute("href").split("/");
-                                                h = h[h.length - 1];
-                                                setHash("#" + (h.match(/avalon[\S]+\.html/g) || []).join(""));
-                                                if(!vmodel.hashchangeSupport) {
-                                                    vmodel.href = h.split(".")[1] + "/" + h
-        ;                                        }
-                                            }
-                                        })
-                                    }
+                            h = avalon(nwindow.body).outerHeight() + avalon(nwindow.body).offset().top;
+                            avalon(iframe).css("height", h + "px");
+                            counter++;
+                            if (counter > 50) clearInterval(vmodel.timer)
+                            if (oldHref !== nwindow.location.href) {
+                                oldHref = nwindow.location.href
+                                if (!oldHref.match(/avalon\.[\S]+\.doc\./g)) return;
+                                // 把iframe的src同步到父页面hash
+                                if (!vmodel.hashchangeSupport) {
+                                    var h = oldHref.split("/")
+                                    setHash("#" + h[h.length - 1]);
                                 }
+                                var ols = nwindow.getElementsByTagName("ol");
+                                if (!ols.length) ols = nwindow.getElementsByTagName("ul");
+                                for (var i = 0, len = ols.length; i < len; i++) {
+                                    if (!ols[i].className.match(/example\-lists|example\-links/g)) continue;
+                                    var as = ols[i].getElementsByTagName("a")
+                                    avalon.each(as, function(x, item) {
+                                        item.onclick = function(e) {
+                                            var e = e || iframe.contentWindow.event;
+                                            e.preventDefault && e.preventDefault();
+                                            e.returnValue = false;
+                                            var h = item.getAttribute("href").split("/");
+                                            h = h[h.length - 1];
+                                            setHash("#" + (h.match(/avalon[\S]+\.html/g) || []).join(""));
+                                            if (!vmodel.hashchangeSupport) {
+                                                vmodel.href = h.split(".")[1] + "/" + h;
+                                            }
+                                        }
+                                    })
+                                }
+                            }
                         }
-                    }catch(e) {
+                    } catch (e) {
                         clearInterval(vmodel.timer)
                     }
                 }, 100)
@@ -330,7 +336,7 @@
         })
         window.setHeight = vmodel.setHeight
         avalon.scan();
-        if(vmodel.hashchangeSupport) {
+        if (vmodel.hashchangeSupport) {
             vmodel.setHeight();
             window.onhashchange = function(e) {
                 vmodel.currentPageIndex = getcurrentPageIndex(location.hash, vmodel.nav);
@@ -339,7 +345,7 @@
                 hash = hash || defaultHref.split("/")[1];
                 hrefObj = getHref(hash);
                 vmodel.href = hrefObj.hash;
-                vmodel.contentWidth = hrefObj.page ? (vmodel.page=true) && 990 : (vmodel.page=false) || 760;
+                vmodel.contentWidth = hrefObj.page ? (vmodel.page = true) && 990 : (vmodel.page = false) || 760;
                 !vmodel.page && vmodel.setHeight()
             }
         }

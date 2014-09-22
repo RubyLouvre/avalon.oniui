@@ -101,9 +101,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                 if (animated) { //防止动画队列堆积
                     return
                 }
-                if (typeof distance === "undefined") { //设置默认距离为1
-                    distance = 1
-                }
+                distance = distance || 1
                 if (vm.effect === "slide") {
                     //移动准备
                     if (direct === 1 && vm.panelOffsetX === -vm.pictureWidth * (vm.picNum - 1)) { //点击为正方向且panel处于队列末尾，队列先回到0

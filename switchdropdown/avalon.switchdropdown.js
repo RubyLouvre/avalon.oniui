@@ -122,7 +122,7 @@ define(['avalon',
         enable: true,           //组件是否可用
         readOnly: false,        //组件是否只读
         data: [],               //下拉列表显示的数据模型
-        value: 1,              //设置组件的初始值
+        value: "",              //设置组件的初始值
         getTemplate: function() {
             return tmpl;
         }

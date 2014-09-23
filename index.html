@@ -47,7 +47,7 @@
                 }
             })
             page.activeIndex = page.computeActiveIndex();
-            require(["uptop/avalon.uptop"], function() {
+            require(["uptop/avalon.uptop","ready!"], function() {
                 avalon.define("", function(vm) {
                     vm.width = 120,
                     vm.animate = true
@@ -74,7 +74,7 @@
             <h1 id="avalon_oniui_banner"><span>Avalon新一代UI库： OniUI</span></h1>
         </div>
         <div class="content" ms-class="content{{activeIndex}}">
-            <div ms-repeat-page="pages" ms-if-loop="$index == activeIndex"  ms-include-src="page.href"></div>
+            <div ms-repeat-page="pages" ms-if-loop="$index == activeIndex"  ms-include-src="page.href"><!--页面位于pages文件夹下面--></div>
         </div>
 
         <div class="footer">

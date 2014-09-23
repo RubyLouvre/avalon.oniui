@@ -16,7 +16,7 @@ define(['avalon',
     var defaultData = [{
             value: 1,
             label : ' 启用',
-            class: 'g-icon-start',
+            iconClass: 'g-icon-start',
             title: '启用',
             font: '&#xf111;',
             titleValue: ' 已启用'
@@ -24,7 +24,7 @@ define(['avalon',
         {
             value: 2,
             label : ' 暂停',
-            class: 'g-icon-pause',
+            iconClass: 'g-icon-pause',
             title: '暂停',
             font: '&#xf04c;',
             titleValue: ' 已暂停'
@@ -95,8 +95,8 @@ define(['avalon',
     function setItemLabel(items) {
         avalon.each(items, function(i, item) {
             item.text = item.label;
-            item.label = ['<i class="ui-icon ', item.class, '">', item.font, '</i>', item.label].join('');
-            item.titleValue = ['<i class="ui-icon ', item.class, '">', item.font, '</i>', item.titleValue].join('');
+            item.label = ['<i class="ui-icon ', item.iconClass, '">', item.font, '</i>', item.label].join('');
+            item.titleValue = ['<i class="ui-icon ', item.iconClass, '">', item.font, '</i>', item.titleValue].join('');
         });
         return items;
     }
@@ -122,7 +122,7 @@ define(['avalon',
         enable: true,           //组件是否可用
         readOnly: false,        //组件是否只读
         data: [],               //下拉列表显示的数据模型
-        value: 1,              //设置组件的初始值
+        value: "",              //设置组件的初始值
         getTemplate: function() {
             return tmpl;
         }

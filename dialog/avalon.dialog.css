@@ -12,7 +12,7 @@
 .ui-dialog .ui-dialog-inner .ui-dialog-header .ui-dialog-close { display: inline; display: inline; float: right; padding: 1px 10px 1px 9px; margin-top: 5px; cursor: pointer; background-color: #f3f3f3; color: #666666; }
 .ui-dialog .ui-dialog-inner .ui-dialog-header .ui-dialog-close .ui-icon { cursor: pointer; }
 .ui-dialog .ui-dialog-inner .ui-dialog-header .ui-dialog-close:hover { border-right: 0; padding: 0 10px 0 8px; background-color: #ffffff; border: 1px solid #dedede; }
-.ui-dialog .ui-dialog-inner .ui-dialog-header .ui-dialog-title { padding: 7px 10px; font-size: 12px; font-weight: 700; }
+.ui-dialog .ui-dialog-inner .ui-dialog-header .ui-dialog-title { padding: 7px 10px; font-size: 12px; line-height: 20px; font-weight: 700; }
 .ui-dialog .ui-dialog-inner .ui-dialog-content { font-size: 12px; padding: 17px 20px; }
 .ui-dialog .ui-dialog-inner .ui-dialog-footer { padding: 8px 5px; background-color: #f8f8f8; }
 .ui-dialog .ui-dialog-inner .ui-dialog-footer .ui-dialog-btns { display: inline; display: inline; float: right; font-size: 0; }

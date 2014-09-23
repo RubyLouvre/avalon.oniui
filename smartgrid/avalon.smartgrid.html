@@ -1,0 +1,51 @@
+<div class="ui-grid">
+    <table>
+        <colgroup>
+            <col ms-repeat-column="columns" 
+                 ms-visible="column.toggle" 
+                 ms-css-width="column.width">
+        </colgroup>
+        <thead class="ui-grid-header">
+            <tr class="ui-grid-header-fixed" 
+                ms-css-top="_headerTop" 
+                ms-visible="_fixHeaderToggle" 
+                ms-css-position="_position" 
+                ms-css-width="_gridWidth">
+                <th ms-repeat-column="columns" 
+                    ms-visible="column.toggle" 
+                    ms-css-width="column.width" 
+                    ms-css-text-align="column.align" 
+                    ms-class="{{column.customClass}}">{{column.name|html}}</th>
+            </tr>
+            <tr>
+                <th ms-repeat-column="columns" 
+                    ms-visible="_toggleColumn(column.toggle, $index)" 
+                    ms-css-text-align="column.align" 
+                    ms-class="{{column.customClass}}">{{column.name|html}}</th>
+            </tr>
+        </thead>
+        <tbody class="ui-grid-body">
+        </tbody>
+        <tfoot class="ui-grid-footer">
+            <tr>
+                <td ms-attr-colspan="{{columns.size()}}"></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+MS_OPTION_EJS
+<&- for(var i=0, trl=@data.length, tr; i<trl; i++) { &>
+    <&- tr = @data[i] &>
+    <tr>
+        <&- for(var j=0, tdl=@columns.length, td; j<tdl; j++) { &>
+            <&- td=@columns[j].$model; 
+                var display=td.toggle ? "display:table-cell;" : "display:none;", 
+                textAlign="text-align:"+td.align, style=display+textAlign,
+                customClass = td.customClass || "",
+                format = td.format;&>
+            <td style=<&= style &> class=<&= customClass &>>
+                <&= format(tr, i, tr[td.key], tr.disable) &>
+            </td>
+        <& } &>
+    </tr>    
+<& } &>      

@@ -99,10 +99,9 @@ define(["avalon",
 
                     //设置title宽度
                     vmodel.titleWidth = computeTitleWidth();
+                    //设置label值
+                    setLabelTitle(vmodel.value);
                 }
-
-                //设置label值
-                setLabelTitle(vmodel.value);
 
                 //如果原来的select没有子节点，那么为它添加option与optgroup
                 if (!hasBuiltinTemplate) {
@@ -268,7 +267,6 @@ define(["avalon",
                     listNode = list
                     vmodel.menuNode = document.getElementById("menu-" + vmodel.$id)     //下拉列表框内层容器 （包裹滚动条部分的容器）
                     vmodel.dropdownNode = document.getElementById("list-" + vmodel.$id) //下拉列表框内容（有滚动条的部分）
-                    vmodel.updateScrollbar();
                 }
 
                 //如果参数b不为布尔值，对toggle值进行取反
@@ -479,7 +477,7 @@ define(["avalon",
             }
 
             if (!opt.multiple && Array.isArray(opt.value)) {
-                opt.value = opt.value[0] || ""
+                opt.value = opt.value[0] !== void 0 ? opt.value[0] : ""
             }
 
             //处理data-duplex-changed参数

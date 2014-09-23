@@ -9,7 +9,7 @@
     <script type="text/javascript">
         require(['dropdown/avalon.dropdown.js', "ready!"], function() {
             avalon.define('dropdown', function(vm) {
-                vm.value = 1;
+                vm.value = 2;
                 vm.data = [
                     {
                         value: 1,
@@ -31,8 +31,8 @@
         <h2>dropdown（下拉框）</h2>
         <p>options可以使用repeat生成</p>
         <select ms-widget="dropdown"
-                ms-duplex="value">
-            <option ms-repeat="data" ms-attr-value="el.value" ms-attr-label="el.label"></option>
+                > 
+            <option ms-repeat="data" ms-attr-value="el.value" ms-attr-label="el.label" ms-selected="el.value==1"></option>
         </select>
         <p>{{value}}</p>
     </div>

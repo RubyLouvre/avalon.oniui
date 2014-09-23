@@ -73,8 +73,6 @@
 <body ms-controller="demo">
 	
 	<h2>多图片上传（仿新浪微博）</h2>
-	<p>支持chrome, firefox, ie10+</p>
-
 
 	<div ms-widget="uploader, $, $opts">
 		<div class="browse">
@@ -114,8 +112,9 @@
 			var model = avalon.define("demo", function(vm){
 
 				vm.$opts = {
+					action: 'post.php',
 					browseButton: 'browse-btn',
-					max: 3
+					max: 4
 				};
 				vm.browse = function(){
 					alert(2);

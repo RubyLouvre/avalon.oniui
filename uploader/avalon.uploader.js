@@ -1,11 +1,12 @@
-define(["browser/avalon.browser", "text!./avalon.uploader.html", "./swfobject/swfobject", "css!./avalon.uploader.css"], function(avalon, sourceHTML){
+define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmRequest", "./swfobject/swfobject", "css!./avalon.uploader.css"], function(avalon, sourceHTML){
 
 	var widget = avalon.ui.uploader = function(element, data, vmodels){
 
 		var fileList = [],		// 存放file对象
 			browseButton,		// 按钮
 			browseButtonClick,	// browseButton 绑定的 click 事件
-			ie_version = avalon.browser.ie;
+			ie_version = avalon.browser.ie,
+			swf;				// {dom} <object>
 
 		var vmodel = avalon.define(data.uploaderId, function(vm){
 
@@ -16,8 +17,23 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "./swfobject/sw
 			browseButton = document.getElementById(vm.browseButton);
 
 			vm.removeFile = function(index){
-				vmodel.files.removeAt(index);
-				fileList.splice(index, 1);
+				// fileList.splice(index, 1);
+				avalon.post(vmodel.action, {
+					id: vmodel.files[index].id
+				}, function(data){
+					
+					if(data.errcode == 0){
+						// 成功
+						vmodel.files.removeAt(index);
+						// swf.setMaxFileNum(vmodel.max);
+						// debugger;
+						console.log('index: ' +　index)
+						console.log('length: ' + vmodel.files.length);
+						console.log(swf);
+						swf.setUploadSuccessNum(vmodel.files.length);
+					}
+
+				}, 'json');
 			};
 			
 
@@ -25,9 +41,8 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "./swfobject/sw
 
 				loadFlash();
 				// loadInput();
-
+				
 				avalon.scan(element, [vmodel].concat(vmodels));
-
 			};
 
 			vm.$remove = function(){
@@ -116,10 +131,10 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "./swfobject/sw
 
 			var flashvars = {
 				js_handler:"jsHandler",
-				uploadAPI:"post.php",
+				uploadAPI: vmodel.action,
 				swfID:"swf13889",
 				maxFileSize:"26214400",
-				maxFileNum:"2",
+				maxFileNum: vmodel.max
 			};
 			var params = {
 				menu: "false",
@@ -127,7 +142,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "./swfobject/sw
 				allowFullscreen: "true",
 				allowScriptAccess: "always",
 				bgcolor: "",
-				wmode: "direct" // can cause issues with FP settings & webcam
+				wmode: "transparent" // 透明
 			};
 			var attributes = {
 				id:"ExifUpload"
@@ -138,6 +153,26 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "./swfobject/sw
 				"expressInstall.swf", 
 				flashvars, params, attributes
 			);
+
+			window.jsHandler = function (obj){
+				console.log(obj);
+
+				if(obj.type === 'uploaded'){
+					var _imgs = obj.data.sucAry;
+					for (var i = 0, len = _imgs.length; i < len; i++) {
+
+						vmodel.files.push({
+							name: _imgs[i].name,
+							src: _imgs[i].source.data.images[0].url,
+							id: _imgs[i].source.data.images[0].id,
+							size: '1k'
+						});
+
+					};
+				}else if(obj.type === 'flashInit'){
+					swf = document.getElementById('ExifUpload');
+				}
+			};
 
 		}
 

@@ -5,6 +5,7 @@
     
     if(isset($_POST['id'])){
         // 删除文件
+
         if(unlink($targetPath.$_POST['id'])){
             // 成功
             echo json_encode(array(
@@ -15,7 +16,7 @@
         }
     }else{
         // 上传文件
-
+        // sleep(10);
         // 获取FILES的缓存文件
         $tempFile = $_FILES['images']['tmp_name'];
         // 创建目录
@@ -51,6 +52,5 @@
         }
         
     }
-
 
 ?>

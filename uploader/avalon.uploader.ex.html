@@ -32,6 +32,7 @@
 			.preview li{
 				background: no-repeat center center;
 				background-size: cover;
+				background-image: url(img/loading.gif);
 			}
 			.add{
 				display: inline-block;
@@ -79,7 +80,7 @@
 			<ul class="preview">
 				<li class="preview" ms-repeat="files" ms-click="removeFile($index)" ms-css-background-image="'url(' + el.src + ')'" ms-css-filter="'progid:DXImageTransform.Microsoft.AlphaImageLoader(src=' + el.src + ', sizingMethod=scale)'"></li>
 			</ul>
-			<span id="browse-btn" class="add" ms-if="files.length < max">
+			<span id="browse-btn" class="add" ms-visible="files.length < max">
 				<span class="icon-add">✚</span>
 			</span>
 		</div>
@@ -92,7 +93,6 @@
 		        <tr>
 		            <th>序号</th>
 		            <th>名字</th>
-		            <th>大小</th>
 		            <th>操作</th>
 		        </tr>
 		    </thead>
@@ -100,7 +100,6 @@
 				<tr ms-repeat="files">
 					<td>{{$index}}</td>
 					<td>{{el.name}}</td>
-					<td>{{el.size}}</td>
 					<td><a href="javascript:;" ms-click="removeFile($index)">删除</a></td>
 				</tr>
 		    </tbody>
@@ -114,7 +113,11 @@
 				vm.$opts = {
 					action: 'post.php',
 					browseButton: 'browse-btn',
-					max: 4
+					max: 4,
+					fileMaxSize: 1048576000,
+					fileSizeErr: function(filename){
+						alert('自定义信息：' + filename + '大小超过1M啦~')
+					}
 				};
 				vm.browse = function(){
 					alert(2);

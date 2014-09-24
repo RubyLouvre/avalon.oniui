@@ -1,11 +1,11 @@
 <script>
 
     var widgets = ["accordion", "at", "browser", "carousel", "checkboxlist", "colorpicker", "cookie",
-        "coupledatepicker", "datepicker", "daterangepicker", "dialog",
-        "doublelist", "draggable", "dropdown", "flipswitch", "live", "miniswitch",
-        "notice", "pager", "position", "preview", "progressbar", "promise", "rating",
-        "resizable", "scrollbar", "scrollspy", "simplegrid", "slider",
-        "spinner", "store", "switchdropdown", "tab", "textbox", "tooltip"
+                "coupledatepicker", "datepicker", "daterangepicker", "dialog",
+                "doublelist", "draggable", "dropdown", "flipswitch", "miniswitch",
+                "notice", "pager", "position", "preview", "progressbar", "promise", "rating",
+                "resizable", "scrollbar", "scrollspy", "simplegrid", "slider",
+                "spinner", "store", "switchdropdown", "tab", "textbox","timer","tooltip"
     ].sort()
     var updateHistory = false //将此url更新入浏览历史
     var vmodel = avalon.define("library", function(vm) {
@@ -19,11 +19,11 @@
                 vm.activeIndex = index
                 name = vm.widgets[index]
             } else { //页面初始化
-                if (location.href.indexOf("#") > -1) { //ex: http.....avalon.oniui/index.html#avalon.datepicker.doc.html
-                    var curLocation = location.href.split("#")[1] //ex: avalon.datepicker.doc.html
-                    name = curLocation.split(".")[1] //ex: datepicker
+                if (location.href.indexOf("#") > -1) { //exp: http.....avalon.oniui/index.html#avalon.datepicker.doc.html
+                    var curLocation = location.href.split("#")[1] //exp: avalon.datepicker.doc.html
+                    name = curLocation.split(".")[1] //exp: datepicker
                     vm.activeIndex = vm.widgets.indexOf(name)
-                } else { //http:....../avalon.oniui/index.html
+                } else { //exp：..../avalon.oniui/index.html
                     name = "accordion"
                 }
             }
@@ -38,7 +38,7 @@
                     prefix = "accordion"
                     break
             }
-            if (window.location.href.indexOf("?ex") > -1 && index === -1) { //ex页面，ex:...avalon.oniui/index.html#avalon.datepicker.doc.html?ex=ex1
+            if (window.location.href.indexOf("?ex") > -1 && index === -1) { //ex页面，exp:...avalon.oniui/index.html#avalon.datepicker.doc.html?ex=ex1
                 vm.widgetHref = prefix + "/avalon." + name + "." + window.location.href.split("example=")[1] + ".html" //寻找目录下示例页
             } else {
                 var curLocation = window.location.href.split("#")[0]
@@ -57,17 +57,13 @@
         }
     }
 
-    avalon.ready(function(){
-        setTimeout(function(){
-            init()
-        },0)
-    })
+    avalon.bind(window,"load",  init)//等待iframe加载
+
 
     function init() {
         var historys = [] //浏览历史
         var historyIndex = -1
         var iframe = document.getElementById("widgetFrame")
-
         vmodel.changeActiveIndex(-1) //页面初始化
 
         if (iframe.attachEvent) { //响应iframe load事件
@@ -94,11 +90,7 @@
         addUpdateHistory(nav);
 
         function iframeLoaded() { //iframe load
-            if(iframe.contentDocument){
-                var iframeBody = iframe.contentDocument.body
-            } else{
-                var iframeBody = iframe.contentWindow.document.body
-            }
+            var iframeBody = iframe.contentWindow.document.body
             iframeBody.style.overflow = "hidden" //重新设置overflow，使其不会出现滚动条
             setTimeout(function() { //设置iframe高度
                 vmodel.frameContentHeight = iframeBody.offsetHeight + 50
@@ -158,10 +150,10 @@
 
         function movingBack() { //历史记录后退
             historyIndex -= 1
-            console.log("后退", "historyIndex=" + historyIndex, historys[historyIndex].href)
+            // console.log("后退", "historyIndex=" + historyIndex, historys[historyIndex].href)
             if (history.pushState) {
                 replaceLocation(historys[historyIndex].href)
-            }else{
+            }else{ //IE7-9
                 replaceLocation(historys[historyIndex].href)
                 vmodel.activeIndex--
             }
@@ -169,10 +161,10 @@
 
         function movingfoward() { //历史记录前进
             historyIndex += 1
-            console.log("前进", "historyIndex=" + historyIndex, historys[historyIndex].href)
+            // console.log("前进", "historyIndex=" + historyIndex, historys[historyIndex].href)
             if (history.pushState) {
                 replaceLocation(historys[historyIndex].href)
-            }else{
+            }else{ //IE7-9
                 replaceLocation(historys[historyIndex].href)
                 vmodel.activeIndex++
             }

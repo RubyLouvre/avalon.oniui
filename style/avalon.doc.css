@@ -15,6 +15,9 @@ h2 {
 .wrapper fieldset{
     margin-top: 1em;
 }
+[ms-controller],.ms-controller{
+    visibility: hidden;
+}
 pre {
     white-space: pre-wrap;
     word-wrap: break-word;

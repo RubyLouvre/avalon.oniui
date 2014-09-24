@@ -224,6 +224,8 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
                         transport.responseType = dataType;
                         this.useResponseType = true;
                     }
+                    //必须要支持 FormData 和 file.fileList 的浏览器 才能用 xhr 发送
+                    //标准规定的 multipart/form-data 发送必须用 utf-8 格式， 记得 ie 会受到 document.charset 的影响
                     transport.send(opts.hasContent && (this.formdata || this.querystring) || null)
                     //在同步模式中,IE6,7可能会直接从缓存中读取数据而不会发出请求,因此我们需要手动发出请求
                     if (!opts.async || transport.readyState === 4) {

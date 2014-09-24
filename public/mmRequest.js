@@ -466,7 +466,7 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
             }
             return query ? json[query] : json;
         },
-        serialize: function(form) { //表单元素变字符串
+        serialize: function(form) { //表单元素变字符串, form为一个元素节点
             var json = {};
 
             // 不直接转换form.elements，防止以下情况：   <form > <input name="elements"/><input name="test"/></form>

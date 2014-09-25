@@ -5,9 +5,9 @@
 	 ms-mouseenter="setArrowVisible" 
 	 ms-mouseleave="setArrowHidden"
 	 >
-	<div class="ui-carousel-panel" 
+	<div id="ui-carousel-panel"
+		 class="ui-carousel-panel" 
 		 ms-css-width="pictureWidth* picNum" 
-		 ms-css-height="pictureHeight" 
 		 ms-css-left="panelOffsetX" 
 		 ms-css-position="panelPosition"
 		 >
@@ -17,7 +17,7 @@
 			 ms-css-position="itemPosition"
 			 ms-css-opacity="getOpacity($index)"
 			 >
-			<img ms-src="{{el}}"  alt=""/>
+			<img ms-src="{{el}}" alt=""/>
 		</div>
 	</div>
 	<div class="ui-carousel-selection-wrap" 
@@ -29,14 +29,14 @@
 		 ms-repeat="selections"
 			></a>
 	</div>
-	<a><img class="arrow prev" 
+	<a><img class="arrow prev png24" 
 		ms-src="arrowLeftSrc"  
 		ms-click="animate(-1)"
 		ms-mouseenter="arrowHover('left')"
 		ms-mouseleave="arrowBlur('left')"
 		ms-visible="arrowVisible"
 		></a>
-	<a><img class="arrow after" 
+	<a><img class="arrow after png24" 
 	   ms-src="arrowRightSrc"  
 		ms-click="animate(1)"
 		ms-mouseenter="arrowHover('right')"

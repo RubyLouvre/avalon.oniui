@@ -50,6 +50,7 @@ define(["avalon",
         pager.perPages = options.pageable ? pager.perPages || options.data.length : options.data.length
         pager.nextText = pager.nextText || "下一页"
         pager.prevText = pager.prevText || "上一页"
+        
         if (Array.isArray(pager.options)) {
             pager.getTemplate = typeof pager.getTemplate === "function" ? pager.getTemplate : function(tmpl) {
                 return tmpl + '<div class="ui-simplegrid-pager-options">每页显示<select ms-widget="dropdown" data-dropdown-list-width="50" data-dropdown-width="50" ms-duplex="perPages"><option ms-repeat="options" ms-value="el.value">{{el.text}}</option></select>条,共{{totalItems}}条结果</div>'

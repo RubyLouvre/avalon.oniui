@@ -58,14 +58,22 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                 avalon.scan(element, [vmodel].concat(vmodels))
                 element.style.display = "block"
 
-                if (vm.adaptiveWidth) { //自动外围容器宽度
-                    var wrapWidth = element.offsetWidth
-                    vm.pictureWidth = wrapWidth
-                    console.log(wrapWidth)
+                if (vm.adaptiveWidth) { //自动填充外围容器宽度
+                    vm.pictureWidth = element.offsetWidth
+                }
+                if (vm.adaptiveHeight) { //自动填充外围容器高度
+                    element.style.height = "100%"
+                    var children = element.children
+                    for(var i = 0, len = children.length; i < len; i++){
+                        if(children[i].id === "ui-carousel"){
+                            children[i].style.height = "100%"
+                        }
+                    }
                 }
 
-                var images = vm.pictures //预加载图片
-                images.push(vm.arrowLeftNormalSrc, vm.arrowLeftHoverSrc, vm.arrowRightNormalSrc, vm.arrowRightHoverSrc)
+                //预加载图片
+                var images = []
+                images.push(vm.pictures, vm.arrowLeftNormalSrc, vm.arrowLeftHoverSrc, vm.arrowRightNormalSrc, vm.arrowRightHoverSrc)
                 for (var i = 0; i < images.length; i++) {
                     var image_preload = new Image()
                     image_preload.src = images[i]
@@ -232,7 +240,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
         alwaysShowSelection: true, //@param alwaysShowSelection 显示底部圆形切换部件
         autoSlide: true, //@param autoSlide 自动播放
         hoverStop: false, //@param autoSlide 鼠标经过停止播放
-        adaptiveWidth: false, //@param adaptiveWidth 适应外围宽度，为true时指定的宽度不起作用
+        adaptiveWidth: false, //@param adaptiveWidth 适应外围宽度，为true时指定pictureWidth不起作用
+        adaptiveHeight: false, //@param adaptiveHeight 适应外围高度，为true时指定pictureHeight不起作用
         arrowLeftNormalSrc: "./images/arrows-left-icon.png", //@param arrowLeftNormalSrc 左箭头正常状态图标
         arrowRightNormalSrc: "./images/arrows-right-icon.png", //@param arrowLeftNormalSrc 右箭头正常状态图标
         arrowLeftHoverSrc: "./images/arrows-left-hover-icon.png", //@param arrowLeftNormalSrc 左箭头hover状态图标

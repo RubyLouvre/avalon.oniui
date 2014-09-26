@@ -11,6 +11,7 @@
   -moz-user-select: none;
   user-select: none; }
   .ui-carousel .ui-carousel-panel {
+    height: 100%;
     position: absolute;
     top: 0;
     left: 0;
@@ -31,6 +32,8 @@
         position: absolute;
         top: 50%;
         left: 50%;
+        width: 100%;
+        height: 100%;
         transform: translate(-50%, -50%);
         position: static\0;
         transform: translate(0, 0) \0;
@@ -50,8 +53,8 @@
       width: 10px;
       height: 10px;
       margin: 0 5px;
-      background-color: white;
       background-color: rgba(255, 255, 255, 0.6);
+      *background-color: white;
       border-radius: 50%;
       cursor: pointer; }
     .ui-carousel .ui-carousel-selection-wrap .selected {

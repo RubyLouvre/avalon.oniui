@@ -23,6 +23,7 @@ $uiname : "ui-carousel";
 	overflow: hidden;
 	@include user-select();
 	.#{$uiname}-panel {
+		height: 100%;
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -40,6 +41,8 @@ $uiname : "ui-carousel";
 				position: absolute;
 				top: 50%;
 				left: 50%;
+				width: 100%;
+				height: 100%;
 				transform: translate(-50%, -50%);
 				position: static\0;
 				transform: translate(0, 0)\0;
@@ -57,8 +60,8 @@ $uiname : "ui-carousel";
 			width: 10px;
 			height: 10px;
 			margin: 0 5px;
-			background-color: rgb(255,255,255);
 			background-color: rgba(255,255,255,0.6);
+			*background-color: rgb(255,255,255);
 			border-radius: 50%;
 			cursor: pointer;
 		}

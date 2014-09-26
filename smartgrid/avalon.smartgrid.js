@@ -113,9 +113,15 @@ define(["avalon",
                     }
                 } else {
                     //否则默认处理
-                    vmodel.data.sort(function(a, b) {
-                        return trend * (a[field] - b[field]) || 0
-                    })
+                    if (column.type === "Number") {
+                        vmodel.data.sort(function(a, b) {
+                            return trend * (a[field] - b[field]) || 0
+                        })
+                    } else {
+                        vmodel.data.sort(function(a, b) {
+                            return trend * (a[field].localeCompare(b[field]))
+                        })
+                    }
                     vmodel.render()
                     if (avalon.type(onColumnSort) === "function") {
                         onColumnSort.call(vmodel, sortTrend, field)
@@ -182,6 +188,9 @@ define(["avalon",
                         tr.cells[index].style.display = "none"
                     }
                 }
+                setTimeout(function() {
+                    vmodel._setColumnWidth()
+                }, 100)
                 return toggle
             }
             
@@ -192,12 +201,10 @@ define(["avalon",
 
                 for (var i = 0, len = cells.length; i < len; i++) {
                     var $cell = avalon(cells[i]),
-                        cellWidth = $cell.outerWidth(),
+                        cellWidth = $cell.width(),
                         column = columns[i]
 
-                    if (column.key !== "selected") {
-                        column.width = cellWidth
-                    } 
+                    column._fixWidth = cellWidth
                 }
                 vmodel._gridWidth = containerWidth
             }
@@ -207,7 +214,8 @@ define(["avalon",
                     datas = vmodel.data,
                     _columns = vmodel.columns,
                     columns = _columns.$model,
-                    dataLen = datas.length
+                    dataLen = datas.length,
+                    checkRow = vmodel.selectable.type === "Checkbox"
 
                 if (!EJS[id]) {
                     fn = EJS.compile(options.template, vmodel.htmlHelper)
@@ -228,7 +236,7 @@ define(["avalon",
                     }
                 }
 
-                html = fn({data: datas, columns: _columns, len: 2, noResult: vmodel.noResult, vmId: vmId})
+                html = fn({data: datas, columns: _columns, len: 2, noResult: vmodel.noResult, vmId: vmId, checkRow: checkRow})
                 return html
             }
             vm.render = function() {
@@ -248,15 +256,19 @@ define(["avalon",
                     vmodel.hideLoading()
                     vmodel._setColumnWidth()
                 })
-                sorting = false
-                containerWrapper.scrollIntoView()
+                if (sorting) {
+                    sorting = false
+                } else {
+                    containerWrapper.scrollIntoView()
+                }
             }
             vm.$init = function() {
                 var container = vmodel.container,
                     pagerVM = null,
-                    intervalID = 0
-                gridHeader = gridHeader.replace("MS_OPTION_ID", vmodel.$id)    
-                container.innerHTML = gridHeader
+                    intervalID = 0,
+                    gridFrame = ""
+                gridFrame = gridHeader.replace("MS_OPTION_ID", vmodel.$id)    
+                container.innerHTML = gridFrame
                 avalon.scan(container, vmodel)
                 avalon.nextTick(function() {
                     vmodel._container = container.getElementsByTagName("tbody")[0]
@@ -328,6 +340,7 @@ define(["avalon",
                 if (pagerVM) {
                     vmodel.pager = pagerVM
                     clearInterval(intervalID)
+                    element.removeAttribute("id")
                 }
             }, 100)
         }
@@ -388,7 +401,7 @@ define(["avalon",
                     var rowData = datas[$target.attr("data-index")],
                         isSelected = target.checked
                     if (isSelected) {
-                        $tr.addClass("ui-smartgrid-selected")
+                        options.selectable.type === "Checkbox" ? $tr.addClass("ui-smartgrid-selected") : 0
                         rowData.selected = true
                         avalon.Array.ensure(selectedData, rowData)
                     } else {
@@ -469,7 +482,7 @@ define(["avalon",
                     columnWidth = "auto"
                 }
             }
-            column.width = columnWidth
+            column.width = column._fixWidth = columnWidth
             allColumnWidth += ~~columnWidth
             ~~columnWidth > maxWidth ? (maxWidth = columnWidth) && (maxWidthColumn = column) : 0
             column.customClass = column.customClass || ""

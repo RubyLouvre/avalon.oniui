@@ -2,7 +2,8 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 
 	var widget = avalon.ui.uploader = function(element, data, vmodels){
 
-		var fileList = [],		// 存放file对象
+		var uploaderId = data.uploaderId,
+			fileList = [],		// 存放file对象
 			browseButton,		// 按钮
 			browseButtonClick,	// browseButton 绑定的 click 事件
 			ie_version = avalon.browser.ie,
@@ -44,6 +45,51 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 			vm.$remove = function(){
 				
 			};
+
+			vm.$jsHandler = function(obj){
+				// console.log(obj);
+
+				switch(obj.type){
+					case 'uploading':
+						// 上传时触发
+					break;
+					case 'singleSuccess':
+						// 单个文件成功时触发
+						/*var file = obj.data;
+
+						vmodel.files.push({
+							name: file.name,
+							src: file.source.data.images[0].url,
+							id: file.source.data.images[0].id
+						});*/
+					break;
+					case 'uploaded':
+						var _imgs = obj.data.sucAry;
+						for (var i = 0, len = _imgs.length; i < len; i++) {
+							vmodel.files.push({
+								name: _imgs[i].name,
+								src: _imgs[i].source.data.images[0].url,
+								id: _imgs[i].source.data.images[0].id
+							});
+						};
+					break;
+					case 'flashInit':
+						// 初始化，取到 swf
+						swf = document.getElementById('ExifUpload');
+						// 改为独有 id
+						swf.id = uploaderId + 'Swf';
+						// 防止用户隐藏起 flash 导致原先配置丢失，这里重新配置 flash
+						swf.setMaxFileNum(vmodel.max);
+						swf.setUploadSuccessNum(vmodel.files.length);
+					break;
+					case 'fileSizeErr':
+						vmodel.fileSizeErr(obj.data);
+					break;
+					case 'fileNumErr':
+						vmodel.fileNumErr(vmodel.max - vmodel.files.length, obj.data);
+					break;
+				}
+			};
 			
 		});
 
@@ -53,48 +99,6 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 			}
 		});
 		
-		avalon.jsHandler = function(obj){
-			// console.log(obj);
-
-			switch(obj.type){
-				case 'uploading':
-					// 上传时触发
-				break;
-				case 'singleSuccess':
-					// 单个文件成功时触发
-					/*var file = obj.data;
-
-					vmodel.files.push({
-						name: file.name,
-						src: file.source.data.images[0].url,
-						id: file.source.data.images[0].id
-					});*/
-				break;
-				case 'uploaded':
-					var _imgs = obj.data.sucAry;
-					for (var i = 0, len = _imgs.length; i < len; i++) {
-						vmodel.files.push({
-							name: _imgs[i].name,
-							src: _imgs[i].source.data.images[0].url,
-							id: _imgs[i].source.data.images[0].id
-						});
-					};
-				break;
-				case 'flashInit':
-					// 初始化，取到 swf
-					swf = document.getElementById('ExifUpload');
-					// 防止用户隐藏起 flash 导致原先配置丢失，这里重新配置 flash
-					swf.setMaxFileNum(vmodel.max);
-					swf.setUploadSuccessNum(vmodel.files.length);
-				break;
-				case 'fileSizeErr':
-					vmodel.fileSizeErr(obj.data);
-				break;
-				case 'fileNumErr':
-					vmodel.fileNumErr(vmodel.max - vmodel.files.length, obj.data);
-				break;
-			}
-		};
 
 		return vmodel;
 
@@ -180,7 +184,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 			browseButton.appendChild(flash);
 
 			var flashvars = {
-				js_handler:"avalon.jsHandler",
+				js_handler: 'avalon.vmodels.' + uploaderId + '.$jsHandler',
 				uploadAPI: vmodel.action,
 				swfID:"swf13889",
 				maxFileSize: vmodel.fileMaxSize,

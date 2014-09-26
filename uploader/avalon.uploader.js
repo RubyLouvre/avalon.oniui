@@ -53,7 +53,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 			}
 		});
 		
-		window.jsHandler = function (obj){
+		avalon.jsHandler = function(obj){
 			// console.log(obj);
 
 			switch(obj.type){
@@ -69,18 +69,15 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 						src: file.source.data.images[0].url,
 						id: file.source.data.images[0].id
 					});*/
-
 				break;
 				case 'uploaded':
 					var _imgs = obj.data.sucAry;
 					for (var i = 0, len = _imgs.length; i < len; i++) {
-
 						vmodel.files.push({
 							name: _imgs[i].name,
 							src: _imgs[i].source.data.images[0].url,
 							id: _imgs[i].source.data.images[0].id
 						});
-
 					};
 				break;
 				case 'flashInit':
@@ -183,7 +180,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 			browseButton.appendChild(flash);
 
 			var flashvars = {
-				js_handler:"jsHandler",
+				js_handler:"avalon.jsHandler",
 				uploadAPI: vmodel.action,
 				swfID:"swf13889",
 				maxFileSize: vmodel.fileMaxSize,

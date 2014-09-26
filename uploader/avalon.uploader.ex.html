@@ -105,6 +105,41 @@
 		    </tbody>
 		</table>
 	</div>
+	
+	<hr />
+
+	<h2>再来一个</h2>
+
+	<div ms-widget="uploader, $, $opts_2">
+		<div class="browse">
+			<ul class="preview">
+				<li class="preview" ms-repeat="files" ms-click="removeFile($index)" ms-css-background-image="'url(' + el.src + ')'" ms-css-filter="'progid:DXImageTransform.Microsoft.AlphaImageLoader(src=' + el.src + ', sizingMethod=scale)'"></li>
+			</ul>
+			<span id="browse-btn-2" class="add" ms-visible="files.length < max">
+				<span class="icon-add">✚</span>
+			</span>
+		</div>
+	
+		<p>共{{files.length}}张，还能上传{{max - files.length}}张</p>
+		
+		<table class="info">
+			<caption>图片信息</caption>
+		    <thead>
+		        <tr>
+		            <th>序号</th>
+		            <th>名字</th>
+		            <th>操作</th>
+		        </tr>
+		    </thead>
+		    <tbody>
+				<tr ms-repeat="files">
+					<td>{{$index}}</td>
+					<td>{{el.name}}</td>
+					<td><a href="javascript:;" ms-click="removeFile($index)">删除</a></td>
+				</tr>
+		    </tbody>
+		</table>
+	</div>
 
 	<script>
 		require("uploader/avalon.uploader", function(){
@@ -119,9 +154,16 @@
 						alert('自定义信息：' + filename + '大小超过1M啦~')
 					}
 				};
-				vm.browse = function(){
-					alert(2);
+				vm.$opts_2 = {
+					action: 'post.php',
+					browseButton: 'browse-btn-2',
+					max: 4,
+					fileMaxSize: 1048576000,
+					fileSizeErr: function(filename){
+						alert('自定义信息：' + filename + '大小超过1M啦~')
+					}
 				};
+				
 			});
 			avalon.scan();
 		});

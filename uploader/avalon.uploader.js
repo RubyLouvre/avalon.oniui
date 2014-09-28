@@ -4,11 +4,11 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 
 		var uploaderId = data.uploaderId,
 			swfId = uploaderId + 'Swf',
+			swf,				// {dom} <object>
 			fileList = [],		// 存放file对象
 			browseButton,		// 按钮
 			browseButtonClick,	// browseButton 绑定的 click 事件
 			ie_version = avalon.browser.ie,
-			swf,				// {dom} <object>
 			hasLoadFlash = false;
 
 		var vmodel = avalon.define(data.uploaderId, function(vm){
@@ -78,25 +78,34 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 						// 初始化，取到 swf
 						swf = document.getElementById(swfId);
 						// 防止用户隐藏起 flash 导致原先配置丢失，这里重新配置 flash
-						swf.setMaxFileNum(vmodel.max);
+						swf.setMaxFileNum(vmodel.maxFileCount);
 						swf.setUploadSuccessNum(vmodel.files.length);
 					break;
 					case 'fileSizeErr':
 						vmodel.fileSizeErr(obj.data);
 					break;
 					case 'fileNumErr':
-						vmodel.fileNumErr(vmodel.max - vmodel.files.length, obj.data);
+						vmodel.fileNumErr(vmodel.maxFileCount - vmodel.files.length, obj.data);
 					break;
 				}
 			};
 			
 		});
-
-		vmodel.files.$watch('length', function(val){
-			if(val == vmodel.max){
-				vmodel.$init();
-			}
-		});
+		
+		/*
+		 * HACK
+		 *
+		 * 非 chrome 下，flash 被隐藏起会失效，这是 flash 本身的bug。
+		 * 这里也仅仅是 猜测 当上传文件到达上限时，flash 会被隐藏，所以需要重新初始化下。
+		 * 但这是不可靠的，不全面的。
+		 */
+		if(!avalon.browser.chrome){
+			vmodel.files.$watch('length', function(val){
+				if(val == vmodel.maxFileCount){
+					vmodel.$init();
+				}
+			});
+		}
 		
 
 		return vmodel;
@@ -185,9 +194,10 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 			var flashvars = {
 				js_handler: 'avalon.vmodels.' + uploaderId + '.$jsHandler',
 				uploadAPI: vmodel.action,
-				swfID: "swf13889",
-				maxFileSize: vmodel.fileMaxSize,
-				maxFileNum: vmodel.max
+				maxFileSize: vmodel.maxFileSize,
+				maxFileNum: vmodel.maxFileCount,
+				imgMaxWidth: vmodel.imgMaxWidth,
+				imgMaxHeight: vmodel.imgMaxHeight
 			};
 			var params = {
 				menu: "false",
@@ -225,7 +235,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 					}*/
 				};
 				reader.onload = function(){
-					if(vmodel.files.length < vmodel.max){
+					if(vmodel.files.length < vmodel.maxFileCount){
 						vmodel.files.push({
 							src: reader.result,
 							name: file.name,
@@ -240,7 +250,10 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 
 	widget.version = 1.0;
 	widget.defaults = {
-		fileMaxSize: 1024,
+		maxFileSize: 1048576,	// 1MB
+		maxFileCount: 100,
+		imgMaxWidth: 10000,
+		imgMaxHeight: 10000,
 		fileSizeErr: function(filename){
 			alert(filename + '太大了');
 		},

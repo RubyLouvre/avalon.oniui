@@ -227,7 +227,8 @@ define(["avalon",
                     var column = columns[i],
                         name = column.key
                     if (!sorting) {
-                        _columns[i].sortTrend = "ndb"
+                        //如果sortTrend属性不存在，在IE下直接给它赋值会报错
+                        _columns[i].sortTrend && (_columns[i].sortTrend = "ndb")
                     }
                     
                     for (var j = 0; j < dataLen; j++) {
@@ -244,7 +245,7 @@ define(["avalon",
                     containerWrapper = vmodel.container
 
                 vmodel._pagerShow = !vmodel.data.length ? false : true
-                container.innerHTML = vmodel._getTemplate()
+                avalon.innerHTML(container, vmodel._getTemplate())
                 if (vmodel.selectable.type === "Checkbox") {
                     var allSelected = isSelectAll(vmodel.data)
                     vmodel._allSelected = allSelected
@@ -304,7 +305,6 @@ define(["avalon",
                 }
                 element.resizeTimeoutId = 0
                 callbacksNeedRemove.resizeCallback = avalon(window).bind("resize", function() {
-                    console.log("resize callback")
                     clearTimeout(element.resizeTimeoutId)
                     // var clientWidth = avalon(window).width()
                     // if (clientWidth <= vmodel.containerMinWidth) {
@@ -529,6 +529,7 @@ define(["avalon",
                 customClass: ""
             }
             allColumnWidth += 20
+            selectColumn.width = selectColumn._fixWidth = 20
             columns.unshift(selectColumn)
         }
 

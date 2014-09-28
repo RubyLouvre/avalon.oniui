@@ -74,7 +74,7 @@ MS_OPTION_EJS
                     textAlign="text-align:"+td.align, style=display+textAlign,
                     customClass = td.customClass || "",
                     format = td.format;&>
-                <td style=<&= style &> class=<&= customClass &>>
+                <td style="<&= style &>" class="<&= customClass &>">
                     <&= format(@vmId, td.key , i, tr[td.key], tr.disable) &>
                 </td>
             <& } &>

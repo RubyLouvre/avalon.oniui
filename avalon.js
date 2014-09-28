@@ -2636,8 +2636,17 @@
                         var lastFn = {}
                         for (var i = 0, n = arr.length; i < n; i++) {
                             var ii = i + pos
-                            var proxy = getEachProxy(ii, arr[i], data, last)
+                            var proxy = getEachProxy(ii, arr[i], data, last, arr)
                             proxies.splice(ii, 0, proxy)
+                            var param = data.param || "el";
+                            (function () {
+                                var eachProxy = proxy
+                                eachProxy.$watch(param, function(newValue, oldValue) {
+                                    var index = eachProxy.$index
+                                    el[index] = newValue
+                                    el.$model[index] = newValue
+                                })
+                            })()
                             lastFn = shimController(data, transation, spans, proxy)
                         }
                         locatedNode = getLocatedNode(parent, data, pos)
@@ -3881,8 +3890,8 @@
         return proxy
     }
     var eachProxyPool = []
-    function getEachProxy(index, item, data, last) {
-        var param = data.param || "el", proxy
+    function getEachProxy(index, item, data, last, eachVM) {
+        var param = data.param || "el", proxy, $index
         var source = {
             $remove: function() {
                 return data.getter().removeAt(proxy.$index)
@@ -3893,6 +3902,7 @@
             $first: index === 0,
             $last: index === last
         }
+        var _watchEachOne = avalon.mix({}, watchEachOne)
         source[param] = item
         for (var i = 0, n = eachProxyPool.length; i < n; i++) {
             var proxy = eachProxyPool[i]
@@ -3907,8 +3917,9 @@
         if (rcomplexType.test(avalon.type(item))) {
             source.$skipArray = [param]
         }
-        proxy = modelFactory(source, 0, watchEachOne)
+        proxy = modelFactory(source, 0, _watchEachOne)
         proxy.$id = "$proxy$" + data.type + Math.random()
+
         return proxy
     }
     function recycleEachProxies(array) {

@@ -9,7 +9,7 @@
     </head>
     <body ms-controller="test">
         <h1>除设置columns和data外都是默认配置的smartgrid</h1>
-        <p>ps: 通过getDates设置数据，通过改变数据的条数看看smartgrid对数据的渲染性能如何，这里重新渲染数据时设置的是1000条</p>
+        <p>ps: 通过getDates设置数据，通过改变数据的条数看看smartgrid对数据的渲染性能如何，这里重新渲染数据时设置的是500条</p>
         <div ms-widget="smartgrid, sg1" ></div>
         <button ms-click="reRenderData">重新渲染数据</button>
         <button ms-click="clearData">清空数据</button>
@@ -34,7 +34,7 @@
                     vm.$skipArray = ["smartgrid"]
                     vm.reRenderData = function() {
                         var sg1 = avalon.vmodels.sg1
-                        sg1.data = getDates(1000)
+                        sg1.data = getDates(500)
                         sg1.render()
                     }
                     vm.clearData = function() {
@@ -85,7 +85,7 @@
                 &lt;/head&gt;
                 &lt;body ms-controller="test"&gt;
                     &lt;h1&gt;除设置columns和data外都是默认配置的smartgrid&lt;/h1&gt;
-                    &lt;p&gt;ps: 通过getDates设置数据，通过改变数据的条数看看smartgrid对数据的渲染性能如何，这里重新渲染数据时设置的是1000条&lt;/p&gt;
+                    &lt;p&gt;ps: 通过getDates设置数据，通过改变数据的条数看看smartgrid对数据的渲染性能如何，这里重新渲染数据时设置的是500条&lt;/p&gt;
                     &lt;div ms-widget="smartgrid, sg1" &gt;&lt;/div&gt;
                     &lt;button ms-click="reRenderData"&gt;重新渲染数据&lt;/button&gt;
                     &lt;button ms-click="clearData"&gt;清空数据&lt;/button&gt;
@@ -110,7 +110,7 @@
                                 vm.$skipArray = ["smartgrid"]
                                 vm.reRenderData = function() {
                                     var sg1 = avalon.vmodels.sg1
-                                    sg1.data = getDates(1000)
+                                    sg1.data = getDates(500)
                                     sg1.render()
                                 }
                                 vm.clearData = function() {

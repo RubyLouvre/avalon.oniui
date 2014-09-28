@@ -2,8 +2,8 @@
 	 class="ui-carousel" 
 	 ms-css-width="pictureWidth" 
 	 ms-css-height="pictureHeight" 
-	 ms-mouseenter="setArrowVisible" 
-	 ms-mouseleave="setArrowHidden"
+	 ms-mouseenter="stopPlay" 
+	 ms-mouseleave="restartPlay('carousel')"
 	 >
 	<div id="ui-carousel-panel"
 		 class="ui-carousel-panel" 
@@ -25,7 +25,9 @@
 		 ms-css-margin-left="selectionWrapOffset"
 		 >
 		<a ms-class="selected:el==currentIndex" 
-		 ms-click="selectPic($index)"
+		 ms-mouseenter="selectPic($index,$event)"
+		 ms-click="selectPic($index,$event)"
+		 ms-mouseleave="restartPlay('tab')"
 		 ms-repeat="selections"
 			></a>
 	</div>

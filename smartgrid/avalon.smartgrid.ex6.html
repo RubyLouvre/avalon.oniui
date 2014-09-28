@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>简单的表格组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body ms-controller="test">
+        <h1>供用户调用API</h1>
+        <div ms-widget="smartgrid, sg1" ></div>
+        <button ms-click="reRenderData">重新渲染数据</button>
+        <script>
+            require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown", "dropdown/avalon.dropdown"], function() {
+                function getDates(number) {
+                    var data = []
+                    for (var i = 0; i < number; i++) {
+                        data.push({
+                            name: "shirly"+i,
+                            age: parseInt(10 + Math.random() * 20),
+                            selected: i%3 ? false: true,
+                            salary: parseInt(Math.random() * 100),
+                            operate : i % 5 ? 0 : 1,
+                            busy : !i%3 && !i%5 ? 0 : 1
+                        })
+                    }
+                    return data
+                } 
+                
+                avalon.define("test", function(vm) {
+                    vm.$skipArray = ["smartgrid"]
+                    vm.reRenderData = function() {
+                        var sg1 = avalon.vmodels.sg1
+                        sg1.data = getDates(6)
+                        sg1.render()
+                    }
+                    vm.smartgrid = {
+                        "selectable" : {
+                            "type" : "Checkbox"
+                        },
+                        $skipArray: ["switchdropdown", "dropdown", "pager"],
+                        isAffix: true,
+                        dropdownData: [{
+                            "name" : "忙",
+                            "value" : "1"
+                        },{
+                            "name" : "不忙",
+                            "value" : "0"
+                        }],
+                        remoteSort: function(field, sortType, vmodel) {
+                            console.log("remoteSort, arguments is : ")
+                            console.log(arguments)
+                        },
+                        sortable : {
+                            "remoteSort" : false // 是否支持远程排序，默认为true
+                        },
+                        pageable: true,
+                        pager: {
+                            onJump: function(e, pagerVM) {
+                                console.log("changePage event, currentPage is : ")
+                                console.log(pagerVM)
+                            },
+                            canChangePageSize : true,
+                            options : [10, 20, 50, 100], //默认[10,30,50]
+                            dropdown: {
+                                onChange: function(newValue, oldValue, vmodel) {
+                                    console.log("pager dropdown")
+                                    console.log("pageSize is : "+newValue)
+                                }
+                            }
+                        },
+                        switchdropdown: {
+                            onChange: function(newValue, oldValue, vmodel) {
+                                var element = this,
+                                    $element = avalon(element),
+                                    rowIndex = $element.attr("rowindex"),
+                                    field = $element.attr("field"),
+                                    vmodel = avalon.vmodels[$element.attr("vmId")]
+                                vmodel.data[rowIndex][field] = newValue
+                            }
+                        },
+                        dropdown : {
+                            width: 100,
+                            listWidth: 100,
+                            onChange: function(newValue, oldValue, vmodel) {
+                                var element = this,
+                                    $element = avalon(element),
+                                    rowIndex = $element.attr("rowindex"),
+                                    field = $element.attr("field"),
+                                    vmodel = avalon.vmodels[$element.attr("vmId")]
+                                vmodel.data[rowIndex][field] = newValue
+                            }
+                        },
+                        htmlHelper: { // 渲染列数据的方法集合
+                            upperCaseName: function(vmId, field, index, cellValue) {
+                                return "<b>"+cellValue +"</b>"
+                            },
+                            switchdropdown: function(vmId, field, index, cellValue) {
+                                var openOption = cellValue == 0 ? '<option value="0" selected>启用</option>' : '<option value="0">启用</option>',
+                                    pauseOption = cellValue == 1 ? '<option value="1" selected>暂停</option>' : '<option value="1">暂停</option>'
+
+                                return ['<select ms-widget="switchdropdown" rowindex="'+index+'" field="'+field+'"  vmId="'+vmId+'">', openOption, pauseOption, '</select>'].join('')
+                            },
+                            dropdown: function(vmId, field, index, cellValue) {
+                                var option = "<option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'></option>"
+                                return '<select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'">' + option + '</select>'
+                            }
+
+                        },
+                        columns: [
+                            {
+                                "key" : "name",
+                                "name" : "姓名",
+                                "sortable" : true,
+                                "isLock" : true,
+                                "align": "left",
+                                "defaultValue": "shirly",
+                                "customClass": "ddd",
+                                "toggle": false,
+                                width: "40%",
+                                localSort: function(a, b, f) {
+                                    return a[f].localeCompare(b[f]);
+                                },
+                                "format": "upperCaseName" // 定义渲染数据的方法名
+                            },
+                            {
+                                "key" : "age",
+                                "name" : "年龄",
+                                "sortable" : true,
+                                width: 100
+                            },
+                            {
+                                "key" : "salary",
+                                "name" : "薪水",
+                                "type" : "Number",
+                                "sortable" : true,
+                                "format" : "$X",
+                                "align": "right",
+                                width: 100
+                            },
+                            {
+                                "key" : "operate",
+                                "name" : "操作",
+                                "title" : "操作",
+                                "width" : 200,
+                                "format": "switchdropdown"
+                            },
+                            {
+                                "key" : "busy",
+                                "name" : "忙吗",
+                                "title" : "忙吗",
+                                "width" : 200,
+                                "format": "dropdown"
+                            }
+                        ],
+                        data: getDates(8),
+                        onRowSelect: function(rowData, isSelected) {
+                            console.log("onRowSelect callback , arguments is : ")
+                            console.log(arguments)
+                        },
+                        onSelectAll: function(datas, isSelectedAll) {
+                            console.log("onSelectAll callback")
+                            console.log(arguments)
+                        },
+                        onColumnSort: function(sortType, field) {
+                            console.log("onColumnSort callback")
+                            console.log(arguments)
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+        <div ms-skip style="display:none">
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;timer demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body ms-controller="test"&gt;
+                    
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>

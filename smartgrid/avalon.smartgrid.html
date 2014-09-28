@@ -1,0 +1,87 @@
+<div class="ui-smartgrid">
+    <table>
+        <colgroup>
+            <col ms-repeat-column="columns" 
+                 ms-visible="column.toggle" 
+                 ms-css-width="column.width">
+        </colgroup>
+        <thead class="ui-smartgrid-header">
+            <tr class="ui-smartgrid-header-fixed" 
+                ms-if="isAffix"
+                ms-css-top="_headerTop" 
+                ms-visible="_fixHeaderToggle" 
+                ms-css-position="_position" 
+                ms-css-width="_gridWidth">
+                <th ms-repeat-column="columns" 
+                    ms-visible="column.toggle" 
+                    ms-css-width="column.width" 
+                    ms-css-text-align="column.align" 
+                    ms-class="{{column.customClass}}">
+                    {{column.name|html}}
+                    <span  ms-click="sortColumn(column, $index, $event)"
+                           ms-if="column.sortable" 
+                           ms-class="ui-helper-{{column.sortTrend}}">
+                        <span class="ui-helper-sort-top"></span>
+                        <span class="ui-helper-sort-bottom"></span>
+                    </span>
+                </th>
+            </tr>
+            <tr>
+                <th ms-repeat-column="columns" 
+                    ms-visible="_toggleColumn(column.toggle, $index)" 
+                    ms-css-text-align="column.align" 
+                    ms-class="{{column.customClass}}">
+                    {{column.name|html}}
+                    <span  ms-click="sortColumn(column, $index, $event)"
+                           ms-if="column.sortable" 
+                           ms-class="ui-helper-{{column.sortTrend}}">
+                        <span class="ui-helper-sort-top"></span>
+                        <span class="ui-helper-sort-bottom"></span>
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        <tbody class="ui-smartgrid-body">
+        </tbody>
+        <tfoot class="ui-smartgrid-footer">
+            <tr>
+                <td ms-attr-colspan="{{columns.size()}}">
+                    <div class="ui-smartgrid-pager-wrapper" ms-if="!pageable || !_pagerShow"></div>
+                    <div class="ui-smartgrid-pager-wrapper" id="pager-MS_OPTION_ID" ms-if="pageable && _pagerShow"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <div ms-widget="loading"></div>
+</div>
+MS_OPTION_EJS
+<&- var trl = @data.length &>
+<&- if(!trl) { &>
+    <tr><td colspan="<&=@columns.length&>"><div class="ui-smartgrid-nodata"><&=@noResult&></div></td></tr>
+<&- } else { &>
+    <&- for(var i=0, tr; i<trl; i++) { &>
+        <&- tr = @data[i]; 
+            var selectedClass = "";
+            if(i%2==0) {
+                selectedClass = "ui-smartgrid-odd";
+
+            } else {
+                selectedClass = "ui-smartgrid-even"
+            } 
+            if (tr.selected) {
+                selectedClass += " ui-smartgrid-selected"
+            }&>
+        <tr class="<&=selectedClass&>">
+            <&- for(var j=0, tdl=@columns.length, td; j<tdl; j++) { &>
+                <&- td=@columns[j].$model; 
+                    var display=td.toggle ? "display:table-cell;" : "display:none;", 
+                    textAlign="text-align:"+td.align, style=display+textAlign,
+                    customClass = td.customClass || "",
+                    format = td.format;&>
+                <td style=<&= style &> class=<&= customClass &>>
+                    <&= format(@vmId, td.key , i, tr[td.key], tr.disable) &>
+                </td>
+            <& } &>
+        </tr>  
+    <& } &>  
+<& } &>    

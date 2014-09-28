@@ -3,6 +3,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 	var widget = avalon.ui.uploader = function(element, data, vmodels){
 
 		var uploaderId = data.uploaderId,
+			swfId = uploaderId + 'Swf',
 			fileList = [],		// 存放file对象
 			browseButton,		// 按钮
 			browseButtonClick,	// browseButton 绑定的 click 事件
@@ -75,9 +76,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 					break;
 					case 'flashInit':
 						// 初始化，取到 swf
-						swf = document.getElementById('ExifUpload');
-						// 改为独有 id
-						swf.id = uploaderId + 'Swf';
+						swf = document.getElementById(swfId);
 						// 防止用户隐藏起 flash 导致原先配置丢失，这里重新配置 flash
 						swf.setMaxFileNum(vmodel.max);
 						swf.setUploadSuccessNum(vmodel.files.length);
@@ -186,7 +185,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 			var flashvars = {
 				js_handler: 'avalon.vmodels.' + uploaderId + '.$jsHandler',
 				uploadAPI: vmodel.action,
-				swfID:"swf13889",
+				swfID: "swf13889",
 				maxFileSize: vmodel.fileMaxSize,
 				maxFileNum: vmodel.max
 			};
@@ -199,7 +198,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 				wmode: "transparent" // 透明
 			};
 			var attributes = {
-				id:"ExifUpload"
+				id: swfId
 			};
 			avalon.swfobject.embedSWF(
 				"swfobject/multiPicUpload.swf", 

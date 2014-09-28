@@ -8,11 +8,8 @@
         <script src="../highlight/shCore.js"></script>
     </head>
     <body ms-controller="test">
-        <h1>除设置columns和data外都是默认配置的smartgrid</h1>
-        <p>ps: 通过getDates设置数据，通过改变数据的条数看看smartgrid对数据的渲染性能如何，这里重新渲染数据时设置的是1000条</p>
+        <h1>演示表格吸顶效果，并且取消pager的显示</h1>
         <div ms-widget="smartgrid, sg1" ></div>
-        <button ms-click="reRenderData">重新渲染数据</button>
-        <button ms-click="clearData">清空数据</button>
         <script>
             require(["smartgrid/avalon.smartgrid"], function() {
                 function getDates(number) {
@@ -32,17 +29,9 @@
                 
                 avalon.define("test", function(vm) {
                     vm.$skipArray = ["smartgrid"]
-                    vm.reRenderData = function() {
-                        var sg1 = avalon.vmodels.sg1
-                        sg1.data = getDates(1000)
-                        sg1.render()
-                    }
-                    vm.clearData = function() {
-                        var sg1 = avalon.vmodels.sg1
-                        sg1.data = []
-                        sg1.render()
-                    }
                     vm.smartgrid = {
+                        isAffix: true,
+                        pageable: false,
                         columns: [
                             {
                                 key : "name", //列标识
@@ -68,7 +57,7 @@
                                 width: 300
                             }
                         ],
-                        data: getDates(100)
+                        data: getDates(1000)
                     }
                 })
                 avalon.scan()

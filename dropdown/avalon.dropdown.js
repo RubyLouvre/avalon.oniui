@@ -664,7 +664,7 @@ define(["avalon",
                     getDataFromHTML(el, ret, parent)
                 } else if (el.tagName === "OPTION") {
                     ret.push({
-                        label: el.text.trim(), //IE9-10有BUG，没有进行trim操作
+                        label: el.label.trim(), //IE9-10有BUG，没有进行trim操作
                         title: el.title.trim(),
                         value: parseData(avalon(el).val()),
                         enable: ensureBool(parent && parent.enable, true) && !el.disabled,

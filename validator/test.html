@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>validator</title>
+</head>
+<body>
+<div ms-controller="demo">
+    <h1>form表单支持的控件类型</h1>
+    <p>注意type为submit reset file slider以及image元素没有验证性</p>
+    <form ms-validate>
+        <h2>checkbox</h2>
+        <label>basketball<input type="checkbox" name="sports" value="basketball" required/></label>
+        <label>football<input type="checkbox" name="sports" value="football"/></label>
+        <label>baseball<input type="checkbox" name="sports" value="baseball"/></label>
+        <label>swim<input type="checkbox" name="sports" value="swim"/></label>
+
+        <h2>radio</h2>
+        <label>male<input type="radio" name="gender" value="male" required/></label>
+        <label>female<input type="radio" name="gender" value="female"/></label>
+
+        <h2>text</h2>
+        <label>name<input type="text"/></label>
+
+        <h2>password</h2>
+        <label>password<input type="password"></label>
+
+        <h2>dropdown</h2>
+        <label>size
+            <select name="size">
+                <option value="36">36</option>
+                <option value="37">37</option>
+                <option value="38">38</option>
+            </select>
+        </label>
+
+        <h2>file</h2>
+        <label>headimage<input type="file"/></label>
+
+        <h2>image</h2>
+        <label><input type="image" src="./star.png"/></label>
+
+        <h2>email</h2>
+        <label>email<input type="email" required></label>
+
+        <h2>urls</h2>
+        <label>urls<input type="url" required/></label>
+
+        <h2>number</h2>
+        <label>number<input type="number" min="0" max="10" step="2" value="6" required></label>
+
+        <h2>slider</h2>
+        <label>slider<input type="range" min="0" max="10" step="2" value="6" required></label>
+
+        <h2>date</h2>
+        <label>date<input type="date" required/></label><br/>
+        <label>datetime<input type="datetime" required/></label><br/>
+        <label>datetime-local<input type="datetime-local" required/></label><br/>
+        <label>month<input type="month" required/></label><br/>
+        <label>week<input type="week" required/></label><br/>
+        <label>time<input type="time" required/></label>
+
+        <h2>search</h2>
+        <label>search<input type="search" required/></label>
+
+        <h2>color pickers</h2>
+        <label>color<input type="color" required/></label>
+
+        <h2>操作</h2>
+        <input type="submit"/>
+        <input type="reset"/>
+    </form>
+</div>
+</body>
+</html>

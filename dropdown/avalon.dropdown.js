@@ -438,7 +438,7 @@ define(["avalon",
             setLabelTitle(n);
             //如果有onChange回调，则执行该回调
             if(avalon.type(vmodel.onChange) === "function") {
-                vmodel.onChange.call(element, n, o);
+                vmodel.onChange.call(element, n, o, vmodel);
             }
         });
 

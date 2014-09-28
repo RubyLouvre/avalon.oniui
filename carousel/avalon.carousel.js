@@ -1,5 +1,5 @@
 /**
- * @carousel组件，
+ * @carousel图片轮播组件
  **/
 
 define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
@@ -58,14 +58,22 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                 avalon.scan(element, [vmodel].concat(vmodels))
                 element.style.display = "block"
 
-                if (vm.adaptiveWidth) { //自动外围容器宽度
-                    var wrapWidth = element.offsetWidth
-                    vm.pictureWidth = wrapWidth
-                    console.log(wrapWidth)
+                if (vm.adaptiveWidth) { //自动填充外围容器宽度
+                    vm.pictureWidth = element.offsetWidth
+                }
+                if (vm.adaptiveHeight) { //自动填充外围容器高度
+                    element.style.height = "100%"
+                    var children = element.children
+                    for (var i = 0, len = children.length; i < len; i++) {
+                        if (children[i].id === "ui-carousel") {
+                            children[i].style.height = "100%"
+                        }
+                    }
                 }
 
-                var images = vm.pictures //预加载图片
-                images.push(vm.arrowLeftNormalSrc, vm.arrowLeftHoverSrc, vm.arrowRightNormalSrc, vm.arrowRightHoverSrc)
+                //预加载图片
+                var images = []
+                images.push(vm.pictures, vm.arrowLeftNormalSrc, vm.arrowLeftHoverSrc, vm.arrowRightNormalSrc, vm.arrowRightHoverSrc)
                 for (var i = 0; i < images.length; i++) {
                     var image_preload = new Image()
                     image_preload.src = images[i]
@@ -78,17 +86,18 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
             vm.$remove = function() {
                 element.innerHTML = element.textContent = ""
             }
-            vm.setArrowVisible = function() { //@method setArrowVisible() hover在组件上时使Arrow显示，停止轮播
+            vm.stopPlay = function() { //hover在组件上时使Arrow显示，停止轮播
                 vm.arrowVisible = vm.alwaysShowArrow ? true : false
                 if (vm.hoverStop && vm.autoSlide) {
                     clearTimeout(timer)
+                    timer = null
                 }
             }
-            vm.setArrowHidden = function() { //@method setArrowHidden() hover离开时使Arrow隐藏，重新开始轮播
-                vm.arrowVisible = false
-                if (vm.hoverStop) {
-                    vm.autoPlay(vm)
+            vm.restartPlay = function(type) { //hover离开时使Arrow隐藏，重新开始轮播
+                if (type === "carousel") {
+                    vm.arrowVisible = false
                 }
+                vm.autoPlay(vm)
             }
 
             //动画参数
@@ -101,9 +110,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                 if (animated) { //防止动画队列堆积
                     return
                 }
-                if (typeof distance === "undefined") { //设置默认距离为1
-                    distance = 1
-                }
+                distance = distance || 1
                 if (vm.effect === "slide") {
                     //移动准备
                     if (direct === 1 && vm.panelOffsetX === -vm.pictureWidth * (vm.picNum - 1)) { //点击为正方向且panel处于队列末尾，队列先回到0
@@ -175,10 +182,38 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                     return 1
                 }
             }
-            vm.selectPic = function(index) { //@method selectPic(index) 通过底部圆形选择图片
-                var distance = vm.currentIndex - index
-                var direct = distance > 0 ? -1 : 1
-                vm.animate(direct, Math.abs(distance))
+
+            var hoverIndex = 0;
+            vm.selectPic = function(index, e) { //@method selectPic(index) 通过底部圆形选择图片
+                hoverIndex = index
+                if (e.type === vm.eventType || vm.eventType === "both") {
+                    var distance = vm.currentIndex - index
+                    var direct = distance > 0 ? -1 : 1
+
+                    if (e.type === "mouseenter") {
+                        setTimeout(function() {
+                            vm.animate(direct, Math.abs(distance))
+                        }, 300) //mouseenter事件设置延时以防止切换时间间隔太小
+                    } else {
+                        vm.animate(direct, Math.abs(distance))
+                    }
+
+                    if (vm.autoSlide) {
+                        clearTimeout(timer)
+                        timer = null
+                    }
+                }
+
+                //修复hover的TAB和select的TAB不一致
+                var fixIndex = setInterval(function(){
+                    if(vm.currentIndex !== hoverIndex){
+                        var distance = vm.currentIndex - hoverIndex
+                        var direct = distance > 0 ? -1 : 1
+                        vm.animate(direct, Math.abs(distance))
+                    } else{
+                        clearInterval(fixIndex)
+                    }
+                },800)
             }
             vm.arrowHover = function(direction) { //@method arrowHover(direction) 左右箭头hover事件
                 if (direction === "left") {
@@ -194,32 +229,28 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                     vm.arrowRightSrc = vm.arrowRightNormalSrc
                 }
             }
-            var timer //轮播计时器
+            var timer = null //轮播计时器
             vm.autoPlay = function() { //@method autoPlay(vmodel) 自动开始轮播
-                if (vm.autoSlide) {
-                    timer = setTimeout(function() {
-                        vm.animate(1) //正方向移动
-                        vm.autoPlay()
-                    }, vm.timeout)
+                if (timer === null && vm.autoSlide) {
+                    function play() {
+                        timer = setTimeout(function() {
+                            vm.animate(1) //正方向移动
+                            play()
+                        }, vm.timeout)
+                    }
+                    play()
                 }
             }
-
         })
-        if (vmodel.effect !== "slide") { //fade 或者 none 模式布局
+        if (vmodel.effect !== "slide") { //fade 或者 none 模式下的布局
             vmodel.itemPosition = "absolute"
             vmodel.panelPosition = "relative"
         }
 
         vmodel.pictures[vmodel.pictures.length] = vmodel.pictures[0] //将第一个元素加到图片数组末尾形成循环
         vmodel.autoPlay(vmodel) //自动开始轮播
-        vmodel.$watch("$all", function() {})
 
         return vmodel
-    }
-
-    function easeInOut(t, b, c, d) {
-        if ((t /= d / 2) < 1) return c / 2 * t * t + b
-        return -c / 2 * ((--t) * (t - 2) - 1) + b
     }
 
     widget.defaults = {
@@ -234,7 +265,9 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
         alwaysShowSelection: true, //@param alwaysShowSelection 显示底部圆形切换部件
         autoSlide: true, //@param autoSlide 自动播放
         hoverStop: false, //@param autoSlide 鼠标经过停止播放
-        adaptiveWidth: false, //@param adaptiveWidth 适应外围宽度，为true时指定的宽度不起作用
+        adaptiveWidth: false, //@param adaptiveWidth 适应外围宽度，为true时指定pictureWidth不起作用
+        adaptiveHeight: false, //@param adaptiveHeight 适应外围高度，为true时指定pictureHeight不起作用
+        eventType: "click", //@param eventType 触发tab切换的nav上的事件类型，取值click(默认)\mouseenter\both
         arrowLeftNormalSrc: "./images/arrows-left-icon.png", //@param arrowLeftNormalSrc 左箭头正常状态图标
         arrowRightNormalSrc: "./images/arrows-right-icon.png", //@param arrowLeftNormalSrc 右箭头正常状态图标
         arrowLeftHoverSrc: "./images/arrows-left-hover-icon.png", //@param arrowLeftNormalSrc 左箭头hover状态图标

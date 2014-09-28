@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.3.4 2014.9.15
+ avalon 1.3.5 2014.9.15
  ==================================================*/
 (function(DOC) {
     /*********************************************************************
@@ -418,7 +418,8 @@
         var accessingProperties = {} //监控属性
         var normalProperties = {} //普通属性
         var computedProperties = [] //计算属性
-        var watchProperties = arguments[2] || {} //强制要监听的属性
+        var watchProperties = avalon.mix({}, arguments[2] || {}) //强制要监听的属性
+
         var skipArray = scope.$skipArray //要忽略监控的属性
         for (var i = 0, name; name = skipProperties[i++]; ) {
             delete scope[name]
@@ -1823,7 +1824,7 @@
                             remove = true
                         }
                     }
-                } else if (fn.type === "if" ||  fn.node === null) {
+                } else if (fn.type === "if" || fn.node === null) {
                     remove = true
                 }
                 if (remove) { //如果它没有在DOM树
@@ -1840,7 +1841,7 @@
                     fn.apply(0, args) //强制重新计算自身
                 } else if (fn.getter) {
                     fn.handler.apply(fn, args) //处理监控数组的方法
-                } else if(fn.node || fn.element){
+                } else if (fn.node || fn.element) {
                     var fun = fn.evaluator || noop
                     fn.handler(fun.apply(0, fn.args || []), el, fn)
                 }
@@ -2195,9 +2196,14 @@
 
     var keywords =
             // 关键字
-            "break,case,catch,continue,debugger,default,delete,do,else,false" + ",finally,for,function,if,in,instanceof,new,null,return,switch,this" + ",throw,true,try,typeof,var,void,while,with"
+            "break,case,catch,continue,debugger,default,delete,do,else,false" +
+            ",finally,for,function,if,in,instanceof,new,null,return,switch,this" +
+            ",throw,true,try,typeof,var,void,while,with"
             // 保留字
-            + ",abstract,boolean,byte,char,class,const,double,enum,export,extends" + ",final,float,goto,implements,import,int,interface,long,native" + ",package,private,protected,public,short,static,super,synchronized" + ",throws,transient,volatile"
+            + ",abstract,boolean,byte,char,class,const,double,enum,export,extends" +
+            ",final,float,goto,implements,import,int,interface,long,native" +
+            ",package,private,protected,public,short,static,super,synchronized" +
+            ",throws,transient,volatile"
 
             // ECMA 5 - use strict
             + ",arguments,let,yield"
@@ -3690,15 +3696,21 @@
 
     //============ each/repeat/with binding 用到的辅助函数与对象 ======================
     //得到某一元素节点或文档碎片对象下的所有注释节点
-    var queryComments = DOC.createTreeWalker ? function(parent) {
-        var tw = DOC.createTreeWalker(parent, NodeFilter.SHOW_COMMENT, null, null),
-                comment, ret = []
-        while (comment = tw.nextNode()) {
-            ret.push(comment)
+    //得到某一元素节点或文档碎片对象下的所有注释节点
+    var getComments = function(parent, array) {
+        var nodes = parent.childNodes
+        for (var i = 0, el; el = nodes[i++]; ) {
+            if (el.nodeType === 8) {
+                array.push(el)
+            } else if (el.nodeType === 1) {
+                getComments(el, array)
+            }
         }
+    }
+    var queryComments = function(parent) {
+        var ret = []
+        getComments(parent, ret)
         return ret
-    } : function(parent) {
-        return parent.getElementsByTagName("!")
     }
     //将通过ms-if移出DOM树放进ifSanctuary的元素节点移出来，以便垃圾回收
 
@@ -3908,6 +3920,9 @@
             source.$skipArray = [param]
         }
         proxy = modelFactory(source, 0, watchEachOne)
+        proxy.$watch(param, function(val) {
+            data.getter().set(proxy.$index, val)
+        })
         proxy.$id = "$proxy$" + data.type + Math.random()
         return proxy
     }
@@ -3917,14 +3932,24 @@
         }
         array.length = 0
     }
+    function breakCircularReference(prop, arr) {
+        if (prop && Array.isArray(arr = prop[subscribers])) {
+            arr.forEach(function(el) {
+                if (el.evaluator) {
+                    el.evaluator = el.element = el.node = null
+                }
+            })
+            arr.length = 0
+        }
+    }
     function recycleEachProxy(proxy) {
         var obj = proxy.$accessors, name = proxy.$itemName;
-        ["$index", "$last", "$first"].forEach(function(prop) {
-            obj[prop][subscribers].length = 0
-        })
-        if (proxy[name][subscribers]) {
-            proxy[name][subscribers].length = 0;
-        }
+        breakCircularReference(obj.$index)
+        breakCircularReference(obj.$last)
+        breakCircularReference(obj.$first)
+        breakCircularReference(obj[name])
+        breakCircularReference(proxy[name])
+        proxy.$events = {}
         if (eachProxyPool.unshift(proxy) > kernel.maxRepeatSize) {
             eachProxyPool.pop()
         }

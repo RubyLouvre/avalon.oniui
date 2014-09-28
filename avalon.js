@@ -2636,7 +2636,7 @@
                         var lastFn = {}
                         for (var i = 0, n = arr.length; i < n; i++) {
                             var ii = i + pos
-                            var proxy = getEachProxy(ii, arr[i], data, last, arr)
+                            var proxy = getEachProxy(ii, arr[i], data, last)
                             proxies.splice(ii, 0, proxy)
                             var param = data.param || "el";
                             (function () {
@@ -3890,8 +3890,8 @@
         return proxy
     }
     var eachProxyPool = []
-    function getEachProxy(index, item, data, last, eachVM) {
-        var param = data.param || "el", proxy, $index
+    function getEachProxy(index, item, data, last) {
+        var param = data.param || "el", proxy
         var source = {
             $remove: function() {
                 return data.getter().removeAt(proxy.$index)

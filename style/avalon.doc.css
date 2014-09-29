@@ -101,3 +101,24 @@ p {
 .warn, .warning {
     color: #f00;
 }
+
+/*14.9.28 表单示例样式 开始*/
+.form-example a{color: #09c;}
+.form-example a:hover{color: #3ce;}
+/*left-wrap*/
+.form-example .example-wrap{padding: 20px; font-size: 14px; color: #333; line-height: 20px; word-wrap: break-word;}
+.form-example .example-wrap .hint{background-color: #DFF0D8;padding: 15px; margin: 20px 0; border: 1px #ddd solid; border-radius: 1px;}
+/*form*/
+.form-example .form {display:inline-block; width:45%; margin: 0 20px 0 0;}
+.form-example .form .item {margin: 0 0 15px;}
+.form-example .form .item .img-responsive{margin: 5px 0 0; max-width: 100%;}
+.form-example .form input[type="text"]{width: 85%; padding: 6px 12px; border:1px #ccc solid; border-radius: 4px;-webkit-box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset;}
+.form-example .form .item input[type="text"]:focus{border-color: rgb(129, 183, 225); -webkit-box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px 0px inset, rgba(102, 175, 232, 0.4) 0px 0px 5.8px 0px;} 
+.form-example .form .item .item-entry-wrap{width: 100%; margin: 10px 0 0 0;}
+.form-example .form .item .item-entry{width: 100%; padding: 10px; background: rgba(0, 0, 0, .02); border:1px #ccc solid;box-sizing:border-box;}
+.form-example .form .item .item-entry .radios-wrap{padding: 10px 0;border-bottom: rgba(0, 0, 0, .1) solid thin; }
+.form-example .form .item .item-entry .upper-wrap,.form .item .item-entry a{margin: 8px 0 0;}
+/*data-wrap*/
+.form-example .data-wrap {display:inline-block; width:45%;vertical-align:top;}
+.form-example .data-wrap pre{padding: 9.5px; margin: 0; border:1px #ccc solid; font-family: Menlo,Monaco,Consolas,"Courier New",monospace; font-size: 12px;}
+/*14.9.28 表单示例样式 结束*/

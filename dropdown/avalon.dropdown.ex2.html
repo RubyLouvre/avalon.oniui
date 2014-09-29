@@ -1,48 +1,46 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title></title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
-    <script src="../avalon.js"></script>
-    <script type="text/javascript">
-        require('dropdown/avalon.dropdown.js', function() {
-            avalon.ready(function() {
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../avalon.js"></script>
+        <script type="text/javascript">
+            require(["dropdown/avalon.dropdown.js", "ready!"], function() {
                 //multiple select vmodel
                 avalon.define('mulSelect', function(vm) {
                     vm.s1 = ['value1', 1, null, false];
                 });
                 avalon.scan();
             });
-        });
-    </script>
-    <script src="../highlight/shCore.js"></script>
-</head>
-<body>
-    <div class="wrapper">
-        <div ms-controller="mulSelect">
-            <h2>multiple select（多选下拉框）</h2>
-            <p>使用html配置dropdown并附加双工绑定，默认处理value的值为Number，Boolean，null的情况</p>
-            <select ms-duplex="s1"
-                    ms-widget="dropdown"
-                    multiple>
-                <optgroup label="group1">
-                    <option value="value1">Value 1</option>
-                    <option>textValue</option>
-                    <option label="label" value="labelValue">with label</option>
-                    <option value="null">Value 2</option>
-                    <option value="1">Value 3</option>
-                </optgroup>
-                <optgroup label="group2">
-                    <option value="false">Value 4</option>
-                    <option value="value5" disabled>Value 5</option>
-                    <option value="value6">Value 6</option>
-                </optgroup>
-            </select>
-            <p>select1: {{s1}}</p>
-        </div>
-        <pre class="brush:html;gutter:false;toolbar:false;" ms-skip>
+        </script>
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div ms-controller="mulSelect">
+                <h2>multiple select（多选下拉框）</h2>
+                <p>使用html配置dropdown并附加双工绑定，默认处理value的值为Number，Boolean，null的情况</p>
+                <select ms-duplex="s1"
+                        ms-widget="dropdown"
+                        multiple>
+                    <optgroup label="group1">
+                        <option value="value1">Value 1</option>
+                        <option>textValue</option>
+                        <option label="label" value="labelValue">with label</option>
+                        <option value="null">Value 2</option>
+                        <option value="1">Value 3</option>
+                    </optgroup>
+                    <optgroup label="group2">
+                        <option value="false">Value 4</option>
+                        <option value="value5" disabled>Value 5</option>
+                        <option value="value6">Value 6</option>
+                    </optgroup>
+                </select>
+                <p>select1: {{s1}}</p>
+            </div>
+            <pre class="brush:html;gutter:false;toolbar:false;" ms-skip>
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
@@ -51,15 +49,13 @@
     &lt;meta name="viewport" content="width=device-width"&gt;
     &lt;script src="../avalon.js"&gt;&lt;/script&gt;
     &lt;script type="text/javascript"&gt;
-        require('dropdown/avalon.dropdown.js', function() &#123;
-            avalon.ready(function() &#123;
+            require(["dropdown/avalon.dropdown.js", "ready!"], function() {
                 //multiple select vmodel
-                avalon.define('mulSelect', function(vm) &#123;
+                avalon.define('mulSelect', function(vm) {
                     vm.s1 = ['value1', 1, null, false];
-                &#125;);
+                });
                 avalon.scan();
-            &#125;);
-        &#125;);
+            });
     &lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
@@ -88,7 +84,7 @@
     &lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-        </pre>
-    </div>
-</body>
+            </pre>
+        </div>
+    </body>
 </html>

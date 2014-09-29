@@ -9,8 +9,12 @@
 .ui-accordion.ui-accordion-mode-nav { margin-top: -1px; }
 .ui-accordion.ui-accordion-mode-nav .ui-accordion-inner { border-top: 0 none; }
 .ui-accordion.ui-accordion-mode-nav .ui-accordion-inner .ui-accordion-header { padding: 7px 10px; }
+.ui-accordion.ui-accordion-mode-nav .ui-accordion-inner.ui-accordion-horizontal div { float: left; }
+.ui-accordion.ui-accordion-mode-nav .ui-accordion-inner.ui-accordion-horizontal div.ui-accordion-header { margin: 0; position: relative; }
+.ui-accordion.ui-accordion-mode-nav .ui-accordion-inner.ui-accordion-horizontal div.ui-accordion-header h2 { -webkit-transform-origin: 0 0; -moz-transform-origin: 0 0; -ms-transform-origin: 0 0; -o-transform-origin: 0 0; transform-origin: 0 0; -webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg); -ms-transform: rotate(-90deg); -o-transform: rotate(-90deg); transform: rotate(-90deg); position: absolute; left: 10px; margin: 0; padding: 0; }
+.ui-accordion.ui-accordion-mode-nav .ui-accordion-inner.ui-accordion-horizontal div.ui-accordion-content { overflow: hidden; }
 .ui-accordion.ui-accordion-mode-caret .ui-accordion-inner { border: 0 none; }
-.ui-accordion .ui-accordion-header { display: block; min-height: 0; position: relative; margin: 2px 0 0 0; padding: .5em .5em .5em .7em; cursor: pointer; font-size: 100%; }
+.ui-accordion .ui-accordion-header { display: block; min-height: 0; position: relative; margin: 2px 0 0 0; padding: 7px 10px; cursor: pointer; font-size: 100%; }
 .ui-accordion .ui-accordion-header.ui-state-default { border: 1px solid #d3d3d3; background-color: #e6e6e6; font-weight: normal; color: #555; }
 .ui-accordion .ui-accordion-header .ui-icon-caret-right { display: inline; }
 .ui-accordion .ui-accordion-header .ui-icon-caret-down { display: none; }
@@ -22,7 +26,7 @@
 .ui-accordion .ui-accordion-icons .ui-accordion-icons { padding-left: 2.2em; }
 .ui-accordion .ui-accordion-icon-wrap { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; width: 14px; vertical-align: middle; text-align: right; cursor: pointer; }
 .ui-accordion .ui-accordion-icon-wrap .ui-icon { cursor: pointer; }
-.ui-accordion .ui-accordion-content { border-top: 0; padding: 1em 2.2em; overflow: auto; font-size: 12px; }
+.ui-accordion .ui-accordion-content { border-top: 0; padding: 7px 10px; overflow: auto; font-size: 12px; }
 .ui-accordion .ui-accordion-content.ui-state-default { border: 1px solid #aaa; background: #fff; color: #000; }
 .ui-accordion .ui-accordion-content.ui-state-active { background: #fff; border: 1px solid #aaa; }
 .ui-accordion .ui-accordion-content.ui-state-hover { border: 1px solid #999999; background: #dadada; font-weight: normal; color: #212121; }

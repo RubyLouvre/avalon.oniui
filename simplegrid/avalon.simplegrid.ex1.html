@@ -22,14 +22,31 @@
                 function range(s, b) {
                     return s + Math.floor((b - s) * Math.random())
                 }
-                avalon.define("test", function(vm) {
-                    vm.simplegrid = {
+                var testVM = avalon.define("test", function(vm) {
+                    vm.$skipArray = ["pagerVM"]
+                    vm.$simplegridAOpts = {
                         columns: ["symbol", "price", "change"],
                         data: getData(10)
                     }
-                    vm.resetData = function() {
-                        var data = getData(1);
-                        var vmodel = avalon.vmodels.simplegridA;
+
+
+                    vm.pagerVM = null
+                    vm.$simplegridBOpts = {
+                        columns: ["symbol", "price", "change"],
+                        data: [],
+                        pageable: true,
+                        pager: {
+                            perPages : 10,
+                            totalItems: 0,
+                            onInit: function(vmodel) {
+                                testVM.pagerVM = vmodel
+                            }
+                        }
+                    }
+                    vm.resetData = function(id) {
+                        var data = getData(3);
+                        var vmodel = avalon.vmodels[id];
+                        testVM.pagerVM.totalItems = data.length
                         vmodel.reRender(data, vmodel)
                     }
                     vm.$skipArray = ["simplegrid"]
@@ -41,10 +58,16 @@
     <body >
         <fieldset ms-controller="test">
             <legend>最简单的例子</legend>
-            <div ms-widget="simplegrid, simplegridA" style="width:99%">
+            <div ms-widget="simplegrid, simplegridA, $simplegridAOpts" style="width:99%">
 
             </div>
-            <button ms-click="resetData">reset data</button>
+            <br />
+
+            <div ms-widget="simplegrid, simplegridB, $simplegridBOpts" style="width:99%">
+
+            </div>
+            <button ms-click="resetData('simplegridA')">reset data A</button>
+            <button ms-click="resetData('simplegridB')">reset data B</button>
             <pre class="brush:html;gutter:false;toolbar:false;">
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;

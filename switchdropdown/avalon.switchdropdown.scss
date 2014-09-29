@@ -4,9 +4,11 @@
 $uiname: "ui-dropdown";
 
 .#{$uiname} {
-  //下拉项的样式
-  .#{$uiname}-item {
-    text-indent: 6px;
+  .#{$uiname}-menu-inner {
+      //下拉项的样式
+      .#{$uiname}-item {
+        text-indent: 6px;
+      }
   }
 }
 

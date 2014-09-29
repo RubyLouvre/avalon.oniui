@@ -16,16 +16,18 @@ define(['avalon',
     var defaultData = [{
             value: 1,
             label : ' 启用',
-            class: 'g-icon-start',
+            iconClass: 'g-icon-start',
             title: '启用',
-            font: '&#xf111;'
+            font: '&#xf111;',
+            titleValue: ' 已启用'
         },
         {
             value: 2,
             label : ' 暂停',
-            class: 'g-icon-pause',
+            iconClass: 'g-icon-pause',
             title: '暂停',
-            font: '&#xf04c;'
+            font: '&#xf04c;',
+            titleValue: ' 已暂停'
         }];
 
     //使用switchdropdown做代理，包装option，内部使用dropdown组件实现
@@ -68,7 +70,7 @@ define(['avalon',
         for (var i = 0, el; el = elems[i++]; ) {
             if (el.nodeType === 1) {//过滤注释节点
                 if (el.tagName === "OPTION") {
-                    ret.push({
+                    var option = {
                         label: ' ' + el.text.trim(), //IE9-10有BUG，没有进行trim操作
                         title: el.title.trim(),
                         value: parseData(avalon(el).val()),
@@ -76,7 +78,12 @@ define(['avalon',
                         group: false,
                         selected: el.selected,
                         parent: parent
-                    });
+                    };
+                    //设置了用于在标题处显示的文案：titleValue
+                    if(avalon(el).attr("data-title-value")) {
+                        option.titleValue = " " + avalon(el).attr("data-title-value").trim()
+                    }
+                    ret.push( option );
                     if(ret.length === 2) break;
                 }
             }
@@ -88,7 +95,8 @@ define(['avalon',
     function setItemLabel(items) {
         avalon.each(items, function(i, item) {
             item.text = item.label;
-            item.label = ['<i class="ui-icon ', item.class, '">', item.font, '</i>', item.label].join('');
+            item.label = ['<i class="ui-icon ', item.iconClass, '">', item.font, '</i>', item.label].join('');
+            item.titleValue = ['<i class="ui-icon ', item.iconClass, '">', item.font, '</i>', item.titleValue].join('');
         });
         return items;
     }
@@ -114,7 +122,7 @@ define(['avalon',
         enable: true,           //组件是否可用
         readOnly: false,        //组件是否只读
         data: [],               //下拉列表显示的数据模型
-        value: 1,              //设置组件的初始值
+        value: "",              //设置组件的初始值
         getTemplate: function() {
             return tmpl;
         }

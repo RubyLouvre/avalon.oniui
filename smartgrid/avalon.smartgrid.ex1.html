@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>简单的表格组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body ms-controller="test">
+        <h1>除设置columns和data外都是默认配置的smartgrid</h1>
+        <p>ps: 通过getDates设置数据，通过改变数据的条数看看smartgrid对数据的渲染性能如何，这里重新渲染数据时设置的是1000条</p>
+        <div ms-widget="smartgrid, sg1" ></div>
+        <button ms-click="reRenderData">重新渲染数据</button>
+        <button ms-click="clearData">清空数据</button>
+        <script>
+            require(["smartgrid/avalon.smartgrid"], function() {
+                function getDates(number) {
+                    var data = []
+                    for (var i = 0; i < number; i++) {
+                        data.push({
+                            name: "shirly"+i,
+                            age: parseInt(10 + Math.random() * 20),
+                            selected: i%3 ? false: true,
+                            salary: parseInt(Math.random() * 100),
+                            operate : i % 5 ? 0 : 1,
+                            busy : !i%3 && !i%5 ? 0 : 1
+                        })
+                    }
+                    return data
+                } 
+                
+                avalon.define("test", function(vm) {
+                    vm.$skipArray = ["smartgrid"]
+                    vm.reRenderData = function() {
+                        var sg1 = avalon.vmodels.sg1
+                        sg1.data = getDates(1000)
+                        sg1.render()
+                    }
+                    vm.clearData = function() {
+                        var sg1 = avalon.vmodels.sg1
+                        sg1.data = []
+                        sg1.render()
+                    }
+                    vm.smartgrid = {
+                        columns: [
+                            {
+                                key : "name", //列标识
+                                name : "姓名", //列名
+                                sortable : true, //是否可排序
+                                isLock : true, //是否锁死列让其始终显示
+                                align: "left", //列的对象方式
+                                defaultValue: "shirly", //列的默认值
+                                customClass: "ddd", //自定义此列单元格类
+                                toggle: false, //控制列的显示隐藏
+                                width: "40%" //设置列的宽度
+                            }, {
+                                key : "age",
+                                name : "年龄",
+                                sortable : true,
+                                width: 300
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                type : "Number",
+                                sortable : true,
+                                align: "right",
+                                width: 300
+                            }
+                        ],
+                        data: getDates(100)
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+        <div ms-skip style="display:none">
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;timer demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body ms-controller="test"&gt;
+                    
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>

@@ -9,7 +9,7 @@
 </head>
 <body class="doc">
     <div class="wrapper">
-        <h2>timer</h2>
+        <h2>smartgrid</h2>
         <fieldset>smartgrid与simplegrid最大的不同是数据的渲染是通过静态模板实现的，当然也可以方便的实现动态更新视图。同时smartgrid实现了grid adapter的所有功能，不过部分使用方式会有些差异，下面会详细说明</fieldset>
         <fieldset>
             <legend>使用说明</legend>
@@ -61,9 +61,8 @@
                     <tr>
                         <td>htmlHelper</td>
                         <td>{}</td> 
-                        <td>包装数据的方法集合，可<a href="avalon.smartgrid.ex4.html">参见实例4</a>的使用</td>
+                        <td>包装数据的方法集合，可<a href="avalon.smartgrid.ex2.html">参见实例2</a>的使用</td>
                     </tr>
-                 
                     <tr>
                         <td>noResult</td>
                         <td>"暂时没有数据"</td> 
@@ -154,6 +153,11 @@
                         <td>获取表格数据,当然也可以通过vmodel.data直接获得表格数据</td>
                     </tr>
                     <tr>
+                        <td>getSelected()</td>
+                        <td></td>
+                        <td>获取选中表格行的数据集合</td>
+                    </tr>
+                    <tr>
                         <td>selectAll(b)</td>
                         <td></td> 
                         <td>全选表格，或者全不选，参数b是个布尔值，true表示全选，false表示全不选，为空时以true对待</td>
@@ -218,14 +222,12 @@
         </fieldset>
         <h3>demo示例：</h3>
         <ol class="example-links">
-            <li><a href="avalon.smartgrid.ex1.html"></a></li>
-            <li><a href="avalon.smartgrid.ex2.html"></a></li>
-            <li><a href="avalon.smartgrid.ex3.html"></a></li>
-            <li><a href="avalon.smartgrid.ex4.html"></a></li>
-            <li><a href="avalon.smartgrid.ex5.html"></a></li>
-            <li><a href="avalon.smartgrid.ex6.html"></a></li>
-            <li><a href="avalon.smartgrid.ex7.html"></a></li>
-            <li><a href="avalon.smartgrid.ex8.html"></a></li>
+            <li><a href="avalon.smartgrid.ex1.html">除设置columns和data外都是默认配置的smartgrid</a></li>
+            <li><a href="avalon.smartgrid.ex2.html">通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数</a></li>
+            <li><a href="avalon.smartgrid.ex3.html">演示表格吸顶效果，并且取消pager的显示</a></li>
+            <li><a href="avalon.smartgrid.ex4.html">表格排序操作</a></li>
+            <li><a href="avalon.smartgrid.ex5.html">自定义smartgrid各种事件回调</a></li>
+            <li><a href="avalon.smartgrid.ex6.html">供用户调用API</a></li>
         </ol>
     </div>
 </body>

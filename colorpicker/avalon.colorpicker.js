@@ -36,7 +36,7 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 			};
 
 			// 如果用户未设置颜色，设置初始颜色
-			if(!("ms-duplex" in $element[0].msData)){
+			if(!("ms-duplex" in element.msData)){
 				element.setAttribute("ms-duplex", "defaultColor");
 			}
 			vm.cp_color = "";			//最终颜色

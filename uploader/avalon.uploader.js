@@ -1,4 +1,4 @@
-define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmRequest", "./swfobject/swfobject", "css!./avalon.uploader.css"], function(avalon, sourceHTML){
+define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmRequest", "./swfobject/swfobject"], function(avalon, sourceHTML){
 
 	var widget = avalon.ui.uploader = function(element, data, vmodels){
 
@@ -214,6 +214,11 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 				if(getStyle(browseButton, 'position') == 'static'){
 					browseButton.style.position = 'relative';
 				}
+			}
+
+			// ie6 下 height: 100%失效
+			if(ieVersion == 6){
+				flash.style.height = getStyle(browseButton, 'height');
 			}
 
 			browseButton.appendChild(flash);

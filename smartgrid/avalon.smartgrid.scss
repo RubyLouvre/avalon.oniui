@@ -12,6 +12,9 @@ $uiname: "ui-smartgrid";
         border-spacing: 0;
         border-collapse: collapse;
     }
+    .#{$uiname}-hide {
+        width: 0;
+    }
     .#{$uiname}-even {
         background-color: #f7f7f7;
     }
@@ -66,6 +69,9 @@ $uiname: "ui-smartgrid";
         height: 26px;
         line-height: 26px;
         padding-left: 5px; 
+        div.ui-smartgrid-showinfo {
+            @include inline-block();
+        }
         .ui-dropdown {
             margin: 0 5px;
             vertical-align: top; 

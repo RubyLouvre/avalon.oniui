@@ -4,6 +4,7 @@
 */
 .ui-smartgrid { border: 1px solid #e5e5e5; font-size: 12px; line-height: 20px; position: relative; /*三种容器的规则*/ /*三种容器下三角形的共同点*/ /*上三角*/ /*下三角*/ }
 .ui-smartgrid table { table-layout: auto; width: 100%; border-spacing: 0; border-collapse: collapse; }
+.ui-smartgrid .ui-smartgrid-hide { width: 0; }
 .ui-smartgrid .ui-smartgrid-even { background-color: #f7f7f7; }
 .ui-smartgrid .ui-smartgrid-selected { background-color: #fff7e6; }
 .ui-smartgrid th { -moz-user-select: none; -ms-user-select: none; -webkit-user-select: none; user-select: none; padding: 7px 5px; }
@@ -15,6 +16,7 @@
 .ui-smartgrid .ui-smartgrid-footer td { padding: 0; }
 .ui-smartgrid .ui-smartgrid-pager-wrapper { width: 100%; padding: 5px 0px; overflow: hidden; background-color: #f8f8f8; }
 .ui-smartgrid .ui-smartgrid-pager-options { font-size: 12px; float: left; height: 26px; line-height: 26px; padding-left: 5px; }
+.ui-smartgrid .ui-smartgrid-pager-options div.ui-smartgrid-showinfo { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; }
 .ui-smartgrid .ui-smartgrid-pager-options .ui-dropdown { margin: 0 5px; vertical-align: top; }
 .ui-smartgrid .ui-smartgrid-nodata { padding: 27px 0; text-align: center; }
 .ui-smartgrid .ui-helper-asc, .ui-smartgrid .ui-helper-desc, .ui-smartgrid .ui-helper-ndb { width: 16px; height: 16px; line-height: 1; vertical-align: middle; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; position: relative; cursor: pointer; }

@@ -1,0 +1,243 @@
+<div class="form-example clearfix" ms-controller="formData" id="form-examples">
+    <div class="example-wrap">
+        <h2>表单示例</h2>
+        <div class="hint">
+            下面表单中的各项数据与"formData"属性绑定，最后组合成JSON格式输出。同时可以自动检测到表单数据的变化。
+        </div>
+        <div id="form_wrap" class="form">
+            <form>
+            <div class="item">
+                <b>Name</b><br/>
+                <input type="text" value="" placeholder="输入名字" ms-duplex="name">
+            </div>
+            <div class="item">
+                <b>Picture</b><br/>
+                <input type="text" value="" placeholder="输入图片Url，可以实时预览" ms-duplex="picture">
+                <img ms-src="{{picture}}" class="img-responsive" alt="" onerror="this.src=''">
+            </div>
+            <div class="item">
+                <b>Nationality</b> 
+                <div>
+                    <label ms-repeat="nationData" ms-click="checkNation">
+                        <input type="checkbox" ms-duplex-radio="el.checked">{{el.nation}}<br/>
+                    </label>
+                </div>
+            </div>
+            <div class="item">
+                <b>Gender</b>
+                <div>
+                    <select ms-duplex="gender">
+                        <option>Female</option>
+                        <option>Male</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="item">
+                <b>Skills</b>
+                <a ms-click="addSkill" href="javascript:(0);">Add a skill</a><br/>
+                <div ms-repeat="skillData">
+                    <div ms-include="'tpl'"></div>
+                </div>
+            </div>
+            </form>
+        </div>
+        <div class="data-wrap">
+            <div>
+                将表单数据以JSON格式存储于"formData"中
+            </div>
+            <pre>{{formDataWrap}}</pre>
+            <a ms-click="clearData()" href="javascript:(0);">Clear data</a>
+        </div>
+        <div>
+            主要用到了ms-duplex\ms-duplex-radio等绑定
+            <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;form&gt;
+    &lt;div class="item"&gt;
+        &lt;b&gt;Name&lt;/b&gt;&lt;br/&gt;
+        &lt;input type="text" value="" placeholder="输入名字" ms-duplex="name"&gt;
+    &lt;/div&gt;
+    &lt;div class="item"&gt;
+        &lt;b&gt;Picture&lt;/b&gt;&lt;br/&gt;
+        &lt;input type="text" value="" placeholder="输入图片Url，可以实时预览" ms-duplex="picture"&gt;
+        &lt;img ms-src="{{picture}}" class="img-responsive" alt="" onerror="this.src=''"&gt;
+    &lt;/div&gt;
+    &lt;div class="item"&gt;
+        &lt;b&gt;Nationality&lt;/b&gt;
+        &lt;div&gt;
+            &lt;label ms-repeat="nationData" ms-click="checkNation"&gt;
+                &lt;input type="checkbox" ms-duplex-radio="el.checked"&gt;{{el.nation}}&lt;br/&gt;
+            &lt;/label&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="item"&gt;
+        &lt;b&gt;Gender&lt;/b&gt;
+        &lt;div &gt;
+            &lt;select ms-duplex="gender"&gt;
+                &lt;option&gt;Female&lt;/option&gt;
+                &lt;option&gt;Male&lt;/option&gt;
+                &lt;option&gt;Other&lt;/option&gt;
+            &lt;/select&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="item"&gt;
+        &lt;b&gt;Skills&lt;/b&gt;
+        &lt;a ms-click="addSkill" href="javascript:(0);"&gt;Add a skill&lt;/a&gt;&lt;br/&gt;
+        &lt;div ms-repeat="skillData"&gt;
+            &lt;div ms-include="'tpl'"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/form&gt;
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script type="avalon" id="tpl">
+    <div class='item-entry-wrap clearfix' ms-visible="skillVisible[el]">
+        <div class='item-entry' ms-click="editSkill()" ms-keyup="editSkill()">
+            <input type='text' placeholder='Skill title' ms-duplex="skillTitles[el]">
+            <div class='radios-wrap'>
+                <label><input type='radio' ms-attr-name='Level{{el}}' ms-duplex-text="skillLevels[el]" value='noob'>Noob</label>
+                <label><input type='radio' ms-attr-name='Level{{el}}' ms-duplex-text="skillLevels[el]" value='intermediate'>Intermediate</label>
+                <label><input type='radio' ms-attr-name='Level{{el}}' ms-duplex-text="skillLevels[el]" value='advanced'>Advanced</label>
+            </div>
+            <div class='upper-wrap'>
+                Name (uppercased): <span>{{name|uppercase}}</span>
+            </div>
+        </div>
+        <a class='fr' ms-click="removeSkill(el)" href="javascript:(0);">Remove skill</a>
+    </div>
+</script>
+
+<script>
+var nationality = {};
+var model = avalon.define({
+    $id: "formData",
+    watchAct: false, //用来引发watch的变量
+    name: "",
+    picture: "",//头像url
+    nationData: [{//国籍数据
+        "id": 1,
+        "nation": "French",
+        "checked": false
+    }, {
+        "id": 2,
+        "nation": "American",
+        "checked": false
+    }, {
+        "id": 3,
+        "nation": "British",
+        "checked": false
+    }, {
+        "id": 4,
+        "nation": "Chinese",
+        "checked": false
+    }],
+    checkNation: function() { //checkbox点击，改变nationData对象
+        model.nationData.forEach(function(el) {
+            if (el.checked === true) {
+                nationality[el.id] = el.nation;
+            } else {
+                delete nationality[el.id];
+            }
+        });
+        model.watchAct = !model.watchAct; //引发watch改变formdata对象
+    },
+    gender: "",//性别
+    skillTitles: [],//保存slills中title属性，每添加一个skill则在addskill种push进一个空值
+    skillLevels: [],//保存slills中level属性，每添加一个skill则在addskill种push进一个空值
+    skillData: [],//保存skills的index，watch它的长度，响应skills的增减
+    skillVisible: [],//保存skills是否可见，默认为true,remove事件之后为false
+    addSkill: function() {
+        model.skillData.push(model.skillData.length);
+        model.skillTitles.push("");
+        model.skillLevels.push("");
+        model.skillVisible.push(true);
+    },
+    editSkill: function() {
+        model.watchAct = !model.watchAct; //引发watch，响应修改skillTitles和skillLevels
+    },
+    removeSkill: function(el) {
+        var noSkills = true;//判断此时skills数是否为0
+        model.skillTitles[el] = "";
+        model.skillLevels[el] = "";
+        model.skillVisible[el] = false;
+        model.skillVisible.push(false); //仅为了长度变化引发watch来删除dom
+        model.skillVisible.pop(false);
+        model.watchAct = !model.watchAct; //引发watch改变formdata对象
+        model.skillVisible.forEach(function(el) { //检测如果所有都不可见则清空skills数据
+            if (el === true) {
+                noSkills = false;
+            }
+        });
+        if (noSkills) { //清空skills数据
+            model.skillTitles = [];
+            model.skillLevels = [];
+            model.skillData = [];
+            model.skillVisible = [];
+        }
+    },
+    formDataWrap: "{}", //内容的包裹层
+    clearData: function() { //清空所有值
+        model.name = "";
+        model.picture = "";
+        nationality = {};
+        model.nationData.forEach(function(el) {
+            el.checked = false;
+        });
+        model.gender = "";
+        model.skillTitles = [];
+        model.skillLevels = [];
+        model.skillData = [];
+        model.skillVisible = [];
+    },
+    formHtml : "" //获取表单html
+});
+model.formHtml=document.getElementById("form_wrap").innerHTML; //获取表单html
+model.$watch("$all", function() {
+    var obj = {}; //每次建立一个新的对象，以便于不显示空属性
+    if (this.name !== "") {
+        obj.name = this.name;
+    }
+    if (this.picture !== "") {
+        obj.picture = this.picture;
+    }
+    if (!isEmpty(nationality)) {
+        obj.nationality = nationality;
+    }
+    if (this.gender !== "") {
+        obj.gender = this.gender;
+    }
+    if (this.skillData.length !== 0) { //创建skills对象
+        var skills = [];
+        for (var i = 0; i < this.skillData.length; i++) { 
+            var newSkill = {
+                "title": this.skillTitles[i],
+                "level": this.skillLevels[i]
+            }
+            if (newSkill.title !== "" || newSkill.level !== "") { //skill属性都为空时不显示
+                skills.push(newSkill);
+            }
+        }
+        obj.skills = skills;
+    }
+    if (!isEmpty(obj)) { //创建formData对象
+        var objWrap = {
+            "formData": obj
+        };
+        model.formDataWrap = JSON.stringify(objWrap, null, 4);
+    } else {
+        model.formDataWrap = "{}";
+    }
+});
+
+//判断对象是否为空
+function isEmpty(obj) {
+    for (var name in obj) {
+        return false;
+    }
+    return true;
+};
+</script>
+

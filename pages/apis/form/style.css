@@ -38,6 +38,7 @@ html, body, div, span, p, ul, li, label, input{
 .way-js-wrap .hint .code .indent-2{text-indent: 60px;}
 
 /*form*/
+.way-js-wrap .form {display:inline-block; width:45%; margin: 0 10px 0;}
 .way-js-wrap .form .item {margin: 0 0 15px;}
 .way-js-wrap .form .item label{width: 25%; *width: 23%; padding: 0 15px 0 0; margin: 7px 0 5px; font-weight: bold;}
 .way-js-wrap .form .item .content{width: 75%; *width: 70%;}

@@ -16,7 +16,12 @@
                         label: '1'
                     }, {
                         value: 2,
-                        label: '2'
+                        label: '2label'
+                    }, {
+                        value: 3
+                    }, {
+                        value: 4,
+                        text: '4text'
                     }
                 ];
             });
@@ -31,8 +36,9 @@
         <h2>dropdown（下拉框）</h2>
         <p>options可以使用repeat生成</p>
         <select ms-widget="dropdown"
+                ms-duplex="value"
                 > 
-            <option ms-repeat="data" ms-attr-value="el.value" ms-attr-label="el.label" ms-selected="el.value==1"></option>
+            <option ms-repeat="data" ms-attr-value="el.value" ms-attr-label="el.label" ms-selected="el.value==1">{{el.text}}</option>
         </select>
         <p>{{value}}</p>
     </div>

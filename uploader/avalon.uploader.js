@@ -8,7 +8,9 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 			fileList = [],		// 存放file对象
 			browseButton,		// 按钮
 			browseButtonClick,	// browseButton 绑定的 click 事件
-			ie_version = avalon.browser.ie,
+			safeOpts = ['action', 'browseButton'],	// 需检测的配置项
+			isSafe = true,		// 配置项安全检测标志
+			ieVersion = avalon.browser.ie,
 			hasLoadFlash = false;
 
 		var vmodel = avalon.define(data.uploaderId, function(vm){
@@ -16,6 +18,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 			vm.files = [];
 
 			avalon.mix(vm, data.uploaderOptions);
+
 
 			browseButton = document.getElementById(vm.browseButton);
 
@@ -28,7 +31,10 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 					if(data.errcode == 0){
 						// 成功
 						vmodel.files.removeAt(index);
-						swf.setUploadSuccessNum(vmodel.files.length);
+						// ff 中 swf 有一定概率取不到 setUploadSuccessNum 方法
+						if(swf.setUploadSuccessNum){
+							swf.setUploadSuccessNum(vmodel.files.length);
+						}
 					}
 
 				}, 'json');
@@ -37,8 +43,21 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 
 			vm.$init = function(){
 
-				loadFlash();
-				// loadInput();
+				// 安全检测
+				for(var i = 0, len = safeOpts.length; i < len; i++){
+					var opt = safeOpts[i];
+					if(!vmodel[opt]){
+						avalon.log('avalon.uploader 缺少配置项：' + opt);
+						isSafe = false;
+						break;
+					}
+				}
+
+
+				if(isSafe){
+					loadFlash();
+					// loadInput();
+				}
 				
 				avalon.scan(element, [vmodel].concat(vmodels));
 			};
@@ -64,6 +83,9 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 							id: file.source.data.images[0].id
 						});*/
 					break;
+					case 'singleError':
+						vmodel.singleError(obj.data.name);
+					break;
 					case 'uploaded':
 						var _imgs = obj.data.sucAry;
 						for (var i = 0, len = _imgs.length; i < len; i++) {
@@ -85,7 +107,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 						vmodel.fileSizeErr(obj.data);
 					break;
 					case 'fileNumErr':
-						vmodel.fileNumErr(vmodel.maxFileCount - vmodel.files.length, obj.data);
+						vmodel.fileCountErr(vmodel.maxFileCount - vmodel.files.length, obj.data);
 					break;
 				}
 			};
@@ -170,7 +192,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 
 
 			// 插入 input 元素
-			if(ie_version > 0 && ie_version < 10){
+			if(ieVersion > 0 && ieVersion < 10){
 				// ie9- 用其他异步事件来触发 input.click 无法取得文件本地路径
 				// 必须还是要点到 input 上，所以插到按钮内部
 				browseButton.appendChild(input);
@@ -187,6 +209,11 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 
 			if(hasLoadFlash){
 				browseButton.removeChild(browseButton.lastChild);
+			}else{
+				// 第一次
+				if(getStyle(browseButton, 'position') == 'static'){
+					browseButton.style.position = 'relative';
+				}
 			}
 
 			browseButton.appendChild(flash);
@@ -254,13 +281,25 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 		maxFileCount: 100,
 		imgMaxWidth: 10000,
 		imgMaxHeight: 10000,
-		fileSizeErr: function(filename){
-			alert(filename + '太大了');
+		fileSizeErr: function(fileName){
+			alert('文件' + fileName + '太大了');
 		},
-		fileNumErr: function(availableNum, selectNum){
+		fileCountErr: function(availableNum, selectNum){
 			alert('还可选择' + availableNum + '个，你选择了' + selectNum + '个，超出了');
+		},
+		singleError: function(fileName){
+			alert('文件' + fileName + '上传失败');
 		}
 	};
+
+	// 获取元素样式
+	function getStyle(ele, attr){
+		if(window.getComputedStyle){
+			return getComputedStyle(ele)[attr];
+		}else{
+			return ele.currentStyle[attr];
+		}
+	}
 
 	return avalon;
 });

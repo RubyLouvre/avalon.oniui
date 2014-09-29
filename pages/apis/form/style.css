@@ -1,0 +1,64 @@
+html, body, div, span, p, ul, li, label, input{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  vertical-align: baseline;
+  outline: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.way-js-wrap .clearfix {display: inline-block;}
+.way-js-wrap .clearfix:after {content: "."; display: block; clear: both; visibility: hidden; line-height: 0; height: 0;}
+.way-js-wrap .inb{display: inline-block; *display: inline; *zoom: 1;}
+.way-js-wrap .db{display: block;}
+.way-js-wrap .fl{float: left;}
+.way-js-wrap .fr{float: right;}
+
+/*general*/
+.way-js-wrap body{background-color: #f3f3f3;padding: 0 20px;}
+.way-js-wrap h1{color: rgba(0, 0, 0, .5); text-align: center; font-size: 36px; font-weight: normal; margin: 0px 30px 30px 10px; line-height: 40px;}
+.way-js-wrap h2{height: 26px; line-height: 26px; font-size: 24px; font-weight: 500;}
+.way-js-wrap a {color: rgb(66, 139, 202); cursor: pointer; }
+.way-js-wrap a:hover {color: #2a6496; text-decoration: underline;}
+.way-js-wrap .intro{background-color: #FCF8E3;}
+.way-js-wrap .intro,.hint {padding: 15px; margin: 20px 0; border: 1px #ddd solid; border-radius: 1px;}
+.way-js-wrap .left-wrap,.right-wrap{width: 50%; *width:48%; padding: 0 15px; font-size: 14px; color: #333; line-height: 20px; word-wrap: break-word;}
+
+/*left-wrap*/
+.way-js-wrap .left-wrap {padding: 30px 15px 15px;}
+.way-js-wrap .left-wrap .example-wrap{padding: 20px; background-color: #fff;box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 1px 10px rgba(0, 0, 0, .35);}
+.way-js-wrap .left-wrap .example-wrap .hint{background-color: #DFF0D8;}
+.way-js-wrap .hint .code{padding: 2px 4px; margin: 20px 0 0; font-family: Menlo,Monaco,Consolas,"Courier New",monospace; font-size: 12px;color: #c7254e;background-color: #f9f2f4;border-radius: 4px;white-space: pre-wrap;}
+.way-js-wrap .hint .code span{padding: 0 8px;}
+.way-js-wrap .hint .code .indent-1{text-indent: 30px;}
+.way-js-wrap .hint .code .indent-2{text-indent: 60px;}
+
+/*form*/
+.way-js-wrap .form {display:inline-block; width:45%; margin: 0 10px 0;}
+.way-js-wrap .form .item {margin: 0 0 15px;}
+.way-js-wrap .form .item label{width: 25%; *width: 23%; padding: 0 15px 0 0; margin: 7px 0 5px; font-weight: bold;}
+.way-js-wrap .form .item .content{width: 75%; *width: 70%;}
+.way-js-wrap .form .item .content .img-responsive{margin: 20px 0 0; max-width: 100%;}
+.way-js-wrap .form .item .content input[type="text"]{width: 100%; padding: 6px 12px; border:1px #ccc solid; border-radius: 4px;-webkit-box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset;}
+.way-js-wrap .form .item .content input[type="text"]:focus{border-color: rgb(129, 183, 225); -webkit-box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px 0px inset, rgba(102, 175, 232, 0.4) 0px 0px 5.8px 0px;} 
+.way-js-wrap .form .item .checkbox-wrap , .form .item .normal-wrap{padding: 7px 0 0;}
+.way-js-wrap .form .item .checkbox-wrap label{padding: 0 20px 0 0;margin: 0; vertical-align:top; font-weight: normal;}
+.way-js-wrap .form .item .checkbox-wrap input{margin: 4px  8px 0 0;}
+.way-js-wrap .form .item .content select{display: block;width: 100%; height: 34px; padding: 6px 12px; font-size: 14px; line-height: 1.4; color: #555;background-image: none; border: 1px solid #ccc; border-radius: 4px; -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075); box-shadow: inset 0 1px 1px rgba(0,0,0,.075);}
+.way-js-wrap .form .item .item-entry-wrap{width: 100%; margin: 20px 0 0 0;}
+.way-js-wrap .form .item .item-entry{width: 100%; padding: 10px; background: rgba(0, 0, 0, .02); border:1px #ccc solid;}
+.way-js-wrap .form .item .item-entry .radios-wrap{padding: 10px 0;border-bottom: rgba(0, 0, 0, .1) solid thin;}
+.way-js-wrap .form .item .item-entry .radios-wrap b{margin: 0 10px 0 0;}
+.way-js-wrap .form .item .item-entry .radios-wrap label{font-weight: normal;}
+.way-js-wrap .form .item .item-entry .upper-wrap,.form .item .item-entry a{margin: 8px 0 0;}
+
+/*right-wrap*/
+.way-js-wrap .right-wrap{position: fixed; right: 10px; top: 0;  padding:100px 0 20px 20px; height: 100%;overflow-y: scroll;}
+.way-js-wrap .right-wrap .intro{margin: 0 0 20px;}
+.way-js-wrap .right-wrap .intro .clear-data{padding: 5px 10px; margin:-5px 0 0; *margin: -41px 15px 0 0; font-size: 12px; line-height: 1.5; background-color: #fff; border:1px #ccc solid; border-radius: 3px; cursor: pointer;}
+.way-js-wrap .right-wrap .intro .clear-data:hover{background-color: #e6e6e6;}
+.way-js-wrap .right-wrap pre{padding: 9.5px; border:1px #ccc solid; font-family: Menlo,Monaco,Consolas,"Courier New",monospace; font-size: 12px;}

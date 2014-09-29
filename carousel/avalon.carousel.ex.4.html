@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>carousel组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script>
+            require(["carousel/avalon.carousel"], function() {
+                avalon.define("demo1", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placehold.it/500x200/333333/dddddd.jpg&text=slide1", 
+                        "http://placehold.it/500x200/555555/dddddd.jpg&text=slide2",
+                        "http://placehold.it/500x200/777777/dddddd.jpg&text=slide3"],
+                        effect: "slide" //@param effect 图片切换类型，默认为"slide"，取值：none:无特效 / fade:渐隐 / slide:滑动
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.define("demo2", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placehold.it/500x200/33aa33/dddddd.jpg&text=fade1", 
+                        "http://placehold.it/500x200/aa3333/dddddd.jpg&text=fade2",
+                        "http://placehold.it/500x200/3333aa/dddddd.jpg&text=fade3"],
+                        effect: "fade"
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.define("demo3", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placehold.it/500x200/555555/dddddd.jpg&text=none1", 
+                        "http://placehold.it/500x200/555555/dddddd.jpg&text=none2",
+                        "http://placehold.it/500x200/555555/dddddd.jpg&text=none3"],
+                        effect: "none"
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <div class="wrapper">
+        <h1>图片轮播组件-自定义effect</h1>
+        <fieldset ms-controller="demo1">
+            <legend>自定义effect-slide</legend>
+            <div ms-widget="carousel"></div>
+        </fieldset>
+        <fieldset ms-controller="demo2">
+            <legend>自定义effect-fade</legend>
+            <div ms-widget="carousel"></div>
+        </fieldset>
+        <fieldset ms-controller="demo3">
+            <legend>自定义effect-none</legend>
+            <div ms-widget="carousel"></div>
+        </fieldset>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;carousel组件&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+        &lt;script&gt;
+            require(["carousel/avalon.carousel"], function() {
+                avalon.define("demo1", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placehold.it/500x200/333333/dddddd.jpg&text=slide1", 
+                        "http://placehold.it/500x200/555555/dddddd.jpg&text=slide2",
+                        "http://placehold.it/500x200/777777/dddddd.jpg&text=slide3"],
+                        effect: "slide" //@图片切换类型，默认为"slide"，取值：none:无特效 / fade:渐隐 / slide:滑动
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.define("demo2", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placehold.it/500x200/33aa33/dddddd.jpg&text=fade1", 
+                        "http://placehold.it/500x200/aa3333/dddddd.jpg&text=fade2",
+                        "http://placehold.it/500x200/3333aa/dddddd.jpg&text=fade3"],
+                        effect: "fade"
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.define("demo3", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placehold.it/500x200/555555/dddddd.jpg&text=none1", 
+                        "http://placehold.it/500x200/555555/dddddd.jpg&text=none2",
+                        "http://placehold.it/500x200/555555/dddddd.jpg&text=none3"],
+                        effect: "none"
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class="wrapper"&gt;
+        &lt;h1&gt;图片轮播组件-自定义effect&lt;/h1&gt;
+        &lt;fieldset ms-controller="demo1"&gt;
+            &lt;legend&gt;自定义effect-slide&lt;/legend&gt;
+            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+        &lt;/fieldset&gt;
+        &lt;fieldset ms-controller="demo2"&gt;
+            &lt;legend&gt;自定义effect-fade&lt;/legend&gt;
+            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+        &lt;/fieldset&gt;
+        &lt;fieldset ms-controller="demo3"&gt;
+            &lt;legend&gt;自定义effect-none&lt;/legend&gt;
+            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+        &lt;/fieldset&gt;
+    &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+    </div>
+    </body>
+</html>

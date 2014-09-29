@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>carousel组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script>
+            require(["carousel/avalon.carousel"], function() {
+                avalon.define("demo1", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placehold.it/900x200/333/dddddd.jpg&text=1200-200",
+                        "http://placehold.it/900x200/555/dddddd.jpg&text=1200-200",
+                        "http://placehold.it/900x200/777/dddddd.jpg&text=1200-200"],
+                        pictureWidth: 900, //@param pictureWidth 图片显示宽度
+                        pictureHeight: 200 //@param pictureHeight 图片显示高度
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.define("demo2", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placehold.it/300x300/333/dddddd.jpg&text=300-300",
+                        "http://placehold.it/300x300/555/dddddd.jpg&text=300-300",
+                        "http://placehold.it/300x300/777/dddddd.jpg&text=300-300"],
+                        pictureWidth: 300, //@param pictureWidth 图片显示宽度
+                        pictureHeight: 300 //@param pictureHeight 图片显示高度
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <div class="wrapper">
+        <h1>图片轮播组件-自定义宽高</h1>
+        <fieldset ms-controller="demo1">
+            <legend>自定义宽高1200×200</legend>
+            <div ms-widget="carousel"></div>
+        </fieldset>
+        <fieldset ms-controller="demo2">
+            <legend>自定义宽高300×300</legend>
+            <div ms-widget="carousel"></div>
+        </fieldset>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;carousel组件&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+        &lt;script&gt;
+            require(["carousel/avalon.carousel"], function() {
+                avalon.define("demo1", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placehold.it/900x200/333/dddddd.jpg&text=1200-200",
+                        "http://placehold.it/900x200/555/dddddd.jpg&text=1200-200",
+                        "http://placehold.it/900x200/777/dddddd.jpg&text=1200-200"],
+                        pictureWidth: 900, //@param pictureWidth 图片显示宽度
+                        pictureHeight: 200 //@param pictureHeight 图片显示高度
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.define("demo2", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placehold.it/300x300/333/dddddd.jpg&text=300-300",
+                        "http://placehold.it/300x300/555/dddddd.jpg&text=300-300",
+                        "http://placehold.it/300x300/777/dddddd.jpg&text=300-300"],
+                        pictureWidth: 300, //@param pictureWidth 图片显示宽度
+                        pictureHeight: 300 //@param pictureHeight 图片显示高度
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class="wrapper"&gt;
+        &lt;h1&gt;图片轮播组件-自定义宽高&lt;/h1&gt;
+        &lt;fieldset ms-controller="demo1"&gt;
+            &lt;legend&gt;自定义宽高1200×200&lt;/legend&gt;
+            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+        &lt;/fieldset&gt;
+        &lt;fieldset ms-controller="demo2"&gt;
+            &lt;legend&gt;自定义宽高300×300&lt;/legend&gt;
+            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+        &lt;/fieldset&gt;
+    &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+    </div>
+    </body>
+</html>

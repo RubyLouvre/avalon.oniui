@@ -60,7 +60,7 @@ define(["avalon"], function(avalon) {
                         clearTimeout(vmodel.timeId);
                     }
                 } else {
-                    window.scrollTo(0, 50)
+                    window.scrollTo(0, 0)
                 }
             }
         })

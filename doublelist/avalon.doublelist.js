@@ -101,16 +101,17 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                 }
             }
             // 响应点击事件
-            vm._select = function(e, item, type) {
+            vm._select = function(e, item, type, isdblClick) {
                 var ele = avalon(this),
                     data = ele.data()
+                e.preventDefault()
                 if(ele.hasClass("ui-state-disabled")) return
                 // 选中区域的点击
                 if(type == "select") {
                     if(ele.hasClass("ui-state-active")) {
                         ele.removeClass("ui-state-active")
                         vmodel._removeFrom(data.value, "fromSelected")
-                    } else {
+                    } else if(!ele.hasClass("ui-state-disabled")){
                         // in case of duplication push
                         for(var i = 0, len = vmodel.selectTmpSelect.length; i < len; i++) {
                             if(vmodel.selectTmpSelect[i] == data.value) return
@@ -118,18 +119,43 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                         ele.addClass("ui-state-active")
                         vmodel.selectTmpSelect.push(data.value)
                     }
+                    if(isdblClick) {
+                        if(!vmodel.countLimit(vmodel.select, "delete", 1)) return
+                        for(var i = 0, len = vmodel.select.length; i < len; i++) {
+                            if(vmodel.select[i] == data.value) {
+                                vmodel.select.removeAt(i)
+                                vmodel._removeFrom(data.value, "fromSelected")
+                                vmodel.selectTmpSelect.clear()
+                                vmodel._getSelect()
+                                return
+                            }
+                        }
+                    }
                 } else {
                 // 待选区域的点击
                     if(ele.hasClass("ui-state-active")) {
                         ele.removeClass("ui-state-active")
                         vmodel._removeFrom(data.value)
-                    } else {
+                    } else if(!ele.hasClass("ui-state-disabled")){
                         // in case of duplication push
                         for(var i = 0, len = vmodel.dataTmpSelect.length; i < len; i++) {
                             if(vmodel.dataTmpSelect[i] == data.value) return
                         }
                         ele.addClass("ui-state-active")
                         vmodel.dataTmpSelect.push(data.value)
+                    }
+                    if(isdblClick) {
+                        // 新增，避免重复
+                        if(!vmodel.countLimit(vmodel.select, "add", 1)) return
+                        for(var i = 0, len = vmodel.select.length; i < len; i++) {
+                            if(vmodel.select[i] == data.value) {
+                                return
+                            }
+                        }
+                        vmodel.select.push(data.value)
+                        vmodel._removeFrom(data.value)
+                        vmodel.selectTmpSelect.clear()
+                        vmodel._getSelect()
                     }
                 }
             }
@@ -140,16 +166,12 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                 if(!vmodel.countLimit(vmodel.select, addOrDelete, tar.length)) return
                 if(addOrDelete === "delete") {
                     for(var i = 0, len = tar.length; i < len; i++) {
-                        // if(!vmodel.countLimit(vmodel.select, addOrDelete)) {
-                        //     break
-                        // } else {
-                            for(var j = 0, jlen = vmodel.select.length; j < jlen; j++) {
-                                if(vmodel.select[j] == tar[i]) {
-                                    vmodel.select.splice(j, 1)
-                                    break
-                                }
+                        for(var j = 0, jlen = vmodel.select.length; j < jlen; j++) {
+                            if(vmodel.select[j] == tar[i]) {
+                                vmodel.select.splice(j, 1)
+                                break
                             }
-                        // }
+                        }
                     }
                     // free data select
                     avalon.each(vmodel.dataTmpSelect, function(i, item) {
@@ -157,19 +179,9 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                     })
                 } else {
                     for(var i = 0, len = tar.length; i < len; i++) {
-                        // if(!vmodel.countLimit(vmodel.select, addOrDelete)) {
-                        //     while(i < len) {
-                        //         avalon(document.getElementById("data" + tar[i] + vmodel.$uid)).removeClass("ui-state-active")
-                        //         i++
-                        //     }
-                        //     break
-                        // } else {
-                            vmodel.select.push(tar[i])
-                        // }
+                        vmodel.select.push(tar[i])
                     }
                 }
-                // selectTmpSelect = []
-                // dataTmpSelect = []
                 vmodel.selectTmpSelect.clear()
                 vmodel.dataTmpSelect.clear()
                 vmodel._getSelect()
@@ -188,12 +200,9 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                         vmodel.select.clear()
                     }
                     vmodel.select = select
-                } else {
-                    // selectTmpSelect = []
-                    // dataTmpSelect = []
-                    vmodel.selectTmpSelect.clear()
-                    vmodel.dataTmpSelect.clear()
-                }
+                } 
+                vmodel.selectTmpSelect.clear()
+                vmodel.dataTmpSelect.clear()
                 vmodel._getSelect()
             }
 

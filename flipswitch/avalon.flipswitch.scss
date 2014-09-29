@@ -45,16 +45,21 @@ div#{$uiname}{
 		background: #fff;
 		filter:alpha(opacity=40); 
 	}
-	&-on{
-		//background-image: map-get($switch, bgImg);
-	}
 	&-normal{
-	    width: 35px;
-	    height: 18px;
+	    width: 48px;
+	    height: 28px;
+	}
+	&-mini{
+	    width: 28px;
+	    height: 16px;
+	}
+	&-small{
+	    width:36px;
+	    height: 22px;
 	}
 	&-large{
-	    width: 57px;
-	    height: 30px;
+	    width: 76px;
+	    height: 42px;
 	}
 	&-bar{
 		position: absolute;
@@ -80,81 +85,81 @@ div#{$uiname}{
 	&-dragger{
 		width: 34%;
 		&-ball{
-			width: 14px;
-			height: 14px;
+			width: 24px;
+			height: 24px;
 			left: 50%;
 			top:50%;
-			margin-left: -7px;
-			margin-top: -7px;
-			position: absolute;
-			background-position: -57px -54px;
+			margin-left: -12px;
+			margin-top: -10px;
 			&-unchecked{
-				margin-left: -6px;
+				margin-left: -12px;
 			}
+			position: absolute;
 		}
 	}
 	&-on {
-		position: absolute;
-		left: 50%;
-		top:50%;
-		background-position: -57px -83px;
-		width: 8px;
-		height: 7px;
-		overflow: hidden;
-		margin-left: -4px;
-		margin-top: -3px;
-	}
-	&-bg{
-		background-position: -57px 0;
-	}
-	&-uckbg{
-		background-position: -57px -36px;
+		display: none;
 	}
 	&-large{
 		#{$uiname}{
 			&-dragger-ball{
-				height: 24px;
-				width: 24px;
-				margin-left: -13px;
-				margin-top: -12px;
-				background-position: -69px -67px;
+				height: 38px;
+				width: 38px;
+				margin-left: -20px;
+				margin-top: -17px;
+				&-unchecked{
+					margin-left: -20px;
+				}
+			}
+		}
+	}
+	&-mini{
+		#{$uiname}{
+			&-dragger-ball{
+				height: 14px;
+				width: 14px;
+				margin-left: -8px;
+				margin-top: -6px;
+				&-unchecked{
+					margin-left: -8px;
+				}
+			}
+		}
+	}
+	&-small{
+		#{$uiname}{
+			&-dragger-ball{
+				height: 18px;
+				width: 18px;
+				margin-left: -10px;
+				margin-top: -7px;
 				&-unchecked{
 					margin-left: -10px;
 				}
-			}
-			&-on {
-				background-position: -71px -54px;
-				width: 14px;
-				height: 11px;
-				overflow: hidden;
-				margin-left: -7px;
-				margin-top: -5px;
-			}
-			&-bg{
-				background-position: 0 0;
-			}
-			&-uckbg{
-				background-position: 0 -60px;
 			}
 		}
 	}
 	&-left, &-right, &-dragger{
 		float: left;
 		display: inline;
-		height: 18px;
-		line-height: 20px;
+		height: 24px;
+		line-height: 24px;
 		font-weight: bolder;
 	}
+	&-mini &-left, &-mini &-right, &-mini &-dragger{
+		height:14px;
+		line-height: 14px;
+		font-size: 14px;
+	}
+	&-small &-left, &-small &-right, &-small &-dragger{
+		height:18px;
+		line-height: 18px;
+		font-size: 18px;
+	}
 	&-large &-left, &-large &-right, &-large &-dragger{
-		height:30px;
-		line-height: 32px;
-		font-size: 24px;
-	}
-	&-large &-left, &-large &-right {
-		
-	}
-	&-large &-right{
-		text-indent: -3px;
+		height:38px;
+		line-height: 38px;
+		font-size: 38px;
 	}
 	&-bg{
 		position: absolute;
@@ -170,40 +175,45 @@ div#{$uiname}{
 			background-image: none;
 		}
 		#{$uiname}-bg{
-			border-radius: 9px;
+			border-radius: 14px;
 			background-color: map-get($switch, bg);
 		}
 		#{$uiname}-dragger-ball{
 			background: map-get($switch, ballColor);
-			border-radius: 6px;
+			border-radius: 12px;
+		}
+		&#{$uiname}-mini{
+			#{$uiname}-bg{
+				border-radius: 8px;
+			}
+			#{$uiname}-dragger-ball{
+				border-radius: 7px;
+			}
+		}
+		&#{$uiname}-small{
+			#{$uiname}-bg{
+				border-radius: 11px;
+			}
+			#{$uiname}-dragger-ball{
+				border-radius: 9px;
+			}
 		}
 		&#{$uiname}-large{
 			#{$uiname}-bg{
-				border-radius: 15px;
+				border-radius: 21px;
 			}
 			#{$uiname}-dragger-ball{
-				border-radius: 12px;
+				border-radius: 19px;
 			}
 		}
 		#{$uiname}-uckbg{
 			background-color: map-get($switch, offBg);
-		}
-		&.ui-state-disabled{
-			/*#{$uiname}-uckbg{
-				background-color: map-get($switch, disableBg);
-				&-disabled{
-					background-color: map-get($switch, disableBg);
-				}
-			}*/
 		}
 	}
 }
 
 
 .ui-state-disabled, .ui-state-hover{
-	/*#{$uiname}-dragger-ball{
-		opacity: .4;
-	}*/
 	#{$uiname}-oval-hd{
 		display: block;
 	}
@@ -216,18 +226,10 @@ div#{$uiname}{
 		cursor: default;
 		color: map-get($switch, disableColor);
 	}
-	#{$uiname}-bg{
-		background-position: -57px -18px;
-	}
 	#{$uiname}-oval-hd{
 		display: block;
 	}
 	#{$uiname}oval-n {
 		display: none;
-	}
-}
-#{$uiname}-large{
-	#{$uiname}-uckbg-disabled {
-		background-position: 0 -30px;
 	}
 }

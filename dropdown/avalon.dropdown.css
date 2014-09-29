@@ -41,6 +41,8 @@
     vertical-align: baseline; }
   .ui-dropdown.ui-state-hover .ui-dropdown-source {
     border-color: #999999; }
+  .ui-dropdown.ui-state-focus .ui-dropdown-source {
+    border-color: #3775c0; }
   .ui-dropdown.ui-state-disabled .ui-dropdown-source {
     background-color: whitesmoke;
     border-color: #d9d9d9;

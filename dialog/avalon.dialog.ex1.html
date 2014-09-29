@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" class="overflow">
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
@@ -8,8 +8,16 @@
 <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
 <script src="../highlight/shCore.js"></script>
 <script src="../avalon.js"></script>
+<style>
+    .overflow {
+        overflow: hidden;
+    }
+    .overflow body {
+        overflow: hidden;
+    }
+</style>
 </head>
-<body class="ms-controller">
+<body>
     <div class="wrapper">
         <h1>dialog demo 1</h1>
         <p class="example">最基本的dialog组件（<span class="statement">ms-widget="dialog dialogId"</span>）</p>
@@ -76,6 +84,12 @@
                             vm.message = "笑傻了吧！！";
                             vm.show = function( id ){
                                 avalon.vmodels[id].toggle = true;
+                            }
+                            vm.dialog = {
+                                getTemplate: function(template) {
+                                    var reg = /<div\s*class="ui-dialog-btns">[\s\S]*<\/div>/
+                                    return template.replace(reg, "")
+                                }
                             }
                             vm.name = "xueer";
                             vm.check1 = ["1"];

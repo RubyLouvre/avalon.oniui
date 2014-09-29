@@ -76,6 +76,7 @@
         vm.callbacks = ["data-callback"]
         vm.staticMethod = ["static-method"]
         vm.prototypeMethod = ["prototype-method"]
+        vm.formExamples = ["form-examples"]
         vm.supportSVG = !!window.SVGElement
         vm.concepts = [
             {
@@ -219,6 +220,12 @@
                         <li ms-repeat="prototypeMethod" ms-click="scrollToView(el)">原型方法</li>
                     </ul>
                 </li>
+                <li>
+                    <div class="title">表单示例</div>
+                    <ul class="child-nav">
+                        <li ms-repeat="formExamples" ms-click="scrollToView(el)">表单示例</li>
+                    </ul>
+                </li>
             </ul>
         </td>
         <td class="apis-details">
@@ -241,6 +248,8 @@
             </div>
             <div ms-include-src="'pages/apis/prototypes/prototypes.html'"  data-include-rendered="highlight">
 
+            </div>
+            <div ms-include-src="'pages/apis/form/index.html'"  data-include-rendered="highlight">
             </div>
         </td>
     </tr>

@@ -9,13 +9,13 @@
 <script src="../highlight/shCore.js"></script>
 <script src="../avalon.js"></script>
 </head>
-<body class="ms-controller">
+<body>
     <div class="wrapper">
         <h1>datepicker demo</h1>
         <div class="demo-show" ms-controller="demo">
             <fieldset>
                 <legend>toggle切换日期的显示隐藏</legend>
-                <input ms-widget="datepicker" data-toggle ="toggle" data-datepicker-timer="true"/>
+                <input ms-widget="datepicker" data-toggle ="toggle"/>
                 <button ms-click="toggleDatepicker" style="float:right;">toggle calendar</button>
                 <p>说明：可以通过toggle切换datepicker的显示与隐藏，这需要在绑定datepicker时，设置ms-data-toggle属性指向demo controller中的属性</p>
                 <p>可以通过配置timer来使组件可选择时间</p>
@@ -26,7 +26,7 @@
                 <p>说明：配置calendarLabel来显示你独特的日历说明</p>
             </fieldset>
             <script> 
-                require(["datepicker/avalon.datepicker", "slider/avalon.slider"], function(avalon) {
+                require(["datepicker/avalon.datepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.toggle = false;
                         vm.toggleDatepicker = function(event) {

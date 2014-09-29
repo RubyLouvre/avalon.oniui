@@ -441,7 +441,8 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         type: "ball", //@param 类型，默认是ball，球，可取spin,ticks
         toggle: true, //@param 是否显示
         modal: true, //@param 是否显示遮罩
-        modalMpacity: 0.1, //@param 遮罩透明度
+        modalOpacity: 0.1, //@param 遮罩透明度
+        modalBackground: "#fff",//@param 遮罩背景色
         container: void 0, //@param loading效果显示的容器，默认是绑定widget的元素
         getTemplate: function(tmpl, opts, tplName) {
             return tmpl

@@ -1,0 +1,47 @@
+<div id="ui-carousel"
+	 class="ui-carousel" 
+	 ms-css-width="pictureWidth" 
+	 ms-css-height="pictureHeight" 
+	 ms-mouseenter="stopPlay" 
+	 ms-mouseleave="restartPlay('carousel')"
+	 >
+	<div id="ui-carousel-panel"
+		 class="ui-carousel-panel" 
+		 ms-css-width="pictureWidth* picNum" 
+		 ms-css-left="panelOffsetX" 
+		 ms-css-position="panelPosition"
+		 >
+		<div class="ui-carousel-item" 
+			 ms-repeat="pictures"
+			 ms-css-width="pictureWidth"
+			 ms-css-position="itemPosition"
+			 ms-css-opacity="getOpacity($index)"
+			 >
+			<img ms-src="{{el}}" alt=""/>
+		</div>
+	</div>
+	<div class="ui-carousel-selection-wrap" 
+		 ms-visible="alwaysShowSelection"
+		 ms-css-margin-left="selectionWrapOffset"
+		 >
+		<a ms-class="selected:el==currentIndex" 
+		 ms-mouseenter="selectPic($index,$event)"
+		 ms-click="selectPic($index,$event)"
+		 ms-mouseleave="restartPlay('tab')"
+		 ms-repeat="selections"
+			></a>
+	</div>
+	<a><img class="arrow prev png24" 
+		ms-src="arrowLeftSrc"  
+		ms-click="animate(-1)"
+		ms-mouseenter="arrowHover('left')"
+		ms-mouseleave="arrowBlur('left')"
+		ms-visible="arrowVisible"
+		></a>
+	<a><img class="arrow after png24" 
+	   ms-src="arrowRightSrc"  
+		ms-click="animate(1)"
+		ms-mouseenter="arrowHover('right')"
+		ms-mouseleave="arrowBlur('right')"
+		ms-visible="arrowVisible"></a>
+</div>

@@ -33,9 +33,11 @@ define(["avalon",
             //这些属性不被监控
             vm.$init = function() {
                 var pageHTML = options.template
+                element.style.display = "none"
                 element.innerHTML = pageHTML
                 setTimeout(function() {
                     avalon.scan(element, [vmodel].concat(vmodels))
+                    element.style.display = "block"
                 }, 100)
                 if (typeof options.onInit === "function") {
                     options.onInit.call(element, vmodel, options, vmodels)
@@ -78,16 +80,18 @@ define(["avalon",
                 efficientChangePages(vm.pages, getPages(vm))
             })
             vm.$watch("perPages", function(a) {
-                vm.perPages = parseInt(vm.perPages, 10)
+                vm.currentPage = 1
                 efficientChangePages(vm.pages, getPages(vm))
             })
             vm.$watch("currentPage", function(a) {
                 vmodel._currentPage = a
+                efficientChangePages(vm.pages, getPages(vm))
             })
             vm.isShowPrev = function() {
-                var a = vm.alwaysShowPrev
-                var b = vm.firstPage
-                return a || b !== 1
+                var a = vm.alwaysShowPrev;
+                var b = vm.firstPage;
+                var c = vm.currentPage;
+                return (a || b !== 1) && c !== 1;
             }
             vm.isShowNext = function() {
                 var a = vm.alwaysShowNext
@@ -187,18 +191,27 @@ define(["avalon",
             return tmpl
         },
         onJump: avalon.noop, //页面跳转时触发的函数
-        getTitle: function(a) {
+        getTitle: function(a, currentPage, totalPages) {
             switch (a) {
                 case "first":
-                    return "Go To First Page"
+                    if (currentPage == 1) {
+                        return "当前页"
+                    }
+                    return "跳转到第一页"
                 case "prev":
-                    return "Go To Previous Page"
+                    return "跳转到上一页"
                 case "next":
-                    return "Go To Next Page"
+                    return "跳转到下一页"
                 case "last":
-                    return "Go To Last Page"
+                    if (currentPage == totalPages) {
+                        return "当前页"
+                    }
+                    return "跳转到最后一页"
                 default:
-                    return "Go to page " + a + ""
+                    if (a === currentPage) {
+                        return "当前页"
+                    }
+                    return "跳转到第" + a + "页"
             }
         }
     }

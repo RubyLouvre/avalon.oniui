@@ -18,7 +18,7 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
         var values = options.values
         var twohandlebars = oRange === true
         var value = Number(options.value) //第几等份
-        if (!value) {
+        if (isNaN(value)) {
             var valVM = avalon.getModel(options.value, vmodels);
             if (valVM) {
                 value = valVM[1][valVM[0]];

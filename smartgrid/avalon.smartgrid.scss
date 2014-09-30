@@ -4,12 +4,16 @@ $uiname: "ui-smartgrid";
 .#{$uiname} {
     border: 1px solid #e5e5e5;
     font-size: 12px;
+    line-height: 20px;
     position: relative;
     table {
         table-layout: auto;
         width: 100%;
         border-spacing: 0;
         border-collapse: collapse;
+    }
+    .#{$uiname}-hide {
+        width: 0;
     }
     .#{$uiname}-even {
         background-color: #f7f7f7;
@@ -65,6 +69,9 @@ $uiname: "ui-smartgrid";
         height: 26px;
         line-height: 26px;
         padding-left: 5px; 
+        div.ui-smartgrid-showinfo {
+            @include inline-block();
+        }
         .ui-dropdown {
             margin: 0 5px;
             vertical-align: top; 

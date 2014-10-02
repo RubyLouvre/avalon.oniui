@@ -321,7 +321,6 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                     ball.css("background-color", "transparent")
                 }
             }
-
             return vm
         })
       

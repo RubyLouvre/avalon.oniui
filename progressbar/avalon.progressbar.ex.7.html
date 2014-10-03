@@ -4,7 +4,7 @@
         <title>progressbar组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <script src="../avalon2.js"></script>
+        <script src="../avalon.$events.js"></script>
         <script src="../highlight/shCore.js"></script>
         <script>
             require(["progressbar/avalon.progressbar"], function() {
@@ -18,8 +18,9 @@
                     var v = 30
                         , timer
                     setTimeout(function() {
-                        timer = setInterval(function() {
-                            avalon.vmodels.$aa.value = 0
+                      timer = setInterval(function() {
+                          
+                          avalon.vmodels.$aa.value = 0
                         }, 50)
                     }, 3000)
                 })

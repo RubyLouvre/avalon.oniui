@@ -261,7 +261,6 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
         function animate(panel, width) {
             var currentWidth = 0
             function widthAnimate() {
-                console.log("widthAnimate : "+currentWidth)
                 currentWidth += 10
                 if (currentWidth > width) {
                     currentWidth = width

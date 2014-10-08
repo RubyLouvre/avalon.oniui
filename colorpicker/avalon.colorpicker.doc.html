@@ -6,6 +6,17 @@
 <title>colorpicker文档说明</title>
 <script src="../highlight/shCore.js"></script>
 <link rel="stylesheet" href="../style/avalon.doc.css"/>
+<style>
+    code{
+        padding: 1px 3px;
+        font-family: Consolas, monospace, sans-serif;
+        font-size: 0.85em;
+        white-space: pre;
+        border: 1px solid #dddbcc;
+        background: #f1f0ea;
+        border-radius: 2px;
+    }
+</style>
 </head>
 <body>
     <div class="wrapper">
@@ -13,7 +24,7 @@
     <fieldset>
         <legend>colorpicker颜色选择器</legend>
         <p>一个直观方便的颜色选择器。既可以展示设定的颜色，又可以调试并选择颜色。</p>
-        <p>使用ms-duplex可以方便的设置和获取颜色。</p>
+        <p>使用 <code>ms-duplex</code> 可以方便的设置和获取颜色。</p>
     </fieldset>
     <fieldset>
         <legend>使用说明</legend>
@@ -35,9 +46,16 @@
             </tr>
         </table>
     </fieldset>
-    <ul class="example-links">
-        <li><a href="avalon.colorpicker.ex.html">例子</a></li>
-    </ul>
+    <fieldset>
+        <legend>注意</legend>
+        <p>请不要在 <code>input</code> 标签上添加 <code>data-duplex-changed</code> 事件，因为会被组件内部的事件覆盖掉</p>
+    </fieldset>
+    <fieldset>
+        <legend>示例</legend>
+        <ul class="example-links">
+            <li><a href="avalon.colorpicker.ex.html">例子</a></li>
+        </ul>
+    </fieldset>
 </div>
 </body>
 </html>

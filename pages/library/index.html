@@ -57,8 +57,7 @@
         }
     }
 
-    avalon.bind(window,"load",  init)//等待iframe加载
-
+    avalon.bind(window, "load", init)//等待iframe加载
 
     function init() {
         var historys = [] //浏览历史
@@ -104,7 +103,6 @@
                     updateHistory = true
                 })
             }
-            
 
             //根据是否为示例页面更新url 
             var curLocation = iframe.contentWindow.location.href

@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.3.6 2014.9.15
+ avalon 1.3.6 2014.10.8
  ==================================================*/
 (function(DOC) {
     /*********************************************************************
@@ -1860,8 +1860,11 @@
             if (remove) { //如果它没有在DOM树
                 $$subscribers.splice(i, 1)
                 avalon.Array.remove(obj.list, data)
-                // log("debug: remove " + data.type)
+                log("debug: remove " + data.type)
                 obj.data = obj.list = data.evaluator = data.element = data.vmodels = null
+                if(data.type === "if" && data.template){
+                    head.removeChild(data.template)
+                }
             }
         }
     }
@@ -1884,7 +1887,7 @@
                     fn.apply(0, args) //强制重新计算自身
                 } else if (fn.$repeat) {
                     fn.handler.apply(fn, args) //处理监控数组的方法
-                } else if (fn.element) {
+                } else if (fn.element && fn.type !== "on") {
                     var fun = fn.evaluator || noop
                     fn.handler(fun.apply(0, fn.args || []), el, fn)
                 }
@@ -2681,7 +2684,6 @@
                             proxies.splice(ii, 0, proxy)
                             shimController(data, transation, proxy, fragments)
                         }
-
                         locatedNode = locateFragment(data, pos)
                         parent.insertBefore(transation, locatedNode)
                         for (var i = 0, fragment; fragment = fragments[i++]; ) {
@@ -2788,7 +2790,7 @@
                     fragment = avalon.parseHTML(val)
                 }
                 nodes = avalon.slice(fragment.childNodes)
-                if (nodes.length == 0) {
+                if (nodes.length === 0) {
                     var comment = DOC.createComment("ms-html")
                     fragment.appendChild(comment)
                     nodes = [comment]
@@ -2799,7 +2801,7 @@
                     var nextNode = elem.nextSibling
                     parent.removeChild(elem)
                     length--
-                    if (length == 0 || nextNode === null)
+                    if (length === 0 || nextNode === null)
                         break
                     elem = nextNode
                 }
@@ -2815,22 +2817,22 @@
         "if": function(val, elem, data) {
             if (val) { //插回DOM树
                 if (elem.nodeType === 8) {
-                    var content = avalon.parseHTML(data.template).firstChild
-                    elem.parentNode.replaceChild(content, elem)
-                    data.element = content
-                    if (rbind.test(data.template.replace(rlt, "<").replace(rgt, ">"))) {
-                        try {
-                            scanAttr(content, data.vmodels)
-                        } catch (e) {
-                            avalon.log(e + "!")
-                        }
-                    }
+                    elem.parentNode.replaceChild(data.template, elem)
+                    data.element = data.template
+                    data.template = null
+                }
+                try {
+                    scanAttr(data.element, data.vmodels)
+                } catch (e) {
+                    avalon.log("warning: ms-if " + e)
                 }
             } else { //移出DOM树，并用注释节点占据原位置
                 if (elem.nodeType === 1) {
                     var node = DOC.createComment("ms-if")
                     elem.parentNode.replaceChild(node, elem)
                     data.element = node
+                    head.appendChild(elem)
+                    data.template = elem
                 }
             }
         },
@@ -2855,7 +2857,6 @@
                     avalon.unbind(elem, eventType, removeFn)
                 }
             }
-            data.evaluator = data.handler = noop
         },
         "text": function(val, elem) {
             val = val == null ? "" : val //不在页面上显示undefined null
@@ -3002,7 +3003,7 @@
             data.renderedCallback = getBindingCallback(elem, "data-" + type + "-rendered", vmodels)
 
             var comment = data.element = DOC.createComment("ms-repeat")
-            if (type === "each" || type == "with") {
+            if (type === "each" || type === "with") {
                 data.template = elem.innerHTML.trim()
                 avalon.clearHTML(elem).appendChild(comment)
             } else {
@@ -3086,10 +3087,6 @@
             var elem = data.element
             if (elem.nodeType === 1) {
                 elem.removeAttribute(data.name)
-                data.template = elem.outerHTML
-                var comment = DOC.createComment("ms-if")
-                elem.parentNode.replaceChild(comment, elem)
-                data.element = comment
             }
             data.vmodels = vmodels
             parseExprProxy(data.value, vmodels, data)

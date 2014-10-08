@@ -1,6 +1,7 @@
 define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./avalon.colorpicker.css"], function(avalon, sourceHTML){
 
-	var vm_temp = {};	//记录前一个被打开的ctr
+	var vm_temp = {},	// 记录前一个被打开的ctr
+		defaultColor = '#ffffff';	// 默认颜色，用于在初始化时 duplex 或 defaultColor 没有输入或不合法时赋值
 	
 	var widget = avalon.ui.colorpicker = function(element, data, vmodels){
 		var vmodel = avalon.define(data.colorpickerId, function(vm){
@@ -36,12 +37,12 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 			};
 
 			// 如果用户未设置颜色，设置初始颜色
-			if(!("ms-duplex" in $element[0].msData)){
+			if(!("ms-duplex" in element.msData)){
 				element.setAttribute("ms-duplex", "defaultColor");
 			}
-			vm.cp_color = "";			//最终颜色
-			vm.input_color = "";		//input字体颜色
-			vm.hue_color = "";			//overlay背景色，s=1, l=0.5
+			vm.cp_color = "";			// 最终颜色
+			vm.input_color = "";		// input字体颜色
+			vm.hue_color = "";			// overlay背景色，s=1, l=0.5
 
 			vm.toggle = false;
 
@@ -50,7 +51,13 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 			vm.$init = function(){
 				
 				renderView();
-				//颜色初始化
+
+				// 颜色初始化
+				// 合法性检测
+				if(!isHexColorValid(element.value)){
+					avalon.log(element.value + ' 不是合法的十六进制颜色表示法');
+					element.value = defaultColor;
+				}
 				vm.setByIp(element.value);
 
 			};
@@ -60,7 +67,7 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 			};
 
 			vm.setByIp = function(val){
-				if(val !== vm.cp_color){			//阻止从ctr改变element.value时触发函数
+				if(val !== vm.cp_color){			// 阻止从ctr改变element.value时触发函数
 
 					if(isHexColorValid(val)){
 						var r = parseInt(val.substr(1, 2), 16),
@@ -292,7 +299,7 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 	widget.version = 1.0;
 	widget.defaults = {
 		autoHide: true,
-		defaultColor: "#ffffff",
+		defaultColor: defaultColor,
 		bgColor: ""
 	};
 

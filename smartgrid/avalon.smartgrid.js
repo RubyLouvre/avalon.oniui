@@ -21,7 +21,8 @@ define(["avalon",
         templateArr = template.split("MS_OPTION_EJS"),
         gridHeader = templateArr[0],
         template = templateArr[1],
-        isIE6 = (window.navigator.userAgent || '').toLowerCase().indexOf('msie 6') !== -1,
+        userAgent = (window.navigator.userAgent || '').toLowerCase(),
+        positionAbsolute = userAgent.indexOf('msie 6') !== -1 || userAgent.indexOf('msie 7') !== -1,
         remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m,
         sorting = false, // 页面在排序的时候不用更新排序icon的状态为ndb，但如果是重新渲染数据的话重置icon状态为ndb
         callbacksNeedRemove = {}
@@ -34,7 +35,7 @@ define(["avalon",
          
         perfectColumns(options, element)   
         initContainer(options, element)
-        options._position = isIE6 ? "absolute" : "fixed"
+        options._position = positionAbsolute ? "absolute" : "fixed"
         options.loading.onInit = function(vm, options, vmodels) {
             vmodel.loadingVModel = vm
         }
@@ -47,7 +48,7 @@ define(["avalon",
                 pager.getTemplate = typeof pager.getTemplate === "function" ? pager.getTemplate : function(tmpl, options) {
                     var optionsStr = ""
                     if (Array.isArray(pager.options) && options.canChangePageSize) {
-                        optionsStr = '<div class="ui-smartgrid-pager-options">每页显示<select ms-widget="dropdown" data-dropdown-list-width="50" data-dropdown-width="50" ms-duplex="perPages"><option ms-repeat="options" ms-value="el.value">{{el.text}}</option></select>条, {{totalItems}}条结果</div>'
+                        optionsStr = '<div class="ui-smartgrid-pager-options"><div class="ui-smartgrid-showinfo">每页显示</div><select ms-widget="dropdown" data-dropdown-list-width="50" data-dropdown-width="50" ms-duplex="perPages"><option ms-repeat="options" ms-value="el.value" ms-attr-label="el.value">{{el.text}}</option></select><div class="ui-smartgrid-showinfo">条, {{totalItems}}条结果</div></div>'
                     } else {
                         optionsStr = '<div class="ui-smartgrid-pager-options">{{totalItems}}条结果</div>'
                     }
@@ -64,7 +65,7 @@ define(["avalon",
         var vmodel = avalon.define(vmId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
-            vm._headerTop = 0
+            vm._headerTop = 0 + options.affixHeight
             vm._container = null
             vm._fixHeaderToggle = false
             vm._gridWidth = 0
@@ -113,9 +114,15 @@ define(["avalon",
                     }
                 } else {
                     //否则默认处理
-                    vmodel.data.sort(function(a, b) {
-                        return trend * (a[field] - b[field]) || 0
-                    })
+                    if (column.type === "Number") {
+                        vmodel.data.sort(function(a, b) {
+                            return trend * (a[field] - b[field]) || 0
+                        })
+                    } else {
+                        vmodel.data.sort(function(a, b) {
+                            return trend * (a[field].localeCompare(b[field]))
+                        })
+                    }
                     vmodel.render()
                     if (avalon.type(onColumnSort) === "function") {
                         onColumnSort.call(vmodel, sortTrend, field)
@@ -147,29 +154,31 @@ define(["avalon",
                 vmodel.loadingVModel.toggle = false
             }
             vm._selectAll = function(event, selected) {
-                var val = event ? event.target.checked : selected,
-                    datas = vmodel.data,
+                var datas = vmodel.data,
                     trs = vmodel._container.getElementsByTagName("tr"),
                     onSelectAll = vmodel.onSelectAll
 
-                vmodel._allSelected = val
-                for (var i = 0, len = datas.length; i < len; i++) {
-                    var data = datas[i],
-                        tr = trs[i],
-                        input = tr.cells[0].getElementsByTagName("input")[0]
-                    data.selected = val
-                    input.checked = val
-                    avalon(tr)[val ? "addClass": "removeClass"]("ui-smartgrid-selected")
-                }
-                if (val) {
-                    vmodel._selectedData = datas.concat()
-                } else {
-                    vmodel._selectedData = []
-                }
-                
-                if (avalon.type(onSelectAll) === "function") {
-                    onSelectAll.call(vmodel, datas, val)
-                }
+                setTimeout(function() {
+                    var val = event ? event.target.checked : selected
+                    vmodel._allSelected = val
+                    for (var i = 0, len = datas.length; i < len; i++) {
+                        var data = datas[i],
+                            tr = trs[i],
+                            input = tr.cells[0].getElementsByTagName("input")[0]
+                        data.selected = val
+                        input.checked = val
+                        avalon(tr)[val ? "addClass": "removeClass"]("ui-smartgrid-selected")
+                    }
+                    if (val) {
+                        vmodel._selectedData = datas.concat()
+                    } else {
+                        vmodel._selectedData = []
+                    }
+                    
+                    if (avalon.type(onSelectAll) === "function") {
+                        onSelectAll.call(vmodel, datas, val)
+                    }
+                }, 100)
             }
             vm._toggleColumn = function(toggle, index) {
                 if (!vmodel._container) return toggle
@@ -182,6 +191,9 @@ define(["avalon",
                         tr.cells[index].style.display = "none"
                     }
                 }
+                setTimeout(function() {
+                    vmodel._setColumnWidth()
+                }, 100)
                 return toggle
             }
             
@@ -192,12 +204,10 @@ define(["avalon",
 
                 for (var i = 0, len = cells.length; i < len; i++) {
                     var $cell = avalon(cells[i]),
-                        cellWidth = $cell.outerWidth(),
+                        cellWidth = $cell.width(),
                         column = columns[i]
 
-                    if (column.key !== "selected") {
-                        column.width = cellWidth
-                    } 
+                    column._fixWidth = cellWidth
                 }
                 vmodel._gridWidth = containerWidth
             }
@@ -207,7 +217,8 @@ define(["avalon",
                     datas = vmodel.data,
                     _columns = vmodel.columns,
                     columns = _columns.$model,
-                    dataLen = datas.length
+                    dataLen = datas.length,
+                    checkRow = vmodel.selectable.type === "Checkbox"
 
                 if (!EJS[id]) {
                     fn = EJS.compile(options.template, vmodel.htmlHelper)
@@ -219,7 +230,8 @@ define(["avalon",
                     var column = columns[i],
                         name = column.key
                     if (!sorting) {
-                        _columns[i].sortTrend = "ndb"
+                        //如果sortTrend属性不存在，在IE下直接给它赋值会报错
+                        _columns[i].sortTrend && (_columns[i].sortTrend = "ndb")
                     }
                     
                     for (var j = 0; j < dataLen; j++) {
@@ -228,15 +240,15 @@ define(["avalon",
                     }
                 }
 
-                html = fn({data: datas, columns: _columns, len: 2, noResult: vmodel.noResult, vmId: vmId})
+                html = fn({data: datas, columns: _columns, len: 2, noResult: vmodel.noResult, vmId: vmId, checkRow: checkRow})
                 return html
             }
-            vm.render = function() {
+            vm.render = function(init) {
                 var container = vmodel._container,
                     containerWrapper = vmodel.container
 
                 vmodel._pagerShow = !vmodel.data.length ? false : true
-                container.innerHTML = vmodel._getTemplate()
+                avalon.innerHTML(container, vmodel._getTemplate())
                 if (vmodel.selectable.type === "Checkbox") {
                     var allSelected = isSelectAll(vmodel.data)
                     vmodel._allSelected = allSelected
@@ -248,27 +260,31 @@ define(["avalon",
                     vmodel.hideLoading()
                     vmodel._setColumnWidth()
                 })
-                sorting = false
-                containerWrapper.scrollIntoView()
+                if (sorting) {
+                    sorting = false
+                } else if (!init) {
+                    containerWrapper.scrollIntoView()
+                }
             }
             vm.$init = function() {
                 var container = vmodel.container,
                     pagerVM = null,
-                    intervalID = 0
-                gridHeader = gridHeader.replace("MS_OPTION_ID", vmodel.$id)    
-                container.innerHTML = gridHeader
+                    intervalID = 0,
+                    gridFrame = ""
+                gridFrame = gridHeader.replace("MS_OPTION_ID", vmodel.$id)    
+                container.innerHTML = gridFrame
                 avalon.scan(container, vmodel)
                 avalon.nextTick(function() {
                     vmodel._container = container.getElementsByTagName("tbody")[0]
-                    vmodel.render()
+                    vmodel.render(true)
                     bindEvents(vmodel)
                 })
                 if (vmodel.isAffix) {
                     callbacksNeedRemove.scrollCallback = avalon(window).bind("scroll", function() {
-                        var scrollTop = document.body.scrollTop,
+                        var scrollTop = Math.max(document.body.scrollTop, document.documentElement.scrollTop),
                             offsetTop = $element.offset().top,
                             headerHeight = avalon(element.getElementsByTagName("thead")[0]).css("height"),
-                            top = scrollTop - offsetTop,
+                            top = scrollTop - offsetTop + vmodel.affixHeight,
                             clientHeight = avalon(window).height(),
                             tableHeight = $element.outerHeight(),
                             _position = vmodel._position
@@ -292,7 +308,6 @@ define(["avalon",
                 }
                 element.resizeTimeoutId = 0
                 callbacksNeedRemove.resizeCallback = avalon(window).bind("resize", function() {
-                    console.log("resize callback")
                     clearTimeout(element.resizeTimeoutId)
                     // var clientWidth = avalon(window).width()
                     // if (clientWidth <= vmodel.containerMinWidth) {
@@ -328,6 +343,7 @@ define(["avalon",
                 if (pagerVM) {
                     vmodel.pager = pagerVM
                     clearInterval(intervalID)
+                    element.removeAttribute("id")
                 }
             }, 100)
         }
@@ -342,6 +358,7 @@ define(["avalon",
         noResult: "暂时没有数据",
         remoteSort: avalon.noop,
         isAffix: false,
+        affixHeight: 0,
         containerMinWidth: 600,
         loading: {
             toggle: false,
@@ -388,7 +405,7 @@ define(["avalon",
                     var rowData = datas[$target.attr("data-index")],
                         isSelected = target.checked
                     if (isSelected) {
-                        $tr.addClass("ui-smartgrid-selected")
+                        options.selectable.type === "Checkbox" ? $tr.addClass("ui-smartgrid-selected") : 0
                         rowData.selected = true
                         avalon.Array.ensure(selectedData, rowData)
                     } else {
@@ -469,7 +486,7 @@ define(["avalon",
                     columnWidth = "auto"
                 }
             }
-            column.width = columnWidth
+            column.width = column._fixWidth = columnWidth
             allColumnWidth += ~~columnWidth
             ~~columnWidth > maxWidth ? (maxWidth = columnWidth) && (maxWidthColumn = column) : 0
             column.customClass = column.customClass || ""
@@ -516,6 +533,7 @@ define(["avalon",
                 customClass: ""
             }
             allColumnWidth += 20
+            selectColumn.width = selectColumn._fixWidth = 20
             columns.unshift(selectColumn)
         }
 

@@ -2,5 +2,122 @@
 @import "../chameleon/oniui-theme";
 $uiname: "ui-smartgrid";
 .#{$uiname} {
-    
+    border: 1px solid #e5e5e5;
+    font-size: 12px;
+    line-height: 20px;
+    position: relative;
+    table {
+        table-layout: auto;
+        width: 100%;
+        border-spacing: 0;
+        border-collapse: collapse;
+    }
+    .#{$uiname}-hide {
+        width: 0;
+    }
+    .#{$uiname}-even {
+        background-color: #f7f7f7;
+    }
+    .#{$uiname}-selected {
+        background-color: #fff7e6
+    }
+    th {
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        padding: 7px 5px;
+    }
+    td {
+        border-bottom: 1px solid #f3f3f3;
+        padding: 7px 5px;
+        word-break: break-all;
+        word-wrap: break-word;
+    }
+    .#{$uiname}-header {
+        background-color: #f8f8f8;
+        border-bottom: 1px solid #e5e5e5;
+        }
+    .#{$uiname}-header-fixed {
+        background-color: #f8f8f8;
+        border-top: 1px solid #e5e5e5;
+        border-bottom: 1px solid #e5e5e5;
+        border-right: 1px solid #e5e5e5;
+        z-index: 1;
+    }
+    .#{$uiname}-body {
+        background: #fff;
+        text-align: center;
+    }
+    .#{$uiname}-footer {
+        background-color: #f8f8f8;
+        font-size: 0;
+        padding: 0;
+        td {
+            padding: 0
+        }
+    }
+    .#{$uiname}-pager-wrapper {
+        width: 100%;
+        padding: 5px 0px;
+        overflow: hidden;
+        background-color: #f8f8f8;
+    }
+    .#{$uiname}-pager-options {
+        font-size: 12px;
+        float: left;
+        height: 26px;
+        line-height: 26px;
+        padding-left: 5px; 
+        div.ui-smartgrid-showinfo {
+            @include inline-block();
+        }
+        .ui-dropdown {
+            margin: 0 5px;
+            vertical-align: top; 
+        }
+    }
+    .#{$uiname}-nodata {
+        padding: 27px 0;
+        text-align: center;
+    }
+    /*三种容器的规则*/
+    .ui-helper-asc, .ui-helper-desc,  .ui-helper-ndb{
+        width:16px;
+        height:16px;
+        line-height: 1;
+        vertical-align: middle;
+        @include inline-block();
+        //display: inline-block;
+        position: relative;
+        cursor: pointer;
+    }
+    /*三种容器下三角形的共同点*/
+    .ui-helper-asc span, .ui-helper-desc span, .ui-helper-ndb span{
+        position: absolute;
+        top: 0px;
+        left: 4px;
+    }
+    /*上三角*/
+    .ui-helper-ndb .ui-helper-sort-top, .ui-helper-desc .ui-helper-sort-top{
+        @include triangle(top, 12px, half, #ccc);
+        top: 0px;
+    }
+    .ui-helper-asc .ui-helper-sort-top{
+        @include triangle(top, 12px, half, #000);
+        top: 0px;
+    }
+    /*下三角*/
+    .ui-helper-ndb .ui-helper-sort-bottom, .ui-helper-asc .ui-helper-sort-bottom{
+        @include triangle(bottom, 12px, half, #ccc);
+        top: 8px;
+    }
+    .ui-helper-desc .ui-helper-sort-bottom{
+        @include triangle(bottom, 12px, half, #000);
+        top: 8px;
+    }
+    .ui-pager {
+        display: inline;
+        float: right; 
+    }
 }

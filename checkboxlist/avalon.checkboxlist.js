@@ -13,17 +13,18 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
             vm.$skipArray = ["widgetElement", "template", "keys"];
             vm.widgetElement = element;
             vm.keys = [];
-            vm.alltext = options.alltext !== undefined ? options.alltext : options.allText;
             // 点击全选按钮之后的回调
             vm._clickAll = function(event) {
-                var checkStatus = event.target.checked;
-                if (checkStatus) {
-                    duplexVM[1][duplexVM[0]] = vmodel.keys;
-                } else {
-                    duplexVM[1][duplexVM[0]].clear()
-                }
-                // 执行onselect回调
-                onSelect.apply(0, [vm.data.$model, checkStatus, event.target]);
+                setTimeout(function() {
+                    var checkStatus = event.target.checked;
+                    if (checkStatus) {
+                        duplexVM[1][duplexVM[0]] = vmodel.keys;
+                    } else {
+                        duplexVM[1][duplexVM[0]].clear()
+                    }
+                    // 执行onselect回调
+                    onSelect.apply(0, [vm.data.$model, checkStatus, event.target]);
+                }, 20)
             }
             // 选中某一项之后的回调操作
             vm._clickOne = function(event,index) {
@@ -100,7 +101,7 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
                             txt = "";
                         // 获取离input最近的父级li元素
                         while(li) {
-                            if (li.tagName = "LI") {
+                            if (li.tagName == "LI") {
                                 break;
                             } else {
                                 li = li.parentNode;
@@ -111,7 +112,7 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
                         txt.replace(/^\s+/, "").replace(/\s+$/,"");
                         // 将提取出来的数据保存在data中
                         data.push({
-                            text: (!~txt.indexOf(vmodel.allText) && txt),
+                            text: txt,
                             value: input.value || txt
                         });
                     }
@@ -130,7 +131,7 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
     widget.defaults = {
         data: [], // 所有选项值的集合，通过此数据来渲染初始视图
         all: false, // 默认不选中所有选项
-        allText: "全部", // 显示"全部"按钮，方便进行全选或者全不选操作
+        alltext: "全部", // 显示"全部"按钮，方便进行全选或者全不选操作
         type: "" , // 内置type为week时的data，用户只需配置type为week即可显示周一到周日的选项 
         /*
             通过配置fetch来获得要显示的数据，数据格式必须如下所示：

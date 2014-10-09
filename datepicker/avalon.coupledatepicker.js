@@ -49,7 +49,7 @@ define(["../avalon.getModel",
         if (!container.length) {
             container = element.getElementsByTagName("div")
         }
-        options.container = container = container.length ? [].slice.call(container) : container
+        options.container = container = container.length ? avalon.slice(container, 0) : container
         calendarTemplate = options.template = options.getTemplate(calendarTemplate, options)
         var vmodel = avalon.define(data.coupledatepickerId, function(vm) {
             avalon.mix(vm, options)

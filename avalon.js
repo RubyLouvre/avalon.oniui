@@ -44,9 +44,14 @@
     function noop() {
     }
 
-    function log(a) {
+    function log() {
         if (window.console && avalon.config.debug) {
-            console.log(W3C ? a : a + "")
+            try {
+                console.log.apply(console, arguments)
+            } catch (e) {
+                // http://stackoverflow.com/questions/8785624/how-to-safely-wrap-console-log
+                Function.apply.call(console.log, console, arguments)
+            }
         }
     }
 
@@ -2426,7 +2431,7 @@
         '\r': '\\r',
         '"': '\\"',
         '\\': '\\\\'
-    };
+    }
     var quote = window.JSON && JSON.stringify || function(str) {
         return   '"' + str.replace(/[\\\"\x00-\x1f]/g, function(a) {
             var c = meta[a];
@@ -2672,7 +2677,6 @@
                     var locatedNode = locateFragment(data, pos)
                 }
                 var group = data.group
-
                 switch (method) {
                     case "add": //在pos位置后添加el数组（pos为数字，el为数组）
                         var arr = el
@@ -2707,17 +2711,20 @@
                         }
                         break
                     case "clear":
-                        var n = ("proxySize" in data ? data.proxySize : proxies.length) * group, k = 0
-                        while (true) {
-                            var nextNode = data.element.nextSibling
-                            if (nextNode && k < n) {
-                                parent.removeChild(nextNode)
-                                k++
-                            } else {
-                                break
+                        var size = "proxySize" in data ? data.proxySize : proxies.length
+                        if (size) {
+                            var n = size * group, k = 0
+                            while (true) {
+                                var nextNode = data.element.nextSibling
+                                if (nextNode && k < n) {
+                                    parent.removeChild(nextNode)
+                                    k++
+                                } else {
+                                    break
+                                }
                             }
+                            recycleEachProxies(proxies)
                         }
-                        recycleEachProxies(proxies)
                         break
                     case "move": //将proxies中的第pos个元素移动el位置上(pos, el都是数字)
                         var t = proxies.splice(pos, 1)[0]
@@ -3768,7 +3775,7 @@
     }
 
     function calculateFragmentGroup(data) {
-        if (typeof data.group !== "number") {
+        if (!isFinite(data.group)) {
             var nodes = avalon.slice(data.element.parentNode.childNodes, 1)
             var n = "proxySize" in data ? data.proxySize : data.proxies.length
             data.group = nodes.length / n

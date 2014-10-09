@@ -13,27 +13,27 @@
     <div class="wrapper">
         <h1>coupledatepicker demo</h1>
         <div class="demo-show" ms-controller="demo">
-            <fieldset>
+            <fieldset style="position: relative; z-index: 5">
                 <legend>双日历框 两天最小相隔0天</legend>
                 <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="fromA, toA" data-coupledatepicker-rules="aOpts"></div>
                 <p>通过配置rules来设置起始日历和结束日历之间两天相隔的最小天数。初始日期设为2014-06-12，最小相隔日期0天，则结束日期的最小日期为2014-06-12，虽然结束日期初始设置为2014-06-02，但是组件会自动修正结束日期</p>
             </fieldset>
-            <fieldset>
+            <fieldset style="position: relative; z-index: 4">
                 <legend>双日历框 两天最大相隔8天</legend>
                 <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="fromB, toB" data-coupledatepicker-rules="bOpts"></div>
                 <p>通过配置rules来设置起始日历和结束日历之间两天相隔的最小天数为0，最大天数为8</p>
             </fieldset>
-            <fieldset>
+            <fieldset style="position: relative; z-index: 3">
                 <legend>双日历框 两天最小相隔0天，最大相隔8天</legend>
                 <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="fromC, toC" data-coupledatepicker-rules="dOpts"></div>
                 <p>初始结束日期的初始日期为2014-06-20，在最小间隔天数和最大间隔天数所包含的日期，正常显示</p>
             </fieldset>
-            <fieldset>
+            <fieldset style="position: relative; z-index: 2">
                 <legend>双日历框 最小日期、最大日期</legend>
                 <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="fromD, toD" data-coupledatepicker-rules="cOpts"></div>
                 <p>通过配置rules对象，设置初始日期的最小日期fromMinDate、最大日期fromMaxDate和结束日期的最小日期toMinDate和最大日期toMaxDate,在显式设置结束日历的最小日期和最大日期的情况下，当结束日期不在其最小和最大日期范围之内时，组件会将结束日期设为其最小日期</p>
             </fieldset>
-            <fieldset>
+            <fieldset style="position: relative; z-index: 1">
                 <legend>双日历框 结束初始日期异常时，rules defaultDate的设置</legend>
                 <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="fromE, toE" data-coupledatepicker-rules="eOpts"></div>
                 from: {{fromE}}
@@ -89,27 +89,27 @@
                 &lt;/head&gt;
                 &lt;body&gt;
                     &lt;div class="demo-show" ms-controller="demo"&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 5"&gt;
                             &lt;legend&gt;双日历框 两天最小相隔0天&lt;/legend&gt;
                             &lt;div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from, to" data-coupledatepicker-rules="aOpts"&gt;&lt;/div&gt;
                             &lt;p&gt;通过配置rules来设置起始日历和结束日历之间两天相隔的最小天数。初始日期设为2014-06-12，最小相隔日期0天，则结束日期的最小日期为2014-06-12，虽然结束日期初始设置为2014-06-02，但是组件会自动修正结束日期&lt;/p&gt;
                         &lt;/fieldset&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 4"&gt;
                             &lt;legend&gt;双日历框 两天最大相隔8天&lt;/legend&gt;
                             &lt;div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from, to" data-coupledatepicker-rules="bOpts"&gt;&lt;/div&gt;
                             &lt;p&gt;通过配置rules来设置起始日历和结束日历之间两天相隔的最小天数为0，最大天数为8&lt;/p&gt;
                         &lt;/fieldset&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 3"&gt;
                             &lt;legend&gt;双日历框 两天最小相隔0天，最大相隔8天&lt;/legend&gt;
                             &lt;div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from, to1" data-coupledatepicker-rules="dOpts"&gt;&lt;/div&gt;
                             &lt;p&gt;初始结束日期的初始日期为2014-06-20，在最小间隔天数和最大间隔天数所包含的日期，正常显示&lt;/p&gt;
                         &lt;/fieldset&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 2"&gt;
                             &lt;legend&gt;双日历框 最小日期、最大日期&lt;/legend&gt;
                             &lt;div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from, to" data-coupledatepicker-rules="cOpts"&gt;&lt;/div&gt;
                             &lt;p&gt;通过配置rules对象，设置初始日期的最小日期fromMinDate、最大日期fromMaxDate和结束日期的最小日期toMinDate和最大日期toMaxDate,在显式设置结束日历的最小日期和最大日期的情况下，当结束日期不在其最小和最大日期范围之内时，组件会将结束日期设为其最小日期&lt;/p&gt;
                         &lt;/fieldset&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 1"&gt;
                             &lt;legend&gt;双日历框 结束初始日期异常时，rules defaultDate的设置&lt;/legend&gt;
                             &lt;div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from, to2" data-coupledatepicker-rules="eOpts"&gt;&lt;/div&gt;
                             &lt;p&gt;通过配置结束日期初始值异常时的默认值、最小间隔天数、最大间隔天数对应的rules属性，可以使结束日期初始为起始初始日期+2&lt;/p&gt;

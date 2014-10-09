@@ -17,7 +17,9 @@ define(["avalon",
             dataSource,
             dataModel,
             templates, titleTemplate, listTemplate,
-            blurHandler
+            blurHandler,
+            scrollHandler,
+            resizeHandler
 
         //将元素的属性值copy到options中
         "multiple,size".replace(avalon.rword, function(name) {
@@ -103,16 +105,22 @@ define(["avalon",
 
                     //注册blur事件
                     blurHandler = avalon.bind(document.body, "click", function(e) {
-                        debugger
                         //判断是否点击发生在dropdown节点内部
                         //如果不在节点内部即发生了blur事件
-                        if(titleNode.contains(e.target) || (listNode && listNode.contains(e.target))) {
-                            return;
+                        if(titleNode.contains(e.target)) {
+                            vmodel._toggle()
+                            return
+                        } else if(listNode && listNode.contains(e.target)) {
+                            return
                         }
                         if (!vmodel.__cursorInList__ && !vmodel.multiple && vmodel.toggle) {
                             vmodel.toggle = false;
                         }
                     })
+
+                    scrollHandler = avalon.bind(window, "scroll", _positionListNode)
+
+                    resizeHandler = avalon.bind(window, "resize", _positionListNode)
                 }
 
                 //如果原来的select没有子节点，那么为它添加option与optgroup
@@ -182,7 +190,13 @@ define(["avalon",
 
             vm.$remove = function() {
                 if (blurHandler) {
-                    avalon.unbind(window, "click", blurHandler);
+                    avalon.unbind(window, "click", blurHandler)
+                }
+                if(scrollHandler) {
+                    avalon.unbind(window, "scroll", scrollHandler)
+                }
+                if(resizeHandler) {
+                    avalon.unbind(window, "resize", resizeHandler)
                 }
                 vmodel.toggle = false;
                 listNode && vmodel.container.removeChild(listNode);
@@ -350,7 +364,7 @@ define(["avalon",
                     css.top = offset.top + outerHeight - $sourceNode.css("borderBottomWidth").replace(styleReg, "$1");
                 }
 
-                if(offsetParent && offsetParent.tagName !== "BODY") {
+                if(offsetParent && (offsetParent.tagName !== "BODY" && offsetParent.tagName !== "HTML")) {
                     //修正由于边框带来的重叠样式
                     css.top = css.top  - $offsetParent.offset().top + listNode.offsetParent.scrollTop;
                     css.left = offset.left - $offsetParent.offset().left + listNode.offsetParent.scrollLeft;
@@ -547,6 +561,13 @@ define(["avalon",
             var title = document.getElementById("title-" + vmodel.$id),
                 $title = avalon(title);
             return vmodel.width - $title.css("paddingLeft").replace(styleReg, "$1") - $title.css("paddingRight").replace(styleReg, "$1");
+        }
+
+        //定位listNode
+        function _positionListNode() {
+            if(!vmodel.multiple && listNode) {
+                vmodel._position();
+            }
         }
 
         return vmodel;

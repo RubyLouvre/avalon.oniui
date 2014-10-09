@@ -17,8 +17,7 @@ define(["avalon",
             dataSource,
             dataModel,
             templates, titleTemplate, listTemplate,
-            scrollHandler,
-            resizeHandler;
+            blurHandler
 
         //将元素的属性值copy到options中
         "multiple,size".replace(avalon.rword, function(name) {
@@ -101,6 +100,19 @@ define(["avalon",
                     vmodel.titleWidth = computeTitleWidth();
                     //设置label值
                     setLabelTitle(vmodel.value);
+
+                    //注册blur事件
+                    blurHandler = avalon.bind(document.body, "click", function(e) {
+                        debugger
+                        //判断是否点击发生在dropdown节点内部
+                        //如果不在节点内部即发生了blur事件
+                        if(titleNode.contains(e.target) || (listNode && listNode.contains(e.target))) {
+                            return;
+                        }
+                        if (!vmodel.__cursorInList__ && !vmodel.multiple && vmodel.toggle) {
+                            vmodel.toggle = false;
+                        }
+                    })
                 }
 
                 //如果原来的select没有子节点，那么为它添加option与optgroup
@@ -169,11 +181,8 @@ define(["avalon",
             }
 
             vm.$remove = function() {
-                if (scrollHandler) {
-                    avalon.unbind(window, "scroll", scrollHandler);
-                }
-                if (resizeHandler) {
-                    avalon.unbind(window, "resize", resizeHandler);
+                if (blurHandler) {
+                    avalon.unbind(window, "click", blurHandler);
                 }
                 vmodel.toggle = false;
                 listNode && vmodel.container.removeChild(listNode);

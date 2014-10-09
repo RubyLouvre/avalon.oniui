@@ -110,9 +110,6 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
             vm.$init = function() {
                 if(inited) return
                 inited = true
-                if(!svgSupport) {
-                    document.namespaces.add("v", "urn:schemas-microsoft-com:vml")
-                }
                 var divCon = avalon.parseHTML(formateTpl(vmodel.template))
                 newDiv = divCon.childNodes[0]
                 insertAfer(element, newDiv)
@@ -134,6 +131,11 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 newDiv.appendChild(inputEle)
                 inputEle.msRetain = false;
 
+                avalon.scan(newDiv, [vmodel].concat(vmodels))
+
+                vmodel._draw()
+
+
                 bar = newDiv.firstChild
 
                 while(bar) {
@@ -141,6 +143,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                     bar = bar.nextSibling
                 }
                 bar.style[vmodel.dir] = vmodel._addthisCss()
+
                 if(vmodel.draggable) {
                     dragger = bar.firstChild
                     while(dragger) {
@@ -155,11 +158,8 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                             avaElem.data("draggable" + _key, typeof item != "function" ? item : key)
                         })
                     }
+                    avalon.scan(bar, [vmodel].concat(vmodels))
                 }
-
-                avalon.scan(newDiv, [vmodel].concat(vmodels))
-
-                vmodel._draw()
 
                 // callback after inited
                 if(typeof options.onInit === "function" ) {

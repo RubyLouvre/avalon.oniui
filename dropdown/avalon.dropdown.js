@@ -118,9 +118,12 @@ define(["avalon",
                         }
                     })
 
-                    scrollHandler = avalon.bind(window, "scroll", _positionListNode)
+                    if(vmodel.position) {
+                        //监听window的滚动及resize事件，重新定位下拉框的位置
+                        scrollHandler = avalon.bind(window, "scroll", _positionListNode)
+                        resizeHandler = avalon.bind(window, "resize", _positionListNode)
+                    }
 
-                    resizeHandler = avalon.bind(window, "resize", _positionListNode)
                 }
 
                 //如果原来的select没有子节点，那么为它添加option与optgroup

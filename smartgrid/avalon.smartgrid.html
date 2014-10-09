@@ -2,8 +2,8 @@
     <table>
         <colgroup>
             <col ms-repeat-column="columns" 
-                 ms-visible="column.toggle" 
-                 ms-css-width="column.width">
+                 ms-class="ui-smartgrid-{{column.toggle? 'show': 'hide'}}"
+                 ms-css-width="column.width"/>
         </colgroup>
         <thead class="ui-smartgrid-header">
             <tr class="ui-smartgrid-header-fixed" 
@@ -14,7 +14,7 @@
                 ms-css-width="_gridWidth">
                 <th ms-repeat-column="columns" 
                     ms-visible="column.toggle" 
-                    ms-css-width="column.width" 
+                    ms-css-width="column._fixWidth" 
                     ms-css-text-align="column.align" 
                     ms-class="{{column.customClass}}">
                     {{column.name|html}}
@@ -46,7 +46,7 @@
         <tfoot class="ui-smartgrid-footer">
             <tr>
                 <td ms-attr-colspan="{{columns.size()}}">
-                    <div class="ui-smartgrid-pager-wrapper" ms-if="!pageable || !_pagerShow"></div>
+                    <div class="ui-smartgrid-pager-wrapper" ms-if="!(pageable && _pagerShow)"></div>
                     <div class="ui-smartgrid-pager-wrapper" id="pager-MS_OPTION_ID" ms-if="pageable && _pagerShow"></div>
                 </td>
             </tr>
@@ -68,7 +68,7 @@ MS_OPTION_EJS
             } else {
                 selectedClass = "ui-smartgrid-even"
             } 
-            if (tr.selected) {
+            if (tr.selected && @checkRow) {
                 selectedClass += " ui-smartgrid-selected"
             }&>
         <tr class="<&=selectedClass&>">
@@ -78,7 +78,7 @@ MS_OPTION_EJS
                     textAlign="text-align:"+td.align, style=display+textAlign,
                     customClass = td.customClass || "",
                     format = td.format;&>
-                <td style=<&= style &> class=<&= customClass &>>
+                <td style="<&= style &>" class="<&= customClass &>">
                     <&= format(@vmId, td.key , i, tr[td.key], tr.disable) &>
                 </td>
             <& } &>

@@ -135,6 +135,8 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                 var fakeRect = fakeTextArea.getBoundingClientRect()
                 var bdos = fakeTextArea.getElementsByTagName(bdoName)
                 var bdo = bdos[bdos.length - 1]
+                if(!bdo)
+                    return
 
                 //高亮@所在bdo元素，然后通过Range.getBoundingClientRect取得它在视口的坐标
                 if (document.createRange && document.documentMode != 9) {//如果是IE10+或W3C

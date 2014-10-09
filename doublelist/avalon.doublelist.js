@@ -8,8 +8,6 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
         var options = data.doublelistOptions
         //方便用户对原始模板进行修改,提高定制性
         options.template = options.getTemplate(template, options)
-        // var dataTmpSelect = [],
-        //     selectTmpSelect = []
         var vmodel = avalon.define(data.doublelistId, function(vm) {
             vm.data = []
             vm.select = []
@@ -28,16 +26,6 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
             vm.$init = function() {
                 if(inited) return
                 inited = true
-
-                var duplex = element.getAttribute("ms-duplex")
-                if(duplex && vmodels[0]) {
-                    element.removeAttribute("ms-duplex")
-                    // vmodel.$changeCBS.push(function(n, o, v) {
-                    //     vmodels[0][duplex] = v.select
-                    // })
-                    // vmodels[0][duplex].$watch("length")
-                }
-
                 var dataTemplate = vmodel._getTemplate("data"),
                     selectTemplate = vmodel._getTemplate("select")
                 vmodel.template = vmodel.template.replace(/\{\{MS_OPTION_SELECT\}\}/g, selectTemplate).replace(/\{\{MS_OPTION_DATA\}\}/g, dataTemplate).replace(/\{\{MS_OPTION_ID\}\}/g, id)
@@ -119,6 +107,7 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                         ele.addClass("ui-state-active")
                         vmodel.selectTmpSelect.push(data.value)
                     }
+                    // 双击
                     if(isdblClick) {
                         if(!vmodel.countLimit(vmodel.select, "delete", 1)) return
                         for(var i = 0, len = vmodel.select.length; i < len; i++) {

@@ -65,7 +65,7 @@
                         ],
                         select: [5],
                         change: function(newValue, oldValue, vmodel) {
-                            avalon.log(vmodel.select)
+                            // avalon.log(vmodel.select)
                         }
                     }
                     var i = 6
@@ -76,7 +76,11 @@
                         })
                         i++
                     }
+                    vm.select = []
                     vm.$skipArray = [&quot;doublelist&quot;]
+                })
+                avalon.vmodels[&quot;test&quot;][&quot;select&quot;].$watch(&quot;length&quot;, function(n,o) {
+                    avalon.log(avalon.vmodels[&quot;test&quot;][&quot;select&quot;].join(&quot;,&quot;))
                 })
                 avalon.scan()
             })
@@ -85,7 +89,7 @@
     &lt;body&gt;
 &lt;div ms-controller=&quot;test&quot;&gt;
         &lt;h1&gt;doublelist-显示已选中条目，不限制选中条数&lt;/h1&gt;
-        &lt;div ms-widget=&quot;doublelist&quot;&gt;&lt;/div&gt;
+        &lt;div ms-widget=&quot;doublelist,nimei&quot; ms-duplex=&quot;select&quot;&gt;&lt;/div&gt;
         
     &lt;/div&gt;
 &lt;/body&gt;

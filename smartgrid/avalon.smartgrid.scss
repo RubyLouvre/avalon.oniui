@@ -13,7 +13,7 @@ $uiname: "ui-smartgrid";
         border-collapse: collapse;
     }
     .#{$uiname}-hide {
-        width: 0;
+        display: none;
     }
     .#{$uiname}-even {
         background-color: #f7f7f7;

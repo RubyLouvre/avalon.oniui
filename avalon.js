@@ -11,7 +11,6 @@
     /*********************************************************************
      *                    全局变量及方法                                  *
      **********************************************************************/
-    var prefix = "ms-"
     var expose = new Date - 0
     var subscribers = "$" + expose
     //http://addyosmani.com/blog/understanding-mvvm-a-guide-for-javascript-developers/
@@ -1388,14 +1387,14 @@
             return ret === "" ? "auto" : border[ret] || ret
         }
         cssHooks["opacity:set"] = function(node, name, value) {
-            if (!node.currentStyle.hasLayout) {
-                node.style.zoom = 1//让元素获得hasLayout
-            }
             if (node.filters.alpha) {
                 //必须已经定义过透明滤镜才能使用以下便捷方式
                 node.filters.alpha.opacity = value * 100
             } else {
                 node.style.filter += "alpha(opacity=" + value * 100 + ")"
+            }
+            if (!node.currentStyle.hasLayout) {
+                node.style.zoom = 1//让元素获得hasLayout
             }
         }
         cssHooks["opacity:get"] = function(node) {
@@ -1938,13 +1937,13 @@
     function scanTag(elem, vmodels, node) {
         //扫描顺序  ms-skip(0) --> ms-important(1) --> ms-controller(2) --> ms-if(10) --> ms-repeat(100) 
         //--> ms-if-loop(110) --> ms-attr(970) ...--> ms-each(1400)-->ms-with(1500)--〉ms-duplex(2000)垫后
-        var a = elem.getAttribute(prefix + "skip")
+        var a = elem.getAttribute("ms-skip")
         //#360 在旧式IE中 Object标签在引入Flash等资源时,可能出现没有getAttributeNode,innerHTML的情形
         if (!elem.getAttributeNode) {
             return log("warning " + elem.tagName + " no getAttributeNode method")
         }
-        var b = elem.getAttributeNode(prefix + "important")
-        var c = elem.getAttributeNode(prefix + "controller")
+        var b = elem.getAttributeNode("ms-important")
+        var c = elem.getAttributeNode("ms-controller")
         if (typeof a === "string") {
             return
         } else if (node = b || c) {
@@ -3063,8 +3062,7 @@
                 }
             }
             var $list = ($repeat.$events || {})[subscribers]
-            if ($list) {
-                $list.push(data)
+            if ($list && avalon.Array.ensure($list, data)) {
                 $$subscribers.push({
                     data: data, list: $list
                 })
@@ -3270,11 +3268,10 @@
                 if ($elem.data("duplex-observe") !== false) {
                     var method = element.checked ? "ensure" : "remove"
                     var array = evaluator()
-                    if (Array.isArray(array)) {
-                        avalon.Array[method](array, element.value)
-                    } else {
-                        avalon.error("ms-duplex位于checkbox时要求对应一个数组")
+                    if (!Array.isArray(array)) {
+                        array = [array]
                     }
+                    avalon.Array[method](array, element.value)
                     callback.call(element, array)
                 }
             }

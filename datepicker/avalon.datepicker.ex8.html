@@ -13,12 +13,12 @@
     <div class="wrapper">
         <h1>datepicker demo</h1>
         <div class="demo-show" ms-controller="demo">
-            <fieldset>
+            <fieldset style="position: relative; z-index: 2">
                 <legend>配置parseDate、formatDate解析规则和格式化规则</legend>
                 <input ms-widget="datepicker, a, $aOpts" value="2014年06月23日"/>
                 <p>说明：结合parseDate和formatDate的配置自定义日期显示规则和相应的解析规则，需要注意的是如果需要手动输入日期，那么请确保显示规则中只存在数字、/、-三种符号，向年、月、日这种汉语或者字母字符是不可输入的</p>
             </fieldset>
-            <fieldset>
+            <fieldset style="position: relative; z-index: 1">
                 <legend>配置formatDate格式化规则</legend>
                 <input ms-widget="datepicker, b, $bOpts" data-datepicker-separator="/"/>
                 <p>说明：配置separator为"/",设置日期显示格式为"yyyy/mm/dd"，鉴于上一个demo中对于手动输入日期规则的限制，同时试试这两个demo的手动输入效果体会一下两者的不同</p>
@@ -57,12 +57,12 @@
                 &lt;/head&gt;
                 &lt;body&gt;
                     &lt;div class="demo-show" ms-controller="demo"&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 2"&gt;
                             &lt;legend&gt;配置parseDate、formatDate解析规则和格式化规则&lt;/legend&gt;
                             &lt;input ms-widget="datepicker, a, $aOpts" value="2014年06月23日"/&gt;
                             &lt;p&gt;说明：结合parseDate和formatDate的配置自定义日期显示规则和相应的解析规则，需要注意的是如果需要手动输入日期，那么请确保显示规则中只存在数字、/、-三种符号，向年、月、日这种汉语或者字母字符是不可输入的&lt;/p&gt;
                         &lt;/fieldset&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 1"&gt;
                             &lt;legend&gt;配置formatDate格式化规则&lt;/legend&gt;
                             &lt;input ms-widget="datepicker, b, $bOpts" data-datepicker-separator="/"/&gt;
                             &lt;p&gt;说明：配置separator为"/",设置日期显示格式为"yyyy/mm/dd"，鉴于上一个demo中对于手动输入日期规则的限制，同时试试这两个demo的手动输入效果体会一下两者的不同&lt;/p&gt;

@@ -17,8 +17,9 @@ define(["avalon",
             dataSource,
             dataModel,
             templates, titleTemplate, listTemplate,
+            blurHandler,
             scrollHandler,
-            resizeHandler;
+            resizeHandler
 
         //将元素的属性值copy到options中
         "multiple,size".replace(avalon.rword, function(name) {
@@ -48,6 +49,7 @@ define(["avalon",
             dataModel = getDataFromOption(dataSource);
         }
 
+        options.data = dataModel
         avalon(element).css('display', 'none');
 
         //转换option
@@ -67,7 +69,6 @@ define(["avalon",
             vm.menuWidth = "auto";   //下拉列表框宽度
             vm.menuHeight = vm.height;  //下拉列表框高度
             vm.dataSource = dataSource;    //源节点的数据源，通过dataSource传递的值将完全模拟select
-            vm.data = dataModel;           //下拉列表的渲染model
             vm.focusClass =  false
             vm.$init = function() {
                 if (vmodel.data.length === 0) {
@@ -101,6 +102,28 @@ define(["avalon",
                     vmodel.titleWidth = computeTitleWidth();
                     //设置label值
                     setLabelTitle(vmodel.value);
+
+                    //注册blur事件
+                    blurHandler = avalon.bind(document.body, "click", function(e) {
+                        //判断是否点击发生在dropdown节点内部
+                        //如果不在节点内部即发生了blur事件
+                        if(titleNode.contains(e.target)) {
+                            vmodel._toggle()
+                            return
+                        } else if(listNode && listNode.contains(e.target)) {
+                            return
+                        }
+                        if (!vmodel.__cursorInList__ && !vmodel.multiple && vmodel.toggle) {
+                            vmodel.toggle = false;
+                        }
+                    })
+
+                    if(vmodel.position) {
+                        //监听window的滚动及resize事件，重新定位下拉框的位置
+                        scrollHandler = avalon.bind(window, "scroll", _positionListNode)
+                        resizeHandler = avalon.bind(window, "resize", _positionListNode)
+                    }
+
                 }
 
                 //如果原来的select没有子节点，那么为它添加option与optgroup
@@ -169,11 +192,14 @@ define(["avalon",
             }
 
             vm.$remove = function() {
-                if (scrollHandler) {
-                    avalon.unbind(window, "scroll", scrollHandler);
+                if (blurHandler) {
+                    avalon.unbind(window, "click", blurHandler)
                 }
-                if (resizeHandler) {
-                    avalon.unbind(window, "resize", resizeHandler);
+                if(scrollHandler) {
+                    avalon.unbind(window, "scroll", scrollHandler)
+                }
+                if(resizeHandler) {
+                    avalon.unbind(window, "resize", resizeHandler)
                 }
                 vmodel.toggle = false;
                 listNode && vmodel.container.removeChild(listNode);
@@ -230,9 +256,9 @@ define(["avalon",
                         case 38:
                         case 63233: //safari 向上
                             event.preventDefault();
-                            index = index - 1
-                            if (index < 0) {
-                                index = max - 1
+                            index = getEnableOption(vm.data, index)
+                            if(index === null) {
+                                return
                             }
                             vm.value = vm.data[index].value
                             vmodel.activeIndex = index
@@ -240,9 +266,9 @@ define(["avalon",
                         case 40:
                         case 63235: //safari 向下
                             event.preventDefault();
-                            index = index + 1
-                            if (index === max) {
-                                index = 0
+                            index = getEnableOption(vm.data, index, true)
+                            if(index === null) {
+                                return
                             }
                             vm.value = vm.data[index].value
                             vmodel.activeIndex = index
@@ -341,7 +367,7 @@ define(["avalon",
                     css.top = offset.top + outerHeight - $sourceNode.css("borderBottomWidth").replace(styleReg, "$1");
                 }
 
-                if(offsetParent && offsetParent.tagName !== "BODY") {
+                if(offsetParent && (offsetParent.tagName !== "BODY" && offsetParent.tagName !== "HTML")) {
                     //修正由于边框带来的重叠样式
                     css.top = css.top  - $offsetParent.offset().top + listNode.offsetParent.scrollTop;
                     css.left = offset.left - $offsetParent.offset().left + listNode.offsetParent.scrollLeft;
@@ -475,9 +501,21 @@ define(["avalon",
                 })
                 opt.value = values
             }
+            if (!opt.multiple) {
+                if(Array.isArray(opt.value)) {
+                    opt.value = opt.value[0] !== void 0 ? opt.value[0] : ""
+                }
+                //尝试在当前的data中查找value对应的选项，如果没有，将value设置为data中的option第一项的value
+                var option = opt.data.filter(function(item) {
+                    return item.value === opt.value
+                }),
+                    options = opt.data.filter(function(item) {
+                        return !item.group
+                    })
 
-            if (!opt.multiple && Array.isArray(opt.value)) {
-                opt.value = opt.value[0] !== void 0 ? opt.value[0] : ""
+                if(option.length === 0 && options.length > 0) {
+                    opt.value = options[0].value
+                }
             }
 
             //处理data-duplex-changed参数
@@ -489,10 +527,10 @@ define(["avalon",
             opt.duplexName = duplexName
 
             //处理container
-            var docBody = document.body, container = options.container;
+            var docBody = document.body, container = opt.container;
 
             // container必须是dom tree中某个元素节点对象或者元素的id，默认将dialog添加到body元素
-            options.container = (avalon.type(container) === "object" && container.nodeType === 1 && docBody.contains(container) ? container : document.getElementById(container)) || docBody;
+            opt.container = (avalon.type(container) === "object" && container.nodeType === 1 && docBody.contains(container) ? container : document.getElementById(container)) || docBody;
         }
 
         /**
@@ -504,9 +542,9 @@ define(["avalon",
         }
 
         //设置label以及title
-        function setLabelTitle(n) {
+        function setLabelTitle(value) {
             var option = vmodel.data.$model.filter(function(item) {
-                return item.value === n;
+                return item.value === value;
             });
 
             option = option.length > 0 ? option[0] : null
@@ -526,6 +564,13 @@ define(["avalon",
             var title = document.getElementById("title-" + vmodel.$id),
                 $title = avalon(title);
             return vmodel.width - $title.css("paddingLeft").replace(styleReg, "$1") - $title.css("paddingRight").replace(styleReg, "$1");
+        }
+
+        //定位listNode
+        function _positionListNode() {
+            if(!vmodel.multiple && listNode) {
+                vmodel._position();
+            }
         }
 
         return vmodel;
@@ -610,6 +655,10 @@ define(["avalon",
                 })
             }
         }
+
+        if(ret.length === 0) {
+            throw new Error("The select has no Options!");
+        }
         return ret
     }
     function getFragmentFromData(data) {
@@ -666,7 +715,7 @@ define(["avalon",
                     ret.push({
                         label: el.label.trim()||el.text.trim()||el.value.trim(), //IE9-10有BUG，没有进行trim操作
                         title: el.title.trim(),
-                        value: parseData(el.value.trim()),
+                        value: parseData(el.value.trim()||el.text.trim()),
                         enable: ensureBool(parent && parent.enable, true) && !el.disabled,
                         group: false,
                         parent: parent
@@ -676,6 +725,45 @@ define(["avalon",
         }
         return ret
     }
+
+    /**
+     * 在用户使用键盘上下箭头选择选项时，需要跳过被禁用的项，即向上或者向下找到非禁用项
+     * @param data 用来选择的数据项
+     * @param index 当前index
+     * @param direction {Boolean} 方向，true为下，false为上，默认为上
+     * @return ret 使用的项在数组中的下标
+     */
+    function getEnableOption(data, index, direction) {
+        var size = data.size(),
+            left = [],
+            right = [],
+            i,
+            ret
+
+        //将data用index分成两段
+        //当向上选择时，选择从左段的队尾到右段的队头
+        //当向下选择时，选择从右端的对头到左段的队尾
+        for(i = 0; i < index; i ++) {
+            if(data[i].enable && !data[i].group) {
+                left.push(i)
+            }
+        }
+        for(i = index + 1; i < size; i ++) {
+            if(data[i].enable && !data[i].group) {
+                right.push(i)
+            }
+        }
+        if(left.length === 0 && right.length === 0) {
+            ret = null
+        }else if(direction) {
+            ret = right.length > 0? right.shift(): left.shift()
+        } else {
+            ret = left.length > 0? left.pop(): right.pop()
+        }
+
+        return ret
+    }
+
     var hasAttribute = document.documentElement.hasAttribute ? function(el, attr) {
         return el.hasAttribute(attr)
     } : function(el, attr) {//IE67

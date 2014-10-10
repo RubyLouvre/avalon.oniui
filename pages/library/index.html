@@ -90,9 +90,10 @@
 
         function iframeLoaded() { //iframe load
             var iframeBody = iframe.contentWindow.document.body
+            var iframeclicked = false
             iframeBody.style.overflow = "hidden" //重新设置overflow，使其不会出现滚动条
             setTimeout(function() { //设置iframe高度
-                vmodel.frameContentHeight = iframeBody.offsetHeight + 50
+                vmodel.frameContentHeight = iframeBody.offsetHeight < 900 ? 900 : iframeBody.offsetHeight + 50
             }, 100)
             if(iframe.addEventListener){
                 iframeBody.addEventListener('click', function() {

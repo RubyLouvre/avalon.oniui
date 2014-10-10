@@ -42,7 +42,7 @@ $uiname: "ui-slider";
         }
         &.ui-state-active, &.ui-state-focus {
             @if($oinui-theme == smoothness) {
-                background:#22dddd!important;
+                background:#22dddd;
             }
         }
     }

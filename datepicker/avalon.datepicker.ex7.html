@@ -13,18 +13,18 @@
     <div class="wrapper">
         <h1>datepicker demo</h1>
         <div class="demo-show" ms-controller="demo">
-            <fieldset>
+            <fieldset style="position: relative; z-index: 3">
                 <legend>onSelect回调</legend>
                 <input ms-widget="datepicker" data-datepicker-on-select="changeCallback"/>
                 <p>说明：通过data-datepicker-on-select配置日历的onSelect回调，值changeCallback映射到一个回调方法。onSelect回调是在选中日期之后的回调操作。onSelect回调参数分别是：选中的日期，绑定元素生成的datepicker VM的id，通过data-*设置的配置项组成的对象</p>
             </fieldset>
-            <fieldset>
+            <fieldset style="position: relative; z-index: 2">
                 <legend>onClose回调</legend>
                 <input ms-widget="datepicker, a, $aOpts" />
                 <p>说明：配置onClose回调，使得日历关闭之后可以调用它做一些自定义操作，添加回调时我希望都能通过绑定组件时的config配置项来添加，而不是通过data-datapicker-name这种方式映射回调，这样避免过多的查找操作，上例中的onSelect回调是个特例，纯粹是为了兼容以前adapter，而且其名后期也会废弃，转而使用onSelect。</p>
                 <p>onClose回调的参数分别是：最近一次选中date，datepicker生成的VM引用</p>
             </fieldset>
-            <fieldset>
+            <fieldset style="position: relative; z-index: 1">
                 <legend>onChangeMonthYear回调</legend>
                 <input ms-widget="datepicker, b, $bOpts" data-datepicker-change-month-and-year="true" />
                 <p>说明：配置changeMonthAndYear为true使得用户可以通过下拉选项切换月份和年份的显示，配置onChangeMonthYear回调，使得用户在切换了月份或者年份之后可以做一些需要的操作。onChangeMonthYear回调的参数分别是当前选中year，当前选中month，datepicker绑定生成的VM应用</p>
@@ -69,18 +69,18 @@
                 &lt;/head&gt;
                 &lt;body&gt;
                     &lt;div class="demo-show" ms-controller="demo"&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 3"&gt;
                             &lt;legend&gt;onSelect回调&lt;/legend&gt;
                             &lt;input ms-widget="datepicker" data-datepicker-on-select="changeCallback"/&gt;
                             &lt;p&gt;说明：通过data-datepicker-on-select配置日历的onSelect回调，值changeCallback映射到一个回调方法。onSelect回调是在选中日期之后的回调操作。onSelect回调参数分别是：选中的日期，绑定元素生成的datepicker VM的id，通过data-*设置的配置项组成的对象&lt;/p&gt;
                         &lt;/fieldset&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 2"&gt;
                             &lt;legend&gt;onClose回调&lt;/legend&gt;
                             &lt;input ms-widget="datepicker, a, $aOpts" /&gt;
                             &lt;p&gt;说明：配置onClose回调，使得日历关闭之后可以调用它做一些自定义操作，添加回调时我希望都能通过绑定组件时的config配置项来添加，而不是通过data-datapicker-name这种方式映射回调，这样避免过多的查找操作，上例中的onSelect回调是个特例，纯粹是为了兼容以前adapter，而且其名后期也会废弃，转而使用onSelect。&lt;/p&gt;
                             &lt;p&gt;onClose回调的参数分别是：最近一次选中date，datepicker生成的VM引用&lt;/p&gt;
                         &lt;/fieldset&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 1"&gt;
                             &lt;legend&gt;onChangeMonthYear回调&lt;/legend&gt;
                             &lt;input ms-widget="datepicker, b, $bOpts" data-datepicker-change-month-and-year="true" /&gt;
                             &lt;p&gt;说明：配置changeMonthAndYear为true使得用户可以通过下拉选项切换月份和年份的显示，配置onChangeMonthYear回调，使得用户在切换了月份或者年份之后可以做一些需要的操作。onChangeMonthYear回调的参数分别是当前选中year，当前选中month，datepicker绑定生成的VM应用&lt;/p&gt;

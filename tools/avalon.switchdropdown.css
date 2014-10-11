@@ -1,6 +1,0 @@
-@charset "UTF-8";
-/*
-这是每个都组件都应该引用的部分
-*/
-.ui-dropdown .ui-dropdown-menu-inner .ui-dropdown-item {
-  text-indent: 6px; }

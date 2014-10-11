@@ -60,8 +60,8 @@ $uiname : "ui-carousel";
 			width: 10px;
 			height: 10px;
 			margin: 0 5px;
-			background-color: rgba(255,255,255,0.6);
-			*background-color: rgb(255,255,255);
+			background-color: rgb(255,255,255);
+			@include opacity(0.6);
 			border-radius: 50%;
 			cursor: pointer;
 		}

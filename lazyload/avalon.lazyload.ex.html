@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>lazyload组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["lazyload/avalon.lazyload"], function() {
+                avalon.define("test", function(vm) {
+                    vm.lazyload = {
+                        preLoadSrc : "./images/loading5.gif",
+                        delayTime: 10,
+                        loadEffect: "fadeIn"
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <style type="text/css">
+        body{text-align: center;}
+        img{width: 800px; height: 300px;}
+    </style>
+    <body ms-controller="test">
+        <h1>lazyload</h1>
+        <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img1" ms-lazyload>
+        <p>
+            placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
+            placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
+            placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
+            placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
+            placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
+        </p>
+        <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img2" ms-lazyload>
+        <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img3" ms-lazyload>
+        <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img4" ms-lazyload>
+        <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img5" ms-lazyload>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+        </pre>
+    </body>
+</html>

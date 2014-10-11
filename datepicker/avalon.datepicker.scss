@@ -19,6 +19,7 @@ $uiname-dropdown: "ui-dropdown";
     display: inline-block;
     *display: inline;
     zoom: 1;
+    z-index: 1;
     input {
         border: 0 none;
         cursor: pointer;
@@ -268,6 +269,7 @@ $uiname-dropdown: "ui-dropdown";
     }
     .ui-dropdown-source {
         margin-top: -2px;
+        *margin-top: 0;
         .ui-dropdown-input {
             padding: 0 21px 0 6px;
             line-height: 20px;

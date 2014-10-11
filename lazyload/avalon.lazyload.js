@@ -39,25 +39,16 @@ define(["avalon"], function() {
         }
         var element = data.element
         element.removeAttribute("ms-lazyload")
-        options = avalon.mix({}, lazyload.defaults, vmOptions || {}, avalon.getWidgetData(element, "lazyload"));
+        options = avalon.mix({}, lazyload.defaults, vmOptions || {}, avalon.getWidgetData(element, "lazyload"))
 
-        //创建preload的img对象
-        var img = new Image();
-        img.src = options.preLoadSrc;
+        //加载占位图片
+        element.src = "./images/placeholder.png" //src是1像素透明图
+        element.style.background = "url(" + options.preLoadSrc + ") no-repeat center center" //背景为load旋转图
+        element.originalCssBackground = avalon.css(element, "background") //记录原背景CSS
 
-        element.src = "./images/placeholder.png"
-        element.style.background = "url(" + options.preLoadSrc + ") no-repeat center center"
-        element.originalCssBackground = avalon.css(element, "background")
+        _resizeImg(element, options.preLoadSrc, false, false)
+
         imgArr.push(element)
-
-        //未设置宽高情况下，宽高为PreloadSrc宽高
-        // img.onload = function() {
-        //     if (element.width === 0 || element.height === 0) {
-        //         element.width = img.width + "px"
-        //         element.height = img.height + "px"
-        //     }
-        //     // console.log(element, element.width, element.height, img.width, img.height)
-        // }
 
         // var target = avalon(element)
         // target.bind("click", function(e) {})
@@ -74,12 +65,36 @@ define(["avalon"], function() {
     }
 
     //初始加载和窗口滚动时加载
-    window.onload = function(){
-        _delayload(options)
+    // avalon.bind(window, "load", function() {
+    //     console.log(1)
+    //     _delayload(options)
+    // })
+    window.onload = new function() {
+        setTimeout(function() {
+            _delayload(options)
+        }, 0)
     }
     window.onscroll = function() {
         _delayload(options)
     }
+
+    var _resizeImg = function(ele, src, isloadingOriginal, needResize) {
+        var placeholderImg = new Image()
+        placeholderImg.onload = function() {
+            //未设置宽高情况下，设置ele宽高为src宽高
+            if (ele.width <= 1 || ele.height <= 1 || needResize) {
+                ele.width = placeholderImg.width
+                ele.height = placeholderImg.height
+                ele.setAttribute("ms-lazyload-preLoadSetSize", true)
+            }
+            if(isloadingOriginal){
+                ele.src = src //大小确定后加载原图
+            }
+            // console.log(ele.width, ele.height, placeholderImg.width, placeholderImg.height)
+        }
+        placeholderImg.src = src
+    }
+
     var _delayload = function(options) {
         for (var i = 0, len = imgArr.length; i < len; i++) {
             var imgItem = imgArr[i],
@@ -87,17 +102,28 @@ define(["avalon"], function() {
                 eleHeight = imgItem.offsetHeight,
                 winTop = document.documentElement.scrollTop || document.body.scrollTop,
                 winHeight = document.documentElement.clientHeight || document.body.clientHeight
-            // console.log(eleTop, eleHeight, winTop, winHeight)
-            //加载正确的图片(originalSrc),条件是屏幕范围内并且要防止重复设置
+                // console.log(eleTop, eleHeight, winTop, winHeight)
+                //加载正确的图片(originalSrc),条件是屏幕范围内并且要防止重复设置
             if (eleTop < winTop + winHeight && eleTop + eleHeight > winTop && !imgItem.getAttribute("ms-lazyload-loaded")) {
                 originalSrc = imgItem.getAttribute("ms-lazyload-original")
                 setTimeout((function(i, originalSrc) { //延迟加载
                     return function() {
                         imgItem = imgArr[i]
                         if (options.loadEffect === "fadeIn") {
-                            _fadeInEffect(imgItem)
+                            avalon.css(imgItem, "opacity", 0)
+                            // _fadeInEffect(imgItem)
                         }
-                        imgItem.src = originalSrc
+                        //重新设置图片大小为originalSrc的大小
+                        if (imgItem.getAttribute("ms-lazyload-preLoadSetSize")) {
+                            _resizeImg(imgItem, originalSrc, true, true)
+                            imgItem.removeAttribute("ms-lazyload-preLoadSetSize")
+                        }else{
+                            _resizeImg(imgItem, originalSrc, true, false)
+                            if (options.loadEffect === "fadeIn") {
+                                _fadeInEffect(imgItem)
+                            }
+                        }
+
                     }
                 })(i, originalSrc), options.delayTime)
                 imgItem.setAttribute("ms-lazyload-loaded", true)
@@ -106,14 +132,13 @@ define(["avalon"], function() {
             }
         }
     }
+
     var _fadeInEffect = function(imgItem) {
         var currentOpacity = 0
         var _fadeInGo = function() {
             currentOpacity += 0.05
-            var Fragment = document.createDocumentFragment();
-            if (Fragment.createElement) { //ie8及以下
-                // avalon.css(imgItem, "opacity", currentOpacity)
-                imgItem.style.filter = "alpha(opacity=" + currentOpacity * 100 + ")"
+            if (window.attachEvent) { //ie8及以下
+                avalon.css(imgItem, "opacity", currentOpacity)
             } else {
                 imgItem.style.opacity = currentOpacity
             }

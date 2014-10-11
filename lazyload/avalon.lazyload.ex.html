@@ -11,7 +11,7 @@
                 avalon.define("test", function(vm) {
                     vm.lazyload = {
                         preLoadSrc : "./images/loading5.gif",
-                        delayTime: 1000,
+                        delayTime: 10,
                         loadEffect: "fadeIn"
                     }
                 })
@@ -26,6 +26,13 @@
     <body ms-controller="test">
         <h1>lazyload</h1>
         <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img1" ms-lazyload>
+        <p>
+            placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
+            placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
+            placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
+            placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
+            placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
+        </p>
         <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img2" ms-lazyload>
         <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img3" ms-lazyload>
         <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img4" ms-lazyload>

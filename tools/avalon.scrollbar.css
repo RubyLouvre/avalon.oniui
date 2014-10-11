@@ -1,0 +1,182 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+div.ui-scrollbar {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: 0; }
+
+.ui-scrollbar {
+  width: 10px;
+  height: 100%;
+  left: auto;
+  right: 0;
+  top: 0;
+  bottom: auto;
+  background: #f8f8f8;
+  z-index: 100;
+  transition: opacity .5s;
+  -webkit-transition: opacity .5s;
+  -moz-transition: opacity .5s;
+  -o-transition: opacity .5s;
+  -ms-transition: opacity .5s; }
+  .ui-scrollbar-arrow {
+    position: absolute;
+    background: #eeeeee;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px; }
+    .ui-scrollbar-arrow b {
+      width: 0;
+      height: 0;
+      line-height: 0;
+      font-size: 0;
+      border-top: 0 none;
+      border-right: 4px dashed transparent;
+      border-bottom: 4px solid #bcbcbc;
+      border-left: 4px dashed transparent;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -2px;
+      margin-left: -4px;
+      font-size: 0;
+      line-height: 0; }
+    div .ui-scrollbar-arrow-down {
+      top: auto;
+      bottom: 0; }
+      div .ui-scrollbar-arrow-down b {
+        width: 0;
+        height: 0;
+        line-height: 0;
+        font-size: 0;
+        border-top: 4px solid #bcbcbc;
+        border-right: 4px dashed transparent;
+        border-bottom: 0;
+        border-left: 4px dashed transparent; }
+  .ui-scrollbar .ui-state-hover {
+    background: #aaaaaa; }
+  .ui-scrollbar .ui-state-active {
+    background: #999999; }
+  .ui-scrollbar .ui-state-disabled {
+    background: #e9e9e9; }
+  .ui-scrollbar-left .ui-state-active b.ui-scrollbar-trangle-up, .ui-scrollbar-right .ui-state-active b.ui-scrollbar-trangle-up {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 0 none;
+    border-right: 4px dashed transparent;
+    border-bottom: 4px solid white;
+    border-left: 4px dashed transparent; }
+  .ui-scrollbar-left .ui-state-active b.ui-scrollbar-trangle-down, .ui-scrollbar-right .ui-state-active b.ui-scrollbar-trangle-down {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 4px solid white;
+    border-right: 4px dashed transparent;
+    border-bottom: 0;
+    border-left: 4px dashed transparent; }
+  .ui-scrollbar-top .ui-state-active b.ui-scrollbar-trangle-up, .ui-scrollbar-bottom .ui-state-active b.ui-scrollbar-trangle-up {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 4px dashed transparent;
+    border-right: 4px solid white;
+    border-bottom: 4px dashed transparent;
+    border-left: 0; }
+  .ui-scrollbar-top .ui-state-active b.ui-scrollbar-trangle-down, .ui-scrollbar-bottom .ui-state-active b.ui-scrollbar-trangle-down {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 4px dashed transparent;
+    border-right: 0;
+    border-bottom: 4px dashed transparent;
+    border-left: 4px solid white; }
+  .ui-scrollbar-scroller {
+    overflow: hidden; }
+  .ui-scrollbar-left {
+    left: 0;
+    right: auto; }
+  .ui-scrollbar-top {
+    width: 100%;
+    height: 10px;
+    left: 0;
+    top: 0;
+    bottom: auto; }
+  .ui-scrollbar-bottom {
+    width: 100%;
+    height: 10px;
+    left: 0;
+    top: auto;
+    bottom: 0; }
+  .ui-scrollbar-draggerpar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; }
+    .ui-scrollbar-draggerpar .ui-scrollbar-dragger {
+      position: absolute;
+      width: 100%;
+      left: 0;
+      background: #cccccc; }
+    .ui-scrollbar-draggerpar .ui-state-hover {
+      background: #999999; }
+    .ui-scrollbar-draggerpar .ui-state-active {
+      background: #888888; }
+    .ui-scrollbar-draggerpar .ui-state-disabled {
+      background: #e9e9e9; }
+  .ui-scrollbar-top .ui-scrollbar-ragger, .ui-scrollbar-bottom .ui-scrollbar-ragger {
+    height: 100%;
+    width: auto;
+    top: 0; }
+  .ui-scrollbar-top .ui-scrollbar-arrow b, .ui-scrollbar-bottom .ui-scrollbar-arrow b {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 4px dashed transparent;
+    border-right: 4px solid #bcbcbc;
+    border-bottom: 4px dashed transparent;
+    border-left: 0;
+    margin-top: -4px;
+    margin-left: -2px; }
+  .ui-scrollbar-top .ui-scrollbar-arrow-down, .ui-scrollbar-bottom .ui-scrollbar-arrow-down {
+    right: 0;
+    left: auto; }
+    .ui-scrollbar-top .ui-scrollbar-arrow-down b, .ui-scrollbar-bottom .ui-scrollbar-arrow-down b {
+      width: 0;
+      height: 0;
+      line-height: 0;
+      font-size: 0;
+      border-top: 4px dashed transparent;
+      border-right: 0;
+      border-bottom: 4px dashed transparent;
+      border-left: 4px solid #bcbcbc; }
+
+.ui-scrollbar-large {
+  width: 14px; }
+  .ui-scrollbar-large .ui-scrollbar-arrow {
+    width: 14px;
+    height: 14px; }
+  .ui-scrollbar-large .ui-scrollbar-top, .ui-scrollbar-large .ui-scrollbar-bottom {
+    height: 14px; }
+
+.ui-scrollbar-bottom-large {
+  height: 14px; }
+
+.ui-scrollbar-small {
+  width: 8px; }
+  .ui-scrollbar-small .ui-scrollbar-arrow {
+    width: 8px;
+    height: 8px; }
+
+.ui-scrollbar-bottom-small {
+  height: 8px; }

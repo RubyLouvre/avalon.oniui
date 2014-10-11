@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style type="text/css">
+        .msg {
+            border-bottom: 1px gray dashed;
+        }
+
+        .warn {
+            color: red;
+        }
+    </style>
+    <script src="jquery.js"></script>
+</head>
+<body>
+<iframe src="avalon.smartAndSimpleGridComapre.html" id="display" frameborder="0" width="100%" height="100%"></iframe>
+<div style="min-width: 310px; height: 400px; margin: 0 auto" id="container"></div>
+<div style="min-width: 310px; margin: 0 auto" id="msgContainer"></div>
+<div>
+    <input type="text" size="100" id="url"/>
+    <br>
+    <button type="button" id="btn">go</button>
+</div>
+</body>
+
+<script type="text/javascript" src="highcharts.js"></script>
+<script type="text/javascript" src="highcharts.exporting.js"></script>
+<script type="text/javascript">
+
+    (function() {
+        $('#display').css({
+            height: $(document).height()
+        });
+    })();
+
+    var container = $('#container'),
+            msgContainer = $('#msgContainer');
+
+    function createCharts( series ) {
+        var wraper = $('<div></div>');
+
+        container.empty();
+
+        container.append(wraper);
+
+        $(wraper).highcharts({
+            chart: {
+                zoomType: 'x',
+                spacingRight: 20
+            },
+            title: {
+                text: '页面渲染时间线（x轴：时间 ｜ y轴：可见节点数量）'
+            },
+            xAxis: {
+                title: {
+                    text: 'time'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'nodes'
+                }
+            },
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                area: {
+                    fillColor: {
+                        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    },
+                    lineWidth: 1,
+                    marker: {
+                        enabled: false
+                    },
+                    shadow: false,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
+                }
+            },
+
+            series: [{
+                data: series
+            }]
+        });
+
+    }
+
+    function createMsg(msgs) {
+
+        msgContainer.empty();
+
+        var wraper = $('<div></div>'),
+                contents = [];
+
+        msgContainer.append(wraper);
+
+        $.each(msgs, function(i, msg) {
+            contents.push($('<div class="msg"></div>').append('<p>' + i + ' item:' + msg.elem + '</p>').append('<p>该操作花费:<span class="warn">' + msg.cost + '</span>ms</p>'));
+            console.log(i, ' : ', msg.elem);
+        });
+
+        wraper.append(contents);
+    }
+
+    $(function() {
+        $('#btn').click(function() {
+            var url = $.trim($('#url').val());
+            if(url.length > 0) {
+                $('#display').attr('src', url);
+            }
+        });
+    });
+
+    window.connector = function(data, scanData) {
+
+        var series = $.map(data, function(d) {
+            return [[d.time / 1000, d.nodes]];
+        });
+        console.log("data")
+        console.log(data)
+        console.log("scanData")
+        console.log(scanData)
+        console.log("series")
+        console.log(series)
+
+        createCharts(series);
+        createMsg(scanData);
+    };
+
+</script>
+</html>

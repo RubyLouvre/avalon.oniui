@@ -127,9 +127,7 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
                     } 
                 }
                 avalon(element).css({display: "none", height:0, width: 0, padding: 0})
-                if (~~vmodel.width) {
-                    slider.style.width = vmodel.width + "px";
-                }
+                avalon(slider).css("width", vmodel.width)
                 avalon.scan(slider, [vmodel].concat(vmodels))
                 if (typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
@@ -151,7 +149,7 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
             vmodel.value = val;
             vmodel.percent = value2Percent(val)
             if (!vmodel._dragEnd) {
-                options.onDragEnd.call(null, event, data);
+                options.onDragEnd.call(null, data);
             }
         })
         function dragCaculate(event, data, keyVal) {

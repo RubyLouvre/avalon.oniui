@@ -105,7 +105,7 @@ avalon.oniui
         <td>colorpicker</td><td>UI组件</td><td>完成</td><td>王，颜色选择器</td>
     </tr>
     <tr>
-        <td>lazyload</td><td>功能组件</td><td></td><td>懒加载</td>
+        <td>lazyload</td><td>功能组件</td><td>开发中</td><td>懒加载</td>
     </tr>
     <tr>
         <td>editor</td><td>UI组件</td><td></td><td>富文本编辑器</td>
@@ -123,16 +123,13 @@ avalon.oniui
         <td> button</td><td>UI组件</td><td></td><td>按钮， http://www.bootcss.com/p/buttons/</td>
     </tr>
     <tr>
-        <td> marquee</td><td>UI组件</td><td></td><td>多个照片</td>
+        <td> carousel</td><td>UI组件</td><td>完成</td><td>单个照片http://owlgraphic.com/owlcarousel/demos/custom.html</td>
     </tr>
     <tr>
-        <td> carousel</td><td>UI组件</td><td></td><td>单个照片http://owlgraphic.com/owlcarousel/demos/custom.html</td>
+        <td> rating</td><td>UI组件</td><td>完成</td><td>林 星级评分</td>
     </tr>
     <tr>
-        <td> rating</td><td>UI组件</td><td></td><td> 星级评分</td>
-    </tr>
-    <tr>
-        <td> uploader</td><td>UI组件</td><td></td><td> 上传</td>
+        <td> uploader</td><td>UI组件</td><td>完成</td><td> 上传</td>
     </tr>
     <tr>
         <td>preview</td><td>UI组件</td><td>完成</td><td>钟， 图片预览</td>
@@ -144,7 +141,7 @@ avalon.oniui
         <td> imagecropper</td><td>UI组件</td><td></td><td> 图片剪切</td>
     </tr>
     <tr>
-        <td> validator</td><td>功能组件</td><td></td><td> 验证框架</td>
+        <td> validator</td><td>功能组件</td><td>开发中</td><td> 验证框架</td>
     </tr>
 </table>
 如何使用OniUI

@@ -3,6 +3,8 @@
 $uiname: "ui-coupledatepicker";
 .ui-coupledatepicker {
     font-size: 0;
+    position: relative;
+    z-index: 1;
     .ui-coupledatepicker-item {
         @include inline-block();
     }

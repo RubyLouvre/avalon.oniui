@@ -107,6 +107,7 @@ a, a:active, a:hover {
 .content {
     position: relative;
     width: 990px;
+    min-height: 400px;
     margin: 0 auto;
     text-align: left;
     background-color: #fff;

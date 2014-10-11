@@ -62,7 +62,7 @@ MS_OPTION_EJS
     <&- for(var i=0, tr; i<trl; i++) { &>
         <&- tr = @data[i]; 
             var selectedClass = "";
-            if(i%2==0) {
+            if (i%2==0) {
                 selectedClass = "ui-smartgrid-odd";
 
             } else {
@@ -70,8 +70,11 @@ MS_OPTION_EJS
             } 
             if (tr.selected && @checkRow) {
                 selectedClass += " ui-smartgrid-selected"
+            }
+            if (tr.disable) {
+                selectedClass += " ui-state-disabled"
             }&>
-        <tr class="<&=selectedClass&>">
+        <tr class="<&=selectedClass&>" ms-hover="ui-state-hover">
             <&- for(var j=0, tdl=@columns.length, td; j<tdl; j++) { &>
                 <&- td=@columns[j].$model; 
                     var display=td.toggle ? "display:table-cell;" : "display:none;", 

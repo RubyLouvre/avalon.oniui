@@ -11,19 +11,22 @@
         <h1>通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数</h1>
         <p>配置selectable设置表格是否需要添加选中行功能，type可以设置为"Checkbox"或者"Radio"</p>
         
-        <div ms-widget="smartgrid, sg1" ></div>
+        <div ms-widget="smartgrid, sg1" style="width:760px; margin: 0 auto"></div>
         <script>
             require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
                 function getDates(number) {
                     var data = []
                     for (var i = 0; i < number; i++) {
                         data.push({
-                            name: "shirly"+i,
-                            age: parseInt(10 + Math.random() * 20),
-                            selected: i%3 ? false: true,
-                            salary: parseInt(Math.random() * 100),
-                            operate : i % 5 ? 0 : 1,
-                            busy : !i%3 && !i%5 ? 0 : 1
+                            description: "北上广经济型计划",
+                            operate: i % 5 ? 0 : 1,
+                            buget: 5800,
+                            display: 13534646,
+                            click : 15932,
+                            clickRate : "50.21%",
+                            consume: 1135800,
+                            averageClickRate: 1.82,
+                            disable: i == 3 ? true : false
                         })
                     }
                     return data
@@ -53,11 +56,6 @@
                             $X: function(vmId, field, index, cellValue) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
                                 return "$"+cellValue
                             },
-                            // 包装姓名列地址，使其全部大写并且字体加粗
-                            upperCaseName: function(vmId, field, index, cellValue) {
-                                cellValue = cellValue.toUpperCase()
-                                return "<b>"+cellValue +"</b>"
-                            },
                             // operate列包装成switchdropdown组件
                             switchdropdown: function(vmId, field, index, cellValue) {
                                 var openOption = cellValue == 0 ? '<option value="0" selected>启用</option>' : '<option value="0">启用</option>',
@@ -73,41 +71,60 @@
                         },
                         columns: [
                             {
-                                key : "name",
-                                name : "姓名",
-                                sortable : true,
+                                key : "description",
+                                name : "竞价推广计划",
+                                sortable : false,
                                 isLock : true,
                                 align: "left",
-                                defaultValue: "shirly",
+                                defaultValue: "北上广经济型计划",
                                 customClass: "ddd",
-                                toggle: false,
-                                width: "40%",
-                                format: "upperCaseName" // 定义渲染数据的方法名
-                            }, {
-                                key: "age",
-                                name: "年龄",
-                                sortable: true,
-                                width: 100
-                            }, {
-                                key : "salary",
-                                name : "薪水",
-                                type : "Number",
-                                sortable : true,
-                                format : "$X",
-                                align: "right",
-                                width: 100
+                                width: 150
                             }, {
                                 key: "operate",
                                 name: "操作",
                                 title: "操作",
-                                width: 200,
+                                width: 110,
                                 format: "switchdropdown"
                             }, {
-                                key : "busy",
-                                name : "忙吗",
-                                title : "忙吗",
-                                width : 200,
-                                format: "dropdown"
+                                key : "buget",
+                                name : "预算",
+                                sortable : true,
+                                align: "right",
+                                defaultValue: "￥5800",
+                                width: 75,
+                                format: "$X" // 定义渲染数据的方法名
+                            }, {
+                                key : "display",
+                                name : "展现",
+                                sortable : true,
+                                align: "right",
+                                width: 98
+                            }, {
+                                key : "click",
+                                name : "点击",
+                                sortable : true,
+                                align: "right",
+                                width: 90
+                            }, {
+                                key : "clickRate",
+                                name : "点击率",
+                                sortable : true,
+                                align: "right",
+                                width: 90
+                            }, {
+                                key : "consume",
+                                name : "消费",
+                                sortable : true,
+                                align: "right",
+                                width: 85,
+                                format: "$X" // 定义渲染数据的方法名
+                            }, {
+                                key : "averageClickRate",
+                                name : "平均点击价格",
+                                sortable : true,
+                                align: "right",
+                                width: 115,
+                                format: "$X" // 定义渲染数据的方法名
                             }
                         ],
                         data: getDates(8)
@@ -198,7 +215,7 @@
                                             defaultValue: "shirly",
                                             customClass: "ddd",
                                             toggle: false,
-                                            width: "40%",
+                                            width: 400,
                                             format: "upperCaseName" // 定义渲染数据的方法名
                                         }, {
                                             key: "age",

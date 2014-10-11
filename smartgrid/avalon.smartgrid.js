@@ -339,7 +339,17 @@ define(["avalon",
             vm._setColumnWidth = function() {
                 var cells = vmodel._container.getElementsByTagName("tr")[0].cells,
                     columns = vmodel.columns,
-                    containerWidth = avalon(vmodel.container).width() - 2
+                    _columns = columns.$model,
+                    containerWidth = avalon(vmodel.container).width() - 2,
+                    minColumnWidth = getMinColumnWidth(_columns),
+                    firstStringColumn = getFirstStringColumn(columns, vmodel)
+
+                if (minColumnWidth < containerWidth) {
+                    firstStringColumn.width = "auto"
+                } else {
+                    avalon(vmodel.container).css("width", minColumnWidth)
+                    firstStringColumn.width = firstStringColumn.configWidth
+                }
 
                 for (var i = 0, len = cells.length; i < len; i++) {
                     var $cell = avalon(cells[i]),
@@ -357,7 +367,8 @@ define(["avalon",
                     _columns = vmodel.columns,
                     columns = _columns.$model,
                     dataLen = datas.length,
-                    checkRow = vmodel.selectable.type === "Checkbox"
+                    selectableType = vmodel.selectable && vmodel.selectable.type || ""
+                    checkRow = selectableType === "Checkbox"
 
                 if (!EJS[id]) {
                     fn = EJS.compile(options.template, vmodel.htmlHelper)
@@ -384,11 +395,12 @@ define(["avalon",
             }
             vm.render = function(init) {
                 var container = vmodel._container,
-                    containerWrapper = vmodel.container
+                    containerWrapper = vmodel.container,
+                    selectable = vmodel.selectable
 
                 vmodel._pagerShow = !vmodel.data.length ? false : true
                 avalon.innerHTML(container, vmodel._getTemplate())
-                if (vmodel.selectable.type === "Checkbox") {
+                if (selectable && selectable.type === "Checkbox") {
                     var allSelected = isSelectAll(vmodel.data)
                     vmodel._allSelected = allSelected
                     getSelectedData(vmodel)
@@ -530,9 +542,10 @@ define(["avalon",
     }
     function bindEvents(options) {
         if (!options.selectable) return
-        var type = options.selectable.type 
+        var type = options.selectable.type ,
+            container = options._container
         if (type === "Checkbox") {
-            avalon.bind(options._container, "click", function(event) {
+            avalon.bind(container, "click", function(event) {
                 var target = event.target,
                     $target = avalon(target),
                     $tr = avalon(target.parentNode.parentNode),
@@ -571,7 +584,7 @@ define(["avalon",
                     // }
                 }
             })
-        }    
+        }  
     }
     function getSelectedData(vmodel) {
         var datas = vmodel.data
@@ -583,6 +596,32 @@ define(["avalon",
                 vmodel._selectedData.push(data)
             }
         }
+    }
+    function getFirstStringColumn(columns, vmodel){
+        for (var i = 0,len = columns.length; i < len; i++) {
+            var column = columns[i],
+                type = column.type
+            type = type === void 0 ? "String" : type
+            if (column.toggle && type === "String"){
+                return column
+            }
+        }
+        if (vmodel.selectable.type) {
+            return columns[1];
+        } else {
+            return columns[0];
+        }
+    }
+    function getMinColumnWidth(columns) {
+        var showColumnWidth = 0
+
+        for (var i = 0, len = columns.length; i < len; i++) {
+            var column = columns[i]
+            if (column.toggle) {
+                showColumnWidth += parseInt(column.configWidth) || 0
+            }
+        }
+        return showColumnWidth
     }
     function isSelectAll(datas) {
         var allSelected = true,
@@ -618,9 +657,11 @@ define(["avalon",
             if (column.toggle === void 0 || column.isLock) {
                 column.toggle = true
             }
+            column.configWidth = columnWidth
             if (!columnWidth) {
                 if (_columnWidth.indexOf("%")) {
                     columnWidth = parentContainerWidth * parseInt(_columnWidth) / 100
+                    column.configWidth = columnWidth
                 } else {
                     columnWidth = "auto"
                 }
@@ -654,7 +695,7 @@ define(["avalon",
             if (type === "Checkbox" || type === "Radio") {
                 selectFormat = function(vmId, field, index, selected, disable, allSelected) {
                     if (allSelected && type === "Radio") return 
-                    return "<input type='" + type.toLowerCase() +"'" + (disable ? "disabled" : "") + (selected ? "checked='checked'" : "") + "name='selected' "+ (allSelected ? "ms-click='_selectAll' ms-duplex-radio='_allSelected'" : "data-index='" + index +"'") +"data-role='selected'/>"
+                    return "<input type='" + type.toLowerCase() +"'" + (disable ? "disabled " : "") + (selected ? "checked='checked'" : "") + "name='selected' "+ (allSelected ? "ms-click='_selectAll' ms-duplex-radio='_allSelected'" : "data-index='" + index +"'") +"data-role='selected'/>"
                 }
                 allSelected = isSelectAll(options.data)
                 options._allSelected = allSelected
@@ -663,7 +704,8 @@ define(["avalon",
             selectColumn = {
                 key : "selected",
                 name: selectFormat(options.$id, "selected", -1, allSelected, null, true),
-                width : 20,
+                width : 25,
+                configWidth: 25,
                 sortable : false,
                 type: options.selectable.type,
                 format: selectFormat,
@@ -671,8 +713,8 @@ define(["avalon",
                 align: "center",
                 customClass: ""
             }
-            allColumnWidth += 20
-            selectColumn.width = selectColumn._fixWidth = 20
+            allColumnWidth += 25
+            selectColumn.width = selectColumn._fixWidth = 25
             columns.unshift(selectColumn)
         }
 

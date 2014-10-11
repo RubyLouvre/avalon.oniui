@@ -13,7 +13,7 @@
     <div class="wrapper">
         <h1>coupledatepicker demo</h1>
         <div class="demo-show" ms-controller="demo">
-            <fieldset>
+            <fieldset style="position: relative; z-index: 2">
                 <legend>双日历框，配置日历说明文字</legend>
                 <div ms-widget="coupledatepicker" data-coupledatepicker-from-label="起始日期" data-coupledatepicker-to-label="结束日期">
                     <div class="ui-coupledatepicker-item"></div>
@@ -22,7 +22,7 @@
                 </div>
                 <p>通过fromCalendarLabel来配置起始日历的说明label，通过toCalendarLabel来配置结束日历的说明label。</p>
             </fieldset>
-            <fieldset>
+            <fieldset style="position: relative; z-index: 1">
                 <legend>双日历框，startDay配置每周从周几开始</legend>
                 <div ms-widget="coupledatepicker" data-coupledatepicker-start-day="0"></div>
                 <p>日历默认每周的第一天从周一开始，可以配置为从任一天开始，但是周日用0表示，周一到周六分别用1-6表示</p>
@@ -47,7 +47,7 @@
                 &lt;/head&gt;
                 &lt;body&gt;
                     &lt;div class="demo-show" ms-controller="demo"&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 2"&gt;
                             &lt;legend&gt;双日历框，配置日历说明文字&lt;/legend&gt;
                             &lt;div ms-widget="coupledatepicker" data-coupledatepicker-from-label="起始日期" data-coupledatepicker-to-label="结束日期"&gt;
                                 &lt;div class="ui-coupledatepicker-item"&gt;&lt;/div&gt;
@@ -56,7 +56,7 @@
                             &lt;/div&gt;
                             &lt;p&gt;通过fromCalendarLabel来配置起始日历的说明label，通过toCalendarLabel来配置结束日历的说明label。&lt;/p&gt;
                         &lt;/fieldset&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 1"&gt;
                             &lt;legend&gt;双日历框，startDay配置每周从周几开始&lt;/legend&gt;
                             &lt;div ms-widget="coupledatepicker" data-coupledatepicker-start-day="0"&gt;&lt;/div&gt;
                             &lt;p&gt;日历默认每周的第一天从周一开始，可以配置为从任一天开始，但是周日用0表示，周一到周六分别用1-6表示&lt;/p&gt;

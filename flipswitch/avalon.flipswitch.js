@@ -110,9 +110,6 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
             vm.$init = function() {
                 if(inited) return
                 inited = true
-                if(!svgSupport) {
-                    document.namespaces.add("v", "urn:schemas-microsoft-com:vml")
-                }
                 var divCon = avalon.parseHTML(formateTpl(vmodel.template))
                 newDiv = divCon.childNodes[0]
                 insertAfer(element, newDiv)

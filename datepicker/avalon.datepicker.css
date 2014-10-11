@@ -4,7 +4,7 @@
 */
 .ui-icon.ui-icon-calendar-o { padding: 0 6px; vertical-align: top; text-indent: 0; display: inline; }
 
-.ui-datepicker-input-wrapper { background: #ffffff; border: 1px solid #cccccc; cursor: pointer; color: #333; font-size: 12px; position: relative; display: inline-block; *display: inline; zoom: 1; }
+.ui-datepicker-input-wrapper { background: #ffffff; border: 1px solid #cccccc; cursor: pointer; color: #333; font-size: 12px; position: relative; display: inline-block; *display: inline; zoom: 1; z-index: 1; }
 .ui-datepicker-input-wrapper input { border: 0 none; cursor: pointer; outline: none; padding: 3px 90px 3px 6px; width: 90px; height: 18px; margin: 0; font-size: 12px; }
 .ui-datepicker-input-wrapper .ui-datepicker-tip { position: absolute; top: 3px; right: 0px; line-height: 18px; height: 18px; color: #b5b5b5; }
 .ui-datepicker-input-wrapper.ui-state-active { border-color: #3775c0; border-bottom: 0; }
@@ -48,7 +48,7 @@
 .ui-datepicker .ui-datepicker-day-none { cursor: auto; }
 .ui-datepicker .ui-datepicker-calendar-days .ui-state-disabled { color: #cccccc; cursor: default; background: transparent; }
 .ui-datepicker .ui-datepicker-calendar-days .ui-datepicker-selected { background: #3775c0; color: #fff; }
-.ui-datepicker .ui-dropdown-source { margin-top: -2px; }
+.ui-datepicker .ui-dropdown-source { margin-top: -2px; *margin-top: 0; }
 .ui-datepicker .ui-dropdown-source .ui-dropdown-input { padding: 0 21px 0 6px; line-height: 20px; height: 20px; }
 .ui-datepicker .ui-dropdown-source .ui-dropdown-icon { top: -20px; line-height: 20px; }
 .ui-datepicker.ui-datepicker-multiple .ui-datepicker-content { border-right: 0; }

@@ -22,9 +22,6 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
         return arr
     }
     var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect
-    if(!svgSupport &&  document.namespaces &&  !document.namespaces["v"]) {
-        document.namespaces.add("v", "urn:schemas-microsoft-com:vml")
-    }
 
     var widget = avalon.ui.progressbar = function(element, data, vmodels) {
         var options = data.progressbarOptions

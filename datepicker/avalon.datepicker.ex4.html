@@ -13,22 +13,22 @@
     <div class="wrapper">
         <h1>datepicker demo</h1>
         <div class="demo-show" ms-controller="demo">
-            <fieldset>
+            <fieldset style="position: relative; z-index: 4">
                 <legend>设置日历可选的最小日期</legend>
                 <input ms-widget="datepicker" data-datepicker-min-date="2014-06-02"/>
                 <p>说明：设置minDate配置日历可选的最小日期，如果显示的当前月份包含了最小日期，则prev按钮将不可用</p>
             </fieldset>
-            <fieldset>
+            <fieldset style="position: relative; z-index: 3">
                 <legend>设置日历可选的最大日期</legend>
                 <input ms-widget="datepicker" data-datepicker-max-date="2014-06-28" />
                 <p>说明：设置maxDate配置日历可选的最大日期，如果当前月份包含了最大日期，则next按钮不可用</p>
             </fieldset>
-            <fieldset>
+            <fieldset style="position: relative; z-index: 2">
                 <legend>同时设置minDate和maxDate</legend>
                 <input ms-widget="datepicker" data-datepicker-min-date="2014-06-7" data-datepicker-max-date="2014-06-28" value="2014-06-23"/>
                 <p>说明：同时设置minDate和maxDate，并且设置初始化输入域</p>
             </fieldset>
-            <fieldset>
+            <fieldset style="position: relative; z-index: 1">
                 <legend>初始日期超出范围</legend>
                 <input ms-widget="datepicker" data-datepicker-min-date="2014-06-08" value="2014-06-05"/>
                 <p>说明：当输入域设置了初始值时，如初始值在minDate和maxDate范围内，则高亮输入域的日期，超出范围则自动修正，如果设了minDate则修正为minDate，没设minDate但设了maxDate则自动修正为maxDate</p>
@@ -55,22 +55,22 @@
                 &lt;/head&gt;
                 &lt;body&gt;
                     &lt;div class="demo-show" ms-controller="demo"&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 4"&gt;
                             &lt;legend&gt;设置日历可选的最小日期&lt;/legend&gt;
                             &lt;input ms-widget="datepicker" data-datepicker-min-date="2014-06-02"/&gt;
                             &lt;p&gt;说明：设置minDate配置日历可选的最小日期，如果显示的当前月份包含了最小日期，则prev按钮将不可用&lt;/p&gt;
                         &lt;/fieldset&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 3"&gt;
                             &lt;legend&gt;设置日历可选的最大日期&lt;/legend&gt;
                             &lt;input ms-widget="datepicker" data-datepicker-max-date="2014-06-28" /&gt;
                             &lt;p&gt;说明：设置maxDate配置日历可选的最大日期，如果当前月份包含了最大日期，则next按钮不可用&lt;/p&gt;
                         &lt;/fieldset&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 2"&gt;
                             &lt;legend&gt;同时设置minDate和maxDate&lt;/legend&gt;
                             &lt;input ms-widget="datepicker" data-datepicker-min-date="2014-06-7" data-datepicker-max-date="2014-06-28" value="2014-06-23"/&gt;
                             &lt;p&gt;说明：同时设置minDate和maxDate，并且设置初始化输入域&lt;/p&gt;
                         &lt;/fieldset&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 1"&gt;
                             &lt;legend&gt;初始日期超出范围&lt;/legend&gt;
                             &lt;input ms-widget="datepicker" data-datepicker-min-date="2014-06-08" value="2014-06-05"/&gt;
                             &lt;p&gt;说明：当输入域设置了初始值时，如初始值在minDate和maxDate范围内，则高亮输入域的日期，如果超出范围会警示说明初始日期超出日期范围&lt;/p&gt;

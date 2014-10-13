@@ -78,15 +78,28 @@ a, a:active, a:hover {
 }
 .header .search {
     position: absolute;
-    top: 0;
+    padding: 0 0 0 10px;
+    border: 1px solid #547c73;
+    border-radius: 3px;
+    top: 13px;
     right: 0;
+    line-height: 30px;
 }
 .header .search input {
-    border: 1px solid #547c73;
-    border-radius: 5px;
-    width: 185px;
+    border: 0 none;
+    width: 170px;
     height: 30px;
-    background: url(./searchIcon.png) 160px 50% no-repeat;
+    outline: none;
+}
+.header .search a{
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    width: 30px;
+    height: 30px;
+    background: url(./searchIcon.png) no-repeat;
+    vertical-align: middle;
+    z-index: 9999;
 }
 .header h1 {
     height: 115px;

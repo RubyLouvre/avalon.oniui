@@ -15,16 +15,13 @@
                 vm.pages = [{
                         title: "组件库",
                         href: "pages/library/index.html"
-                    },
-                    {
+                    }, {
                         title: "组件概览",
                         href: "pages/timeline/index.html"
-                    },
-                    {
+                    }, {
                         title: "APIs",
                         href: "pages/apis/index.html"
-                    },
-                    {
+                    }, {
                         title: "下载",
                         href: "pages/download/index.html"
                     }
@@ -38,22 +35,45 @@
 
                 vm.computeActiveIndex = function(url) {
                     var url = url || location.hash.replace(/#/g, "");
-                    for(var i = 0, len = page.pages.length; i < len; i++) {
-                        if(page.pages[i].href === url) {
+                    for (var i = 0, len = page.pages.length; i < len; i++) {
+                        if (page.pages[i].href === url) {
                             return i;
                         }
                     }
                     return 0
                 }
+
+                vm.searchComponentKey = ""
+                vm.searchComponent = function() {
+                    window.find(vm.searchComponentKey)
+                }
+                vm.searchFocus = function() {
+                    avalon.bind(document, "keypress", function(e) {
+                        var currKey = 0,
+                            e = e || event;
+                        if (e.keyCode == 13) {
+                            window.find(vm.searchComponentKey)
+                        }
+                    })
+                }
             })
             page.activeIndex = page.computeActiveIndex();
-            require(["uptop/avalon.uptop","ready!"], function() {
+            require(["uptop/avalon.uptop", "ready!"], function() {
                 avalon.define("", function(vm) {
                     vm.width = 120,
                     vm.animate = true
                 })
                 avalon.scan(document.body, page)
             })
+
+             // function keypress(e) {
+             //     var currKey = 0,
+             //         e = e || event;
+             //     if (e.keyCode == 13) {
+             //         alert("enter")
+             //     }
+             // }
+             // document.onkeypress = keypress;
         </script>
     </head>
     <body class="ms-controller" ms-controller="pages" ms-uptop data-uptop-background-url="uptop/up.png" >
@@ -65,9 +85,10 @@
                             <a ms-href="#{{page.href}}" >{{page.title | html}}</a>
                         </li>
                     </ul>
-                    <div class="search">
-                        <input type="text"/>
-                    </div>
+                    <form class="search">
+                        <input type="text" ms-duplex="searchComponentKey" ms-focus="searchFocus"/>
+                        <a href="javascript:void(0);" ms-click="searchComponent"></a>
+                    </form>
                 </div>
             </div>
             <div class="placeHolder"></div>

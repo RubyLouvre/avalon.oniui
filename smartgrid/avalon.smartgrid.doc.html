@@ -6,6 +6,11 @@
 <title>smartgrid文档说明</title>
 <meta name="description" content="静态模板 实现grid adapter所有功能的smartgrid" />
 <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<style>
+    img {
+        width: 960px;
+    }
+</style>
 </head>
 <body class="doc">
     <div class="wrapper">
@@ -49,7 +54,7 @@
     defaultValue: "shirly", //列的默认值，当数据中没有为此列设置值时显示此默认值
     customClass: "ddd", //设置此列单元格的自定义类
     toggle: false, //是否显示此列，true显示false不显示
-    width: "40%", //设置列宽，可以是百分比也可以是Number
+    width: 400, //设置列宽，必须是Number
     localSort: function(a, b, f) { //自定义列的本地排序规则
         return a[f].localeCompare(b[f]);
     },
@@ -229,6 +234,17 @@
             <li><a href="avalon.smartgrid.ex5.html">自定义smartgrid各种事件回调</a></li>
             <li><a href="avalon.smartgrid.ex6.html">供用户调用API</a></li>
         </ol>
+        <p>下面附上实现相同展示效果的情况下，smartgrid与simplegrid的渲染情况对比</p>
+        <div>
+            <h2>smartgrid渲染10条表格数据</h2>
+            <img src="smartgrid10.png"/>
+            <h2>simplegrid渲染10条表格数据</h2>
+            <img src="simplegrid10.png"/>
+            <h2>smartgrid渲染200条表格数据</h2>
+            <img src="smartgrid200.png"/>
+            <h2>simplegrid渲染200条表格数据</h2>
+            <img src="simplegrid200.png"/>
+        </div>
     </div>
 </body>
 </html>

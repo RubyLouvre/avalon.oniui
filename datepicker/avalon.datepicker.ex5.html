@@ -13,14 +13,14 @@
     <div class="wrapper">
         <h1>datepicker demo</h1>
         <div class="demo-show" ms-controller="demo">
-            <fieldset>
+            <fieldset style="position: relative; z-index: 2">
                 <legend>toggle切换日期的显示隐藏</legend>
                 <input ms-widget="datepicker" data-toggle ="toggle"/>
                 <button ms-click="toggleDatepicker" style="float:right;">toggle calendar</button>
                 <p>说明：可以通过toggle切换datepicker的显示与隐藏，这需要在绑定datepicker时，设置ms-data-toggle属性指向demo controller中的属性</p>
                 <p>可以通过配置timer来使组件可选择时间</p>
             </fieldset>
-            <fieldset>
+            <fieldset style="position: relative; z-index: 1">
                 <legend>calendarLabel配置日历的说明label</legend>
                 <input ms-widget="datepicker" data-datepicker-calendar-label="选择你的日期" />
                 <p>说明：配置calendarLabel来显示你独特的日历说明</p>
@@ -49,24 +49,20 @@
                 &lt;/head&gt;
                 &lt;body&gt;
                     &lt;div class="demo-show" ms-controller="demo"&gt;
-                        &lt;fieldset style="position:relative;"&gt;
+                        &lt;fieldset style="position: relative; z-index: 2"&gt;
                             &lt;legend&gt;toggle切换日期的显示隐藏&lt;/legend&gt;
                             &lt;input ms-widget="datepicker" data-toggle ="toggle"/&gt;
-                            &lt;button ms-click="toggleDatepicker" style="position:absolute;right:0;top: 20px;"&gt;toggle calendar&lt;/button&gt;
+                            &lt;button ms-click="toggleDatepicker" style="float:right;"&gt;toggle calendar&lt;/button&gt;
                             &lt;p&gt;说明：可以通过toggle切换datepicker的显示与隐藏，这需要在绑定datepicker时，设置ms-data-toggle属性指向demo controller中的属性&lt;/p&gt;
+                            &lt;p&gt;可以通过配置timer来使组件可选择时间&lt;/p&gt;
                         &lt;/fieldset&gt;
-                        &lt;fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 1"&gt;
                             &lt;legend&gt;calendarLabel配置日历的说明label&lt;/legend&gt;
                             &lt;input ms-widget="datepicker" data-datepicker-calendar-label="选择你的日期" /&gt;
                             &lt;p&gt;说明：配置calendarLabel来显示你独特的日历说明&lt;/p&gt;
                         &lt;/fieldset&gt;
-                        &lt;fieldset&gt;
-                            &lt;legend&gt;使日历可以通过下拉框切换月份和年份的显示&lt;/legend&gt;
-                            &lt;input ms-widget="datepicker" data-datepicker-change-month-and-year="true" /&gt;
-                            &lt;p&gt;说明：配置changeMonthAndYear为true使得用户可以通过下拉选项切换日历的月份和年份&lt;/p&gt;
-                        &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require(["datepicker/avalon.datepicker", "slider/avalon.slider"], function(avalon) {
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.toggle = false;
                                     vm.toggleDatepicker = function(event) {

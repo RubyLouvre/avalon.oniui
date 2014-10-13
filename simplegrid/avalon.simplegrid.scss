@@ -1,10 +1,8 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
 $uiname : "ui-simplegrid";
-
-        
-
 .#{$uiname}{
+    font: normal 12px/1.5 tahoma,arial,'Hiragino Sans GB','\5b8b\4f53',sans-serif;
     width:100%;
     border: 1px solid $ui-state-default-border-color;
     position: relative;
@@ -22,14 +20,12 @@ $uiname : "ui-simplegrid";
     .#{$uiname}-thead{
         width: 100%;
         @include user-select();
-        border-bottom: 1px solid $ui-state-default-border-color;
         border-collapse: collapse;
     }
     .#{$uiname}-thead td,.#{$uiname}-thead th {
         border: 0 none;
-        height: 35px;
-        line-height: 35px;
-        background-color:$ui-state-default-background-color;
+        padding: 10px 5px;
+        background-color: #f8f8f8;
     }
     .#{$uiname}-thead td,.#{$uiname}-thead th, .#{$uiname}-tbody td, .#{$uiname}-tbody th{
         padding-left: 5px;
@@ -41,26 +37,24 @@ $uiname : "ui-simplegrid";
         border-left:none;
         border-right:none;
         border-collapse: collapse;
-        tr.even td, tr.even th {
-            background:rgb(247,247,247);
-        }
     }
     %cell-style{
         border: 0 none;
-        height: 35px;
-        line-height: 35px;
-        padding-left: 5px;
+        padding: 7px 5px;
     }
     .#{$uiname}-tbody{
-        td{
+        td, th{
             @extend %cell-style;
-        }
-        td{
-            @extend %cell-style;
+            border-bottom: 1px solid #f3f3f3;
         }
         .ui-state-hover{
             td, th{
-                background-color: $ui-state-hover-background-color;
+                background-color: #e8f5fd;
+            }
+        }
+        .ui-state-selected {
+            td, th{
+                background-color: #fff7e6;
             }
         }
     } 
@@ -74,7 +68,7 @@ $uiname : "ui-simplegrid";
         width: 100%;
         padding:5px 0px;
         overflow:hidden;
-        background-color: $ui-state-default-background-color;
+        background-color: #f8f8f8;
         border-top: 1px solid #d4d4d4;
     }
     .#{$uiname}-pager-options{

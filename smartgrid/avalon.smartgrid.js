@@ -1,22 +1,11 @@
-require.config({
-    paths: {
-        ejs: "../mmTemplate"
-    },
-    shim: {
-        ejs: {
-            exports: "ejs"
-        }
-    }
-})
 define(["avalon",
     "text!./avalon.smartgrid.html",
-    "ejs",
     "../loading/avalon.loading",
     "../pager/avalon.pager",
     "../dropdown/avalon.dropdown",
     "css!../chameleon/oniui-common.css",
     "css!./avalon.smartgrid.css"
-], function(avalon, template, EJS) {
+], function(avalon, template) {
     var tempId = new Date - 0,
         templateArr = template.split("MS_OPTION_EJS"),
         gridHeader = templateArr[0],
@@ -26,6 +15,156 @@ define(["avalon",
         remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m,
         sorting = false, // 页面在排序的时候不用更新排序icon的状态为ndb，但如果是重新渲染数据的话重置icon状态为ndb
         callbacksNeedRemove = {}
+    var EJS =  window.ejs  = function( id,data,opts){
+        var el, source;
+        if( !EJS.cache[ id] ){
+            opts = opts || {}; 
+            var doc = opts.doc || document;
+            data = data || {};
+            if($.fn){//如果引入jQuery, mass
+                el = $(id, doc)[0];
+            }else if(doc.querySelectorAll){//如果是IE8+与标准浏览器
+                el = doc.querySelectorAll(id)[0];
+            }else{
+                el = doc.getElementById(id.slice(1));
+            }
+            if(! el )
+                throw "can not find the target element";
+            source = el.innerHTML;
+            if(!(/script|textarea/i.test(el.tagName))){
+                source = avalon.filters.unescape( source );
+            }
+            var fn = EJS.compile( source, opts );
+            ejs.cache[ id ] = fn;
+        }
+        return ejs.cache[ id ]( data );
+    }
+    //如果第二配置对象指定了tid，则使用它对应的编译模板
+    EJS.compile = function( source, opts){
+        opts = opts || {}
+        var tid = opts.tid
+        if(typeof tid === "string" && typeof EJS.cache[tid] == "function"){
+            return EJS.cache[tid]
+        }
+        var open  = opts.open  || "<&"
+        var close = opts.close || "&>"
+        var helperNames = [], helpers = []
+        for(var name in opts){
+            if(opts.hasOwnProperty(name) && typeof opts[name] == "function"){
+                helperNames.push(name)
+                helpers.push( opts[name] )
+            }
+        }
+        var flag = true//判定是否位于前定界符的左边
+        var codes = [] //用于放置源码模板中普通文本片断
+        var time = new Date * 1// 时间截,用于构建codes数组的引用变量
+        var prefix = " ;r += txt"+ time +"[" //渲染函数输出部分的前面
+        var postfix = "];"//渲染函数输出部分的后面
+        var t = "return function(data){'use strict'; try{var r = '',line"+time+" = 0;"//渲染函数的最开始部分
+        var rAt = /(^|[^\w\u00c0-\uFFFF_])(@)(?=\w)/g
+        var rstr = /(['"])(?:\\[\s\S]|[^\ \\r\n])*?\1/g // /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/
+        var rtrim = /(^-|-$)/g
+        var rmass = /mass/
+        var js = []
+        var pre = 0, cur, code, trim
+        for(var i = 0, n = source.length; i < n; ){
+            cur = source.indexOf( flag ? open : close, i)
+            if( cur < pre){
+                if( flag ){//取得最末尾的HTML片断
+                    t += prefix + codes.length + postfix
+                    code = source.slice( pre+ close.length )
+                    if(trim){
+                        code = code.trim()
+                        trim = false
+                    }
+                    codes.push( code )
+                }else{
+                    throw Error("发生错误了")
+                }
+                break;
+            }
+            code = source.slice(i, cur )//截取前后定界符之间的片断
+            pre = cur
+            if( flag ){//取得HTML片断
+                t += prefix + codes.length + postfix
+                if(trim){
+                    code = code.trim()
+                    trim = false
+                }
+                codes.push( code )
+                i = cur + open.length
+            }else{//取得javascript罗辑
+                js.push(code)
+                t += ";line"+time+"=" +js.length+";"
+                switch(code.charAt(0)){
+                    case "="://直接输出
+                        code = code.replace(rtrim,function(){
+                            trim = true
+                            return ""
+                        });
+                        code = code.replace(rAt,"$1data.")
+                        if( code.indexOf("|") > 1 ){//使用过滤器
+                            var arr = [];
+                            var str = code.replace(rstr, function(str){
+                                arr.push(str);//先收拾所有字符串字面量
+                                return 'mass';
+                            }).replace(/\|\|/g,"@");//再收拾所有短路或
+                            if(str.indexOf("|") > 1){
+                                var segments = str.split("|")
+                                var filtered = segments.shift().replace(/\@/g,"||").replace(rmass, function(){
+                                    return arr.shift();
+                                });
+                                for( var filter;filter = arr.shift();){
+                                    segments = filter.split(":");
+                                    name = segments[0];
+                                    args = "";
+                                    if(segments[1]){
+                                        args = ', ' + segments[1].replace(rmass, function(){
+                                            return arr.shift();//还原
+                                        })
+                                    }
+                                    filtered = "avalon.filters."+ name +"(" +filtered + args+")"
+                                }
+                                code = "="+ filtered;
+                            }
+                        }
+                        t += " ;r +" +code +";"
+                        break;
+                    case "#"://注释,不输出
+                        break
+                    case "-":
+                    default://普通逻辑,不输出
+                        code = code.replace(rtrim,function(){
+                            trim = true
+                            return ""
+                        })
+                        t += code.replace(rAt,"$1data.")
+                        break;
+                }
+                i = cur + close.length
+            }
+            flag = !flag
+        }
+        t += " return r; }catch(e){ avalon.log(e);\navalon.log(js"+time+"[line"+time+"-1]) }}"
+        var body = ["txt"+time,"js"+time, "filters"]
+        var fn = Function.apply(Function, body.concat(helperNames,t) )
+        var args = [codes, js, avalon.filters]
+        var compiled = fn.apply(this, args.concat(helpers))
+        if(typeof tid === "string"){
+            return  EJS.cache[tid] = compiled
+        }
+        return compiled
+    }
+    EJS.cache = {}//用于保存编译好的模板函数
+    avalon.filters.unescape = function (target) {
+        return  target.replace(/&quot;/g,'"')
+        .replace(/&lt;/g,'<')
+        .replace(/&gt;/g,'>')
+        .replace(/&amp;/g, "&"); //处理转义的中文和实体字符
+        return target.replace(/&#([\d]+);/g, function($0, $1){
+            return String.fromCharCode(parseInt($1, 10));
+        });
+    }
 
     var widget = avalon.ui.smartgrid = function(element, data, vmodels) {
         var options = data.smartgridOptions,
@@ -200,7 +339,17 @@ define(["avalon",
             vm._setColumnWidth = function() {
                 var cells = vmodel._container.getElementsByTagName("tr")[0].cells,
                     columns = vmodel.columns,
-                    containerWidth = avalon(vmodel.container).width() - 2
+                    _columns = columns.$model,
+                    containerWidth = avalon(vmodel.container).width() - 2,
+                    minColumnWidth = getMinColumnWidth(_columns),
+                    firstStringColumn = getFirstStringColumn(columns, vmodel)
+
+                if (minColumnWidth < containerWidth) {
+                    firstStringColumn.width = "auto"
+                } else {
+                    avalon(vmodel.container).css("width", minColumnWidth)
+                    firstStringColumn.width = firstStringColumn.configWidth
+                }
 
                 for (var i = 0, len = cells.length; i < len; i++) {
                     var $cell = avalon(cells[i]),
@@ -218,7 +367,8 @@ define(["avalon",
                     _columns = vmodel.columns,
                     columns = _columns.$model,
                     dataLen = datas.length,
-                    checkRow = vmodel.selectable.type === "Checkbox"
+                    selectableType = vmodel.selectable && vmodel.selectable.type || ""
+                    checkRow = selectableType === "Checkbox"
 
                 if (!EJS[id]) {
                     fn = EJS.compile(options.template, vmodel.htmlHelper)
@@ -245,11 +395,12 @@ define(["avalon",
             }
             vm.render = function(init) {
                 var container = vmodel._container,
-                    containerWrapper = vmodel.container
+                    containerWrapper = vmodel.container,
+                    selectable = vmodel.selectable
 
                 vmodel._pagerShow = !vmodel.data.length ? false : true
                 avalon.innerHTML(container, vmodel._getTemplate())
-                if (vmodel.selectable.type === "Checkbox") {
+                if (selectable && selectable.type === "Checkbox") {
                     var allSelected = isSelectAll(vmodel.data)
                     vmodel._allSelected = allSelected
                     getSelectedData(vmodel)
@@ -391,9 +542,10 @@ define(["avalon",
     }
     function bindEvents(options) {
         if (!options.selectable) return
-        var type = options.selectable.type 
+        var type = options.selectable.type ,
+            container = options._container
         if (type === "Checkbox") {
-            avalon.bind(options._container, "click", function(event) {
+            avalon.bind(container, "click", function(event) {
                 var target = event.target,
                     $target = avalon(target),
                     $tr = avalon(target.parentNode.parentNode),
@@ -432,7 +584,7 @@ define(["avalon",
                     // }
                 }
             })
-        }    
+        }  
     }
     function getSelectedData(vmodel) {
         var datas = vmodel.data
@@ -444,6 +596,32 @@ define(["avalon",
                 vmodel._selectedData.push(data)
             }
         }
+    }
+    function getFirstStringColumn(columns, vmodel){
+        for (var i = 0,len = columns.length; i < len; i++) {
+            var column = columns[i],
+                type = column.type
+            type = type === void 0 ? "String" : type
+            if (column.toggle && type === "String"){
+                return column
+            }
+        }
+        if (vmodel.selectable.type) {
+            return columns[1];
+        } else {
+            return columns[0];
+        }
+    }
+    function getMinColumnWidth(columns) {
+        var showColumnWidth = 0
+
+        for (var i = 0, len = columns.length; i < len; i++) {
+            var column = columns[i]
+            if (column.toggle) {
+                showColumnWidth += parseInt(column.configWidth) || 0
+            }
+        }
+        return showColumnWidth
     }
     function isSelectAll(datas) {
         var allSelected = true,
@@ -479,9 +657,11 @@ define(["avalon",
             if (column.toggle === void 0 || column.isLock) {
                 column.toggle = true
             }
+            column.configWidth = columnWidth
             if (!columnWidth) {
                 if (_columnWidth.indexOf("%")) {
                     columnWidth = parentContainerWidth * parseInt(_columnWidth) / 100
+                    column.configWidth = columnWidth
                 } else {
                     columnWidth = "auto"
                 }
@@ -515,7 +695,7 @@ define(["avalon",
             if (type === "Checkbox" || type === "Radio") {
                 selectFormat = function(vmId, field, index, selected, disable, allSelected) {
                     if (allSelected && type === "Radio") return 
-                    return "<input type='" + type.toLowerCase() +"'" + (disable ? "disabled" : "") + (selected ? "checked='checked'" : "") + "name='selected' "+ (allSelected ? "ms-click='_selectAll' ms-duplex-radio='_allSelected'" : "data-index='" + index +"'") +"data-role='selected'/>"
+                    return "<input type='" + type.toLowerCase() +"'" + (disable ? "disabled " : "") + (selected ? "checked='checked'" : "") + "name='selected' "+ (allSelected ? "ms-click='_selectAll' ms-duplex-radio='_allSelected'" : "data-index='" + index +"'") +"data-role='selected'/>"
                 }
                 allSelected = isSelectAll(options.data)
                 options._allSelected = allSelected
@@ -524,7 +704,8 @@ define(["avalon",
             selectColumn = {
                 key : "selected",
                 name: selectFormat(options.$id, "selected", -1, allSelected, null, true),
-                width : 20,
+                width : 25,
+                configWidth: 25,
                 sortable : false,
                 type: options.selectable.type,
                 format: selectFormat,
@@ -532,8 +713,8 @@ define(["avalon",
                 align: "center",
                 customClass: ""
             }
-            allColumnWidth += 20
-            selectColumn.width = selectColumn._fixWidth = 20
+            allColumnWidth += 25
+            selectColumn.width = selectColumn._fixWidth = 25
             columns.unshift(selectColumn)
         }
 

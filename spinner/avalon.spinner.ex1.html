@@ -13,50 +13,6 @@
     <div class="wrapper">
         <h1>spinner demo</h1>
         <p class="example">可以添加onDecrease、onIncrease为spinner添加回调，onDecrease是用户点击了"-"更新spinner之后的回调，this是触发事件的元素，参数是新的spinner值，同理onIncrease是点击了"+"更新spinner之后的回调</p>
-        <div ms-skip>
-            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
-                &lt;!DOCTYPE HTML&gt;
-                &lt;html&gt;
-                &lt;head&gt;
-                    &lt;meta charset='utf-8'/&gt;
-                    &lt;title&gt;spinner demo 1&lt;/title&gt;
-                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
-                &lt;/head&gt;
-                &lt;body&gt;
-                    &lt;div class="demo-show" ms-controller="pager"&gt;
-                        &lt;fieldset&gt;
-                            &lt;legend&gt;有范围限制的spinner,最小0,最大5&lt;/legend&gt;
-                                &lt;input ms-duplex="p1" ms-widget="spinner, $spinner, $spinnerOpts" /&gt;
-                        &lt;/fieldset&gt;
-                        &lt;script&gt;
-                            require(["spinner/avalon.spinner"], function(avalon) {
-                                var pager = avalon.define('pager', function(vm) {
-                                    vm.p1 = 2;
-                                    vm.$spinnerOpts = {
-                                        min: 0,
-                                        max: 5,
-                                        onDecrease : function(value) {
-                                            avalon.log("this是触发事件的元素");
-                                            avalon.log(this);
-                                            avalon.log("value是spinner的当前数值");
-                                            avalon.log(value);
-                                        },
-                                        onIncrease : function(value) {
-                                            avalon.log("this是触发事件的元素");
-                                            avalon.log(this);
-                                            avalon.log("value是spinner的当前数值");
-                                            avalon.log(value);
-                                        }
-                                    }
-                                });
-                                avalon.scan();
-                            })
-                        &lt;/script&gt;
-                    &lt;/div&gt;
-                &lt;/body&gt;
-                &lt;/html&gt;
-            </pre>
-        </div>
         <div class="demo-show" ms-controller="pager">
             <fieldset>
                 <legend>有范围限制的spinner,最小0,最大5</legend>
@@ -83,7 +39,7 @@
                         vm.p1 = 8;
                         vm.p2 = 10
                         vm.p3 = 2
-                        vm.disable = false
+                        vm.disable = true
                         vm.$spinnerOpts = {
                             min: 0,
                             max: 5,
@@ -104,6 +60,68 @@
                     avalon.scan();
                 })
             </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;spinner demo 1&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="pager"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;有范围限制的spinner,最小0,最大5&lt;/legend&gt;
+                            &lt;input ms-duplex="p1" ms-widget="spinner, $spinner, $spinnerOpts" /&gt;
+                            &lt;p&gt;p1 is : {{p1}}&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;初始化spinner&lt;/legend&gt;
+                            &lt;input ms-duplex="p2" ms-widget="spinner" /&gt;
+                            &lt;p&gt;p2 is : {{p2}}&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;初始化spinner&lt;/legend&gt;
+                            &lt;input ms-duplex="p3" ms-widget="spinner" /&gt;
+                            &lt;p&gt;p3 is : {{p3}}&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;禁用spinner&lt;/legend&gt;
+                            &lt;input value="3" ms-disabled="disable" ms-widget="spinner, spinner1"  /&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt;
+                            require(["spinner/avalon.spinner"], function(avalon) {
+                                var pager = avalon.define('pager', function(vm) {
+                                    vm.p1 = 8;
+                                    vm.p2 = 10
+                                    vm.p3 = 2
+                                    vm.disable = true
+                                    vm.$spinnerOpts = {
+                                        min: 0,
+                                        max: 5,
+                                        onDecrease : function(value) {
+                                            avalon.log("this是触发事件的元素");
+                                            avalon.log(this);
+                                            avalon.log("value是spinner的当前数值");
+                                            avalon.log(value);
+                                        },
+                                        onIncrease : function(value) {
+                                            avalon.log("this是触发事件的元素");
+                                            avalon.log(this);
+                                            avalon.log("value是spinner的当前数值");
+                                            avalon.log(value);
+                                        }
+                                    }
+                                });
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
         </div>
     </div>
 </body>

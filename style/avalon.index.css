@@ -107,6 +107,7 @@ a, a:active, a:hover {
 .content {
     position: relative;
     width: 990px;
+    min-height: 400px;
     margin: 0 auto;
     text-align: left;
     background-color: #fff;
@@ -115,20 +116,35 @@ a, a:active, a:hover {
     background: none;
 }
 .ui-list {
-    width: 130px;
-    line-height: 24px;
-    padding: 20px 2px;
+    width: 160px;
+    padding:0px;
+    margin: 34px 0px;
+    border:1px solid rgb(215,220,224);
 }
 .ui-list a {
     text-decoration: none;
-    color: #2b2b2b;
-    font-size: 14px;
-    font-weight: bold;
+    display:inline-block;
+    *display:inline;
+    *zoom:1;
+    width:160px;
+    height:34px;
+    line-height:34px;
+    font-size: 15px;
     cursor: pointer;
+    text-indent:4px;
 }
+
+.ui-list a.odd {
+    background-color:rgb(215,220,224);
+    color:#34495e;
+}
+
 .ui-list a.active {
-    color: #3a745c;
+    background-color: #28966f;
+    color:#fff;
+     font-weight: bold;
 }
+
 .ui-doc {
     margin-left: 130px;
     padding: 30px 50px;

@@ -178,6 +178,7 @@
             <ul class="ui-list">
                 <li ms-repeat="widgets">
                     <a  href="javascript:void(0)"
+                        ms-class-odd="$index % 2 === 1"
                         ms-class="active: $index===activeIndex"
                         ms-click="changeActiveIndex($index)">
                         {{el}}

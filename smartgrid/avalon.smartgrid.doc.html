@@ -67,6 +67,22 @@
                         </td>
                     </tr>
                     <tr>
+                        <td>allSelected</td>
+                        <td>true</td> 
+                        <td>当设置selectable之后，是否显示表头的全选框，默认显示，false不显示</td>
+                    </tr>
+                    <tr>
+                        <td>addRow</td>
+                        <td>
+<pre>
+addRow: function(tmpl, columns, vmodel) {
+    return tmpl
+}
+</pre>
+                        </td> 
+                        <td>为表格添加新行</td>
+                    </tr>
+                    <tr>
                         <td>htmlHelper</td>
                         <td>{}</td> 
                         <td>包装数据的方法集合，可<a href="avalon.smartgrid.ex2.html">参见实例2</a>的使用</td>
@@ -236,6 +252,7 @@
             <li><a href="avalon.smartgrid.ex4.html">表格排序操作</a></li>
             <li><a href="avalon.smartgrid.ex5.html">自定义smartgrid各种事件回调</a></li>
             <li><a href="avalon.smartgrid.ex6.html">供用户调用API</a></li>
+            <li><a href="avalon.smartgrid.ex7.html">配置addRow为表格添加新行</a></li>
         </ol>
         <p>下面附上实现相同展示效果的情况下，smartgrid与simplegrid的渲染情况对比</p>
         <div>

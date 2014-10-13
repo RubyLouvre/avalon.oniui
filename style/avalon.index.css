@@ -118,7 +118,6 @@ a, a:active, a:hover {
 .ui-list {
     width: 160px;
     padding:0px;
-    margin: 34px 0px;
     border:1px solid rgb(215,220,224);
 }
 .ui-list a {

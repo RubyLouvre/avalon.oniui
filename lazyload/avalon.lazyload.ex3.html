@@ -11,10 +11,7 @@
             require(["lazyload/avalon.lazyload"], function() {
                 avalon.define("demo", function(vm) {
                     vm.lazyload = {
-                        preLoadType: "image",
-                        preLoadSrc: "./images/loading1.gif",
-                        delayTime: 500,
-                        loadEffect: "none"
+                        preLoadType: "text"
                     }
                 })
                 avalon.scan()
@@ -23,24 +20,24 @@
     </head>
     <body>
         <div class="wrapper">
-            <h1>lazyload懒加载组件-默认配置</h1>
+            <h1>lazyload懒加载组件-预加载采用文字模式</h1>
             <fieldset ms-controller="demo">
-                <legend>默认配置</legend>
-                <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img1" ms-lazyload>
+                <legend>预加载采用文字模式</legend>
+                <img alt="" ms-lazyload-indiepreLoadSrc= "图片1预加载文字" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img1" ms-lazyload>
                 <p>
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                 </p>
-                <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img2" ms-lazyload>
+                <img alt="" ms-lazyload-indiepreLoadSrc= "图片2预加载文字" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img2" ms-lazyload>
                 <p>
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                 </p>
-                <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img3" ms-lazyload>
+                <img alt="" ms-lazyload-indiepreLoadSrc= "图片3预加载文字" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img3" ms-lazyload>
             </fieldset>
             <pre ms-skip class="brush:html;gutter:false;toolbar:false">
             </pre>

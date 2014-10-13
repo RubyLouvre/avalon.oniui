@@ -52,13 +52,13 @@ define(["avalon"], function() {
         if (options.preLoadType === "image") {
             element.style.background = "url(" + preLoadSrc + ") no-repeat center center" //设置load旋转图为背景
             element.originalCssBackground = avalon.css(element, "background") //记录原背景CSS
-            _renderImg(element, options.preLoadSrc, false, false)
+            _renderImg(element, preLoadSrc, false, false)
             imgArr.push(element)
         } else if (options.preLoadType === "text") {
             //设置placeholderText插入图片DOM前面
             var placeholderText = document.createElement("span")
-            placeholderText.innerHTML = options.preLoadSrc
-            element.parentNode.insertBefore(placeholderText, element);
+            placeholderText.innerHTML = preLoadSrc
+            element.parentNode.insertBefore(placeholderText, element)
 
             //placeholderText尺寸为图片尺寸
             placeholderText.style.cssText = "display:inline-block;*display:inline;*zoom:1;" +
@@ -87,7 +87,7 @@ define(["avalon"], function() {
                 parent.appendChild(newElement);
             } else {
                 //如果不是，则插入在目标元素的下一个兄弟节点的前面。也就是目标元素的后面。
-                parent.insertBefore(newElement, targetElement);
+                parent.insertBefore(newElement, targetElement)
             }
         }
 
@@ -96,10 +96,10 @@ define(["avalon"], function() {
     }
 
     lazyload.defaults = {
-        preLoadType: "image",
-        preLoadSrc: "http://placehold.it/800x200/fff/000.jpg&text=preload",
-        delayTime: 1000,
-        loadEffect: "none"
+        preLoadType: "image", //@param preLoadType 预加载模式："image"-图片（默认） / "text"-文字
+        preLoadSrc: "./images/loading1.gif", //@param preLoadSrc 默认预加载图片（文字）：preLoadType为"image"时，此为图片路径；preLoadType为"text"时，此为文字内容
+        delayTime: 500, //@param delayTime 延迟加载时间（毫秒），默认值500
+        loadEffect: "none" //@param loadEffect 预加载效果 "none"-无效果（默认） / "fadeIn"-渐入效果
     }
 
     lazyload.getAll = function() {
@@ -157,7 +157,7 @@ define(["avalon"], function() {
 
             //移除placeholderText
             if(options.preLoadType === "text"){
-                tempImgItem.parentNode.removeChild(tempImgItem);
+                tempImgItem.parentNode.removeChild(tempImgItem)
             }
         }
         placeholderImg.src = src

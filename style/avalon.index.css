@@ -66,8 +66,7 @@ a, a:active, a:hover {
     margin-right: 35px;
 }
 .header .nav ul li a {
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 20px;
     color: #555555;
     display: block;
     height: 60px;
@@ -118,7 +117,6 @@ a, a:active, a:hover {
 .ui-list {
     width: 160px;
     padding:0px;
-    margin: 34px 0px;
     border:1px solid rgb(215,220,224);
 }
 .ui-list a {

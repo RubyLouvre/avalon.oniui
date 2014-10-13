@@ -36,10 +36,6 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 				top: 0
 			};
 
-			// 如果用户未设置颜色，设置初始颜色
-			if(!("ms-duplex" in element.msData)){
-				element.setAttribute("ms-duplex", "defaultColor");
-			}
 			vm.cp_color = "";			// 最终颜色
 			vm.input_color = "";		// input字体颜色
 			vm.hue_color = "";			// overlay背景色，s=1, l=0.5
@@ -235,9 +231,12 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 			function renderView(){
 
 				//render input
+				if(!("ms-duplex" in element.msData)){
+					element.setAttribute("ms-duplex", "defaultColor");
+				}
+				element.setAttribute("data-duplex-changed", "setByIp");
 				element.setAttribute("ms-css-background", "cp_color");
 				element.setAttribute("ms-css-color", "input_color");
-				element.setAttribute("data-duplex-changed", "setByIp");
 
 				//render colorpicker
 				var dom_arr = sourceHTML.split("MS_OPTION_COM").map(function(item){

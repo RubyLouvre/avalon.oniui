@@ -28,6 +28,9 @@ $uiname: "ui-smartgrid";
             border-color: #ccc;
         }
     }
+    .ui-state-hidden input {
+        visibility: hidden;
+    }
     th {
         -moz-user-select: none;
         -ms-user-select: none;

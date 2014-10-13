@@ -150,7 +150,7 @@
 	</fieldset>
 
 	<script>
-		require("uploader/avalon.uploader", function(){
+		require(["uploader/avalon.uploader", "ready!"], function(){
 			var model = avalon.define("demo", function(vm){
 
 				vm.$opts = {
@@ -171,7 +171,6 @@
 						alert('自定义信息：' + fileName + '大小超过1M啦~')
 					}
 				};
-				
 			});
 			avalon.scan();
 		});

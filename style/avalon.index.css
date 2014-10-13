@@ -77,18 +77,23 @@ a, a:active, a:hover {
 }
 .header .search {
     position: absolute;
+    top: 14px;
+    right: 0;
     padding: 0 0 0 10px;
+    line-height: 20px;
     border: 1px solid #547c73;
     border-radius: 3px;
-    top: 13px;
-    right: 0;
-    line-height: 30px;
 }
 .header .search input {
-    border: 0 none;
     width: 170px;
-    height: 30px;
+    height: 20px;
+    padding: 5px 0;
+    margin: 0;
+    border: 0 none;
+    line-height: 20px;
     outline: none;
+    font-family: inherit;
+    vertical-align: middle;
 }
 .header .search a{
     display: inline-block;
@@ -98,7 +103,21 @@ a, a:active, a:hover {
     height: 30px;
     background: url(./searchIcon.png) no-repeat;
     vertical-align: middle;
-    z-index: 9999;
+}
+.header .search .find-nocomp-tip{
+    position: absolute;
+    padding: 5px 5px;
+    border-radius: 3px;
+    left: -60px;
+    color: #c33;
+    opacity: 0;
+    line-height: 20px;
+    filter:alpha(opacity = 0);
+    -webkit-transition: 1s opacity;
+    -moz-transition: 1s opacity;
+    -ms-transition: 1s opacity;
+    -o-transition: 1s opacity;
+    transition: 1s opacity;
 }
 .header h1 {
     height: 115px;
@@ -130,7 +149,7 @@ a, a:active, a:hover {
 .ui-list {
     width: 160px;
     padding:0px;
-    border:1px solid rgb(215,220,224);
+    border:1px solid #eee;
 }
 .ui-list a {
     text-decoration: none;
@@ -146,7 +165,7 @@ a, a:active, a:hover {
 }
 
 .ui-list a.odd {
-    background-color:rgb(215,220,224);
+    background-color:#efe;
     color:#34495e;
 }
 

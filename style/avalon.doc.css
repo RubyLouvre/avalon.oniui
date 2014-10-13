@@ -3,6 +3,7 @@ body {
     margin: 0;
     padding: 0 0 100px;
 }
+h1,h2,h3,h4{font-weight: normal;}
 h2 {
     text-align: center;
 }
@@ -14,6 +15,7 @@ h2 {
 }
 .wrapper fieldset{
     margin-top: 1em;
+    border: 2px #666 solid;
 }
 [ms-controller],.ms-controller{
     visibility: hidden;
@@ -25,9 +27,7 @@ pre {
 .wrapper fieldset legend {
     padding: 0 12px;
     font-size: 18px;
-    font-weight: bold;
     color: #28966f;
-    
 }
 /*doc table的样式*/
 table.table-doc {  
@@ -37,23 +37,23 @@ table.table-doc {
     color: #666; 
     font-size: 14px;
     width: 100%;
-}  
-.table-doc th {  
-    background: url(th_bg1.gif);  
-    background-repeat: repeat-x;
-    height: 30px;  
-}  
+}
 .table-doc th:nth-child(2) {
     white-space: nowrap;
 }
 .table-doc td,.table-doc th{  
-    border: 1px solid #cad9ea;  
-    padding: 0 1em 0;  
+    border: 1px solid #e1e1e1;  
+    padding: 6px 12px;  
     line-height: 26px;
-}  
+}
+.table-doc th{
+    /*border-top: 2px #296 solid;*/
+    background-color: #296;
+    color: #fff;
+}
 .table-doc tr.odd, .table-doc tr:nth-child(odd){  
-    background-color: #f5fafe;  
-}  
+    background-color: #F1F1F1;  
+}
 .table-doc caption {
     color: #FF0000;
     text-align: left;
@@ -102,7 +102,7 @@ p {
     color: #f00;
 }
 
-/*14.9.28 表单示例样式 开始*/
+/*14.9.28 表单示例样式*/
 .form-example a{color: #09c;}
 .form-example a:hover{color: #3ce;}
 /*left-wrap*/
@@ -122,3 +122,10 @@ p {
 .form-example .data-wrap {display:inline-block; width:45%;vertical-align:top;}
 .form-example .data-wrap pre{padding: 9.5px; margin: 0; border:1px #ccc solid; font-family: Menlo,Monaco,Consolas,"Courier New",monospace; font-size: 12px;}
 /*14.9.28 表单示例样式 结束*/
+
+/*14.10.13 组件库demo示例链接样式*/
+.example-links {margin: 0;}
+.example-links li{padding: 2px 0;}
+.example-links a{text-decoration: none;}
+
+.oniui-content{border: 0 none;border-spacing: 0;}

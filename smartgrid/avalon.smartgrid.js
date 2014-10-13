@@ -8,13 +8,14 @@ define(["avalon",
 ], function(avalon, template) {
     var tempId = new Date - 0,
         templateArr = template.split("MS_OPTION_EJS"),
-        gridHeader = templateArr[0],
-        template = templateArr[1],
+        gridHeader = templateArr[0], // 表格视图结构
         userAgent = (window.navigator.userAgent || '').toLowerCase(),
         positionAbsolute = userAgent.indexOf('msie 6') !== -1 || userAgent.indexOf('msie 7') !== -1,
         remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m,
         sorting = false, // 页面在排序的时候不用更新排序icon的状态为ndb，但如果是重新渲染数据的话重置icon状态为ndb
         callbacksNeedRemove = {}
+
+    template = templateArr[1] // 静态模板渲染部分view
     var EJS =  window.ejs  = function( id,data,opts){
         var el, source;
         if( !EJS.cache[ id] ){

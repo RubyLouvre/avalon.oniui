@@ -13,13 +13,20 @@ $uiname: "ui-smartgrid";
         border-collapse: collapse;
     }
     .#{$uiname}-hide {
-        width: 0;
+        display: none;
     }
-    .#{$uiname}-even {
-        background-color: #f7f7f7;
+    .ui-state-hover {
+        background-color: #e8f5fd; 
     }
     .#{$uiname}-selected {
-        background-color: #fff7e6
+        background-color: #fff7e6;
+    }
+    .ui-state-disabled {
+        color: #ccc;
+        background: #fff;
+        .ui-dropdown .ui-dropdown-source {
+            border-color: #ccc;
+        }
     }
     th {
         -moz-user-select: none;
@@ -27,17 +34,23 @@ $uiname: "ui-smartgrid";
         -webkit-user-select: none;
         user-select: none;
         padding: 7px 5px;
+        input {
+            margin: 0;
+        }
     }
     td {
         border-bottom: 1px solid #f3f3f3;
         padding: 7px 5px;
         word-break: break-all;
         word-wrap: break-word;
+        input {
+            margin: 0;
+        }
     }
     .#{$uiname}-header {
         background-color: #f8f8f8;
         border-bottom: 1px solid #e5e5e5;
-        }
+    }
     .#{$uiname}-header-fixed {
         background-color: #f8f8f8;
         border-top: 1px solid #e5e5e5;
@@ -78,13 +91,14 @@ $uiname: "ui-smartgrid";
         }
     }
     .#{$uiname}-nodata {
-        padding: 27px 0;
+        padding: 23px 0;
         text-align: center;
+        line-height: 15px;
     }
     /*三种容器的规则*/
     .ui-helper-asc, .ui-helper-desc,  .ui-helper-ndb{
-        width:16px;
-        height:16px;
+        width:12px;
+        height:12px;
         line-height: 1;
         vertical-align: middle;
         @include inline-block();
@@ -102,19 +116,23 @@ $uiname: "ui-smartgrid";
     .ui-helper-ndb .ui-helper-sort-top, .ui-helper-desc .ui-helper-sort-top{
         @include triangle(top, 12px, half, #ccc);
         top: 0px;
+        left: 0px;
     }
     .ui-helper-asc .ui-helper-sort-top{
         @include triangle(top, 12px, half, #000);
         top: 0px;
+        left: 0px;
     }
     /*下三角*/
     .ui-helper-ndb .ui-helper-sort-bottom, .ui-helper-asc .ui-helper-sort-bottom{
         @include triangle(bottom, 12px, half, #ccc);
         top: 8px;
+        left: 0px;
     }
     .ui-helper-desc .ui-helper-sort-bottom{
         @include triangle(bottom, 12px, half, #000);
         top: 8px;
+        left: 0px;
     }
     .ui-pager {
         display: inline;

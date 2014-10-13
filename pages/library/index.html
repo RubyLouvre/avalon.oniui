@@ -5,7 +5,8 @@
                 "doublelist", "draggable", "dropdown", "flipswitch", "miniswitch",
                 "notice", "pager", "position", "preview", "progressbar", "promise", "rating",
                 "resizable", "scrollbar", "scrollspy", "simplegrid", "slider",
-                "spinner", "store", "switchdropdown", "tab", "textbox","timer","tooltip"
+                "spinner", "store", "switchdropdown", "tab", "textbox","timer","tooltip","uploader"
+
     ].sort()
     var updateHistory = false //将此url更新入浏览历史
     var vmodel = avalon.define("library", function(vm) {
@@ -57,8 +58,7 @@
         }
     }
 
-    avalon.bind(window,"load",  init)//等待iframe加载
-
+    avalon.bind(window, "load", init)//等待iframe加载
 
     function init() {
         var historys = [] //浏览历史
@@ -91,9 +91,10 @@
 
         function iframeLoaded() { //iframe load
             var iframeBody = iframe.contentWindow.document.body
+            var iframeclicked = false
             iframeBody.style.overflow = "hidden" //重新设置overflow，使其不会出现滚动条
             setTimeout(function() { //设置iframe高度
-                vmodel.frameContentHeight = iframeBody.offsetHeight + 50
+                vmodel.frameContentHeight = iframeBody.offsetHeight < 900 ? 900 : iframeBody.offsetHeight + 50
             }, 100)
             if(iframe.addEventListener){
                 iframeBody.addEventListener('click', function() {
@@ -104,7 +105,6 @@
                     updateHistory = true
                 })
             }
-            
 
             //根据是否为示例页面更新url 
             var curLocation = iframe.contentWindow.location.href
@@ -178,6 +178,7 @@
             <ul class="ui-list">
                 <li ms-repeat="widgets">
                     <a  href="javascript:void(0)"
+                        ms-class-odd="$index % 2 === 1"
                         ms-class="active: $index===activeIndex"
                         ms-click="changeActiveIndex($index)">
                         {{el}}

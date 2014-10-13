@@ -100,7 +100,7 @@
                                 align: "left",
                                 defaultValue: "shirly",
                                 toggle: false,
-                                width: "40%"
+                                width: 400
                             }, {
                                 key: "age",
                                 name: "年龄",
@@ -122,7 +122,8 @@
                                 format: "dropdown"
                             }
                         ],
-                        data: getDates(10),
+                        isAffix: true,
+                        data: getDates(30),
                         onInit: function(vmodel) {
                             smartgrid = vmodel
                         }
@@ -232,7 +233,7 @@
                                             align: "left",
                                             defaultValue: "shirly",
                                             toggle: false,
-                                            width: "40%",
+                                            width: 400,
                                         }, {
                                             key: "age",
                                             name: "年龄",

@@ -300,8 +300,9 @@ define(["avalon"], function(avalon) {
 
     if (window.VBArray && !("msUserSelect" in rootElement.style)) {
         var _ieSelectBack;//fix IE6789
-        function returnFalse(event) {
-            event.returnValue = false
+        function returnFalse() {
+            var e = window.event || {}
+            e.returnValue = false
         }
         fixUserSelect = function() {
             _ieSelectBack = body.onselectstart;

@@ -172,7 +172,6 @@ a, a:active, a:hover {
 .ui-list a.active {
     background-color: #28966f;
     color:#fff;
-     font-weight: bold;
 }
 
 .ui-doc {

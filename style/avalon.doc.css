@@ -47,7 +47,7 @@ table.table-doc {
     line-height: 26px;
 }
 .table-doc th{
-    /*border-top: 2px #296 solid;*/
+    font-weight: normal;
     background-color: #296;
     color: #fff;
 }
@@ -101,6 +101,7 @@ p {
 .warn, .warning {
     color: #f00;
 }
+.oniui-content{border: 0 none;border-spacing: 0;}
 
 /*14.9.28 表单示例样式*/
 .form-example a{color: #09c;}
@@ -124,8 +125,6 @@ p {
 /*14.9.28 表单示例样式 结束*/
 
 /*14.10.13 组件库demo示例链接样式*/
-.example-links {margin: 0;}
 .example-links li{padding: 2px 0;}
 .example-links a{text-decoration: none;}
 
-.oniui-content{border: 0 none;border-spacing: 0;}

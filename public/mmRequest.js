@@ -21,8 +21,11 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
             isLocal = rlocalProtocol.test(segments[1]),
             head = DOC.head || DOC.getElementsByTagName("head")[0], //HEAD元素
             //http://www.cnblogs.com/rubylouvre/archive/2010/04/20/1716486.html
-            s = ["XMLHttpRequest", "ActiveXObject('Msxml2.XMLHTTP.6.0')",
-                "ActiveXObject('Msxml2.XMLHTTP.3.0')", "ActiveXObject('Msxml2.XMLHTTP')"
+            s = ["XMLHttpRequest",
+                "ActiveXObject('MSXML2.XMLHTTP.6.0')",
+                "ActiveXObject('MSXML2.XMLHTTP.3.0')",
+                "ActiveXObject('MSXML2.XMLHTTP')",
+                "ActiveXObject('Microsoft.XMLHTTP')"
             ];
     if (!"1" [0]) { //判定IE67
         s[0] = location.protocol === "file:" ? "!" : s[0]

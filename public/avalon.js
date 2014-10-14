@@ -95,7 +95,7 @@
             return false
         }
     } : function(fn) {
-        return serialize.call(fn) == "[object Function]"
+        return serialize.call(fn) === "[object Function]"
     }
     avalon.isFunction = isFunction
 

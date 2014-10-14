@@ -9,6 +9,7 @@
 .ui-smartgrid .ui-smartgrid-selected { background-color: #fff7e6; }
 .ui-smartgrid .ui-state-disabled { color: #ccc; background: #fff; }
 .ui-smartgrid .ui-state-disabled .ui-dropdown .ui-dropdown-source { border-color: #ccc; }
+.ui-smartgrid .ui-state-hidden input { visibility: hidden; }
 .ui-smartgrid th { -moz-user-select: none; -ms-user-select: none; -webkit-user-select: none; user-select: none; padding: 7px 5px; }
 .ui-smartgrid th input { margin: 0; }
 .ui-smartgrid td { border-bottom: 1px solid #f3f3f3; padding: 7px 5px; word-break: break-all; word-wrap: break-word; }

@@ -11,10 +11,7 @@
             require(["lazyload/avalon.lazyload"], function() {
                 avalon.define("demo", function(vm) {
                     vm.lazyload = {
-                        preLoadType: "image",
-                        preLoadSrc: "./images/loading1.gif",
-                        delayTime: 500,
-                        loadEffect: "none"
+                        loadEffect: "fadeIn"
                     }
                 })
                 avalon.scan()
@@ -23,9 +20,9 @@
     </head>
     <body>
         <div class="wrapper">
-            <h1>lazyload懒加载组件-默认配置</h1>
+            <h1>lazyload懒加载组件-fadeIn加载效果</h1>
             <fieldset ms-controller="demo">
-                <legend>默认配置</legend>
+                <legend>fadeIn加载效果</legend>
                 <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img1" ms-lazyload>
                 <p>
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
@@ -43,7 +40,6 @@
                 <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img3" ms-lazyload>
             </fieldset>
             <pre ms-skip class="brush:html;gutter:false;toolbar:false">
-&lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;lazyload组件&lt;/title&gt;
@@ -56,10 +52,7 @@
             require(["lazyload/avalon.lazyload"], function() {
                 avalon.define("demo", function(vm) {
                     vm.lazyload = {
-                        preLoadType: "image",
-                        preLoadSrc: "./images/loading1.gif",
-                        delayTime: 500,
-                        loadEffect: "none"
+                        loadEffect: "fadeIn"
                     }
                 })
                 avalon.scan()
@@ -68,9 +61,9 @@
     &lt;/head&gt;
     &lt;body&gt;
         &lt;div class="wrapper"&gt;
-            &lt;h1&gt;lazyload懒加载组件-默认配置&lt;/h1&gt;
+            &lt;h1&gt;lazyload懒加载组件-fadeIn加载效果&lt;/h1&gt;
             &lt;fieldset ms-controller="demo"&gt;
-                &lt;legend&gt;默认配置&lt;/legend&gt;
+                &lt;legend&gt;fadeIn加载效果&lt;/legend&gt;
                 &lt;img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img1" ms-lazyload&gt;
                 &lt;p&gt;
                     placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;

@@ -26,7 +26,7 @@
                         "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
                         "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
                         "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"],
-                        hoverStop: true //@param autoSlide 鼠标经过停止播放
+                        hoverStop: false //@param autoSlide 鼠标经过不停止播放
                     }
                     vm.$skipArray = ["carousel"]
                 })
@@ -36,13 +36,13 @@
     </head>
     <body>
         <div class="wrapper">
-        <h1>图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过停止播放</h1>
+        <h1>图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过不停止播放</h1>
         <fieldset ms-controller="demo1">
             <legend>自定义不显示左右切换箭头和底部圆形选择部件</legend>
             <div ms-widget="carousel"></div>
         </fieldset>
         <fieldset ms-controller="demo2">
-            <legend>自定义鼠标经过停止播放</legend>
+            <legend>自定义鼠标经过不停止播放</legend>
             <div ms-widget="carousel"></div>
         </fieldset>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">
@@ -74,7 +74,7 @@
                         "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
                         "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
                         "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"],
-                        hoverStop: false //@param autoSlide 鼠标经过停止播放
+                        hoverStop: false //@param autoSlide 鼠标经过不停止播放
                     }
                     vm.$skipArray = ["carousel"]
                 })

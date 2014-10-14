@@ -11,98 +11,138 @@
         <script src="./highlight/shCore.js"></script>
         <link rel=stylesheet type=text/css href="pages/timeline/css/base.css"/>
         <script>
-            var page = avalon.define("pages", function(vm) {
-                vm.pages = [{
-                        title: "组件库",
-                        href: "pages/library/index.html"
-                    }, {
-                        title: "组件概览",
-                        href: "pages/timeline/index.html"
-                    }, {
-                        title: "APIs",
-                        href: "pages/apis/index.html"
-                    }, {
-                        title: "下载",
-                        href: "pages/download/index.html"
+        var page = avalon.define("pages", function(vm) {
+            vm.pages = [{
+                    title: "组件库",
+                    href: "pages/library/index.html"
+                }, {
+                    title: "组件概览",
+                    href: "pages/timeline/index.html"
+                }, {
+                    title: "APIs",
+                    href: "pages/apis/index.html"
+                }, {
+                    title: "下载",
+                    href: "pages/download/index.html"
+                }
+
+            ]
+            vm.changeActiveIndex = function(index) {
+                vm.activeIndex = index
+            }
+
+            vm.activeIndex = 0
+
+            vm.computeActiveIndex = function(url) {
+                var url = url || location.hash.replace(/#/g, "");
+                for (var i = 0, len = page.pages.length; i < len; i++) {
+                    if (page.pages[i].href === url) {
+                        return i;
                     }
-
-                ]
-                vm.changeActiveIndex = function(index) {
-                    vm.activeIndex = index
                 }
+                return 0
+            }
 
-                vm.activeIndex = 0
-
-                vm.computeActiveIndex = function(url) {
-                    var url = url || location.hash.replace(/#/g, "");
-                    for (var i = 0, len = page.pages.length; i < len; i++) {
-                        if (page.pages[i].href === url) {
-                            return i;
-                        }
+            vm.searchComponentKey = ""
+            vm.searchComponent = function() {
+                findComponent(vm.searchComponentKey)
+            }
+            vm.searchFocus = function() {
+                avalon.bind(document, "keypress", function(e) {
+                    var currKey = 0,
+                        e = e || event;
+                    if (e.keyCode == 13) {
+                        findComponent(vm.searchComponentKey)
                     }
-                    return 0
-                }
-
-                vm.searchComponentKey = ""
-                vm.searchComponent = function() {
-                    findComponent(vm.searchComponentKey)
-                }
-                vm.searchFocus = function() {
-                    avalon.bind(document, "keypress", function(e) {
-                        var currKey = 0,
-                            e = e || event;
-                        if (e.keyCode == 13) {
-                            findComponent(vm.searchComponentKey)
-                        }
-                    })
-                }
-                vm.searchTipVisible = 0
-            })
-            page.activeIndex = page.computeActiveIndex();
-            require(["uptop/avalon.uptop", "ready!"], function() {
-                avalon.define("", function(vm) {
-                    vm.width = 120,
-                    vm.animate = true
                 })
-                avalon.scan(document.body, page)
+            }
+            vm.searchTipVisible = 0
+        })
+         page.activeIndex = page.computeActiveIndex();
+        require(["uptop/avalon.uptop", "ready!"], function() {
+            avalon.define("oniui_uptop", function(vm) {
+                vm.width = 120,
+                vm.animate = true
             })
+            avalon.scan(document.body, page)
+        })
 
-            //搜索組件
-            function findComponent(key) {
-                if (false) {
-                    window.find(key, true, false, false, true, false, true)
-                } else {
-                    var list = document.getElementById("ui-list"), //find "ui-list" in pages/library/index.html
-                        items = list.getElementsByTagName("a")
-                    for (var i = 0, len = items.length; i < len; i++) {
-                        if (items[i].innerHTML.trim().indexOf(key) !== -1) {
-                            console.log("find in " + items[i].innerHTML.trim())
-                            selectElement(items[i])
-                            scroll(0, items[i].offsetTop)
-                            return
-                        }
-                    }
-                    page.searchTipVisible = 1
-                    setTimeout(function(){
-                        page.searchTipVisible = 0
-                    },2000)
+         //搜索組件
+        function findComponent(key) {
+            var list = document.getElementById("ui-list"), //find "ui-list" in pages/library/index.html
+                items = list.getElementsByTagName("a")
+            for (var i = 0, len = items.length; i < len; i++) {
+                if (items[i].innerHTML.trim().indexOf(key) !== -1 || findInAdvice(items[i].innerHTML.trim()).indexOf(key) !== -1) {
+                    selectElement(items[i])
+                    scroll(0, items[i].offsetTop)
+                    return
                 }
             }
+            page.searchTipVisible = 1
+            setTimeout(function() {
+                page.searchTipVisible = 0
+            }, 2000)
+        }
 
-            //选中文字
-            function selectElement(element) {
-                if (window.getSelection) {
-                    var sel = window.getSelection();
-                    sel.removeAllRanges();
-                    var range = document.createRange();
-                    range.selectNodeContents(element);
-                    sel.addRange(range);
-                } else if (document.selection) {
-                    var textRange = document.body.createTextRange();
-                    textRange.moveToElementText(element);
-                    textRange.select();
-                }
+        function findInAdvice(componentName){
+            var advices = {
+                "accordion": "手风琴组件",
+                "at":"@组件",
+                "browser":"浏览器检测模块",
+                "carousel": "轮播组件/跑马灯组件",
+                "checkboxlist":"复选框列表组件",
+                "colorpicker":"颜色选择器组件/取色器组件", 
+                "cookie":"cookie工具集组件",
+                "coupledatepicker":"日期范围选择的双日历组件",
+                "datepicker":"日期选择器组件", 
+                "daterangepicker":"日期范围选择日历组件",
+                "dialog":"对话框弹窗组件",
+                "doublelist":"平衡木组件/左右列表组件/双列表组件", 
+                "draggable":"拖拽组件/可拖动组件", 
+                "dropdown":"下拉框组件", 
+                "flipswitch":"滑动式开关组件", 
+                "miniswitch":"下拉式开关组件",
+                "notice":"提示组件/提示信息组件", 
+                "pager":"分页组件", 
+                "position":"定位组件", 
+                "preview":"图片预览组件/图片批量预览组件", 
+                "progressbar":"进度条组件/倒计时组件", 
+                "promise":"异步列队组件", 
+                "rating":"评分组件",
+                "resizable":"伸缩组件", 
+                "scrollbar":"滚动条组件", 
+                "scrollspy":"滚动监听组件", 
+                "simplegrid":"表格组件/大数据展示组件", 
+                "slider":"滑块组件",
+                "spinner":"数字输入框组件", 
+                "store":"本地储存组件", 
+                "switchdropdown":"切换下拉框组件", 
+                "tab":"选项卡组件/标签页组件", 
+                "textbox":"提示功能的输入框组件",
+                "timer":"时间选择器组件",
+                "tooltip":"气泡提示组件",
+                "uploader":"图片上传组件/文件上传组件"
             }
+            if (typeof advices[componentName] !== "undefined") {
+                return advices[componentName]
+            }
+            return ""
+        }
+
+         //选中文字
+        function selectElement(element) {
+            if (window.getSelection) {
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                var range = document.createRange();
+                range.selectNodeContents(element);
+                sel.addRange(range);
+            } else if (document.selection) {
+                var textRange = document.body.createTextRange();
+                textRange.moveToElementText(element);
+                textRange.select();
+            }
+        }
         </script>
     </head>
     <body class="ms-controller" ms-controller="pages" ms-uptop data-uptop-background-url="uptop/up_green.png" >
@@ -116,7 +156,7 @@
                     </ul>
                     <div class="search">
                         <span class="find-nocomp-tip" ms-css-opacity="{{searchTipVisible}}">未找到</span>
-                        <input type="text" ms-duplex="searchComponentKey" ms-focus="searchFocus"/>
+                        <input type="text" placeholder="组件名或中文关键字..." ms-duplex="searchComponentKey" ms-focus="searchFocus"/>
                         <a href="javascript:void(0);" ms-click="searchComponent"></a>
                     </div>
                 </div>

@@ -126,5 +126,5 @@ p {
 
 /*14.10.13 组件库demo示例链接样式*/
 .example-links li{padding: 2px 0;}
-.example-links a{text-decoration: none;}
+.example-links a{text-decoration: none; color:#547c73;}
 

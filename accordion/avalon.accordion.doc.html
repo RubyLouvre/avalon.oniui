@@ -5,6 +5,8 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge" />
         <title>accordion文档说明</title>
         <meta name="description" content="accordion组件是在有限的区域显示可折叠内容面板的信息，通过不同的配置选项和丰富的api可以灵活的设置accordion,实现比如嵌套accordion的效果" />
+        <script src="../highlight/shCore.js"></script>
+
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
     </head>
     <body class="doc">
@@ -18,6 +20,8 @@
             <fieldset>
                 <legend>使用说明</legend>
                 <table class="table-doc">
+                    <col width="180"/>
+                    <col width="180"/>
                     <thead>
                         <tr>
                             <th>名字</th>
@@ -106,17 +110,25 @@
                             <td>data</td>
                             <td>默认[], type: Array</td>
                             <td>配置accordion组件要展示的数据对象，格式为
+                                <pre class="brush:javascript;gutter:false;toolbar:false">
                                 [
                                 {title: String, content: String},
                                 {title: String, content: String},
                                 {title: String, content: String}
-                                ]</td>
+                                 ]
+                                </pre>                                
+                            </td>
                         </tr>
                         <tr>
                             <td>template</td>
                             <td>默认"" type: String</td>
                             <td>配置抽屉标题、面板区域的html模板,在mode为“custom”时有效
-                                比如：'&lt;div class="ui-accordion-inner" ms-each-item="data"&gt;&lt;h3 class="ui-accordion-header" ms-class="MS_OPTION_ACTIVECLASS:currentIndex == $index"&gt;{{item.title}}&lt;/h3&gt;&lt;div class="ui-accordion-content" ms-visible="currentIndex == $index"&gt;{{item.content|html}}&lt;/div&gt;'
+                                比如：
+                                <pre class="brush:html;gutter:false;toolbar:false">
+                                &lt;div class="ui-accordion-inner" ms-each-item="data"&gt;
+                                &lt;h3 class="ui-accordion-header" ms-class="MS_OPTION_ACTIVECLASS:currentIndex == $index"&gt;{{item.title}}&lt;/h3&gt;
+                                &lt;div class="ui-accordion-content" ms-visible="currentIndex == $index"&gt;{{item.content|html}}&lt;/div&gt;
+                                </pre>
                                 <p>注意：模板必须是由最外层的ui-accordion-inner包装，并配置ms-each-item="data",accordion的header部分由ui-accordion-header包装，content部分由ui-accordion-content包装，内部结构随便设置，accordion的tittle由{{item.content}}占位符表示，content由{{item.content}}占位符表示，必须注意务必配置ui-accordion-header元素的ms-class，如上例所示</p>
                             </td>
                         </tr>
@@ -144,6 +156,7 @@
                             <td>setData(data)</td>
                             <td></td>
                             <td>重定义组件配置数据对象，参数data的结构如下：
+                                <pre class="brush:javascript;gutter:false;toolbar:false">
                                 [{
                                 title: "标题1",
                                 content: "正文1"
@@ -152,6 +165,7 @@
                                 title: "标题2",
                                 content: "正文2"
                                 }] 
+                                </pre>
                                 setData方法仅供外部调用，不可配置
                             </td>
                         </tr>
@@ -159,12 +173,15 @@
                             <td>refresh(data)</td>
                             <td></td>
                             <td>手工刷新组件视图,也可以传递参数data，重渲染组件视图
+                                <pre class="brush:javascript;gutter:false;toolbar:false">
+
                                 accordion.refresh({
                                 data: [{
                                 title: '标题',
                                 content: '正文'
                                 }]
                                 });  
+                                </pre>
                                 refresh方法仅供外部调用，不可配置   
                             </td>
                         </tr>

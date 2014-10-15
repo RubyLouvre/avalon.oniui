@@ -71,13 +71,15 @@ table.table-doc {
     line-height: 30px;
     display: inline-block;
 }
-/*a:hover {
-    color: blue;
+fieldset code{
+    background: none repeat scroll 0 0 #f1f0ea;
+    border: 1px solid #dddbcc;
+    border-radius: 2px;
+    font-family: Consolas,monospace,sans-serif;
+    font-size: 0.85em;
+    padding: 1px 3px;
+    white-space: pre;
 }
-p {
-    line-height: 30px;
-    font-size: 16px;
-}*/
 .demo {
     color:#f00; 
     font-weight: bold;

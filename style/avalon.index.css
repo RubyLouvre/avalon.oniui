@@ -45,6 +45,16 @@ a, a:active, a:hover {
     box-shadow: 0 2px 3px 0 rgba(74, 136, 115, 0.5);
     z-index: 120;
 }
+.header .nav .logo{
+    position:absolute;
+    left:0;
+    top:0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    width:180px;
+    height:60px;
+    cursor:pointer;
+}
 .header .nav ul {
     display: inline-block;
     *display: inline;

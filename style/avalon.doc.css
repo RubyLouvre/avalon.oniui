@@ -31,6 +31,7 @@ pre {
 }
 /*doc table的样式*/
 table.table-doc {  
+    table-layout: fixed;
     margin: 10px auto;
     border: 1px solid #cad9ea;  
     border-collapse: collapse;

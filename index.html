@@ -149,7 +149,7 @@
         <div class="header">
             <div class="fix">
                 <div id="nav" class="nav">
-                    <a class="logo" ms-href='{{ location.href.indexOf("localhost") ? "/avalon/index.html": "/oniui/index.html"}}'></a>
+                    <a class="logo" ms-href='{{ location.href.indexOf("localhost") !== -1 ? "/avalon/index.html": "/oniui/index.html"}}'></a>
                     <ul id="oniui_component_list">
                         <li ms-repeat-page="pages" ms-class="active: $index == activeIndex" ms-click="changeActiveIndex($index)">
                             <a ms-href="#{{page.href}}" >{{page.title | html}}</a>

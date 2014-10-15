@@ -4,6 +4,7 @@
         <title>规范</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
+        <script src="./highlight/shCore.js"></script>
     </head>
     <body>
         <p><a href="http://www.cnblogs.com/rubylouvre/p/3573061.html"> avalonjs 组件编写指南</a></p>
@@ -71,6 +72,16 @@
             </li>
             <li>
                 组件的模板编写,请遵循<a href="http://www.cnblogs.com/rubylouvre/p/3642024.html">《avalon 的HTML规范》</a>
+            </li>
+            <li>
+                每个组件的文件夹里增加一个avalon.[uiName].log.html 文件,里面是一个UI列表, 每次升级或修BUG,都把日期与改动都记录下来
+                <pre class="brush:html;gutter:false;toolbar:false">
+                                &lt;h1&gt;日志&lt;h1&gt;
+&lt;ul&gt;
+   &lt;li&gt;2014.10.15, 修改了什么什么功能&lt;/li&gt; 
+   &lt;li&gt;2014.10.16, 修改了什么什么功能&lt;/li&gt;
+&lt;ul&gt;
+                </pre>
             </li>
         </ul>
 

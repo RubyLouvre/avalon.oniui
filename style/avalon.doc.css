@@ -71,13 +71,15 @@ table.table-doc {
     line-height: 30px;
     display: inline-block;
 }
-/*a:hover {
-    color: blue;
+fieldset code{
+    background: none repeat scroll 0 0 #f1f0ea;
+    border: 1px solid #dddbcc;
+    border-radius: 2px;
+    font-family: Consolas,monospace,sans-serif;
+    font-size: 0.85em;
+    padding: 1px 3px;
+    white-space: pre;
 }
-p {
-    line-height: 30px;
-    font-size: 16px;
-}*/
 .demo {
     color:#f00; 
     font-weight: bold;
@@ -126,5 +128,5 @@ p {
 
 /*14.10.13 组件库demo示例链接样式*/
 .example-links li{padding: 2px 0;}
-.example-links a{text-decoration: none;}
+.example-links a{text-decoration: none; color:#547c73;}
 

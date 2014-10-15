@@ -7,7 +7,7 @@
         <link type="text/css" rel="stylesheet" href="./style/avalon.doc.css" />
         <link type="text/css" rel="stylesheet" href="./style/avalon.index.css" />
         <script src="avalon.js"></script>
-        <script src="history.js"></script>
+        <script src="./pages/library/history.js"></script>
         <script src="./highlight/shCore.js"></script>
         <link rel=stylesheet type=text/css href="pages/timeline/css/base.css"/>
         <script>
@@ -149,6 +149,7 @@
         <div class="header">
             <div class="fix">
                 <div id="nav" class="nav">
+                    <a class="logo" ms-href='{{ location.href.indexOf("localhost") ? "/avalon/index.html": "/oniui/index.html"}}'></a>
                     <ul id="oniui_component_list">
                         <li ms-repeat-page="pages" ms-class="active: $index == activeIndex" ms-click="changeActiveIndex($index)">
                             <a ms-href="#{{page.href}}" >{{page.title | html}}</a>

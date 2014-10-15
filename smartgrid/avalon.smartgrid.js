@@ -530,7 +530,7 @@ define(["avalon",
         },
         pager: {
             canChangePageSize : true,
-            options : [10, 20, 50, 100] //默认[10,30,50]
+            options : [10, 20, 50, 100] //默认[10,20,50,100]
         },
         sortable: {
             remoteSort: true

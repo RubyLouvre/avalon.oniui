@@ -285,7 +285,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                     viewW,
                     viewH,
                     // 计算滚动条可以占据的宽或者高
-                    barH = strToNumber(ele.css("height")),
+                    // barH = strToNumber(ele.css("height")),
+                    barH = vmodel.widgetElement === document.body? vmodel.viewElement.clientHeight : strToNumber(ele.css("height")),
                     barW = strToNumber(ele.css("width")),
                     // 滚动视野区宽高，存在滚动视野区宽高和滚动宽高不一致的情况
                     h = vmodel.viewHeightGetter(ele),

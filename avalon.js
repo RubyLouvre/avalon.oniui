@@ -551,8 +551,9 @@
                 watchedProperties[name] = accessor
             })(i, $scope[i])
         }
+
         $$skipArray.forEach(function(name) {
-            $scope[name] = true //为用户定义的对象再添加一些特殊属性
+            delete $scope[name]
             delete $model[name]  //这些特殊属性不应该在$model中出现
         })
 
@@ -630,8 +631,8 @@
         //a为原来的VM， b为新数组或新对象
         var son = parent[name]
         if (valueType === "array") {
-            if (!Array.isArray(value)) {
-                return parent //fix https://github.com/RubyLouvre/avalon/issues/261
+            if (!Array.isArray(value) || son === value) {
+                return son //fix https://github.com/RubyLouvre/avalon/issues/261
             }
             son.clear()
             son.pushArray(value.concat())
@@ -744,6 +745,11 @@
                     buffer.push("\tPublic [" + name + "]")
                 }
             }
+            $$skipArray.forEach(function(name) {
+                if (!accessors.hasOwnProperty(name)) {
+                    buffer.push("\tPublic [" + name + "]")
+                }
+            })
             buffer.push("\tPublic [" + 'hasOwnProperty' + "]")
             //添加访问器属性 
             for (name in accessors) {
@@ -900,16 +906,18 @@
     /*********************************************************************
      *                           DOM 底层补丁                             *
      **********************************************************************/
-    function fixContains(a, b) {
-        if (b) {
-            while ((b = b.parentNode)) {
-                if (b === a) {
+
+    function fixContains(root, el) {
+        try {//IE6-8,游离于DOM树外的文本节点，访问parentNode有时会抛错
+            while ((el = el.parentNode))
+                if (el === root)
                     return true;
-                }
-            }
+            return false
+        } catch (e) {
+            return false
         }
-        return false
     }
+
     //safari5+是把contains方法放在Element.prototype上而不是Node.prototype
     if (!root.contains) {
         Node.prototype.contains = function(arg) {
@@ -2531,6 +2539,7 @@
                         return elem[bool] = !!val
                     }
                 }
+                console.log(attrName)
                 var toRemove = (val === false) || (val === null) || (val === void 0)
                 if (!W3C && propMap[attrName]) {//旧式IE下需要进行名字映射
                     attrName = propMap[attrName]
@@ -2621,6 +2630,12 @@
                     val = val.replace(/&amp;/g, "&") //处理IE67自动转义的问题
                 }
                 elem[method] = val
+                if (window.chrome && elem.tagName === "EMBED") {
+                    var parent = elem.parentNode//#525  chrome1-37下embed标签动态设置src不能发生请求
+                    var comment = document.createComment("ms-src")
+                    parent.replaceChild(comment, elem)
+                    parent.replaceChild(elem, comment)
+                }
             }
         },
         "class": function(val, elem, data) {
@@ -2976,6 +2991,20 @@
                     if (form && form.msValidate) {
                         form.msValidate(elem)
                     }
+                    data.msType = data.param || ""
+                    if (data.msType === "bool") {
+                        data.msType = "boolean"
+                        log("ms-duplex-bool已经更名为ms-duplex-boolean")
+                    } else if (data.msType === "text") {
+                        data.msType = "string"
+                        log("ms-duplex-text已经更名为ms-duplex-string")
+                    }
+                    if (data.msType === "radio") {
+                        log("ms-duplex-radio将在2.0废掉，请尽量不要用")
+                    }
+                    if (!/boolean|string|number/.test(data.msType)) {
+                        data.msType = ""
+                    }
                     data.bound = function(type, callback) {
                         if (elem.addEventListener) {
                             elem.addEventListener(type, callback, false)
@@ -3206,45 +3235,48 @@
     //如果一个input标签添加了model绑定。那么它对应的字段将与元素的value连结在一起
     //字段变，value就变；value变，字段也跟着变。默认是绑定input事件，
     duplexBinding.INPUT = function(element, evaluator, data) {
-        var fixType = data.param,
-                type = element.type,
+        var type = element.type,
                 bound = data.bound,
                 $elem = avalon(element),
                 firstTigger = false,
-                composing = false,
-                callback = function(value) {
-                    firstTigger = true
-                    data.changed.call(this, value)
-                },
-                compositionStart = function() {
-                    composing = true
-                },
-                compositionEnd = function() {
-                    composing = false
-                },
-                //当value变化时改变model的值
-                updateVModel = function() {
-                    if (composing)
-                        return
-                    var val = getTypeValue(data, element.value)
-                    if ($elem.data("duplex-observe") !== false) {
-                        evaluator(val)
-                        callback.call(element, val)
-                    }
+                composing = false
+        function callback(value) {
+            firstTigger = true
+            data.changed.call(this, value)
+        }
+        function compositionStart() {
+            composing = true
+        }
+        function compositionEnd() {
+            composing = false
+        }
+        //当value变化时改变model的值
+        function updateVModel() {
+            if (composing)//处理中文输入法在minlengh下引发的BUG
+                return
+            var val = element.oldValue = element.value //防止递归调用形成死循环
+            var typedVal = getTypedValue(data, val)               //尝式转换为正确的格式
+            if ($elem.data("duplex-observe") !== false) {
+                evaluator(typedVal)
+                callback.call(element, typedVal)
+                if ($elem.data("duplex-focus")) {
+                    avalon.nextTick(function() {
+                        element.focus()
+                    })
                 }
+            }
+        }
 
         //当model变化时,它就会改变value的值
         data.handler = function() {
             var val = evaluator()
-            val = val == null ? "" : val 
-            setTypeValue(data, val)
-            val += ""
+            val = val == null ? "" : val + ""
             if (val !== element.value) {
                 element.value = val
             }
         }
 
-        if (type === "checkbox" && fixType === "radio") {
+        if (type === "checkbox" && data.param === "radio") {
             type = "radio"
         }
         if (type === "radio") {
@@ -3252,22 +3284,14 @@
             updateVModel = function() {
                 if ($elem.data("duplex-observe") !== false) {
                     var val = element.value
-                    if (fixType === "text") {
-                        evaluator(getTypeValue(data, val))
-                    } else if (fixType === "bool") {
-                        val = val === "true"
-                        evaluator(val)
-                    } else {
-                        val = !element.oldValue
-                        evaluator(val)
-                    }
-                    callback.call(element, val)
+                    var typedValue = data.msType ? getTypedValue(data, val) : !element.oldValue
+                    evaluator(typedValue)
+                    callback.call(element, typedValue)
                 }
             }
             data.handler = function() {
                 var val = evaluator()
-                setTypeValue(data, val)
-                var checked = /bool|text/.test(fixType) ? val + "" === element.value : !!val
+                var checked = data.msType ? val + "" === element.value : !!val
                 element.oldValue = checked
                 if (IE6) {
                     setTimeout(function() {
@@ -3288,21 +3312,27 @@
                     var method = element.checked ? "ensure" : "remove"
                     var array = evaluator()
                     if (!Array.isArray(array)) {
+                        log("ms-duplex应用于checkbox上要对应一个数组")
                         array = [array]
                     }
-                    avalon.Array[method](array, element.value)
+                    var typedValue = getTypedValue(data, element.value)
+                    avalon.Array[method](array, typedValue)
                     callback.call(element, array)
                 }
             }
+
             data.handler = function() {
                 var array = [].concat(evaluator()) //强制转换为数组
-                element.checked = array.indexOf(element.value) >= 0
+                element.checked = array.indexOf(getTypedValue(data, element.value)) >= 0
             }
 
             bound(W3C ? "change" : "click", updateVModel)
 
         } else {
             var event = element.attributes["data-duplex-event"] || element.attributes["data-event"] || {}
+            if (element.attributes["data-event"]) {
+                log("data-event指令已经废弃，请改用data-duplex-event")
+            }
             event = event.value
             if (event === "change") {
                 bound("change", updateVModel)
@@ -3354,20 +3384,15 @@
             clearTimeout(timer)
         }, 31)
     }
-    function getTypeValue(data, val) {
+
+    function getTypedValue(data, val) {
         switch (data.msType) {
             case "boolean":
-                return val == "true"
+                return val === "true"
             case "number":
-                return isFinite(val) ? Number(val) : val
+                return isFinite(val) || val === "" ? parseFloat(val) || 0 : val
             default:
-                return val + ""
-        }
-    }
-    function setTypeValue(data, val) {
-        if (!data.msType) {
-            var type = typeof val
-            data.msType = type === "boolean" || type === "number" ? type : "string"
+                return val
         }
     }
 
@@ -3434,10 +3459,10 @@
                 var val = $elem.val() //字符串或字符串数组
                 if (Array.isArray(val)) {
                     val = val.map(function(v) {
-                        return getTypeValue(data, v)
+                        return getTypedValue(data, v)
                     })
                 } else {
-                    val = getTypeValue(data, val)
+                    val = getTypedValue(data, val)
                 }
                 if (val + "" !== element.oldValue) {
                     evaluator(val)
@@ -3448,34 +3473,16 @@
         data.handler = function() {
             var val = evaluator()
             val = val && val.$model || val
-
-            if (!data.msType) {
-                var values = []
-                for (var i = 0, el; el = element.options[i++]; ) {
-                    values.push(avalon(el).val())
+            //必须变成字符串后才能比较
+            if (Array.isArray(val)) {
+                if (!element.multiple) {
+                    log("ms-duplex在<select multiple=true>上要求对应一个数组")
                 }
-                var maybeType = "string"
-                if (values.every(function(val) {
-                    return isFinite(val)
-                })) {
-                    maybeType = "number"
-                } else if (values.every(function(val) {
-                    return val === "true" || val === "false"
-                })) {
-                    maybeType = "boolean"
-                }
-                if (!Array.isArray(val)) {
-                    data.msType = typeof val === maybeType ? maybeType : "string"
-                } else {
-                    var check0 = typeof val[0] === maybeType
-                    var check1 = val.length > 1 ? typeof val[1] === maybeType : true
-                    var check2 = val.length > 2 ? typeof val[2] === maybeType : true
-                    var check3 = val.length > 3 ? typeof val[3] === maybeType : true
-                    var check4 = val.length > 4 ? typeof val[4] === maybeType : true
-                    data.msType = check0 && check1 && check2 && check3 && check4 ? maybeType : "string"
+            } else {
+                if (element.multiple) {
+                    log("ms-duplex在<select multiple=false>不能对应一个数组")
                 }
             }
-            //必须变成字符串后才能比较
             val = Array.isArray(val) ? val.map(String) : val + ""
             if (val + "" !== element.oldValue) {
                 $elem.val(val)
@@ -4666,33 +4673,6 @@
     })
 
     avalon.ready(function() {
-        //IE6-9下这个通常只要1ms,而且没有副作用，不会发出请求，setImmediate如果只执行一次，与setTimeout一样要140ms上下
-        if (window.VBArray && !window.setImmediate) {
-            var handlerQueue = []
-
-            function drainQueue() {
-                var fn = handlerQueue.shift()
-                if (fn) {
-                    fn()
-                    if (handlerQueue.length) {
-                        avalon.nextTick()
-                    }
-                }
-            }
-            avalon.nextTick = function(callback) {
-                if (typeof callback === "function") {
-                    handlerQueue.push(callback)
-                }
-                var node = DOC.createElement("script")
-                node.onreadystatechange = function() {
-                    drainQueue() //在interactive阶段就触发
-                    node.onreadystatechange = null
-                    head.removeChild(node)
-                    node = null
-                }
-                head.appendChild(node)
-            }
-        }
         avalon.scan(DOC.body)
     })
 })(document)

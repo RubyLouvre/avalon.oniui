@@ -94,8 +94,6 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                 if(inited || !force && !vm.callInit) return
                 inited = true
 
-                // vm.tabs = options.tabs ? vm.tabs : tabs
-                // vm.tabpanels = options.tabpanels ? vm.tabpanels : tabpanels
                 if(!options.tabs) vm.tabs = tabs
                 if(!vm.tabpanels) vm.tabpanels = tabpanels
                 vm.active = vm.active >= vm.tabs.length && vm.tabs.length - 1 || vm.active < 0 && 0 || parseInt(vm.active) >> 0

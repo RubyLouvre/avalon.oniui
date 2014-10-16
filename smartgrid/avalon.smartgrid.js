@@ -403,12 +403,16 @@ define(["avalon",
                 return html
             }
 
-            vm.render = function(init) {
+            vm.render = function(data, init) {
                 var container = vmodel._container,
                     containerWrapper = vmodel.container,
                     selectable = vmodel.selectable,
                     tableTemplate = ""
-
+                if (avalon.type(data) === "array") {
+                    vmodel.data = data
+                } else {
+                    init = data
+                }
                 vmodel._pagerShow = !vmodel.data.length ? false : true
                 tableTemplate = vmodel.addRow(vmodel._getTemplate(), vmodel.columns.$model, vmodels)
                 avalon.innerHTML(container, tableTemplate)
@@ -530,7 +534,7 @@ define(["avalon",
         },
         pager: {
             canChangePageSize : true,
-            options : [10, 20, 50, 100] //默认[10,30,50]
+            options : [10, 20, 50, 100] //默认[10,20,50,100]
         },
         sortable: {
             remoteSort: true

@@ -19,25 +19,31 @@
         </script>
     </head>
     <body>
-        <div class="wrapper">
-            <h1>lazyload懒加载组件-fadeIn加载效果</h1>
-            <fieldset ms-controller="demo">
-                <legend>fadeIn加载效果</legend>
-                <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img1" ms-lazyload>
+        <div class="wrapper"  ms-controller="demo">
+            <h1>lazyload懒加载组件-自定义效果</h1>
+            <fieldset>
+                <legend>渐入效果</legend>
+                <img alt="1" ms-lazyload-original="images/placeholderimg1.jpg" ms-lazyload>
                 <p>
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                 </p>
-                <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img2" ms-lazyload>
+            </fieldset>
+            <fieldset>
+                <legend>从左侧滑出效果</legend>
+                <img alt="2" ms-lazyload-original="images/placeholderimg2.jpg" ms-lazyload-effect="slideX" ms-lazyload>
                 <p>
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                     placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
                 </p>
-                <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img3" ms-lazyload>
+            </fieldset>
+            <fieldset>
+                <legend>从上侧滑出效果</legend>
+                <img alt="3" ms-lazyload-original="images/placeholderimg3.jpg" ms-lazyload-effect="slideY" ms-lazyload>
             </fieldset>
             <pre ms-skip class="brush:html;gutter:false;toolbar:false">
 &lt;html&gt;
@@ -60,26 +66,28 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body&gt;
-        &lt;div class="wrapper"&gt;
-            &lt;h1&gt;lazyload懒加载组件-fadeIn加载效果&lt;/h1&gt;
-            &lt;fieldset ms-controller="demo"&gt;
-                &lt;legend&gt;fadeIn加载效果&lt;/legend&gt;
-                &lt;img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img1" ms-lazyload&gt;
+        &lt;div class="wrapper"  ms-controller="demo"&gt;
+            &lt;h1&gt;lazyload懒加载组件-自定义效果&lt;/h1&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;渐入效果&lt;/legend&gt;
+                &lt;img alt="1" ms-lazyload-original="images/placeholderimg1.jpg" ms-lazyload&gt;
                 &lt;p&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
+                    placeholder&lt;br /&gt;...
                 &lt;/p&gt;
-                &lt;img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img2" ms-lazyload&gt;
-                &lt;p&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
-                &lt;/p&gt;
-                &lt;img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img3" ms-lazyload&gt;
             &lt;/fieldset&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;从左侧滑出效果&lt;/legend&gt;
+                &lt;img alt="2" ms-lazyload-original="images/placeholderimg2.jpg" ms-lazyload-effect="slideX" ms-lazyload&gt;
+                &lt;p&gt;
+                    placeholder&lt;br /&gt;...
+                &lt;/p&gt;
+            &lt;/fieldset&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;从上侧滑出效果&lt;/legend&gt;
+                &lt;img alt="3" ms-lazyload-original="images/placeholderimg3.jpg" ms-lazyload-effect="slideY" ms-lazyload&gt;
+            &lt;/fieldset&gt;
+            &lt;pre ms-skip class="brush:html;gutter:false;toolbar:false"&gt;
+            &lt;/pre&gt;
         &lt;/div&gt;
     &lt;/body&gt;
 &lt;/html&gt;

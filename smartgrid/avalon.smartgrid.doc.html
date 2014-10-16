@@ -1,53 +1,55 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-<meta http-equiv="x-ua-compatible" content="ie=edge" />
-<title>smartgrid文档说明</title>
-<meta name="description" content="静态模板 实现grid adapter所有功能的smartgrid" />
-<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
-<style>
-    img {
-        width: 960px;
-    }
-</style>
-</head>
-<body class="doc">
-    <div class="wrapper">
-        <h2>smartgrid</h2>
-        <fieldset>
-            <legend>表格</legend>
-            smartgrid与simplegrid最大的不同是数据的渲染是通过静态模板实现的，当然也可以方便的实现动态更新视图。同时smartgrid实现了grid adapter的所有功能，不过部分使用方式会有些差异，下面会详细说明
-        </fieldset>
-        <fieldset>
-            <legend>使用说明</legend>
-            <table class="table-doc">
-                <thead>
-                    <tr>
-                        <th>名字</th>
-                        <th>默认值</th>
-                        <th>说明</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="3" align="center">配置参数</td>
-                    </tr>
-                    <tr>
-                        <td>container</td>
-                        <td>""</td> 
-                        <td>设置组件的容器元素，可以是字符串表示对应元素的id，也可以是元素对象引用</td>
-                    </tr>
-                    <tr>
-                        <td>data</td>
-                        <td>[]</td> 
-                        <td>表格数据</td>
-                    </tr>
-                    <tr>
-                        <td>columns</td>
-                        <td>[]</td> 
-                        <td>表格列信息对象的集合，格式为：
-<pre>
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <title>smartgrid文档说明</title>
+        <meta name="description" content="静态模板 实现grid adapter所有功能的smartgrid" />
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <style>
+            img {
+                width: 960px;
+            }
+        </style>
+    </head>
+    <body class="doc">
+        <div class="wrapper">
+            <h2>smartgrid</h2>
+            <fieldset>
+                <legend>表格</legend>
+                smartgrid与simplegrid最大的不同是数据的渲染是通过静态模板实现的，当然也可以方便的实现动态更新视图。同时smartgrid实现了grid adapter的所有功能，不过部分使用方式会有些差异，下面会详细说明
+            </fieldset>
+            <fieldset>
+                <legend>使用说明</legend>
+                <table class="table-doc">
+                    <col width="180"/>
+                    <col width="180"/>
+                    <thead>
+                        <tr>
+                            <th>名字</th>
+                            <th>默认值</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" align="center">配置参数</td>
+                        </tr>
+                        <tr>
+                            <td>container</td>
+                            <td>""</td> 
+                            <td>设置组件的容器元素，可以是字符串表示对应元素的id，也可以是元素对象引用</td>
+                        </tr>
+                        <tr>
+                            <td>data</td>
+                            <td>[]</td> 
+                            <td>表格数据</td>
+                        </tr>
+                        <tr>
+                            <td>columns</td>
+                            <td>[]</td> 
+                            <td>表格列信息对象的集合，格式为：
+                                <pre>
 [{
     key: "name", //列标志 
     name: "姓名", //列明
@@ -63,208 +65,208 @@
     },
     format: "upperCaseName" //包装列数据的方法，此方法名对应到htmlHelper对象中的方法
 }, ...]
-</pre>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>allSelected</td>
-                        <td>true</td> 
-                        <td>当设置selectable之后，是否显示表头的全选框，默认显示，false不显示</td>
-                    </tr>
-                    <tr>
-                        <td>addRow</td>
-                        <td>
-<pre>
+                                </pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>allSelected</td>
+                            <td>true</td> 
+                            <td>当设置selectable之后，是否显示表头的全选框，默认显示，false不显示</td>
+                        </tr>
+                        <tr>
+                            <td>addRow</td>
+                            <td>
+                                <pre>
 addRow: function(tmpl, columns, vmodel) {
     return tmpl
 }
-</pre>
-                        </td> 
-                        <td>为表格添加新行</td>
-                    </tr>
-                    <tr>
-                        <td>htmlHelper</td>
-                        <td>{}</td> 
-                        <td>包装数据的方法集合，可<a href="avalon.smartgrid.ex2.html">参见实例2</a>的使用</td>
-                    </tr>
-                    <tr>
-                        <td>noResult</td>
-                        <td>"暂时没有数据"</td> 
-                        <td>数据为空时表格的提示信息</td>
-                    </tr>
-                    <tr>
-                        <td>remoteSort</td>
-                        <td>avalon.noop</td> 
-                        <td>远程排序操作的方法</td>
-                    </tr>
-                    <tr>
-                        <td>isAffix</td>
-                        <td>false</td> 
-                        <td>
-                            表头在表格内容超过可视区高度时是否吸顶，true吸顶，false不吸顶，默认不吸顶
-                            <p>ps：在IE6下的吸顶是通过absolute定位的，所以会有跳动的感觉，所以谨慎使用吸顶效果</p>
-                        </td>
-                    </tr>
-                    <!-- containerMinWidth -->
-                    <tr>
-                        <td>loading</td>
-                        <td>
-<pre>
+                                </pre>
+                            </td> 
+                            <td>为表格添加新行</td>
+                        </tr>
+                        <tr>
+                            <td>htmlHelper</td>
+                            <td>{}</td> 
+                            <td>包装数据的方法集合，可<a href="avalon.smartgrid.ex2.html">参见实例2</a>的使用</td>
+                        </tr>
+                        <tr>
+                            <td>noResult</td>
+                            <td>"暂时没有数据"</td> 
+                            <td>数据为空时表格的提示信息</td>
+                        </tr>
+                        <tr>
+                            <td>remoteSort</td>
+                            <td>avalon.noop</td> 
+                            <td>远程排序操作的方法</td>
+                        </tr>
+                        <tr>
+                            <td>isAffix</td>
+                            <td>false</td> 
+                            <td>
+                                表头在表格内容超过可视区高度时是否吸顶，true吸顶，false不吸顶，默认不吸顶
+                                <p>ps：在IE6下的吸顶是通过absolute定位的，所以会有跳动的感觉，所以谨慎使用吸顶效果</p>
+                            </td>
+                        </tr>
+                        <!-- containerMinWidth -->
+                        <tr>
+                            <td>loading</td>
+                            <td>
+                                <pre>
 {
     toggle: false, //是否显示遮罩
     modal: true, //显示遮罩
     modalBackground: "#000" //设置遮罩颜色，opacity默认为0.1
 }
-</pre>
-                        </td>
-                        <td>设置loading缓冲的配置项，具体使用方法参见loading document</td>
-                    </tr>
-                    <tr>
-                        <td>sortable</td>
-                        <td>
-<pre>
+                                </pre>
+                            </td>
+                            <td>设置loading缓冲的配置项，具体使用方法参见loading document</td>
+                        </tr>
+                        <tr>
+                            <td>sortable</td>
+                            <td>
+                                <pre>
 {
     remoteSort: true
 }
-</pre>
-                        </td>
-                        <td>是否进行远程排序，默认true，进行远程排序必须配置远程排序的方法：remoteSort</td>
-                    </tr>
-                    <tr>
-                        <td>pager</td>
-                        <td>
-<pre>
+                                </pre>
+                            </td>
+                            <td>是否进行远程排序，默认true，进行远程排序必须配置远程排序的方法：remoteSort</td>
+                        </tr>
+                        <tr>
+                            <td>pager</td>
+                            <td>
+                                <pre>
 {
     canChangePageSize : true,
     options : [10, 20, 50, 100] //默认[10,30,50]
 }
-</pre>
-                        </td>
-                        <td>设置pager的配置项，smartgrid组件默认会添加pager，也可以改变表格显示数目，默认可选10、20、50、100条数据，如果不希望显示此选项，可以设置canChangePageSize为false</td>
-                    </tr>
-                    <tr>
-                        <td>getTemplate(tmp, options)</td>
-                        <td></td>
-                        <td>调用此方法修改模板，提高用户对模板的定制性</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" align="center">暴露给用户调用的API</td>
-                    </tr>
-                    <tr>
-                        <td>render</td>
-                        <td></td> 
-                        <td>渲染表格视图，只要改变了数据data就要调用render方法重新渲染表格</td>
-                    </tr>
-                    <tr>
-                        <td>setColumns(columns, b)</td>
-                        <td></td> 
-                        <td>
-                            设置列的显示或者隐藏, columns可以是字符串，也可以是数组，列出要设置的列的key值， b是一个布尔，true为显示列，false为隐藏列，设置了列的isLock属性为ture时始终显示列。
-                            <p>ps: 同grid adapter的使用完全相同</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>showNoResult(text)</td>
-                        <td></td> 
-                        <td>
-                            调用此方法清空表格数据，可以设置对应的说明文字，text默认值为“暂时没有数据”
-                            <p>ps: 这里虽然保留了grid adapter中的此方法，但是其实没有意义，因为组件在数据为空的时候会自动显示相应的无数据说明文字，不需要用户手动调用此方法</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>getRawData()</td>
-                        <td></td> 
-                        <td>获取表格数据,当然也可以通过vmodel.data直接获得表格数据</td>
-                    </tr>
-                    <tr>
-                        <td>getSelected()</td>
-                        <td></td>
-                        <td>获取选中表格行的数据集合</td>
-                    </tr>
-                    <tr>
-                        <td>selectAll(b)</td>
-                        <td></td> 
-                        <td>全选表格，或者全不选，参数b是个布尔值，true表示全选，false表示全不选，为空时以true对待</td>
-                    </tr>
-                    <tr>
-                        <td>isSelectAll()</td>
-                        <td></td> 
-                        <td>判断表过是否全选，全选返回true，否则返回false，其实也可以直接通过_allSelected属性来判断</td>
-                    </tr>
-                    <tr>
-                        <td>showLoading()</td>
-                        <td></td> 
-                        <td>显示缓冲提示，最终调用的是loading组件，想要配置缓冲格式的话可以参见<a href="../loading/avalon.loading.doc.html">loading的使用文档</a></td>
-                    </tr>
-                    <tr>
-                        <td>hideLoading()</td>
-                        <td></td> 
-                        <td>隐藏缓冲提示</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" align="center">可以配置的事件回调</td>
-                    </tr> 
-                    <tr>
-                        <td>onColumnSort(sortType, field)</td>
-                        <td></td> 
-                        <td>
-                            排序回调
-                            <p>ps: 此事件对应grid adapter中callback回调中的columnSort事件类型</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>onRowSelect(rowData, isSelected)</td>
-                        <td></td> 
-                        <td>
-                            用户选中一行或者取消一行选中状态的回调
-                            <p>ps: 此事件对应grid adapter中callback回调中的rowSelect事件类型</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>onSelectAll(datas, isSelectedAll)</td>
-                        <td></td> 
-                        <td>
-                            用户全选或全不选的回调
-                            ps: 此事件对应grid adapter中callback回调中的selectAll事件类型
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>onInit(vmodel, options, vmodels)</td>
-                        <td></td> 
-                        <td>组件渲染之后的回调</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">
-                            <p>grid adapter中的rowDataChange事件是针对switchdropdown或者dropdown这种组件的回调事件，规范起见，这些回调方法统一在对应的组件中配置</p>
-                            <p>pageNumberChange事件对应pager组件的onJump事件，因此smartgrid组件里也不再保留，事件的配置请用户放在pager配置项中</p>
-                            <p>pageSizeChange事件对应dropdown的onChange事件，因此smartgrid也不做保留，请用户将在dropdown配置项中配置onChange即可，建议最好把dropdown配置项放在pager的配置项中，<a href="./avalon.smartgrid.ex5.html">可以参见实例5</a>
-                            </p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </fieldset>
-        <h3>demo示例：</h3>
-        <ol class="example-links">
-            <li><a href="avalon.smartgrid.ex1.html">除设置columns和data外都是默认配置的smartgrid</a></li>
-            <li><a href="avalon.smartgrid.ex2.html">通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数</a></li>
-            <li><a href="avalon.smartgrid.ex3.html">演示表格吸顶效果，并且取消pager的显示</a></li>
-            <li><a href="avalon.smartgrid.ex4.html">表格排序操作</a></li>
-            <li><a href="avalon.smartgrid.ex5.html">自定义smartgrid各种事件回调</a></li>
-            <li><a href="avalon.smartgrid.ex6.html">供用户调用API</a></li>
-            <li><a href="avalon.smartgrid.ex7.html">配置addRow为表格添加新行</a></li>
-        </ol>
-        <p>下面附上实现相同展示效果的情况下，smartgrid与simplegrid的渲染情况对比</p>
-        <div>
-            <h2>smartgrid渲染10条表格数据</h2>
-            <img src="smartgrid10.png"/>
-            <h2>simplegrid渲染10条表格数据</h2>
-            <img src="simplegrid10.png"/>
-            <h2>smartgrid渲染200条表格数据</h2>
-            <img src="smartgrid200.png"/>
-            <h2>simplegrid渲染200条表格数据</h2>
-            <img src="simplegrid200.png"/>
+                                </pre>
+                            </td>
+                            <td>设置pager的配置项，smartgrid组件默认会添加pager，也可以改变表格显示数目，默认可选10、20、50、100条数据，如果不希望显示此选项，可以设置canChangePageSize为false</td>
+                        </tr>
+                        <tr>
+                            <td>getTemplate(tmp, options)</td>
+                            <td></td>
+                            <td>调用此方法修改模板，提高用户对模板的定制性</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" align="center">暴露给用户调用的API</td>
+                        </tr>
+                        <tr>
+                            <td>render</td>
+                            <td></td> 
+                            <td>渲染表格视图，只要改变了数据data就要调用render方法重新渲染表格</td>
+                        </tr>
+                        <tr>
+                            <td>setColumns(columns, b)</td>
+                            <td></td> 
+                            <td>
+                                设置列的显示或者隐藏, columns可以是字符串，也可以是数组，列出要设置的列的key值， b是一个布尔，true为显示列，false为隐藏列，设置了列的isLock属性为ture时始终显示列。
+                                <p>ps: 同grid adapter的使用完全相同</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>showNoResult(text)</td>
+                            <td></td> 
+                            <td>
+                                调用此方法清空表格数据，可以设置对应的说明文字，text默认值为“暂时没有数据”
+                                <p>ps: 这里虽然保留了grid adapter中的此方法，但是其实没有意义，因为组件在数据为空的时候会自动显示相应的无数据说明文字，不需要用户手动调用此方法</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>getRawData()</td>
+                            <td></td> 
+                            <td>获取表格数据,当然也可以通过vmodel.data直接获得表格数据</td>
+                        </tr>
+                        <tr>
+                            <td>getSelected()</td>
+                            <td></td>
+                            <td>获取选中表格行的数据集合</td>
+                        </tr>
+                        <tr>
+                            <td>selectAll(b)</td>
+                            <td></td> 
+                            <td>全选表格，或者全不选，参数b是个布尔值，true表示全选，false表示全不选，为空时以true对待</td>
+                        </tr>
+                        <tr>
+                            <td>isSelectAll()</td>
+                            <td></td> 
+                            <td>判断表过是否全选，全选返回true，否则返回false，其实也可以直接通过_allSelected属性来判断</td>
+                        </tr>
+                        <tr>
+                            <td>showLoading()</td>
+                            <td></td> 
+                            <td>显示缓冲提示，最终调用的是loading组件，想要配置缓冲格式的话可以参见<a href="../loading/avalon.loading.doc.html">loading的使用文档</a></td>
+                        </tr>
+                        <tr>
+                            <td>hideLoading()</td>
+                            <td></td> 
+                            <td>隐藏缓冲提示</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" align="center">可以配置的事件回调</td>
+                        </tr> 
+                        <tr>
+                            <td>onColumnSort(sortType, field)</td>
+                            <td></td> 
+                            <td>
+                                排序回调
+                                <p>ps: 此事件对应grid adapter中callback回调中的columnSort事件类型</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>onRowSelect(rowData, isSelected)</td>
+                            <td></td> 
+                            <td>
+                                用户选中一行或者取消一行选中状态的回调
+                                <p>ps: 此事件对应grid adapter中callback回调中的rowSelect事件类型</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>onSelectAll(datas, isSelectedAll)</td>
+                            <td></td> 
+                            <td>
+                                用户全选或全不选的回调
+                                ps: 此事件对应grid adapter中callback回调中的selectAll事件类型
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>onInit(vmodel, options, vmodels)</td>
+                            <td></td> 
+                            <td>组件渲染之后的回调</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <p>grid adapter中的rowDataChange事件是针对switchdropdown或者dropdown这种组件的回调事件，规范起见，这些回调方法统一在对应的组件中配置</p>
+                                <p>pageNumberChange事件对应pager组件的onJump事件，因此smartgrid组件里也不再保留，事件的配置请用户放在pager配置项中</p>
+                                <p>pageSizeChange事件对应dropdown的onChange事件，因此smartgrid也不做保留，请用户将在dropdown配置项中配置onChange即可，建议最好把dropdown配置项放在pager的配置项中，<a href="./avalon.smartgrid.ex5.html">可以参见实例5</a>
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+            <h3>demo示例：</h3>
+            <ol class="example-links">
+                <li><a href="avalon.smartgrid.ex1.html">除设置columns和data外都是默认配置的smartgrid</a></li>
+                <li><a href="avalon.smartgrid.ex2.html">通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数</a></li>
+                <li><a href="avalon.smartgrid.ex3.html">演示表格吸顶效果，并且取消pager的显示</a></li>
+                <li><a href="avalon.smartgrid.ex4.html">表格排序操作</a></li>
+                <li><a href="avalon.smartgrid.ex5.html">自定义smartgrid各种事件回调</a></li>
+                <li><a href="avalon.smartgrid.ex6.html">供用户调用API</a></li>
+                <li><a href="avalon.smartgrid.ex7.html">配置addRow为表格添加新行</a></li>
+            </ol>
+            <p>下面附上实现相同展示效果的情况下，smartgrid与simplegrid的渲染情况对比</p>
+            <div>
+                <h2>smartgrid渲染10条表格数据</h2>
+                <img src="smartgrid10.png"/>
+                <h2>simplegrid渲染10条表格数据</h2>
+                <img src="simplegrid10.png"/>
+                <h2>smartgrid渲染200条表格数据</h2>
+                <img src="smartgrid200.png"/>
+                <h2>simplegrid渲染200条表格数据</h2>
+                <img src="simplegrid200.png"/>
+            </div>
         </div>
-    </div>
-</body>
+    </body>
 </html>

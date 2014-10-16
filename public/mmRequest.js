@@ -476,7 +476,9 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
 
             // 不直接转换form.elements，防止以下情况：   <form > <input name="elements"/><input name="test"/></form>
             Array.prototype.filter.call(form.getElementsByTagName("*"), function(el) {
-                return rinput.test(el.nodeName) && el.name && !el.disabled && (rcheckbox.test(el.type) ? el.checked : true)
+                if(rinput.test(el.nodeName) && el.name && !el.disabled){
+                    return  rcheckbox.test(el.type) ? el.checked : true
+                }
             }).forEach(function(el) {
                 var val = avalon(el).val(),
                         vs;

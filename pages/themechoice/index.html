@@ -46,6 +46,8 @@
                 
                 <h2 class="demoHeaders">Daterangepicker</h2>
                 <div ms-controller="daterangepicker" ms-widget="daterangepicker" id="daterangepicker"></div>
+                <h2 class="demoHeaders">Coupledatepicker</h2>
+                <div ms-controller="coupledatepicker" ms-widget="coupledatepicker" id="coupledatepicker"></div>
                 <h2 class="demoHeaders">Doublelist</h2>
                 <div ms-controller="doublelist" ms-widget="doublelist,nimei" ms-duplex="select" id="doublelist"> </div>
 
@@ -340,6 +342,14 @@
             var datepicker = document.getElementById("datepicker");
             avalon.scan(datepicker, datepickerVM);
         })
+
+        require(['dropdown/avalon.dropdown'], function() {
+            var dropdownVM = avalon.define('dropdown', function(vm) {
+            });
+            var datepicker = document.getElementById("dropdown");
+            avalon.scan(dropdown, dropdownVM);
+          
+        });
 
         require(["progressbar/avalon.progressbar"], function() {
             var progressbarVM = avalon.define("progressbar", function(vm) {

@@ -720,7 +720,7 @@ define(["avalon",
                     if (allSelected && type === "Radio") return 
                     return "<input type='" + type.toLowerCase() +"'" + (disable ? "disabled " : "") + (selected ? "checked='checked'" : "") + "name='selected' "+ (allSelected ? "ms-click='_selectAll' ms-duplex-radio='_allSelected'" : "data-index='" + index +"'") +"data-role='selected'/>"
                 }
-                allSelected = isSelectAll(options.data)
+                allSelected = isSelectAll(options.data) || false
                 options._allSelected = allSelected
             }
             

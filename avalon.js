@@ -167,7 +167,11 @@
             if ((options = arguments[i]) != null) {
                 for (name in options) {
                     src = target[name]
-                    copy = options[name]
+                    try {
+                        copy = options[name]//当options为VBS对象时报错
+                    } catch (e) {
+                        continue
+                    }
 
                     // 防止环引用
                     if (target === copy) {
@@ -431,7 +435,7 @@
         return true
     }
 
-    function modelFactory($scope, $special) {
+    function modelFactory($scope, $special, $model) {
         if (Array.isArray($scope)) {
             var arr = $scope.concat()
             $scope.length = 0
@@ -450,7 +454,7 @@
         }
         $scope.$skipArray.$special = $special || {}//强制要监听的属性
         var $vmodel = {} //要返回的对象, 它在IE6-8下可能被偷龙转凤
-        var $model = {}  //vmodels.$model属性
+        $model = $model || {}  //vmodels.$model属性
         var $events = {} //vmodel.$events属性
         var watchedProperties = {} //监控属性
         var computedProperties = []  //计算属性
@@ -528,9 +532,8 @@
                             return childVmodel
                         }
                     }
-                    var childVmodel = accessor.child = modelFactory(val)
+                    var childVmodel = accessor.child = modelFactory(val, 0, $model[name])
                     childVmodel.$events[subscribers] = $events[name]
-                    $model[name] = childVmodel.$model
                 } else {
                     //第3种对应简单的数据类型，自变量，监控属性
                     accessor = function(newValue) {
@@ -2539,7 +2542,6 @@
                         return elem[bool] = !!val
                     }
                 }
-                console.log(attrName)
                 var toRemove = (val === false) || (val === null) || (val === void 0)
                 if (!W3C && propMap[attrName]) {//旧式IE下需要进行名字映射
                     attrName = propMap[attrName]
@@ -3337,10 +3339,21 @@
             if (event === "change") {
                 bound("change", updateVModel)
             } else {
-                if (W3C && DOC.documentMode !== 9) { //IE10+, W3C
+                if (W3C) { //IE9+, W3C
                     bound("input", updateVModel)
                     bound("compositionstart", compositionStart)
                     bound("compositionend", compositionEnd)
+                    if ("onselectionchange"in DOC) {//fix IE9 http://www.matts411.com/post/internet-explorer-9-oninput/
+                        function selectionchange(e) {
+                            if (e.type === "focus") {
+                                DOC.addEventListener("selectionchange", updateVModel, false);
+                            } else {
+                                DOC.removeEventListener("selectionchange", updateVModel, false);
+                            }
+                        }
+                        bound("focus", selectionchange)
+                        bound("blur", selectionchange)
+                    }
                 } else {
                     var events = ["keyup", "paste", "cut", "change"]
 
@@ -3639,7 +3652,7 @@
             pos = typeof pos === "number" ? pos : oldLength
             var added = []
             for (var i = 0, n = arr.length; i < n; i++) {
-                added[i] = convert(arr[i])
+                added[i] = convert(arr[i], this.$model[i])
             }
             _splice.apply(this, [pos, 0].concat(added))
             this._fire("add", pos, added)
@@ -3794,9 +3807,9 @@
         }
     })
 
-    function convert(val) {
+    function convert(val, $model) {
         if (rcomplexType.test(avalon.type(val))) {
-            val = val.$id ? val : modelFactory(val)
+            val = val.$id ? val : modelFactory(val, 0, $model)
         }
         return val
     }

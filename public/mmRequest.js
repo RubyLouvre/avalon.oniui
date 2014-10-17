@@ -210,17 +210,15 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
                     if (opts.crossDomain && !("withCredentials" in transport)) {
                         avalon.error("本浏览器不支持crossdomain xhr")
                     }
-                    if (opts.username) {
-                        transport.open(opts.type, opts.url, opts.async, opts.username, opts.password)
-                    } else {
-                        transport.open(opts.type, opts.url, opts.async)
-                    }
+
+                    transport.open(opts.type, opts.url, opts.async, opts.username, opts.password)
+
                     if (this.mimeType && transport.overrideMimeType) {
                         transport.overrideMimeType(this.mimeType)
                     }
                     this.requestHeaders["X-Requested-With"] = "XMLHttpRequest";
                     for (var i in this.requestHeaders) {
-                        transport.setRequestHeader(i, this.requestHeaders[i])
+                        transport.setRequestHeader(i, this.requestHeaders[i] + "")
                     }
                     var dataType = this.options.dataType;
                     if ("responseType" in transport && /^(blob|arraybuffer|text)$/.test(dataType)) {
@@ -267,22 +265,26 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
                                 }
                             } else {
                                 var status = transport.status
-                                this.responseText = transport.responseText
+                                //设置responseText
+                                var text = transport.responseText
+
+                                this.responseText = typeof text == "string" ? text : void 0
+                                //设置responseXML
                                 try {
                                     //当responseXML为[Exception: DOMException]时，
                                     //访问它会抛“An attempt was made to use an object that is not, or is no longer, usable”异常
                                     var xml = transport.responseXML
+                                    this.responseXML = xml.documentElement
                                 } catch (e) {
                                 }
+                                //设置response
                                 if (this.useResponseType) {
                                     this.response = transport.response
                                 }
-                                if (xml && xml.documentElement) {
-                                    this.responseXML = xml;
-                                }
+                                //设置responseHeadersString
                                 this.responseHeadersString = transport.getAllResponseHeaders()
-                                //火狐在跨城请求时访问statusText值会抛出异常
-                                try {
+
+                                try { //火狐在跨城请求时访问statusText值会抛出异常
                                     var statusText = transport.statusText
                                 } catch (e) {
                                     this.error = e
@@ -476,13 +478,13 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
 
             // 不直接转换form.elements，防止以下情况：   <form > <input name="elements"/><input name="test"/></form>
             Array.prototype.filter.call(form.getElementsByTagName("*"), function(el) {
-                if(rinput.test(el.nodeName) && el.name && !el.disabled){
+                if (rinput.test(el.nodeName) && el.name && !el.disabled) {
                     return  rcheckbox.test(el.type) ? el.checked : true //只处理拥有name并且没有disabled的表单元素
                 }
             }).forEach(function(el) {
                 var val = avalon(el).val(),
                         vs;
-                val = Array.isArray(val) ? val : typeof val === "string" ?[val] : [];
+                val = Array.isArray(val) ? val : typeof val === "string" ? [val] : [];
                 val = val.map(function(v) {
                     return v.replace(rCRLF, "\r\n")
                 })

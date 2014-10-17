@@ -520,7 +520,7 @@ define(["avalon",
         container: "", // element | id
         data: [],
         columns: [],
-        allSelected: true,
+        allChecked: true,
         htmlHelper: {},
         noResult: "暂时没有数据",
         remoteSort: avalon.noop,

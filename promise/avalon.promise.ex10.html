@@ -33,7 +33,7 @@
                 var p4 = new Promise(function(resolve, reject) {
                     reject('error')
                 })
-                p4.then(alert).then(alert).then(alert).catch(function(a) {
+                p4.then(alert).then(alert).then(alert)["catch"](function(a) {
                     alert(a + 1)
                 })
 

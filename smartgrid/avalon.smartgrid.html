@@ -17,7 +17,7 @@
                     ms-css-width="column._fixWidth" 
                     ms-css-text-align="column.align" 
                     ms-class="{{column.customClass}}"
-                    ms-class-1="ui-state-hidden: selectable && selectable.type && column.key=='selected' && !allSelected">
+                    ms-class-1="ui-state-hidden: selectable && selectable.type && column.key=='selected' && !allChecked">
                     {{column.name|html}}
                     <span  ms-click="sortColumn(column, $index, $event)"
                            ms-if="column.sortable" 
@@ -32,7 +32,7 @@
                     ms-visible="_toggleColumn(column.toggle, $index)" 
                     ms-css-text-align="column.align" 
                     ms-class="{{column.customClass}}"
-                    ms-class-1="ui-state-hidden: selectable && selectable.type && column.key=='selected' && !allSelected">
+                    ms-class-1="ui-state-hidden: selectable && selectable.type && column.key=='selected' && !allChecked">
                     {{column.name|html}}
                     <span  ms-click="sortColumn(column, $index, $event)"
                            ms-if="column.sortable" 

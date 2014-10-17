@@ -84,7 +84,7 @@ MS_OPTION_EJS
                     customClass = td.customClass || "",
                     format = td.format;&>
                 <td style="<&= style &>" class="<&= customClass &>">
-                    <&= format(@vmId, td.key , i, tr[td.key], tr.disable) &>
+                    <&= format(@vmId, td.key , i, tr[td.key], tr, tr.disable) &>
                 </td>
             <& } &>
         </tr>  

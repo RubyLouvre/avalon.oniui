@@ -697,14 +697,14 @@ define(["avalon",
                 column.sortTrend = "ndb"
             }
             if (format && !options.htmlHelper[format]) {
-                options.htmlHelper[format] = function(vmId, field, index, cellValue) {
+                options.htmlHelper[format] = function(vmId, field, index, cellValue, rowData) {
                     avalon.log("方法"+format+"未定义")
                     return cellValue
                 }
             }
             htmlFunction = options.htmlHelper[format]
             if (!htmlFunction) {
-                htmlFunction = function(vmId, field, index, cellValue) {
+                htmlFunction = function(vmId, field, index, cellValue, rowData) {
                     return cellValue
                 }
             }
@@ -716,7 +716,7 @@ define(["avalon",
                 allSelected = true
 
             if (type === "Checkbox" || type === "Radio") {
-                selectFormat = function(vmId, field, index, selected, disable, allSelected) {
+                selectFormat = function(vmId, field, index, selected, rowData, disable, allSelected) {
                     if (allSelected && type === "Radio") return 
                     return "<input type='" + type.toLowerCase() +"'" + (disable ? "disabled " : "") + (selected ? "checked='checked'" : "") + "name='selected' "+ (allSelected ? "ms-click='_selectAll' ms-duplex-radio='_allSelected'" : "data-index='" + index +"'") +"data-role='selected'/>"
                 }
@@ -726,7 +726,7 @@ define(["avalon",
             
             selectColumn = {
                 key : "selected",
-                name: selectFormat(options.$id, "selected", -1, allSelected, null, true),
+                name: selectFormat(options.$id, "selected", -1, allSelected, [], null, true),
                 width : 25,
                 configWidth: 25,
                 sortable : false,

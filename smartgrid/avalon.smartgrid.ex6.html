@@ -82,11 +82,11 @@
                         },
                         htmlHelper: { // 渲染列数据的方法集合
                             // 包装工资列的数据
-                            $X: function(vmId, field, index, cellValue) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
+                            $X: function(vmId, field, index, cellValue, rowData) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
                                 return "$"+cellValue
                             },
                             // busy列包装成dropdown组件
-                            dropdown: function(vmId, field, index, cellValue) {
+                            dropdown: function(vmId, field, index, cellValue, rowData) {
                                 var option = "<option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'></option>"
                                 return '<select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'">' + option + '</select>'
                             }
@@ -215,11 +215,11 @@
                                     },
                                     htmlHelper: { // 渲染列数据的方法集合
                                         // 包装工资列的数据
-                                        $X: function(vmId, field, index, cellValue) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
+                                        $X: function(vmId, field, index, cellValue, rowData) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
                                             return "$"+cellValue
                                         },
                                         // busy列包装成dropdown组件
-                                        dropdown: function(vmId, field, index, cellValue) {
+                                        dropdown: function(vmId, field, index, cellValue, rowData) {
                                             var option = "&lt;option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'&gt;&lt;/option&gt;"
                                             return '&lt;select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'"&gt;' + option + '&lt;/select&gt;'
                                         }

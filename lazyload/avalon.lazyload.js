@@ -65,7 +65,6 @@ define(["avalon"], function() {
         var indiepreLoadSrc = element.getAttribute("ms-lazyload-indiepreLoadSrc")
         var preLoadSrc = indiepreLoadSrc === null ? options.preLoadSrc : indiepreLoadSrc
 
-
         //loading占位
         if (options.preLoadType === "image") {
             element.originalCssBackground = avalon.css(element, "background-image") //记录原背景CSS
@@ -99,27 +98,23 @@ define(["avalon"], function() {
     }
 
     //init
-    window.onload = new function() {
+    avalon.bind(window, "load", function() {
+        _delayload(options)
+    })
+    avalon.bind(document.body, "mousewheel", function() {
         setTimeout(function() {
             _delayload(options)
         }, 0)
-    }
-    window.onscroll = function() {
-        _delayload(options)
-    }
-
+    })
 
     var _renderImg = function(ele, src, isloadingOriginal, needResize, tempImgItem) {
         var placeholderImg = new Image(),
-            effect = ele.getAttribute("ms-lazyload-effect") !== null ? ele.getAttribute("ms-lazyload-effect") : options.loadEffect
-
+            effect = ele.getAttribute("ms-lazyload-effect") !== null ? ele.getAttribute("ms-lazyload-effect") : options.effect
         if (ele.tagName !== "IMG" && isloadingOriginal) {
             var domContent = src
             src = "./images/placeholder.png"
         }
-        if (effect === "fadeIn") {
-            avalon.css(ele, "opacity", 0)
-        }
+
         placeholderImg.onload = function() {
             //CSS设置了DOM宽高时采用originalSize,否则采用src的宽高
             if (ele.width <= 1 || ele.height <= 1 || typeof ele.width === "undefined" || typeof ele.height === "undefined" || needResize) {
@@ -150,14 +145,19 @@ define(["avalon"], function() {
                     ele.src = src //大小确定后加载原图
                 } else { //DOM
                     ele.innerHTML = domContent
-                    ele.parentNode.removeAttribute("avalonctrl")
-                    ele.parentNode.setAttribute("ms-controller", "demo")
-                    avalon.scan(ele.parentNode)
+                    var findController = ele
+
+                    do {
+                        findController = findController.parentNode
+                    } while (findController.getAttribute("avalonctrl") === null);
+                    findController.setAttribute("ms-controller", findController.getAttribute("avalonctrl"))
+                    findController.removeAttribute("avalonctrl")
+                    avalon.scan(findController)
                 }
             }
 
             //Effect 模式
-            if (( effect === "fadeIn" || effect === "slideY" || effect === "slideX" ) && isloadingOriginal) {
+            if ((effect === "fadeIn" || effect === "slideY" || effect === "slideX") && isloadingOriginal) {
                 _EffectStart(ele, effect)
             }
 
@@ -177,7 +177,7 @@ define(["avalon"], function() {
             var eleTop = imgItem.offsetTop,
                 eleHeight = imgItem.offsetHeight,
                 winTop = document.documentElement.scrollTop || document.body.scrollTop,
-                winHeight = document.documentElement.clientHeight || document.body.clientHeight
+                winHeight = document.body.clientHeight || document.documentElement.clientHeight
 
             //加载正确的图片(originalSrc),条件是屏幕范围内并且要防止重复设置
             if (eleTop < winTop + winHeight && eleTop + eleHeight > winTop && !imgItem.lazyloaded) {
@@ -197,7 +197,7 @@ define(["avalon"], function() {
                             delete imgItem.originalCssBackground
                         } catch (e) {}
                     }
-                })(i, imgItem, imgItem.getAttribute("ms-lazyload-original")), options.delayTime)
+                })(i, imgItem, imgItem.getAttribute("ms-lazyload-original")), imgItem.getAttribute("ms-lazyload-delay") || options.delay)
             }
         }
     }
@@ -222,7 +222,7 @@ define(["avalon"], function() {
                 avalon.css(ele, cssName, cssValue)
                 currentTime += 1
                 requestAnimationFrame(_EffectGo)
-            } 
+            }
         }
         ele.animated = true
         _EffectGo()
@@ -232,10 +232,10 @@ define(["avalon"], function() {
         contentType: "image", //@param 懒加载的内容："image"-图片 / "DOM"-文档片段
         preLoadType: "image", //@param 预加载的内容："image"-加载中图片 / "text"-加载中文字
         preLoadSrc: "./images/loading1.gif", //@param  预加载图片（文字内容）：preLoadType为"image"时，此为图片路径；preLoadType为"text"时，此为文字内容，也可以设置元素的ms-lazyload-indiepreLoadSrc替代默认值
-        delayTime: 500, //@param  延迟加载时间（毫秒）
-        loadEffect: "none", //@param  预加载效果 "none"-无效果 / "fadeIn"-渐入效果 / "slideX"-由左向右滑动 / "slideY"-由上向下滑动，建议在图片加载中使用
+        delay: 500, //@param  延迟加载时间（毫秒）
+        effect: "none", //@param  预加载效果 "none"-无效果 / "fadeIn"-渐入效果 / "slideX"-由左向右滑动 / "slideY"-由上向下滑动，建议在图片加载中使用
         easing: "easeInOut", //@param  动画效果的缓动函数
-        slideDistance: 200, //@param loadEffect-slide模式的滑动长度
+        slideDistance: 300, //@param effect-slide模式的滑动长度
         $author: "heiwu805@hotmail.com"
     }
 

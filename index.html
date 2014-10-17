@@ -68,6 +68,11 @@
             })
         })
 
+        //搜索框输入后清空结果列表
+        page.$watch("searchComponentKey", function() {
+            searchResultList = []
+        })
+        
         //搜索組件
         var searchResultList = [] //搜索结果列表
 
@@ -75,6 +80,7 @@
             var list = document.getElementById("ui-list"), //find "ui-list" in pages/library/index.html
                 items = list.getElementsByTagName("a")
             for (var i = 0, len = items.length; i < len; i++) {
+                console.log(searchResultList, items[i].innerHTML)
                 if (items[i].innerHTML.trim().indexOf(key) !== -1 || _findInAdvice(items[i].innerHTML.trim()).indexOf(key) !== -1) {
                     _selectElement(items[i])
                     scroll(0, items[i].offsetTop)
@@ -104,11 +110,6 @@
             }, 2000)
         }
 
-        //搜索框输入后清空结果列表
-        page.$watch("searchComponentKey", function() {
-            searchResultList = []
-        })
-
         function _findInAdvice(componentName) {
             var advices = {
                 "accordion": "手风琴组件",
@@ -126,6 +127,10 @@
                 "draggable": "拖拽组件/可拖动组件",
                 "dropdown": "下拉框组件",
                 "flipswitch": "滑动式开关组件",
+                "lazyload": "懒加载组件",
+                "live": "事件代理绑定组件",
+                "loading": "加载动画效果组件",
+                "menu": "菜单组件",
                 "miniswitch": "下拉式开关组件",
                 "notice": "提示组件/提示信息组件",
                 "pager": "分页组件",
@@ -150,21 +155,22 @@
             }
             if (typeof advices[componentName] !== "undefined") {
                 return advices[componentName]
+            } else {
+                return ""
             }
-
-            //选中文字
-            function _selectElement(element) {
-                if (window.getSelection) {
-                    var sel = window.getSelection();
-                    sel.removeAllRanges();
-                    var range = document.createRange();
-                    range.selectNodeContents(element);
-                    sel.addRange(range);
-                } else if (document.selection) {
-                    var textRange = document.body.createTextRange();
-                    textRange.moveToElementText(element);
-                    textRange.select();
-                }
+        }
+        //选中文字
+        function _selectElement(element) {
+            if (window.getSelection) {
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                var range = document.createRange();
+                range.selectNodeContents(element);
+                sel.addRange(range);
+            } else if (document.selection) {
+                var textRange = document.body.createTextRange();
+                textRange.moveToElementText(element);
+                textRange.select();
             }
         }
         </script>

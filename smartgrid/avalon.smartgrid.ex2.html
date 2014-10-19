@@ -6,13 +6,12 @@
         <meta name="viewport" content="width=device-width">
         <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
-        <script type="text/javascript" src="../tools/statistics.js"></script>
     </head>
     <body ms-controller="test">
         <h1>通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数</h1>
         <p>配置selectable设置表格是否需要添加选中行功能，type可以设置为"Checkbox"或者"Radio"</p>
         
-        <div ms-widget="smartgrid, sg1" style="width:760px; margin: 0 auto"></div>
+        <div ms-widget="smartgrid, sg1, opts" style="width:760px; margin: 0 auto"></div>
         <script>
             require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
                 function getDates(number) {
@@ -34,8 +33,8 @@
                 } 
                 
                 avalon.define("test", function(vm) {
-                    vm.$skipArray = ["smartgrid"] //不需要转为监控属性的属性务必放到$skipArray数组中，减少开销提高性能
-                    vm.smartgrid = {
+                    vm.$skipArray = ["opts"] //不需要转为监控属性的属性务必放到$skipArray数组中，减少开销提高性能
+                    vm.opts = {
                         // 不希望组件的配置项被smartgrid监控，将其放到$skipArray数组中，添加其他组件同理
                         $skipArray: ["switchdropdown", "dropdown", "pager"],
                         selectable: {
@@ -54,18 +53,20 @@
                         },
                         htmlHelper: { // 渲染列数据的方法集合
                             // 包装工资列的数据
-                            $X: function(vmId, field, index, cellValue) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
+                            $X: function(vmId, field, index, cellValue, rowData) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
+                                avalon.log("arguments is : ")
+                                avalon.log(arguments)
                                 return "$"+cellValue
                             },
                             // operate列包装成switchdropdown组件
-                            switchdropdown: function(vmId, field, index, cellValue, disable) {
+                            switchdropdown: function(vmId, field, index, cellValue, rowData, disable) {
                                 var openOption = cellValue == 0 ? '<option value="0" selected>启用</option>' : '<option value="0">启用</option>',
                                     pauseOption = cellValue == 1 ? '<option value="1" selected>暂停</option>' : '<option value="1">暂停</option>'
 
                                 return ['<select ms-widget="switchdropdown" rowindex="'+index+'" field="'+field+'"  vmId="'+vmId+'" '+ (disable ? "disabled": "") +'>', openOption, pauseOption, '</select>'].join('')
                             },
                             // busy列包装成dropdown组件
-                            dropdown: function(vmId, field, index, cellValue, disable) {
+                            dropdown: function(vmId, field, index, cellValue, rowData, disable) {
                                 var option = "<option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'></option>"
                                 return '<select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'" ' + (disable ? "disabled" : "") + '>' + option + '</select>'
                             }
@@ -185,18 +186,18 @@
                                     },
                                     htmlHelper: { // 渲染列数据的方法集合
                                         // 包装工资列的数据
-                                        $X: function(vmId, field, index, cellValue) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
+                                        $X: function(vmId, field, index, cellValue, rowData) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
                                             return "$"+cellValue
                                         },
                                         // operate列包装成switchdropdown组件
-                                        switchdropdown: function(vmId, field, index, cellValue, disable) {
+                                        switchdropdown: function(vmId, field, index, cellValue, rowData, disable) {
                                             var openOption = cellValue == 0 ? '&lt;option value="0" selected&gt;启用&lt;/option&gt;' : '&lt;option value="0"&gt;启用&lt;/option&gt;',
                                                 pauseOption = cellValue == 1 ? '&lt;option value="1" selected&gt;暂停&lt;/option&gt;' : '&lt;option value="1"&gt;暂停&lt;/option&gt;'
 
                                             return ['&lt;select ms-widget="switchdropdown" rowindex="'+index+'" field="'+field+'"  vmId="'+vmId+'" '+ (disable ? "disabled": "") +'&gt;', openOption, pauseOption, '&lt;/select&gt;'].join('')
                                         },
                                         // busy列包装成dropdown组件
-                                        dropdown: function(vmId, field, index, cellValue, disable) {
+                                        dropdown: function(vmId, field, index, cellValue, rowData, disable) {
                                             var option = "&lt;option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'&gt;&lt;/option&gt;"
                                             return '&lt;select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'" ' + (disable ? "disabled" : "") + '&gt;' + option + '&lt;/select&gt;'
                                         }

@@ -8,13 +8,14 @@ define(["avalon",
 ], function(avalon, template) {
     var tempId = new Date - 0,
         templateArr = template.split("MS_OPTION_EJS"),
-        gridHeader = templateArr[0],
-        template = templateArr[1],
+        gridHeader = templateArr[0], // 表格视图结构
         userAgent = (window.navigator.userAgent || '').toLowerCase(),
         positionAbsolute = userAgent.indexOf('msie 6') !== -1 || userAgent.indexOf('msie 7') !== -1,
         remptyfn = /^function\s+\w*\s*\([^)]*\)\s*{\s*}$/m,
         sorting = false, // 页面在排序的时候不用更新排序icon的状态为ndb，但如果是重新渲染数据的话重置icon状态为ndb
         callbacksNeedRemove = {}
+
+    template = templateArr[1] // 静态模板渲染部分view
     var EJS =  window.ejs  = function( id,data,opts){
         var el, source;
         if( !EJS.cache[ id] ){
@@ -209,6 +210,7 @@ define(["avalon",
             vm._fixHeaderToggle = false
             vm._gridWidth = 0
             vm._pagerShow = false
+            vm._selectedData = []
             vm.loadingVModel = null
             vm.getRawData = function() {
                 return vmodel.data
@@ -300,13 +302,20 @@ define(["avalon",
                 setTimeout(function() {
                     var val = event ? event.target.checked : selected
                     vmodel._allSelected = val
-                    for (var i = 0, len = datas.length; i < len; i++) {
-                        var data = datas[i],
-                            tr = trs[i],
-                            input = tr.cells[0].getElementsByTagName("input")[0]
-                        data.selected = val
-                        input.checked = val
-                        avalon(tr)[val ? "addClass": "removeClass"]("ui-smartgrid-selected")
+                    for (var i = 0, len = trs.length; i < len; i++) {
+                        var tr = trs[i],
+                            data, 
+                            input = tr.cells[0].getElementsByTagName("input")[0],
+                            $tr = avalon(tr),
+                            dataIndex = avalon(input).attr("data-index")
+                        if (dataIndex !== null) {
+                            data = datas[dataIndex]
+                            data.selected = val
+                            input.checked = val
+                            $tr[val ? "addClass": "removeClass"]("ui-smartgrid-selected")
+                        } else {
+                            continue
+                        }
                     }
                     if (val) {
                         vmodel._selectedData = datas.concat()
@@ -393,13 +402,20 @@ define(["avalon",
                 html = fn({data: datas, columns: _columns, len: 2, noResult: vmodel.noResult, vmId: vmId, checkRow: checkRow})
                 return html
             }
-            vm.render = function(init) {
+
+            vm.render = function(data, init) {
                 var container = vmodel._container,
                     containerWrapper = vmodel.container,
-                    selectable = vmodel.selectable
-
+                    selectable = vmodel.selectable,
+                    tableTemplate = ""
+                if (avalon.type(data) === "array") {
+                    vmodel.data = data
+                } else {
+                    init = data
+                }
                 vmodel._pagerShow = !vmodel.data.length ? false : true
-                avalon.innerHTML(container, vmodel._getTemplate())
+                tableTemplate = vmodel.addRow(vmodel._getTemplate(), vmodel.columns.$model, vmodels)
+                avalon.innerHTML(container, tableTemplate)
                 if (selectable && selectable.type === "Checkbox") {
                     var allSelected = isSelectAll(vmodel.data)
                     vmodel._allSelected = allSelected
@@ -484,7 +500,6 @@ define(["avalon",
             var intervalID = setInterval(function() {
                 var elem = document.getElementById("pager-" + vmodel.$id)
                 if (elem && !flagPager) {
-
                     elem.setAttribute("ms-widget", "pager,pager-" + vmodel.$id)
                     avalon(elem).addClass("ui-smartgrid-pager-wrapper")
                     avalon.scan(elem, vmodel)
@@ -505,6 +520,7 @@ define(["avalon",
         container: "", // element | id
         data: [],
         columns: [],
+        allChecked: true,
         htmlHelper: {},
         noResult: "暂时没有数据",
         remoteSort: avalon.noop,
@@ -518,10 +534,13 @@ define(["avalon",
         },
         pager: {
             canChangePageSize : true,
-            options : [10, 20, 50, 100] //默认[10,30,50]
+            options : [10, 20, 50, 100] //默认[10,20,50,100]
         },
         sortable: {
             remoteSort: true
+        },
+        addRow: function(tmpl, columns, vmodel) {
+            return tmpl
         },
         getTemplate: function(str, options) {
             return str
@@ -551,10 +570,13 @@ define(["avalon",
                     $tr = avalon(target.parentNode.parentNode),
                     datas = options.data,
                     onSelectAll = options.onSelectAll,
-                    selectedData = options._selectedData
-
+                    selectedData = options._selectedData,
+                    dataIndex = $target.attr("data-index")
+                if (!$target.attr("data-role") || dataIndex === null) {
+                    return
+                }
                 if ($target.attr("data-role") === "selected") {
-                    var rowData = datas[$target.attr("data-index")],
+                    var rowData = datas[dataIndex],
                         isSelected = target.checked
                     if (isSelected) {
                         options.selectable.type === "Checkbox" ? $tr.addClass("ui-smartgrid-selected") : 0
@@ -569,6 +591,7 @@ define(["avalon",
                         options.onRowSelect.call($tr[0], rowData, isSelected)
                     }
                 }
+
                 if (selectedData.length == datas.length) {
                     options._allSelected = true
                     // 是否全选的回调，通过用户点击单独的行来确定是否触发
@@ -674,14 +697,14 @@ define(["avalon",
                 column.sortTrend = "ndb"
             }
             if (format && !options.htmlHelper[format]) {
-                options.htmlHelper[format] = function(vmId, field, index, cellValue) {
+                options.htmlHelper[format] = function(vmId, field, index, cellValue, rowData) {
                     avalon.log("方法"+format+"未定义")
                     return cellValue
                 }
             }
             htmlFunction = options.htmlHelper[format]
             if (!htmlFunction) {
-                htmlFunction = function(vmId, field, index, cellValue) {
+                htmlFunction = function(vmId, field, index, cellValue, rowData) {
                     return cellValue
                 }
             }
@@ -693,17 +716,17 @@ define(["avalon",
                 allSelected = true
 
             if (type === "Checkbox" || type === "Radio") {
-                selectFormat = function(vmId, field, index, selected, disable, allSelected) {
+                selectFormat = function(vmId, field, index, selected, rowData, disable, allSelected) {
                     if (allSelected && type === "Radio") return 
                     return "<input type='" + type.toLowerCase() +"'" + (disable ? "disabled " : "") + (selected ? "checked='checked'" : "") + "name='selected' "+ (allSelected ? "ms-click='_selectAll' ms-duplex-radio='_allSelected'" : "data-index='" + index +"'") +"data-role='selected'/>"
                 }
-                allSelected = isSelectAll(options.data)
+                allSelected = isSelectAll(options.data) || false
                 options._allSelected = allSelected
             }
             
             selectColumn = {
                 key : "selected",
-                name: selectFormat(options.$id, "selected", -1, allSelected, null, true),
+                name: selectFormat(options.$id, "selected", -1, allSelected, [], null, true),
                 width : 25,
                 configWidth: 25,
                 sortable : false,

@@ -45,6 +45,16 @@ a, a:active, a:hover {
     box-shadow: 0 2px 3px 0 rgba(74, 136, 115, 0.5);
     z-index: 120;
 }
+.header .nav .logo{
+    position:absolute;
+    left:0;
+    top:0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    width:180px;
+    height:60px;
+    cursor:pointer;
+}
 .header .nav ul {
     display: inline-block;
     *display: inline;
@@ -66,8 +76,7 @@ a, a:active, a:hover {
     margin-right: 35px;
 }
 .header .nav ul li a {
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 20px;
     color: #555555;
     display: block;
     height: 60px;
@@ -78,15 +87,47 @@ a, a:active, a:hover {
 }
 .header .search {
     position: absolute;
-    top: 0;
+    top: 14px;
     right: 0;
+    padding: 0 0 0 10px;
+    line-height: 20px;
+    border: 1px solid #547c73;
+    border-radius: 3px;
 }
 .header .search input {
-    border: 1px solid #547c73;
-    border-radius: 5px;
-    width: 185px;
+    width: 170px;
+    height: 20px;
+    padding: 5px 0;
+    margin: 0;
+    border: 0 none;
+    line-height: 20px;
+    outline: none;
+    font-family: inherit;
+    vertical-align: middle;
+}
+.header .search a{
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    width: 30px;
     height: 30px;
-    background: url(./searchIcon.png) 160px 50% no-repeat;
+    background: url(./searchIcon.png) no-repeat;
+    vertical-align: middle;
+}
+.header .search .search-tip{
+    position: absolute;
+    padding: 5px 5px;
+    border-radius: 3px;
+    left: -85px;
+    color: #c33;
+    opacity: 0;
+    line-height: 20px;
+    filter:alpha(opacity = 0);
+    -webkit-transition: 1s opacity;
+    -moz-transition: 1s opacity;
+    -ms-transition: 1s opacity;
+    -o-transition: 1s opacity;
+    transition: 1s opacity;
 }
 .header h1 {
     height: 115px;
@@ -104,6 +145,7 @@ a, a:active, a:hover {
     padding: 0 5px;
     margin: 0 auto;
 }
+
 .content {
     position: relative;
     width: 990px;
@@ -118,8 +160,7 @@ a, a:active, a:hover {
 .ui-list {
     width: 160px;
     padding:0px;
-    margin: 34px 0px;
-    border:1px solid rgb(215,220,224);
+    border:1px solid #eee;
 }
 .ui-list a {
     text-decoration: none;
@@ -135,14 +176,13 @@ a, a:active, a:hover {
 }
 
 .ui-list a.odd {
-    background-color:rgb(215,220,224);
+    background-color:#efe;
     color:#34495e;
 }
 
 .ui-list a.active {
     background-color: #28966f;
     color:#fff;
-     font-weight: bold;
 }
 
 .ui-doc {

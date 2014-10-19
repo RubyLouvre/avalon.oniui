@@ -26,27 +26,61 @@
                         "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
                         "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
                         "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"],
-                        hoverStop: true //@param autoSlide 鼠标经过停止播放
+                        arrowLeftClass: "myArrowLeftClass",
+                        arrowRightClass: "myArrowRightClass"
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.scan()
+                avalon.define("demo3", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
+                        "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
+                        "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"],
+                        hoverStop: false //@param autoSlide 鼠标经过不停止播放
                     }
                     vm.$skipArray = ["carousel"]
                 })
                 avalon.scan()
             })
         </script>
+        <style type="text/css">
+            .ui-carousel .myArrowLeftClass,.ui-carousel .myArrowRightClass{
+                width: 48px; 
+                height: 48px; 
+                margin: -24px 0 0 -24px; 
+            }
+            .ui-carousel .myArrowLeftClass{
+                background-image: url(./images/ex-left.png);
+            }
+            .ui-carousel .myArrowLeftClass:hover{
+                background-image: url(./images/ex-left-hover.png);
+            } 
+            .ui-carousel .myArrowRightClass{
+                background-image: url(./images/ex-right.png);
+            }
+            .ui-carousel .myArrowRightClass:hover{
+                background-image: url(./images/ex-right-hover.png);
+            }
+        </style>
     </head>
     <body>
         <div class="wrapper">
-        <h1>图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过停止播放</h1>
+        <h1>test图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过不停止播放</h1>
         <fieldset ms-controller="demo1">
             <legend>自定义不显示左右切换箭头和底部圆形选择部件</legend>
             <div ms-widget="carousel"></div>
         </fieldset>
         <fieldset ms-controller="demo2">
-            <legend>自定义鼠标经过停止播放</legend>
+            <legend>自定义箭头arrowClass，并修改样式</legend>
+            <div ms-widget="carousel"></div>
+        </fieldset>
+        <fieldset ms-controller="demo3">
+            <legend>自定义鼠标经过不停止播放</legend>
             <div ms-widget="carousel"></div>
         </fieldset>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">
-&lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
         &lt;title&gt;carousel组件&lt;/title&gt;
@@ -74,27 +108,61 @@
                         "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
                         "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
                         "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"],
-                        hoverStop: false //@param autoSlide 鼠标经过停止播放
+                        arrowLeftClass: "myArrowLeftClass",
+                        arrowRightClass: "myArrowRightClass"
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.scan()
+                avalon.define("demo3", function(vm) {
+                    vm.carousel = {
+                        pictures: [
+                        "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
+                        "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
+                        "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"],
+                        hoverStop: false //@param autoSlide 鼠标经过不停止播放
                     }
                     vm.$skipArray = ["carousel"]
                 })
                 avalon.scan()
             })
         &lt;/script&gt;
+        &lt;style type="text/css"&gt;
+            .ui-carousel .myArrowLeftClass,.ui-carousel .myArrowRightClass{
+                width: 48px; 
+                height: 48px; 
+                margin: -24px 0 0 -24px; 
+            }
+            .ui-carousel .myArrowLeftClass{
+                background-image: url(./images/ex-left.png);
+            }
+            .ui-carousel .myArrowLeftClass:hover{
+                background-image: url(./images/ex-left-hover.png);
+            } 
+            .ui-carousel .myArrowRightClass{
+                background-image: url(./images/ex-right.png);
+            }
+            .ui-carousel .myArrowRightClass:hover{
+                background-image: url(./images/ex-right-hover.png);
+            }
+        &lt;/style&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;div class="wrapper"&gt;
-        &lt;h1&gt;图片轮播组件&lt;/h1&gt;
+        &lt;h1&gt;test图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过不停止播放&lt;/h1&gt;
         &lt;fieldset ms-controller="demo1"&gt;
             &lt;legend&gt;自定义不显示左右切换箭头和底部圆形选择部件&lt;/legend&gt;
             &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
         &lt;/fieldset&gt;
         &lt;fieldset ms-controller="demo2"&gt;
-            &lt;legend&gt;自定义鼠标经过停止播放&lt;/legend&gt;
+            &lt;legend&gt;自定义箭头arrowClass，并修改样式&lt;/legend&gt;
+            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+        &lt;/fieldset&gt;
+        &lt;fieldset ms-controller="demo3"&gt;
+            &lt;legend&gt;自定义鼠标经过不停止播放&lt;/legend&gt;
             &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
         &lt;/fieldset&gt;
         &lt;pre ms-skip class="brush:html;gutter:false;toolbar:false"&gt;
-
         &lt;/pre&gt;
     &lt;/div&gt;
     &lt;/body&gt;

@@ -69,15 +69,17 @@
     top: 50%;
     width: 30px;
     height: 30px;
-    line-height: 24px;
     margin: -15px 0 0 -15px;
-    color: #fff;
-    text-align: center;
-    font-size: 28px;
     cursor: pointer; }
   .ui-carousel .prev {
-    left: 7%; }
+    left: 7%;
+    background: url(./images/arrows-left-icon.png) no-repeat; }
+  .ui-carousel .prev:hover {
+    background: url(./images/arrows-left-hover-icon.png) no-repeat; }
   .ui-carousel .after {
-    left: 93%; }
+    left: 93%;
+    background: url(./images/arrows-right-icon.png) no-repeat; }
+  .ui-carousel .after:hover {
+    background: url(./images/arrows-right-hover-icon.png) no-repeat; }
 
 /*# sourceMappingURL=avalon.carousel.css.map */

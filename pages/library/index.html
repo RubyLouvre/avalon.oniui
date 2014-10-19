@@ -2,11 +2,10 @@
 
     var widgets = ["accordion", "at", "browser", "carousel", "checkboxlist", "colorpicker", "cookie",
                 "coupledatepicker", "datepicker", "daterangepicker", "dialog",
-                "doublelist", "draggable", "dropdown", "flipswitch", "miniswitch",
+                "doublelist", "draggable", "dropdown", "flipswitch", "lazyload", "loading", "live","menu","miniswitch",
                 "notice", "pager", "position", "preview", "progressbar", "promise", "rating",
-                "resizable", "scrollbar", "scrollspy", "simplegrid", "slider",
+                "resizable", "scrollbar", "scrollspy","smartgrid", "simplegrid", "slider",
                 "spinner", "store", "switchdropdown", "tab", "textbox","timer","tooltip","uploader"
-
     ].sort()
     var updateHistory = false //将此url更新入浏览历史
     var vmodel = avalon.define("library", function(vm) {
@@ -93,8 +92,8 @@
             var iframeBody = iframe.contentWindow.document.body
             var iframeclicked = false
             iframeBody.style.overflow = "hidden" //重新设置overflow，使其不会出现滚动条
-            setTimeout(function() { //设置iframe高度
-                vmodel.frameContentHeight = iframeBody.offsetHeight < 900 ? 900 : iframeBody.offsetHeight + 50
+            setTimeout(function() { //设置iframe高度,最低为左侧列表高度
+                vmodel.frameContentHeight = iframeBody.offsetHeight < 1300 ? 1300 : iframeBody.offsetHeight + 50
             }, 100)
             if(iframe.addEventListener){
                 iframeBody.addEventListener('click', function() {
@@ -172,10 +171,10 @@
 
     }
 </script>
-<table width="100%" ms-controller="library">
+<table class="oniui-content" width="100%" ms-controller="library">
     <tr>
-        <td valign="top" style="width:130px">
-            <ul class="ui-list">
+        <td valign="top" style="width:130px;padding:0">
+            <ul id="ui-list" class="ui-list">
                 <li ms-repeat="widgets">
                     <a  href="javascript:void(0)"
                         ms-class-odd="$index % 2 === 1"

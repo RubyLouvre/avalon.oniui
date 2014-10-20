@@ -126,7 +126,6 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
 
             vm._popup = function(str) {
                 //创建测量用的DIV,它与当前textara, input的大小样式完全相同
-                //firefox 用PRE元素无法通过CSS让文字自动换行
                 fakeTextArea = fakeTextArea || document.createElement("div")
                 fakeTextArea.innerHTML = str
                 document.body.appendChild(fakeTextArea)
@@ -147,7 +146,6 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                     border: "1px solid red",
                     display: "block",
                     "word-wrap": "break-word", //强制换行 fix IE6-8
-                    "word-break": "normal",//强制换行 fix IE6-8
                     visibility: "hidden"
                 })
                 var array = []
@@ -170,7 +168,7 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                 } else {//IE6-9
                     rangeRect = bdo.getBoundingClientRect()
                 }
-                //高亮@所在bdo元素在测量用的PER的坐标
+                //高亮@所在bdo元素在测量用的DIV的坐标
                 var top = rangeRect.bottom - fakeRect.top
                 var left = rangeRect.left - fakeRect.left
                 //创建弹出菜单
@@ -310,15 +308,8 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
         var code = e.which || e.keyCode
         //firefox down 为37
         switch (code) {
-            case 37:
-                //console.log("left")
-                break
-            case 39:
-                //console.log("right")
-                break
             case 13:
                 // enter
-                //console.log("enter")
                 vmodel._select(e)
                 break;
             case 9:
@@ -329,7 +320,6 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                 break;
             case 38:
             case 63233:
-                //console.log("up")
                 //safari
                 // up arrow
                 e.preventDefault();
@@ -341,7 +331,6 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                 break;
             case 40:
             case 63235:
-                //console.log("down")
                 //safari
                 // down arrow
                 e.preventDefault();

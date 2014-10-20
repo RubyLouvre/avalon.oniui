@@ -403,12 +403,16 @@ define(["avalon",
                 return html
             }
 
-            vm.render = function(init) {
+            vm.render = function(data, init) {
                 var container = vmodel._container,
                     containerWrapper = vmodel.container,
                     selectable = vmodel.selectable,
                     tableTemplate = ""
-
+                if (avalon.type(data) === "array") {
+                    vmodel.data = data
+                } else {
+                    init = data
+                }
                 vmodel._pagerShow = !vmodel.data.length ? false : true
                 tableTemplate = vmodel.addRow(vmodel._getTemplate(), vmodel.columns.$model, vmodels)
                 avalon.innerHTML(container, tableTemplate)
@@ -516,7 +520,7 @@ define(["avalon",
         container: "", // element | id
         data: [],
         columns: [],
-        allSelected: true,
+        allChecked: true,
         htmlHelper: {},
         noResult: "暂时没有数据",
         remoteSort: avalon.noop,
@@ -530,7 +534,7 @@ define(["avalon",
         },
         pager: {
             canChangePageSize : true,
-            options : [10, 20, 50, 100] //默认[10,30,50]
+            options : [10, 20, 50, 100] //默认[10,20,50,100]
         },
         sortable: {
             remoteSort: true
@@ -693,14 +697,14 @@ define(["avalon",
                 column.sortTrend = "ndb"
             }
             if (format && !options.htmlHelper[format]) {
-                options.htmlHelper[format] = function(vmId, field, index, cellValue) {
+                options.htmlHelper[format] = function(vmId, field, index, cellValue, rowData) {
                     avalon.log("方法"+format+"未定义")
                     return cellValue
                 }
             }
             htmlFunction = options.htmlHelper[format]
             if (!htmlFunction) {
-                htmlFunction = function(vmId, field, index, cellValue) {
+                htmlFunction = function(vmId, field, index, cellValue, rowData) {
                     return cellValue
                 }
             }
@@ -712,17 +716,17 @@ define(["avalon",
                 allSelected = true
 
             if (type === "Checkbox" || type === "Radio") {
-                selectFormat = function(vmId, field, index, selected, disable, allSelected) {
+                selectFormat = function(vmId, field, index, selected, rowData, disable, allSelected) {
                     if (allSelected && type === "Radio") return 
                     return "<input type='" + type.toLowerCase() +"'" + (disable ? "disabled " : "") + (selected ? "checked='checked'" : "") + "name='selected' "+ (allSelected ? "ms-click='_selectAll' ms-duplex-radio='_allSelected'" : "data-index='" + index +"'") +"data-role='selected'/>"
                 }
-                allSelected = isSelectAll(options.data)
+                allSelected = isSelectAll(options.data) || false
                 options._allSelected = allSelected
             }
             
             selectColumn = {
                 key : "selected",
-                name: selectFormat(options.$id, "selected", -1, allSelected, null, true),
+                name: selectFormat(options.$id, "selected", -1, allSelected, [], null, true),
                 width : 25,
                 configWidth: 25,
                 sortable : false,

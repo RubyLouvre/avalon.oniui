@@ -120,6 +120,7 @@ define(["avalon",
                 textboxWrapper.innerHTML = textboxWrapper.textContent = ""
                 textboxWrapper.parentNode.removeChild(textboxWrapper)
             }
+            
         })
         return vmodel
     }

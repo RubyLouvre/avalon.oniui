@@ -67,6 +67,7 @@ define(["avalon"], function(avalon) {
         },
         then: function(onSuccess, onFail) {
             var parent = this//在新的Promise上添加回调
+           
             return new Promise(function(resolve, reject) {
                 parent._then(function(value) {
                     if (typeof onSuccess === "function") {
@@ -137,10 +138,11 @@ define(["avalon"], function(avalon) {
         })
     }
     function _some(any, promises) {
+        promises = Array.isArray(promises) ? promises : []
         var n = 0, result = [], end
         return new Promise(function(resolve, reject) {
-            function loop(promise, index) {
-                promise.then(function(ret) {
+            function loop(a, index) {
+                a.then(function(ret) {
                     if (!end) {
                         result[index] = ret//保证回调的顺序
                         n++
@@ -160,11 +162,11 @@ define(["avalon"], function(avalon) {
         })
     }
 
-    Promise.all = function() {
-        return _some(false, arguments)
+    Promise.all = function(array) {
+        return _some(false, array)
     }
-    Promise.race = function() {
-        return _some(true, arguments)
+    Promise.race = function(array) {
+        return _some(true, array)
     }
 
     var nativePromise = window.Promise

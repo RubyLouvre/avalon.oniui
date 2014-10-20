@@ -69,7 +69,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>allSelected</td>
+                            <td>allChecked</td>
                             <td>true</td> 
                             <td>当设置selectable之后，是否显示表头的全选框，默认显示，false不显示</td>
                         </tr>
@@ -138,7 +138,7 @@ addRow: function(tmpl, columns, vmodel) {
                                 <pre>
 {
     canChangePageSize : true,
-    options : [10, 20, 50, 100] //默认[10,30,50]
+    options : [10, 20, 50, 100]
 }
                                 </pre>
                             </td>
@@ -153,9 +153,20 @@ addRow: function(tmpl, columns, vmodel) {
                             <td colspan="3" align="center">暴露给用户调用的API</td>
                         </tr>
                         <tr>
-                            <td>render</td>
+                            <td>render(data)</td>
                             <td></td> 
-                            <td>渲染表格视图，只要改变了数据data就要调用render方法重新渲染表格</td>
+                            <td>
+                                渲染表格视图，只要改变了数据data就要调用render方法重新渲染表格, 有两种书写方式
+                                <p>方式一：</p>
+<pre>
+    smartgridVM.data = newData
+    smartgridVM.render()
+</pre>
+                                <p>方式二：</p>
+<pre>
+    smartgridVM.render(newData)
+</pre>
+                            </td>
                         </tr>
                         <tr>
                             <td>setColumns(columns, b)</td>

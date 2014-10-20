@@ -31,17 +31,20 @@
 		 ms-repeat="selections"
 			></a>
 	</div>
-	<a><img class="arrow prev png24" 
-		ms-src="arrowLeftSrc"  
+	<a ms-class="{{arrowLeftClass}}" class="arrow prev png24" 
 		ms-click="animate(-1)"
 		ms-mouseenter="arrowHover('left')"
 		ms-mouseleave="arrowBlur('left')"
 		ms-visible="arrowVisible"
-		></a>
-	<a><img class="arrow after png24" 
-	   ms-src="arrowRightSrc"  
+		ms-css-background-image="arrowLeftBg"
+	>
+	</a>
+	<a ms-class="{{arrowRightClass}}" class="arrow after png24" 
 		ms-click="animate(1)"
 		ms-mouseenter="arrowHover('right')"
 		ms-mouseleave="arrowBlur('right')"
-		ms-visible="arrowVisible"></a>
+		ms-visible="arrowVisible"
+		ms-css-background-image="arrowRightBg"
+	>
+	</a>
 </div>

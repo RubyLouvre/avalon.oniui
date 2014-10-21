@@ -113,6 +113,11 @@
     if (isWindow(window)) {
         avalon.isWindow = isWindow
     }
+    var enu
+    for (enu in avalon({})) {
+        break
+    }
+    var enumerateBUG = enu !== "0"//IE6下为true, 其他为false
     /*判定是否是一个朴素的javascript对象（Object），不是DOM对象，不是BOM对象，不是自定义类的实例*/
     avalon.isPlainObject = function(obj, key) {
         if (!obj || avalon.type(obj) !== "object" || obj.nodeType || avalon.isWindow(obj)) {
@@ -127,9 +132,14 @@
         } catch (e) {//IE8 9会在这里抛错
             return false;
         }
+        if (enumerateBUG) {
+            for (key in obj) {
+                return ohasOwn.call(obj, key)
+            }
+        }
         for (key in obj) {
         }
-        return key === undefined || ohasOwn.call(obj, key);
+        return key === void 0 || ohasOwn.call(obj, key);
     }
     if (rnative.test(Object.getPrototypeOf)) {
         avalon.isPlainObject = function(obj) {
@@ -1769,11 +1779,11 @@
             var all = events.$all || []
             var args = aslice.call(arguments, 1)
             for (var i = 0, callback; callback = callbacks[i++]; ) {
-                if (isFunction(callback))
+                if (isFunction(callback) && !special)
                     callback.apply(this, args)
             }
             for (var i = 0, callback; callback = all[i++]; ) {
-                if (isFunction(callback))
+                if (isFunction(callback) && !special)
                     callback.apply(this, arguments)
             }
             var element = events.expr && findNode(events.expr)
@@ -1809,6 +1819,7 @@
                     if (special === "up") {
                         alls.reverse()
                     }
+                    console.log(alls)
                     alls.forEach(function(v) {
                         v.$fire.apply(v, detail)
                     })
@@ -3652,7 +3663,7 @@
             pos = typeof pos === "number" ? pos : oldLength
             var added = []
             for (var i = 0, n = arr.length; i < n; i++) {
-                added[i] = convert(arr[i], this.$model[i])
+                added[i] = convert(arr[i], this.$model[pos+i])
             }
             _splice.apply(this, [pos, 0].concat(added))
             this._fire("add", pos, added)

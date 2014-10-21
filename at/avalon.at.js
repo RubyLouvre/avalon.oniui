@@ -2,17 +2,17 @@
 define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", "css!./avalon.at.css"], function(avalon, template) {
 
     var widget = avalon.ui.at = function(element, data, vmodels) {
-        var options = data.atOptions, $element = avalon(element), keyupCallback, blurCallback, popup
+        var options = data.atOptions, $element = avalon(element), keyupCallback, blurCallback, keypressCallback, popup
         options.template = options.getTemplate(template, options)
 
         var lastModified = new Date - 0//上次更新时间
+        var queryStartIndex, fakeTextArea
         var vmodel = avalon.define(data.atId, function(vm) {
 
             avalon.mix(vm, options)
 
             vm.$skipArray = ["at", "widgetElement", "datalist", "template"]
             vm.widgetElement = element
-            var bdoName = document.documentMode ? "bdo" : "bdi"
             vm.$init = function() {
                 var _vmodels = [vmodel].concat(vmodels)
                 blurCallback = $element.bind("blur", function(e) {
@@ -20,40 +20,62 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                         vmodel.toggle = false
                     }
                 })
+                keypressCallback = $element.bind("keypress", function(e) {
+                    if (e.keyCode === 13 && popup) {
+                        //我们可以在菜单中上下移动，然后接回车选中并且最后隐藏菜单
+                        //在这个过程中，不会触发浏览器默认的回车换行行为
+                        e.preventDefault()
+                    }
+                })
                 keyupCallback = $element.bind("keyup", function(e) {
-                    var value = this.value
-                    var at = options.at
-                    var index = value.lastIndexOf(at)
-                    if (index > -1) {
-                        if (!vmodel.toggle) {
-                            var str = value.replace(/\s+$/g, "")
-                            //每隔一个字符插入一个<wbr>，实现强制换行，插入<bdo>包围@，方便以后查找
-                            var sington = str.length === 1
-                            str = str.split("").join("<wbr>") + "<wbr>"
-                            if (sington) {
-                                str = "<wbr>" + str //防止@出现在最前面
+                    var el = this
+                    if (e.shiftKey) {//防止键入@时触发两次
+                        return
+                    }
+                    setTimeout(function() {
+                        var caret = getCaretPosition(el)
+                        var value = el.value
+                        var at = options.at//查询标记
+                        var query = null //查询字符串,用于highlightData方法
+                        //如果光标直接位于光标之后，那么就查询所有
+                        var queryAll = value.charAt(caret - 1) === at
+                        //取得离光标左边最近的@的位置(也就是插入菜单的位置)
+                        var _queryStartIndex = value.slice(0, caret).lastIndexOf(at)
+                        if (_queryStartIndex !== -1) {
+                            queryStartIndex = _queryStartIndex + 1
+                        } else {//如果光标之前的element.value不存在@那么关闭菜单
+                            return vmodel.toggle = false
+                            return
+                        }
+                        if (queryAll) {
+                            query = ""
+                        }
+                        if (!queryAll && typeof queryStartIndex === "number") {
+                            var query = value.slice(queryStartIndex, caret)
+                            if (query.indexOf(" ") >= 0 || query.length > options.maxLength) {
+                                return vmodel.toggle = false //如果存在空白或超出长度, 就关闭子菜单
+                            } else {
+                                query = query.length >= options.minLength ? query : ""
                             }
-                            str = str.replace(new RegExp(escapeRegExp("<wbr>" + at + "<wbr>"), "img"), "<" + bdoName + ">" + at + "</" + bdoName + ">")
-
-                            //创建弹出层
-                            popup = vmodel._popup.call(this, str)
-                            if (popup) {
+                        }
+                        if (typeof query === "string") {
+                            vmodel.query = query
+                            if (!popup) {//如果菜单不存在创建菜单
+                                var rectValue = value.slice(0, caret)
+                                var rectHTML = rectValue
+                                //每隔一个字符插入一个<wbr>，实现强制换行，插入<bdo>包围@，方便以后查找
+                                // var rectHTML = rectValue.split("").join("<wbr>") + "<wbr>"
+                                //为性能起见，只有用户定位于@后才重刷fakeTextArea里面的HTML结构
+                                rectHTML = rectHTML.replace(new RegExp(escapeRegExp(at), "img"), "<bdo>" + at + "</bdo>")
+                                //创建弹出层
+                                popup = vmodel._popup.call(el, rectHTML)
                                 vmodel.activeIndex = 0 //重置高亮行
                                 avalon.scan(popup, _vmodels)
-
                                 avalon(popup).bind("mouseleave", function() {
                                     vmodel.$model.__mouseenter__ = false
                                 })
                             }
 
-
-                        }
-                        var rightContext = value.substr(index + 1, options.maxLength)
-
-                        if (rightContext.length >= options.minLength) {
-                            // 取得@右边的内容，一直取得其最近的一个空白为止
-                            var match = rightContext.match(/^\S+/) || [""]
-                            var query = vmodel.query = match[0]//取得查询字符串
                             function callback() {
                                 //对请求回来的数据进笨过滤排序
                                 var datalist = vmodel.filterData(vmodel)
@@ -68,11 +90,7 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                                     vmodel.$model.__toString__ = toString
                                 }
                                 vmodel.toggle = !!datalist.length
-                                if (!vmodel.toggle && popup) {
-                                    popup.parentNode.removeChild(popup)
-                                }
                             }
-
                             var now = new Date//时间闸
                             if (lastModified - now > vmodel.delay && typeof vmodel.updateData === "function") {
                                 //远程请求数据，自己实现updateData方法，主要是改变datalist数组，然后在调用callback
@@ -88,8 +106,7 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                             }, 150)
 
                         }
-
-                    }
+                    })
 
                 })
                 avalon.scan(element, _vmodels)
@@ -99,58 +116,63 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
             }
 
             vm.$remove = function() {
-                avalon(element).unbind("keyup", keyupCallback).unbind("blur", blurCallback)
+                avalon(element)
+                        .unbind("keyup", keyupCallback)
+                        .unbind("blur", blurCallback)
+                        .unbind("keypress", blurCallback)
                 vm.toggle = false
                 avalon.log("at $remove")
             }
 
             vm._popup = function(str) {
                 //创建测量用的DIV,它与当前textara, input的大小样式完全相同
-                var fakeTextArea = document.createElement("pre")
+                fakeTextArea = fakeTextArea || document.createElement("div")
                 fakeTextArea.innerHTML = str
                 document.body.appendChild(fakeTextArea)
+                //拷贝其样式
                 var styles = window.getComputedStyle ?
                         getComputedStyle(this, null) :
                         this.currentStyle
-                var $fakeTextArea = avalon(fakeTextArea)
+                var obj = {}
+                avalon(this).css("font-size") //强制reflow
                 for (var i in styles) {
-                    if (typeof styles[i] !== "function") {
-                        try {
-                            $fakeTextArea.css(i, styles[i])
-                        } catch (e) {
-                        }
+                    if (/^[a-z]+$/i.test(i) && styles[i] !== "" && typeof styles[i] !== "function") {
+                        obj[i] = styles[i]
                     }
                 }
-
-                $fakeTextArea.css({
-                    width: this.offsetWidth,
-                    height: this.offsetHeight,
+                avalon.mix(obj, {
+                    width: avalon(this).width() + "px",
+                    height: avalon(this).height() + "px",
                     border: "1px solid red",
                     display: "block",
                     "word-wrap": "break-word", //强制换行 fix IE6-8
-                    "word-break": "break-all" //强制换行 fix IE6-8
+                    visibility: "hidden"
                 })
+                var array = []
+                for (var i in obj) {
+                    array.push(hyphen(i) + ":" + obj[i])
+                }
+                fakeTextArea.style.cssText = array.join("; ")
+                fakeTextArea.scrollTop = this.scrollTop
+                fakeTextArea.scrollLeft = this.scrollLeft
                 //取得textarea,input在页面上的坐标
                 var offset = avalon(this).offset()
                 var fakeRect = fakeTextArea.getBoundingClientRect()
-                var bdos = fakeTextArea.getElementsByTagName(bdoName)
+                var bdos = fakeTextArea.getElementsByTagName("bdo")
                 var bdo = bdos[bdos.length - 1]
-                if(!bdo)
-                    return
-
                 //高亮@所在bdo元素，然后通过Range.getBoundingClientRect取得它在视口的坐标
-                if (document.createRange && document.documentMode != 9) {//如果是IE10+或W3C
+                if (document.createRange) {//如果是IE10+或W3C  && document.documentMode != 9
                     var range = document.createRange();
                     range.selectNode(bdo)
                     var rangeRect = range.getBoundingClientRect()
                 } else {//IE6-9
                     rangeRect = bdo.getBoundingClientRect()
                 }
-                //高亮@所在bdo元素在测量用的PER的坐标
+                //高亮@所在bdo元素在测量用的DIV的坐标
                 var top = rangeRect.bottom - fakeRect.top
                 var left = rangeRect.left - fakeRect.left
                 //创建弹出菜单
-                popup = document.createElement("div")
+                popup = popup || document.createElement("div")
                 popup.innerHTML = vmodel.template
                 document.body.appendChild(popup)
                 popup.className = "ui-at"
@@ -160,8 +182,6 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                     left: offset.left + left,
                     position: "absolute"
                 })
-                document.body.removeChild(fakeTextArea)
-                fakeTextArea = null
                 return popup
             }
 
@@ -177,6 +197,8 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                 if (v === false && popup && popup.parentNode) {
                     popup.parentNode.removeChild(popup)
                     popup = null
+                    document.body.removeChild(fakeTextArea)
+                    fakeTextArea = null
                 }
             })
             vm._select = function(e) {
@@ -187,13 +209,12 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                 span.innerHTML = query
                 query = span.textContent || span.innerText//去掉高亮标签
                 var value = element.value
-                var index = value.replace(/\s+$/g, "").lastIndexOf(vmodel.at)
-                //添加一个特殊的空格,让aaa不再触发 <ZWNJ>，零宽不连字空格
-                element.value = value.slice(0, index) + "@\u200c" + query
-                element.focus()//聚集到最后
-                //销毁菜单
-                vmodel.toggle = false
 
+                element.value = value.slice(0, queryStartIndex) + query + " " + value.slice(queryStartIndex)
+                //销毁菜单
+
+                setCaretPosition(element, queryStartIndex + query.length + 1)
+                vmodel.toggle = false
             }
 
         })
@@ -249,13 +270,44 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
             })
         }
     }
+    function hyphen(target) {
+        //转换为连字符线风格
+        return target.replace(/([A-Z]+)/g, function(a, b) {
+            return "-" + b.toLowerCase()
+        })
+    }
     function escapeRegExp(str) {
         return str.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+    }
+    function getCaretPosition(element) {
+        var caret  //取得光标的位置
+        if (typeof element.selectionStart === "number") {
+            caret = element.selectionStart
+        } else {
+            var selection = document.selection.createRange() //这个TextRange对象不能重用
+            selection.moveStart("character", -element.value.length)
+            caret = selection.text.length;
+        }
+        return caret
+    }
+    function setCaretPosition(ctrl, pos) {
+        if (ctrl.setSelectionRange) {
+            ctrl.focus()
+            ctrl.setSelectionRange(pos, pos)
+        } else if (ctrl.createTextRange) {
+            var range = ctrl.createTextRange()
+            range.collapse(true);
+            range.moveEnd("character", pos)
+            range.moveStart("character", pos)
+            range.select()
+        }
     }
     //通过监听textarea,input的keyup进行，移动列表项的高亮位置
     function moveIndex(e, vmodel) {
         var max = vmodel._datalist.size()
-        switch (e.keyCode) {
+        var code = e.which || e.keyCode
+        //firefox down 为37
+        switch (code) {
             case 13:
                 // enter
                 vmodel._select(e)
@@ -267,7 +319,8 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                 e.preventDefault();
                 break;
             case 38:
-            case 63233: //safari
+            case 63233:
+                //safari
                 // up arrow
                 e.preventDefault();
                 var index = vmodel.activeIndex - 1
@@ -277,7 +330,8 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                 vmodel.activeIndex = index
                 break;
             case 40:
-            case 63235: //safari
+            case 63235:
+                //safari
                 // down arrow
                 e.preventDefault();
                 var index = vmodel.activeIndex + 1

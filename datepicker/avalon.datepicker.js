@@ -835,6 +835,9 @@ define(["../avalon.getModel",
         onClose: avalon.noop,
         onSelectTime: "",
         parseDate: function(str){
+            if (!str) {
+                return null
+            }
             var separator = this.separator;
             var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})[\\s\\w\\W]*$";
             reg = new RegExp(reg);

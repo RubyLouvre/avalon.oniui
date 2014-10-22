@@ -16,7 +16,7 @@ define(["avalon",
         callbacksNeedRemove = {}
 
     template = templateArr[1] // 静态模板渲染部分view
-    var EJS =  window.ejs  = function( id,data,opts){
+    var EJS =  avalon.ejs  = function( id,data,opts){
         var el, source;
         if( !EJS.cache[ id] ){
             opts = opts || {}; 
@@ -345,19 +345,20 @@ define(["avalon",
                 return toggle
             }
             
-            vm._setColumnWidth = function() {
+            vm._setColumnWidth = function(resize) {
                 var cells = vmodel._container.getElementsByTagName("tr")[0].cells,
                     columns = vmodel.columns,
                     _columns = columns.$model,
-                    containerWidth = avalon(vmodel.container).width() - 2,
+                    $gridContainer = avalon(vmodel.container),
+                    containerWidth = $gridContainer.width(),
                     minColumnWidth = getMinColumnWidth(_columns),
                     firstStringColumn = getFirstStringColumn(columns, vmodel)
-
-                if (minColumnWidth < containerWidth) {
-                    firstStringColumn.width = "auto"
-                } else {
-                    avalon(vmodel.container).css("width", minColumnWidth)
+                if (minColumnWidth > containerWidth && !resize) {
+                    $gridContainer.css("width", minColumnWidth)
                     firstStringColumn.width = firstStringColumn.configWidth
+                } else {
+                    $gridContainer.css("width", "auto")
+                    firstStringColumn.width = "auto"
                 }
 
                 for (var i = 0, len = cells.length; i < len; i++) {
@@ -476,12 +477,12 @@ define(["avalon",
                 element.resizeTimeoutId = 0
                 callbacksNeedRemove.resizeCallback = avalon(window).bind("resize", function() {
                     clearTimeout(element.resizeTimeoutId)
-                    // var clientWidth = avalon(window).width()
-                    // if (clientWidth <= vmodel.containerMinWidth) {
-                    //     element.parentNode.style.width = clientWidth + "px"
-                    // }
+                    var clientWidth = avalon(window).width()
+                    if (clientWidth <= vmodel.containerMinWidth) {
+                        element.style.width = vmodel.containerMinWidth + "px"
+                    } 
                     element.resizeTimeoutId = setTimeout(function(){
-                        vmodel._setColumnWidth()
+                        vmodel._setColumnWidth(true)
                     },150)
                 })
                 if (typeof options.onInit === "function") {
@@ -710,6 +711,7 @@ define(["avalon",
             }
             column.format = htmlFunction // EJS模板对于helper的渲染是通过将helper中的方法分别作为compiler的参数存在的，为了在静态模板中可以使用fn()这种方式渲染数据，只好统一将渲染数据的方法保存在format中
         }
+
         if (options.selectable) {
             var type = options.selectable.type,
                 selectFormat,

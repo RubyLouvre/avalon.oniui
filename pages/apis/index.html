@@ -233,14 +233,9 @@
             <div ms-repeat="concepts" ms-include-src="pages/apis/concepts/{{el.id}}.html"  data-include-rendered="highlight">
 
             </div>
-            <div ms-if="supportSVG"　ms-include-src="'pages/apis/bindings/bindings.svg'">   
-            </div>
-            <div ms-if="!supportSVG">   
-                <img src="pages/apis/bindings/bindings.png"/>
-            </div>
             <div>
-                <h3 style='color:yellow'> avalon的指令分为三大类</h3>
-                <ul>
+                <h3 style='color:green'> avalon的指令分为三大类</h3>
+                <ul style='list-style:circle inside'>
                     <li>以ms-*开头的绑定属性</li>
                     <li ms-skip>位于文本节点或位于ms-attr-*, ms-href, ms-src, ms-value, ms-title,
                         ms-alt中的{{}}插值表达式
@@ -249,6 +244,12 @@
                         data-duplex-event, data-repeat-rendered,data-include-loaded....)</li>
                 </ul>
             </div>
+            <div ms-if="supportSVG"　ms-include-src="'pages/apis/bindings/bindings.svg'">   
+            </div>
+            <div ms-if="!supportSVG">   
+                <img src="pages/apis/bindings/bindings.png"/>
+            </div>
+
             <div ms-repeat="bindingIncludes" ms-include-src="pages/apis/bindings/{{el}}.html"  data-include-rendered="highlight">
 
             </div>

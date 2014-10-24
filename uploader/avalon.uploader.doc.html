@@ -47,13 +47,16 @@
 					<td colspan="3" align="center">回调函数</td>
 				</tr>
 				<tr>  
-					<td>fileSizeErr(filename)</td><td></td><td>单个文件大小超出设置时触发。fileName：文件名。</td> 
+					<td>onSuccess(files)</td><td></td><td>上传成功时触发。files：上传成功的文件数组。</td> 
 				</tr>
 				<tr>  
-					<td>fileCountErr(availableNum, selectNum)</td><td></td><td>文件数目超出设置时触发。availableNum：剩余可选数量；selectNum：此次选择数量。</td> 
+					<td>onFileSizeErr(filename)</td><td></td><td>单个文件大小超出设置时触发。fileName：文件名。</td> 
 				</tr>
 				<tr>  
-					<td>singleError(fileName)</td><td></td><td>单个文件失败时触发。fileName：文件名。</td> 
+					<td>onFileCountErr(availableNum, selectNum)</td><td></td><td>文件数目超出设置时触发。availableNum：剩余可选数量；selectNum：此次选择数量。</td> 
+				</tr>
+				<tr>  
+					<td>onSingleFailed(fileName)</td><td></td><td>单个文件失败时触发。fileName：文件名。</td> 
 				</tr>
 				<tr>
 					<td colspan="3" align="center">暴露参数</td>

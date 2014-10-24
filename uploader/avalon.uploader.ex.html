@@ -158,7 +158,10 @@
 					browseButton: 'browse-btn',
 					maxFileCount: 4,
 					maxFileSize: 1048576000,
-					fileSizeErr: function(fileName){
+					onSuccess: function(data){
+						console.log(data);
+					},
+					onFileSizeErr: function(fileName){
 						alert('自定义信息：' + fileName + '大小超过1M啦~')
 					}
 				};
@@ -167,7 +170,7 @@
 					browseButton: 'browse-btn-2',
 					maxFileCount: 4,
 					maxFileSize: 1048576000,
-					fileSizeErr: function(fileName){
+					onFileSizeErr: function(fileName){
 						alert('自定义信息：' + fileName + '大小超过1M啦~')
 					}
 				};

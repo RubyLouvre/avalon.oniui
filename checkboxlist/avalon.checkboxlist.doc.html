@@ -1,97 +1,99 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-<meta http-equiv="x-ua-compatible" content="ie=edge" />
-<meta name="description" content="通过checkboxlist可以方便的实现选框的全选、全不选，并可通过简单配置进行选中操作的回调处理，也可以通过多种方式来提供渲染选项视图所需要的数据" />
-<title>checkboxlist文档说明</title>
-<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
-</head>
-<body class="doc">
-    <div class="wrapper">
-        <h2>checkboxlist</h2>
-        <fieldset>
-            <legend>复选框列表</legend>
-            通过checkboxlist可以方便的实现选框的全选、全不选，并可通过简单配置进行选中操作的回调处理，也可以通过多种方式来提供渲染选项视图所需要的数据
-        </fieldset>
-        <fieldset>
-            <legend>使用说明</legend>
-            <table class="table-doc">
-                <thead>
-                    <tr>
-                        <th>名字</th>
-                        <th>默认值</th>
-                        <th>说明</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="3" align="center">配置参数</td>
-                    </tr>
-                    <tr>
-                        <td>all</td>
-                        <td>false</td>
-                        <td>默认不选中所有选项</td>
-                    </tr>
-                    <tr>
-                        <td>alltext</td>
-                        <td>"全部"</td>
-                        <td>显示"全部"按钮，方便进行全选或者全不选操作,不需要全选操作的话可以设置alltext为""</td>
-                    </tr>
-                    <tr>
-                        <td>type</td>
-                        <td>""</td>
-                        <td>内置type为week时的data，用户只需配置type为week即可显示周一到周日的选项 </td>
-                    </tr>
-                    <tr>
-                        <td>vertical</td>
-                        <td>true</td>
-                        <td>如果希望选框水平排列则设置vertical为false，默认垂直排列</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" align="center">接口方法与固有属性</td>
-                    </tr>
-                    <tr>
-                        <td>data</td>
-                        <td>[]</td>
-                        <td>所有选项值的集合，通过此数据来渲染初始视图</td>
-                    </tr>
-                    <tr>
-                        <td>checkStatus</td>
-                        <td>{}</td>
-                        <td>通过此对象判断选框的选中状态，从而选中或者不选中对应选框,checkStatus中key分别代表每个选项，选中的选项对应key的value非0，没选中的value为0或者false</td>
-                    </tr>
-                    <tr>
-                        <td>fetch</td>
-                        <td>""</td>
-                        <td>
-                            通过配置fetch来获得要显示的数据，数据格式必须如下所示：
-                            [
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="description" content="通过checkboxlist可以方便的实现选框的全选、全不选，并可通过简单配置进行选中操作的回调处理，也可以通过多种方式来提供渲染选项视图所需要的数据" />
+        <title>checkboxlist文档说明</title>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    </head>
+    <body class="doc">
+        <div class="wrapper">
+            <h2>checkboxlist</h2>
+            <fieldset>
+                <legend>复选框列表</legend>
+                通过checkboxlist可以方便的实现选框的全选、全不选，并可通过简单配置进行选中操作的回调处理，也可以通过多种方式来提供渲染选项视图所需要的数据
+            </fieldset>
+            <fieldset>
+                <legend>使用说明</legend>
+                <table class="table-doc">
+                    <col width="180"/>
+                    <col width="180"/>
+                    <thead>
+                        <tr>
+                            <th>名字</th>
+                            <th>默认值</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" align="center">配置参数</td>
+                        </tr>
+                        <tr>
+                            <td>all</td>
+                            <td>false</td>
+                            <td>默认不选中所有选项</td>
+                        </tr>
+                        <tr>
+                            <td>alltext</td>
+                            <td>"全部"</td>
+                            <td>显示"全部"按钮，方便进行全选或者全不选操作,不需要全选操作的话可以设置alltext为""</td>
+                        </tr>
+                        <tr>
+                            <td>type</td>
+                            <td>""</td>
+                            <td>内置type为week时的data，用户只需配置type为week即可显示周一到周日的选项 </td>
+                        </tr>
+                        <tr>
+                            <td>vertical</td>
+                            <td>true</td>
+                            <td>如果希望选框水平排列则设置vertical为false，默认垂直排列</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" align="center">接口方法与固有属性</td>
+                        </tr>
+                        <tr>
+                            <td>data</td>
+                            <td>[]</td>
+                            <td>所有选项值的集合，通过此数据来渲染初始视图</td>
+                        </tr>
+                        <tr>
+                            <td>checkStatus</td>
+                            <td>{}</td>
+                            <td>通过此对象判断选框的选中状态，从而选中或者不选中对应选框,checkStatus中key分别代表每个选项，选中的选项对应key的value非0，没选中的value为0或者false</td>
+                        </tr>
+                        <tr>
+                            <td>fetch</td>
+                            <td>""</td>
+                            <td>
+                                通过配置fetch来获得要显示的数据，数据格式必须如下所示：
+                                [
                                 { text : '文字1' , value : 'w1' } ,
                                 { text : '文字2' , value : 'w2' } ,
                                 { text : '文字3' , value : 'w3' } ,
                                 { text : '文字4' , value : 'w4' }
-                            ]
-                            而且方法接受一个callback参数，获取到数据之后将数据作为参数传给callback
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>onSelect</td>
-                        <td>""</td>
-                        <td>如果在选中选框或者取消选中之后需要做一些操作，可以配置此选项，执行一些回调操作</td>
-                    </tr>
-                </tbody>
-            </table>
-        </fieldset>
-        <p>demo示例</p>
-        <ol class="example-links">
-            <li><a href="avalon.checkboxlist.ex.html">checkboxlist功能全览</a></li>
-            <li><a href="avalon.checkboxlist.ex1.html">默认配置的checkboxlist组件</a></li>
-            <li><a href="avalon.checkboxlist.ex2.html">配置checkboxlist-duplex初始化初始选中的选项，而且可以通过duplex值的改变修正选中项状态</a></li>
-            <li><a href="avalon.checkboxlist.ex3.html">checkboxlist组件默认提供了type为week时的data</a></li>
-            <li><a href="avalon.checkboxlist.ex4.html">配置checkboxlist-fetch获取用户定义的所有选项值</a></li>
-            <li><a href="avalon.checkboxlist.ex5.html">配置onselect回调</a></li>
-        </ol>
-    </div>
-</body>
+                                ]
+                                而且方法接受一个callback参数，获取到数据之后将数据作为参数传给callback
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>onSelect</td>
+                            <td>""</td>
+                            <td>如果在选中选框或者取消选中之后需要做一些操作，可以配置此选项，执行一些回调操作</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+            <p>demo示例</p>
+            <ol class="example-links">
+                <li><a href="avalon.checkboxlist.ex.html">checkboxlist功能全览</a></li>
+                <li><a href="avalon.checkboxlist.ex1.html">默认配置的checkboxlist组件</a></li>
+                <li><a href="avalon.checkboxlist.ex2.html">配置checkboxlist-duplex初始化初始选中的选项，而且可以通过duplex值的改变修正选中项状态</a></li>
+                <li><a href="avalon.checkboxlist.ex3.html">checkboxlist组件默认提供了type为week时的data</a></li>
+                <li><a href="avalon.checkboxlist.ex4.html">配置checkboxlist-fetch获取用户定义的所有选项值</a></li>
+                <li><a href="avalon.checkboxlist.ex5.html">配置onselect回调</a></li>
+            </ol>
+        </div>
+    </body>
 </html>

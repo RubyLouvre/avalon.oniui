@@ -16,7 +16,7 @@ define(["avalon",
         callbacksNeedRemove = {}
 
     template = templateArr[1] // 静态模板渲染部分view
-    var EJS =  window.ejs  = function( id,data,opts){
+    var EJS =  avalon.ejs  = function( id,data,opts){
         var el, source;
         if( !EJS.cache[ id] ){
             opts = opts || {}; 
@@ -201,7 +201,7 @@ define(["avalon",
 
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
-        options.$skipArray = ["template", "widgetElement", "data", "container", "_container", "_position", "htmlHelper", "_selectedData", "selectable", "loadingVModel", "loading", "pageable", "pager", "noResult", "sortable", "containerMinWidth"].concat(options.$skipArray)
+        options.$skipArray = ["_allEnabledData", "template", "widgetElement", "data", "container", "_container", "_position", "htmlHelper", "selectable", "loadingVModel", "loading", "pageable", "pager", "noResult", "sortable", "containerMinWidth", "_disabledData", "_enabledData"].concat(options.$skipArray)
         var vmodel = avalon.define(vmId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
@@ -210,12 +210,22 @@ define(["avalon",
             vm._fixHeaderToggle = false
             vm._gridWidth = 0
             vm._pagerShow = false
+            vm._allEnabledData = []
+            vm._disabledData = []
+            vm._enabledData = []
             vm.loadingVModel = null
             vm.getRawData = function() {
                 return vmodel.data
             }
             vm.getSelected = function() {
-                return vmodel._selectedData
+                var disabledData = vmodel._disabledData,
+                    selectedData = []
+                disabledData.forEach(function(dataItem, index) {
+                    if (dataItem.selected) {
+                        selectedData.push(dataItem)
+                    }
+                })
+                return selectedData.concat(vmodel._enabledData)
             }
             vm.selectAll = function(b) {
                 b = b !== void 0 ? b : true
@@ -299,20 +309,31 @@ define(["avalon",
                     onSelectAll = vmodel.onSelectAll
 
                 setTimeout(function() {
-                    var val = event ? event.target.checked : selected
+                    var val = event ? event.target.checked : selected,
+                        enableData = datas.concat()
                     vmodel._allSelected = val
-                    for (var i = 0, len = datas.length; i < len; i++) {
-                        var data = datas[i],
-                            tr = trs[i],
-                            input = tr.cells[0].getElementsByTagName("input")[0]
-                        data.selected = val
-                        input.checked = val
-                        avalon(tr)[val ? "addClass": "removeClass"]("ui-smartgrid-selected")
+                    for (var i = 0, len = trs.length; i < len; i++) {
+                        var tr = trs[i],
+                            data, 
+                            input = tr.cells[0].getElementsByTagName("input")[0],
+                            $tr = avalon(tr),
+                            dataIndex = avalon(input).attr("data-index")
+                        if (dataIndex !== null) {
+                            data = datas[dataIndex]
+                            if (!data.disable) {
+                                data.selected = val
+                                input.checked = val
+                                $tr[val ? "addClass": "removeClass"]("ui-smartgrid-selected")
+                            }
+                        } else {
+                            continue
+                        }
                     }
+
                     if (val) {
-                        vmodel._selectedData = datas.concat()
+                        vmodel._enabledData = vmodel._allEnabledData
                     } else {
-                        vmodel._selectedData = []
+                        vmodel._enabledData = []
                     }
                     
                     if (avalon.type(onSelectAll) === "function") {
@@ -337,19 +358,20 @@ define(["avalon",
                 return toggle
             }
             
-            vm._setColumnWidth = function() {
+            vm._setColumnWidth = function(resize) {
                 var cells = vmodel._container.getElementsByTagName("tr")[0].cells,
                     columns = vmodel.columns,
                     _columns = columns.$model,
-                    containerWidth = avalon(vmodel.container).width() - 2,
+                    $gridContainer = avalon(vmodel.container),
+                    containerWidth = $gridContainer.width(),
                     minColumnWidth = getMinColumnWidth(_columns),
                     firstStringColumn = getFirstStringColumn(columns, vmodel)
-
-                if (minColumnWidth < containerWidth) {
-                    firstStringColumn.width = "auto"
-                } else {
-                    avalon(vmodel.container).css("width", minColumnWidth)
+                if (minColumnWidth > containerWidth && !resize) {
+                    $gridContainer.css("width", minColumnWidth)
                     firstStringColumn.width = firstStringColumn.configWidth
+                } else {
+                    $gridContainer.css("width", "auto")
+                    firstStringColumn.width = "auto"
                 }
 
                 for (var i = 0, len = cells.length; i < len; i++) {
@@ -394,13 +416,21 @@ define(["avalon",
                 html = fn({data: datas, columns: _columns, len: 2, noResult: vmodel.noResult, vmId: vmId, checkRow: checkRow})
                 return html
             }
-            vm.render = function(init) {
+
+            vm.render = function(data, init) {
                 var container = vmodel._container,
                     containerWrapper = vmodel.container,
-                    selectable = vmodel.selectable
-
+                    selectable = vmodel.selectable,
+                    tableTemplate = ""
+                if (avalon.type(data) === "array") {
+                    vmodel.data = data
+                } else {
+                    init = data
+                }
+                dataFracte(vmodel)
                 vmodel._pagerShow = !vmodel.data.length ? false : true
-                avalon.innerHTML(container, vmodel._getTemplate())
+                tableTemplate = vmodel.addRow(vmodel._getTemplate(), vmodel.columns.$model, vmodels)
+                avalon.innerHTML(container, tableTemplate)
                 if (selectable && selectable.type === "Checkbox") {
                     var allSelected = isSelectAll(vmodel.data)
                     vmodel._allSelected = allSelected
@@ -461,12 +491,12 @@ define(["avalon",
                 element.resizeTimeoutId = 0
                 callbacksNeedRemove.resizeCallback = avalon(window).bind("resize", function() {
                     clearTimeout(element.resizeTimeoutId)
-                    // var clientWidth = avalon(window).width()
-                    // if (clientWidth <= vmodel.containerMinWidth) {
-                    //     element.parentNode.style.width = clientWidth + "px"
-                    // }
+                    var clientWidth = avalon(window).width()
+                    if (clientWidth <= vmodel.containerMinWidth) {
+                        element.style.width = vmodel.containerMinWidth + "px"
+                    } 
                     element.resizeTimeoutId = setTimeout(function(){
-                        vmodel._setColumnWidth()
+                        vmodel._setColumnWidth(true)
                     },150)
                 })
                 if (typeof options.onInit === "function") {
@@ -485,7 +515,6 @@ define(["avalon",
             var intervalID = setInterval(function() {
                 var elem = document.getElementById("pager-" + vmodel.$id)
                 if (elem && !flagPager) {
-
                     elem.setAttribute("ms-widget", "pager,pager-" + vmodel.$id)
                     avalon(elem).addClass("ui-smartgrid-pager-wrapper")
                     avalon.scan(elem, vmodel)
@@ -506,6 +535,7 @@ define(["avalon",
         container: "", // element | id
         data: [],
         columns: [],
+        allChecked: true,
         htmlHelper: {},
         noResult: "暂时没有数据",
         remoteSort: avalon.noop,
@@ -519,10 +549,13 @@ define(["avalon",
         },
         pager: {
             canChangePageSize : true,
-            options : [10, 20, 50, 100] //默认[10,30,50]
+            options : [10, 20, 50, 100] //默认[10,20,50,100]
         },
         sortable: {
             remoteSort: true
+        },
+        addRow: function(tmpl, columns, vmodel) {
+            return tmpl
         },
         getTemplate: function(str, options) {
             return str
@@ -552,25 +585,29 @@ define(["avalon",
                     $tr = avalon(target.parentNode.parentNode),
                     datas = options.data,
                     onSelectAll = options.onSelectAll,
-                    selectedData = options._selectedData
-
+                    enabledData = options._enabledData,
+                    disabledData = options._disabledData,
+                    dataIndex = $target.attr("data-index")
+                if (!$target.attr("data-role") || dataIndex === null) {
+                    return
+                }
                 if ($target.attr("data-role") === "selected") {
-                    var rowData = datas[$target.attr("data-index")],
+                    var rowData = datas[dataIndex],
                         isSelected = target.checked
                     if (isSelected) {
                         options.selectable.type === "Checkbox" ? $tr.addClass("ui-smartgrid-selected") : 0
                         rowData.selected = true
-                        avalon.Array.ensure(selectedData, rowData)
+                        avalon.Array.ensure(enabledData, rowData)
                     } else {
                         $tr.removeClass("ui-smartgrid-selected")
                         rowData.selected = false
-                        avalon.Array.remove(selectedData, rowData)
+                        avalon.Array.remove(enabledData, rowData)
                     }
                     if (avalon.type(options.onRowSelect) === "function") {
                         options.onRowSelect.call($tr[0], rowData, isSelected)
                     }
                 }
-                if (selectedData.length == datas.length) {
+                if (enabledData.length == (datas.length - disabledData.length)) {
                     options._allSelected = true
                     // 是否全选的回调，通过用户点击单独的行来确定是否触发
                     // if (avalon.type(onSelectAll) === "function") {
@@ -587,14 +624,28 @@ define(["avalon",
             })
         }  
     }
+    function dataFracte(vmodel) {
+        var data = vmodel.data,
+            enabledData = vmodel._enabledData = [],
+            disabledData = vmodel._disabledData = []
+
+        data.forEach(function(dataItem, index) {
+            if (dataItem.disable) {
+                disabledData.push(dataItem)
+            } else {
+                enabledData.push(dataItem)
+            }
+        })
+        vmodel._allEnabledData = enabledData
+    }
     function getSelectedData(vmodel) {
-        var datas = vmodel.data
-        vmodel._selectedData = []
+        var datas = vmodel.data,
+            enabledData = vmodel._enabledData = []
         for (var i = 0, len = datas.length; i < len; i++) {
             var data = datas[i],
                 selected = data.selected
-            if (selected) {
-                vmodel._selectedData.push(data)
+            if (selected && !data.disable) {
+                enabledData.push(data)
             }
         }
     }
@@ -627,13 +678,14 @@ define(["avalon",
     function isSelectAll(datas) {
         var allSelected = true,
             len = datas.length
+
         if (!len) {
             allSelected = false
             return
         }
         for (var i = 0; i < len; i++) {
             var data = datas[i]
-            if (!data.selected) {
+            if (!data.selected && !data.disable) {
                 allSelected = false
             }
         }
@@ -675,36 +727,37 @@ define(["avalon",
                 column.sortTrend = "ndb"
             }
             if (format && !options.htmlHelper[format]) {
-                options.htmlHelper[format] = function(vmId, field, index, cellValue) {
+                options.htmlHelper[format] = function(vmId, field, index, cellValue, rowData) {
                     avalon.log("方法"+format+"未定义")
                     return cellValue
                 }
             }
             htmlFunction = options.htmlHelper[format]
             if (!htmlFunction) {
-                htmlFunction = function(vmId, field, index, cellValue) {
+                htmlFunction = function(vmId, field, index, cellValue, rowData) {
                     return cellValue
                 }
             }
             column.format = htmlFunction // EJS模板对于helper的渲染是通过将helper中的方法分别作为compiler的参数存在的，为了在静态模板中可以使用fn()这种方式渲染数据，只好统一将渲染数据的方法保存在format中
         }
+
         if (options.selectable) {
             var type = options.selectable.type,
                 selectFormat,
                 allSelected = true
 
             if (type === "Checkbox" || type === "Radio") {
-                selectFormat = function(vmId, field, index, selected, disable, allSelected) {
+                selectFormat = function(vmId, field, index, selected, rowData, disable, allSelected) {
                     if (allSelected && type === "Radio") return 
                     return "<input type='" + type.toLowerCase() +"'" + (disable ? "disabled " : "") + (selected ? "checked='checked'" : "") + "name='selected' "+ (allSelected ? "ms-click='_selectAll' ms-duplex-radio='_allSelected'" : "data-index='" + index +"'") +"data-role='selected'/>"
                 }
-                allSelected = isSelectAll(options.data)
+                allSelected = isSelectAll(options.data) || false
                 options._allSelected = allSelected
             }
             
             selectColumn = {
                 key : "selected",
-                name: selectFormat(options.$id, "selected", -1, allSelected, null, true),
+                name: selectFormat(options.$id, "selected", -1, allSelected, [], null, true),
                 width : 25,
                 configWidth: 25,
                 sortable : false,

@@ -44,8 +44,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
             vm.selectionWrapOffset = -vm.pictures.length * 20 / 2 //圆形选择CSS位置修正
             vm.panelOffsetX = 0 //长panel的X方向偏移，正向移动（右）时减小，反向移动（左）时增大
             vm.arrowVisible = false //箭头是否可见
-            vm.arrowLeftSrc = vm.arrowLeftNormalSrc //默认箭头icon
-            vm.arrowRightSrc = vm.arrowRightNormalSrc //默认箭头icon
+            vm.arrowLeftBg = vm.arrowLeftNormalSrc !== "" ? "url("+vm.arrowLeftNormalSrc+")" : ""
+            vm.arrowRightBg = vm.arrowRightNormalSrc !== "" ? "url("+vm.arrowRightNormalSrc+")" : ""
             vm.$skipArray = ["widgetElement", "template", "selectionWrapOffset"]
 
             var inited
@@ -217,16 +217,16 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
             }
             vm.arrowHover = function(direction) { //@method arrowHover(direction) 左右箭头hover事件
                 if (direction === "left") {
-                    vm.arrowLeftSrc = vm.arrowLeftHoverSrc
+                    vm.arrowLeftBg = vm.arrowLeftHoverSrc !== "" ? "url("+vm.arrowLeftHoverSrc+")" : ""
                 } else {
-                    vm.arrowRightSrc = vm.arrowRightHoverSrc
+                    vm.arrowRightBg = vm.arrowRightHoverSrc !== "" ? "url("+vm.arrowRightHoverSrc+")" : ""
                 }
             }
             vm.arrowBlur = function(direction) { //@method arrowBlur(direction) 左右箭头blur事件
                 if (direction === "left") {
-                    vm.arrowLeftSrc = vm.arrowLeftNormalSrc
+                    vm.arrowLeftBg = vm.arrowLeftNormalSrc !== "" ? "url("+vm.arrowLeftNormalSrc+")" : ""
                 } else {
-                    vm.arrowRightSrc = vm.arrowRightNormalSrc
+                    vm.arrowRightBg = vm.arrowRightNormalSrc !== "" ? "url("+vm.arrowRightNormalSrc+")" : ""
                 }
             }
             var timer = null //轮播计时器
@@ -254,24 +254,26 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
     }
 
     widget.defaults = {
-        pictures: [], //@param pictures 轮播图片素材
-        pictureWidth: 500, //@param pictureWidth 图片显示宽度
-        pictureHeight: 200, //@param pictureHeight 图片显示高度
-        effect: "slide", //@param effect 图片切换类型，默认为"slide"，取值：none:无特效 / fade:渐隐 / slide:滑动
-        easing: "easeInOut", //@param effect 缓动类型，默认为"easeInOut"，取值 linear:无缓动效果 / easeIn:在过渡的开始提供缓动效果 / easeOut:在过渡的结尾提供缓动效果 / easeInOut 在过渡的开始和结尾提供缓动效果
-        timeout: 2500, //@param timeout 切换时间间隔
-        during: 300, //@param during 切换速度，越小越快，单位为毫秒
-        alwaysShowArrow: true, //@param alwaysShowArrow 显示左右切换箭头
-        alwaysShowSelection: true, //@param alwaysShowSelection 显示底部圆形切换部件
-        autoSlide: true, //@param autoSlide 自动播放
-        hoverStop: false, //@param autoSlide 鼠标经过停止播放
-        adaptiveWidth: false, //@param adaptiveWidth 适应外围宽度，为true时指定pictureWidth不起作用
-        adaptiveHeight: false, //@param adaptiveHeight 适应外围高度，为true时指定pictureHeight不起作用
-        eventType: "click", //@param eventType 触发tab切换的nav上的事件类型，取值click(默认)\mouseenter\both
-        arrowLeftNormalSrc: "./images/arrows-left-icon.png", //@param arrowLeftNormalSrc 左箭头正常状态图标
-        arrowRightNormalSrc: "./images/arrows-right-icon.png", //@param arrowLeftNormalSrc 右箭头正常状态图标
-        arrowLeftHoverSrc: "./images/arrows-left-hover-icon.png", //@param arrowLeftNormalSrc 左箭头hover状态图标
-        arrowRightHoverSrc: "./images/arrows-right-hover-icon.png", //@param arrowLeftNormalSrc 右箭头hover状态图标
+        pictures: [], //@param  轮播图片素材
+        pictureWidth: 500, //@param  图片显示宽度
+        pictureHeight: 200, //@param  图片显示高度
+        effect: "slide", //@param  图片切换类型，取值：none:无特效 / fade:渐隐 / slide:滑动
+        easing: "easeInOut", //@param  缓动类型，取值 linear:无缓动效果 / easeIn:在过渡的开始提供缓动效果 / easeOut:在过渡的结尾提供缓动效果 / easeInOut 在过渡的开始和结尾提供缓动效果
+        timeout: 2500, //@param  切换时间间隔
+        during: 300, //@param  切换速度，越小越快，单位为毫秒
+        alwaysShowArrow: true, //@param  显示左右切换箭头
+        alwaysShowSelection: true, //@param  显示底部圆形切换部件
+        autoSlide: true, //@param  自动播放
+        hoverStop: true, //@param  鼠标经过停止播放
+        adaptiveWidth: false, //@param  适应外围宽度，为true时指定pictureWidth不起作用
+        adaptiveHeight: false, //@param  适应外围高度，为true时指定pictureHeight不起作用
+        eventType: "click", //@param  触发tab切换的nav上的事件类型，取值click\mouseenter\both
+        arrowLeftNormalSrc: "", //@param  左箭头正常状态图标，可不传
+        arrowRightNormalSrc: "", //@param  右箭头正常状态图标，可不传
+        arrowLeftHoverSrc: "", //@param  左箭头hover状态图标，可不传
+        arrowRightHoverSrc: "", //@param  右箭头hover状态图标，可不传
+        arrowLeftClass:"", //@param  左右箭头的className，可不传
+        arrowRightClass:"", //@param  左右箭头的className，可不传
         onInit: avalon.noop, //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         getTemplate: function(tmpl, opts, tplName) {
             return tmpl

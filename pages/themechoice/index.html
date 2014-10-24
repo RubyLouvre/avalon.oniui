@@ -31,9 +31,11 @@
             </td>
             <td style="padding: 0 20px; width: 700px">
                 <h2 class="demoHeaders">Accordion</h2>
-                <div ms-controller="accordion" ms-widget="accordion,accordion,$accordionOpts" id="accordion">{{aaa}}</div>
+                <div ms-controller="accordion" ms-widget="accordion,accordion,$accordionOpts" id="accordion">{{aaa}}</div> 
                 <h2 class="demoHeaders">Tabs</h2>
                 <div ms-controller="tab" ms-widget="tab" id="tabs"></div>
+                
+                 
                 <h2 class="demoHeaders">Dialog</h2>
                 <div ms-controller="dialog" id="dialog">
                     <button ms-click="openDialog">Open Dialog</button>
@@ -41,22 +43,27 @@
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                     </div>
                 </div>
+                
                 <h2 class="demoHeaders">Daterangepicker</h2>
                 <div ms-controller="daterangepicker" ms-widget="daterangepicker" id="daterangepicker"></div>
+                <h2 class="demoHeaders">Coupledatepicker</h2>
+                <div ms-controller="coupledatepicker" ms-widget="coupledatepicker" id="coupledatepicker"></div>
                 <h2 class="demoHeaders">Doublelist</h2>
                 <div ms-controller="doublelist" ms-widget="doublelist,nimei" ms-duplex="select" id="doublelist"> </div>
+
                 <h2 class="demoHeaders">Slier</h2>
                 <input ms-controller="slider" ms-widget="slider" data-slider-value="36" data-slider-values = "[40, 60]" data-slider-range="true" id="slider">
+
                 <h2 class="demoHeaders">Progressbar</h2>
                 <div ms-controller="progressbar" ms-widget="progressbar" data-progressbar-value="49" data-progressbar-label="true" data-progressbar-in-two="true" id="progressbar"></div>
+               
                 <h2 class="demoHeaders">Loading</h2>
-                <div ms-controller="loading" id="loading" style="width:690px" class="ui-helper-clearfix">
+                <div ms-controller="loadingDemo" id="loading" style="width:690px" class="ui-helper-clearfix">
                     <div ms-widget="loading" data-loading-type="ticks" style="width:100px;height:100px;position:relative;zoom:1;float: left"></div>
                     <div ms-widget="loading" data-loading-type="spin" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
                     <div ms-widget="loading" data-loading-type="spokes" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
-                    <div ms-widget="loading" data-loading-type="spinning-spin" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
-                    <div ms-widget="loading" data-loading-type="spinning-bubbles" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
-                </div> 
+                    <div ms-widget="loading" data-loading-type="spinning-bubbles" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div> 
+                </div>  
             </td>
             <td style="width:235px">
                 <h2 class="demoHeaders">Textbox</h2>
@@ -213,12 +220,12 @@
             var daterangepicker = document.getElementById("daterangepicker");
             avalon.scan(daterangepicker, daterangepickerVM);
         })
-        // require("datepicker/avalon.coupledatepicker", function(avalon) {
-        //     var coupledatepickerVM = avalon.define("coupledatepicker", function(vm) {
-        //     })
-        //     var daterangepicker = document.getElementById("coupledatepicker");
-        //     avalon.scan(coupledatepicker, coupledatepickerVM);
-        // })
+        require("datepicker/avalon.coupledatepicker", function(avalon) {
+            var coupledatepickerVM = avalon.define("coupledatepicker", function(vm) {
+            })
+            var daterangepicker = document.getElementById("coupledatepicker");
+            avalon.scan(coupledatepicker, coupledatepickerVM);
+        })
 
         require(["doublelist/avalon.doublelist"], function() {
             var doublelistVM = avalon.define("doublelist", function(vm) {
@@ -250,7 +257,7 @@
         })
 
         require(["loading/avalon.loading"], function() {
-            var loadingVM = avalon.define("loading", function(vm) {
+            var loadingVM = avalon.define("loadingDemo", function(vm) {
                 
             })
             var loading = document.getElementById("loading");
@@ -336,6 +343,14 @@
             avalon.scan(datepicker, datepickerVM);
         })
 
+        require(['dropdown/avalon.dropdown'], function() {
+            var dropdownVM = avalon.define('dropdown', function(vm) {
+            });
+            var datepicker = document.getElementById("dropdown");
+            avalon.scan(dropdown, dropdownVM);
+          
+        });
+
         require(["progressbar/avalon.progressbar"], function() {
             var progressbarVM = avalon.define("progressbar", function(vm) {
                 
@@ -344,13 +359,8 @@
             avalon.scan(progressbar, progressbarVM);
         })
 
-        require('dropdown/avalon.dropdown.js', function() {
-            var dropdownVM = avalon.define('dropdown', function(vm) {
-            });
-            var dropdown = document.getElementById("dropdown");
-            avalon.scan(dropdown, dropdownVM);
-        });
-
+       
+        //只有存在flipswitch loading就会出问题，等会查找
         require(["flipswitch/avalon.flipswitch"], function() {
             var flipswitchVM = avalon.define("flipswitch", function(vm) {
             })

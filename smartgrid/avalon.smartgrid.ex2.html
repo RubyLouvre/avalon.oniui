@@ -14,7 +14,7 @@
         <div ms-widget="smartgrid, sg1, opts" style="width:760px; margin: 0 auto"></div>
         <script>
             require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
-                function getDates(number) {
+                function getDatas(number) {
                     var data = []
                     for (var i = 0; i < number; i++) {
                         data.push({
@@ -130,7 +130,7 @@
                                 format: "$X" // 定义渲染数据的方法名
                             }
                         ],
-                        data: getDates(8)
+                        data: getDatas(8)
                     }
                 })
                 avalon.scan()
@@ -152,7 +152,7 @@
                     &lt;div ms-widget="smartgrid, sg1, opts" style="width:760px; margin: 0 auto"&gt;&lt;/div&gt;
                     &lt;script&gt;
                         require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
-                            function getDates(number) {
+                            function getDatas(number) {
                                 var data = []
                                 for (var i = 0; i &lt; number; i++) {
                                     data.push({
@@ -268,7 +268,7 @@
                                             format: "$X" // 定义渲染数据的方法名
                                         }
                                     ],
-                                    data: getDates(8)
+                                    data: getDatas(8)
                                 }
                             })
                             avalon.scan()

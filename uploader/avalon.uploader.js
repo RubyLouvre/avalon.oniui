@@ -22,7 +22,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 
 			browseButton = document.getElementById(vm.browseButton);
 
-			vm.removeFile = function(index){
+			vm.deleteFile = function(index){
 				// fileList.splice(index, 1);
 				avalon.post(vmodel.action, {
 					id: vmodel.files[index].id
@@ -35,12 +35,17 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 						if(swf.setUploadSuccessNum){
 							swf.setUploadSuccessNum(vmodel.files.length);
 						}
+						
+						vmodel.onDeleteSuccess(data);
+
+					}else{
+						// 失败
+						vmodel.onDeleteFailed(data);
 					}
 
 				}, 'json');
 			};
 			
-
 			vm.$init = function(){
 
 				// 安全检测
@@ -53,13 +58,16 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 					}
 				}
 
-
 				if(isSafe){
 					loadFlash();
 					// loadInput();
 				}
 				
 				avalon.scan(element, [vmodel].concat(vmodels));
+
+				if(typeof vmodel.onInit === 'function'){
+					vmodel.onInit.call(element, vmodel, data.uploaderOptions, vmodels);
+				}
 			};
 
 			vm.$remove = function(){
@@ -278,22 +286,27 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 		}
 	};
 
-	widget.version = 1.1;
+	widget.version = 1.2;
 	widget.defaults = {
+		
 		maxFileSize: 1048576,	// 1MB
 		maxFileCount: 100,
 		imgMaxWidth: 10000,
 		imgMaxHeight: 10000,
+
+		// 回调
 		onSuccess: avalon.noop,
+		onSingleFailed: function(fileName){
+			alert('文件' + fileName + '上传失败');
+		},
 		onFileSizeErr: function(fileName){
 			alert('文件' + fileName + '太大了');
 		},
 		onFileCountErr: function(availableNum, selectNum){
 			alert('还可选择' + availableNum + '个，你选择了' + selectNum + '个，超出了');
 		},
-		onSingleFailed: function(fileName){
-			alert('文件' + fileName + '上传失败');
-		}
+		onDeleteSuccess: avalon.noop,
+		onDeleteFailed: avalon.noop
 	};
 
 	// 获取元素样式

@@ -15,7 +15,7 @@
         <div ms-widget="smartgrid, sg2, $sg2Options"></div>
         <script>
             require(["smartgrid/avalon.smartgrid"], function() {
-                function getDates(number) {
+                function getDatas(number) {
                     var data = []
                     for (var i = 0; i < number; i++) {
                         data.push({
@@ -76,7 +76,7 @@
                                 type: "Number"
                             }
                         ],
-                        data: getDates(10)
+                        data: getDatas(10)
                     }
                     vm.$sg2Options = {
                         remoteSort: function(field, sortType, vmodel) {
@@ -118,7 +118,7 @@
                                 width : 200
                             }
                         ],
-                        data: getDates(10)
+                        data: getDatas(10)
                     }
                 })
                 avalon.scan()
@@ -141,7 +141,7 @@
                     &lt;div ms-widget="smartgrid, sg2, $sg2Options"&gt;&lt;/div&gt;
                     &lt;script&gt;
                         require(["smartgrid/avalon.smartgrid"], function() {
-                            function getDates(number) {
+                            function getDatas(number) {
                                 var data = []
                                 for (var i = 0; i &lt; number; i++) {
                                     data.push({
@@ -202,7 +202,7 @@
                                             type: "Number"
                                         }
                                     ],
-                                    data: getDates(10),
+                                    data: getDatas(10),
                                 }
                                 vm.$sg2Options = {
                                     remoteSort: function(field, sortType, vmodel) {
@@ -244,7 +244,7 @@
                                             width : 200,
                                         }
                                     ],
-                                    data: getDates(10),
+                                    data: getDatas(10),
                                 }
                             })
                             avalon.scan()

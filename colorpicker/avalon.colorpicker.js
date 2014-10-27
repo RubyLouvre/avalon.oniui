@@ -290,7 +290,6 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 			
 		});
 		
-		//avalon.scan();
 		return vmodel;
 
 	};

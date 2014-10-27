@@ -12,7 +12,7 @@
         <div ms-widget="smartgrid, sg1"></div>
         <script>
             require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
-                function getDates(number) {
+                function getDatas(number) {
                     var data = []
                     for (var i = 0; i < number; i++) {
                         data.push({
@@ -151,7 +151,7 @@
                                 format: "dropdown"
                             }
                         ],
-                        data: getDates(10),
+                        data: getDatas(10),
                         // 用户鼠标选中行或者不选中行的回调
                         onRowSelect: function(rowData, isSelected) {
                             avalon.log("onRowSelect callback , arguments is : ")
@@ -186,7 +186,7 @@
                     &lt;div ms-widget="smartgrid, sg1"&gt;&lt;/div&gt;
                     &lt;script&gt;
                         require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
-                            function getDates(number) {
+                            function getDatas(number) {
                                 var data = []
                                 for (var i = 0; i &lt; number; i++) {
                                     data.push({
@@ -325,7 +325,7 @@
                                             format: "dropdown"
                                         }
                                     ],
-                                    data: getDates(10),
+                                    data: getDatas(10),
                                     // 用户鼠标选中行或者不选中行的回调
                                     onRowSelect: function(rowData, isSelected) {
                                         avalon.log("onRowSelect callback , arguments is : ")

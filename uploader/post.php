@@ -6,13 +6,18 @@
     if(isset($_POST['id'])){
         // 删除文件
 
-        if(unlink($targetPath.$_POST['id'])){
+        if(@unlink($targetPath.$_POST['id'])){
             // 成功
             echo json_encode(array(
                 'errcode' => 0,
                 'errmsg' => 'success'
             ));
-
+        }else{
+            // 失败
+            echo json_encode(array(
+                'errcode' => 1,
+                'errmsg' => 'failed'
+            ));
         }
     }else{
         // 上传文件

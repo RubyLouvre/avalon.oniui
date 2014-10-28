@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>button demo 1</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
         <script type="text/javascript" src="../avalon.js"></script>
-        <!-- <link href="avalon.buttons.css" type="text/css" rel="stylesheet" media="screen, projection" charset="utf-8" /> -->
         <style>
             body {
                 padding-bottom: 200px;
@@ -21,17 +22,9 @@
     </head>
     <body ms-controller="demo">
         <fieldset>
-            <legend>size and icon</legend>
+            <legend>button type and iconPosition 、 icon 、corner、label config</legend>
             <div>
-                <input ms-widget="button" data-button-size="small" type="submit" value="input元素">
-                <button ms-widget="button" data-button-size="small" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf015;">button元素</button>
-                <button ms-widget="button" data-button-size="small" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">button元素</button>
-                <a href="#" ms-widget="button" data-button-size="small" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf001;">a元素</a>
-                <div href="#" ms-widget="button" data-button-size="small" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf06b;">div元素</div>
-                <a href="#" ms-widget="button" data-button-size="small" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">a元素</a>
-            </div>
-            <div>
-                <input ms-widget="button" type="submit" value="input元素">
+                <input ms-widget="button" value="input元素"/>
                 <button ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf015;">button元素</button>
                 <button ms-widget="button" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">button元素</button>
                 <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf001;">a元素</a>
@@ -39,140 +32,75 @@
                 <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">a元素</a>
             </div>
             <div>
-                <input ms-widget="button" data-button-size="big" type="submit" value="input元素">
-                <button ms-widget="button" data-button-size="big" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf015;">button元素</button>
-                <button ms-widget="button" data-button-size="big" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">button元素</button>
-                <a href="#" ms-widget="button" data-button-size="big" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf001;">a元素</a>
-                <div href="#" ms-widget="button" data-button-size="big" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf06b;">div元素</div>
-                <a href="#" ms-widget="button" data-button-size="big" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">a元素</a>
+                <input ms-widget="button" value="input元素" data-button-corner="4"/>
+                <button ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf015;" data-button-corner="4">button元素</button>
+                <button ms-widget="button" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;" data-button-corner="4">button元素</button>
+                <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf001;" data-button-corner="4">a元素</a>
+                <div href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf06b;" data-button-corner="4" data-button-label="icon right">div元素</div>
+                <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;" data-button-corner="4">a元素</a>
             </div>
-            <div>
-                <input ms-widget="button" data-button-size="large" type="submit" value="input元素">
-                <button ms-widget="button" data-button-size="large" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf015;">button元素</button>
-                <button ms-widget="button" data-button-size="large" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">button元素</button>
-                <a href="#" ms-widget="button" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf001;">a元素</a>
-                <div href="#" ms-widget="button" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf06b;">div元素</div>
-                <a href="#" ms-widget="button" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">a元素</a>
-            </div>
-            <div>
-                <button ms-widget="button" data-button-size="small" >size small</button>
-                <button ms-widget="button">size default</button>
-                <button ms-widget="button" data-button-size="big">size big</button>
-                <button ms-widget="button" data-button-size="large">size large</button>
-            </div>
-        </fieldset>
-        <fieldset>
-            <legend>color</legend>
-            <div>
-                <button ms-widget="button">default status</button>
-                <button ms-widget="button" data-button-disabled="true">disabled status</button>
-                <button ms-widget="button" data-button-color="primary">primary status</button>
-                <button ms-widget="button" data-button-color="primary" data-button-disabled="true">disabled status</button>
-                <button ms-widget="button" data-button-color="success">success status</button>
-                <button ms-widget="button" data-button-color="success" data-button-disabled="true">disabled status</button>
-            </div>
-            <div>
-                <button ms-widget="button" data-button-color="info">info status</button>
-                <button ms-widget="button" data-button-color="info" data-button-disabled="true">disabled status</button>
-
-                <button ms-widget="button" data-button-color="warning">warning status</button>
-                <button ms-widget="button" data-button-color="warning" data-button-disabled="true">disabled status</button>
-
-                <button ms-widget="button" data-button-color="danger">danger status</button>
-                <button ms-widget="button" data-button-color="danger" data-button-disabled="true">disabled status</button>
-            </div>
-            <div>
-            <a href="#" ms-widget="button" data-button-color="primary" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf001;">a元素</a>
-            <a href="#" ms-widget="button" data-button-color="success" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf06b;">a元素</a>
-            <a href="#" ms-widget="button" data-button-color="info" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">a元素</a>
-            <a href="#" ms-widget="button" data-button-color="warning" data-button-size="large" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf001;">a元素</a>
-            <a href="#" ms-widget="button" data-button-color="danger" data-button-size="large" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">a元素</a>
-            </div>
-        </fieldset>
-        <fieldset>
-            <legend>button group</legend>
-            <div>
-                <div ms-widget="buttonset" class="inline">
-                    <a href="#" ms-widget="button">button 1</a>
-                    <a href="#" ms-widget="button">button 2</a>
-                    <a href="#" ms-widget="button">button 3</a>
-                </div>
-                <div ms-widget="buttonset" class="inline">
-                    <a href="#" ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf04c;"></a>
-                    <a href="#" ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf04b;"></a>
-                    <a href="#" ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf074;"></a>
-                </div>
-                <div ms-widget="buttonset" class="inline">
-                    <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf04c;">暂停</a>
-                    <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf04b;">播放</a>
-                    <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf074;">拖曳</a>
-                </div>
-            </div>
-            <div>
-                <div ms-widget="buttonset" class="inline">
-                    <a href="#" ms-widget="button" data-button-color="info">button 1</a>
-                    <a href="#" ms-widget="button" data-button-color="info">button 2</a>
-                    <a href="#" ms-widget="button" data-button-color="info">button 3</a>
-                </div>
-                <div ms-widget="buttonset" class="inline">
-                    <a href="#" ms-widget="button" data-button-color="info" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf04c;"></a>
-                    <a href="#" ms-widget="button" data-button-color="info"  data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf04b;"></a>
-                    <a href="#" ms-widget="button" data-button-color="info"  data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf074;"></a>
-                </div>
-                <div ms-widget="buttonset" class="inline">
-                    <a href="#" ms-widget="button" data-button-color="info" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf04c;">暂停</a>
-                    <a href="#" ms-widget="button" data-button-color="info" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf04b;">播放</a>
-                    <a href="#" ms-widget="button" data-button-color="info" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf074;">拖曳</a>
-                </div>
-            </div>
-            <div>
-                <div ms-widget="buttonset" class="inline">
-                    <a href="#" ms-widget="button" data-button-size="large" data-button-color="danger">button 1</a>
-                    <a href="#" ms-widget="button" data-button-size="large" data-button-color="danger">button 2</a>
-                    <a href="#" ms-widget="button" data-button-size="large" data-button-color="danger">button 3</a>
-                </div>
-                <div ms-widget="buttonset" class="inline">
-                    <a href="#" ms-widget="button" data-button-size="large" data-button-color="danger" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf04c;"></a>
-                    <a href="#" ms-widget="button" data-button-size="large" data-button-color="danger"  data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf04b;"></a>
-                    <a href="#" ms-widget="button" data-button-size="large" data-button-color="danger"  data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf074;"></a>
-                </div>
-                <div ms-widget="buttonset" class="inline">
-                    <a href="#" ms-widget="button" data-button-size="large" data-button-color="danger" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf04c;">暂停</a>
-                    <a href="#" ms-widget="button" data-button-size="large" data-button-color="danger" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf04b;">播放</a>
-                    <a href="#" ms-widget="button" data-button-size="large" data-button-color="danger" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf074;">拖曳</a>
-                </div>
-            </div>
-            <div>
-                <div ms-widget="buttonset" data-buttonset-direction="vertical">
-                    <a href="#" ms-widget="button">button 1</a>
-                    <a href="#" ms-widget="button">button 2</a>
-                    <a href="#" ms-widget="button">button 3</a>
-                </div>
-                <div ms-widget="buttonset" data-buttonset-direction="vertical">
-                    <a href="#" ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf04c;"></a>
-                    <a href="#" ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf04b;"></a>
-                    <a href="#" ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf074;"></a>
-                </div>
-                <div ms-widget="buttonset" data-buttonset-direction="vertical">
-                    <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf04c;">暂停</a>
-                    <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf04b;">播放</a>
-                    <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf074;">拖曳</a>
-                </div>
-                <div ms-widget="buttonset" data-buttonset-direction="vertical" data-buttonset-corner="false">
-                    <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf04c;">pause</a>
-                    <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf04b;">play</a>
-                    <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf074;">drag</a>
-                </div>
-            </div>
-            
         </fieldset>
         <script>
             require("./button/avalon.button", function() {
-                avalon.define("demo", function() {
-
+                avalon.define("demo", function(vm) {
+                    
                 })
                 avalon.scan()
             })
         </script>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;button demo 1&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script type="text/javascript" src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;!-- &lt;link href="avalon.buttons.css" type="text/css" rel="stylesheet" media="screen, projection" charset="utf-8" /&gt; --&gt;
+        &lt;style&gt;
+            body {
+                padding-bottom: 200px;
+            }
+            fieldset &gt; div {
+                margin-bottom: 20px;
+            }
+            .inline {
+                display: inline-block;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="demo"&gt;
+        &lt;fieldset&gt;
+            &lt;legend&gt;button type&lt;/legend&gt;
+            &lt;div&gt;
+                &lt;input ms-widget="button" value="input元素"&gt;
+                &lt;button ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf015;"&gt;button元素&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;"&gt;button元素&lt;/button&gt;
+                &lt;a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf001;"&gt;a元素&lt;/a&gt;
+                &lt;div href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf06b;"&gt;div元素&lt;/div&gt;
+                &lt;a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;"&gt;a元素&lt;/a&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+                &lt;input ms-widget="button" value="input元素" data-button-corner="4"/&gt;
+                &lt;button ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf015;" data-button-corner="4"&gt;button元素&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;" data-button-corner="4"&gt;button元素&lt;/button&gt;
+                &lt;a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf001;" data-button-corner="4"&gt;a元素&lt;/a&gt;
+                &lt;div href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf06b;" data-button-corner="4" data-button-label="icon right"&gt;div元素&lt;/div&gt;
+                &lt;a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;" data-button-corner="4"&gt;a元素&lt;/a&gt;
+            &lt;/div&gt;
+        &lt;/fieldset&gt;
+        &lt;script&gt;
+            require("./button/avalon.button", function() {
+                avalon.define("demo", function(vm) {
+                    
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;     
+    &lt;/body&gt;
+&lt;/html&gt;       
+            </pre>
+        </div>
     </body>
 </html>

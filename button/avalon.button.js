@@ -1,4 +1,4 @@
-define(["avalon", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"], function(avalon, sourceHTML) {
+define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"], function(avalon, sourceHTML) {
     var baseClasses = ["ui-button", "ui-widget", "ui-state-default"],
         typeClasses = "ui-button-icons-only ui-button-icon-only ui-button-text-icons ui-button-text-icon-primary ui-button-text-icon-secondary ui-button-text-only"
     var widget = avalon.ui.button = function(element, data, vmodels) {
@@ -14,9 +14,55 @@ define(["avalon", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"
         }
         btnModel = {
             $init: function() {
-                var elementType = "",
+                var data = options.data,
+                    elementType = "",
                     hasTitle = false,
-                    label = ""
+                    label = options.label,
+                    buttonWidth = 0
+
+                if (options.groups && data.length > 1) {
+                    var buttons = ""
+                    
+                    data.forEach(function(button, index) {
+                        var buttonStr = "<span ms-widget='button'"
+                        if (button.type !== void 0) {
+                            buttonStr += " data-button-type='" + button.type + "'"
+                        }
+                        if (button.iconPosition !== void 0) {
+                            buttonStr += " data-button-icon-position='" + button.iconPosition + "'"
+                        }
+                        if (button.icon !== void 0) {
+                            buttonStr += " data-button-icon='" + button.icon + "'"
+                        }
+                        if (button.color !== void 0) {
+                            buttonStr += " data-button-color='" + button.color + "'"
+                        }
+                        if (button.size !== void 0) {
+                            buttonStr += " data-button-size='" + button.size + "'"
+                        }
+                        if (button.disabled !== void 0) {
+                            buttonStr += " data-button-disabled='" + button.disabled + "'"
+                        }
+                        if (button.label !== void 0) {
+                            buttonStr += " data-button-label='" + button.label + "'"
+                        }
+                        buttonStr += ">" + (button.text || "") + "</span>"
+                        buttons += buttonStr
+                    })
+                    element.innerHTML = buttons
+                    element.setAttribute("ms-widget", "buttonset")
+                    if (options.direction == "vertical") {
+                        element.setAttribute("data-buttonset-direction", "vertical")
+                    }
+                    if (!options.corner) {
+                        element.setAttribute("data-buttonset-corner", options.corner)
+                    }
+                    if (options.width) {
+                        element.setAttribute("data-buttonset-width", parseInt(options.width))
+                    }
+                    avalon.scan(element, vmodels)
+                    return
+                }
                 if (typeof options.disabled !== "boolean") {
                     options.disabled = !!element.disabled
                 } else {
@@ -24,8 +70,11 @@ define(["avalon", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"
                 }
                 if (element.tagName.toLowerCase() === "input") {
                     elementType = "input"
+                    element.type = "button"
                 }
-
+                if (buttonWidth = parseInt(options.width)) {
+                    element.style.width = buttonWidth + "px"
+                }
                 hasTitle = !!element.getAttribute("title")
 
                 $element.bind("mouseenter", function(event) {
@@ -45,7 +94,7 @@ define(["avalon", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"
                     $element.removeClass("ui-state-active")
                 })
                 $element.bind("blur", function() {
-                    $element.removeClass("ui-state-active");
+                    $element.removeClass("ui-state-active")
                 })
 
                 if (!options.label) {
@@ -85,8 +134,9 @@ define(["avalon", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"
         return btnModel
     }
     avalon.ui.buttonset = function(element, data, vmodels) {
-        var buttonsetCorner = data.buttonsetOptions.corner,
-            direction = data.buttonsetOptions.direction,
+        var options = data.buttonsetOptions,
+            buttonsetCorner = options.corner,
+            direction = options.direction,
             $element = avalon(element)
 
         buttonsetCorner = buttonsetCorner !== void 0 ? buttonsetCorner : true
@@ -97,13 +147,17 @@ define(["avalon", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"
                 firstButtonClass = "ui-corner-left",
                 lastButtonClass = "ui-corner-right",
                 children = element.childNodes, 
-                buttons = []
-                
+                buttons = [] // 收集button组元素
+                buttonGroups = false, // 判断是否有button元素组成button组
+                buttonWidth = options.width
 
                 for (var i = 0, el; el = children[i++]; ) {
-                    if (el.nodeType === 1 && (/^(button|input|a)$/i.test(el.tagName) || el.getAttribute("data-button"))) {
+                    if (el.nodeType === 1) {
                         el.setAttribute("data-button-corner", "false")
                         buttons.push(el)
+                        if (el.tagName.toLowerCase() === "button") {
+                            buttonGroups = true
+                        }
                     }
                 }
                 var n = buttons.length
@@ -121,6 +175,34 @@ define(["avalon", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"
                 $element.addClass(elementClass.join(" "))
                 data.buttons = buttons
                 avalon.scan(element, vmodels)
+                if (buttonWidth = parseInt(buttonWidth)) {
+                    for (var i = 0; button = buttons[i++];) {
+                        button.style.width = buttonWidth + "px"
+                    }
+                    return 
+                }
+                if (buttonGroups) {
+                    (function(buttons) {
+                        var interval = 0,
+                            maxButtonWidth = 0
+
+                        buttons = buttons.concat()
+                        interval = setInterval(function() {
+                            var buttonWidth = 0
+                            for (var i = 0; button = buttons[i++];) {
+                                buttonWidth = Math.max(buttonWidth, avalon(button).outerWidth())
+                            }
+                            if (buttonWidth === maxButtonWidth) {
+                                maxButtonWidth += 1
+                                for (var i = 0; button = buttons[i++];) {
+                                    button.style.width = maxButtonWidth + "px"
+                                }
+                                clearInterval(interval)
+                            }
+                            maxButtonWidth = buttonWidth
+                        }, 100)
+                    })(buttons)
+                }
             },
             $remove: function(el) {
                 avalon(element).removeClass("ui-buttonset")
@@ -135,11 +217,15 @@ define(["avalon", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"
         var buttonText, 
             buttonClasses = baseClasses.concat(),
             iconText = false,
-            icons = options.icon || ""
+            icons = options.icon || "",
+            corner = options.corner
 
         options.label = options.label || ""
-        if (options.corner) {
-            buttonClasses.push("ui-corner-all")            
+        if (corner) {
+            buttonClasses.push("ui-corner-all")    
+            if (corner = parseInt(corner)) {
+                element.style.borderRadius = corner + "px"
+            }        
         }
         if (options.size) {
             buttonClasses.push("ui-button-" + options.size)
@@ -184,14 +270,18 @@ define(["avalon", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"
     widget.version = 1.0
     widget.defaults = {
         groups: false,
+        direction: "",
+        data: [],
         type: "text", //"text" "icon" "labeledIcon"
-        iconPosition: "left", //"left" "right", "left-right"
-        size: "", //"待确定"
+        iconPosition: "left", //"left" "right" "left-right"
+        icon: "",
+        size: "", //"small" "default" "big" "large"
         color: "",
         corner: true,
-        style: "",
+        style: "", // 用于定义button的展现形式，比如"flat" "glow" "rounded" "3D" "pill" 本组件，仅提供flat的实现
         disabled: false,
-        label: ""
+        label: "",
+        width: ""
     }
     return avalon
 });

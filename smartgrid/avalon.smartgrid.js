@@ -658,7 +658,7 @@ define(["avalon",
                 return column
             }
         }
-        if (vmodel.selectable.type) {
+        if (vmodel.selectable && vmodel.selectable.type) {
             return columns[1];
         } else {
             return columns[0];

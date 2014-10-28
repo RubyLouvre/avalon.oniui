@@ -16,7 +16,6 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
             $init: function() {
                 var data = options.data,
                     elementType = "",
-                    hasTitle = false,
                     label = options.label,
                     buttonWidth = 0
 
@@ -75,8 +74,6 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                 if (buttonWidth = parseInt(options.width)) {
                     element.style.width = buttonWidth + "px"
                 }
-                hasTitle = !!element.getAttribute("title")
-
                 $element.bind("mouseenter", function(event) {
                     stop(event)
                     $element.addClass("ui-state-hover")
@@ -95,36 +92,23 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                 })
                 $element.bind("blur", function() {
                     $element.removeClass("ui-state-active")
+                    $element.removeClass("ui-state-focus");
                 })
-
-                if (!options.label) {
-                    label = elementType === "input" ? element.value : element.innerHTML
-                }
-
                 $element.bind("focus", function() {
                     $element.addClass("ui-state-focus");
                 })
-
-                $element.bind("blur", function() {
-                    $element.removeClass("ui-state-focus");
-                })
-                $element.bind("mouseleave", function() {
-                    if (options.disabled) {
-                        return
-                    }
-                    avalon(this).removeClass(options.activeClass)
-                })
                 $element.bind("click", function(event) {
                     stop(event)
-                    if (typeof options.click === "function") {
-                        options.click.call(vmodels.widgetElement, event, vmodel)
+                    if (typeof options.onClick === "function") {
+                        options.onClick.call(vmodels.widgetElement, event)
                     }
                 })
-                options.hasTitle = hasTitle
+                if (!options.label) {
+                    label = elementType === "input" ? element.value : element.innerHTML
+                }
                 options.elementType = elementType
                 options.label = label
                 createButton(element, options)
-
             },
             $remove: function() {
 
@@ -148,16 +132,12 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                 lastButtonClass = "ui-corner-right",
                 children = element.childNodes, 
                 buttons = [] // 收集button组元素
-                buttonGroups = false, // 判断是否有button元素组成button组
                 buttonWidth = options.width
 
                 for (var i = 0, el; el = children[i++]; ) {
                     if (el.nodeType === 1) {
                         el.setAttribute("data-button-corner", "false")
                         buttons.push(el)
-                        if (el.tagName.toLowerCase() === "button") {
-                            buttonGroups = true
-                        }
                     }
                 }
                 var n = buttons.length
@@ -181,28 +161,34 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                     }
                     return 
                 }
-                if (buttonGroups) {
-                    (function(buttons) {
-                        var interval = 0,
-                            maxButtonWidth = 0
 
-                        buttons = buttons.concat()
-                        interval = setInterval(function() {
-                            var buttonWidth = 0
-                            for (var i = 0; button = buttons[i++];) {
-                                buttonWidth = Math.max(buttonWidth, avalon(button).outerWidth())
+                (function(buttons) {
+                    var interval = 0,
+                        maxButtonWidth = 0
+                    buttons = buttons.concat()
+                    debugger
+                    interval = setInterval(function() {
+                        var buttonWidth = 0,
+                            buttonPadding = 0,
+                            buttonBorder = 0,
+                            $button
+                        for (var i = 0, button; button = buttons[i++];) {
+                            buttonWidth = Math.max(buttonWidth, avalon(button).outerWidth())
+                        }
+                        if (buttonWidth === maxButtonWidth) {
+                            maxButtonWidth += 1
+                            for (var i = 0, button; button = buttons[i++];) {
+                                $button = avalon(button)
+                                buttonPadding = Math.ceil(parseFloat($button.css("padding-left")))
+                                buttonBorder = Math.ceil(parseFloat($button.css("border-left-width")))
+                                debugger
+                                button.style.width = (maxButtonWidth - buttonPadding * 2 - buttonBorder * 2) + "px"
                             }
-                            if (buttonWidth === maxButtonWidth) {
-                                maxButtonWidth += 1
-                                for (var i = 0; button = buttons[i++];) {
-                                    button.style.width = maxButtonWidth + "px"
-                                }
-                                clearInterval(interval)
-                            }
-                            maxButtonWidth = buttonWidth
-                        }, 100)
-                    })(buttons)
-                }
+                            clearInterval(interval)
+                        }
+                        maxButtonWidth = buttonWidth
+                    }, 100)
+                })(buttons)
             },
             $remove: function(el) {
                 avalon(element).removeClass("ui-buttonset")

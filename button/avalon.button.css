@@ -26,10 +26,10 @@
 .ui-button.ui-button-success.ui-state-disabled { background-color: #5cb85c; border-color: #4cae4c; color: #ffffff; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
 .ui-button.ui-button-info { background-color: #5bc0de; border-color: #46b8da; color: #ffffff; }
 .ui-button.ui-button-info.ui-state-hover { background-color: #31b0d5; border-color: #269abc; }
-.ui-button.ui-button-info.ui-state-disabled { background-color: #5cb85c; border-color: #4cae4c; }
-.ui-button.ui-button-info.ui-state-disabled.ui-state-disabled { background-color: #5bc0de; border-color: #46b8da; color: #ffffff; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
-.ui-button.ui-button-inverse { background-color: #58b359; border-color: #45a846; color: #ffffff; }
-.ui-button.ui-button-inverse.ui-state-hover { background-color: #68c969; border-color: #3e973e; }
+.ui-button.ui-button-info.ui-state-disabled { background-color: #5bc0de; border-color: #46b8da; color: #ffffff; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
+.ui-button.ui-button-inverse { background-color: #333; border-color: #222; color: #ffffff; }
+.ui-button.ui-button-inverse.ui-state-hover { background-color: #222; border-color: #000; }
+.ui-button.ui-button-inverse.ui-state-disabled { background-color: #333; border-color: #222; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
 .ui-button.ui-corner-all { -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; border-radius: 2px; }
 .ui-button.ui-corner-left { -moz-border-radius-topleft: 2px; -webkit-border-top-left-radius: 2px; border-top-left-radius: 2px; -moz-border-radius-bottomleft: 2px; -webkit-border-bottom-left-radius: 2px; border-bottom-left-radius: 2px; }
 .ui-button.ui-corner-right { -moz-border-radius-topright: 2px; -webkit-border-top-right-radius: 2px; border-top-right-radius: 2px; -moz-border-radius-bottomright: 2px; -webkit-border-bottom-right-radius: 2px; border-bottom-right-radius: 2px; }

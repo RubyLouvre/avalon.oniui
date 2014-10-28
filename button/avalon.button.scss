@@ -173,25 +173,27 @@ $btnInverseBackgroundHighlight:     $grayDarker;
             border-color: #269abc;
         }
         &.ui-state-disabled {
-            background-color: #5cb85c;
-            border-color: #4cae4c;
-            &.ui-state-disabled {
-                background-color: #5bc0de;
-                border-color: #46b8da;
-                color: #ffffff;
-                filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60);
-                opacity: 0.6;
-            }
+            background-color: #5bc0de;
+            border-color: #46b8da;
+            color: #ffffff;
+            filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60);
+            opacity: 0.6;
         }
     }
     // Inverse appears as dark gray
     &.#{$uiname}-inverse {
-        background-color: #58b359;
-        border-color: #45a846;
+        background-color: #333;
+        border-color: #222;
         color: #ffffff;
         &.ui-state-hover {
-            background-color: #68c969;
-            border-color: #3e973e;
+            background-color: #222;
+            border-color: #000;
+        }
+        &.ui-state-disabled {
+            background-color: #333;
+            border-color: #222;
+            filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60);
+            opacity: 0.6;
         }
     }
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>button demo 3</title>
+        <title>button demo 4</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
@@ -17,6 +17,8 @@
             }
             .inline {
                 display: inline-block;
+                *display: inline;
+                zoom: 1;
                 margin-right: 30px;
                 vertical-align: bottom;
             }
@@ -86,16 +88,24 @@
                     <a href="#" ms-widget="button" data-button-color="warning" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf074;">拖曳</a>
                 </div>
                 <div ms-widget="buttonset" data-buttonset-direction="vertical" data-buttonset-corner="false" class="inline">
-                    <a href="#" ms-widget="button" data-button-color="success" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf04c;">暂停</a>
+                    <a href="#" ms-widget="button" data-button-color="success" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf04c;" id="test">暂停</a>
                     <a href="#" ms-widget="button" data-button-color="success" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf04b;">播放</a>
                     <a href="#" ms-widget="button" data-button-color="success" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf074;">拖曳</a>
                 </div>
             </div>
         </fieldset>
+        <fieldset>
+            <legend>onClick</legend>
+            <button ms-widget="button, $, buttonConfig">button 1</button>
+        </fieldset>
         <script>
             require("./button/avalon.button", function() {
                 avalon.define("demo", function(vm) {
-                    
+                    vm.buttonConfig = {
+                        onClick: function(event) {
+                            avalon.log("click event " + event)
+                        }
+                    }
                 })
                 avalon.scan()
             })
@@ -105,7 +115,7 @@
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
-        &lt;title&gt;button demo 3&lt;/title&gt;
+        &lt;title&gt;button demo 4&lt;/title&gt;
         &lt;meta charset="UTF-8"&gt;
         &lt;meta name="viewport" content="width=device-width"&gt;
         &lt;link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/&gt;

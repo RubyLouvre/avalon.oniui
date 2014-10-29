@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>uploader demo</title>
+<title>uploader demo 概览</title>
 <script src="../avalon.js"></script>
 <link rel="stylesheet" href="../style/avalon.doc.css"/>
 <style>
@@ -95,6 +95,8 @@
 </head>
 <body ms-controller="demo">
 
+	<h2>概览</h2>
+	
 	<fieldset class="default">  
 		<legend>多图片上传</legend>
 		<div ms-widget="uploader, $, $opts">
@@ -123,7 +125,7 @@
 					<tr ms-repeat="files">
 						<td>{{$index}}</td>
 						<td>{{el.name}}</td>
-						<td><a href="javascript:;" ms-click="removeFile($index)">删除</a></td>
+						<td><a href="javascript:;" ms-click="deleteFile($index)">删除</a></td>
 					</tr>
 			    </tbody>
 			</table>
@@ -138,7 +140,7 @@
 			
 			<div class="browse">
 				<ul class="preview">
-					<li ms-repeat="files" ms-click="removeFile($index)" ms-css-background-image="'url(' + el.src + ')'" ms-css-filter="'progid:DXImageTransform.Microsoft.AlphaImageLoader(src=' + el.src + ', sizingMethod=scale)'"></li>
+					<li ms-repeat="files" ms-click="deleteFile($index)" ms-css-background-image="'url(' + el.src + ')'" ms-css-filter="'progid:DXImageTransform.Microsoft.AlphaImageLoader(src=' + el.src + ', sizingMethod=scale)'"></li>
 				</ul>
 				<span id="browse-btn-2" class="add" ms-visible="files.length < maxFileCount">
 					<span class="icon-add">&#10010;</span>
@@ -150,7 +152,7 @@
 	</fieldset>
 
 	<script>
-		require("uploader/avalon.uploader", function(){
+		require(["uploader/avalon.uploader", "ready!"], function(){
 			var model = avalon.define("demo", function(vm){
 
 				vm.$opts = {
@@ -158,7 +160,7 @@
 					browseButton: 'browse-btn',
 					maxFileCount: 4,
 					maxFileSize: 1048576000,
-					fileSizeErr: function(fileName){
+					onFileSizeErr: function(fileName){
 						alert('自定义信息：' + fileName + '大小超过1M啦~')
 					}
 				};
@@ -167,11 +169,10 @@
 					browseButton: 'browse-btn-2',
 					maxFileCount: 4,
 					maxFileSize: 1048576000,
-					fileSizeErr: function(fileName){
+					onFileSizeErr: function(fileName){
 						alert('自定义信息：' + fileName + '大小超过1M啦~')
 					}
 				};
-				
 			});
 			avalon.scan();
 		});

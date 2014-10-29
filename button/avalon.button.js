@@ -166,7 +166,6 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                     var interval = 0,
                         maxButtonWidth = 0
                     buttons = buttons.concat()
-                    debugger
                     interval = setInterval(function() {
                         var buttonWidth = 0,
                             buttonPadding = 0,
@@ -181,7 +180,6 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                                 $button = avalon(button)
                                 buttonPadding = Math.ceil(parseFloat($button.css("padding-left")))
                                 buttonBorder = Math.ceil(parseFloat($button.css("border-left-width")))
-                                debugger
                                 button.style.width = (maxButtonWidth - buttonPadding * 2 - buttonBorder * 2) + "px"
                             }
                             clearInterval(interval)

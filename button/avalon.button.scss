@@ -73,20 +73,23 @@ $btnInverseBackgroundHighlight:     $grayDarker;
     padding: 6px 10px;
     margin: 0 10px 0 0;
     font-size:  12px;
-    border: 1px solid  #ccc;
-    background-color: #f8f8f8;
+    border: 1px solid transparent;
     text-align: center;
     vertical-align: middle;
     cursor: pointer;
     color: #333;
     text-decoration: none;
+    outline: 0;
     &:link {
     	text-decoration: none;
+    }
+    &.ui-state-default {
+        border-color: #ccc;
+        background-color: #f8f8f8;
     }
     &.#{$uiname}-input {
         padding: 6px 10px;
     }
-
     // button size
     &.#{$uiname}-small {
         padding: 4px 5px;
@@ -112,13 +115,14 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         outline: 0;
         @include box-shadow(inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05));
     }
-
+    
     // Disabled state
     &.ui-state-disabled, &[disabled] {
         background-color: #f8f8f8;
         border-color: #d9d9d9;
         color: #cccccc;
     }
+    
     // button color
     &.#{$uiname}-primary {
         background-color: #3775c0;

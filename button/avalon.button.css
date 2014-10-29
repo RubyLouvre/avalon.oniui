@@ -7,8 +7,9 @@
 .ui-buttonset.ui-buttonset-vertical { _width: 100px; }
 .ui-buttonset.ui-buttonset-vertical .ui-button { display: block; float: none; }
 
-.ui-button { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; _display: inline; padding: 6px 10px; margin: 0 10px 0 0; font-size: 12px; border: 1px solid  #ccc; background-color: #f8f8f8; text-align: center; vertical-align: middle; cursor: pointer; color: #333; text-decoration: none; }
+.ui-button { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; _display: inline; padding: 6px 10px; margin: 0 10px 0 0; font-size: 12px; border: 1px solid transparent; text-align: center; vertical-align: middle; cursor: pointer; color: #333; text-decoration: none; outline: 0; }
 .ui-button:link { text-decoration: none; }
+.ui-button.ui-state-default { border-color: #ccc; background-color: #f8f8f8; }
 .ui-button.ui-button-input { padding: 6px 10px; }
 .ui-button.ui-button-small { padding: 4px 5px; }
 .ui-button.ui-button-big { font-size: 14px; padding: 8px 15px; }

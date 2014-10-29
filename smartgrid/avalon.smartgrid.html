@@ -47,9 +47,10 @@
         </tbody>
         <tfoot class="ui-smartgrid-footer">
             <tr>
-                <td ms-attr-colspan="{{columns.size()}}">
-                    <div class="ui-smartgrid-pager-wrapper" ms-if="!(pageable && _pagerShow)"></div>
-                    <div class="ui-smartgrid-pager-wrapper" id="pager-MS_OPTION_ID" ms-if="pageable && _pagerShow"></div>
+                <td ms-attr-colspan="{{columns.size()}}" class="ui-smartgrid-pager-wrapper">
+                    <div ms-visible="pageable && _pagerShow">
+                        <div id="pager-MS_OPTION_ID"></div>
+                    </div>
                 </td>
             </tr>
         </tfoot>

@@ -1,0 +1,12 @@
+<ul class="ui-tree">
+	<li class="level1" tabindex="0" 
+	    ms-repeat-leaf="data">
+	    <span class="button level1 switch roots_close" 
+	          ms-class-1="roots_open:hasClassOpen(leaf)"></span><a class="level1" target="_blank">
+	        <span class="button ico_close" 
+	              ms-class-1="ico_open:hasClassOpen(leaf)"></span><span>{{leaf.name}}</span><span ms-if="hasEditBtn()" class="button edit"></span><span class="button remove" ms-if="hasRemoveBtn()"></span>
+	    </a>
+	</li>
+	<ul 
+	    ms-if="hasChildren(leaf)"></ul>
+</ul>

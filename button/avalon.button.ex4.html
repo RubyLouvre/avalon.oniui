@@ -96,7 +96,7 @@
         </fieldset>
         <fieldset>
             <legend>onClick</legend>
-            <button ms-widget="button, $, buttonConfig">button 1</button>
+            <button ms-widget="button, $, buttonConfig" ms-click="clickCallback">button 1</button>
         </fieldset>
         <script>
             require("./button/avalon.button", function() {
@@ -105,6 +105,9 @@
                         onClick: function(event) {
                             avalon.log("click event " + event)
                         }
+                    }
+                    vm.clickCallback = function() {
+                        alert("click button")
                     }
                 })
                 avalon.scan()

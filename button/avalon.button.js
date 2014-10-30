@@ -109,9 +109,10 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                 options.elementType = elementType
                 options.label = label
                 createButton(element, options)
+                avalon.scan(element, vmodels)
             },
             $remove: function() {
-
+                element.innerHTML = element.contextContent = ""
             }
         }
         
@@ -187,13 +188,6 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                         maxButtonWidth = buttonWidth
                     }, 100)
                 })(buttons)
-            },
-            $remove: function(el) {
-                avalon(element).removeClass("ui-buttonset")
-                while (el = data.buttons.pop()) {
-                    el.removeAttribute("data-button-corner-class")
-                }
-                delete data.buttons
             }
         }
     }

@@ -1,7 +1,7 @@
 define(["avalon"], function(avalon) {
     var W3C = window.dispatchEvent
     var DOC = document
-    if (!avalon.duplexHooks) {//如果avalon的版本少于1.3.7，那么重写ms-duplex指令，方便直接使用ms-duplex2.0
+    if (!avalon.duplexHooks) {//如果avalon的版本少于1.3.7，那么重写ms-duplex指令，方便直接使用ms-duplex2.0, 只兼容到1.2x
         var oldDuplexBinding = avalon.bindingHandlers.duplex
         var oldInputBinding = oldDuplexBinding.INPUT
         var oldSelectBinding = oldDuplexBinding.SELECT
@@ -14,12 +14,22 @@ define(["avalon"], function(avalon) {
                 el.dispatchEvent(event)
             }
         }
+        var getBindingCallback = function(elem, name, vmodels) {
+            var callback = elem.getAttribute(name)
+            if (callback) {
+                for (var i = 0, vm; vm = vmodels[i++]; ) {
+                    if (vm.hasOwnProperty(callback) && typeof vm[callback] === "function") {
+                        return vm[callback]
+                    }
+                }
+            }
+        }
 
         var duplexBinding = avalon.bindingHandlers.duplex = function(data, vmodels) {
             var elem = data.element,
                     tagName = elem.tagName
             if (typeof duplexBinding[tagName] === "function") {
-                data.changed = getBindingCallback(elem, "data-duplex-changed", vmodels) || function(a){
+                data.changed = getBindingCallback(elem, "data-duplex-changed", vmodels) || function(a) {
                     return a
                 }
                 //由于情况特殊，不再经过parseExprProxy
@@ -82,7 +92,6 @@ define(["avalon"], function(avalon) {
 
         duplexBinding.INPUT = function(element, evaluator, data) {
             //当model变化时,它就会改变value的值
-
             runOldImplement(element, evaluator, data, oldInputBinding)
             var type = element.type,
                     bound = data.bound,
@@ -209,7 +218,7 @@ define(["avalon"], function(avalon) {
             element.oldValue = element.value
             data.handler()
             launch(function() {
-                if (avalon.contains(document.documentElement, element)) {
+                if (avalon.contains(DOC.documentElement, element)) {
                     onTree.call(element)
                 } else if (!element.msRetain) {
                     return false
@@ -223,16 +232,7 @@ define(["avalon"], function(avalon) {
                 clearTimeout(timer)
             }, 31)
         }
-        var getBindingCallback = function(elem, name, vmodels) {
-            var callback = elem.getAttribute(name)
-            if (callback) {
-                for (var i = 0, vm; vm = vmodels[i++]; ) {
-                    if (vm.hasOwnProperty(callback) && typeof vm[callback] === "function") {
-                        return vm[callback]
-                    }
-                }
-            }
-        }
+
         var TimerID, ribbon = [],
                 launch = avalon.noop
         function W3CFire(el, name, detail) {
@@ -341,10 +341,12 @@ define(["avalon"], function(avalon) {
             }, 20)
         }
         duplexBinding.TEXTAREA = duplexBinding.INPUT
+
+        //==================== avalon.duplexHooks======================
+        
         function fixNull(val) {
             return val == null ? "" : val
         }
-        var rnumber = /-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?/
         avalon.duplexHooks = {
             checked: {
                 get: function(val, data) {
@@ -386,6 +388,7 @@ define(["avalon"], function(avalon) {
             return val
         }
     }
+    //==========================avalon.validation的专有逻辑========================
     avalon.mix(avalon.duplexHooks, {
         trim: {
             get: function(val, data) {

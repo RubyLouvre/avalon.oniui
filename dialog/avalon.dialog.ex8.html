@@ -12,7 +12,7 @@
 <body>
     <div class="wrapper">
         <h1>dialog demo 8</h1>
-        <p class="example">通过配置context选项使得dialog作为context的子元素存在，默认dialog是body的直接子元素，注意context必须是dialog父元素的id或者父元素的dom对象</p>
+        <p class="example">通过配置container选项使得dialog作为container的子元素存在，默认dialog是body的直接子元素，注意container必须是dialog父元素的id或者父元素的dom对象</p>
         <div class="demo-show" ms-controller="demo">
             <div>
                 <p>
@@ -91,7 +91,7 @@
                         vm.$aaOpts = {
                             title: "取消“close”按钮的dialog",
                             showClose: false,
-                            context: document.createElement("div")
+                            container: "modalWrapper"
                         }
                         vm.show = function( id ){
                             avalon.vmodels[id].toggle = true;
@@ -107,7 +107,7 @@
                 &lt;html&gt;
                 &lt;head&gt;
                     &lt;meta charset='utf-8'/&gt;
-                    &lt;title&gt;context 配置dialog位置（&lt;/title&gt;
+                    &lt;title&gt;container 配置dialog位置（&lt;/title&gt;
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body&gt;
@@ -189,7 +189,7 @@
                                     vm.$aaOpts = {
                                         title: "取消“close”按钮的dialog",
                                         showClose: false,
-                                        context: "modalWrapper"
+                                        container: "modalWrapper"
                                     }
                                     vm.show = function( id ){
                                         avalon.vmodels[id].toggle = true;

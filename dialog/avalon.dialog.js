@@ -181,12 +181,12 @@ define(["../avalon.getModel",
             }
 
             // 将零散的模板(dialog header、dialog content、 dialog footer、 dialog wrapper)组合成完整的dialog
-            vm._RenderView = function() {
+            vm._renderView = function() {
                 var innerWrapper = null // 保存innerWraper元素节点
                 // 用户只能通过data-dialog-width配置width，不可以通过ms-css-width来配置，配置了也无效
                 element.setAttribute("ms-css-width", "width")
                 lastContent = avalon.parseHTML(_content).firstChild
-                _lastContent = element.innerHTML
+                _lastContent = element.innerHTML || vmodel.content
                 element.innerHTML = ""
                 lastContent.innerHTML = _lastContent
                 innerWrapper = avalon.parseHTML(_innerWrapper).firstChild
@@ -212,7 +212,7 @@ define(["../avalon.getModel",
                 $element.addClass("ui-dialog")
                 element.setAttribute("ms-visible", "toggle")
                 element.setAttribute("ms-css-position", "position")
-                vm._RenderView()
+                vm._renderView()
                 elementParent.appendChild(element)
                 // 当窗口尺寸发生变化时重新调整dialog的位置，始终使其水平垂直居中
                 element.resizeCallback = avalon(window).bind("resize", throttle(resetCenter, 50, 100, [vmodel, element]))
@@ -267,6 +267,7 @@ define(["../avalon.getModel",
         width: 480, //默认dialog的width
         title: "&nbsp;", //dialog的title
         type: "confirm", //dialog的显示类型confirm(有两个按钮) alert(有一个按钮)
+        content: "",
         onConfirm: avalon.noop, //点击"确定"按钮时的回调
         onOpen: avalon.noop, //显示dialog的回调 
         onCancel: avalon.noop, //点击“取消”按钮的回调

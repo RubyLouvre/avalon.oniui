@@ -19,7 +19,7 @@
 .ui-smartgrid .ui-smartgrid-body { background: #fff; text-align: center; }
 .ui-smartgrid .ui-smartgrid-footer { background-color: #f8f8f8; font-size: 0; padding: 0; }
 .ui-smartgrid .ui-smartgrid-footer td { padding: 0; }
-.ui-smartgrid .ui-smartgrid-pager-wrapper { width: 100%; padding: 5px 0px; overflow: hidden; background-color: #f8f8f8; }
+.ui-smartgrid .ui-smartgrid-footer .ui-smartgrid-pager-wrapper { width: 100%; padding: 5px 0px; overflow: hidden; background-color: #f8f8f8; }
 .ui-smartgrid .ui-smartgrid-pager-options { font-size: 12px; float: left; height: 26px; line-height: 26px; padding-left: 5px; }
 .ui-smartgrid .ui-smartgrid-pager-options div.ui-smartgrid-showinfo { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; }
 .ui-smartgrid .ui-smartgrid-pager-options .ui-dropdown { margin: 0 5px; vertical-align: top; }

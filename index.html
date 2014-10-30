@@ -80,7 +80,6 @@
             var list = document.getElementById("ui-list"), //find "ui-list" in pages/library/index.html
                 items = list.getElementsByTagName("a")
             for (var i = 0, len = items.length; i < len; i++) {
-                console.log(searchResultList, items[i].innerHTML)
                 if (items[i].innerHTML.trim().indexOf(key) !== -1 || _findInAdvice(items[i].innerHTML.trim()).indexOf(key) !== -1) {
                     _selectElement(items[i])
                     scroll(0, items[i].offsetTop)

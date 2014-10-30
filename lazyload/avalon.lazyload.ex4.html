@@ -18,11 +18,10 @@
     </head>
     <body>
         <div class="wrapper">
-            <h1>lazyload懒加载组件-懒加载DOM</h1>
+            <h1>lazyload懒加载组件-懒加载文档片段</h1>
             <fieldset ms-controller="demo">
-                <legend>懒加载DOM</legend>
-                <p ms-lazyload-original="<span>{{testContent}}当带有ms-lazyload属性的标签非img标签时，会自动触发DOM模式，懒加载属性ms-lazyload-original中的html内容</span><br /> 
-                 <span>注：当不指定容器的宽高时，会由容器内DOM自动撑开容器</span><br /> 
+                <legend>懒加载文档片段</legend>
+                <p data-lazyload-original="<span>{{testContent}}当带有ms-lazyload属性的标签非img标签时，会自动触发DOM模式，加载ms-lazyload-original属性中的html内容。注：当不指定容器的宽高时，会由容器内DOM自动撑开容器</span><br /> 
                  <img src='images/placeholderimg1.jpg'/>" 
                  ms-lazyload>
                 </p>
@@ -50,7 +49,7 @@
             &lt;h1&gt;lazyload懒加载组件-懒加载DOM&lt;/h1&gt;
             &lt;fieldset ms-controller="demo"&gt;
                 &lt;legend&gt;懒加载DOM&lt;/legend&gt;
-                &lt;p ms-lazyload-original="&lt;span&gt;{{testContent}}当带有ms-lazyload属性的标签非img标签时，会自动触发DOM模式，懒加载属性ms-lazyload-original中的html内容&lt;/span&gt;&lt;br /&gt; 
+                &lt;p data-lazyload-original="&lt;span&gt;{{testContent}}当带有ms-lazyload属性的标签非img标签时，会自动触发DOM模式，懒加载属性ms-lazyload-original中的html内容&lt;/span&gt;&lt;br /&gt; 
                  &lt;span&gt;注：当不指定容器的宽高时，会由容器内DOM自动撑开容器&lt;/span&gt;&lt;br /&gt; 
                  &lt;img src='images/placeholderimg1.jpg'/&gt;" 
                  ms-lazyload&gt;

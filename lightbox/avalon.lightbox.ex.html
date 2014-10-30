@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <script src="../avalon.js"></script>
+    <link rel="stylesheet" href="demo.css"/>
+</head>
+<body>
+<script>
+    require("avalon.lightbox", function() {
+        avalon.define("test", function(vm) {
+            vm.singleOpts = {
+                showSet: false,
+                pictures:[
+                    {
+                        thumb:"img/image-1.jpg",
+                        big:"img/image-1.jpg",
+                        description:"哈哈哈哈哈"
+                    },
+                    {
+                        thumb:"img/image-2.jpg",
+                        big:"img/image-2.jpg",
+                        description:"呵呵呵呵呵"
+                    }
+                ]
+            }
+
+            vm.setOpts = {
+                showSet: true,
+                pictures:[
+                    {
+                        thumb:"img/thumb-3.jpg",
+                        big:"img/image-3.jpg",
+                        description:"嘻嘻嘻嘻嘻嘻"
+                    },
+                    {
+                        thumb:"img/thumb-4.jpg",
+                        big:"img/image-4.jpg",
+                        description:"啊啊啊啊啊啊啊"
+                    },
+                    {
+                        thumb:"img/thumb-5.jpg",
+                        big:"img/image-5.jpg",
+                        description:"呃呃呃呃呃呃呃呃呃呃呃呃"
+                    },
+                    {
+                        thumb:"img/thumb-6.jpg",
+                        big:"img/image-6.jpg",
+                        description:"擦擦擦擦擦擦擦擦擦擦擦擦s"
+                    }
+                ]
+            }
+
+            vm.$skipArray=["setOpts","singleOpts"];
+
+        })
+        avalon.scan()
+    })
+</script>
+<div ms-controller="test" >
+
+    <section id="examples" class="examples-section">
+        <div class="container">
+            <h2>Examples</h2>
+
+            <h3>Two individual images</h3>
+            <div class="image-row" ms-widget="lightbox,aaa,singleOpts" >
+                <a class="example-image-link"  ms-repeat="pictures" ms-click="show(el.big,pictures,$index)">
+                    <img class="example-image" ms-src={{el.thumb}} alt="">
+                </a>
+            </div>
+
+            <h3 style="clear: both;">Four image set</h3>
+
+            <div class="image-row" ms-widget="lightbox,ddd,setOpts" >
+                <a class="example-image-link" ms-repeat="pictures" ms-click="show(el.big,pictures,$index)">
+                    <img class="example-image" ms-src={{el.thumb}} alt="">
+                </a>
+            </div>
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

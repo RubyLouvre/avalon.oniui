@@ -62,8 +62,7 @@ define(["avalon"], function() {
         }
 
         //设置preLoadSrc
-        var indiepreLoadSrc = element.getAttribute("ms-lazyload-indiepreLoadSrc")
-        var preLoadSrc = indiepreLoadSrc === null ? options.preLoadSrc : indiepreLoadSrc
+        var preLoadSrc = element.getAttribute("data-lazyload-preloadsrc") === null ? options.preLoadSrc : element.getAttribute("data-lazyload-preloadsrc")
 
         //loading占位
         if (options.preLoadType === "image") {
@@ -109,7 +108,7 @@ define(["avalon"], function() {
 
     var _renderImg = function(ele, src, isloadingOriginal, needResize, tempImgItem) {
         var placeholderImg = new Image(),
-            effect = ele.getAttribute("ms-lazyload-effect") !== null ? ele.getAttribute("ms-lazyload-effect") : options.effect
+            effect = ele.getAttribute("data-lazyload-itemeffect") !== null ? ele.getAttribute("data-lazyload-itemeffect") : options.effect
         if (ele.tagName !== "IMG" && isloadingOriginal) {
             var domContent = src
             src = "./images/placeholder.png"
@@ -191,13 +190,13 @@ define(["avalon"], function() {
                         }
                         //加载完成
                         imgItem.lazyloaded = true
-                        imgItem.removeAttribute("ms-lazyload-original")
+                        imgItem.removeAttribute("data-lazyload-original")
                         avalon.css(imgItem, "background-image", imgItem.originalCssBackground)
                         try { //ie不支持
                             delete imgItem.originalCssBackground
                         } catch (e) {}
                     }
-                })(i, imgItem, imgItem.getAttribute("ms-lazyload-original")), imgItem.getAttribute("ms-lazyload-delay") || options.delay)
+                })(i, imgItem, imgItem.getAttribute("data-lazyload-original")), imgItem.getAttribute("data-lazyload-itemdelay") || options.delay)
             }
         }
     }
@@ -207,8 +206,9 @@ define(["avalon"], function() {
             return
         }
         var currentTime = 0,
-            startpos = effect === "fadeIn" ? 0 : -options.slideDistance,
-            duringDistance = effect === "fadeIn" ? 1 : options.slideDistance,
+            distance = ele.getAttribute("data-lazyload-distance") || options.slideDistance,
+            startpos = effect === "fadeIn" ? 0 : -distance,
+            duringDistance = effect === "fadeIn" ? 1 : distance,
             duringTime = 20,
             cssName
         if (effect === "fadeIn") {
@@ -229,13 +229,13 @@ define(["avalon"], function() {
     }
 
     lazyload.defaults = {
-        contentType: "image", //@param 懒加载的内容："image"-图片 / "DOM"-文档片段
-        preLoadType: "image", //@param 预加载的内容："image"-加载中图片 / "text"-加载中文字
-        preLoadSrc: "./images/loading1.gif", //@param  预加载图片（文字内容）：preLoadType为"image"时，此为图片路径；preLoadType为"text"时，此为文字内容，也可以设置元素的ms-lazyload-indiepreLoadSrc替代默认值
-        delay: 500, //@param  延迟加载时间（毫秒）
-        effect: "none", //@param  预加载效果 "none"-无效果 / "fadeIn"-渐入效果 / "slideX"-由左向右滑动 / "slideY"-由上向下滑动，建议在图片加载中使用
+        contentType: "image", //@param 懒加载内容类型："image"-图片 / "DOM"-文档片段
+        preLoadType: "image", //@param 预加载类型："image"-采用加载中图片 / "text"-采用加载中文字
+        preLoadSrc: "./images/loading1.gif", //@param  预加载图片路径（文字内容）：preLoadType为"image"时为图片路径；preLoadType为"text"时为文字内容。也可以设置元素的data-lazyload-preloadsrc，替代默认值
+        delay: 500, //@param  延迟加载时间（毫秒）。也可以设置元素的data-lazyload-itemdelay，替代默认值
+        effect: "none", //@param  预加载效果 "none"-无效果 / "fadeIn"-渐入效果 / "slideX"-由左向右滑动 / "slideY"-由上向下滑动，建议在图片加载中使用。也可以设置元素的data-lazyload-itemeffect，替代默认值
         easing: "easeInOut", //@param  动画效果的缓动函数
-        slideDistance: 300, //@param effect-slide模式的滑动长度
+        slideDistance: 300, //@param effect-slide模式的滑动长度。也可以设置元素的data-lazyload-distance，替代默认值
         $author: "heiwu805@hotmail.com"
     }
 

@@ -2,17 +2,34 @@ define(["avalon"], function(avalon) {
     var W3C = window.dispatchEvent
     var DOC = document
     if (!avalon.duplexHooks) {//如果avalon的版本少于1.3.7，那么重写ms-duplex指令，方便直接使用ms-duplex2.0
+        var oldDuplexBinding = avalon.bindingHandlers.duplex
+        var oldInputBinding = oldDuplexBinding.INPUT
+        var oldSelectBinding = oldDuplexBinding.SELECT
+
+//1.2的BUG，不小心实现此方法，1.2.1已经去掉
+        avalon.fire = function(el, name) {
+            if (DOC.createEvent) {
+                var event = DOC.createEvent("Event")
+                event.initEvent(name, true, true)
+                el.dispatchEvent(event)
+            }
+        }
+
         var duplexBinding = avalon.bindingHandlers.duplex = function(data, vmodels) {
             var elem = data.element,
                     tagName = elem.tagName
             if (typeof duplexBinding[tagName] === "function") {
-                data.changed = getBindingCallback(elem, "data-duplex-changed", vmodels) || avalon.noop
+                data.changed = getBindingCallback(elem, "data-duplex-changed", vmodels) || function(a){
+                    return a
+                }
                 //由于情况特殊，不再经过parseExprProxy
-                parseExpr(data.value, vmodels, data, "duplex")
+                data.handler = avalon.noop
+                avalon.parseExprProxy(data.value, vmodels, data, "duplex")
                 if (data.evaluator && data.args) {
                     var params = []
-                    var casting = oneObject("string,number,boolean,checked")
+                    var casting = avalon.oneObject("string,number,boolean,checked")
                     var hasCast
+                    data.error = {}
                     data.oldParam = data.param
                     data.param.replace(avalon.rword, function(name) {
                         if ((elem.type === "radio" && data.param === "") || (elem.type === "checkbox" && name === "radio")) {
@@ -62,8 +79,10 @@ define(["avalon"], function(avalon) {
             }
             data.param = data.newParam
         }
-        var oldInputBinding = duplexBinding.INPUT
+
         duplexBinding.INPUT = function(element, evaluator, data) {
+            //当model变化时,它就会改变value的值
+
             runOldImplement(element, evaluator, data, oldInputBinding)
             var type = element.type,
                     bound = data.bound,
@@ -87,6 +106,7 @@ define(["avalon"], function(avalon) {
                     return
                 var val = element.oldValue = element.value //防止递归调用形成死循环
                 var typedVal = pipe(val, data, "get")      //尝式转换为正确的格式
+
                 if ($elem.data("duplex-observe") !== false) {
                     evaluator(typedVal)
                     callback.call(element, typedVal)
@@ -98,7 +118,6 @@ define(["avalon"], function(avalon) {
                 }
             }
 
-            //当model变化时,它就会改变value的值
             data.handler = function() {
                 var val = evaluator()
                 val = pipe(val, data, "set")
@@ -188,6 +207,7 @@ define(["avalon"], function(avalon) {
                 }
             }
             element.oldValue = element.value
+            data.handler()
             launch(function() {
                 if (avalon.contains(document.documentElement, element)) {
                     onTree.call(element)
@@ -203,9 +223,18 @@ define(["avalon"], function(avalon) {
                 clearTimeout(timer)
             }, 31)
         }
-
+        var getBindingCallback = function(elem, name, vmodels) {
+            var callback = elem.getAttribute(name)
+            if (callback) {
+                for (var i = 0, vm; vm = vmodels[i++]; ) {
+                    if (vm.hasOwnProperty(callback) && typeof vm[callback] === "function") {
+                        return vm[callback]
+                    }
+                }
+            }
+        }
         var TimerID, ribbon = [],
-                launch = avlaon.noop
+                launch = avalon.noop
         function W3CFire(el, name, detail) {
             var event = DOC.createEvent("Events")
             event.initEvent(name, true, true)
@@ -260,8 +289,6 @@ define(["avalon"], function(avalon) {
         } catch (e) {
             launch = tick134
         }
-
-        var oldSelectBinding = duplexBinding.SELECT
         duplexBinding.SELECT = function(element, evaluator, data) {
             runOldImplement(element, evaluator, data, oldSelectBinding)
             var $elem = avalon(element)
@@ -301,9 +328,70 @@ define(["avalon"], function(avalon) {
                 }
             }
             data.bound("change", updateVModel)
+            var id = setInterval(function() {
+                var currHTML = element.innerHTML
+                if (currHTML === innerHTML) {
+                    clearInterval(id)
+                    //先等到select里的option元素被扫描后，才根据model设置selected属性  
+                    data.handler()
+                    data.changed.call(element, evaluator(), data)
+                } else {
+                    innerHTML = currHTML
+                }
+            }, 20)
         }
         duplexBinding.TEXTAREA = duplexBinding.INPUT
+        function fixNull(val) {
+            return val == null ? "" : val
+        }
+        var rnumber = /-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?/
+        avalon.duplexHooks = {
+            checked: {
+                get: function(val, data) {
+                    return !data.element.oldValue
+                }
+            },
+            string: {
+                get: function(val) {//同步到VM
+                    return val
+                },
+                set: fixNull
+            },
+            "boolean": {
+                get: function(val) {
+                    return val === "true"
+                },
+                set: fixNull
+            },
+            number: {
+                get: function(val, data) {
+                    delete data.error.number
+                    if (isFinite(val)) {
+                        return parseFloat(val) || 0
+                    } else {
+                        data.error.number = true
+                        return val
+                    }
+                },
+                set: fixNull
+            }
+        }
+        function pipe(val, data, action) {
+            data.param.replace(avalon.rword, function(name) {
+                var hook = avalon.duplexHooks[name]
+                if (hook && typeof hook[action] === "function") {
+                    val = hook[action](val, data)
+                }
+            })
+            return val
+        }
     }
-
+    avalon.mix(avalon.duplexHooks, {
+        trim: {
+            get: function(val, data) {
+                return data.element.type !== "password" ? String(val || "").trim() : val
+            }
+        }
+    })
 
 })

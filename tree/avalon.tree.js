@@ -113,12 +113,6 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 leaf.open = !leaf.open
             }
 
-            vm.hasEditBtn = function(leaf) {
-
-            }
-            vm.hasRemoveBtn = function(leaf) {
-
-            }
             vm.hasChildren = function(leaf, visible) {
                 // 有有效子节点
                 var renderStatus = leaf.children && leaf.children.length && vm.hasClassOpen(leaf)
@@ -165,5 +159,9 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             return tmpl
         },//@optMethod getTemplate(tpl, opts, tplName) 定制修改模板接口
         $author: "skipper@123"
+    }
+    //@method avalon.ui.tree.Extension({xxx}) 给tree组件添加扩展，用于扩展属性，方法
+    avalon.ui.tree.Extension = function(classToExtend) {
+        avalon.mix(widget.defaults, classToExtend)
     }
 })

@@ -40,7 +40,7 @@ define(["avalon"], function() {
             var pairs = str.split(/[;,] */)
             pairs.forEach(function(pair) {
                 var index = pair.indexOf("=")
-                var key = pair.substr(0, index).trim()
+                var key = pair.substr(0, index)
                 if (key) {
                     var val = pair.substr(++index, pair.length).trim()
                     if (!(key in obj)) {
@@ -79,8 +79,15 @@ define(["avalon"], function() {
 
     Cookie.clear = function() {
         var c = document.cookie.split("; ");
-        for (var i in c)
-            document.cookie = /^[^=]+/.exec(c[i])[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        pairs.forEach(function(pair) {
+            var index = pair.indexOf("=")
+            var key = pair.substr(0, index)
+            Cookie.remove(key)
+        })
+        //  var pairs = document.cookie.split(/[;,] */)
+        //  for (var i in c) {
+        //   document.cookie = /^[^=]+/.exec(c[i])[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        //  }
     }
     avalon.cookie = Cookie
     return avalon

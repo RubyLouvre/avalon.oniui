@@ -1,12 +1,20 @@
 define(["avalon"], function() {
-    var encode = encodeURIComponent
-    var decode = decodeURIComponent
-
+    function parseCookieValue(s) {
+        if (s.indexOf('"') === 0) {
+// This is a quoted cookie as according to RFC2068, unescape...
+            s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+        }
+        try {
+            return  decodeURIComponent(s.replace(/\+/g, ' '))//处理加号
+        } catch (e) {
+            return s
+        }
+    }
     // Cookie.stringify('foo', 'bar', { httpOnly: true })  => "foo=bar; httpOnly"
     //将两个字符串变成一个cookie字段
     var Cookie = {
         stringify: function(name, val, opts) {
-            var pairs = [name + "=" + encode(val)]
+            var pairs = [name + "=" + encodeURIComponent(val)]
             if (isFinite(opts) && typeof opts === "number") {
                 pairs.push("Max-Age=" + opts)
             } else {
@@ -35,11 +43,8 @@ define(["avalon"], function() {
                 var key = pair.substr(0, index).trim()
                 if (key) {
                     var val = pair.substr(++index, pair.length).trim()
-                    if (val[0] === '"') {
-                        val = val.slice(1, -1)
-                    }
                     if (!(key in obj)) {
-                        obj[key] = decode(val)
+                        obj[key] = parseCookieValue(val)
                     }
                 }
             })
@@ -54,7 +59,7 @@ define(["avalon"], function() {
         if (/\S/.test(name)) {
             if ((m = String(document.cookie).match(
                     new RegExp('(?:^| )' + name + '(?:(?:=([^;]*))|;|$)')))) {
-                ret = m[1] ? decode(m[1]) : ""
+                ret = m[1] ? parseCookieValue(m[1]) : ""
             }
         }
         return ret

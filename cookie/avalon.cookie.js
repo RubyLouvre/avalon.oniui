@@ -10,6 +10,7 @@ define(["avalon"], function() {
             return s
         }
     }
+
     // Cookie.stringify('foo', 'bar', { httpOnly: true })  => "foo=bar; httpOnly"
     //将两个字符串变成一个cookie字段
     var Cookie = {
@@ -77,17 +78,10 @@ define(["avalon"], function() {
         Cookie.set(name, '', opt)
     }
 
-    Cookie.clear = function() {
-        var pairs = document.cookie.split(/[;,] */)
-        pairs.forEach(function(pair) {
-            var index = pair.indexOf("=")
-            var key = pair.substr(0, index)
-            Cookie.remove(key)
-        })
-        //  var c= document.cookie.split("; ");
-        //  for (var i in c) {
-        //   document.cookie = /^[^=]+/.exec(c[i])[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        //  }
+    Cookie.clear = function() { 
+        for(var name in Cookie.getAll()){
+              Cookie.remove(name)
+        }
     }
     avalon.cookie = Cookie
     return avalon

@@ -18,7 +18,6 @@
         </style>
         <script>
             require(["cookie/avalon.cookie"], function() {
-                // document.cookie = "historys=11"
                 var cookie = avalon.cookie
                 function getData() {
                     var array = []
@@ -54,11 +53,9 @@
                     }
                     vm.clear = function() {
                         cookie.clear()
-                        console.log("______________")
                         setTimeout(function() {
                             vm.array = getData()
-                        }, 1000)
-
+                        }, 300)
                     }
                 })
                 avalon.scan()

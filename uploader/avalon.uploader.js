@@ -22,7 +22,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 
 			browseButton = document.getElementById(vm.browseButton);
 
-			vm.removeFile = function(index){
+			vm.deleteFile = function(index){
 				// fileList.splice(index, 1);
 				avalon.post(vmodel.action, {
 					id: vmodel.files[index].id
@@ -35,12 +35,17 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 						if(swf.setUploadSuccessNum){
 							swf.setUploadSuccessNum(vmodel.files.length);
 						}
+						
+						vmodel.onDeleteSuccess(data);
+
+					}else{
+						// 失败
+						vmodel.onDeleteFailed(data);
 					}
 
 				}, 'json');
 			};
 			
-
 			vm.$init = function(){
 
 				// 安全检测
@@ -53,13 +58,16 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 					}
 				}
 
-
 				if(isSafe){
 					loadFlash();
 					// loadInput();
 				}
 				
 				avalon.scan(element, [vmodel].concat(vmodels));
+
+				if(typeof vmodel.onInit === 'function'){
+					vmodel.onInit.call(element, vmodel, data.uploaderOptions, vmodels);
+				}
 			};
 
 			vm.$remove = function(){
@@ -74,27 +82,25 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 						// 上传时触发
 					break;
 					case 'singleSuccess':
-						// 单个文件成功时触发
-						/*var file = obj.data;
-
-						vmodel.files.push({
-							name: file.name,
-							src: file.source.data.images[0].url,
-							id: file.source.data.images[0].id
-						});*/
 					break;
 					case 'singleError':
-						vmodel.singleError(obj.data.name);
+						vmodel.onSingleFailed(obj.data.name);
 					break;
 					case 'uploaded':
-						var _imgs = obj.data.sucAry;
-						for (var i = 0, len = _imgs.length; i < len; i++) {
-							vmodel.files.push({
-								name: _imgs[i].name,
-								src: _imgs[i].source.data.images[0].url,
-								id: _imgs[i].source.data.images[0].id
-							});
+						var items = obj.data.sucAry,
+							imgs = [];
+
+						for (var i = 0, len = items.length; i < len; i++) {
+							var img = {
+								name: items[i].name,
+								src: items[i].source.data.images[0].url,
+								id: items[i].source.data.images[0].id
+							};
+							vmodel.files.push(img);
+							imgs.push(img);
 						};
+
+						vmodel.onSuccess(imgs);
 					break;
 					case 'flashInit':
 						// 初始化，取到 swf
@@ -103,11 +109,11 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 						swf.setMaxFileNum(vmodel.maxFileCount);
 						swf.setUploadSuccessNum(vmodel.files.length);
 					break;
-					case 'fileSizeErr':
-						vmodel.fileSizeErr(obj.data);
+					case 'onSizeErr':
+						vmodel.onFileSizeErr(obj.data);
 					break;
 					case 'fileNumErr':
-						vmodel.fileCountErr(vmodel.maxFileCount - vmodel.files.length, obj.data);
+						vmodel.onFileCountErr(vmodel.maxFileCount - vmodel.files.length, obj.data);
 					break;
 				}
 			};
@@ -280,21 +286,27 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 		}
 	};
 
-	widget.version = 1.0;
+	widget.version = 1.2;
 	widget.defaults = {
+		
 		maxFileSize: 1048576,	// 1MB
 		maxFileCount: 100,
 		imgMaxWidth: 10000,
 		imgMaxHeight: 10000,
-		fileSizeErr: function(fileName){
+
+		// 回调
+		onSuccess: avalon.noop,
+		onSingleFailed: function(fileName){
+			alert('文件' + fileName + '上传失败');
+		},
+		onFileSizeErr: function(fileName){
 			alert('文件' + fileName + '太大了');
 		},
-		fileCountErr: function(availableNum, selectNum){
+		onFileCountErr: function(availableNum, selectNum){
 			alert('还可选择' + availableNum + '个，你选择了' + selectNum + '个，超出了');
 		},
-		singleError: function(fileName){
-			alert('文件' + fileName + '上传失败');
-		}
+		onDeleteSuccess: avalon.noop,
+		onDeleteFailed: avalon.noop
 	};
 
 	// 获取元素样式

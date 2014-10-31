@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>uploader 日志</title>
+<style>
+body{
+	line-height: 1.5em;
+}
+	code{
+		padding: 1px 3px;
+		font-family: Consolas, monospace, sans-serif;
+		font-size: 0.85em;
+		white-space: pre;
+		border: 1px solid #dddbcc;
+		background: #f1f0ea;
+		border-radius: 2px;
+	}
+</style>
+</head>
+<body>
+	<h2>日志</h2>
+	<ul>
+		<li>
+			<p>
+				<span class="version">1.1</span>
+				<span class="date">2014-10-24</span>
+			</p>
+			<ul>
+				<li>新增 <code>onSuccess</code> 回调</li>
+				<li>重命名 <code>fileSizeErr</code> 为 <code>onFileSizeErr</code>，重命名 <code>fileCountErr</code> 为 <code>onFileCountErr</code>，重命名 <code>singleError</code> 为 <code>onSingleFailed</code></li>
+			</ul>
+		</li>
+		<li>
+			<p>
+				<span class="version">1.2</span>
+				<span class="date">2014-10-27</span>
+			</p>
+			<ul>
+				<li>新增 <code>onInit</code> 回调，<code>onDeleteSuccess</code> 回调，<code>onDeleteFailed</code> 回调</li>
+				<li>重命名 <code>removeFile</code> 为 <code>deleteFile</code></li>
+				<li>新增关于回调的演示页面</li>
+			</ul>
+		</li>
+	</ul>
+</body>
+</html>

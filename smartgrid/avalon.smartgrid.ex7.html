@@ -14,7 +14,7 @@
         <div ms-widget="smartgrid, sg1" style="width:760px; margin: 0 auto"></div>
         <script>
             require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
-                function getDates(number) {
+                function getDatas(number) {
                     var data = []
                     for (var i = 0; i < number; i++) {
                         data.push({
@@ -40,7 +40,7 @@
                         selectable: {
                             type: "Checkbox" //为表格添加选中行操作框,可以设置为"Checkbox"或者"Radio"
                         },
-                        allSelected: false,
+                        allChecked: false,
                         addRow: function(tmp, columns, vmodel) {
                             var tr = '<tr style="text-align:left"><td colspan="' + columns.length + '"><label>',
                                 checkbox = ""
@@ -52,18 +52,18 @@
                         },
                         htmlHelper: { // 渲染列数据的方法集合
                             // 包装工资列的数据
-                            $X: function(vmId, field, index, cellValue) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
+                            $X: function(vmId, field, index, cellValue, rowData) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
                                 return "$"+cellValue
                             },
                             // operate列包装成switchdropdown组件
-                            switchdropdown: function(vmId, field, index, cellValue, disable) {
+                            switchdropdown: function(vmId, field, index, cellValue, rowData, disable) {
                                 var openOption = cellValue == 0 ? '<option value="0" selected>启用</option>' : '<option value="0">启用</option>',
                                     pauseOption = cellValue == 1 ? '<option value="1" selected>暂停</option>' : '<option value="1">暂停</option>'
 
                                 return ['<select ms-widget="switchdropdown" rowindex="'+index+'" field="'+field+'"  vmId="'+vmId+'" '+ (disable ? "disabled": "") +'>', openOption, pauseOption, '</select>'].join('')
                             },
                             // busy列包装成dropdown组件
-                            dropdown: function(vmId, field, index, cellValue, disable) {
+                            dropdown: function(vmId, field, index, cellValue, rowData, disable) {
                                 var option = "<option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'></option>"
                                 return '<select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'" ' + (disable ? "disabled" : "") + '>' + option + '</select>'
                             }
@@ -126,7 +126,7 @@
                                 format: "$X" // 定义渲染数据的方法名
                             }
                         ],
-                        data: getDates(8)
+                        data: getDatas(8)
                     }
                 })
                 avalon.scan()
@@ -145,7 +145,7 @@
                     &lt;div ms-widget="smartgrid, sg1" style="width:760px; margin: 0 auto"&gt;&lt;/div&gt;
                     &lt;script&gt;
                         require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
-                            function getDates(number) {
+                            function getDatas(number) {
                                 var data = []
                                 for (var i = 0; i &lt; number; i++) {
                                     data.push({
@@ -183,18 +183,18 @@
                                     },
                                     htmlHelper: { // 渲染列数据的方法集合
                                         // 包装工资列的数据
-                                        $X: function(vmId, field, index, cellValue) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
+                                        $X: function(vmId, field, index, cellValue, rowData) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
                                             return "$"+cellValue
                                         },
                                         // operate列包装成switchdropdown组件
-                                        switchdropdown: function(vmId, field, index, cellValue, disable) {
+                                        switchdropdown: function(vmId, field, index, cellValue, rowData, disable) {
                                             var openOption = cellValue == 0 ? '&lt;option value="0" selected&gt;启用&lt;/option&gt;' : '&lt;option value="0"&gt;启用&lt;/option&gt;',
                                                 pauseOption = cellValue == 1 ? '&lt;option value="1" selected&gt;暂停&lt;/option&gt;' : '&lt;option value="1"&gt;暂停&lt;/option&gt;'
 
                                             return ['&lt;select ms-widget="switchdropdown" rowindex="'+index+'" field="'+field+'"  vmId="'+vmId+'" '+ (disable ? "disabled": "") +'&gt;', openOption, pauseOption, '&lt;/select&gt;'].join('')
                                         },
                                         // busy列包装成dropdown组件
-                                        dropdown: function(vmId, field, index, cellValue, disable) {
+                                        dropdown: function(vmId, field, index, cellValue, rowData, disable) {
                                             var option = "&lt;option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'&gt;&lt;/option&gt;"
                                             return '&lt;select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'" ' + (disable ? "disabled" : "") + '&gt;' + option + '&lt;/select&gt;'
                                         }
@@ -257,7 +257,7 @@
                                             format: "$X" // 定义渲染数据的方法名
                                         }
                                     ],
-                                    data: getDates(8)
+                                    data: getDatas(8)
                                 }
                             })
                             avalon.scan()

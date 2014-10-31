@@ -24,7 +24,7 @@
                                         { name:"叶子节点123"},
                                         { name:"叶子节点124"}
                                     ]},
-                                { name:"父节点13 - 没有子节点", isParent:true, open: false,}
+                                { name:"父节点13 - 没有子节点", isParent:true, open: false}
                             ]},
                         { name:"父节点2 - 折叠", open: false,
                             children: [
@@ -50,7 +50,7 @@
                                         { name:"叶子节点234"}
                                     ]}
                             ]},
-                        { name:"父节点3 - 没有子节点", isParent:true, open: false,}
+                        { name:"父节点3 - 没有子节点", isParent:true, open: false}
                         ];
             // for(var i = 0; i < 5000; i++) {
             //     child.push(child[1])
@@ -62,9 +62,7 @@
                     }
                     vm.$skipArray = ["tree"]
                 })
-                var t = Date.now()
                 avalon.scan()
-                console.log(Date.now() - t)
             })
         </script>
     </head>

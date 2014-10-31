@@ -1,8 +1,9 @@
-<span class="button level1 switch center_docu" 
+<span class="button switch center_docu" 
       ms-class="bottom_docu:$last"></span>
-<a class="level1" target="_blank">
+<a target="_blank">
     <span class="button ico_docu"></span>
-  	<span>{{leaf.name}}</span><span ms-if="hasEditBtn()" class="button edit"></span>
+  	<span>{{leaf.name}}</span>
+  	<span ms-if="hasEditBtn(leaf)" class="button edit"></span>
   	<span class="button remove" 
-  		  ms-if="hasRemoveBtn()"></span>
+  		  ms-if="hasRemoveBtn(leaf)"></span>
 </a>

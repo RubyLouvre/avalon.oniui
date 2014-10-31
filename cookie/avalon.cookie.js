@@ -38,7 +38,7 @@ define(["avalon"], function() {
                     if (val[0] === '"') {
                         val = val.slice(1, -1)
                     }
-                    if (obj[key] === void 0) {
+                    if (!(key in obj)) {
                         obj[key] = decode(val)
                     }
                 }

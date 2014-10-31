@@ -78,13 +78,13 @@ define(["avalon"], function() {
     }
 
     Cookie.clear = function() {
-        var c = document.cookie.split("; ");
+        var pairs = document.cookie.split(/[;,] */)
         pairs.forEach(function(pair) {
             var index = pair.indexOf("=")
             var key = pair.substr(0, index)
             Cookie.remove(key)
         })
-        //  var pairs = document.cookie.split(/[;,] */)
+        //  var c= document.cookie.split("; ");
         //  for (var i in c) {
         //   document.cookie = /^[^=]+/.exec(c[i])[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
         //  }

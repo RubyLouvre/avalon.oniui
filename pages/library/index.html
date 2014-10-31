@@ -62,10 +62,8 @@ function init() {
     var historys = [] //浏览历史
     var historyIndex = -1
     if(getCookie("historys") !== ""){
-        console.log(JSON.parse(getCookie("historys")))
         historys = JSON.parse(getCookie("historys"))
         historyIndex = historys.length-2
-        console.log(historyIndex)
     }
     
     var iframe = document.getElementById("widgetFrame")
@@ -134,23 +132,24 @@ function init() {
                 "content": iframeContent //iframe此时content
             }
             historys[historyIndex] = newHistoryObj
-            // console.log(JSON.stringify(historys),typeof JSON.stringify(historys))
             setCookie("historys", JSON.stringify(historys), 1)
         } else if (historyIndex !== -1) { //处理前进后退
-            console.log(historyIndex)
             if (historyIndex === 0) { //historyIndex=0，只可能是前进
                 movingfoward()
-                vmodel.activeIndex = historys[historyIndex].widget
+                if(historys[historyIndex]){
+                    vmodel.activeIndex = historys[historyIndex].widget
+                }
                 return
             }
             shortIframeContent = iframeContent
-            shortHistoryContent = historys[historyIndex - 1].content
+            if(historys[historyIndex-1]){
+                shortHistoryContent = historys[historyIndex - 1].content
+            }
             if (shortIframeContent === shortHistoryContent) { //比较当前iframe内容与历史保存的内容
                 movingBack()
             } else {
                 movingfoward()
             }
-            vmodel.activeIndex = historys[historyIndex].widget //更新iframe组件index，继而更新右侧选项颜色
             scroll(0, document.getElementById("avalon_oniui_banner").offsetHeight) //跨过banner
         }
         updateHistory = false
@@ -158,23 +157,29 @@ function init() {
 
     function movingBack() { //历史记录后退
         historyIndex -= 1
-        // console.log("后退", "historyIndex=" + historyIndex, historys[historyIndex].href)
-        if (history.pushState) {
-            replaceLocation(historys[historyIndex].href)
-        } else { //IE7-9
-            replaceLocation(historys[historyIndex].href)
-            vmodel.activeIndex--
+        if(historys[historyIndex]){
+            // console.log("后退", "historyIndex=" + historyIndex, historys[historyIndex].href)
+            if (history.pushState) {
+                replaceLocation(historys[historyIndex].href)
+            } else { //IE7-9
+                replaceLocation(historys[historyIndex].href)
+                vmodel.activeIndex--
+            }
+            vmodel.activeIndex = historys[historyIndex].widget //更新iframe组件index，继而更新右侧选项颜色
         }
     }
 
     function movingfoward() { //历史记录前进
         historyIndex += 1
-        // console.log("前进", "historyIndex=" + historyIndex, historys[historyIndex].href)
-        if (history.pushState) {
-            replaceLocation(historys[historyIndex].href)
-        } else { //IE7-9
-            replaceLocation(historys[historyIndex].href)
-            vmodel.activeIndex++
+        if(historys[historyIndex]){
+            // console.log("前进", "historyIndex=" + historyIndex, historys[historyIndex].href)
+            if (history.pushState) {
+                replaceLocation(historys[historyIndex].href)
+            } else { //IE7-9
+                replaceLocation(historys[historyIndex].href)
+                vmodel.activeIndex++
+            }
+            vmodel.activeIndex = historys[historyIndex].widget //更新iframe组件index，继而更新右侧选项颜色
         }
     }
 

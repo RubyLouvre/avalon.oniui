@@ -13,6 +13,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
     function dataFormator(arr) {
         avalon.each(arr, function(index, item) {
             itemFormator(item)
+            if(item.children) dataFormator(item.children)
         })
     }
     /**
@@ -83,12 +84,14 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         options.parentTemplate = options.getTemplate(parentTemplate, options, "parent").replace(/\n/g, "").replace(/>[\s]+</g, "><")
         options.leafTemplate = options.getTemplate(leafTemplate, options, "leaf").replace(/\n/g, "").replace(/>[\s]+</g, "><")
         options.nodesTemplate = nodesTemplate
+        dataFormator(options.children)
 
         var vmodel = avalon.define(data.treeId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
             vm.widgetElement.innerHTML = vm.template
             vm.$skipArray = ["widgetElement", "template"]
+            vm._select = []
 
             var inited
             vm.$init = function() {
@@ -104,18 +107,38 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             vm.$remove = function() {
                 element.innerHTML = element.textContent = ""
             }
+            // 展开相关
             // 展开
-            vm.hasClassOpen = function(leaf) {
-                return (leaf.isParent||leaf.children) && leaf.open
+            vm.hasClassOpen = function(leaf, noline) {
+                if(vm.view.showLine) {
+                    return leaf.isParent && leaf.open && noline != 'noline'
+                } else {
+                    return leaf.isParent && leaf.open && noline
+                }
             }
             vm.toggleOpenStatue = function(event, leaf) {
                 event.stopPropagation()
                 leaf.open = !leaf.open
             }
+            //@method open(leaf, all) 展开leaf节点的子节点，all表示是否迭代所有子孙节点
+            vm.open = function(leaf, all, openOrClose) {
+                if(!leaf) {
+                    leaf = vm.children
+                } else {
+                    leaf.open = !openOrClose
+                    if(!leaf.isParent) return
+                    leaf = leaf.children
+                }
+                if(all) avalon.each(leaf, function(i, item) {vm.open(item, "all", openOrClose)})
+            }
+            //@method close(leaf, all) 折叠leaf节点的子节点，all表示是否迭代所有子孙节点
+            vm.close = function(leaf, all) {
+                vm.open(leaf, all, "close")
+            }
 
             vm.hasChildren = function(leaf, visible) {
                 // 有有效子节点
-                var renderStatus = leaf.children && leaf.children.length && vm.hasClassOpen(leaf)
+                var renderStatus = leaf.children && leaf.children.length && vm.hasClassOpen(leaf, "ignoreNoline")
                 if(visible) {
                     return renderStatus
                 } else {
@@ -136,13 +159,50 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             vm.timeStamp = function() {
                 return Date.now()
             }
-            //@method exChangeNodes(a, b) 交换a、b节点的位置，同步到dom
-            vm.exChangeNodes = function(a, b, leaf) {
+            //@method exChangeNodes(a, b, leaf, changeDom) 交换leaf节点的索引为a、b子节点的位置，doNotChangeDom不同步到dom，例如修改dom，同步数据而已
+            vm.exChangeNodes = function(a, b, leaf, doNotChangeDom) {
                 // 交换数据
-                var tmp = vm.children[a]
-                vm.children[a] = vm.children[b]
-                vm.children[b] = tmp
+                var leaf = leaf || vm, 
+                    ma = leaf.children[a],
+                    mb = leaf.children[b]
+                leaf.children[a] = mb
+                leaf.children[b] = ma
                 // 交换节点
+                if(!doNotChangeDom) {
+                    var domA = g(ma.$id), domB = g(mb.$id), par = domA.parentNode, next = domB.nextSibling
+                    par.insertBefore(domB, domA)
+                    par.insertBefore(domA, next)
+                }
+            }
+
+            //选中相关
+            vm.hasClassSelect = function(leaf) {
+                for(var i = 0, len = vm._select.length; i < len; i++) {
+                    if(vm._select[i] === leaf.$id) return i + 1
+                }
+                return 0
+            }
+
+            vm.select = function(event, leaf) {
+                event.stopPropagation()
+                var id = leaf.$id, index = vm.hasClassSelect(leaf)
+                if(index) {
+                    vm._select.splice(index - 1, 1)
+                } else {
+                    if(vm.ctrlCMD(event)) {
+                        vm._select.push(id)
+                    } else {
+                        vm._select = [id]
+                    }
+                }
+            }
+
+            vm.freeSelect = function() {
+                vm._select = []
+            }
+
+            vm.ctrlCMD = function(event) {
+                return event.ctrlKey && vm.view.selectedMulti
             }
 
         })
@@ -155,6 +215,16 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
     widget.defaults = {
         //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
+        view: {//@param 视觉效果相关的配置
+            showLine: true,//@param view.showLine是否显示连接线
+            dblClickExpand: true,//@param view.dblClickExpand是否双击变化展开状态
+            selectedMulti: true,//@param view.selectedMulti true / false 分别表示 支持 / 不支持 同时选中多个节点
+            showIcon: true,//@param view.showIcon zTree 是否显示节点的图标
+            showTitle: true,//@param view.showTitle 分别表示 显示 / 隐藏 提示信息
+            nameShower: function(leaf) {
+                return leaf.name
+            }//@optMethod view.nameShower(leaf)节点显示内容过滤器，默认是显示leaf.name
+        },
         getTemplate: function(tmpl, opts, tplName) {
             return tmpl
         },//@optMethod getTemplate(tpl, opts, tplName) 定制修改模板接口
@@ -162,6 +232,6 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
     }
     //@method avalon.ui.tree.Extension({xxx}) 给tree组件添加扩展，用于扩展属性，方法
     avalon.ui.tree.Extension = function(classToExtend) {
-        avalon.mix(widget.defaults, classToExtend)
+        avalon.mix(true, widget.defaults, classToExtend)
     }
 })

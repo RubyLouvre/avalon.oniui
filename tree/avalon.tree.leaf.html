@@ -1,6 +1,10 @@
 <span class="button switch center_docu" 
-      ms-class="bottom_docu:$last"></span>
-<a target="_blank">
-    <span class="button ico_docu"></span>
-  	<span>{{leaf.name}}</span>
+      ms-class="bottom_docu:$last" 
+      ms-class-2="noline_docu:!view.showLine"></span>
+<a target="_blank"
+   ms-class="curSelectedNode:hasClassSelect(leaf)" 
+   ms-click="select($event,leaf)">
+    <span class="button ico_docu" 
+          ms-if="view.showIcon"></span>
+  	<span>{{view.nameShower(leaf)|html}}</span>
 </a>

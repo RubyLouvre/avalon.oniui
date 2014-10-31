@@ -23,7 +23,10 @@
     margin: 0;
     padding: 0 0 0 18px; }
   .ui-tree li ul.line {
-    background: url(./line_conn.gif) 0 0 repeat-y; }
+    background: url(./line_conn.gif) 0 0 repeat-y;
+    zoom: 1; }
+  .ui-tree li ul.noline_docu {
+    background: none; }
   .ui-tree li a {
     padding: 1px 3px 0 0;
     margin: 0;
@@ -132,6 +135,10 @@
   .ui-tree li span.switch {
     width: 18px;
     height: 18px; }
+  .ui-tree li span.center_close {
+    background-position: -74px -18px; }
+  .ui-tree li span.center_open {
+    background-position: -92px -18px; }
   .ui-tree li span.root_close {
     background-position: -74px -54px; }
   .ui-tree li span.root_open {
@@ -140,10 +147,6 @@
     background-position: -74px 0; }
   .ui-tree li span.roots_open {
     background-position: -92px 0; }
-  .ui-tree li span.center_close {
-    background-position: -74px -18px; }
-  .ui-tree li span.center_open {
-    background-position: -92px -18px; }
   .ui-tree li span.bottom_close {
     background-position: -74px -36px; }
   .ui-tree li span.bottom_open {
@@ -152,24 +155,24 @@
     background-position: -74px -72px; }
   .ui-tree li span.noline_open {
     background-position: -92px -72px; }
+  .ui-tree li span.center_docu {
+    background-position: -56px -18px; }
   .ui-tree li span.root_docu {
     background: none; }
   .ui-tree li span.roots_docu {
     background-position: -56px 0; }
-  .ui-tree li span.center_docu {
-    background-position: -56px -18px; }
   .ui-tree li span.bottom_docu {
     background-position: -56px -36px; }
   .ui-tree li span.noline_docu {
     background: none; }
-  .ui-tree li span.ico_open {
-    margin-right: 2px;
-    background-position: -110px -16px;
-    vertical-align: top;
-    *vertical-align: middle; }
   .ui-tree li span.ico_close {
     margin-right: 2px;
     background-position: -110px 0;
+    vertical-align: top;
+    *vertical-align: middle; }
+  .ui-tree li span.ico_open {
+    margin-right: 2px;
+    background-position: -110px -16px;
     vertical-align: top;
     *vertical-align: middle; }
   .ui-tree li span.ico_docu {

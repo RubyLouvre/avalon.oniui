@@ -17,7 +17,8 @@ $uiname : ".ui-tree";
 	* {padding:0; margin:0;font-size:12px;}
 	li{padding:0; margin:0; list-style:none; line-height:14px; text-align:left; white-space:nowrap; outline:0}
 	li ul{ margin:0; padding:0 0 0 18px}
-	li ul.line{ background:url(./line_conn.gif) 0 0 repeat-y;}
+	li ul.line{ background:url(./line_conn.gif) 0 0 repeat-y;zoom:1;}
+	li ul.noline_docu{background:none;}
 
 	li a {padding:1px 3px 0 0; margin:0; cursor:pointer; height:17px; color:#333; background-color: transparent;
 		text-decoration:none; vertical-align:top; display: inline-block}
@@ -59,24 +60,24 @@ $uiname : ".ui-tree";
 	li span.radio_true_disable {background-position:-42px -56px}
 
 	li span.switch {width:18px; height:18px}
+	li span.center_close{background-position:-74px -18px}
+	li span.center_open{background-position:-92px -18px}
 	li span.root_close{background-position:-74px -54px}
 	li span.root_open{background-position:-92px -54px}
 	li span.roots_close{background-position:-74px 0}
 	li span.roots_open{background-position:-92px 0}
-	li span.center_close{background-position:-74px -18px}
-	li span.center_open{background-position:-92px -18px}
 	li span.bottom_close{background-position:-74px -36px}
 	li span.bottom_open{background-position:-92px -36px}
 	li span.noline_close{background-position:-74px -72px}
 	li span.noline_open{background-position:-92px -72px}
+	li span.center_docu{background-position:-56px -18px}
 	li span.root_docu{ background:none;}
 	li span.roots_docu{background-position:-56px 0}
-	li span.center_docu{background-position:-56px -18px}
 	li span.bottom_docu{background-position:-56px -36px}
 	li span.noline_docu{ background:none;}
 
-	li span.ico_open{margin-right:2px; background-position:-110px -16px; vertical-align:top; *vertical-align:middle}
 	li span.ico_close{margin-right:2px; background-position:-110px 0; vertical-align:top; *vertical-align:middle}
+	li span.ico_open{margin-right:2px; background-position:-110px -16px; vertical-align:top; *vertical-align:middle}
 	li span.ico_docu{margin-right:2px; background-position:-110px -32px; vertical-align:top; *vertical-align:middle}
 	li span.edit {margin-right:2px; background-position:-110px -48px; vertical-align:top; *vertical-align:middle}
 	li span.remove {margin-right:2px; background-position:-110px -64px; vertical-align:top; *vertical-align:middle}

@@ -6,7 +6,8 @@
         <meta name="viewport" content="width=device-width">
         <script src="../highlight/shCore.js"></script>
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
-    </head>
+    <meta name="description" content="tree组件，借鉴ztree实现的avalon版本树组件，尽量接近ztree的数据结构"/>
+</head>
     <body>
         <div class="wrapper">
             <h2>tree</h2>
@@ -24,16 +25,39 @@
                         <td colspan="3" aligin="center">配置参数</td>
                     </tr>
                     <!--auto doc start-->
-                    <!--auto doc end-->
+<tr>
+    <td>view</td><td>{Object}</td><td> 视觉效果相关的配置</td></tr>
+<tr>
+    <td>view.showLine</td><td> true</td><td> view.showLine是否显示连接线</td></tr>
+<tr>
+    <td>view.dblClickExpand</td><td> true</td><td> view.dblClickExpand是否双击变化展开状态</td></tr>
+<tr>
+    <td>view.selectedMulti</td><td> true</td><td> view.selectedMulti true / false 分别表示 支持 / 不支持 同时选中多个节点</td></tr>
+<tr>
+    <td>view.showIcon</td><td> true</td><td> view.showIcon zTree 是否显示节点的图标</td></tr>
+<tr>
+    <td>view.showTitle</td><td> true</td><td> view.showTitle 分别表示 显示 / 隐藏 提示信息</td></tr>
+<tr>
+    <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+<tr>
+    <td>view.nameShower</td><td>配置接口</td><td>view.nameShower(leaf)节点显示内容过滤器，默认是显示leaf.name</td></tr>
+<tr>
+    <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td></tr>
+<tr>
+    <td>exChangeNodes</td><td>接口调用</td><td>exChangeNodes(a, b, leaf, changeDom) 交换leaf节点的索引为a、b子节点的位置，doNotChangeDom不同步到dom，例如修改dom，同步数据而已</td></tr>
+<tr>
+    <td>avalon.ui.tree.Extension</td><td>接口调用</td><td>avalon.ui.tree.Extension({xxx}) 给tree组件添加扩展，用于扩展属性，方法</td></tr>
+<!--auto doc end-->
                 </table>
             </fieldset>
             <!--source start-->
             <!--source end-->
             <h3>例子：</h3>
             <!--ex list start-->
-            <ol class="example-links">
-            </ol>
-            <!--ex list end-->
+<ol class="example-links">
+<li><a href="avalon.tree.ex.html">tree</a></li>
+</ol>
+<!--ex list end-->
         </div>
     </body>
 </html>

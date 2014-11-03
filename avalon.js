@@ -1678,7 +1678,7 @@
                 var text = el.text
                 parent.removeChild(el)
                 //IE直接通过移除节点，重赋text属性，再插回原位就恢复执行脚本功能
-                if (!window.VBArray && scriptTypes[el.type]) {
+                if (scriptTypes[el.type]) {
                     // 其他浏览器则需要以偷龙转凤方式恢复此功能
                     neo = script.cloneNode(false) //FF不能省略参数
                     ap.forEach.call(el.attributes, function(attr) {
@@ -1828,9 +1828,11 @@
                 if (special === "up") {
                     alls.reverse()
                 }
-                alls.forEach(function(v) {
-                    v.$fire.apply(v, detail)
-                })
+                for (var i = 0, el; el = all[i++]; ) {
+                    if (el.$fire.apply(el, detail) === false) {
+                        break
+                    }
+                }
             }
         }
     }
@@ -3435,7 +3437,7 @@
 
             data.handler = function() {
                 var array = [].concat(evaluator()) //强制转换为数组
-                element.checked = array.indexOf(pipet(element.value, data, "get")) >= 0
+                element.checked = array.indexOf(pipe(element.value, data, "get")) >= 0
             }
             bound(W3C ? "change" : "click", updateVModel)
         } else {

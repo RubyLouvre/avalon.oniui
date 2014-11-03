@@ -18,7 +18,9 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
                 setTimeout(function() {
                     var checkStatus = event.target.checked;
                     if (checkStatus) {
-                        duplexVM[1][duplexVM[0]] = vmodel.keys;
+                        duplexVM[1][duplexVM[0]] = vmodel.keys.map(function(el) {
+                            return el + ""
+                        });
                     } else {
                         duplexVM[1][duplexVM[0]].clear()
                     }

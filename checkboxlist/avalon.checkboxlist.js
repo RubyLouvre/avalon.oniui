@@ -7,7 +7,7 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
             onSelectVM = typeof options.onSelect === "string" ? avalon.getModel(options.onSelect, vmodels) : false,
             onSelect = onSelectVM && onSelectVM[1][onSelectVM[0]] || avalon.noop,
             onfetch = avalon.type(fetchFunc) === "function" ? fetchFunc : null;
-        options.template = options.getTemplate(template, options);
+        
         var vmodel = avalon.define(data.checkboxlistId, function(vm) {
             avalon.mix(vm, options);
             vm.$skipArray = ["widgetElement", "template", "keys"];
@@ -31,9 +31,10 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
                 onSelect.apply(0, [vm.data.$model, event.target.checked, event.target]);
             }
             vm.$init = function() {
-                options.template = options.template.replace("MS_OPTIONS_DUPLEX", options.duplex);
+                var temp = template.replace("MS_OPTIONS_DUPLEX", options.duplex);
+                vmodel.template = vmodel.getTemplate(temp, options);
                 element.className += " ui-checkboxlist ui-checkboxlist-list ui-helper-clearfix";
-                element.innerHTML = options.template;
+                element.innerHTML = vmodel.template;
                 avalon.scan(element, [vmodel].concat(vmodels));
                 if(typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
@@ -143,6 +144,7 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
             ]
         */
         fetch: "", 
+        template: "",
         onSelect: avalon.noop, // 通过配置onSelect来进行选中或者不选中选框的回调操作
         getTemplate: function(tmpl, options) {
             return tmpl

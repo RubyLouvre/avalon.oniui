@@ -2,7 +2,6 @@
 /*
 这是每个都组件都应该引用的部分
 */
-/*样式参考zTree https://github.com/zTree/zTree_v3*/
 .ui-tree {
   margin: 0;
   padding: 5px;
@@ -85,8 +84,8 @@
     background-color: transparent;
     background-repeat: no-repeat;
     background-attachment: scroll;
-    background-image: url("./TreeStandard.png");
-    *background-image: url("./TreeStandard.gif"); }
+    background-image: url("./treeStandard.png");
+    *background-image: url("./treeStandard.gif"); }
   .ui-tree li span.chk {
     width: 13px;
     height: 13px;

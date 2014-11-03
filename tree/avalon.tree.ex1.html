@@ -55,7 +55,7 @@
             // for(var i = 0; i < 5000; i++) {
             //     child.push(child[1])
             // }
-            require(["tree/avalon.tree"], function() {
+            require(["tree/avalon.tree.edit"], function() {
                 avalon.define("test", function(vm) {
                     vm.tree = {
                         children: child,
@@ -66,14 +66,8 @@
                             }
                         },
                         callback: {
-                            onExpand: function(data) {
-                            },
-                            onClick: function(data) {
-                                console.log(data)
-                            },
-                            onContextmenu: function(data) {
-                                console.log(data)
-                                data.e.preventDefault()
+                            onExpand: function(leaf) {
+                                console.log(leaf)
                             }
                         }
                     }

@@ -7,7 +7,6 @@ $uiname : ".ui-tree";
 		borderColor:#aaaaaa
 	) !global
 }
-/*样式参考zTree https://github.com/zTree/zTree_v3*/
 
 #{$uiname} {
 	// current style
@@ -35,7 +34,7 @@ $uiname : ".ui-tree";
 	li span.button {line-height:0; margin:0; width:16px; height:16px; display: inline-block; vertical-align:middle;
 		border:0 none; cursor: pointer;outline:none;
 		background-color:transparent; background-repeat:no-repeat; background-attachment: scroll;
-		background-image:url("./TreeStandard.png"); *background-image:url("./TreeStandard.gif")}
+		background-image:url("./treeStandard.png"); *background-image:url("./treeStandard.gif")}
 
 	li span.chk {width:13px; height:13px; margin:0 3px 0 0; cursor: auto}
 	li span.checkbox_false_full {background-position:0 0}

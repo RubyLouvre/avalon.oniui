@@ -13,7 +13,7 @@
             <h2>tree</h2>
             <fieldset>
                 <legend>tree组件</legend>
-                <p class="doc-description"></p>
+                <p class="doc-description">tree组件，借鉴ztree实现的avalon版本树组件，尽量接近ztree的数据结构</p>
             </fieldset>
             <fieldset>
                 <legend>使用说明</legend>
@@ -42,11 +42,27 @@
 <tr>
     <td>view.nameShower</td><td>配置接口</td><td>view.nameShower(leaf)节点显示内容过滤器，默认是显示leaf.name</td></tr>
 <tr>
+    <td>callback.onExpand</td><td>配置接口</td><td>callback.onExpand(data) 节点展开回调</td></tr>
+<tr>
+    <td>callback.onCollapse</td><td>配置接口</td><td>callback.onCollapse(data) 节点收起回调</td></tr>
+<tr>
+    <td>callback.onSelect</td><td>配置接口</td><td>callback.onSelect(data) 节点被选中回调</td></tr>
+<tr>
+    <td>callback.onClick</td><td>配置接口</td><td>callback.onClick(data) 节点被点击回调</td></tr>
+<tr>
+    <td>callback.onDblClick</td><td>配置接口</td><td>callback.onDblClick(data) 节点被双击回调</td></tr>
+<tr>
     <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td></tr>
 <tr>
-    <td>exChangeNodes</td><td>接口调用</td><td>exChangeNodes(a, b, leaf, changeDom) 交换leaf节点的索引为a、b子节点的位置，doNotChangeDom不同步到dom，例如修改dom，同步数据而已</td></tr>
+    <td>expand</td><td>接口调用</td><td>expand(leaf, all) 展开leaf节点的子节点，all表示是否迭代所有子孙节点</td></tr>
 <tr>
-    <td>avalon.ui.tree.Extension</td><td>接口调用</td><td>avalon.ui.tree.Extension({xxx}) 给tree组件添加扩展，用于扩展属性，方法</td></tr>
+    <td>collapse</td><td>接口调用</td><td>collapse(leaf, all) 折叠leaf节点的子节点，all表示是否迭代所有子孙节点</td></tr>
+<tr>
+    <td>exChangeNodes</td><td>接口调用</td><td>exChangeNodes(a, b, doNotChangeDom) 交换a,b节点的位置，doNotChangeDom不同步到dom，例如只是通过修改dom，同步数据而已</td></tr>
+<tr>
+    <td>freeSelect</td><td>接口调用</td><td>freeSelect(event, leaf)取消leaf节点上所有处于选中状态的节点</td></tr>
+<tr>
+    <td>avalon.ui.tree.AddExtention</td><td>接口调用</td><td>avalon.ui.tree.AddExtention(fixNames, addingDefaults, addingMethodFunc)扩展tree</td></tr>
 <!--auto doc end-->
                 </table>
             </fieldset>
@@ -56,6 +72,7 @@
             <!--ex list start-->
 <ol class="example-links">
 <li><a href="avalon.tree.ex.html">tree</a></li>
+<li><a href="avalon.tree.ex1.html">tree</a></li>
 </ol>
 <!--ex list end-->
         </div>

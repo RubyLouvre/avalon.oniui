@@ -279,13 +279,13 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
     function escapeRegExp(str) {
         return str.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
     }
-    function getCaretPosition(element) {
+    function getCaretPosition(ctrl) {
         var caret  //取得光标的位置
-        if (typeof element.selectionStart === "number") {
-            caret = element.selectionStart
+        if (typeof ctrl.selectionStart === "number") {
+            caret = ctrl.selectionStart
         } else {
-            var selection = document.selection.createRange() //这个TextRange对象不能重用
-            selection.moveStart("character", -element.value.length)
+            var selection = ctrl.selection.createRange() //这个TextRange对象不能重用
+            selection.moveStart("character", -ctrl.value.length)
             caret = selection.text.length;
         }
         return caret

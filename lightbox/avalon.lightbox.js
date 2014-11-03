@@ -1,9 +1,8 @@
-define(["avalon", "text!./avalon.lightbox.html", "css!./stylesheets/avalon.lightbox.css"], function (avalon, template) {
+define(["avalon", "text!./avalon.lightbox.html", "css!./avalon.lightbox.css"], function (avalon, template) {
 
     var widget = avalon.ui.lightbox = function (element, data, vmodels) {
         var options = data.lightboxOptions
         options.template = options.getTemplate(template, options)
-        console.log(element.textContent)
         var vmodel = avalon.define(data.lightboxId, function (vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element

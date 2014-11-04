@@ -96,11 +96,9 @@ define(["avalon"], function(avalon) {
                 var type = element.type,
                         bound = data.bound,
                         $elem = avalon(element),
-                        firstTigger = false,
                         composing = false
 
                 function callback(value) {
-                    firstTigger = true
                     data.changed.call(this, value, data)
                 }
                 function compositionStart() {
@@ -114,11 +112,10 @@ define(["avalon"], function(avalon) {
                     if (composing)//处理中文输入法在minlengh下引发的BUG
                         return
                     var val = element.oldValue = element.value //防止递归调用形成死循环
-                    var typedVal = pipe(val, data, "get")      //尝式转换为正确的格式
-
+                    var lastValue = pipe(val, data, "get")
                     if ($elem.data("duplex-observe") !== false) {
-                        evaluator(typedVal)
-                        callback.call(element, typedVal)
+                        evaluator(lastValue)
+                        callback.call(element, lastValue)
                         if ($elem.data("duplex-focus")) {
                             avalon.nextTick(function() {
                                 element.focus()
@@ -139,10 +136,9 @@ define(["avalon"], function(avalon) {
                     var IE6 = !window.XMLHttpRequest
                     updateVModel = function() {
                         if ($elem.data("duplex-observe") !== false) {
-                            var val = element.value
-                            var typedValue = pipe(val, data, "get")
-                            evaluator(typedValue)
-                            callback.call(element, typedValue)
+                            var lastValue = pipe(element.value, data, "get")
+                            evaluator(lastValue)
+                            callback.call(element, lastValue)
                         }
                     }
                     data.handler = function() {
@@ -224,13 +220,8 @@ define(["avalon"], function(avalon) {
                         return false
                     }
                 })
-                //  registerSubscriber(data)
-                var timer = setTimeout(function() {
-                    if (!firstTigger) {
-                        callback.call(element, element.value)
-                    }
-                    clearTimeout(timer)
-                }, 31)
+                callback.call(element, element.value)
+
             }
 
             var TimerID, ribbon = [],
@@ -397,5 +388,5 @@ define(["avalon"], function(avalon) {
             }
         }
     })
-
+//http://bootstrapvalidator.com/
 })

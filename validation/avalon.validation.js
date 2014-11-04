@@ -1,4 +1,4 @@
-define(["../promise/avalon.promise"], function(avalon) {
+define(["avalon"], function(avalon) {
 
     if (!avalon.duplexHooks) {
         throw new Error("你的版本少于avalon1.3.7，不支持ms-duplex2.0，请使用avalon.validation.old.js")
@@ -7,86 +7,162 @@ define(["../promise/avalon.promise"], function(avalon) {
 
     avalon.mix(avalon.duplexHooks, {
         trim: {
-            get: function(val, data) {
+            get: function(value, data) {
                 if (data.element.type !== "password") {
-                    val = String(val || "").trim()
+                    value = String(value || "").trim()
                 }
-                return val
+                return value
             }
         },
         required: {
             message: '必须填写',
-            get: function(val, data, next) {
-                next(val !== "")
-                return val
-            }
-        },
-        minlength: {
-            message: '最少输入%argu个字',
-            get: function(val, data, next) {
-                var elem = data.element
-                var a = parseInt(elem.getAttribute("minlength"), 10)
-                var b = parseInt(elem.getAttribute("data-duplex-minlength"), 10)
-                var num = a || b
-                next(val.length >= num)
-                return val
-            }
-        },
-        maxlength: {
-            message: '最多输入%argu个字',
-            get: function(val, data, next) {
-                var elem = data.element
-                var a = parseInt(elem.getAttribute("maxlength"), 10)
-                var b = parseInt(elem.getAttribute("data-duplex-maxlength"), 10)
-                var num = a || b
-                next(val.length <= num)
-                return val
+            get: function(value, data, next) {
+                next(value !== "")
+                return value
             }
         },
         "int": {
             message: "必须是整数",
-            get: function(val, data, next) {
-                next(/^\-?\d+$/.test(val))
-                return val
+            get: function(value, data, next) {
+                next(/^\-?\d+$/.test(value))
+                return value
+            }
+        },
+        decimal: {
+            message: '必须是小数',
+            get: function(value, data, next) {
+                next(/^\-?\d*\.?\d+$/.test(value))
+                return value
+            }
+        },
+        alpha: {
+            message: '必须是字母',
+            get: function(value, data, next) {
+                next(/^[a-z]+$/i.test(value))
+                return value
+            }
+        },
+        alpha_numeric: {
+            message: '必须为字母或数字',
+            get: function(value, data, next) {
+                next(/^[a-z0-9]+$/i.test(value))
+                return value
+            }
+        },
+        alpha_dash: {
+            message: '必须为字母或数字及下划线等特殊字符',
+            validate: function(value, data, next) {
+                next(/^[a-z0-9_\-]+$/i.test(value))
+                return value
+            }
+        },
+        chs_numeric: {
+            message: '必须是中文字符或数字及下划线等特殊字符',
+            get: function(value, data, next) {
+                next(/^[\\u4E00-\\u9FFF0-9_\-]+$/i.test(value))
+                return value
             }
         },
         email: {
             message: "邮件地址错误",
-            get: function(val, data, next) {
-                next(/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i.test(val))
-                return val
+            get: function(value, data, next) {
+                next(/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i.test(value))
+                return value
             }
         },
         url: {
             message: "URL格式错误",
-            get: function(val, data, next) {
-                next(/^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/.test(val))
-                return val
+            get: function(value, data, next) {
+                next(/^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/.test(value))
+                return value
             }
         },
         date: {
             message: '必须符合日期格式 YYYY-MM-DD',
-            get: function(val, data, next) {
-                next(/^\d\d\d\d\-\d\d\-\d\d$/.test(val))
-                return val
+            get: function(value, data, next) {
+                next(/^\d\d\d\d\-\d\d\-\d\d$/.test(value))
+                return value
             }
         },
         passport: {
             message: '护照格式错误或过长',
-            get: function(val, data, next) {
-                next(/^[a-zA-Z0-9]{0,20}$/i.test(val))
-                return val
+            get: function(value, data, next) {
+                next(/^[a-zA-Z0-9]{0,20}$/i.test(value))
+                return value
+            }
+        },
+        minlength: {
+            message: '最少输入{{min}}个字',
+            get: function(value, data, next) {
+                var elem = data.element
+                var a = parseInt(elem.getAttribute("minlength"), 10)
+                if (!isFinite(a)) {
+                    a = parseInt(elem.getAttribute("data-duplex-minlength"), 10)
+                }
+                var num = data.data.min = a
+                next(value.length >= num)
+                return value
+            }
+        },
+        maxlength: {
+            message: '最多输入{{max}}个字',
+            get: function(value, data, next) {
+                var elem = data.element
+                var a = parseInt(elem.getAttribute("maxlength"), 10)
+                if (!isFinite(a)) {
+                    a = parseInt(elem.getAttribute("data-duplex-maxlength"), 10)
+                }
+                var num = data.data.max = a
+                next(value.length <= num)
+                return value
+            }
+        },
+        gt: {
+            message: '必须大于{{max}}',
+            get: function(value, data, next) {
+                var elem = data.element
+                var a = parseInt(elem.getAttribute("max"), 10)
+                if (!isFinite(a)) {
+                    a = parseInt(elem.getAttribute("data-duplex-gt"), 10)
+                }
+                var num = data.data.max = a
+                next(parseFloat(value) > num)
+                return value
+            }
+        },
+        lt: {
+            message: '必须小于{{min}}',
+            get: function(value, data, next) {
+                var elem = data.element
+                var a = parseInt(elem.getAttribute("min"), 10)
+                if (!isFinite(a)) {
+                    a = parseInt(elem.getAttribute("data-duplex-lt"), 10)
+                }
+                var num = data.data.min = a
+                next(parseFloat(value) < num)
+                return value
+            }
+        },
+        eq: {
+            message: '必须等于{{eq}}',
+            get: function(value, data, next) {
+                var elem = data.element
+                var a = parseInt(elem.getAttribute("data-duplex-eq"), 10)
+                var num = data.data.eq = a
+                next(parseFloat(value) == num)
+                return value
             }
         },
         pattern: {
-            get: function(val, data, next) {
+            message: '必须匹配/{{pattern}}/这样的格式',
+            get: function(value, data, next) {
                 var elem = data.element
                 var h5pattern = elem.getAttribute("pattern")
                 var mspattern = elem.getAttribute("data-duplex-pattern")
-                var pattern = h5pattern || mspattern
+                var pattern = data.data.pattern = h5pattern || mspattern
                 var re = new RegExp('^(?:' + pattern + ')$')
-                next(re.test(val))
-                return val
+                next(re.test(value))
+                return value
             }
         }
     })
@@ -125,6 +201,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                 data.param.replace(/\w+/g, function(name) {
                     var hook = inwardHooks[name] || globalHooks[name]
                     if (hook && typeof hook[action] === "function") {
+                        data.data = {}
                         if (!elem.disabled && hook.message) {
                             var resolve, reject
                             promises.push(new Promise(function(a, b) {
@@ -137,8 +214,10 @@ define(["../promise/avalon.promise"], function(avalon) {
                                 } else {
                                     var reason = {
                                         element: element,
+                                        data: data.data,
                                         message: hook.message,
-                                        validateRule: name
+                                        validateRule: name,
+                                        getMessage: getMessage
                                     }
                                     resolve(reason)
                                 }
@@ -196,6 +275,13 @@ define(["../promise/avalon.promise"], function(avalon) {
         })
 
         return vmodel
+    }
+    var rformat = /\\?{([^{}]+)\}/gm
+    function getMessage() {
+        var data = this.data || {}
+        return this.message.replace(rformat, function(_, name) {
+            return data[name] || ""
+        })
     }
     widget.defaults = {
         validationHooks: {},

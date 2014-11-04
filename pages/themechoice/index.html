@@ -26,7 +26,7 @@
         <script src="../../avalon.js"></script>
 
     </head>
-    <body c>
+    <body>
         <table class="uiCollection">
             <tr>
                 <td width="230px">
@@ -112,7 +112,7 @@
                             }, {
                                 'title': 'Section 3',
                                 'content': '<p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis. Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.</p><ul><li>List item one</li><li>List item two</li><li>List item three</li></ul>'
-                            }],
+                            }]
                     }
                 });
                 var accordion = document.getElementById("accordion");
@@ -200,33 +200,6 @@
                 avalon.scan(dialog, dialogVM);
             })
 
-            require(["simplegrid/avalon.simplegrid"], function() {
-                function getData(n) {
-                    var ret = []
-                    for (var i = 0; i < n; i++) {
-                        ret.push({
-                            symbol: Math.random().toString(32).slice(4, 10),
-                            price: range(100, 200),
-                            change: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1)
-                        })
-                    }
-                    return ret
-                }
-                function range(s, b) {
-                    return s + Math.floor((b - s) * Math.random())
-                }
-                var simplegridVM = avalon.define("simplegrid", function(vm) {
-                    vm.simplegrid = {
-                        columns: ["symbol", "price", "change"],
-                        data: getData(5),
-                        pageable: true
-                    }
-                    vm.$skipArray = ["simplegrid"]
-                })
-                var simplegrid = document.getElementById("simplegrid");
-                avalon.scan(simplegrid, simplegridVM)
-            })
-
             require("datepicker/avalon.daterangepicker", function(avalon) {
                 var daterangepickerVM = avalon.define("daterangepicker", function(vm) {
 
@@ -256,18 +229,39 @@
                             avalon.log(vmodel.select)
                         }
                     }
-                    var i = 6
-                    while (i < 200) {
-                        vm.doublelist.data.push({
+                    var i = 6, arr = []
+                    while (i < 10) {
+                        arr.push({
                             name: "Hello Sang" + i,
                             value: i
                         })
                         i++
                     }
+                    vm.doublelist.data.splice.apply(vm.doublelist.data, [5,0].concat(arr))
                     vm.$skipArray = ["doublelist"]
                 })
                 var doublelist = document.getElementById("doublelist");
                 avalon.scan(doublelist, doublelistVM)
+            })
+
+            require("textbox/avalon.textbox", function() {
+                var textboxVM = avalon.define("textbox", function(vm) {
+                    vm.val = "";
+                })
+                var textbox = document.getElementById("textbox");
+                avalon.scan(textbox, textboxVM);
+                avalon.ui["suggest"].strategies['test'] = function(value, render) {
+                    var data = !value.indexOf("x") ? ["xueer", "xueli", "xueyan"] : []
+                    render(data)
+                }
+            })
+
+            require(["spinner/avalon.spinner"], function(avalon) {
+                var spinnerVM = avalon.define('spinner', function(vm) {
+
+                });
+                var spinner = document.getElementById("spinner");
+                avalon.scan(spinner, spinnerVM);
             })
 
             require(["loading/avalon.loading"], function() {
@@ -275,7 +269,9 @@
 
                 })
                 var loading = document.getElementById("loading");
-                avalon.scan(loading, loadingVM)
+                asyncRender(function() {
+                    avalon.scan(loading, loadingVM)
+                })
             })
 
             require(["menu/avalon.menu"], function() {
@@ -318,35 +314,9 @@
                     }
                 })
                 var menu = document.getElementById("menu");
-                avalon.scan(menu, menuVM);
-            })
-
-            require("textbox/avalon.textbox", function() {
-                var textboxVM = avalon.define("textbox", function(vm) {
-                    vm.val = "";
+                asyncRender(function() {
+                    avalon.scan(menu, menuVM);
                 })
-                var textbox = document.getElementById("textbox");
-                avalon.scan(textbox, textboxVM);
-                avalon.ui["suggest"].strategies['test'] = function(value, render) {
-                    var data = !value.indexOf("x") ? ["xueer", "xueli", "xueyan"] : []
-                    render(data)
-                }
-            })
-
-            require(["spinner/avalon.spinner"], function(avalon) {
-                var spinnerVM = avalon.define('spinner', function(vm) {
-
-                });
-                var spinner = document.getElementById("spinner");
-                avalon.scan(spinner, spinnerVM);
-            })
-
-            require("slider/avalon.slider", function() {
-                var sliderVM = avalon.define("slider", function(vm) {
-
-                })
-                var slider = document.getElementById("slider");
-                avalon.scan(slider, sliderVM);
             })
 
             require("datepicker/avalon.datepicker", function(avalon) {
@@ -356,18 +326,32 @@
                 avalon.scan(datepicker, datepickerVM);
             })
 
+            require("slider/avalon.slider", function() {
+                var sliderVM = avalon.define("slider", function(vm) {
+
+                })
+                var slider = document.getElementById("slider");
+                asyncRender(function() {
+                    avalon.scan(slider, sliderVM);
+                })
+            })
+
             require(['dropdown/avalon.dropdown'], function() {
                 var dropdownVM = avalon.define('dropdown', function(vm) {
                 });
                 var datepicker = document.getElementById("dropdown");
-                avalon.scan(dropdown, dropdownVM);
+                asyncRender(function() {
+                    avalon.scan(dropdown, dropdownVM);
+                })
             });
             require(["progressbar/avalon.progressbar"], function() {
                 var progressbarVM = avalon.define("progressbar", function(vm) {
 
                 })
                 var progressbar = document.getElementById("progressbar");
-                avalon.scan(progressbar, progressbarVM);
+                asyncRender(function() {
+                    avalon.scan(progressbar, progressbarVM);
+                })
             })
 
 
@@ -376,8 +360,18 @@
                 var flipswitchVM = avalon.define("flipswitch", function(vm) {
                 })
                 var flipswitch = document.getElementById("flipswitch");
-                avalon.scan(flipswitch, flipswitchVM);
+                asyncRender(function() {
+                    avalon.scan(flipswitch, flipswitchVM);
+                })
             })
+
+            function asyncRender(fn) {
+                if(asyncRender.count === void 0) {
+                    asyncRender.count = 0
+                }
+                asyncRender.count++
+                setTimeout(fn, asyncRender.count * 40)
+            }
         </script>
     </body>
 </html>

@@ -30,12 +30,15 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         item.$parentLeaf = parentLeaf
         if(item.isParent) {
             item.open = !!item.open
-            item.children = item.children || []
-        }
+        } else {
+            item.open = false
+        }   
+        // 诶，子节点也可能被编辑成父节点...         
+        item.children = item.children || []
         return item
     }
     function itemIsParent(item) {
-        return !!item.isParent || !!item.open || !!item.children
+        return !!item.isParent || !!item.open || !!(item.children&&item.children.length)
     }
     /**  将简单的数组结构数据转换成树状结构
       *  注如果是一个没有子节点的父节点必须加isParent = true，open属性只有父节点有必要有
@@ -178,7 +181,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             }
 
             vm.loadLeafTemplate = function(leaf) {
-                if(leaf.isParent || leaf.children) return vm.parentTemplate
+                if(leaf.isParent) return vm.parentTemplate
                 return vm.leafTemplate
             }
 

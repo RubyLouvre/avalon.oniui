@@ -99,6 +99,9 @@
         </tr>
     </table>
     <script>
+        avalon.define({
+            $id: "pages"
+        })
         require(["accordion/avalon.accordion"], function() {
             var accordionVM = avalon.define('accordion',function(vm){
                 vm.$accordionOpts = {

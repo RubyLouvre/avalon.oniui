@@ -17,7 +17,7 @@
                     ms-css-width="column._fixWidth" 
                     ms-css-text-align="column.align" 
                     ms-class="{{column.customClass}}"
-                    ms-class-1="ui-state-hidden: selectable && selectable.type && column.key=='selected' && !allSelected">
+                    ms-class-1="ui-state-hidden: selectable && selectable.type && column.key=='selected' && !allChecked">
                     {{column.name|html}}
                     <span  ms-click="sortColumn(column, $index, $event)"
                            ms-if="column.sortable" 
@@ -32,7 +32,7 @@
                     ms-visible="_toggleColumn(column.toggle, $index)" 
                     ms-css-text-align="column.align" 
                     ms-class="{{column.customClass}}"
-                    ms-class-1="ui-state-hidden: selectable && selectable.type && column.key=='selected' && !allSelected">
+                    ms-class-1="ui-state-hidden: selectable && selectable.type && column.key=='selected' && !allChecked">
                     {{column.name|html}}
                     <span  ms-click="sortColumn(column, $index, $event)"
                            ms-if="column.sortable" 
@@ -47,9 +47,10 @@
         </tbody>
         <tfoot class="ui-smartgrid-footer">
             <tr>
-                <td ms-attr-colspan="{{columns.size()}}">
-                    <div class="ui-smartgrid-pager-wrapper" ms-if="!(pageable && _pagerShow)"></div>
-                    <div class="ui-smartgrid-pager-wrapper" id="pager-MS_OPTION_ID" ms-if="pageable && _pagerShow"></div>
+                <td ms-attr-colspan="{{columns.size()}}" class="ui-smartgrid-pager-wrapper">
+                    <div ms-visible="pageable && _pagerShow">
+                        <div id="pager-MS_OPTION_ID"></div>
+                    </div>
                 </td>
             </tr>
         </tfoot>
@@ -84,7 +85,7 @@ MS_OPTION_EJS
                     customClass = td.customClass || "",
                     format = td.format;&>
                 <td style="<&= style &>" class="<&= customClass &>">
-                    <&= format(@vmId, td.key , i, tr[td.key], tr.disable) &>
+                    <&= format(@vmId, td.key , i, tr[td.key], tr, tr.disable) &>
                 </td>
             <& } &>
         </tr>  

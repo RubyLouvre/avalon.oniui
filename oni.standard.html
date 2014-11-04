@@ -4,6 +4,7 @@
         <title>规范</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
+        <script src="./highlight/shCore.js"></script>
     </head>
     <body>
         <p><a href="http://www.cnblogs.com/rubylouvre/p/3573061.html"> avalonjs 组件编写指南</a></p>
@@ -61,9 +62,6 @@
                 组件必须有改写模板的配置项,参看@组件的popup
             </li>
             <li>
-                组件的模板必须独立出来， 组件的模板与样式合而为一,通过MS_OPTION_STYLE分隔,在组件第一次加载时,添加到avalonStyle.cssText里面去
-            </li>
-            <li>
                 组件的模板请使用MS_OPTION_*做占位符
             </li>
             <li>
@@ -71,6 +69,16 @@
             </li>
             <li>
                 组件的模板编写,请遵循<a href="http://www.cnblogs.com/rubylouvre/p/3642024.html">《avalon 的HTML规范》</a>
+            </li>
+            <li>
+                每个组件的文件夹里增加一个avalon.[uiName].log.html 文件,里面是一个UI列表, 每次升级或修BUG,都把日期与改动都记录下来
+                <pre class="brush:html;gutter:false;toolbar:false">
+&lt;h1&gt;日志&lt;h1&gt;
+&lt;ul&gt;
+   &lt;li&gt;2014.10.15, 修改了什么什么功能&lt;/li&gt; 
+   &lt;li&gt;2014.10.16, 修改了什么什么功能&lt;/li&gt;
+&lt;ul&gt;
+                </pre>
             </li>
         </ul>
 

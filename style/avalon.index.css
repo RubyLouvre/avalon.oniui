@@ -114,11 +114,11 @@ a, a:active, a:hover {
     background: url(./searchIcon.png) no-repeat;
     vertical-align: middle;
 }
-.header .search .find-nocomp-tip{
+.header .search .search-tip{
     position: absolute;
     padding: 5px 5px;
     border-radius: 3px;
-    left: -60px;
+    left: -85px;
     color: #c33;
     opacity: 0;
     line-height: 20px;

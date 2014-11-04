@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.3.6 2014.10.30 support IE6+ and other browsers
+ avalon 1.3.6 2014.11.4 support IE6+ and other browsers
  ==================================================*/
 (function(DOC) {
     /*********************************************************************
@@ -1828,7 +1828,7 @@
                 if (special === "up") {
                     alls.reverse()
                 }
-                for (var i = 0, el; el = all[i++]; ) {
+                for (var i = 0, el; el = alls[i++]; ) {
                     if (el.$fire.apply(el, detail) === false) {
                         break
                     }
@@ -3053,8 +3053,7 @@
                     var params = []
                     var casting = oneObject("string,number,boolean,checked")
                     var hasCast
-                    data.error = {}
-                    data.param.replace(rword, function(name) {
+                    data.param.replace(/\w+/g, function(name) {
                         if ((elem.type === "radio" && data.param === "") || (elem.type === "checkbox" && name === "radio")) {
                             log(elem.type + "控件如果想通过checked属性同步VM,请改用ms-duplex-checked，以后ms-duplex默认是使用value属性同步VM")
                             name = "checked"
@@ -3088,7 +3087,12 @@
                             old && old()
                         }
                     }
-                    pipe(null, data, "init")
+                    for (var i in avalon.vmodels) {
+                        var v = avalon.vmodels[i]
+                        v.$fire("init-ms-duplex", data)
+                    }
+                    var cpipe = data.pipe || (data.pipe = pipe)
+                    cpipe(null, data, "init")
                     duplexBinding[elem.tagName](elem, data.evaluator.apply(null, data.args), data)
                 }
             }
@@ -3310,7 +3314,6 @@
     function fixNull(val) {
         return val == null ? "" : val
     }
-
     avalon.duplexHooks = {
         checked: {
             get: function(val, data) {
@@ -3330,14 +3333,8 @@
             set: fixNull
         },
         number: {
-            get: function(val, data) {
-                delete data.error.number
-                if (isFinite(val)) {
-                    return parseFloat(val) || 0
-                } else {
-                    data.error.number = true
-                    return val
-                }
+            get: function(val) {
+               return isFinite(val) ? parseFloat(val) || 0: val
             },
             set: fixNull
         }
@@ -3375,7 +3372,7 @@
             if (composing)//处理中文输入法在minlengh下引发的BUG
                 return
             var val = element.oldValue = element.value //防止递归调用形成死循环
-            var lastValue = pipe(val, data, "get")
+            var lastValue = data.pipe(val, data, "get")
             if ($elem.data("duplex-observe") !== false) {
                 evaluator(lastValue)
                 callback.call(element, lastValue)
@@ -3389,7 +3386,7 @@
 
         //当model变化时,它就会改变value的值
         data.handler = function() {
-            var val = pipe(evaluator(), data, "set")
+            var val = data.pipe(evaluator(), data, "set")
             if (val !== element.value) {
                 element.value = val
             }
@@ -3399,7 +3396,7 @@
             var IE6 = !window.XMLHttpRequest
             updateVModel = function() {
                 if ($elem.data("duplex-observe") !== false) {
-                    var lastValue = pipe(element.value, data, "get")
+                    var lastValue = data.pipe(element.value, data, "get")
                     evaluator(lastValue)
                     callback.call(element, lastValue)
                 }
@@ -3430,14 +3427,14 @@
                         log("ms-duplex应用于checkbox上要对应一个数组")
                         array = [array]
                     }
-                    avalon.Array[method](array, pipe(element.value, data, "get"))
+                    avalon.Array[method](array, data.pipe(element.value, data, "get"))
                     callback.call(element, array)
                 }
             }
 
             data.handler = function() {
                 var array = [].concat(evaluator()) //强制转换为数组
-                element.checked = array.indexOf(pipe(element.value, data, "get")) >= 0
+                element.checked = array.indexOf(data.pipe(element.value, data, "get")) >= 0
             }
             bound(W3C ? "change" : "click", updateVModel)
         } else {
@@ -3548,10 +3545,10 @@
                 var val = $elem.val() //字符串或字符串数组
                 if (Array.isArray(val)) {
                     val = val.map(function(v) {
-                        return pipe(v, data, "get")
+                        return data.pipe(v, data, "get")
                     })
                 } else {
-                    val = pipe(val, data, "get")
+                    val = data.pipe(val, data, "get")
                 }
                 if (val + "" !== element.oldValue) {
                     evaluator(val)

@@ -1,6 +1,6 @@
 define(["../promise/avalon.promise"], function(avalon) {
 
-    if (!avalon.duplexHooks) {//如果avalon的版本少于1.3.7，那么重写ms-duplex指令，方便直接使用ms-duplex2.0, 只兼容到1.2x
+    if (!avalon.duplexHooks) {
         throw new Error("你的版本少于avalon1.3.7，不支持ms-duplex2.0，请使用avalon.validation.old.js")
     }
     //==========================avalon.validation的专有逻辑========================

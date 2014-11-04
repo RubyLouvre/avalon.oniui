@@ -38,7 +38,7 @@
 <tr>
     <td>view.showTitle</td><td> true</td><td> view.showTitle 分别表示 显示 / 隐藏 提示信息</td></tr>
 <tr>
-    <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+    <td>callback</td><td>{Object}</td><td> 回调相关的配置</td></tr>
 <tr>
     <td>view.nameShower</td><td>配置接口</td><td>view.nameShower(leaf)节点显示内容过滤器，默认是显示leaf.name</td></tr>
 <tr>
@@ -52,6 +52,8 @@
 <tr>
     <td>callback.onDblClick</td><td>配置接口</td><td>callback.onDblClick(data) 节点被双击回调</td></tr>
 <tr>
+    <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+<tr>
     <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td></tr>
 <tr>
     <td>expand</td><td>接口调用</td><td>expand(leaf, all) 展开leaf节点的子节点，all表示是否迭代所有子孙节点</td></tr>
@@ -62,7 +64,7 @@
 <tr>
     <td>freeSelect</td><td>接口调用</td><td>freeSelect(event, leaf)取消leaf节点上所有处于选中状态的节点</td></tr>
 <tr>
-    <td>avalon.ui.tree.AddExtention</td><td>接口调用</td><td>avalon.ui.tree.AddExtention(fixNames, addingDefaults, addingMethodFunc)扩展tree</td></tr>
+    <td>avalon.ui.tree.AddExtention</td><td>接口调用</td><td>avalon.ui.tree.AddExtention(fixNames, addingDefaults, addingMethodFunc, watchEvents)扩展tree</td></tr>
 <!--auto doc end-->
                 </table>
             </fieldset>

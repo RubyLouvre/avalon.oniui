@@ -5,7 +5,7 @@
 define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "text!./avalon.tree.parent.html",  "text!./avalon.tree.nodes.html", "../live/avalon.live", "css!./avalon.tree.css", "css!../chameleon/oniui-common.css"], function(avalon, template, leafTemplate, parentTemplate, nodesTemplate) {
 
     var optionKeyToFixMix = {view: 1, callback: 1},
-        eventList = ["click", "dblClick", "collapse", "expand", "select"],
+        eventList = ["click", "dblClick", "collapse", "expand", "select", "contextmenu"],
         ExtentionMethods = [],
         undefine = void 0
     //  tool functions
@@ -106,7 +106,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         var vmodel = avalon.define(data.treeId, function(vm) {
             // mix插件配置
             avalon.each(ExtentionMethods, function(i, func) {
-                func && func(vm)
+                func && func(vm, vmodels)
             })
             avalon.mix(vm, options)
             avalon.each(optionKeyToFixMix, function(key) {
@@ -157,7 +157,9 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 if(all) avalon.each(children, function(i, item) {vm.expand(item, "all", openOrClose)})
                 vm.$fire(("e:" + (openOrClose ? "collapse" : "expand")), {
                     leaf: leaf,
-                    e: event
+                    e: event,
+                    vmodel: vm,
+                    vmodels: vmodels
                 })
             }
             //@method collapse(leaf, all) 折叠leaf节点的子节点，all表示是否迭代所有子孙节点
@@ -237,7 +239,9 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 vm.$fire("e:select", {
                     e: event,
                     leaf: leaf,
-                    select: vm._select
+                    select: vm._select,
+                    vmodel: vm,
+                    vmodels: vmodels
                 })
             }
             //@method freeSelect(event, leaf)取消leaf节点上所有处于选中状态的节点
@@ -257,13 +261,22 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             // 鼠标事件相关
             vm.liveContextmenu = function(event) {
                 vm.$fire("e:contextmenu", {
-                    e: event
+                    e: event,
+                    vmodel: vm,
+                    vmodels: vmodels
                 })
             }
             vm.liveClick = function(event) {
                 vm.$fire("e:click", {
-                    e: event
+                    e: event,
+                    vmodel: vm,
+                    vmodels: vmodels
                 })
+            }
+            // 指令执行器
+            vm.excute = function() {
+                var cmd = arguments[0]
+                if(cmd) vm[cmd].apply(this, [].slice.call(arguments, 1))
             }
         })
 
@@ -280,8 +293,6 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
     //argName: defaultValue, \/\/@param description
     //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
-        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
-        onInit: avalon.noop,
         view: {//@param 视觉效果相关的配置
             showLine: true,//@param view.showLine是否显示连接线
             dblClickExpand: true,//@param view.dblClickExpand是否双击变化展开状态
@@ -292,14 +303,15 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 return leaf.name
             }//@optMethod view.nameShower(leaf)节点显示内容过滤器，默认是显示leaf.name
         },
-        //@param 回调相关的配置
-        callback: {
+        callback: {//@param 回调相关的配置
             //@optMethod callback.onExpand(data) 节点展开回调
             //@optMethod callback.onCollapse(data) 节点收起回调
             //@optMethod callback.onSelect(data) 节点被选中回调
             //@optMethod callback.onClick(data) 节点被点击回调
             //@optMethod callback.onDblClick(data) 节点被双击回调
         },
+        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
+        onInit: avalon.noop,
         getTemplate: function(tmpl, opts, tplName) {
             return tmpl
         },//@optMethod getTemplate(tpl, opts, tplName) 定制修改模板接口
@@ -309,12 +321,13 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         widget.defaults.callback["on" + upperFirstLetter(item)] = avalon.noop
     })
 
-    //@method avalon.ui.tree.AddExtention(fixNames, addingDefaults, addingMethodFunc)扩展tree
-    avalon.ui.tree.AddExtention = function(fixNames, addingDefaults, addingMethodFunc) {
+    //@method avalon.ui.tree.AddExtention(fixNames, addingDefaults, addingMethodFunc, watchEvents)扩展tree
+    avalon.ui.tree.AddExtention = function(fixNames, addingDefaults, addingMethodFunc, watchEvents) {
         if(fixNames) avalon.each(fixNames, function(i, item) {
             optionKeyToFixMix[item] = item
         })
         if(addingDefaults) avalon.mix(true, widget.defaults, addingDefaults)
         if(addingMethodFunc) ExtentionMethods.push(addingMethodFunc)
+        if(watchEvents) eventList = eventList.concat(watchEvents)
     }
 })

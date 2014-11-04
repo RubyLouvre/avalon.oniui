@@ -17,7 +17,7 @@ define(["avalon", "./avalon.tree"], function() {
 			}
 		},
 		// 给vm新增方法
-		function(vm) {
+		function(vm, vmodels) {
 			avalon.mix(vm, {
 				editFun: function(event, leaf) {
 
@@ -27,7 +27,9 @@ define(["avalon", "./avalon.tree"], function() {
 					par.children.remove(leaf)
 					vm.$fire("e:remove", {
 						e: event,
-						leaf: leaf
+						leaf: leaf,
+						vmodel: vm,
+						vmodels: vmodels
 					})
 				},
 				hasEditBtn: function(leaf) {
@@ -37,5 +39,6 @@ define(["avalon", "./avalon.tree"], function() {
 
 			    }
 			})
-		})
+		// 侦听的事件，func操作内进行分发
+		}, ["remove", "rename", "add"])
 })

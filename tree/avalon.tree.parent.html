@@ -1,0 +1,25 @@
+<span class="button switch center_close" 
+      ms-class-4="bottom_close:$last"
+      ms-class-5="root_close:$first && !$outer.$outer"
+      ms-class-2="noline_close:!optionToBoolen(view.showLine,leaf)"
+      ms-class-3="noline_open:hasClassOpen(leaf,'noline')" 
+      ms-class-1="center_open:hasClassOpen(leaf)" 
+      ms-class-7="roots_open:hasClassOpen(leaf) && !$outer.$outer" 
+      ms-class-6="bottom_open:hasClassOpen(leaf) && $last" 
+      ms-click="toggleOpenStatue($event,leaf)"></span>
+<a target="_blank" 
+   ms-class="curSelectedNode:hasClassSelect(leaf)" 
+   ms-click="selectFun($event,leaf)" 
+	 ms-dblclick="toggleOpenStatue($event,leaf)">
+    <span class="button ico_close" 
+          ms-if="view.showIcon"
+          ms-class-1="ico_open:hasClassOpen(leaf)"></span>
+  	<span>{{view.nameShower(leaf)|html}}</span>
+</a>
+<ul class="line" 
+    ms-if="hasChildren(leaf)" 
+    ms-class-2="noline_docu:!optionToBoolen(view.showLine,leaf)"
+    ms-visible="hasChildren(leaf, 'visible')"
+    ms-attr-id="'c'+leaf.$id">
+	  {{loadNodes("levelGT0")|html}}
+    </ul>

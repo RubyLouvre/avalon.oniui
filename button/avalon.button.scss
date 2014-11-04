@@ -2,7 +2,7 @@
 @import "../chameleon/oniui-theme";
 $uiname: "ui-button";
 @mixin button-background($startColor, $endColor: $startColor, $textColor: #fff) {
-	&.ui-state-hover, &:active, &.ui-state-active,&[disabled], &.ui-state-disabled  {
+	&:active, &.ui-state-active,&[disabled], &.ui-state-disabled  {
         color: $textColor;
         background-color: $endColor;
         *background-color: darken($endColor, 5%);
@@ -70,9 +70,9 @@ $btnInverseBackgroundHighlight:     $grayDarker;
 .#{$uiname} {
     @include inline-block();
     _display: inline;
-    padding: 6px 10px;
-    margin: 0 10px 0 0;
-    font-size:  12px;
+    padding: 0 10px;
+    margin: 0;
+    font-size: 12px;
     border: 1px solid transparent;
     text-align: center;
     vertical-align: middle;
@@ -80,6 +80,8 @@ $btnInverseBackgroundHighlight:     $grayDarker;
     color: #333;
     text-decoration: none;
     outline: 0;
+    height: 26px;
+    @include box-sizing(border-box);
     &:link {
     	text-decoration: none;
     }
@@ -87,23 +89,8 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         border-color: #ccc;
         background-color: #f8f8f8;
     }
-    &.#{$uiname}-input {
-        padding: 6px 10px;
-    }
-    // button size
-    &.#{$uiname}-small {
-        padding: 4px 5px;
-    }
-    &.#{$uiname}-big {
-        font-size: 14px;
-        padding: 8px 15px;
-    }
-    &.#{$uiname}-large {
-        font-size: 14px;
-        padding: 12px 25px;
-    }
     // button status
-    &.ui-state-hover, &:hover {
+    &:hover {
         background-color: #f5f5f5;
         border-color: #d9d9d9;
     }
@@ -128,7 +115,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         background-color: #3775c0;
         border-color: #1d5eac;
         color: #ffffff;
-        &.ui-state-hover, &:hover {
+        &:hover {
             background-color: #3d8be9;
             border-color: #1a5092;
         }
@@ -144,7 +131,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         background-color: #f0ad4e;
         border-color: #eea236;
         color: #ffffff;
-        &.ui-state-hover, &:hover {
+        &:hover {
             background-color: #ec971f;
             border-color: #d58512;
         }
@@ -160,7 +147,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         background-color: #d9534f;
         border-color: #d43f3a;
         color: #ffffff;
-        &.ui-state-hover, &:hover {
+        &:hover {
             background-color: #c9302c;
             border-color: #ac2925;
         }
@@ -176,7 +163,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         background-color: #58b359;
         border-color: #45a846;
         color: #ffffff;
-        &.ui-state-hover, &:hover {
+        &:hover {
             background-color: #68c969;
             border-color: #3e973e;
         }
@@ -192,7 +179,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         background-color: #5bc0de;
         border-color: #46b8da;
         color: #ffffff;
-        &.ui-state-hover, &:hover {
+        &:hover {
             background-color: #31b0d5;
             border-color: #269abc;
         }
@@ -208,7 +195,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         background-color: #333;
         border-color: #222;
         color: #ffffff;
-        &.ui-state-hover, &:hover {
+        &:hover {
             background-color: #222;
             border-color: #000;
         }
@@ -236,16 +223,25 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         @include border-bottom-radius(2px);
     }
 
-	
-
     // icon
     .ui-icon {
+        font-size: 12px;
     	overflow: hidden;
-        font-size: inherit;
-        line-height: inherit;
+        line-height: 24px;
+        height: 24px;
+        *margin-top: -2px;
+        @include inline-block();
+        _display: inline;
     }
     .#{$uiname}-text {
-        vertical-align: middle;
+        font-size: 12px;
+        line-height: 24px;
+        height: 24px;
+        word-break: keep-all;
+        white-space: nowrap;
+        *margin-top: -2px;
+        @include inline-block();
+        _display: inline;
         &.#{$uiname}-text-hidden {
             display: none;
         }
@@ -259,5 +255,52 @@ $btnInverseBackgroundHighlight:     $grayDarker;
             padding-left: 5px;
             padding-right: 5px;
         }
+    }
+}
+// button size
+.#{$uiname}-small {
+    padding: 0 5px;
+    height: 22px;
+    @include box-sizing(border-box);
+    .ui-icon {
+        font-size: 12px;
+        line-height: 20px;
+        height: 20px;
+    }
+    .#{$uiname}-text {
+        font-size: 12px;
+        line-height: 20px;
+        height: 20px;
+    }
+}
+.#{$uiname}-big {
+    font-size: 14px;
+    padding: 0 15px;
+    height: 32px;
+    @include box-sizing(border-box);
+    .ui-icon {
+        font-size: 14px;
+        line-height: 30px;
+        height: 30px;
+    }
+    .#{$uiname}-text {
+        font-size: 14px;
+        line-height: 30px;
+        height: 30px;
+    }
+}
+.#{$uiname}-large {
+    padding: 0 25px;
+    height: 40px;
+    @include box-sizing(border-box);
+    .ui-icon {
+        font-size: 14px;
+        line-height: 38px;
+        height: 38px;
+    }
+    .#{$uiname}-text {
+        font-size: 14px;
+        line-height: 38px;
+        height: 38px;
     }
 }

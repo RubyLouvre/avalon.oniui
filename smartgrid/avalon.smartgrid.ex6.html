@@ -20,7 +20,7 @@
         <button ms-click="selectAll">全选或者全不选表格数据</button>
         <script>
             require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown", "dropdown/avalon.dropdown"], function() {
-                function getDates(number) {
+                function getDatas(number) {
                     var data = []
                     for (var i = 0; i < number; i++) {
                         data.push({
@@ -82,11 +82,11 @@
                         },
                         htmlHelper: { // 渲染列数据的方法集合
                             // 包装工资列的数据
-                            $X: function(vmId, field, index, cellValue) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
+                            $X: function(vmId, field, index, cellValue, rowData) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
                                 return "$"+cellValue
                             },
                             // busy列包装成dropdown组件
-                            dropdown: function(vmId, field, index, cellValue) {
+                            dropdown: function(vmId, field, index, cellValue, rowData) {
                                 var option = "<option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'></option>"
                                 return '<select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'">' + option + '</select>'
                             }
@@ -123,7 +123,7 @@
                             }
                         ],
                         isAffix: true,
-                        data: getDates(30),
+                        data: getDatas(30),
                         onInit: function(vmodel) {
                             smartgrid = vmodel
                         }
@@ -154,7 +154,7 @@
                     &lt;button ms-click="selectAll"&gt;全选或者全不选表格数据&lt;/button&gt;
                     &lt;script&gt;
                         require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown", "dropdown/avalon.dropdown"], function() {
-                            function getDates(number) {
+                            function getDatas(number) {
                                 var data = []
                                 for (var i = 0; i &lt; number; i++) {
                                     data.push({
@@ -215,11 +215,11 @@
                                     },
                                     htmlHelper: { // 渲染列数据的方法集合
                                         // 包装工资列的数据
-                                        $X: function(vmId, field, index, cellValue) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
+                                        $X: function(vmId, field, index, cellValue, rowData) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
                                             return "$"+cellValue
                                         },
                                         // busy列包装成dropdown组件
-                                        dropdown: function(vmId, field, index, cellValue) {
+                                        dropdown: function(vmId, field, index, cellValue, rowData) {
                                             var option = "&lt;option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'&gt;&lt;/option&gt;"
                                             return '&lt;select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'"&gt;' + option + '&lt;/select&gt;'
                                         }
@@ -255,7 +255,7 @@
                                             format: "dropdown"
                                         }
                                     ],
-                                    data: getDates(10),
+                                    data: getDatas(10),
                                     onInit: function(vmodel) {
                                         smartgrid = vmodel
                                     }

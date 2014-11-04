@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>lazyload组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script>
+            require(["lazyload/avalon.lazyload"], function() {
+                avalon.define("demo", function(vm) {
+                    vm.testContent = "这一段话由懒加载组件生成。"
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h1>lazyload懒加载组件-懒加载文档片段</h1>
+            <fieldset ms-controller="demo">
+                <legend>懒加载文档片段</legend>
+                <p data-lazyload-original="<span>{{testContent}}当带有ms-lazyload属性的标签非img标签时，会自动触发DOM模式，加载ms-lazyload-original属性中的html内容。注：当不指定容器的宽高时，会由容器内DOM自动撑开容器</span><br /> 
+                 <img src='images/placeholderimg1.jpg'/>" 
+                 ms-lazyload>
+                </p>
+            </fieldset>
+            <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;lazyload组件&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+        &lt;script&gt;
+            require(["lazyload/avalon.lazyload"], function() {
+                avalon.define("demo", function(vm) {
+                    vm.testContent = "这一段话由懒加载组件生成。"
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class="wrapper"&gt;
+            &lt;h1&gt;lazyload懒加载组件-懒加载DOM&lt;/h1&gt;
+            &lt;fieldset ms-controller="demo"&gt;
+                &lt;legend&gt;懒加载DOM&lt;/legend&gt;
+                &lt;p data-lazyload-original="&lt;span&gt;{{testContent}}当带有ms-lazyload属性的标签非img标签时，会自动触发DOM模式，懒加载属性ms-lazyload-original中的html内容&lt;/span&gt;&lt;br /&gt; 
+                 &lt;span&gt;注：当不指定容器的宽高时，会由容器内DOM自动撑开容器&lt;/span&gt;&lt;br /&gt; 
+                 &lt;img src='images/placeholderimg1.jpg'/&gt;" 
+                 ms-lazyload&gt;
+                &lt;/p&gt;
+            &lt;/fieldset&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>
+

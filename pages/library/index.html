@@ -1,176 +1,208 @@
 <script>
-
-    var widgets = ["accordion", "at", "browser", "carousel", "checkboxlist", "colorpicker", "cookie",
-                "coupledatepicker", "datepicker", "daterangepicker", "dialog",
-                "doublelist", "draggable", "dropdown", "flipswitch", "miniswitch",
-                "notice", "pager", "position", "preview", "progressbar", "promise", "rating",
-                "resizable", "scrollbar", "scrollspy","smartgrid", "simplegrid", "slider",
-                "spinner", "store", "switchdropdown", "tab", "textbox","timer","tooltip","uploader"
-
-    ].sort()
-    var updateHistory = false //将此url更新入浏览历史
-    var vmodel = avalon.define("library", function(vm) {
-        vm.widgets = widgets
-        vm.activeIndex = 0
-        vm.widgetHref = ""
-        vm.frameContentHeight = 3500 //默认iframe高度，过后通过iframeLoaded重新设置
-        vm.changeActiveIndex = function(index) { //左侧边栏点击和页面初始化时，更新iframe的src以及页面url
-            var name, prefix
-            if (index !== -1) { //左侧边栏点击
-                vm.activeIndex = index
-                name = vm.widgets[index]
-            } else { //页面初始化
-                if (location.href.indexOf("#") > -1) { //exp: http.....avalon.oniui/index.html#avalon.datepicker.doc.html
-                    var curLocation = location.href.split("#")[1] //exp: avalon.datepicker.doc.html
-                    name = curLocation.split(".")[1] //exp: datepicker
-                    vm.activeIndex = vm.widgets.indexOf(name)
-                } else { //exp：..../avalon.oniui/index.html
-                    name = "accordion"
-                }
+var widgets = ["accordion", "at", "browser","button", "carousel", "checkboxlist", "colorpicker", "cookie",
+    "coupledatepicker", "datepicker", "daterangepicker", "dialog",
+    "doublelist", "draggable", "dropdown", "flipswitch", "lazyload", "loading", "live","lightbox", "menu", "miniswitch",
+    "notice", "pager", "position", "preview", "progressbar", "promise", "rating",
+    "resizable", "scrollbar", "scrollspy", "smartgrid", "simplegrid", "slider",
+    "spinner", "store", "switchdropdown", "tab", "textbox", "timer", "tooltip", "uploader"
+].sort()
+var updateHistory = false //将此url更新入浏览历史
+var vmodel = avalon.define("library", function(vm) {
+    vm.widgets = widgets
+    vm.activeIndex = 0
+    vm.widgetHref = ""
+    vm.frameContentHeight = 3500 //默认iframe高度，过后通过iframeLoaded重新设置
+    vm.changeActiveIndex = function(index) { //左侧边栏点击和页面初始化时，更新iframe的src以及页面url
+        var name, prefix
+        if (index !== -1) { //左侧边栏点击
+            vm.activeIndex = index
+            name = vm.widgets[index]
+        } else { //页面初始化
+            if (location.href.indexOf("#") > -1) { //exp: http.....avalon.oniui/index.html#avalon.datepicker.doc.html
+                var curLocation = location.href.split("#")[1] //exp: avalon.datepicker.doc.html
+                name = curLocation.split(".")[1] //exp: datepicker
+                vm.activeIndex = vm.widgets.indexOf(name)
+            } else { //exp：..../avalon.oniui/index.html
+                name = "accordion"
             }
-            prefix = name //处理一般情况
-            switch (name) {
-                case "coupledatepicker": //都在datepicker目录下
-                case "daterangepicker":
-                    prefix = "datepicker"
-                    break
-                case "html": //处理默认无后缀情况
-                    name = "accordion"
-                    prefix = "accordion"
-                    break
-            }
-            if (window.location.href.indexOf("?ex") > -1 && index === -1) { //ex页面，exp:...avalon.oniui/index.html#avalon.datepicker.doc.html?ex=ex1
-                vm.widgetHref = prefix + "/avalon." + name + "." + window.location.href.split("example=")[1] + ".html" //寻找目录下示例页
-            } else {
-                var curLocation = window.location.href.split("#")[0]
-                vm.widgetHref = prefix + "/avalon." + name + ".doc.html?ts=" + Date.parse(new Date()) //使页面刷新
-                replaceLocation(curLocation + "#avalon." + name + ".doc.html") //doc页面
-            }
-            updateHistory = true //需要更新入浏览历史
         }
-    })
+        prefix = name //处理一般情况
+        switch (name) {
+            case "coupledatepicker": //都在datepicker目录下
+            case "daterangepicker":
+                prefix = "datepicker"
+                break
+            case "html": //处理默认无后缀情况
+                name = "accordion"
+                prefix = "accordion"
+                break
+        }
+        if (window.location.href.indexOf("?ex") > -1 && index === -1) { //ex页面，exp:...avalon.oniui/index.html#avalon.datepicker.doc.html?ex=ex1
+            vm.widgetHref = prefix + "/avalon." + name + "." + window.location.href.split("example=")[1] + ".html" //寻找目录下示例页
+        } else {
+            var curLocation = window.location.href.split("#")[0]
+            vm.widgetHref = prefix + "/avalon." + name + ".doc.html?ts=" + Date.parse(new Date()) //使页面刷新
+            replaceLocation(curLocation + "#avalon." + name + ".doc.html") //doc页面
+        }
+        updateHistory = true //需要更新入浏览历史
+    }
+})
+
+function replaceLocation(location) {
+    if (history.replaceState) {
+        history.replaceState("", "new state", location)
+    } else { //IE10以下
+        window.location.replace(location)
+    }
+}
+
+avalon.bind(window, "load", init) //等待iframe加载
+
+function init() {
+    var historys = [] //浏览历史
+    var historyIndex = -1
+    if(getCookie("historys") !== ""){
+        historys = JSON.parse(getCookie("historys"))
+        historyIndex = historys.length-2
+    }
     
-    function replaceLocation(location) {
-        if (history.replaceState) {
-            history.replaceState("", "new state", location)
-        } else { //IE10以下
-            window.location.replace(location)
+    var iframe = document.getElementById("widgetFrame")
+    vmodel.changeActiveIndex(-1) //页面初始化
+
+    if (iframe.attachEvent) { //响应iframe load事件
+        iframe.attachEvent("onload", function() {
+            iframeLoaded()
+        })
+    } else {
+        iframe.onload = function() {
+            iframeLoaded()
         }
     }
 
-    avalon.bind(window, "load", init)//等待iframe加载
+    //使点击顶部链接加入历史
+    var nav = document.getElementById("nav")
+    var addUpdateHistory = function(wrapper) {
+        var nodes = wrapper.getElementsByTagName("a")
+        var i
+        for (i = 0; i < nodes.length; i++) {
+            nodes[i].onclick = function(e) {
+                updateHistory = true //需要更新入浏览历史
+            }
+        }
+    }
+    addUpdateHistory(nav);
 
-    function init() {
-        var historys = [] //浏览历史
-        var historyIndex = -1
-        var iframe = document.getElementById("widgetFrame")
-        vmodel.changeActiveIndex(-1) //页面初始化
-
-        if (iframe.attachEvent) { //响应iframe load事件
-            iframe.attachEvent("onload", function() {
-                iframeLoaded()
+    function iframeLoaded() { //iframe load
+        var iframeBody = iframe.contentWindow.document.body
+        var iframeclicked = false
+        iframeBody.style.overflow = "hidden" //重新设置overflow，使其不会出现滚动条
+        setTimeout(function() { //设置iframe高度,最低为左侧列表高度
+            vmodel.frameContentHeight = iframeBody.offsetHeight < 1300 ? 1300 : iframeBody.offsetHeight + 50
+        }, 100)
+        if (iframe.addEventListener) {
+            iframeBody.addEventListener('click', function() {
+                updateHistory = true
             })
         } else {
-            iframe.onload = function() {
-                iframeLoaded()
-            }
+            iframeBody.attachEvent('onclick', function() {
+                updateHistory = true
+            })
         }
 
-        //使点击顶部链接加入历史
-        var nav = document.getElementById("nav")
-        var addUpdateHistory = function(wrapper) {
-            var nodes = wrapper.getElementsByTagName("a")
-            var i
-            for (i = 0; i < nodes.length; i++) {
-                nodes[i].onclick = function(e) {
-                    updateHistory = true //需要更新入浏览历史
-                }
-            }
+        //根据是否为示例页面更新url 
+        var curLocation = iframe.contentWindow.location.href
+        var locationSections = curLocation.split("/")
+        var match = locationSections[locationSections.length - 1].match(/ex(\d+|\.\d+)?/) //ex / ex3 / ex.3
+        if (match != null && window.location.href.indexOf("?example") === -1) {
+            replaceLocation(window.location.href + "?example=" + match[0])
         }
-        addUpdateHistory(nav);
 
-        function iframeLoaded() { //iframe load
-            var iframeBody = iframe.contentWindow.document.body
-            var iframeclicked = false
-            iframeBody.style.overflow = "hidden" //重新设置overflow，使其不会出现滚动条
-            setTimeout(function() { //设置iframe高度
-                vmodel.frameContentHeight = iframeBody.offsetHeight < 900 ? 900 : iframeBody.offsetHeight + 50
-            }, 100)
-            if(iframe.addEventListener){
-                iframeBody.addEventListener('click', function() {
-                    updateHistory = true
-                })
+        //处理存入历史和页面前进后退
+        var iframeContent = iframeBody.innerHTML.substr(0, 100)
+        if (updateHistory) { //存入历史
+            if (historyIndex === -1) {
+                scroll(0, 0) //第一次进入时页面到最顶端
             } else {
-                iframeBody.attachEvent('onclick', function() {
-                    updateHistory = true
-                })
-            }
-
-            //根据是否为示例页面更新url 
-            var curLocation = iframe.contentWindow.location.href
-            var locationSections = curLocation.split("/")
-            var match = locationSections[locationSections.length - 1].match(/ex(\d+|\.\d+)?/) //ex / ex3 / ex.3
-            if (match != null && window.location.href.indexOf("?example") === -1) {
-                replaceLocation(window.location.href + "?example=" + match[0])
-            }
-
-            //处理存入历史和页面前进后退
-            var iframeContent = iframeBody.innerHTML.substr(0, 100)
-            if (updateHistory) { //存入历史
-                if (historyIndex === -1) {
-                    scroll(0, 0) //第一次进入时页面到最顶端
-                } else {
-                    scroll(0, document.getElementById("avalon_oniui_banner").offsetHeight) //跨过banner
-                }
-                historyIndex += 1
-                var newHistoryObj = {
-                    "widget": vmodel.activeIndex, //组件index
-                    "href": location.href, //链接
-                    "content": iframeContent //iframe此时content
-                }
-                historys[historyIndex] = newHistoryObj
-            } else if (historyIndex !== -1) { //处理前进后退
-                if (historyIndex === 0) { //historyIndex=0，只可能是前进
-                    movingfoward()
-                    vmodel.activeIndex = historys[historyIndex].widget
-                    return
-                }
-                shortIframeContent = iframeContent
-                shortHistoryContent = historys[historyIndex - 1].content
-                if (shortIframeContent === shortHistoryContent) { //比较当前iframe内容与历史保存的内容
-                    movingBack()
-                } else {
-                    movingfoward()
-                }
-                vmodel.activeIndex = historys[historyIndex].widget //更新iframe组件index，继而更新右侧选项颜色
                 scroll(0, document.getElementById("avalon_oniui_banner").offsetHeight) //跨过banner
             }
-            updateHistory = false
+            historyIndex += 1
+            var newHistoryObj = {
+                "widget": vmodel.activeIndex, //组件index
+                "href": location.href, //链接
+                "content": iframeContent //iframe此时content
+            }
+            historys[historyIndex] = newHistoryObj
+            setCookie("historys", JSON.stringify(historys), 1)
+        } else if (historyIndex !== -1) { //处理前进后退
+            if (historyIndex === 0) { //historyIndex=0，只可能是前进
+                movingfoward()
+                if(historys[historyIndex]){
+                    vmodel.activeIndex = historys[historyIndex].widget
+                }
+                return
+            }
+            shortIframeContent = iframeContent
+            if(historys[historyIndex-1]){
+                shortHistoryContent = historys[historyIndex - 1].content
+            }
+            if (shortIframeContent === shortHistoryContent) { //比较当前iframe内容与历史保存的内容
+                movingBack()
+            } else {
+                movingfoward()
+            }
+            scroll(0, document.getElementById("avalon_oniui_banner").offsetHeight) //跨过banner
         }
+        updateHistory = false
+    }
 
-        function movingBack() { //历史记录后退
-            historyIndex -= 1
+    function movingBack() { //历史记录后退
+        historyIndex -= 1
+        if(historys[historyIndex]){
             // console.log("后退", "historyIndex=" + historyIndex, historys[historyIndex].href)
             if (history.pushState) {
                 replaceLocation(historys[historyIndex].href)
-            }else{ //IE7-9
+            } else { //IE7-9
                 replaceLocation(historys[historyIndex].href)
                 vmodel.activeIndex--
             }
+            vmodel.activeIndex = historys[historyIndex].widget //更新iframe组件index，继而更新右侧选项颜色
         }
+    }
 
-        function movingfoward() { //历史记录前进
-            historyIndex += 1
+    function movingfoward() { //历史记录前进
+        historyIndex += 1
+        if(historys[historyIndex]){
             // console.log("前进", "historyIndex=" + historyIndex, historys[historyIndex].href)
             if (history.pushState) {
                 replaceLocation(historys[historyIndex].href)
-            }else{ //IE7-9
+            } else { //IE7-9
                 replaceLocation(historys[historyIndex].href)
                 vmodel.activeIndex++
             }
+            vmodel.activeIndex = historys[historyIndex].widget //更新iframe组件index，继而更新右侧选项颜色
         }
-
     }
+
+    function setCookie(c_name, value, expiredays) {
+        var exdate = new Date()
+        exdate.setDate(exdate.getDate() + expiredays)
+        document.cookie = c_name + "=" + escape(value) +
+            ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString())
+    }
+
+    function getCookie(c_name) {
+        if (document.cookie.length > 0) {
+            c_start = document.cookie.indexOf(c_name + "=")
+            if (c_start != -1) {
+                c_start = c_start + c_name.length + 1
+                c_end = document.cookie.indexOf(";", c_start)
+                if (c_end == -1) c_end = document.cookie.length
+                return unescape(document.cookie.substring(c_start, c_end))
+            }
+        }
+        return ""
+    }
+}
 </script>
 <table class="oniui-content" width="100%" ms-controller="library">
     <tr>

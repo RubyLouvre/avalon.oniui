@@ -9,9 +9,9 @@
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
         <script>
             require(["lazyload/avalon.lazyload"], function() {
-                avalon.define("demo", function(vm) {
+                vmodel = avalon.define("demo", function(vm) {
                     vm.lazyload = {
-                        loadEffect: "fadeIn"
+                        effect: "fadeIn"
                     }
                 })
                 avalon.scan()
@@ -19,25 +19,27 @@
         </script>
     </head>
     <body>
-        <div class="wrapper">
-            <h1>lazyload懒加载组件-fadeIn加载效果</h1>
-            <fieldset ms-controller="demo">
-                <legend>fadeIn加载效果</legend>
-                <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img1" ms-lazyload>
-                <p>
-                    placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
-                    placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
-                    placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
-                    placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
-                </p>
-                <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img2" ms-lazyload>
-                <p>
-                    placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
-                    placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
-                    placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
-                    placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />placeholder<br />
-                </p>
-                <img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img3" ms-lazyload>
+        <div class="wrapper"  ms-controller="demo">
+            <h1>lazyload懒加载组件-自定义effect(加载效果)和各自delay(加载延迟)</h1>
+            <fieldset>
+                <legend>渐入效果</legend>
+                <img alt="" 
+                data-lazyload-original="images/placeholderimg1.jpg" 
+                ms-lazyload>
+            </fieldset>
+            <fieldset>
+                <legend>左侧插入效果</legend>
+                <img alt="" data-lazyload-original="images/placeholderimg2.jpg" 
+                data-lazyload-itemeffect="slideX" 
+                data-lazyload-itemdelay="1000"
+                ms-lazyload>
+            </fieldset>
+            <fieldset>
+                <legend>上侧插入效果</legend>
+                <img alt="" data-lazyload-original="images/placeholderimg3.jpg" 
+                data-lazyload-itemeffect="slideY" 
+                data-lazyload-itemdelay="1500" 
+                ms-lazyload>
             </fieldset>
             <pre ms-skip class="brush:html;gutter:false;toolbar:false">
 &lt;html&gt;
@@ -60,25 +62,27 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body&gt;
-        &lt;div class="wrapper"&gt;
-            &lt;h1&gt;lazyload懒加载组件-fadeIn加载效果&lt;/h1&gt;
-            &lt;fieldset ms-controller="demo"&gt;
-                &lt;legend&gt;fadeIn加载效果&lt;/legend&gt;
-                &lt;img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img1" ms-lazyload&gt;
-                &lt;p&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
-                &lt;/p&gt;
-                &lt;img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img2" ms-lazyload&gt;
-                &lt;p&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
-                    placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;placeholder&lt;br /&gt;
-                &lt;/p&gt;
-                &lt;img alt="" ms-lazyload-original="http://placehold.it/800x300/09c/fff.jpg&amp;text=img3" ms-lazyload&gt;
+        &lt;div class="wrapper"  ms-controller="demo"&gt;
+            &lt;h1&gt;lazyload懒加载组件-自定义效果&lt;/h1&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;渐入效果&lt;/legend&gt;
+                &lt;img alt="" 
+                data-lazyload-original="images/placeholderimg1.jpg" 
+                ms-lazyload&gt;
+            &lt;/fieldset&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;左侧插入效果&lt;/legend&gt;
+                &lt;img alt="" data-lazyload-original="images/placeholderimg2.jpg" 
+                ms-lazyload-effect="slideX" 
+                data-lazyload-itemdelay="1000" 
+                ms-lazyload&gt;
+            &lt;/fieldset&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;上侧插入效果&lt;/legend&gt;
+                &lt;img alt="" data-lazyload-original="images/placeholderimg3.jpg" 
+                ms-lazyload-effect="slideY" 
+                data-lazyload-itemdelay="1500" 
+                ms-lazyload&gt;
             &lt;/fieldset&gt;
         &lt;/div&gt;
     &lt;/body&gt;

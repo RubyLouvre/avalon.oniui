@@ -14,6 +14,7 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
             vm._selectData = []
             vm.dataTmpSelect = []
             vm.selectTmpSelect = []
+            vm.$changeCBS = []
             avalon.mix(vm, options)
             if(vm.change != avalon.noop && vm.onChange == avalon.noop) {
                 vm.onChange = vm.change
@@ -222,11 +223,11 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
         countLimit: function(select) {
             return true
         },//@optMethod countLimit(select) 选择条目限制，必须有return true or false，参数是当前已选中条数和add or delete操作
-        select:[],//@param 选中的value list，[value1,value2]，取的是data 里面item的value
-        data:[],//@param 配置左侧待选项列表，数据 [{value: xxx, name: xx}]
+        // select:[],//@param 选中的value list，[value1,value2]，取的是data 里面item的value
+        // data:[],//@param 配置左侧待选项列表，数据 [{value: xxx, name: xx}]
+        // $changeCBS: [],
         change: avalon.noop, //@optMethod change(newValue, oldValue, vmodel) 所选变化的回调，不建议使用，等价于onChange
         onChange: avalon.noop,//@optMethod onChange(newValue, oldValue, vmodel) 所选变化的对调，同change，第一、二个参数分别是数组变化前后的长度
-        $changeCBS: [],
         $author: "skipper@123"
     }
 })

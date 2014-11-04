@@ -26,7 +26,7 @@
     <script src="../../avalon.js"></script>
 
 </head>
-<body class="ms-controller" ms-controller="pages">
+<body c>
     <table class="uiCollection">
         <tr>
             <td width="230px">
@@ -34,7 +34,7 @@
             </td>
             <td style="padding: 0 20px; width: 700px">
                 <h2 class="demoHeaders">Accordion</h2>
-                <div ms-controller="accordion" ms-widget="accordion,accordion,$accordionOpts" id="accordion">{{aaa}}</div> 
+                <div ms-controller="accordion" ms-widget="accordion,accordion,$accordionOpts" id="accordion" ms-text="aaa"></div> 
                 <h2 class="demoHeaders">Tabs</h2>
                 <div ms-controller="tab" ms-widget="tab" id="tabs"></div>
                 
@@ -99,9 +99,7 @@
         </tr>
     </table>
     <script>
-        avalon.define({
-            $id: "pages"
-        })
+
         require(["accordion/avalon.accordion"], function() {
             var accordionVM = avalon.define('accordion',function(vm){
                 vm.$accordionOpts = {

@@ -252,4 +252,3 @@ define(["avalon",
 //http://luis-almeida.github.io/jPages/defaults.html
 //http://gist.corp.qunar.com/jifeng.yao/gist/demos/pager/pager.html
 
-

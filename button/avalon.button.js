@@ -69,11 +69,8 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                     element.disabled = options.disabled
                 }
 
-                if (elementTagName === "input" || elementTagName === "button") {
-                    avalon(element).addClass("ui-button-input")
-                    if (elementTagName === "input") {
-                        elementType = "input"
-                    }
+                if (elementTagName === "input") {
+                    elementType = "input"
                 }
                 if (buttonWidth = parseInt(options.width)) {
                     element.style.width = buttonWidth + "px"
@@ -123,12 +120,17 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                 lastButtonClass = "ui-corner-right",
                 children = element.childNodes, 
                 buttons = [] // 收集button组元素
-                buttonWidth = options.width
+                buttonWidth = options.width,
+                firstElement = true
 
                 for (var i = 0, el; el = children[i++]; ) {
                     if (el.nodeType === 1) {
                         el.setAttribute("data-button-corner", "false")
                         buttons.push(el)
+                        if (firstElement) {
+                            avalon(el).addClass("ui-button-first")
+                            firstElement = false
+                        }
                     }
                 }
                 var n = buttons.length

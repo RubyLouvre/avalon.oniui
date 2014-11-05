@@ -287,7 +287,7 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
         currentTriggerClass: "ui-state-active", // 展开accordion面板时，header添加的class
         data: [], // 渲染accordion的header和panel信息
         initIndex: null, // 初始打开的面板
-        mode: "nav", // 有三种类型的template，分别是caret|nav，当是custom需要用户传入合适template
+        mode: "caret", // 有三种类型的template，分别是caret|nav，当是custom需要用户传入合适template
         multiple: false, // 是否可以同时打开多个面板
         widgetElement: "", // accordion容器
         trigger: "ui-accordion-header", // 触发展开面板的dom节点对应class

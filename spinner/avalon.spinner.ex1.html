@@ -25,13 +25,21 @@
                 <p>p2 is : {{p2}}</p>
             </fieldset>
             <fieldset>
-                <legend>初始化spinner</legend>
-                <input ms-duplex="p3" ms-widget="spinner" />
+                <legend>配置min为3</legend>
+                <input ms-duplex="p3" ms-widget="spinner" data-spinner-min="3"/>
                 <p>p3 is : {{p3}}</p>
             </fieldset>
             <fieldset>
                 <legend>禁用spinner</legend>
                 <input value="3" ms-disabled="disable" ms-widget="spinner, spinner1"  />
+            </fieldset>
+            <fieldset>
+                <legend>动态设置min</legend>
+                <input value="1" ms-widget="spinner, mi" data-spinner-min="minData" />
+            </fieldset>
+            <fieldset>
+                <legend>动态设置max</legend>
+                <input value="4" ms-widget="spinner" data-spinner-max="maxData"/>
             </fieldset>
             <script>
                 require(["spinner/avalon.spinner"], function(avalon) {
@@ -40,6 +48,8 @@
                         vm.p2 = 10
                         vm.p3 = 2
                         vm.disable = true
+                        vm.minData = -1
+                        vm.maxData = 5
                         vm.$spinnerOpts = {
                             min: 0,
                             max: 5,
@@ -83,13 +93,21 @@
                             &lt;p&gt;p2 is : {{p2}}&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;fieldset&gt;
-                            &lt;legend&gt;初始化spinner&lt;/legend&gt;
-                            &lt;input ms-duplex="p3" ms-widget="spinner" /&gt;
+                            &lt;legend&gt;配置min为3&lt;/legend&gt;
+                            &lt;input ms-duplex="p3" ms-widget="spinner" data-spinner-min="3"/&gt;
                             &lt;p&gt;p3 is : {{p3}}&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;fieldset&gt;
                             &lt;legend&gt;禁用spinner&lt;/legend&gt;
                             &lt;input value="3" ms-disabled="disable" ms-widget="spinner, spinner1"  /&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;动态设置min&lt;/legend&gt;
+                            &lt;input value="1" ms-widget="spinner, mi" data-spinner-min="minData" /&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;动态设置max&lt;/legend&gt;
+                            &lt;input value="4" ms-widget="spinner" data-spinner-max="maxData"/&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt;
                             require(["spinner/avalon.spinner"], function(avalon) {
@@ -98,6 +116,8 @@
                                     vm.p2 = 10
                                     vm.p3 = 2
                                     vm.disable = true
+                                    vm.minData = -1
+                                    vm.maxData = 5
                                     vm.$spinnerOpts = {
                                         min: 0,
                                         max: 5,

@@ -58,13 +58,23 @@ $btnInverseBackgroundHighlight:     $grayDarker;
     .#{$uiname} {
         margin: 0;
         float: left;
+        @include box-sizing(content-box);
+        border-left-width: 0;
     }
-    &.ui-buttonset-vertical {
-        _width: 100px;
-        .#{$uiname} {
-            display: block;
-            float: none;
-        }
+    .#{$uiname}-first {
+        border-left-width: 1px;
+    }
+}
+.ui-buttonset-vertical {
+    _width: 100px;
+    .#{$uiname} {
+        display: block;
+        float: none;
+        border-left-width: 1px;
+        border-top-width: 0;
+    }
+    .#{$uiname}-first {
+        border-top-width: 1px;
     }
 }
 .#{$uiname} {
@@ -261,7 +271,6 @@ $btnInverseBackgroundHighlight:     $grayDarker;
 .#{$uiname}-small {
     padding: 0 5px;
     height: 22px;
-    @include box-sizing(border-box);
     .ui-icon {
         font-size: 12px;
         line-height: 20px;
@@ -277,7 +286,6 @@ $btnInverseBackgroundHighlight:     $grayDarker;
     font-size: 14px;
     padding: 0 15px;
     height: 32px;
-    @include box-sizing(border-box);
     .ui-icon {
         font-size: 14px;
         line-height: 30px;
@@ -292,7 +300,6 @@ $btnInverseBackgroundHighlight:     $grayDarker;
 .#{$uiname}-large {
     padding: 0 25px;
     height: 40px;
-    @include box-sizing(border-box);
     .ui-icon {
         font-size: 14px;
         line-height: 38px;

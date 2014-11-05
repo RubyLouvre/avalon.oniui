@@ -1,5 +1,6 @@
 define(["../avalon.getModel", 
     "text!./avalon.dialog.html",
+    "../button/avalon.button",
     "css!../chameleon/oniui-common.css", 
     "css!./avalon.dialog.css"
 ], function(avalon, sourceHTML) {

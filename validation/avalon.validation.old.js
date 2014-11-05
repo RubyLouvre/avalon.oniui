@@ -379,90 +379,166 @@ define(["../promise/avalon.promise"], function(avalon) {
             }
         })(document, window.dispatchEvent)
     }
-    //==========================avalon.validation的专有逻辑========================
+     //==========================avalon.validation的专有逻辑========================
 
     avalon.mix(avalon.duplexHooks, {
         trim: {
-            get: function(val, data) {
+            get: function(value, data) {
                 if (data.element.type !== "password") {
-                    val = String(val || "").trim()
+                    value = String(value || "").trim()
                 }
-                return val
+                return value
             }
         },
         required: {
             message: '必须填写',
-            get: function(val, data, next) {
-                next(val !== "")
-                return val
-            }
-        },
-        minlength: {
-            message: '最少输入%argu个字',
-            get: function(val, data, next) {
-                var elem = data.element
-                var a = parseInt(elem.getAttribute("minlength"), 10)
-                var b = parseInt(elem.getAttribute("data-duplex-minlength"), 10)
-                var num = a || b
-                next(val.length >= num)
-                return val
-            }
-        },
-        maxlength: {
-            message: '最多输入%argu个字',
-            get: function(val, data, next) {
-                var elem = data.element
-                var a = parseInt(elem.getAttribute("maxlength"), 10)
-                var b = parseInt(elem.getAttribute("data-duplex-maxlength"), 10)
-                var num = a || b
-                next(val.length <= num)
-                return val
+            get: function(value, data, next) {
+                next(value !== "")
+                return value
             }
         },
         "int": {
             message: "必须是整数",
-            get: function(val, data, next) {
-                next(/^\-?\d+$/.test(val))
-                return val
+            get: function(value, data, next) {
+                next(/^\-?\d+$/.test(value))
+                return value
+            }
+        },
+        decimal: {
+            message: '必须是小数',
+            get: function(value, data, next) {
+                next(/^\-?\d*\.?\d+$/.test(value))
+                return value
+            }
+        },
+        alpha: {
+            message: '必须是字母',
+            get: function(value, data, next) {
+                next(/^[a-z]+$/i.test(value))
+                return value
+            }
+        },
+        alpha_numeric: {
+            message: '必须为字母或数字',
+            get: function(value, data, next) {
+                next(/^[a-z0-9]+$/i.test(value))
+                return value
+            }
+        },
+        alpha_dash: {
+            message: '必须为字母或数字及下划线等特殊字符',
+            validate: function(value, data, next) {
+                next(/^[a-z0-9_\-]+$/i.test(value))
+                return value
+            }
+        },
+        chs_numeric: {
+            message: '必须是中文字符或数字及下划线等特殊字符',
+            get: function(value, data, next) {
+                next(/^[\\u4E00-\\u9FFF0-9_\-]+$/i.test(value))
+                return value
             }
         },
         email: {
             message: "邮件地址错误",
-            get: function(val, data, next) {
-                next(/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i.test(val))
-                return val
+            get: function(value, data, next) {
+                next(/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i.test(value))
+                return value
             }
         },
         url: {
             message: "URL格式错误",
-            get: function(val, data, next) {
-                next(/^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/.test(val))
-                return val
+            get: function(value, data, next) {
+                next(/^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/.test(value))
+                return value
             }
         },
         date: {
             message: '必须符合日期格式 YYYY-MM-DD',
-            get: function(val, data, next) {
-                next(/^\d\d\d\d\-\d\d\-\d\d$/.test(val))
-                return val
+            get: function(value, data, next) {
+                next(/^\d\d\d\d\-\d\d\-\d\d$/.test(value))
+                return value
             }
         },
         passport: {
             message: '护照格式错误或过长',
-            get: function(val, data, next) {
-                next(/^[a-zA-Z0-9]{0,20}$/i.test(val))
-                return val
+            get: function(value, data, next) {
+                next(/^[a-zA-Z0-9]{0,20}$/i.test(value))
+                return value
+            }
+        },
+        minlength: {
+            message: '最少输入{{min}}个字',
+            get: function(value, data, next) {
+                var elem = data.element
+                var a = parseInt(elem.getAttribute("minlength"), 10)
+                if (!isFinite(a)) {
+                    a = parseInt(elem.getAttribute("data-duplex-minlength"), 10)
+                }
+                var num = data.data.min = a
+                next(value.length >= num)
+                return value
+            }
+        },
+        maxlength: {
+            message: '最多输入{{max}}个字',
+            get: function(value, data, next) {
+                var elem = data.element
+                var a = parseInt(elem.getAttribute("maxlength"), 10)
+                if (!isFinite(a)) {
+                    a = parseInt(elem.getAttribute("data-duplex-maxlength"), 10)
+                }
+                var num = data.data.max = a
+                next(value.length <= num)
+                return value
+            }
+        },
+        gt: {
+            message: '必须大于{{max}}',
+            get: function(value, data, next) {
+                var elem = data.element
+                var a = parseInt(elem.getAttribute("max"), 10)
+                if (!isFinite(a)) {
+                    a = parseInt(elem.getAttribute("data-duplex-gt"), 10)
+                }
+                var num = data.data.max = a
+                next(parseFloat(value) > num)
+                return value
+            }
+        },
+        lt: {
+            message: '必须小于{{min}}',
+            get: function(value, data, next) {
+                var elem = data.element
+                var a = parseInt(elem.getAttribute("min"), 10)
+                if (!isFinite(a)) {
+                    a = parseInt(elem.getAttribute("data-duplex-lt"), 10)
+                }
+                var num = data.data.min = a
+                next(parseFloat(value) < num)
+                return value
+            }
+        },
+        eq: {
+            message: '必须等于{{eq}}',
+            get: function(value, data, next) {
+                var elem = data.element
+                var a = parseInt(elem.getAttribute("data-duplex-eq"), 10)
+                var num = data.data.eq = a
+                next(parseFloat(value) == num)
+                return value
             }
         },
         pattern: {
-            get: function(val, data, next) {
+            message: '必须匹配/{{pattern}}/这样的格式',
+            get: function(value, data, next) {
                 var elem = data.element
                 var h5pattern = elem.getAttribute("pattern")
                 var mspattern = elem.getAttribute("data-duplex-pattern")
-                var pattern = h5pattern || mspattern
+                var pattern = data.data.pattern = h5pattern || mspattern
                 var re = new RegExp('^(?:' + pattern + ')$')
-                next(re.test(val))
-                return val
+                next(re.test(value))
+                return value
             }
         }
     })
@@ -476,6 +552,9 @@ define(["../promise/avalon.promise"], function(avalon) {
             vm.$skipArray = ["widgetElement", "elements", "validationHooks"]
             vm.widgetElement = element
             vm.elements = []
+            /**
+             * @interface 为元素绑定submit事件，阻止默认行为
+             */
             vm.$init = function() {
                 element.setAttribute("novalidate", "novalidate");
                 avalon.scan(element, [vmodel].concat(vmodels))
@@ -487,6 +566,9 @@ define(["../promise/avalon.promise"], function(avalon) {
                     options.onInit.call(element, vmodel, options, vmodels)
                 }
             }
+            /**
+             * @interface 销毁组件，移除相关回调
+             */
             vm.$destory = function() {
                 vm.elements = []
                 avalon.unbind(element, "submit", onSubmitCallback)
@@ -501,7 +583,12 @@ define(["../promise/avalon.promise"], function(avalon) {
                 data.param.replace(/\w+/g, function(name) {
                     var hook = inwardHooks[name] || globalHooks[name]
                     if (hook && typeof hook[action] === "function") {
+                        data.data = {}
                         if (!elem.disabled && hook.message) {
+                            if (!data.bindValidateReset) {
+                                data.bindValidateReset = avalon.bind(elem, "focus", vm.onReset)
+                            }
+
                             var resolve, reject
                             promises.push(new Promise(function(a, b) {
                                 resolve = a
@@ -513,8 +600,10 @@ define(["../promise/avalon.promise"], function(avalon) {
                                 } else {
                                     var reason = {
                                         element: element,
+                                        data: data.data,
                                         message: hook.message,
-                                        validateRule: name
+                                        validateRule: name,
+                                        getMessage: getMessage
                                     }
                                     resolve(reason)
                                 }
@@ -549,7 +638,12 @@ define(["../promise/avalon.promise"], function(avalon) {
                 }
                 return val
             }
+            /**
+             * @interface 验证当前表单下的所有非disabled元素
+             * @param callback {Null|Function} 最后执行的回调，如果用户没传就使用vm.onValidateAll
+             */
             vm.validateAll = function(callback) {
+                var fn = callback || vm.onValidateAll
                 var promise = vm.elements.map(function(el) {
                     return  vm.pipe(avalon(el).val(), el, "get", true)
                 })
@@ -558,8 +652,22 @@ define(["../promise/avalon.promise"], function(avalon) {
                     for (var i = 0, el; el = array[i++]; ) {
                         reasons = reasons.concat(array)
                     }
-                    callback(!reasons.length, reasons)//这里只放置未通过验证的组件
+                    fn(!reasons.length, reasons)//这里只放置未通过验证的组件
                 })
+            }
+            /**
+             * @interface 重置当前表单元素
+             * @param callback {Null|Function} 最后执行的回调，如果用户没传就使用vm.onResetAll
+             */
+            vm.resetAll = function(callback) {
+                vm.forEach.map(function(el) {
+                    try {
+                        el.element.focus()
+                    } catch (e) {
+                    }
+                })
+                var fn = callback || vm.onResetAll
+                fn.call(vm)
             }
             //收集下方表单元素的数据
             vm.$watch("init-ms-duplex", function(data) {
@@ -573,16 +681,21 @@ define(["../promise/avalon.promise"], function(avalon) {
 
         return vmodel
     }
+    var rformat = /\\?{([^{}]+)\}/gm
+    function getMessage() {
+        var data = this.data || {}
+        return this.message.replace(rformat, function(_, name) {
+            return data[name] || ""
+        })
+    }
     widget.defaults = {
-        validationHooks: {},
-        onSuccess: function() {
-        },
-        onError: function() {
-        },
-        onComplete: function() {
-        },
-        onValidateAll: function() {
-        }
+        validationHooks: {}, //@config {Object} 空对象，用于放置验证规则
+        onSuccess: avalon.noop, //@config {Function} 空函数，单个验证成功时触发
+        onError: avalon.noop, //@config {Function} 空函数，单个验证失败时触发
+        onComplete: avalon.noop, //@config {Function} 空函数，单个验证无论成功与否都触发
+        onValidateAll: avalon.noop, //@config {Function} 空函数，整体验证后或调用了validateAll方法后触发
+        onReset: avalon.noop, //@config {Function} 空函数，表单元素获取焦点时触发，大家可以在这里清理ms-error这样表示验证失败的类名
+        onResetAll: avalon.noop, //@config {Function} 空函数，当用户调用了resetAll后触发
     }
 //http://bootstrapvalidator.com/
 //https://github.com/rinh/jvalidator/blob/master/src/index.js

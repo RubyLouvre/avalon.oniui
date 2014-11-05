@@ -39,6 +39,9 @@ table.table-doc {
     font-size: 14px;
     width: 100%;
 }
+table.table-doc table{
+     border-collapse: collapse;
+}
 .table-doc th:nth-child(2) {
     white-space: nowrap;
 }
@@ -86,6 +89,9 @@ fieldset code{
     font-size: 0.85em;
     padding: 1px 3px;
     white-space: pre;
+}
+fieldset > p{
+    text-indent:2em;
 }
 .demo {
     color:#f00; 

@@ -6,45 +6,46 @@
  *  也可以在配置对象上的validationHooks中添加验证规则。</p>
  *  <p>验证规则如下定义:</p>
  *  ```javascript
- *    alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-duplex-int-alpha_numeric="prop"
- *   
- message: '必须为字母或数字',  //这是错误提示，可以使用{{expr}}插值表达式，但这插值功能比较弱，
- //里面只能是某个单词，两边不能有空格
- get: function(value, data, next) {//这里的传参是固定的，next为回调
- next(/^[a-z0-9]+$/i.test(value))//这里是规则
- //如果message有{{expr}}插值表达式，需要用data.data.expr = aaa设置参数，
- //aaa可以通过data.element.getAttribute()得到
- return value //原样返回value
- }
- },
+ *   alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-duplex-int-alpha_numeric="prop"
+           message: '必须为字母或数字',  //这是错误提示，可以使用{{expr}}插值表达式，但这插值功能比较弱，
+           //里面只能是某个单词，两边不能有空格
+           get: function(value, data, next) {//这里的传参是固定的，next为回调
+                next(/^[a-z0-9]+$/i.test(value))//这里是规则
+                //如果message有{{expr}}插值表达式，需要用data.data.expr = aaa设置参数，
+                //aaa可以通过data.element.getAttribute()得到
+                return value //原样返回value
+           }
+     },
  *  ```
  *  <p>验证规则不惧怕任何形式的异步，只要你决定进行验证时，执行next方法就行。next 需要传入布尔。</p>
  *  ```javascript
  *      async: {
- message : "异步验证" , 
- get : function( value , data, next ){
- setTimeout(function(){
- next(true)
- },3000)
- }
- },
+            message : "异步验证" , 
+            get : function( value , data, next ){
+                setTimeout(function(){
+                    next(true)
+                },3000)
+                return value
+            }
+       },
  *  ```
  * <p> 另一个例子:</p>
  *  ```javascript
  beijing: {
- message : "当前位置必须是在{{city}}" , 
- validate : function( value ,data, next ){
- $.ajax({
- url : "http://ws.qunar.com/ips.jcp" , 
- dataType : "jsonp" , 
- jsonpCallback : "callback" , 
- success : function( data, textStatus, jqXHR  ){
- data.data.city = "北京"
- next( data.city == value )
- }
- })
- }
- }
+    message : "当前位置必须是在{{city}}" , 
+    get : function( value ,data, next ){
+        $.ajax({
+               url : "http://ws.qunar.com/ips.jcp" , 
+               dataType : "jsonp" , 
+               jsonpCallback : "callback" , 
+               success : function( data, textStatus, jqXHR  ){
+                  data.data.city = "北京"
+                  next( data.city == value )
+               }
+        })
+        return value
+     }
+  }
  *  ```
  *  <p>注意，本组件是基于<code>avalon1.3.7</code>开发，如果是很旧的版本，可以使用avalon.validation.old.js，它一直兼容到avalon1.2.0。</p>
  *  <p>注意，本组件只能绑定在<code>form元素</code>上, &lt;form ms-widget="validation"&gt;&lt;/&gt</p>

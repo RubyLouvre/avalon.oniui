@@ -21,7 +21,7 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
         if (vmodelsLength > 1) { // 存在嵌套的accordion时，需要手动将配置对象mix到options上，这就要求所有accordion的组件定义必须存在id和options选项，比如：ms-widget="accordion,accordionId,accordionOpts"
             avalon.mix(options, vmodels[vmodelsLength-1][accordionOpts]);
         }
-        navTemplate = options.direction === "vertical" ? navTemplate.replace("MS_OPTION_HORIZONTAL_HEADER_WIDTH_HEIGHT", "").replace("MS_OPTION_HORIZONTAL_CONTENT_WIDTH_HEIGHT", "") : navTemplate.replace("MS_OPTION_HORIZONTAL_HEADER_WIDTH_HEIGHT", horizontalHeaderStyle).replace("MS_OPTION_HORIZONTAL_CONTENT_WIDTH_HEIGHT",horizontalContentStyle)
+        navTemplate = options.direction === "vertical" ? navTemplate.replace("MS_OPTION_HORIZONTAL_HEADER_WIDTH_HEIGHT", "").replace(/MS_OPTION_HORIZONTAL_CONTENT_WIDTH_HEIGHT/g, "") : navTemplate.replace("MS_OPTION_HORIZONTAL_HEADER_WIDTH_HEIGHT", horizontalHeaderStyle).replace(/MS_OPTION_HORIZONTAL_CONTENT_WIDTH_HEIGHT/g,horizontalContentStyle)
         if (options.direction === "vertical") {
             accordionTemp = options.mode == "caret" ? caretTemplate : navTemplate 
         } else {
@@ -230,6 +230,8 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
             if (vmodel.direction == "horizontal" && panel) {
                 clearTimeout(animateTime) 
                 animate(panel, Number(vmodel.contentWidth) || 400)
+            } else {
+                // console.log("垂直accordion panel is: "+val)
             }
         })
         function eventCallback(event, index) {

@@ -2,14 +2,6 @@
 /*
 这是每个都组件都应该引用的部分
 */
-.ui-buttonset { font-size: 0; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; _display: inline; }
-.ui-buttonset .ui-button { margin: 0; float: left; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; border-left-width: 0; }
-.ui-buttonset .ui-button-first { border-left-width: 1px; }
-
-.ui-buttonset-vertical { _width: 100px; }
-.ui-buttonset-vertical .ui-button { display: block; float: none; border-left-width: 1px; border-top-width: 0; }
-.ui-buttonset-vertical .ui-button-first { border-top-width: 1px; }
-
 .ui-button { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; _display: inline; padding: 0 10px; margin: 0; font-size: 12px; border: 1px solid transparent; text-align: center; vertical-align: middle; cursor: pointer; color: #333; text-decoration: none; outline: 0; height: 26px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
 .ui-button:link { text-decoration: none; }
 .ui-button.ui-state-default { border-color: #ccc; background-color: #f8f8f8; }
@@ -57,3 +49,13 @@
 .ui-button-large { padding: 0 25px; height: 40px; }
 .ui-button-large .ui-icon { font-size: 14px; line-height: 38px; height: 38px; }
 .ui-button-large .ui-button-text { font-size: 14px; line-height: 38px; height: 38px; }
+
+.ui-buttonset { font-size: 0; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; _display: inline; }
+.ui-buttonset .ui-button { margin: 0; float: left; border-left-width: 0; }
+.ui-buttonset .ui-button-first { border-left-width: 1px; }
+.ui-buttonset .ui-icon { *margin-top: 0; }
+.ui-buttonset .ui-button-text { *margin-top: 0; }
+
+.ui-buttonset-vertical { _width: 100px; }
+.ui-buttonset-vertical .ui-button { display: block; float: none; border-left-width: 1px; border-top-width: 0; }
+.ui-buttonset-vertical .ui-button-first { border-top-width: 1px; }

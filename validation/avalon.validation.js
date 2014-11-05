@@ -9,7 +9,7 @@
  *    alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-duplex-int-alpha_numeric="prop"
  *   
  message: '必须为字母或数字',  //这是错误提示，可以使用{{expr}}插值表达式，但这插值功能比较弱，
-      //里面只能是某个单词，两边不能有空格
+ //里面只能是某个单词，两边不能有空格
  get: function(value, data, next) {//这里的传参是固定的，next为回调
  next(/^[a-z0-9]+$/i.test(value))//这里是规则
  //如果message有{{expr}}插值表达式，需要用data.data.expr = aaa设置参数，
@@ -250,6 +250,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                 element.setAttribute("novalidate", "novalidate");
                 avalon.scan(element, [vmodel].concat(vmodels))
                 onSubmitCallback = avalon.bind(element, "submit", function(e) {
+                    console.log(e)
                     e.preventDefault()
                     vm.validateAll(vm.onValidateAll)
                 })
@@ -277,7 +278,9 @@ define(["../promise/avalon.promise"], function(avalon) {
                         data.data = {}
                         if (!elem.disabled && hook.message) {
                             if (!data.bindValidateReset) {
-                                data.bindValidateReset = avalon.bind(elem, "focus", vm.onReset)
+                                data.bindValidateReset = avalon.bind(elem, "focus", function(e) {
+                                    vm.onReset.call(elem, e, data)
+                                })
                             }
 
                             var resolve, reject
@@ -290,7 +293,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                                     resolve(true)
                                 } else {
                                     var reason = {
-                                        element: element,
+                                        element: data.element,
                                         data: data.data,
                                         message: hook.message,
                                         validateRule: name,
@@ -305,15 +308,20 @@ define(["../promise/avalon.promise"], function(avalon) {
                         val = hook[action](val, data, next)
                     }
                 })
+//                var events = data.element.getAttribute("data-duplex-event") || ""
+//                if(!data.__){
+//                    data.__ = 1
+//                    return
+//                }
                 if (promises.length) {//如果promises不为空，说明经过验证拦截器
                     var lastPromise = Promise.all(promises).then(function(array) {
-                        if (!inSubmit) {
-                            var reasons = []
-                            for (var i = 0, el; el = array[i++]; ) {
-                                if (typeof el === "object") {
-                                    reasons.push(el)
-                                }
+                        var reasons = []
+                        for (var i = 0, el; el = array[i++]; ) {
+                            if (typeof el === "object") {
+                                reasons.push(el)
                             }
+                        }
+                        if (!inSubmit) {
                             if (reasons.length) {
                                 vm.onError(false, reasons)
                             } else {
@@ -335,14 +343,17 @@ define(["../promise/avalon.promise"], function(avalon) {
              */
             vm.validateAll = function(callback) {
                 var fn = callback || vm.onValidateAll
+                console.log(fn + "")
                 var promise = vm.elements.map(function(el) {
-                    return  vm.pipe(avalon(el).val(), el, "get", true)
+                    return  vm.pipe(avalon(el.element).val(), el, "get", true)
                 })
+
                 Promise.all(promise).then(function(array) {
                     var reasons = []
                     for (var i = 0, el; el = array[i++]; ) {
-                        reasons = reasons.concat(array)
+                        reasons = reasons.concat(el)
                     }
+                    console.log(reasons)
                     fn(!reasons.length, reasons)//这里只放置未通过验证的组件
                 })
             }

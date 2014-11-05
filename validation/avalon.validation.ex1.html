@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>验证数组</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <style >
+            .error{
+                border:1px  solid red;
+            }
+        </style>
+        <script>
+            require(["validation/avalon.validation", "ready!"], function() {
+
+                avalon.define({
+                    $id: "test",
+                    $skipArray: ["validation"],
+                    a: "",
+                    b: "",
+                    validation: {
+                        onReset: function() {
+                            avalon.log("reset")
+                          //  avalon(this).removeClass("error")
+                        },
+                        onError: function(e, reasons) {
+                            reasons.forEach(function(el) {
+                                console.log(el.validateRule)
+                                avalon(el.element).addClass("error")
+                            })
+                        },
+                        onValidateAll: function(ok, reasons) {
+                            console.log(ok)
+                            if (!ok) {
+                                reasons.forEach(function(el) {
+                                    avalon(el.element).addClass("error")
+                                })
+                            }
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <form ms-controller="test" ms-widget="validation">
+            <h3>验证组件</h3>
+            <p>必须输入东西</p>
+            <p><input ms-duplex-required="a"></p>
+            <p>必须输入纯数字</p>
+            <p><input ms-duplex-int="b"></p>
+            <button type="submit">submit
+            </button>
+        </form>
+    </body>
+</html>

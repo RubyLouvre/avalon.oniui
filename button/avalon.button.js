@@ -17,7 +17,8 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                 var data = options.data,
                     elementType = "",
                     label = options.label,
-                    buttonWidth = 0
+                    buttonWidth = 0,
+                    elementTagName = element.tagName.toLowerCase()
 
                 if (options.groups && data.length > 1) {
                     var buttons = ""
@@ -67,21 +68,13 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                 } else {
                     element.disabled = options.disabled
                 }
-                if (element.tagName.toLowerCase() === "input") {
+
+                if (elementTagName === "input") {
                     elementType = "input"
-                    element.type = "button"
                 }
                 if (buttonWidth = parseInt(options.width)) {
                     element.style.width = buttonWidth + "px"
                 }
-                $element.bind("mouseenter", function(event) {
-                    stop(event)
-                    $element.addClass("ui-state-hover")
-                })
-                $element.bind("mouseleave", function(event) {
-                    stop(event)
-                    $element.removeClass("ui-state-hover")
-                })
                 $element.bind("mousedown", function(event) {
                     stop(event)
                     $element.addClass("ui-state-active")
@@ -96,12 +89,6 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                 })
                 $element.bind("focus", function() {
                     $element.addClass("ui-state-focus");
-                })
-                $element.bind("click", function(event) {
-                    stop(event)
-                    if (typeof options.onClick === "function") {
-                        options.onClick.call(vmodels.widgetElement, event)
-                    }
                 })
                 if (!options.label) {
                     label = elementType === "input" ? element.value : element.innerHTML
@@ -133,12 +120,17 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                 lastButtonClass = "ui-corner-right",
                 children = element.childNodes, 
                 buttons = [] // 收集button组元素
-                buttonWidth = options.width
+                buttonWidth = options.width,
+                firstElement = true
 
                 for (var i = 0, el; el = children[i++]; ) {
                     if (el.nodeType === 1) {
                         el.setAttribute("data-button-corner", "false")
                         buttons.push(el)
+                        if (firstElement) {
+                            avalon(el).addClass("ui-button-first")
+                            firstElement = false
+                        }
                     }
                 }
                 var n = buttons.length
@@ -217,7 +209,7 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
         avalon(element).addClass(buttonClasses.join(" "))
         if (options.elementType === "input" && options.label) {
             avalon(element).val(options.label)
-            avalon(element).addClass("ui-button-input")
+            
             return
         }
         switch (options.type) {

@@ -22,6 +22,19 @@
                 font-weight: normal;
                 margin: 2em 0 1em;
             }
+            ul, li {
+                list-style: none;
+                padding: 0;
+                margin: 0 0 10px 0;
+            }
+            .btnWidth {
+                width: 110px;
+                display: inline-block;
+            }
+            .inlineBlock {
+                display: inline-block;
+                margin-right: 20px;
+            }
         </style>
         <script src="../../avalon.js"></script>
 
@@ -41,7 +54,7 @@
 
                     <h2 class="demoHeaders">Dialog</h2>
                     <div ms-controller="dialog" id="dialog">
-                        <button ms-click="openDialog">Open Dialog</button>
+                        <button ms-click="openDialog" ms-widget="button">Open Dialog</button>
                         <div ms-widget="dialog, dialogA" data-dialog-title="Dialog Title" data-dialog-modal="false" ms-draggable>
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                         </div>
@@ -57,16 +70,28 @@
                     <h2 class="demoHeaders">Slier</h2>
                     <input ms-controller="slider" ms-widget="slider" data-slider-value="36" data-slider-values = "[40, 60]" data-slider-range="true" id="slider">
 
-                        <h2 class="demoHeaders">Progressbar</h2>
-                        <div ms-controller="progressbar" ms-widget="progressbar" data-progressbar-value="49" data-progressbar-label="true" data-progressbar-in-two="true" id="progressbar"></div>
+                    <h2 class="demoHeaders">Progressbar</h2>
+                    <div ms-controller="progressbar" ms-widget="progressbar" data-progressbar-value="49" data-progressbar-label="true" data-progressbar-in-two="true" id="progressbar"></div>
 
-                        <h2 class="demoHeaders">Loading</h2>
-                        <div ms-controller="loadingDemo" id="loading" style="width:690px" class="ui-helper-clearfix">
-                            <div ms-widget="loading" data-loading-type="ticks" style="width:100px;height:100px;position:relative;zoom:1;float: left"></div>
-                            <div ms-widget="loading" data-loading-type="spin" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
-                            <div ms-widget="loading" data-loading-type="spokes" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
-                            <div ms-widget="loading" data-loading-type="spinning-bubbles" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div> 
-                        </div>  
+                    <h2 class="demoHeaders">Loading</h2>
+                    <div ms-controller="loadingDemo" id="loading" style="width:690px" class="ui-helper-clearfix">
+                        <div ms-widget="loading" data-loading-type="ticks" style="width:100px;height:100px;position:relative;zoom:1;float: left"></div>
+                        <div ms-widget="loading" data-loading-type="spin" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
+                        <div ms-widget="loading" data-loading-type="spokes" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
+                        <div ms-widget="loading" data-loading-type="spinning-bubbles" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div> 
+                    </div>  
+                    <h2 class="demoHeaders">ButtonGroup</h2>
+                    <ul id="buttongroup">
+                        <li class="inlineBlock">
+                            <div ms-widget="button, $, group1"></div>
+                        </li>
+                        <li class="inlineBlock">
+                            <div ms-widget="button, $, group2"></div>
+                        </li>
+                        <li class="inlineBlock">
+                            <div ms-widget="button, $, group3"></div>
+                        </li>
+                    </ul>
                 </td>
                 <td style="width:235px">
                     <h2 class="demoHeaders">Textbox</h2>
@@ -95,11 +120,100 @@
                     <br style="clear:both"/>
                     <h2 class="demoHeaders">Flipswitch</h2>
                     <input ms-controller="flipswitch" checked="checked" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="large" data-flipswitch-draggable="true" id="flipswitch"> 
+                    <h2 class="demoHeaders">Button</h2>
+                    <ul id="button">
+                        <li>
+                            <div class="btnWidth"><button ms-widget="button">button default</button></div>
+                            <div class="btnWidth"><button ms-widget="button" data-button-color="primary" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf015;">primary icon</button></div></li>
+                        <li>
+                            <div class="btnWidth"><button ms-widget="button" data-button-color="warning" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf015;">warning</button></div>
+                            <div class="btnWidth"><button ms-widget="button" data-button-color="danger" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">danger</button></div>
+                        </li>
+                        <li>
+                            <div class="btnWidth"><button ms-widget="button" data-button-color="success" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf015;">button success</button></div>
+                            <div class="btnWidth"><button ms-widget="button" data-button-color="info" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">button info</button></div>
+                        </li>
+                        <li>
+                            <div class="btnWidth"><button ms-widget="button" data-button-color="inverse">button inverse</button></div>
+                            <div class="btnWidth"><button ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf015;" data-button-width="60">cuctom width</button></div>
+                        </li>
+                        <li>
+                            <div class="btnWidth"><button ms-widget="button" data-button-disabled="true">disabled button</button></div>
+                            <div class="btnWidth"><button ms-widget="button" data-button-size="small">button small</button></div>
+                        </li>
+                        <li>
+                            <div class="btnWidth"><button ms-widget="button" data-button-size="big">button big</button></div>
+                            <div class="btnWidth"><button ms-widget="button" data-button-size="large">large</button></div>
+                        </li>
+                    </ul>
                 </td>
             </tr>
         </table>
         <script>
-
+            require(["button/avalon.button"], function() {
+                var buttonVM = avalon.define("button", function(vm) {
+                    vm.$skipArray = ["group1", "group2"]
+                    vm.group1 = {
+                        groups: true,
+                        data: [{
+                            text: "button 1"
+                        }, {
+                            text: "button2"
+                        }, {
+                            text: "button 3"
+                        }]
+                    }
+                    vm.group2 = {
+                        groups: true,
+                        data: [{
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf04c;",
+                            color: "success",
+                            text: "暂停"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf04b;",
+                            color: "success",
+                            text: "播放"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf074;",
+                            color: "success",
+                            text: "拖曳"
+                        }]
+                    }
+                    vm.group3 =  {
+                        groups: true,
+                        width: 50,
+                        data: [{
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf04c;",
+                            color: "danger",
+                            text: "button 1"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf04b;",
+                            color: "danger",
+                            text: "button 2"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf074;",
+                            color: "danger",
+                            text: "button 3"
+                        }]
+                    }
+                })
+                var button = document.getElementById("button");
+                var buttonGroup = document.getElementById("buttongroup")
+                avalon.scan(button, buttonVM);
+                avalon.scan(buttonGroup, buttonVM);
+            })
             require(["accordion/avalon.accordion"], function() {
                 var accordionVM = avalon.define('accordion', function(vm) {
                     vm.$accordionOpts = {

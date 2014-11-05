@@ -7,13 +7,14 @@
         ms-hover="ui-state-hover">
         <h2 ms-if="direction==='horizontal'" MS_OPTION_HORIZONTAL_TITLE>{{item.title}}</h2>
         <span ms-if="direction==='vertical'">{{item.title}}</span>
-
     </div>
     <div class="ui-accordion-content ui-widget-content ui-state-default" 
          ms-visible="currentIndex === $index"
          ms-class="ui-corner-bottom: direction==='vertical'"
          MS_OPTION_HORIZONTAL_CONTENT_WIDTH_HEIGHT>
-        {{item.content|html}}
+         <div MS_OPTION_HORIZONTAL_CONTENT_WIDTH_HEIGHT>
+            {{item.content|html}}
+         </div>
     </div>
 </div>
 MS_OPTION_MODE_CARET

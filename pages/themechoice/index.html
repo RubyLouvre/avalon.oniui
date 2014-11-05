@@ -59,14 +59,6 @@
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                         </div>
                     </div>
-
-                    <h2 class="demoHeaders">Daterangepicker</h2>
-                    <div ms-controller="daterangepicker" ms-widget="daterangepicker" id="daterangepicker"></div>
-                    <h2 class="demoHeaders">Coupledatepicker</h2>
-                    <div ms-controller="coupledatepicker" ms-widget="coupledatepicker" id="coupledatepicker"></div>
-                    <h2 class="demoHeaders">Doublelist</h2>
-                    <div ms-controller="doublelist" ms-widget="doublelist,nimei" ms-duplex="select" id="doublelist"> </div>
-
                     <h2 class="demoHeaders">Slier</h2>
                     <input ms-controller="slider" ms-widget="slider" data-slider-value="36" data-slider-values = "[40, 60]" data-slider-range="true" id="slider">
 
@@ -79,8 +71,8 @@
                         <div ms-widget="loading" data-loading-type="spin" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
                         <div ms-widget="loading" data-loading-type="spokes" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
                         <div ms-widget="loading" data-loading-type="spinning-bubbles" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div> 
-                    </div>  
-                    <h2 class="demoHeaders">ButtonGroup</h2>
+                    </div> 
+                    <h2 class="demoHeaders">ButtonGroup</h2> 
                     <ul id="buttongroup">
                         <li class="inlineBlock">
                             <div ms-widget="button, $, group1"></div>
@@ -92,6 +84,12 @@
                             <div ms-widget="button, $, group3"></div>
                         </li>
                     </ul>
+                    <h2 class="demoHeaders">Coupledatepicker</h2>
+                    <div ms-controller="coupledatepicker" ms-widget="coupledatepicker" id="coupledatepicker"></div>
+                    <h2 class="demoHeaders">Daterangepicker</h2>
+                    <div ms-controller="daterangepicker" ms-widget="daterangepicker" id="daterangepicker"></div>
+                    <h2 class="demoHeaders">Doublelist</h2>
+                    <div ms-controller="doublelist" ms-widget="doublelist,nimei" ms-duplex="select" id="doublelist"> </div>
                 </td>
                 <td style="width:235px">
                     <h2 class="demoHeaders">Textbox</h2>
@@ -123,27 +121,15 @@
                     <h2 class="demoHeaders">Button</h2>
                     <ul id="button">
                         <li>
-                            <div class="btnWidth"><button ms-widget="button">button default</button></div>
-                            <div class="btnWidth"><button ms-widget="button" data-button-color="primary" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf015;">primary icon</button></div></li>
+                            <div class="btnWidth"><button ms-widget="button" data-button-width="100">button default</button></div>
+                            <div class="btnWidth"><button ms-widget="button" data-button-width="108" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf015;">primary icon</button></div></li>
                         <li>
-                            <div class="btnWidth"><button ms-widget="button" data-button-color="warning" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf015;">warning</button></div>
-                            <div class="btnWidth"><button ms-widget="button" data-button-color="danger" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">danger</button></div>
+                            <div class="btnWidth"><button ms-widget="button" data-button-width="100" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf015;">warning</button></div>
+                            <div class="btnWidth"><button ms-widget="button" data-button-width="108" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">danger</button></div>
                         </li>
                         <li>
-                            <div class="btnWidth"><button ms-widget="button" data-button-color="success" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf015;">button success</button></div>
-                            <div class="btnWidth"><button ms-widget="button" data-button-color="info" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">button info</button></div>
-                        </li>
-                        <li>
-                            <div class="btnWidth"><button ms-widget="button" data-button-color="inverse">button inverse</button></div>
-                            <div class="btnWidth"><button ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf015;" data-button-width="60">cuctom width</button></div>
-                        </li>
-                        <li>
-                            <div class="btnWidth"><button ms-widget="button" data-button-disabled="true">disabled button</button></div>
-                            <div class="btnWidth"><button ms-widget="button" data-button-size="small">button small</button></div>
-                        </li>
-                        <li>
-                            <div class="btnWidth"><button ms-widget="button" data-button-size="big">button big</button></div>
-                            <div class="btnWidth"><button ms-widget="button" data-button-size="large">large</button></div>
+                            <div class="btnWidth"><button ms-widget="button" data-button-width="100" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf015;">button success</button></div>
+                            <div class="btnWidth"><button ms-widget="button" data-button-width="108" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">button info</button></div>
                         </li>
                     </ul>
                 </td>
@@ -169,19 +155,16 @@
                             type: "labeledIcon",
                             iconPosition: "left",
                             icon: "\&\#xf04c;",
-                            color: "success",
                             text: "暂停"
                         }, {
                             type: "labeledIcon",
                             iconPosition: "left",
                             icon: "\&\#xf04b;",
-                            color: "success",
                             text: "播放"
                         }, {
                             type: "labeledIcon",
                             iconPosition: "left",
                             icon: "\&\#xf074;",
-                            color: "success",
                             text: "拖曳"
                         }]
                     }
@@ -192,19 +175,16 @@
                             type: "icon",
                             iconPosition: "left",
                             icon: "\&\#xf04c;",
-                            color: "danger",
                             text: "button 1"
                         }, {
                             type: "icon",
                             iconPosition: "left",
                             icon: "\&\#xf04b;",
-                            color: "danger",
                             text: "button 2"
                         }, {
                             type: "icon",
                             iconPosition: "left",
                             icon: "\&\#xf074;",
-                            color: "danger",
                             text: "button 3"
                         }]
                     }

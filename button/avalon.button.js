@@ -160,22 +160,17 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                         maxButtonWidth = 0
                     buttons = buttons.concat()
                     interval = setInterval(function() {
-                        var buttonWidth = 0,
-                            buttonPadding = 0,
-                            buttonBorder = 0,
-                            $button
+                        var buttonWidth = 0
                         for (var i = 0, button; button = buttons[i++];) {
                             buttonWidth = Math.max(buttonWidth, avalon(button).outerWidth())
                         }
                         if (buttonWidth === maxButtonWidth) {
                             maxButtonWidth += 1
                             for (var i = 0, button; button = buttons[i++];) {
-                                $button = avalon(button)
-                                buttonPadding = Math.ceil(parseFloat($button.css("padding-left")))
-                                buttonBorder = Math.ceil(parseFloat($button.css("border-left-width")))
-                                button.style.width = (maxButtonWidth - buttonPadding * 2 - buttonBorder * 2) + "px"
+                                button.style.width = maxButtonWidth + "px"
                             }
                             clearInterval(interval)
+                            return 
                         }
                         maxButtonWidth = buttonWidth
                     }, 100)

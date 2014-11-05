@@ -52,7 +52,7 @@
  *  ```javascript
  *  onSuccess, onError, onComplete, onValidateAll, onReset, onResetAll
  *  ```
- * <p>其中，前面四个是一个系列，它们都有两个参数，第一个是布尔，表示成功与否，第二个是验证规则对象数组； onReset是在元素获取焦点做重置工作的，如清理类名，
+ * <p>其中，前面四个是一个系列，它们都有1个参数，是一个对象数组，里面一些验证规则对象数组（如果成功，数组为空）； onReset是在元素获取焦点做重置工作的，如清理类名，
  * 清空value值，onResetAll是用于重置整个表单，它会在组件执行它辖下的所有元素的onReset回调后再执行。</p>
  * <p>验证规则对象的结构如下：</p>
  * ```javascript
@@ -250,7 +250,6 @@ define(["../promise/avalon.promise"], function(avalon) {
                 element.setAttribute("novalidate", "novalidate");
                 avalon.scan(element, [vmodel].concat(vmodels))
                 onSubmitCallback = avalon.bind(element, "submit", function(e) {
-                    console.log(e)
                     e.preventDefault()
                     vm.validateAll(vm.onValidateAll)
                 })
@@ -321,13 +320,17 @@ define(["../promise/avalon.promise"], function(avalon) {
                                 reasons.push(el)
                             }
                         }
-                        if (!inSubmit) {
+                        if(!data.interact){
+                            data.interact = true
+                              return reasons
+                        }
+                        if (!inSubmit ) {
                             if (reasons.length) {
-                                vm.onError(false, reasons)
+                                vm.onError.call(elem, reasons)
                             } else {
-                                vm.onSuccess(true, reasons)
+                                vm.onSuccess.call(elem, reasons)
                             }
-                            vm.onComplete(true)
+                            vm.onComplete.call(elem, reasons)
                         }
                         return reasons
                     })
@@ -343,7 +346,6 @@ define(["../promise/avalon.promise"], function(avalon) {
              */
             vm.validateAll = function(callback) {
                 var fn = callback || vm.onValidateAll
-                console.log(fn + "")
                 var promise = vm.elements.map(function(el) {
                     return  vm.pipe(avalon(el.element).val(), el, "get", true)
                 })
@@ -353,8 +355,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                     for (var i = 0, el; el = array[i++]; ) {
                         reasons = reasons.concat(el)
                     }
-                    console.log(reasons)
-                    fn(!reasons.length, reasons)//这里只放置未通过验证的组件
+                    fn.call(vm.widgetElement, reasons)//这里只放置未通过验证的组件
                 })
             }
             /**
@@ -362,7 +363,7 @@ define(["../promise/avalon.promise"], function(avalon) {
              * @param callback {Null|Function} 最后执行的回调，如果用户没传就使用vm.onResetAll
              */
             vm.resetAll = function(callback) {
-                vm.forEach.map(function(el) {
+                vm.elements.forEach.map(function(el) {
                     try {
                         el.element.focus()
                     } catch (e) {

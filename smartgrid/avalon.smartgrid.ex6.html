@@ -20,7 +20,7 @@
         <button ms-click="selectAll">全选或者全不选表格数据</button>
         <script>
             require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown", "dropdown/avalon.dropdown"], function() {
-                function getDates(number) {
+                function getDatas(number) {
                     var data = []
                     for (var i = 0; i < number; i++) {
                         data.push({
@@ -123,7 +123,7 @@
                             }
                         ],
                         isAffix: true,
-                        data: getDates(30),
+                        data: getDatas(30),
                         onInit: function(vmodel) {
                             smartgrid = vmodel
                         }
@@ -154,7 +154,7 @@
                     &lt;button ms-click="selectAll"&gt;全选或者全不选表格数据&lt;/button&gt;
                     &lt;script&gt;
                         require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown", "dropdown/avalon.dropdown"], function() {
-                            function getDates(number) {
+                            function getDatas(number) {
                                 var data = []
                                 for (var i = 0; i &lt; number; i++) {
                                     data.push({
@@ -255,7 +255,7 @@
                                             format: "dropdown"
                                         }
                                     ],
-                                    data: getDates(10),
+                                    data: getDatas(10),
                                     onInit: function(vmodel) {
                                         smartgrid = vmodel
                                     }

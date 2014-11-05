@@ -89,9 +89,8 @@ define(["avalon",
             })
             vm.isShowPrev = function() {
                 var a = vm.alwaysShowPrev;
-                var b = vm.firstPage;
-                var c = vm.currentPage;
-                return (a || b !== 1) && c !== 1;
+                var b = vm.firstPage
+                return a || b !== 1
             }
             vm.isShowNext = function() {
                 var a = vm.alwaysShowNext
@@ -252,5 +251,4 @@ define(["avalon",
 })
 //http://luis-almeida.github.io/jPages/defaults.html
 //http://gist.corp.qunar.com/jifeng.yao/gist/demos/pager/pager.html
-
 

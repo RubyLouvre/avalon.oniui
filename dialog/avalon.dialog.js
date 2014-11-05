@@ -1,5 +1,6 @@
 define(["../avalon.getModel", 
     "text!./avalon.dialog.html",
+    "../button/avalon.button",
     "css!../chameleon/oniui-common.css", 
     "css!./avalon.dialog.css"
 ], function(avalon, sourceHTML) {
@@ -66,15 +67,15 @@ define(["../avalon.getModel",
             vm.widgetElement = element
             vm.position = "fixed"
             // 如果显示模式为alert或者配置了showClose为false，不显示关闭按钮
-            vm.showClose = vm.type === "alert" ? false : options.showClose
+            vm.showClose = vm.type === "alert" ? false : vm.showClose
             
             // 点击确定按钮，根据回调返回值是否为false决定是否关闭弹窗
             vm._confirm = function(e) {
-                if (typeof options.onConfirm !== "function") {
+                if (typeof vmodel.onConfirm !== "function") {
                     throw new Error("onConfirm必须是一个回调方法")
                 }
                 // 在用户回调返回false时，不关闭弹窗
-                if(options.onConfirm.call(e.target, e, vmodel) !== false){
+                if(vmodel.onConfirm.call(e.target, e, vmodel) !== false){
                     vmodel._close(e)
                 }
             }
@@ -102,7 +103,7 @@ define(["../avalon.getModel",
                     iFrame.style.height = maskLayer.style.height
                     iFrame.style.zIndex = maskLayer.style.zIndex -1
                 }
-                options.onOpen.call(element, vmodel)
+                vmodel.onOpen.call(element, vmodel)
             }
             
             // 隐藏dialog
@@ -124,7 +125,7 @@ define(["../avalon.getModel",
                         iFrame.style.display = "none"
                     }
                     document.documentElement.style.overflow = ""
-                    options.onClose.call(element, vmodel)
+                    vmodel.onClose.call(element, vmodel)
                     return 
                 }
                 // 重置maskLayer的z-index,当最上层的dialog关闭，通过降低遮罩层的z-index来显示紧邻其下的dialog
@@ -133,16 +134,16 @@ define(["../avalon.getModel",
                 if (iFrame) {
                     iFrame.style.zIndex = layoutZIndex -1
                 }
-                options.onClose.call(element, vmodel)
+                vmodel.onClose.call(element, vmodel)
             }
 
             // 点击"取消"按钮，根据回调返回值是否为false决定是否关闭dialog
             vm._cancel = function(e) {
-                if (typeof options.onCancel != "function") {
+                if (typeof vmodel.onCancel != "function") {
                     throw new Error("onCancel必须是一个回调方法")
                 }
                 // 在用户回调返回false时，不关闭弹窗
-                if(options.onCancel.call(e.target, e, vmodel) !== false){
+                if(vmodel.onCancel.call(e.target, e, vmodel) !== false){
                     vmodel._close(e)
                 }
             }
@@ -181,12 +182,12 @@ define(["../avalon.getModel",
             }
 
             // 将零散的模板(dialog header、dialog content、 dialog footer、 dialog wrapper)组合成完整的dialog
-            vm._RenderView = function() {
+            vm._renderView = function() {
                 var innerWrapper = null // 保存innerWraper元素节点
                 // 用户只能通过data-dialog-width配置width，不可以通过ms-css-width来配置，配置了也无效
                 element.setAttribute("ms-css-width", "width")
                 lastContent = avalon.parseHTML(_content).firstChild
-                _lastContent = element.innerHTML
+                _lastContent = element.innerHTML || vmodel.content
                 element.innerHTML = ""
                 lastContent.innerHTML = _lastContent
                 innerWrapper = avalon.parseHTML(_innerWrapper).firstChild
@@ -201,7 +202,7 @@ define(["../avalon.getModel",
             }
 
             vm.$init = function() {
-                var container = options.container,
+                var container = vmodel.container,
                     clientHeight = body.clientHeight,
                     docBody = document.body,
                     // container必须是dom tree中某个元素节点对象或者元素的id，默认将dialog添加到body元素
@@ -212,7 +213,7 @@ define(["../avalon.getModel",
                 $element.addClass("ui-dialog")
                 element.setAttribute("ms-visible", "toggle")
                 element.setAttribute("ms-css-position", "position")
-                vm._RenderView()
+                vm._renderView()
                 elementParent.appendChild(element)
                 // 当窗口尺寸发生变化时重新调整dialog的位置，始终使其水平垂直居中
                 element.resizeCallback = avalon(window).bind("resize", throttle(resetCenter, 50, 100, [vmodel, element]))
@@ -224,9 +225,9 @@ define(["../avalon.getModel",
                     avalon.scan(maskLayer, [vmodel].concat(vmodels))
                 }
                 avalon.scan(element, [vmodel].concat(vmodels))
-                if (typeof options.onInit === "function" ){
+                if (typeof vmodel.onInit === "function" ){
                     //vmodels是不包括vmodel的
-                    options.onInit.call(element, vmodel, options, vmodels)
+                    vmodel.onInit.call(element, vmodel, options, vmodels)
                 }
             }
 
@@ -267,6 +268,7 @@ define(["../avalon.getModel",
         width: 480, //默认dialog的width
         title: "&nbsp;", //dialog的title
         type: "confirm", //dialog的显示类型confirm(有两个按钮) alert(有一个按钮)
+        content: "",
         onConfirm: avalon.noop, //点击"确定"按钮时的回调
         onOpen: avalon.noop, //显示dialog的回调 
         onCancel: avalon.noop, //点击“取消”按钮的回调

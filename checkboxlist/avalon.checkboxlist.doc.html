@@ -56,7 +56,7 @@
                         <tr>
                             <td>data</td>
                             <td>[]</td>
-                            <td>所有选项值的集合，通过此数据来渲染初始视图</td>
+                            <td>所有选项值的集合，通过此数据来渲染初始视图。可以在组件初始化之前配置data，也可以在异步取得数据之后在配置。当同时配置了data、fetch且在绑定元素内部显示设置了要渲染的checkbox列表，则优先级顺序是：data>fetch>sub elements</td>
                         </tr>
                         <tr>
                             <td>checkStatus</td>
@@ -93,6 +93,7 @@
                 <li><a href="avalon.checkboxlist.ex3.html">checkboxlist组件默认提供了type为week时的data</a></li>
                 <li><a href="avalon.checkboxlist.ex4.html">配置checkboxlist-fetch获取用户定义的所有选项值</a></li>
                 <li><a href="avalon.checkboxlist.ex5.html">配置onselect回调</a></li>
+                <li><a href="avalon.checkboxlist.ex6.html">配置data选项来渲染checkbox</a></li>
             </ol>
         </div>
     </body>

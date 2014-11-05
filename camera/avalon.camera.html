@@ -1,0 +1,43 @@
+<div id="ui-camera"
+	 class="ui-camera"
+	 ms-css-width="pictureWidth" 
+	 ms-css-height="pictureHeight" 
+	 >
+	<div id="ui-camera-panel"
+		 class="ui-camera-panel" 
+		 >
+		<div class="ui-camera-item" 
+			 ms-repeat="pictures"
+			 ms-css-width="pictureWidth" 
+			 ms-css-height="pictureHeight"
+			 ms-visible="$index === pictureIndex"
+			 >
+			<img ms-src="{{el}}" alt=""/>
+		</div>
+		<div class="ui-camera-fakehover"
+			 ms-visible="fakehoverVisible">
+		</div>
+	</div>
+	<div class="ui-camera-selection-wrap" 
+		 ms-visible="alwaysShowSelection"
+		 ms-css-margin-left="selectionWrapOffset"
+		 >
+		<a ms-class="selected:el==selectionIndex" 
+		   ms-repeat="selections"
+		   ms-click="navselect($index)"
+			>
+		</a>
+	</div>
+	<a  ms-class="{{arrowLeftClass}}" 
+		class="arrow prev png24" 
+		ms-visible="arrowVisible"
+		ms-click="lastPicture"
+	>
+	</a>
+	<a  ms-class="{{arrowRightClass}}" 
+		class="arrow after png24" 
+		ms-visible="arrowVisible"
+		ms-click="nextPicture"
+	>
+	</a>
+</div>

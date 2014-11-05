@@ -1,11 +1,11 @@
 /*==================================================
- Copyright 2013-2014 司徒正美 and other contributors
+ Copyright (c) 2013-2014 司徒正美 and other contributors
  http://www.cnblogs.com/rubylouvre/
  https://github.com/RubyLouvre
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.3.6 2014.10.10
+ avalon 1.3.6 2014.11.5 support IE6+ and other browsers
  ==================================================*/
 (function(DOC) {
     /*********************************************************************
@@ -45,7 +45,7 @@
 
     function log() {
         if (window.console && avalon.config.debug) {
-            // http://stackoverflow.com/questions/8785624/how-to-safely-wrap-console-log
+// http://stackoverflow.com/questions/8785624/how-to-safely-wrap-console-log
             Function.apply.call(console.log, console, arguments)
         }
     }
@@ -183,7 +183,7 @@
                         continue
                     }
 
-                    // 防止环引用
+// 防止环引用
                     if (target === copy) {
                         continue
                     }
@@ -1002,7 +1002,7 @@
                         return  s.replace(ropen, "").replace(rclose, "")
                     },
                     set: function(html) {
-                        if (avalon.clearHTM) {
+                        if (avalon.clearHTML) {
                             avalon.clearHTML(this)
                             var frag = avalon.parseHTML(html)
                             enumerateNode(frag, this)
@@ -1041,6 +1041,7 @@
         //将字符串安全格式化为正则表达式的源码
         return (target + "").replace(rregexp, "\\$&")
     }
+    var innerRequire = noop
     var plugins = {
         loader: function(builtin) {
             window.define = builtin ? innerRequire.define : otherDefine
@@ -1098,7 +1099,7 @@
 
     var ClassListMethods = {
         _toString: function() {
-            var node = this.node//IE6,7元素节点不存在hasAttribute方法
+            var node = this.node
             var cls = node.className
             var str = typeof cls === "string" ? cls : cls.baseVal
             return str.split(/\s+/).join(" ")
@@ -1577,13 +1578,12 @@
     }
     var roption = /^<option(?:\s+\w+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?)*\s+value[\s=]/i
     var valHooks = {
-        "option:get": function(node) {
+        "option:get": window.VBArray ? function(node) {
             //在IE11及W3C，如果没有指定value，那么node.value默认为node.text（存在trim作），但IE9-10则是取innerHTML(没trim操作)
-            if (node.hasAttribute) {
-                return node.hasAttribute("value") ? node.value : node.text.trim()
-            }
             //specified并不可靠，因此通过分析outerHTML判定用户有没有显示定义value
-            return roption.test(node.outerHTML) ? node.value : node.text
+            return roption.test(node.outerHTML) ? node.value : node.text.trim()
+        } : function(node) {
+            return node.value
         },
         "select:get": function(node, value) {
             var option, options = node.options,
@@ -1630,7 +1630,7 @@
             //取得其tagName
             rxhtml = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/ig,
             rcreate = W3C ? /[^\d\D]/ : /(<(?:script|link|style|meta|noscript))/ig,
-            scriptTypes = oneObject("text/javascript", "text/ecmascript", "application/ecmascript", "application/javascript", "text/vbscript"),
+            scriptTypes = oneObject(["", "text/javascript", "text/ecmascript", "application/ecmascript", "application/javascript"]),
             //需要处理套嵌关系的标签
             rnest = /<(?:tb|td|tf|th|tr|col|opt|leg|cap|area)/
     //parseHTML的辅助变量
@@ -1673,16 +1673,21 @@
         var els = wrapper.getElementsByTagName("script")
         if (els.length) { //使用innerHTML生成的script节点不会发出请求与执行text属性
             for (var i = 0, el; el = els[i++]; ) {
-                if (!el.type || scriptTypes[el.type]) { //如果script节点的MIME能让其执行脚本
+                var parent = el.parentNode
+                var next = el.nextSibling
+                var text = el.text
+                parent.removeChild(el)
+                //IE直接通过移除节点，重赋text属性，再插回原位就恢复执行脚本功能
+                if (scriptTypes[el.type]) {
+                    // 其他浏览器则需要以偷龙转凤方式恢复此功能
                     neo = script.cloneNode(false) //FF不能省略参数
                     ap.forEach.call(el.attributes, function(attr) {
-                        if (attr && attr.specified) {
-                            neo[attr.name] = attr.value //复制其属性
-                        }
+                        neo.setAttribute(attr.name, attr.value)
                     })
-                    neo.text = el.text //必须指定,因为无法在attributes中遍历出来
-                    el.parentNode.replaceChild(neo, el) //替换节点
+                    el = neo
                 }
+                el.text = text
+                parent.insertBefore(el, next)
             }
         }
         //移除我们为了符合套嵌关系而添加的标签
@@ -1823,9 +1828,11 @@
                 if (special === "up") {
                     alls.reverse()
                 }
-                alls.forEach(function(v) {
-                    v.$fire.apply(v, detail)
-                })
+                for (var i = 0, el; el = alls[i++]; ) {
+                    if (el.$fire.apply(el, detail) === false) {
+                        break
+                    }
+                }
             }
         }
     }
@@ -1908,8 +1915,8 @@
                 delete $$subscribers[obj]
                 avalon.Array.remove(obj.list, data)
                 //log("debug: remove " + data.type)
-                if (data.type === "if" && data.template && data.template.parentNode === head) {
-                    head.removeChild(data.template)
+                if (data.type === "if" && data.template && data.template.parentNode === ifGroup) {
+                    ifGroup.removeChild(data.template)
                 }
                 for (var key in data) {
                     data[key] = null
@@ -1965,7 +1972,7 @@
     var stopScan = oneObject("area,base,basefont,br,col,command,embed,hr,img,input,link,meta,param,source,track,wbr,noscript,script,style,textarea".toUpperCase())
 
     //确保元素的内容被完全扫描渲染完毕才调用回调
-    var interval = W3C ? 15 : 50
+    var interval = W3C ? 30 : 50
 
     function checkScan(elem, callback) {
         var innerHTML = NaN,
@@ -2002,12 +2009,17 @@
             vmodels = node === b ? [newVmodel] : [newVmodel].concat(vmodels)
             var name = node.name
             elem.removeAttribute(name) //removeAttributeNode不会刷新[ms-controller]样式规则
-            elem.setAttribute("avalonctrl", node.value)
-            newVmodel.$events.expr = elem.tagName + '[avalonctrl="' + node.value + '"]'
+            createSignalTower(elem, newVmodel)
             avalon(elem).removeClass(name)
 
         }
         scanAttr(elem, vmodels) //扫描特性节点
+    }
+
+    function createSignalTower(elem, vmodel) {
+        var id = elem.getAttribute("avalonctrl") ||  vmodel.$id
+        elem.setAttribute("avalonctrl", id)
+        vmodel.$events.expr = elem.tagName + '[avalonctrl="' + id + '"]'
     }
 
     function scanNodeList(parent, vmodels) {
@@ -2094,6 +2106,7 @@
     function bindingSorter(a, b) {
         return a.priority - b.priority
     }
+
     function scanAttr(elem, vmodels) {
         //防止setAttribute, removeAttribute时 attributes自动被同步,导致for循环出错
         var attributes = getAttributes ? getAttributes(elem) : avalon.slice(elem.attributes)
@@ -2112,12 +2125,12 @@
                     if (events[type]) {
                         param = type
                         type = "on"
-                    } else if (type === "enabled") {//吃掉ms-enabled绑定,用ms-disabled代替
-                        type = "disabled"
-                        value = "!(" + value + ")"
-                    }
-                    //吃掉以下几个绑定,用ms-attr-*绑定代替
-                    if (type === "checked" || type === "selected" || type === "disabled" || type === "readonly") {
+                    } else if (type === "checked" || type === "selected" || type === "disabled" || type === "readonly") {
+                        log("ms-" + type + "已经被废弃,请使用ms-attr-*代替")
+                        if (type === "enabled") {//吃掉ms-enabled绑定,用ms-disabled代替
+                            type = "disabled"
+                            value = "!(" + value + ")"
+                        }
                         param = type
                         type = "attr"
                         elem.removeAttribute(name)
@@ -2524,9 +2537,8 @@
     anomaly.replace(rword, function(name) {
         propMap[name.toLowerCase()] = name
     })
-
-    var cssText = "<style id='avalonStyle'>.avalonHide{ display: none!important }</style>"
-    head.insertBefore(avalon.parseHTML(cssText), head.firstChild) //避免IE6 base标签BUG
+    var ifGroup = head.insertBefore(document.createElement("avalon"), head.firstChild) //避免IE6 base标签BUG
+    ifGroup.innerHTML = "X<style id='avalonStyle'>.avalonHide{ display: none!important }</style>"
     var rnoscripts = /<noscript.*?>(?:[\s\S]+?)<\/noscript>/img
     var rnoscriptText = /<noscript.*?>([\s\S]+?)<\/noscript>/im
 
@@ -2568,6 +2580,7 @@
                 if (boolMap[attrName]) {
                     var bool = boolMap[attrName]
                     if (typeof elem[bool] === "boolean") {
+                        // IE6-11不支持动态设置fieldset的disabled属性，IE11下样式是生效了，但无法阻止用户对其底下的input元素进行设值……
                         return elem[bool] = !!val
                     }
                 }
@@ -2595,17 +2608,30 @@
                 }
             } else if (method === "include" && val) {
                 var vmodels = data.vmodels
-                var rendered = getBindingCallback(elem, "data-include-rendered", vmodels)
-                var loaded = getBindingCallback(elem, "data-include-loaded", vmodels)
+                var rendered = data.includeRendered
+                var loaded = data.includeLoaded
+                var replace = data.includeReplaced
+                var target = replace ? elem.parentNode : elem
 
                 function scanTemplate(text) {
                     if (loaded) {
-                        text = loaded.apply(elem, [text].concat(vmodels))
+                        text = loaded.apply(target, [text].concat(vmodels))
                     }
-                    avalon.innerHTML(elem, text)
-                    scanNodeList(elem, vmodels)
-                    rendered && checkScan(elem, function() {
-                        rendered.call(elem)
+
+                    while (true) {
+                        var node = data.startInclude.nextSibling
+                        if (node && node !== data.endInclude) {
+                            target.removeChild(node)
+                        } else {
+                            break
+                        }
+                    }
+                    var dom = avalon.parseHTML(text)
+                    var nodes = avalon.slice(dom.childNodes)
+                    target.insertBefore(dom, data.endInclude)
+                    scanNodeArray(nodes, vmodels)
+                    rendered && checkScan(target, function() {
+                        rendered.call(target)
                     })
                 }
                 if (data.param === "src") {
@@ -2884,7 +2910,7 @@
                     var node = data.element = DOC.createComment("ms-if")
                     elem.parentNode.replaceChild(node, elem)
                     data.template = elem //元素节点
-                    head.appendChild(elem)
+                    ifGroup.appendChild(elem)
                 }
             }
         },
@@ -2965,6 +2991,22 @@
                     text = RegExp.$1
                 }
             }
+            if (data.type === "include") {
+                var elem = data.element
+                data.includeRendered = getBindingCallback(elem, "data-include-rendered", vmodels)
+                data.includeLoaded = getBindingCallback(elem, "data-include-loaded", vmodels)
+                var outer = data.includeReplaced = !!avalon(elem).data("includeReplace")
+                data.startInclude = DOC.createComment("ms-include")
+                data.endInclude = DOC.createComment("ms-include-end")
+                if (outer) {
+                    data.element = data.startInclude
+                    elem.parentNode.insertBefore(data.startInclude, elem)
+                    elem.parentNode.insertBefore(data.endInclude, elem.nextSibling)
+                } else {
+                    elem.insertBefore(data.startInclude, elem.firstChild)
+                    elem.appendChild(data.endInclude)
+                }
+            }
             data.handlerName = "attr" //handleName用于处理多种绑定共用同一种bindingExecutor的情况
             parseExprProxy(text, vmodels, data, (simple ? null : scanExpr(data.value)))
         },
@@ -3011,26 +3053,33 @@
             if (typeof duplexBinding[tagName] === "function") {
                 data.changed = getBindingCallback(elem, "data-duplex-changed", vmodels) || noop
                 //由于情况特殊，不再经过parseExprProxy
-                parseExpr(data.value, vmodels, data, "duplex")
+                parseExpr(data.value, vmodels, data)
                 if (data.evaluator && data.args) {
-                    var form = elem.form
-                    if (form && form.msValidate) {
-                        form.msValidate(elem)
+                    var params = []
+                    var casting = oneObject("string,number,boolean,checked")
+                    var hasCast
+                    data.param.replace(/\w+/g, function(name) {
+                        if ((elem.type === "radio" && data.param === "") || (elem.type === "checkbox" && name === "radio")) {
+                            log(elem.type + "控件如果想通过checked属性同步VM,请改用ms-duplex-checked，以后ms-duplex默认是使用value属性同步VM")
+                            name = "checked"
+                            data.isChecked = true
+                        }
+                        if (name === "bool") {
+                            name = "boolean"
+                            log("ms-duplex-bool已经更名为ms-duplex-boolean")
+                        } else if (name === "text") {
+                            name = "string"
+                            log("ms-duplex-text已经更名为ms-duplex-string")
+                        }
+                        if (casting[name]) {
+                            hasCast = true
+                        }
+                        avalon.Array.ensure(params, name)
+                    })
+                    if (!hasCast) {
+                        params.push("string")
                     }
-                    data.msType = data.param || ""
-                    if (data.msType === "bool") {
-                        data.msType = "boolean"
-                        log("ms-duplex-bool已经更名为ms-duplex-boolean")
-                    } else if (data.msType === "text") {
-                        data.msType = "string"
-                        log("ms-duplex-text已经更名为ms-duplex-string")
-                    }
-                    if (data.msType === "radio") {
-                        log("ms-duplex-radio将在2.0废掉，请尽量不要用")
-                    }
-                    if (!/boolean|string|number/.test(data.msType)) {
-                        data.msType = ""
-                    }
+                    data.param = params.join("-")
                     data.bound = function(type, callback) {
                         if (elem.addEventListener) {
                             elem.addEventListener(type, callback, false)
@@ -3043,6 +3092,12 @@
                             old && old()
                         }
                     }
+                    for (var i in avalon.vmodels) {
+                        var v = avalon.vmodels[i]
+                        v.$fire("init-ms-duplex", data)
+                    }
+                    var cpipe = data.pipe || (data.pipe = pipe)
+                    cpipe(null, data, "init")
                     duplexBinding[elem.tagName](elem, data.evaluator.apply(null, data.args), data)
                 }
             }
@@ -3216,8 +3271,11 @@
                 data[widget + "Options"] = avalon.mix({}, constructor.defaults, vmOptions || {}, widgetData)
                 elem.removeAttribute("ms-widget")
                 var vmodel = constructor(elem, data, vmodels) || {} //防止组件不返回VM
+                if (vmodel.$id) {
+                    createSignalTower(elem, vmodel)
+                    elem.msData["ms-widget-id"] = vmodel.$id
+                }
                 data.evaluator = noop
-                elem.msData["ms-widget-id"] = vmodel.$id || ""
                 if (vmodel.hasOwnProperty("$init")) {
                     vmodel.$init()
                 }
@@ -3261,17 +3319,55 @@
 
     //将模型中的字段与input, textarea的value值关联在一起
     var duplexBinding = bindingHandlers.duplex
+    function fixNull(val) {
+        return val == null ? "" : val
+    }
+    avalon.duplexHooks = {
+        checked: {
+            get: function(val, data) {
+                return !data.element.oldValue
+            }
+        },
+        string: {
+            get: function(val) {//同步到VM
+                return val
+            },
+            set: fixNull
+        },
+        "boolean": {
+            get: function(val) {
+                return val === "true"
+            },
+            set: fixNull
+        },
+        number: {
+            get: function(val) {
+                return isFinite(val) ? parseFloat(val) || 0 : val
+            },
+            set: fixNull
+        }
+    }
+
+    function pipe(val, data, action) {
+        data.param.replace(rword, function(name) {
+            var hook = avalon.duplexHooks[name]
+            if (hook && typeof hook[action] === "function") {
+                val = hook[action](val, data)
+            }
+        })
+        return val
+    }
     //如果一个input标签添加了model绑定。那么它对应的字段将与元素的value连结在一起
     //字段变，value就变；value变，字段也跟着变。默认是绑定input事件，
+
     duplexBinding.INPUT = function(element, evaluator, data) {
         var type = element.type,
                 bound = data.bound,
                 $elem = avalon(element),
-                firstTigger = false,
                 composing = false
+
         function callback(value) {
-            firstTigger = true
-            data.changed.call(this, value)
+            data.changed.call(this, value, data)
         }
         function compositionStart() {
             composing = true
@@ -3280,14 +3376,14 @@
             composing = false
         }
         //当value变化时改变model的值
-        function updateVModel() {
+        function updateVModel(event) {
             if (composing)//处理中文输入法在minlengh下引发的BUG
                 return
             var val = element.oldValue = element.value //防止递归调用形成死循环
-            var typedVal = getTypedValue(data, val)               //尝式转换为正确的格式
+            var lastValue = data.pipe(val, data, "get")
             if ($elem.data("duplex-observe") !== false) {
-                evaluator(typedVal)
-                callback.call(element, typedVal)
+                evaluator(lastValue)
+                callback.call(element, lastValue)
                 if ($elem.data("duplex-focus")) {
                     avalon.nextTick(function() {
                         element.focus()
@@ -3298,29 +3394,24 @@
 
         //当model变化时,它就会改变value的值
         data.handler = function() {
-            var val = evaluator()
-            val = val == null ? "" : val + ""
+            var val = data.pipe(evaluator(), data, "set")
             if (val !== element.value) {
                 element.value = val
             }
         }
 
-        if (type === "checkbox" && data.param === "radio") {
-            type = "radio"
-        }
-        if (type === "radio") {
+        if (data.isChecked || element.type === "radio") {
             var IE6 = !window.XMLHttpRequest
             updateVModel = function() {
                 if ($elem.data("duplex-observe") !== false) {
-                    var val = element.value
-                    var typedValue = data.msType ? getTypedValue(data, val) : !element.oldValue
-                    evaluator(typedValue)
-                    callback.call(element, typedValue)
+                    var lastValue = data.pipe(element.value, data, "get")
+                    evaluator(lastValue)
+                    callback.call(element, lastValue)
                 }
             }
             data.handler = function() {
                 var val = evaluator()
-                var checked = data.msType ? val + "" === element.value : !!val
+                var checked = data.isChecked ? !!val : val + "" === element.value
                 element.oldValue = checked
                 if (IE6) {
                     setTimeout(function() {
@@ -3344,19 +3435,16 @@
                         log("ms-duplex应用于checkbox上要对应一个数组")
                         array = [array]
                     }
-                    var typedValue = getTypedValue(data, element.value)
-                    avalon.Array[method](array, typedValue)
+                    avalon.Array[method](array, data.pipe(element.value, data, "get"))
                     callback.call(element, array)
                 }
             }
 
             data.handler = function() {
                 var array = [].concat(evaluator()) //强制转换为数组
-                element.checked = array.indexOf(getTypedValue(data, element.value)) >= 0
+                element.checked = array.indexOf(data.pipe(element.value, data, "get")) >= 0
             }
-
             bound(W3C ? "change" : "click", updateVModel)
-
         } else {
             var event = element.attributes["data-duplex-event"] || element.attributes["data-event"] || {}
             if (element.attributes["data-event"]) {
@@ -3370,41 +3458,23 @@
                     bound("input", updateVModel)
                     bound("compositionstart", compositionStart)
                     bound("compositionend", compositionEnd)
-                    if ("onselectionchange"in DOC) {//fix IE9 http://www.matts411.com/post/internet-explorer-9-oninput/
-                        function selectionchange(e) {
-                            if (e.type === "focus") {
-                                DOC.addEventListener("selectionchange", updateVModel, false);
-                            } else {
-                                DOC.removeEventListener("selectionchange", updateVModel, false);
-                            }
+                    //http://www.cnblogs.com/rubylouvre/archive/2013/02/17/2914604.html
+                    //http://www.matts411.com/post/internet-explorer-9-oninput/
+                    if (DOC.documentMode === 9) {
+                        function delay(e) {
+                            setTimeout(function() {
+                                updateVModel(e)
+                            })
                         }
-                        bound("focus", selectionchange)
-                        bound("blur", selectionchange)
+                        bound("paste", delay)
+                        bound("cut", delay)
                     }
                 } else {
-                    var events = ["keyup", "paste", "cut", "change"]
-
-                    function removeFn(e) {
-                        var key = e.keyCode
-                        //    command            modifiers                   arrows
-                        if (key === 91 || (15 < key && key < 19) || (37 <= key && key <= 40))
-                            return
-                        if (e.type === "cut") {
-                            avalon.nextTick(updateVModel)
-                        } else {
-                            updateVModel()
+                    bound("propertychange", function(e) {
+                        if (e.properyName === "value") {
+                            updateVModel(e)
                         }
-                    }
-
-                    events.forEach(function(type) {
-                        element.attachEvent("on" + type, removeFn)
                     })
-
-                    data.rollback = function() {
-                        events.forEach(function(type) {
-                            element.detachEvent("on" + type, removeFn)
-                        })
-                    }
                 }
             }
         }
@@ -3417,23 +3487,7 @@
             }
         })
         registerSubscriber(data)
-        var timer = setTimeout(function() {
-            if (!firstTigger) {
-                callback.call(element, element.value)
-            }
-            clearTimeout(timer)
-        }, 31)
-    }
-
-    function getTypedValue(data, val) {
-        switch (data.msType) {
-            case "boolean":
-                return val === "true"
-            case "number":
-                return isFinite(val) || val === "" ? parseFloat(val) || 0 : val
-            default:
-                return val
-        }
+        callback.call(element, element.value)
     }
 
     var TimerID, ribbon = [],
@@ -3499,15 +3553,15 @@
                 var val = $elem.val() //字符串或字符串数组
                 if (Array.isArray(val)) {
                     val = val.map(function(v) {
-                        return getTypedValue(data, v)
+                        return data.pipe(v, data, "get")
                     })
                 } else {
-                    val = getTypedValue(data, val)
+                    val = data.pipe(val, data, "get")
                 }
                 if (val + "" !== element.oldValue) {
                     evaluator(val)
                 }
-                data.changed.call(element, val)
+                data.changed.call(element, val, data)
             }
         }
         data.handler = function() {
@@ -3537,7 +3591,7 @@
                 clearInterval(id)
                 //先等到select里的option元素被扫描后，才根据model设置selected属性  
                 registerSubscriber(data)
-                data.changed.call(element, evaluator())
+                data.changed.call(element, evaluator(), data)
             } else {
                 innerHTML = currHTML
             }
@@ -4292,12 +4346,9 @@
         filters.date.locate = locate
     }
 
-
     /*********************************************************************
      *                      AMD加载器                                   *
      **********************************************************************/
-
-    var innerRequire
     var modules = avalon.modules = {
         "ready!": {
             exports: avalon

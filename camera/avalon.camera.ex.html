@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>camera组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["camera/avalon.camera"], function() {
+                avalon.define("test", function(vm) {
+                    vm.camera = {
+                        pictures: [
+                        "http://gallery.kissyui.com/slide/1.3/demo/img/slide-1.jpg",
+                        "http://gallery.kissyui.com/slide/1.3/demo/img/slide-2.jpg",
+                        "http://gallery.kissyui.com/slide/1.3/demo/img/slide-3.jpg",
+                        "http://gallery.kissyui.com/slide/1.3/demo/img/slide-4.jpg",
+                        "http://gallery.kissyui.com/slide/1.3/demo/img/slide-5.jpg"
+                        ],
+                        effect: "slideY"
+                    }
+                    vm.$skipArray = ["camera"]
+                })
+                avalon.scan()
+            })
+        </script>
+        <style type="text/css">
+            #widget{width: 600px; height: 270px; margin: 0 auto;}
+        </style>
+    </head>
+    <body ms-controller="test">
+        <h1>camera</h1>
+        <div id="widget" ms-widget="camera, xxx"></div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+        </pre>
+    </body>
+</html>

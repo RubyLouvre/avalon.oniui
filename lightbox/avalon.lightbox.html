@@ -1,0 +1,30 @@
+<div class="lightbox-widget">
+    <div class="lightboxOverlay"  ms-visible="toggle" ms-click="close" ms-css-width="layerWidth" ms-css-height="layerHeight" ms-css-opacity="overlayOpacity"></div>
+
+    <div class="lightbox" ms-visible="toggle"  ms-css-top="ltboxTop" ms-click="close" ms-css-left="ltboxLeft">
+        <div class="lb-outerContainer" ms-css-width="containerWidth" ms-css-height="containerHeight">
+            <div class="lb-container"  ms-hover="hover">
+                <img class="lb-image" ms-src="src" ms-css-width="imgWidth" ms-css-height="imgHeight" ms-css-opacity="imgOpacity" ms-visible="imgVisible" >
+                <div class="lb-nav" ms-visible="showNav" ms-click="imgClick">
+                    <div class="lb-prev" ms-hover="hover-prev" ms-visible="showPrev" ms-click="prev" ></div>
+                    <div class="lb-next" ms-hover="hover-next" ms-visible="showNext" ms-click="next" ></div>
+                </div>
+                <div class="lb-loader" ms-visible="loaderDisplay">
+                    <a class="lb-cancel"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="lb-dataContainer" ms-css-width="containerWidth" ms-css-opacity="imgOpacity">
+            <div class="lb-data">
+                <div class="lb-details" >
+                    <span class="lb-caption">{{description}}</span>
+                    <span class="lb-number" ms-if="showSet">Image {{picindex}} of {{albumlength}} </span>
+                </div>
+                <div class="lb-closeContainer">
+                    <a class="lb-close" ms-click="close"><img src="img/close.png" alt=""/></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

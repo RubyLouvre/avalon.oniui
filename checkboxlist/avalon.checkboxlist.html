@@ -2,12 +2,12 @@
     ms-css-float="vertical? 'none': 'left'" 
     ms-if="!!alltext"
     ms-class="fl:!vertical">
-    <label>
+    <label ms-if="data.size()">
         <input type="checkbox" 
                ms-click="_clickAll($event)" 
                ms-duplex-radio="all" 
                value = "all"
-               class="checkbox" /> {{alltext}}
+               class="checkbox"/> {{alltext}}
     </label>
 </li>
 <li ms-repeat-cpitem="data" class="ui-checkboxlist-item" 

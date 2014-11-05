@@ -47,10 +47,21 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
                 element.innerHTML = "";
             };
         })
-        var duplexVM = avalon.getModel(options.duplex, [vmodel].concat(vmodels));
-        element.value = duplexVM[1][duplexVM[0]].$model.join(",");
+        var duplexVM = avalon.getModel(options.duplex, [vmodel].concat(vmodels)),
+            duplexArr = duplexVM && duplexVM[1][duplexVM[0]]
+
+        vmodel.data.$watch("length", function(len) {
+            if (len) {
+                setKeys(vmodel, duplexArr)
+            }
+        })
+        
+        if (!duplexArr) {
+            throw new Error("未配置duplex")
+        }
+        element.value = duplexArr.$model.join(",");
         // 为了兼容 jvalidator，将ul的value同步为duplex的值
-        duplexVM[1][duplexVM[0]].$watch("length", function(newValue) { // 当选中checkbox或者全校选中时判断vmodel.all，从而判断是否选中"全选"按钮
+        duplexArr.$watch("length", function(newValue) { // 当选中checkbox或者全校选中时判断vmodel.all，从而判断是否选中"全选"按钮
             if (newValue == 0 ) {
                 element.value = "";
             } else {
@@ -58,6 +69,10 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
             }
             vmodel.all = (newValue == vmodel.data.length);
         })
+        if (vmodel.data.length) {
+            setKeys(vmodel, duplexArr)
+            return vmodel
+        }
         if (options.fetch) {
             /*
                 通过回调返回数据，数据结构必须是
@@ -122,13 +137,23 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
                 break;
             }
             vmodel.data = data;
-            var data = [];
-            avalon.each(vmodel.data, function(index, item) {
-                data.push(item.value || item.text);
-            })
-            vmodel.keys = data;
         }
         return vmodel;
+    }
+    function setKeys(vmodel, duplexVM) {
+        var data = [],
+            allChecked = true
+        duplexVM = duplexVM && duplexVM.$model
+        avalon.each(vmodel.data, function(index, item) {
+            data.push(item.value || item.text);
+        })
+        vmodel.keys = data;
+        avalon.each(data, function(index, item) {
+            if (duplexVM.indexOf(item) === -1) {
+                allChecked = false
+            }
+        })
+        vmodel.all = allChecked
     }
     widget.version = 1.0
     widget.defaults = {

@@ -64,7 +64,10 @@
                     avalon.define("demo", function(vm) {
                         vm.$aaOpts = {
                             title: "取消“close”按钮的dialog",
-                            showClose: false
+                            showClose: false,
+                            getFooter: function(tmp) {
+                                return tmp
+                            }
                         }
                         vm.show = function( id ){
                             avalon.vmodels[id].toggle = true;

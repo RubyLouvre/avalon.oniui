@@ -15,7 +15,7 @@ MS_OPTION_CONTENT
 MS_OPTION_FOOTER
 <div class="ui-dialog-footer ui-helper-clearfix">
     <div class="ui-dialog-btns">
-        <button class="ui-btn ui-btn-primary" ms-hover="ui-state-hover" ms-click="_confirm">{{confirmName}}</button>
-        <button class="ui-btn" ms-if="type =='confirm'" ms-click="_cancel">{{cancelName}}</button>
+        <button ms-widget="button" data-button-color="success" ms-hover="ui-state-hover" ms-click="_confirm">{{confirmName}}</button>
+        <button ms-widget="button" ms-if="type =='confirm'" ms-click="_cancel">{{cancelName}}</button>
     </div>
 </div>

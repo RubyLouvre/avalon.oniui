@@ -127,7 +127,7 @@ define(["../promise/avalon.promise"], function(avalon) {
         chs: {
             message: '必须是中文字符',
             get: function(value, data, next) {
-                next(/[^\u4e00-\u9fa5]/.test(value))
+                next(/^[\u4e00-\u9fa5]+$/.test(value))
                 return value
             }
         },

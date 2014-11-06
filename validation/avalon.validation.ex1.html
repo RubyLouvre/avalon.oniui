@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>验证数组</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <style >
+            .error{
+                border:1px  solid red;
+            }
+        </style>
+        <script>
+            require(["validation/avalon.validation", "ready!"], function() {
+                 var validationVM
+                avalon.define({
+                    $id: "test",
+                    $skipArray: ["validation"],
+                    a: "",
+                    b: "a",
+                    reset: function(){
+                        validationVM && validationVM.resetAll()
+                    },
+                    validation: {
+                        onInit: function(v){
+                            validationVM = v
+                        },
+                        onReset: function() {
+                            avalon.log("reset")
+                            avalon(this).removeClass("error")
+                        },
+                        onError: function(reasons) {
+                            reasons.forEach(function(el) {
+                                //onsole.log(el.validateRule)
+                                alert(el.getMessage())
+                                avalon(this).addClass("error")
+                            }, this)
+                        },
+                        onValidateAll: function(reasons) {
+                            reasons.forEach(function(el) {
+                                 alert(el.getMessage())
+                                avalon(el.element).addClass("error")
+                            })
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <form ms-controller="test" ms-widget="validation">
+            <h3>验证组件</h3>
+            <p>必须输入东西</p>
+            <p><input ms-duplex-required="a" ></p>
+            <p>必须输入纯数字</p>
+            <p><input ms-duplex-int="b" ></p>
+            <button type="submit">submit
+            </button>
+            <button type="reset" ms-click="reset">reset
+            </button>
+        </form>
+    </body>
+</html>

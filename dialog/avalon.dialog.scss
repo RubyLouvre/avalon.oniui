@@ -4,37 +4,6 @@ $uiname: "ui-dialog";
 .#{$uiname} {
     position: absolute;
     text-align: left;
-    .ui-btn {
-        height: 26px;
-        overflow: visible;
-        _overflow-y: hidden;
-        padding: 0 10px;
-        @include border-radius(2px);
-        @if($oinui-theme == smoothness) {
-            font-size: 12px;
-            color: #333333;
-            background-color: #f8f8f8;
-            border: 1px solid #cccccc;
-        }
-    }
-    .ui-btn:hover {
-        box-shadow: 1px 1px 0 0 rgba(0,0,0,0.1);
-        @if($oinui-theme == smoothness) {
-            background-color: #f8f8f8;
-            border-color: #bbbbbb;
-            color: #333333;
-        }
-    }
-    .ui-btn-primary {
-        background-color: $ui-state-active-background-color;
-        border-color: $ui-state-active-border-color;
-        color: $ui-state-active-color;
-    }
-    .ui-btn-primary.ui-state-hover {
-        background-color: lighten($ui-state-active-background-color, 10%);
-        border-color: lighten($ui-state-active-border-color, 10%);
-        color: $ui-state-active-color;
-    }
     .#{$uiname}-inner {
         box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
         @if($oinui-theme == smoothness) {
@@ -87,7 +56,7 @@ $uiname: "ui-dialog";
                 display: inline;
                 @include float-right();
                 font-size: 0;
-                .ui-btn {
+                .ui-button {
                     margin-left: 10px;
                 }
             }

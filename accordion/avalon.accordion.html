@@ -1,25 +1,26 @@
 <div class="ui-accordion-inner" ms-each-item="data" ms-class="ui-accordion-horizontal: direction==='horizontal'">
-    <div class="ui-accordion-header ui-widget-header ui-state-default ui-accordion-trigger"
+    <div class="ui-accordion-header ui-widget-header ui-state-default ui-accordion-trigger ui-corner-all"
         ms-class="MS_OPTION_ACTIVECLASS:currentIndex === $index"
         ms-class-1="ui-corner-top: direction=='vertical' && currentIndex === $index"
-        ms-class-2="ui-corner-all: direction==='vertical'"
         MS_OPTION_HORIZONTAL_HEADER_WIDTH_HEIGHT
         ms-hover="ui-state-hover">
-        <h2 ms-if="direction==='horizontal'" MS_OPTION_HORIZONTAL_TITLE>{{item.title}}</h2>
+        <h2 ms-if="direction==='horizontal'" MS_OPTION_HORIZONTAL_TITLE>{{item.title}} {{$index}}{{currentIndex}}</h2>
         <span ms-if="direction==='vertical'">{{item.title}}</span>
-
     </div>
     <div class="ui-accordion-content ui-widget-content ui-state-default" 
          ms-visible="currentIndex === $index"
          ms-class="ui-corner-bottom: direction==='vertical'"
          MS_OPTION_HORIZONTAL_CONTENT_WIDTH_HEIGHT>
-        {{item.content|html}}
+         <div MS_OPTION_HORIZONTAL_CONTENT_WIDTH_HEIGHT>
+            {{item.content|html}}
+         </div>
     </div>
 </div>
 MS_OPTION_MODE_CARET
 <div class="ui-accordion-inner" ms-each-item="data">
     <div class="ui-accordion-header ui-widget-header ui-state-default ui-corner-all"
         ms-class="MS_OPTION_ACTIVECLASS:currentIndex === $index"
+        ms-class-1="ui-corner-top: direction=='vertical' && currentIndex === $index"
         ms-hover="ui-state-hover">
         <span class="ui-accordion-icon-wrap ui-accordion-trigger">
             <i class="ui-icon ui-icon-caret-right">&#xf0da;</i>

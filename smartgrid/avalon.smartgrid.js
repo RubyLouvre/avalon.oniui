@@ -343,13 +343,17 @@ define(["avalon",
             }
             vm._toggleColumn = function(toggle, index) {
                 if (!vmodel._container) return toggle
-                var trs = vmodel._container.getElementsByTagName("tr")
+                var trs = vmodel._container.getElementsByTagName("tr"),
+                    cell = null
                 for (var i = 0, tr, len =trs.length; i < len; i++) {
                     tr = trs[i]
-                    if (toggle) {
-                        tr.cells[index].style.display = "table-cell"
-                    } else {
-                        tr.cells[index].style.display = "none"
+                    cell = tr.cells[index]
+                    if (cell) {
+                        if (toggle) {
+                            tr.cells[index].style.display = "table-cell"
+                        } else {
+                            tr.cells[index].style.display = "none"
+                        }
                     }
                 }
                 setTimeout(function() {

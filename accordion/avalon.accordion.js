@@ -21,7 +21,7 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
         if (vmodelsLength > 1) { // 存在嵌套的accordion时，需要手动将配置对象mix到options上，这就要求所有accordion的组件定义必须存在id和options选项，比如：ms-widget="accordion,accordionId,accordionOpts"
             avalon.mix(options, vmodels[vmodelsLength-1][accordionOpts]);
         }
-        navTemplate = options.direction === "vertical" ? navTemplate.replace("MS_OPTION_HORIZONTAL_HEADER_WIDTH_HEIGHT", "").replace("MS_OPTION_HORIZONTAL_CONTENT_WIDTH_HEIGHT", "") : navTemplate.replace("MS_OPTION_HORIZONTAL_HEADER_WIDTH_HEIGHT", horizontalHeaderStyle).replace("MS_OPTION_HORIZONTAL_CONTENT_WIDTH_HEIGHT",horizontalContentStyle)
+        navTemplate = options.direction === "vertical" ? navTemplate.replace("MS_OPTION_HORIZONTAL_HEADER_WIDTH_HEIGHT", "").replace(/MS_OPTION_HORIZONTAL_CONTENT_WIDTH_HEIGHT/g, "") : navTemplate.replace("MS_OPTION_HORIZONTAL_HEADER_WIDTH_HEIGHT", horizontalHeaderStyle).replace(/MS_OPTION_HORIZONTAL_CONTENT_WIDTH_HEIGHT/g,horizontalContentStyle)
         if (options.direction === "vertical") {
             accordionTemp = options.mode == "caret" ? caretTemplate : navTemplate 
         } else {
@@ -230,6 +230,8 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
             if (vmodel.direction == "horizontal" && panel) {
                 clearTimeout(animateTime) 
                 animate(panel, Number(vmodel.contentWidth) || 400)
+            } else {
+                // console.log("垂直accordion panel is: "+val)
             }
         })
         function eventCallback(event, index) {
@@ -287,10 +289,10 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
         currentTriggerClass: "ui-state-active", // 展开accordion面板时，header添加的class
         data: [], // 渲染accordion的header和panel信息
         initIndex: null, // 初始打开的面板
-        mode: "nav", // 有三种类型的template，分别是caret|nav，当是custom需要用户传入合适template
+        mode: "caret", // 有三种类型的template，分别是caret|nav，当是custom需要用户传入合适template
         multiple: false, // 是否可以同时打开多个面板
         widgetElement: "", // accordion容器
-        trigger: "ui-accordion-trigger", // 触发展开面板的dom节点对应class
+        trigger: "ui-accordion-header", // 触发展开面板的dom节点对应class
         triggerType: 'click', // 触发展开面板的事件类型，可以是：click|mouseover
         currentIndex: -1, // 当前点击的面板的索引值
         direction: "vertical",

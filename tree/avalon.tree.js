@@ -248,6 +248,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 })
             }
             //@method freeSelect(event, leaf)取消leaf节点上所有处于选中状态的节点
+            //未实现
             vm.freeSelect = function(event, leaf) {
                 vm.selectFun(event, leaf, "clearAll")
             }

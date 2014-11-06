@@ -3512,12 +3512,16 @@
 
     function onTree() { //disabled状态下改动不触发input事件
         if (!this.disabled && this.oldValue !== this.value) {
+            var type = this.getAttribute("data-duplex-event") || "input"
+            type = type.match(rword).shift()
             if (W3C) {
-                W3CFire(this, "input")
+                W3CFire(this, type)
             } else {
+                if (type === "input")
+                    type = "keydown"
                 var e = document.createEventObject()
                 e.isTrusted = false //isTrusted在W3C中表示程序触发
-                this.fireEvent("onkeydown", e)
+                this.fireEvent("on" + type, e)
             }
         }
     }

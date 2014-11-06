@@ -184,8 +184,9 @@ define(["../promise/avalon.promise"], function(avalon) {
         equal: {
             message: "必须等于{{other}}",
             get: function(value, data, next) {
-                var other = document.getElementById("data-duplex-equal") || {}
-                data.data.other = other.value || ""
+                var id = data.element.getAttribute("data-duplex-equal") ||""
+                var other = avalon(document.getElementById(id)).val() || ""
+                data.data.other = other
                 next(value === other)
                 return value
             }
@@ -200,7 +201,7 @@ define(["../promise/avalon.promise"], function(avalon) {
         passport: {
             message: '护照格式错误或过长',
             get: function(value, data, next) {
-                next(/^[a-zA-Z0-9]{0,20}$/i.test(value))
+                next(/^[a-zA-Z0-9]{4,20}$/i.test(value))
                 return value
             }
         },
@@ -349,9 +350,9 @@ define(["../promise/avalon.promise"], function(avalon) {
                                     resolve(true)
                                 } else {
                                     var reason = {
-                                        element: data.element,
+                                        element: elem,
                                         data: data.data,
-                                        message: hook.message,
+                                        message: elem.getAttribute("data-duplex-message") ||  hook.message,
                                         validateRule: name,
                                         getMessage: getMessage
                                     }
@@ -432,7 +433,7 @@ define(["../promise/avalon.promise"], function(avalon) {
 
         return vmodel
     }
-    var rformat = /\\?{([^{}]+)\}/gm
+    var rformat = /\\?{{([^{}]+)\}}/gm
     function getMessage() {
         var data = this.data || {}
         return this.message.replace(rformat, function(_, name) {
@@ -454,13 +455,14 @@ define(["../promise/avalon.promise"], function(avalon) {
 //https://github.com/rinh/jvalidator/blob/master/src/index.js
 //http://baike.baidu.com/view/2582.htm?fr=aladdin&qq-pf-to=pcqq.group
 })
-/*
+/**
  @other
- avalon.validation自带了许多<code>验证规则</code>，满足你一般的业务需求。
+ <p>avalon.validation自带了许多<code>验证规则</code>，满足你一般的业务需求。</p>
  */
 
  /**
  @links
  [自带验证规则required,int,decimal,alpha,chs](avalon.at.ex1.html)
  [自带验证规则qq,id,email,url,date,passport,pattern](avalon.at.ex2.html)
+ [自带验证规则maxlength,minlength,lt,gt,eq,equal](avalon.at.ex3.html)
  */

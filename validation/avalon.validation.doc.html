@@ -129,7 +129,17 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                     <tr>
                         <td>onResetAll</td>
                         <td>avalon.noop</td>
-                        <td>{Function} 空函数，当用户调用了resetAll后触发</td>
+                        <td>{Function} 空函数，当用户调用了resetAll后触发，</td>
+                    </tr>
+                    <tr>
+                        <td>validateInBlur</td>
+                        <td>true</td>
+                        <td>{Boolean} true，在blur事件中执行onReset回调</td>
+                    </tr>
+                    <tr>
+                        <td>validateInSubmit</td>
+                        <td>true</td>
+                        <td>{Boolean} true，在submit事件中执行onValidateAll回调</td>
                     </tr>
                     <tr>
                         <td align="center" colspan="3">接口方法与固有属性</td>
@@ -182,6 +192,8 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                     </tr>
                 </table>
             </fieldset>
+            <div class="others">r avalon.validation自带了许多
+                <code>验证规则</code>，满足你一般的业务需求。 /@links [自带验证规则required, init](avalon.at.ex1.html)</div>
             <ul></ul>
         </div>
     </body>

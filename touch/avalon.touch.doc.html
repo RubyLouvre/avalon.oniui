@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>touch组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <meta name="description" content="for mobile，通过avalon.touch.js，avalon.shake.js支持tap,doubletap,hold,swipe["","left","right","up","down"],pinch["","in","out"],squeeze,splay,shake等事件"/>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h2>tooltip</h2>
+            <fieldset>
+                <legend>touch</legend>
+                for mobile，通过avalon.touch.js，avalon.shake.js支持tap,doubletap,hold,swipe["","left","right","up","down"],pinch["","in","out"],squeeze,splay,shake等事件
+            </fieldset>
+            <fieldset>
+                <legend>事件说明</legend>
+                <table class="table-doc">
+                    <!--auto doc start-->
+                    <!--auto doc end-->
+                </table>
+                <ul class="task-list">
+                    <li>
+                        <span>tap</span> 拍击</li>
+                    <li>
+                        <span>doubletap</span> 双击</li>
+                    <li>
+                        <span>hold</span> 长按</li>
+                    <li>
+                        <span>swipe</span> 单指滑动 <br>
+                        <ul>
+                            <li>
+                                <span>swipeleft</span> 单指向左滑动 - 必定出发swipe</li>
+                            <li>
+                                <span>swiperight</span> 单指向右滑动 - 必定出发swipe</li>
+                            <li>
+                                <span>swipeup</span> 单指向上滑动 - 必定出发swipe</li>
+                            <li>
+                                <span>swipedown</span> 单指向下滑动 - 必定出发swipe</li>
+                        </ul>
+<code>
+    avalon.bind(ele, "swipe*", function(e) {
+        //e.detail = {direction: left||right||up||down}
+    })
+</code>
+                        </li>
+                        <li>
+                        <span>pinch</span> 双指缩放
+                        <ul>
+                            <li>
+                                <span>pinchin</span> 双指捏合 - 必定出发pinch</li>
+                            <li>
+                                <span>pinchout</span> 双指展开 - 必定出发pinch</li>
+                        </ul>
+<code>
+    avalon.bind(ele, "pinch*", function(e) {
+        //e.detail = {direction: in||out, scale: 缩放比}
+    })
+</code>
+                        </li>
+                    <li>
+                        <span>squeeze</span> 三指以上指捏合</li>
+                    <li>
+                        <span>splay</span> 三指以上展开</li>
+                    <li>
+                        <span>rotate</span> 双指缩放
+                        <ul>
+                            <li>
+                                <span>rotatecw</span> 顺时针旋转 - 必定出发rotate</li>
+                            <li>
+                                <span>rotateccw</span> 逆时针旋转 - 必定出发rotate</li>
+                        </ul>
+<code>
+avalon.bind(ele, "rotate*", function(e) {
+    //e.detail = {direction: cw||ccw,deflection: 旋转角度数，单位一度}
+})
+</code>
+                    </li>
+                    <li>
+                        <span>shake</span> 摇一摇
+<code>
+avalon.bind(ele, "shake", function(e) {
+    //e.direction = left||right||forward||back||up||down||以及组合，但不准确
+})
+</code>
+                    </li>
+                </ul>
+            </fieldset>
+            <h3>例子：</h3>
+            <!--ex list start-->
+            <ol class="example-links">
+                <li><a href="avalon.shake.ex.html">shake</a></li>
+                <li><a href="avalon.touch.ex.html">touch && gesture</a></li>
+            </ol>
+            <!--ex list end-->
+        </div>
+    </body>
+</html>

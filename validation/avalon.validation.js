@@ -124,10 +124,24 @@ define(["../promise/avalon.promise"], function(avalon) {
                 return value
             }
         },
+        chs: {
+            message: '必须是中文字符',
+            get: function(value, data, next) {
+                next(/[^\u4e00-\u9fa5]/.test(value))
+                return value
+            }
+        },
         chs_numeric: {
             message: '必须是中文字符或数字及下划线等特殊字符',
             get: function(value, data, next) {
                 next(/^[\\u4E00-\\u9FFF0-9_\-]+$/i.test(value))
+                return value
+            }
+        },
+        qq: {
+            message: "腾讯QQ号从10000开始",
+            get: function(value, data, next) {
+                next(/^[1-9]\d{4,10}$/.test(value))
                 return value
             }
         },
@@ -272,14 +286,13 @@ define(["../promise/avalon.promise"], function(avalon) {
             var rnoinput = /^(radio|select|file|reset|button|submit|checkbox)/
             vm.pipe = function(val, data, action, e) {
                 var isValidateAll = e === true
-                data.eventType = e && e.type ? e.type : void 0
                 var inwardHooks = vmodel.validationHooks
                 var globalHooks = avalon.duplexHooks
                 var promises = []
                 var elem = data.element
                 if (!data.bindValidateBlur && !rnoinput.test(elem) && String(elem.getAttribute("data-duplex-event")).indexOf("blur") === -1) {
-                    data.bindValidateBlur = avalon.bind(elem, "blur", function() {
-                        vm.pipe(elem.value, data, "get")
+                    data.bindValidateBlur = avalon.bind(elem, "blur", function(e) {
+                        vm.pipe(elem.value, data, "get", e)
                     })
                 }
                 if (!data.bindValidateReset) {
@@ -292,8 +305,6 @@ define(["../promise/avalon.promise"], function(avalon) {
                     if (hook && typeof hook[action] === "function") {
                         data.data = {}
                         if (!elem.disabled && hook.message) {
-
-
                             var resolve, reject
                             promises.push(new Promise(function(a, b) {
                                 resolve = a
@@ -319,11 +330,9 @@ define(["../promise/avalon.promise"], function(avalon) {
                         val = hook[action](val, data, next)
                     }
                 })
-//                var events = data.element.getAttribute("data-duplex-event") || ""
-//                if(!data.__){
-//                    data.__ = 1
-//                    return
-//                }
+                if(!data.skipFirstAssign){
+                    return data.skipFirstAssign = 1
+                }
                 if (promises.length) {//如果promises不为空，说明经过验证拦截器
                     var lastPromise = Promise.all(promises).then(function(array) {
                         var reasons = []
@@ -331,10 +340,6 @@ define(["../promise/avalon.promise"], function(avalon) {
                             if (typeof el === "object") {
                                 reasons.push(el)
                             }
-                        }
-                        if (!data.interact) {
-                            data.interact = true
-                            return reasons
                         }
                         if (!isValidateAll) {
                             if (reasons.length) {
@@ -350,7 +355,6 @@ define(["../promise/avalon.promise"], function(avalon) {
                         return lastPromise
                     }
                 }
-                delete data.eventType
                 return val
             }
             /**
@@ -376,9 +380,9 @@ define(["../promise/avalon.promise"], function(avalon) {
              * @param callback {Null|Function} 最后执行的回调，如果用户没传就使用vm.onResetAll
              */
             vm.resetAll = function(callback) {
-                vm.elements.forEach.map(function(el) {
+                vm.elements.forEach(function(el) {
                     try {
-                        el.element.focus()
+                        vm.onReset.call(el.element, {type: "reset"}, el)
                     } catch (e) {
                     }
                 })
@@ -412,12 +416,18 @@ define(["../promise/avalon.promise"], function(avalon) {
         onValidateAll: avalon.noop, //@config {Function} 空函数，整体验证后或调用了validateAll方法后触发
         onReset: avalon.noop, //@config {Function} 空函数，表单元素获取焦点时触发，this指向被验证元素，大家可以在这里清理className、value
         onResetAll: avalon.noop, //@config {Function} 空函数，当用户调用了resetAll后触发，
-        validateInBlur: true,
-        validateInSubmit: true
+        validateInBlur: true, //@config {Boolean} true，在blur事件中执行onReset回调
+        validateInSubmit: true //@config {Boolean} true，在submit事件中执行onValidateAll回调
     }
 //http://bootstrapvalidator.com/
 //https://github.com/rinh/jvalidator/blob/master/src/index.js
 //http://baike.baidu.com/view/2582.htm?fr=aladdin&qq-pf-to=pcqq.group
 })
-
-
+/*
+ @other
+ avalon.validation自带了许多<code>验证规则</code>，满足你一般的业务需求。
+ 
+ /**
+ @links
+ [自带验证规则required, init](avalon.at.ex1.html)
+ */

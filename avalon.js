@@ -3513,7 +3513,7 @@
             if (W3C) {
                 W3CFire(this, "input")
             } else {
-                this.fireEvent("onchange")
+                this.fireEvent("onpropertychange")
             }
         }
     }

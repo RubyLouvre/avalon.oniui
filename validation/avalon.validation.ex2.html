@@ -48,6 +48,8 @@
                     c: "d",
                     d: "",
                     e: "",
+                    f: "",
+                    g: "",
                     reset: function() {
                         validationVM && validationVM.resetAll()
                     },
@@ -87,11 +89,14 @@
     <body>
         <form ms-controller="test" ms-widget="validation">
             <h3>验证组件</h3>
-            <p><input ms-duplex-required="a" placeholder="不能为空"></p>
-            <p><input ms-duplex-int="b" placeholder="必须输入整数"></p>
-            <p><input ms-duplex-decimal="c" placeholder="必须输入小数"></p>
-            <p><input ms-duplex-alpha="d" placeholder="必须输入字母"></p>
-            <p><input ms-duplex-chs="e" placeholder="必须输入中文"></p>
+            <p>使用data-duplex-event="change"，延迟到失去焦点才验证</p>
+            <p><input ms-duplex-qq="a" data-duplex-event="change" placeholder="输入QQ号"></p>
+            <p><input ms-duplex-id="b" data-duplex-event="change" placeholder="输入身份证号码"></p>
+            <p><input ms-duplex-email="c" data-duplex-event="change" placeholder="输入电子邮件"></p>
+            <p><input ms-duplex-url="d" data-duplex-event="change" placeholder="输入网址"></p>
+            <p><input ms-duplex-date="e" data-duplex-event="change" placeholder="输入YYYY-MM-DD这样日期格式"></p>
+            <p><input ms-duplex-passport="f" data-duplex-event="change" placeholder="输入护照号码"></p>
+            <p><input ms-duplex-pattern="g" data-duplex-event="change" pattern="\d{6,8}" placeholder="输入6-8个数字"></p>
             <button type="submit">submit
             </button>
             <button type="button" ms-click="reset">reset

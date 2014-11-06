@@ -72,55 +72,22 @@ define(["../promise/avalon.promise"], function(avalon) {
         throw new Error("你的版本少于avalon1.3.7，不支持ms-duplex2.0，请使用avalon.validation.old.js")
     }
     //==========================avalon.validation的专有逻辑========================
-    function idCard(num) {
-        num = num.toUpperCase();
-//身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X。
-        if (!(/(^\d{15}$)|(^\d{17}(\d|X)$)/.test(num))) {
-            return -1;
-        }
-//校验位按照ISO 7064:1983.MOD 11-2的规定生成，X可以认为是数字10。
-//下面分别分析出生日期和校验位
-        var len, re;
-        len = num.length;
-        if (len == 15) {
-            re = new RegExp(/^(\d{6})(\d{2})(\d{2})(\d{2})(\d{3})$/);
-            var arrSplit = num.match(re);
-//检查生日日期是否正确
-            var dtmBirth = new Date('19' + arrSplit[2] + '/' + arrSplit[3] + '/' + arrSplit[4]);
-            var bGoodDay = (dtmBirth.getYear() == Number(arrSplit[2])) && ((dtmBirth.getMonth() + 1) == Number(arrSplit[3])) && (dtmBirth.getDate() == Number(arrSplit[4]));
-            if (!bGoodDay) {
-                return -2;
-            } else {
-                return 1;
+    function idCard(val) {
+        if ((/^\d{15}$/).test(val)) {
+            return true;
+        } else if ((/^\d{17}[0-9xX]$/).test(val)) {
+            var vs = "1,0,x,9,8,7,6,5,4,3,2".split(","),
+                    ps = "7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2".split(","),
+                    ss = val.toLowerCase().split(""),
+                    r = 0;
+            for (var i = 0; i < 17; i++) {
+                r += ps[i] * ss[i];
             }
+            return (vs[r % 11] == ss[17]);
         }
-        if (len == 18) {
-            re = new RegExp(/^(\d{6})(\d{4})(\d{2})(\d{2})(\d{3})(\d|X)$/);
-            var arrSplit = num.match(re);
-//检查生日日期是否正确
-            var dtmBirth = new Date(arrSplit[2] + "/" + arrSplit[3] + "/" + arrSplit[4]);
-            var bGoodDay = (dtmBirth.getFullYear() == Number(arrSplit[2])) && ((dtmBirth.getMonth() + 1) == Number(arrSplit[3])) && (dtmBirth.getDate() == Number(arrSplit[4]));
-            if (!bGoodDay) {
-                return -2;
-            } else {
-//检验18位身份证的校验码是否正确。
-//校验位按照ISO 7064:1983.MOD 11-2的规定生成，X可以认为是数字10。
-                var valnum;
-                var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
-                var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
-                var nTemp = 0, i;
-                for (i = 0; i < 17; i++) {
-                    nTemp += num.substr(i, 1) * arrInt[i];
-                }
-                valnum = arrCh[nTemp % 11];
-                if (valnum != num.substr(17, 1)) {
-                    return -2;
-                }
-                return 1;
-            }
-        }
-        return -2;
     }
+    var remail = /^[a-zA-Z0-9.!#$%&amp;'*+\-\/=?\^_`{|}~\-]+@[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*$/
+
     avalon.mix(avalon.duplexHooks, {
         trim: {
             get: function(value, data) {
@@ -203,7 +170,7 @@ define(["../promise/avalon.promise"], function(avalon) {
         email: {
             message: "邮件地址错误",
             get: function(value, data, next) {
-                next(/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i.test(value))
+                next(remail.test(value))
                 return value
             }
         },
@@ -226,7 +193,7 @@ define(["../promise/avalon.promise"], function(avalon) {
         date: {
             message: '必须符合日期格式 YYYY-MM-DD',
             get: function(value, data, next) {
-                next(/^\d\d\d\d\-\d\d\-\d\d$/.test(value))
+                next(/^(\d\d\d\d)\-(\d\d)\-(\d\d)$/.test(value))
                 return value
             }
         },
@@ -490,8 +457,10 @@ define(["../promise/avalon.promise"], function(avalon) {
 /*
  @other
  avalon.validation自带了许多<code>验证规则</code>，满足你一般的业务需求。
- 
+ */
+
  /**
  @links
- [自带验证规则required, init](avalon.at.ex1.html)
+ [自带验证规则required,int,decimal,alpha,chs](avalon.at.ex1.html)
+ [自带验证规则qq,id,email,url,date,passport,pattern](avalon.at.ex2.html)
  */

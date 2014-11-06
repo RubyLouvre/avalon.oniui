@@ -140,14 +140,15 @@ define(['avalon',
          */
         getTemplate: function() {
             return tmpl;
-        }
+        },
+        onInit: avalon.noop     //@config 初始化时执行方法
     };
 });
 
 /**
  @links
  [用空select节点使用默认配置生成组件](avalon.switchdropdown.ex1.html)
- [用html结构配置组件](avalon.switchdropdown.ex2.htmll)
+ [用html结构配置组件](avalon.switchdropdown.ex2.html)
  [用options配置组件](avalon.switchdropdown.ex3.html)
  [用options配置组件并设置duplex](avalon.switchdropdown.ex4.html)
  */

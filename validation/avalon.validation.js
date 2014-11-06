@@ -72,7 +72,55 @@ define(["../promise/avalon.promise"], function(avalon) {
         throw new Error("你的版本少于avalon1.3.7，不支持ms-duplex2.0，请使用avalon.validation.old.js")
     }
     //==========================avalon.validation的专有逻辑========================
-
+    function idCard(num) {
+        num = num.toUpperCase();
+//身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X。
+        if (!(/(^\d{15}$)|(^\d{17}(\d|X)$)/.test(num))) {
+            return -1;
+        }
+//校验位按照ISO 7064:1983.MOD 11-2的规定生成，X可以认为是数字10。
+//下面分别分析出生日期和校验位
+        var len, re;
+        len = num.length;
+        if (len == 15) {
+            re = new RegExp(/^(\d{6})(\d{2})(\d{2})(\d{2})(\d{3})$/);
+            var arrSplit = num.match(re);
+//检查生日日期是否正确
+            var dtmBirth = new Date('19' + arrSplit[2] + '/' + arrSplit[3] + '/' + arrSplit[4]);
+            var bGoodDay = (dtmBirth.getYear() == Number(arrSplit[2])) && ((dtmBirth.getMonth() + 1) == Number(arrSplit[3])) && (dtmBirth.getDate() == Number(arrSplit[4]));
+            if (!bGoodDay) {
+                return -2;
+            } else {
+                return 1;
+            }
+        }
+        if (len == 18) {
+            re = new RegExp(/^(\d{6})(\d{4})(\d{2})(\d{2})(\d{3})(\d|X)$/);
+            var arrSplit = num.match(re);
+//检查生日日期是否正确
+            var dtmBirth = new Date(arrSplit[2] + "/" + arrSplit[3] + "/" + arrSplit[4]);
+            var bGoodDay = (dtmBirth.getFullYear() == Number(arrSplit[2])) && ((dtmBirth.getMonth() + 1) == Number(arrSplit[3])) && (dtmBirth.getDate() == Number(arrSplit[4]));
+            if (!bGoodDay) {
+                return -2;
+            } else {
+//检验18位身份证的校验码是否正确。
+//校验位按照ISO 7064:1983.MOD 11-2的规定生成，X可以认为是数字10。
+                var valnum;
+                var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
+                var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
+                var nTemp = 0, i;
+                for (i = 0; i < 17; i++) {
+                    nTemp += num.substr(i, 1) * arrInt[i];
+                }
+                valnum = arrCh[nTemp % 11];
+                if (valnum != num.substr(17, 1)) {
+                    return -2;
+                }
+                return 1;
+            }
+        }
+        return -2;
+    }
     avalon.mix(avalon.duplexHooks, {
         trim: {
             get: function(value, data) {
@@ -145,6 +193,13 @@ define(["../promise/avalon.promise"], function(avalon) {
                 return value
             }
         },
+        id: {
+            message: "身份证格式错误",
+            get: function(value, data, next) {
+                next(idCard(value))
+                return value
+            }
+        },
         email: {
             message: "邮件地址错误",
             get: function(value, data, next) {
@@ -156,6 +211,15 @@ define(["../promise/avalon.promise"], function(avalon) {
             message: "URL格式错误",
             get: function(value, data, next) {
                 next(/^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/.test(value))
+                return value
+            }
+        },
+        equal: {
+            message: "必须等于{{other}}",
+            get: function(value, data, next) {
+                var other = document.getElementById("data-duplex-equal") || {}
+                data.data.other = other.value || ""
+                next(value === other)
                 return value
             }
         },
@@ -285,9 +349,7 @@ define(["../promise/avalon.promise"], function(avalon) {
             //重写框架内部的pipe方法
             var rnoinput = /^(radio|select|file|reset|button|submit|checkbox)/
             vm.pipe = function(val, data, action, e) {
-
-                if (e && e.isTrusted == false) {
-                      console.log(e.type, e.propertyName, e.isTrusted)
+                if (e && e.isTrusted === false) {//如果程序触发的直接过滤
                     e = false
                 }
                 var isValidateAll = e === true

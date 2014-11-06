@@ -13,7 +13,7 @@
      **********************************************************************/
     var expose = new Date - 0
     var subscribers = "$" + expose
-    //http://addyosmani.com/blog/understanding-mvvm-a-guide-for-javascript-developers/
+    //http://stackoverflow.com/questions/3277182/how-to-get-the-global-object-in-javascript
     var window = this || (0, eval)("this")
     var otherRequire = window.require
     var otherDefine = window.define
@@ -3350,14 +3350,12 @@
     }
 
     function pipe(val, data, action, e) {
-        data.eventType = e && e.type ? e.type : void 0
         data.param.replace(rword, function(name) {
             var hook = avalon.duplexHooks[name]
             if (hook && typeof hook[action] === "function") {
                 val = hook[action](val, data)
             }
         })
-        delete data.eventType
         return val
     }
     //如果一个input标签添加了model绑定。那么它对应的字段将与元素的value连结在一起

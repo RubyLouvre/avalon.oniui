@@ -70,7 +70,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
             }
             // 处理提示项的鼠标点击，也就是更新input值，同时隐藏提示框?
             vm.clickcallback = function(idx, event) {
-                vmodel.onchange(vmodel.list[idx].value, vmodel.list[idx].$model, event);
+                vmodel.onchange(vmodel.list[idx].value, vmodel.inputElement, event);
                 vm.toggle = false;
             }
             // 如果input元素配置了suggest-focus项，则执行此条件块?
@@ -115,7 +115,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                             event.preventDefault();
                             if (!vmodel.toggle) return ;
                             vmodel.toggle = false;
-                            vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.list[vmodel.selectedIndex].$model, event );
+                            vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
                         break;
                         case 38:
                             // up arrow
@@ -124,7 +124,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                             if (vmodel.selectedIndex === -1) {
                                 vmodel.selectedIndex = vmodel.list.length - 1
                             }
-                            vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.list[vmodel.selectedIndex].$model, event );
+                            vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
                         break;
                         case 40:
                             // down arrow
@@ -133,7 +133,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                             if (vmodel.selectedIndex === vmodel.list.length) {
                                 vmodel.selectedIndex = 0
                             }
-                            vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.list[vmodel.selectedIndex].$model, event );
+                            vmodel.onchange( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
                         break;
                         default:
                             vmodel.searchText = this.value || String.fromCharCode(event.which);

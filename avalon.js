@@ -3323,6 +3323,12 @@
     function fixNull(val) {
         return val == null ? "" : val
     }
+    function toBoolean(el) {
+        return typeof el === "boolean" ? el : el === "true"
+    }
+    function toNumber(el) {
+        return isFinite(el) ? parseFloat(el) || 0 : el
+    }
     avalon.duplexHooks = {
         checked: {
             get: function(val, data) {
@@ -3337,13 +3343,19 @@
         },
         "boolean": {
             get: function(val) {
-                return val === "true"
+                if (Array.isArray) {
+                    return val.map(toBoolean)
+                }
+                return toBoolean(val)
             },
             set: fixNull
         },
         number: {
             get: function(val) {
-                return isFinite(val) ? parseFloat(val) || 0 : val
+                if (Array.isArray) {
+                    return val.map(toNumber)
+                }
+                return toNumber(val)
             },
             set: fixNull
         }
@@ -3436,7 +3448,9 @@
                         log("ms-duplex应用于checkbox上要对应一个数组")
                         array = [array]
                     }
-                    avalon.Array[method](array, data.pipe(element.value, data, "get", e))
+                    
+                    avalon.Array[method](array, element.value)
+                    data.pipe(array, data, "get", e)
                     callback.call(element, array)
                 }
             }
@@ -3566,13 +3580,7 @@
         function updateVModel(e) {
             if ($elem.data("duplex-observe") !== false) {
                 var val = $elem.val() //字符串或字符串数组
-                if (Array.isArray(val)) {
-                    val = val.map(function(v) {
-                        return data.pipe(v, data, "get", e)
-                    })
-                } else {
-                    val = data.pipe(val, data, "get", e)
-                }
+                val = data.pipe(val, data, "get", e)
                 if (val + "" !== element.oldValue) {
                     evaluator(val)
                 }

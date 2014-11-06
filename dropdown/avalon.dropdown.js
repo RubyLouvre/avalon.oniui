@@ -4,13 +4,13 @@
  * @cnName 下拉框
  * @enName dropdown
  * @introduce
- * <p>
- 因为原生<code>select</code>实在是难用，avalon的dropdown组件在兼容原生<code>select</code>的基础上，对其进行了增强。
- <div>
+ *
+ <p>因为原生<code>select</code>实在是难用，avalon的dropdown组件在兼容原生<code>select</code>的基础上，对其进行了增强。</p>
+ <ul>
  <li>1，支持在标题和下拉菜单项中使用html结构，可以用来信息的自定义显示</li>
  <li>2，同时支持通过html以及配置项两种方式设置组件</li>
  <li>3，通过配置，可以让下拉框自动识别在屏幕中的位置，来调整向上或者向下显示</li>
- </div>
+ </ul>
  */
 define(["avalon",
     "text!./avalon.dropdown.html",

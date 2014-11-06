@@ -1,3 +1,12 @@
+//avalon 1.3.6 2014.11.06
+/**
+ *
+ * @cnName 迷你开关型下拉框
+ * @enName switchdropdown
+ * @introduce
+ *
+ <p>基于dropdown开发的迷你开关类型的下拉框</p>
+ */
 define(['avalon',
     'text!./avalon.miniswitch.html',
     '../switchdropdown/avalon.switchdropdown',
@@ -29,5 +38,12 @@ define(['avalon',
             return tmpl;
         }
     };
-
 });
+
+/**
+ @links
+ [用空select节点生成默认组件](avalon.miniswitch.ex1.html)
+ [用select结构配置组件](avalon.miniswitch.ex2.htmll)
+ [用options配置组件](avalon.miniswitch.ex3.html)
+ [用options配置组件并设置duplex](avalon.miniswitch.ex4.html)
+ */

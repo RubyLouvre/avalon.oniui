@@ -285,6 +285,11 @@ define(["../promise/avalon.promise"], function(avalon) {
             //重写框架内部的pipe方法
             var rnoinput = /^(radio|select|file|reset|button|submit|checkbox)/
             vm.pipe = function(val, data, action, e) {
+
+                if (e && e.isTrusted == false) {
+                      console.log(e.type, e.propertyName, e.isTrusted)
+                    e = false
+                }
                 var isValidateAll = e === true
                 var inwardHooks = vmodel.validationHooks
                 var globalHooks = avalon.duplexHooks
@@ -329,11 +334,8 @@ define(["../promise/avalon.promise"], function(avalon) {
                         }
                         val = hook[action](val, data, next)
                     }
-                })
-                if(!data.skipFirstAssign){
-                    return data.skipFirstAssign = 1
-                }
-                if (promises.length) {//如果promises不为空，说明经过验证拦截器
+                }) //只有用户输入才触发
+                if (promises.length && e) {//如果promises不为空，说明经过验证拦截器
                     var lastPromise = Promise.all(promises).then(function(array) {
                         var reasons = []
                         for (var i = 0, el; el = array[i++]; ) {

@@ -3380,7 +3380,7 @@
         }
         //当value变化时改变model的值
         function updateVModel(e) {
-            if (composing )//处理中文输入法在minlengh下引发的BUG
+            if (composing)//处理中文输入法在minlengh下引发的BUG
                 return
             var val = element.oldValue = element.value //防止递归调用形成死循环
             var lastValue = data.pipe(val, data, "get", e)
@@ -3453,6 +3453,11 @@
             if (element.attributes["data-event"]) {
                 log("data-event指令已经废弃，请改用data-duplex-event")
             }
+            function delay(e) {
+                setTimeout(function() {
+                    updateVModel(e)
+                })
+            }
             events.replace(rword, function(name) {
                 switch (name) {
                     case "input":
@@ -3463,20 +3468,18 @@
                             //http://www.cnblogs.com/rubylouvre/archive/2013/02/17/2914604.html
                             //http://www.matts411.com/post/internet-explorer-9-oninput/
                             if (DOC.documentMode === 9) {
-                                function delay(e) {
-                                    setTimeout(function() {
-                                        updateVModel(e)
-                                    })
-                                }
                                 bound("paste", delay)
                                 bound("cut", delay)
                             }
-                        } else {
-                            bound("propertychange", function(e) {
-                                if (e.propertyName === "value") {
-                                    updateVModel(e)
-                                }
+                        } else {//onpropertychange事件无法区分是程序触发还是用户触发
+                            bound("keydown", function(e) {
+                                var key = e.keyCode
+                                if (key === 91 || (15 < key && key < 19) || (37 <= key && key <= 40))
+                                    return;
+                                delay(e)
                             })
+                            bound("paste", delay)
+                            bound("cut", delay)
                         }
                         break
                     default:
@@ -3502,6 +3505,7 @@
     function W3CFire(el, name, detail) {
         var event = DOC.createEvent("Events")
         event.initEvent(name, true, true)
+        event.isTrusted = false
         if (detail) {
             event.detail = detail
         }
@@ -3513,7 +3517,9 @@
             if (W3C) {
                 W3CFire(this, "input")
             } else {
-                this.fireEvent("onpropertychange")
+                var e = document.createEventObject()
+                e.isTrusted = false //isTrusted在W3C中表示程序触发
+                this.fireEvent("onkeydown", e)
             }
         }
     }

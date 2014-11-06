@@ -3349,13 +3349,15 @@
         }
     }
 
-    function pipe(val, data, action) {
+    function pipe(val, data, action, e) {
+        data.eventType = e && e.type ? e.type : void 0
         data.param.replace(rword, function(name) {
             var hook = avalon.duplexHooks[name]
             if (hook && typeof hook[action] === "function") {
                 val = hook[action](val, data)
             }
         })
+        delete data.eventType
         return val
     }
     //如果一个input标签添加了model绑定。那么它对应的字段将与元素的value连结在一起
@@ -3381,7 +3383,7 @@
             if (composing )//处理中文输入法在minlengh下引发的BUG
                 return
             var val = element.oldValue = element.value //防止递归调用形成死循环
-            var lastValue = data.pipe(val, data, "get")
+            var lastValue = data.pipe(val, data, "get", e)
             if ($elem.data("duplex-observe") !== false) {
                 evaluator(lastValue)
                 callback.call(element, lastValue)
@@ -3403,9 +3405,9 @@
 
         if (data.isChecked || element.type === "radio") {
             var IE6 = !window.XMLHttpRequest
-            updateVModel = function() {
+            updateVModel = function(e) {
                 if ($elem.data("duplex-observe") !== false) {
-                    var lastValue = data.pipe(element.value, data, "get")
+                    var lastValue = data.pipe(element.value, data, "get", e)
                     evaluator(lastValue)
                     callback.call(element, lastValue)
                 }
@@ -3428,7 +3430,7 @@
             }
             bound(IE6 ? "mouseup" : "click", updateVModel)
         } else if (type === "checkbox") {
-            updateVModel = function() {
+            updateVModel = function(e) {
                 if ($elem.data("duplex-observe") !== false) {
                     var method = element.checked ? "ensure" : "remove"
                     var array = evaluator()
@@ -3436,7 +3438,7 @@
                         log("ms-duplex应用于checkbox上要对应一个数组")
                         array = [array]
                     }
-                    avalon.Array[method](array, data.pipe(element.value, data, "get"))
+                    avalon.Array[method](array, data.pipe(element.value, data, "get", e))
                     callback.call(element, array)
                 }
             }
@@ -3553,15 +3555,15 @@
 
     duplexBinding.SELECT = function(element, evaluator, data) {
         var $elem = avalon(element)
-        function updateVModel() {
+        function updateVModel(e) {
             if ($elem.data("duplex-observe") !== false) {
                 var val = $elem.val() //字符串或字符串数组
                 if (Array.isArray(val)) {
                     val = val.map(function(v) {
-                        return data.pipe(v, data, "get")
+                        return data.pipe(v, data, "get", e)
                     })
                 } else {
-                    val = data.pipe(val, data, "get")
+                    val = data.pipe(val, data, "get", e)
                 }
                 if (val + "" !== element.oldValue) {
                     evaluator(val)

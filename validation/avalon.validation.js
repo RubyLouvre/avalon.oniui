@@ -7,45 +7,45 @@
  *  <p>验证规则如下定义:</p>
  *  ```javascript
  *   alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-duplex-int-alpha_numeric="prop"
-           message: '必须为字母或数字',  //这是错误提示，可以使用{{expr}}插值表达式，但这插值功能比较弱，
-           //里面只能是某个单词，两边不能有空格
-           get: function(value, data, next) {//这里的传参是固定的，next为回调
-                next(/^[a-z0-9]+$/i.test(value))//这里是规则
-                //如果message有{{expr}}插值表达式，需要用data.data.expr = aaa设置参数，
-                //aaa可以通过data.element.getAttribute()得到
-                return value //原样返回value
-           }
-     },
+ message: '必须为字母或数字',  //这是错误提示，可以使用{{expr}}插值表达式，但这插值功能比较弱，
+ //里面只能是某个单词，两边不能有空格
+ get: function(value, data, next) {//这里的传参是固定的，next为回调
+ next(/^[a-z0-9]+$/i.test(value))//这里是规则
+ //如果message有{{expr}}插值表达式，需要用data.data.expr = aaa设置参数，
+ //aaa可以通过data.element.getAttribute()得到
+ return value //原样返回value
+ }
+ },
  *  ```
  *  <p>验证规则不惧怕任何形式的异步，只要你决定进行验证时，执行next方法就行。next 需要传入布尔。</p>
  *  ```javascript
  *      async: {
-            message : "异步验证" , 
-            get : function( value , data, next ){
-                setTimeout(function(){
-                    next(true)
-                },3000)
-                return value
-            }
-       },
+ message : "异步验证" , 
+ get : function( value , data, next ){
+ setTimeout(function(){
+ next(true)
+ },3000)
+ return value
+ }
+ },
  *  ```
  * <p> 另一个例子:</p>
  *  ```javascript
  beijing: {
-    message : "当前位置必须是在{{city}}" , 
-    get : function( value ,data, next ){
-        $.ajax({
-               url : "http://ws.qunar.com/ips.jcp" , 
-               dataType : "jsonp" , 
-               jsonpCallback : "callback" , 
-               success : function( data, textStatus, jqXHR  ){
-                  data.data.city = "北京"
-                  next( data.city == value )
-               }
-        })
-        return value
-     }
-  }
+ message : "当前位置必须是在{{city}}" , 
+ get : function( value ,data, next ){
+ $.ajax({
+ url : "http://ws.qunar.com/ips.jcp" , 
+ dataType : "jsonp" , 
+ jsonpCallback : "callback" , 
+ success : function( data, textStatus, jqXHR  ){
+ data.data.city = "北京"
+ next( data.city == value )
+ }
+ })
+ return value
+ }
+ }
  *  ```
  *  <p>注意，本组件是基于<code>avalon1.3.7</code>开发，如果是很旧的版本，可以使用avalon.validation.old.js，它一直兼容到avalon1.2.0。</p>
  *  <p>注意，本组件只能绑定在<code>form元素</code>上, &lt;form ms-widget="validation"&gt;&lt;/&gt</p>
@@ -248,12 +248,14 @@ define(["../promise/avalon.promise"], function(avalon) {
              * @interface 为元素绑定submit事件，阻止默认行为
              */
             vm.$init = function() {
-                element.setAttribute("novalidate", "novalidate");
+                element.setAttribute("novalidate", "novalidate", "validateInSubmit", "validateInBlur");
                 avalon.scan(element, [vmodel].concat(vmodels))
-                onSubmitCallback = avalon.bind(element, "submit", function(e) {
-                    e.preventDefault()
-                    vm.validateAll(vm.onValidateAll)
-                })
+                if (vm.validateInSubmit) {
+                    onSubmitCallback = avalon.bind(element, "submit", function(e) {
+                        e.preventDefault()
+                        vm.validateAll(vm.onValidateAll)
+                    })
+                }
                 if (typeof options.onInit === "function") { //vmodels是不包括vmodel的
                     options.onInit.call(element, vmodel, options, vmodels)
                 }
@@ -263,25 +265,34 @@ define(["../promise/avalon.promise"], function(avalon) {
              */
             vm.$destory = function() {
                 vm.elements = []
-                avalon.unbind(element, "submit", onSubmitCallback)
+                onSubmitCallback && avalon.unbind(element, "submit", onSubmitCallback)
                 element.textContent = element.innerHTML = ""
             }
             //重写框架内部的pipe方法
-            vm.pipe = function(val, data, action, inSubmit) {
+            var rnoinput = /^(radio|select|file|reset|button|submit|checkbox)/
+            vm.pipe = function(val, data, action, e) {
+                var isValidateAll = e === true
+                data.eventType = e && e.type ? e.type : void 0
                 var inwardHooks = vmodel.validationHooks
                 var globalHooks = avalon.duplexHooks
                 var promises = []
                 var elem = data.element
+                if (!data.bindValidateBlur && !rnoinput.test(elem) && String(elem.getAttribute("data-duplex-event")).indexOf("blur") === -1) {
+                    data.bindValidateBlur = avalon.bind(elem, "blur", function() {
+                        vm.pipe(elem.value, data, "get")
+                    })
+                }
+                if (!data.bindValidateReset) {
+                    data.bindValidateReset = avalon.bind(elem, "focus", function(e) {
+                        vm.onReset.call(elem, e, data)
+                    })
+                }
                 data.param.replace(/\w+/g, function(name) {
                     var hook = inwardHooks[name] || globalHooks[name]
                     if (hook && typeof hook[action] === "function") {
                         data.data = {}
                         if (!elem.disabled && hook.message) {
-                            if (!data.bindValidateReset) {
-                                data.bindValidateReset = avalon.bind(elem, "focus", function(e) {
-                                    vm.onReset.call(elem, e, data)
-                                })
-                            }
+
 
                             var resolve, reject
                             promises.push(new Promise(function(a, b) {
@@ -321,11 +332,11 @@ define(["../promise/avalon.promise"], function(avalon) {
                                 reasons.push(el)
                             }
                         }
-                        if(!data.interact){
+                        if (!data.interact) {
                             data.interact = true
-                              return reasons
+                            return reasons
                         }
-                        if (!inSubmit ) {
+                        if (!isValidateAll) {
                             if (reasons.length) {
                                 vm.onError.call(elem, reasons)
                             } else {
@@ -335,10 +346,11 @@ define(["../promise/avalon.promise"], function(avalon) {
                         }
                         return reasons
                     })
-                    if (inSubmit) {
+                    if (isValidateAll) {
                         return lastPromise
                     }
                 }
+                delete data.eventType
                 return val
             }
             /**
@@ -399,7 +411,9 @@ define(["../promise/avalon.promise"], function(avalon) {
         onComplete: avalon.noop, //@config {Function} 空函数，单个验证无论成功与否都触发，this与传参情况同上
         onValidateAll: avalon.noop, //@config {Function} 空函数，整体验证后或调用了validateAll方法后触发
         onReset: avalon.noop, //@config {Function} 空函数，表单元素获取焦点时触发，this指向被验证元素，大家可以在这里清理className、value
-        onResetAll: avalon.noop, //@config {Function} 空函数，当用户调用了resetAll后触发
+        onResetAll: avalon.noop, //@config {Function} 空函数，当用户调用了resetAll后触发，
+        validateInBlur: true,
+        validateInSubmit: true
     }
 //http://bootstrapvalidator.com/
 //https://github.com/rinh/jvalidator/blob/master/src/index.js

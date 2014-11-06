@@ -3057,6 +3057,7 @@
                 if (data.evaluator && data.args) {
                     var params = []
                     var casting = oneObject("string,number,boolean,checked")
+                    data.msType = "string"
                     data.param.replace(/\w+/g, function(name) {
                         if ((elem.type === "radio" && data.param === "") || (elem.type === "checkbox" && name === "radio")) {
                             log(elem.type + "控件如果想通过checked属性同步VM,请改用ms-duplex-checked，以后ms-duplex默认是使用value属性同步VM")
@@ -3076,9 +3077,6 @@
                             avalon.Array.ensure(params, name)
                         }
                     })
-                    if (!data.msType) {
-                        data.msType = "string"
-                    }
                     data.param = params.join("-")
                     data.bound = function(type, callback) {
                         if (elem.addEventListener) {
@@ -3570,7 +3568,7 @@
             if ($elem.data("duplex-observe") !== false) {
                 var val = $elem.val() //字符串或字符串数组
                 if (Array.isArray(val)) {
-                    if (data.msType === "number" || data.msType === "boolean") {
+                    if (data.msType !== "checked") {
                         val = val.map(typeIt)
                     }
                 } else {

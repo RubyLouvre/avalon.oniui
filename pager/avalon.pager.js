@@ -38,10 +38,10 @@ define(["avalon",
                 setTimeout(function() {
                     avalon.scan(element, [vmodel].concat(vmodels))
                     element.style.display = "block"
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }, 100)
-                if (typeof options.onInit === "function") {
-                    options.onInit.call(element, vmodel, options, vmodels)
-                }
             }
             vm.$remove = function() {
                 element.innerHTML = element.textContent = ""

@@ -1,94 +1,249 @@
 <!DOCTYPE html>
 <html>
+    
     <head>
-        <title>dropdown文档说明</title>
-        <meta name="description" content="dropdown基于avalon对普通select控件进行扩展，支持通过data初始化下拉选项，使用内置的scroll控件。" />
-        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <title>下拉框</title>
+        <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <meta name="descriptions" content="因为原生select实在是难用，avalon的dropdown组件在兼容原生select的基础上，对其进行了增强。
+ 
+ 1，支持在标题和下拉菜单项中使用html结构，可以用来信息的自定义显示
+ 2，同时支持通过html以及配置项两种方式设置组件
+ 3，通过配置，可以让下拉框自动识别在屏幕中的位置，来调整向上或者向下显示
+ 
+ " />
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        />
+        <script src="../highlight/shCore.js"></script>
     </head>
+    
     <body>
         <div class="wrapper">
-            <h1>dropdown</h1>
+            <h2>dropdown</h2>
             <fieldset>
                 <legend>下拉框</legend>
-                用于代替原生select控件，支持更多制定
+                <p>因为原生
+                    <code>select</code>实在是难用，avalon的dropdown组件在兼容原生
+                    <code>select</code>的基础上，对其进行了增强。</p>
+                <ul>
+                    <li>1，支持在标题和下拉菜单项中使用html结构，可以用来信息的自定义显示</li>
+                    <li>2，同时支持通过html以及配置项两种方式设置组件</li>
+                    <li>3，通过配置，可以让下拉框自动识别在屏幕中的位置，来调整向上或者向下显示</li>
+                </ul>
             </fieldset>
             <fieldset>
-                <legend>使用方法</legend>
-                <table class="table-doc">
-                    <col width="180"/>
-                    <col width="180"/>
-                    <thead>
-                        <tr>
-                            <th>名字</th><th>默认值</th> <th>说明</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>width</td>
-                            <td>200</td>
-                            <td>自定义宽度</td>
-                        </tr>
-                        <tr>
-                            <td>listWidth</td>
-                            <td>200</td>
-                            <td>自定义下拉列表的宽度</td>
-                        </tr>
-                        <tr>
-                            <td>height</td>
-                            <td>200</td>
-                            <td>下拉列表的高度</td>
-                        </tr>
-                        <tr>
-                            <td>enable</td>
-                            <td>true</td>
-                            <td>组件是否可用</td>
-                        </tr>
-                        <tr>
-                            <td>readonly</td>
-                            <td>false</td>
-                            <td>组件是否只读</td>
-                        </tr>
-                        <tr>
-                            <td>data</td>
-                            <td>[]</td>
-                            <td>下拉列表显示的数据模型</td>
-                        </tr>
-                        <tr>
-                            <td>modelBind</td>
-                            <td>false</td>
-                            <td>是否要在model更新时通知列表更新</td>
-                        </tr>
-                        <tr>
-                            <td>value</td>
-                            <td>data中第一个数据项的value</td>
-                            <td>设置组件的初始值</td>
-                        </tr>
-                        <tr>
-                            <td>multiple</td>
-                            <td>false</td>
-                            <td>是否为多选模式</td>
-                        </tr>
-                        <tr>
-                            <td>size</td>
-                            <td>1</td>
-                            <td>尺寸大小</td>
-                        </tr>
-                    </tbody>
+                <legend>使用说明</legend>
+                <table class="table-doc" border="1">
+                    <colgroup>
+                        <col width="180" />
+                        <col width="180" />
+                    </colgroup>
+                    <tr>
+                        <th>名字</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="3">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>container</td>
+                        <td>null</td>
+                        <td>放置列表的容器</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>200</td>
+                        <td>自定义宽度</td>
+                    </tr>
+                    <tr>
+                        <td>listWidth</td>
+                        <td>200</td>
+                        <td>自定义下拉列表的宽度</td>
+                    </tr>
+                    <tr>
+                        <td>titleWidth</td>
+                        <td>0</td>
+                        <td>title部分宽度</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>200</td>
+                        <td>下拉列表的高度</td>
+                    </tr>
+                    <tr>
+                        <td>enable</td>
+                        <td>true</td>
+                        <td>组件是否可用</td>
+                    </tr>
+                    <tr>
+                        <td>readOnly</td>
+                        <td>false</td>
+                        <td>组件是否只读</td>
+                    </tr>
+                    <tr>
+                        <td>readonlyAttr</td>
+                        <td>null</td>
+                        <td>readonly依赖的属性</td>
+                    </tr>
+                    <tr>
+                        <td>currentOption</td>
+                        <td>null</td>
+                        <td>组件当前的选项</td>
+                    </tr>
+                    <tr>
+                        <td>data</td>
+                        <td>[]</td>
+                        <td>下拉列表显示的数据模型</td>
+                    </tr>
+                    <tr>
+                        <td>textFiled</td>
+                        <td>"text"</td>
+                        <td>模型数据项中对应显示text的字段,可以传function，根据数据源对text值进行格式化</td>
+                    </tr>
+                    <tr>
+                        <td>valueField</td>
+                        <td>"value"</td>
+                        <td>模型数据项中对应value的字段</td>
+                    </tr>
+                    <tr>
+                        <td>value</td>
+                        <td>[]</td>
+                        <td>设置组件的初始值</td>
+                    </tr>
+                    <tr>
+                        <td>label</td>
+                        <td>null</td>
+                        <td>设置组件的提示文案，可以是一个字符串，也可以是一个对象</td>
+                    </tr>
+                    <tr>
+                        <td>multiple</td>
+                        <td>false</td>
+                        <td>是否为多选模式</td>
+                    </tr>
+                    <tr>
+                        <td>listClass</td>
+                        <td>""</td>
+                        <td>列表添加自定义className来控制样式</td>
+                    </tr>
+                    <tr>
+                        <td>titleClass</td>
+                        <td>""</td>
+                        <td>title添加自定义className来控制样式</td>
+                    </tr>
+                    <tr>
+                        <td>position</td>
+                        <td>true</td>
+                        <td>是否自动定位下拉列表</td>
+                    </tr>
+                    <tr>
+                        <td>onSelect</td>
+                        <td>null</td>
+                        <td>点击选项时的回调</td>
+                    </tr>
+                    <tr>
+                        <td>onShow</td>
+                        <td>null</td>
+                        <td>下拉框展示的回调函数</td>
+                    </tr>
+                    <tr>
+                        <td>onHide</td>
+                        <td>null</td>
+                        <td>下拉框隐藏的回调函数</td>
+                    </tr>
+                    <tr>
+                        <td>onChange</td>
+                        <td>null</td>
+                        <td>value改变时的回调函数</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(str,options)</td>
+                        <td></td>
+                        <td>模板函数,方便用户自定义模板
+                            <table border="1">
+                                <tr>
+                                    <th>参数名/返回值</th>
+                                    <th>类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>str</td>
+                                    <td>String</td>
+                                    <td>默认模板</td>
+                                </tr>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>Object</td>
+                                    <td>VM</td>
+                                </tr>
+                                <tr>
+                                    <td>返回</td>
+                                    <td>String</td>
+                                    <td>新模板</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="3">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>$remove()</td>
+                        <td></td>
+                        <td>当组件移出DOM树时,系统自动调用的销毁函数</td>
+                    </tr>
+                    <tr>
+                        <td>val(newValue)</td>
+                        <td></td>
+                        <td>
+                            <table border="1">
+                                <tr>
+                                    <th>参数名/返回值</th>
+                                    <th>类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>newValue</td>
+                                    <td></td>
+                                    <td>设置控件的值，需要注意的是dropdown设置了multiple属性之后，值是数组，未设置multiple属性的时候，可以接受字符串，数字，布尔值；未设置该值时，效果是返回当前控件的值</td>
+                                </tr>
+                                <tr>
+                                    <td>返回</td>
+                                    <td></td>
+                                    <td>vmodel.value 控件当前的值</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
                 </table>
             </fieldset>
-            <ul class="example-links">
-                <li><a href="avalon.dropdown.ex1.html">使用html配置multiple组件</a></li>
-                <li><a href="avalon.dropdown.ex2.html">使用html配置multiple并使用双工绑定</a></li>
-                <li><a href="avalon.dropdown.ex3.html">使用option配置multiple并使用双工绑定</a></li>
-                <li><a href="avalon.dropdown.ex4.html">使用html配置dropdown组件</a></li>
-                <li><a href="avalon.dropdown.ex5.html">使用html配置dropdown并使用双工绑定</a></li>
-                <li><a href="avalon.dropdown.ex6.html">使用option配置dropdown并使用双工绑定</a></li>
-                <li><a href="avalon.dropdown.ex7.html">dropdown disabled</a></li>
-                <li><a href="avalon.dropdown.ex8.html">dropdown readOnly</a></li>
+            <ul>
+                <li>
+                    <a href="avalon.dropdown.ex1.html">使用html配置multiple组件</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdown.ex2.htmll">使用html配置multiple并使用双工绑定</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdown.ex3.html">使用option配置multiple并使用双工绑定</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdown.ex4.html">使用html配置dropdown组件</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdown.ex5.html">使用html配置dropdown并使用双工绑定</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdown.ex6.html">使用option配置dropdown并使用双工绑定</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdown.ex7.html">dropdown disabled</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdown.ex8.html">dropdown readOnly</a>
+                </li>
             </ul>
         </div>
     </body>
+
 </html>

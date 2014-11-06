@@ -6,10 +6,9 @@
  *  也可以在配置对象上的validationHooks中添加验证规则。</p>
  *  <p>验证规则如下定义:</p>
  *  ```javascript
- *    alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-duplex-int-alpha_numeric="prop"
- *   
+ *   alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-duplex-int-alpha_numeric="prop"
  message: '必须为字母或数字',  //这是错误提示，可以使用{{expr}}插值表达式，但这插值功能比较弱，
-      //里面只能是某个单词，两边不能有空格
+ //里面只能是某个单词，两边不能有空格
  get: function(value, data, next) {//这里的传参是固定的，next为回调
  next(/^[a-z0-9]+$/i.test(value))//这里是规则
  //如果message有{{expr}}插值表达式，需要用data.data.expr = aaa设置参数，
@@ -26,6 +25,7 @@
  setTimeout(function(){
  next(true)
  },3000)
+ return value
  }
  },
  *  ```
@@ -33,7 +33,7 @@
  *  ```javascript
  beijing: {
  message : "当前位置必须是在{{city}}" , 
- validate : function( value ,data, next ){
+ get : function( value ,data, next ){
  $.ajax({
  url : "http://ws.qunar.com/ips.jcp" , 
  dataType : "jsonp" , 
@@ -43,6 +43,7 @@
  next( data.city == value )
  }
  })
+ return value
  }
  }
  *  ```
@@ -52,9 +53,9 @@
  *  ```javascript
  *  onSuccess, onError, onComplete, onValidateAll, onReset, onResetAll
  *  ```
- * <p>其中，前面四个是一个系列，它们都有两个参数，第一个是布尔，表示成功与否，第二个是验证规则对象数组； onReset是在元素获取焦点做重置工作的，如清理类名，
+ * <p>其中，前面四个是一个系列，它们都有1个参数，是一个对象数组，里面一些<code>验证规则对象</code>（如果成功，数组为空）； onReset是在元素获取焦点做重置工作的，如清理类名，
  * 清空value值，onResetAll是用于重置整个表单，它会在组件执行它辖下的所有元素的onReset回调后再执行。</p>
- * <p>验证规则对象的结构如下：</p>
+ * <p><b>验证规则对象</b>的结构如下：</p>
  * ```javascript
  * {
  *   element: element, //添加了ms-duplex绑定的元素节点，它应该位于form[ms-widget="validation"]这个元素下
@@ -71,6 +72,21 @@ define(["../promise/avalon.promise"], function(avalon) {
         throw new Error("你的版本少于avalon1.3.7，不支持ms-duplex2.0，请使用avalon.validation.old.js")
     }
     //==========================avalon.validation的专有逻辑========================
+    function idCard(val) {
+        if ((/^\d{15}$/).test(val)) {
+            return true;
+        } else if ((/^\d{17}[0-9xX]$/).test(val)) {
+            var vs = "1,0,x,9,8,7,6,5,4,3,2".split(","),
+                    ps = "7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2".split(","),
+                    ss = val.toLowerCase().split(""),
+                    r = 0;
+            for (var i = 0; i < 17; i++) {
+                r += ps[i] * ss[i];
+            }
+            return (vs[r % 11] == ss[17]);
+        }
+    }
+    var remail = /^[a-zA-Z0-9.!#$%&amp;'*+\-\/=?\^_`{|}~\-]+@[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*$/
 
     avalon.mix(avalon.duplexHooks, {
         trim: {
@@ -123,6 +139,13 @@ define(["../promise/avalon.promise"], function(avalon) {
                 return value
             }
         },
+        chs: {
+            message: '必须是中文字符',
+            get: function(value, data, next) {
+                next(/^[\u4e00-\u9fa5]+$/.test(value))
+                return value
+            }
+        },
         chs_numeric: {
             message: '必须是中文字符或数字及下划线等特殊字符',
             get: function(value, data, next) {
@@ -130,10 +153,24 @@ define(["../promise/avalon.promise"], function(avalon) {
                 return value
             }
         },
+        qq: {
+            message: "腾讯QQ号从10000开始",
+            get: function(value, data, next) {
+                next(/^[1-9]\d{4,10}$/.test(value))
+                return value
+            }
+        },
+        id: {
+            message: "身份证格式错误",
+            get: function(value, data, next) {
+                next(idCard(value))
+                return value
+            }
+        },
         email: {
             message: "邮件地址错误",
             get: function(value, data, next) {
-                next(/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i.test(value))
+                next(remail.test(value))
                 return value
             }
         },
@@ -144,10 +181,19 @@ define(["../promise/avalon.promise"], function(avalon) {
                 return value
             }
         },
+        equal: {
+            message: "必须等于{{other}}",
+            get: function(value, data, next) {
+                var other = document.getElementById("data-duplex-equal") || {}
+                data.data.other = other.value || ""
+                next(value === other)
+                return value
+            }
+        },
         date: {
             message: '必须符合日期格式 YYYY-MM-DD',
             get: function(value, data, next) {
-                next(/^\d\d\d\d\-\d\d\-\d\d$/.test(value))
+                next(/^(\d\d\d\d)\-(\d\d)\-(\d\d)$/.test(value))
                 return value
             }
         },
@@ -247,12 +293,14 @@ define(["../promise/avalon.promise"], function(avalon) {
              * @interface 为元素绑定submit事件，阻止默认行为
              */
             vm.$init = function() {
-                element.setAttribute("novalidate", "novalidate");
+                element.setAttribute("novalidate", "novalidate", "validateInSubmit", "validateInBlur");
                 avalon.scan(element, [vmodel].concat(vmodels))
-                onSubmitCallback = avalon.bind(element, "submit", function(e) {
-                    e.preventDefault()
-                    vm.validateAll(vm.onValidateAll)
-                })
+                if (vm.validateInSubmit) {
+                    onSubmitCallback = avalon.bind(element, "submit", function(e) {
+                        e.preventDefault()
+                        vm.validateAll(vm.onValidateAll)
+                    })
+                }
                 if (typeof options.onInit === "function") { //vmodels是不包括vmodel的
                     options.onInit.call(element, vmodel, options, vmodels)
                 }
@@ -262,24 +310,35 @@ define(["../promise/avalon.promise"], function(avalon) {
              */
             vm.$destory = function() {
                 vm.elements = []
-                avalon.unbind(element, "submit", onSubmitCallback)
+                onSubmitCallback && avalon.unbind(element, "submit", onSubmitCallback)
                 element.textContent = element.innerHTML = ""
             }
             //重写框架内部的pipe方法
-            vm.pipe = function(val, data, action, inSubmit) {
+            var rnoinput = /^(radio|select|file|reset|button|submit|checkbox)/
+            vm.pipe = function(val, data, action, e) {
+                if (e && e.isTrusted === false) {//如果程序触发的直接过滤
+                    e = false
+                }
+                var isValidateAll = e === true
                 var inwardHooks = vmodel.validationHooks
                 var globalHooks = avalon.duplexHooks
                 var promises = []
                 var elem = data.element
+                if (!data.bindValidateBlur && !rnoinput.test(elem) && String(elem.getAttribute("data-duplex-event")).indexOf("blur") === -1) {
+                    data.bindValidateBlur = avalon.bind(elem, "blur", function(e) {
+                        vm.pipe(elem.value, data, "get", e)
+                    })
+                }
+                if (!data.bindValidateReset) {
+                    data.bindValidateReset = avalon.bind(elem, "focus", function(e) {
+                        vm.onReset.call(elem, e, data)
+                    })
+                }
                 data.param.replace(/\w+/g, function(name) {
                     var hook = inwardHooks[name] || globalHooks[name]
                     if (hook && typeof hook[action] === "function") {
                         data.data = {}
                         if (!elem.disabled && hook.message) {
-                            if (!data.bindValidateReset) {
-                                data.bindValidateReset = avalon.bind(elem, "focus", vm.onReset)
-                            }
-
                             var resolve, reject
                             promises.push(new Promise(function(a, b) {
                                 resolve = a
@@ -290,7 +349,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                                     resolve(true)
                                 } else {
                                     var reason = {
-                                        element: element,
+                                        element: data.element,
                                         data: data.data,
                                         message: hook.message,
                                         validateRule: name,
@@ -304,26 +363,26 @@ define(["../promise/avalon.promise"], function(avalon) {
                         }
                         val = hook[action](val, data, next)
                     }
-                })
-                if (promises.length) {//如果promises不为空，说明经过验证拦截器
+                }) //只有用户输入才触发
+                if (promises.length && e) {//如果promises不为空，说明经过验证拦截器
                     var lastPromise = Promise.all(promises).then(function(array) {
-                        if (!inSubmit) {
-                            var reasons = []
-                            for (var i = 0, el; el = array[i++]; ) {
-                                if (typeof el === "object") {
-                                    reasons.push(el)
-                                }
+                        var reasons = []
+                        for (var i = 0, el; el = array[i++]; ) {
+                            if (typeof el === "object") {
+                                reasons.push(el)
                             }
+                        }
+                        if (!isValidateAll) {
                             if (reasons.length) {
-                                vm.onError(false, reasons)
+                                vm.onError.call(elem, reasons)
                             } else {
-                                vm.onSuccess(true, reasons)
+                                vm.onSuccess.call(elem, reasons)
                             }
-                            vm.onComplete(true)
+                            vm.onComplete.call(elem, reasons)
                         }
                         return reasons
                     })
-                    if (inSubmit) {
+                    if (isValidateAll) {
                         return lastPromise
                     }
                 }
@@ -336,14 +395,15 @@ define(["../promise/avalon.promise"], function(avalon) {
             vm.validateAll = function(callback) {
                 var fn = callback || vm.onValidateAll
                 var promise = vm.elements.map(function(el) {
-                    return  vm.pipe(avalon(el).val(), el, "get", true)
+                    return  vm.pipe(avalon(el.element).val(), el, "get", true)
                 })
+
                 Promise.all(promise).then(function(array) {
                     var reasons = []
                     for (var i = 0, el; el = array[i++]; ) {
-                        reasons = reasons.concat(array)
+                        reasons = reasons.concat(el)
                     }
-                    fn(!reasons.length, reasons)//这里只放置未通过验证的组件
+                    fn.call(vm.widgetElement, reasons)//这里只放置未通过验证的组件
                 })
             }
             /**
@@ -351,9 +411,9 @@ define(["../promise/avalon.promise"], function(avalon) {
              * @param callback {Null|Function} 最后执行的回调，如果用户没传就使用vm.onResetAll
              */
             vm.resetAll = function(callback) {
-                vm.forEach.map(function(el) {
+                vm.elements.forEach(function(el) {
                     try {
-                        el.element.focus()
+                        vm.onReset.call(el.element, {type: "reset"}, el)
                     } catch (e) {
                     }
                 })
@@ -381,15 +441,26 @@ define(["../promise/avalon.promise"], function(avalon) {
     }
     widget.defaults = {
         validationHooks: {}, //@config {Object} 空对象，用于放置验证规则
-        onSuccess: avalon.noop, //@config {Function} 空函数，单个验证成功时触发
-        onError: avalon.noop, //@config {Function} 空函数，单个验证失败时触发
-        onComplete: avalon.noop, //@config {Function} 空函数，单个验证无论成功与否都触发
+        onSuccess: avalon.noop, //@config {Function} 空函数，单个验证成功时触发，this指向被验证元素this指向被验证元素，传参为一个对象数组
+        onError: avalon.noop, //@config {Function} 空函数，单个验证失败时触发，this与传参情况同上
+        onComplete: avalon.noop, //@config {Function} 空函数，单个验证无论成功与否都触发，this与传参情况同上
         onValidateAll: avalon.noop, //@config {Function} 空函数，整体验证后或调用了validateAll方法后触发
-        onReset: avalon.noop, //@config {Function} 空函数，表单元素获取焦点时触发，大家可以在这里清理ms-error这样表示验证失败的类名
-        onResetAll: avalon.noop, //@config {Function} 空函数，当用户调用了resetAll后触发
+        onReset: avalon.noop, //@config {Function} 空函数，表单元素获取焦点时触发，this指向被验证元素，大家可以在这里清理className、value
+        onResetAll: avalon.noop, //@config {Function} 空函数，当用户调用了resetAll后触发，
+        validateInBlur: true, //@config {Boolean} true，在blur事件中执行onReset回调
+        validateInSubmit: true //@config {Boolean} true，在submit事件中执行onValidateAll回调
     }
 //http://bootstrapvalidator.com/
 //https://github.com/rinh/jvalidator/blob/master/src/index.js
+//http://baike.baidu.com/view/2582.htm?fr=aladdin&qq-pf-to=pcqq.group
 })
+/*
+ @other
+ avalon.validation自带了许多<code>验证规则</code>，满足你一般的业务需求。
+ */
 
-
+ /**
+ @links
+ [自带验证规则required,int,decimal,alpha,chs](avalon.at.ex1.html)
+ [自带验证规则qq,id,email,url,date,passport,pattern](avalon.at.ex2.html)
+ */

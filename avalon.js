@@ -13,7 +13,7 @@
      **********************************************************************/
     var expose = new Date - 0
     var subscribers = "$" + expose
-    //http://addyosmani.com/blog/understanding-mvvm-a-guide-for-javascript-developers/
+    //http://stackoverflow.com/questions/3277182/how-to-get-the-global-object-in-javascript
     var window = this || (0, eval)("this")
     var otherRequire = window.require
     var otherDefine = window.define
@@ -2017,7 +2017,7 @@
     }
 
     function createSignalTower(elem, vmodel) {
-        var id = elem.getAttribute("avalonctrl") ||  vmodel.$id
+        var id = elem.getAttribute("avalonctrl") || vmodel.$id
         elem.setAttribute("avalonctrl", id)
         vmodel.$events.expr = elem.tagName + '[avalonctrl="' + id + '"]'
     }
@@ -3272,6 +3272,7 @@
                 elem.removeAttribute("ms-widget")
                 var vmodel = constructor(elem, data, vmodels) || {} //防止组件不返回VM
                 if (vmodel.$id) {
+                    avalon.vmodels[vmodel.$id] = vmodel
                     createSignalTower(elem, vmodel)
                     elem.msData["ms-widget-id"] = vmodel.$id
                 }
@@ -3348,7 +3349,7 @@
         }
     }
 
-    function pipe(val, data, action) {
+    function pipe(val, data, action, e) {
         data.param.replace(rword, function(name) {
             var hook = avalon.duplexHooks[name]
             if (hook && typeof hook[action] === "function") {
@@ -3376,11 +3377,11 @@
             composing = false
         }
         //当value变化时改变model的值
-        function updateVModel(event) {
+        function updateVModel(e) {
             if (composing)//处理中文输入法在minlengh下引发的BUG
                 return
             var val = element.oldValue = element.value //防止递归调用形成死循环
-            var lastValue = data.pipe(val, data, "get")
+            var lastValue = data.pipe(val, data, "get", e)
             if ($elem.data("duplex-observe") !== false) {
                 evaluator(lastValue)
                 callback.call(element, lastValue)
@@ -3402,9 +3403,9 @@
 
         if (data.isChecked || element.type === "radio") {
             var IE6 = !window.XMLHttpRequest
-            updateVModel = function() {
+            updateVModel = function(e) {
                 if ($elem.data("duplex-observe") !== false) {
-                    var lastValue = data.pipe(element.value, data, "get")
+                    var lastValue = data.pipe(element.value, data, "get", e)
                     evaluator(lastValue)
                     callback.call(element, lastValue)
                 }
@@ -3427,7 +3428,7 @@
             }
             bound(IE6 ? "mouseup" : "click", updateVModel)
         } else if (type === "checkbox") {
-            updateVModel = function() {
+            updateVModel = function(e) {
                 if ($elem.data("duplex-observe") !== false) {
                     var method = element.checked ? "ensure" : "remove"
                     var array = evaluator()
@@ -3435,7 +3436,7 @@
                         log("ms-duplex应用于checkbox上要对应一个数组")
                         array = [array]
                     }
-                    avalon.Array[method](array, data.pipe(element.value, data, "get"))
+                    avalon.Array[method](array, data.pipe(element.value, data, "get", e))
                     callback.call(element, array)
                 }
             }
@@ -3446,37 +3447,44 @@
             }
             bound(W3C ? "change" : "click", updateVModel)
         } else {
-            var event = element.attributes["data-duplex-event"] || element.attributes["data-event"] || {}
+            var events = element.getAttribute("data-duplex-event") || element.getAttribute("data-event") || "input"
             if (element.attributes["data-event"]) {
                 log("data-event指令已经废弃，请改用data-duplex-event")
             }
-            event = event.value
-            if (event === "change") {
-                bound("change", updateVModel)
-            } else {
-                if (W3C) { //IE9+, W3C
-                    bound("input", updateVModel)
-                    bound("compositionstart", compositionStart)
-                    bound("compositionend", compositionEnd)
-                    //http://www.cnblogs.com/rubylouvre/archive/2013/02/17/2914604.html
-                    //http://www.matts411.com/post/internet-explorer-9-oninput/
-                    if (DOC.documentMode === 9) {
-                        function delay(e) {
-                            setTimeout(function() {
-                                updateVModel(e)
-                            })
-                        }
-                        bound("paste", delay)
-                        bound("cut", delay)
-                    }
-                } else {
-                    bound("propertychange", function(e) {
-                        if (e.properyName === "value") {
-                            updateVModel(e)
-                        }
-                    })
-                }
+            function delay(e) {
+                setTimeout(function() {
+                    updateVModel(e)
+                })
             }
+            events.replace(rword, function(name) {
+                switch (name) {
+                    case "input":
+                        if (W3C) { //IE9+, W3C
+                            bound("input", updateVModel)
+                            bound("compositionstart", compositionStart)
+                            bound("compositionend", compositionEnd)
+                            //http://www.cnblogs.com/rubylouvre/archive/2013/02/17/2914604.html
+                            //http://www.matts411.com/post/internet-explorer-9-oninput/
+                            if (DOC.documentMode === 9) {
+                                bound("paste", delay)
+                                bound("cut", delay)
+                            }
+                        } else {//onpropertychange事件无法区分是程序触发还是用户触发
+                            bound("keydown", function(e) {
+                                var key = e.keyCode
+                                if (key === 91 || (15 < key && key < 19) || (37 <= key && key <= 40))
+                                    return;
+                                delay(e)
+                            })
+                            bound("paste", delay)
+                            bound("cut", delay)
+                        }
+                        break
+                    default:
+                        bound(name, updateVModel)
+                        break
+                }
+            })
         }
         element.oldValue = element.value
         launch(function() {
@@ -3495,6 +3503,7 @@
     function W3CFire(el, name, detail) {
         var event = DOC.createEvent("Events")
         event.initEvent(name, true, true)
+        event.isTrusted = false
         if (detail) {
             event.detail = detail
         }
@@ -3506,7 +3515,9 @@
             if (W3C) {
                 W3CFire(this, "input")
             } else {
-                this.fireEvent("onchange")
+                var e = document.createEventObject()
+                e.isTrusted = false //isTrusted在W3C中表示程序触发
+                this.fireEvent("onkeydown", e)
             }
         }
     }
@@ -3548,15 +3559,15 @@
 
     duplexBinding.SELECT = function(element, evaluator, data) {
         var $elem = avalon(element)
-        function updateVModel() {
+        function updateVModel(e) {
             if ($elem.data("duplex-observe") !== false) {
                 var val = $elem.val() //字符串或字符串数组
                 if (Array.isArray(val)) {
                     val = val.map(function(v) {
-                        return data.pipe(v, data, "get")
+                        return data.pipe(v, data, "get", e)
                     })
                 } else {
-                    val = data.pipe(val, data, "get")
+                    val = data.pipe(val, data, "get", e)
                 }
                 if (val + "" !== element.oldValue) {
                     evaluator(val)

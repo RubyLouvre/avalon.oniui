@@ -462,7 +462,7 @@ define(["../promise/avalon.promise"], function(avalon) {
 
  /**
  @links
- [自带验证规则required,int,decimal,alpha,chs](avalon.at.ex1.html)
- [自带验证规则qq,id,email,url,date,passport,pattern](avalon.at.ex2.html)
- [自带验证规则maxlength,minlength,lt,gt,eq,equal](avalon.at.ex3.html)
+ [自带验证规则required,int,decimal,alpha,chs](avalon.validation.ex1.html)
+ [自带验证规则qq,id,email,url,date,passport,pattern](avalon.validation.ex2.html)
+ [自带验证规则maxlength,minlength,lt,gt,eq,equal](avalon.validation.ex3.html)
  */

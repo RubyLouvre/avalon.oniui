@@ -53,9 +53,9 @@
  *  ```javascript
  *  onSuccess, onError, onComplete, onValidateAll, onReset, onResetAll
  *  ```
- * <p>其中，前面四个是一个系列，它们都有1个参数，是一个对象数组，里面一些验证规则对象数组（如果成功，数组为空）； onReset是在元素获取焦点做重置工作的，如清理类名，
+ * <p>其中，前面四个是一个系列，它们都有1个参数，是一个对象数组，里面一些<code>验证规则对象</code>（如果成功，数组为空）； onReset是在元素获取焦点做重置工作的，如清理类名，
  * 清空value值，onResetAll是用于重置整个表单，它会在组件执行它辖下的所有元素的onReset回调后再执行。</p>
- * <p>验证规则对象的结构如下：</p>
+ * <p><b>验证规则对象</b>的结构如下：</p>
  * ```javascript
  * {
  *   element: element, //添加了ms-duplex绑定的元素节点，它应该位于form[ms-widget="validation"]这个元素下
@@ -394,15 +394,16 @@ define(["../promise/avalon.promise"], function(avalon) {
     }
     widget.defaults = {
         validationHooks: {}, //@config {Object} 空对象，用于放置验证规则
-        onSuccess: avalon.noop, //@config {Function} 空函数，单个验证成功时触发
-        onError: avalon.noop, //@config {Function} 空函数，单个验证失败时触发
-        onComplete: avalon.noop, //@config {Function} 空函数，单个验证无论成功与否都触发
+        onSuccess: avalon.noop, //@config {Function} 空函数，单个验证成功时触发，this指向被验证元素this指向被验证元素，传参为一个对象数组
+        onError: avalon.noop, //@config {Function} 空函数，单个验证失败时触发，this与传参情况同上
+        onComplete: avalon.noop, //@config {Function} 空函数，单个验证无论成功与否都触发，this与传参情况同上
         onValidateAll: avalon.noop, //@config {Function} 空函数，整体验证后或调用了validateAll方法后触发
-        onReset: avalon.noop, //@config {Function} 空函数，表单元素获取焦点时触发，大家可以在这里清理ms-error这样表示验证失败的类名
+        onReset: avalon.noop, //@config {Function} 空函数，表单元素获取焦点时触发，this指向被验证元素，大家可以在这里清理className、value
         onResetAll: avalon.noop, //@config {Function} 空函数，当用户调用了resetAll后触发
     }
 //http://bootstrapvalidator.com/
 //https://github.com/rinh/jvalidator/blob/master/src/index.js
+//http://baike.baidu.com/view/2582.htm?fr=aladdin&qq-pf-to=pcqq.group
 })
 
 

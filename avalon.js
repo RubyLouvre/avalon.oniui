@@ -3377,11 +3377,11 @@
             composing = false
         }
         //当value变化时改变model的值
-        function updateVModel(e) {
+        function updateVModel() {
             if (composing)//处理中文输入法在minlengh下引发的BUG
                 return
             var val = element.oldValue = element.value //防止递归调用形成死循环
-            var lastValue = data.pipe(val, data, "get", e)
+            var lastValue = data.pipe(val, data, "get")
             if ($elem.data("duplex-observe") !== false) {
                 evaluator(lastValue)
                 callback.call(element, lastValue)
@@ -3403,9 +3403,9 @@
 
         if (data.isChecked || element.type === "radio") {
             var IE6 = !window.XMLHttpRequest
-            updateVModel = function(e) {
+            updateVModel = function() {
                 if ($elem.data("duplex-observe") !== false) {
-                    var lastValue = data.pipe(element.value, data, "get", e)
+                    var lastValue = data.pipe(element.value, data, "get")
                     evaluator(lastValue)
                     callback.call(element, lastValue)
                 }
@@ -3428,7 +3428,7 @@
             }
             bound(IE6 ? "mouseup" : "click", updateVModel)
         } else if (type === "checkbox") {
-            updateVModel = function(e) {
+            updateVModel = function() {
                 if ($elem.data("duplex-observe") !== false) {
                     var method = element.checked ? "ensure" : "remove"
                     var array = evaluator()
@@ -3436,7 +3436,7 @@
                         log("ms-duplex应用于checkbox上要对应一个数组")
                         array = [array]
                     }
-                    avalon.Array[method](array, data.pipe(element.value, data, "get", e))
+                    avalon.Array[method](array, data.pipe(element.value, data, "get"))
                     callback.call(element, array)
                 }
             }
@@ -3470,14 +3470,10 @@
                                 bound("cut", delay)
                             }
                         } else {//onpropertychange事件无法区分是程序触发还是用户触发
-                            bound("keydown", function(e) {
-                                var key = e.keyCode
-                                if (key === 91 || (15 < key && key < 19) || (37 <= key && key <= 40))
-                                    return;
-                                delay(e)
+                            bound("propertychange", function(e) {
+                                if (e.propertyName === "value")
+                                    updateVModel()
                             })
-                            bound("paste", delay)
-                            bound("cut", delay)
                         }
                         break
                     default:
@@ -3517,11 +3513,7 @@
             if (W3C) {
                 W3CFire(this, type)
             } else {
-                if (type === "input")
-                    type = "keydown"
-                var e = document.createEventObject()
-                e.isTrusted = false //isTrusted在W3C中表示程序触发
-                this.fireEvent("on" + type, e)
+                this.fireEvent("on" + type)
             }
         }
     }
@@ -3563,15 +3555,15 @@
 
     duplexBinding.SELECT = function(element, evaluator, data) {
         var $elem = avalon(element)
-        function updateVModel(e) {
+        function updateVModel() {
             if ($elem.data("duplex-observe") !== false) {
                 var val = $elem.val() //字符串或字符串数组
                 if (Array.isArray(val)) {
                     val = val.map(function(v) {
-                        return data.pipe(v, data, "get", e)
+                        return data.pipe(v, data, "get")
                     })
                 } else {
-                    val = data.pipe(val, data, "get", e)
+                    val = data.pipe(val, data, "get")
                 }
                 if (val + "" !== element.oldValue) {
                     evaluator(val)

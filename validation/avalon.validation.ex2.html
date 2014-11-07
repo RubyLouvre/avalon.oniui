@@ -13,7 +13,7 @@
         <style >
             .error{
                 border:1px  solid red;
-                
+
             }
             .success{
                 border:1px  solid greenyellow;
@@ -65,17 +65,17 @@
                         },
                         onError: function(reasons) {
                             reasons.forEach(function(reason) {
-                                avalon(this).addClass("error")
+                                avalon(this).removeClass("success").addClass("error")
                                 showError(this, reason)
                             }, this)
                         },
                         onSuccess: function() {
-                            avalon(this).addClass("success")
+                            avalon(this).removeClass("error").addClass("success")
                             removeError(this)
                         },
                         onValidateAll: function(reasons) {
                             reasons.forEach(function(reason) {
-                                avalon(reason.element).addClass("error")
+                                avalon(reason.element).removeClass("success").addClass("error")
                                 showError(reason.element, reason)
                             })
                             if (reasons.length === 0) {

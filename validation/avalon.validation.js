@@ -287,7 +287,7 @@ define(["../promise/avalon.promise"], function(avalon) {
         var onSubmitCallback
         var vmodel = avalon.define(data.validationId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "data", "validationHooks","validateInKeyup", "validateAllInSubmit","resetInBlur"]
+            vm.$skipArray = ["widgetElement", "data", "validationHooks", "validateInKeyup", "validateAllInSubmit", "resetInBlur"]
             vm.widgetElement = element
             vm.data = []
             /**
@@ -380,6 +380,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                                 resolve(reason)
                             }
                         }
+                        data.data = {}
                         hook.get(value, data, next)
                     }
 
@@ -433,18 +434,14 @@ define(["../promise/avalon.promise"], function(avalon) {
                                 })
                             })
                         }
-                        if (vm.validateInKeyup) {
+                        if (vm.validateInBlur) {
                             data.bound("blur", function(e) {
-                                setTimeout(function() {
-                                    vm.validate(data)
-                                })
+                                vm.validate(data)
                             })
                         }
                         if (vm.resetInFocus) {
                             data.bound("focus", function(e) {
-                                setTimeout(function() {
-                                    vm.onReset.call(data.element, e, data)
-                                })
+                                vm.onReset.call(data.element, e, data)
                             })
                         }
                     }
@@ -471,9 +468,10 @@ define(["../promise/avalon.promise"], function(avalon) {
         onValidateAll: avalon.noop, //@config {Function} 空函数，整体验证后或调用了validateAll方法后触发
         onReset: avalon.noop, //@config {Function} 空函数，表单元素获取焦点时触发，this指向被验证元素，大家可以在这里清理className、value
         onResetAll: avalon.noop, //@config {Function} 空函数，当用户调用了resetAll后触发，
-        resetInBlur: true, //@config {Boolean} true，在blur事件中执行onReset回调
+        validateInBlur: true, //@config {Boolean} true，在blur事件中进行验证,触发onSuccess, onError, onComplete回调
+        validateInKeyup: true, //@config {Boolean} true，在keyup事件中进行验证,触发onSuccess, onError, onComplete回调
         validateAllInSubmit: true, //@config {Boolean} true，在submit事件中执行onValidateAll回调
-        validateInKeyup: true//@config {Boolean} true，在keyup事件中进行验证,触发onSuccess, onError, onComplete回调
+        resetInFocus: true //@config {Boolean} true，在focus事件中执行onReset回调
     }
 //http://bootstrapvalidator.com/
 //https://github.com/rinh/jvalidator/blob/master/src/index.js

@@ -56,7 +56,7 @@ div#{$uiname} {
 		color: $ui-state-disabled-color;
 		background: map-get($doublelist, disableBg);
 	}
-	.ui-button{
+	.ui-dbl-button{
 		height: 24px;
 		*height: auto;
 		line-height: 24px;

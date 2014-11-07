@@ -1,6 +1,17 @@
-<span class="button edit"
-	  ms-if="hasEditBtn(leaf)" 
+<span class="button ebutton add"
+      ms-on-dblclick="editDblclick" 
+	  ms-if="edit.enable && optionToBoolen(edit.showAddBtn,leaf)" 
+	  ms-click="addFun($event,leaf)"></span>
+<span class="button ebutton edit" 
+      ms-on-dblclick="editDblclick" 
+	  ms-if="edit.enable && optionToBoolen(edit.showRenameBtn,leaf)" 
 	  ms-click="editFun($event,leaf)"></span>
-<span class="button remove" 
-	  ms-if="hasRemoveBtn(leaf)" 
+<span class="button ebutton remove" 
+      ms-on-dblclick="editDblclick" 
+	  ms-if="edit.enable && optionToBoolen(edit.showRemoveBtn,leaf)" 
 	  ms-click="removeFun($event,leaf)"></span>
+<span class="edit-input"><input type="text" class="rename" 
+      ms-attr-id="'input'+leaf.$id"
+      ms-attr-value="leaf.name" 
+      ms-on-focus="editFocus(event,leaf)"
+      ms-on-blur="saveChange(event,leaf)"></span> 

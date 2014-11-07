@@ -7,10 +7,18 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
     var optionKeyToFixMix = {view: 1, callback: 1},
         eventList = ["click", "dblClick", "collapse", "expand", "select", "contextmenu"],
         ExtentionMethods = [],
-        undefine = void 0
+        undefine = void 0,
+        tplDict = {}
     //  tool functions
     function g(id) {
         return document.getElementById(id)
+    }
+
+    function tplFormate(tpl) {
+        return tpl.replace(/\{\{MS_[^\}]+\}\}/g, function(mt) {
+            var k = mt.substr(mt.indexOf("_") + 1).replace("}}", "").toLowerCase()
+            return tplDict[k] || ""
+        })
     }
 
     //  树状数据的标准化，mvvm的痛
@@ -33,7 +41,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         item.isParent = itemIsParent(item)
         item.pId = item.pId || 0
         // 不要可监听
-        item.$parentLeaf = ""
+        item.$parentLeaf = parentLeaf || ""
         if(item.isParent) {
             item.open = !!item.open
         } else {
@@ -107,6 +115,10 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
 
     var widget = avalon.ui.tree = function(element, data, vmodels) {
         var options = data.treeOptions, cache = {}// 缓存节点
+        template = tplFormate(template)
+        parentTemplate = tplFormate(parentTemplate)
+        leafTemplate = tplFormate(leafTemplate)
+        nodesTemplate = tplFormate(nodesTemplate)
         //方便用户对原始模板进行修改,提高定制性
         options.template = options.getTemplate(template, options)
         options.parentTemplate = options.getTemplate(parentTemplate, options, "parent").replace(/\n/g, "").replace(/>[\s]+</g, "><")
@@ -421,7 +433,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             vm.optionToBoolen = function() {
                 var arg = arguments[0]
                 if(!avalon.isFunction(arg)) return arg
-                return arg.apply(null, [].slice.call(arguments,1))
+                return arg.apply(vm, [].slice.call(arguments,1))
             }
             // 鼠标事件相关
             vm.liveContextmenu = function(event) {
@@ -442,6 +454,11 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             vm.excute = function() {
                 var cmd = arguments[0]
                 if(cmd) vm[cmd].apply(this, [].slice.call(arguments, 1))
+            }
+            vm.createLeaf = itemFormator
+
+            vm.cloneNode = function(leaf) {
+                return avalon.mix({}, leaf.$model)
             }
         })
 
@@ -487,12 +504,13 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
     })
 
     //@method avalon.ui.tree.AddExtention(fixNames, addingDefaults, addingMethodFunc, watchEvents)扩展tree
-    avalon.ui.tree.AddExtention = function(fixNames, addingDefaults, addingMethodFunc, watchEvents) {
+    avalon.ui.tree.AddExtention = function(fixNames, addingDefaults, addingMethodFunc, watchEvents, tplHooks) {
         if(fixNames) avalon.each(fixNames, function(i, item) {
             optionKeyToFixMix[item] = item
         })
         if(addingDefaults) avalon.mix(true, widget.defaults, addingDefaults)
         if(addingMethodFunc) ExtentionMethods.push(addingMethodFunc)
         if(watchEvents) eventList = eventList.concat(watchEvents)
+        if(tplHooks) avalon.mix(tplDict, tplHooks)
     }
 })

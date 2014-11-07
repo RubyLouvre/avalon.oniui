@@ -7,7 +7,7 @@
       ms-class-7="roots_open:hasClassOpen(leaf) && leaf.level==0" 
       ms-class-6="bottom_open:hasClassOpen(leaf) && $last" 
       ms-click="toggleOpenStatue($event,leaf)"></span>
-<a target="_blank" 
+<a target="_blank" {{MS_EDIT_BINDING}} 
    ms-class="curSelectedNode:hasClassSelect(leaf)" 
    ms-click="selectFun($event,leaf)" 
 	 ms-dblclick="toggleOpenStatue($event,leaf)">
@@ -15,6 +15,7 @@
           ms-if="view.showIcon"
           ms-class-1="ico_open:hasClassOpen(leaf)"></span>
   	<span>{{view.nameShower(leaf)|html}}</span>
+    {{MS_EDIT_HTML}}
 </a>
 <ul class="line" 
     ms-if="hasChildren(leaf)" 

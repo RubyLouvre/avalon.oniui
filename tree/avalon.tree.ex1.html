@@ -68,6 +68,12 @@
                         callback: {
                             onExpand: function(leaf) {
                                 console.log(leaf)
+                            },
+                            beforeRemove: function(obj) {
+                                return confirm("确认删除?")
+                            },
+                            beforeAdd: function(obj) {
+                                return confirm("确认添加?")
                             }
                         }
                     }

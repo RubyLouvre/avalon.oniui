@@ -80,7 +80,7 @@ $uiname : ".ui-tree";
 	li span.ico_docu{margin-right:2px; background-position:-110px -32px; vertical-align:top; *vertical-align:middle}
 	li span.edit {margin-right:2px; background-position:-110px -48px; vertical-align:top; *vertical-align:middle}
 	li span.remove {margin-right:2px; background-position:-110px -64px; vertical-align:top; *vertical-align:middle}
-
+	li span.add {margin-left: 2px;margin-right: -1px;background-position: -144px 0;vertical-align: top;*vertical-align:middle}
 	li span.ico_loading{margin-right:2px; background:url(./loading.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
 
 	ul.tmpTargetTree {background-color:#FFE6B0; opacity:0.8; filter:alpha(opacity=80)}
@@ -91,5 +91,6 @@ $uiname : ".ui-tree";
 
 	ul.tree.treeDragUL {margin:0; padding:0; position:absolute; width:auto; height:auto;overflow:hidden; background-color:#cfcfcf; border:1px #00B83F dotted; opacity:0.8; filter:alpha(opacity=80)}
 	.TreeMask {z-index:10000; background-color:#cfcfcf; opacity:0.0; filter:alpha(opacity=0); position:absolute}
-
+	li a.curSelectedNode span.ebutton,li a.ui-state-hover span.ebutton,li.edit-focus span.ico_close,li.edit-focus span.edit-input {display:inline-block;}
+	li.edit-focus a span.ebutton,li.edit-focus a span,li a span.ebutton , span.edit-input{display:none;}
 }

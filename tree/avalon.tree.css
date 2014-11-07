@@ -189,6 +189,12 @@
     background-position: -110px -64px;
     vertical-align: top;
     *vertical-align: middle; }
+  .ui-tree li span.add {
+    margin-left: 2px;
+    margin-right: -1px;
+    background-position: -144px 0;
+    vertical-align: top;
+    *vertical-align: middle; }
   .ui-tree li span.ico_loading {
     margin-right: 2px;
     background: url(./loading.gif) no-repeat scroll 0 0 transparent;
@@ -229,3 +235,7 @@
     opacity: 0.0;
     filter: alpha(opacity=0);
     position: absolute; }
+  .ui-tree li a.curSelectedNode span.ebutton, .ui-tree li a.ui-state-hover span.ebutton, .ui-tree li.edit-focus span.ico_close, .ui-tree li.edit-focus span.edit-input {
+    display: inline-block; }
+  .ui-tree li.edit-focus a span.ebutton, .ui-tree li.edit-focus a span, .ui-tree li a span.ebutton, .ui-tree span.edit-input {
+    display: none; }

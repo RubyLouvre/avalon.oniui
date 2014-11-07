@@ -1,10 +1,11 @@
 <span class="button switch center_docu" 
       ms-class="bottom_docu:$last" 
       ms-class-2="noline_docu:!optionToBoolen(view.showLine, leaf)"></span>
-<a target="_blank"
+<a target="_blank" {{MS_EDIT_BINDING}} 
    ms-class="curSelectedNode:hasClassSelect(leaf)" 
    ms-click="selectFun($event,leaf)">
     <span class="button ico_docu" 
           ms-if="optionToBoolen(view.showIcon,leaf)"></span>
   	<span>{{view.nameShower(leaf)|html}}</span>
+  	{{MS_EDIT_HTML}}
 </a>

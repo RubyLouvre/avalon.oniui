@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.3.6 2014.11.5 support IE6+ and other browsers
+ avalon 1.3.6 2014.11.7 support IE6+ and other browsers
  ==================================================*/
 (function(DOC) {
     /*********************************************************************
@@ -3506,8 +3506,9 @@
         el.dispatchEvent(event)
     }
 
-    function onTree() { //disabled状态下改动不触发input事件
-        if (!this.disabled && this.oldValue !== this.value) {
+    function onTree(value) { //disabled状态下改动不触发input事件
+        var newValue = arguments.length ? value : this.value
+        if (!this.disabled && this.oldValue !== newValue) {
             var type = this.getAttribute("data-duplex-event") || "input"
             type = type.match(rword).shift()
             if (W3C) {
@@ -3536,16 +3537,14 @@
         }
     }
 
-    function newSetter(newValue) {
-        oldSetter.call(this, newValue)
-        if (newValue !== this.oldValue) {
-            W3CFire(this, "input")
-        }
+    function newSetter(value) {
+        onSetter.call(this, value)
+        onTree.call(this, value)
     }
     try {
         var inputProto = HTMLInputElement.prototype
         Object.getOwnPropertyNames(inputProto)//故意引发IE6-8等浏览器报错
-        var oldSetter = Object.getOwnPropertyDescriptor(inputProto, "value").set //屏蔽chrome, safari,opera
+        var onSetter = Object.getOwnPropertyDescriptor(inputProto, "value").set //屏蔽chrome, safari,opera
         Object.defineProperty(inputProto, "value", {
             set: newSetter
         })

@@ -11,5 +11,5 @@ div.ui-doublelist { font-size: 12px; }
 .ui-doublelist li.ui-state-hover { background-color: #f8f8f8; }
 .ui-doublelist li.ui-state-active { background-color: #3775c0; color: white; }
 .ui-doublelist li.ui-state-disabled { cursor: default; color: #999999; background: white; }
-.ui-doublelist .ui-button { height: 24px; *height: auto; line-height: 24px; padding: 0; background-color: #f8f8f8; border: 1px solid #d4d4d4; border-radius: 2px; color: black; text-align: center; margin-top: 10px; cursor: pointer; }
+.ui-doublelist .ui-dbl-button { height: 24px; *height: auto; line-height: 24px; padding: 0; background-color: #f8f8f8; border: 1px solid #d4d4d4; border-radius: 2px; color: black; text-align: center; margin-top: 10px; cursor: pointer; }
 .ui-doublelist-option div.ui-state-disabled { border-color: #dedede; color: #ccc; }

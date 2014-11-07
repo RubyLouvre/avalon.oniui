@@ -172,7 +172,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                                 log("ms-duplex应用于checkbox上要对应一个数组")
                                 array = [array]
                             }
-                            avalon.Array[method](array, data.pipe(element.value, data, "get",e))
+                            avalon.Array[method](array, data.pipe(element.value, data, "get", e))
                             callback.call(element, array)
                         }
                     }
@@ -188,6 +188,11 @@ define(["../promise/avalon.promise"], function(avalon) {
                     if (element.attributes["data-event"]) {
                         log("data-event指令已经废弃，请改用data-duplex-event")
                     }
+                    function delay(e) {
+                        setTimeout(function() {
+                            updateVModel(e)
+                        })
+                    }
                     events.replace(avalon.rword, function(name) {
                         switch (name) {
                             case "input":
@@ -198,20 +203,18 @@ define(["../promise/avalon.promise"], function(avalon) {
                                     //http://www.cnblogs.com/rubylouvre/archive/2013/02/17/2914604.html
                                     //http://www.matts411.com/post/internet-explorer-9-oninput/
                                     if (DOC.documentMode === 9) {
-                                        function delay(e) {
-                                            setTimeout(function() {
-                                                updateVModel(e)
-                                            })
-                                        }
                                         bound("paste", delay)
                                         bound("cut", delay)
                                     }
-                                } else {
-                                    bound("propertychange", function(e) {
-                                        if (e.properyName === "value") {
-                                            updateVModel(e)
-                                        }
+                                } else {//onpropertychange事件无法区分是程序触发还是用户触发
+                                    bound("keydown", function(e) {
+                                        var key = e.keyCode
+                                        if (key === 91 || (15 < key && key < 19) || (37 <= key && key <= 40))
+                                            return;
+                                        delay(e)
                                     })
+                                    bound("paste", delay)
+                                    bound("cut", delay)
                                 }
                                 break
                             default:
@@ -238,6 +241,7 @@ define(["../promise/avalon.promise"], function(avalon) {
             function W3CFire(el, name, detail) {
                 var event = DOC.createEvent("Events")
                 event.initEvent(name, true, true)
+                event.isTrusted = false
                 if (detail) {
                     event.detail = detail
                 }
@@ -249,7 +253,9 @@ define(["../promise/avalon.promise"], function(avalon) {
                     if (W3C) {
                         W3CFire(this, "input")
                     } else {
-                        this.fireEvent("onchange")
+                        var e = document.createEventObject()
+                        e.isTrusted = false //isTrusted在W3C中表示程序触发
+                        this.fireEvent("onkeydown", e)
                     }
                 }
             }
@@ -404,7 +410,6 @@ define(["../promise/avalon.promise"], function(avalon) {
         "int": {
             message: "必须是整数",
             get: function(value, data, next) {
-                console.log(/^\-?\d+$/.test(value))
                 next(/^\-?\d+$/.test(value))
                 return value
             }
@@ -437,10 +442,24 @@ define(["../promise/avalon.promise"], function(avalon) {
                 return value
             }
         },
+        chs: {
+            message: '必须是中文字符',
+            get: function(value, data, next) {
+                next(/^[\u4e00-\u9fa5]+$/.test(value))
+                return value
+            }
+        },
         chs_numeric: {
             message: '必须是中文字符或数字及下划线等特殊字符',
             get: function(value, data, next) {
                 next(/^[\\u4E00-\\u9FFF0-9_\-]+$/i.test(value))
+                return value
+            }
+        },
+        qq: {
+            message: "腾讯QQ号从10000开始",
+            get: function(value, data, next) {
+                next(/^[1-9]\d{4,10}$/.test(value))
                 return value
             }
         },
@@ -584,6 +603,11 @@ define(["../promise/avalon.promise"], function(avalon) {
             //重写框架内部的pipe方法
             var rnoinput = /^(radio|select|file|reset|button|submit|checkbox)/
             vm.pipe = function(val, data, action, e) {
+
+                if (e && e.isTrusted == false) {
+                      console.log(e.type, e.propertyName, e.isTrusted)
+                    e = false
+                }
                 var isValidateAll = e === true
                 var inwardHooks = vmodel.validationHooks
                 var globalHooks = avalon.duplexHooks
@@ -628,8 +652,8 @@ define(["../promise/avalon.promise"], function(avalon) {
                         }
                         val = hook[action](val, data, next)
                     }
-                })
-                if (promises.length) {//如果promises不为空，说明经过验证拦截器
+                }) //只有用户输入才触发
+                if (promises.length && e) {//如果promises不为空，说明经过验证拦截器
                     var lastPromise = Promise.all(promises).then(function(array) {
                         var reasons = []
                         for (var i = 0, el; el = array[i++]; ) {

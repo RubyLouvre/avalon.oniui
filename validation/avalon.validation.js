@@ -184,7 +184,7 @@ define(["../promise/avalon.promise"], function(avalon) {
         equal: {
             message: "必须等于{{other}}",
             get: function(value, data, next) {
-                var id = data.element.getAttribute("data-duplex-equal") ||""
+                var id = data.element.getAttribute("data-duplex-equal") || ""
                 var other = avalon(document.getElementById(id)).val() || ""
                 data.data.other = other
                 next(value === other)
@@ -352,7 +352,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                                     var reason = {
                                         element: elem,
                                         data: data.data,
-                                        message: elem.getAttribute("data-duplex-message") ||  hook.message,
+                                        message: elem.getAttribute("data-duplex-message") || hook.message,
                                         validateRule: name,
                                         getMessage: getMessage
                                     }
@@ -423,8 +423,22 @@ define(["../promise/avalon.promise"], function(avalon) {
             }
             //收集下方表单元素的数据
             vm.$watch("init-ms-duplex", function(data) {
+                var inwardHooks = vmodel.validationHooks
+                var globalHooks = avalon.duplexHooks
                 if (typeof data.pipe !== "function" && avalon.contains(element, data.element)) {
                     data.pipe = vm.pipe
+                    var params = []
+                    var validateParams = []
+                    data.param.replace(/\w+/g, function(name) {
+                        var hook = inwardHooks[name] || globalHooks[name]
+                        if (hook && typeof hook.get === "function" && hook.message) {
+                            validateParams.push(name)
+                        } else {
+                            params.push(name)
+                        }
+                    })
+                    data.param = params.join("-")
+                    data.validateParam = validateParams.join("-")
                     vm.elements.push(data)
                     return false
                 }
@@ -448,8 +462,9 @@ define(["../promise/avalon.promise"], function(avalon) {
         onValidateAll: avalon.noop, //@config {Function} 空函数，整体验证后或调用了validateAll方法后触发
         onReset: avalon.noop, //@config {Function} 空函数，表单元素获取焦点时触发，this指向被验证元素，大家可以在这里清理className、value
         onResetAll: avalon.noop, //@config {Function} 空函数，当用户调用了resetAll后触发，
-        validateInBlur: true, //@config {Boolean} true，在blur事件中执行onReset回调
-        validateInSubmit: true //@config {Boolean} true，在submit事件中执行onValidateAll回调
+        resetInBlur: true, //@config {Boolean} true，在blur事件中执行onReset回调
+        validateInSubmit: true, //@config {Boolean} true，在submit事件中执行onValidateAll回调
+        validateInKeyup: true//@config {Boolean} true，在submit事件中执行onValidateAll回调
     }
 //http://bootstrapvalidator.com/
 //https://github.com/rinh/jvalidator/blob/master/src/index.js
@@ -460,7 +475,7 @@ define(["../promise/avalon.promise"], function(avalon) {
  <p>avalon.validation自带了许多<code>验证规则</code>，满足你一般的业务需求。</p>
  */
 
- /**
+/**
  @links
  [自带验证规则required,int,decimal,alpha,chs](avalon.validation.ex1.html)
  [自带验证规则qq,id,email,url,date,passport,pattern](avalon.validation.ex2.html)

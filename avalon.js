@@ -13,8 +13,8 @@
      **********************************************************************/
     var expose = new Date - 0
     var subscribers = "$" + expose
-    //http://stackoverflow.com/questions/3277182/how-to-get-the-global-object-in-javascript
-    var window = this || (0, eval)("this")
+    //http://stackoverflow.com/questions/7290086/javascript-use-strict-and-nicks-find-global-function
+    var window = this || Function("return this")()
     var otherRequire = window.require
     var otherDefine = window.define
     var stopRepeatAssign = false
@@ -3057,7 +3057,7 @@
                 if (data.evaluator && data.args) {
                     var params = []
                     var casting = oneObject("string,number,boolean,checked")
-                    data.msType = "string"
+                    var hasCast
                     data.param.replace(/\w+/g, function(name) {
                         if ((elem.type === "radio" && data.param === "") || (elem.type === "checkbox" && name === "radio")) {
                             log(elem.type + "控件如果想通过checked属性同步VM,请改用ms-duplex-checked，以后ms-duplex默认是使用value属性同步VM")
@@ -3072,11 +3072,13 @@
                             log("ms-duplex-text已经更名为ms-duplex-string")
                         }
                         if (casting[name]) {
-                            data.msType = name
-                        } else {
-                            avalon.Array.ensure(params, name)
+                            hasCast = true
                         }
+                        avalon.Array.ensure(params, name)
                     })
+                    if (!hasCast) {
+                        params.push("string")
+                    }
                     data.param = params.join("-")
                     data.bound = function(type, callback) {
                         if (elem.addEventListener) {
@@ -3335,7 +3337,7 @@
         },
         "boolean": {
             get: function(val) {
-                return  val === "true"
+                return val === "true"
             },
             set: fixNull
         },
@@ -3374,13 +3376,12 @@
         function compositionEnd() {
             composing = false
         }
-        var typeIt = avalon.duplexHooks[data.msType].get
         //当value变化时改变model的值
         function updateVModel(e) {
             if (composing)//处理中文输入法在minlengh下引发的BUG
                 return
             var val = element.oldValue = element.value //防止递归调用形成死循环
-            var lastValue = data.pipe(typeIt(val), data, "get", e)
+            var lastValue = data.pipe(val, data, "get", e)
             if ($elem.data("duplex-observe") !== false) {
                 evaluator(lastValue)
                 callback.call(element, lastValue)
@@ -3400,18 +3401,18 @@
             }
         }
 
-        if (data.msType === "checked" || element.type === "radio") {
+        if (data.isChecked || element.type === "radio") {
             var IE6 = !window.XMLHttpRequest
             updateVModel = function(e) {
                 if ($elem.data("duplex-observe") !== false) {
-                    var lastValue = data.pipe(typeIt(element.value), data, "get", e)
+                    var lastValue = data.pipe(element.value, data, "get", e)
                     evaluator(lastValue)
                     callback.call(element, lastValue)
                 }
             }
             data.handler = function() {
                 var val = evaluator()
-                var checked = data.msType === "checked" ? !!val : val + "" === element.value
+                var checked = data.isChecked ? !!val : val + "" === element.value
                 element.oldValue = checked
                 if (IE6) {
                     setTimeout(function() {
@@ -3435,15 +3436,14 @@
                         log("ms-duplex应用于checkbox上要对应一个数组")
                         array = [array]
                     }
-                    avalon.Array[method](array, typeIt(element.value))
-                    data.pipe(array, data, "get", e)
+                    avalon.Array[method](array, data.pipe(element.value, data, "get", e))
                     callback.call(element, array)
                 }
             }
 
             data.handler = function() {
                 var array = [].concat(evaluator()) //强制转换为数组
-                element.checked = array.indexOf(typeIt(element.value)) >= 0
+                element.checked = array.indexOf(data.pipe(element.value, data, "get")) >= 0
             }
             bound(W3C ? "change" : "click", updateVModel)
         } else {
@@ -3563,18 +3563,16 @@
 
     duplexBinding.SELECT = function(element, evaluator, data) {
         var $elem = avalon(element)
-        var typeIt = avalon.duplexHooks[data.msType].get
         function updateVModel(e) {
             if ($elem.data("duplex-observe") !== false) {
                 var val = $elem.val() //字符串或字符串数组
                 if (Array.isArray(val)) {
-                    if (data.msType !== "checked") {
-                        val = val.map(typeIt)
-                    }
+                    val = val.map(function(v) {
+                        return data.pipe(v, data, "get", e)
+                    })
                 } else {
-                    val = typeIt(val)
+                    val = data.pipe(val, data, "get", e)
                 }
-                val = data.pipe(val, data, "get", e)
                 if (val + "" !== element.oldValue) {
                     evaluator(val)
                 }

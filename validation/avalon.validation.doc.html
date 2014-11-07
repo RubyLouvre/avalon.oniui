@@ -132,12 +132,12 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                         <td>{Function} 空函数，当用户调用了resetAll后触发，</td>
                     </tr>
                     <tr>
-                        <td>validateInBlur</td>
+                        <td>resetInBlur</td>
                         <td>true</td>
                         <td>{Boolean} true，在blur事件中执行onReset回调</td>
                     </tr>
                     <tr>
-                        <td>validateInSubmit</td>
+                        <td>validateAllInSubmit</td>
                         <td>true</td>
                         <td>{Boolean} true，在submit事件中执行onValidateAll回调</td>
                     </tr>
@@ -153,24 +153,6 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                         <td>$destory()</td>
                         <td></td>
                         <td>销毁组件，移除相关回调</td>
-                    </tr>
-                    <tr>
-                        <td>validateAll(callback)</td>
-                        <td></td>
-                        <td>验证当前表单下的所有非disabled元素
-                            <table border="1">
-                                <tr>
-                                    <th>参数名/返回值</th>
-                                    <th>类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>callback</td>
-                                    <td></td>
-                                    <td>{Null|Function} 最后执行的回调，如果用户没传就使用vm.onValidateAll</td>
-                                </tr>
-                            </table>
-                        </td>
                     </tr>
                     <tr>
                         <td>resetAll(callback)</td>

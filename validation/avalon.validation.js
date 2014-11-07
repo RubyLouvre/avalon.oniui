@@ -287,16 +287,16 @@ define(["../promise/avalon.promise"], function(avalon) {
         var onSubmitCallback
         var vmodel = avalon.define(data.validationId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "elements", "validationHooks"]
+            vm.$skipArray = ["widgetElement", "data", "validationHooks","validateInKeyup", "validateAllInSubmit","resetInBlur"]
             vm.widgetElement = element
-            vm.elements = []
+            vm.data = []
             /**
              * @interface 为元素绑定submit事件，阻止默认行为
              */
             vm.$init = function() {
-                element.setAttribute("novalidate", "novalidate", "validateInSubmit", "validateInBlur");
+                element.setAttribute("novalidate", "novalidate");
                 avalon.scan(element, [vmodel].concat(vmodels))
-                if (vm.validateInSubmit) {
+                if (vm.validateAllInSubmit) {
                     onSubmitCallback = avalon.bind(element, "submit", function(e) {
                         e.preventDefault()
                         vm.validateAll(vm.onValidateAll)
@@ -310,11 +310,11 @@ define(["../promise/avalon.promise"], function(avalon) {
              * @interface 销毁组件，移除相关回调
              */
             vm.$destory = function() {
-                vm.elements = []
+                vm.data = []
                 onSubmitCallback && avalon.unbind(element, "submit", onSubmitCallback)
                 element.textContent = element.innerHTML = ""
             }
-           
+
             /**
              * @interface 验证当前表单下的所有非disabled元素
              * @param callback {Null|Function} 最后执行的回调，如果用户没传就使用vm.onValidateAll
@@ -322,7 +322,7 @@ define(["../promise/avalon.promise"], function(avalon) {
 
             vm.validateAll = function(callback) {
                 var fn = callback || vm.onValidateAll
-                var promise = vm.elements.map(function(data) {
+                var promise = vm.data.map(function(data) {
                     return  vm.validate(data, true)
                 })
                 Promise.all(promise).then(function(array) {
@@ -338,7 +338,7 @@ define(["../promise/avalon.promise"], function(avalon) {
              * @param callback {Null|Function} 最后执行的回调，如果用户没传就使用vm.onResetAll
              */
             vm.resetAll = function(callback) {
-                vm.elements.forEach(function(el) {
+                vm.data.forEach(function(el) {
                     try {
                         vm.onReset.call(el.element, {type: "reset"}, el)
                     } catch (e) {
@@ -347,13 +347,18 @@ define(["../promise/avalon.promise"], function(avalon) {
                 var fn = callback || vm.onResetAll
                 fn.call(vm)
             }
+            /**
+             * @interface 验证单个元素对应的VM中的属性是否符合格式
+             * @param data {Object} 绑定对象
+             * @isValidateAll {Undefined|Boolean} 是否全部验证,是就禁止onSuccess, onError, onComplete触发
+             */
             vm.validate = function(data, isValidateAll) {
-                var value = data.evaluator.apply(null, data.args)
+                var value = data.valueAccessor()
                 var inwardHooks = vmodel.validationHooks
                 var globalHooks = avalon.duplexHooks
                 var promises = []
                 var elem = data.element
-                data.param.replace(/\w+/g, function(name) {
+                data.validateParam.replace(/\w+/g, function(name) {
                     var hook = inwardHooks[name] || globalHooks[name]
                     if (!elem.disabled) {
                         var resolve, reject
@@ -380,30 +385,31 @@ define(["../promise/avalon.promise"], function(avalon) {
 
                 })
 
-                if (promises.length) {//如果promises不为空，说明经过验证拦截器
-                    var lastPromise = Promise.all(promises).then(function(array) {
-                        var reasons = []
-                        for (var i = 0, el; el = array[i++]; ) {
-                            if (typeof el === "object") {
-                                reasons.push(el)
-                            }
+                //如果promises不为空，说明经过验证拦截器
+                var lastPromise = Promise.all(promises).then(function(array) {
+                    var reasons = []
+                    for (var i = 0, el; el = array[i++]; ) {
+                        if (typeof el === "object") {
+                            reasons.push(el)
                         }
-                        if (!isValidateAll) {
-                            if (reasons.length) {
-                                vm.onError.call(elem, reasons)
-                            } else {
-                                vm.onSuccess.call(elem, reasons)
-                            }
-                            vm.onComplete.call(elem, reasons)
+                    }
+                    if (!isValidateAll) {
+                        if (reasons.length) {
+                            vm.onError.call(elem, reasons)
+                        } else {
+                            vm.onSuccess.call(elem, reasons)
                         }
-                        return reasons
-                    })
-                    return lastPromise
-                }
+                        vm.onComplete.call(elem, reasons)
+                    }
+                    return reasons
+                })
+                return lastPromise
+
             }
             //收集下方表单元素的数据
             vm.$watch("init-ms-duplex", function(data) {
                 var inwardHooks = vmodel.validationHooks
+                data.valueAccessor = data.evaluator.apply(null, data.args)
                 var globalHooks = avalon.duplexHooks
                 if (typeof data.pipe !== "function" && avalon.contains(element, data.element)) {
                     var params = []
@@ -427,14 +433,14 @@ define(["../promise/avalon.promise"], function(avalon) {
                                 })
                             })
                         }
-                        if (!data.validateInKeyup) {
+                        if (vm.validateInKeyup) {
                             data.bound("blur", function(e) {
                                 setTimeout(function() {
                                     vm.validate(data)
                                 })
                             })
                         }
-                        if (!data.resetInFocus) {
+                        if (vm.resetInFocus) {
                             data.bound("focus", function(e) {
                                 setTimeout(function() {
                                     vm.onReset.call(data.element, e, data)
@@ -442,7 +448,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                             })
                         }
                     }
-                    vm.elements.push(data)
+                    vm.data.push(data)
                     return false
                 }
             })
@@ -466,8 +472,8 @@ define(["../promise/avalon.promise"], function(avalon) {
         onReset: avalon.noop, //@config {Function} 空函数，表单元素获取焦点时触发，this指向被验证元素，大家可以在这里清理className、value
         onResetAll: avalon.noop, //@config {Function} 空函数，当用户调用了resetAll后触发，
         resetInBlur: true, //@config {Boolean} true，在blur事件中执行onReset回调
-        validateInSubmit: true, //@config {Boolean} true，在submit事件中执行onValidateAll回调
-        validateInKeyup: true//@config {Boolean} true，在submit事件中执行onValidateAll回调
+        validateAllInSubmit: true, //@config {Boolean} true，在submit事件中执行onValidateAll回调
+        validateInKeyup: true//@config {Boolean} true，在keyup事件中进行验证,触发onSuccess, onError, onComplete回调
     }
 //http://bootstrapvalidator.com/
 //https://github.com/rinh/jvalidator/blob/master/src/index.js

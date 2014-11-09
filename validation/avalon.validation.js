@@ -516,4 +516,5 @@ define(["../promise/avalon.promise"], function(avalon) {
  [自带验证规则required,int,decimal,alpha,chs](avalon.validation.ex1.html)
  [自带验证规则qq,id,email,url,date,passport,pattern](avalon.validation.ex2.html)
  [自带验证规则maxlength,minlength,lt,gt,eq,equal](avalon.validation.ex3.html)
+ [自定义验证规则](avalon.validation.ex4.html)
  */

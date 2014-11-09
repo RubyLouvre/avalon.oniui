@@ -31,7 +31,7 @@
                     $skipArray: ["validation"],
                     a: 'bbb',
                     b: ["4", "5"],
-                    c: "d",
+                    c: "5",
                     d: "",
                     e: "",
                     f: "",
@@ -50,7 +50,8 @@
                                 get: function(val, data, next) {
                                     var vmValue = [].concat(val)
                                     var domValue = (data.element.getAttribute("data-duplex-contains") || "").split(",")
-
+                                    console.log(domValue)
+                                    console.log(vmValue)
                                     data.data.array = domValue.join(",")
                                     var has = false
                                     for (var i = 0, n = vmValue.length; i < n; i++) {
@@ -97,17 +98,17 @@
             </select> 必须选择 aaa
             <br />
             <label><input name="chk" type="checkbox" value="1" ms-duplex-contains="b" data-duplex-contains="1,2" />1</label>
-            <label><input name="chk" type="checkbox" value="2"/>2</label>
-            <label><input name="chk" type="checkbox" value="3" />3</label>
-            <label><input name="chk" type="checkbox" value="4"/>4</label>
-            <label><input name="chk" type="checkbox" value="5" />5</label>
+            <label><input name="chk" type="checkbox" value="2" ms-duplex="b"/>2</label>
+            <label><input name="chk" type="checkbox" value="3" ms-duplex="b"/>3</label>
+            <label><input name="chk" type="checkbox" value="4" ms-duplex="b"/>4</label>
+            <label><input name="chk" type="checkbox" value="5" ms-duplex="b"/>5</label>
             必须包含 1 或 2
             <br />
-            <label><input name="rdo" type="radio" value="1"  ms-duplex-contains="c" data-duplex-contains="1,2" />1</label>
-            <label><input name="rdo" type="radio" value="2" />2</label>
-            <label><input name="rdo" type="radio" value="3" />3</label>
-            <label><input name="rdo" type="radio" value="4" />4</label>
-            <label><input name="rdo" type="radio" value="5" />5</label>
+            <label><input name="rdo" type="radio" value="1" ms-duplex-contains-string="c" data-duplex-contains="1,2" />1</label>
+            <label><input name="rdo" type="radio" value="2" ms-duplex-string="c"/>2</label>
+            <label><input name="rdo" type="radio" value="3" ms-duplex-string="c"/>3</label>
+            <label><input name="rdo" type="radio" value="4" ms-duplex-string="c"/>4</label>
+            <label><input name="rdo" type="radio" value="5" ms-duplex-string="c"/>5</label>
             必须选择 1 或 2
             <br />
             <textarea ms-duplex-required="d"></textarea>

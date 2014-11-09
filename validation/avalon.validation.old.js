@@ -2,8 +2,7 @@ define(["../promise/avalon.promise"], function(avalon) {
 //如果avalon的版本少于1.3.7，那么重写ms-duplex指令，方便直接使用ms-duplex2.0, 只兼容到1.2x
 //但它不支持pipe方法，换言之，不支持类型转换，只做验证
     if (!avalon.duplexHooks) {
-        (function(DOC, W3C) {
-
+        (function() {
             var getBindingCallback = function(elem, name, vmodels) {
                 var callback = elem.getAttribute(name)
                 if (callback) {
@@ -34,6 +33,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                                     log("ms-duplex-radio已经更名为ms-duplex-checked")
                                 name = "checked"
                                 data.isChecked = true
+                                data.msType = "checked"//1.3.6中途添加的
                             }
                             if (name === "bool") {
                                 name = "boolean"
@@ -72,7 +72,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                     }
                 }
             }
-        })(document, window.dispatchEvent)
+        })()
     }
     //==========================avalon.validation的专有逻辑========================
     function idCard(val) {
@@ -89,8 +89,23 @@ define(["../promise/avalon.promise"], function(avalon) {
             return (vs[r % 11] == ss[17]);
         }
     }
-    var remail = /^[a-zA-Z0-9.!#$%&amp;'*+\-\/=?\^_`{|}~\-]+@[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*$/
-
+    function isCorrectDate(value) {
+        if (rdate.test(value)) {
+            var date = parseInt(RegExp.$1, 10);
+            var month = parseInt(RegExp.$2, 10);
+            var year = parseInt(RegExp.$3, 10);
+            var xdata = new Date(year, month - 1, date, 12, 0, 0, 0);
+            if ((xdata.getUTCFullYear() === year) && (xdata.getUTCMonth() === month - 1) && (xdata.getUTCDate() === date)) {
+                return true
+            }
+        }
+        return false
+    }
+    var rdate = /^\d{4}\-\d{1,2}\-\d{1,2}$/
+    //  var remail = /^[a-zA-Z0-9.!#$%&amp;'*+\-\/=?\^_`{|}~\-]+@[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*$/
+    var remail = /^([A-Z0-9]+[_|\_|\.]?)*[A-Z0-9]+@([A-Z0-9]+[_|\_|\.]?)*[A-Z0-9]+\.[A-Z]{2,3}$/i
+    var ripv4 = /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i
+    var ripv6 = /^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/i
     avalon.mix(avalon.duplexHooks, {
         trim: {
             get: function(value, data) {
@@ -173,7 +188,14 @@ define(["../promise/avalon.promise"], function(avalon) {
         ipv4: {
             message: "ip地址不正确",
             get: function(value, data, next) {
-                next(/^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i.test(value))
+                next(ripv4.test(value))
+                return value
+            }
+        },
+        ipv6: {
+            message: "ip地址不正确",
+            get: function(value, data, next) {
+                next(ripv6.test(value))
                 return value
             }
         },
@@ -204,7 +226,7 @@ define(["../promise/avalon.promise"], function(avalon) {
         date: {
             message: '必须符合日期格式 YYYY-MM-DD',
             get: function(value, data, next) {
-                next(/^(\d\d\d\d)\-(\d\d)\-(\d\d)$/.test(value))
+                next(isCorrectDate(value))
                 return value
             }
         },

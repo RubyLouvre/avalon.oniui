@@ -26,55 +26,50 @@
         <script>
             require(["validation/avalon.validation", "ready!"], function() {
                 var validationVM
-
-                function showError(el, data) {
-                    var next = el.nextSibling
-                    if (!(next && next.className === "error-tip")) {
-                        next = document.createElement("div")
-                        next.className = "error-tip"
-                        el.parentNode.appendChild(next)
-                    }
-                    next.innerHTML = data.getMessage()
-                }
-                function removeError(el) {
-                    var next = el.nextSibling
-                    if (next && next.className === "error-tip") {
-                        el.parentNode.removeChild(next)
-                    }
-                }
                 avalon.define({
                     $id: "test",
                     $skipArray: ["validation"],
-                    a: ["bbb"],
-                    b: ["4","5"],
+                    a: 'bbb',
+                    b: ["4", "5"],
                     c: "d",
                     d: "",
                     e: "",
                     f: "",
                     g: "",
-                    reset: function() {
+                    clearAll: function() {
                         validationVM && validationVM.resetAll()
                     },
-                    checkAll: function(){
-                         validationVM && validationVM.validateAll()
+                    checkAll: function() {
+                        validationVM && validationVM.validateAll()
                     },
                     validation: {
+                        valiedateInBlur: false,
                         validationHooks: {
                             contains: {
                                 message: "必须是{{array}}中的一个",
                                 get: function(val, data, next) {
-                                   
-                                    var array = data.element.getAttribute("data-duplex-contains") ||""
-                                    array = array.split(",")
-                                    //console.log(val)
-                                    data.data.array = array
-                                    next(array.indexOf(val) >= 0)
+                                    var vmValue = [].concat(val)
+                                    var domValue = (data.element.getAttribute("data-duplex-contains") || "").split(",")
+
+                                    data.data.array = domValue.join(",")
+                                    var has = false
+                                    for (var i = 0, n = vmValue.length; i < n; i++) {
+                                        var v = vmValue[i]
+                                        if (domValue.indexOf(v) >= 0) {
+                                            has = true
+                                            break
+                                        }
+                                    }
+                                    next(has)
                                     return val
                                 }
                             }
                         },
                         onInit: function(v) {
                             validationVM = v
+                        },
+                        onReset: function() {
+                            this.value = ""
                         },
                         onValidateAll: function(reasons) {
                             var msg = []
@@ -83,7 +78,7 @@
                             })
                             if (reasons.length === 0) {
                                 alert("全部验证成功！")
-                            }else{
+                            } else {
                                 alert(msg.join("\n"))
                             }
                         }
@@ -108,17 +103,18 @@
             <label><input name="chk" type="checkbox" value="5" />5</label>
             必须包含 1 或 2
             <br />
-            <label><input name="rdo" type="radio" value="1" data-jvalidator-pattern="match[1]|match[2]" />1</label>
+            <label><input name="rdo" type="radio" value="1"  ms-duplex-contains="c" data-duplex-contains="1,2" />1</label>
             <label><input name="rdo" type="radio" value="2" />2</label>
             <label><input name="rdo" type="radio" value="3" />3</label>
             <label><input name="rdo" type="radio" value="4" />4</label>
             <label><input name="rdo" type="radio" value="5" />5</label>
             必须选择 1 或 2
             <br />
-            <textarea data-jvalidator-pattern="required"></textarea>
+            <textarea ms-duplex-required="d"></textarea>
             必须有内容
             <br />
             <input type="button" value="验证" ms-click="checkAll" />
+            <input type="button" value="重置" ms-click="clearAll" />
         </form>
     </body>
 </html>

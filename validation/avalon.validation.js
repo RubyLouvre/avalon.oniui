@@ -369,12 +369,12 @@ define(["../promise/avalon.promise"], function(avalon) {
             vm.resetAll = function(callback) {
                 vm.data.forEach(function(el) {
                     try {
-                        vm.onReset.call(el.element, {type: "reset"}, el)
+                        vm.onReset.call(el.element)
                     } catch (e) {
                     }
                 })
                 var fn = typeof callback == "function" ? callback : vm.onResetAll
-                fn.call(vm.widgetElement, vm)
+                fn.call(vm.widgetElement)
             }
             /**
              * @interface 验证单个元素对应的VM中的属性是否符合格式

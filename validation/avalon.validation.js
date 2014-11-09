@@ -167,6 +167,13 @@ define(["../promise/avalon.promise"], function(avalon) {
                 return value
             }
         },
+        ipv4: {
+            message: "ip地址不正确",
+            get: function(value, data, next) {
+                next(/^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i.test(value))
+                return value
+            }
+        },
         email: {
             message: "邮件地址错误",
             get: function(value, data, next) {

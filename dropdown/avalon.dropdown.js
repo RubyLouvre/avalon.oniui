@@ -82,9 +82,6 @@ define(["avalon",
             vm.dataSource = dataSource;    //源节点的数据源，通过dataSource传递的值将完全模拟select
             vm.focusClass =  false
             vm.$init = function() {
-                if (vmodel.data.length === 0) {
-                    throw new Error("the options is not enough for init a dropdown!");
-                }
                 //根据multiple的类型初始化组件
                 if (vmodel.multiple) {
                     //创建菜单
@@ -200,6 +197,17 @@ define(["avalon",
                     vmodel.readOnly = readOnlyModel[1][readOnlyModel[0]];
                 }
 
+                //获取$source信息
+                if(vmodel.$source) {
+                    if(avalon.type(vmodel.$source) === "string") {
+                        var sourceModel = avalon.getModel(vmodel.$source);
+
+                        sourceModel && ( vmodel.$source = sourceModel[1][sourceModel[0]] );
+
+                    } else if(!vmodel.$source.$id) {
+                        vmodel.$source = null
+                    }
+                }
             }
 
             /**
@@ -242,11 +250,6 @@ define(["avalon",
                         vmodel.onSelect.call(this, event, vmodel.value);
                     }
                 }
-            };
-
-            vm._listClick = function(event) {
-                event.stopPropagation();
-                event.preventDefault();
             };
 
             vm._keydown = function(event) {
@@ -292,7 +295,7 @@ define(["avalon",
             }
             //下拉列表的显示依赖toggle值，该函数用来处理下拉列表的初始化，定位
             vm._toggle = function(b) {
-                if (!vmodel.enable || vmodel.readOnly) {
+                if (vmodel.data.length ===0 || !vmodel.enable || vmodel.readOnly) {
                     vmodel.toggle = false;
                     return;
                 }
@@ -465,11 +468,11 @@ define(["avalon",
         });
 
         //对data的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
-        vmodel.data.$watch('length', function(n) {
+        vmodel.$source && vmodel.$source.$watch && vmodel.$source.$watch('length', function(n) {
             //当data改变时，解锁滚动条
             vmodel._disabledScrollbar(false);
+            avalon.assign(vmodel.data, getDataFromOption(vmodel.$source.$model || vmodel.$source));
             if(n > 0) {
-
                 //当data改变时，尝试使用之前的value对label和title进行赋值，如果失败，使用data第一项
                 if(!setLabelTitle(vmodel.value)) {
                     vmodel.currentOption = vmodel.data[0].$model;
@@ -608,6 +611,7 @@ define(["avalon",
         readonlyAttr: null, //@config readonly依赖的属性
         currentOption: null,  //@config 组件当前的选项
         data: [], //@config 下拉列表显示的数据模型
+        $source: null, //@config 下拉列表的数据源
         textFiled: "text", //@config 模型数据项中对应显示text的字段,可以传function，根据数据源对text值进行格式化
         valueField: "value", //@config 模型数据项中对应value的字段
         value: [], //@config 设置组件的初始值
@@ -681,9 +685,6 @@ define(["avalon",
             }
         }
 
-        if(ret.length === 0) {
-            throw new Error("The select has no Options!");
-        }
         return ret
     }
     function getFragmentFromData(data) {

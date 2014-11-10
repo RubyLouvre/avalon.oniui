@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>验证框架</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <style >
+            .error{
+                border:1px  solid red;
+
+            }
+            .success{
+                border:1px  solid greenyellow;
+            }
+            .error-tip{
+                color: red;
+                background:pink;
+            }
+        </style>
+        <script>
+            require(["validation/avalon.validation", "ready!"], function() {
+                var validationVM
+                avalon.define({
+                    $id: "test",
+                    $skipArray: ["validation"],
+                    a: 'bbb',
+                    b: ["4", "5"],
+                    c: "5",
+                    d: "",
+                    e: "",
+                    f: "",
+                    g: "",
+                    clearAll: function() {
+                        validationVM && validationVM.resetAll()
+                    },
+                    checkAll: function() {
+                        validationVM && validationVM.validateAll()
+                    },
+                    validation: {
+                        valiedateInBlur: false,
+                        validationHooks: {
+                            contains: {
+                                message: "必须是{{array}}中的一个",
+                                get: function(val, data, next) {
+                                    var vmValue = [].concat(val)
+                                    var domValue = (data.element.getAttribute("data-duplex-contains") || "").split(",")
+                                    console.log(domValue)
+                                    console.log(vmValue)
+                                    data.data.array = domValue.join(",")
+                                    var has = false
+                                    for (var i = 0, n = vmValue.length; i < n; i++) {
+                                        var v = vmValue[i]
+                                        if (domValue.indexOf(v) >= 0) {
+                                            has = true
+                                            break
+                                        }
+                                    }
+                                    next(has)
+                                    return val
+                                }
+                            }
+                        },
+                        onInit: function(v) {
+                            validationVM = v
+                        },
+                        onReset: function() {
+                            this.value = ""
+                        },
+                        onValidateAll: function(reasons) {
+                            var msg = []
+                            reasons.forEach(function(reason) {
+                                msg.push(reason.getMessage())
+                            })
+                            if (reasons.length === 0) {
+                                alert("全部验证成功！")
+                            } else {
+                                alert(msg.join("\n"))
+                            }
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <form ms-controller="test" ms-widget="validation">
+            <pre>select, checkbox, radiobox, textarea</pre>
+            <select ms-duplex-contains="a" data-duplex-contains="aaa">
+                <option value="aaa" >aaa</option>
+                <option value="bbb" >bbb</option>
+            </select> 必须选择 aaa
+            <br />
+            <label><input name="chk" type="checkbox" value="1" ms-duplex-contains="b" data-duplex-contains="1,2" />1</label>
+            <label><input name="chk" type="checkbox" value="2" ms-duplex="b"/>2</label>
+            <label><input name="chk" type="checkbox" value="3" ms-duplex="b"/>3</label>
+            <label><input name="chk" type="checkbox" value="4" ms-duplex="b"/>4</label>
+            <label><input name="chk" type="checkbox" value="5" ms-duplex="b"/>5</label>
+            必须包含 1 或 2
+            <br />
+            <label><input name="rdo" type="radio" value="1" ms-duplex-contains-string="c" data-duplex-contains="1,2" />1</label>
+            <label><input name="rdo" type="radio" value="2" ms-duplex-string="c"/>2</label>
+            <label><input name="rdo" type="radio" value="3" ms-duplex-string="c"/>3</label>
+            <label><input name="rdo" type="radio" value="4" ms-duplex-string="c"/>4</label>
+            <label><input name="rdo" type="radio" value="5" ms-duplex-string="c"/>5</label>
+            必须选择 1 或 2
+            <br />
+            <textarea ms-duplex-required="d"></textarea>
+            必须有内容
+            <br />
+            <input type="button" value="验证" ms-click="checkAll" />
+            <input type="button" value="重置" ms-click="clearAll" />
+        </form>
+    </body>
+</html>

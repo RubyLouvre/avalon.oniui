@@ -60,7 +60,7 @@
 <tr>
     <td>collapse</td><td>接口调用</td><td>collapse(leaf, all) 折叠leaf节点的子节点，all表示是否迭代所有子孙节点</td></tr>
 <tr>
-    <td>exChangeNodes</td><td>接口调用</td><td>exChangeNodes(a, b, doNotChangeDom) 交换a,b节点的位置，doNotChangeDom不同步到dom，例如只是通过修改dom，同步数据而已</td></tr>
+    <td>moveNode</td><td>接口调用</td><td>moveNode(targetLeaf, leaf, moveType, isSilent) <br>targetNode：移动节点要移动到的目标节点；<br>leaf：被移动的节点； <br>moveType：指定移动到目标节点的相对位置，"inner"：成为子节点，"prev"：成为同级前一个节点，"next"：成为同级后一个节点；<br>isSilent：设定移动节点后是否自动展开父节点。isSilent = true 时，不展开父节点，其他值或缺省状态都自动展开。</td></tr>
 <tr>
     <td>freeSelect</td><td>接口调用</td><td>freeSelect(event, leaf)取消leaf节点上所有处于选中状态的节点</td></tr>
 <tr>

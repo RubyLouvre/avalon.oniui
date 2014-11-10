@@ -3100,6 +3100,7 @@
                         v.$fire("init-ms-duplex", data)
                     }
                     var cpipe = data.pipe || (data.pipe = pipe)
+                    console.log("++++++++++++++++++")
                     cpipe(null, data, "init")
                     duplexBinding[elem.tagName](elem, data.evaluator.apply(null, data.args), data)
                 }
@@ -3353,7 +3354,7 @@
     }
 
     function pipe(val, data, action, e) {
-        data.param.replace(rword, function(name) {
+        data.param.replace(/\w+/g, function(name) {
             var hook = avalon.duplexHooks[name]
             if (hook && typeof hook[action] === "function") {
                 val = hook[action](val, data)

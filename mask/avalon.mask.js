@@ -12,113 +12,110 @@
 define(["avalon"], function() {
 
     avalon.duplexHooks.mask = {
-        init: function(data) {
+        init: function(_, data) {
             var elem = data.element
             var maskText = elem.getAttribute("data-duplex-mask")
-            if (data.msType === "mask") {
-                if (maskText) {
-                    data.msMask = new Mask(elem, maskText)
-                    function keyCallback(e) {
-                        var k = e.which || e.keyCode
-                        if (e.type === "click") {
-                            k = 100
-                        }
-                        var valueLength = elem.value.length
-                        if (valueLength && (data.msMask.validMask.length !== valueLength)) {
-                            data.msMask.masked = false
-                        }
+            if (maskText) {
+                data.msMask = new Mask(elem, maskText)
+                function keyCallback(e) {
+                    var k = e.which || e.keyCode
+                    if (e.type === "click") {
+                        k = 100
+                    }
+                    var valueLength = elem.value.length
+                    if (valueLength && (data.msMask.validMask.length !== valueLength)) {
+                        data.msMask.masked = false
+                    }
 
-                        // console.log(k)
-                        if (e.ctrlKey || e.altKey || e.metaKey || k < 32) //Ignore
-                            return
+                    if (e.ctrlKey || e.altKey || e.metaKey || k < 32) //Ignore
+                        return
 
-                        var caret = getCaret(elem)
-                        var impurity = data.msMask.impurity
-                        function getPos(i, left, n) {
-                            var step = left ? -1 : +1
-                            var old = i
-                            while (i >= -1 && i < n) {
-                                i = i + step
-                                if (!impurity[i] && i !== -1 && i !== n) {
-                                    return i
-                                }
-                                if (i === -1) {
-                                    return  old + 1
-                                }
-                                if (i === n) {
-                                    return  old - 1
-                                }
+                    var caret = getCaret(elem)
+                    var impurity = data.msMask.impurity
+                    function getPos(i, left, n) {
+                        var step = left ? -1 : +1
+                        var old = i
+                        while (i >= -1 && i < n) {
+                            i = i + step
+                            if (!impurity[i] && i !== -1 && i !== n) {
+                                return i
                             }
-                        }
-                        var n = elem.value.length - 1
-                        var pos
-                        if (k === 37 || k == 38) {//向左向上移动光标
-                            pos = caret.start - 1
-                            if (pos < 1) {
-                                pos = 0
+                            if (i === -1) {
+                                return  old + 1
                             }
-                            if (impurity[pos]) {
-                                pos = getPos(pos, true, n)
+                            if (i === n) {
+                                return  old - 1
                             }
-                        } else if (k === 39 || k == 40) {//向右向下移动光标
-                            pos = caret.end//只操作end
-                            if (pos >= n) {
-                                pos -= 1
-                            }
-                            if (impurity[pos]) {
-                                pos = getPos(pos, false, n)
-                            }
-                        } else if (k && k !== 13) {//如果是在光标高亮处直接键入字母
-                            pos = caret.start
-                            if (pos >= n) {
-                                pos -= 1
-                            }
-                            if (impurity[pos]) {
-                                pos = getPos(pos, false, n)
-                            }
-                        }
-                        if (typeof pos === "number") {
-                            setTimeout(function() {
-                                setCaret(elem, pos, pos + 1)
-                            })
-                        }
-
-                        if (e.preventDefault) {
-                            e.preventDefault()
-                        } else {
-                            e.returnValue = false
                         }
                     }
-                    data.bound("keyup", keyCallback)
-                    data.bound("click", keyCallback)
-                    var mask = data.msMask
-                    function showMask(e) {
-                        if (!e || !mask.masked) {
-                            mask.masked = true
-                            elem.value = avalon.duplexHooks.mask.set(mask.value || mask.mask, data)
+                    var n = elem.value.length - 1
+                    var pos
+                    if (k === 37 || k == 38) {//向左向上移动光标
+                        pos = caret.start - 1
+                        if (pos < 1) {
+                            pos = 0
+                        }
+                        if (impurity[pos]) {
+                            pos = getPos(pos, true, n)
+                        }
+                    } else if (k === 39 || k == 40) {//向右向下移动光标
+                        pos = caret.end//只操作end
+                        if (pos >= n) {
+                            pos -= 1
+                        }
+                        if (impurity[pos]) {
+                            pos = getPos(pos, false, n)
+                        }
+                    } else if (k && k !== 13) {//如果是在光标高亮处直接键入字母
+                        pos = caret.start
+                        if (pos >= n) {
+                            pos -= 1
+                        }
+                        if (impurity[pos]) {
+                            pos = getPos(pos, false, n)
                         }
                     }
-                    function hideMask() {
-                        if ((mask.clearIfInvalid && !mask.valid) ||
-                                (mask.clearIfPristine && mask.value === mask.validMask)) {
-                            elem.value = mask.oldValue = mask.masked = ""//注意IE6-8下，this不指向element
-                        }
+                    if (typeof pos === "number") {
+                        setTimeout(function() {
+                            setCaret(elem, pos, pos + 1)
+                        })
                     }
-                    if (mask.showAlways) {
-                        showMask()
+
+                    if (e.preventDefault) {
+                        e.preventDefault()
                     } else {
-                        if (mask.showIfFocus) {
-                            data.bound("focus", showMask)
-                            data.bound("blur", hideMask)
-                        }
-                        if (mask.showIfHover) {
-                            data.bound("mouserover", showMask)
-                            data.bound("mouseout", hideMask)
-                        }
+                        e.returnValue = false
                     }
-                } else {
-                    throw ("请指定data-duplex-mask")
                 }
+                data.bound("keyup", keyCallback)
+                data.bound("click", keyCallback)
+                var mask = data.msMask
+                function showMask(e) {
+                    if (!e || !mask.masked) {
+                        mask.masked = true
+                        elem.value = avalon.duplexHooks.mask.set(mask.value || mask.mask, data)
+                    }
+                }
+                function hideMask() {
+                    if ((mask.clearIfInvalid && !mask.valid) ||
+                            (mask.clearIfPristine && mask.value === mask.validMask)) {
+                        elem.value = mask.oldValue = mask.masked = ""//注意IE6-8下，this不指向element
+                    }
+                }
+                if (mask.showAlways) {
+                    showMask()
+                } else {
+                    if (mask.showIfFocus) {
+                        data.bound("focus", showMask)
+                        data.bound("blur", hideMask)
+                    }
+                    if (mask.showIfHover) {
+                        data.bound("mouserover", showMask)
+                        data.bound("mouseout", hideMask)
+                    }
+                }
+            } else {
+                throw ("请指定data-duplex-mask")
             }
         },
         get: function(val, data) {
@@ -166,12 +163,12 @@ define(["avalon"], function() {
         this.impurity = {} //@config {Object} mask分别两部分，一些部分用户需要输入，一部分是提示或美化用的杂质，impurity是用于装载这些杂质在这个mask中的索引值，它用于光标引导功能
     }
     Mask.defaults = {
-        placehoder: "_",//@config {Boolean} "_", 将元字符串换为"_"显示到element.value上，如99/99/9999会替换为__/__/____，可以通过data-duplex-mask-placehoder设置
+        placehoder: "_", //@config {Boolean} "_", 将元字符串换为"_"显示到element.value上，如99/99/9999会替换为__/__/____，可以通过data-duplex-mask-placehoder设置
         hideIfInvalid: false, //@config {Boolean} false, 如果它不匹配就会在失去焦点时清空value，可以通过data-duplex-mask-hide-if-invalid设置
         hideIfPristine: true, //@config {Boolean} true如果它没有改动过就会在失去焦点时清空value，可以通过data-duplex-mask-hide-if-pristine设置
-        showIfHover: false,//@config {Boolean} false 当鼠标掠过其元素上方就显示它出来，可以通过data-duplex-mask-show-if-hover设置
-        showIfFocus: true,//@config {Boolean} true 当用户让其元素得到焦点就显示它出来，可以通过data-duplex-mask-show-if-focus设置
-        showAlways: false,//@config {Boolean} false 总是显示它，可以通过data-duplex-mask-show-always设置
+        showIfHover: false, //@config {Boolean} false 当鼠标掠过其元素上方就显示它出来，可以通过data-duplex-mask-show-if-hover设置
+        showIfFocus: true, //@config {Boolean} true 当用户让其元素得到焦点就显示它出来，可以通过data-duplex-mask-show-if-focus设置
+        showAlways: false, //@config {Boolean} false 总是显示它，可以通过data-duplex-mask-show-always设置
         translations: {//@config {Object} 此对象上每个键名都是元字符，都对应一个对象，上面有pattern(正则)，placehoder(占位符，如果你不想用"_"),optional（表示可选）
             0: {pattern: /\d/},
             9: {pattern: /\d/, optional: true},

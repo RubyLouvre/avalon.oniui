@@ -1,3 +1,14 @@
+/**
+ * @cnName 输入引导模块
+ * @enName validation
+ * @introduce
+ *  <p>这是ms-duplex2.0的一个扩展模块，用于引导用户输入。</p>
+ *  <p>通过如下方式使用:</p>
+ *  ```html
+ *   <input ms-duplex-mask="a"  data-duplex-mask="((00/00其他字符0000)"/>
+ *  ```
+ */
+
 define(["avalon"], function() {
 
     avalon.duplexHooks.mask = {
@@ -146,23 +157,26 @@ define(["avalon"], function() {
             t = new Function("return " + options.translations)()
         } catch (e) {
         }
-        this.placehoder = "_"
-        this.hideIfInvalid = false //如果它不匹配就会在失去焦点时清空value
-        this.hideIfPristine = true //如果它没有改动过就会在失去焦点时清空value
-        this.showIfHover = false
-        this.showIfFocus = true
-        this.showAlways = false
-        options.translations = avalon.mix({
+        avalon.mix(this, Mask.defaults, options)
+        this.translations = avalon.mix({}, Mask.defaults.translations, t)
+        this.mask = mask
+        this.element = element //@config {Element} 组件作用的对象
+        this.oldValue = ""
+        this.value = ""//@config 默认值
+    }
+    Mask.defaults = {
+        placehoder: "_",
+        hideIfInvalid: false, //@config {Boolean} false, 如果它不匹配就会在失去焦点时清空value
+        hideIfPristine: true, //@config {Boolean} "true"如果它没有改动过就会在失去焦点时清空value
+        showIfHover: false,
+        showIfFocus: true,
+        showAlways: false,
+        translations: {//@config {Object} 对每个字符进行翻译
             0: {pattern: /\d/},
             9: {pattern: /\d/, optional: true},
             A: {pattern: /[a-zA-Z0-9]/},
             S: {pattern: /[a-zA-Z]/}
-        }, t)
-
-        avalon.mix(this, options)
-        this.mask = mask
-        this.element = element
-        this.oldValue = this.value = ""
+        }
     }
     Mask.prototype = {
         getMaskedVal: function(skipMask) {
@@ -280,5 +294,15 @@ define(["avalon"], function() {
             range.moveEnd("character", end - start)
             range.select()
         }
+    }
+    var widget = function() {
+    }
+    widget.defaults = {
+        /*
+         * @config {String} "_"，将需要替换的元字符全部变成"_"
+         */
+        placehoder: "_",
+        hideIfInvalid: false, //@config {Boolean} false, 如果它不匹配就会在失去焦点时清空value
+        hideIfPristine: true //@config {Boolean} "true"如果它没有改动过就会在失去焦点时清空value
     }
 })

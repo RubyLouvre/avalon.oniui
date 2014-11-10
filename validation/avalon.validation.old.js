@@ -74,7 +74,7 @@ define(["../promise/avalon.promise"], function(avalon) {
             }
         })()
     }
-    //==========================avalon.validation的专有逻辑========================
+      //==========================avalon.validation的专有逻辑========================
     function idCard(val) {
         if ((/^\d{15}$/).test(val)) {
             return true;
@@ -213,10 +213,10 @@ define(["../promise/avalon.promise"], function(avalon) {
                 return value
             }
         },
-        equal: {
+        repeat: {
             message: "必须等于{{other}}",
             get: function(value, data, next) {
-                var id = data.element.getAttribute("data-duplex-equal") || ""
+                var id = data.element.getAttribute("data-duplex-repeat") || ""
                 var other = avalon(document.getElementById(id)).val() || ""
                 data.data.other = other
                 next(value === other)
@@ -289,6 +289,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                 return value
             }
         },
+        //contain
         eq: {
             message: '必须等于{{eq}}',
             get: function(value, data, next) {
@@ -297,6 +298,46 @@ define(["../promise/avalon.promise"], function(avalon) {
                 var num = data.data.eq = a
                 next(parseFloat(value) == num)
                 return value
+            }
+        },
+        contains: {
+            message: "必须包含{{array}}中的一个",
+            get: function(val, data, next) {
+                var vmValue = [].concat(val).map(String)
+                var domValue = (data.element.getAttribute("data-duplex-contains") || "").split(",")
+                data.data.array = domValue
+                var has = false
+                for (var i = 0, n = vmValue.length; i < n; i++) {
+                    var v = vmValue[i]
+                    if (domValue.indexOf(v) >= 0) {
+                        has = true
+                        break
+                    }
+                }
+                next(has)
+                return val
+            }
+        },
+        contain: {
+            message: "必须包含{{array}}",
+            get: function(val, data, next) {
+                var vmValue = [].concat(val).map(String)
+                var domValue = (data.element.getAttribute("data-duplex-contain") || "").split(",")
+                data.data.array = domValue.join('与')
+                if (vmValue.length) {
+                    var has = false
+                } else {
+                    has = true
+                    for (var i = 0, n = vmValue.length; i < n; i++) {
+                        var v = vmValue[i]
+                        if (domValue.indexOf(v) === -1) {
+                            has = false
+                            break
+                        }
+                    }
+                }
+                next(has)
+                return val
             }
         },
         pattern: {
@@ -365,14 +406,18 @@ define(["../promise/avalon.promise"], function(avalon) {
                     fn.call(vm.widgetElement, reasons)//这里只放置未通过验证的组件
                 })
             }
+
             /**
              * @interface 重置当前表单元素
              * @param callback {Null|Function} 最后执行的回调，如果用户没传就使用vm.onResetAll
              */
             vm.resetAll = function(callback) {
-                vm.data.forEach(function(el) {
+                vm.data.forEach(function(data) {
                     try {
-                        vm.onReset.call(el.element)
+                        if (data.valueResetor) {
+                            data.valueResetor()
+                        }
+                        vm.onReset.call(data.element)
                     } catch (e) {
                     }
                 })
@@ -386,6 +431,30 @@ define(["../promise/avalon.promise"], function(avalon) {
              */
             vm.validate = function(data, isValidateAll) {
                 var value = data.valueAccessor()
+                if (!data.valueResetor) {
+                    switch (avalon.type(value)) {
+                        case "array":
+                            data.valueResetor = function() {
+                                this.valueAccessor([])
+                            }
+                            break
+                        case "boolean":
+                            data.valueResetor = function() {
+                                this.valueAccessor(false)
+                            }
+                            break
+                        case "number":
+                            data.valueResetor = function() {
+                                this.valueAccessor(0)
+                            }
+                            break
+                        default:
+                            data.valueResetor = function() {
+                                this.valueAccessor("")
+                            }
+                            break
+                    }
+                }
                 var inwardHooks = vmodel.validationHooks
                 var globalHooks = avalon.duplexHooks
                 var promises = []
@@ -473,6 +542,9 @@ define(["../promise/avalon.promise"], function(avalon) {
                         }
                         if (vm.resetInFocus) {
                             data.bound("focus", function(e) {
+                                if (data.valueResetor) {
+                                    data.valueResetor()
+                                }
                                 vm.onReset.call(data.element, e, data)
                             })
                         }

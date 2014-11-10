@@ -159,13 +159,14 @@ define(["avalon"], function() {
         }
         avalon.mix(this, Mask.defaults, options)
         this.translations = avalon.mix({}, Mask.defaults.translations, t)
-        this.mask = mask //@config {String} 用于提示用户输入的mask字符串，用户只能在占位符上输入（会有光标引导你）
-        this.element = element //@config {Element} 组件作用的元素节点
+        this.mask = mask //@config {String} 用于提示用户输入的mask字符串，用户只能在占位符上输入（会有光标引导你）,用户必须设置data-duplex-mask属性
+        this.element = element //@config {Element} 组件实例要作用的input元素
         this.oldValue = "" //@config {String} 元素之前的value值
         this.value = ""//@config {String} 元素现在的value值
+        this.impurity = {} //@config {Object} mask分别两部分，一些部分用户需要输入，一部分是提示或美化用的杂质，impurity是用于装载这些杂质在这个mask中的索引值，它用于光标引导功能
     }
     Mask.defaults = {
-        placehoder: "_",//@config {Boolean} "_", 将元字符串换为"_"显示到element.value上，可以通过data-duplex-mask-placehoder设置
+        placehoder: "_",//@config {Boolean} "_", 将元字符串换为"_"显示到element.value上，如99/99/9999会替换为__/__/____，可以通过data-duplex-mask-placehoder设置
         hideIfInvalid: false, //@config {Boolean} false, 如果它不匹配就会在失去焦点时清空value，可以通过data-duplex-mask-hide-if-invalid设置
         hideIfPristine: true, //@config {Boolean} true如果它没有改动过就会在失去焦点时清空value，可以通过data-duplex-mask-hide-if-pristine设置
         showIfHover: false,//@config {Boolean} false 当鼠标掠过其元素上方就显示它出来，可以通过data-duplex-mask-show-if-hover设置

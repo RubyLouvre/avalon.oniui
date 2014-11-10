@@ -239,6 +239,12 @@
     display: inline-block; }
   .ui-tree li.edit-focus a span.ebutton, .ui-tree li.edit-focus a span, .ui-tree li a span.ebutton, .ui-tree span.edit-input {
     display: none; }
+  .ui-tree ul.par-edit-focus li span {
+    display: inline-block; }
+  .ui-tree ul.par-edit-focus li a.ui-state-hover span.ebutton {
+    display: inline-block; }
+  .ui-tree ul.par-edit-focus li span.edit-input {
+    display: none; }
 
 .no-select {
   -moz-user-select: none;

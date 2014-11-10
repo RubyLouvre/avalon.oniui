@@ -59,6 +59,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.edit.html"], function(ava
 					if(avalon(this.parentNode).hasClass("curSelectedNode")) event.stopPropagation()
 					// edit logic
 					avalon(g(leaf.$id)).addClass("edit-focus")
+					avalon(g("c" +leaf.$id)).addClass("par-edit-focus")
 					var input = g("input" + leaf.$id)
 					if(vm.view.editNameSelectAll) {
 						input.select()
@@ -71,6 +72,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.edit.html"], function(ava
 					var leaf = arg.leaf
 					leaf.name = this.value
 					avalon(g(leaf.$id)).removeClass("edit-focus")
+					avalon(g("c" +leaf.$id)).removeClass("par-edit-focus")
 				},
 				addFun: function(arg) {
 					var event = arg.e,

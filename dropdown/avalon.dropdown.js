@@ -809,4 +809,6 @@ define(["avalon",
  [使用option配置dropdown并使用双工绑定](avalon.dropdown.ex6.html)
  [dropdown disabled](avalon.dropdown.ex7.html)
  [dropdown readOnly](avalon.dropdown.ex8.html)
+ [options可以使用repeat生成](avalon.dropdown.ex9.html)
+ [更改模板，使用button作为触发器](avalon.dropdown.ex10.html)
  */

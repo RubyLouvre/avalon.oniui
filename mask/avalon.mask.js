@@ -159,19 +159,19 @@ define(["avalon"], function() {
         }
         avalon.mix(this, Mask.defaults, options)
         this.translations = avalon.mix({}, Mask.defaults.translations, t)
-        this.mask = mask
-        this.element = element //@config {Element} 组件作用的对象
-        this.oldValue = ""
-        this.value = ""//@config 默认值
+        this.mask = mask //@config {String} 用于提示用户输入的mask字符串，用户只能在占位符上输入（会有光标引导你）
+        this.element = element //@config {Element} 组件作用的元素节点
+        this.oldValue = "" //@config {String} 元素之前的value值
+        this.value = ""//@config {String} 元素现在的value值
     }
     Mask.defaults = {
-        placehoder: "_",
-        hideIfInvalid: false, //@config {Boolean} false, 如果它不匹配就会在失去焦点时清空value
-        hideIfPristine: true, //@config {Boolean} "true"如果它没有改动过就会在失去焦点时清空value
-        showIfHover: false,
-        showIfFocus: true,
-        showAlways: false,
-        translations: {//@config {Object} 对每个字符进行翻译
+        placehoder: "_",//@config {Boolean} "_", 将元字符串换为"_"显示到element.value上，可以通过data-duplex-mask-placehoder设置
+        hideIfInvalid: false, //@config {Boolean} false, 如果它不匹配就会在失去焦点时清空value，可以通过data-duplex-mask-hide-if-invalid设置
+        hideIfPristine: true, //@config {Boolean} true如果它没有改动过就会在失去焦点时清空value，可以通过data-duplex-mask-hide-if-pristine设置
+        showIfHover: false,//@config {Boolean} false 当鼠标掠过其元素上方就显示它出来，可以通过data-duplex-mask-show-if-hover设置
+        showIfFocus: true,//@config {Boolean} true 当用户让其元素得到焦点就显示它出来，可以通过data-duplex-mask-show-if-focus设置
+        showAlways: false,//@config {Boolean} false 总是显示它，可以通过data-duplex-mask-show-always设置
+        translations: {//@config {Object} 此对象上每个键名都是元字符，都对应一个对象，上面有pattern(正则)，placehoder(占位符，如果你不想用"_"),optional（表示可选）
             0: {pattern: /\d/},
             9: {pattern: /\d/, optional: true},
             A: {pattern: /[a-zA-Z0-9]/},
@@ -295,14 +295,9 @@ define(["avalon"], function() {
             range.select()
         }
     }
-    var widget = function() {
-    }
-    widget.defaults = {
-        /*
-         * @config {String} "_"，将需要替换的元字符全部变成"_"
-         */
-        placehoder: "_",
-        hideIfInvalid: false, //@config {Boolean} false, 如果它不匹配就会在失去焦点时清空value
-        hideIfPristine: true //@config {Boolean} "true"如果它没有改动过就会在失去焦点时清空value
-    }
 })
+
+/**
+ @links
+ [例子](avalon.mask.ex1.html)
+ */

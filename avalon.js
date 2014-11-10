@@ -2125,12 +2125,12 @@
                     if (events[type]) {
                         param = type
                         type = "on"
-                    } else if (type === "checked" || type === "selected" || type === "disabled" || type === "readonly") {
-                        log("ms-" + type + "已经被废弃,请使用ms-attr-*代替")
+                    } else if (/^(checked|selected|disabled|readonly|enabled)$/.test(type)) {
                         if (type === "enabled") {//吃掉ms-enabled绑定,用ms-disabled代替
                             type = "disabled"
                             value = "!(" + value + ")"
                         }
+                        log("ms-" + type + "已经被废弃,请使用ms-attr-*代替")
                         param = type
                         type = "attr"
                         elem.removeAttribute(name)

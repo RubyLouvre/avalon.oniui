@@ -13,7 +13,34 @@
                     vm.$skipArray = ['opts'];
                     vm.opts = {
                         data: [
-
+                            {
+                                value: '1',
+                                label: '1'
+                            }, {
+                                value: 2,
+                                label: '2'
+                            }, {
+                                label: 'group1',
+                                options: [
+                                    {
+                                        value: false,
+                                        label: 'false'
+                                    },
+                                    {
+                                        value: null,
+                                        label: 'null'
+                                    }
+                                ]
+                            }, {
+                                label: 'group2',
+                                options: [
+                                    {
+                                        value: 'disabled',
+                                        label: 'disabled',
+                                        enable: false
+                                    }
+                                ]
+                            }
                         ]
                     };
                     vm.value = '1';

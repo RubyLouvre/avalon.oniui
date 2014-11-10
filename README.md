@@ -105,22 +105,22 @@ avalon.oniui
         <td>colorpicker</td><td>UI组件</td><td>完成</td><td>王，颜色选择器</td>
     </tr>
     <tr>
-        <td>lazyload</td><td>功能组件</td><td>开发中</td><td>懒加载</td>
+        <td>lazyload</td><td>功能组件</td><td>完成</td><td>懒加载</td>
     </tr>
     <tr>
         <td>editor</td><td>UI组件</td><td></td><td>富文本编辑器</td>
     </tr>
     <tr>
-        <td>menu</td><td>UI组件</td><td></td><td>多级菜单</td>
+        <td>menu</td><td>UI组件</td><td>完成</td><td>多级菜单</td>
     </tr>
     <tr>
-        <td>tree</td><td>UI组件</td><td></td><td>树</td>
+        <td>tree</td><td>UI组件</td><td>开发中</td><td>树</td>
     </tr>
     <tr>
         <td>waterfall</td><td>UI组件</td><td></td><td>瀑布流</td>
     </tr>
     <tr>
-        <td> button</td><td>UI组件</td><td></td><td>按钮， http://www.bootcss.com/p/buttons/</td>
+        <td> button</td><td>UI组件</td><td>完成</td><td>按钮</td>
     </tr>
     <tr>
         <td> carousel</td><td>UI组件</td><td>完成</td><td>单个照片http://owlgraphic.com/owlcarousel/demos/custom.html</td>
@@ -141,7 +141,7 @@ avalon.oniui
         <td> imagecropper</td><td>UI组件</td><td></td><td> 图片剪切</td>
     </tr>
     <tr>
-        <td> validator</td><td>功能组件</td><td>开发中</td><td> 验证框架</td>
+        <td> validator</td><td>功能组件</td><td>完成</td><td> 验证框架</td>
     </tr>
 </table>
 如何使用OniUI

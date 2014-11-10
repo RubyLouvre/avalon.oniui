@@ -1,5 +1,5 @@
 //@description avalon.ui.tree组件编辑功能扩展，包括增删改节点
-define(["avalon", "./avalon.tree"], function() {
+define(["avalon", "./avalon.tree", "text!./avalon.tree.edit.html"], function() {
 	avalon.ui.tree.AddExtention(
 		["edit"],
 		// 注入默认配置

@@ -14,10 +14,16 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
     }
 
     //  树状数据的标准化，mvvm的痛
-    function dataFormator(arr, parentLeaf) {
+    function dataFormator(arr, parentLeaf, dataFormated, func) {
         avalon.each(arr, function(index, item) {
-            itemFormator(item, parentLeaf)
-            if(item.children && item.children.length) dataFormator(item.children, item)
+            if(!dataFormated) {
+                item.level = parentLeaf ? parentLeaf.level + 1 : 0
+                itemFormator(item, parentLeaf)
+            } else {
+                item.$parentLeaf = parentLeaf
+                func && func(item)
+            }
+            if(item.children && item.children.length) dataFormator(item.children, item, dataFormated)
         })
     }
     /**
@@ -27,7 +33,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         item.isParent = itemIsParent(item)
         item.pId = item.pId || 0
         // 不要可监听
-        item.$parentLeaf = parentLeaf
+        item.$parentLeaf = ""
         if(item.isParent) {
             item.open = !!item.open
         } else {
@@ -80,6 +86,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             } else {
                 (tar && tar.children || tree).push(now)
             }
+            now.level = stack.length
             prev = now
         }
         return tree
@@ -99,7 +106,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
     }
 
     var widget = avalon.ui.tree = function(element, data, vmodels) {
-        var options = data.treeOptions
+        var options = data.treeOptions, cache = {}// 缓存节点
         //方便用户对原始模板进行修改,提高定制性
         options.template = options.getTemplate(template, options)
         options.parentTemplate = options.getTemplate(parentTemplate, options, "parent").replace(/\n/g, "").replace(/>[\s]+</g, "><")
@@ -124,7 +131,9 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             vm.$init = function() {
                 if(inited) return
                 inited = true
-
+                dataFormator(vm.children, undefine, "构建父子节点衔接关系", function(leaf) {
+                    cache[leaf.$id] = leaf
+                })
                 avalon.scan(element, [vmodel].concat(vmodels))
                 if(typeof options.onInit === "function" ) {
                     //vmodels是不包括vmodel的 
@@ -133,6 +142,8 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             }
             vm.$remove = function() {
                 element.innerHTML = element.textContent = ""
+                cache = null
+                vm._select = null
             }
             // 展开相关
             // 展开
@@ -144,19 +155,21 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 }
             }
             vm.toggleOpenStatue = function(event, leaf) {
-                leaf.open ? vm.collapse(leaf, undefine, undefine, event) : vm.expand(leaf, undefine, undefine, event)
+                leaf.open ? vm.collapse(leaf, undefine, event) : vm.expand(leaf, undefine, undefine, event)
             }
             //@method expand(leaf, all) 展开leaf节点的子节点，all表示是否迭代所有子孙节点
             vm.expand = function(leaf, all, openOrClose, event) {
                 if(!leaf) {
                     leaf = vm
-                    leaf.open = !openOrClose
                 } else {
                     if(!leaf.isParent) return
                     leaf.open = !openOrClose
                 }
-                var children = leaf.children
-                // 节点未渲染，向上传递渲染 - 暂不处理
+                var children = leaf.children, leafDom = g(leaf.$id)
+                // 节点未渲染，或不可见，向上溯源处理
+                if(!leafDom || !leafDom.clientHeight) vm.cVisitor(leaf, function(node) {
+                    node.open = true
+                })
                 if(all) avalon.each(children, function(i, item) {vm.expand(item, "all", openOrClose)})
                 vm.$fire(("e:" + (openOrClose ? "collapse" : "expand")), {
                     leaf: leaf,
@@ -165,9 +178,12 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                     vmodels: vmodels
                 })
             }
+            vm.expandAll = function(openOrClose) {
+                openOrClose ? vm.expand(undefine, "all") : vm.collapse(undefine, "all")
+            }
             //@method collapse(leaf, all) 折叠leaf节点的子节点，all表示是否迭代所有子孙节点
-            vm.collapse = function(leaf, all) {
-                vm.expand(leaf, all, "close")
+            vm.collapse = function(leaf, all, event) {
+                vm.expand(leaf, all, "close", event)
             }
 
             vm.hasChildren = function(leaf, visible) {
@@ -193,50 +209,186 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             vm.timeStamp = function() {
                 return Date.now()
             }
-            //@method exChangeNodes(a, b, doNotChangeDom) 交换a,b节点的位置，doNotChangeDom不同步到dom，例如只是通过修改dom，同步数据而已
-            vm.exChangeNodes = function(a, b, doNotChangeDom) {
-                // 交换数据
-                var parLeafA = a.$parentLeaf || vm,
-                    parLeafB = b.$parentLeaf || vm,
-                    indexA = arrayIndex(parLeafA.children, function(item) {
-                        return item == a
+            // 目测这个是相当费性能的。。。
+            vm.moveNode = function(targetLeaf, leaf, moveType, isSilent) {
+                var parLeaf = leaf.$parentLeaf || vm,
+                    indexA = arrayIndex(parLeaf.children, function(item) {
+                        return item == leaf || item == leaf.$model
                     }),
-                    indexB = arrayIndex(parLeafB.children, function(item) {
-                        return item  == b
-                    }),
-                    modelParA = parLeafA.children.$model,
-                    modelParB = parLeafB.children.$model
-                if(indexA < 0 && indexB < 0) return
-                parLeafA.children[indexA] = b
-                parLeafA.children[indexB] = a
-                // 交换$model数据
-                modelParA[indexA] = b.$model
-                modelParB[indexB] = a.$model
-                // 交换节点
-                if(!doNotChangeDom) {
-                    var domA = g(a.$id), domB = g(b.$id), parA = domA.parentNode, parB = domB.parentNode, next = domB.nextSibling
-                    parA.insertBefore(domB, domA)
-                    parB.insertBefore(domA, next)
+                    level = leaf.level
+                if(indexA < 0) return
+                if(!targetLeaf) targetLeaf = vm
+                if(targetLeaf == vm) moveType = "inner"
+                // 移除
+                parLeaf.children.splice(indexA, 1)
+                if(moveType == "inner") {
+                    // 注入
+                    if(!targetLeaf.isParent && targetLeaf != vm) targetLeaf.isParent = true
+                    leaf.$parentLeaf = targetLeaf == vm ? false : targetLeaf
+                    leaf.level = leaf.$parentLeaf ? leaf.$parentLeaf.level + 1 : 0
+                    targetLeaf.children.push(leaf)
+                } else {
+                    moveType = moveType === "prev" ? "prev" : "next"
+                    var parLeafB = targetLeaf.$parentLeaf,
+                        tarArray = parLeafB ? parLeafB.children : vm.children,
+                        indexB = arrayIndex(tarArray, function(item) {
+                            return item == targetLeaf || item == targetLeaf.$model
+                        })
+                    // 挂载到新的父节点下
+                    leaf.$parentLeaf = parLeafB
+                    leaf.level = targetLeaf.level
+                    tarArray.splice(indexB, 0, leaf)
                 }
+                if(leaf.$parentLeaf) vm.expand(leaf.$parentLeaf)
+                // 层级变化了
+                if(level != leaf.level) vm.visitor(leaf, function(node) {
+                    if(node != leaf) node.level = node.$parentLeaf.level + 1
+                })
             }
 
-            //选中相关
+            // 节点遍历
+            // 中序遍历，向下
+            vm.visitor = function(startLeaf, func, endFunc, res, options) {
+                var startLeaf = startLeaf || vm,
+                    res = res || []
+                if(startLeaf != vm) {
+                    var data = func(startLeaf, options)
+                    data && res.push(data)
+                    if(endFunc && endFunc(res, startLeaf)) return res
+                }
+                if(startLeaf.isParent) {
+                    for(var i = 0, children = startLeaf.children, len = children.length; i < len; i++) {
+                        if(endFunc && endFunc(res, children[i])) break
+                        vm.visitor(children[i], func, endFunc, res, options)
+                    }
+                }
+                return res
+            }
+            // 向上溯源
+            vm.cVisitor = function(startLeaf, func, endFunc, res, options) {
+                var res = res || []
+                if(startLeaf) {
+                    var data = func(startLeaf, options)
+                    data && res.push(data)
+                    // 结束溯源
+                    if(endFunc && endFunc(res, startLeaf)) return res
+                    // 继续向上
+                    if(startLeaf.$parentLeaf) vm.cVisitor(startLeaf.$parentLeaf, func, endFunc, res, options)
+                }
+                return res
+            }
+
+            // 获取节点
+            vm.getNodeByTId = function(id) {
+                return cache[id]
+            }
+
+            vm.getNodeIndex = function(leaf) {
+                var c = leaf.$parentLeaf ? leaf.$parentLeaf.children : vm.children
+                for(var i = 0, len = c.length; i < len; i++) {
+                    if(c[i] === leaf) return i
+                }
+                return -1
+            }
+
+            vm.getNodes = function() {
+                return vm.children
+            }
+
+            vm.getNodesByFilter = function(fitler, isSingle, startLeaf, options) {
+                return vm.visitor(startLeaf, filter, isSingle ? function(data, node) {
+                    return data.length > 1
+                } : false, [], options)
+            }
+
+            vm.getNodeByParam = function(key, value, startLeaf) {
+                return vm.getNodesByParam(key, value, startLeaf, function(data, node) {
+                    return data.length > 1
+                })
+            }
+
+            vm.getNodesByParam = function(key, value, startLeaf, endFunc) {
+                return vm.visitor(startLeaf, function(leaf) {
+                    return leaf[key] === value
+                }, endFunc, [])
+            }
+
+            vm.getNodesByParamFuzzy = function(key, value, startLeaf) {
+                return vm.visitor(startLeaf, function(leaf) {
+                    return (leaf[key] + "").match(new RegExp(value, "g"))
+                }, false, [])
+            }
+
+            vm.getSelectedNodes = function(startLeaf) {
+                if(!startLeaf) return vm._select
+                var info = vm._getSelectIDs(startLeaf),
+                    ids = info.dict,
+                    res = [],
+                    _s = vm._select
+                for(var i = 0, len = _s.length; i < len; i++) {
+                    var k = _s[i].$id
+                    if(ids[k]) res.push(_s[i])
+                }
+                return res
+            }
+
+            // cache管理
+            vm.removeCacheById = function(id) {
+                delete cache[id]
+            }
+
+            //选中相关，可能是一个性能瓶颈，之后可以作为优化的点
             vm.hasClassSelect = function(leaf) {
                 for(var i = 0, len = vm._select.length; i < len; i++) {
                     if(vm._select[i].$id === leaf.$id) return i + 1
                 }
                 return 0
             }
+            vm._getSelectIDs = function(leaf) {
+                var total = 0, dict = {}
+                if(leaf) {
+                    vm.visitor(leaf, function(leaf){
+                        // 是否被选中
+                        if(avalon(g(leaf.$id).getElementsByTagName("a")[0]).hasClass("curSelectedNode")) {
+                            dict[leaf.$id] = 1
+                            total++
+                        }
+                    }, false)
+                }
+                return {
+                    total: total,
+                    dict: dict
+                }
+            }
             // 取消节点的选中状态
-            vm.selectFun = function(event, leaf, isClear) {
-                var id = leaf.$id, index = vm.hasClassSelect(leaf)
-                if(index) {
-                    vm._select.splice(index - 1, 1)
+            vm.selectFun = function(event, leaf, all) {
+                if(all) {
+                    var _s = vm._select,
+                        info = vm._getSelectIDs(leaf),
+                        total = count = info.total,
+                        dict = info.dict
+                    // 删除优化
+                    if(total > 1) _s.$unwatch()
+                    for(var i = 0; i < _s.length; i++) {
+                        var k = _s[i]
+                        if(dict[k.$id]) {
+                            _s.splice(i, 1)
+                            i--
+                            count--
+                            if(count == 1 && total > 1) _s.$watch()
+                        }
+                    }
+                    res = dict = null
                 } else {
-                    if(vm.ctrlCMD(event, leaf)) {
-                        vm._select.push(leaf)
+                    var id = leaf.$id, index = vm.hasClassSelect(leaf)
+                    if(index) {
+                        vm._select.splice(index - 1, 1)
                     } else {
-                        vm._select = [leaf]
+                        if(vm.ctrlCMD(event, leaf)) {
+                            vm._select.push(leaf)
+                        } else {
+                            vm._select = [leaf]
+                        }
                     }
                 }
                 vm.$fire("e:select", {
@@ -247,9 +399,19 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                     vmodels: vmodels
                 })
             }
+            vm.selectNode = function(leaf, appendOrReplace) {
+                if(vm.view.selectedMulti === false) appendOrReplace = false
+                if(appendOrReplace) vm._select.push(leaf)
+                else vm._select = [leaf]
+            }
             //@method freeSelect(event, leaf)取消leaf节点上所有处于选中状态的节点
             vm.freeSelect = function(event, leaf) {
-                vm.selectFun(event, leaf, "clearAll")
+                if(!leaf) {
+                    // clear all
+                    vm._select.clear()
+                } else {
+                    vm.selectFun(event, leaf, "all")
+                }
             }
 
             vm.ctrlCMD = function(event, leaf) {

@@ -1,6 +1,6 @@
 /**
  * @cnName 输入引导模块
- * @enName validation
+ * @enName mask
  * @introduce
  *  <p>这是ms-duplex2.0的一个扩展模块，用于引导用户输入。</p>
  *  <p>通过如下方式使用:</p>

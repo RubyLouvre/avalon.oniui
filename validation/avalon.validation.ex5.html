@@ -30,7 +30,7 @@
                     $id: "test",
                     $skipArray: ["validation"],
                     a: 'bbb',
-                    b: ["4", "5"],
+                    b: "",
                     c: "5",
                     d: "",
                     clearAll: function() {
@@ -66,31 +66,14 @@
     </head>
     <body>
         <form ms-controller="test" ms-widget="validation">
-            <pre>select, checkbox, radiobox, textarea</pre>
-            <select ms-duplex-contains="a" data-duplex-contains="aaa">
-                <option value="aaa" >aaa</option>
-                <option value="bbb" >bbb</option>
-            </select> 必须选择 aaa
-            <br />
-            <label><input name="chk" type="checkbox" value="1" ms-duplex-contain="b" data-duplex-contain="1,2" />1</label>
-            <label><input name="chk" type="checkbox" value="2" ms-duplex="b"/>2</label>
-            <label><input name="chk" type="checkbox" value="3" ms-duplex="b"/>3</label>
-            <label><input name="chk" type="checkbox" value="4" ms-duplex="b"/>4</label>
-            <label><input name="chk" type="checkbox" value="5" ms-duplex="b"/>5</label>
-            必须包含 1与 2
-            <br />
-            <label><input name="rdo" type="radio" value="1" ms-duplex-contains-string="c" data-duplex-contains="1,2" />1</label>
-            <label><input name="rdo" type="radio" value="2" ms-duplex-string="c"/>2</label>
-            <label><input name="rdo" type="radio" value="3" ms-duplex-string="c"/>3</label>
-            <label><input name="rdo" type="radio" value="4" ms-duplex-string="c"/>4</label>
-            <label><input name="rdo" type="radio" value="5" ms-duplex-string="c"/>5</label>
-            必须选择 1 或 2
-            <br />
-            <textarea ms-duplex-required="d"></textarea>
-            必须有内容
-            <br />
-            <input type="button" value="验证" ms-click="checkAll" />
-            <input type="button" value="重置" ms-click="clearAll" />
+            <pre>重复密码</pre>
+            <form id="form8">
+                <pre>重复密码，单框验证</pre>
+                <input type="password" ms-duplex-alpha_numeric="a" id="password"/>
+                <input type="password" ms-duplex-alpha_numeric-repeat="b" data-duplex-repeat="password"/>
+                <input type="button" value="验证" ms-click="checkAll" />
+                <input type="button" value="重置" ms-click="clearAll" />
+            </form>
         </form>
     </body>
 </html>

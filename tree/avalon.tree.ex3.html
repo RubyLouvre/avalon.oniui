@@ -55,7 +55,7 @@
             // for(var i = 0; i < 5000; i++) {
             //     child.push(child[1])
             // }
-            require(["tree/avalon.tree.edit"], function() {
+            require(["tree/avalon.tree.check"], function() {
                 avalon.define("test", function(vm) {
                     vm.tree = {
                         children: child,
@@ -78,26 +78,35 @@
                             }
                         },
                         callback: {
-                            onExpand: function(leaf) {
-                                console.log(leaf)
+                            beforeExpand: function(arg) {
+                                avalon.log("before expand")
                             },
-                            beforeRename: function(arg) {
-                                avalon.log("before编辑")
+                            beforeCollapse: function(arg) {
+                                avalon.log("before collapse")
                             },
-                            beforeNodeCreated: function(arg) {
-                                avalon.log("before NodeCreated")
+                            onExpand: function(arg) {
+                                avalon.log("expand")
                             },
-                            onNodeCreated: function(arg) {
-                                avalon.log("onNodeCreated")
-                            },
-                            onRename: function(arg) {
-                                avalon.log("编辑")
+                            onCollapse: function(arg) {
+                                avalon.log("collapse")
                             },
                             beforeRemove: function(obj) {
                                 return confirm("确认删除?")
                             },
                             beforeAdd: function(obj) {
                                 return confirm("确认添加?")
+                            },
+                            beforeMousedown: function(obj) {
+                                avalon.log("before down")
+                            },
+                            beforeRightClick: function(obj) {
+                                avalon.log("before right click")
+                            },
+                            beforeClick: function(obj) {
+                                avalon.log("before select")
+                            },
+                            onClick: function(obj) {
+                                avalon.log("select")
                             }
                         }
                     }

@@ -7,64 +7,53 @@
         <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
         <script>
-        var child = [
-                        { name:"父节点1 - 展开", open:true,
-                            children: [
-                                { name:"父节点11 - 折叠", open: false,
-                                    children: [
-                                        { name:"叶子节点111"},
-                                        { name:"叶子节点112"},
-                                        { name:"叶子节点113"},
-                                        { name:"叶子节点114", url: "http://www.baidu.com"}
-                                    ]},
-                                { name:"父节点12 - 折叠", open: false,
-                                    children: [
-                                        { name:"叶子节点121"},
-                                        { name:"叶子节点122"},
-                                        { name:"叶子节点123"},
-                                        { name:"叶子节点124"}
-                                    ]},
-                                { name:"父节点13 - 没有子节点", isParent:true, open: false}
-                            ]},
-                        { name:"父节点2 - 折叠", open: false,
-                            children: [
-                                { name:"父节点21 - 展开", open:true,
-                                    children: [
-                                        { name:"叶子节点211"},
-                                        { name:"叶子节点212"},
-                                        { name:"叶子节点213"},
-                                        { name:"叶子节点214"}
-                                    ]},
-                                { name:"父节点22 - 折叠", open: false,
-                                    children: [
-                                        { name:"叶子节点221"},
-                                        { name:"叶子节点222"},
-                                        { name:"叶子节点223"},
-                                        { name:"叶子节点224"}
-                                    ]},
-                                { name:"父节点23 - 折叠", open: false,
-                                    children: [
-                                        { name:"叶子节点231"},
-                                        { name:"叶子节点232"},
-                                        { name:"叶子节点233"},
-                                        { name:"叶子节点234"}
-                                    ]}
-                            ]},
-                        { name:"父节点3 - 没有子节点", isParent:true, open: false}
-                        ];
-            // for(var i = 0; i < 5000; i++) {
-            //     child.push(child[1])
-            // }
+        var child = []
+        var zNodes =[
+            { id:1, pid:0, name:"父节点1 - 展开", open:true},
+            { id:11, pid:1, name:"父节点11 - 折叠"},
+            { id:111, pid:11, name:"叶子节点111"},
+            { id:112, pid:11, name:"叶子节点112"},
+            { id:113, pid:11, name:"叶子节点113"},
+            { id:114, pid:11, name:"叶子节点114"},
+            { id:12, pid:1, name:"父节点12 - 折叠"},
+            { id:121, pid:12, name:"叶子节点121"},
+            { id:122, pid:12, name:"叶子节点122"},
+            { id:123, pid:12, name:"叶子节点123"},
+            { id:124, pid:12, name:"叶子节点124"},
+            { id:13, pid:1, name:"父节点13 - 没有子节点", isParent:true},
+            { id:2, pid:0, name:"父节点2 - 折叠"},
+            { id:21, pid:2, name:"父节点21 - 展开", open:true},
+            { id:211, pid:21, name:"叶子节点211"},
+            { id:212, pid:21, name:"叶子节点212"},
+            { id:213, pid:21, name:"叶子节点213"},
+            { id:214, pid:21, name:"叶子节点214"},
+            { id:22, pid:2, name:"父节点22 - 折叠"},
+            { id:221, pid:22, name:"叶子节点221"},
+            { id:222, pid:22, name:"叶子节点222"},
+            { id:223, pid:22, name:"叶子节点223"},
+            { id:224, pid:22, name:"叶子节点224"},
+            { id:23, pid:2, name:"父节点23 - 折叠"},
+            { id:231, pid:23, name:"叶子节点231"},
+            { id:232, pid:23, name:"叶子节点232"},
+            { id:233, pid:23, name:"叶子节点233"},
+            { id:234, pid:23, name:"叶子节点234"},
+            { id:3, pid:0, name:"父节点3 - 没有子节点", isParent:true}
+        ];
+
             require(["tree/avalon.tree.edit"], function() {
                 avalon.define("test", function(vm) {
                     vm.tree = {
-                        children: child,
+                        children: zNodes,
                         edit: {
                             showRemoveBtn: function(leaf) {
                                 return leaf.level > 0
                             }
                         },
                         data: {
+                            simpleData: {
+                                enable: true,
+                                pIdKey: "pid"
+                            },
                             keep: {
                                 leaf: false,
                                 parent: true
@@ -81,20 +70,11 @@
                             onExpand: function(leaf) {
                                 console.log(leaf)
                             },
-                            beforeRename: function(arg) {
-                                avalon.log("before编辑")
-                            },
-                            beforeNodeCreated: function(arg) {
-                                avalon.log("before NodeCreated")
-                            },
-                            onNodeCreated: function(arg) {
-                                avalon.log("onNodeCreated")
-                            },
-                            onRename: function(arg) {
-                                avalon.log("编辑")
-                            },
                             beforeRemove: function(obj) {
                                 return confirm("确认删除?")
+                            },
+                            onRemove: function(leaf) {
+                                console.log("remove " + leaf)
                             },
                             beforeAdd: function(obj) {
                                 return confirm("确认添加?")
@@ -112,8 +92,7 @@
     </head>
     <body ms-controller="test">
         <h1>tree</h1>
-        <div ms-widget="tree"></div>
-        <div ms-widget="tree,tree2,$treeOpt"></div>
+        <div ms-widget="tree,tree2"></div>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;

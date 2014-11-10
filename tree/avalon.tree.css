@@ -239,3 +239,14 @@
     display: inline-block; }
   .ui-tree li.edit-focus a span.ebutton, .ui-tree li.edit-focus a span, .ui-tree li a span.ebutton, .ui-tree span.edit-input {
     display: none; }
+
+.no-select {
+  -moz-user-select: none;
+  /*火狐*/
+  -webkit-user-select: none;
+  /*webkit浏览器*/
+  -ms-user-select: none;
+  /*IE10*/
+  -khtml-user-select: none;
+  /*早期浏览器*/
+  user-select: none; }

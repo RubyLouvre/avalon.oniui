@@ -1,5 +1,6 @@
 <ul class="ui-tree" 
+    ms-class="no-select:!view.txtSelectedEnable"
 	ms-live-click="liveClick($event)" 
-	ms-live-contextmenu="liveContextmenu($event)">
+	ms-live-contextmenu="excute('rightClick', $event, false, 'liveContextmenu')">
 	{{loadNodes()|html}}
 </ul>

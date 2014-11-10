@@ -5,10 +5,11 @@
 define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "text!./avalon.tree.parent.html",  "text!./avalon.tree.nodes.html", "../live/avalon.live", "css!./avalon.tree.css", "css!../chameleon/oniui-common.css"], function(avalon, template, leafTemplate, parentTemplate, nodesTemplate) {
 
     var optionKeyToFixMix = {view: 1, callback: 1},
-        eventList = ["click", "dblClick", "collapse", "expand", "select", "contextmenu"],
+        eventList = ["click", "dblClick", "collapse", "expand", "select", "contextmenu", "mousedown", "mouseup"],
         ExtentionMethods = [],
         undefine = void 0,
-        tplDict = {}
+        tplDict = {},
+        disabelSelectArr = []
     //  tool functions
     function g(id) {
         return document.getElementById(id)
@@ -22,24 +23,31 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
     }
 
     //  树状数据的标准化，mvvm的痛
-    function dataFormator(arr, parentLeaf, dataFormated, func) {
+    function dataFormator(arr, parentLeaf, dataFormated, func, vm) {
         avalon.each(arr, function(index, item) {
             if(!dataFormated) {
-                item.level = parentLeaf ? parentLeaf.level + 1 : 0
-                itemFormator(item, parentLeaf)
-            } else {
+                itemFormator(item, parentLeaf, vm)
+            } else if(item){
                 item.$parentLeaf = parentLeaf
                 func && func(item)
             }
-            if(item.children && item.children.length) dataFormator(item.children, item, dataFormated)
+            if(item && item.children && item.children.length) dataFormator(item.children, item, dataFormated, undefine, vm)
+        })
+    }
+    function formate(item, dict) {
+        avalon.each(dict, function(key, value) {
+            if(key === "hasOwnProperty") return
+            item[key] = item[value] || ""
         })
     }
     /**
       * 格式化数据，补全字段
       */
-    function itemFormator(item, parentLeaf) {
+    function itemFormator(item, parentLeaf, vm) {
+        if(!item) return
+        item.level = parentLeaf ? parentLeaf.level + 1 : 0
         item.isParent = itemIsParent(item)
-        item.pId = item.pId || 0
+        formate(item, vm.data.key)
         // 不要可监听
         item.$parentLeaf = parentLeaf || ""
         if(item.isParent) {
@@ -61,16 +69,17 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
       *      {id: 11, pId: 1, name: xxx, others}// 子节点
       *  ]
       */
-    function simpleDataToTreeData(arr) {
+    function simpleDataToTreeData(arr, vm) {
         if(!arr.length) return []
+        var dict = vm.data.simpleData, idKey = dict.idKey, pIdKey = dict.pIdKey
         var prev, tree = [], stack = [], tar, now
         for(var i = 0, len = arr.length; i < len; i++) {
-            now = itemFormator(arr[i])
+            now = itemFormator(arr[i], undefine, vm)
             // 前一个节点是直属父节点
-            if(prev && prev.id === now.pId) {
+            if(prev && prev[idKey] === now[pIdKey]) {
                 // 标记父节点
                 prev.isParent = true 
-                itemFormator(prev)
+                itemFormator(prev, undefine, vm)
                 // 防止重复压入堆栈
                 if(!tar || tar !== prev) {
                     stack.push(prev)
@@ -78,9 +87,9 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 }
                 tar.children.push(now)
             // 当前节点是一个父节点或者没有出现过父节点或者出现的父节点非自己的父节点
-            } else if(now.isParent || !tar || tar.id !== now.pId) {
+            } else if(now.isParent || !tar || tar[idKey] !== now[pIdKey]) {
                 // 出栈知道找到自己的父节点或者栈空
-                while(tar && (now.pId !== tar.id)) {
+                while(tar && (now[pIdKey] !== tar[idKey])) {
                     stack.pop()
                     tar = stack[stack.length - 1]
                 }
@@ -95,6 +104,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 (tar && tar.children || tree).push(now)
             }
             now.level = stack.length
+            now[pIdKey] = now[pIdKey] || 0
             prev = now
         }
         return tree
@@ -124,16 +134,22 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         options.parentTemplate = options.getTemplate(parentTemplate, options, "parent").replace(/\n/g, "").replace(/>[\s]+</g, "><")
         options.leafTemplate = options.getTemplate(leafTemplate, options, "leaf").replace(/\n/g, "").replace(/>[\s]+</g, "><")
         options.nodesTemplate = nodesTemplate
-        dataFormator(options.children)
+        var newOpt = {}
+        avalon.mix(newOpt, options)
+        avalon.each(optionKeyToFixMix, function(key) {
+            avalon.mix(true, newOpt[key], avalon.mix(true, {}, widget.defaults[key], newOpt[key]))
+        })
+        if(newOpt.data.simpleData.enable) {
+            newOpt.children = simpleDataToTreeData(newOpt.children, newOpt)
+        } else {
+            dataFormator(newOpt.children, undefine, undefine, undefine, newOpt)
+        }
         var vmodel = avalon.define(data.treeId, function(vm) {
             // mix插件配置
             avalon.each(ExtentionMethods, function(i, func) {
                 func && func(vm, vmodels)
             })
-            avalon.mix(vm, options)
-            avalon.each(optionKeyToFixMix, function(key) {
-                avalon.mix(vm[key], avalon.mix({}, widget.defaults[key], vm[key]))
-            })
+            avalon.mix(vm, newOpt)
             vm.widgetElement = element
             vm.widgetElement.innerHTML = vm.template
             vm.$skipArray = ["widgetElement", "template", "callback"]
@@ -145,8 +161,11 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 inited = true
                 dataFormator(vm.children, undefine, "构建父子节点衔接关系", function(leaf) {
                     cache[leaf.$id] = leaf
-                })
+                }, vm)
                 avalon.scan(element, [vmodel].concat(vmodels))
+                if(!vm.view.txtSelectedEnable && navigator.userAgent.match(/msie\s+[5-8]/gi)) {
+                    disabelSelectArr.push(vm.widgetElement)
+                }
                 if(typeof options.onInit === "function" ) {
                     //vmodels是不包括vmodel的 
                     options.onInit.call(element, vmodel, options, vmodels)
@@ -167,10 +186,13 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 }
             }
             vm.toggleOpenStatue = function(event, leaf) {
-                leaf.open ? vm.collapse(leaf, undefine, event) : vm.expand(leaf, undefine, undefine, event)
+                var leaf = leaf || event.leaf
+                if(!leaf) return
+                leaf.open ? vm.excute("collapse", event, leaf, "collapse") : vm.excute("expand", event, leaf, "expand")
             }
             //@method expand(leaf, all) 展开leaf节点的子节点，all表示是否迭代所有子孙节点
-            vm.expand = function(leaf, all, openOrClose, event) {
+            vm.expand = function(arg, all, openOrClose) {
+                var leaf = arg.leaf
                 if(!leaf) {
                     leaf = vm
                 } else {
@@ -179,16 +201,17 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 }
                 var children = leaf.children, leafDom = g(leaf.$id)
                 // 节点未渲染，或不可见，向上溯源处理
-                if(!leafDom || !leafDom.clientHeight) vm.cVisitor(leaf, function(node) {
+                if(!leafDom || !leafDom.scrollHeight) vm.cVisitor(leaf, function(node) {
                     node.open = true
                 })
+                // 互斥
+                if(vm.view.singlePath && !openOrClose) {
+                    var children = leaf.$parentLeaf ? leaf.$parentLeaf.children : vm.children
+                    avalon.each(children, function(i, item){
+                        if(item != leaf && item.open) vm.excute("collapse", arg.e, item, "collapse") 
+                    })
+                }
                 if(all) avalon.each(children, function(i, item) {vm.expand(item, "all", openOrClose)})
-                vm.$fire(("e:" + (openOrClose ? "collapse" : "expand")), {
-                    leaf: leaf,
-                    e: event,
-                    vmodel: vm,
-                    vmodels: vmodels
-                })
             }
             vm.expandAll = function(openOrClose) {
                 openOrClose ? vm.expand(undefine, "all") : vm.collapse(undefine, "all")
@@ -331,6 +354,20 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 }, false, [])
             }
 
+            vm.getPreNode = function(leaf, next) {
+                var allMates = leaf.$parentLeaf ? leaf.$parentLeaf.children : vm.children,
+                    index = vm.getNodeIndex(leaf)
+                return allMates[next ? index + 1 : index-1]
+            }
+
+            vm.getNextNode = function(leaf) {
+                return vm.getPreNode(leaf, "next")
+            }
+
+            vm.getParentNode = function(leaf) {
+                return leaf.$parentLeaf
+            }
+
             vm.getSelectedNodes = function(startLeaf) {
                 if(!startLeaf) return vm._select
                 var info = vm._getSelectIDs(startLeaf),
@@ -373,7 +410,10 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 }
             }
             // 取消节点的选中状态
-            vm.selectFun = function(event, leaf, all) {
+            vm.selectFun = function(event, all) {
+                var leaf = leaf || event.leaf,
+                    event = event.e
+                if(!leaf.url) event.preventDefault()
                 if(all) {
                     var _s = vm._select,
                         info = vm._getSelectIDs(leaf),
@@ -403,13 +443,6 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                         }
                     }
                 }
-                vm.$fire("e:select", {
-                    e: event,
-                    leaf: leaf,
-                    select: vm._select,
-                    vmodel: vm,
-                    vmodels: vmodels
-                })
             }
             vm.selectNode = function(leaf, appendOrReplace) {
                 if(vm.view.selectedMulti === false) appendOrReplace = false
@@ -450,27 +483,61 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                     vmodels: vmodels
                 })
             }
-            // 指令执行器
-            vm.excute = function() {
-                var cmd = arguments[0]
-                if(cmd) vm[cmd].apply(this, [].slice.call(arguments, 1))
+            // 事件分发中心
+            vm.excute = function(cmd, event, leaf, action) {
+                var evt = cmd, eventName = upperFirstLetter(cmd),
+                    beforeFunc = vm.callback["before" + eventName],
+                    onFunc = vm.callback["on" + eventName],
+                    arg = {
+                        e: event,
+                        leaf: leaf,
+                        vm: vm,
+                        vmodels: vmodels,
+                        preventDefault: function() {
+                            this.cancel = true
+                        }
+                    }, ele = event ? event.srcElement || event.target : null
+                // 执行前检测，返回
+                vmodel.$fire("e:before" + eventName, arg)
+                if(beforeFunc && beforeFunc.call(ele, arg) === false || arg.cancel) return
+                if(action) {
+                    if(!avalon.isFunction(action)) action = vm[action]
+                    if(avalon.isFunction(action)) action.call(ele, arg)
+                }
+                vmodel.$fire("e:" + cmd, arg) 
+                onFunc && onFunc.call(ele, arg)
             }
-            vm.createLeaf = itemFormator
+            vm.createLeaf = function(item, parentLeaf) {
+                return itemFormator(item, parentLeaf, vm)
+            }
 
             vm.cloneNode = function(leaf) {
                 return avalon.mix({}, leaf.$model)
             }
-        })
 
-        avalon.each(eventList, function(i, evt) {
-            var key = "on" + upperFirstLetter(evt)
-            vmodel.$watch("e:" + evt, function() {
-                vmodel.callback[key].apply(null, arguments)
-            })
+            vm.exprAnd = function() {
+                var len = arguments.length, step = 1, res = step, leaf = arguments[0]
+                while(step < len) {
+                    res = res && vm.optionToBoolen(arguments[step], leaf)
+                    step++
+                }
+                return res
+            }
         })
       
         return vmodel
     }
+    function disabelSelect(event) {
+        var src = event.srcElement
+        for(var i = 0, len = disabelSelectArr.length; i < len; i++) {
+            if(avalon.contains(disabelSelectArr[i], src) && src.type != "text") {
+                event.preventDefault()
+                return
+            }
+        }
+    }
+    avalon.bind(document.body, "selectstart", disabelSelect)
+    avalon.bind(document.body, "drag", disabelSelect)
     //add args like this:
     //argName: defaultValue, \/\/@param description
     //methodName: code, \/\/@optMethod optMethodName(args) description 
@@ -479,11 +546,28 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             showLine: true,//@param view.showLine是否显示连接线
             dblClickExpand: true,//@param view.dblClickExpand是否双击变化展开状态
             selectedMulti: true,//@param view.selectedMulti true / false 分别表示 支持 / 不支持 同时选中多个节点
+            txtSelectedEnable: false,
+            autoCancelSelected: false,
+            singlePath: true,
             showIcon: true,//@param view.showIcon zTree 是否显示节点的图标
             showTitle: true,//@param view.showTitle 分别表示 显示 / 隐藏 提示信息
             nameShower: function(leaf) {
                 return leaf.name
             }//@optMethod view.nameShower(leaf)节点显示内容过滤器，默认是显示leaf.name
+        },
+        data: {
+            simpleData: {
+                idKey: "id",
+                pIdKey: "pId",
+                enable: false
+            },
+            key: {
+                checked: "checked",
+                children: "children",
+                name: "name",
+                title: "",
+                url: "url"
+            }
         },
         callback: {//@param 回调相关的配置
             //@optMethod callback.onExpand(data) 节点展开回调
@@ -500,7 +584,9 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         $author: "skipper@123"
     }
     avalon.each(eventList, function(i, item) {
+        if(item == "contextmenu") item = "RightClick"
         widget.defaults.callback["on" + upperFirstLetter(item)] = avalon.noop
+        widget.defaults.callback["before" + upperFirstLetter(item)] = false
     })
 
     //@method avalon.ui.tree.AddExtention(fixNames, addingDefaults, addingMethodFunc, watchEvents)扩展tree

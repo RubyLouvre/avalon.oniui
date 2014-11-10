@@ -94,3 +94,10 @@ $uiname : ".ui-tree";
 	li a.curSelectedNode span.ebutton,li a.ui-state-hover span.ebutton,li.edit-focus span.ico_close,li.edit-focus span.edit-input {display:inline-block;}
 	li.edit-focus a span.ebutton,li.edit-focus a span,li a span.ebutton , span.edit-input{display:none;}
 }
+.no-select{
+   -moz-user-select: none; /*火狐*/
+   -webkit-user-select: none;  /*webkit浏览器*/
+   -ms-user-select: none;   /*IE10*/
+   -khtml-user-select: none; /*早期浏览器*/
+   user-select: none;
+}

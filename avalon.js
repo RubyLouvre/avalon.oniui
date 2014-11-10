@@ -1935,7 +1935,7 @@
         }
         beginTime = new Date()
     }
-  
+
     function notifySubscribers(list) { //通知依赖于这个访问器的订阅者更新自身
         clearTimeout(removeID)
         if (new Date() - beginTime > 444) {
@@ -3100,6 +3100,7 @@
                         v.$fire("init-ms-duplex", data)
                     }
                     var cpipe = data.pipe || (data.pipe = pipe)
+                    console.log("++++++++++++++++++")
                     cpipe(null, data, "init")
                     duplexBinding[elem.tagName](elem, data.evaluator.apply(null, data.args), data)
                 }
@@ -3353,7 +3354,7 @@
     }
 
     function pipe(val, data, action, e) {
-        data.param.replace(rword, function(name) {
+        data.param.replace(/\w+/g, function(name) {
             var hook = avalon.duplexHooks[name]
             if (hook && typeof hook[action] === "function") {
                 val = hook[action](val, data)
@@ -3996,7 +3997,7 @@
         source[param] = item
         for (var i = 0, n = eachProxyPool.length; i < n; i++) {
             var proxy = eachProxyPool[i]
-            if (proxy.hasOwnProperty(param)) {
+            if (proxy.hasOwnProperty(param) && (avalon.type(proxy[param]) === avalon.type(item))) {
                 for (var k in source) {
                     proxy[k] = source[k]
                 }

@@ -49,6 +49,7 @@
                     c: "d",
                     d: "",
                     e: "",
+                    f: "",
                     reset: function() {
                         validationVM && validationVM.resetAll()
                     },
@@ -93,6 +94,7 @@
             <p><input ms-duplex-decimal="c" placeholder="必须输入小数"></p>
             <p><input ms-duplex-alpha="d" placeholder="必须输入字母"></p>
             <p><input ms-duplex-chs="e" placeholder="必须输入中文"></p>
+            <p><input ms-duplex-ipv4="f" placeholder="请输入互联网协议（Internet Protocol，IP）的第四版"></p>
             <button type="submit">submit
             </button>
             <button type="button" ms-click="reset">reset

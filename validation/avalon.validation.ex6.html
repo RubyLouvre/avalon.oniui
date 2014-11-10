@@ -40,6 +40,15 @@
                         validationVM && validationVM.validateAll()
                     },
                     validation: {
+                        validationHooks:{
+                            match12345:{
+                                message: "必须等于12345",
+                                get: function(value, data, next){
+                                    next(value === "12345")
+                                    return value
+                                }
+                            }
+                        },
                         valiedateInBlur: false,
                         onInit: function(v) {
                             validationVM = v
@@ -66,28 +75,8 @@
     </head>
     <body>
         <form ms-controller="test" ms-widget="validation">
-            <pre>select, checkbox, radiobox, textarea</pre>
-            <select ms-duplex-contains="a" data-duplex-contains="aaa">
-                <option value="aaa" >aaa</option>
-                <option value="bbb" >bbb</option>
-            </select> 必须选择 aaa
-            <br />
-            <label><input name="chk" type="checkbox" value="1" ms-duplex-contain="b" data-duplex-contain="1,2" />1</label>
-            <label><input name="chk" type="checkbox" value="2" ms-duplex="b"/>2</label>
-            <label><input name="chk" type="checkbox" value="3" ms-duplex="b"/>3</label>
-            <label><input name="chk" type="checkbox" value="4" ms-duplex="b"/>4</label>
-            <label><input name="chk" type="checkbox" value="5" ms-duplex="b"/>5</label>
-            必须包含 1与 2
-            <br />
-            <label><input name="rdo" type="radio" value="1" ms-duplex-contains-string="c" data-duplex-contains="1,2" />1</label>
-            <label><input name="rdo" type="radio" value="2" ms-duplex-string="c"/>2</label>
-            <label><input name="rdo" type="radio" value="3" ms-duplex-string="c"/>3</label>
-            <label><input name="rdo" type="radio" value="4" ms-duplex-string="c"/>4</label>
-            <label><input name="rdo" type="radio" value="5" ms-duplex-string="c"/>5</label>
-            必须选择 1 或 2
-            <br />
-            <textarea ms-duplex-required="d"></textarea>
-            必须有内容
+            <h3>自定义验证规则</h3>
+            <input ms-duplex-match12345="a" placeholder="请输入内容"></textarea>
             <br />
             <input type="button" value="验证" ms-click="checkAll" />
             <input type="button" value="重置" ms-click="clearAll" />

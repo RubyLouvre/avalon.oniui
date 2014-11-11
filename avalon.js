@@ -14,7 +14,7 @@
     var expose = new Date - 0
     var subscribers = "$" + expose
     //http://stackoverflow.com/questions/7290086/javascript-use-strict-and-nicks-find-global-function
-    var window = this || Function("return this")()
+    var window = Function("return this")()
     var otherRequire = window.require
     var otherDefine = window.define
     var stopRepeatAssign = false
@@ -1899,7 +1899,7 @@
             $$subscribers.push(obj)
         }
     }
-    var $$subscribers = [], $startIndex = 0, $maxIndex = 200
+    var $$subscribers = [], $startIndex = 0, $maxIndex = 200, beginTime = new Date(), removeID
     function removeSubscribers() {
         for (var i = $startIndex, n = $startIndex + $maxIndex; i < n; i++) {
             var obj = $$subscribers[i]
@@ -1922,7 +1922,6 @@
                     data[key] = null
                 }
                 obj.data = obj.list = null
-
                 i--
                 n--
 
@@ -1934,26 +1933,27 @@
         } else {
             $startIndex = 0
         }
+        beginTime = new Date()
     }
-    var beginTime = new Date(), removeID
+
     function notifySubscribers(list) { //通知依赖于这个访问器的订阅者更新自身
-        var currentTime = new Date()
         clearTimeout(removeID)
-        if (currentTime - beginTime > 333) {
+        if (new Date() - beginTime > 444) {
             removeSubscribers()
-            beginTime = new Date()
         } else {
-            removeID = setTimeout(removeSubscribers, 333)
+            removeID = setTimeout(removeSubscribers, 444)
         }
         if (list && list.length) {
             var args = aslice.call(arguments, 1)
             for (var i = list.length, fn; fn = list[--i]; ) {
                 var el = fn.element
-                if (fn.$repeat) {
-                    fn.handler.apply(fn, args) //处理监控数组的方法
-                } else if (fn.element && fn.type !== "on") {//事件绑定只能由用户触发,不能由程序触发
-                    var fun = fn.evaluator || noop
-                    fn.handler(fun.apply(0, fn.args || []), el, fn)
+                if (el && el.parentNode) {
+                    if (fn.$repeat) {
+                        fn.handler.apply(fn, args) //处理监控数组的方法
+                    } else if (fn.type !== "on") {//事件绑定只能由用户触发,不能由程序触发
+                        var fun = fn.evaluator || noop
+                        fn.handler(fun.apply(0, fn.args || []), el, fn)
+                    }
                 }
             }
         }
@@ -2125,7 +2125,7 @@
                     if (events[type]) {
                         param = type
                         type = "on"
-                    } else if (type === "checked" || type === "selected" || type === "disabled" || type === "readonly") {
+                    } else if (/^(checked|selected|disabled|readonly|enabled)$/.test(type)) {
                         log("ms-" + type + "已经被废弃,请使用ms-attr-*代替")
                         if (type === "enabled") {//吃掉ms-enabled绑定,用ms-disabled代替
                             type = "disabled"
@@ -2899,7 +2899,7 @@
             if (val) { //插回DOM树
                 if (elem.nodeType === 8) {
                     elem.parentNode.replaceChild(data.template, elem)
-                    elem = data.element = data.template
+                    elem = data.element = data.template //这时可能为null
                 }
                 if (elem.getAttribute(data.name)) {
                     elem.removeAttribute(data.name)
@@ -3049,7 +3049,7 @@
         },
         "duplex": function(data, vmodels) {
             var elem = data.element,
-                    tagName = elem.tagName
+                    tagName = elem.tagName, hasCast
             if (typeof duplexBinding[tagName] === "function") {
                 data.changed = getBindingCallback(elem, "data-duplex-changed", vmodels) || noop
                 //由于情况特殊，不再经过parseExprProxy
@@ -3057,10 +3057,13 @@
                 if (data.evaluator && data.args) {
                     var params = []
                     var casting = oneObject("string,number,boolean,checked")
-                    var hasCast
+                    if (elem.type === "radio" && data.param === "") {
+                        data.param = "checked"
+                    }
                     data.param.replace(/\w+/g, function(name) {
-                        if ((elem.type === "radio" && data.param === "") || (elem.type === "checkbox" && name === "radio")) {
-                            log(elem.type + "控件如果想通过checked属性同步VM,请改用ms-duplex-checked，以后ms-duplex默认是使用value属性同步VM")
+                        if (/^(checkbox|radio)$/.test(elem.type) && /^(radio|checked)$/.test(name)) {
+                            if (name === "radio")
+                                log("ms-duplex-radio已经更名为ms-duplex-checked")
                             name = "checked"
                             data.isChecked = true
                         }
@@ -3350,7 +3353,7 @@
     }
 
     function pipe(val, data, action, e) {
-        data.param.replace(rword, function(name) {
+        data.param.replace(/\w+/g, function(name) {
             var hook = avalon.duplexHooks[name]
             if (hook && typeof hook[action] === "function") {
                 val = hook[action](val, data)
@@ -3993,7 +3996,7 @@
         source[param] = item
         for (var i = 0, n = eachProxyPool.length; i < n; i++) {
             var proxy = eachProxyPool[i]
-            if (proxy.hasOwnProperty(param)) {
+            if (proxy.hasOwnProperty(param) && (avalon.type(proxy[param]) === avalon.type(item))) {
                 for (var k in source) {
                     proxy[k] = source[k]
                 }

@@ -31,6 +31,72 @@
                         <th>默认值</th>
                         <th>说明</th>
                     </tr>
+                    <tr>
+                        <td align="center" colspan="3">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>40</td>
+                        <td>自定义宽度</td>
+                    </tr>
+                    <tr>
+                        <td>listWidth</td>
+                        <td>100</td>
+                        <td>自定义下拉列表的宽度</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>60</td>
+                        <td>下拉列表的高度</td>
+                    </tr>
+                    <tr>
+                        <td>enable</td>
+                        <td>true</td>
+                        <td>组件是否可用</td>
+                    </tr>
+                    <tr>
+                        <td>readOnly</td>
+                        <td>false</td>
+                        <td>组件是否只读</td>
+                    </tr>
+                    <tr>
+                        <td>data</td>
+                        <td>[]</td>
+                        <td>下拉列表显示的数据模型</td>
+                    </tr>
+                    <tr>
+                        <td>value</td>
+                        <td>""</td>
+                        <td>设置组件的初始值</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate()</td>
+                        <td></td>
+                        <td>模板函数,方便用户自定义模板
+                            <table border="1">
+                                <tr>
+                                    <th>参数名/返回值</th>
+                                    <th>类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>str</td>
+                                    <td>String</td>
+                                    <td>默认模板</td>
+                                </tr>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>Object</td>
+                                    <td>VM</td>
+                                </tr>
+                                <tr>
+                                    <td>返回</td>
+                                    <td>String</td>
+                                    <td>新模板</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
                 </table>
             </fieldset>
             <ul>
@@ -38,7 +104,7 @@
                     <a href="avalon.miniswitch.ex1.html">用空select节点生成默认组件</a>
                 </li>
                 <li>
-                    <a href="avalon.miniswitch.ex2.htmll">用select结构配置组件</a>
+                    <a href="avalon.miniswitch.ex2.html">用select结构配置组件</a>
                 </li>
                 <li>
                     <a href="avalon.miniswitch.ex3.html">用options配置组件</a>

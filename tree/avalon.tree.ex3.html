@@ -50,12 +50,12 @@
                                         { name:"叶子节点234"}
                                     ]}
                             ]},
-                        { name:"父节点3 - 没有子节点", isParent:true, open: false}
+                        { name:"父节点3 - 没有子节点", isParent:true, open: false, nocheck:true}
                         ];
             // for(var i = 0; i < 5000; i++) {
             //     child.push(child[1])
             // }
-            require(["tree/avalon.tree.check"], function() {
+            require(["tree/avalon.tree.check", "tree/avalon.tree.edit"], function() {
                 avalon.define("test", function(vm) {
                     vm.tree = {
                         children: child,
@@ -63,6 +63,9 @@
                             showRemoveBtn: function(leaf) {
                                 return leaf.level > 0
                             }
+                        },
+                        check: {
+                            enable: true
                         },
                         data: {
                             keep: {
@@ -107,11 +110,23 @@
                             },
                             onClick: function(obj) {
                                 avalon.log("select")
+                            },
+                            onCheck: function(arg) {
+                                avalon.log("check")
                             }
                         }
                     }
                     vm.$treeOpt = {
-                        children: [child[0]]
+                        children: [child[0]],
+                        check: {
+                            chkStyle: "radio",
+                            enable: true
+                        },
+                        callback: {
+                            onCheck: function(arg) {
+                                avalon.log(arg)
+                            }
+                        }
                     }
                     vm.$skipArray = ["tree"]
                 })

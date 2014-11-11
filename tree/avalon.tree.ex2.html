@@ -76,8 +76,14 @@
                             onRemove: function(leaf) {
                                 console.log("remove " + leaf)
                             },
+                            onRename: function(arg) {
+                                console.log("renamed")
+                            },
                             beforeAdd: function(obj) {
                                 return confirm("确认添加?")
+                            },
+                            onNodeCreated: function(obj) {
+                                avalon.log("node onNodeCreated")
                             }
                         }
                     }

@@ -18,9 +18,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.edit.html"], function(ava
 				showRemoveBtn: true,
 				showRenameBtn: true,
 				editNameSelectAll: true,
-				removeTitle: function(leaf) {
-					return "删除" + leaf.name
-				},
+				removeTitle: "remove",
 				renameTitle:"rename",
 				addTitle:"add"
 			},
@@ -48,14 +46,16 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.edit.html"], function(ava
 					leaf.isParent = !!leaf.children.length
 				}
 			}
+			var focusLeaf
 			avalon.mix(vm, {
 				editDblclick: function(event) {
 					event.stopPropagation()
 				},
-				editFun: function(arg) {
+				editName: function(arg) {
 					var event = arg.e,
 						leaf = arg.leaf
 					event.preventDefault()
+					focusLeaf = leaf
 					if(avalon(this.parentNode).hasClass("curSelectedNode")) event.stopPropagation()
 					// edit logic
 					avalon(g(leaf.$id)).addClass("edit-focus")
@@ -66,11 +66,19 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.edit.html"], function(ava
 					}
 					input.focus()
 				},
-				editFocus: function(arg) {
+				cancelEditName: function(newName) {
+					if(focusLeaf) {
+						if(newName !== void 0) focusLeaf.name = newName
+					}
 				},
 				saveChange: function(arg) {
 					var leaf = arg.leaf
-					leaf.name = this.value
+					if(this.value != leaf.name) {
+						vm.cancelEditName(this.value)
+					} else {
+						arg.preventDefault()
+					}
+					focusLeaf = null
 					avalon(g(leaf.$id)).removeClass("edit-focus")
 					avalon(g("c" +leaf.$id)).removeClass("par-edit-focus")
 				},
@@ -79,9 +87,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.edit.html"], function(ava
 						leaf = arg.leaf
 					event.preventDefault()
 					event.stopPropagation()
-					var newLeaf = vm.createLeaf({name: "未命名节点"}, leaf)
-					leaf.isParent = leaf.open = true
-					leaf.children.push(newLeaf)
+					return vm.addNode(leaf, {name: "未命名节点"}, void 0, "no excute")
 				},
 				removeFun: function(arg) {
 					var event = arg.e,
@@ -93,6 +99,15 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.edit.html"], function(ava
 					var par = leaf.$parentLeaf || vm
 					par.children.remove(leaf)
 					leaf.$parentLeaf && changeIsParent(leaf.$parentLeaf)
+				},
+				removeNode: function(leaf, callbackFlag) {
+					vm.excute('remove', {
+						cancelCallback: !callbackFlag
+					}, leaf, 'removeFun')
+				},
+				removeChildNodes: function(parentLeaf) {
+					var arr = vm.getNodes(parentLeaf)
+					arr.clear()
 				}
 			})
 		// 侦听的事件，func操作内进行分发

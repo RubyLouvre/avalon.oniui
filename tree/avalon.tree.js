@@ -9,16 +9,18 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         ExtentionMethods = [],
         undefine = void 0,
         tplDict = {},
-        disabelSelectArr = []
+        disabelSelectArr = [],
+        callbacks = []
     //  tool functions
     function g(id) {
         return document.getElementById(id)
     }
 
-    function tplFormate(tpl) {
+    function tplFormate(tpl, options) {
         return tpl.replace(/\{\{MS_[^\}]+\}\}/g, function(mt) {
-            var k = mt.substr(mt.indexOf("_") + 1).replace("}}", "").toLowerCase()
-            return tplDict[k] || ""
+            var k = mt.substr(mt.indexOf("_") + 1).replace("}}", "").toLowerCase(), v = tplDict[k] || ""
+            if(avalon.isFunction(v)) return v(tpl, options)
+            return v
         })
     }
 
@@ -125,14 +127,10 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
 
     var widget = avalon.ui.tree = function(element, data, vmodels) {
         var options = data.treeOptions, cache = {}// 缓存节点
-        template = tplFormate(template)
-        parentTemplate = tplFormate(parentTemplate)
-        leafTemplate = tplFormate(leafTemplate)
-        nodesTemplate = tplFormate(nodesTemplate)
         //方便用户对原始模板进行修改,提高定制性
         options.template = options.getTemplate(template, options)
-        options.parentTemplate = options.getTemplate(parentTemplate, options, "parent").replace(/\n/g, "").replace(/>[\s]+</g, "><")
-        options.leafTemplate = options.getTemplate(leafTemplate, options, "leaf").replace(/\n/g, "").replace(/>[\s]+</g, "><")
+        options.parentTemplate = options.getTemplate(parentTemplate, options, "parent")
+        options.leafTemplate = options.getTemplate(leafTemplate, options, "leaf")
         options.nodesTemplate = nodesTemplate
         var newOpt = {}
         avalon.mix(newOpt, options)
@@ -144,6 +142,10 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         } else {
             dataFormator(newOpt.children, undefine, undefine, undefine, newOpt)
         }
+        newOpt.template = tplFormate(newOpt.template, newOpt).replace(/\n/g, "").replace(/>[\s]+</g, "><")
+        newOpt.parentTemplate = tplFormate(newOpt.parentTemplate, newOpt).replace(/\n/g, "").replace(/>[\s]+</g, "><")
+        newOpt.leafTemplate = tplFormate(newOpt.leafTemplate, newOpt).replace(/\n/g, "").replace(/>[\s]+</g, "><")
+        newOpt.nodesTemplate = tplFormate(newOpt.nodesTemplate, newOpt).replace(/\n/g, "").replace(/>[\s]+</g, "><")
         var vmodel = avalon.define(data.treeId, function(vm) {
             // mix插件配置
             avalon.each(ExtentionMethods, function(i, func) {
@@ -206,8 +208,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 })
                 // 互斥
                 if(vm.view.singlePath && !openOrClose) {
-                    var children = leaf.$parentLeaf ? leaf.$parentLeaf.children : vm.children
-                    avalon.each(children, function(i, item){
+                    vm.brotherVisitor(leaf, function(item, opt){
                         if(item != leaf && item.open) vm.excute("collapse", arg.e, item, "collapse") 
                     })
                 }
@@ -241,9 +242,148 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 return vm.nodesTemplate.replace(/leaf=\"children\"/g, "leaf=\"leaf.children\"")
             }
 
-            vm.timeStamp = function() {
-                return Date.now()
+            // 节点遍历
+            // 中序遍历，向下
+            vm.visitor = function(startLeaf, func, endFunc, res, options) {
+                var startLeaf = startLeaf || vm,
+                    res = res || []
+                if(startLeaf != vm) {
+                    var data = func(startLeaf, options)
+                    data && res.push(data)
+                    if(endFunc && endFunc(res, startLeaf)) return res
+                }
+                if(startLeaf.children && startLeaf.children.length) {
+                    for(var i = 0, children = startLeaf.children, len = children.length; i < len; i++) {
+                        if(endFunc && endFunc(res, children[i])) break
+                        vm.visitor(children[i], func, endFunc, res, options)
+                    }
+                }
+                return res
             }
+            // 向上溯源
+            vm.cVisitor = function(startLeaf, func, endFunc, res, options) {
+                var res = res || []
+                if(startLeaf) {
+                    var data = func(startLeaf, options)
+                    data && res.push(data)
+                    // 结束溯源
+                    if(endFunc && endFunc(res, startLeaf)) return res
+                    // 继续向上
+                    if(startLeaf.$parentLeaf) vm.cVisitor(startLeaf.$parentLeaf, func, endFunc, res, options)
+                }
+                return res
+            }
+
+            // 同级访问
+            vm.brotherVisitor = function(startLeaf, func, endFunc, res, options) {
+                var res = res || []
+                if(startLeaf) {
+                    var data, brothers = vm.getBrothers(startLeaf)
+                    for(var i = 0, len = brothers.length; i < len; i++) {
+                        data = func && func(brothers[i], options)
+                        data && res.push(data)
+                        // endCheck
+                        if(endFunc && endFunc(res, brothers[i])) break
+                    }
+                }
+                return res
+            }
+
+            vm.getBrothers = function(leaf) {
+                if(!leaf) return []
+                return leaf.$parentLeaf ? leaf.$parentLeaf.children : vm.children
+            }
+
+            // 获取节点
+            vm.getNodeByTId = function(id) {
+                return cache[id]
+            }
+
+            vm.getNodeIndex = function(leaf) {
+                var c = vm.getBrothers(leaf)
+                for(var i = 0, len = c.length; i < len; i++) {
+                    if(c[i] === leaf) return i
+                }
+                return -1
+            }
+
+            vm.getNodes = function(leaf) {
+                return leaf ? leaf.children : vm.children
+            }
+
+            vm.getNodesByFilter = function(fitler, isSingle, startLeaf, options) {
+                return vm.visitor(startLeaf, filter, isSingle ? function(data, node) {
+                    return data.length > 1
+                } : false, [], options)
+            }
+
+            vm.getNodeByParam = function(key, value, startLeaf) {
+                return vm.getNodesByParam(key, value, startLeaf, function(data, node) {
+                    return data.length > 1
+                })
+            }
+
+            vm.getNodesByParam = function(key, value, startLeaf, endFunc) {
+                return vm.visitor(startLeaf, function(leaf) {
+                    return leaf[key] === value
+                }, endFunc, [])
+            }
+
+            vm.getNodesByParamFuzzy = function(key, value, startLeaf) {
+                return vm.visitor(startLeaf, function(leaf) {
+                    return (leaf[key] + "").match(new RegExp(value, "g"))
+                }, false, [])
+            }
+
+            vm.getPreNode = function(leaf, next) {
+                var allMates = vm.getBrothers(leaf),
+                    index = vm.getNodeIndex(leaf)
+                return allMates[next ? index + 1 : index-1]
+            }
+
+            vm.getNextNode = function(leaf) {
+                return vm.getPreNode(leaf, "next")
+            }
+
+            vm.getParentNode = function(leaf) {
+                return leaf.$parentLeaf
+            }
+
+            vm.addNode = function(parentLeaf, item, isSilent, noExcute) {
+                var newLeaf = itemFormator(item, parentLeaf, vm), arr = vm.getNodes(parentLeaf)
+                if(noExcute) {
+                    arr.push(newLeaf)
+                } else {
+                    excute('nodeCreated', {
+                        isSilent: isSilent
+                    }, leaf, function() {
+                        arr.push(newLeaf)
+                        return arr[arr.length - 1]
+                    })
+                }
+                return arr[arr.length - 1]
+            }
+
+            vm.addNodes = function(parentLeaf, nodes, isSilent) {
+                // 数据构建
+                if(vm.data.simpleData.enable) nodes = simpleDataToTreeData(nodes, vm)
+                dataFormator(nodes, parentLeaf, undefine, undefine, vm)
+                if(parentLeaf) parentLeaf.isParent = true
+                var arr = vm.getNodes(parentLeaf), len = arr.length
+                vm.excute('nodeCreated', {
+                    isSilent: isSilent
+                } , parentLeaf, function() {
+                    arr.pushArray(nodes)
+                    return arr.slice(len) || []
+                })
+                return arr.slice(len) || []
+            }
+
+            vm.copyNode = function(targetLeaf, leaf, moveType, isSilent) {
+                var newLeaf = avalon.mix({}, leaf.$model)
+                vm.moveNode(targetLeaf, newLeaf, moveType, isSilent)
+            }
+
             // 目测这个是相当费性能的。。。
             vm.moveNode = function(targetLeaf, leaf, moveType, isSilent) {
                 var parLeaf = leaf.$parentLeaf || vm,
@@ -281,106 +421,6 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 })
             }
 
-            // 节点遍历
-            // 中序遍历，向下
-            vm.visitor = function(startLeaf, func, endFunc, res, options) {
-                var startLeaf = startLeaf || vm,
-                    res = res || []
-                if(startLeaf != vm) {
-                    var data = func(startLeaf, options)
-                    data && res.push(data)
-                    if(endFunc && endFunc(res, startLeaf)) return res
-                }
-                if(startLeaf.isParent) {
-                    for(var i = 0, children = startLeaf.children, len = children.length; i < len; i++) {
-                        if(endFunc && endFunc(res, children[i])) break
-                        vm.visitor(children[i], func, endFunc, res, options)
-                    }
-                }
-                return res
-            }
-            // 向上溯源
-            vm.cVisitor = function(startLeaf, func, endFunc, res, options) {
-                var res = res || []
-                if(startLeaf) {
-                    var data = func(startLeaf, options)
-                    data && res.push(data)
-                    // 结束溯源
-                    if(endFunc && endFunc(res, startLeaf)) return res
-                    // 继续向上
-                    if(startLeaf.$parentLeaf) vm.cVisitor(startLeaf.$parentLeaf, func, endFunc, res, options)
-                }
-                return res
-            }
-
-            // 获取节点
-            vm.getNodeByTId = function(id) {
-                return cache[id]
-            }
-
-            vm.getNodeIndex = function(leaf) {
-                var c = leaf.$parentLeaf ? leaf.$parentLeaf.children : vm.children
-                for(var i = 0, len = c.length; i < len; i++) {
-                    if(c[i] === leaf) return i
-                }
-                return -1
-            }
-
-            vm.getNodes = function() {
-                return vm.children
-            }
-
-            vm.getNodesByFilter = function(fitler, isSingle, startLeaf, options) {
-                return vm.visitor(startLeaf, filter, isSingle ? function(data, node) {
-                    return data.length > 1
-                } : false, [], options)
-            }
-
-            vm.getNodeByParam = function(key, value, startLeaf) {
-                return vm.getNodesByParam(key, value, startLeaf, function(data, node) {
-                    return data.length > 1
-                })
-            }
-
-            vm.getNodesByParam = function(key, value, startLeaf, endFunc) {
-                return vm.visitor(startLeaf, function(leaf) {
-                    return leaf[key] === value
-                }, endFunc, [])
-            }
-
-            vm.getNodesByParamFuzzy = function(key, value, startLeaf) {
-                return vm.visitor(startLeaf, function(leaf) {
-                    return (leaf[key] + "").match(new RegExp(value, "g"))
-                }, false, [])
-            }
-
-            vm.getPreNode = function(leaf, next) {
-                var allMates = leaf.$parentLeaf ? leaf.$parentLeaf.children : vm.children,
-                    index = vm.getNodeIndex(leaf)
-                return allMates[next ? index + 1 : index-1]
-            }
-
-            vm.getNextNode = function(leaf) {
-                return vm.getPreNode(leaf, "next")
-            }
-
-            vm.getParentNode = function(leaf) {
-                return leaf.$parentLeaf
-            }
-
-            vm.getSelectedNodes = function(startLeaf) {
-                if(!startLeaf) return vm._select
-                var info = vm._getSelectIDs(startLeaf),
-                    ids = info.dict,
-                    res = [],
-                    _s = vm._select
-                for(var i = 0, len = _s.length; i < len; i++) {
-                    var k = _s[i].$id
-                    if(ids[k]) res.push(_s[i])
-                }
-                return res
-            }
-
             // cache管理
             vm.removeCacheById = function(id) {
                 delete cache[id]
@@ -393,6 +433,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 }
                 return 0
             }
+
             vm._getSelectIDs = function(leaf) {
                 var total = 0, dict = {}
                 if(leaf) {
@@ -409,9 +450,10 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                     dict: dict
                 }
             }
+
             // 取消节点的选中状态
             vm.selectFun = function(event, all) {
-                var leaf = leaf || event.leaf,
+                var leaf = event.leaf,
                     event = event.e
                 if(!leaf.url) event.preventDefault()
                 if(all) {
@@ -444,13 +486,32 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                     }
                 }
             }
+
             vm.selectNode = function(leaf, appendOrReplace) {
                 if(vm.view.selectedMulti === false) appendOrReplace = false
                 if(appendOrReplace) vm._select.push(leaf)
                 else vm._select = [leaf]
             }
-            //@method freeSelect(event, leaf)取消leaf节点上所有处于选中状态的节点
-            vm.freeSelect = function(event, leaf) {
+
+            vm.getSelectedNodes = function(startLeaf) {
+                if(!startLeaf) return vm._select
+                var info = vm._getSelectIDs(startLeaf),
+                    ids = info.dict,
+                    res = [],
+                    _s = vm._select
+                for(var i = 0, len = _s.length; i < len; i++) {
+                    var k = _s[i].$id
+                    if(ids[k]) res.push(_s[i])
+                }
+                return res
+            }
+
+            vm.cancelSelectedNode = function(leaf) {
+                vm._select.remove(leaf)
+            }
+
+            //@method cancelSelectedChildren(event, leaf)取消leaf节点上所有处于选中状态的节点
+            vm.cancelSelectedChildren = function(event, leaf) {
                 if(!leaf) {
                     // clear all
                     vm._select.clear()
@@ -468,6 +529,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 if(!avalon.isFunction(arg)) return arg
                 return arg.apply(vm, [].slice.call(arguments,1))
             }
+            //event
             // 鼠标事件相关
             vm.liveContextmenu = function(event) {
                 vm.$fire("e:contextmenu", {
@@ -483,11 +545,13 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                     vmodels: vmodels
                 })
             }
+            // tool function
             // 事件分发中心
             vm.excute = function(cmd, event, leaf, action) {
                 var evt = cmd, eventName = upperFirstLetter(cmd),
                     beforeFunc = vm.callback["before" + eventName],
                     onFunc = vm.callback["on" + eventName],
+                    res,
                     arg = {
                         e: event,
                         leaf: leaf,
@@ -496,23 +560,28 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                         preventDefault: function() {
                             this.cancel = true
                         }
-                    }, ele = event ? event.srcElement || event.target : null
+                    }, ele = event ? event.srcElement || event.target : null,
+                    callbackEnabled = !event || !event.cancelCallback
                 // 执行前检测，返回
                 vmodel.$fire("e:before" + eventName, arg)
-                if(beforeFunc && beforeFunc.call(ele, arg) === false || arg.cancel) return
+                if(callbackEnabled) {
+                    if(beforeFunc && beforeFunc.call(ele, arg) === false || arg.cancel) {
+                        arg.preventDefault()
+                        return
+                    }
+                }
                 if(action) {
                     if(!avalon.isFunction(action)) action = vm[action]
-                    if(avalon.isFunction(action)) action.call(ele, arg)
+                    if(avalon.isFunction(action)) res = action.call(ele, arg)
                 }
+                if(res !== undefine) arg.res = res
+                // 被消除
+                if(arg.cancel) return
                 vmodel.$fire("e:" + cmd, arg) 
-                onFunc && onFunc.call(ele, arg)
-            }
-            vm.createLeaf = function(item, parentLeaf) {
-                return itemFormator(item, parentLeaf, vm)
-            }
-
-            vm.cloneNode = function(leaf) {
-                return avalon.mix({}, leaf.$model)
+                if(callbackEnabled) {
+                    onFunc && onFunc.call(ele, arg)
+                }
+                return res
             }
 
             vm.exprAnd = function() {
@@ -523,8 +592,20 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 }
                 return res
             }
+
+            vm.timeStamp = function() {
+                return Date.now()
+            }
         })
-      
+        // 展开父节点
+        vmodel.$watch("e:nodeCreated", function(arg) {
+            if(arg && arg.e && arg.e.isSilent) return
+            var leaf = arg.leaf
+            if(leaf) leaf.isParent = leaf.open = true
+        })
+        avalon.each(callbacks, function(i, func) {
+            if(avalon.isFunction(func)) func(vmodel, vmodels)
+        })
         return vmodel
     }
     function disabelSelect(event) {
@@ -548,7 +629,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             selectedMulti: true,//@param view.selectedMulti true / false 分别表示 支持 / 不支持 同时选中多个节点
             txtSelectedEnable: false,
             autoCancelSelected: false,
-            singlePath: true,
+            singlePath: false,
             showIcon: true,//@param view.showIcon zTree 是否显示节点的图标
             showTitle: true,//@param view.showTitle 分别表示 显示 / 隐藏 提示信息
             nameShower: function(leaf) {
@@ -562,7 +643,6 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 enable: false
             },
             key: {
-                checked: "checked",
                 children: "children",
                 name: "name",
                 title: "",
@@ -590,7 +670,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
     })
 
     //@method avalon.ui.tree.AddExtention(fixNames, addingDefaults, addingMethodFunc, watchEvents)扩展tree
-    avalon.ui.tree.AddExtention = function(fixNames, addingDefaults, addingMethodFunc, watchEvents, tplHooks) {
+    avalon.ui.tree.AddExtention = function(fixNames, addingDefaults, addingMethodFunc, watchEvents, tplHooks, callback) {
         if(fixNames) avalon.each(fixNames, function(i, item) {
             optionKeyToFixMix[item] = item
         })
@@ -598,5 +678,6 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         if(addingMethodFunc) ExtentionMethods.push(addingMethodFunc)
         if(watchEvents) eventList = eventList.concat(watchEvents)
         if(tplHooks) avalon.mix(tplDict, tplHooks)
+        if(callback) callbacks.push(callback)
     }
 })

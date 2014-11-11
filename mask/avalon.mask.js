@@ -50,7 +50,8 @@ define(["avalon"], function() {
                     }
                     var n = elem.value.length - 1
                     var pos
-                    if (k === 37 || k == 38) {//向左向上移动光标
+                    console.log(k)
+                    if (k === 37 || k === 38) {//向左向上移动光标
                         pos = caret.start - 1
                         if (pos < 1) {
                             pos = 0
@@ -58,7 +59,7 @@ define(["avalon"], function() {
                         if (impurity[pos]) {
                             pos = getPos(pos, true, n)
                         }
-                    } else if (k === 39 || k == 40) {//向右向下移动光标
+                    } else if (k === 39 || k === 40) {//向右向下移动光标
                         pos = caret.end//只操作end
                         if (pos >= n) {
                             pos -= 1
@@ -68,7 +69,7 @@ define(["avalon"], function() {
                         }
                     } else if (k && k !== 13) {//如果是在光标高亮处直接键入字母
                         pos = caret.start
-                        if (pos >= n) {
+                        if (pos > n) {
                             pos -= 1
                         }
                         if (impurity[pos]) {
@@ -97,8 +98,8 @@ define(["avalon"], function() {
                     }
                 }
                 function hideMask() {
-                    if ((mask.clearIfInvalid && !mask.valid) ||
-                            (mask.clearIfPristine && mask.value === mask.validMask)) {
+                    if ((mask.hideIfInvalid && !mask.valid) ||
+                            (mask.hideIfPristine && mask.value === mask.validMask)) {
                         elem.value = mask.oldValue = mask.masked = ""//注意IE6-8下，this不指向element
                     }
                 }
@@ -110,7 +111,7 @@ define(["avalon"], function() {
                         data.bound("blur", hideMask)
                     }
                     if (mask.showIfHover) {
-                        data.bound("mouserover", showMask)
+                        data.bound("mouseover", showMask)
                         data.bound("mouseout", hideMask)
                     }
                 }
@@ -156,6 +157,7 @@ define(["avalon"], function() {
         }
         avalon.mix(this, Mask.defaults, options)
         this.translations = avalon.mix({}, Mask.defaults.translations, t)
+        //  console.log(this)
         this.mask = mask //@config {String} 用于提示用户输入的mask字符串，用户只能在占位符上输入（会有光标引导你）,用户必须设置data-duplex-mask属性
         this.element = element //@config {Element} 组件实例要作用的input元素
         this.oldValue = "" //@config {String} 元素之前的value值
@@ -201,32 +203,39 @@ define(["avalon"], function() {
                 }
                 this.validMask = valueArray.join("")
             }
-
+            var mshift = "shift"
+            var mpush = "push"
+            if (this.reverse) {
+                var mshift = "pop"
+                var mpush = "unshift"
+            }
+         
+        
             while (maskArray.length) {
-                var m = maskArray.shift()
+                var m = maskArray[mshift]()
                 if (valid) {//得控位获得焦点时,光标应该定位的位置
                     caretIndex++
                 }
                 if (translations[m]) {
-                    var el = valueArray.shift()//123456
+                    var el = valueArray[mshift]()//123456
                     var translation = translations[m]
                     var pattern = translation.pattern
 
                     if (el && el.match(pattern)) {
-                        buf.push(el)
+                        buf[mpush](el)
                     } else {
                         valid = false
                         if (!translation.optional && !skipMask) {
-                            buf.push(translation.placehoder || this.placehoder)
+                            buf[mpush](translation.placehoder || this.placehoder)
                         }
                     }
                 } else {
                     this.impurity[impurityIndex] = true//收集杂质的位置
                     if (valueArray[0] === m) {// 当__/__/____遇到12/34/____时，/要去掉
-                        valueArray.shift()
+                        valueArray[mshift]()
                     }
                     if (!skipMask) {
-                        buf.push(m)
+                        buf[mpush](m)
                     }
                 }
                 impurityIndex++
@@ -299,8 +308,8 @@ define(["avalon"], function() {
  * data-duplex-mask-translations应该对应的一个对象，默认情况下已经有如下东西了：
  * <table class="table-doc" border="1">
  *     <colgroup>
-         <col width="190" />
-      </colgroup>
+ <col width="190" />
+ </colgroup>
  *    <tr><th>元字符</th><th>意义</th></tr>
  *    <tr><td>0</td><td>表示任何数字，0-9，正则为/\d/， <code>可选</code>，即不匹配对最终结果也没关系</td></tr>
  *    <tr><td>9</td><td>表示任何数字，0-9，正则为/\d/</td></tr>
@@ -311,5 +320,6 @@ define(["avalon"], function() {
  */
 /**
  @links
- [例子](avalon.mask.ex1.html)
+ [例子1](avalon.mask.ex1.html)
+ [例子2](avalon.mask.ex2.html)
  */

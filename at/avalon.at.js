@@ -255,7 +255,8 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
          */
         updateData: function(vm, callback) {
 
-        }, /**
+        }, 
+        /**
          * @config 模板函数,方便用户自定义模板
          * @param str {String} 默认模板
          * @param opts {Object} vmodel

@@ -599,7 +599,7 @@ define(["../avalon.getModel",
                 var target = e.target;
                 if(options.type==="range") {
                     return ;
-                } 
+                }
                 if(!calendar.contains(target) && !tipContainer.contains(target) && vmodel.toggle && !vmodel.timer) {
                     vmodel.toggle = false;
                     toggleVM ? toggleVM[1][toggleVM[0]] = false : 0;

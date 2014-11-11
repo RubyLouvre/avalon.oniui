@@ -1,6 +1,6 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname: "ui-pager";
+$uiname: "oni-pager";
 $pager-background-color: #FFFFFF;
 $pager-active-color: $ui-state-active-color;
 @if($oinui-theme == smoothness){
@@ -31,7 +31,7 @@ $pager-active-color: $ui-state-active-color;
         vertical-align: middle;
         @include user-select(none);
         /*!当前页,没有边框*/
-        &.ui-state-active {
+        &.oni-state-active {
             color: $pager-active-color;
             border: 0 none;
             padding: 1px 11px;
@@ -39,11 +39,11 @@ $pager-active-color: $ui-state-active-color;
             background: transparent;
         }
         /*!掠过*/
-        &.ui-state-hover{
+        &.oni-state-hover{
             border-color:$pager-active-color;
         }
         /*!禁用*/
-        &.ui-state-disabled {
+        &.oni-state-disabled {
             border-color:$ui-state-disabled-border-color;
             background-color:$ui-state-disabled-background-color;
             color: $ui-state-disabled-color;

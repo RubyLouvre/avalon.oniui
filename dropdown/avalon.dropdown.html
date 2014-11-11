@@ -13,9 +13,9 @@
              id="title-MS_OPTION_ID">{{label|sanitize|html}}</div>
         <div class="ui-dropdown-icon-wrap">
             <i class="ui-dropdown-icon ui-icon ui-icon-angle-up"
-               ms-if="toggle">&#xf106;</i>
+               ms-visible="toggle">&#xf106;</i>
             <i class="ui-dropdown-icon ui-icon ui-icon-angle-down"
-               ms-if="!toggle">&#xf107;</i>
+               ms-visible="!toggle">&#xf107;</i>
         </div>
     </div>
 </div>
@@ -26,7 +26,6 @@ MS_OPTION_TEMPLATE
      ms-css-width="{{listWidth}}"
      ms-mouseenter="_listenter"
      ms-mouseleave="_listleave"
-     ms-click="_listClick"
      ms-visible="toggle||multiple">
     <div class="ui-dropdown-menu-inner"
          ms-css-width="menuWidth"

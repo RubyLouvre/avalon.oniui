@@ -7,7 +7,7 @@
     -o-transition: $duration;
     transition: $duration;
 }
-$uiname : "ui-carousel";
+$uiname : "oni-carousel";
 @if($oinui-theme == smoothness) {
 	$carousel: (
 		bg: #fff,

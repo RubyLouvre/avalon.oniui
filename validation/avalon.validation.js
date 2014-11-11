@@ -86,8 +86,23 @@ define(["../promise/avalon.promise"], function(avalon) {
             return (vs[r % 11] == ss[17]);
         }
     }
-    var remail = /^[a-zA-Z0-9.!#$%&amp;'*+\-\/=?\^_`{|}~\-]+@[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*$/
-
+    function isCorrectDate(value) {
+        if (rdate.test(value)) {
+            var date = parseInt(RegExp.$1, 10);
+            var month = parseInt(RegExp.$2, 10);
+            var year = parseInt(RegExp.$3, 10);
+            var xdata = new Date(year, month - 1, date, 12, 0, 0, 0);
+            if ((xdata.getUTCFullYear() === year) && (xdata.getUTCMonth() === month - 1) && (xdata.getUTCDate() === date)) {
+                return true
+            }
+        }
+        return false
+    }
+    var rdate = /^\d{4}\-\d{1,2}\-\d{1,2}$/
+    //  var remail = /^[a-zA-Z0-9.!#$%&amp;'*+\-\/=?\^_`{|}~\-]+@[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*$/
+    var remail = /^([A-Z0-9]+[_|\_|\.]?)*[A-Z0-9]+@([A-Z0-9]+[_|\_|\.]?)*[A-Z0-9]+\.[A-Z]{2,3}$/i
+    var ripv4 = /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i
+    var ripv6 = /^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/i
     avalon.mix(avalon.duplexHooks, {
         trim: {
             get: function(value, data) {
@@ -167,6 +182,20 @@ define(["../promise/avalon.promise"], function(avalon) {
                 return value
             }
         },
+        ipv4: {
+            message: "ip地址不正确",
+            get: function(value, data, next) {
+                next(ripv4.test(value))
+                return value
+            }
+        },
+        ipv6: {
+            message: "ip地址不正确",
+            get: function(value, data, next) {
+                next(ripv6.test(value))
+                return value
+            }
+        },
         email: {
             message: "邮件地址错误",
             get: function(value, data, next) {
@@ -181,10 +210,10 @@ define(["../promise/avalon.promise"], function(avalon) {
                 return value
             }
         },
-        equal: {
+        repeat: {
             message: "必须等于{{other}}",
             get: function(value, data, next) {
-                var id = data.element.getAttribute("data-duplex-equal") || ""
+                var id = data.element.getAttribute("data-duplex-repeat") || ""
                 var other = avalon(document.getElementById(id)).val() || ""
                 data.data.other = other
                 next(value === other)
@@ -194,7 +223,7 @@ define(["../promise/avalon.promise"], function(avalon) {
         date: {
             message: '必须符合日期格式 YYYY-MM-DD',
             get: function(value, data, next) {
-                next(/^(\d\d\d\d)\-(\d\d)\-(\d\d)$/.test(value))
+                next(isCorrectDate(value))
                 return value
             }
         },
@@ -257,6 +286,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                 return value
             }
         },
+        //contain
         eq: {
             message: '必须等于{{eq}}',
             get: function(value, data, next) {
@@ -265,6 +295,46 @@ define(["../promise/avalon.promise"], function(avalon) {
                 var num = data.data.eq = a
                 next(parseFloat(value) == num)
                 return value
+            }
+        },
+        contains: {
+            message: "必须包含{{array}}中的一个",
+            get: function(val, data, next) {
+                var vmValue = [].concat(val).map(String)
+                var domValue = (data.element.getAttribute("data-duplex-contains") || "").split(",")
+                data.data.array = domValue
+                var has = false
+                for (var i = 0, n = vmValue.length; i < n; i++) {
+                    var v = vmValue[i]
+                    if (domValue.indexOf(v) >= 0) {
+                        has = true
+                        break
+                    }
+                }
+                next(has)
+                return val
+            }
+        },
+        contain: {
+            message: "必须包含{{array}}",
+            get: function(val, data, next) {
+                var vmValue = [].concat(val).map(String)
+                var domValue = (data.element.getAttribute("data-duplex-contain") || "").split(",")
+                data.data.array = domValue.join('与')
+                if (vmValue.length) {
+                    var has = false
+                } else {
+                    has = true
+                    for (var i = 0, n = vmValue.length; i < n; i++) {
+                        var v = vmValue[i]
+                        if (domValue.indexOf(v) === -1) {
+                            has = false
+                            break
+                        }
+                    }
+                }
+                next(has)
+                return val
             }
         },
         pattern: {
@@ -321,7 +391,7 @@ define(["../promise/avalon.promise"], function(avalon) {
              */
 
             vm.validateAll = function(callback) {
-                var fn = callback || vm.onValidateAll
+                var fn = typeof callback == "function" ? callback : vm.onValidateAll
                 var promise = vm.data.map(function(data) {
                     return  vm.validate(data, true)
                 })
@@ -333,19 +403,23 @@ define(["../promise/avalon.promise"], function(avalon) {
                     fn.call(vm.widgetElement, reasons)//这里只放置未通过验证的组件
                 })
             }
+
             /**
              * @interface 重置当前表单元素
              * @param callback {Null|Function} 最后执行的回调，如果用户没传就使用vm.onResetAll
              */
             vm.resetAll = function(callback) {
-                vm.data.forEach(function(el) {
+                vm.data.forEach(function(data) {
                     try {
-                        vm.onReset.call(el.element, {type: "reset"}, el)
+                        if (data.valueResetor) {
+                            data.valueResetor()
+                        }
+                        vm.onReset.call(data.element)
                     } catch (e) {
                     }
                 })
-                var fn = callback || vm.onResetAll
-                fn.call(vm)
+                var fn = typeof callback == "function" ? callback : vm.onResetAll
+                fn.call(vm.widgetElement)
             }
             /**
              * @interface 验证单个元素对应的VM中的属性是否符合格式
@@ -354,6 +428,30 @@ define(["../promise/avalon.promise"], function(avalon) {
              */
             vm.validate = function(data, isValidateAll) {
                 var value = data.valueAccessor()
+                if (!data.valueResetor) {
+                    switch (avalon.type(value)) {
+                        case "array":
+                            data.valueResetor = function() {
+                                this.valueAccessor([])
+                            }
+                            break
+                        case "boolean":
+                            data.valueResetor = function() {
+                                this.valueAccessor(false)
+                            }
+                            break
+                        case "number":
+                            data.valueResetor = function() {
+                                this.valueAccessor(0)
+                            }
+                            break
+                        default:
+                            data.valueResetor = function() {
+                                this.valueAccessor("")
+                            }
+                            break
+                    }
+                }
                 var inwardHooks = vmodel.validationHooks
                 var globalHooks = avalon.duplexHooks
                 var promises = []
@@ -441,6 +539,9 @@ define(["../promise/avalon.promise"], function(avalon) {
                         }
                         if (vm.resetInFocus) {
                             data.bound("focus", function(e) {
+                                if (data.valueResetor) {
+                                    data.valueResetor()
+                                }
                                 vm.onReset.call(data.element, e, data)
                             })
                         }
@@ -484,7 +585,10 @@ define(["../promise/avalon.promise"], function(avalon) {
 
 /**
  @links
- [自带验证规则required,int,decimal,alpha,chs](avalon.validation.ex1.html)
+ [自带验证规则required,int,decimal,alpha,chs,ipv4](avalon.validation.ex1.html)
  [自带验证规则qq,id,email,url,date,passport,pattern](avalon.validation.ex2.html)
  [自带验证规则maxlength,minlength,lt,gt,eq,equal](avalon.validation.ex3.html)
+ [自带验证规则contains,contain](avalon.validation.ex4.html)
+ [自带验证规则repeat(重复密码)](avalon.validation.ex5.html)
+ [自定义验证规则](avalon.validation.ex6.html)
  */

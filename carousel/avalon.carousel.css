@@ -2,7 +2,7 @@
 /*
 这是每个都组件都应该引用的部分
 */
-.ui-carousel {
+.oni-carousel {
   position: relative;
   margin: 0 auto;
   overflow: hidden;
@@ -10,13 +10,13 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none; }
-  .ui-carousel .ui-carousel-panel {
+  .oni-carousel .oni-carousel-panel {
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
     overflow: hidden; }
-    .ui-carousel .ui-carousel-panel .ui-carousel-item {
+    .oni-carousel .oni-carousel-panel .oni-carousel-item {
       position: relative;
       height: 100%;
       display: -moz-inline-stack;
@@ -28,7 +28,7 @@
       overflow: hidden;
       text-align: center;
       background-color: #f2f2f2; }
-      .ui-carousel .ui-carousel-panel .ui-carousel-item img {
+      .oni-carousel .oni-carousel-panel .oni-carousel-item img {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -43,11 +43,11 @@
         transform: translate(0, 0) \0;
         *top: 0;
         *left: 0; }
-  .ui-carousel .ui-carousel-selection-wrap {
+  .oni-carousel .oni-carousel-selection-wrap {
     position: absolute;
     bottom: 4%;
     left: 50%; }
-    .ui-carousel .ui-carousel-selection-wrap a {
+    .oni-carousel .oni-carousel-selection-wrap a {
       display: -moz-inline-stack;
       display: inline-block;
       vertical-align: middle;
@@ -62,24 +62,24 @@
       opacity: 0.6;
       border-radius: 50%;
       cursor: pointer; }
-    .ui-carousel .ui-carousel-selection-wrap .selected {
+    .oni-carousel .oni-carousel-selection-wrap .selected {
       background-color: #00a3c2; }
-  .ui-carousel .arrow {
+  .oni-carousel .arrow {
     position: absolute;
     top: 50%;
     width: 30px;
     height: 30px;
     margin: -15px 0 0 -15px;
     cursor: pointer; }
-  .ui-carousel .prev {
+  .oni-carousel .prev {
     left: 7%;
     background: url(./images/arrows-left-icon.png) no-repeat; }
-  .ui-carousel .prev:hover {
+  .oni-carousel .prev:hover {
     background: url(./images/arrows-left-hover-icon.png) no-repeat; }
-  .ui-carousel .after {
+  .oni-carousel .after {
     left: 93%;
     background: url(./images/arrows-right-icon.png) no-repeat; }
-  .ui-carousel .after:hover {
+  .oni-carousel .after:hover {
     background: url(./images/arrows-right-hover-icon.png) no-repeat; }
 
 /*# sourceMappingURL=avalon.carousel.css.map */

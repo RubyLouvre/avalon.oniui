@@ -109,3 +109,64 @@ a .ui-icon,.ui-btn .ui-icon {
 .g-icon-pause {
   color: $oniui-icon-pause-color;
 }
+//=====================为了与洋葱UI共存====================
+.oni-helper-hidden {
+    display: none;
+}
+.oni-helper-hidden-accessible {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+.oni-helper-reset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    line-height: 1.3;
+    text-decoration: none;
+    font-size: 100%;
+    list-style: none;
+}
+//禁止文字被选中，禁止图片被拖动
+.oni-helper-noselect {
+    @include user-select();
+    img, a{
+        -webkit-user-drag:none; 
+        pointer-events:none;
+    }
+}
+.oni-helper-clearfix {
+    @include legacy-pie-clearfix();
+}
+
+// max z-index
+.oni-helper-max-index{
+    html &,body &{
+        z-index:1000; 
+    }
+}
+
+
+
+.oni-icon {
+    @include user-select(none);
+    cursor: default;
+    font-family: fontawesome !important;
+    font-size: 14px;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 18px;
+    vertical-align: middle;
+}
+
+a .oni-icon,.oni-btn .oni-icon {
+    cursor: pointer;
+}

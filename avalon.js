@@ -1643,7 +1643,7 @@
         thead: [1, "<table>", "</table>"],
         tr: [2, "<table><tbody>"],
         td: [3, "<table><tbody><tr>"],
-        text: [1, '<svg xmlns="http://www.w3.org/2000/svg" version="1.1">', '</svg>'],
+        g: [1, '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">', '</svg>'],
         //IE6-8在用innerHTML生成节点时，不能直接创建no-scope元素与HTML5的新标签
         _default: W3C ? [0, ""] : [1, "X<div>"] //div可以不用闭合
     }
@@ -1651,8 +1651,8 @@
     tagHooks.optgroup = tagHooks.option
     tagHooks.tbody = tagHooks.tfoot = tagHooks.colgroup = tagHooks.caption = tagHooks.thead
     tagHooks.th = tagHooks.td
-    "g,circle,ellipse,line,path,polygon,polyline,text".replace(rword, function(tag) {
-        tagHooks[tag] = tagHooks.text//处理SVG
+    "circle,defs,ellipse,image,line,path,polygon,polyline,rect,symbol,text,use".replace(rword, function(tag) {
+        tagHooks[tag] = tagHooks.g//处理SVG
     })
     var script = DOC.createElement("script")
     avalon.parseHTML = function(html) {
@@ -2125,7 +2125,7 @@
                     if (events[type]) {
                         param = type
                         type = "on"
-                    } else if (type === "checked" || type === "selected" || type === "disabled" || type === "readonly") {
+                    } else if (/^(checked|selected|disabled|readonly|enabled)$/.test(type)) {
                         log("ms-" + type + "已经被废弃,请使用ms-attr-*代替")
                         if (type === "enabled") {//吃掉ms-enabled绑定,用ms-disabled代替
                             type = "disabled"
@@ -3100,7 +3100,6 @@
                         v.$fire("init-ms-duplex", data)
                     }
                     var cpipe = data.pipe || (data.pipe = pipe)
-                    console.log("++++++++++++++++++")
                     cpipe(null, data, "init")
                     duplexBinding[elem.tagName](elem, data.evaluator.apply(null, data.args), data)
                 }
@@ -3518,7 +3517,10 @@
             if (W3C) {
                 W3CFire(this, type)
             } else {
-                this.fireEvent("on" + type)
+                try {
+                    this.fireEvent("on" + type)
+                } catch (e) {
+                }
             }
         }
     }

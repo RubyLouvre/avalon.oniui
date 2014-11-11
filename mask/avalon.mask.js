@@ -170,10 +170,10 @@ define(["avalon"], function() {
         showIfFocus: true, //@config {Boolean} true 当用户让其元素得到焦点就显示它出来，可以通过data-duplex-mask-show-if-focus设置
         showAlways: false, //@config {Boolean} false 总是显示它，可以通过data-duplex-mask-show-always设置
         translations: {//@config {Object} 此对象上每个键名都是元字符，都对应一个对象，上面有pattern(正则)，placehoder(占位符，如果你不想用"_"),optional（表示可选）
-            0: {pattern: /\d/},
-            9: {pattern: /\d/, optional: true},
-            A: {pattern: /[a-zA-Z0-9]/},
-            S: {pattern: /[a-zA-Z]/}
+            "0": {pattern: /\d/, optional: true},
+            "9": {pattern: /\d/},
+            "A": {pattern: /[a-zA-Z]/},
+            "*": {pattern: /[a-zA-Z0-9]/}
         }
     }
     Mask.prototype = {
@@ -294,7 +294,21 @@ define(["avalon"], function() {
         }
     }
 })
-
+/**
+ * @other
+ * data-duplex-mask-translations应该对应的一个对象，默认情况下已经有如下东西了：
+ * <table class="table-doc" border="1">
+ *     <colgroup>
+         <col width="190" />
+      </colgroup>
+ *    <tr><th>元字符</th><th>意义</th></tr>
+ *    <tr><td>0</td><td>表示任何数字，0-9，正则为/\d/， <code>可选</code>，即不匹配对最终结果也没关系</td></tr>
+ *    <tr><td>9</td><td>表示任何数字，0-9，正则为/\d/</td></tr>
+ *    <tr><td>A</td><td>表示任何字母，，正则为/[a-zA-Z]/</td></tr>
+ *    <tr><td>*</td><td>表示任何非空字符，正则为/\S/</td></tr>
+ * </table>
+ * 
+ */
 /**
  @links
  [例子](avalon.mask.ex1.html)

@@ -100,6 +100,35 @@
                     </tr>
                 </table>
             </fieldset>
+            <div class="others">data-duplex-mask-translations应该对应的一个对象，默认情况下已经有如下东西了：
+                <table class="table-doc"
+                border="1">
+                    <colgroup>
+                        <col width="190" />
+                    </colgroup>
+                    <tr>
+                        <th>元字符</th>
+                        <th>意义</th>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>表示任何数字，0-9，正则为/\d/，
+                            <code>可选</code>，即不匹配对最终结果也没关系</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>表示任何数字，0-9，正则为/\d/</td>
+                    </tr>
+                    <tr>
+                        <td>A</td>
+                        <td>表示任何字母，，正则为/[a-zA-Z]/</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>表示任何非空字符，正则为/\S/</td>
+                    </tr>
+                </table>
+            </div>
             <ul class="example-links">
                 <li>
                     <a href="avalon.mask.ex1.html">例子</a>

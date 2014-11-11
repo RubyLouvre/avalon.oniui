@@ -2,7 +2,7 @@
 /*
 这是每个都组件都应该引用的部分
 */
-.ui-camera {
+.oni-camera {
   position: relative;
   margin: 0 auto;
   overflow: hidden;
@@ -10,13 +10,13 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none; }
-  .ui-camera .ui-camera-panel {
+  .oni-camera .oni-camera-panel {
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
     overflow: hidden; }
-    .ui-camera .ui-camera-panel .ui-camera-item {
+    .oni-camera .oni-camera-panel .oni-camera-item {
       position: relative;
       height: 100%;
       display: -moz-inline-stack;
@@ -28,7 +28,7 @@
       overflow: hidden;
       text-align: center;
       background-color: #f2f2f2; }
-      .ui-camera .ui-camera-panel .ui-camera-item img {
+      .oni-camera .oni-camera-panel .oni-camera-item img {
         width: 100%;
         height: 100%;
         position: absolute;
@@ -43,13 +43,13 @@
         transform: translate(0, 0) \0;
         *top: 0;
         *left: 0; }
-    .ui-camera .ui-camera-panel .ui-camera-fakehover {
+    .oni-camera .oni-camera-panel .oni-camera-fakehover {
       position: absolute;
       top: 0;
       bottom: 0;
       left: 0;
       right: 0; }
-      .ui-camera .ui-camera-panel .ui-camera-fakehover .fakepart {
+      .oni-camera .oni-camera-panel .oni-camera-fakehover .fakepart {
         display: -moz-inline-stack;
         display: inline-block;
         vertical-align: middle;
@@ -57,11 +57,11 @@
         zoom: 1;
         *display: inline;
         position: absolute; }
-  .ui-camera .ui-camera-selection-wrap {
+  .oni-camera .oni-camera-selection-wrap {
     position: absolute;
     bottom: 4%;
     left: 50%; }
-    .ui-camera .ui-camera-selection-wrap a {
+    .oni-camera .oni-camera-selection-wrap a {
       display: -moz-inline-stack;
       display: inline-block;
       vertical-align: middle;
@@ -76,24 +76,24 @@
       opacity: 0.6;
       border-radius: 50%;
       cursor: pointer; }
-    .ui-camera .ui-camera-selection-wrap .selected {
+    .oni-camera .oni-camera-selection-wrap .selected {
       background-color: #00a3c2; }
-  .ui-camera .arrow {
+  .oni-camera .arrow {
     position: absolute;
     top: 50%;
     width: 30px;
     height: 30px;
     margin: -15px 0 0 -15px;
     cursor: pointer; }
-  .ui-camera .prev {
+  .oni-camera .prev {
     left: 7%;
     background: url(./images/arrows-left-icon.png) no-repeat; }
-  .ui-camera .prev:hover {
+  .oni-camera .prev:hover {
     background: url(./images/arrows-left-hover-icon.png) no-repeat; }
-  .ui-camera .after {
+  .oni-camera .after {
     left: 93%;
     background: url(./images/arrows-right-icon.png) no-repeat; }
-  .ui-camera .after:hover {
+  .oni-camera .after:hover {
     background: url(./images/arrows-right-hover-icon.png) no-repeat; }
 
 /*# sourceMappingURL=avalon.camera.css.map */

@@ -1,11 +1,5 @@
-<span class="button switch center_close" 
-      ms-class-4="bottom_close:$last"
-      ms-class-5="root_close:$first && leaf.level==0"
-      ms-class-2="noline_close:!optionToBoolen(view.showLine,leaf)"
-      ms-class-3="noline_open:hasClassOpen(leaf,'noline')" 
-      ms-class-1="center_open:hasClassOpen(leaf)" 
-      ms-class-7="roots_open:hasClassOpen(leaf) && leaf.level==0" 
-      ms-class-6="bottom_open:hasClassOpen(leaf) && $last" 
+<span class="button switch" 
+      ms-class="{{computeIconClass(leaf, $first, $last)}}"
       ms-click="toggleOpenStatue($event,leaf)"></span>
 {{MS_CHECK_HTML}}
 <a {{MS_EDIT_BINDING}} 

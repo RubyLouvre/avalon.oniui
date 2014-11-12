@@ -178,6 +178,12 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 cache = null
                 vm._select = null
             }
+            vm.computeIconClass = function(leaf, first, last) {
+                var status = leaf.open ? "open" : "close",
+                    pos = first && !leaf.level ? "roots" : last ? "bottom" : "center"
+                if(!vm.optionToBoolen(vm.view.showLine,leaf)) pos = "noline"
+                return pos + "_" + status
+            }
             // 展开相关
             // 展开
             vm.hasClassOpen = function(leaf, noline) {
@@ -680,4 +686,5 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         if(tplHooks) avalon.mix(tplDict, tplHooks)
         if(callback) callbacks.push(callback)
     }
+    avalon.ui.tree.leafIgnoreField = [] // tree转化成数据的时候，忽略的字段，所有以$开头的，以及这个数组内的
 })

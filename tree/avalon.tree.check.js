@@ -1,14 +1,9 @@
 //@description avalon.ui.tree组件编辑功能扩展，包括增删改节点
 define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(avalon, tree, check_html) {
 	function g(id) {return document.getElementById(id)}
-	var replacer = [], type = ["checkbox", "radio"], chkValue = ["false", "true"], chkStatus = ["full", "part", "disable"], v, t, undefine = void 0
-	for(var i = 0; i < chkValue.length; i++) {
-		v = chkValue[i]
-		for(var j = 0; j < chkStatus.length; j++) {
-			t = chkStatus[j]
-			replacer.push(" ms-class-" + replacer.length + "=\"`type`_" + v + "_" + t + ":checkClass('`type`'," + v + ",'" + t + "',leaf)\" ")
-		}
-	}
+	var undefine = void 0
+	// 排除辅助字段
+	avalon.ui.tree.leafIgnoreField.push("chkFocus")
 	avalon.ui.tree.AddExtention(
 		["check", "data"],
 		{
@@ -27,22 +22,25 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 			data: {
 				key: {
                 	checked: "checked",
-                	nocheck: "nocheck"
+                	nocheck: "nocheck",
+                	chkDisabled: "chkDisabled",
+                	halfCheck: "halfCheck",
+                	chkFocus: "chkFocus",
+                	chkTotal: ""
 				}
 			}
 		},
 		function(vm, vmodels) {
 			avalon.mix(vm, {
 				chkFocus: function(arg) {
-					
+					if(arg.leaf) arg.leaf.chkFocus = true
 				},
 				chkBlur: function(arg) {
-
+					if(arg.leaf) arg.leaf.chkFocus = false
 				},
-				checkClass: function(type, value, status, leaf) {
-					var t = vm.getCheckType()
-					if(t !== type || (!!leaf.checked) != value || status === "disable" && !leaf.disable) return false
-					return true
+				computeCHKClass: function(leaf) {
+					var type = vm.getCheckType()
+					return type + "_" + !!leaf.checked + "_" + (leaf.halfCheck ? "part" : "full") + (leaf.chkFocus ? "_focus" : "")
 				},
 				getCheckType: function() {
 					return vm.check.chkStyle === "radio" ? "radio" : "checkbox"
@@ -58,7 +56,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 				checkAllNodes: function(checked, leaf) {
 					if(!vm.check.enable && vm.check.chkStyle !== "checkbox") return
 					vm.visitor(leaf, function(node) {
-						if(!node.nocheck && !node.disable) {
+						if(!node.nocheck && !node.chkDisabled) {
 							node.checked = !!checked
 						}
 					})
@@ -66,7 +64,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 				getCheckedNodes: function(checked, leaf) {
 					var checked = checked === undefine ? true : !!checked
 					return vm.visitor(leaf, function(node) {
-						if(node.disable || node.nocheck) return
+						if(node.chkDisabled || node.nocheck) return
 						if(node.checked == checked) return node
 					}, checked && vm.check.chkStyle === "radio" && vm.check.radioType === "all" ? function(res) {
 						return res && res.length > 0
@@ -74,16 +72,13 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 				},
 				getChangeCheckedNodes: function(leaf) {
 
+				},
+				setChkDisabled: function(leaf, disabled, inheritParent, inheritChildren) {
+
 				}
 			})
 		}, [], {
-			check_html: function(tpl, options) {
-				var type = options.check.chkStyle === "radio" ? "radio" : "checkbox", res = []
-				avalon.each(replacer, function(i, item) {
-					res[i] = item.replace(/`type`/g, type)
-				})
-				return check_html.replace("__class__", res.join(""))
-			}
+			check_html: check_html
 		}, function(vmodel, vmodels) {
 			// 继承check属性
 			vmodel.$watch("e:nodeCreated", function(arg) {

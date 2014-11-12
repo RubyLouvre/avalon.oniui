@@ -1,4 +1,4 @@
-(function() {
+define(['avalon'], function(avalon) {
 	if('ondevicemotion' in window) {
 		var lastXYZ = {}, // 上一次devicemotion的3个方向的加速度
 			threshold = 15, // 临界值，变化量绝对值需要大于临界值 
@@ -68,4 +68,4 @@
 	        }
 		}
 	}
-}) ()
+})

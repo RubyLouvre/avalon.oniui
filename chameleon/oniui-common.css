@@ -9,8 +9,8 @@ oinui的CSS规范
 不能出现大写,以连字符风格命名 
 表示状态的应该用ui-state-*命名 
 表示功能的应该用ui-helper-*命名
-表示布局的应用用ui-uiname-* 命名, 它的子元素应该全部包在 .ui-uiname这个根类下
-如 .ui-grid .ui-grid-tbody{ ... }
+表示布局的应用用ui-uiname-* 命名, 它的子元素应该全部包在 .oni-uiname这个根类下
+如 .oni-grid .oni-grid-tbody{ ... }
 如果某一个区域的背景要换肤,能用ui-widget-header或ui-widget-content就尽用
 其他细微之后的换肤,使用ui-state-*-?-color实现,或至少包在if(oniui-theme === xxx){}分支内
 
@@ -27,10 +27,10 @@ CSSShrink 是一个压缩 CSS 的在线工具。压缩比真高！
 
 http://cssshrink.com/
 */
-.ui-helper-hidden {
+.oni-helper-hidden {
   display: none; }
 
-.ui-helper-hidden-accessible {
+.oni-helper-hidden-accessible {
   border: 0;
   clip: rect(0 0 0 0);
   height: 1px;
@@ -40,7 +40,7 @@ http://cssshrink.com/
   position: absolute;
   width: 1px; }
 
-.ui-helper-reset {
+.oni-helper-reset {
   margin: 0;
   padding: 0;
   border: 0;
@@ -50,18 +50,18 @@ http://cssshrink.com/
   font-size: 100%;
   list-style: none; }
 
-.ui-helper-noselect {
+.oni-helper-noselect {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none; }
-  .ui-helper-noselect img, .ui-helper-noselect a {
+  .oni-helper-noselect img, .oni-helper-noselect a {
     -webkit-user-drag: none;
     pointer-events: none; }
 
-.ui-helper-clearfix {
+.oni-helper-clearfix {
   *zoom: 1; }
-  .ui-helper-clearfix:after {
+  .oni-helper-clearfix:after {
     content: "\0020";
     display: block;
     height: 0;
@@ -69,7 +69,7 @@ http://cssshrink.com/
     overflow: hidden;
     visibility: hidden; }
 
-html .ui-helper-max-index, body .ui-helper-max-index {
+html .oni-helper-max-index, body .oni-helper-max-index {
   z-index: 1000; }
 
 @font-face {
@@ -78,7 +78,7 @@ html .ui-helper-max-index, body .ui-helper-max-index {
   font-weight: normal;
   src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.eot?v=4.2.0");
   src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.eot?#iefix&v=4.2.0") format("embedded-opentype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.woff?v=4.2.0") format("woff"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.ttf?v=4.2.0") format("truetype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular") format("svg"); }
-.ui-icon {
+.oni-icon {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -93,7 +93,7 @@ html .ui-helper-max-index, body .ui-helper-max-index {
   line-height: 18px;
   vertical-align: middle; }
 
-a .ui-icon, .ui-btn .ui-icon {
+a .oni-icon, .oni-btn .oni-icon {
   cursor: pointer; }
 
 .g-icon-start {

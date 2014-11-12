@@ -139,7 +139,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 bar = newDiv.firstChild
 
                 while(bar) {
-                    if(bar.className && bar.className.indexOf("ui-flipswitch-bar") != -1) break
+                    if(bar.className && bar.className.indexOf("oni-flipswitch-bar") != -1) break
                     bar = bar.nextSibling
                 }
                 bar.style[vmodel.dir] = vmodel._addthisCss()
@@ -147,7 +147,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 if(vmodel.draggable) {
                     dragger = bar.firstChild
                     while(dragger) {
-                        if(dragger.className && dragger.className.indexOf("ui-flipswitch-dragger") != -1) break
+                        if(dragger.className && dragger.className.indexOf("oni-flipswitch-dragger") != -1) break
                         dragger = dragger.nextSibling
                     }
                     if(dragger) {
@@ -258,11 +258,11 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 if(vmodel.getStyleFromSkin) {
                     avalon.each(divs, function(i, item) {
                         var ae = avalon(item)
-                        if(ae.hasClass("ui-flipswitch-bg")) bg = ae
+                        if(ae.hasClass("oni-flipswitch-bg")) bg = ae
                     }) 
                     avalon.each(bs, function(i, item) {
                         var ae = avalon(item)
-                        if(ae.hasClass("ui-flipswitch-dragger-ball")) ball = ae
+                        if(ae.hasClass("oni-flipswitch-dragger-ball")) ball = ae
                     }) 
                 }
                 if(bg) {
@@ -334,7 +334,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
 
     widget.defaults = {
         toggle: true, //@param 组件是否显示，可以通过设置为false来隐藏组件
-        onText: "<b class=\"ui-flipswitch-on\"></b>",           //@param 选中状态提示文字
+        onText: "<b class=\"oni-flipswitch-on\"></b>",           //@param 选中状态提示文字
         offText: "",//"&times;",         //@param 未选中状态提示文字
         size: "normal",         //@param 滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成ui-flipswitch-{{size}}添加给flipswitch模板容器
         theme: "normal",        //@param 主题，normal,success,warning,danger

@@ -61,15 +61,15 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                     avalon.each(nodes, function(i, item) {
                         var ele = avalon(item)
                         if(vmodel.circle) {
-                            if(ele.hasClass("ui-progressbar-circle-par")) {
+                            if(ele.hasClass("oni-progressbar-circle-par")) {
                                 barParElement = ele
-                            } else if(ele.hasClass("ui-progressbar-circle-bar")) {
+                            } else if(ele.hasClass("oni-progressbar-circle-bar")) {
                                 barElement = ele
                             }
                         } else {
-                            if(ele.hasClass("ui-progressbar-label")) {
+                            if(ele.hasClass("oni-progressbar-label")) {
                                 labelElement = item
-                            } else if(ele.hasClass("ui-progressbar-bar")) {
+                            } else if(ele.hasClass("oni-progressbar-bar")) {
                                 barElement = item
                                 barParElement = item.parentNode
                             }

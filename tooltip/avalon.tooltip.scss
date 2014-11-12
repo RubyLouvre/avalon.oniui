@@ -1,6 +1,6 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname : ".ui-tooltip";
+$uiname : ".oni-tooltip";
 @if($oinui-theme == smoothness) {
 	$tooltip: (
 		bg: #FFE44F,
@@ -8,7 +8,7 @@ $uiname : ".ui-tooltip";
 		fontColor:#A65A00
 	) !global
 }
-.ui-tooltip-hidden{
+.oni-tooltip-hidden{
 	visibility: hidden;
 }
 div#{$uiname}{

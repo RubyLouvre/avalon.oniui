@@ -183,8 +183,8 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                         <td>验证当前表单下的所有非disabled元素
                             <table border="1">
                                 <tr>
-                                    <th>参数名/返回值</th>
-                                    <th>类型</th>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
                                     <th>说明</th>
                                 </tr>
                                 <tr>
@@ -202,8 +202,8 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                         <td>重置当前表单元素
                             <table border="1">
                                 <tr>
-                                    <th>参数名/返回值</th>
-                                    <th>类型</th>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
                                     <th>说明</th>
                                 </tr>
                                 <tr>
@@ -221,8 +221,8 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                         <td>验证单个元素对应的VM中的属性是否符合格式
                             <table border="1">
                                 <tr>
-                                    <th>参数名/返回值</th>
-                                    <th>类型</th>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
                                     <th>说明</th>
                                 </tr>
                                 <tr>
@@ -238,6 +238,8 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
             <div class="others">er
                 <p>avalon.validation自带了许多
                     <code>验证规则</code>，满足你一般的业务需求。</p>
+                <p>大家可以在onReset的回调里得到第二个参数data, 然后调用data.valueResetor()将VM中的数据也置空,如布尔数据变false,
+                    数值数据变0,数组数据变[],字符串数组变成""</p>
             </div>
             <ul class="example-links">
                 <li>

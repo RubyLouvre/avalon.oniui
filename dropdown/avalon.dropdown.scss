@@ -37,23 +37,23 @@ $ui-divider-state-default-color: #f2f2f2;
         }
 
     }
-    .ui-icon{
+    .oni-icon{
         cursor: pointer;
         font-size: 12px;
         vertical-align: baseline;
     }
     //各种状态
-    &.ui-state-hover {
+    &.oni-state-hover {
         .#{$uiname}-source {
             border-color: map-get($ui-source, hoverBoderColor);
         }
     }
-    &.ui-state-focus {
+    &.oni-state-focus {
         .#{$uiname}-source {
             border-color: #3775c0
         }
     }
-    &.ui-state-disabled {
+    &.oni-state-disabled {
         .#{$uiname}-source {
             background-color: $ui-state-disabled-background-color;
             border-color: $ui-state-disabled-border-color;
@@ -64,7 +64,7 @@ $ui-divider-state-default-color: #f2f2f2;
             cursor: default;
         }
     }
-    &.ui-state-small {
+    &.oni-state-small {
         .#{$uiname}-source {
             border-radius: 2px;
         }
@@ -76,12 +76,12 @@ $ui-divider-state-default-color: #f2f2f2;
             top: -19px;
         }
     }
-    &.ui-state-error {
+    &.oni-state-error {
         .#{$uiname}-source {
             border-color: $ui-state-error-border-color;
         }
     }
-    &.ui-state-error:hover {
+    &.oni-state-error:hover {
         .#{$uiname}-source {
             border-color: $ui-state-error-border-color;
         }
@@ -101,10 +101,10 @@ $ui-divider-state-default-color: #f2f2f2;
         display: block;
         position: relative;
         height: 0;
-        .ui-icon-angle-down {
+        .oni-icon-angle-down {
             display: block;
         }
-        .ui-icon-angle-up {
+        .oni-icon-angle-up {
             display: block;
         }
     }
@@ -153,13 +153,13 @@ $ui-divider-state-default-color: #f2f2f2;
         }
 
         //禁用
-        &.ui-state-disabled {
+        &.oni-state-disabled {
             border-color: $ui-state-disabled-border-color;
             background-color: $ui-state-disabled-background-color;
             color: $ui-state-disabled-color;
         }
         //掠过
-        &.ui-state-hover {
+        &.oni-state-hover {
           @if($oinui-theme == smoothness){
             border-color:  $ui-state-hover-border-color;
             background-color: $ui-state-hover-border-color;
@@ -167,11 +167,11 @@ $ui-divider-state-default-color: #f2f2f2;
           }
         }
         //选中
-        &.ui-state-active {
+        &.oni-state-active {
             border-color: $ui-state-active-border-color;
             background-color: $ui-state-active-background-color;
             color: $ui-state-active-color;
-            .ui-icon {
+            .oni-icon {
                 color: $oniui-icon-state-hover-color;
             }
         }

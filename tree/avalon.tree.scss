@@ -1,6 +1,6 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname : ".ui-tree";
+$uiname : ".oni-tree";
 @if($oinui-theme == smoothness) {
 	$tree: (
 		bg: #fff,
@@ -91,13 +91,13 @@ $uiname : ".ui-tree";
 
 	ul.tree.treeDragUL {margin:0; padding:0; position:absolute; width:auto; height:auto;overflow:hidden; background-color:#cfcfcf; border:1px #00B83F dotted; opacity:0.8; filter:alpha(opacity=80)}
 	.TreeMask {z-index:10000; background-color:#cfcfcf; opacity:0.0; filter:alpha(opacity=0); position:absolute}
-	li a.curSelectedNode span.ebutton,li a.ui-state-hover span.ebutton,li.edit-focus span.ico_close,li.edit-focus span.edit-input {display:inline-block;}
+	li a.curSelectedNode span.ebutton,li a.oni-state-hover span.ebutton,li.edit-focus span.ico_close,li.edit-focus span.edit-input {display:inline-block;}
 	li.edit-focus a span.ebutton,li.edit-focus a span,li a span.ebutton , span.edit-input{display:none;}
 	ul.par-edit-focus {
 		li span{
 			display:inline-block;
 		}
-		li a.ui-state-hover span.ebutton{
+		li a.oni-state-hover span.ebutton{
 			display:inline-block;
 		}
 		li span.edit-input{

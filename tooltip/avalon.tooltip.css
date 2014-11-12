@@ -2,10 +2,10 @@
 /*
 这是每个都组件都应该引用的部分
 */
-.ui-tooltip-hidden {
+.oni-tooltip-hidden {
   visibility: hidden; }
 
-div.ui-tooltip {
+div.oni-tooltip {
   padding: 10px;
   position: absolute;
   z-index: 9999;
@@ -16,14 +16,14 @@ div.ui-tooltip {
   color: #a65a00;
   font-size: 12px;
   border-radius: 0 0 0 0; }
-  div.ui-tooltip a, div.ui-tooltip a:link, div.ui-tooltip a:hover {
+  div.oni-tooltip a, div.oni-tooltip a:link, div.oni-tooltip a:hover {
     color: #a65a00;
     cursor: pointer; }
-  div.ui-tooltip .ui-tooltip-arrow-in, div.ui-tooltip .ui-tooltip-arrow-out {
+  div.oni-tooltip .oni-tooltip-arrow-in, div.oni-tooltip .oni-tooltip-arrow-out {
     overflow: visible;
     position: absolute; }
 
-.ui-tooltip-top .ui-tooltip-arrow-in {
+.oni-tooltip-top .oni-tooltip-arrow-in {
   width: 0;
   height: 0;
   line-height: 0;
@@ -34,7 +34,7 @@ div.ui-tooltip {
   border-left: 4px dashed transparent;
   left: 29px;
   top: -5px; }
-.ui-tooltip-top .ui-tooltip-arrow-out {
+.oni-tooltip-top .oni-tooltip-arrow-out {
   width: 0;
   height: 0;
   line-height: 0;
@@ -45,7 +45,7 @@ div.ui-tooltip {
   border-left: 5px dashed transparent;
   left: 28px;
   top: -6px; }
-.ui-tooltip-right .ui-tooltip-arrow-in {
+.oni-tooltip-right .oni-tooltip-arrow-in {
   width: 0;
   height: 0;
   line-height: 0;
@@ -56,7 +56,7 @@ div.ui-tooltip {
   border-left: 5px solid #ffe44f;
   right: -4px;
   top: 29px; }
-.ui-tooltip-right .ui-tooltip-arrow-out {
+.oni-tooltip-right .oni-tooltip-arrow-out {
   width: 0;
   height: 0;
   line-height: 0;
@@ -68,7 +68,7 @@ div.ui-tooltip {
   left: auto;
   right: -5px;
   top: 28px; }
-.ui-tooltip-bottom .ui-tooltip-arrow-in {
+.oni-tooltip-bottom .oni-tooltip-arrow-in {
   width: 0;
   height: 0;
   line-height: 0;
@@ -80,7 +80,7 @@ div.ui-tooltip {
   bottom: -5px;
   left: 29px;
   top: auto; }
-.ui-tooltip-bottom .ui-tooltip-arrow-out {
+.oni-tooltip-bottom .oni-tooltip-arrow-out {
   width: 0;
   height: 0;
   line-height: 0;
@@ -92,7 +92,7 @@ div.ui-tooltip {
   bottom: -6px;
   left: 28px;
   top: auto; }
-.ui-tooltip-left .ui-tooltip-arrow-in {
+.oni-tooltip-left .oni-tooltip-arrow-in {
   width: 0;
   height: 0;
   line-height: 0;
@@ -103,7 +103,7 @@ div.ui-tooltip {
   border-left: 0;
   left: -4px;
   top: 29px; }
-.ui-tooltip-left .ui-tooltip-arrow-out {
+.oni-tooltip-left .oni-tooltip-arrow-out {
   width: 0;
   height: 0;
   line-height: 0;

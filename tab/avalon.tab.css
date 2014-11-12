@@ -2,13 +2,13 @@
 /*
 这是每个都组件都应该引用的部分
 */
-div.ui-tab {
+div.oni-tab {
   border: none; }
 
-.ui-tab {
+.oni-tab {
   /*dir=v, small size*/
   /*dir=v, normal size*/ }
-  .ui-tab .ui-tab-nav .ui-state-default {
+  .oni-tab .oni-tab-nav .oni-state-default {
     float: left;
     display: inline;
     list-style: none;
@@ -21,64 +21,64 @@ div.ui-tab {
     border: 1px solid #d4d4d4;
     border-right-width: 0;
     color: black; }
-  .ui-tab .ui-tab-nav .ui-state-default a, .ui-tab .ui-tab-nav .ui-state-default:link, .ui-tab .ui-tab-nav .ui-state-default a:hover {
+  .oni-tab .oni-tab-nav .oni-state-default a, .oni-tab .oni-tab-nav .oni-state-default:link, .oni-tab .oni-tab-nav .oni-state-default a:hover {
     color: black;
     text-decoration: none;
     font-size: 12px; }
-  .ui-tab .ui-tab-nav .ui-state-hover {
+  .oni-tab .oni-tab-nav .oni-state-hover {
     color: black;
     background: white; }
-    .ui-tab .ui-tab-nav .ui-state-hover a {
+    .oni-tab .oni-tab-nav .oni-state-hover a {
       color: black; }
-    .ui-tab .ui-tab-nav .ui-state-hover a:link {
+    .oni-tab .oni-tab-nav .oni-state-hover a:link {
       color: black; }
-    .ui-tab .ui-tab-nav .ui-state-hover .ui-tab-close {
+    .oni-tab .oni-tab-nav .oni-state-hover .oni-tab-close {
       border-color: white; }
-  .ui-tab .ui-tab-nav .ui-state-active {
+  .oni-tab .oni-tab-nav .oni-state-active {
     border-bottom-color: white;
     background: white;
     color: black; }
-    .ui-tab .ui-tab-nav .ui-state-active a {
+    .oni-tab .oni-tab-nav .oni-state-active a {
       color: black; }
-    .ui-tab .ui-tab-nav .ui-state-active a:link {
+    .oni-tab .oni-tab-nav .oni-state-active a:link {
       color: black; }
-    .ui-tab .ui-tab-nav .ui-state-active .ui-tab-close {
+    .oni-tab .oni-tab-nav .oni-state-active .oni-tab-close {
       border-color: white; }
-  .ui-tab .ui-tab-nav .ui-state-disabled {
+  .oni-tab .oni-tab-nav .oni-state-disabled {
     color: #999999;
     cursor: default; }
-    .ui-tab .ui-tab-nav .ui-state-disabled a {
+    .oni-tab .oni-tab-nav .oni-state-disabled a {
       color: #999999;
       cursor: default; }
-    .ui-tab .ui-tab-nav .ui-state-disabled a:link {
+    .oni-tab .oni-tab-nav .oni-state-disabled a:link {
       color: #999999;
       cursor: default; }
-  .ui-tab .ui-tab-nav .ui-tab-last {
+  .oni-tab .oni-tab-nav .oni-tab-last {
     border-right-width: 1px; }
-  .ui-tab-small .ui-tab-nav .ui-state-default {
+  .oni-tab-small .oni-tab-nav .oni-state-default {
     border-right-width: 1px;
     margin-right: -1px;
     z-index: 1;
     padding: 7px 10px; }
-  .ui-tab-small .ui-tab-nav .ui-state-active {
+  .oni-tab-small .oni-tab-nav .oni-state-active {
     border-color: #3775c0;
     z-index: 10; }
-  .ui-tab-vertical .ui-tab-nav .ui-state-default {
+  .oni-tab-vertical .oni-tab-nav .oni-state-default {
     float: none;
     display: block;
     text-align: left;
     border-right-width: 1px;
     border-bottom-width: 0; }
-  .ui-tab-vertical .ui-tab-nav .ui-state-active {
+  .oni-tab-vertical .oni-tab-nav .oni-state-active {
     border-right-color: white;
     border-bottom-color: #d4d4d4; }
-  .ui-tab-vertical .ui-tab-nav .ui-tab-last {
+  .oni-tab-vertical .oni-tab-nav .oni-tab-last {
     border-bottom-width: 1px; }
-  .ui-tab-click .ui-state-default {
+  .oni-tab-click .oni-state-default {
     cursor: pointer; }
-  .ui-tab-removable {
+  .oni-tab-removable {
     padding-right: 30px; }
-  .ui-tab-nav .ui-tab-item .ui-tab-close {
+  .oni-tab-nav .oni-tab-item .oni-tab-close {
     position: absolute;
     right: 0px;
     top: 7px;
@@ -92,11 +92,11 @@ div.ui-tab {
     text-indent: 0;
     line-height: 14px;
     font-family: Helvetica, Arial, sans-serif; }
-  .ui-tab .ui-tab-nav .ui-state-active .ui-tab-close-hover {
+  .oni-tab .oni-tab-nav .oni-state-active .oni-tab-close-hover {
     background: white;
     border-color: #d4d4d4;
     cursor: pointer; }
-  .ui-tab .ui-tab-nav .ui-state-hover .ui-tab-close-hover {
+  .oni-tab .oni-tab-nav .oni-state-hover .oni-tab-close-hover {
     background: white;
     border-color: #d4d4d4;
     cursor: pointer; }

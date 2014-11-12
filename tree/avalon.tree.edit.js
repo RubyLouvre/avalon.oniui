@@ -113,7 +113,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.edit.html"], function(ava
 		// 侦听的事件，func操作内进行分发
 		}, ["remove", "rename", "add"],  {
 		// 添加html钩子
-		edit_binding: " ms-hover=\"ui-state-hover\" ",
+		edit_binding: " ms-hover=\"oni-state-hover\" ",
 		edit_html: edit_html
 	})
 })

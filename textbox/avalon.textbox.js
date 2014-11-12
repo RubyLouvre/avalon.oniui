@@ -11,7 +11,9 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
             placeholder = "";
         // 解析html并获取需要的Dom对象引用
         sourceHTML = sourceHTML.replace(/MS_OPTION_DISABLEDCLASS/gm, options.disabledClass);
+        sourceHTML = options.getTemplate(sourceHTML);
         sourceList = avalon.parseHTML(sourceHTML).firstChild ;
+
         inputWraper = sourceList.getElementsByTagName("div")[0];
         placeholder = sourceList.getElementsByTagName("span")[0];
 
@@ -160,7 +162,10 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
         tabIndex: -1,
         width: -1,
         autoFocus: false,
-        disabledClass: "ui-textbox-disabled"
+        disabledClass: "ui-textbox-disabled",
+        getTemplate: function(tmp) {
+            return tmp
+        }
     }
     return avalon ;
 })

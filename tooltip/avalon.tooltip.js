@@ -138,7 +138,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
 
                 vmodel.arrClass = _init(vmodel.position)
                 // 埋个钩子
-                vmodel.widgetElement.setAttribute("ui-tooltip-id", vmodel.$id)
+                vmodel.widgetElement.setAttribute("oni-tooltip-id", vmodel.$id)
 
                 if(vmodel.event == "mouseenter" && vmodel.delegate) {
                     vmodel.event = "mouseover"
@@ -174,9 +174,9 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                         arrIn
                     for(var i = 0, len = bs.length; i < len; i++) {
                         var tb = avalon(bs[i])
-                        if(tb.hasClass("ui-tooltip-arrow-out")) {
+                        if(tb.hasClass("oni-tooltip-arrow-out")) {
                             arrOut = tb
-                        } else if(tb.hasClass("ui-tooltip-arrow-in")) {
+                        } else if(tb.hasClass("oni-tooltip-arrow-in")) {
                             arrIn = tb
                         }
                     }
@@ -203,10 +203,10 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                     if(elem.nodeName) {
                         if(tipElem.position().top > atEle.position().top + elem.offsetHeight && vmodel.arrClass == "bottom") {
                             vmodel.arrClass = "top"
-                            tipElem.removeClass("ui-tooltip-bottom").addClass("ui-tooltip-top")
+                            tipElem.removeClass("oni-tooltip-bottom").addClass("oni-tooltip-top")
                         } else if(tipElem.position().top + tooltipElem.offsetHeight < atEle.position().top && vmodel.arrClass == "top") {
                             vmodel.arrClass = "bottom"
-                            tipElem.removeClass("ui-tooltip-top").addClass("ui-tooltip-bottom")
+                            tipElem.removeClass("oni-tooltip-top").addClass("oni-tooltip-bottom")
                         }
 
                         // 根据元素和tooltip元素的宽高调整箭头位置
@@ -327,7 +327,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                     animateTimer = setInterval(function() {
                         if(dis.length <= 0) {
                             tooltipElem.style.display = "none"
-                            avalon(tooltipElem).addClass("ui-tooltip-hidden")
+                            avalon(tooltipElem).addClass("oni-tooltip-hidden")
                             return clearInterval(animateTimer)
                         }
                         avalon(tooltipElem).css("opacity",  dis[0]/100)
@@ -377,7 +377,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                 }
                 clearTimeout(hideTimer)
                 clearTimeout(animateTimer)
-                var inited = tar.getAttribute("ui-tooltip-inited")
+                var inited = tar.getAttribute("oni-tooltip-inited")
                 // 禁用默认的title
                 var oldTitle = tar.title
                 vmodel.content = content
@@ -386,15 +386,15 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                     tooltipElem = tooltipELementMaker()
                     avalon.scan(tooltipElem, [vmodel].concat(vmodels))
                 }
-                avalon(tooltipElem).removeClass("ui-tooltip-hidden")
+                avalon(tooltipElem).removeClass("oni-tooltip-hidden")
                 // 减少抖动
                 if(!vmodel.track) {
                     _init(vmodel.arrClass)
                 }
                 vmodel.show(vmodel.track ? e || tar : tar)
-                var inited = tar.getAttribute("ui-tooltip-inited")
+                var inited = tar.getAttribute("oni-tooltip-inited")
                 if(!inited) {
-                    tar.setAttribute("ui-tooltip-inited", 1)
+                    tar.setAttribute("oni-tooltip-inited", 1)
                     // 自动隐藏
                     vmodel.autohide && avalon(tar).bind(vmodel.event != "focus" ? "mouseleave" : "blur", function(e) {
                         if(oldTitle) tar.title = oldTitle
@@ -407,7 +407,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                             _track_event = e
                             vmodel.show(e)
                             // 减少抖动
-                            avalon(tooltipElem).removeClass("ui-tooltip-hidden")
+                            avalon(tooltipElem).removeClass("oni-tooltip-hidden")
                         })
                     }
                 }
@@ -418,7 +418,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             }
             vm._isShown = function() {
                 var elem = avalon(tooltipElem)
-                return elem.css("display") != "none" && !elem.hasClass("ui-tooltip-hidden")
+                return elem.css("display") != "none" && !elem.hasClass("oni-tooltip-hidden")
             }
 
         })

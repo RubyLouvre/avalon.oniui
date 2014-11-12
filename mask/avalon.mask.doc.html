@@ -28,81 +28,121 @@
                 <table class="table-doc" border="1">
                     <colgroup>
                         <col width="180" />
+                        <col width="80" />
                         <col width="180" />
                     </colgroup>
                     <tr>
                         <th>名字</th>
+                        <th>类型</th>
                         <th>默认值</th>
                         <th>说明</th>
                     </tr>
                     <tr>
-                        <td align="center" colspan="3">配置参数</td>
-                    </tr>
-                    <tr>
-                        <td>mask</td>
-                        <td>mask</td>
-                        <td>{String} 用于提示用户输入的mask字符串，用户只能在占位符上输入（会有光标引导你）,用户必须设置data-duplex-mask属性</td>
+                        <td align="center" colspan="4">配置参数</td>
                     </tr>
                     <tr>
                         <td>element</td>
+                        <td>String</td>
                         <td>element</td>
-                        <td>{Element} 组件实例要作用的input元素</td>
+                        <td>用于提示用户输入的mask字符串，用户只能在占位符上输入（会有光标引导你）,用户必须设置data-duplex-mask属性</td>
                     </tr>
                     <tr>
                         <td>oldValue</td>
+                        <td>Element</td>
                         <td>""</td>
-                        <td>{String} 元素之前的value值</td>
+                        <td>组件实例要作用的input元素</td>
                     </tr>
                     <tr>
                         <td>value</td>
+                        <td>String</td>
                         <td>""</td>
-                        <td>{String} 元素现在的value值</td>
+                        <td>元素之前的value值</td>
                     </tr>
                     <tr>
                         <td>impurity</td>
+                        <td>String</td>
                         <td>{}</td>
-                        <td>{Object} mask分别两部分，一些部分用户需要输入，一部分是提示或美化用的杂质，impurity是用于装载这些杂质在这个mask中的索引值，它用于光标引导功能</td>
+                        <td>元素现在的value值</td>
                     </tr>
                     <tr>
                         <td>placehoder</td>
+                        <td>Boolean</td>
                         <td>"_"</td>
-                        <td>{Boolean} "_", 将元字符串换为"_"显示到element.value上，如99/99/9999会替换为__/__/____，可以通过data-duplex-mask-placehoder设置</td>
+                        <td>"_", 将元字符串换为"_"显示到element.value上，如99/99/9999会替换为__/__/____，可以通过data-duplex-mask-placehoder设置</td>
                     </tr>
                     <tr>
                         <td>hideIfInvalid</td>
+                        <td>Boolean</td>
                         <td>false</td>
-                        <td>{Boolean} false, 如果它不匹配就会在失去焦点时清空value，可以通过data-duplex-mask-hide-if-invalid设置</td>
+                        <td>false, 如果它不匹配就会在失去焦点时清空value，可以通过data-duplex-mask-hide-if-invalid设置</td>
                     </tr>
                     <tr>
                         <td>hideIfPristine</td>
+                        <td>Boolean</td>
                         <td>true</td>
-                        <td>{Boolean} true如果它没有改动过就会在失去焦点时清空value，可以通过data-duplex-mask-hide-if-pristine设置</td>
+                        <td>true如果它没有改动过就会在失去焦点时清空value，可以通过data-duplex-mask-hide-if-pristine设置</td>
                     </tr>
                     <tr>
                         <td>showIfHover</td>
+                        <td>Boolean</td>
                         <td>false</td>
-                        <td>{Boolean} false 当鼠标掠过其元素上方就显示它出来，可以通过data-duplex-mask-show-if-hover设置</td>
+                        <td>false 当鼠标掠过其元素上方就显示它出来，可以通过data-duplex-mask-show-if-hover设置</td>
                     </tr>
                     <tr>
                         <td>showIfFocus</td>
+                        <td>Boolean</td>
                         <td>true</td>
-                        <td>{Boolean} true 当用户让其元素得到焦点就显示它出来，可以通过data-duplex-mask-show-if-focus设置</td>
+                        <td>true 当用户让其元素得到焦点就显示它出来，可以通过data-duplex-mask-show-if-focus设置</td>
                     </tr>
                     <tr>
                         <td>showAlways</td>
+                        <td>Boolean</td>
                         <td>false</td>
-                        <td>{Boolean} false 总是显示它，可以通过data-duplex-mask-show-always设置</td>
+                        <td>false 总是显示它，可以通过data-duplex-mask-show-always设置</td>
                     </tr>
                     <tr>
                         <td>translations</td>
+                        <td>Object</td>
                         <td></td>
-                        <td>{Object} 此对象上每个键名都是元字符，都对应一个对象，上面有pattern(正则)，placehoder(占位符，如果你不想用"_"),optional（表示可选）</td>
+                        <td>此对象上每个键名都是元字符，都对应一个对象，上面有pattern(正则)，placehoder(占位符，如果你不想用"_"),optional（表示可选）</td>
                     </tr>
                 </table>
             </fieldset>
+            <div class="others">data-duplex-mask-translations应该对应的一个对象，默认情况下已经有如下东西了：
+                <table class="table-doc"
+                border="1">
+                    <colgroup>
+                        <col width="190" />
+                    </colgroup>
+                    <tr>
+                        <th>元字符</th>
+                        <th>意义</th>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>表示任何数字，0-9，正则为/\d/，
+                            <code>可选</code>，即不匹配对最终结果也没关系</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>表示任何数字，0-9，正则为/\d/</td>
+                    </tr>
+                    <tr>
+                        <td>A</td>
+                        <td>表示任何字母，，正则为/[a-zA-Z]/</td>
+                    </tr>
+                    <tr>
+                        <td>*</td>
+                        <td>表示任何非空字符，正则为/\S/</td>
+                    </tr>
+                </table>
+            </div>
             <ul class="example-links">
                 <li>
-                    <a href="avalon.mask.ex1.html">例子</a>
+                    <a href="avalon.mask.ex1.html">例子1</a>
+                </li>
+                <li>
+                    <a href="avalon.mask.ex2.html">例子2</a>
                 </li>
             </ul>
         </div>

@@ -71,8 +71,8 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                     })
                     var ele = avalon(document.getElementById("data" + item + vmodel.$uid))
                     // 重置样式
-                    ele.removeClass("ui-state-active").addClass("ui-state-disabled")
-                    if(vmodel.hideSelect) ele.addClass("ui-helper-hidden")
+                    ele.removeClass("oni-state-active").addClass("oni-state-disabled")
+                    if(vmodel.hideSelect) ele.addClass("oni-helper-hidden")
                 })
             }
             vm.updateScrollbar = function() {
@@ -94,18 +94,18 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                 var ele = avalon(this),
                     data = ele.data()
                 e.preventDefault()
-                if(ele.hasClass("ui-state-disabled")) return
+                if(ele.hasClass("oni-state-disabled")) return
                 // 选中区域的点击
                 if(type == "select") {
-                    if(ele.hasClass("ui-state-active")) {
-                        ele.removeClass("ui-state-active")
+                    if(ele.hasClass("oni-state-active")) {
+                        ele.removeClass("oni-state-active")
                         vmodel._removeFrom(data.value, "fromSelected")
-                    } else if(!ele.hasClass("ui-state-disabled")){
+                    } else if(!ele.hasClass("oni-state-disabled")){
                         // in case of duplication push
                         for(var i = 0, len = vmodel.selectTmpSelect.length; i < len; i++) {
                             if(vmodel.selectTmpSelect[i] == data.value) return
                         }
-                        ele.addClass("ui-state-active")
+                        ele.addClass("oni-state-active")
                         vmodel.selectTmpSelect.push(data.value)
                     }
                     // 双击
@@ -123,15 +123,15 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                     }
                 } else {
                 // 待选区域的点击
-                    if(ele.hasClass("ui-state-active")) {
-                        ele.removeClass("ui-state-active")
+                    if(ele.hasClass("oni-state-active")) {
+                        ele.removeClass("oni-state-active")
                         vmodel._removeFrom(data.value)
-                    } else if(!ele.hasClass("ui-state-disabled")){
+                    } else if(!ele.hasClass("oni-state-disabled")){
                         // in case of duplication push
                         for(var i = 0, len = vmodel.dataTmpSelect.length; i < len; i++) {
                             if(vmodel.dataTmpSelect[i] == data.value) return
                         }
-                        ele.addClass("ui-state-active")
+                        ele.addClass("oni-state-active")
                         vmodel.dataTmpSelect.push(data.value)
                     }
                     if(isdblClick) {

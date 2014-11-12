@@ -1,6 +1,6 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname : ".ui-menu";
+$uiname : ".oni-menu";
 @if($oinui-theme == smoothness) {
 	$menu: (
 		bg: #fff,
@@ -23,7 +23,7 @@ ul#{$uiname},ol#{$uiname}{
 	z-index:5;
 	zoom: 1;
 	// fix ie 7 can not repaint correctly bug
-	& ul.ui-helper-hidden{
+	& ul.oni-helper-hidden{
 		visibility: hidden;
 	}
 	& &-icon{
@@ -47,10 +47,10 @@ ul#{$uiname},ol#{$uiname}{
 			text-decoration:none;
 		}
 	}
-	& li.ui-state-hover{
+	& li.oni-state-hover{
 		background: $ui-state-hover-background-color;
 	}
-	& li.ui-state-active{
+	& li.oni-state-active{
 		background: $ui-state-active-background-color;
 		color: $ui-state-active-color;
 	}
@@ -73,7 +73,7 @@ ul#{$uiname},ol#{$uiname}{
 		left: -1px;
 		top:100%;
 	}
-	& .ui-state-disabled, & .ui-state-disabled a,& .ui-state-disabled a:link, & .ui-state-disabled a:hover{
+	& .oni-state-disabled, & .oni-state-disabled a,& .oni-state-disabled a:link, & .oni-state-disabled a:hover{
 		color: map-get($menu, disabledColor);
 		cursor: default;
 	}

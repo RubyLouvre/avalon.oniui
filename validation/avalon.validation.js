@@ -411,10 +411,10 @@ define(["../promise/avalon.promise"], function(avalon) {
             vm.resetAll = function(callback) {
                 vm.data.forEach(function(data) {
                     try {
-                        if (data.valueResetor) {
-                            data.valueResetor()
-                        }
-                        vm.onReset.call(data.element)
+//                        if (data.valueResetor) {
+//                            data.valueResetor()
+//                        }
+                        vm.onReset.call(data.element,{type:"reset"}, data)
                     } catch (e) {
                     }
                 })
@@ -506,7 +506,7 @@ define(["../promise/avalon.promise"], function(avalon) {
 
             }
             //收集下方表单元素的数据
-            vm.$watch("init-ms-duplex", function(data) {
+            vm.$watch("avalon-ms-duplex-init", function(data) {
                 var inwardHooks = vmodel.validationHooks
                 data.valueAccessor = data.evaluator.apply(null, data.args)
                 var globalHooks = avalon.duplexHooks
@@ -539,9 +539,9 @@ define(["../promise/avalon.promise"], function(avalon) {
                         }
                         if (vm.resetInFocus) {
                             data.bound("focus", function(e) {
-                                if (data.valueResetor) {
-                                    data.valueResetor()
-                                }
+//                                if (data.valueResetor) {
+//                                    data.valueResetor()
+//                                }
                                 vm.onReset.call(data.element, e, data)
                             })
                         }
@@ -581,6 +581,11 @@ define(["../promise/avalon.promise"], function(avalon) {
 /**
  @other
  <p>avalon.validation自带了许多<code>验证规则</code>，满足你一般的业务需求。</p>
+ <p>大家可以在onReset的回调里得到第二个参数data, 然后调用data.valueResetor()将VM中的数据也置空,如布尔数据变false, 
+ 数值数据变0,数组数据变[],字符串数组变成""
+ 
+ </p>
+                
  */
 
 /**

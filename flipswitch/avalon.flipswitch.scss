@@ -1,6 +1,6 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname : ".ui-flipswitch";
+$uiname : ".oni-flipswitch";
 v\:* { behavior: url(#default#VML);} 
 @if($oinui-theme == smoothness) {
 	$switch: (
@@ -213,7 +213,7 @@ div#{$uiname}{
 }
 
 
-.ui-state-disabled, .ui-state-hover{
+.oni-state-disabled, .oni-state-hover{
 	#{$uiname}-oval-hd{
 		display: block;
 	}
@@ -221,7 +221,7 @@ div#{$uiname}{
 		display: none;
 	}
 }
-.ui-state-disabled{
+.oni-state-disabled{
 	& #{$uiname}-bar label, & #{$uiname}-bar span{
 		cursor: default;
 		color: map-get($switch, disableColor);

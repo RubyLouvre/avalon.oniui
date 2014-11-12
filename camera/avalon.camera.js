@@ -60,12 +60,12 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
         var fakepartWidth = vmodel.pictureWidth / vmodel.slicedCols,
             fakepartHeight = vmodel.pictureHeight / vmodel.slicedRows
         require('jquery,ready!', function($) {
-            var fakeHover = $(".ui-camera-fakehover")
+            var fakeHover = $(".oni-camera-fakehover")
             fakeHover.css("display", "none")
             for (var i = 0; i < vmodel.slicedRows; i++) {
                 for (var j = 0; j < vmodel.slicedCols; j++) {
                     fakeHover.append("<div class='fakepart'></div>")
-                    $(".ui-camera-fakehover .fakepart:last").css({
+                    $(".oni-camera-fakehover .fakepart:last").css({
                         "background": "url(" + "http://gallery.kissyui.com/slide/1.3/demo/img/slide-1.jpg" + ")",
                         "background-position": -j * fakepartWidth + "px " + -i * fakepartHeight + "px"
                     })
@@ -73,13 +73,13 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
                 fakeHover.append("<br>")
             }
 
-            $(".ui-camera-fakehover .fakepart").css({
+            $(".oni-camera-fakehover .fakepart").css({
                 "width": fakepartWidth,
                 "height": fakepartHeight
             })
             for (var i = 0; i < vmodel.slicedRows; i++) {
                 for (var j = 0; j < vmodel.slicedCols; j++) {
-                    $(".ui-camera-fakehover .fakepart").eq(i * vmodel.slicedCols + j).css({
+                    $(".oni-camera-fakehover .fakepart").eq(i * vmodel.slicedCols + j).css({
                         "width": fakepartWidth,
                         "height": fakepartHeight
                     })
@@ -98,10 +98,9 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
             }
 
             //prepare
-            var fakeparts = $(".ui-camera-fakehover .fakepart"),
+            var fakeparts = $(".oni-camera-fakehover .fakepart"),
                 finishCount = 0,
                 effect = effect === "random" ? effects[Math.floor(Math.random() * effects.length)] : effect
-
             for (var i = 0; i < vmodel.slicedRows; i++) {
                 for (var j = 0; j < vmodel.slicedCols; j++) {
                     var _part = fakeparts.eq(i * vmodel.slicedCols + j),
@@ -233,7 +232,6 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
         var minX = 0, minY = 0, maxX = mx-1, maxY = my-1
         var row = 0, col = 0;
         for (var i = 0; i < mx * my; i++) {
-            console.log(row, col)
             helix[row][col] = i + 1;
             if (row == minY && col < maxX) {
                 col++;

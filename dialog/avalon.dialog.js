@@ -54,6 +54,7 @@ define(["../avalon.getModel",
             options.onCancel = onCancelVM && onCancelVM[1][onCancelVM[0]] || avalon.noop
         }
         if (typeof onClose ==="string") {
+            avalon.log("ms-widget='dialog' data-dialog-on-close 此用法已经被废弃")
             onCloseVM = avalon.getModel(onClose, vmodels)
             options.onClose = onCloseVM && onCloseVM[1][onCloseVM[0]] || avalon.noop
         }

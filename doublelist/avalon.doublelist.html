@@ -1,22 +1,22 @@
-<div class="ui-doublelist ui-helper-reset ui-helper-clearfix ui-widget ui-helper-noselect"
+<div class="oni-doublelist oni-helper-reset oni-helper-clearfix oni-widget oni-helper-noselect"
 	 ms-visible="toggle">
-	<div class="ui-doublelist-data ui-doublelist-menu ui-widget-content" ms-widget="scrollbar,$left{{MS_OPTION_ID}}">
-		<ul class="ui-helper-reset ui-scrollbar-scroller" ms-each-item="data" data-each-rendered="updateScrollbar">
+	<div class="oni-doublelist-data oni-doublelist-menu oni-widget-content" ms-widget="scrollbar,$left{{MS_OPTION_ID}}">
+		<ul class="oni-helper-reset oni-scrollbar-scroller" ms-each-item="data" data-each-rendered="updateScrollbar">
 		{{MS_OPTION_DATA}}
 		</ul>
 	</div>
-	<div class="ui-doublelist-option">
-		<div class="ui-dbl-button" ms-click="_update($event,'add')" 
-			ms-class-101="ui-state-disabled:dataTmpSelect.length==0">
+	<div class="oni-doublelist-option">
+		<div class="oni-dbl-button" ms-click="_update($event,'add')" 
+			ms-class-101="oni-state-disabled:dataTmpSelect.length==0">
 			<span>&nbsp;添加&nbsp;&gt;</span>
 		</div>
-		<div class="ui-dbl-button" ms-click="_update($event,'delete')" 
-			ms-class-101="ui-state-disabled:selectTmpSelect.length==0">
+		<div class="oni-dbl-button" ms-click="_update($event,'delete')" 
+			ms-class-101="oni-state-disabled:selectTmpSelect.length==0">
 			<span>&lt;&nbsp;删除&nbsp;</span>
 		</div>
 	</div>
-	<div class="ui-doublelist-select ui-doublelist-menu ui-widget-content" ms-widget="scrollbar,$right{{MS_OPTION_ID}}">
-		<ul class="ui-helper-reset ui-scrollbar-scroller" ms-each-item="_selectData" data-each-rendered="updateScrollbar">
+	<div class="oni-doublelist-select oni-doublelist-menu oni-widget-content" ms-widget="scrollbar,$right{{MS_OPTION_ID}}">
+		<ul class="oni-helper-reset oni-scrollbar-scroller" ms-each-item="_selectData" data-each-rendered="updateScrollbar">
 			{{MS_OPTION_SELECT}}
 		</ul>
 	</div>

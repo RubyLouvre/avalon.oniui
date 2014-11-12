@@ -38,15 +38,20 @@ define(["avalon",
             vm.widgetElement = element
             vm.$skipArray = ["showPages", "widgetElement", "template", "ellipseText", "alwaysShowPrev", "alwaysShowNext"]
             //这些属性不被监控
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 var pageHTML = options.template
                 element.style.display = "none"
                 element.innerHTML = pageHTML
                 setTimeout(function() {
-                    avalon.scan(element, [vmodel].concat(vmodels))
                     element.style.display = "block"
-                    if (typeof options.onInit === "function") {
-                        options.onInit.call(element, vmodel, options, vmodels)
+                    if (continueScan) {
+                        continueScan()
+                    } else {
+                        avalon.log("你的avalon太旧,请尽快升级到1.3.7")
+                        avalon.scan(element, [vmodel].concat(vmodels))
+                        if (typeof options.onInit === "function") {
+                            options.onInit.call(element, vmodel, options, vmodels)
+                        }
                     }
                 }, 100)
             }
@@ -208,7 +213,8 @@ define(["avalon",
          * @param {Event} e
          * @param {Number} page  当前页码
          */
-        onJump: function(e,page){},
+        onJump: function(e, page) {
+        },
         /**
          * @config {Function} 获取页码上的title的函数
          * @param {String|Number} a 当前页码的类型，如first, prev, next, last, 1, 2, 3
@@ -314,12 +320,12 @@ define(["avalon",
 
 /**
  *  @links
-    [显示跳转台](avalon.pager.ex1.html)
-    [指定回调onJump](avalon.pager.ex2.html)
-    [改变每页显示的数量](avalon.pager.ex3.html)
-    [指定上一页,下一页的文本](avalon.pager.ex4.html)
-    [通过左右方向键或滚轮改变页码](avalon.pager.ex5.html)
-    [总是显示上一页与下一页按钮](avalon.pager.ex6.html)
+ [显示跳转台](avalon.pager.ex1.html)
+ [指定回调onJump](avalon.pager.ex2.html)
+ [改变每页显示的数量](avalon.pager.ex3.html)
+ [指定上一页,下一页的文本](avalon.pager.ex4.html)
+ [通过左右方向键或滚轮改变页码](avalon.pager.ex5.html)
+ [总是显示上一页与下一页按钮](avalon.pager.ex6.html)
  * 
  */
 //http://luis-almeida.github.io/jPages/defaults.html

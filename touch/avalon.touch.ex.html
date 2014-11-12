@@ -58,7 +58,6 @@
 				z-index: 1000;
 			}
         </style>
-		<script src="avalon.touch.js"></script>
     </head>
     <body ms-controller="test" 
           ms-on-tap="tap" 
@@ -102,8 +101,8 @@
         		rotate{{rotateLog}}
         	</div>
         </div>
-        <script>
-        	var index = 0
+    	<script>
+    	var index = 0
             var model = avalon.define("test", function(vm){
             	vm.index = 0
             	vm.log = []
@@ -165,6 +164,9 @@
 			window.__log = function(log) {
 				model.log.unshift(log)
 			}
+        	require(["./touch/avalon.touch", "./drop"], function() {
+	        	
+			})
         </script>
     </body>
 </html>

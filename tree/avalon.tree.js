@@ -260,7 +260,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 }
                 if(startLeaf.children && startLeaf.children.length) {
                     for(var i = 0, children = startLeaf.children, len = children.length; i < len; i++) {
-                        if(endFunc && endFunc(res, children[i]), startLeaf) break
+                        if(endFunc && endFunc(res, children[i], startLeaf)) break
                         vm.visitor(children[i], func, endFunc, res, options)
                     }
                 }

@@ -39,7 +39,9 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 					}
 					avalon.log("check is enable")
 					return true
-				}
+				},
+				beforeCheckChange: avalon.noop,
+				onCheckChange: avalon.noop
 			}
 		},
 		function(vm, vmodels) {
@@ -62,11 +64,17 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 				},
 				checkNode: function(leaf, checked, checkTypeFlag, callbackFlag) {
 					if(!vm.checkEnable() || leaf.chkDisabled) return
-					vm.excute("check", {
-						cancelCallback: !callbackFlag
-					}, leaf, function() {
-						var chk = checked === undefine ? !leaf.checked : !!checked
-						return leaf.checked = chk
+					vm.excute("checkChange", {
+						cancelCallback: !callbackFlag,
+						checkTypeFlag: checkTypeFlag
+					}, leaf, function(arg) {
+						var chk = checked === undefine ? !leaf.checked : !!checked,
+							beforeCheck = vm.callback.beforeCheck,
+							onCheck = vm.callback.onCheck
+						if(callbackFlag && chk && beforeCheck && beforeCheck(arg) || arg.cancel) return 
+						leaf.checked = chk
+						callbackFlag && chk && onCheck && onCheck(arg)
+						return chk
 					})
 				},
 				checkAllNodes: function(checked, leaf) {
@@ -117,7 +125,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 									canDisabledCount++
 									if(node.chkDisabled) disabledCount++
 								})
-								par.chkDisabled = disabled ? disabledCount >= canDisabledCount : disabledCount >= canDisabledCount
+								par.chkDisabled = disabledCount >= canDisabledCount
 							})
 						}
 					}
@@ -140,15 +148,20 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 				}
 			})
 			var onlyOneRadio = vmodel.getCheckedNodes()
-			vmodel.$watch("e:check", function(arg) {
+			vmodel.$watch("e:checkChange", function(arg) {
 				var leaf = arg.leaf,
 					vm = arg.vm,
 					chk = vm.check
 				if(!chk.enable) return
 				var	chkStyle = chk.chkStyle,
 					radioType = chk.radioType,
-					chkboxType = chk.chkboxType
-
+					chkboxType = chk.chkboxType,
+					autoCheckTrigger = chk.autoCheckTrigger,
+					callback = vmodel.callback,
+					beforeCheck = callback.beforeCheck,
+					onCheck = callback.onCheck,
+					cancelCallback = arg.e && arg.e.cancelCallback 
+				leaf.halfCheck = false
 				if(chk.chkStyle === "radio") {
 					if(leaf.checked) {
 						if(radioType === "all") {
@@ -168,21 +181,59 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 					// 关联效果
 					var bool = !!leaf.checked
 					chkboxType =  bool ? chkboxType.Y : chkboxType.N
-					if(checkbox) {
+					if(chkStyle === "checkbox" && arg.e && arg.e.checkTypeFlag) {
 						// 向上关联
 						if(chkboxType.indexOf("p") > -1) {
-							vmodel.brotherVisitor(leaf, function(node) {
-								if(node.nocheck || node.chkDisabled) return
-							}, function(res, node, par) {
-								return par.nocheck || par.chkDisabled
+							vmodel.cVisitor(leaf, function(node) {
+								var par = node.$parentLeaf
+								if(!par) return
+								var checkedCount = 0,
+									canCheckedCount = 0
+								// 计算节点check数目
+								vmodel.brotherVisitor(node, function(brother) {
+									if(brother.nocheck || brother.chkDisabled) return
+									if(brother.checked) checkedCount++
+									canCheckedCount++
+								}, function(res, brother, par) {
+									return par && (par.nocheck || par.chkDisabled)
+								})
+								var e = {
+									e: arg.e,
+									srcLeaf: leaf,
+									leaf: node,
+									vm: vmodel,
+			                        vmodels: vmodels,
+			                        preventDefault: function() {
+			                            this.cancel = true
+			                        }
+								}
+								if(!cancelCallback) {
+									if(bool && autoCheckTrigger && beforeCheck && beforeCheck(e)) return
+								}
+								par.checked = checkedCount > 0
+								par.halfCheck = checkedCount <= 0 || checkedCount >= canCheckedCount ? false : true
+								!cancelCallback && bool && autoCheckTrigger && onCheck && onCheck(e)
 							})
 						}
 						// 向下关联
 						if(chkboxType.indexOf("s") > -1) {
 							vmodel.visitor(leaf, function(node) {
-								// 级联不进入回调
 								if(node.nocheck || node.chkDisabled) return
+								var e = {
+									e: arg.e,
+									srcLeaf: leaf,
+									leaf: node,
+									vm: vmodel,
+			                        vmodels: vmodels,
+			                        preventDefault: function() {
+			                            this.cancel = true
+			                        }
+								}
+								if(!cancelCallback) {
+									if(bool && autoCheckTrigger && beforeCheck && beforeCheck(e)) return
+								}
 								node.checked = bool
+								!cancelCallback && bool && autoCheckTrigger && onCheck && onCheck(e)
 							}, undefine, [])
 						}
 					}

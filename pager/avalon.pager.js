@@ -42,12 +42,13 @@ define(["avalon",
                 var pageHTML = options.template
                 element.style.display = "none"
                 element.innerHTML = pageHTML
+
                 setTimeout(function() {
                     element.style.display = "block"
                     if (continueScan) {
                         continueScan()
                     } else {
-                        avalon.log("你的avalon太旧,请尽快升级到1.3.7")
+                        avalon.log("avalon请尽快升到1.3.7+")
                         avalon.scan(element, [vmodel].concat(vmodels))
                         if (typeof options.onInit === "function") {
                             options.onInit.call(element, vmodel, options, vmodels)

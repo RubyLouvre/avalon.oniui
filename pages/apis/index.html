@@ -44,7 +44,8 @@
             "unbind(el, type, fn, phase)": "卸载事件",
             "each(obj,fn)": "★★★功能同jQuery.each， 都是索引值或键名在前，值或元素在后",
             "avalon.define(id, factory)": "★★★定义一个ViewModel",
-            "scan(el?, vmodels?)": "★★★扫描DOM树，抽取绑定",
+            "scan(el?, vmodels?, group ?)": "★★★扫描DOM树，抽取绑定(el默认为DOM,vmodels默认为空数组,group 1.3.7新增，默认为$all)",
+            "scanCallback(fn, group ?)": "扫描某一个区域后执行的回调，group 1.3.7新增，默认为$all",
             "define(id?, deps?, factory)": "●一个全局方法，用于定义AMD规范的JS模块",
             "require(deps, callback)": "●一个全局方法，用于加载JS模块",
             "css(node, name, value?)": "如果只有两个参数，读取元素的某个样式，三个参数时，设置元素某个样式;<br/>" +

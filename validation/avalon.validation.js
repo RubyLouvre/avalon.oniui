@@ -506,7 +506,7 @@ define(["../promise/avalon.promise"], function(avalon) {
 
             }
             //收集下方表单元素的数据
-            vm.$watch("init-ms-duplex", function(data) {
+            vm.$watch("avalon-ms-duplex-init", function(data) {
                 var inwardHooks = vmodel.validationHooks
                 data.valueAccessor = data.evaluator.apply(null, data.args)
                 var globalHooks = avalon.duplexHooks

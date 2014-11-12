@@ -216,8 +216,8 @@
     background-repeat: no-repeat;
     background-attachment: scroll;
     background-position: -110px -80px;
-    background-image: url("./TreeStandard.png");
-    *background-image: url("./TreeStandard.gif"); }
+    background-image: url("./treeStandard.png");
+    *background-image: url("./treeStandard.gif"); }
   .oni-tree ul.tree.treeDragUL {
     margin: 0;
     padding: 0;
@@ -229,7 +229,7 @@
     border: 1px #00B83F dotted;
     opacity: 0.8;
     filter: alpha(opacity=80); }
-  .oni-tree .TreeMask {
+  .oni-tree .treeMask {
     z-index: 10000;
     background-color: #cfcfcf;
     opacity: 0.0;

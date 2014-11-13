@@ -26,15 +26,24 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
 
     //  树状数据的标准化，mvvm的痛
     function dataFormator(arr, parentLeaf, dataFormated, func, vm) {
+        var newArr = []
         avalon.each(arr, function(index, item) {
             if(!dataFormated) {
-                itemFormator(item, parentLeaf, vm)
+                // 拷贝替换
+                newArr[index] = itemFormator(avalon.mix({}, item), parentLeaf, vm)
             } else if(item){
                 item.$parentLeaf = parentLeaf
                 func && func(item)
             }
-            if(item && item.children && item.children.length) dataFormator(item.children, item, dataFormated, undefine, vm)
+            if(item && item.children && item.children.length) {
+                if(!dataFormated) {
+                    newArr[index].children = dataFormator(item.children, newArr[index], dataFormated, undefine, vm)
+                } else {
+                    dataFormator(item.children, item, dataFormated, undefine, vm)
+                }
+            }
         })
+        return dataFormated ? arr : newArr
     }
     function formate(item, dict) {
         avalon.each(dict, function(key, value) {
@@ -132,15 +141,16 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         options.parentTemplate = options.getTemplate(parentTemplate, options, "parent")
         options.leafTemplate = options.getTemplate(leafTemplate, options, "leaf")
         options.nodesTemplate = nodesTemplate
-        var newOpt = {}
+        var newOpt = {}, dataBak
         avalon.mix(newOpt, options)
         avalon.each(optionKeyToFixMix, function(key) {
             avalon.mix(true, newOpt[key], avalon.mix(true, {}, widget.defaults[key], newOpt[key]))
         })
+        dataBak = options.children
         if(newOpt.data.simpleData.enable) {
             newOpt.children = simpleDataToTreeData(newOpt.children, newOpt)
         } else {
-            dataFormator(newOpt.children, undefine, undefine, undefine, newOpt)
+            newOpt.children = dataFormator(newOpt.children, undefine, undefine, undefine, newOpt)
         }
         newOpt.template = tplFormate(newOpt.template, newOpt).replace(/\n/g, "").replace(/>[\s]+</g, "><")
         newOpt.parentTemplate = tplFormate(newOpt.parentTemplate, newOpt).replace(/\n/g, "").replace(/>[\s]+</g, "><")
@@ -178,11 +188,24 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 cache = null
                 vm._select = null
             }
-            vm.computeIconClass = function(leaf, first, last) {
+            vm.computeIconClass = function(leaf) {
+                return (leaf.iconSkin ? leaf.iconSkin + "_" : "") + "ico_" + (leaf.isParent ? vm.hasClassOpen(leaf) ? "open" : "close" : "docu")
+            }
+            vm.computeIcon = function(leaf) {
+                var ico = leaf.isParent ? vm.hasClassOpen(leaf) ? leaf.icon_open || "" : leaf.icon_close || "" : leaf.icon ? leaf.icon : ""
+                if(ico) {
+                    return "url(\"" + ico + "\") 0 0 no-repeat"
+                }
+                return ""
+            }
+            vm.computeLineClass = function(leaf, first, last) {
                 var status = leaf.open ? "open" : "close",
                     pos = first && !leaf.level ? "roots" : last ? "bottom" : "center"
                 if(!vm.optionToBoolen(vm.view.showLine,leaf)) pos = "noline"
                 return pos + "_" + status
+            }
+            vm.levelClass = function(leaf) {
+                return "level" + (leaf.level || 0)
             }
             // 展开相关
             // 展开
@@ -356,12 +379,14 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             }
 
             vm.addNode = function(parentLeaf, item, isSilent, noExcute) {
-                var newLeaf = itemFormator(item, parentLeaf, vm), arr = vm.getNodes(parentLeaf)
+                // 拷贝
+                var newLeaf = itemFormator(avalon.mix({}, item), parentLeaf, vm), arr = vm.getNodes(parentLeaf)
                 if(noExcute) {
                     arr.push(newLeaf)
                 } else {
                     excute('nodeCreated', {
-                        isSilent: isSilent
+                        isSilent: isSilent,
+                        newLeaf: newLeaf
                     }, leaf, function() {
                         arr.push(newLeaf)
                         return arr[arr.length - 1]
@@ -373,7 +398,8 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             vm.addNodes = function(parentLeaf, nodes, isSilent) {
                 // 数据构建
                 if(vm.data.simpleData.enable) nodes = simpleDataToTreeData(nodes, vm)
-                dataFormator(nodes, parentLeaf, undefine, undefine, vm)
+                nodes = dataFormator(nodes, parentLeaf, undefine, undefine, vm)
+                dataFormator(nodes, parentLeaf, "构建父子节点衔接关系", undefine, vm)
                 if(parentLeaf) parentLeaf.isParent = true
                 var arr = vm.getNodes(parentLeaf), len = arr.length
                 vm.excute('nodeCreated', {
@@ -383,6 +409,11 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                     return arr.slice(len) || []
                 })
                 return arr.slice(len) || []
+            }
+
+            vm.reset = function(children) {
+                vm.children.clear()
+                vm.addNodes(undefine, dataBak || children)
             }
 
             vm.copyNode = function(targetLeaf, leaf, moveType, isSilent) {

@@ -147,7 +147,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 					newLeaf.chkDisabled = vm.check.chkDisabledInherit && par.chkDisabled
 				}
 			})
-			var onlyOneRadio = vmodel.getCheckedNodes()
+			var onlyOneRadio = vmodel.getCheckedNodes()[0]
 			vmodel.$watch("e:checkChange", function(arg) {
 				var leaf = arg.leaf,
 					vm = arg.vm,
@@ -161,8 +161,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 					beforeCheck = callback.beforeCheck,
 					onCheck = callback.onCheck,
 					cancelCallback = arg.e && arg.e.cancelCallback 
-				leaf.halfCheck = false
-				if(chk.chkStyle === "radio") {
+				if(chkStyle === "radio") {
 					if(leaf.checked) {
 						if(radioType === "all") {
 							if(onlyOneRadio) onlyOneRadio.checked = false
@@ -178,6 +177,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 					}
 				// only for checkbox
 				} else {
+					leaf.halfCheck = false
 					// 关联效果
 					var bool = !!leaf.checked
 					chkboxType =  bool ? chkboxType.Y : chkboxType.N
@@ -233,6 +233,8 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 									if(bool && autoCheckTrigger && beforeCheck && beforeCheck(e)) return
 								}
 								node.checked = bool
+								// 勾选父节点，让子节点的半勾选失效
+								if(bool) node.halfCheck = false
 								!cancelCallback && bool && autoCheckTrigger && onCheck && onCheck(e)
 							}, undefine, [])
 						}

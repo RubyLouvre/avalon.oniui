@@ -36,7 +36,7 @@ $uiname : ".oni-tree";
 		background-color:transparent; background-repeat:no-repeat; background-attachment: scroll;
 		background-image:url("./treeStandard.png"); *background-image:url("./treeStandard.gif")}
 
-	li span.chk {width:13px; height:13px; margin:0 3px 0 0; cursor: auto}
+	li span.chk {width:13px; height:13px; margin:0 3px 0 0; cursor: auto;overflow:hidden;}
 	li span.checkbox_false_full {background-position:0 0}
 	li span.checkbox_false_full_focus {background-position:0 -14px}
 	li span.checkbox_false_part {background-position:0 -28px}

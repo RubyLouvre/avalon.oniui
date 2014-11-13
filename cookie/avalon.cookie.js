@@ -70,8 +70,7 @@ define(["avalon"], function() {
             return obj
         },
         set: function(name, val, opts) {
-            var str = Cookie.stringify.apply(0, arguments)
-            document.cookie = str
+            document.cookie =  Cookie.stringify.apply(0, arguments)
         },
         remove: function(name, opt) {
             opt = opt || {}

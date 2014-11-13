@@ -17,79 +17,29 @@ define(["avalon"], function() {
             var maskText = elem.getAttribute("data-duplex-mask")
             if (maskText) {
                 data.msMask = new Mask(elem, maskText)
-                function keyCallback(e) {
-                    var k = e.which || e.keyCode
-                    if (e.type === "click") {
-                        k = 100
-                    }
-                    var valueLength = elem.value.length
-                    if (valueLength && (data.msMask.valueMask.length !== valueLength)) {
-                        data.msMask.masked = false
-                    }
 
-                    if (e.ctrlKey || e.altKey || e.metaKey || k < 32) //Ignore
-                        return
-
-                    var caret = getCaret(elem)
-                    var impurity = data.msMask.vmodelData
-                    function getPos(i, left, n) {
-                        var step = left ? -1 : +1
-                        var old = i
-                        while (i >= -1 && i < n) {
-                            i = i + step
-                            if ((impurity[i] !== null) && i !== -1 && i !== n) {
-                                return i
-                            }
-                            if (i === -1) {
-                                return  old + 1
-                            }
-                            if (i === n) {
-                                return  old - 1
-                            }
-                        }
-                    }
-                    var n = elem.value.length - 1
-                    var pos
-                    //  console.log(k)
-                    if (k === 37 || k === 38) {//向左向上移动光标
-                        pos = caret.start - 1
-                        if (pos < 1) {
-                            pos = 0
-                        }
-                        if (impurity[pos] === null) {
-                            pos = getPos(pos, true, n)
-                        }
-                    } else if (k === 39 || k === 40) {//向右向下移动光标
-                        pos = caret.end//只操作end
-                        if (pos >= n) {
-                            pos -= 1
-                        }
-                        if (impurity[pos] === null) {
-                            pos = getPos(pos, false, n)
-                        }
-                    } else if (k && k !== 13) {//如果是在光标高亮处直接键入字母
-                        pos = caret.start
-                        if (pos > n) {
-                            pos -= 1
-                        }
-                        if (impurity[pos] === null) {
-                            pos = getPos(pos, false, n)
-                        }
-                    }
-                    if (typeof pos === "number") {
-                        setTimeout(function() {
-                            setCaret(elem, pos, pos + 1)
-                        })
-                    }
-
-                    if (e.preventDefault) {
-                        e.preventDefault()
-                    } else {
-                        e.returnValue = false
-                    }
-                }
                 data.bound("keydown", function(e) {
-                    elem.userTrigger = true
+                    elem.userTrigger = false
+                    var k = e.which || e.keyCode
+                    if (e.ctrlKey || e.altKey || e.metaKey || k < 32) { //Ignore
+                        return
+                    }
+                    var caret = getCaret(elem)
+                    //console.log(e)
+                    if (k == 39) {//向右
+                        var i = mask.vmodelData.indexOf(null, caret.end)
+                        setTimeout(function() {
+                            setCaret(elem, i, i + 1)
+                        })
+                    } else if (k == 37) {//向左
+                        var _ = mask.vmodelData.slice(0, caret.start)
+                        var i = _.lastIndexOf(null)
+                        setTimeout(function() {
+                            setCaret(elem, i, i + 1)
+                        })
+                    } else {
+                        elem.userTrigger = true
+                    }
                 })
                 //  data.bound("keyup", keyCallback)
                 //  data.bound("click", keyCallback)
@@ -129,19 +79,19 @@ define(["avalon"], function() {
         },
         get: function(val, data) {//用户点击时会先触发这里
             var elem = data.element
-            console.log("get", val, elem.userTrigger)
+            avalon.log("get", val, elem.userTrigger)
             var mask = data.msMask
             if (elem.userTrigger) {
                 mask.getter(val)
                 elem.oldValue = val
                 elem.userTrigger = false
                 var index = mask.vmodelData.indexOf(null)
-                if(index === -1){
+                if (index === -1) {
                     index = mask.index
-                }else{
+                } else {
                     mask.index = index
                 }
-                console.log(index)
+                //  console.log(index)
                 setTimeout(function() {
                     setCaret(elem, index, index + 1)
                 })
@@ -152,8 +102,6 @@ define(["avalon"], function() {
         },
         set: function(val, data) {//将vm中数据放到这里进行处理，让用户看到经过格式化的数据
             // 第一次总是得到符合格式的数据
-            var elem = data.element
-            console.log("SETTTT")
             return  data.msMask.masked ? data.msMask.viewData.join("") : val
         }
     }
@@ -263,6 +211,7 @@ define(["avalon"], function() {
             end: end
         };
     }
+    //setCaret(ctrl, a, b) 高亮部分停留在第a个字符上，但不包含b
     function setCaret(ctrl, start, end) {
         if (!ctrl.value || ctrl.readOnly)
             return

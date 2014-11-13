@@ -50,7 +50,6 @@ define(["avalon"], function() {
                     }
                     var n = elem.value.length - 1
                     var pos
-                    console.log(k)
                     if (k === 37 || k === 38) {//向左向上移动光标
                         pos = caret.start - 1
                         if (pos < 1) {

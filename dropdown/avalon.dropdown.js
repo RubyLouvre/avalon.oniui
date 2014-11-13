@@ -457,10 +457,12 @@ define(["avalon",
 
         //对data的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
         vmodel.$source && vmodel.$source.$watch && vmodel.$source.$watch('length', function(n) {
-            //当data改变时，解锁滚动条
-            vmodel._disabledScrollbar(false);
-            avalon.assign(vmodel.data, getDataFromOption(vmodel.$source.$model || vmodel.$source));
             if(n > 0) {
+                //当data改变时，解锁滚动条
+                vmodel._disabledScrollbar(false);
+                vmodel.data.clear();
+                vmodel.data.pushArray(getDataFromOption(vmodel.$source.$model || vmodel.$source));
+
                 //当data改变时，尝试使用之前的value对label和title进行赋值，如果失败，使用data第一项
                 if(!setLabelTitle(vmodel.value)) {
                     vmodel.currentOption = vmodel.data[0].$model;

@@ -108,11 +108,12 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                     vmodel.focusClass = true
                     vmodel.toggle = false
                 })
+
+                avalon.scan(sourceList, models);
+                avalon.scan(element, models);
                 if (!vmodel.placehold.length || element.value != "") {
                     vmodel.toggle = false
                 }
-                avalon.scan(sourceList, models);
-                avalon.scan(element, models);
                 if(typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
                     options.onInit.call(element, vmodel, options, vmodels)

@@ -68,7 +68,7 @@
 
         <p id="test3">将此段落内容放到<b style="color: blue">notice</b>中作为提示信息</p>
         <div ms-each-i="list"> {{i}} <br /></div>
-        <button ms-click="toggleNotice('errorMessage','ff')">show notice</button>
+        <button ms-click="toggleNotice()">show notice</button>
         <script>
 
 require(["notice/avalon.notice", "ready!"], function(avalon) {
@@ -81,20 +81,20 @@ require(["notice/avalon.notice", "ready!"], function(avalon) {
         vm.affix = function() {
             avalon.notice.show('form_validate_message', 'content', 'success');      //info,error,success为notice类型
         };
-        vm.toggleNotice = function(id, id1) {
-            var noticeVM = avalon.vmodels[id];
-            var noticeVM1 = avalon.vmodels[id1];
+        vm.toggleNotice = function() {
+            var noticeVM = avalon.vmodels['errorMessage'];
+            var noticeVM1 = avalon.vmodels['ff'];
             var noticeVMaa = avalon.vmodels["aa"];
             var noticeVMbb = avalon.vmodels["bb"];
             var noticeVMcc = avalon.vmodels["cc"];
             var noticeVMdd = avalon.vmodels["dd"];
 
-            noticeVM.toggle = !noticeVM.toggle;
-            noticeVM1.toggle = !noticeVM1.toggle;
-            noticeVMaa.toggle = !noticeVMaa.toggle;
-            noticeVMbb.toggle = !noticeVMbb.toggle;
-            noticeVMcc.toggle = !noticeVMcc.toggle;
-            noticeVMdd.toggle = !noticeVMdd.toggle;
+            noticeVM && (noticeVM.toggle = !noticeVM.toggle)
+            noticeVM1 && (noticeVM1.toggle = !noticeVM1.toggle);
+            noticeVMaa && (noticeVMaa.toggle = !noticeVMaa.toggle);
+            noticeVMbb && (noticeVMbb.toggle = !noticeVMbb.toggle);
+            noticeVMcc && (noticeVMcc.toggle = !noticeVMcc.toggle);
+            noticeVMdd && (noticeVMdd.toggle = !noticeVMdd.toggle);
         }
         vm.changeType = function(id) {
             var typeArr = ["info", "success", "error"];
@@ -120,27 +120,6 @@ require(["notice/avalon.notice", "ready!"], function(avalon) {
             var noticeVM = avalon.vmodels[id];
             var widgetElement = noticeVM.widgetElement;
             widgetElement.parentNode.removeChild(widgetElement);
-
-
-            var noticeVMErr = avalon.vmodels["errorMessage"];
-            var widgetElementErr = noticeVMErr.widgetElement;
-            widgetElementErr.parentNode.removeChild(widgetElementErr);
-
-            var noticeVMA = avalon.vmodels["aa"];
-            var widgetElementA = noticeVMA.widgetElement;
-            widgetElementA.parentNode.removeChild(widgetElementA);
-
-            var noticeVMB = avalon.vmodels["bb"];
-            var widgetElementB = noticeVMB.widgetElement;
-            widgetElementB.parentNode.removeChild(widgetElementB);
-
-            var noticeVMD = avalon.vmodels["dd"];
-            var widgetElementD = noticeVMD.widgetElement;
-            widgetElementD.parentNode.removeChild(widgetElementD);
-
-            var noticeVMF = avalon.vmodels["ff"];
-            var widgetElementF = noticeVMF.widgetElement;
-            widgetElementF.parentNode.removeChild(widgetElementF);
         }
     })
     avalon.scan();

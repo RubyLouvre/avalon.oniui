@@ -1,4 +1,4 @@
-/**
+/*
  * @cnName 提示组件
  * @enName notice
  * @introduce
@@ -40,7 +40,9 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
         var vmodel = avalon.define(data.noticeId, function(vm) {
             avalon.mix(vm, options);
             vm.$closeTimer = 0; // 定时器引用
-            vm.$skipArray = ["template", "widgetElement", "_isAffix", "container"];
+            vm.$skipArray = ["template", "widgetElement", "_isAffix", "container", "elementHeight"];
+            vm.elementHeight = 0
+            vm.height = 0
             vm.content = vm.content || elementInnerHTML;
             vm._isAffix = vm.isPlace && vm.isAffix;
             vm.widgetElement = element;
@@ -51,16 +53,18 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
             vm.affixPlaceholderDisplay = "none";
             // 如果配置notice不占位则设置器容器为body
             !vm.isPlace ? vm.container = document.body : vm.container;
-            vm._show = function() { // toggle为true时调用此方法显示notice
+            vm._show = function(display) { // toggle为true时调用此方法显示notice
                 _timerClose();
                 _affix();
+                step(display, vmodel)
                 vmodel.onShow.call(element, data, vmodels); // 用户回调
             }
             vm._close = function() { //close按钮click时的监听处理函数
                 vmodel.toggle = false;
             }
-            vm._hide = function() { //toggle为false时隐藏notice
+            vm._hide = function(display) { //toggle为false时隐藏notice
                 var hideAffixIndex = affixBoxs.indexOf(templateView);
+                step(display, vmodel)
                 //隐藏吸顶元素后将其从吸顶队列中删除，并修改吸顶队列中所有元素的position为static，以便affixPosition能重新调整吸顶元素位置
                 if (hideAffixIndex !== -1) {
                     templateView.style.position = "static"; //隐藏时改变position，方便再显示时调整元素位置(吸顶还是原位)
@@ -98,10 +102,25 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
                     avalon.scan(AffixPlaceholder, [vmodel]);
                 }
                 avalon.scan(templateView, [vmodel].concat(vmodels))
-                if (typeof options.onInit === "function") {
-                    //vmodels是不包括vmodel的
-                    options.onInit.call(element, vmodel, options, vmodels)
-                }
+                setTimeout(function() {
+                    var temp = document.createElement("div"),
+                        cloneTemplateView = templateView.cloneNode(true),
+                        $cloneTemplateView
+
+                    temp.style.position = "absolute"
+                    temp.style.height = 0
+                    document.body.appendChild(temp)
+                    temp.appendChild(cloneTemplateView)
+                    $cloneTemplateView = avalon(cloneTemplateView)
+                    $cloneTemplateView.css({visibility: "hidden", height: "auto"})
+                    
+                    vmodel.elementHeight = $cloneTemplateView.height()
+                    document.body.removeChild(temp)
+                    if (typeof options.onInit === "function") {
+                        //vmodels是不包括vmodel的
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
+                }, 10)
             }
             vm.$remove = function() { //删除组件绑定元素后的自清理方法
                 var templateViewPar = templateView.parentNode;
@@ -125,9 +144,9 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
         });
         vmodel.$watch("toggle", function(v) { //改变toggle影响notice的显示、隐藏
             if (v) {
-                vmodel._show();
+                vmodel._show(v);
             } else {
-                vmodel._hide();
+                vmodel._hide(v);
             }
         })
         vmodel.$watch("type", function(v) { //改变type影响notice的显示类型
@@ -280,6 +299,51 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
         }
         return maxIndex + 1;
     }
+    function camelize(target) {
+        //转换为驼峰风格
+        if (target.indexOf("-") < 0 && target.indexOf("_") < 0) {
+            return target //提前判断，提高getStyle等的效率
+        }
+        return target.replace(/[-_][^-_]/g, function(match) {
+            return match.charAt(1).toUpperCase()
+        })
+    }
+    function supportCss3(name) {
+        var prefix = ["", "-webkit-", "-o-", "-moz-", "-ms-"],
+            i,
+            htmlStyle = document.documentElement.style
+        for (i in prefix) {
+            camelCase = camelize(prefix[i] + name)
+            if (camelCase in htmlStyle) {
+                return true
+            }
+        }
+        return false
+    }
+    function step(display, vmodel) {
+        var elementHeight = vmodel.elementHeight,
+            height,
+            interval
+        if (supportCss3("transition")) {
+            height = display ? elementHeight : 0
+            vmodel.height = height 
+        } else {
+            height = display ? 0 : elementHeight
+            function animate() {
+                height = display ? height + 1 : height - 1
+                if (height < 0) {
+                    vmodel.height = 0
+                    return 
+                } else if (height > elementHeight) {
+                    vmodel.height = elementHeight
+                    return 
+                }
+                vmodel.height = height
+                setTimeout(animate, 0)
+            }
+            animate()
+        }
+    }
     widget.version = 1.0
     widget.defaults = {
         content: "", //@interface 要显示的内容,可以是DOM对象|String|DOM String
@@ -330,4 +394,4 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
  [自定义notice的回调](avalon.notice.ex4.html)
  [设置timer使得notice在显示一段时间之后隐藏](avalon.notice.ex5.html)
  [自定义notice type的样式类](avalon.notice.ex6.html)
- */
+ **/

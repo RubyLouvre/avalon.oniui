@@ -88,23 +88,11 @@ define(["avalon",
                     listNode = createListNode();
                     elemParent.insertBefore(listNode, element);
                 } else {//如果是单选
-                    var title, defaultOption;
+                    var title;
                     titleNode = avalon.parseHTML(titleTemplate);
                     title = titleNode.firstChild;
                     elemParent.insertBefore(titleNode, element);
                     titleNode = title;
-
-                    if (typeof vmodel.value === "undefined") {
-                        defaultOption = vmodel.data.filter(function(option) {
-                            return !option.group
-                        })[0];
-
-                        vmodel.value = defaultOption.value;
-                    } else {
-                        defaultOption = vmodel.data.filter(function(option) {
-                            return option.value === vmodel.value[0];
-                        })[0];
-                    }
 
                     //设置title宽度
                     vmodel.titleWidth = computeTitleWidth();
@@ -537,6 +525,11 @@ define(["avalon",
 
                 if(option.length === 0 && options.length > 0) {
                     opt.value = options[0].value
+
+                    //如果存在duplex，同步该值
+                    if(duplexModel) {
+                        duplexModel[1][duplexModel[0]] = opt.value
+                    }
                 }
             }
 

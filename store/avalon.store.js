@@ -23,7 +23,7 @@ define(["avalon", "json/avalon.json"], function(avalon) {
         serialize: function(value) {
             return JSON.stringify(value)
         },
-        deserialize: function(value) {
+        parse: function(value) {
             if (typeof value !== 'string') {
                 return void 0
             }
@@ -57,7 +57,7 @@ define(["avalon", "json/avalon.json"], function(avalon) {
                 return val
             },
             get: function(key) {
-                return store.deserialize(storage.getItem(key))
+                return store.parse(storage.getItem(key))
             },
             remove: function(key) {
                 storage.removeItem(key)
@@ -130,7 +130,7 @@ define(["avalon", "json/avalon.json"], function(avalon) {
             }),
             get: withIEStorage(function(storage, key) {
                 key = ieKeyFix(key)
-                return store.deserialize(storage.getAttribute(key))
+                return store.parse(storage.getAttribute(key))
             }),
             remove: withIEStorage(function(storage, key) {
                 key = ieKeyFix(key)
@@ -145,7 +145,7 @@ define(["avalon", "json/avalon.json"], function(avalon) {
             forEach: withIEStorage(function(storage, callback) {
                 var attributes = storage.XMLDocument.documentElement.attributes
                 for (var i = 0, attr; attr = attributes[i]; ++i) {
-                    callback(attr.name, store.deserialize(storage.getAttribute(attr.name)))
+                    callback(attr.name, store.parse(storage.getAttribute(attr.name)))
                 }
             })
         })

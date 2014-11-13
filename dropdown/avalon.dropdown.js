@@ -129,7 +129,7 @@ define(["avalon",
                 if (!hasBuiltinTemplate) {
                     element.appendChild(getFragmentFromData(dataModel));
                     avalon.each(["multiple", "size"], function(i, attr) {
-                        avalon(element).attr("ms-attr-" + attr, vmodel[attr]);
+                        avalon(element).attr(attr, vmodel[attr]);
                     });
                 }
 
@@ -193,8 +193,6 @@ define(["avalon",
 
                 avalon.ready(function() {
                     avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
-                    $element.attr("ms-enabled", "enable");
-                    avalon.scan(element, [vmodel].concat(vmodels));
                     if (typeof options.onInit === "function") {
                         options.onInit.call(element, vmodel, options, vmodels)
                     }
@@ -505,12 +503,21 @@ define(["avalon",
         });
 
         //在multiple模式下同步select的值
+        //http://stackoverflow.com/questions/16582901/javascript-jquery-set-values-selection-in-a-multiple-select
         function optionsSync() {
             avalon.each(element.getElementsByTagName("option"), function(i, option) {
                 if(vmodel.value.$model.indexOf(option.value) > -1 || vmodel.value.$model.indexOf( parseData(option.value) ) > -1) {
-                    option.selected = true
+                    try {
+                        option.selected = true
+                    } catch(e) {
+                        avalon(option).attr("selected", "selected");
+                    }
                 } else {
-                    option.selected = false
+                    try {
+                        option.selected = false
+                    } catch(e) {
+                        option.removeAttribute("selected")
+                    }
                 }
             })
         }

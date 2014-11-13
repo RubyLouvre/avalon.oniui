@@ -79,43 +79,49 @@
             &lt;script type="text/javascript"&gt;
                 require('dropdown/avalon.dropdown.js', function() &#123;
                     avalon.ready(function() &#123;
-                        avalon.define('dropdown', function(vm) &#123;
+                        var dropdownVm = avalon.define('dropdown', function(vm) &#123;
                             vm.$skipArray = ['opts'];
                             vm.opts = &#123;
-                                data: [
-                                    &#123;
-                                        value: '1',
-                                        label: '1'
-                                    &#125;, &#123;
-                                        value: 2,
-                                        label: '2'
-                                    &#125;, &#123;
-                                        label: 'group1',
-                                        options: [
-                                            &#123;
-                                                value: false,
-                                                label: 'false'
-                                            &#125;,
-                                            &#123;
-                                                value: null,
-                                                label: 'null'
-                                            &#125;
-                                        ]
-                                    &#125;, &#123;
-                                        label: 'group2',
-                                        options: [
-                                            &#123;
-                                                value: 'disabled',
-                                                label: 'disabled',
-                                                enable: false
-                                            &#125;
-                                        ]
-                                    &#125;
-                                ]
+                                data: []
                             &#125;;
+                            vm.source = [];
                             vm.value = '1';
                         &#125;);
+
+                        dropdownVm.opts.$source = dropdownVm.source;
                         avalon.scan();
+                        setTimeout(function() &#123;
+                            dropdownVm.source.pushArray([
+                                &#123;
+                                    value: '1',
+                                    label: '1'
+                                &#125;, &#123;
+                                    value: '2',
+                                    label: '2'
+                                &#125;, &#123;
+                                    label: 'group1',
+                                    options: [
+                                        &#123;
+                                            value: 'false',
+                                            label: 'false'
+                                        &#125;,
+                                        &#123;
+                                            value: 'null',
+                                            label: 'null'
+                                        &#125;
+                                    ]
+                                &#125;, &#123;
+                                    label: 'group2',
+                                    options: [
+                                        &#123;
+                                            value: 'disabled',
+                                            label: 'disabled',
+                                            enable: false
+                                        &#125;
+                                    ]
+                                &#125;
+                            ])
+                        &#125;, 3000)
                     &#125;);
                 &#125;);
             &lt;/script&gt;

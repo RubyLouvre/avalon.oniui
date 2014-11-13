@@ -1,13 +1,13 @@
-<ul class="ui-tab-nav ui-helper-clearfix ui-widget-header ui-helper-reset"
+<ul class="oni-tab-nav oni-helper-clearfix oni-widget-header oni-helper-reset"
     ms-visible="toggle">
-    <li class="ui-state-default" 
+    <li class="oni-state-default" 
         ms-repeat-tab="tabs" 
-        ms-class="ui-tab-item"  
-        ms-class-1="ui-state-active:!!_canActive(tab, $index)" 
-        ms-class-2="ui-state-disabled:tab.disabled" 
-        ms-class-3="ui-tab-last:$last" 
-        ms-class-4="ui-tab-removable:!!_canRemove(tab)" 
-        ms-hover="ui-state-hover:!tab.disabled" 
+        ms-class="oni-tab-item"  
+        ms-class-1="oni-state-active:!!_canActive(tab, $index)" 
+        ms-class-2="oni-state-disabled:tab.disabled" 
+        ms-class-3="oni-tab-last:$last" 
+        ms-class-4="oni-tab-removable:!!_canRemove(tab)" 
+        ms-hover="oni-state-hover:!tab.disabled" 
         ms-{{MS_OPTION_EVENT}}="activate($event, $index)" 
         > 
         <a ms-href="tab.href?tab.href:'#'" ms-attr-target="tab.target||target||'_self'">{{_tabTitle(tab.title, tab, _cutCounter(), cutEnd) | html}}</a>

@@ -1,10 +1,10 @@
-<div class="ui-tab-panel-container" ms-each-panel="tabpanels"
+<div class="oni-tab-panel-container" ms-each-panel="tabpanels"
 	 ms-visible="toggle"
 	 ms-if="tabpanels.length">
-     <div class="ui-tab-panel ui-widget-content" 
+     <div class="oni-tab-panel oni-widget-content" 
           ms-visible="_shallPanelAlwaysShow($index)" 
           ms-if-loop="_isAjax(panel)">{{panel.content |html }}</div>
-     <div class="ui-tab-panel ui-widget-content"
+     <div class="oni-tab-panel oni-widget-content"
           ms-visible="_shallPanelAlwaysShow($index)" 
           ms-include-src="panel.content" 
           ms-if-loop="!_isAjax(panel)" data-include-rendered="onAjaxCallback">

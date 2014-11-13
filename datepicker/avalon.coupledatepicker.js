@@ -80,7 +80,7 @@ define(["../avalon.getModel",
                     toContainer = null,
                     calendarTemplate = "";
 
-                avalon(element).addClass("ui-coupledatepicker")
+                avalon(element).addClass("oni-coupledatepicker")
                 initValues()
                 applyRules(vmodel.inputFromValue && parseDate(vmodel.inputFromValue) || new Date())
                 if (container.length) {
@@ -92,8 +92,8 @@ define(["../avalon.getModel",
                     toContainer = container[1]
                     fromContainer.appendChild(fromInput)
                     toContainer.appendChild(toInput)
-                    avalon(fromContainer).addClass("ui-coupledatepicker-item")
-                    avalon(toContainer).addClass("ui-coupledatepicker-item")
+                    avalon(fromContainer).addClass("oni-coupledatepicker-item")
+                    avalon(toContainer).addClass("oni-coupledatepicker-item")
                 } else {
                     calendarTemplate = containerTemp
                     calendar = avalon.parseHTML(calendarTemplate)

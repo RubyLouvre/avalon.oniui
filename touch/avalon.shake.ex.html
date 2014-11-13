@@ -10,7 +10,6 @@
         		alert(JSON.stringify(e))
         	}
         </script>
-		<script src="avalon.shake.js"></script>
         <style type="text/css">
         	*{
         		padding: 0;
@@ -63,6 +62,9 @@
 			}
 			avalon.bind(window, 'shake', function(e) {
 				__log("shaked " + e.direction + " " + index++)
+			})
+			require(["./touch/avalon.shake"], function() {
+				
 			})
 		</script>
 	</body>

@@ -86,8 +86,8 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
 
                 element.innerHTML = vmodel.template
                 if(vmodel._depth === 1) {
-                    element.setAttribute("ms-hover-100", "ui-helper-max-index")
-                    avalon(element).addClass("ui-menu ui-helper-clearfix ui-helper-reset" + (vmodel.dir === "v" ? " ui-menu-vertical" : ""))
+                    element.setAttribute("ms-hover-100", "oni-helper-max-index")
+                    avalon(element).addClass("oni-menu oni-helper-clearfix oni-helper-reset" + (vmodel.dir === "v" ? " oni-menu-vertical" : ""))
                 }
                 avalon.scan(element, [vmodel].concat(vmodels))
                 // 只有第一级menu触发onInit

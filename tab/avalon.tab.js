@@ -99,7 +99,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                 vm.active = vm.active >= vm.tabs.length && vm.tabs.length - 1 || vm.active < 0 && 0 || parseInt(vm.active) >> 0
 
                 // avalon.nextTick(function() {
-                    avalon(element).addClass("ui-tab ui-widget ui-widget-content" + (vm.event == "click" ? " ui-tab-click" : "") + (vm.dir == "v" ? " ui-tab-vertical" : "") + (vm.dir != "v" && vm.uiSize == "small" ? " ui-tab-small" : ""))
+                    avalon(element).addClass("oni-tab oni-widget oni-widget-content" + (vm.event == "click" ? " oni-tab-click" : "") + (vm.dir == "v" ? " oni-tab-vertical" : "") + (vm.dir != "v" && vm.uiSize == "small" ? " oni-tab-small" : ""))
                     // tab列表
                     var tabFrag = _getTemplate(vm._getTemplate(0, vm), vm)
                         , panelFrag = _getTemplate(vm._getTemplate("panel", vm), vm)

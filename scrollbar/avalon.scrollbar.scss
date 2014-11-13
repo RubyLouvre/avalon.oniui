@@ -1,6 +1,6 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname : ".ui-scrollbar";
+$uiname : ".oni-scrollbar";
 @if($oinui-theme == smoothness) {
 	$scrollbar: (
 		bg: #f8f8f8,
@@ -64,17 +64,17 @@ div#{$uiname} {
 	    	}
 	    }
 	}
-    .ui-state-hover{
+    .oni-state-hover{
     	background: map-get($scrollbar, arrHoverBg);
     }
-    .ui-state-active{
+    .oni-state-active{
     	background: map-get($scrollbar, arrActiveBg);
     }
-    .ui-state-disabled{
+    .oni-state-disabled{
     	background: map-get($scrollbar, arrDisabledBg);
     }
     &-left,&-right{
-    	.ui-state-active {
+    	.oni-state-active {
     		b#{$uiname}-trangle-up {
 				@include triangle($direction: top, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrActiveColor));
     		}
@@ -84,7 +84,7 @@ div#{$uiname} {
     	}
     }
     &-top,&-bottom{
-    	.ui-state-active {
+    	.oni-state-active {
     		b#{$uiname}-trangle-up {
 				@include triangle($direction: left, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrActiveColor));
     		}
@@ -126,13 +126,13 @@ div#{$uiname} {
 			left: 0;
 			background: map-get($scrollbar, draggerBg);
 		}		
-		.ui-state-hover{
+		.oni-state-hover{
 			background: map-get($scrollbar, draggerHoverBg);
 		}
-		.ui-state-active{
+		.oni-state-active{
 			background:map-get($scrollbar, draggerActiveBg);
 		}
-		.ui-state-disabled{
+		.oni-state-disabled{
 			background: map-get($scrollbar, draggerDisabledBg);
 		}
 	}

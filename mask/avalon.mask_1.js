@@ -23,7 +23,7 @@ define(["avalon"], function() {
                         k = 100
                     }
                     var valueLength = elem.value.length
-                    if (valueLength && (data.msMask.valueMask.length !== valueLength)) {
+                    if (valueLength && (data.msMask.validMask.length !== valueLength)) {
                         data.msMask.masked = false
                     }
 
@@ -31,13 +31,13 @@ define(["avalon"], function() {
                         return
 
                     var caret = getCaret(elem)
-                    var impurity = data.msMask.vmodelData
+                    var impurity = data.msMask.impurity
                     function getPos(i, left, n) {
                         var step = left ? -1 : +1
                         var old = i
                         while (i >= -1 && i < n) {
                             i = i + step
-                            if ((impurity[i] !== null) && i !== -1 && i !== n) {
+                            if (!impurity[i] && i !== -1 && i !== n) {
                                 return i
                             }
                             if (i === -1) {
@@ -50,13 +50,13 @@ define(["avalon"], function() {
                     }
                     var n = elem.value.length - 1
                     var pos
-                    //  console.log(k)
+                    console.log(k)
                     if (k === 37 || k === 38) {//向左向上移动光标
                         pos = caret.start - 1
                         if (pos < 1) {
                             pos = 0
                         }
-                        if (impurity[pos] === null) {
+                        if (impurity[pos]) {
                             pos = getPos(pos, true, n)
                         }
                     } else if (k === 39 || k === 40) {//向右向下移动光标
@@ -64,7 +64,7 @@ define(["avalon"], function() {
                         if (pos >= n) {
                             pos -= 1
                         }
-                        if (impurity[pos] === null) {
+                        if (impurity[pos]) {
                             pos = getPos(pos, false, n)
                         }
                     } else if (k && k !== 13) {//如果是在光标高亮处直接键入字母
@@ -72,7 +72,7 @@ define(["avalon"], function() {
                         if (pos > n) {
                             pos -= 1
                         }
-                        if (impurity[pos] === null) {
+                        if (impurity[pos]) {
                             pos = getPos(pos, false, n)
                         }
                     }
@@ -88,26 +88,18 @@ define(["avalon"], function() {
                         e.returnValue = false
                     }
                 }
-                data.bound("keydown", function(e) {
-                    elem.userTrigger = true
-                })
-                //  data.bound("keyup", keyCallback)
-                //  data.bound("click", keyCallback)
+                data.bound("keyup", keyCallback)
+                data.bound("click", keyCallback)
                 var mask = data.msMask
                 function showMask(e) {
                     if (!e || !mask.masked) {
-                        elem.value = mask.valueMask
-                        elem.userTrigger = mask.masked = true
-                        var index = mask.vmodelData.indexOf(null)//定位于第一个要填空的位置上
-                        if (index !== -1) {
-                            mask.index = index
-                            setCaret(elem, index, index + 1)
-                        }
+                        mask.masked = true
+                        elem.value = avalon.duplexHooks.mask.set(mask.value || mask.mask, data)
                     }
                 }
                 function hideMask() {
                     if ((mask.hideIfInvalid && !mask.valid) ||
-                            (mask.hideIfPristine && mask.value === mask.valueMask)) {
+                            (mask.hideIfPristine && mask.value === mask.validMask)) {
                         elem.value = mask.oldValue = mask.masked = ""//注意IE6-8下，this不指向element
                     }
                 }
@@ -127,38 +119,36 @@ define(["avalon"], function() {
                 throw ("请指定data-duplex-mask")
             }
         },
-        get: function(val, data) {//用户点击时会先触发这里
-            var elem = data.element
-            console.log("get", val, elem.userTrigger)
+        get: function(val, data) {
             var mask = data.msMask
-            if (elem.userTrigger) {
-                mask.getter(val)
-                elem.oldValue = val
-                elem.userTrigger = false
-                var index = mask.vmodelData.indexOf(null)
-                if(index === -1){
-                    index = mask.index
-                }else{
-                    mask.index = index
-                }
-                console.log(index)
-                setTimeout(function() {
-                    setCaret(elem, index, index + 1)
-                })
-                return mask.vmodelData.join("")
+            if (mask.masked) {
+                mask.oldValue = mask.value = val
+                return mask.getMaskedVal(true)
             } else {
-                return mask.masked ? val : ""
+                return val
             }
         },
-        set: function(val, data) {//将vm中数据放到这里进行处理，让用户看到经过格式化的数据
-            // 第一次总是得到符合格式的数据
-            var elem = data.element
-            console.log("SETTTT")
-            return  data.msMask.masked ? data.msMask.viewData.join("") : val
+        set: function(val, data) {
+            var mask = data.msMask
+            if (mask.masked) {
+                mask.value = val
+                mask.value = mask.getMaskedVal()
+                mask.value = mask.getMaskedVal(true) //得到上一次的maskValue,并对数据进行清洗
+                var newValue = mask.getMaskedVal()    //得到第二次的maskValue
+                if (mask.oldValue !== newValue) {
+                    var pos = mask.caretStart
+                    setTimeout(function() {
+                        setCaret(data.element, pos, pos + 1)
+                    }, 50)
+                }
+                return newValue
+            } else {
+                return val
+            }
         }
     }
 
-    function Mask(element, dataMask) {
+    function Mask(element, mask) {
         var options = avalon.getWidgetData(element, "duplexMask")
         var t = {}
         try {
@@ -167,12 +157,12 @@ define(["avalon"], function() {
         }
         avalon.mix(this, Mask.defaults, options)
         this.translations = avalon.mix({}, Mask.defaults.translations, t)
+        //  console.log(this)
+        this.mask = mask //@config {String} 用于提示用户输入的mask字符串，用户只能在占位符上输入（会有光标引导你）,用户必须设置data-duplex-mask属性
         this.element = element //@config {Element} 组件实例要作用的input元素
-        this.dataMask = dataMask //@config {String} 用户在input/textarea元素上通过data-duplex-mask定义的属性值
-        //第一次将dataMask放进去，得到element.value为空时，用于提示的valueMask
-        this.getter(dataMask, true)
-        // console.log(this.viewData.join("") + " * ")
-        this.valueMask = this.viewData.join("")// valueMask中的元字符被全部替换为对应的占位符后的形态，用户实际上在element.value看到的形态
+        this.oldValue = "" //@config {String} 元素之前的value值
+        this.value = ""//@config {String} 元素现在的value值
+        this.impurity = {} //@config {Object} mask分别两部分，一些部分用户需要输入，一部分是提示或美化用的杂质，impurity是用于装载这些杂质在这个mask中的索引值，它用于光标引导功能
     }
     Mask.defaults = {
         placehoder: "_", //@config {Boolean} "_", 将元字符串换为"_"显示到element.value上，如99/99/9999会替换为__/__/____，可以通过data-duplex-mask-placehoder设置
@@ -189,39 +179,70 @@ define(["avalon"], function() {
         }
     }
     Mask.prototype = {
-        getter: function(value, replace) {
-            var maskArray = this.dataMask.split("")//用户定义的data-duplex-mask的值
+        getMaskedVal: function(skipMask) {
+            var mask = this.mask
+            var value = this.value
             var valueArray = value.split("")
+            var maskArray = mask.split("")
             var translations = this.translations
-            var viewData = []
-            var vmodelData = []
-            // (9999/99/99) 这个是data-duplex-mask的值，其中“9”为“元字符”，“(”与 “/” 为“提示字符”
-            // (____/__/__) 这是用占位符处理后的mask值
+            var buf = []
+            var caretIndex = -1 //光标的插入位置
+            var valid = true
+            var impurityIndex = 0
+            this.impurity = {}
+            if (value === mask) {
+                //如果不存在或一致，那么先将元字符转换为占位符,比如
+                //将00/00/0000转换为__/__/____
+                for (var i = 0, n = maskArray.length; i < n; i++) {
+                    var m = maskArray[i]
+                    if (translations[m]) {
+                        valueArray[i] = translations[m].placehoder || this.placehoder
+                    } else {
+                        valueArray[i] = m
+                    }
+                }
+                this.validMask = valueArray.join("")
+            }
+            var mshift = "shift"
+            var mpush = "push"
+            if (this.reverse) {
+                var mshift = "pop"
+                var mpush = "unshift"
+            }
+         
+        
             while (maskArray.length) {
-                var m = maskArray.shift()
-                var el = valueArray.shift()//123456
-                if (translations[m]) {//如果碰到元字符
+                var m = maskArray[mshift]()
+                if (valid) {//得控位获得焦点时,光标应该定位的位置
+                    caretIndex++
+                }
+                if (translations[m]) {
+                    var el = valueArray[mshift]()//123456
                     var translation = translations[m]
                     var pattern = translation.pattern
-                    if (el && el.match(pattern)) {//如果匹配
-                        if (replace) {
-                            vmodelData.push(null)
-                            viewData.push(translation.placehoder || this.placehoder)
-                        } else {
-                            vmodelData.push(el)
-                            viewData.push(el)
-                        }
+
+                    if (el && el.match(pattern)) {
+                        buf[mpush](el)
                     } else {
-                        vmodelData.push(null)
-                        viewData.push(translation.placehoder || this.placehoder)
+                        valid = false
+                        if (!translation.optional && !skipMask) {
+                            buf[mpush](translation.placehoder || this.placehoder)
+                        }
                     }
-                } else {//如果是提示字符 
-                    viewData.push(el)
-                    vmodelData.push(void 0)
+                } else {
+                    this.impurity[impurityIndex] = true//收集杂质的位置
+                    if (valueArray[0] === m) {// 当__/__/____遇到12/34/____时，/要去掉
+                        valueArray[mshift]()
+                    }
+                    if (!skipMask) {
+                        buf[mpush](m)
+                    }
                 }
+                impurityIndex++
             }
-            this.viewData = viewData
-            this.vmodelData = vmodelData
+            this.valid = valid
+            this.caretStart = caretIndex
+            return  buf.join("")
         }
     }
 

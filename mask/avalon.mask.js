@@ -47,23 +47,33 @@ define(["avalon"], function() {
                     }
                 })
                 data.bound("click", function(e) {
+                    setTimeout(function() {
+                        elem.userTrigger = false
+                    })
+                    if (elem.userTrigger === true) {
+                        return
+                    }
                     var caret = getCaret(elem)
                     var i = mask.caretData.indexOf(null, caret.end)
                     if (i === -1) {
                         i = mask.caretData.indexOf(null)
                     }
-                    elem.userTrigger = true
+                    // elem.userTrigger = true
                     setTimeout(function() {
                         setCaret(elem, i, i + 1)
+                        elem.userTrigger = false
                     })
                 })
                 var mask = data.msMask
                 function showMask(e) {
                     if (!e || !mask.masked) {
                         elem.value = mask.valueMask
+                        console.log(mask.valueMask)
+                        console.log(elem.value)
                         elem.userTrigger = mask.masked = true
                         var index = mask.vmodelData.indexOf(null)//定位于第一个要填空的位置上
                         if (index !== -1) {
+                            console.log("focus")
                             mask.index = index
                             setCaret(elem, index, index + 1)
                         }
@@ -79,8 +89,8 @@ define(["avalon"], function() {
                     showMask()
                 } else {
                     if (mask.showIfFocus) {
-                        data.bound("focus", showMask)
-                        data.bound("blur", hideMask)
+                        //   data.bound("focus", showMask)
+                        //  data.bound("blur", hideMask)
                     }
                     if (mask.showIfHover) {
                         data.bound("mouseover", showMask)
@@ -93,40 +103,37 @@ define(["avalon"], function() {
         },
         get: function(val, data) {//用户点击时会先触发这里
             var elem = data.element
-            avalon.log("get", val, elem.userTrigger)
+
             var mask = data.msMask
-            console.log("++++++++++++")
+
             if (elem.userTrigger) {
                 mask.getter(val)
                 elem.oldValue = val
                 elem.userTrigger = false
                 var index = mask.vmodelData.indexOf(null)
                 if (index === -1) {
-                    index = mask.index
-                } else {
-                    mask.index = index
-                }
-                //  console.log(index)
-                setTimeout(function() {
-                    setCaret(elem, index, index + 1)
-                })
-                return mask.vmodelData.join("")
-            } else {
-                if (val !== "") {
-                    if (!mask.match(val)) {
-                        console.log("fix")
-                        elem.oldValue = mask.fix(val)
+                    var caret = getCaret(elem)
+                    var index = mask.caretData.indexOf(null, caret.end)
+                    if (index === -1) {
+                        index = mask.caretData.indexOf(null)
                     }
-                    return val
+                    setCaret(elem, index, index + 1)
                 } else {
-                    return ""
+                    setTimeout(function() {
+                        setCaret(elem, index, index + 1)
+                    })
                 }
+                //   return mask.vmodelData.join("")
             }
+            elem.oldValue = val
+            console.log("get " + mask.vmodelData.join(""))
+            return mask.vmodelData.join("")
         },
         set: function(val, data) {//将vm中数据放到这里进行处理，让用户看到经过格式化的数据
             // 第一次总是得到符合格式的数据
             var elem = data.element
             var mask = data.msMask
+            console.log("set " + val)
             if (val !== "") {
                 if (!mask.match(val)) {
                     elem.oldValue = mask.fix(val)

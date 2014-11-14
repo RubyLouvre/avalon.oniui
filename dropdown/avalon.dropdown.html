@@ -38,7 +38,7 @@ MS_OPTION_TEMPLATE
                  ms-title="el.title||el.label"
                  ms-hover="oni-state-hover: el.enable"
                  ms-class-1="oni-state-disabled:!el.enable"
-                 ms-class-2="oni-state-active:isActive(el) "
+                 ms-class-2="oni-state-active:isActive(el, multipleChange)"
                  ms-class-4="oni-dropdown-group:el.group"
                  ms-class-5="oni-dropdown-divider:el.group && !$first"
                  >{{el.label|sanitize|html}}</div>

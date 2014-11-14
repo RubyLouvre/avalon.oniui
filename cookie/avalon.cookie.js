@@ -11,9 +11,9 @@ define(["avalon"], function() {
         }
     }
 
-    // Cookie.stringify('foo', 'bar', { httpOnly: true })  => "foo=bar; httpOnly"
     //将两个字符串变成一个cookie字段
     var Cookie = {
+        //   Cookie.stringify('foo', 'bar', { httpOnly: true })  => "foo=bar; httpOnly"
         stringify: function(name, val, opts) {
             var pairs = [name + "=" + encodeURIComponent(val)]
             if (isFinite(opts) && typeof opts === "number") {
@@ -35,54 +35,58 @@ define(["avalon"], function() {
             }
             return pairs.join("; ")
         },
-        //将一段字符串变成对象
-        parse: function(str) {
-            var obj = {}
-            var pairs = str.split(/[;,] */)
+        forEach: function(callback) {
+            var pairs = String(document.cookie).split(/; */)
             pairs.forEach(function(pair) {
-                var index = pair.indexOf("=")
-                var key = pair.substr(0, index)
-                if (key) {
-                    var val = pair.substr(++index, pair.length).trim()
-                    if (!(key in obj)) {
-                        obj[key] = parseCookieValue(val)
+                var index = pair.indexOf('=')
+                if (index === -1) {
+                    return
+                }
+                var key = pair.substr(0, index).trim()
+                var val = pair.substr(++index, pair.length).trim();
+                callback(key, parseCookieValue(val))
+            })
+        },
+        get: function(name) {
+            var ret
+            try {
+                Cookie.forEach(function(key, value) {
+                    if (key === name) {
+                        ret = value
+                        throw ""
                     }
+                })
+            } catch (e) {
+            }
+            return ret
+        },
+        getAll: function() {
+            var obj = {}
+            Cookie.forEach(function(key, value) {
+                if (!(key in obj)) {
+                    obj[key] = value
                 }
             })
             return obj
-        }
-    }
-    Cookie.getAll = function() {
-        return Cookie.parse(String(document.cookie))
-    }
-    Cookie.get = function(name) {
-        var ret, m;
-        if (/\S/.test(name)) {
-            if ((m = String(document.cookie).match(
-                    new RegExp('(?:^| )' + name + '(?:(?:=([^;]*))|;|$)')))) {
-                ret = m[1] ? parseCookieValue(m[1]) : ""
+        },
+        set: function(name, val, opts) {
+            document.cookie =  Cookie.stringify.apply(0, arguments)
+        },
+        remove: function(name, opt) {
+            opt = opt || {}
+            if (!opt.expires) {
+                opt.expires = new Date(1970, 0, 1)
             }
+            Cookie.set(name, '', opt)
+        },
+        clear: function() {
+            Cookie.forEach(function(key, value) {
+                Cookie.remove(key)
+            })
         }
-        return ret
-    }
-    Cookie.set = function(name, val, opts) {
-        var str = Cookie.stringify.apply(0, arguments)
-        document.cookie = str
-    }
-    // 置空，并立刻过期
-    Cookie.remove = function(name, opt) {
-        opt = opt || {}
-        if (!opt.expires) {
-            opt.expires = new Date(1970, 0, 1)
-        }
-        Cookie.set(name, '', opt)
     }
 
-    Cookie.clear = function() { 
-        for(var name in Cookie.getAll()){
-              Cookie.remove(name)
-        }
-    }
+
     avalon.cookie = Cookie
     return avalon
 })

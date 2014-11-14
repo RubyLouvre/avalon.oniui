@@ -94,10 +94,10 @@
                                 avalon.log("collapse")
                             },
                             beforeRemove: function(obj) {
-                                return confirm("确认删除?")
+                                avalon.log("确认删除?")
                             },
                             beforeAdd: function(obj) {
-                                return confirm("确认添加?")
+                                avalon.log("确认添加?")
                             },
                             beforeMousedown: function(obj) {
                                 avalon.log("before down")
@@ -123,6 +123,9 @@
                                 arg.newLeaf = {
                                     name: "管理员"
                                 }
+                            },
+                            onNodeCreated: function(arg) {
+                                console.log("add")
                             }
                         }
                     }

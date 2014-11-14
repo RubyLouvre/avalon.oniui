@@ -98,7 +98,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 							imgs.push(img);
 						};
 
-						vmodel.onSuccess(imgs);
+						vmodel.onSuccess(imgs, obj.data);
 					break;
 					case 'flashInit':
 						// 初始化，取到 swf

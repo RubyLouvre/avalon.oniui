@@ -6,38 +6,25 @@ var Mask = function(ctrl, data) {
     var p = {
         invalid: [],
         getCaret: function() {
-            try {
-                var sel,
-                        pos = 0,
-                        dSel = document.selection,
-                        cSelStart = ctrl.selectionStart;
-                // IE Support
-                if (dSel && navigator.appVersion.indexOf("MSIE 10") === -1) {
-                    sel = dSel.createRange();
-                    sel.moveStart('character', -el.value.length);
-                    pos = sel.text.length;
-                }
-                // Firefox support
-                else if (cSelStart || cSelStart === '0') {
-                    pos = cSelStart;
-                }
-                return pos;
-            } catch (e) {
+            var caret = 0 //取得光标的位置
+            if (typeof ctrl.selectionStart === "number") {
+                caret = ctrl.selectionStart
+            } else {
+                var selection = ctrl.selection.createRange() //这个TextRange对象不能重用
+                selection.moveStart("character", -ctrl.value.length)
+                caret = selection.text.length;
             }
+            return caret
         },
         setCaret: function(pos) {
-            try {
-                var range
-                if (ctrl.setSelectionRange) {
-                    ctrl.setSelectionRange(pos, pos);
-                } else if (ctrl.createTextRange) {
-                    range = ctrl.createTextRange();
-                    range.collapse(true);
-                    range.moveEnd('character', pos);
-                    range.moveStart('character', pos);
-                    range.select();
-                }
-            } catch (e) {
+            if (ctrl.setSelectionRange) {
+                ctrl.setSelectionRange(pos, pos);
+            } else if (ctrl.createTextRange) {
+                var range = ctrl.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', pos);
+                range.moveStart('character', pos);
+                range.select();
             }
         },
         events: function() {

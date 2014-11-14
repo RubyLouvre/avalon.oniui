@@ -2,7 +2,20 @@
 var Mask = function(ctrl, data) {
     var el = avalon(ctrl)
     var jMask = this, old_value = el.val(), regexMask;
-    var mask = el.data("duplexMask")
+    var mask = ctrl.getAttribute("data-duplex-mask")
+    var options = avalon.getWidgetData(element, "duplexMask")
+    var t = {}
+    try {
+        t = new Function("return " + options.translations)()
+    } catch (e) {
+    }
+    avalon.mix(this, Mask.defaults, options)
+    this.translations = avalon.mix({}, Mask.defaults.translations, t)
+    //data-duplex-mask=AAA 000-S0S
+    //data-duplex-mask-reverse=true
+    //data-duplex-mask-clear-if-not-match=true
+    //data-dupex-mask-translation="{ 'r': {  pattern: /[\/]/,  fallback: '/' }}" 
+    //data-dupex-mask-placeholder: "__/__/____"
     var p = {
         invalid: [],
         getCaret: function() {
@@ -107,7 +120,7 @@ var Mask = function(ctrl, data) {
             e = e || window.event;
             p.invalid = [];
             var keyCode = e.keyCode || e.which;
-            if ($.inArray(keyCode, jMask.byPassKeys) === -1) {
+            if (jMask.byPassKeys.indexOf(keyCode) === -1) {
 
                 var caretPos = p.getCaret(),
                         currVal = p.val(),
@@ -223,83 +236,19 @@ var Mask = function(ctrl, data) {
             callback('onComplete', val.length === mask.length, defaultArgs);
             callback('onInvalid', p.invalid.length > 0, [val, e, el, p.invalid, options]);
         }
-    };
-
-
-    // public methods
+    }
+// public methods
     jMask.mask = mask;
     jMask.options = options;
 
 
-    // get value without mask
+// get value without mask
     jMask.getCleanVal = function() {
         return p.getMasked(true);
     };
 
-    jMask.init = function(only_mask) {
-        only_mask = only_mask || false;
-        options = options || {};
-
-        jMask.byPassKeys = $.jMaskGlobals.byPassKeys;
-        jMask.translation = $.jMaskGlobals.translation;
-
-        jMask.translation = $.extend({}, jMask.translation, options.translation);
-        jMask = $.extend(true, {}, jMask, options);
-
-        regexMask = p.getRegexMask();
-
-        if (only_mask === false) {
-
-            if (options.placeholder) {
-                el.attr('placeholder', options.placeholder);
-            }
-
-            // autocomplete needs to be off. we can't intercept events
-            // the browser doesn't  fire any kind of event when something is 
-            // selected in a autocomplete list so we can't sanitize it.
-            el.attr('autocomplete', 'off');
-            p.destroyEvents();
-            p.events();
-
-            var caret = p.getCaret();
-            p.val(p.getMasked());
-            p.setCaret(caret + p.getMCharsBeforeCount(caret, true));
-
-        } else {
-            p.events();
-            p.val(p.getMasked());
-        }
-    };
-
-
-
-};
-
-
-
-$.fn.mask = function(mask, options) {
-    options = options || {};
-    var selector = this.selector,
-            globals = $.jMaskGlobals,
-            interval = $.jMaskGlobals.watchInterval,
-            maskFunction = function() {
-                if (notSameMaskObject(this, mask, options)) {
-                    return $(this).data('mask', new Mask(this, mask, options));
-                }
-            };
-
-    $(this).each(maskFunction);
-
-    if (selector && selector !== "" && globals.watchInputs) {
-        clearInterval($.maskWatchers[selector]);
-        $.maskWatchers[selector] = setInterval(function() {
-            $(document).find(selector).each(maskFunction);
-        }, interval);
-    }
-};
-
-
-var globals = {
+}
+Mask.defaults = {
     maskElements: 'input,td,span,div',
     dataMaskAttr: '*[data-mask]',
     dataMask: true,
@@ -314,9 +263,7 @@ var globals = {
         'A': {pattern: /[a-zA-Z0-9]/},
         'S': {pattern: /[a-zA-Z]/}
     }
-};
-
-
+}
 
 
 avalon.duplexHooks.mask = {

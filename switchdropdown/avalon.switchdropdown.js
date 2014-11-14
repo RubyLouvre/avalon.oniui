@@ -1,3 +1,12 @@
+//avalon 1.3.6 2014.11.06
+/**
+ *
+ * @cnName 开关型下拉框
+ * @enName switchdropdown
+ * @introduce
+ *
+ <p>基于dropdown开发的开关类型的下拉框</p>
+ */
 define(['avalon',
     'text!./avalon.switchdropdown.html',
     '../dropdown/avalon.dropdown',
@@ -116,17 +125,30 @@ define(['avalon',
     widget.version = "1.0";
 
     widget.defaults = {
-        width: 100,             //自定义宽度
-        listWidth: 100,         //自定义下拉列表的宽度
-        height: 60,             //下拉列表的高度
-        enable: true,           //组件是否可用
-        readOnly: false,        //组件是否只读
-        data: [],               //下拉列表显示的数据模型
-        value: "",              //设置组件的初始值
+        width: 100,             //@config 自定义宽度
+        listWidth: 100,         //@config 自定义下拉列表的宽度
+        height: 60,             //@config 下拉列表的高度
+        enable: true,           //@config 组件是否可用
+        readOnly: false,        //@config 组件是否只读
+        data: [],               //@config 下拉列表显示的数据模型
+        value: "",              //@config 设置组件的初始值
+        /**
+         * @config 模板函数,方便用户自定义模板
+         * @param str {String} 默认模板
+         * @param opts {Object} VM
+         * @returns {String} 新模板
+         */
         getTemplate: function() {
             return tmpl;
-        }
+        },
+        onInit: avalon.noop     //@config 初始化时执行方法
     };
-
-
 });
+
+/**
+ @links
+ [用空select节点使用默认配置生成组件](avalon.switchdropdown.ex1.html)
+ [用html结构配置组件](avalon.switchdropdown.ex2.html)
+ [用options配置组件](avalon.switchdropdown.ex3.html)
+ [用options配置组件并设置duplex](avalon.switchdropdown.ex4.html)
+ */

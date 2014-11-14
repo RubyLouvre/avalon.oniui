@@ -1,372 +1,471 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" class="xjb_html">
-<head>
-    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>去哪儿avalon ui skin themes</title>
-    <style type="text/css">
-        body {
-            -webkit-font-smoothing: antialiased;
-            color: #333;
-            font: 15px/22.5px "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif;
-            padding-bottom: 100px;
-        }
-        .uiCollection td {
-            vertical-align: top;
-        }
-        .demoHeaders {
-            font-size: 1.3em;
-            font-weight: normal;
-            margin: 2em 0 1em;
-        }
-    </style>
-    <script src="../../avalon.js"></script>
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <title>去哪儿avalon ui skin themes</title>
+        <style type="text/css">
+            body {
+                -webkit-font-smoothing: antialiased;
+                color: #333;
+                font: 15px/22.5px "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif;
+                padding-bottom: 100px;
+            }
+            .uiCollection td {
+                vertical-align: top;
+            }
+            .ms-controller{
+                visibility: hidden;
+            }
+            .demoHeaders {
+                font-size: 1.3em;
+                font-weight: normal;
+                margin: 2em 0 1em;
+            }
+            ul, li {
+                list-style: none;
+                padding: 0;
+                margin: 0 0 10px 0;
+            }
+            .btnWidth {
+                width: 110px;
+                display: inline-block;
+            }
+            .inlineBlock {
+                display: inline-block;
+                margin-right: 20px;
+            }
+        </style>
+        <script src="../../avalon.js"></script>
 
-</head>
-<body class="ms-controller" ms-controller="pages">
-    <table class="uiCollection">
-        <tr>
-            <td width="230px">
-                <h2 class="demoHeaders" style="display: none">导航部分</h2>
-            </td>
-            <td style="padding: 0 20px; width: 700px">
-                <h2 class="demoHeaders">Accordion</h2>
-                <div ms-controller="accordion" ms-widget="accordion,accordion,$accordionOpts" id="accordion">{{aaa}}</div> 
-                <h2 class="demoHeaders">Tabs</h2>
-                <div ms-controller="tab" ms-widget="tab" id="tabs"></div>
-                
-                 
-                <h2 class="demoHeaders">Dialog</h2>
-                <div ms-controller="dialog" id="dialog">
-                    <button ms-click="openDialog">Open Dialog</button>
-                    <div ms-widget="dialog, dialogA" data-dialog-title="Dialog Title" data-dialog-modal="false" ms-draggable>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </head>
+    <body>
+        <table class="uiCollection">
+            <tr>
+                <td width="230px">
+                    <h2 class="demoHeaders" style="display: none">导航部分</h2>
+                </td>
+                <td style="padding: 0 20px; width: 700px">
+                    <h2 class="demoHeaders">Accordion</h2>
+                    <div ms-controller="accordion" ms-widget="accordion,accordion,$accordionOpts" id="accordion" ms-text="aaa"></div> 
+                    <h2 class="demoHeaders">Tabs</h2>
+                    <div ms-controller="tab" ms-widget="tab" id="tabs"></div>
+
+
+                    <h2 class="demoHeaders">Dialog</h2>
+                    <div ms-controller="dialog" id="dialog">
+                        <button ms-click="openDialog" ms-widget="button">Open Dialog</button>
+                        <div ms-widget="dialog, dialogA" data-dialog-title="Dialog Title" data-dialog-modal="false" ms-draggable>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        </div>
                     </div>
-                </div>
-                
-                <h2 class="demoHeaders">Daterangepicker</h2>
-                <div ms-controller="daterangepicker" ms-widget="daterangepicker" id="daterangepicker"></div>
-                <h2 class="demoHeaders">Coupledatepicker</h2>
-                <div ms-controller="coupledatepicker" ms-widget="coupledatepicker" id="coupledatepicker"></div>
-                <h2 class="demoHeaders">Doublelist</h2>
-                <div ms-controller="doublelist" ms-widget="doublelist,nimei" ms-duplex="select" id="doublelist"> </div>
+                    <h2 class="demoHeaders">Slier</h2>
+                    <input ms-controller="slider" ms-widget="slider" data-slider-value="36" data-slider-values = "[40, 60]" data-slider-range="true" id="slider">
 
-                <h2 class="demoHeaders">Slier</h2>
-                <input ms-controller="slider" ms-widget="slider" data-slider-value="36" data-slider-values = "[40, 60]" data-slider-range="true" id="slider">
+                    <h2 class="demoHeaders">Progressbar</h2>
+                    <div ms-controller="progressbar" ms-widget="progressbar" data-progressbar-value="49" data-progressbar-label="true" data-progressbar-in-two="true" id="progressbar"></div>
 
-                <h2 class="demoHeaders">Progressbar</h2>
-                <div ms-controller="progressbar" ms-widget="progressbar" data-progressbar-value="49" data-progressbar-label="true" data-progressbar-in-two="true" id="progressbar"></div>
-               
-                <h2 class="demoHeaders">Loading</h2>
-                <div ms-controller="loadingDemo" id="loading" style="width:690px" class="ui-helper-clearfix">
-                    <div ms-widget="loading" data-loading-type="ticks" style="width:100px;height:100px;position:relative;zoom:1;float: left"></div>
-                    <div ms-widget="loading" data-loading-type="spin" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
-                    <div ms-widget="loading" data-loading-type="spokes" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
-                    <div ms-widget="loading" data-loading-type="spinning-bubbles" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div> 
-                </div>  
-            </td>
-            <td style="width:235px">
-                <h2 class="demoHeaders">Textbox</h2>
-                <input ms-controller="textbox" ms-widget="textbox" ms-duplex="val" data-textbox-suggest="test" id="textbox" data-textbox-width="190"/>
-                <h2 class="demoHeaders">Spinner</h2>
-                <input ms-controller="spinner" ms-widget="spinner" id="spinner"/>
-                <h2 class="demoHeaders">Datepicker</h2>
-                <input ms-controller="datepicker" ms-widget="datepicker" id="datepicker" data-datepicker-show-datepicker-always="true" data-datepicker-timer="true"/>
-                <h2 class="demoHeaders">Dropdown</h2>
-                <select ms-controller="dropdown" ms-widget="dropdown" id="dropdown">
-                    <optgroup label="group1">
-                        <option value="value1">Value 1</option>
-                        <option>textValue</option>
-                        <option label="label" value="labelValue">with label</option>
-                        <option value="value2" selected>Value 2</option>
-                        <option value="value3">Value 3</option>
-                    </optgroup>
-                    <optgroup label="group2">
-                        <option value="value4" selected>Value 4</option>
-                        <option value="value5" disabled selected>Value 5</option>
-                        <option value="value6">Value 6</option>
-                    </optgroup>
-                </select>
-                <h2 class="demoHeaders">Menu</h2>
-                <ul ms-controller="menu" ms-widget="menu, menuA, $menuAOpts" id="menu" style="float:left"></ul>
-                <br style="clear:both"/>
-                <h2 class="demoHeaders">Flipswitch</h2>
-                <input ms-controller="flipswitch" checked="checked" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="large" data-flipswitch-draggable="true" id="flipswitch"> 
-            </td>
-        </tr>
-    </table>
-    <script>
-        require(["accordion/avalon.accordion"], function() {
-            var accordionVM = avalon.define('accordion',function(vm){
-                vm.$accordionOpts = {
-                    data: [{
-                        'title': 'Section 1',
-                        'content': '<p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.</p>'
-                    }, {
-                        'title': 'Section 2',
-                        'content': '<p>Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna.</p>'
-                    }, {
-                        'title': 'Section 3',
-                        'content': '<p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis. Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.</p><ul><li>List item one</li><li>List item two</li><li>List item three</li></ul>'
-                    }],
-                }
-            });
-            var accordion = document.getElementById("accordion");
-            avalon.scan(accordion, accordionVM);
-        });
-        require(["tab/avalon.tab", "simplegrid/avalon.simplegrid", "tooltip/avalon.tooltip"], function() {
-            function getData(n) {
-                var ret = []
-                for (var i = 0; i < n; i++) {
-                    ret.push({
-                        symbol: Math.random().toString(32).slice(4, 10),
-                        price: range(100, 200),
-                        change: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1)
-                    })
-                }
-                return ret
-            }
-            function range(s, b) {
-                return s + Math.floor((b - s) * Math.random())
-            }
-            var tabVM = avalon.define("tab", function(vm) {
-                vm.tab = {
-                    hideTooltip: function() {
-                        avalon.vmodels.tooltipA.toggle = false;
-                    },
-                    onActivate : function(e) {
-                        avalon.log("user define cc activate callback")
-                    }
-                    , active: 1
-                    , tabs : [{
-                        title: "First",
-                        name: "First",
-                        target: "_self"
-                        }, {
-                            title: "Second",
-                            name: "Second",
-                            target: "_self"
-                        }, {
-                            title: "Third", 
-                            name: "Third",
-                            target: "_self"
-                        }
-                    ]
-                    , tabpanels : [
-                        {content: '<h2 class="demoHeaders">Simplegrid</h2><div ms-widget="simplegrid, simplegridA" style="width:680px; margin: 0 auto;"></div>'},
-                        {content: '<p ms-widget="tooltip, tooltipA, $tooptipAOpts" data-tooltip-position="bl" ms-mouseout="hideTooltip">Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.</p>'},
-                        {content: "<p>Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</p>"}
-                    ]
-                }
-                vm.$tooptipAOpts = {
-                    "contentGetter": function(elem) {
-                        var str = "请输入"
-                        return str + str + str + str + str + str + str + str + str + str + str
-                    }
-                    , autohide: !true
-                }
-                vm.simplegrid = {
-                    columns: ["symbol", "price", "change"],
-                    data: getData(5),
-                    pageable: true
-                }
-                vm.$skipArray = ["tab", "simplegrid"]
-            })
-            var tabs = document.getElementById("tabs");
-            avalon.scan(tabs, tabVM);
-        })
-
-        require(["dialog/avalon.dialog", "draggable/avalon.draggable"], function() {
-            var dialogVM = avalon.define("dialog", function(vm) {
-                vm.openDialog = function(){
-                    avalon.vmodels.dialogA.toggle = true;
-                }
-            })
-            var dialog = document.getElementById("dialog");
-            avalon.scan(dialog, dialogVM);
-        })
-
-        require(["simplegrid/avalon.simplegrid"], function() {
-            function getData(n) {
-                var ret = []
-                for (var i = 0; i < n; i++) {
-                    ret.push({
-                        symbol: Math.random().toString(32).slice(4, 10),
-                        price: range(100, 200),
-                        change: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1)
-                    })
-                }
-                return ret
-            }
-            function range(s, b) {
-                return s + Math.floor((b - s) * Math.random())
-            }
-            var simplegridVM = avalon.define("simplegrid", function(vm) {
-                vm.simplegrid = {
-                    columns: ["symbol", "price", "change"],
-                    data: getData(5),
-                    pageable: true
-                }
-                vm.$skipArray = ["simplegrid"]
-            })
-            var simplegrid = document.getElementById("simplegrid");
-            avalon.scan(simplegrid, simplegridVM)
-        })
-
-        require("datepicker/avalon.daterangepicker", function(avalon) {
-            var daterangepickerVM = avalon.define("daterangepicker", function(vm) {
-                
-            })
-            var daterangepicker = document.getElementById("daterangepicker");
-            avalon.scan(daterangepicker, daterangepickerVM);
-        })
-        require("datepicker/avalon.coupledatepicker", function(avalon) {
-            var coupledatepickerVM = avalon.define("coupledatepicker", function(vm) {
-            })
-            var daterangepicker = document.getElementById("coupledatepicker");
-            avalon.scan(coupledatepicker, coupledatepickerVM);
-        })
-
-        require(["doublelist/avalon.doublelist"], function() {
-            var doublelistVM = avalon.define("doublelist", function(vm) {
-                vm.doublelist = {
-                    data: [
-                        {name: "Lily", value: 1},
-                        {name: "Lucy", value: 2},
-                        {name: "Tom", value: 3},
-                        {name: "Harry", value: 4},
-                        {name: "Jim", value: 5}
-                    ],
-                    select: [5],
-                    change: function(newValue, oldValue, vmodel) {
-                        avalon.log(vmodel.select)
-                    }
-                }
-                var i = 6
-                while(i < 200) {
-                    vm.doublelist.data.push({
-                        name: "Hello Sang" + i,
-                        value: i
-                    })
-                    i++
-                }
-                vm.$skipArray = ["doublelist"]
-            })
-            var doublelist = document.getElementById("doublelist");
-            avalon.scan(doublelist, doublelistVM)
-        })
-
-        require(["loading/avalon.loading"], function() {
-            var loadingVM = avalon.define("loadingDemo", function(vm) {
-                
-            })
-            var loading = document.getElementById("loading");
-            avalon.scan(loading, loadingVM)
-        })
-
-        require(["menu/avalon.menu"], function() {
-            var menuVM = avalon.define("menu", function(vm) {
-                vm.$menuAOpts = {
-                    data: [{
-                        active: false,
-                        title: "menu1",
-                        disabled: false,
+                    <h2 class="demoHeaders">Loading</h2>
+                    <div ms-controller="loadingDemo" id="loading" style="width:690px" class="ui-helper-clearfix">
+                        <div ms-widget="loading" data-loading-type="ticks" style="width:100px;height:100px;position:relative;zoom:1;float: left"></div>
+                        <div ms-widget="loading" data-loading-type="spin" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
+                        <div ms-widget="loading" data-loading-type="spokes" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
+                        <div ms-widget="loading" data-loading-type="spinning-bubbles" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div> 
+                    </div> 
+                    <h2 class="demoHeaders">ButtonGroup</h2> 
+                    <ul id="buttongroup">
+                        <li class="inlineBlock">
+                            <div ms-widget="button, $, group1"></div>
+                        </li>
+                        <li class="inlineBlock">
+                            <div ms-widget="button, $, group2"></div>
+                        </li>
+                        <li class="inlineBlock">
+                            <div ms-widget="button, $, group3"></div>
+                        </li>
+                    </ul>
+                    <h2 class="demoHeaders">Coupledatepicker</h2>
+                    <div ms-controller="coupledatepicker" ms-widget="coupledatepicker" id="coupledatepicker"></div>
+                    <h2 class="demoHeaders">Daterangepicker</h2>
+                    <div ms-controller="daterangepicker" ms-widget="daterangepicker" id="daterangepicker"></div>
+                    <h2 class="demoHeaders">Doublelist</h2>
+                    <div ms-controller="doublelist" ms-widget="doublelist,nimei" ms-duplex="select" id="doublelist"> </div>
+                </td>
+                <td style="width:235px">
+                    <h2 class="demoHeaders">Textbox</h2>
+                    <input ms-controller="textbox" ms-widget="textbox" ms-duplex="val" data-textbox-suggest="test" id="textbox" data-textbox-width="190"/>
+                    <h2 class="demoHeaders">Spinner</h2>
+                    <input ms-controller="spinner" ms-widget="spinner" id="spinner"/>
+                    <h2 class="demoHeaders">Datepicker</h2>
+                    <input ms-controller="datepicker" ms-widget="datepicker" id="datepicker" data-datepicker-show-datepicker-always="true" data-datepicker-timer="true"/>
+                    <h2 class="demoHeaders">Dropdown</h2>
+                    <select ms-controller="dropdown" ms-widget="dropdown" id="dropdown">
+                        <optgroup label="group1">
+                            <option value="value1">Value 1</option>
+                            <option>textValue</option>
+                            <option label="label" value="labelValue">with label</option>
+                            <option value="value2" selected>Value 2</option>
+                            <option value="value3">Value 3</option>
+                        </optgroup>
+                        <optgroup label="group2">
+                            <option value="value4" selected>Value 4</option>
+                            <option value="value5" disabled selected>Value 5</option>
+                            <option value="value6">Value 6</option>
+                        </optgroup>
+                    </select>
+                    <h2 class="demoHeaders">Menu</h2>
+                    <ul ms-controller="menu" ms-widget="menu, menuA, $menuAOpts" id="menu" style="float:left"></ul>
+                    <br style="clear:both"/>
+                    <h2 class="demoHeaders">Flipswitch</h2>
+                    <input ms-controller="flipswitch" checked="checked" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="large" data-flipswitch-draggable="true" id="flipswitch"> 
+                    <h2 class="demoHeaders">Button</h2>
+                    <ul id="button">
+                        <li>
+                            <div class="btnWidth"><button ms-widget="button" data-button-width="100">button default</button></div>
+                            <div class="btnWidth"><button ms-widget="button" data-button-width="108" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf015;">primary icon</button></div></li>
+                        <li>
+                            <div class="btnWidth"><button ms-widget="button" data-button-width="100" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf015;">warning</button></div>
+                            <div class="btnWidth"><button ms-widget="button" data-button-width="108" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">danger</button></div>
+                        </li>
+                        <li>
+                            <div class="btnWidth"><button ms-widget="button" data-button-width="100" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf015;">button success</button></div>
+                            <div class="btnWidth"><button ms-widget="button" data-button-width="108" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">button info</button></div>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        <script>
+            require(["button/avalon.button"], function() {
+                var buttonVM = avalon.define("button", function(vm) {
+                    vm.$skipArray = ["group1", "group2"]
+                    vm.group1 = {
+                        groups: true,
                         data: [{
-                            active: true,
-                            title: "menu1_1",
-                            disabled: false
+                            text: "button 1"
                         }, {
-                            active: false,
-                            title: "menu1_2",
-                            disabled: false
+                            text: "button2"
                         }, {
-                            active: false,
-                            title: "menu1_3",
-                            disabled: false
+                            text: "button 3"
                         }]
-                    }, {
-                        active: false,
-                        title: "menu2",
-                        disabled: false
-                    }, {
-                        active: false,
-                        title: "menu3",
-                        disabled: false
-                    }, {
-                        active: false,
-                        title: "menu4",
-                        disabled: false
-                    }, {
-                        active: false,
-                        title: "menu5",
-                        disabled: false
-                    }]
+                    }
+                    vm.group2 = {
+                        groups: true,
+                        data: [{
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf04c;",
+                            text: "暂停"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf04b;",
+                            text: "播放"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf074;",
+                            text: "拖曳"
+                        }]
+                    }
+                    vm.group3 =  {
+                        groups: true,
+                        width: 50,
+                        data: [{
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf04c;",
+                            text: "button 1"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf04b;",
+                            text: "button 2"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf074;",
+                            text: "button 3"
+                        }]
+                    }
+                })
+                var button = document.getElementById("button");
+                var buttonGroup = document.getElementById("buttongroup")
+                avalon.scan(button, buttonVM);
+                avalon.scan(buttonGroup, buttonVM);
+            })
+            require(["accordion/avalon.accordion"], function() {
+                var accordionVM = avalon.define('accordion', function(vm) {
+                    vm.$accordionOpts = {
+                        data: [{
+                                'title': 'Section 1',
+                                'content': '<p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.</p>'
+                            }, {
+                                'title': 'Section 2',
+                                'content': '<p>Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna.</p>'
+                            }, {
+                                'title': 'Section 3',
+                                'content': '<p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis. Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.</p><ul><li>List item one</li><li>List item two</li><li>List item three</li></ul>'
+                            }]
+                    }
+                });
+                var accordion = document.getElementById("accordion");
+                avalon.scan(accordion, accordionVM);
+            });
+            require(["tab/avalon.tab", "simplegrid/avalon.simplegrid", "tooltip/avalon.tooltip"], function() {
+                function getData(n) {
+                    var ret = []
+                    for (var i = 0; i < n; i++) {
+                        ret.push({
+                            symbol: Math.random().toString(32).slice(4, 10),
+                            price: range(100, 200),
+                            change: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1)
+                        })
+                    }
+                    return ret
+                }
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
+                var tabVM = avalon.define("tab", function(vm) {
+
+                    vm.tab = {
+                        onActivate: function(e) {
+                            avalon.log("user define cc activate callback")
+                        },
+                        hideTooltip: function() {
+                            if (avalon.vmodels.tooltipA)
+                                avalon.vmodels.tooltipA.toggle = false;
+                        },
+                        active: 1,
+                        tabs: [{
+                                title: "First",
+                                name: "First",
+                                target: "_self"
+                            }, {
+                                title: "Second",
+                                name: "Second",
+                                target: "_self"
+                            }, {
+                                title: "Third",
+                                name: "Third",
+                                target: "_self"
+                            }
+                        ],
+                        tabpanels: [
+                            {
+                                content: '<h2 class="demoHeaders">Simplegrid</h2><div ms-widget="simplegrid, simplegridA" style="width:680px; margin: 0 auto;"></div>'
+                            },
+                            {
+                                content: '<p ms-widget="tooltip, tooltipA, $tooptipAOpts"  data-tooltip-position="bl">' +
+                                        'Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare,' +
+                                        ' felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.</p>'
+                            },
+                            {
+                                content: "<p>Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</p>"
+                            }
+                        ]
+                    }
+                    vm.$tooptipAOpts = {
+                        "contentGetter": function(elem) {
+                            var str = "请输入"
+                            return str + str + str + str + str + str + str + str + str + str + str
+                        }, 
+                        autohide: true
+                    }
+                    vm.simplegrid = {
+                        columns: ["symbol", "price", "change"],
+                        data: getData(5),
+                        pageable: true
+                    }
+                    vm.$skipArray = ["tab", "simplegrid"]
+                })
+                var tabs = document.getElementById("tabs");
+                avalon.scan(tabs, tabVM);
+            })
+
+            require(["dialog/avalon.dialog", "draggable/avalon.draggable"], function() {
+                var dialogVM = avalon.define("dialog", function(vm) {
+                    vm.openDialog = function() {
+                        avalon.vmodels.dialogA.toggle = true;
+                    }
+                })
+                var dialog = document.getElementById("dialog");
+                avalon.scan(dialog, dialogVM);
+            })
+
+            require("datepicker/avalon.daterangepicker", function(avalon) {
+                var daterangepickerVM = avalon.define("daterangepicker", function(vm) {
+
+                })
+                var daterangepicker = document.getElementById("daterangepicker");
+                avalon.scan(daterangepicker, daterangepickerVM);
+            })
+            require("datepicker/avalon.coupledatepicker", function(avalon) {
+                var coupledatepickerVM = avalon.define("coupledatepicker", function(vm) {
+                })
+                var daterangepicker = document.getElementById("coupledatepicker");
+                avalon.scan(coupledatepicker, coupledatepickerVM);
+            })
+
+            require(["doublelist/avalon.doublelist"], function() {
+                var doublelistVM = avalon.define("doublelist", function(vm) {
+                    vm.doublelist = {
+                        data: [
+                            {name: "Lily", value: 1},
+                            {name: "Lucy", value: 2},
+                            {name: "Tom", value: 3},
+                            {name: "Harry", value: 4},
+                            {name: "Jim", value: 5}
+                        ],
+                        select: [5],
+                        change: function(newValue, oldValue, vmodel) {
+                            avalon.log(vmodel.select)
+                        }
+                    }
+                    var i = 6, arr = []
+                    while (i < 10) {
+                        arr.push({
+                            name: "Hello Sang" + i,
+                            value: i
+                        })
+                        i++
+                    }
+                    vm.doublelist.data.splice.apply(vm.doublelist.data, [5,0].concat(arr))
+                    vm.$skipArray = ["doublelist"]
+                })
+                var doublelist = document.getElementById("doublelist");
+                avalon.scan(doublelist, doublelistVM)
+            })
+
+            require("textbox/avalon.textbox", function() {
+                var textboxVM = avalon.define("textbox", function(vm) {
+                    vm.val = "";
+                })
+                var textbox = document.getElementById("textbox");
+                avalon.scan(textbox, textboxVM);
+                avalon.ui["suggest"].strategies['test'] = function(value, render) {
+                    var data = !value.indexOf("x") ? ["xueer", "xueli", "xueyan"] : []
+                    render(data)
                 }
             })
-            var menu = document.getElementById("menu");
-            avalon.scan(menu, menuVM);
-        })
 
-        require("textbox/avalon.textbox", function() {
-            var textboxVM = avalon.define("textbox", function(vm) {
-                vm.val = "";
+            require(["spinner/avalon.spinner"], function(avalon) {
+                var spinnerVM = avalon.define('spinner', function(vm) {
+
+                });
+                var spinner = document.getElementById("spinner");
+                avalon.scan(spinner, spinnerVM);
             })
-            var textbox = document.getElementById("textbox");
-            avalon.scan(textbox, textboxVM);
 
-            avalon.ui["suggest"].strategies['test'] = function(value , render) {
-                var data = !value.indexOf("x") ? ["xueer", "xueli", "xueyan"] : []
-                render(data)
+            require(["loading/avalon.loading"], function() {
+                var loadingVM = avalon.define("loadingDemo", function(vm) {
+
+                })
+                var loading = document.getElementById("loading");
+                asyncRender(function() {
+                    avalon.scan(loading, loadingVM)
+                })
+            })
+
+            require(["menu/avalon.menu"], function() {
+                var menuVM = avalon.define("menu", function(vm) {
+                    vm.$menuAOpts = {
+                        data: [{
+                                active: false,
+                                title: "menu1",
+                                disabled: false,
+                                data: [{
+                                        active: true,
+                                        title: "menu1_1",
+                                        disabled: false
+                                    }, {
+                                        active: false,
+                                        title: "menu1_2",
+                                        disabled: false
+                                    }, {
+                                        active: false,
+                                        title: "menu1_3",
+                                        disabled: false
+                                    }]
+                            }, {
+                                active: false,
+                                title: "menu2",
+                                disabled: false
+                            }, {
+                                active: false,
+                                title: "menu3",
+                                disabled: false
+                            }, {
+                                active: false,
+                                title: "menu4",
+                                disabled: false
+                            }, {
+                                active: false,
+                                title: "menu5",
+                                disabled: false
+                            }]
+                    }
+                })
+                var menu = document.getElementById("menu");
+                asyncRender(function() {
+                    avalon.scan(menu, menuVM);
+                })
+            })
+
+            require("datepicker/avalon.datepicker", function(avalon) {
+                var datepickerVM = avalon.define("datepicker", function(vm) {
+                })
+                var datepicker = document.getElementById("datepicker");
+                avalon.scan(datepicker, datepickerVM);
+            })
+
+            require("slider/avalon.slider", function() {
+                var sliderVM = avalon.define("slider", function(vm) {
+
+                })
+                var slider = document.getElementById("slider");
+                asyncRender(function() {
+                    avalon.scan(slider, sliderVM);
+                })
+            })
+
+            require(['dropdown/avalon.dropdown'], function() {
+                var dropdownVM = avalon.define('dropdown', function(vm) {
+                });
+                var datepicker = document.getElementById("dropdown");
+                asyncRender(function() {
+                    avalon.scan(dropdown, dropdownVM);
+                })
+            });
+            require(["progressbar/avalon.progressbar"], function() {
+                var progressbarVM = avalon.define("progressbar", function(vm) {
+
+                })
+                var progressbar = document.getElementById("progressbar");
+                asyncRender(function() {
+                    avalon.scan(progressbar, progressbarVM);
+                })
+            })
+
+
+            //只有存在flipswitch loading就会出问题，等会查找
+            require(["flipswitch/avalon.flipswitch"], function() {
+                var flipswitchVM = avalon.define("flipswitch", function(vm) {
+                })
+                var flipswitch = document.getElementById("flipswitch");
+                asyncRender(function() {
+                    avalon.scan(flipswitch, flipswitchVM);
+                })
+            })
+
+            function asyncRender(fn) {
+                if(asyncRender.count === void 0) {
+                    asyncRender.count = 0
+                }
+                asyncRender.count++
+                setTimeout(fn, asyncRender.count * 40)
             }
-        })
-
-        require(["spinner/avalon.spinner"], function(avalon) {
-            var spinnerVM = avalon.define('spinner', function(vm) {
-            
-            });
-            var spinner = document.getElementById("spinner");
-            avalon.scan(spinner, spinnerVM);
-        })
-        
-        require("slider/avalon.slider", function() {
-            var sliderVM = avalon.define("slider", function(vm) {
-                
-            })
-            var slider = document.getElementById("slider");
-            avalon.scan(slider, sliderVM);
-        })
-
-        require("datepicker/avalon.datepicker", function(avalon) {
-            var datepickerVM = avalon.define("datepicker", function(vm) {
-            })
-            var datepicker = document.getElementById("datepicker");
-            avalon.scan(datepicker, datepickerVM);
-        })
-
-        require(['dropdown/avalon.dropdown'], function() {
-            var dropdownVM = avalon.define('dropdown', function(vm) {
-            });
-            var datepicker = document.getElementById("dropdown");
-            avalon.scan(dropdown, dropdownVM);
-          
-        });
-
-        require(["progressbar/avalon.progressbar"], function() {
-            var progressbarVM = avalon.define("progressbar", function(vm) {
-                
-            })
-            var progressbar = document.getElementById("progressbar");
-            avalon.scan(progressbar, progressbarVM);
-        })
-
-       
-        //只有存在flipswitch loading就会出问题，等会查找
-        require(["flipswitch/avalon.flipswitch"], function() {
-            var flipswitchVM = avalon.define("flipswitch", function(vm) {
-            })
-            var flipswitch = document.getElementById("flipswitch");
-            avalon.scan(flipswitch, flipswitchVM);
-        })
-    </script>
-</body>
+        </script>
+    </body>
 </html>

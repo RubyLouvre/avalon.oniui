@@ -1,3 +1,10 @@
+/**
+ * @cnName 分页组件
+ * @enName pager
+ * @introduce
+ *  <p> 分页组件 用于各种列表与表格的下方 。</p>
+ */
+
 define(["avalon",
     "text!./avalon.pager.html",
     "css!../chameleon/oniui-common.css",
@@ -31,17 +38,23 @@ define(["avalon",
             vm.widgetElement = element
             vm.$skipArray = ["showPages", "widgetElement", "template", "ellipseText", "alwaysShowPrev", "alwaysShowNext"]
             //这些属性不被监控
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 var pageHTML = options.template
                 element.style.display = "none"
                 element.innerHTML = pageHTML
+
                 setTimeout(function() {
-                    avalon.scan(element, [vmodel].concat(vmodels))
                     element.style.display = "block"
+                    if (continueScan) {
+                        continueScan()
+                    } else {
+                        avalon.log("avalon请尽快升到1.3.7+")
+                        avalon.scan(element, [vmodel].concat(vmodels))
+                        if (typeof options.onInit === "function") {
+                            options.onInit.call(element, vmodel, options, vmodels)
+                        }
+                    }
                 }, 100)
-                if (typeof options.onInit === "function") {
-                    options.onInit.call(element, vmodel, options, vmodels)
-                }
             }
             vm.$remove = function() {
                 element.innerHTML = element.textContent = ""
@@ -89,9 +102,8 @@ define(["avalon",
             })
             vm.isShowPrev = function() {
                 var a = vm.alwaysShowPrev;
-                var b = vm.firstPage;
-                var c = vm.currentPage;
-                return (a || b !== 1) && c !== 1;
+                var b = vm.firstPage
+                return a || b !== 1
             }
             vm.isShowNext = function() {
                 var a = vm.alwaysShowNext
@@ -170,27 +182,47 @@ define(["avalon",
 
     }
     widget.defaults = {
-        perPages: 10, //每页包含多少条目
-        showPages: 10, //要显示的页面的数量，从1开始
-        currentPage: 1, //当前被高亮的页面，从1开始
-        _currentPage: 1,
-        totalItems: 200, //总条目数
-        totalPages: 0, //总页数,通过Math.ceil(vm.totalItems / vm.perPages)求得
-        pages: [], //要显示的页面组成的数字数组，如[1,2,3,4,5,6,7]
-        nextText: ">",
-        prevText: "<",
-        ellipseText: "…",
-        firstPage: 0, //当前可显示的最小页码，不能小于1
-        lastPage: 0, //当前可显示的最大页码，不能大于totalPages
-        alwaysShowNext: false, //总是显示向后按钮
-        alwaysShowPrev: false, //总是显示向前按钮
+        perPages: 10, //@config {Number} 每页包含多少条目
+        showPages: 10, //@config {Number} 中间部分一共要显示多少页(如果两边出现省略号,即它们之间的页数) 
+        currentPage: 1, //@config {Number} 当前选中的页面 (按照人们日常习惯,是从1开始)，它会被高亮 
+        _currentPage: 1, //@config {Number}  跳转台中的输入框显示的数字，它默认与currentPage一致
+        totalItems: 200, //@config {Number} 总条目数
+        totalPages: 0, //@config {Number} 总页数,通过Math.ceil(vm.totalItems / vm.perPages)求得
+        pages: [], //@config {Array} 要显示的页面组成的数字数组，如[1,2,3,4,5,6,7]
+        nextText: ">", //@config {String} “下一页”分页按钮上显示的文字 
+        prevText: "<", //@config {String} “上一页”分页按钮上显示的文字 
+        ellipseText: "…", //@config {String} 省略的页数用什么文字表示 
+        firstPage: 0, //@config {Number} 当前可显示的最小页码，不能小于1
+        lastPage: 0, //@config {Number} 当前可显示的最大页码，不能大于totalPages
+        alwaysShowNext: false, //@config {Boolean} 总是显示向后按钮
+        alwaysShowPrev: false, //@config {Boolean} 总是显示向前按钮
         showFirstOmit: false,
         showLastOmit: false,
         showJumper: false, //是否显示输入跳转台
+        /*
+         * @config {Function} 用于重写模板的函数 
+         * @param {String} tmpl
+         * @param {Object} opts
+         * @returns {String}
+         */
         getTemplate: function(tmpl, opts) {
             return tmpl
         },
-        onJump: avalon.noop, //页面跳转时触发的函数
+        options: [], // @config {Array}数字数组或字符串数组或对象数组,但都转换为对象数组,每个对象都应包含text,value两个属性, 用于决定每页有多少页(看avalon.pager.ex3.html) 
+        /**
+         * @config {Function} 页面跳转时触发的函数
+         * @param {Event} e
+         * @param {Number} page  当前页码
+         */
+        onJump: function(e, page) {
+        },
+        /**
+         * @config {Function} 获取页码上的title的函数
+         * @param {String|Number} a 当前页码的类型，如first, prev, next, last, 1, 2, 3
+         * @param {Number} currentPage 当前页码
+         * @param {Number} totalPages 最大页码
+         * @returns {String}
+         */
         getTitle: function(a, currentPage, totalPages) {
             switch (a) {
                 case "first":
@@ -250,7 +282,53 @@ define(["avalon",
     }
     return avalon
 })
+/**
+ * @other
+ * <p>pager 组件有一个重要的jumpPage方法，用于决定它的跳转方式。它有两个参数，第一个事件对象，第二个是跳转方式，见源码：</p>
+ ```javascript
+ vm.jumpPage = function(event, page) {
+ event.preventDefault()
+ if (page !== vm.currentPage) {
+ switch (page) {
+ case "first":
+ vm.currentPage = 1
+ break
+ case "last":
+ vm.currentPage = vm.totalPages
+ break
+ case "next":
+ vm.currentPage++
+ if (vm.currentPage > vm.totalPages) {
+ vm.currentPage = vm.totalPages
+ }
+ break
+ case "prev":
+ vm.currentPage--
+ if (vm.currentPage < 1) {
+ vm.currentPage = 1
+ }
+ break
+ default:
+ vm.currentPage = page
+ break
+ }
+ vm.onJump.call(element, event, vm)
+ efficientChangePages(vm.pages, getPages(vm))
+ }
+ }
+ ```
+ */
+
+/**
+ *  @links
+ [显示跳转台](avalon.pager.ex1.html)
+ [指定回调onJump](avalon.pager.ex2.html)
+ [改变每页显示的数量](avalon.pager.ex3.html)
+ [指定上一页,下一页的文本](avalon.pager.ex4.html)
+ [通过左右方向键或滚轮改变页码](avalon.pager.ex5.html)
+ [总是显示上一页与下一页按钮](avalon.pager.ex6.html)
+ * 
+ */
 //http://luis-almeida.github.io/jPages/defaults.html
 //http://gist.corp.qunar.com/jifeng.yao/gist/demos/pager/pager.html
-
 

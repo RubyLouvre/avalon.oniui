@@ -1,11 +1,11 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
 $uiname: "ui-daterangepicker";
-.ui-daterangepicker {
+.oni-daterangepicker {
     width: 260px;
     font-size: 12px;
     line-height: 18px;
-    .ui-btn {
+    .oni-btn {
         height: 26px;
         overflow: visible;
         _overflow-y: hidden;
@@ -19,7 +19,7 @@ $uiname: "ui-daterangepicker";
         }
         cursor: pointer;
     }
-    .ui-btn:hover {
+    .oni-btn:hover {
         box-shadow: 1px 1px 0 0 rgba(0,0,0,0.1);
         @if($oinui-theme == smoothness) {
             background-color: #f8f8f8;
@@ -27,26 +27,26 @@ $uiname: "ui-daterangepicker";
             color: #333333;
         }
     }
-    .ui-btn-small {
+    .oni-btn-small {
         height: 22px;
         padding: 0 5px;
         font-size: 12px;
     }
-    .ui-btn-primary {
+    .oni-btn-primary {
         background-color: $ui-state-active-background-color;
         border-color: $ui-state-active-border-color;
         color: $ui-state-active-color;
     }
-    .ui-btn-primary.ui-state-hover {
+    .oni-btn-primary.oni-state-hover {
         background-color: lighten($ui-state-active-background-color, 10%);
         border-color: lighten($ui-state-active-border-color, 10%);
         color: $ui-widget-content-color;
     }
-    .ui-daterangepicker-content {
+    .oni-daterangepicker-content {
         position: relative;
         z-index: 1000;
         zoom: 1;
-        .ui-daterangepicker-quick-operation {
+        .oni-daterangepicker-quick-operation {
             font-size: 12px;
             border-bottom: 1px solid #f2f2f2;
             margin: -5px 0 10px -10px;
@@ -58,7 +58,7 @@ $uiname: "ui-daterangepicker";
                 cursor: pointer;
             }
         }
-        .ui-datepicker-groups {
+        .oni-datepicker-groups {
             position: absolute;
             z-index: 1000;
             zoom: 1;
@@ -70,15 +70,15 @@ $uiname: "ui-daterangepicker";
             @if($oinui-theme == smoothness) {
                 background: #ffffff;
             }
-            .ui-datepicker-group {
+            .oni-datepicker-group {
                 position: relative;
                 @include inline-block();
-                .ui-datepicker-content {
+                .oni-datepicker-content {
                     position: static;
                     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); 
                 }
             }
-            .ui-calendarbox-footer-small {
+            .oni-calendarbox-footer-small {
                 position: relative;
                 margin: 10px 0 0 -10px;
                 height:22px;
@@ -89,22 +89,22 @@ $uiname: "ui-daterangepicker";
                 @if($oinui-theme == smoothness) {
                     background: #f8f8f8;
                 }
-                .ui-calendarbox-btns {
+                .oni-calendarbox-btns {
                     position: absolute;
                     right: 10px;
                     top: 4px;
                     display: inline;
                     font-size: 0;
-                    .ui-btn {
+                    .oni-btn {
                         margin: 0 0 0 5px ;
                     }
                 }
-                .ui-calendarbox-msg {
+                .oni-calendarbox-msg {
                     padding-left: 10px;
                     font-size: 12px;
                 }
             }
-            .ui-datepicker-wrapper {
+            .oni-datepicker-wrapper {
                 position: static;
                 padding: 0;
                 border: 0;
@@ -113,36 +113,36 @@ $uiname: "ui-daterangepicker";
             }
         }
     }
-    .ui-datepicker-range-input {
+    .oni-datepicker-range-input {
         cursor: pointer;
         border: 1px solid #cccccc;
         @if($oinui-theme == smoothness) {
             background-color: #ffffff;
         }
-        .ui-datepicker-input {
+        .oni-datepicker-input {
             height: 18px;
             overflow: hidden;
             padding: 3px 21px 3px 6px;
             text-overflow: ellipsis;
             white-space: nowrap;
-            &.ui-datepicker-input-disabled {
+            &.oni-datepicker-input-disabled {
                 background: #ebebe4;
                 border-color: #cccccc;
             }
         }
-        &.ui-state-hover {
+        &.oni-state-hover {
             border: 1px solid #999;
         }
-        &.ui-state-active {
+        &.oni-state-active {
             border-color: #3775c0;
             border-bottom-color: #fff;
         }
     }
-    .ui-datepicker-icon-wrap {
+    .oni-datepicker-icon-wrap {
         position: relative;
         display: block;
         height: 0;
-        .ui-datepicker-icon {
+        .oni-datepicker-icon {
             position: absolute;
             right: 0;
             top: -21px;
@@ -154,7 +154,7 @@ $uiname: "ui-daterangepicker";
             @if($oinui-theme == smoothness) {
                 color: #b5b5b5;
             }
-            &.ui-icon-angle-down, &.ui-icon-angle-up {
+            &.oni-icon-angle-down, &.oni-icon-angle-up {
                 display: block;
             }
         }

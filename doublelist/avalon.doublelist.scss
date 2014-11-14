@@ -1,6 +1,6 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname : ".ui-doublelist";
+$uiname : ".oni-doublelist";
 @if($oinui-theme == smoothness) {
 	$doublelist: (
 		fontColor: #000, 
@@ -44,22 +44,23 @@ div#{$uiname} {
 		cursor: pointer;
 		color: map-get($doublelist, fontColor);
 	}
-	li.ui-state-hover{
+	li.oni-state-hover{
 		background-color: map-get($doublelist, hoverBg);
 	}
-	li.ui-state-active{
+	li.oni-state-active{
 		background-color: map-get($doublelist, activeBg);
 		color: $ui-state-active-color;
 	}
-	li.ui-state-disabled{
+	li.oni-state-disabled{
 		cursor: default;
 		color: $ui-state-disabled-color;
 		background: map-get($doublelist, disableBg);
 	}
-	.ui-button{
+	.oni-dbl-button{
 		height: 24px;
 		*height: auto;
 		line-height: 24px;
+		padding: 0;
 		background-color: map-get($doublelist, buttonBg);
 		border: 1px solid $ui-state-default-border-color;
 		border-radius: 2px;
@@ -68,7 +69,7 @@ div#{$uiname} {
 		margin-top: 10px;
 		cursor: pointer;
 	}
-	&-option div.ui-state-disabled{
+	&-option div.oni-state-disabled{
 		border-color: #dedede;
 		color: #ccc;
 	}

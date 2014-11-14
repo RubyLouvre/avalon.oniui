@@ -1,0 +1,7 @@
+<span class="button chk" 
+      ms-attr-id="'chk'+leaf.$id" 
+      ms-if="exprAnd(leaf, check.enable, !leaf.nocheck)" 
+      ms-class="{{computeCHKClass(leaf)}}"
+      ms-on-mouseenter="excute('chkFocus', $event, leaf, chkFocus)" 
+      ms-on-mouseleave="excute('chkBlur', $event, leaf, chkBlur)" 
+      ms-on-click="checkNode(leaf, void 0, true, 'callbackFlag')"></span>

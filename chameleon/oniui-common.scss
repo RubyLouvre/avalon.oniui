@@ -13,8 +13,8 @@ oinui的CSS规范
 不能出现大写,以连字符风格命名 
 表示状态的应该用ui-state-*命名 
 表示功能的应该用ui-helper-*命名
-表示布局的应用用ui-uiname-* 命名, 它的子元素应该全部包在 .ui-uiname这个根类下
-如 .ui-grid .ui-grid-tbody{ ... }
+表示布局的应用用ui-uiname-* 命名, 它的子元素应该全部包在 .oni-uiname这个根类下
+如 .oni-grid .oni-grid-tbody{ ... }
 如果某一个区域的背景要换肤,能用ui-widget-header或ui-widget-content就尽用
 其他细微之后的换肤,使用ui-state-*-?-color实现,或至少包在if(oniui-theme === xxx){}分支内
 
@@ -31,10 +31,10 @@ CSSShrink 是一个压缩 CSS 的在线工具。压缩比真高！
 
 http://cssshrink.com/
 */
-.ui-helper-hidden {
+.oni-helper-hidden {
     display: none;
 }
-.ui-helper-hidden-accessible {
+.oni-helper-hidden-accessible {
     border: 0;
     clip: rect(0 0 0 0);
     height: 1px;
@@ -44,7 +44,7 @@ http://cssshrink.com/
     position: absolute;
     width: 1px;
 }
-.ui-helper-reset {
+.oni-helper-reset {
     margin: 0;
     padding: 0;
     border: 0;
@@ -55,19 +55,19 @@ http://cssshrink.com/
     list-style: none;
 }
 //禁止文字被选中，禁止图片被拖动
-.ui-helper-noselect {
+.oni-helper-noselect {
     @include user-select();
     img, a{
         -webkit-user-drag:none; 
         pointer-events:none;
     }
 }
-.ui-helper-clearfix {
+.oni-helper-clearfix {
     @include legacy-pie-clearfix();
 }
 
 // max z-index
-.ui-helper-max-index{
+.oni-helper-max-index{
     html &,body &{
         z-index:1000; 
     }
@@ -78,15 +78,15 @@ http://cssshrink.com/
   font-family: fontawesome;
   font-style: normal;
   font-weight: normal;
-  src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.eot?v=4.1.0');
-  src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.eot?#iefix&v=4.1.0') 
+  src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.eot?v=4.2.0');
+  src: url('http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.eot?#iefix&v=4.2.0') 
       format('embedded-opentype'), 
-      url('http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.woff?v=4.1.0') format('woff'),
-      url('http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.ttf?v=4.1.0') format('truetype'),
-      url('http://simg4.qunarzz.com/fonts/fontawesome/4.1.0/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular') format('svg');
+      url('http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.woff?v=4.2.0') format('woff'),
+      url('http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.ttf?v=4.2.0') format('truetype'),
+      url('http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular') format('svg');
 }
 
-.ui-icon {
+.oni-icon {
     @include user-select(none);
     cursor: default;
     font-family: fontawesome !important;
@@ -99,7 +99,7 @@ http://cssshrink.com/
     vertical-align: middle;
 }
 
-a .ui-icon,.ui-btn .ui-icon {
+a .oni-icon,.oni-btn .oni-icon {
     cursor: pointer;
 }
 
@@ -108,4 +108,65 @@ a .ui-icon,.ui-btn .ui-icon {
 }
 .g-icon-pause {
   color: $oniui-icon-pause-color;
+}
+//=====================为了与洋葱UI共存====================
+.oni-helper-hidden {
+    display: none;
+}
+.oni-helper-hidden-accessible {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+.oni-helper-reset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    line-height: 1.3;
+    text-decoration: none;
+    font-size: 100%;
+    list-style: none;
+}
+//禁止文字被选中，禁止图片被拖动
+.oni-helper-noselect {
+    @include user-select();
+    img, a{
+        -webkit-user-drag:none; 
+        pointer-events:none;
+    }
+}
+.oni-helper-clearfix {
+    @include legacy-pie-clearfix();
+}
+
+// max z-index
+.oni-helper-max-index{
+    html &,body &{
+        z-index:1000; 
+    }
+}
+
+
+
+.oni-icon {
+    @include user-select(none);
+    cursor: default;
+    font-family: fontawesome !important;
+    font-size: 14px;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 18px;
+    vertical-align: middle;
+}
+
+a .oni-icon,.oni-btn .oni-icon {
+    cursor: pointer;
 }

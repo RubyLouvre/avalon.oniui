@@ -1,4 +1,12 @@
 //avalon 1.2.5 2014.4.2
+/**
+ * 
+ * @cnName avalon类似新浪微博的@提示组件
+ * @enName at
+ * @introduce
+ *    <p>经常使用微博的人会发现，当我们在输入框输入@然后敲一个人的名字，会弹出一个<code>tip提示层</code>，里面是一个名字列表。这是社交网站或应用最近非常流行的功能。
+ 当你发布<code>@昵称</code>的信息时，在这里的意思是“向某某人说”，对方能看到你说的话，并能够回复，实现一对一的沟通。</p>
+ */
 define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", "css!./avalon.at.css"], function(avalon, template) {
 
     var widget = avalon.ui.at = function(element, data, vmodels) {
@@ -114,7 +122,9 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                     options.onInit.call(element, vmodel, options, vmodels)
                 }
             }
-
+            /**
+             * @interface 当组件移出DOM树时,系统自动调用的销毁函数
+             */
             vm.$remove = function() {
                 avalon(element)
                         .unbind("keyup", keyupCallback)
@@ -175,7 +185,7 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                 popup = popup || document.createElement("div")
                 popup.innerHTML = vmodel.template
                 document.body.appendChild(popup)
-                popup.className = "ui-at"
+                popup.className = "oni-at"
                 popup.setAttribute("ms-visible", "toggle")
                 avalon(popup).css({
                     top: offset.top + top, //得到@在textarea, input的坐标
@@ -223,23 +233,43 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
     }
     widget.vertion = 1.0
     widget.defaults = {
-        at: "@", //默认的标识符,
-        datalist: [], //字符串数组，不可监控，(名字取自HTML的datalist同名元素)
-        _datalist: [], //实际是应用于模板上的字符串数组，它里面的字符可能做了高亮处理
-        template: "", //弹出层的模板，如果为空，使用默认模板，注意要在上面添加点击或hover处理
-        toggle: false, //用于控制弹出层的显示隐藏
-        activeIndex: 0, //弹出层里面要高亮的列表项的索引值
-        query: "", //@后的查询字符串
-        limit: 5, //弹出层里面总共有多少个列表项
-        maxLength: 20, //@后的查询字符串的最大长度，注意中间不能有空格
-        minLength: 1, //@后的查询字符串只有出现了多少个字符后才显示弹出层
-        delay: 500, //我们是通过$update方法与后台进行AJAX连接，为了防止输入过快导致频繁，需要指定延时毫秒数
-        //远程更新函数,与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行$filter、$highlight操作
-        updateData: avalon.noop,
-        getTemplate: function(str, options) {
+        at: "@", // @config 默认的标识符
+        datalist: [], //@config 字符串数组，不可监控，(名字取自HTML的datalist同名元素)
+        _datalist: [], //@interface 实际是应用于模板上的字符串数组，它里面的字符可能做了高亮处理
+        template: "", // @config  弹出层的模板，如果为空，使用默认模板，注意要在上面添加点击或hover处理
+        toggle: false, //@config 用于控制弹出层的显示隐藏
+        activeIndex: 0, //@config 弹出层里面要高亮的列表项的索引值
+        query: "", ///@config @后的查询字符串
+        limit: 5, //@config  弹出层里面总共有多少个列表项
+        maxLength: 20, //@config @后的查询字符串的最大长度，注意中间不能有空格
+        minLength: 1, //@config @后的查询字符串只有出现了多少个字符后才显示弹出层
+        /**
+         * @config 我们是通过$update方法与后台进行AJAX连接，为了防止输入过快导致频繁，需要指定延时毫秒数
+         * 远程更新函数,与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行$filter、$highlight操作
+         */
+        delay: 500,
+        /**
+         * @config {Function} 远程更改数据
+         * @param vm {Object} vmodel
+         * @param callback {Function} 在vmodel.datalist被更新后执行的回调
+         */
+        updateData: function(vm, callback) {
+
+        }, 
+        /**
+         * @config 模板函数,方便用户自定义模板
+         * @param str {String} 默认模板
+         * @param opts {Object} vmodel
+         * @returns {String} 新模板
+         */
+        getTemplate: function(str, opts) {
             return str
         },
-        //用于对datalist进行过滤排序，将得到的新数组赋给_datalist，实现弹出层的更新
+        /**
+         * @config 用于对datalist进行过滤排序，将得到的新数组赋给_datalist，实现弹出层的更新
+         * @param opts {Object} vmodel
+         * @returns {Array} datalist
+         */
         filterData: function(opts) {
             //opts实质上就是vmodel，但由于在IE6-8下，this不指向调用者，因此需要手动传vmodel
             var unique = {}, query = opts.query, lowquery = query.toLowerCase()
@@ -262,7 +292,11 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
             })
             return datalist.slice(0, opts.limit) //对显示个数进行限制
         },
-        //用于对_datalist中的字符串进行高亮处理，item为_datalist中的每一项，str为查询字符串
+        /*
+         * @config 用于对_datalist中的字符串进行高亮处理，将得到的新数组赋给_datalist，实现弹出层的更新
+         * @param items {String} datalist中的每一项
+         * @returns {String} 查询字符串
+         */
         highlightData: function(item, str) {
             var query = escapeRegExp(str)
             return item.replace(new RegExp('(' + query + ')', 'ig'), function($1, match) {
@@ -279,13 +313,13 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
     function escapeRegExp(str) {
         return str.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
     }
-    function getCaretPosition(element) {
+    function getCaretPosition(ctrl) {
         var caret  //取得光标的位置
-        if (typeof element.selectionStart === "number") {
-            caret = element.selectionStart
+        if (typeof ctrl.selectionStart === "number") {
+            caret = ctrl.selectionStart
         } else {
-            var selection = document.selection.createRange() //这个TextRange对象不能重用
-            selection.moveStart("character", -element.value.length)
+            var selection = ctrl.selection.createRange() //这个TextRange对象不能重用
+            selection.moveStart("character", -ctrl.value.length)
             caret = selection.text.length;
         }
         return caret
@@ -345,23 +379,25 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
 
     return avalon
 })
-/*
- //updateData的例子，里面是一个AJAX回调，成功后更新VM的datalist，并执行回调
- 
- function updateData(vmodel, callback){ 
+/**
+ * @other
+ * updateData是一个非常重要的配置项，用于与后端同步数据，下面是
+ * ```js
+ function updateData(vmodel, callback) {
  var model = vmodel.$model
- jQuery.post("url", { limit: model.limit, query: model.query}, function(data){
+ jQuery.post("url", {limit: model.limit, query: model.query}, function(data) {
  vmodel.datalist = data.datalist
  callback()
  })
  }
- 
- 
- 
- **/
-/**
- * 参考链接
- http://dddemo.duapp.com/bootstrap
- http://www.cnblogs.com/haogj/p/3376874.html
+ ```
+*/
+/*
+ <p><a href="http://dddemo.duapp.com/bootstrap"> http://dddemo.duapp.com/bootstrap</a></p>
+ <p><a href=" http://www.cnblogs.com/haogj/p/3376874.html"> http://www.cnblogs.com/haogj/p/3376874.html</a></p>
  */
 
+/**
+ @links
+ [例子1](avalon.at.ex1.html)
+ */

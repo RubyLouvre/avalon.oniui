@@ -17,7 +17,8 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                 var data = options.data,
                     elementType = "",
                     label = options.label,
-                    buttonWidth = 0
+                    buttonWidth = 0,
+                    elementTagName = element.tagName.toLowerCase()
 
                 if (options.groups && data.length > 1) {
                     var buttons = ""
@@ -67,21 +68,13 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                 } else {
                     element.disabled = options.disabled
                 }
-                if (element.tagName.toLowerCase() === "input") {
+
+                if (elementTagName === "input") {
                     elementType = "input"
-                    element.type = "button"
                 }
                 if (buttonWidth = parseInt(options.width)) {
                     element.style.width = buttonWidth + "px"
                 }
-                $element.bind("mouseenter", function(event) {
-                    stop(event)
-                    $element.addClass("ui-state-hover")
-                })
-                $element.bind("mouseleave", function(event) {
-                    stop(event)
-                    $element.removeClass("ui-state-hover")
-                })
                 $element.bind("mousedown", function(event) {
                     stop(event)
                     $element.addClass("ui-state-active")
@@ -97,12 +90,6 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                 $element.bind("focus", function() {
                     $element.addClass("ui-state-focus");
                 })
-                $element.bind("click", function(event) {
-                    stop(event)
-                    if (typeof options.onClick === "function") {
-                        options.onClick.call(vmodels.widgetElement, event)
-                    }
-                })
                 if (!options.label) {
                     label = elementType === "input" ? element.value : element.innerHTML
                 }
@@ -110,13 +97,9 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                 options.label = label
                 createButton(element, options)
                 avalon.scan(element, vmodels)
-            },
-            $remove: function() {
-                element.innerHTML = element.contextContent = ""
             }
         }
-        
-        return btnModel
+        btnModel.$init()
     }
     avalon.ui.buttonset = function(element, data, vmodels) {
         var options = data.buttonsetOptions,
@@ -133,12 +116,17 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                 lastButtonClass = "ui-corner-right",
                 children = element.childNodes, 
                 buttons = [] // 收集button组元素
-                buttonWidth = options.width
+                buttonWidth = options.width,
+                firstElement = true
 
                 for (var i = 0, el; el = children[i++]; ) {
                     if (el.nodeType === 1) {
                         el.setAttribute("data-button-corner", "false")
                         buttons.push(el)
+                        if (firstElement) {
+                            avalon(el).addClass("ui-button-first")
+                            firstElement = false
+                        }
                     }
                 }
                 var n = buttons.length
@@ -168,22 +156,17 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                         maxButtonWidth = 0
                     buttons = buttons.concat()
                     interval = setInterval(function() {
-                        var buttonWidth = 0,
-                            buttonPadding = 0,
-                            buttonBorder = 0,
-                            $button
+                        var buttonWidth = 0
                         for (var i = 0, button; button = buttons[i++];) {
                             buttonWidth = Math.max(buttonWidth, avalon(button).outerWidth())
                         }
                         if (buttonWidth === maxButtonWidth) {
                             maxButtonWidth += 1
                             for (var i = 0, button; button = buttons[i++];) {
-                                $button = avalon(button)
-                                buttonPadding = Math.ceil(parseFloat($button.css("padding-left")))
-                                buttonBorder = Math.ceil(parseFloat($button.css("border-left-width")))
-                                button.style.width = (maxButtonWidth - buttonPadding * 2 - buttonBorder * 2) + "px"
+                                button.style.width = maxButtonWidth + "px"
                             }
                             clearInterval(interval)
+                            return 
                         }
                         maxButtonWidth = buttonWidth
                     }, 100)
@@ -217,7 +200,7 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
         avalon(element).addClass(buttonClasses.join(" "))
         if (options.elementType === "input" && options.label) {
             avalon(element).val(options.label)
-            avalon(element).addClass("ui-button-input")
+            
             return
         }
         switch (options.type) {

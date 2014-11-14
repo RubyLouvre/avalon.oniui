@@ -1,0 +1,25 @@
+<span class="button switch center_docu" 
+      ms-class="bottom_docu:$last" 
+      ms-class-100="{{levelClass(leaf)}}" 
+      ms-class-2="noline_docu:!optionToBoolen(view.showLine, leaf)"></span>
+{{MS_CHECK_HTML}}
+<a  {{MS_EDIT_BINDING}} 
+   ms-class="curSelectedNode:hasClassSelect(leaf)" 
+   ms-class-100="{{levelClass(leaf)}}" 
+   ms-attr-target="leaf.target || '_blank'" 
+   ms-attr-href="leaf.url || '#'" 
+   ms-on-mousedown="excute('mousedown', $event, leaf)" 
+   ms-on-mouseup="excute('mouseup', $event, leaf)" 
+   ms-attr-title="exprAnd(leaf, view.showTitle, leaf.title || leaf.name)"
+   ms-click="excute('click',$event,leaf,'selectFun')">
+    <span class="button ico_docu" 
+          ms-css-background="computeIcon(leaf)" 
+          ms-class-100="{{levelClass(leaf)}}" 
+          ms-if="exprAnd(leaf, view.showIcon,leaf.icon)"></span>
+    <span class="button ico_docu" 
+          ms-class-100="{{levelClass(leaf)}}" 
+          ms-if="exprAnd(leaf, view.showIcon,!leaf.icon)"></span>
+  	<span 
+          ms-class-100="{{levelClass(leaf)}}" >{{view.nameShower(leaf)|html}}</span>
+  	{{MS_EDIT_HTML}}
+</a>

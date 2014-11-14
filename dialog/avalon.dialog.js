@@ -1,5 +1,6 @@
 define(["../avalon.getModel", 
     "text!./avalon.dialog.html",
+    "../button/avalon.button",
     "css!../chameleon/oniui-common.css", 
     "css!./avalon.dialog.css"
 ], function(avalon, sourceHTML) {
@@ -53,6 +54,7 @@ define(["../avalon.getModel",
             options.onCancel = onCancelVM && onCancelVM[1][onCancelVM[0]] || avalon.noop
         }
         if (typeof onClose ==="string") {
+            avalon.log("ms-widget='dialog' data-dialog-on-close 此用法已经被废弃")
             onCloseVM = avalon.getModel(onClose, vmodels)
             options.onClose = onCloseVM && onCloseVM[1][onCloseVM[0]] || avalon.noop
         }
@@ -60,6 +62,7 @@ define(["../avalon.getModel",
             onOpenVM = avalon.getModel(onOpen, vmodels)
             options.onOpen = onOpenVM && onOpenVM[1][onOpenVM[0]] || avalon.noop
         }
+        _lastFooter = options.getFooter(_lastFooter, options)
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options)
             vm.$skipArray = ["widgetElement", "template", "container", "modal"]
@@ -283,6 +286,9 @@ define(["../avalon.getModel",
         cancelName: "取消",
         getTemplate: function(str, options) {
             return str
+        },
+        getFooter: function(tmp) {
+            return tmp
         },
         modal: true, //是否显示遮罩
         zIndex: maxZIndex //手动设置body直接子元素的最大z-index

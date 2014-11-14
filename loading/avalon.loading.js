@@ -58,9 +58,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         "count": 10, //@param type=ball，loading效果组成的小图形个数
         "interval": 120,//@param type=ball，毫秒数，动画效果帧间隔
         "circleMargin": 1,//@param type=ticks，小球之间的间距，单位是一倍小球半径
-        "data": [],
-        "svgDur": "1s",
-        "opacities": []
+        "svgDur": "1s"
     }, function(vmodel) {
         var type = vmodel.type,
             count = vmodel.count,
@@ -211,8 +209,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         spokesHeight: 8, //@param type=spokes，小长方形高度
         interval: 125, //@param type=spokes，效果动画间隔毫秒数
         svgPath: "M14 0 H18 V8 H14 z",
-        svgDur: "1s",
-        opacities: []
+        svgDur: "1s"
     },function(vmodel) {
         var count = vmodel.count,w = vmodel.width, sw = vmodel.spokesWidth, sh = vmodel.spokesHeight, index = 0, interval = vmodel.interval;
         if(vmodel.svgSupport) {
@@ -342,6 +339,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             vm.height = ""
             vm.width = ""
             vm.data = []
+            vm.opacities = []
             avalon.mix(vm, options)
             vm.widgetElement = element
             vm.svgSupport = svgSupport
@@ -379,7 +377,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             }
             vm._effect = function() {
                 if (vmodel.toggle) {
-                    var ele = document.getElementById("ui-loading-" + vmodel.$loadingID)
+                    var ele = document.getElementById("oni-loading-" + vmodel.$loadingID)
                     if (ele) {
                         var effect = vmodel.effect && vmodel.effect(vmodel, ele)
                         if(effect) {

@@ -2,51 +2,14 @@
 /*
 这是每个都组件都应该引用的部分
 */
-div.ui-doublelist {
-  font-size: 12px; }
+div.oni-doublelist { font-size: 12px; }
 
-.ui-doublelist-menu {
-  width: 180px;
-  height: 190px;
-  border: 1px solid #d4d4d4;
-  background: white;
-  float: left;
-  display: inline; }
-.ui-doublelist ul {
-  width: 100%; }
-.ui-doublelist-option {
-  width: 58px;
-  height: 62px;
-  padding: 10px;
-  vertical-align: middle;
-  float: left;
-  display: inline;
-  margin-top: 40px; }
-.ui-doublelist li {
-  list-style: none;
-  padding: 5px 6px;
-  cursor: pointer;
-  color: black; }
-.ui-doublelist li.ui-state-hover {
-  background-color: #f8f8f8; }
-.ui-doublelist li.ui-state-active {
-  background-color: #3775c0;
-  color: white; }
-.ui-doublelist li.ui-state-disabled {
-  cursor: default;
-  color: #999999;
-  background: white; }
-.ui-doublelist .ui-button {
-  height: 24px;
-  *height: auto;
-  line-height: 24px;
-  background-color: #f8f8f8;
-  border: 1px solid #d4d4d4;
-  border-radius: 2px;
-  color: black;
-  text-align: center;
-  margin-top: 10px;
-  cursor: pointer; }
-.ui-doublelist-option div.ui-state-disabled {
-  border-color: #dedede;
-  color: #ccc; }
+.oni-doublelist-menu { width: 180px; height: 190px; border: 1px solid #d4d4d4; background: white; float: left; display: inline; }
+.oni-doublelist ul { width: 100%; }
+.oni-doublelist-option { width: 58px; height: 62px; padding: 10px; vertical-align: middle; float: left; display: inline; margin-top: 40px; }
+.oni-doublelist li { list-style: none; padding: 5px 6px; cursor: pointer; color: black; }
+.oni-doublelist li.oni-state-hover { background-color: #f8f8f8; }
+.oni-doublelist li.oni-state-active { background-color: #3775c0; color: white; }
+.oni-doublelist li.oni-state-disabled { cursor: default; color: #999999; background: white; }
+.oni-doublelist .oni-dbl-button { height: 24px; *height: auto; line-height: 24px; padding: 0; background-color: #f8f8f8; border: 1px solid #d4d4d4; border-radius: 2px; color: black; text-align: center; margin-top: 10px; cursor: pointer; }
+.oni-doublelist-option div.oni-state-disabled { border-color: #dedede; color: #ccc; }

@@ -62,18 +62,16 @@ define(["avalon"], function() {
                     })
                 })
                 function showMask(e) {
-                    console.log("dddddddddddd")
                     elem.value = mask.valueMask
                     elem.userTrigger = true
                     var index = mask.vmodelData.indexOf(null)//定位于第一个要填空的位置上
                     if (index !== -1) {
-                        mask.index = index
                         setCaret(elem, index, index + 1)
                     }
                 }
                 function hideMask() {
                     if ((mask.hideIfInvalid && !mask.valid) ||
-                            (mask.hideIfPristine && mask.value === mask.valueMask)) {
+                            (mask.hideIfPristine && elem.value === mask.valueMask)) {
                         elem.value = mask.oldValue = mask.masked = ""//注意IE6-8下，this不指向element
                     }
                 }
@@ -82,7 +80,7 @@ define(["avalon"], function() {
                 } else {
                     if (mask.showIfFocus) {
                         data.bound("focus", showMask)
-                        //  data.bound("blur", hideMask)
+                        data.bound("blur", hideMask)
                     }
                     if (mask.showIfHover) {
                         data.bound("mouseover", showMask)
@@ -159,7 +157,7 @@ define(["avalon"], function() {
         showIfHover: false, //@config {Boolean} false 当鼠标掠过其元素上方就显示它出来，可以通过data-duplex-mask-show-if-hover设置
         showIfFocus: true, //@config {Boolean} true 当用户让其元素得到焦点就显示它出来，可以通过data-duplex-mask-show-if-focus设置
         showAlways: false, //@config {Boolean} false 总是显示它，可以通过data-duplex-mask-show-always设置
-        translations: {//@config {Object} 此对象上每个键名都是元字符，都对应一个对象，上面有pattern(正则)，placehoder(占位符，如果你不想用"_"),optional（表示可选）
+        translations: {//@config {Object} 此对象上每个键名都是元字符，都对应一个对象，上面有pattern(正则)，placehoder(占位符，如果你不想用"_")
             "0": {pattern: /\d/, optional: true},
             "9": {pattern: /\d/},
             "A": {pattern: /[a-zA-Z]/},

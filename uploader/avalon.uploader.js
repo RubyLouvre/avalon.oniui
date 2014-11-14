@@ -4,7 +4,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 
 		var uploaderId = data.uploaderId,
 			swfId = uploaderId + 'Swf',
-			swf,				// {dom} <object>
+			swf,				// {Element} <object>
 			fileList = [],		// 存放file对象
 			browseButton,		// 按钮
 			browseButtonClick,	// browseButton 绑定的 click 事件
@@ -19,11 +19,10 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 
 			avalon.mix(vm, data.uploaderOptions);
 
-
 			browseButton = document.getElementById(vm.browseButton);
 
 			vm.deleteFile = function(index){
-				// fileList.splice(index, 1);
+
 				avalon.post(vmodel.action, {
 					id: vmodel.files[index].id
 				}, function(data){
@@ -75,7 +74,6 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 			};
 
 			vm.$jsHandler = function(obj){
-				// console.log(obj);
 
 				switch(obj.type){
 					case 'uploading':
@@ -100,7 +98,7 @@ define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmReq
 							imgs.push(img);
 						};
 
-						vmodel.onSuccess(imgs);
+						vmodel.onSuccess(imgs, obj.data);
 					break;
 					case 'flashInit':
 						// 初始化，取到 swf

@@ -16,8 +16,7 @@ define(["avalon"], function() {
             var elem = data.element
             var maskText = elem.getAttribute("data-duplex-mask")
             if (maskText) {
-                data.msMask = new Mask(elem, maskText)
-
+                var mask = data.msMask = new Mask(elem, maskText)
                 data.bound("keydown", function(e) {
                     elem.userTrigger = false
                     var k = e.which || e.keyCode
@@ -25,7 +24,7 @@ define(["avalon"], function() {
                         return
                     }
                     var caret = getCaret(elem)
-                    if (k == 39) {//向右
+                    if (k === 39) {//向右
                         var i = mask.caretData.indexOf(null, caret.end)
                         if (i === -1) {
                             i = mask.caretData.indexOf(null)
@@ -60,22 +59,16 @@ define(["avalon"], function() {
                     }
                     setTimeout(function() {
                         setCaret(elem, i, i + 1)
-                      //  elem.userTrigger = false
                     })
                 })
-                var mask = data.msMask
                 function showMask(e) {
-                    if (!e || !mask.masked) {
-                        elem.value = mask.valueMask
-                        console.log(mask.valueMask)
-                        console.log(elem.value)
-                        elem.userTrigger = mask.masked = true
-                        var index = mask.vmodelData.indexOf(null)//定位于第一个要填空的位置上
-                        if (index !== -1) {
-                            console.log("focus")
-                            mask.index = index
-                            setCaret(elem, index, index + 1)
-                        }
+                    console.log("dddddddddddd")
+                    elem.value = mask.valueMask
+                    elem.userTrigger = true
+                    var index = mask.vmodelData.indexOf(null)//定位于第一个要填空的位置上
+                    if (index !== -1) {
+                        mask.index = index
+                        setCaret(elem, index, index + 1)
                     }
                 }
                 function hideMask() {
@@ -88,7 +81,7 @@ define(["avalon"], function() {
                     showMask()
                 } else {
                     if (mask.showIfFocus) {
-                           data.bound("focus", showMask)
+                        data.bound("focus", showMask)
                         //  data.bound("blur", hideMask)
                     }
                     if (mask.showIfHover) {
@@ -122,7 +115,6 @@ define(["avalon"], function() {
                         setCaret(elem, index, index + 1)
                     })
                 }
-                //   return mask.vmodelData.join("")
             }
             elem.oldValue = val
             console.log("get " + mask.vmodelData.join(""))
@@ -132,7 +124,6 @@ define(["avalon"], function() {
             // 第一次总是得到符合格式的数据
             var elem = data.element
             var mask = data.msMask
-            console.log("set " + val)
             if (val !== "") {
                 if (!mask.match(val)) {
                     elem.oldValue = mask.fix(val)

@@ -87,7 +87,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.edit.html"], function(ava
 						leaf = arg.leaf
 					event.preventDefault()
 					event.stopPropagation()
-					return vm.addNode(leaf, {name: "未命名节点"}, void 0, "no excute")
+					return vm.addNode(leaf, avalon.mix({name: "未命名节点"}, arg.newLeaf || {}), void 0, "no excute")
 				},
 				removeFun: function(arg) {
 					var event = arg.e,

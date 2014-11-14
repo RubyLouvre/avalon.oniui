@@ -76,6 +76,9 @@ define(["avalon",
         var vmodel = avalon.define(data.dropdownId, function(vm) {
             avalon.mix(vm, options);
             vm.$skipArray = ["widgetElement", "duplexName", "menuNode", "dropdownNode"];
+            if(vm.multiple && vm.$hasDuplex && vm.$skipArray.indexOf("value") === -1) {
+                vm.$skipArray.push("value")
+            }
             vm.widgetElement = element;
             vm.menuWidth = "auto";   //下拉列表框宽度
             vm.menuHeight = vm.height;  //下拉列表框高度
@@ -88,23 +91,11 @@ define(["avalon",
                     listNode = createListNode();
                     elemParent.insertBefore(listNode, element);
                 } else {//如果是单选
-                    var title, defaultOption;
+                    var title;
                     titleNode = avalon.parseHTML(titleTemplate);
                     title = titleNode.firstChild;
                     elemParent.insertBefore(titleNode, element);
                     titleNode = title;
-
-                    if (typeof vmodel.value === "undefined") {
-                        defaultOption = vmodel.data.filter(function(option) {
-                            return !option.group
-                        })[0];
-
-                        vmodel.value = defaultOption.value;
-                    } else {
-                        defaultOption = vmodel.data.filter(function(option) {
-                            return option.value === vmodel.value[0];
-                        })[0];
-                    }
 
                     //设置title宽度
                     vmodel.titleWidth = computeTitleWidth();
@@ -138,19 +129,9 @@ define(["avalon",
                 if (!hasBuiltinTemplate) {
                     element.appendChild(getFragmentFromData(dataModel));
                     avalon.each(["multiple", "size"], function(i, attr) {
-                        avalon(element).attr("ms-attr-" + attr, attr);
+                        avalon(element).attr(attr, vmodel[attr]);
                     });
                 }
-
-                avalon.ready(function() {
-                    avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
-                    $element.attr("ms-enabled", "enable");
-                    $element.attr('ms-duplex', "value");
-                    avalon.scan(element, [vmodel].concat(vmodels));
-                    if (typeof options.onInit === "function") {
-                        options.onInit.call(element, vmodel, options, vmodels)
-                    }
-                });
 
                 if (!vmodel.multiple) {
                     var duplexName = (element.msData["ms-duplex"] || "").trim(),
@@ -162,6 +143,7 @@ define(["avalon",
                         })
                         vmodel.$watch("value", function(newValue) {
                             duplexModel[1][duplexModel[0]] = newValue
+                            element.value = newValue
                         })
                     }
                 }
@@ -208,6 +190,14 @@ define(["avalon",
                         vmodel.$source = null
                     }
                 }
+
+                avalon.ready(function() {
+                    avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
+                    vmodel.multiple && optionsSync()
+                });
             }
 
             /**
@@ -469,10 +459,12 @@ define(["avalon",
 
         //对data的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
         vmodel.$source && vmodel.$source.$watch && vmodel.$source.$watch('length', function(n) {
-            //当data改变时，解锁滚动条
-            vmodel._disabledScrollbar(false);
-            avalon.assign(vmodel.data, getDataFromOption(vmodel.$source.$model || vmodel.$source));
             if(n > 0) {
+                //当data改变时，解锁滚动条
+                vmodel._disabledScrollbar(false);
+                vmodel.data.clear();
+                vmodel.data.pushArray(getDataFromOption(vmodel.$source.$model || vmodel.$source));
+
                 //当data改变时，尝试使用之前的value对label和title进行赋值，如果失败，使用data第一项
                 if(!setLabelTitle(vmodel.value)) {
                     vmodel.currentOption = vmodel.data[0].$model;
@@ -482,13 +474,21 @@ define(["avalon",
             }
         });
 
-        vmodel.$watch("value", function(n, o) {
-            setLabelTitle(n);
-            //如果有onChange回调，则执行该回调
-            if(avalon.type(vmodel.onChange) === "function") {
-                vmodel.onChange.call(element, n, o, vmodel);
-            }
-        });
+        if(!vmodel.multiple) {
+            vmodel.$watch("value", function(n, o) {
+                setLabelTitle(n);
+                //如果有onChange回调，则执行该回调
+                if(avalon.type(vmodel.onChange) === "function") {
+                    vmodel.onChange.call(element, n, o, vmodel);
+                }
+            });
+        } else {
+            vmodel.value.$watch("length", function() {
+                vmodel.multipleChange = !vmodel.multipleChange;
+                optionsSync();
+            })
+        }
+
 
         vmodel.$watch("enable", function(n) {
             if(!n) {
@@ -502,6 +502,26 @@ define(["avalon",
             }
         });
 
+        //在multiple模式下同步select的值
+        //http://stackoverflow.com/questions/16582901/javascript-jquery-set-values-selection-in-a-multiple-select
+        function optionsSync() {
+            avalon.each(element.getElementsByTagName("option"), function(i, option) {
+                if(vmodel.value.$model.indexOf(option.value) > -1 || vmodel.value.$model.indexOf( parseData(option.value) ) > -1) {
+                    try {
+                        option.selected = true
+                    } catch(e) {
+                        avalon(option).attr("selected", "selected");
+                    }
+                } else {
+                    try {
+                        option.selected = false
+                    } catch(e) {
+                        option.removeAttribute("selected")
+                    }
+                }
+            })
+        }
+
         function _buildOptions(opt) {
             //为options添加value与duplexName
             //如果原来的select元素绑定了ms-duplex，那么取得其值作value
@@ -510,6 +530,7 @@ define(["avalon",
             var duplexModel
             if (duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
                 opt.value = duplexModel[1][duplexModel[0]]
+                opt.$hasDuplex = true
             } else if (!hasBuiltinTemplate) {
                 if (!Array.isArray(opt.value)) {
                     opt.value = [opt.value || ""]
@@ -537,6 +558,11 @@ define(["avalon",
 
                 if(option.length === 0 && options.length > 0) {
                     opt.value = options[0].value
+
+                    //如果存在duplex，同步该值
+                    if(duplexModel) {
+                        duplexModel[1][duplexModel[0]] = opt.value
+                    }
                 }
             }
 
@@ -629,6 +655,8 @@ define(["avalon",
         onShow: null,    //@config 下拉框展示的回调函数
         onHide: null,    //@config 下拉框隐藏的回调函数
         onChange: null,  //@config value改变时的回调函数
+        $hasDuplex: false,  //@config 判断是否存在duplex绑定
+        multipleChange: false, //@config 判断是否在multiple模式下，选项发生变化
         /**
          * @config 模板函数,方便用户自定义模板
          * @param str {String} 默认模板
@@ -655,7 +683,7 @@ define(["avalon",
 
     //根据dataSource构建数据结构
     //从VM的配置对象提取数据源, dataSource为配置项的data数组，但它不能直接使用，需要转换一下
-    //它的每一个对象代表option或optGroup， 
+    //它的每一个对象代表option或optGroup，
     //如果是option则包含label, enable, value
     //如果是optGroup则包含label, enable, options(options则包含上面的option)
     //每个对象中的enable如果不是布尔，则默认为true; group与parent则框架自动添加

@@ -1,8 +1,10 @@
 <span class="button switch" 
-      ms-class="{{computeIconClass(leaf, $first, $last)}}"
+      ms-class-100="{{levelClass(leaf)}}" 
+      ms-class="{{computeLineClass(leaf, $first, $last)}}"
       ms-click="toggleOpenStatue($event,leaf)"></span>
 {{MS_CHECK_HTML}}
 <a {{MS_EDIT_BINDING}} 
+   ms-class-100="{{levelClass(leaf)}}" 
    ms-class="curSelectedNode:hasClassSelect(leaf)" 
    ms-click="excute('click',$event,leaf,'selectFun')" 
    ms-attr-target="leaf.target || '_blank'" 
@@ -11,13 +13,21 @@
    ms-on-mouseup="excute('mouseup', $event, leaf)" 
    ms-attr-title="exprAnd(leaf, view.showTitle, leaf.title || leaf.name)" 
 	 ms-dblclick="excute('dblclick', $event,leaf,'toggleOpenStatue')">
-    <span class="button ico_close" 
-          ms-if="optionToBoolen(view.showIcon,leaf)"
-          ms-class-1="ico_open:hasClassOpen(leaf)"></span>
-  	<span>{{view.nameShower(leaf)|html}}</span>
+    <span class="button" 
+          ms-css-background="{{computeIcon(leaf)}}" 
+          ms-class-100="{{levelClass(leaf)}}" 
+          ms-if="exprAnd(leaf, view.showIcon, leaf.icon_close, leaf.icon_open)" 
+          ms-class="{{computeIconClass(leaf)}}"></span>
+    <span class="button" 
+          ms-class-100="{{levelClass(leaf)}}" 
+          ms-if="!exprAnd(leaf, view.showIcon, leaf.icon_close, leaf.icon_open)" 
+          ms-class="{{computeIconClass(leaf)}}"></span>
+  	<span 
+          ms-class-100="{{levelClass(leaf)}}" >{{view.nameShower(leaf)|html}}</span>
     {{MS_EDIT_HTML}}
 </a>
 <ul class="line" 
+    ms-class-100="{{levelClass(leaf)}}" 
     ms-if="hasChildren(leaf)" 
     ms-class-2="noline_docu:!optionToBoolen(view.showLine,leaf)"
     ms-visible="hasChildren(leaf, 'visible')"

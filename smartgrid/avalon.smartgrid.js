@@ -410,13 +410,11 @@ define(["avalon",
                         //如果sortTrend属性不存在，在IE下直接给它赋值会报错
                         _columns[i].sortTrend && (_columns[i].sortTrend = "ndb")
                     }
-                    
                     for (var j = 0; j < dataLen; j++) {
                         var data = datas[j]
                         data[name] = data[name] !== void 0 ? data[name] : column.defaultValue
                     }
                 }
-
                 html = fn({data: datas, columns: _columns, len: 2, noResult: vmodel.noResult, vmId: vmId, checkRow: checkRow})
                 return html
             }

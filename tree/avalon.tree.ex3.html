@@ -12,12 +12,12 @@
                             children: [
                                 { name:"父节点11 - 折叠", open: false,
                                     children: [
-                                        { name:"叶子节点111"},
+                                        { name:"叶子节点111", icon:"http://www.ztree.me/v3/css/zTreeStyle/img/diy/5.png"},
                                         { name:"叶子节点112"},
                                         { name:"叶子节点113"},
                                         { name:"叶子节点114", url: "http://www.baidu.com"}
                                     ]},
-                                { name:"父节点12 - 折叠", open: false,
+                                { name:"父节点12 - 折叠", open: false, halfCheck: true,
                                     children: [
                                         { name:"叶子节点121"},
                                         { name:"叶子节点122"},
@@ -111,8 +111,18 @@
                             onClick: function(obj) {
                                 avalon.log("select")
                             },
+                            beforeCheck: function(arg) {
+                                var leaf =arg.leaf
+                                if(leaf.level > 1) arg.preventDefault()
+                                avalon.log("level > 1, can not checked")
+                            },
                             onCheck: function(arg) {
                                 avalon.log("check")
+                            },
+                            beforeNodeCreated: function(arg) {
+                                arg.newLeaf = {
+                                    name: "管理员"
+                                }
                             }
                         }
                     }
@@ -124,7 +134,7 @@
                         },
                         callback: {
                             onCheck: function(arg) {
-                                avalon.log(arg)
+                                avalon.log("radio checked")
                             }
                         }
                     }

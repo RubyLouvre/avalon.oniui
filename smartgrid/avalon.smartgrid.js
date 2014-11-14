@@ -410,13 +410,11 @@ define(["avalon",
                         //如果sortTrend属性不存在，在IE下直接给它赋值会报错
                         _columns[i].sortTrend && (_columns[i].sortTrend = "ndb")
                     }
-                    
                     for (var j = 0; j < dataLen; j++) {
                         var data = datas[j]
                         data[name] = data[name] !== void 0 ? data[name] : column.defaultValue
                     }
                 }
-
                 html = fn({data: datas, columns: _columns, len: 2, noResult: vmodel.noResult, vmId: vmId, checkRow: checkRow})
                 return html
             }
@@ -460,11 +458,9 @@ define(["avalon",
                 gridFrame = gridHeader.replace("MS_OPTION_ID", vmodel.$id)    
                 container.innerHTML = gridFrame
                 avalon.scan(container, vmodel)
-                avalon.nextTick(function() {
-                    vmodel._container = container.getElementsByTagName("tbody")[0]
-                    vmodel.render(true)
-                    bindEvents(vmodel)
-                })
+                vmodel._container = container.getElementsByTagName("tbody")[0]
+                vmodel.render(true)
+                bindEvents(vmodel)
                 if (vmodel.isAffix) {
                     callbacksNeedRemove.scrollCallback = avalon(window).bind("scroll", function() {
                         var scrollTop = Math.max(document.body.scrollTop, document.documentElement.scrollTop),

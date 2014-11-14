@@ -21,7 +21,7 @@
                 var a = avalon.define({
                     $id: "test",
                     //aaa: "1237",
-                    aaa: "",
+                    aaa: "111",
                     textModel: "text",
                     passwordModel: "password",
                     radioModel: true,
@@ -35,15 +35,15 @@
         </script>
     </head>
     <body ms-controller="test">
-        <input ms-duplex-mask="aaa"
-               size='40'
-               data-duplex-mask="【00/00其他提示字符0000】"
-               data-duplex-mask-clear-if-pristine="false"
-               data-duplex-mask-translations ="{
-               A: {pattern: /[A-Za-z0-9]/}, 
-               S: {pattern: /[A-Za-z]/},  
-               Y: {pattern: /[0-9]/}
-               }"
-               />
+        <input  size='40'
+                ms-duplex-mask="aaa"
+                data-duplex-mask="【00/00其他提示字符0000】"
+                data-duplex-mask-clear-if-pristine="false"
+                data-duplex-mask-translations ="{
+                A: {pattern: /[A-Za-z0-9]/}, 
+                S: {pattern: /[A-Za-z]/},  
+                Y: {pattern: /[0-9]/}
+                }"
+                />
     </body>
 </html>

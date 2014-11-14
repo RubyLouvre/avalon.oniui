@@ -97,13 +97,9 @@ define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.cs
                 options.label = label
                 createButton(element, options)
                 avalon.scan(element, vmodels)
-            },
-            $remove: function() {
-                element.innerHTML = element.contextContent = ""
             }
         }
-        
-        return btnModel
+        btnModel.$init()
     }
     avalon.ui.buttonset = function(element, data, vmodels) {
         var options = data.buttonsetOptions,

@@ -20,7 +20,13 @@
             require(["mask/avalon.mask.js"], function() {
                 var a = avalon.define({
                     $id: "test",
-                    aaa: ""
+                    aaa: "",
+                    bbb: "",
+                    ccc: "",
+                    ddd: "",
+                    eee: "",
+                    fff: "",
+                    ggg: ""
                 })
                 a.$watch("aaa", function(v) {
                     // console.log(v)
@@ -30,15 +36,27 @@
         </script>
     </head>
     <body ms-controller="test">
-        <input  size='40'
-                ms-duplex-mask="aaa"
-                data-duplex-mask="【00/00其他提示字符0000】"
-                data-duplex-mask-clear-if-pristine="false"
-                data-duplex-mask-translations ="{
-                A: {pattern: /[A-Za-z0-9]/}, 
-                S: {pattern: /[A-Za-z]/},  
-                Y: {pattern: /[0-9]/}
-                }"
-                />
+        <p>日期 <input ms-duplex-mask="aaa"
+                     data-duplex-mask="9999/99/99"
+                     data-duplex-mask-show-if-hover="true"
+                     data-duplex-mask-clear-if-pristine="false" /></p>
+        <p>时间 <input ms-duplex-mask="bbb"
+                     data-duplex-mask="99/99/99"
+                     data-duplex-mask-show-if-hover="true"
+                     data-duplex-mask-clear-if-pristine="false" /></p>
+        <p>日期+时间 <input ms-duplex-mask="ccc"
+                        data-duplex-mask="9999/99/99 99:99:99"
+                        data-duplex-mask-show-if-hover="true"
+                        data-duplex-mask-clear-if-pristine="false" /></p>
+        <p>邮政编码 <input ms-duplex-mask="ddd"
+                       data-duplex-mask="999999"
+                       data-duplex-mask-show-if-hover="true"
+                       data-duplex-mask-translations="{S:{pattern: /[012]/}}"
+                       data-duplex-mask-clear-if-pristine="false" /></p>
+        <p>IP地址 <input ms-duplex-mask="eee"
+                       data-duplex-mask="S99.S99.S99.S99"
+                       data-duplex-mask-show-if-hover="true"
+                       data-duplex-mask-translations="{S:{pattern: /[012]/}}"
+                       data-duplex-mask-clear-if-pristine="false" /></p>
     </body>
 </html>

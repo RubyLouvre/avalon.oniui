@@ -25,15 +25,20 @@ define(["avalon"], function() {
                         return
                     }
                     var caret = getCaret(elem)
-                    //console.log(e)
                     if (k == 39) {//向右
-                        var i = mask.vmodelData.indexOf(null, caret.end)
+                        var i = mask.caretData.indexOf(null, caret.end)
+                        if (i === -1) {
+                            i = mask.caretData.indexOf(null)
+                        }
                         setTimeout(function() {
                             setCaret(elem, i, i + 1)
                         })
                     } else if (k == 37) {//向左
-                        var _ = mask.vmodelData.slice(0, caret.start)
+                        var _ = mask.caretData.slice(0, caret.start)
                         var i = _.lastIndexOf(null)
+                        if (i === -1) {
+                            i = mask.caretData.indexOf(null)
+                        }
                         setTimeout(function() {
                             setCaret(elem, i, i + 1)
                         })
@@ -41,8 +46,17 @@ define(["avalon"], function() {
                         elem.userTrigger = true
                     }
                 })
-                //  data.bound("keyup", keyCallback)
-                //  data.bound("click", keyCallback)
+                data.bound("click", function(e) {
+                    var caret = getCaret(elem)
+                    var i = mask.caretData.indexOf(null, caret.end)
+                    if (i === -1) {
+                        i = mask.caretData.indexOf(null)
+                    }
+                    elem.userTrigger = true
+                    setTimeout(function() {
+                        setCaret(elem, i, i + 1)
+                    })
+                })
                 var mask = data.msMask
                 function showMask(e) {
                     if (!e || !mask.masked) {
@@ -81,6 +95,7 @@ define(["avalon"], function() {
             var elem = data.element
             avalon.log("get", val, elem.userTrigger)
             var mask = data.msMask
+            console.log("++++++++++++")
             if (elem.userTrigger) {
                 mask.getter(val)
                 elem.oldValue = val
@@ -97,12 +112,30 @@ define(["avalon"], function() {
                 })
                 return mask.vmodelData.join("")
             } else {
-                return mask.masked ? val : ""
+                if (val !== "") {
+                    if (!mask.match(val)) {
+                        console.log("fix")
+                        elem.oldValue = mask.fix(val)
+                    }
+                    return val
+                } else {
+                    return ""
+                }
             }
         },
         set: function(val, data) {//将vm中数据放到这里进行处理，让用户看到经过格式化的数据
             // 第一次总是得到符合格式的数据
-            return  data.msMask.masked ? data.msMask.viewData.join("") : val
+            var elem = data.element
+            var mask = data.msMask
+            if (val !== "") {
+                if (!mask.match(val)) {
+                    elem.oldValue = mask.fix(val)
+                }
+                return data.msMask.viewData.join("")
+            } else {
+                return ""
+            }
+
         }
     }
 
@@ -118,7 +151,7 @@ define(["avalon"], function() {
         this.element = element //@config {Element} 组件实例要作用的input元素
         this.dataMask = dataMask //@config {String} 用户在input/textarea元素上通过data-duplex-mask定义的属性值
         //第一次将dataMask放进去，得到element.value为空时，用于提示的valueMask
-        this.getter(dataMask, true)
+        getDatas.call(this)
         // console.log(this.viewData.join("") + " * ")
         this.valueMask = this.viewData.join("")// valueMask中的元字符被全部替换为对应的占位符后的形态，用户实际上在element.value看到的形态
     }
@@ -136,29 +169,94 @@ define(["avalon"], function() {
             "*": {pattern: /[a-zA-Z0-9]/}
         }
     }
+    function getDatas() {
+        var array = this.dataMask.split("")//用户定义的data-duplex-mask的值
+        var n = array.length
+        var translations = this.translations
+        this.viewData = array.concat() //占位符
+        this.caretData = array.concat()
+        this.vmodelData = new Array(n)
+        // (9999/99/99) 这个是data-duplex-mask的值，其中“9”为“元字符”，“(”与 “/” 为“提示字符”
+        // (____/__/__) 这是用占位符处理后的mask值
+        for (var i = 0; i < n; i++) {
+            var m = array[i]
+            if (translations[m]) {
+                var translation = translations[m]
+                this.viewData[i] = translation.placehoder || this.placehoder
+                this.caretData[i] = null
+                this.vmodelData[i] = null
+            }
+        }
+    }
+
     Mask.prototype = {
-        getter: function(value, replace) {
+        match: function(value) {
+            if (value.length === this.valueMask.length) {
+                var array = value.split("")
+                var translations = this.translations
+                for (var i = 0, n = array.length; i < n; i++) {
+                    var m = array[i]
+                    if (translations[m]) {
+                        var translation = translations[m]
+                        var pattern = translation.pattern
+                        var placehoder = translation.placehoder || this.placehoder
+                        if (m === placehoder) {
+                            continue
+                        }
+                        if (!pattern.test(m)) {
+                            return false
+                        }
+                    } else {
+                        if (m !== this.valueMask.charAt(i)) {
+                            return false
+                        }
+                    }
+                }
+                return true
+            } else {
+                return false
+            }
+        },
+        fix: function(value) {//如果不符合格式，则补上提示符与占位符
+            var array = this.dataMask.split("")
+            var valueArray = value.split("")
+            var translations = this.translations
+            for (var i = 0, n = array.length; i < n; i++) {
+                var m = array[i]
+                if (translations[m]) {
+                    var translation = translations[m]
+                    var pattern = translation.pattern
+                    if (pattern.test(valueArray[0])) {
+                        array[i] = valueArray.shift()
+                    } else {
+                        array[i] = translation.placehoder || this.placehoder
+                    }
+                }
+            }
+            this.viewData = array
+            return array.join("")
+        },
+        getter: function(value) {
             var maskArray = this.dataMask.split("")//用户定义的data-duplex-mask的值
             var valueArray = value.split("")
             var translations = this.translations
             var viewData = []
             var vmodelData = []
+
             // (9999/99/99) 这个是data-duplex-mask的值，其中“9”为“元字符”，“(”与 “/” 为“提示字符”
             // (____/__/__) 这是用占位符处理后的mask值
             while (maskArray.length) {
                 var m = maskArray.shift()
                 var el = valueArray.shift()//123456
+
                 if (translations[m]) {//如果碰到元字符
                     var translation = translations[m]
                     var pattern = translation.pattern
                     if (el && el.match(pattern)) {//如果匹配
-                        if (replace) {
-                            vmodelData.push(null)
-                            viewData.push(translation.placehoder || this.placehoder)
-                        } else {
-                            vmodelData.push(el)
-                            viewData.push(el)
-                        }
+
+                        vmodelData.push(el)
+                        viewData.push(el)
+
                     } else {
                         vmodelData.push(null)
                         viewData.push(translation.placehoder || this.placehoder)

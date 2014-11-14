@@ -66,6 +66,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
     text-decoration: none;
     outline: 0;
     height: 26px;
+    font-family: fontawesome;
     @include box-sizing(border-box);
     &:link {
     	text-decoration: none;
@@ -217,6 +218,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         *margin-top: -2px;
         @include inline-block();
         _display: inline;
+        font-style: normal;
     }
     .#{$uiname}-text {
         font-size: 12px;

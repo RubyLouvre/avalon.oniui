@@ -90,7 +90,8 @@
     width: 13px;
     height: 13px;
     margin: 0 3px 0 0;
-    cursor: auto; }
+    cursor: auto;
+    overflow: hidden; }
   .oni-tree li span.checkbox_false_full {
     background-position: 0 0; }
   .oni-tree li span.checkbox_false_full_focus {

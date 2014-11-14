@@ -460,11 +460,9 @@ define(["avalon",
                 gridFrame = gridHeader.replace("MS_OPTION_ID", vmodel.$id)    
                 container.innerHTML = gridFrame
                 avalon.scan(container, vmodel)
-                avalon.nextTick(function() {
-                    vmodel._container = container.getElementsByTagName("tbody")[0]
-                    vmodel.render(true)
-                    bindEvents(vmodel)
-                })
+                vmodel._container = container.getElementsByTagName("tbody")[0]
+                vmodel.render(true)
+                bindEvents(vmodel)
                 if (vmodel.isAffix) {
                     callbacksNeedRemove.scrollCallback = avalon(window).bind("scroll", function() {
                         var scrollTop = Math.max(document.body.scrollTop, document.documentElement.scrollTop),

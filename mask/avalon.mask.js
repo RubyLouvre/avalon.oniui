@@ -47,10 +47,10 @@ define(["avalon"], function() {
                     }
                 })
                 data.bound("click", function(e) {
-                    setTimeout(function() {
+                    setTimeout(function() {//搞掉keyup中的  elem.userTrigger = true
                         elem.userTrigger = false
                     })
-                    if (elem.userTrigger === true) {
+                    if (elem.userTrigger === true) {//防止触发了keyup的操作又触发这里的
                         return
                     }
                     var caret = getCaret(elem)
@@ -58,10 +58,9 @@ define(["avalon"], function() {
                     if (i === -1) {
                         i = mask.caretData.indexOf(null)
                     }
-                    // elem.userTrigger = true
                     setTimeout(function() {
                         setCaret(elem, i, i + 1)
-                        elem.userTrigger = false
+                      //  elem.userTrigger = false
                     })
                 })
                 var mask = data.msMask
@@ -89,7 +88,7 @@ define(["avalon"], function() {
                     showMask()
                 } else {
                     if (mask.showIfFocus) {
-                        //   data.bound("focus", showMask)
+                           data.bound("focus", showMask)
                         //  data.bound("blur", hideMask)
                     }
                     if (mask.showIfHover) {

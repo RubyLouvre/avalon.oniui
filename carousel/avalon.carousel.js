@@ -65,7 +65,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                     element.style.height = "100%"
                     var children = element.children
                     for (var i = 0, len = children.length; i < len; i++) {
-                        if (children[i].id === "ui-carousel") {
+                        if (children[i].id === "oui-carousel") {
                             children[i].style.height = "100%"
                         }
                     }

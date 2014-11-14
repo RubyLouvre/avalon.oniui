@@ -194,7 +194,7 @@ define(["../avalon.getModel",
                 listWidth: 60,
                 height: 160,
                 position: false,
-                listClass: "ui-datepicker-dropdown",
+                listClass: "oni-datepicker-dropdown",
                 onSelect: function(e) {
                     e.stopPropagation()
                 }
@@ -204,7 +204,7 @@ define(["../avalon.getModel",
                 height: 160,
                 listWidth: 45,
                 position: false,
-                listClass: "ui-datepicker-dropdown",
+                listClass: "oni-datepicker-dropdown",
                 onSelect: function(e) {
                     e.stopPropagation()
                 }
@@ -377,14 +377,14 @@ define(["../avalon.getModel",
                 avalon(element).attr("ms-css-width", "width")
                 if (element.tagName === "INPUT" && vmodel.type !== "range") {
                     var div = document.createElement("div")
-                    div.className = "ui-datepicker-input-wrapper"
-                    div.setAttribute("ms-class", "ui-state-active:toggle")
+                    div.className = "oni-datepicker-input-wrapper"
+                    div.setAttribute("ms-class", "oni-state-active:toggle")
                     div.setAttribute("ms-css-border-color", "dateError")
-                    div.setAttribute("ms-hover", "ui-state-hover")
+                    div.setAttribute("ms-hover", "oni-state-hover")
                     elementPar.insertBefore(div,element)
                     div.appendChild(element)
                     if (vmodel.showTip) {
-                        var tip = avalon.parseHTML("<div class='ui-datepicker-tip'>{{tip}}<i class='ui-icon ui-icon-calendar-o'>&#xf133;</i></div>")
+                        var tip = avalon.parseHTML("<div class='oni-datepicker-tip'>{{tip}}<i class='oni-icon oni-icon-calendar-o'>&#xf133;</i></div>")
                         div.appendChild(tip)
                     } else {
                         element.style.paddingRight = "0px"
@@ -599,7 +599,7 @@ define(["../avalon.getModel",
                 var target = e.target;
                 if(options.type==="range") {
                     return ;
-                } 
+                }
                 if(!calendar.contains(target) && !tipContainer.contains(target) && vmodel.toggle && !vmodel.timer) {
                     vmodel.toggle = false;
                     toggleVM ? toggleVM[1][toggleVM[0]] = false : 0;

@@ -15,7 +15,7 @@
                                         { name:"叶子节点111"},
                                         { name:"叶子节点112"},
                                         { name:"叶子节点113"},
-                                        { name:"叶子节点114"}
+                                        { name:"叶子节点114", url: "http://www.baidu.com"}
                                     ]},
                                 { name:"父节点12 - 折叠", open: false,
                                     children: [
@@ -59,7 +59,19 @@
                 avalon.define("test", function(vm) {
                     vm.tree = {
                         children: child,
+                        edit: {
+                            showRemoveBtn: function(leaf) {
+                                return leaf.level > 0
+                            }
+                        },
+                        data: {
+                            keep: {
+                                leaf: false,
+                                parent: true
+                            }
+                        },
                         view: {
+                            editNameSelectAll: true,
                             showLine: function(leaf) {
                                 return true
                                 return leaf.level > 1 || 1
@@ -68,6 +80,24 @@
                         callback: {
                             onExpand: function(leaf) {
                                 console.log(leaf)
+                            },
+                            beforeRename: function(arg) {
+                                avalon.log("before编辑")
+                            },
+                            beforeNodeCreated: function(arg) {
+                                avalon.log("before NodeCreated")
+                            },
+                            onNodeCreated: function(arg) {
+                                avalon.log("onNodeCreated")
+                            },
+                            onRename: function(arg) {
+                                avalon.log("编辑")
+                            },
+                            beforeRemove: function(obj) {
+                                return confirm("确认删除?")
+                            },
+                            beforeAdd: function(obj) {
+                                return confirm("确认添加?")
                             }
                         }
                     }

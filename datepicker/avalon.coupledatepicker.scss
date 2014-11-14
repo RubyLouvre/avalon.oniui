@@ -1,11 +1,11 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
 $uiname: "ui-coupledatepicker";
-.ui-coupledatepicker {
+.oni-coupledatepicker {
     font-size: 0;
     position: relative;
     z-index: 1;
-    .ui-coupledatepicker-item {
+    .oni-coupledatepicker-item {
         @include inline-block();
     }
     .label {

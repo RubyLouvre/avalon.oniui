@@ -51,32 +51,7 @@ $btnDangerBackgroundHighlight:      #bd362f;
 $btnInverseBackground:              #444;
 $btnInverseBackgroundHighlight:     $grayDarker;
 
-.ui-buttonset {
-    font-size: 0;
-    @include inline-block();
-    _display: inline;
-    .#{$uiname} {
-        margin: 0;
-        float: left;
-        @include box-sizing(content-box);
-        border-left-width: 0;
-    }
-    .#{$uiname}-first {
-        border-left-width: 1px;
-    }
-}
-.ui-buttonset-vertical {
-    _width: 100px;
-    .#{$uiname} {
-        display: block;
-        float: none;
-        border-left-width: 1px;
-        border-top-width: 0;
-    }
-    .#{$uiname}-first {
-        border-top-width: 1px;
-    }
-}
+
 .#{$uiname} {
     @include inline-block();
     _display: inline;
@@ -91,6 +66,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
     text-decoration: none;
     outline: 0;
     height: 26px;
+    font-family: fontawesome;
     @include box-sizing(border-box);
     &:link {
     	text-decoration: none;
@@ -242,6 +218,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         *margin-top: -2px;
         @include inline-block();
         _display: inline;
+        font-style: normal;
     }
     .#{$uiname}-text {
         font-size: 12px;
@@ -309,5 +286,37 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         font-size: 14px;
         line-height: 38px;
         height: 38px;
+    }
+}
+
+.ui-buttonset {
+    font-size: 0;
+    @include inline-block();
+    _display: inline;
+    .#{$uiname} {
+        margin: 0;
+        float: left;
+        border-left-width: 0;
+    }
+    .#{$uiname}-first {
+        border-left-width: 1px;
+    }
+    .ui-icon {
+        *margin-top: 0;
+    }
+    .#{$uiname}-text {
+        *margin-top: 0;
+    }
+}
+.ui-buttonset-vertical {
+    _width: 100px;
+    .#{$uiname} {
+        display: block;
+        float: none;
+        border-left-width: 1px;
+        border-top-width: 0;
+    }
+    .#{$uiname}-first {
+        border-top-width: 1px;
     }
 }

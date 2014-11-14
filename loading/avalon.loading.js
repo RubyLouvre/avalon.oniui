@@ -377,7 +377,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             }
             vm._effect = function() {
                 if (vmodel.toggle) {
-                    var ele = document.getElementById("ui-loading-" + vmodel.$loadingID)
+                    var ele = document.getElementById("oni-loading-" + vmodel.$loadingID)
                     if (ele) {
                         var effect = vmodel.effect && vmodel.effect(vmodel, ele)
                         if(effect) {

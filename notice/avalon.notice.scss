@@ -1,6 +1,6 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname: "ui-notice";
+$uiname: "oni-notice";
 .#{$uiname}-flow {
     margin-bottom: 10px;
 }
@@ -13,7 +13,10 @@ $uiname: "ui-notice";
     position: absolute;
 }
 .#{$uiname} {
-    display: none;
+    position:relative;
+    overflow:hidden;
+    transition: height 0.6s;
+    height: 0;
     width: 100%;
     *zoom: 1;
     font-size: 12px;

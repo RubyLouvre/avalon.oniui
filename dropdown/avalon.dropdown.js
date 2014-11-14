@@ -1,3 +1,17 @@
+//avalon 1.3.6 2014.11.06
+/**
+ *
+ * @cnName 下拉框
+ * @enName dropdown
+ * @introduce
+ *
+ <p>因为原生<code>select</code>实在是难用，avalon的dropdown组件在兼容原生<code>select</code>的基础上，对其进行了增强。</p>
+ <ul>
+ <li>1，支持在标题和下拉菜单项中使用html结构，可以用来信息的自定义显示</li>
+ <li>2，同时支持通过html以及配置项两种方式设置组件</li>
+ <li>3，通过配置，可以让下拉框自动识别在屏幕中的位置，来调整向上或者向下显示</li>
+ </ul>
+ */
 define(["avalon",
     "text!./avalon.dropdown.html",
     "../avalon.getModel",
@@ -5,10 +19,7 @@ define(["avalon",
     "css!../chameleon/oniui-common.css",
     "css!./avalon.dropdown.css"
 ], function(avalon, template) {
-
-
     var styleReg = /^(\d+).*$/;
-
     var widget = avalon.ui.dropdown = function(element, data, vmodels) {
         var $element = avalon(element),
             elemParent = element.parentNode,
@@ -65,38 +76,26 @@ define(["avalon",
         var vmodel = avalon.define(data.dropdownId, function(vm) {
             avalon.mix(vm, options);
             vm.$skipArray = ["widgetElement", "duplexName", "menuNode", "dropdownNode"];
+            if(vm.multiple && vm.$hasDuplex && vm.$skipArray.indexOf("value") === -1) {
+                vm.$skipArray.push("value")
+            }
             vm.widgetElement = element;
             vm.menuWidth = "auto";   //下拉列表框宽度
             vm.menuHeight = vm.height;  //下拉列表框高度
             vm.dataSource = dataSource;    //源节点的数据源，通过dataSource传递的值将完全模拟select
             vm.focusClass =  false
             vm.$init = function() {
-                if (vmodel.data.length === 0) {
-                    throw new Error("the options is not enough for init a dropdown!");
-                }
                 //根据multiple的类型初始化组件
                 if (vmodel.multiple) {
                     //创建菜单
                     listNode = createListNode();
                     elemParent.insertBefore(listNode, element);
                 } else {//如果是单选
-                    var title, defaultOption;
+                    var title;
                     titleNode = avalon.parseHTML(titleTemplate);
                     title = titleNode.firstChild;
                     elemParent.insertBefore(titleNode, element);
                     titleNode = title;
-
-                    if (typeof vmodel.value === "undefined") {
-                        defaultOption = vmodel.data.filter(function(option) {
-                            return !option.group
-                        })[0];
-
-                        vmodel.value = defaultOption.value;
-                    } else {
-                        defaultOption = vmodel.data.filter(function(option) {
-                            return option.value === vmodel.value[0];
-                        })[0];
-                    }
 
                     //设置title宽度
                     vmodel.titleWidth = computeTitleWidth();
@@ -130,19 +129,9 @@ define(["avalon",
                 if (!hasBuiltinTemplate) {
                     element.appendChild(getFragmentFromData(dataModel));
                     avalon.each(["multiple", "size"], function(i, attr) {
-                        avalon(element).attr("ms-attr-" + attr, attr);
+                        avalon(element).attr(attr, vmodel[attr]);
                     });
                 }
-
-                avalon.ready(function() {
-                    avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
-                    $element.attr("ms-enabled", "enable");
-                    $element.attr('ms-duplex', "value");
-                    avalon.scan(element, [vmodel].concat(vmodels));
-                    if (typeof options.onInit === "function") {
-                        options.onInit.call(element, vmodel, options, vmodels)
-                    }
-                });
 
                 if (!vmodel.multiple) {
                     var duplexName = (element.msData["ms-duplex"] || "").trim(),
@@ -154,6 +143,7 @@ define(["avalon",
                         })
                         vmodel.$watch("value", function(newValue) {
                             duplexModel[1][duplexModel[0]] = newValue
+                            element.value = newValue
                         })
                     }
                 }
@@ -189,8 +179,30 @@ define(["avalon",
                     vmodel.readOnly = readOnlyModel[1][readOnlyModel[0]];
                 }
 
+                //获取$source信息
+                if(vmodel.$source) {
+                    if(avalon.type(vmodel.$source) === "string") {
+                        var sourceModel = avalon.getModel(vmodel.$source);
+
+                        sourceModel && ( vmodel.$source = sourceModel[1][sourceModel[0]] );
+
+                    } else if(!vmodel.$source.$id) {
+                        vmodel.$source = null
+                    }
+                }
+
+                avalon.ready(function() {
+                    avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
+                    vmodel.multiple && optionsSync()
+                });
             }
 
+            /**
+             * @interface 当组件移出DOM树时,系统自动调用的销毁函数
+             */
             vm.$remove = function() {
                 if (blurHandler) {
                     avalon.unbind(window, "click", blurHandler)
@@ -228,11 +240,6 @@ define(["avalon",
                         vmodel.onSelect.call(this, event, vmodel.value);
                     }
                 }
-            };
-
-            vm._listClick = function(event) {
-                event.stopPropagation();
-                event.preventDefault();
             };
 
             vm._keydown = function(event) {
@@ -278,7 +285,7 @@ define(["avalon",
             }
             //下拉列表的显示依赖toggle值，该函数用来处理下拉列表的初始化，定位
             vm._toggle = function(b) {
-                if (!vmodel.enable || vmodel.readOnly) {
+                if (vmodel.data.length ===0 || !vmodel.enable || vmodel.readOnly) {
                     vmodel.toggle = false;
                     return;
                 }
@@ -396,6 +403,11 @@ define(["avalon",
                 }
             }
 
+            /**
+             * @interface
+             * @param newValue 设置控件的值，需要注意的是dropdown设置了multiple属性之后，值是数组，未设置multiple属性的时候，可以接受字符串，数字，布尔值；未设置该值时，效果是返回当前控件的值
+             * @returns vmodel.value 控件当前的值
+             */
             vm.val = function(newValue) {
                 if (typeof newValue !== "undefined") {
                     if (avalon.type(newValue) !== "array") {
@@ -446,10 +458,12 @@ define(["avalon",
         });
 
         //对data的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
-        vmodel.data.$watch('length', function(n) {
-            //当data改变时，解锁滚动条
-            vmodel._disabledScrollbar(false);
+        vmodel.$source && vmodel.$source.$watch && vmodel.$source.$watch('length', function(n) {
             if(n > 0) {
+                //当data改变时，解锁滚动条
+                vmodel._disabledScrollbar(false);
+                vmodel.data.clear();
+                vmodel.data.pushArray(getDataFromOption(vmodel.$source.$model || vmodel.$source));
 
                 //当data改变时，尝试使用之前的value对label和title进行赋值，如果失败，使用data第一项
                 if(!setLabelTitle(vmodel.value)) {
@@ -460,13 +474,21 @@ define(["avalon",
             }
         });
 
-        vmodel.$watch("value", function(n, o) {
-            setLabelTitle(n);
-            //如果有onChange回调，则执行该回调
-            if(avalon.type(vmodel.onChange) === "function") {
-                vmodel.onChange.call(element, n, o, vmodel);
-            }
-        });
+        if(!vmodel.multiple) {
+            vmodel.$watch("value", function(n, o) {
+                setLabelTitle(n);
+                //如果有onChange回调，则执行该回调
+                if(avalon.type(vmodel.onChange) === "function") {
+                    vmodel.onChange.call(element, n, o, vmodel);
+                }
+            });
+        } else {
+            vmodel.value.$watch("length", function() {
+                vmodel.multipleChange = !vmodel.multipleChange;
+                optionsSync();
+            })
+        }
+
 
         vmodel.$watch("enable", function(n) {
             if(!n) {
@@ -480,6 +502,26 @@ define(["avalon",
             }
         });
 
+        //在multiple模式下同步select的值
+        //http://stackoverflow.com/questions/16582901/javascript-jquery-set-values-selection-in-a-multiple-select
+        function optionsSync() {
+            avalon.each(element.getElementsByTagName("option"), function(i, option) {
+                if(vmodel.value.$model.indexOf(option.value) > -1 || vmodel.value.$model.indexOf( parseData(option.value) ) > -1) {
+                    try {
+                        option.selected = true
+                    } catch(e) {
+                        avalon(option).attr("selected", "selected");
+                    }
+                } else {
+                    try {
+                        option.selected = false
+                    } catch(e) {
+                        option.removeAttribute("selected")
+                    }
+                }
+            })
+        }
+
         function _buildOptions(opt) {
             //为options添加value与duplexName
             //如果原来的select元素绑定了ms-duplex，那么取得其值作value
@@ -488,6 +530,7 @@ define(["avalon",
             var duplexModel
             if (duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
                 opt.value = duplexModel[1][duplexModel[0]]
+                opt.$hasDuplex = true
             } else if (!hasBuiltinTemplate) {
                 if (!Array.isArray(opt.value)) {
                     opt.value = [opt.value || ""]
@@ -515,6 +558,11 @@ define(["avalon",
 
                 if(option.length === 0 && options.length > 0) {
                     opt.value = options[0].value
+
+                    //如果存在duplex，同步该值
+                    if(duplexModel) {
+                        duplexModel[1][duplexModel[0]] = opt.value
+                    }
                 }
             }
 
@@ -579,37 +627,46 @@ define(["avalon",
     widget.version = "1.0";
 
     widget.defaults = {
-        container: null, //放置列表的容器
-        width: 200, //自定义宽度
-        listWidth: 200, //自定义下拉列表的宽度
-        titleWidth: 0,  //title部分宽度
-        height: 200, //下拉列表的高度
-        enable: true, //组件是否可用
-        readOnly: false, //组件是否只读
-        readonlyAttr: null, //readonly依赖的属性
-        currentOption: null,  //组件当前的选项
-        data: [], //下拉列表显示的数据模型
-        textFiled: "text", //模型数据项中对应显示text的字段,可以传function，根据数据源对text值进行格式化
-        valueField: "value", //模型数据项中对应value的字段
-        value: [], //设置组件的初始值
-        label: null, //设置组件的提示文案，可以是一个字符串，也可以是一个对象
-        multiple: false, //是否为多选模式
-        listClass: "",   //列表添加自定义className来控制样式
+        container: null, //@config 放置列表的容器
+        width: 200, //@config 自定义宽度
+        listWidth: 200, //@config 自定义下拉列表的宽度
+        titleWidth: 0,  //@config title部分宽度
+        height: 200, //@config 下拉列表的高度
+        enable: true, //@config 组件是否可用
+        readOnly: false, //@config 组件是否只读
+        readonlyAttr: null, //@config readonly依赖的属性
+        currentOption: null,  //@config 组件当前的选项
+        data: [], //@config 下拉列表显示的数据模型
+        $source: null, //@config 下拉列表的数据源
+        textFiled: "text", //@config 模型数据项中对应显示text的字段,可以传function，根据数据源对text值进行格式化
+        valueField: "value", //@config 模型数据项中对应value的字段
+        value: [], //@config 设置组件的初始值
+        label: null, //@config 设置组件的提示文案，可以是一个字符串，也可以是一个对象
+        multiple: false, //@config 是否为多选模式
+        listClass: "",   //@config 列表添加自定义className来控制样式
         title: "",
-        titleClass: "",   //title添加自定义className来控制样式
+        titleClass: "",   //@config title添加自定义className来控制样式
         activeIndex: NaN,
         size: 1,
         menuNode: {},
         dropdownNode: {},
-        position: true, //是否自动定位下拉列表
-        onSelect: null,  //点击选项时的回调
-        onShow: null,    //下拉框展示的回调函数
-        onHide: null,    //下拉框隐藏的回调函数
-        onChange: null,  //value改变时的回调函数
+        position: true, //@config 是否自动定位下拉列表
+        onSelect: null,  //@config 点击选项时的回调
+        onShow: null,    //@config 下拉框展示的回调函数
+        onHide: null,    //@config 下拉框隐藏的回调函数
+        onChange: null,  //@config value改变时的回调函数
+        $hasDuplex: false,  //@config 判断是否存在duplex绑定
+        multipleChange: false, //@config 判断是否在multiple模式下，选项发生变化
+        /**
+         * @config 模板函数,方便用户自定义模板
+         * @param str {String} 默认模板
+         * @param opts {Object} VM
+         * @returns {String} 新模板
+         */
         getTemplate: function(str, options) {
             return str
         },
-        onInit: avalon.noop     //初始化时执行方法
+        onInit: avalon.noop     //@config 初始化时执行方法
     };
 
     //用于将字符串中的值转换成具体值
@@ -626,7 +683,7 @@ define(["avalon",
 
     //根据dataSource构建数据结构
     //从VM的配置对象提取数据源, dataSource为配置项的data数组，但它不能直接使用，需要转换一下
-    //它的每一个对象代表option或optGroup， 
+    //它的每一个对象代表option或optGroup，
     //如果是option则包含label, enable, value
     //如果是optGroup则包含label, enable, options(options则包含上面的option)
     //每个对象中的enable如果不是布尔，则默认为true; group与parent则框架自动添加
@@ -656,9 +713,6 @@ define(["avalon",
             }
         }
 
-        if(ret.length === 0) {
-            throw new Error("The select has no Options!");
-        }
         return ret
     }
     function getFragmentFromData(data) {
@@ -773,3 +827,17 @@ define(["avalon",
     return avalon;
 
 });
+
+/**
+ @links
+ [使用html配置multiple组件](avalon.dropdown.ex1.html)
+ [使用html配置multiple并使用双工绑定](avalon.dropdown.ex2.htmll)
+ [使用option配置multiple并使用双工绑定](avalon.dropdown.ex3.html)
+ [使用html配置dropdown组件](avalon.dropdown.ex4.html)
+ [使用html配置dropdown并使用双工绑定](avalon.dropdown.ex5.html)
+ [使用option配置dropdown并使用双工绑定](avalon.dropdown.ex6.html)
+ [dropdown disabled](avalon.dropdown.ex7.html)
+ [dropdown readOnly](avalon.dropdown.ex8.html)
+ [options可以使用repeat生成](avalon.dropdown.ex9.html)
+ [更改模板，使用button作为触发器](avalon.dropdown.ex10.html)
+ */

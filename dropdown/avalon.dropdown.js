@@ -550,7 +550,7 @@ define(["avalon",
                 }
                 //尝试在当前的data中查找value对应的选项，如果没有，将value设置为data中的option第一项的value
                 var option = opt.data.filter(function(item) {
-                    return item.value === opt.value
+                    return item.value === opt.value  && !item.group
                 }),
                     options = opt.data.filter(function(item) {
                         return !item.group

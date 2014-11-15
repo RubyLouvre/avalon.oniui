@@ -62,6 +62,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         })
         // 扫描获取tabs
         if(options.tabs == void 0) {
+            avalon.scan(element, vmodels)
             tabsParent = options.tabContainerGetter(element)
             tabs = _getData(tabsParent, "li", options.target)
             // 销毁dom
@@ -95,7 +96,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                 inited = true
 
                 if(!options.tabs) vm.tabs = tabs
-                if(!vm.tabpanels) vm.tabpanels = tabpanels
+                if(!vm.tabpanels.length) vm.tabpanels = tabpanels
                 vm.active = vm.active >= vm.tabs.length && vm.tabs.length - 1 || vm.active < 0 && 0 || parseInt(vm.active) >> 0
 
                 // avalon.nextTick(function() {
@@ -103,7 +104,6 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                     // tab列表
                     var tabFrag = _getTemplate(vm._getTemplate(0, vm), vm)
                         , panelFrag = _getTemplate(vm._getTemplate("panel", vm), vm)
-
                     element.innerHTML = vmodel.bottom ? panelFrag + tabFrag : tabFrag + panelFrag
                    
                     avalon.scan(element, [vmodel].concat(vmodels))

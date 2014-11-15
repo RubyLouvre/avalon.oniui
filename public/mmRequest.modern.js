@@ -150,6 +150,7 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
         if (opts.async && opts.timeout > 0) {
             promise.timeoutID = setTimeout(function() {
                 promise.abort("timeout")
+		promise.dispatch(0, "timeout")
             }, opts.timeout)
         }
         promise.request()

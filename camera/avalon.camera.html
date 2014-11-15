@@ -1,7 +1,9 @@
 <div id="oni-camera"
 	 class="oni-camera"
-	 ms-css-width="pictureWidth" 
-	 ms-css-height="pictureHeight" 
+	 ms-css-width="pictureWidth"
+	 ms-css-height="pictureHeight"
+	 ms-mouseenter="stopPlay"
+	 ms-mouseleave="restartPlay('carousel')"
 	 >
 	<div id="oni-camera-panel"
 		 class="oni-camera-panel" 
@@ -24,7 +26,8 @@
 		 >
 		<a ms-class="selected:el==selectionIndex" 
 		   ms-repeat="selections"
-		   ms-click="navselect($index)"
+		   ms-click="navselect($index,$event)"
+		   ms-mouseenter="navselect($index,$event)"
 			>
 		</a>
 	</div>

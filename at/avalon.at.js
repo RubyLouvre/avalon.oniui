@@ -1,11 +1,10 @@
-//avalon 1.2.5 2014.4.2
 /**
- * 
  * @cnName avalon类似新浪微博的@提示组件
  * @enName at
  * @introduce
  *    <p>经常使用微博的人会发现，当我们在输入框输入@然后敲一个人的名字，会弹出一个<code>tip提示层</code>，里面是一个名字列表。这是社交网站或应用最近非常流行的功能。
  当你发布<code>@昵称</code>的信息时，在这里的意思是“向某某人说”，对方能看到你说的话，并能够回复，实现一对一的沟通。</p>
+ *  @updatetime 2011-11-17
  */
 define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", "css!./avalon.at.css"], function(avalon, template) {
 

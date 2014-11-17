@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.3.7 2014.11.7 support IE6+ and other browsers
+ avalon 1.3.7 2014.11.15 support IE6+ and other browsers
  ==================================================*/
 (function(DOC) {
     /*********************************************************************
@@ -308,7 +308,7 @@
             name = avalon.cssName(prop) || prop
             if (value === void 0 || typeof value === "boolean") { //获取样式
                 var fn = cssHooks[prop + ":get"] || cssHooks["@:get"]
-                if(name === "background"){
+                if (name === "background") {
                     name = "backgroundColor"
                 }
                 var val = fn(node, name)
@@ -1630,13 +1630,7 @@
     /************************************************************************
      *            HTML处理(parseHTML, innerHTML, clearHTML)                  *
      ************************************************************************/
-    var rtagName = /<([\w:]+)/,
-            //取得其tagName
-            rxhtml = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/ig,
-            rcreate = W3C ? /[^\d\D]/ : /(<(?:script|link|style|meta|noscript))/ig,
-            scriptTypes = oneObject(["", "text/javascript", "text/ecmascript", "application/ecmascript", "application/javascript"]),
-            //需要处理套嵌关系的标签
-            rnest = /<(?:tb|td|tf|th|tr|col|opt|leg|cap|area)/
+
     //parseHTML的辅助变量
     var tagHooks = {
         area: [1, "<map>"],
@@ -1658,6 +1652,11 @@
     String("circle,defs,ellipse,image,line,path,polygon,polyline,rect,symbol,text,use").replace(rword, function(tag) {
         tagHooks[tag] = tagHooks.g //处理SVG
     })
+    var rtagName = /<([\w:]+)/  //取得其tagName
+    var rxhtml = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/ig
+    var rcreate = W3C ? /[^\d\D]/ : /(<(?:script|link|style|meta|noscript))/ig
+    var scriptTypes = oneObject(["", "text/javascript", "text/ecmascript", "application/ecmascript", "application/javascript"])
+    var rnest = /<(?:tb|td|tf|th|tr|col|opt|leg|cap|area)/ //需要处理套嵌关系的标签
     var script = DOC.createElement("script")
     avalon.parseHTML = function(html) {
         if (typeof html !== "string") {
@@ -1745,6 +1744,7 @@
         }
         return node
     }
+
     /*********************************************************************
      *                            事件管理器                            *
      **********************************************************************/
@@ -2019,22 +2019,6 @@
 
     //http://www.w3.org/TR/html5/syntax.html#void-elements
     var stopScan = oneObject("area,base,basefont,br,col,command,embed,hr,img,input,link,meta,param,source,track,wbr,noscript,script,style,textarea".toUpperCase())
-
-    //确保元素的内容被完全扫描渲染完毕才调用回调
-    var interval = W3C ? 30 : 50
-
-    function checkScan(elem, callback) {
-        var innerHTML = NaN,
-                id = setInterval(function() {
-                    var currHTML = elem.innerHTML
-                    if (currHTML === innerHTML) {
-                        clearInterval(id)
-                        callback()
-                    } else {
-                        innerHTML = currHTML
-                    }
-                }, interval)
-    }
 
 
     function scanTag(elem, vmodels, node) {
@@ -2675,11 +2659,12 @@
                     if (loaded) {
                         text = loaded.apply(target, [text].concat(vmodels))
                     }
-                   if (rendered) {
-                        avalon.scanCallback(function(){
-                           rendered.call(target)
+                    if (rendered) {
+                        avalon.scanCallback(function() {
+                            rendered.call(target)
                         })
                     }
+                    avalon.scan(target)
                     while (true) {
                         var node = data.startInclude.nextSibling
                         if (node && node !== data.endInclude) {
@@ -2906,12 +2891,13 @@
                 }
                 var callback = data.renderedCallback || noop,
                         args = arguments
-                checkScan(parent, function() {
+                avalon.scanCallback(function() {
                     callback.apply(parent, args)
                     if (parent.oldValue && parent.tagName === "SELECT" && method === "index") { //fix #503
                         avalon(parent).val(parent.oldValue.split(","))
                     }
                 })
+                avalon.scan(parent)
             }
         },
         "html": function(val, elem, data) {
@@ -3679,18 +3665,12 @@
             }
         }
         data.bound("change", updateVModel)
-        var innerHTML = NaN
-        var id = setInterval(function() {
-            var currHTML = element.innerHTML
-            if (currHTML === innerHTML) {
-                clearInterval(id)
-                //先等到select里的option元素被扫描后，才根据model设置selected属性  
-                registerSubscriber(data)
-                data.changed.call(element, evaluator(), data)
-            } else {
-                innerHTML = currHTML
-            }
-        }, 20)
+        avalon.scanCallback(function() {
+            //先等到select里的option元素被扫描后，才根据model设置selected属性  
+            registerSubscriber(data)
+            data.changed.call(element, evaluator(), data)
+        })
+        avalon.scan(element)
     }
     duplexBinding.TEXTAREA = duplexBinding.INPUT
     //============================= event binding =======================
@@ -4157,7 +4137,7 @@
         //https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
         //    <a href="javasc&NewLine;ript&colon;alert('XSS')">chrome</a> 
         //    <a href="data:text/html;base64, PGltZyBzcmM9eCBvbmVycm9yPWFsZXJ0KDEpPg==">chrome</a>
-        //    <a href="jav  ascript:alert('XSS');">IE67chrome</a>
+        //    <a href="jav	ascript:alert('XSS');">IE67chrome</a>
         //    <a href="jav&#x09;ascript:alert('XSS');">IE67chrome</a>
         //    <a href="jav&#x0A;ascript:alert('XSS');">IE67chrome</a>
         sanitize: function(str) {
@@ -4196,10 +4176,10 @@
         },
         number: function(number, decimals, dec_point, thousands_sep) {
             //与PHP的number_format完全兼容
-            //number    必需，要格式化的数字
-            //decimals  可选，规定多少个小数位。
-            //dec_point 可选，规定用作小数点的字符串（默认为 . ）。
-            //thousands_sep 可选，规定用作千位分隔符的字符串（默认为 , ），如果设置了该参数，那么所有其他参数都是必需的。
+            //number	必需，要格式化的数字
+            //decimals	可选，规定多少个小数位。
+            //dec_point	可选，规定用作小数点的字符串（默认为 . ）。
+            //thousands_sep	可选，规定用作千位分隔符的字符串（默认为 , ），如果设置了该参数，那么所有其他参数都是必需的。
             // http://kevin.vanzonneveld.net
             number = (number + "").replace(/[^0-9+\-Ee.]/g, "")
             var n = !isFinite(+number) ? 0 : +number,

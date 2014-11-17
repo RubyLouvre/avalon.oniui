@@ -32,6 +32,10 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
         return value //原样返回value
     }
 },</pre>
+                <p>在validationHooks中自定验证规则，每个都必须写
+                    <b style="color:red">message</b>(
+                    <span style="color:lightgreen">message不能为空字符串</span>)与
+                    <b style="color:red">get</b>方法。</p>
                 <p>验证规则不惧怕任何形式的异步，只要你决定进行验证时，执行next方法就行。next 需要传入布尔。</p>
                 <pre class="brush:javascript;gutter:false;toolbar:false;">async: {
     message: "异步验证",
@@ -229,6 +233,11 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                                     <td>data</td>
                                     <td>Object</td>
                                     <td>绑定对象</td>
+                                </tr>
+                                <tr>
+                                    <td>isValidateAll</td>
+                                    <td>Undefined|Boolean</td>
+                                    <td>是否全部验证,是就禁止onSuccess, onError, onComplete触发</td>
                                 </tr>
                             </table>
                         </td>

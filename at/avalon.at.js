@@ -21,7 +21,7 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
 
             vm.$skipArray = ["at", "widgetElement", "datalist", "template"]
             vm.widgetElement = element
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 var _vmodels = [vmodel].concat(vmodels)
                 blurCallback = $element.bind("blur", function(e) {
                     if (!vmodel.$model.__mouseenter__ && vmodel.toggle) {
@@ -117,9 +117,14 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                     })
 
                 })
-                avalon.scan(element, _vmodels)
-                if (typeof options.onInit === "function") {
-                    options.onInit.call(element, vmodel, options, vmodels)
+                if(continueScan){
+                    continueScan()
+                }else{
+                    avalon.log("请尽快升到avalon1.3.7+")
+                    avalon.scan(element, _vmodels)
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }
             }
             /**

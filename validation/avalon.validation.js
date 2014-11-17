@@ -17,6 +17,8 @@
  }
  },
  *  ```
+ *  <p>在validationHooks中自定验证规则，每个都必须写<b style="color:red">message</b>
+ *  (<span style="color:lightgreen">message不能为空字符串</span>)与<b style="color:red">get</b>方法。</p>
  *  <p>验证规则不惧怕任何形式的异步，只要你决定进行验证时，执行next方法就行。next 需要传入布尔。</p>
  *  ```javascript
  *      async: {
@@ -424,7 +426,7 @@ define(["../promise/avalon.promise"], function(avalon) {
             /**
              * @interface 验证单个元素对应的VM中的属性是否符合格式
              * @param data {Object} 绑定对象
-             * @isValidateAll {Undefined|Boolean} 是否全部验证,是就禁止onSuccess, onError, onComplete触发
+             * @param isValidateAll {Undefined|Boolean} 是否全部验证,是就禁止onSuccess, onError, onComplete触发
              */
             vm.validate = function(data, isValidateAll) {
                 var value = data.valueAccessor()

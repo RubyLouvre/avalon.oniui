@@ -67,6 +67,7 @@
  *   getMessage: function(){}//用户调用到方法即可以拿到完整的错误消息——“当前位置必须是在北京”
  * }
  * ```
+ * <p>如果用户指定了<code>norequired</code>验证规则，如果input为空, 那么就会跳过之后的所有验证</p>
  */
 
 define(["../promise/avalon.promise"], function(avalon) {
@@ -118,6 +119,14 @@ define(["../promise/avalon.promise"], function(avalon) {
             message: '必须填写',
             get: function(value, data, next) {
                 next(value !== "")
+                return value
+            }
+        },
+        norequired: {
+            message: '可以不写',
+            get: function(value, data, next) {
+                next(true)
+                data.norequired = value === ""
                 return value
             }
         },
@@ -416,7 +425,7 @@ define(["../promise/avalon.promise"], function(avalon) {
 //                        if (data.valueResetor) {
 //                            data.valueResetor()
 //                        }
-                        vm.onReset.call(data.element,{type:"reset"}, data)
+                        vm.onReset.call(data.element, {type: "reset"}, data)
                     } catch (e) {
                     }
                 })
@@ -467,6 +476,9 @@ define(["../promise/avalon.promise"], function(avalon) {
                             reject = b
                         }))
                         var next = function(a) {
+                            if (data.norequired)
+                                a = true
+                            delete data.norequired
                             if (a) {
                                 resolve(true)
                             } else {
@@ -587,7 +599,7 @@ define(["../promise/avalon.promise"], function(avalon) {
  数值数据变0,数组数据变[],字符串数组变成""
  
  </p>
-                
+ 
  */
 
 /**
@@ -598,4 +610,5 @@ define(["../promise/avalon.promise"], function(avalon) {
  [自带验证规则contains,contain](avalon.validation.ex4.html)
  [自带验证规则repeat(重复密码)](avalon.validation.ex5.html)
  [自定义验证规则](avalon.validation.ex6.html)
+ [自带验证规则norequied](avalon.validation.ex7.html)
  */

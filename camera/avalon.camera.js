@@ -77,13 +77,12 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
             vm.$skipArray = ["widgetElement", "template", "selectionWrapOffset"]
 
             var inited
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if (inited) return
                 inited = true
                 var pageHTML = options.template
                 element.style.display = "none"
                 element.innerHTML = pageHTML
-                avalon.scan(element, [vmodel].concat(vmodels))
                 element.style.display = "block"
 
                 if (vm.adaptiveWidth) { //自动填充外围容器宽度
@@ -103,7 +102,6 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
                 //区块大小
                 fakepartWidth = vm.pictureWidth / vm.slicedCols
                 fakepartHeight = vm.pictureHeight / vm.slicedRows
-                console.log(fakepartHeight)
 
                 //分割区块
                 require('jquery,ready!', function($) {
@@ -133,6 +131,16 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
                         }
                     }
                 })
+
+                if(continueScan){
+                    continueScan()
+                }else{
+                    avalon.log("请尽快升到avalon1.3.7+")
+                    avalon.scan(element, _vmodels)
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
+                }
             }
 
             vm.$remove = function() {

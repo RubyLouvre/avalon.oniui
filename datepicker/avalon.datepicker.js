@@ -376,7 +376,7 @@ define(["../avalon.getModel",
                 toggleMonth("next")
                 event.stopPropagation()
             }
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 var elementPar = element.parentNode,
                     value = element.value;
                 calendar = avalon.parseHTML(calendarTemplate).firstChild

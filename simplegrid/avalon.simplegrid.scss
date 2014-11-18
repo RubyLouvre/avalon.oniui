@@ -1,6 +1,7 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname : "ui-simplegrid";
+$uiname : "oni-simplegrid";
+$helper : "oni-helper";
 .#{$uiname}{
     font: normal 12px/1.5 tahoma,arial,'Hiragino Sans GB','\5b8b\4f53',sans-serif;
     width:100%;
@@ -47,12 +48,12 @@ $uiname : "ui-simplegrid";
             @extend %cell-style;
             border-bottom: 1px solid #f3f3f3;
         }
-        .ui-state-hover{
+        .oni-state-hover{
             td, th{
                 background-color: #e8f5fd;
             }
         }
-        .ui-state-selected {
+        .oni-state-selected {
             td, th{
                 background-color: #fff7e6;
             }
@@ -76,7 +77,7 @@ $uiname : "ui-simplegrid";
         height: 26px;
         line-height: 26px;
         padding-left: 5px;
-        .ui-dropdown {
+        .oni-dropdown {
             margin: 0 5px;
             vertical-align: top;
         }
@@ -84,7 +85,7 @@ $uiname : "ui-simplegrid";
 
     //====================
     /*三种容器的规则*/
-    .ui-helper-asc, .ui-helper-desc,  .ui-helper-ndb{
+    .#{$helper}-asc, .#{$helper}-desc,  .#{$helper}-ndb{
         width:16px;
         height:16px;
         line-height: 1;
@@ -95,31 +96,31 @@ $uiname : "ui-simplegrid";
         cursor: pointer;
     }
     /*三种容器下三角形的共同点*/
-    .ui-helper-asc span, .ui-helper-desc span, .ui-helper-ndb span{
+    .#{$helper}-asc span, .#{$helper}-desc span, .#{$helper}-ndb span{
         position: absolute;
         top: 0px;
         left: 4px;
     }
     /*上三角*/
-    .ui-helper-ndb .ui-helper-sort-top, .ui-helper-desc .ui-helper-sort-top{
+    .#{$helper}-ndb .#{$helper}-sort-top, .#{$helper}-desc .#{$helper}-sort-top{
         @include triangle(top, 12px, half, #ccc);
         top: 0px;
     }
-    .ui-helper-asc .ui-helper-sort-top{
+    .#{$helper}-asc .#{$helper}-sort-top{
         @include triangle(top, 12px, half, #000);
         top: 0px;
     }
     /*下三角*/
-    .ui-helper-ndb .ui-helper-sort-bottom, .ui-helper-asc .ui-helper-sort-bottom{
+    .#{$helper}-ndb .#{$helper}-sort-bottom, .#{$helper}-asc .#{$helper}-sort-bottom{
         @include triangle(bottom, 12px, half, #ccc);
         top: 8px;
     }
-    .ui-helper-desc .ui-helper-sort-bottom{
+    .#{$helper}-desc .#{$helper}-sort-bottom{
         @include triangle(bottom, 12px, half, #000);
         top: 8px;
     }
 
-    .ui-pager{
+    .oni-pager{
         @include float-right();
     }
     .#{$uiname}-empty {

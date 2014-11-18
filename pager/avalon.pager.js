@@ -41,10 +41,10 @@ define(["avalon",
             vm.$init = function(continueScan) {
                 var pageHTML = options.template
                 element.style.display = "none"
-                element.innerHTML = pageHTML
-
                 setTimeout(function() {
+                    element.innerHTML = pageHTML
                     element.style.display = "block"
+                    avalon.log("开始扫描组件内部")
                     if (continueScan) {
                         continueScan()
                     } else {

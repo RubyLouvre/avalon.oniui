@@ -296,7 +296,7 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
 
     widget.defaults = {
         pictures: [], //@param  轮播图片素材
-        effect: "crossY", //@param  图片切换类型，取值：random:全部随机 / none:无特效 / slideX:横向滑动 / slideY:纵向滑动 / fadeIn:渐入 / crossX:横向交叉 / crossY:纵向交叉 / stepX:横向阶梯 / stepY:纵向阶梯 / rotateFadeIn:旋转式渐入
+        effect: "random", //@param  图片切换类型，取值：random:全部随机 / none:无特效 / slideX:横向滑动 / slideY:纵向滑动 / fadeIn:渐入 / crossX:横向交叉 / crossY:纵向交叉 / stepX:横向阶梯 / stepY:纵向阶梯 / rotateFadeIn:旋转式渐入
         timeout: 2500, //@param  切换时间间隔
         during: 600, //@param  切换速度，越小越快，单位为毫秒
         alwaysShowArrow: true, //@param  显示左右切换箭头

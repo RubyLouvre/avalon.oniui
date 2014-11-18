@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script>
+            window.onload = function() {
+                //chrome36 chrome39
+               // if (document.body.animate) {
+                    var elem = document.querySelector("#test")
+                    var player = elem.animate([
+                        {transform: 'translate(0px, 0px)'},
+                        {transform: 'translate(400px, 150px)'},
+                        {transform: 'translate(0px, 300px)'}
+                    ], 1500);
+                    console.log(player)
+                    console.log(player.source)
+                    player.onfinish = function(e) {
+                        console.log('per aspera ad terra!');
+                    }
+
+//                    elem.animate([
+//                        {backgroundColor: 'blue', offset: 0},
+//                        {backgroundColor: 'green', offset: 1 / 3},
+//                        {backgroundColor: 'red', offset: 2 / 3},
+//                        {backgroundColor: 'yellow', offset: 1}
+//                    ], 2000);
+ //               }
+            }
+
+        </script>
+        <style>
+            #test{
+                width:100px;
+                height:100px;
+                background: red;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="test">ccccc</div>
+    <template></template>
+    </body>
+</html>

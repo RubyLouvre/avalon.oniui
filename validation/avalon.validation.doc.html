@@ -32,6 +32,10 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
         return value //原样返回value
     }
 },</pre>
+                <p>在validationHooks中自定验证规则，每个都必须写
+                    <b style="color:red">message</b>(
+                    <span style="color:lightgreen">message不能为空字符串</span>)与
+                    <b style="color:red">get</b>方法。</p>
                 <p>验证规则不惧怕任何形式的异步，只要你决定进行验证时，执行next方法就行。next 需要传入布尔。</p>
                 <pre class="brush:javascript;gutter:false;toolbar:false;">async: {
     message: "异步验证",
@@ -77,6 +81,8 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
     validateRule: "beijing",
     getMessage: function() {} //用户调用到方法即可以拿到完整的错误消息——“当前位置必须是在北京”
 }</pre>
+                <p>如果用户指定了
+                    <code>norequired</code>验证规则，如果input为空, 那么就会跳过之后的所有验证</p>
             </fieldset>
             <fieldset>
                 <legend>使用说明</legend>
@@ -230,6 +236,11 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                                     <td>Object</td>
                                     <td>绑定对象</td>
                                 </tr>
+                                <tr>
+                                    <td>isValidateAll</td>
+                                    <td>Undefined|Boolean</td>
+                                    <td>是否全部验证,是就禁止onSuccess, onError, onComplete触发</td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
@@ -259,6 +270,9 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                 </li>
                 <li>
                     <a href="avalon.validation.ex6.html">自定义验证规则</a>
+                </li>
+                <li>
+                    <a href="avalon.validation.ex7.html">自带验证规则norequied</a>
                 </li>
             </ul>
         </div>

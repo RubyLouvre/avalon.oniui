@@ -359,20 +359,24 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                     vmodel.toggle = true
                 }
             }
-            vm._show = function(e) {
+            vm._show = function(e, content) {
                 var tar =  _event_ele || vmodel.widgetElement
                     , src = e && (e.srcElement || e.target) || ofElement || vmodel.widgetElement
-                    , content
+                    , content = content
                 // delegate情形下，从src->this找到符合要求的元素
-                if(vmodel.delegate) {
-                    content = vmodel.contentGetter.call(vmodel, src)
-                    while(!content && src && src != tar) {
-                        src = src.parentNode
+                if(content === void 0) {
+                    if(vmodel.delegate) {
                         content = vmodel.contentGetter.call(vmodel, src)
+                        while(!content && src && src != tar) {
+                            src = src.parentNode
+                            content = vmodel.contentGetter.call(vmodel, src)
+                        }
+                        tar = src
+                    } else {
+                        content = vmodel.contentGetter.call(vmodel, tar)
                     }
-                    tar = src
                 } else {
-                    content = vmodel.contentGetter.call(vmodel, tar)
+                    tar = src
                 }
                 if(content == void 0) {
                     _event = ofElement
@@ -415,9 +419,9 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                     }
                 }
             }
-            //@interface showBy($event) 参数满足 {target: elem}这样，或者是一个elem元素亦可，tooltip会按照elem定位，并作为参数传递给contentGetter
-            vm.showBy = function(obj) {
-                vmodel._show(obj && obj.tagName ? {target: obj} : obj)
+            //@interface showBy($event, content) 参数满足 {target: elem}这样，或者是一个elem元素亦可，tooltip会按照elem定位，并作为参数传递给contentGetter，如果指定content，则忽略contentGetter的返回，直接显示content内容
+            vm.showBy = function(obj, content) {
+                vmodel._show(obj && obj.tagName ? {target: obj} : obj, content)
             }
             vm._isShown = function() {
                 var elem = avalon(tooltipElem)

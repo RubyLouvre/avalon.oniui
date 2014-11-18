@@ -163,10 +163,10 @@
                         <td>hide($event) 隐藏tooltip，参数是$event，可缺省</td>
                     </tr>
                     <tr>
-                        <td>showBy(obj)</td>
+                        <td>showBy(obj,content)</td>
                         <td>Function</td>
                         <td></td>
-                        <td>showBy($event) 参数满足 {target: elem}这样，或者是一个elem元素亦可，tooltip会按照elem定位，并作为参数传递给contentGetter</td>
+                        <td>showBy($event, content) 参数满足 {target: elem}这样，或者是一个elem元素亦可，tooltip会按照elem定位，并作为参数传递给contentGetter，如果指定content，则忽略contentGetter的返回，直接显示content内容</td>
                     </tr>
                 </table>
             </fieldset>

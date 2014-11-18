@@ -420,7 +420,9 @@ define(["../promise/avalon.promise"], function(avalon) {
              * @param callback {Null|Function} 最后执行的回调，如果用户没传就使用vm.onResetAll
              */
             vm.resetAll = function(callback) {
+                var reasons = []
                 vm.data.forEach(function(data) {
+                    reasons.push(data)
                     try {
 //                        if (data.valueResetor) {
 //                            data.valueResetor()
@@ -430,7 +432,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                     }
                 })
                 var fn = typeof callback == "function" ? callback : vm.onResetAll
-                fn.call(vm.widgetElement)
+                fn.call(vm.widgetElement, reasons)
             }
             /**
              * @interface 验证单个元素对应的VM中的属性是否符合格式

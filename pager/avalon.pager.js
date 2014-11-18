@@ -30,6 +30,9 @@ define(["avalon",
         } else {
             options.options = []
         }
+        if(vmodels.cb){
+            template  = template.replace(/ms-title/g, "ms-attr-title")
+        }
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
         options._currentPage = options.currentPage
@@ -44,7 +47,6 @@ define(["avalon",
                 setTimeout(function() {
                     element.innerHTML = pageHTML
                     element.style.display = "block"
-                    avalon.log("开始扫描组件内部")
                     if (continueScan) {
                         continueScan()
                     } else {

@@ -1,3 +1,11 @@
+// avalon 1.3.6
+/**
+ * 
+ * @cnName 滑块
+ * @enName slider
+ * @introduce
+ *    <p>slider组件用来拖动手柄选择数值，可以水平拖动、垂直拖动、设置range使得两边都可以拖动，或者根据设置的步长更新滑块数值</p>
+ */
 define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../chameleon/oniui-common.css", "css!./avalon.slider.css", "../avalon.getModel"], function(avalon, sourceHTML) {
     /**
      * @global Handlers ： 保存页面上所有滑动手柄
@@ -53,7 +61,7 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
         // handlers保存滑动块上的手柄，域Handlers进行区分
         var slider = avalon.parseHTML(sliderHTML).firstChild, handlers = []
         element.parentNode.insertBefore(slider, element.nextSibling)
-        $element.addClass("ui-helper-hidden-accessible")
+        $element.addClass("oni-helper-hidden-accessible")
 
         function value2Percent(val) { // 将value值转换为百分比
             if (val < valueMin) {
@@ -100,11 +108,11 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
                 data.started = !vmodel.disabled
                 data.dragX = data.dragY = false
                 Index = handlers.indexOf(data.element)
-                data.$element.addClass("ui-state-active")
+                data.$element.addClass("oni-state-active")
                 options.onDragStart.call(null, event, data);
             }
             vm.dragend = function(event, data, keyVal) {
-                data.$element.removeClass("ui-state-active")
+                data.$element.removeClass("oni-state-active")
                 // dragCaculate(event, data, keyVal)
                 options.onDragEnd.call(null, event, data);
                 vmodel._dragEnd = false; 
@@ -195,17 +203,37 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
         return vmodel
     }
     widget.defaults = {
-        max: 100,
-        min: 0,
+        max: 100, //@config 组件的最大值
+        min: 0, //@config 组件的最小值
         width: -1,
-        orientation: "horizontal",
+        orientation: "horizontal", //@config 组件是水平拖动还是垂直拖动，垂直是“vertical”
+        /**
+         * @config 滑块是否显示滑动范围，配置值可以是true、min、max
+            <p>true: 显示滑动范围</p>
+            <p>min: 滑块值最小的一端固定</p>
+            <p>max: 滑块值最大的一端固定</p>
+         */
         range: false,
-        step: 1,
-        value: 0,
-        values: null,
-        disabled: false,
+        step: 1, //@config 滑块滑动的步值
+        value: 0, //@config 滑块的当前值，当range为true时，value是滑块范围表示的两个值，以“,”分隔
+        values: null, //@config 当range为true时，values数组需要有两个值，表示滑块范围
+        disabled: false, //@config 是否禁用滑块, 设为true时滑块禁用
+        /**
+         * @config {Function} 滑动开始的回调
+         * @param event {Object} 事件对象
+         * @param data {Object} 滑动的数据信息
+         */
         onDragStart: avalon.noop,
+        /**
+         * @config {Function} 滑动时的回调
+         * @param vmodel {Object} 组件对应的Vmodel
+         * @param data {Object} 滑动的数据信息
+         */
         onDrag: avalon.noop,
+        /**
+         * @config {Function} 滑动结束时的回调
+         * @param data {Object} 滑动的数据信息
+         */
         onDragEnd: avalon.noop,
         getTemplate: function(str, options) {
             return str;
@@ -217,11 +245,11 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
         var Index = Handlers.indexOf(el)
         if (Index !== -1) {
             if (FocusElement) {
-                FocusElement.removeClass("ui-state-focus");
+                FocusElement.removeClass("oni-state-focus");
             }
-            FocusElement = avalon(el).addClass("ui-state-focus")
+            FocusElement = avalon(el).addClass("oni-state-focus")
         } else if (FocusElement) {
-            FocusElement.removeClass("ui-state-focus")
+            FocusElement.removeClass("oni-state-focus")
             FocusElement = null
         }
    })
@@ -256,3 +284,14 @@ define(["../draggable/avalon.draggable", "text!./avalon.slider.html", "css!../ch
     })
     return avalon
 })
+/**
+ @links
+ [slider组件使用概览](avalon.slider.ex.html)
+ [基本的slider组件，配置有dragstart、drag、dragend回调](avalon.slider.ex1.html)
+ [切换禁用slider组件](avalon.slider.ex2.html)
+ [配置slider组件max、min、value值](avalon.slider.ex3.html)
+ [配置slider的range为true、min、max实现不同的slider效果](avalon.slider.ex4.html)
+ [配置slider的步长step](avalon.slider.ex5.html)
+ [配置orientation选项使得slider为垂直拖动块](avalon.slider.ex6.html)
+ [利用slider组件滚动图片](avalon.slider.ex7.html)
+ */

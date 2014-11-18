@@ -29,18 +29,19 @@
                                 &lt;tbody&gt;
                                     &lt;tr&gt;
                                         &lt;td class="pad30"&gt;
-                                            &lt;input ms-widget="textbox, b, $bOpts" type="text"/&gt;
+                                            &lt;input ms-widget="textbox, b, $bOpts" type="text" id="test"/&gt;
                                             &lt;p&gt;设置tabIndex为2&lt;/p&gt;
                                         &lt;/td&gt;
+
                                         &lt;td class="pad30"&gt;
-                                            &lt;input ms-widget="textbox, a, $aOpts" type="text"/&gt;
+                                            &lt;input ms-widget="textbox, a, $aOpts" data-textbox-auto-focus="true" type="text"/&gt;
                                             &lt;p&gt;设置width、tabIndex为1&lt;/p&gt;
                                         &lt;/td&gt;
                                     &lt;/tr&gt;
                                     &lt;tr&gt;
                                         &lt;td colspan = "2" class="pad30"&gt;
                                             &lt;input ms-widget="textbox, c, $cOpts" ms-disabled="disable" type="text"/&gt;
-                                            &lt;p&gt;设置disabledClass为"ui-textbox-disabled disableClass2"&lt;/p&gt;
+                                            &lt;p&gt;设置disabledClass为"oni-textbox-disabled disableClass2"&lt;/p&gt;
                                         &lt;/td&gt;
                                     &lt;/tr&gt;
                                 &lt;/tbody&gt;
@@ -58,7 +59,7 @@
                                     tabIndex: 2
                                 }
                                 vm.$cOpts = {
-                                    disabledClass: "ui-textbox-disabled disableClass2"
+                                    disabledClass: "oni-textbox-disabled disableClass2"
                                 }
                                 vm.disable = true
                             })
@@ -88,7 +89,7 @@
                         <tr>
                             <td colspan = "2" class="pad30">
                                 <input ms-widget="textbox, c, $cOpts" ms-disabled="disable" type="text"/>
-                                <p>设置disabledClass为"ui-textbox-disabled disableClass2"</p>
+                                <p>设置disabledClass为"oni-textbox-disabled disableClass2"</p>
                             </td>
                         </tr>
                     </tbody>
@@ -106,7 +107,7 @@
                         tabIndex: 2
                     }
                     vm.$cOpts = {
-                        disabledClass: "ui-textbox-disabled disableClass2"
+                        disabledClass: "oni-textbox-disabled disableClass2"
                     }
                     vm.disable = true
                 })

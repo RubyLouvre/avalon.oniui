@@ -47,8 +47,8 @@
                                         'title': '标题2',
                                         'content': '正文2'
                                     }],
-                                    controlCls: "ui-accordion-customClass",
-                                    currentTriggerClass: "ui-accordion-active-cus",
+                                    controlCls: "oni-accordion-customClass",
+                                    currentTriggerClass: "oni-accordion-active-cus",
                                     initIndex: 1,
                                     width: "500",
                                     beforeSwitch: function() {
@@ -81,10 +81,10 @@
                             avalon.scan(accordionElement, model);
                             setTimeout(function() {
                                 var aaVmodel = avalon.vmodels["aa"];
-                                expect(avalon(accordionElement).hasClass("ui-accordion-customClass")).to.be(true);
+                                expect(avalon(accordionElement).hasClass("oni-accordion-customClass")).to.be(true);
                                 expect(aaVmodel.currentIndex).to.be(1);
-                                expect(avalon(aaVmodel.getHeader(1)).hasClass("ui-accordion-active-cus")).to.be(true);
-                                expect(avalon(aaVmodel.getHeader(1)).hasClass("ui-accordion-active")).to.be(false);
+                                expect(avalon(aaVmodel.getHeader(1)).hasClass("oni-accordion-active-cus")).to.be(true);
+                                expect(avalon(aaVmodel.getHeader(1)).hasClass("oni-accordion-active")).to.be(false);
                                 expect(avalon(aaVmodel.getPanel(1)).css("display")).to.be("block");
                                 expect(avalon(accordionElement).css("width")).to.be("500px");
                                 expect(aaVmodel.mode).to.be("caret");

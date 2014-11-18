@@ -1,16 +1,16 @@
-<div class="ui-slider ui-widget ui-corner-all"
-     ms-class-1 = "ui-slider-horizontal: orientation==='horizontal'"
-     ms-class-2 = "ui-slider-vertical: orientation !== 'horizontal'"
-     ms-class-ui-state-disabled="disabled"> 
-    <div class="ui-slider-range ui-widget-header ui-corner-all" 
-         ms-class-1 = "ui-slider-range-min:range==='min'"
-         ms-class-2 = "ui-slider-range-max:range==='max'"
+<div class="oni-slider oni-widget oni-corner-all"
+     ms-class-1 = "oni-slider-horizontal: orientation==='horizontal'"
+     ms-class-2 = "oni-slider-vertical: orientation !== 'horizontal'"
+     ms-class-oni-state-disabled="disabled"> 
+    <div class="oni-slider-range oni-widget-header oni-corner-all" 
+         ms-class-1 = "oni-slider-range-min:range==='min'"
+         ms-class-2 = "oni-slider-range-max:range==='max'"
          ms-css-MS_OPTION_WIDTHORHEIGHT = "{{range === 'max' ? 100-percent : percent}}%"
          ms-css-MS_OPTION_LEFTORBOTTOM = "{{ $twohandlebars ? percent0 : 'auto'}}%"
          ms-if = "range"
          style="width: 100%;">
     </div>
-    <b  class="ui-slider-handle  ui-corner-all hander___flag"
+    <b  class="oni-slider-handle  oni-corner-all hander___flag"
         ms-css-MS_OPTION_LEFTORBOTTOM = "{{percent}}%"
         ms-data-axis = "$axis"
         ms-draggable
@@ -18,10 +18,10 @@
         data-draggable-stop="dragend" 
         data-draggable-drag="drag" 
         data-draggable-containment="parent" 
-        ms-hover="ui-state-hover"
+        ms-hover="oni-state-hover"
         ms-if = "!$twohandlebars"
         ></b>
-    <b  class="ui-slider-handle  ui-corner-all"
+    <b  class="oni-slider-handle  oni-corner-all"
         ms-css-MS_OPTION_LEFTORBOTTOM = "{{percent0}}%"
         ms-data-axis = "$axis"
         ms-draggable
@@ -29,10 +29,10 @@
         data-draggable-stop="dragend" 
         data-draggable-drag="drag" 
         data-draggable-containment="parent" 
-        ms-hover="ui-state-hover"
+        ms-hover="oni-state-hover"
         ms-if = "$twohandlebars"
         ></b>
-    <b  class="ui-slider-handle  ui-corner-all"
+    <b  class="oni-slider-handle  oni-corner-all"
         ms-css-MS_OPTION_LEFTORBOTTOM = "{{percent1}}%"
         ms-data-axis = "$axis"
         ms-draggable
@@ -40,7 +40,7 @@
         data-draggable-stop="dragend" 
         data-draggable-drag="drag" 
         data-draggable-containment="parent" 
-        ms-hover="ui-state-hover"
+        ms-hover="oni-state-hover"
      
         ms-if = "$twohandlebars"
         ></b>

@@ -67,6 +67,7 @@
                 avalon.define("demo6", function(vm) {
                     vm.inputValue = "";
                     vm.changedCallback = function() {
+                        console.log(arguments)
                         vm.inputValue += "_tht result of callback handler";
                     }
                 })

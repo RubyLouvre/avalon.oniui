@@ -42,8 +42,8 @@
                             setTimeout(function() {
                                 var sliderWrapper = avalon(testWrapper.children[1]);
                                 if (sliderWrapper[0].tagName === "DIV") {
-                                    expect(avalon(inputElement).hasClass("ui-helper-hidden-accessible")).to.be(true);
-                                    expect(sliderWrapper.hasClass("ui-slider"));
+                                    expect(avalon(inputElement).hasClass("oni-helper-hidden-accessible")).to.be(true);
+                                    expect(sliderWrapper.hasClass("oni-slider"));
                                     expect(sliderWrapper[0].getElementsByTagName("b").length).to.be(1);
                                     expect(sliderWrapper[0].getElementsByTagName("div").length).to.be(0)
                                 }else {
@@ -126,7 +126,7 @@
                                 var handle = sliderWrapper[0].getElementsByTagName("b")[0];
                                 var aVModel = avalon.vmodels["a"];
                                 aVModel.$watch("disabled", function(v) {
-                                    expect(sliderWrapper.hasClass("ui-state-disabled")).to.be(false);
+                                    expect(sliderWrapper.hasClass("oni-state-disabled")).to.be(false);
                                     expect(v).to.be(false);
                                     done();
                                 })
@@ -135,7 +135,7 @@
                                     aVModel.disabled = false;
                                 })
                                 if (sliderWrapper[0].tagName === "DIV") {
-                                    expect(sliderWrapper.hasClass("ui-state-disabled")).to.be(true);
+                                    expect(sliderWrapper.hasClass("oni-state-disabled")).to.be(true);
                                     handle.click();
                                 }else {
                                     avalon.log("sliderWrapper获取有误")
@@ -159,7 +159,7 @@
                                 var aVModel = avalon.vmodels["a"];
                                 if (sliderWrapper[0].tagName === "DIV") {
                                     expect(aVModel.percent).to.be(50);
-                                    expect(sliderBar.hasClass("ui-slider-range")).to.be(true);
+                                    expect(sliderBar.hasClass("oni-slider-range")).to.be(true);
                                     expect(sliderBar[0].style.width).to.be("50%");
                                 }else {
                                     avalon.log("sliderWrapper获取有误")
@@ -188,7 +188,7 @@
                                     expect(aVModel.percent0).to.be(25);
                                     expect(aVModel.percent1).to.be(75)
                                     expect(handles.length).to.be(2);
-                                    expect(avalon(sliderBar).hasClass("ui-slider-range")).to.be(true);
+                                    expect(avalon(sliderBar).hasClass("oni-slider-range")).to.be(true);
                                     expect(sliderBar.style.width).to.be("50%");
                                     expect(sliderBar.style.left).to.be("25%");
                                 }else {
@@ -237,12 +237,12 @@
                                 var sliderBar = sliderWrapper[0].getElementsByTagName("div")[0];
                                 var aVModel = avalon.vmodels["a"];
                                 if (sliderWrapper[0].tagName === "DIV") {
-                                    expect(sliderWrapper.hasClass("ui-slider-vertical")).to.be(true);
+                                    expect(sliderWrapper.hasClass("oni-slider-vertical")).to.be(true);
                                     expect(aVModel.percent).to.be(50);
                                     expect(aVModel.percent0).to.be(25);
                                     expect(aVModel.percent1).to.be(75)
                                     expect(handles.length).to.be(2);
-                                    expect(avalon(sliderBar).hasClass("ui-slider-range")).to.be(true);
+                                    expect(avalon(sliderBar).hasClass("oni-slider-range")).to.be(true);
                                     expect(sliderBar.style.height).to.be("50%");
                                     expect(sliderBar.style.bottom).to.be("25%");
                                     expect(sliderBar.style.width).to.be("100%");

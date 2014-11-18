@@ -84,7 +84,7 @@ define(["avalon",
             vm.menuHeight = vm.height;  //下拉列表框高度
             vm.dataSource = dataSource;    //源节点的数据源，通过dataSource传递的值将完全模拟select
             vm.focusClass =  false
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 //根据multiple的类型初始化组件
                 if (vmodel.multiple) {
                     //创建菜单
@@ -223,8 +223,15 @@ define(["avalon",
 
                 avalon.ready(function() {
                     avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
-                    if (typeof options.onInit === "function") {
-                        options.onInit.call(element, vmodel, options, vmodels)
+                    if(continueScan){
+                        continueScan()
+                    }
+                    else{
+                        avalon.log("请尽快升到avalon1.3.7+")
+                        avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
+                        if (typeof options.onInit === "function") {
+                            options.onInit.call(element, vmodel, options, vmodels)
+                        }
                     }
                     vmodel.multiple && optionsSync()
                 });

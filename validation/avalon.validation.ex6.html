@@ -34,7 +34,9 @@
                     c: "5",
                     d: "",
                     clearAll: function() {
-                        validationVM && validationVM.resetAll()
+                        validationVM && validationVM.resetAll(function(a){
+                            console.log(a)
+                        })
                     },
                     checkAll: function() {
                         validationVM && validationVM.validateAll()

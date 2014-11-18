@@ -17,7 +17,7 @@
                                         { name:"叶子节点113"},
                                         { name:"叶子节点114", url: "http://www.baidu.com"}
                                     ]},
-                                { name:"父节点12 - 折叠", open: false, halfCheck: true,
+                                { name:"父节点12 - 折叠", open: false, halfCheck: true,isHidden: true,
                                     children: [
                                         { name:"叶子节点121"},
                                         { name:"叶子节点122"},
@@ -94,10 +94,10 @@
                                 avalon.log("collapse")
                             },
                             beforeRemove: function(obj) {
-                                return confirm("确认删除?")
+                                avalon.log("确认删除?")
                             },
                             beforeAdd: function(obj) {
-                                return confirm("确认添加?")
+                                avalon.log("确认添加?")
                             },
                             beforeMousedown: function(obj) {
                                 avalon.log("before down")
@@ -123,6 +123,9 @@
                                 arg.newLeaf = {
                                     name: "管理员"
                                 }
+                            },
+                            onNodeCreated: function(arg) {
+                                console.log("add")
                             }
                         }
                     }

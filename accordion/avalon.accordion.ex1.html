@@ -38,13 +38,13 @@
                                             'title': '标题2',
                                             'content': '正文2'
                                         }],
-                                        accordionClass: "ui-accordion-customClass",
+                                        accordionClass: "oni-accordion-customClass",
                                         initIndex: 1,
                                         width: "500",
-                                        beforeSwitch: function() {
+                                        onBeforeSwitch: function() {
                                             avalon.log(this);
                                             avalon.log(arguments);
-                                            avalon.log("beforeSwitch callback");
+                                            avalon.log("onBeforeSwitch callback");
                                         },
                                         onSwitch: function() {
                                             avalon.log("onSwitch callback");
@@ -74,13 +74,13 @@
                                 'title': '标题2',
                                 'content': '正文2'
                             }],
-                            accordionClass: "ui-accordion-customClass",
+                            accordionClass: "oni-accordion-customClass",
                             initIndex: 1,
                             width: "500",
-                            beforeSwitch: function() {
+                            onBeforeSwitch: function() {
                                 avalon.log(this);
                                 avalon.log(arguments);
-                                avalon.log("beforeSwitch callback");
+                                avalon.log("onBeforeSwitch callback");
                             },
                             onSwitch: function() {
                                 avalon.log("onSwitch callback");

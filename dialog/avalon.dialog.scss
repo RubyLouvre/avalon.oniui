@@ -1,6 +1,6 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname: "ui-dialog";
+$uiname: "oni-dialog";
 .#{$uiname} {
     position: absolute;
     text-align: left;
@@ -24,7 +24,7 @@ $uiname: "ui-dialog";
                     background-color: #f3f3f3;
                     color: #666666;
                 }
-                .ui-icon {
+                .oni-icon {
                     cursor: pointer;
                 }
                 &:hover {
@@ -56,7 +56,7 @@ $uiname: "ui-dialog";
                 display: inline;
                 @include float-right();
                 font-size: 0;
-                .ui-button {
+                .oni-button {
                     margin-left: 10px;
                 }
             }

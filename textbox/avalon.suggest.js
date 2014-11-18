@@ -23,7 +23,6 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
         */
         options.textboxContainer = options.textboxContainer == "" ? options.inputElement : options.textboxContainer;
         var vmodel = avalon.define(data.suggestId, function(vm) {
-            // debugger
             avalon.mix(vm, options);
             vm.$skipArray = ["widgetElement", "puresuggest"];
             vm.widgetElement = element;

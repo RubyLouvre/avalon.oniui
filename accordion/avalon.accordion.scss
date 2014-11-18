@@ -1,6 +1,6 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname: "ui-accordion";
+$uiname: "oni-accordion";
 $corner-radius: 4px;
 .#{$uiname} {
     @include inline-block();
@@ -8,16 +8,16 @@ $corner-radius: 4px;
     width: 100%;
     font-family: $oniui-font-size * 1.1;
     font-size: $oniui-font-size;
-    .ui-corner-all {
+    .oni-corner-all {
         border-radius: $corner-radius;
     }
-    .ui-corner-top {
+    .oni-corner-top {
         border-top-left-radius: $corner-radius;
         border-top-right-radius: $corner-radius;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
     }
-    .ui-corner-bottom {
+    .oni-corner-bottom {
         border-bottom-right-radius: $corner-radius;
         border-bottom-left-radius: $corner-radius;
         border-top-left-radius: 0;
@@ -71,19 +71,19 @@ $corner-radius: 4px;
         padding: 7px 10px;
         cursor: pointer;
         font-size: 100%;
-        &.ui-state-default {
+        &.oni-state-default {
             border: 1px solid #d3d3d3;
             background-color: #e6e6e6;
             font-weight: normal;
             color: #555;
         }
-        .ui-icon-caret-right {
+        .oni-icon-caret-right {
             display: inline;
         }
-        .ui-icon-caret-down {
+        .oni-icon-caret-down {
             display: none;
         }
-        &.ui-state-hover {
+        &.oni-state-hover {
             @if($oinui-theme == smoothness) {
                 border: 1px solid #999999;
                 background: #dadada;
@@ -91,16 +91,16 @@ $corner-radius: 4px;
                 color: #212121;
             }
         }
-        &.ui-state-active {
+        &.oni-state-active {
             @if($oinui-theme == smoothness) {
                 background: #fff;
                 border: 1px solid #aaa;
                 color: #212121;
             }
-            .ui-icon-caret-down {
+            .oni-icon-caret-down {
                 display: inline;
             }
-            .ui-icon-caret-right {
+            .oni-icon-caret-right {
                 display: none;
             }
         }
@@ -117,7 +117,7 @@ $corner-radius: 4px;
         vertical-align: middle;
         text-align: right;
         cursor: pointer;
-        .ui-icon {
+        .oni-icon {
             cursor: pointer;
         }
     }
@@ -126,20 +126,20 @@ $corner-radius: 4px;
         padding: 7px 10px;
         overflow: auto;
         font-size: 12px;
-        &.ui-state-default {
+        &.oni-state-default {
             @if($oinui-theme == smoothness) {
                 border: 1px solid #aaa;
                 background: #fff;
                 color: #000;
             }
         }
-        &.ui-state-active {
+        &.oni-state-active {
             @if($oinui-theme == smoothness) {
                 background: #fff;
                 border: 1px solid #aaa;
             }
         }
-        &.ui-state-hover {
+        &.oni-state-hover {
             @if($oinui-theme == smoothness) {
                 border: 1px solid #999999;
                 background: #dadada;

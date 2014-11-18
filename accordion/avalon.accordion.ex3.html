@@ -51,7 +51,7 @@
                                             'content': '正文2'
                                         }],
                                         mode: "custom",
-                                        template: '&lt;div class="ui-accordion-inner" ms-each-item="data"&gt;&lt;h3 class="ui-accordion-header" ms-class="MS_OPTION_ACTIVECLASS:currentIndex == $index"&gt;{{item.title}}&lt;/h3&gt;&lt;div class="ui-accordion-content" ms-visible="currentIndex == $index"&gt;{{item.content|html}}&lt;/div&gt;',
+                                        template: '&lt;div class="oni-accordion-inner" ms-each-item="data"&gt;&lt;h3 class="oni-accordion-header" ms-class="MS_OPTION_ACTIVECLASS:currentIndex == $index"&gt;{{item.title}}&lt;/h3&gt;&lt;div class="oni-accordion-content" ms-visible="currentIndex == $index"&gt;{{item.content|html}}&lt;/div&gt;',
                                     }
                                     vm.getCurrentHeader = function(id) {
                                         var currentHeader = avalon.vmodels[id].getCurrentHeader();
@@ -113,7 +113,7 @@
                                 'content': '正文2'
                             }],
                             mode: "custom",
-                            template: '<div class="ui-accordion-inner" ms-each-item="data"><h3 class="ui-accordion-header ui-state-default" ms-class="MS_OPTION_ACTIVECLASS:currentIndex == $index">{{item.title}}</h3><div class="ui-accordion-content ui-state-default ui-widget-content" ms-visible="currentIndex == $index">{{item.content|html}}</div>',
+                            template: '<div class="oni-accordion-inner" ms-each-item="data"><h3 class="oni-accordion-header oni-state-default" ms-class="MS_OPTION_ACTIVECLASS:currentIndex == $index">{{item.title}}</h3><div class="oni-accordion-content oni-state-default oni-widget-content" ms-visible="currentIndex == $index">{{item.content|html}}</div>',
                         }
                         vm.getCurrentHeader = function(id) {
                             var currentHeader = avalon.vmodels[id].getCurrentHeader();

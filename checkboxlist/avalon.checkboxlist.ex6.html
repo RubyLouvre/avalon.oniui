@@ -21,13 +21,13 @@
                 <ul ms-widget="checkboxlist, $, dataConfig" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部"></ul>
                 {{ val }}
             </fieldset>
-            <fieldset>
+<!--             <fieldset>
                 <legend>延迟配置data</legend>
 
                 <ul ms-widget="checkboxlist, c1" data-checkboxlist-duplex="v1" data-checkboxlist-alltext="全选"></ul>
                 <p>{{ v1 }}</p>
                 <button ms-click="setData">set data</button>
-            </fieldset>
+            </fieldset> -->
             
         </div>
         <script>
@@ -36,6 +36,7 @@
                     vm.$skipArray = ["dataConfig"]
                     vm.val = ["1", "2"]
                     vm.v1 = []
+                    vm.name = "dddd"
                     vm.dataConfig = {
                         data: [{
                             text: "选项一", 
@@ -56,7 +57,7 @@
                     }
                     vm.setData = function() {
                         avalon.vmodels.c1.data = [{
-                            text: "menu一", 
+                            text: "menu一{{name}}", 
                             value: "11"
                         }, {
                             text: "menu二", 

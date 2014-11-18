@@ -345,7 +345,6 @@ define(["../promise/avalon.promise"], function(avalon) {
                     }
                 }
                 next(has)
-                console.log(val)
                 return val
             }
         },
@@ -600,7 +599,15 @@ define(["../promise/avalon.promise"], function(avalon) {
  数值数据变0,数组数据变[],字符串数组变成""
  
  </p>
- 
+                
+<p> 也可以在页面添加不依赖于ms-duplex的绑定</p>
+```javascript
+validateVM.data.push({
+   valueAccessor: function(){}
+   validateParam: "xxx",
+   element: element
+})
+```
  */
 
 /**

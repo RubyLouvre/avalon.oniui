@@ -37,6 +37,7 @@
                     a2: 0,
                     a3: 0,
                     a4: 0,
+                    four: [],
                     clearAll: function() {
                         validationVM && validationVM.resetAll()
                     },
@@ -45,10 +46,16 @@
                     },
                     validation: {
                         validationHooks: {
-                            yyy: {
-                                
+                            checkfour2: {
+                                message: "要求a1 > a2 && a3 < a4",
+                                get: function(value, data, next) {
+                                    var array = v.four
+                                    var ret = array[0] > array[1] && array[2] < array[3]
+                                    next(ret)
+                                    return value
+                                }
                             },
-                            xxx: {
+                            checkfour1: {
                                 message: "要求a1 > a2 && a3 < a4",
                                 get: function(value, data, next) {
                                     var ret = v.a1 > v.a2 && v.a3 < v.a4
@@ -78,10 +85,24 @@
                         }
                     }
                 })
+
+                v.$watch("a1", function(a) {
+                    v.four[0] = a
+                })
+                v.$watch("a2", function(a) {
+                    v.four[1] = a
+                })
+                v.$watch("a3", function(a) {
+                    v.four[2] = a
+                })
+                v.$watch("a4", function(a) {
+                    v.four[3] = a
+                    avalon.log(v.four)
+                })
                 avalon.scan()
             })
 
-            
+
         </script>
     </head>
     <body>
@@ -109,11 +130,18 @@
             <textarea ms-duplex-required="d"></textarea>
             必须有内容
             <br />
-
-            <label><input name="chk"  value="1" ms-duplex-required-number-xxx-="a1" data-duplex-xxx="1,2" />{{a1}}</label>
+            <!--方案1
+                        <label><input name="chk"  value="1" ms-duplex-required-number-checkfour1-="a1" />{{a1}}</label>
+                        <label><input name="chk"  value="2" ms-duplex-required-number="a2"/>{{a2}}</label>
+                        <label><input name="chk"  value="3" ms-duplex-required-number="a3"/>{{a3}}</label>
+                        <label><input name="chk"  value="4" ms-duplex-required-number="a4"/>{{a4}}</label>
+            -->          
+            <label><input name="chk"  value="1" ms-duplex-required-number="a1"  />{{a1}}</label>
             <label><input name="chk"  value="2" ms-duplex-required-number="a2"/>{{a2}}</label>
             <label><input name="chk"  value="3" ms-duplex-required-number="a3"/>{{a3}}</label>
             <label><input name="chk"  value="4" ms-duplex-required-number="a4"/>{{a4}}</label>
+            <div ms-duplex-checkfour2="four"></div>
+
             <br/>
             <input type="button" value="验证" ms-click="checkAll" />
             <input type="button" value="重置" ms-click="clearAll" />

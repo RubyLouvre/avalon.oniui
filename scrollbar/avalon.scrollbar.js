@@ -45,7 +45,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
             var inited,
                 bars = [],
                 scroller
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if(inited) return
                 inited = true
                 vmodel.widgetElement.style.position = "relative"
@@ -62,9 +62,9 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                 var children = vmodel.widgetElement.childNodes
                 avalon.each(children, function(i, item) {
                     var ele = avalon(item)
-                    if(ele.hasClass("oni-scrollbar")) {
+                    if(ele.hasClass("oni-scrollbar") || ele.hasClass("ui-scrollbar")) {
                         bars.push(ele)
-                    } else if(ele.hasClass("oni-scrollbar-scroller")) {
+                    } else if(ele.hasClass("oni-scrollbar-scroller") || ele.hasClass("ui-scrollbar-scroller")) {
                         scroller = ele
                     }
                 })
@@ -280,6 +280,15 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
             //@method update()更新滚动条状态，windowresize，内容高度变化等情况下调用，不能带参数
             vm.update = function(ifInit, x, y) {
                 if(vmodel.disabled) return
+                var children = vmodel.widgetElement.childNodes
+                avalon.each(children, function(i, item) {
+                    var ele = avalon(item)
+                    if(ele.hasClass("oni-scrollbar") || ele.hasClass("ui-scrollbar")) {
+                        bars.push(ele)
+                    } else if(ele.hasClass("oni-scrollbar-scroller") || ele.hasClass("ui-scrollbar-scroller")) {
+                        scroller = ele
+                    }
+                })
                 var ele = avalon(vmodel.viewElement),
                     // 滚动内容宽高
                     viewW,

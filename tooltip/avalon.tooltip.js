@@ -27,7 +27,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
 
         function _init(p) {
             var cName = "left",
-                p = p == void 0 ? p : options.position
+                p = p == void 0 ? options.position : p
             if(!(customMy && customAt)) {
                 switch (p) {
                     case "tc"://正上方

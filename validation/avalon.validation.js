@@ -332,19 +332,20 @@ define(["../promise/avalon.promise"], function(avalon) {
                 var vmValue = [].concat(val).map(String)
                 var domValue = (data.element.getAttribute("data-duplex-contain") || "").split(",")
                 data.data.array = domValue.join('与')
-                if (vmValue.length) {
+                if (!vmValue.length) {
                     var has = false
                 } else {
                     has = true
-                    for (var i = 0, n = vmValue.length; i < n; i++) {
-                        var v = vmValue[i]
-                        if (domValue.indexOf(v) === -1) {
+                    for (var i = 0, n = domValue.length; i < n; i++) {
+                        var v = domValue[i]
+                        if (vmValue.indexOf(v) === -1) {
                             has = false
                             break
                         }
                     }
                 }
                 next(has)
+                console.log(val)
                 return val
             }
         },

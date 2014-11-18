@@ -45,12 +45,15 @@
                     },
                     validation: {
                         validationHooks: {
+                            yyy: {
+                                
+                            },
                             xxx: {
                                 message: "要求a1 > a2 && a3 < a4",
                                 get: function(value, data, next) {
                                     var ret = v.a1 > v.a2 && v.a3 < v.a4
                                     next(ret)
-                                    return ret
+                                    return value
                                 }
                             }
                         },
@@ -58,8 +61,9 @@
                         onInit: function(v) {
                             validationVM = v
                         },
-                        onReset: function() {
-                            this.value = ""
+                        onReset: function(e, data) {
+                            avalon.log(data)
+                            //this.value = ""
                         },
                         onValidateAll: function(reasons) {
                             var msg = []
@@ -77,7 +81,7 @@
                 avalon.scan()
             })
 
-            validationVM.validateAll()
+            
         </script>
     </head>
     <body>
@@ -110,6 +114,7 @@
             <label><input name="chk"  value="2" ms-duplex-required-number="a2"/>{{a2}}</label>
             <label><input name="chk"  value="3" ms-duplex-required-number="a3"/>{{a3}}</label>
             <label><input name="chk"  value="4" ms-duplex-required-number="a4"/>{{a4}}</label>
+            <br/>
             <input type="button" value="验证" ms-click="checkAll" />
             <input type="button" value="重置" ms-click="clearAll" />
         </form>

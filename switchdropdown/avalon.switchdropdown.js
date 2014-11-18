@@ -63,12 +63,25 @@ define(['avalon',
 
         var vmodel = avalon.define('switchdropdown' + setTimeout("1"), function(vm) {
             vm.$opts = options;
+
+            vm.$init = function(continueScan) {
+                if(continueScan){
+                    continueScan()
+                }else{
+                    avalon.log("请尽快升到avalon1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels));
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
+                }
+            }
         });
         avalon(element).attr('ms-widget', ['dropdown', data.switchdropdownId, '$opts'].join());
 
         //由于对数据做预先处理，使用option模式传递数据，将element的内容清空
         element.innerHTML = "";
-        avalon.scan(element, [vmodel].concat(vmodels));
+
+
         return vmodel;
     };
 
@@ -104,8 +117,8 @@ define(['avalon',
     function setItemLabel(items) {
         avalon.each(items, function(i, item) {
             item.text = item.label;
-            item.label = ['<i class="ui-icon ', item.iconClass, '">', item.font, '</i>', item.label].join('');
-            item.titleValue = ['<i class="ui-icon ', item.iconClass, '">', item.font, '</i>', item.titleValue].join('');
+            item.label = ['<i class="oni-icon ', item.iconClass, '">', item.font, '</i>', item.label].join('');
+            item.titleValue = ['<i class="oni-icon ', item.iconClass, '">', item.font, '</i>', item.titleValue].join('');
         });
         return items;
     }

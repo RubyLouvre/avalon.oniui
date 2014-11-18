@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.3.7 2014.11.7 support IE6+ and other browsers
+ avalon 1.3.7 2014.11.17 support IE6+ and other browsers
  ==================================================*/
 (function(DOC) {
     /*********************************************************************
@@ -308,7 +308,7 @@
             name = avalon.cssName(prop) || prop
             if (value === void 0 || typeof value === "boolean") { //获取样式
                 var fn = cssHooks[prop + ":get"] || cssHooks["@:get"]
-                if(name === "background"){
+                if (name === "background") {
                     name = "backgroundColor"
                 }
                 var val = fn(node, name)
@@ -1630,13 +1630,7 @@
     /************************************************************************
      *            HTML处理(parseHTML, innerHTML, clearHTML)                  *
      ************************************************************************/
-    var rtagName = /<([\w:]+)/,
-            //取得其tagName
-            rxhtml = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/ig,
-            rcreate = W3C ? /[^\d\D]/ : /(<(?:script|link|style|meta|noscript))/ig,
-            scriptTypes = oneObject(["", "text/javascript", "text/ecmascript", "application/ecmascript", "application/javascript"]),
-            //需要处理套嵌关系的标签
-            rnest = /<(?:tb|td|tf|th|tr|col|opt|leg|cap|area)/
+
     //parseHTML的辅助变量
     var tagHooks = {
         area: [1, "<map>"],
@@ -1658,6 +1652,11 @@
     String("circle,defs,ellipse,image,line,path,polygon,polyline,rect,symbol,text,use").replace(rword, function(tag) {
         tagHooks[tag] = tagHooks.g //处理SVG
     })
+    var rtagName = /<([\w:]+)/  //取得其tagName
+    var rxhtml = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/ig
+    var rcreate = W3C ? /[^\d\D]/ : /(<(?:script|link|style|meta|noscript))/ig
+    var scriptTypes = oneObject(["", "text/javascript", "text/ecmascript", "application/ecmascript", "application/javascript"])
+    var rnest = /<(?:tb|td|tf|th|tr|col|opt|leg|cap|area)/ //需要处理套嵌关系的标签
     var script = DOC.createElement("script")
     avalon.parseHTML = function(html) {
         if (typeof html !== "string") {
@@ -1677,21 +1676,18 @@
         var els = wrapper.getElementsByTagName("script")
         if (els.length) { //使用innerHTML生成的script节点不会发出请求与执行text属性
             for (var i = 0, el; el = els[i++]; ) {
-                var parent = el.parentNode
-                var next = el.nextSibling
-                var text = el.text
-                parent.removeChild(el)
-                //IE直接通过移除节点，重赋text属性，再插回原位就恢复执行脚本功能
                 if (scriptTypes[el.type]) {
-                    // 其他浏览器则需要以偷龙转凤方式恢复此功能
+                    //以偷龙转凤方式恢复执行脚本功能
                     neo = script.cloneNode(false) //FF不能省略参数
                     ap.forEach.call(el.attributes, function(attr) {
-                        neo.setAttribute(attr.name, attr.value)
+                        if (attr && attr.specified) {
+                            neo[attr.name] = attr.value //复制其属性
+                            neo.setAttribute(attr.name, attr.value)
+                        }
                     })
-                    el = neo
+                    neo.text = el.text
+                    el.parentNode.replaceChild(neo, el) //替换节点
                 }
-                el.text = text
-                parent.insertBefore(el, next)
             }
         }
         //移除我们为了符合套嵌关系而添加的标签
@@ -1745,6 +1741,7 @@
         }
         return node
     }
+
     /*********************************************************************
      *                            事件管理器                            *
      **********************************************************************/
@@ -2020,22 +2017,6 @@
     //http://www.w3.org/TR/html5/syntax.html#void-elements
     var stopScan = oneObject("area,base,basefont,br,col,command,embed,hr,img,input,link,meta,param,source,track,wbr,noscript,script,style,textarea".toUpperCase())
 
-    //确保元素的内容被完全扫描渲染完毕才调用回调
-    var interval = W3C ? 30 : 50
-
-    function checkScan(elem, callback) {
-        var innerHTML = NaN,
-                id = setInterval(function() {
-                    var currHTML = elem.innerHTML
-                    if (currHTML === innerHTML) {
-                        clearInterval(id)
-                        callback()
-                    } else {
-                        innerHTML = currHTML
-                    }
-                }, interval)
-    }
-
 
     function scanTag(elem, vmodels, node) {
         //扫描顺序  ms-skip(0) --> ms-important(1) --> ms-controller(2) --> ms-if(10) --> ms-repeat(100) 
@@ -2159,7 +2140,7 @@
     function bindingSorter(a, b) {
         return a.priority - b.priority
     }
-
+    var obsoleteAttrs = oneObject("value,title,alt,checked,selected,disabled,readonly,enabled")
     function scanAttr(elem, vmodels) {
         //防止setAttribute, removeAttribute时 attributes自动被同步,导致for循环出错
         var attributes = getAttributes ? getAttributes(elem) : avalon.slice(elem.attributes)
@@ -2178,7 +2159,7 @@
                     if (events[type]) {
                         param = type
                         type = "on"
-                    } else if (/^(checked|selected|disabled|readonly|enabled)$/.test(type)) {
+                    } else if (obsoleteAttrs[type]) {
                         log("ms-" + type + "已经被废弃,请使用ms-attr-*代替")
                         if (type === "enabled") { //吃掉ms-enabled绑定,用ms-disabled代替
                             type = "disabled"
@@ -2643,22 +2624,15 @@
                     }
                 }
                 var toRemove = (val === false) || (val === null) || (val === void 0)
+
                 if (!W3C && propMap[attrName]) { //旧式IE下需要进行名字映射
                     attrName = propMap[attrName]
-                    var isInnate = true
                 }
                 if (toRemove) {
                     return elem.removeAttribute(attrName)
                 }
-                if (window.VBArray && !isInnate) { //IE下需要区分固有属性与自定义属性
-                    if (isVML(elem)) {
-                        isInnate = true
-                    } else if (!rsvg.test(elem)) {
-                        var attrs = elem.attributes || {}
-                        var attr = attrs[attrName]
-                        isInnate = attr ? attr.expando === false : attr === null
-                    }
-                }
+                //SVG只能使用setAttribute(xxx, yyy), VML只能使用elem.xxx = yyy ,HTML的固有属性必须elem.xxx = yyy
+                var isInnate = rsvg.test(elem) ? false : (DOC.namespaces && isVML(elem)) ? true : attrName in elem.cloneNode(false)
                 if (isInnate) {
                     elem[attrName] = val
                 } else {
@@ -2675,11 +2649,12 @@
                     if (loaded) {
                         text = loaded.apply(target, [text].concat(vmodels))
                     }
-                   if (rendered) {
-                        avalon.scanCallback(function(){
-                           rendered.call(target)
+                    if (rendered) {
+                        avalon.scanCallback(function() {
+                            rendered.call(target)
                         })
                     }
+                    avalon.scan(target)
                     while (true) {
                         var node = data.startInclude.nextSibling
                         if (node && node !== data.endInclude) {
@@ -2906,12 +2881,13 @@
                 }
                 var callback = data.renderedCallback || noop,
                         args = arguments
-                checkScan(parent, function() {
+                avalon.scanCallback(function() {
                     callback.apply(parent, args)
                     if (parent.oldValue && parent.tagName === "SELECT" && method === "index") { //fix #503
                         avalon(parent).val(parent.oldValue.split(","))
                     }
                 })
+                avalon.scan(parent)
             }
         },
         "html": function(val, elem, data) {
@@ -3679,18 +3655,12 @@
             }
         }
         data.bound("change", updateVModel)
-        var innerHTML = NaN
-        var id = setInterval(function() {
-            var currHTML = element.innerHTML
-            if (currHTML === innerHTML) {
-                clearInterval(id)
-                //先等到select里的option元素被扫描后，才根据model设置selected属性  
-                registerSubscriber(data)
-                data.changed.call(element, evaluator(), data)
-            } else {
-                innerHTML = currHTML
-            }
-        }, 20)
+        avalon.scanCallback(function() {
+            //先等到select里的option元素被扫描后，才根据model设置selected属性  
+            registerSubscriber(data)
+            data.changed.call(element, evaluator(), data)
+        })
+        avalon.scan(element)
     }
     duplexBinding.TEXTAREA = duplexBinding.INPUT
     //============================= event binding =======================
@@ -4157,7 +4127,7 @@
         //https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
         //    <a href="javasc&NewLine;ript&colon;alert('XSS')">chrome</a> 
         //    <a href="data:text/html;base64, PGltZyBzcmM9eCBvbmVycm9yPWFsZXJ0KDEpPg==">chrome</a>
-        //    <a href="jav  ascript:alert('XSS');">IE67chrome</a>
+        //    <a href="jav	ascript:alert('XSS');">IE67chrome</a>
         //    <a href="jav&#x09;ascript:alert('XSS');">IE67chrome</a>
         //    <a href="jav&#x0A;ascript:alert('XSS');">IE67chrome</a>
         sanitize: function(str) {
@@ -4196,10 +4166,10 @@
         },
         number: function(number, decimals, dec_point, thousands_sep) {
             //与PHP的number_format完全兼容
-            //number    必需，要格式化的数字
-            //decimals  可选，规定多少个小数位。
-            //dec_point 可选，规定用作小数点的字符串（默认为 . ）。
-            //thousands_sep 可选，规定用作千位分隔符的字符串（默认为 , ），如果设置了该参数，那么所有其他参数都是必需的。
+            //number	必需，要格式化的数字
+            //decimals	可选，规定多少个小数位。
+            //dec_point	可选，规定用作小数点的字符串（默认为 . ）。
+            //thousands_sep	可选，规定用作千位分隔符的字符串（默认为 , ），如果设置了该参数，那么所有其他参数都是必需的。
             // http://kevin.vanzonneveld.net
             number = (number + "").replace(/[^0-9+\-Ee.]/g, "")
             var n = !isFinite(+number) ? 0 : +number,

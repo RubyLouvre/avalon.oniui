@@ -56,9 +56,9 @@
                                     uiTextBox = inputPar.parentNode,
                                     wrapper = uiTextBox.parentNode;
                                 btns = wrapper.getElementsByTagName("button");
-                                expect(avalon(inputPar).hasClass("ui-textbox-input-wrap")).to.be(true);
-                                expect(avalon(uiTextBox).hasClass("ui-textbox")).to.be(true);
-                                expect(avalon(wrapper).hasClass("ui-numberpicker")).to.be(true);
+                                expect(avalon(inputPar).hasClass("oni-textbox-input-wrap")).to.be(true);
+                                expect(avalon(uiTextBox).hasClass("oni-textbox")).to.be(true);
+                                expect(avalon(wrapper).hasClass("oni-numberpicker")).to.be(true);
                                 expect(btns.length).to.be(2);
                                 btns[0].click();
                             }, 400)

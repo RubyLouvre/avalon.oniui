@@ -376,7 +376,7 @@ define(["../avalon.getModel",
                 toggleMonth("next")
                 event.stopPropagation()
             }
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 var elementPar = element.parentNode,
                     value = element.value;
                 calendar = avalon.parseHTML(calendarTemplate).firstChild
@@ -431,10 +431,14 @@ define(["../avalon.getModel",
                 setTimeout(function() {
                     dataSet(vmodel.month, vmodel.year)
                 }, 0)
-                avalon.scan(calendar, [vmodel].concat(vmodels))
-                if (typeof options.onInit === "function" ){
-                    //vmodels是不包括vmodel的
-                    options.onInit.call(element, vmodel, options, vmodels)
+                if(continueScan){
+                    continueScan()
+                }else{
+                    avalon.log("请尽快升到avalon1.3.7+")
+                    avalon.scan(calendar, [vmodel].concat(vmodels))
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }
             }
             vm.$remove = function() {

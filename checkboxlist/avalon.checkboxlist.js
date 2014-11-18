@@ -44,6 +44,7 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
                 vmodel.template = vmodel.getTemplate(temp, options);
                 element.className += " oni-checkboxlist oni-checkboxlist-list oni-helper-clearfix";
                 element.innerHTML = vmodel.template;
+
                 if (continueScan) {
                     continueScan()
                 } else {

@@ -24,7 +24,7 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
 
             var inited, id = +(new Date())
             vm.$uid = id
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if(inited) return
                 inited = true
                 var dataTemplate = vmodel._getTemplate("data"),
@@ -33,11 +33,16 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                 element.innerHTML = vmodel.template
 
                 vmodel._getSelect()
-                avalon.scan(element, [vmodel].concat(vmodels))
-                // callback after inited
-                if(typeof options.onInit === "function" ) {
-                    //vmodels是不包括vmodel的 
-                    options.onInit.call(element, vmodel, options, vmodels)
+                if(continueScan){
+                    continueScan()
+                }else{
+                    avalon.log("请尽快升到avalon1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                    // callback after inited
+                    if(typeof options.onInit === "function" ) {
+                        //vmodels是不包括vmodel的
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }
             }
             vm.$remove = function() {

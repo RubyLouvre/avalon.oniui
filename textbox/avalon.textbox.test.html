@@ -101,9 +101,9 @@
                                     placeholder = inputParent.firstChild;
 
                                 placeholder = getElementNode(placeholder);
-                                expect(avalon(inputParent).hasClass("ui-textbox-input-wrap")).to.be(true);
-                                expect(avalon(inputWrapper).hasClass("ui-textbox")).to.be(true);
-                                expect(avalon(placeholder).hasClass("ui-textbox-placeholder")).to.be(true);
+                                expect(avalon(inputParent).hasClass("oni-textbox-input-wrap")).to.be(true);
+                                expect(avalon(inputWrapper).hasClass("oni-textbox")).to.be(true);
+                                expect(avalon(placeholder).hasClass("oni-textbox-placeholder")).to.be(true);
 
                                 expect(getElementNode(placeholder.nextSibling)).to.equal(input);
                                 expect(getElementNode(div.firstChild)).to.equal(span);
@@ -179,8 +179,8 @@
                                     suggestUl = suggest.getElementsByTagName("ul")[0],
                                     wraper = input.parentNode.parentNode;
 
-                                expect(avalon(suggest).hasClass("ui-textbox-suggest")).to.be(true);
-                                expect(avalon(suggestUl).hasClass("ui-suggest")).to.be(true);
+                                expect(avalon(suggest).hasClass("oni-textbox-suggest")).to.be(true);
+                                expect(avalon(suggestUl).hasClass("oni-suggest")).to.be(true);
                                 expect(avalon(suggestUl).css("display")).to.be("none");
                                 testWrapper.removeChild(wraper);
                                 done();

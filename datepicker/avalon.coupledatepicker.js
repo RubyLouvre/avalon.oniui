@@ -1,3 +1,11 @@
+// avalon 1.3.6
+/**
+ * 
+ * @cnName 日期范围选择的双日历
+ * @enName coupledatepicker
+ * @introduce
+ *    <p>coupledatepicker其实是普通日历的升级版，可以通过设置起始日期与结束日期的最小间隔天数和最大间隔天数将截止日期限制在一定的选择范围中</p>
+ */
 define(["../avalon.getModel",
         "text!./avalon.coupledatepicker.html", 
         "./avalon.datepicker",
@@ -99,11 +107,11 @@ define(["../avalon.getModel",
                     calendar = avalon.parseHTML(calendarTemplate)
                     element.appendChild(calendar)
                 }
-                if(continueScan){
+                if (continueScan) {
                     continueScan()
-                }else{
-                    avalon.log("请尽快升到avalon1.3.7+")
-                    avalon.scan(element, [vmodel].concat(vmodels));
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels))
                     if (typeof options.onInit === "function") {
                         options.onInit.call(element, vmodel, options, vmodels)
                     }
@@ -252,14 +260,37 @@ define(["../avalon.getModel",
     widget.version = 1.0
     widget.defaults = {
         container : [], //必选，渲染的容器，每个元素类型为 {Element|JQuery|String}
-        fromLabel : '选择起始日期',   // 起始日期日历框上方提示文字
-        toLabel : '选择结束日期',     // 结束日期日历框上方提示文字
+        fromLabel : '选择起始日期', //@config 设置起始日期日历框的说明文字
+        toLabel : '选择结束日期', //@config 设置结束日期日历框的说明文字
         changeMonthAndYear: false,
         widgetElement: "", // accordion容器
-        disabled: false,
-        startDay: 1,    //星期开始时间
-        separator: "-",
+        disabled: false, //@config 设置是否禁用组件
+        startDay: 1, //@config 设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推, 默认从周一开始
+        separator: "-", //@config 日期格式的分隔符，可以是"/"或者你希望的符号，但如果是除了"-"和"/"之外的字符则需要和parseDate和formatDate配合使用，以便组件能正常运作
+        /**
+         * @config 设置双日历框的工作规则
+            <pre class="brush:javascript;gutter:false;toolbar:false">
+            {
+                rules: 'null, 0D, 8D',
+                fromMinDate: '2014-05-02',
+                fromMaxDate: '2014-06-28',
+                toMinDate: '2014-06-01',
+                toMaxDate: '2014-07-12'
+            }
+            </pre> 
+         * 可以是绑定组件时定义的配置对象中的一个rules对象，也可以是一个字符串，指向一个上述对象。
+         * 其中对象中的rules属性定义结束初始日期异常时默认显示的日期、初始日期和结束日子之间最小相隔天数、最大相隔天数，格式是[+-]\d[DMY]，分别代表几天、几个月或者几年，也可以附加+或者-号，+号表示正数几天，-号表示负数几天
+         * fromMinDate代表起始日期可以设置的最小日期
+         * fromMaxDate代表起始日期可以设置的最大日期
+         * toMinDate代表结束日期可以设置的最小日期
+         * toMaxDate代表结束日期可以设置的最大日期
+         */
         rules: "",
+        /**
+         * @config {Function} 将符合日期格式要求的字符串解析为date对象并返回，不符合格式的字符串返回null,用户可以根据自己需要自行配置解析过程
+         * @param str {String} 需要解析的日期字符串
+         * @returns {Date} 解析后的日期对象 
+         */
         parseDate: function(str){
             var separator = this.separator
             var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})$"
@@ -267,6 +298,11 @@ define(["../avalon.getModel",
             var x = str.match(reg)
             return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null
         },
+        /**
+         * @config {Function} 将日期对象转换为符合要求的日期字符串
+         * @param date {Date} 需要格式化的日期对象
+         * @returns {String} 格式化后的日期字符串 
+         */
         formatDate: function(date){
             var separator = this.separator,
                 year = date.getFullYear(), 
@@ -287,3 +323,11 @@ define(["../avalon.getModel",
     }
     return avalon
 })
+/**
+ @links
+ [不同构建方式的coupledatepicker，注意按demo说明方式设置](avalon.coupledatepicker.ex1.html)
+ [配置双日历框的日历说明文字、设置日历显示每周的第一天从周日开始](avalon.coupledatepicker.ex2.html)
+ [初始化双日历框的起始日期和结束日期、不同方式切换禁用日历](avalon.coupledatepicker.ex3.html)
+ [初始日期和截止日期之间的最小相隔天数和最大相隔天数](avalon.coupledatepicker.ex4.html)
+ [配置双日历框的解析和显示规则](avalon.coupledatepicker.ex5.html)
+ */

@@ -1,3 +1,11 @@
+// avalon 1.3.6
+/**
+ * 
+ * @cnName 数字输入框
+ * @enName spinner
+ * @introduce
+ *    <p>spinner组件是用来增强输入框的能力，使其可以通过上下按钮或者键盘上的up、down键来改变输入域的数值，而且确保输入域始终是数值字符，非数值字符无效，组件会默认将非数值字符转换为最近一次的输入域数值</p>
+ */
 define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/oniui-common.css", "css!./avalon.spinner.css"], function(avalon, sourceHTML) {
     var widget = avalon.ui.spinner = function(element, data, vmodels) {
         var options = data.spinnerOptions,
@@ -127,9 +135,9 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
         }
         function decorateElement() {
             var $element = avalon(element);
-            $element.addClass("ui-textbox-input");
+            $element.addClass("oni-textbox-input");
             $element.attr("ms-css-width", "width");
-            $element.attr("ms-class", "ui-state-disabled:disabled")
+            $element.attr("ms-class", "oni-state-disabled:disabled")
             // $element.bind("focus", function() {
             //     focusValue = element.value;
             // })
@@ -172,18 +180,42 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
     }
     widget.version = 1.0
     widget.defaults = {
-        min: NaN,
-        max: NaN,
-        step: 1,
-        width: "auto",
-        value: 0,
-        disabled: false,
+        min: NaN, //@config spinner的最小值,默认不存在最小值限制
+        max: NaN, //@config spinner的最大值，默认不存在最大值限制
+        step: 1, //@config spinner的步长
+        width: "auto", //@config 设置spinner的width
+        value: 0, //@config spinner的当前值
+        disabled: false, //@config 是否禁用spinner
         widgetElement: "", // accordion容器
         getTemplate: function(str, options) {
             return str;
         },
+        /**
+         * @config {Function} 减值更新spinner之后的回调
+         * @param value {Number} 当前值
+         */
         onDecrease: avalon.noop,
+        /**
+         * @config {Function} 增值更新spinner之后的回调
+         * @param value {Number} 当前值
+         */
         onIncrease: avalon.noop
     }
     return avalon;
 })
+/**
+ @links
+ [spinner demo](avalon.spinner.ex.html)
+ [动态设置spinner的min、max的值](avalon.spinner.ex1.html)
+ */
+/**
+ * @other
+ *  <h1>spinner使用注意点</h1>
+    <ol >
+        <li>请保证输入域的值是数值或者字符串型的数值，否则会报错</li>
+        <li>当通过手动输入值时，如果输入的值不是数值型的，组件会默认将其置为修改之前的值，如果输入大于最大值，组件会自动将其置为最大值，小于最小值时同理
+        </li>
+        <li>在输入域获得焦点时可通过键盘上的上下箭头控制spinner的增减</li>
+        <li>spinner会判断初始输入域值是否在用户设置的数值范围呢，不在的话会进行调整</li>
+    </ol>
+ */

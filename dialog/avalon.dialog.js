@@ -1,3 +1,11 @@
+// avalon 1.3.6
+/**
+ * 
+ * @cnName 对话框
+ * @enName dialog
+ * @introduce
+ *    <p>dialog组件提供弹窗显示或者隐藏,通过简单配置可以水平居中显示dialog弹窗，此组件支持弹窗中再弹窗，也可以用来模拟alert的行为，非常方便</p>
+ */
 define(["../avalon.getModel", 
     "text!./avalon.dialog.html",
     "../button/avalon.button",
@@ -81,7 +89,6 @@ define(["../avalon.getModel",
                     vmodel._close(e)
                 }
             }
-            
             // 显示dialogmask
             vm._open = function(updateZIndex) {
                 var len = 0, //当前显示的dialog的个数
@@ -182,7 +189,6 @@ define(["../avalon.getModel",
                 }
                 return vmodel
             }
-
             // 将零散的模板(dialog header、dialog content、 dialog footer、 dialog wrapper)组合成完整的dialog
             vm._renderView = function() {
                 var innerWrapper = null // 保存innerWraper元素节点
@@ -203,7 +209,7 @@ define(["../avalon.getModel",
                 }
             }
 
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 var container = vmodel.container,
                     clientHeight = body.clientHeight,
                     docBody = document.body,
@@ -212,7 +218,8 @@ define(["../avalon.getModel",
                 if (avalon(docBody).height() < clientHeight) {
                     avalon(docBody).css("min-height", clientHeight)
                 }
-                $element.addClass("ui-dialog")
+                vmodel.title = vmodel.title || "&nbsp;"
+                $element.addClass("oni-dialog")
                 element.setAttribute("ms-visible", "toggle")
                 element.setAttribute("ms-css-position", "position")
                 vm._renderView()
@@ -227,9 +234,14 @@ define(["../avalon.getModel",
                     avalon.scan(maskLayer, [vmodel].concat(vmodels))
                 }
                 avalon.scan(element, [vmodel].concat(vmodels))
-                if (typeof vmodel.onInit === "function" ){
-                    //vmodels是不包括vmodel的
-                    vmodel.onInit.call(element, vmodel, options, vmodels)
+                if (continueScan) {
+                    continueScan()
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }
             }
 
@@ -267,31 +279,59 @@ define(["../avalon.getModel",
     }
     widget.version = 1.0
     widget.defaults = {
-        width: 480, //默认dialog的width
-        title: "&nbsp;", //dialog的title
-        type: "confirm", //dialog的显示类型confirm(有两个按钮) alert(有一个按钮)
-        content: "",
-        onConfirm: avalon.noop, //点击"确定"按钮时的回调
-        onOpen: avalon.noop, //显示dialog的回调 
+        width: 480, //@config 设置dialog的width
+        title: "&nbsp;", //@config 设置弹窗的标题
+        type: "confirm", //@config 配置弹窗的类型，可以配置为alert来模拟浏览器
+        content: "", //@config 配置dialog的content，默认取dialog的innerHTML作为dialog的content，如果innerHTML为空，再去取content配置项
+        /**
+         * @config {Function} 定义点击"确定"按钮后的回调操作
+         * @param event {Number} 事件对象
+         * @param vmodel {Object} 组件对应的Vmodel
+         */
+        onConfirm: avalon.noop, 
+        /**
+         * @config {Function} 定义显示dialog时的回调
+         * @param vmodel {Object} 组件对应的Vmodel
+         */
+        onOpen: avalon.noop, 
+        /**
+         * @config {Function} 定义点击"取消"按钮后的回调操作
+         * @param event {Object} 事件对象
+         * @param vmodel {Object} 组件对应的Vmodel
+         */
         onCancel: avalon.noop, //点击“取消”按钮的回调
+        /**
+         * @config {Function} 定义点击"关闭"按钮后的回调操作
+         * @param event {Object} 事件对象
+         * @param vmodel {Object} 组件对应的Vmodel
+         */
         onClose: avalon.noop, //点击右上角的“关闭”按钮的回调
         setTitle: avalon.noop, //动态修改dialog的title
         setContent: avalon.noop, //动态修改dialog的content
+        /**
+         * @config {Function} 重新渲染模板
+         * @param m {Object} 重新渲染dialog的配置对象，包括title、content、content中涉及的插值表达式，需要注意的是，title和content不是真正渲染的内容，所以不需要avalon进行扫描监控，定义的时候必须在其前面加上"$",否则组件不会渲染成想要的效果
+         */
         setModel: avalon.noop, //重新渲染dialog
-        showClose: true, //是否显示右上角的“关闭”按钮
+        showClose: true, //@config 配置dialog是否显示"取消"按钮，但是如果type为alert，不论showClose为true or false都不会显示"取消"按钮
         toggle: false, //通过此属性的决定dialog的显示或者隐藏状态
         widgetElement: "", //保存对绑定元素的引用
-        container: "body", //dialog放置的元素
-        confirmName: "确定",
-        cancelName: "取消",
+        container: "body", //@config dialog元素的上下文父元素，container必须是dialog要appendTo的父元素的id或者元素dom对象
+        confirmName: "确定", //@config 配置dialog的"确定"按钮的显示文字
+        cancelName: "取消", //@config 配置dialog的"取消"按钮的显示文字
         getTemplate: function(str, options) {
             return str
         },
+        /**
+         * @config {Function} 通过此方法配置dialog的footer
+         * @param tmp {String} dialog默认模板的footer
+         * @returns {String} 用户自定义的dialog的footer 
+         */
         getFooter: function(tmp) {
             return tmp
         },
-        modal: true, //是否显示遮罩
-        zIndex: maxZIndex //手动设置body直接子元素的最大z-index
+        modal: true, //@config 是否显示遮罩
+        zIndex: maxZIndex //@config 通过设置vmodel的zIndex来改变dialog的z-index,默认是body直接子元素中的最大z-index值，如果都没有设置就默认的为10
     }
     avalon(window).bind("keydown", function(e) {
         var keyCode = e.which,
@@ -415,3 +455,18 @@ define(["../avalon.getModel",
 
     return avalon
 })
+/**
+ @links
+ [dialog功能全览](avalon.dialog.ex.html)
+ [默认配置的dialog组件](avalon.dialog.ex1.html)
+ [拥有回调操作的dialog](avalon.dialog.ex2.html)
+ [不显示关闭按钮的dialog](avalon.dialog.ex3.html)
+ [嵌套dialog](avalon.dialog.ex4.html)
+ [模拟alert](avalon.dialog.ex5.html)
+ [模拟alert，showClose配置无效](avalon.dialog.ex6.html)
+ [自定义dialog的width](avalon.dialog.ex7.html)
+ [通过container配置项设置dialog元素的上下文父元素](avalon.dialog.ex8.html)
+ [修改dialog的title、content、或者重新渲染dialog](avalon.dialog.ex9.html)
+ [通过加载avalon.draggable实现拖拽](avalon.dialog.ex10.html)
+ [改变dialog的z-index](avalon.dialog.ex11.html)
+ */

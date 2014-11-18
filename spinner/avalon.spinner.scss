@@ -1,10 +1,10 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname: "ui-spinner";
-.ui-spinner {
+$uiname: "oni-spinner";
+.oni-spinner {
     font-size: 0;
     @include inline-block();
-    .ui-btn {
+    .oni-btn {
         height: 26px;
         overflow: visible;
         _overflow-y: hidden;
@@ -29,18 +29,18 @@ $uiname: "ui-spinner";
                 color: #333333;
             }
         }
-        &.ui-state-disabled, &.ui-state-disabled .ui-icon {
+        &.oni-state-disabled, &.oni-state-disabled .oni-icon {
             background-color: whitesmoke;
             border-color: #d9d9d9;
             cursor: default;
             color: #ccc;
         }
     }
-    .ui-btn .ui-icon {
+    .oni-btn .oni-icon {
         line-height: 15px;
         text-indent: 0;
     }
-    .ui-textbox {
+    .oni-textbox {
         @include inline-block();
         outline: none;
         margin: 0 -1px;
@@ -56,16 +56,16 @@ $uiname: "ui-spinner";
                 border-color: #999999;
             }
         }
-        &.ui-state-disabled {
+        &.oni-state-disabled {
             background-color: whitesmoke;
             border-color: #d9d9d9;
             cursor: default;
         }
-        .ui-textbox-input-wrap {
+        .oni-textbox-input-wrap {
             position: relative;
             @include inline-block();
             vertical-align: middle;
-            .ui-textbox-input {
+            .oni-textbox-input {
                 position: relative;
                 display: inline;
                 float: left;
@@ -82,7 +82,7 @@ $uiname: "ui-spinner";
                     color: #333333;
                     background-color: #ffffff;
                 }
-                &.ui-state-disabled {
+                &.oni-state-disabled {
                     background-color: whitesmoke;
                     border-color: #d9d9d9;
                     cursor: default;

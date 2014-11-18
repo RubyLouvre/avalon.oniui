@@ -1,8 +1,8 @@
-<ul class='ui-suggest' ms-each-item='list' ms-visible='toggle'>
-    <li class='ui-suggest-item' 
+<ul class='oni-suggest' ms-each-item='list' ms-visible='toggle'>
+    <li class='oni-suggest-item' 
         ms-click='clickcallback($index,$event)' 
-        ms-class='ui-suggest-item-selected:list[selectedIndex] == item' tabindex='-1' 
-        ms-hover='ui-suggest-item-selected'>
+        ms-class='oni-suggest-item-selected:list[selectedIndex] == item' tabindex='-1' 
+        ms-hover='oni-suggest-item-selected'>
             {{ _renderItem(item.text) | html }}
     </li>
 </ul>

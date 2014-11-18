@@ -36,7 +36,7 @@ $background-highlight-color:darken($white, 10%)
     vertical-align: middle;
     cursor: pointer;
     // Hover state
-    &:hover, &.ui-state-hover {
+    &:hover, &.oni-state-hover {
         color: $grayDark;
         text-decoration: none;
         @include opacity(0.8);
@@ -55,7 +55,7 @@ $background-highlight-color:darken($white, 10%)
     }
 
     // Active state
-    &.ui-state-active,
+    &.oni-state-active,
     &:active {
         background-color: darken($white, 10%);
         background-color: darken($white, 15%) \9;
@@ -65,7 +65,7 @@ $background-highlight-color:darken($white, 10%)
     }
 
     // Disabled state
-    &.ui-state-disabled,
+    &.oni-state-disabled,
     &[disabled] {
         cursor: not-allowed;
         background-color: darken($white, 10%);
@@ -135,7 +135,7 @@ $background-highlight-color:darken($white, 10%)
     @include reset-filter();
 
     // in these cases the gradient won't cover the background, so we override
-    &:hover, &.ui-state-hover, &:active, &.ui-state-active,&[disabled], &.ui-state-disabled  {
+    &:hover, &.oni-state-hover, &:active, &.oni-state-active,&[disabled], &.oni-state-disabled  {
         color: $textColor;
         background-color: $endColor;
         *background-color: darken($endColor, 5%);
@@ -143,7 +143,7 @@ $background-highlight-color:darken($white, 10%)
 
     // IE 7 + 8 can't handle box-shadow to show active, so we darken a bit ourselves
     &:active,
-        &.ui-state-active {
+        &.oni-state-active {
         background-color: darken($endColor, 10%) \9;
     }
 }
@@ -177,7 +177,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
     background-color:$color;
     background-image:none;
     border-color:$color;
-    &:hover, .ui-state-hover{
+    &:hover, .oni-state-hover{
         background-color:$color;
         background-image:none;
         border-color:$color;

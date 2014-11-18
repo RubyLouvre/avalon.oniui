@@ -54,7 +54,7 @@
                                             expect(contentSpan[0].innerHTML).to.be("modify content")
                                             expect(contentSpan[1].innerHTML).to.be("关闭");
                                             expect(notices[0].style.display).to.be("block");
-                                            expect(avalon(notices[0]).hasClass("ui-notice-info")).to.be(true);
+                                            expect(avalon(notices[0]).hasClass("oni-notice-info")).to.be(true);
                                             noticeA.toggle = false;
                                         })
                                     }
@@ -97,11 +97,11 @@
 
                                 notices = $noticeWidget[0].children;
                                 var buttons = testWrapper.getElementsByTagName("button");
-                                expect($noticeWidget.hasClass("ui-notice-flow")).to.be(true)
+                                expect($noticeWidget.hasClass("oni-notice-flow")).to.be(true)
                                 expect(notices.length).to.be(2)
-                                expect(avalon(notices[0]).hasClass("ui-notice")).to.be(true);
-                                expect(avalon(notices[0]).hasClass("ui-notice-info")).to.be(false);
-                                expect(avalon(notices[1]).hasClass("ui-notice ui-notice-danger")).to.be(true)
+                                expect(avalon(notices[0]).hasClass("oni-notice")).to.be(true);
+                                expect(avalon(notices[0]).hasClass("oni-notice-info")).to.be(false);
+                                expect(avalon(notices[1]).hasClass("oni-notice oni-notice-danger")).to.be(true)
                                 expect(notices[0].style.display).to.be("none");
                                 buttons[3].click();
                                 buttons[2].click();
@@ -175,13 +175,13 @@
                                 var bodyDetatch = bodyChildren[bodyChildrenLen-1];
                                 expect(len).to.be(2);
                                 for(var i=0;i<len;i++) {
-                                    if(avalon(flowContent[i]).hasClass("ui-notice")) {
+                                    if(avalon(flowContent[i]).hasClass("oni-notice")) {
                                         noticeArr.push(flowContent[i]);
                                     }
                                 }
                                 expect(noticeArr.length).to.be(1);
-                                expect(avalon(noticeContainerFlow).hasClass("ui-notice-flow")).to.be(true);
-                                expect(avalon(bodyDetatch).hasClass("ui-notice-detach")).to.be(true);
+                                expect(avalon(noticeContainerFlow).hasClass("oni-notice-flow")).to.be(true);
+                                expect(avalon(bodyDetatch).hasClass("oni-notice-detach")).to.be(true);
                                 expect(bodyDetatch.children[0].children[0].children[0].innerHTML).to.be("notice b title");
                                 avalon.vmodels["a"].toggle = true;
 

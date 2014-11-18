@@ -1,3 +1,11 @@
+// avalon 1.3.6
+/**
+ * 
+ * @cnName 日期选择器
+ * @enName datepicker
+ * @introduce
+ *    <p>datepicker组件方便快速创建功能齐备的日历组件，通过不同的配置日历可以满足显示多个月份、通过prev、next切换月份、或者通过下拉选择框切换日历的年份、月份，当然也可以手动输入日期，日历组件也会根据输入域中的日期值高亮显示对应日期等等各种需求</p>
+ */
 define(["../avalon.getModel", 
         "./avalon.datepicker.lang",
         "text!./avalon.datepicker.html", 
@@ -61,7 +69,7 @@ define(["../avalon.getModel",
                     _day = vmodel.day = date.getDate()
                     vmodel.dateError = "#cccccc"
                     vmodel.tip = getDateTip(cleanDate(date)).text
-                    vmodel.onSelect.call(null, date, data["datepickerId"], avalon(element).data())
+                    vmodel.onSelect.call(null, date, vmodel, avalon(element).data())
                 } else {
                     vmodel.tip = "格式错误"
                     vmodel.dateError = "#ff8888"
@@ -309,7 +317,7 @@ define(["../avalon.getModel",
                         duplexVM ? duplexVM[1][duplexVM[0]] = date : ""
                     } else { // range datepicker时需要切换选中日期项的类名
                         if (vmodel.timer) {
-                            date = date + "  " + timerFilter(vmodel.hour) + ":" + timerFilter(vmodel.minute)
+                            date = date + " " + timerFilter(vmodel.hour) + ":" + timerFilter(vmodel.minute)
                         }
                         element.value = date
                         duplexVM ? duplexVM[1][duplexVM[0]] = date : ""
@@ -320,7 +328,7 @@ define(["../avalon.getModel",
                     }
                 }
                 if (!vmodel.showDatepickerAlways) {
-                    vmodel.onSelect.call(null, date, data["datepickerId"], avalon(element).data())
+                    vmodel.onSelect.call(null, date, vmodel, avalon(element).data())
                 }
                 if (month === _oldMonth && !dateDisabled) {
                     toggleActiveClass(outerIndex, innerIndex)
@@ -341,7 +349,7 @@ define(["../avalon.getModel",
                     time = hour + ":" + minute,
                     _date = formatDate(parseDate(element.value));
 
-                element.value = _date + "  " + time
+                element.value = _date + " " + time
                 if (!vmodel.showDatepickerAlways) {
                     vmodel.toggle = false
                 }
@@ -811,29 +819,55 @@ define(["../avalon.getModel",
     }
     widget.version = 1.0
     widget.defaults = {
-        dayNames : ['日', '一', '二', '三', '四', '五', '六'],
-        startDay: 1,
+        dayNames : ['日', '一', '二', '三', '四', '五', '六'], //@interface 日期名列表，从周日开始，可以配置为["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] 
+        startDay: 1, //@config 设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推, 默认从周一开始
         width: 90,
         showTip: true,
-        changeMonthAndYear: false,
-        mobileMonthAndYear: false,
-        showOtherMonths: false,
-        numberOfMonths: 1,
+        changeMonthAndYear: false, //@config 是否可以通过下拉框选择月份或者年份
+        mobileMonthAndYear: false, //@config PC端可以通过设置changeMonthAndYear为true使用dropdown的形式选择年份或者月份，但是移动端只能通过设置mobileMonthAndYear为true来选择月份、年份
+        showOtherMonths: false, //@config 是否显示非当前月的日期
+        numberOfMonths: 1, //@config 一次显示的日历月份数, 默认一次显示一个
         allowBlank : false,
-        minDate : null,
-        maxDate : null,
-        stepMonths : 1,
-        toggle: false,
-        separator: "-",
-        calendarLabel: "选择日期",
+        minDate : null, //@config 最小的可选日期，可以配置为Date对象，也可以是yyyy-mm-dd格式的字符串，或者当分隔符是“/”时，可以是yyyy/mm/dd格式的字符串
+        maxDate : null, //@config 最大的可选日期，可以配置为Date对象，也可以是yyyy-mm-dd格式的字符串，或者当分隔符是“/”时，可以是yyyy/mm/dd格式的字符串
+        stepMonths : 1, //@config 当点击next、prev链接时应该跳过几个月份, 默认一个月份
+        toggle: false, //@config 设置日历的显示或者隐藏，false隐藏，true显示
+        separator: "-", //@config 日期格式的分隔符,默认“-”，可以配置为"/"，而且默认日期格式必须是yyyy-mm-dd
+        calendarLabel: "选择日期", //@config 日历组件的说明label
+        /**
+         * @config {Function} 当month或者year更新时调用的回调
+         * @param year {Number} 当前日期的year
+         * @param month {Number} 当前日期的month(0-11)
+         * @param vmodel {Number} 日历组件对应vmodel
+         */
         onChangeMonthYear: avalon.noop, 
         watermark: true,
         zIndex: -1,
         showDatepickerAlways: false,
-        timer: false,
-        onSelect: avalon.noop, //将废弃,相当于onSelect
+        timer: false, //@config 是否在组件中可选择时间
+        /**
+         * @config {Function} 选中日期后的回调
+         * @param date {String} 当前选中的日期
+         * @param vmodel {Object} 当前日期组件对应的Vmodel
+         * @param data {Object} 绑定组件的元素的data属性组成的集合
+         */
+        onSelect: avalon.noop, 
+        /**
+         * @config {Function} 日历关闭的回调
+         * @param date {Object} 当前日期
+         * @param vmodel {Object} 当前日期组件对应的Vmodel
+         */
         onClose: avalon.noop,
-        onSelectTime: "",
+        /**
+         * @config {Function} 在设置了timer为true时，选择日期、时间后的回调
+         * @param vmodel {Object} 当前日期组件对应的Vmodel
+         */
+        onSelectTime: avalon.noop,
+        /**
+         * @config {Function} 将符合日期格式要求的字符串解析为date对象并返回，不符合格式的字符串返回null,用户可以根据自己需要自行配置解析过程
+         * @param str {String} 要解析的日期字符串
+         * @returns {Date} Date格式的日期
+         */
         parseDate: function(str){
             if (!str) {
                 return null
@@ -844,6 +878,11 @@ define(["../avalon.getModel",
             var x = str.match(reg);
             return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
         },
+        /**
+         * @config {Function} 将日期对象转换为符合要求的日期字符串
+         * @param date {Date} 要格式化的日期对象
+         * @returns {String} 格式化后的日期
+         */
         formatDate: function(date){
             if (avalon.type(date) !== "date") return ""
             var separator = this.separator,
@@ -944,3 +983,17 @@ define(["../avalon.getModel",
     };
     return avalon;
 })
+/**
+ @links
+ [默认配置的日历框、allowBlank为true时的不同](avalon.datepicker.ex1.html)
+ [配置日历周一-周日的对应的显示名、使日历的每一周从周日开始、通过下拉选框切换选择日历显示年份、月份](avalon.datepicker.ex2.html)
+ [显示非当前月日期、通过prev、next每次切换3个月、一次显示多个月份](avalon.datepicker.ex3.html)
+ [设置日期可选的最小日期、最大日期、以及初始值异常的显示情况](avalon.datepicker.ex4.html)
+ [设置toggle切换日历显示与隐藏、calendarLabel配置日历顶部说明文字](avalon.datepicker.ex5.html)
+ [ms-duplex初始化日期、allowBlank为false or true时组件对不同初始值的处理方式](avalon.datepicker.ex6.html)
+ [组件选择日期后的change回调、关闭时的onClose回调、切换月份、年份的onChangeMonthYear回调](avalon.datepicker.ex7.html)
+ [自定义parseDate、formatDate方法正确解析和显示日期](avalon.datepicker.ex8.html)
+ [切换日历组件的禁用与否，以及手动输入日期的结果](avalon.datepicker.ex9.html)
+ [移动端日期、年份选择](avalon.datepicker.ex10.html)
+ [具有时间选择功能的datepicker](avalon.datepicker.ex11.html)
+ */

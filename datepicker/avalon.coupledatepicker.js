@@ -68,7 +68,7 @@ define(["../avalon.getModel",
                     inputToDate = parseDate(vmodel.inputToValue);
                 return (inputFromDate && inputToDate && [inputFromDate, inputToDate]) || null;
             } 
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 var template = options.template.replace(/MS_OPTION_FROM_LABEL/g,vmodel.fromLabel).replace(/MS_OPTION_TO_LABEL/g,vmodel.toLabel).replace(/MS_OPTION_START_DAY/g, vmodel.startDay).replace(/MS_OPTION_CHANGE_MONTH_AND_YEAR/g, vmodel.changeMonthAndYear).split("MS_OPTION_TEMPLATE"),
                     containerTemp = template[0],
                     inputOnlyTemp = template[1],
@@ -99,9 +99,14 @@ define(["../avalon.getModel",
                     calendar = avalon.parseHTML(calendarTemplate)
                     element.appendChild(calendar)
                 }
-                avalon.scan(element, [vmodel].concat(vmodels));
-                if(typeof options.onInit === "function" ){
-                    options.onInit.call(element, vmodel, options, vmodels)
+                if(continueScan){
+                    continueScan()
+                }else{
+                    avalon.log("请尽快升到avalon1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels));
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }
             };
             vm.$remove = function() {

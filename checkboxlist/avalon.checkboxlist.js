@@ -32,15 +32,20 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
             vm._clickOne = function(event,index) {
                 onSelect.apply(0, [vm.data.$model, event.target.checked, event.target]);
             }
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 var temp = template.replace("MS_OPTIONS_DUPLEX", options.duplex);
                 vmodel.template = vmodel.getTemplate(temp, options);
                 element.className += " ui-checkboxlist ui-checkboxlist-list ui-helper-clearfix";
                 element.innerHTML = vmodel.template;
-                avalon.scan(element, [vmodel].concat(vmodels));
-                if(typeof options.onInit === "function" ){
-                    //vmodels是不包括vmodel的
-                    options.onInit.call(element, vmodel, options, vmodels)
+
+                if(continueScan){
+                    continueScan()
+                }else{
+                    avalon.log("请尽快升到avalon1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels));
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }
             };  
             vm.$remove = function() {

@@ -3108,7 +3108,7 @@
             }
         },
         "duplex": function(data, vmodels) {
-            var elem = data.element
+            var elem = data.element,
 
             hasCast
             parseExprProxy(data.value, vmodels, data, 0, 1)

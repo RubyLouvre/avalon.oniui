@@ -38,6 +38,7 @@
                     a3: 0,
                     a4: 0,
                     four: [],
+                    validateInBlur:false,
                     clearAll: function() {
                         validationVM && validationVM.resetAll()
                     },
@@ -46,15 +47,6 @@
                     },
                     validation: {
                         validationHooks: {
-                            checkfour2: {
-                                message: "要求a1 > a2 && a3 < a4",
-                                get: function(value, data, next) {
-                                    var array = v.four
-                                    var ret = array[0] > array[1] && array[2] < array[3]
-                                    next(ret)
-                                    return value
-                                }
-                            },
                             checkfour1: {
                                 message: "要求a1 > a2 && a3 < a4",
                                 get: function(value, data, next) {
@@ -69,7 +61,7 @@
                             validationVM = v
                         },
                         onReset: function(e, data) {
-                            avalon.log(data)
+                           data.valueResetor && data.valueResetor()
                             //this.value = ""
                         },
                         onValidateAll: function(reasons) {
@@ -86,19 +78,19 @@
                     }
                 })
 
-                v.$watch("a1", function(a) {
-                    v.four[0] = a
-                })
-                v.$watch("a2", function(a) {
-                    v.four[1] = a
-                })
-                v.$watch("a3", function(a) {
-                    v.four[2] = a
-                })
-                v.$watch("a4", function(a) {
-                    v.four[3] = a
-                    avalon.log(v.four)
-                })
+//                v.$watch("a1", function(a) {
+//                    v.four[0] = a
+//                })
+//                v.$watch("a2", function(a) {
+//                    v.four[1] = a
+//                })
+//                v.$watch("a3", function(a) {
+//                    v.four[2] = a
+//                })
+//                v.$watch("a4", function(a) {
+//                    v.four[3] = a
+//                    avalon.log(v.four)
+//                })
                 avalon.scan()
             })
 
@@ -140,7 +132,7 @@
             <label><input name="chk"  value="2" ms-duplex-required-number="a2"/>{{a2}}</label>
             <label><input name="chk"  value="3" ms-duplex-required-number="a3"/>{{a3}}</label>
             <label><input name="chk"  value="4" ms-duplex-required-number="a4"/>{{a4}}</label>
-            <div ms-duplex-checkfour2="four"></div>
+            <div ms-duplex-checkfour1="four"></div>
 
             <br/>
             <input type="button" value="验证" ms-click="checkAll" />

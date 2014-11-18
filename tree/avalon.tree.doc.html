@@ -340,6 +340,82 @@ callback配置说明
                         </td>
                     </tr>
                     <tr>
+                        <td>hideNode(leaf)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>隐藏某个节点
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>leaf</td>
+                                    <td>Object</td>
+                                    <td>指定节点，也可以是{leaf:leaf} or leaf</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>hideNodes(nodes,flag)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>隐藏节点集合
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>nodes</td>
+                                    <td>Array</td>
+                                    <td>节点集合</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>showNode(node)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>显示某个节点
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>node</td>
+                                    <td>Object</td>
+                                    <td>指定节点，也可以是{leaf:leaf} or leaf</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>showNodes(nodes)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>显示节点集合
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>nodes</td>
+                                    <td>Array</td>
+                                    <td>节点集合</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>visitor(startLeaf,func,endFunc,res,options)</td>
                         <td>Function</td>
                         <td></td>
@@ -883,9 +959,28 @@ callback配置说明
                             </table>
                         </td>
                     </tr>
+                    <tr>
+                        <td>AddExtention(fixNames,addingDefaults,addingMethodFunc,watchEvents,tplHooks,callback)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>heh</td>
+                    </tr>
                 </table>
             </fieldset>
-            <ul class="example-links"></ul>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.tree.ex.html">tree</a>
+                </li>
+                <li>
+                    <a href="avalon.tree.ex1.html">tree</a>
+                </li>
+                <li>
+                    <a href="avalon.tree.ex2.html">tree</a>
+                </li>
+                <li>
+                    <a href="avalon.tree.ex3.html">tree</a>
+                </li>
+            </ul>
         </div>
     </body>
 

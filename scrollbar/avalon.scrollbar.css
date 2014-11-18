@@ -180,3 +180,6 @@ div.oni-scrollbar {
 
 .oni-scrollbar-bottom-small {
   height: 8px; }
+
+.ui-scrollbar-scroller {
+  overflow: hidden; }

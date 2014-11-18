@@ -445,6 +445,42 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 return vm.nodesTemplate.replace(/leaf=\"children\"/g, "leaf=\"leaf.children\"")
             }
 
+
+            /**
+             * @interface 隐藏某个节点
+             * @param {Object} 指定节点，也可以是{leaf:leaf} or leaf
+             */
+            vm.hideNode = function(leaf) {
+                leaf = leaf && leaf.leaf || leaf
+                vm.hideNodes([leaf])
+            }
+
+            /**
+             * @interface 隐藏节点集合
+             * @param {Array} 节点集合
+             */
+            vm.hideNodes = function(nodes, flag) {
+                flag = flag === undefine ? false : flag
+                avalon.each(nodes, function(i, node) {
+                    node.isHidden = flag
+                })
+            }
+            /**
+             * @interface 显示某个节点
+             * @param {Object} 指定节点，也可以是{leaf:leaf} or leaf
+             */
+            vm.showNode = function(node) {
+                node = node && node.leaf || node
+                vm.showNodes([node])
+            }
+            /**
+             * @interface 显示节点集合
+             * @param {Array} 节点集合
+             */
+            vm.showNodes = function(nodes) {
+                vm.hideNodes(nodes, true)
+            }
+
             /**
              * @interface 中序向下遍历树，返回一个数组
              * @param {Object} 起点，为空表示根

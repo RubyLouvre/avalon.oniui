@@ -1,7 +1,10 @@
 /**
-  * @description flipswitch组件，将checkbox表单元素转化成富UI的开关，不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑
-  *
-  */
+ * @cnName 滑动按钮组件
+ * @enName flipswitch
+ * @introduce
+ *  <p> 将checkbox表单元素转化成富UI的开关，不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑
+</p>
+ */
 define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggable", "css!./avalon.flipswitch.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 
     var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect,
@@ -183,7 +186,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 return "0"
             }
 
-            //@method toggleStatus 交替改变选中状态
+            //@interface toggleStatus 交替改变选中状态
             vm.toggleStatus = function() {
                 if(vmodel.disabled || vmodel.draggable) return
                 vmodel._toggle()
@@ -225,12 +228,12 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                     bar.style[vmodel.dir] = dir ? "-50%" : "0"
                 }
             }
-            //@method disable 禁用组件
+            //@interface disable 禁用组件
             vm.disable = function() {
                 vmodel.disabled = true
             }
 
-            //@method enable 启用组件
+            //@interface enable 启用组件
             vm.enable = function() {
                 vmodel.disabled = false
             }
@@ -248,7 +251,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
             }
 
             // 根据样式绘制圆，圆角等
-            //@method _draw() 动态更换皮肤后，可以调用这个方法更新提取switch样式
+            //@interface _draw() 动态更换皮肤后，可以调用这个方法更新提取switch样式
             vm._draw = function() {
                 if(radiusSupport) return
                 var divs = newDiv.getElementsByTagName("div")
@@ -333,30 +336,30 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
     }
 
     widget.defaults = {
-        toggle: true, //@param 组件是否显示，可以通过设置为false来隐藏组件
-        onText: "<b class=\"oni-flipswitch-on\"></b>",           //@param 选中状态提示文字
-        offText: "",//"&times;",         //@param 未选中状态提示文字
-        size: "normal",         //@param 滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成ui-flipswitch-{{size}}添加给flipswitch模板容器
-        theme: "normal",        //@param 主题，normal,success,warning,danger
-        draggable: false,       //@param 是否支持拖动切换状态
-        disabled: false,        //@param 禁用
-        checked: false,         //@param 默认选中状态
-        animated: true,         //@param 是否开启切换动画效果
-        hdir: true,         //@param 开启、关闭选项排列顺序默认为true，即on-off,false为off-on
-        dir: "left",            //\@param 组件排列方向,left,to
-        getStyleFromSkin: true, //\@param 是否从皮肤的css里面计算获取圆形进度条样式，默认为true，设置为true的时候，将忽略下面draggerColor,draggerRadius,onColor,offColor,height,width,draggerRadius样式设置
-        draggerColor: "#ffffff", //\@param 推动头颜色，会尝试自动到样式文件里面提取
+        toggle: true, //@config 组件是否显示，可以通过设置为false来隐藏组件
+        onText: "<b class=\"oni-flipswitch-on\"></b>",           //@config 选中状态提示文字
+        offText: "",//"&times;",         //@config 未选中状态提示文字
+        size: "normal",         //@config 滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成ui-flipswitch-{{size}}添加给flipswitch模板容器
+        theme: "normal",        //@config 主题，normal,success,warning,danger
+        draggable: false,       //@config 是否支持拖动切换状态
+        disabled: false,        //@config 禁用
+        checked: false,         //@config 默认选中状态
+        animated: true,         //@config 是否开启切换动画效果
+        hdir: true,         //@config 开启、关闭选项排列顺序默认为true，即on-off,false为off-on
+        dir: "left",            //\@config 组件排列方向,left,to
+        getStyleFromSkin: true, //\@config 是否从皮肤的css里面计算获取圆形进度条样式，默认为true，设置为true的时候，将忽略下面draggerColor,draggerRadius,onColor,offColor,height,width,draggerRadius样式设置
+        draggerColor: "#ffffff", //\@config 推动头颜色，会尝试自动到样式文件里面提取
         // draggerHoverColor: "#ffffff",
-        onColor: "#45A846", //\@param 选中情况颜色，会尝试自动到样式文件里面提取
-        offColor: "#D5D5D5", //\@param 未选中情况颜色，会尝试自动到样式文件里面提取
-        disabledColor: "#DEDEDE",//\@param 禁用情况颜色，会尝试自动到样式文件里面提取
-        draggerRadius: 7, //\@param normal size拖动头半径，会尝试自动到样式文件里面提取
-        height: 24,   //\@param normal size高度，会尝试自动到样式文件里面提取
-        width: 48,    //\@param normal size宽度，会尝试自动到样式文件里面提取
+        onColor: "#45A846", //\@config 选中情况颜色，会尝试自动到样式文件里面提取
+        offColor: "#D5D5D5", //\@config 未选中情况颜色，会尝试自动到样式文件里面提取
+        disabledColor: "#DEDEDE",//\@config 禁用情况颜色，会尝试自动到样式文件里面提取
+        draggerRadius: 7, //\@config normal size拖动头半径，会尝试自动到样式文件里面提取
+        height: 24,   //\@config normal size高度，会尝试自动到样式文件里面提取
+        width: 48,    //\@config normal size宽度，会尝试自动到样式文件里面提取
         css3support: false,
-        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
+        //@config onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
-        //@optMethod _animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]
+        //@config _animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]
         _animateArrMaker: function(from, to) {
             var arr = []
                 , dis = to - from
@@ -369,9 +372,9 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
             if(!arr.length) arr = [to]
             return arr
         },
-        //@optMethod onChange(newValue, vmodel) 选中状态发生变化时触发，参数为当前的选中状态及vmodel对象
+        //@config onChange(newValue, vmodel) 选中状态发生变化时触发，参数为当前的选中状态及vmodel对象
         onChange: avalon.noop,
-        //@optMethod getTemplate(tmpl, opts) 用于修改模板的接口，默认不做修改
+        //@config getTemplate(tmpl, opts) 用于修改模板的接口，默认不做修改
         getTemplate: function(tmpl, opts) {
             return tmpl
         },

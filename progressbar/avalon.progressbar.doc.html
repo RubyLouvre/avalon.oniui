@@ -26,7 +26,7 @@
                     <colgroup>
                         <col width="180" />
                         <col width="80" />
-                        <col width="180" />
+                        <col width="120" />
                     </colgroup>
                     <tr>
                         <th>名字</th>
@@ -86,12 +86,6 @@
                         <td>圆形</td>
                     </tr>
                     <tr>
-                        <td>getStyleFromSkin</td>
-                        <td>Boolean</td>
-                        <td>true</td>
-                        <td>是否从皮肤的css里面计算获取圆形进度条样式，默认为true，设置为true的时候，将忽略下面所有circle*样式设置</td>
-                    </tr>
-                    <tr>
                         <td>circleColor</td>
                         <td>String</td>
                         <td>"#ffffff"</td>
@@ -112,13 +106,13 @@
                     <tr>
                         <td>circleRadius</td>
                         <td>Number</td>
-                        <td>0</td>
+                        <td>38</td>
                         <td>圆形的半径，可以配制为从皮肤中提取，只在初始化的时候提取</td>
                     </tr>
                     <tr>
                         <td>circleBorderWidth</td>
                         <td>Number</td>
-                        <td>0</td>
+                        <td>4</td>
                         <td>圆形的边框宽度，可以配制为从皮肤中提取，只在初始化的时候提取</td>
                     </tr>
                     <tr>
@@ -184,12 +178,6 @@
                         <td>Function</td>
                         <td></td>
                         <td>progress(value) 设置value值，其实也可以直接设置vmodel.value</td>
-                    </tr>
-                    <tr>
-                        <td>_draw()</td>
-                        <td>Function</td>
-                        <td></td>
-                        <td>_draw 动态切换皮肤之后，如果需要更新提取圆形进度条的样式，可以调用这个方法</td>
                     </tr>
                 </table>
             </fieldset>

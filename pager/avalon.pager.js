@@ -30,6 +30,9 @@ define(["avalon",
         } else {
             options.options = []
         }
+        if(vmodels.cb){
+            template  = template.replace(/ms-title/g, "ms-attr-title")
+        }
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
         options._currentPage = options.currentPage
@@ -41,9 +44,8 @@ define(["avalon",
             vm.$init = function(continueScan) {
                 var pageHTML = options.template
                 element.style.display = "none"
-                element.innerHTML = pageHTML
-
                 setTimeout(function() {
+                    element.innerHTML = pageHTML
                     element.style.display = "block"
                     if (continueScan) {
                         continueScan()

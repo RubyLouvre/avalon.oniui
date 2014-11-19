@@ -13,7 +13,7 @@
 
     <fieldset>
         <legend>普通绑定</legend>
-        <ul ms-widget="checkboxlist" data-checkboxlist-select="selectCallback" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部">
+        <ul ms-widget="checkboxlist" data-checkboxlist-on-select="selectCallback" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部">
             <li><input type="checkbox" value="1">选项一</li>
             <li><input type="checkbox" value="2">选项二</li>
             <li><input type="checkbox" value="3">选项三</li>
@@ -60,7 +60,6 @@
                 vm.selectCallback = function() {
                     avalon.log("selectCallback argumnets is: ");
                     avalon.log(arguments);
-                    avalon.log("this is : "+this);
                 }
             });
             setTimeout(function (){

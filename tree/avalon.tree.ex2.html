@@ -97,7 +97,7 @@
         </script>
     </head>
     <body ms-controller="test">
-        <h1>tree</h1>
+        <h1>tree - 简单数据模式</h1>
         <div ms-widget="tree,tree2"></div>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -108,58 +108,88 @@
         &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
         
         &lt;script&gt;
-        var child = [
-                        { name:&quot;父节点1 - 展开&quot;, open:true,
-                            children: [
-                                { name:&quot;父节点11 - 折叠&quot;, open: false,
-                                    children: [
-                                        { name:&quot;叶子节点111&quot;},
-                                        { name:&quot;叶子节点112&quot;},
-                                        { name:&quot;叶子节点113&quot;},
-                                        { name:&quot;叶子节点114&quot;}
-                                    ]},
-                                { name:&quot;父节点12 - 折叠&quot;, open: false,
-                                    children: [
-                                        { name:&quot;叶子节点121&quot;},
-                                        { name:&quot;叶子节点122&quot;},
-                                        { name:&quot;叶子节点123&quot;},
-                                        { name:&quot;叶子节点124&quot;}
-                                    ]},
-                                { name:&quot;父节点13 - 没有子节点&quot;, isParent:true, open: false}
-                            ]},
-                        { name:&quot;父节点2 - 折叠&quot;, open: false,
-                            children: [
-                                { name:&quot;父节点21 - 展开&quot;, open:true,
-                                    children: [
-                                        { name:&quot;叶子节点211&quot;},
-                                        { name:&quot;叶子节点212&quot;},
-                                        { name:&quot;叶子节点213&quot;},
-                                        { name:&quot;叶子节点214&quot;}
-                                    ]},
-                                { name:&quot;父节点22 - 折叠&quot;, open: false,
-                                    children: [
-                                        { name:&quot;叶子节点221&quot;},
-                                        { name:&quot;叶子节点222&quot;},
-                                        { name:&quot;叶子节点223&quot;},
-                                        { name:&quot;叶子节点224&quot;}
-                                    ]},
-                                { name:&quot;父节点23 - 折叠&quot;, open: false,
-                                    children: [
-                                        { name:&quot;叶子节点231&quot;},
-                                        { name:&quot;叶子节点232&quot;},
-                                        { name:&quot;叶子节点233&quot;},
-                                        { name:&quot;叶子节点234&quot;}
-                                    ]}
-                            ]},
-                        { name:&quot;父节点3 - 没有子节点&quot;, isParent:true, open: false}
-                        ];
-            // for(var i = 0; i &lt; 5000; i++) {
-            //     child.push(child[1])
-            // }
-            require([&quot;tree/avalon.tree&quot;], function() {
+        var child = []
+        var zNodes =[
+            { id:1, pid:0, name:&quot;父节点1 - 展开&quot;, open:true},
+            { id:11, pid:1, name:&quot;父节点11 - 折叠&quot;},
+            { id:111, pid:11, name:&quot;叶子节点111&quot;},
+            { id:112, pid:11, name:&quot;叶子节点112&quot;},
+            { id:113, pid:11, name:&quot;叶子节点113&quot;},
+            { id:114, pid:11, name:&quot;叶子节点114&quot;},
+            { id:12, pid:1, name:&quot;父节点12 - 折叠&quot;},
+            { id:121, pid:12, name:&quot;叶子节点121&quot;},
+            { id:122, pid:12, name:&quot;叶子节点122&quot;},
+            { id:123, pid:12, name:&quot;叶子节点123&quot;},
+            { id:124, pid:12, name:&quot;叶子节点124&quot;},
+            { id:13, pid:1, name:&quot;父节点13 - 没有子节点&quot;, isParent:true},
+            { id:2, pid:0, name:&quot;父节点2 - 折叠&quot;},
+            { id:21, pid:2, name:&quot;父节点21 - 展开&quot;, open:true},
+            { id:211, pid:21, name:&quot;叶子节点211&quot;},
+            { id:212, pid:21, name:&quot;叶子节点212&quot;},
+            { id:213, pid:21, name:&quot;叶子节点213&quot;},
+            { id:214, pid:21, name:&quot;叶子节点214&quot;},
+            { id:22, pid:2, name:&quot;父节点22 - 折叠&quot;},
+            { id:221, pid:22, name:&quot;叶子节点221&quot;},
+            { id:222, pid:22, name:&quot;叶子节点222&quot;},
+            { id:223, pid:22, name:&quot;叶子节点223&quot;},
+            { id:224, pid:22, name:&quot;叶子节点224&quot;},
+            { id:23, pid:2, name:&quot;父节点23 - 折叠&quot;},
+            { id:231, pid:23, name:&quot;叶子节点231&quot;},
+            { id:232, pid:23, name:&quot;叶子节点232&quot;},
+            { id:233, pid:23, name:&quot;叶子节点233&quot;},
+            { id:234, pid:23, name:&quot;叶子节点234&quot;},
+            { id:3, pid:0, name:&quot;父节点3 - 没有子节点&quot;, isParent:true}
+        ];
+
+            require([&quot;tree/avalon.tree.edit&quot;], function() {
                 avalon.define(&quot;test&quot;, function(vm) {
                     vm.tree = {
-                        children: child
+                        children: zNodes,
+                        edit: {
+                            showRemoveBtn: function(leaf) {
+                                return leaf.level &gt; 0
+                            }
+                        },
+                        data: {
+                            simpleData: {
+                                enable: true,
+                                pIdKey: &quot;pid&quot;
+                            },
+                            keep: {
+                                leaf: false,
+                                parent: true
+                            }
+                        },
+                        view: {
+                            editNameSelectAll: true,
+                            showLine: function(leaf) {
+                                return true
+                                return leaf.level &gt; 1 || 1
+                            }
+                        },
+                        callback: {
+                            onExpand: function(leaf) {
+                                console.log(leaf)
+                            },
+                            beforeRemove: function(obj) {
+                                return confirm(&quot;确认删除?&quot;)
+                            },
+                            onRemove: function(leaf) {
+                                console.log(&quot;remove &quot; + leaf)
+                            },
+                            onRename: function(arg) {
+                                console.log(&quot;renamed&quot;)
+                            },
+                            beforeAdd: function(obj) {
+                                return confirm(&quot;确认添加?&quot;)
+                            },
+                            onNodeCreated: function(obj) {
+                                avalon.log(&quot;node onNodeCreated&quot;)
+                            }
+                        }
+                    }
+                    vm.$treeOpt = {
+                        children: [child[0]]
                     }
                     vm.$skipArray = [&quot;tree&quot;]
                 })
@@ -168,8 +198,8 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
-        &lt;h1&gt;tree&lt;/h1&gt;
-        &lt;div ms-widget=&quot;tree&quot;&gt;&lt;/div&gt;
+        &lt;h1&gt;tree - 简单数据模式&lt;/h1&gt;
+        &lt;div ms-widget=&quot;tree,tree2&quot;&gt;&lt;/div&gt;
         
     &lt;/body&gt;
 &lt;/html&gt;

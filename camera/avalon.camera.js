@@ -1,6 +1,11 @@
 /**
- * @camera图片轮播组件
- **/
+ *
+ * @cnName 图片百叶窗效果组件
+ * @enName camera
+ * @introduce
+ * 基于carousel图片轮播组件，动画效果由jquery完成。
+ * @summary
+ */
 avalon.config({
     paths: {
         jquery: "./mocha/jquery.js"
@@ -23,8 +28,8 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
         var vmodel = avalon.define(data.cameraId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
-            vm.pictureWidth = avalon.css(element, "width") //@param  图片显示宽度
-            vm.pictureHeight = avalon.css(element, "height") //@param  图片显示高度
+            vm.pictureWidth = avalon.css(element, "width") //@config  图片显示宽度
+            vm.pictureHeight = avalon.css(element, "height") //@config  图片显示高度
             vm.selections = avalon.range(vm.pictures.length) //圆形选择的数据数组（不包括复制到末尾的第一个元素）
             vm.selectionWrapOffset = -vm.pictures.length * 20 / 2 //圆形选择CSS位置修正
             vm.arrowVisible = vm.alwaysShowArrow ? true : false //箭头是否可见
@@ -77,13 +82,12 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
             vm.$skipArray = ["widgetElement", "template", "selectionWrapOffset"]
 
             var inited
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if (inited) return
                 inited = true
                 var pageHTML = options.template
                 element.style.display = "none"
                 element.innerHTML = pageHTML
-                avalon.scan(element, [vmodel].concat(vmodels))
                 element.style.display = "block"
 
                 if (vm.adaptiveWidth) { //自动填充外围容器宽度
@@ -91,7 +95,7 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
                 }
                 if (vm.adaptiveHeight) { //自动填充外围容器高度
                     element.style.height = "100%"
-                    vm.pictureHeight = avalon.css(element, "height") //@param  图片显示高度
+                    vm.pictureHeight = avalon.css(element, "height") //@config  图片显示高度
                     var children = element.children
                     for (var i = 0, len = children.length; i < len; i++) {
                         if (children[i].id === "oni-camera") {
@@ -103,7 +107,6 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
                 //区块大小
                 fakepartWidth = vm.pictureWidth / vm.slicedCols
                 fakepartHeight = vm.pictureHeight / vm.slicedRows
-                console.log(fakepartHeight)
 
                 //分割区块
                 require('jquery,ready!', function($) {
@@ -133,6 +136,16 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
                         }
                     }
                 })
+
+                if(continueScan){
+                    continueScan()
+                }else{
+                    avalon.log("请尽快升到avalon1.3.7+")
+                    avalon.scan(element, _vmodels)
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
+                }
             }
 
             vm.$remove = function() {
@@ -294,21 +307,22 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
         return vmodel
     }
 
+    widget.vertion = 1.0
     widget.defaults = {
-        pictures: [], //@param  轮播图片素材
-        effect: "crossY", //@param  图片切换类型，取值：random:全部随机 / none:无特效 / slideX:横向滑动 / slideY:纵向滑动 / fadeIn:渐入 / crossX:横向交叉 / crossY:纵向交叉 / stepX:横向阶梯 / stepY:纵向阶梯 / rotateFadeIn:旋转式渐入
-        timeout: 2500, //@param  切换时间间隔
-        during: 600, //@param  切换速度，越小越快，单位为毫秒
-        alwaysShowArrow: true, //@param  显示左右切换箭头
-        alwaysShowSelection: true, //@param  显示底部圆形切换部件
-        hoverStop: true, //@param  鼠标经过停止播放
-        adaptiveWidth: false, //@param  适应外围宽度
-        adaptiveHeight: false, //@param  适应外围高度
-        eventType: "click", //@param  触发tab切换的nav上的事件类型，取值click\mouseenter\both
-        arrowLeftClass: "", //@param  左右箭头的className，可不传
-        arrowRightClass: "", //@param  左右箭头的className，可不传
-        slicedCols: 5, //@param  区块列数
-        slicedRows: 4, //@param  区块行数
+        pictures: [], //@config  轮播图片素材
+        effect: "random", //@config  图片切换类型，取值：random:全部随机 / none:无特效 / slideX:横向滑动 / slideY:纵向滑动 / fadeIn:渐入 / crossX:横向交叉 / crossY:纵向交叉 / stepX:横向阶梯 / stepY:纵向阶梯 / rotateFadeIn:旋转式渐入
+        timeout: 2500, //@config  切换时间间隔
+        during: 600, //@config  切换速度，越小越快，单位为毫秒
+        alwaysShowArrow: true, //@config  显示左右切换箭头
+        alwaysShowSelection: true, //@config  显示底部圆形切换部件
+        hoverStop: true, //@config  鼠标经过停止播放
+        adaptiveWidth: false, //@config  适应外围宽度
+        adaptiveHeight: false, //@config  适应外围高度
+        eventType: "click", //@config  触发tab切换的nav上的事件类型，取值click\mouseenter\both
+        arrowLeftClass: "", //@config  左右箭头的className，可不传
+        arrowRightClass: "", //@config  左右箭头的className，可不传
+        slicedCols: 5, //@config  区块列数
+        slicedRows: 4, //@config  区块行数
         onInit: avalon.noop, //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         getTemplate: function(tmpl, opts, tplName) {
             return tmpl
@@ -316,3 +330,11 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
         $author: "heiwu805@hotmail.com"
     }
 })
+
+/**
+ @links
+ [图片百叶窗切换组件](avalon.camera.ex.html)
+ [图片百叶窗切换组件-自定义宽高](avalon.camera.ex1.html)
+ [图片百叶窗切换组件-自定义切换间隔和切换速度](avalon.camera.ex2.html)
+ [图片百叶窗切换组件-自定义区块数量](avalon.camera.ex3.html)
+ */

@@ -1,6 +1,11 @@
 /**
- * @carousel图片轮播组件
- **/
+ *
+ * @cnName 图片轮播组件
+ * @enName carousel
+ * @introduce
+ * 图片轮播，采用跑马灯效果
+ * @summary
+ */
 
 define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
     var requestAnimationFrame = (function() { //requestAnimationFrame 兼容
@@ -49,13 +54,12 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
             vm.$skipArray = ["widgetElement", "template", "selectionWrapOffset"]
 
             var inited
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if (inited) return
                 inited = true
                 var pageHTML = options.template
                 element.style.display = "none"
                 element.innerHTML = pageHTML
-                avalon.scan(element, [vmodel].concat(vmodels))
                 element.style.display = "block"
 
                 if (vm.adaptiveWidth) { //自动填充外围容器宽度
@@ -79,8 +83,14 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                     image_preload.src = images[i]
                 }
 
-                if (typeof options.onInit === "function") {
-                    options.onInit.call(element, vmodel, options, vmodels)
+                if(continueScan){
+                    continueScan()
+                }else{
+                    avalon.log("请尽快升到avalon1.3.7+")
+                    avalon.scan(element, _vmodels)
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }
             }
             vm.$remove = function() {
@@ -253,27 +263,28 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
         return vmodel
     }
 
+    widget.vertion = 1.0
     widget.defaults = {
-        pictures: [], //@param  轮播图片素材
-        pictureWidth: 500, //@param  图片显示宽度
-        pictureHeight: 200, //@param  图片显示高度
-        effect: "slide", //@param  图片切换类型，取值：none:无特效 / fade:渐隐 / slide:滑动
-        easing: "easeInOut", //@param  缓动类型，取值 linear:无缓动效果 / easeIn:在过渡的开始提供缓动效果 / easeOut:在过渡的结尾提供缓动效果 / easeInOut 在过渡的开始和结尾提供缓动效果
-        timeout: 2500, //@param  切换时间间隔
-        during: 300, //@param  切换速度，越小越快，单位为毫秒
-        alwaysShowArrow: true, //@param  显示左右切换箭头
-        alwaysShowSelection: true, //@param  显示底部圆形切换部件
-        autoSlide: true, //@param  自动播放
-        hoverStop: true, //@param  鼠标经过停止播放
-        adaptiveWidth: false, //@param  适应外围宽度，为true时指定pictureWidth不起作用
-        adaptiveHeight: false, //@param  适应外围高度，为true时指定pictureHeight不起作用
-        eventType: "click", //@param  触发tab切换的nav上的事件类型，取值click\mouseenter\both
-        arrowLeftNormalSrc: "", //@param  左箭头正常状态图标，可不传
-        arrowRightNormalSrc: "", //@param  右箭头正常状态图标，可不传
-        arrowLeftHoverSrc: "", //@param  左箭头hover状态图标，可不传
-        arrowRightHoverSrc: "", //@param  右箭头hover状态图标，可不传
-        arrowLeftClass:"", //@param  左右箭头的className，可不传
-        arrowRightClass:"", //@param  左右箭头的className，可不传
+        pictures: [], //@config  轮播图片素材
+        pictureWidth: 500, //@config  图片显示宽度
+        pictureHeight: 200, //@config  图片显示高度
+        effect: "slide", //@config  图片切换类型，取值：none:无特效 / fade:渐隐 / slide:滑动
+        easing: "easeInOut", //@config  缓动类型，取值 linear:无缓动效果 / easeIn:在过渡的开始提供缓动效果 / easeOut:在过渡的结尾提供缓动效果 / easeInOut 在过渡的开始和结尾提供缓动效果
+        timeout: 2500, //@config  切换时间间隔
+        during: 300, //@config  切换速度，越小越快，单位为毫秒
+        alwaysShowArrow: true, //@config  显示左右切换箭头
+        alwaysShowSelection: true, //@config  显示底部圆形切换部件
+        autoSlide: true, //@config  自动播放
+        hoverStop: true, //@config  鼠标经过停止播放
+        adaptiveWidth: false, //@config  适应外围宽度，为true时指定pictureWidth不起作用
+        adaptiveHeight: false, //@config  适应外围高度，为true时指定pictureHeight不起作用
+        eventType: "click", //@config  触发tab切换的nav上的事件类型，取值click\mouseenter\both
+        arrowLeftNormalSrc: "", //@config  左箭头正常状态图标，可不传
+        arrowRightNormalSrc: "", //@config  右箭头正常状态图标，可不传
+        arrowLeftHoverSrc: "", //@config  左箭头hover状态图标，可不传
+        arrowRightHoverSrc: "", //@config  右箭头hover状态图标，可不传
+        arrowLeftClass:"", //@config  左右箭头的className，可不传
+        arrowRightClass:"", //@config  左右箭头的className，可不传
         onInit: avalon.noop, //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         getTemplate: function(tmpl, opts, tplName) {
             return tmpl
@@ -281,3 +292,14 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
         $author: "heiwu805@hotmail.com"
     }
 })
+
+/**
+ @links
+ [图片轮播组件-默认配置图片轮播](avalon.carousel.ex.html)
+ [图片轮播组件-自定义宽高](avalon.carousel.ex1.html)
+ [图片轮播组件-自定义图片切换时间间隔 / 自定义图片切换速度](avalon.carousel.ex2.html)
+ [图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过不停止播放](avalon.carousel.ex3.html)
+ [图片轮播组件-自定义effect](avalon.carousel.ex4.html)
+ [图片轮播组件-自定义缓动类型](avalon.carousel.ex5.html)
+ [图片轮播组件-自定义填充外围宽度和高度](avalon.carousel.ex6.html)
+ */

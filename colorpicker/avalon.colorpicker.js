@@ -1,3 +1,11 @@
+/**
+ * @cnName 颜色选择器
+ * @enName colorpicker
+ * @introduce
+ *		<p>一个直观方便的颜色选择器。既可以展示设定的颜色，又可以调试并选择颜色。</p>
+    	<p>使用 <code>ms-duplex</code> 可以方便的设置和获取颜色。</p>
+ * @updatetime 2014-07-24
+ */
 define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./avalon.colorpicker.css"], function(avalon, sourceHTML){
 
 	var vm_temp = {},	// 记录前一个被打开的ctr
@@ -260,7 +268,7 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 				//自动隐藏
 				if(vm.autoHide){
 
-					avalon(cp).addClass("ui-colorpicker-auto-hide");
+					avalon(cp).addClass("oni-colorpicker-auto-hide");
 					
 					cp.setAttribute("ms-visible", "toggle");
 					cp.setAttribute("ms-click", "cpClick");
@@ -296,9 +304,9 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 
 	widget.version = 1.0;
 	widget.defaults = {
-		autoHide: true,
-		defaultColor: defaultColor,
-		bgColor: ""
+		autoHide: true,				// @config 是否自动隐藏控件
+		defaultColor: "#ffffff",	// @config 默认颜色
+		bgColor: ""					// @config 背景颜色
 	};
 
 	function isHexColorValid(val){

@@ -1,6 +1,9 @@
 /**
-  * @description scrollbar组件，自定义滚动条样式，绑定ms-widget="scrollbar"的元素内必须包含一个class="oni-scrollbar-scroller"的视窗元素
-  */
+ * @cnName 滚动条组件
+ * @enName scrollbar
+ * @introduce
+ *  <p> 自定义滚动条样式，绑定ms-widget="scrollbar"的元素内必须包含一个class="oni-scrollbar-scroller"的视窗元素</p>
+ */
 define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable", "css!./avalon.scrollbar.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 
     // get by className, not strict
@@ -45,7 +48,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
             var inited,
                 bars = [],
                 scroller
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if(inited) return
                 inited = true
                 vmodel.widgetElement.style.position = "relative"
@@ -58,13 +61,21 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
 
                 var frag = avalon.parseHTML(options.template)
                 vmodel.widgetElement.appendChild(frag)
-                avalon.scan(element, [vmodel].concat(vmodels))
+                if (continueScan) {
+                    continueScan()
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
+                }
                 var children = vmodel.widgetElement.childNodes
                 avalon.each(children, function(i, item) {
                     var ele = avalon(item)
-                    if(ele.hasClass("oni-scrollbar")) {
+                    if(ele.hasClass("oni-scrollbar") || ele.hasClass("ui-scrollbar")) {
                         bars.push(ele)
-                    } else if(ele.hasClass("oni-scrollbar-scroller")) {
+                    } else if(ele.hasClass("oni-scrollbar-scroller") || ele.hasClass("ui-scrollbar-scroller")) {
                         scroller = ele
                     }
                 })
@@ -190,12 +201,6 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                 })
 
                 vmodel.update("init")
-                
-                // callback after inited
-                if(typeof options.onInit === "function" ) {
-                    //vmodels是不包括vmodel的 
-                    options.onInit.call(element, vmodel, options, vmodels)
-                }
             }
 
             // data-draggable-before-start="beforeStartFn" 
@@ -269,15 +274,15 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                     })
                 }
             }
-            //@method getBars()返回所有的滚动条元素，avalon元素对象
+            //@interface getBars()返回所有的滚动条元素，avalon元素对象
             vm.getBars = function() {
                 return bars
             }
-            //@method getScroller()返回scroller avalon对象
+            //@interface getScroller()返回scroller avalon对象
             vm.getScroller = function() {
                 return scroller
             }
-            //@method update()更新滚动条状态，windowresize，内容高度变化等情况下调用，不能带参数
+            //@interface update()更新滚动条状态，windowresize，内容高度变化等情况下调用，不能带参数
             vm.update = function(ifInit, x, y) {
                 if(vmodel.disabled) return
                 var ele = avalon(vmodel.viewElement),
@@ -625,7 +630,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                 }
             }
 
-            //@method scrollTo(x,y) 滚动至 x,y
+            //@interface scrollTo(x,y) 滚动至 x,y
             vm.scrollTo = function(x, y) {
                 vmodel.update(!"ifInit", x, y)
                 vm._scrollTo(x, y)
@@ -663,36 +668,33 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
 
         return vmodel
     }
-    //add args like this:
-    //argName: defaultValue, \/\/@param description
-    //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
-        disabled: false, //@param 组件是否被禁用，默认为否
-        toggle: true, //@param 组件是否显示，可以通过设置为false来隐藏组件
-        position: "right", //@param scrollbar出现的位置,right右侧，bottom下侧，可能同时出现多个方向滚动条
-        limitRateV: 1.5, //@param 竖直方向，拖动头最小高度和拖动头宽度比率
-        limitRateH: 1.5, //@param 水平方向，拖动头最小宽度和高度的比率
-        scrollTop: 0, //@param 竖直方向滚动初始值，负数会被当成0，设置一个极大值等价于将拖动头置于bottom
-        scrollLeft: 0, //@param 水平方向滚动初始值，负数会被当成0处理，极大值等价于拖动头置于right
-        show: "always", //@param never一直不可见，scrolling滚动和hover时候可见，always一直可见
-        showBarHeader: true,//@param 是否显示滚动条两端的上下箭头
-        draggerHTML: "", //@param 滚动条拖动头里，注入的html碎片
-        breakOutCallback: false, //@optMethod breakOutCallback(["h", "up"], vmodel) 滚动到极限位置的回调，用来实现无线下拉等效果 breakOutCallback(["h", "up"], vmodel) 第一个参数是一个数组，分别是滚动条方向【h水平，v竖直】和超出极限的方向【up是向上或者向左，down是向右或者向下】，第三个参数是一个对象，包含滚动条的元素，宽高等信息
-        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
+        disabled: false, //@config 组件是否被禁用，默认为否
+        toggle: true, //@config 组件是否显示，可以通过设置为false来隐藏组件
+        position: "right", //@config scrollbar出现的位置,right右侧，bottom下侧，可能同时出现多个方向滚动条
+        limitRateV: 1.5, //@config 竖直方向，拖动头最小高度和拖动头宽度比率
+        limitRateH: 1.5, //@config 水平方向，拖动头最小宽度和高度的比率
+        scrollTop: 0, //@config 竖直方向滚动初始值，负数会被当成0，设置一个极大值等价于将拖动头置于bottom
+        scrollLeft: 0, //@config 水平方向滚动初始值，负数会被当成0处理，极大值等价于拖动头置于right
+        show: "always", //@config never一直不可见，scrolling滚动和hover时候可见，always一直可见
+        showBarHeader: true,//@config 是否显示滚动条两端的上下箭头
+        draggerHTML: "", //@config 滚动条拖动头里，注入的html碎片
+        breakOutCallback: false, //@config breakOutCallback(["h", "up"], vmodel) 滚动到极限位置的回调，用来实现无线下拉等效果 breakOutCallback(["h", "up"], vmodel) 第一个参数是一个数组，分别是滚动条方向【h水平，v竖直】和超出极限的方向【up是向上或者向左，down是向右或者向下】，第三个参数是一个对象，包含滚动条的元素，宽高等信息
+        //@config onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
         viewHeightGetter: function(viewElement) {
             return viewElement.innerHeight()
-        }, //@optMethod viewHeightGetter(viewElement) 配置计算视窗高度计函数，默认返回innerHeight
+        }, //@config viewHeightGetter(viewElement) 配置计算视窗高度计函数，默认返回innerHeight
         viewWidthGetter: function(viewElement) {
             return viewElement.innerWidth()
-        }, //@optMethod viewWidthGetter(viewElement) 配置计算视窗宽度计函数，默认返回innerWidth
+        }, //@config viewWidthGetter(viewElement) 配置计算视窗宽度计函数，默认返回innerWidth
         getTemplate: function(tmpl, opts) {
             return tmpl
-        },//@optMethod getTemplate(tpl, opts) 定制修改模板接口
+        },//@config getTemplate(tpl, opts) 定制修改模板接口
         onScroll: function(newValue, oldValue, diretion, vmodel) {
 
-        },//@optMethod onScroll(newValue, oldValue, diretion, vmodel) 滚动回调,scrollLeft or scrollTop变化的时候触发，参数为newValue, oldValue, diretion, vmodel diretion = h 水平方向，= v 竖直方向
-        size: "normal", //@param srollbar size,normal为10px，small为8px，large为14px
+        },//@config onScroll(newValue, oldValue, diretion, vmodel) 滚动回调,scrollLeft or scrollTop变化的时候触发，参数为newValue, oldValue, diretion, vmodel diretion = h 水平方向，= v 竖直方向
+        size: "normal", //@config srollbar size,normal为10px，small为8px，large为14px
         $author: "skipper@123"
     }
 })

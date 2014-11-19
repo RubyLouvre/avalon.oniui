@@ -2,7 +2,7 @@
 /*
 这是每个都组件都应该引用的部分
 */
-.ui-textbox {
+.oni-textbox {
   display: -moz-inline-stack;
   display: inline-block;
   vertical-align: middle;
@@ -15,11 +15,11 @@
   line-height: 18px;
   background-color: #FFFFFF;
   border: 1px solid #CCCCCC; }
-  .ui-textbox.ui-state-hover {
+  .oni-textbox.oni-state-hover {
     border-color: #999999; }
-  .ui-textbox.ui-state-focus {
+  .oni-textbox.oni-state-focus {
     border-color: #3775c0; }
-  .ui-textbox .ui-textbox-input-wrap {
+  .oni-textbox .oni-textbox-input-wrap {
     position: relative;
     display: -moz-inline-stack;
     display: inline-block;
@@ -28,7 +28,7 @@
     zoom: 1;
     *display: inline;
     line-height: 18px; }
-    .ui-textbox .ui-textbox-input-wrap .ui-textbox-input {
+    .oni-textbox .oni-textbox-input-wrap .oni-textbox-input {
       position: relative;
       float: left;
       display: inline;
@@ -43,10 +43,10 @@
       background-color: #FFFFFF;
       border: 0 none;
       color: #333333; }
-    .ui-textbox .ui-textbox-input-wrap textarea.ui-textbox-input {
+    .oni-textbox .oni-textbox-input-wrap textarea.oni-textbox-input {
       height: 60px;
       resize: none; }
-  .ui-textbox .ui-textbox-placeholder {
+  .oni-textbox .oni-textbox-placeholder {
     position: absolute;
     left: 0;
     top: 0;
@@ -56,16 +56,16 @@
     z-index: 1;
     overflow: hidden;
     color: #999999; }
-  .ui-textbox .ui-textbox-suggest {
+  .oni-textbox .oni-textbox-suggest {
     position: relative;
     z-index: 1000; }
-  .ui-textbox.ui-textbox-disabled {
+  .oni-textbox.oni-textbox-disabled {
     background-color: whitesmoke;
     border-color: #d9d9d9;
     cursor: default; }
-    .ui-textbox.ui-textbox-disabled .ui-textbox-placeholder {
+    .oni-textbox.oni-textbox-disabled .oni-textbox-placeholder {
       color: #CCCCCC; }
-    .ui-textbox.ui-textbox-disabled .ui-textbox-input {
+    .oni-textbox.oni-textbox-disabled .oni-textbox-input {
       cursor: default;
       background-color: whitesmoke;
       color: #CCCCCC; }

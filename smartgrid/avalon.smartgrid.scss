@@ -1,6 +1,6 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname: "ui-smartgrid";
+$uiname: "oni-smartgrid";
 .#{$uiname} {
     border: 1px solid #e5e5e5;
     font-size: 12px;
@@ -15,20 +15,20 @@ $uiname: "ui-smartgrid";
     .#{$uiname}-hide {
         display: none;
     }
-    .ui-state-hover {
+    .oni-state-hover {
         background-color: #e8f5fd; 
     }
     .#{$uiname}-selected {
         background-color: #fff7e6;
     }
-    .ui-state-disabled {
+    .oni-state-disabled {
         color: #ccc;
         background: #fff;
-        .ui-dropdown .ui-dropdown-source {
+        .oni-dropdown .oni-dropdown-source {
             border-color: #ccc;
         }
     }
-    .ui-state-hidden input {
+    .oni-state-hidden input {
         visibility: hidden;
     }
     th {
@@ -85,10 +85,10 @@ $uiname: "ui-smartgrid";
         height: 26px;
         line-height: 26px;
         padding-left: 5px; 
-        div.ui-smartgrid-showinfo {
+        div.oni-smartgrid-showinfo {
             @include inline-block();
         }
-        .ui-dropdown {
+        .oni-dropdown {
             margin: 0 5px;
             vertical-align: top; 
         }
@@ -99,7 +99,7 @@ $uiname: "ui-smartgrid";
         line-height: 15px;
     }
     /*三种容器的规则*/
-    .ui-helper-asc, .ui-helper-desc,  .ui-helper-ndb{
+    .oni-helper-asc, .oni-helper-desc,  .oni-helper-ndb{
         width:12px;
         height:12px;
         line-height: 1;
@@ -110,34 +110,34 @@ $uiname: "ui-smartgrid";
         cursor: pointer;
     }
     /*三种容器下三角形的共同点*/
-    .ui-helper-asc span, .ui-helper-desc span, .ui-helper-ndb span{
+    .oni-helper-asc span, .oni-helper-desc span, .oni-helper-ndb span{
         position: absolute;
         top: 0px;
         left: 4px;
     }
     /*上三角*/
-    .ui-helper-ndb .ui-helper-sort-top, .ui-helper-desc .ui-helper-sort-top{
+    .oni-helper-ndb .oni-helper-sort-top, .oni-helper-desc .oni-helper-sort-top{
         @include triangle(top, 12px, half, #ccc);
         top: 0px;
         left: 0px;
     }
-    .ui-helper-asc .ui-helper-sort-top{
+    .oni-helper-asc .oni-helper-sort-top{
         @include triangle(top, 12px, half, #000);
         top: 0px;
         left: 0px;
     }
     /*下三角*/
-    .ui-helper-ndb .ui-helper-sort-bottom, .ui-helper-asc .ui-helper-sort-bottom{
+    .oni-helper-ndb .oni-helper-sort-bottom, .oni-helper-asc .oni-helper-sort-bottom{
         @include triangle(bottom, 12px, half, #ccc);
         top: 8px;
         left: 0px;
     }
-    .ui-helper-desc .ui-helper-sort-bottom{
+    .oni-helper-desc .oni-helper-sort-bottom{
         @include triangle(bottom, 12px, half, #000);
         top: 8px;
         left: 0px;
     }
-    .ui-pager {
+    .oni-pager {
         display: inline;
         float: right; 
     }

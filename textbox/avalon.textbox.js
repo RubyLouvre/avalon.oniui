@@ -1,3 +1,11 @@
+// avalon 1.3.6
+/**
+ * 
+ * @cnName 具有提示功能的输入框
+ * @enName textbox
+ * @introduce
+ * <p>通过给简单的表单输入域设置不同的配置项可以使表单拥有舒服的视觉效果，也可以使其具有提示补全功能</p>
+ */
 define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui-common.css", "css!./avalon.textbox.css"], function(avalon, sourceHTML) {
     var htmlStructArray = sourceHTML.split("MS_OPTION_SUGGEST"),
         suggestHTML = htmlStructArray[1];
@@ -66,7 +74,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 sourceListParent.removeChild(sourceList);
                 sourceList.innerHTML = sourceList.textContent = "";
             }           
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 avalon.bind(element, "blur", vm.blur);
                 if (options.autoFocus) {
                     avalon.bind(element, "mouseover", function() {
@@ -81,8 +89,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                  * $suggestopts自动获取
                  **/
                 
-                var models = [vmodel].concat(vmodels);
-                $element.addClass("ui-textbox-input");
+                $element.addClass("oni-textbox-input");
                 // 包装原始输入域
                 var tempDiv = document.createElement("div");
                 elemParent.insertBefore(tempDiv, element);
@@ -109,14 +116,18 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                     vmodel.toggle = false
                 })
 
-                avalon.scan(sourceList, models);
-                avalon.scan(element, models);
+                avalon.scan(sourceList, [vmodel].concat(vmodels));
                 if (!vmodel.placehold.length || element.value != "") {
                     vmodel.toggle = false
                 }
-                if(typeof options.onInit === "function" ){
-                    //vmodels是不包括vmodel的
-                    options.onInit.call(element, vmodel, options, vmodels)
+                if (continueScan) {
+                    continueScan()
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }
                 // 如果输入域有值，则隐藏占位符，否则显示，默认显示
                 vm.elementDisabled = element.disabled;
@@ -156,17 +167,37 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
         return vmodel
     } 
     widget.defaults = {
-        suggest : false,
-        autoTrim: true,
-        placeholder: "",
-        widgetElement: "",
-        tabIndex: -1,
-        width: -1,
-        autoFocus: false,
-        disabledClass: "ui-textbox-disabled",
+        /**
+         * @config 配置输入框有自动提示补全功能，提示类型由用户自定义，默认配置为false，也就是不开启自动补全功能
+         */
+        suggest : false,  
+        autoTrim: true, //@config 是否自动过滤用户输入的内容头部和尾部的空格
+        placeholder: "", //@config 配置textbox输入框的提示文字(占位符)
+        widgetElement: "", //@interface 绑定组件元素的dom对象的引用
+        tabIndex: -1, //@config 配置textbox在进行tab切换时的tabIndex，切换顺序从值小的开始，必须配置为大于0的值
+        width: -1, //@config 配置textbox的显示宽
+        autoFocus: false, //@config 如果想要鼠标悬停在textbox上时就focus textbox，设置此属性为true即可
+        disabledClass: "oni-textbox-disabled", //@config 配置输入域disabled时组件包装元素设置的类，多个类以空格分隔
+        /**
+         * @config 模板函数,方便用户自定义模板
+         * @param str {String} 默认模板
+         * @param opts {Object} vmodel
+         * @returns {String} 新模板
+         */
         getTemplate: function(tmp) {
             return tmp
-        }
+        },
+        suggestOnChange: "", //@config 配置提示补全时切换提示项之后的callback
+        suggestFocus: false //@config 特殊的suggest，当focus时即显示特定的提示列表
     }
     return avalon ;
 })
+/**
+ @links
+ [基本textbox、配置了width、tabIndex的textbox以及配置了disabledClass的textbox](avalon.textbox.ex1.html)
+ [拥有占位符的textbox](avalon.textbox.ex2.html)
+ [切换禁用textbox](avalon.textbox.ex3.html)
+ [有自动补全功能的textbox](avalon.textbox.ex4.html)
+ [无视用户输入的自动补全](avalon.textbox.ex5.html)
+ [添加回调操作的自动补全](avalon.textbox.ex6.html)
+ */

@@ -3,11 +3,6 @@
 这是每个都组件都应该引用的部分
 */
 .oni-daterangepicker { width: 260px; font-size: 12px; line-height: 18px; }
-.oni-daterangepicker .oni-btn { height: 26px; overflow: visible; _overflow-y: hidden; padding: 0 10px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; border-radius: 2px; font-size: 12px; color: #333333; background-color: #f8f8f8; border: 1px solid #cccccc; cursor: pointer; }
-.oni-daterangepicker .oni-btn:hover { box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1); background-color: #f8f8f8; border-color: #bbbbbb; color: #333333; }
-.oni-daterangepicker .oni-btn-small { height: 22px; padding: 0 5px; font-size: 12px; }
-.oni-daterangepicker .oni-btn-primary { background-color: #3775c0; border-color: #3775c0; color: white; }
-.oni-daterangepicker .oni-btn-primary.oni-state-hover { background-color: #5a8fd0; border-color: #5a8fd0; color: white; }
 .oni-daterangepicker .oni-daterangepicker-content { position: relative; z-index: 1000; zoom: 1; }
 .oni-daterangepicker .oni-daterangepicker-content .oni-daterangepicker-quick-operation { font-size: 12px; border-bottom: 1px solid #f2f2f2; margin: -5px 0 10px -10px; padding-left: 10px; }
 .oni-daterangepicker .oni-daterangepicker-content .oni-daterangepicker-quick-operation span { color: #3775c0; padding: 6px 10px 6px 0; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; cursor: pointer; }

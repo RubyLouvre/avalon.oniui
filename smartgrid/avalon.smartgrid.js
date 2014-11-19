@@ -1,3 +1,11 @@
+// avalon 1.3.6
+/**
+ * 
+ * @cnName 表格
+ * @enName smartgrid
+ * @introduce
+ *    <p>smartgrid与simplegrid最大的不同是数据的渲染是通过静态模板实现的，当然也可以方便的实现动态更新视图。同时smartgrid实现了grid adapter的所有功能，不过部分使用方式会有些差异，下面会详细说明</p>
+ */
 define(["avalon",
     "text!./avalon.smartgrid.html",
     "../loading/avalon.loading",
@@ -188,9 +196,9 @@ define(["avalon",
                 pager.getTemplate = typeof pager.getTemplate === "function" ? pager.getTemplate : function(tmpl, options) {
                     var optionsStr = ""
                     if (Array.isArray(pager.options) && options.canChangePageSize) {
-                        optionsStr = '<div class="ui-smartgrid-pager-options"><div class="ui-smartgrid-showinfo">每页显示</div><select ms-widget="dropdown" data-dropdown-list-width="50" data-dropdown-width="50" ms-duplex="perPages"><option ms-repeat="options" ms-value="el.value" ms-attr-label="el.value">{{el.text}}</option></select><div class="ui-smartgrid-showinfo">条, {{totalItems}}条结果</div></div>'
+                        optionsStr = '<div class="oni-smartgrid-pager-options"><div class="oni-smartgrid-showinfo">每页显示</div><select ms-widget="dropdown" data-dropdown-list-width="50" data-dropdown-width="50" ms-duplex="perPages"><option ms-repeat="options" ms-value="el.value" ms-attr-label="el.value">{{el.text}}</option></select><div class="oni-smartgrid-showinfo">条, {{totalItems}}条结果</div></div>'
                     } else {
-                        optionsStr = '<div class="ui-smartgrid-pager-options">{{totalItems}}条结果</div>'
+                        optionsStr = '<div class="oni-smartgrid-pager-options">{{totalItems}}条结果</div>'
                     }
                     return tmpl + optionsStr
                 }
@@ -214,9 +222,17 @@ define(["avalon",
             vm._disabledData = []
             vm._enabledData = []
             vm.loadingVModel = null
+            /**
+             * @interface {Function} 获取表格数据,当然也可以通过vmodel.data直接获得表格数据
+             * @returns {Array} 表格的渲染数据
+             */
             vm.getRawData = function() {
                 return vmodel.data
             }
+            /**
+             * @interface {Function} 获取选中表格行的数据集合
+             * @returns {Array} 选中数据集合
+             */
             vm.getSelected = function() {
                 var disabledData = vmodel._disabledData,
                     selectedData = []
@@ -227,10 +243,18 @@ define(["avalon",
                 })
                 return selectedData.concat(vmodel._enabledData)
             }
+            /**
+             * @interface {Function} 全选表格，或者全不选
+             * @param b {Boolean} true表示全选，false表示全不选，为空时以true对待
+             */
             vm.selectAll = function(b) {
                 b = b !== void 0 ? b : true
                 vmodel._selectAll(null, b)
             }
+            /**
+             * @interface {Function} 判断表过是否全选
+             * @returns {Boolean} true表示全选，false表示全不选
+             */
             vm.isSelectAll = function() {
                 return vmodel._allSelected
             }
@@ -243,7 +267,7 @@ define(["avalon",
                     trend = 0,
                     onColumnSort = vmodel.onColumnSort
                 if (!vmodel.data.length) return
-                if ($target.hasClass("ui-helper-sort-top")) {
+                if ($target.hasClass("oni-helper-sort-top")) {
                     sortTrend = "asc"
                 } else {
                     sortTrend = "desc"
@@ -279,6 +303,11 @@ define(["avalon",
                     }
                 }
             }
+            /**
+             * @interface {Function} 设置列的显示或者隐藏
+             * @param columns {String|Array} 可以是字符串，也可以是数组，列出要设置的列的key值
+             * @param b {Boolean} true为显示列，false为隐藏列，设置了列的isLock属性为ture时始终显示列
+             */
             vm.setColumns = function(columns, b) {
                 var columnsOption = vmodel.columns
                 columns = [].concat(columns)
@@ -292,14 +321,24 @@ define(["avalon",
                     }
                 }
             }
+            /**
+             * @interface {Function} 调用此方法清空表格数据
+             * @param text {String} 无数据情况下的说明文字，默认为“暂时没有数据”
+             */
             vm.showNoResult = function(text) { // 只要数据为空组件会自动showNoResult,考虑到使用习惯保留了showNoResult，不过其实完全可以不用
                 vmodel.noResult = text || vmodel.noResult
                 vmodel.data = []
                 vmodel.render()
             }
+            /**
+             * @interface {Function} 显示缓冲提示
+             */
             vm.showLoading = function() {
                 vmodel.loadingVModel.toggle = true
             }
+            /**
+             * @interface {Function} 隐藏缓冲提示
+             */
             vm.hideLoading = function() {
                 vmodel.loadingVModel.toggle = false
             }
@@ -323,7 +362,7 @@ define(["avalon",
                             if (!data.disable) {
                                 data.selected = val
                                 input.checked = val
-                                $tr[val ? "addClass": "removeClass"]("ui-smartgrid-selected")
+                                $tr[val ? "addClass": "removeClass"]("oni-smartgrid-selected")
                             }
                         } else {
                             continue
@@ -418,7 +457,10 @@ define(["avalon",
                 html = fn({data: datas, columns: _columns, len: 2, noResult: vmodel.noResult, vmId: vmId, checkRow: checkRow})
                 return html
             }
-
+            /**
+         * @interface {Function} 用新的数据重新渲染表格视图
+         * @param data {Array} 重新渲染表格的数据集合
+         */
             vm.render = function(data, init) {
                 var container = vmodel._container,
                     containerWrapper = vmodel.container,
@@ -516,7 +558,7 @@ define(["avalon",
                 var elem = document.getElementById("pager-" + vmodel.$id)
                 if (elem && !flagPager) {
                     elem.setAttribute("ms-widget", "pager,pager-" + vmodel.$id)
-                    avalon(elem).addClass("ui-smartgrid-pager-wrapper")
+                    avalon(elem).addClass("oni-smartgrid-pager-wrapper")
                     avalon.scan(elem, vmodel)
                     flagPager = true
                 }
@@ -532,34 +574,96 @@ define(["avalon",
         return vmodel
     }
     widget.defaults = {
-        container: "", // element | id
-        data: [],
+        container: "", //@config 设置组件的容器元素，可以是字符串表示对应元素的id，也可以是元素对象引用
+        data: [], //@interface 表格数据
+        /**
+         * @interface 表格列信息对象的集合，格式为
+            <pre>
+                [{
+                    key: "name", //列标志 
+                    name: "姓名", //列名
+                    sortable: true, //是否可对列排序
+                    isLock: true, //是否锁死列，设为true会始终显示此列，无论配置如何
+                    align": "left", //设置列的对齐方式，"left"|"center"|"right"默认为"center"
+                    defaultValue: "shirly", //列的默认值，当数据中没有为此列设置值时显示此默认值
+                    customClass: "ddd", //设置此列单元格的自定义类
+                    toggle: false, //是否显示此列，true显示false不显示
+                    width: 400, //设置列宽，必须是Number
+                    localSort: function(a, b, f) { //自定义列的本地排序规则
+                        return a[f].localeCompare(b[f]);
+                    },
+                    format: "upperCaseName" //包装列数据的方法，此方法名对应到htmlHelper对象中的方法
+                }, ...]
+            </pre>
+         */
         columns: [],
-        allChecked: true,
-        htmlHelper: {},
-        noResult: "暂时没有数据",
+        allChecked: true, //@config 当设置selectable之后，是否显示表头的全选框，默认显示，false不显示
+        
+        htmlHelper: {}, //@config 包装数据的方法集合,可<a href="avalon.smartgrid.ex2.html">参见实例2</a>的使用
+        noResult: "暂时没有数据", //@config 数据为空时表格的提示信息
+        /**
+         * @config {Function} 远程排序操作的方法
+         * @param field {String} 带排序的列名
+         * @param sortTrend {String} 排序规则，"asc"为升序"desc"为降序
+         * @param vmodel {Object} smartgrid组件对应的Vmodel
+         */
         remoteSort: avalon.noop,
+        /**
+         * @config 表头在表格内容超过可视区高度时是否吸顶，true吸顶，false不吸顶，默认不吸顶
+         * <p>ps：在IE6下的吸顶是通过absolute定位的，所以会有跳动的感觉，所以谨慎使用吸顶效果</p>
+         */
         isAffix: false,
-        affixHeight: 0,
+        affixHeight: 0, //@config 配置吸顶元素距离窗口顶部的高度
         containerMinWidth: 600,
+        /**
+         * @config 设置loading缓冲的配置项，具体使用方法参见loading document
+         */
         loading: {
             toggle: false,
             modal: true,
             modalBackground: "#000"
         },
-        pager: {
+        pager: { //@config 设置pager的配置项，smartgrid组件默认会添加pager，也可以改变表格显示数目，默认可选10、20、50、100条数据，如果不希望显示此选项，可以设置canChangePageSize为false
             canChangePageSize : true,
             options : [10, 20, 50, 100] //默认[10,20,50,100]
         },
+        /**
+         * @config 是否进行远程排序，默认true，进行远程排序必须配置远程排序的方法：remoteSort
+         */
         sortable: {
             remoteSort: true
         },
+        /**
+         * @config {Function} 为表格添加新行
+         * @param tmpl {String} 表格的body模板
+         * @param columns {Array} 列信息数组
+         * @param vmodel {Object} smartgrid组件对应的Vmodel
+         * @returns {String} 用户定制后的模板
+         */
         addRow: function(tmpl, columns, vmodel) {
             return tmpl
         },
         getTemplate: function(str, options) {
             return str
-        }
+        },
+        /**
+         * @config {Function} 排序回调
+         * @param sortType {String} 排序规则，"asc"为升序"desc"为降序
+         * @param field {String} 排序的列名
+         */
+        onColumnSort: avalon.noop,
+        /**
+         * @config {Function} 用户选中一行或者取消一行选中状态的回调
+         * @param rowData {Object} 被操作行的数据对象
+         * @param isSelected {Boolean} 行的选中状态，true选中状态，false非选中状态
+         */
+        onRowSelect: avalon.noop,
+        /**
+         * @config {Function} 用户全选或全不选的回调
+         * @param datas {Array} 表格数据
+         * @param isSelectedAll {Boolean} 全选状态，true选中状态，false非选中状态
+         */
+        onSelectAll: avalon.noop
     }
     function initContainer(options, element) {
         var container = options.container
@@ -595,11 +699,11 @@ define(["avalon",
                     var rowData = datas[dataIndex],
                         isSelected = target.checked
                     if (isSelected) {
-                        options.selectable.type === "Checkbox" ? $tr.addClass("ui-smartgrid-selected") : 0
+                        options.selectable.type === "Checkbox" ? $tr.addClass("oni-smartgrid-selected") : 0
                         rowData.selected = true
                         avalon.Array.ensure(enabledData, rowData)
                     } else {
-                        $tr.removeClass("ui-smartgrid-selected")
+                        $tr.removeClass("oni-smartgrid-selected")
                         rowData.selected = false
                         avalon.Array.remove(enabledData, rowData)
                     }
@@ -790,3 +894,28 @@ define(["avalon",
     }
     return avalon
 })
+/**
+ @links
+ [除设置columns和data外都是默认配置的smartgrid](avalon.smartgrid.ex1.html)
+ [通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数](avalon.smartgrid.ex2.html)
+ [演示表格吸顶效果，并且取消pager的显示](avalon.smartgrid.ex3.html)
+ [表格排序操作](avalon.smartgrid.ex4.html)
+ [自定义smartgrid各种事件回调](avalon.smartgrid.ex5.html)
+ [供用户调用API](avalon.smartgrid.ex6.html)
+ [配置addRow为表格添加新行](avalon.smartgrid.ex7.html)
+ */
+
+/**
+ * @other
+ *  <p>下面附上实现相同展示效果的情况下，smartgrid与simplegrid的渲染情况对比</p>
+    <div>
+        <h2>smartgrid渲染10条表格数据</h2>
+        <img src="smartgrid10.png" style="width:100%"/>
+        <h2>simplegrid渲染10条表格数据</h2>
+        <img src="simplegrid10.png" style="width:100%"/>
+        <h2>smartgrid渲染200条表格数据</h2>
+        <img src="smartgrid200.png" style="width:100%"/>
+        <h2>simplegrid渲染200条表格数据</h2>
+        <img src="simplegrid200.png"style="width:100%"/>
+    </div>
+ */

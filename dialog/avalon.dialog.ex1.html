@@ -32,22 +32,28 @@
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body&gt;
-                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                    &lt;div class="demo-show" ms-important="demo"&gt;
                         &lt;fieldset&gt;  
                             &lt;legend&gt;基本的dialog组件&lt;/legend&gt;
                                 &lt;button ms-click="show('aa')"&gt;打开对话框&lt;/button&gt;
                                 &lt;div ms-widget="dialog,aa"&gt;
                                     呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
                                     &lt;p&gt;{{message}}&lt;/p&gt;
+                                    &lt;ul ms-widget="checkboxlist" data-checkboxlist-duplex="check1"&gt;
+                                        &lt;li&gt;&lt;input type="checkbox" value="1"&gt;选项一&lt;/li&gt;
+                                        &lt;li&gt;&lt;input type="checkbox" value="2"&gt;选项二&lt;/li&gt;
+                                        &lt;li&gt;&lt;input type="checkbox" value="3"&gt;选项三&lt;/li&gt;
+                                    &lt;/ul&gt;
                                 &lt;/div&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("dialog/avalon.dialog", function(avalon) {
+                            require(["dialog/avalon.dialog", "checkboxlist/avalon.checkboxlist"], function() {
                                 avalon.define("demo", function(vm) {
                                     vm.message = "笑傻了吧！！";
                                     vm.show = function( id ){
                                         avalon.vmodels[id].toggle = true;
                                     }
+                                    vm.check1 = ["1"];
                                 })
                                 avalon.scan();
                             })
@@ -57,7 +63,7 @@
                 &lt;/html&gt;
             </pre>
         </div>
-        <div ms-controller="test">
+        <div>
             <div class="demo-show" ms-important="demo">
                 <fieldset>  
                     <legend>基本的dialog组件</legend>
@@ -73,25 +79,13 @@
                         </div>
                 </fieldset>
                 <script> 
-                    avalon.ui.css = {
-                        dialog: "dialog"
-                    };
                     require(["dialog/avalon.dialog", "checkboxlist/avalon.checkboxlist"], function() {
-                        avalon.define("test", function(vm) {
-                            vm.a = "test";
-                        })
                         avalon.define("demo", function(vm) {
                             vm.message = "笑傻了吧！！";
                             vm.show = function( id ){
                                 avalon.vmodels[id].toggle = true;
                             }
-                            vm.dialog = {
-                                getTemplate: function(template) {
-                                    var reg = /<div\s*class="ui-dialog-btns">[\s\S]*<\/div>/
-                                    return template.replace(reg, "")
-                                }
-                            }
-                            vm.name = "xueer";
+                            vm.name = "shirly"
                             vm.check1 = ["1"];
                         })
                         avalon.scan();

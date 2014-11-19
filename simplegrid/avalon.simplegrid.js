@@ -53,7 +53,7 @@ define(["avalon",
         
         if (Array.isArray(pager.options)) {
             pager.getTemplate = typeof pager.getTemplate === "function" ? pager.getTemplate : function(tmpl) {
-                return tmpl + '<div class="ui-simplegrid-pager-options">每页显示<select ms-widget="dropdown" data-dropdown-list-width="50" data-dropdown-width="50" ms-duplex="perPages"><option ms-repeat="options" ms-value="el.value">{{el.text}}</option></select>条,共{{totalItems}}条结果</div>'
+                return tmpl + '<div class="oni-simplegrid-pager-options">每页显示<select ms-widget="dropdown" data-dropdown-list-width="50" data-dropdown-width="50" ms-duplex="perPages"><option ms-repeat="options" ms-value="el.value">{{el.text}}</option></select>条,共{{totalItems}}条结果</div>'
             }
         }
         makeBool(pager, "showJumper", true)
@@ -398,7 +398,7 @@ define(["avalon",
                 if (elem && !flagPager) {
 
                     elem.setAttribute("ms-widget", "pager,pager-" + vmodel.$id)
-                    avalon(elem).addClass("ui-simplegrid-pager-wrapper")
+                    avalon(elem).addClass("oni-simplegrid-pager-wrapper")
                     avalon.scan(elem, vmodel)
                     flagPager = true
                 }
@@ -577,10 +577,10 @@ define(["avalon",
     }
 
     var fixUserSelect = function() {
-        avalon(body).addClass("ui-helper-noselect")
+        avalon(body).addClass("oni-helper-noselect")
     }
     var restoreUserSelect = function() {
-        avalon(body).removeClass("ui-helper-noselect")
+        avalon(body).removeClass("oni-helper-noselect")
     }
     if (window.VBArray && !("msUserSelect" in document.documentElement.style)) {
         var _ieSelectBack;//fix IE6789

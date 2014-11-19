@@ -1,47 +1,10 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname: "ui-daterangepicker";
+$uiname: "oni-daterangepicker";
 .oni-daterangepicker {
     width: 260px;
     font-size: 12px;
     line-height: 18px;
-    .oni-btn {
-        height: 26px;
-        overflow: visible;
-        _overflow-y: hidden;
-        padding: 0 10px;
-        @include border-radius(2px);
-        @if($oinui-theme == smoothness) {
-            font-size: 12px;
-            color: #333333;
-            background-color: #f8f8f8;
-            border: 1px solid #cccccc;
-        }
-        cursor: pointer;
-    }
-    .oni-btn:hover {
-        box-shadow: 1px 1px 0 0 rgba(0,0,0,0.1);
-        @if($oinui-theme == smoothness) {
-            background-color: #f8f8f8;
-            border-color: #bbbbbb;
-            color: #333333;
-        }
-    }
-    .oni-btn-small {
-        height: 22px;
-        padding: 0 5px;
-        font-size: 12px;
-    }
-    .oni-btn-primary {
-        background-color: $ui-state-active-background-color;
-        border-color: $ui-state-active-border-color;
-        color: $ui-state-active-color;
-    }
-    .oni-btn-primary.oni-state-hover {
-        background-color: lighten($ui-state-active-background-color, 10%);
-        border-color: lighten($ui-state-active-border-color, 10%);
-        color: $ui-widget-content-color;
-    }
     .oni-daterangepicker-content {
         position: relative;
         z-index: 1000;

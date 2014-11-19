@@ -1,0 +1,17 @@
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+$uiname : ".oni-dragsort";
+@if($oinui-theme == smoothness) {
+	$dragsort: (
+		bg: #fff,
+		borderColor:#aaaaaa
+	) !global
+}
+
+#{$uiname} {
+	// current style
+	// means #{$uiname}-bar
+	&-class {
+		border: 1px solid map-get($dragsort, borderColor);
+	}
+}

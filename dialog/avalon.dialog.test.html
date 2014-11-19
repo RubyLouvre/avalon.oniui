@@ -58,17 +58,17 @@
                             var model = avalon.define("demo", function(vm) {
                                 vm.message = "笑傻了吧！！";
                                 vm.show = function( id ){
-                                    var dialogContent = getElementsByClassName(dialogDiv, "ui-dialog-content"),
-                                        dialogHeader = getElementsByClassName(dialogDiv, "ui-dialog-header"),
-                                        dialogFooter = getElementsByClassName(dialogDiv, "ui-dialog-footer"),
+                                    var dialogContent = getElementsByClassName(dialogDiv, "oni-dialog-content"),
+                                        dialogHeader = getElementsByClassName(dialogDiv, "oni-dialog-header"),
+                                        dialogFooter = getElementsByClassName(dialogDiv, "oni-dialog-footer"),
                                         p = dialogDiv.getElementsByTagName("p")[0],
                                         pText = p.innerText || p.textContent,
-                                        sureBtn = getElementsByClassName(dialogDiv, "ui-btn-primary")[0];
+                                        sureBtn = getElementsByClassName(dialogDiv, "oni-btn-primary")[0];
 
                                     pText = pText.replace(/^\s*|\s*$/g,"");
                                     avalon.vmodels[id].toggle = true;
                                     setTimeout(function() {
-                                        expect(dialogDiv.className).to.be("ui-dialog");
+                                        expect(dialogDiv.className).to.be("oni-dialog");
                                         expect(dialogHeader.length).to.be(1);
                                         expect(dialogContent.length).to.be(1);
                                         expect(dialogFooter.length).to.be(1);
@@ -106,7 +106,7 @@
                                 vm.show = function( id ){
                                     avalon.vmodels[id].toggle = true;
                                     setTimeout(function() {
-                                        var sureBtn = getElementsByClassName(dialogDiv, "ui-btn-primary")[0];
+                                        var sureBtn = getElementsByClassName(dialogDiv, "oni-btn-primary")[0];
                                         sureBtn.click();
                                     }, 800)
                                 }
@@ -137,7 +137,7 @@
                             avalon.scan(dialogDiv, model);
                             avalon.scan(button, model);
                             setTimeout(function() {
-                                close = getElementsByClassName(dialogDiv,"ui-dialog-close");
+                                close = getElementsByClassName(dialogDiv,"oni-dialog-close");
                                 expect(close.length).to.be(1);
                                 button.click();
                             }, 400)
@@ -169,12 +169,12 @@
                             avalon.scan(dialogDiv, model);
                             avalon.scan(button, model);
                             setTimeout(function() {
-                                var close = getElementsByClassName(dialogDiv,"ui-dialog-close");
-                                var buttons = getElementsByClassName(dialogDiv,"ui-dialog-footer")[0].getElementsByTagName("button");
+                                var close = getElementsByClassName(dialogDiv,"oni-dialog-close");
+                                var buttons = getElementsByClassName(dialogDiv,"oni-dialog-footer")[0].getElementsByTagName("button");
 
                                 expect(close.length).to.be(0);
                                 expect(buttons.length).to.be(1);
-                                expect(buttons[0].className).to.be("ui-btn ui-btn-primary");
+                                expect(buttons[0].className).to.be("oni-btn oni-btn-primary");
                                 done();
                             }, 400)
                             
@@ -193,12 +193,12 @@
                             avalon.scan(dialogDiv, model);
                             avalon.scan(button, model);
                             setTimeout(function() {
-                                var close = getElementsByClassName(dialogDiv,"ui-dialog-close");
-                                var buttons = getElementsByClassName(dialogDiv,"ui-dialog-footer")[0].getElementsByTagName("button");
+                                var close = getElementsByClassName(dialogDiv,"oni-dialog-close");
+                                var buttons = getElementsByClassName(dialogDiv,"oni-dialog-footer")[0].getElementsByTagName("button");
 
                                 expect(close.length).to.be(0);
                                 expect(buttons.length).to.be(1);
-                                expect(buttons[0].className).to.be("ui-btn ui-btn-primary");
+                                expect(buttons[0].className).to.be("oni-btn oni-btn-primary");
                                 done();
                             }, 400)
                         })
@@ -227,7 +227,7 @@
                     describe("动态创建dialog", function() {
                         var dialog, dialogDiv,dialogHeader ,dialogContent;
                         it("动态创建dialog", function(done) {
-                            var layout = getElementsByClassName(document, "ui-dialog-layout");
+                            var layout = getElementsByClassName(document, "oni-dialog-layout");
                             expect(layout.length).to.be(0);
                             var model = avalon.define("demo", function(vm) {
                                 vm.tpl = '我是tpl';
@@ -273,13 +273,13 @@
                             }) 
                             model.customShow("cus");
                             setTimeout(function() {
-                                dialogDiv = getElementsByClassName(document, "ui-dialog")[0],
-                                dialogHeader = getElementsByClassName(dialogDiv, "ui-dialog-header")[0],
-                                dialogContent = getElementsByClassName(dialogDiv, "ui-dialog-content")[0];
+                                dialogDiv = getElementsByClassName(document, "oni-dialog")[0],
+                                dialogHeader = getElementsByClassName(dialogDiv, "oni-dialog-header")[0],
+                                dialogContent = getElementsByClassName(dialogDiv, "oni-dialog-content")[0];
 
                                 var title = dialogHeader.innerText || dialogHeader.textContent,
                                     content = dialogContent.innerText || dialogContent.textContent,
-                                    layout = getElementsByClassName(document, "ui-dialog-layout");
+                                    layout = getElementsByClassName(document, "oni-dialog-layout");
 
                                 title = title.replace(/^\s*|\s*$/g,"");
                                 content = content.replace(/^\s*|\s*$/g,"");
@@ -315,7 +315,7 @@
                             var model = avalon.vmodels["demo"];
                             dialog.setModel(model.m);
                             setTimeout(function() {
-                                var dialogContent = getElementsByClassName(dialogDiv, "ui-dialog-content")[0];
+                                var dialogContent = getElementsByClassName(dialogDiv, "oni-dialog-content")[0];
                                 var content = dialogContent.innerText || dialogContent.textContent;
                                 content = content.replace(/^\s*|\s*$/g,"");
                                 expect(content).to.be("改变modal的content我变了");
@@ -326,7 +326,7 @@
                             var dialogDiv = dialog.widgetElement;
                             dialogDiv.parentNode.removeChild(dialogDiv);
                             setTimeout(function() {
-                                var layout = getElementsByClassName(document, "ui-dialog-layout");
+                                var layout = getElementsByClassName(document, "oni-dialog-layout");
                                 expect(layout.length).to.be(0);
                                 done();
                             }, 400)
@@ -355,7 +355,7 @@
                                 vm.show = function( id ){
                                     avalon.vmodels[id].toggle = true;
                                     setTimeout(function() {
-                                        var layout = getElementsByClassName(document, "ui-dialog-layout");
+                                        var layout = getElementsByClassName(document, "oni-dialog-layout");
                                         expect(layout[0].style.display).not.to.be("none");
                                         done();
                                     }, 800)

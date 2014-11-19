@@ -662,8 +662,8 @@ define(["avalon",
         onShow: null,    //@config 下拉框展示的回调函数
         onHide: null,    //@config 下拉框隐藏的回调函数
         onChange: null,  //@config value改变时的回调函数
-        $hasDuplex: false,  //@config 判断是否存在duplex绑定
-        multipleChange: false, //@config 判断是否在multiple模式下，选项发生变化
+        $hasDuplex: false, 
+        multipleChange: false, 
         /**
          * @config 模板函数,方便用户自定义模板
          * @param str {String} 默认模板

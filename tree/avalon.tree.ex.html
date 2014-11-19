@@ -87,7 +87,7 @@
         </script>
     </head>
     <body ms-controller="test">
-        <h1>tree</h1>
+        <h1>tree - Base模块功能</h1>
         <div ms-widget="tree"></div>
         <div ms-widget="tree,tree2,$treeOpt"></div>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
@@ -150,7 +150,27 @@
             require([&quot;tree/avalon.tree&quot;], function() {
                 avalon.define(&quot;test&quot;, function(vm) {
                     vm.tree = {
-                        children: child
+                        children: child,
+                        view: {
+                            showLine: function(leaf) {
+                                return true
+                                return leaf.level &gt; 1 || 1
+                            }
+                        },
+                        callback: {
+                            onExpand: function(data) {
+                            },
+                            onClick: function(data) {
+                                console.log(data)
+                            },
+                            onContextmenu: function(data) {
+                                console.log(data)
+                                // data.e.preventDefault()
+                            }
+                        }
+                    }
+                    vm.$treeOpt = {
+                        children: [child[0]]
                     }
                     vm.$skipArray = [&quot;tree&quot;]
                 })
@@ -159,8 +179,9 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
-        &lt;h1&gt;tree&lt;/h1&gt;
+        &lt;h1&gt;tree - Base模块功能&lt;/h1&gt;
         &lt;div ms-widget=&quot;tree&quot;&gt;&lt;/div&gt;
+        &lt;div ms-widget=&quot;tree,tree2,$treeOpt&quot;&gt;&lt;/div&gt;
         
     &lt;/body&gt;
 &lt;/html&gt;

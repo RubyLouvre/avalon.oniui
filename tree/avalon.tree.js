@@ -322,19 +322,23 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             vm._select = []
 
             var inited
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if(inited) return
                 inited = true
                 dataFormator(vm.children, undefine, "构建父子节点衔接关系", function(leaf) {
                     cache[leaf.$id] = leaf
                 }, vm)
-                avalon.scan(element, [vmodel].concat(vmodels))
                 if(!vm.view.txtSelectedEnable && navigator.userAgent.match(/msie\s+[5-8]/gi)) {
                     disabelSelectArr.push(vm.widgetElement)
                 }
-                if(typeof options.onInit === "function" ) {
-                    //vmodels是不包括vmodel的 
-                    options.onInit.call(element, vmodel, options, vmodels)
+                if (continueScan) {
+                    continueScan()
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }
             }
             vm.$remove = function() {
@@ -669,7 +673,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 } , parentLeaf, function() {
                     // 数据构建
                     if(vm.data.simpleData.enable && (nodes instanceof Array)) {
-                        nodes = simpleDataToTreeData(nodes, vm)
+                        nodes = vm.transformTozTreeNodes(nodes)
                     } else {
                         nodes = [nodes]
                     }
@@ -680,6 +684,50 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                     arr.pushArray(nodes)
                     return arr.slice(len) || []
                 })
+            }
+            /**
+             * @interface 将简单 Array 格式数据转换为 tree 使用的标准 JSON 嵌套数据格式
+             * @param 需要被转换的简单 Array 格式数据 或 某个单独的数据对象
+             */
+            vm.transformTozTreeNodes = function(data) {
+                if(!(data instanceof Array)) data = [data]
+                return simpleDataToTreeData(nodes, vm)
+            }
+
+            /**
+             * @interface 将 tree 使用的标准 JSON 嵌套格式的数据转换为简单 Array 格式
+             * @param  需要被转换的 tree 节点数据对象集合 或 某个单独节点的数据对象
+             * @param {Function} 格式化过滤器函数
+             */
+            vm.transformToArray = function(data, filter, res) {
+                var res = res || [],
+                    ignoreKey = arguments[3],
+                    dict = vm.data.key
+                if(!ignoreKey) {
+                    // 忽略的辅助性key
+                    ignoreKey = {}
+                    avalon.each(avalon.ui.tree.leafIgnoreField, function(i, key) {
+                        ignoreKey[key] = true
+                    })
+                }
+                if(data instanceof Array) {
+                    avalon.each(data, function(i, node) {
+                        vm.transformToArray(node, filter, res, ignoreKey)
+                    })
+                } else if(data){
+                    var item = {}, model = data.$model
+                    for(var i in model) {
+                        // ignore ^$
+                        if(i.indexOf("$") === 0 || ignoreKey[i] || i === "children" || model[i] == "") continue
+                        var key = dict[i] ? dict[i] : i
+                        item[key] = model[i]
+                    }
+                    res.push(filter ? filter(item) : item)
+                    if(data.isParent) {
+                        vm.transformToArray(data.children, filter, res, ignoreKey)
+                    }
+                }
+                return res
             }
 
             /**
@@ -1035,5 +1083,5 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         if(tplHooks) avalon.mix(tplDict, tplHooks)
         if(callback) callbacks.push(callback)
     }
-    avalon.ui.tree.leafIgnoreField = [] // tree转化成数据的时候，忽略的字段，所有以$开头的，以及这个数组内的
+    avalon.ui.tree.leafIgnoreField = ["level"] // tree转化成数据的时候，忽略的字段，所有以$开头的，以及这个数组内的
 })

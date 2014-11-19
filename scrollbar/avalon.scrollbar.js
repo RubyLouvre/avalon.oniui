@@ -48,7 +48,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
             var inited,
                 bars = [],
                 scroller
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if(inited) return
                 inited = true
                 vmodel.widgetElement.style.position = "relative"
@@ -61,7 +61,15 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
 
                 var frag = avalon.parseHTML(options.template)
                 vmodel.widgetElement.appendChild(frag)
-                avalon.scan(element, [vmodel].concat(vmodels))
+                if (continueScan) {
+                    continueScan()
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
+                }
                 var children = vmodel.widgetElement.childNodes
                 avalon.each(children, function(i, item) {
                     var ele = avalon(item)
@@ -193,12 +201,6 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                 })
 
                 vmodel.update("init")
-                
-                // callback after inited
-                if(typeof options.onInit === "function" ) {
-                    //vmodels是不包括vmodel的 
-                    options.onInit.call(element, vmodel, options, vmodels)
-                }
             }
 
             // data-draggable-before-start="beforeStartFn" 

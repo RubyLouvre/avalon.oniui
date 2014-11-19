@@ -111,7 +111,7 @@
         </script>
     </head>
     <body ms-controller="test">
-        <h1>tree</h1>
+        <h1>tree - Edit模块</h1>
         <div ms-widget="tree"></div>
         <div ms-widget="tree,tree2,$treeOpt"></div>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
@@ -131,7 +131,7 @@
                                         { name:&quot;叶子节点111&quot;},
                                         { name:&quot;叶子节点112&quot;},
                                         { name:&quot;叶子节点113&quot;},
-                                        { name:&quot;叶子节点114&quot;}
+                                        { name:&quot;叶子节点114&quot;, url: &quot;http://www.baidu.com&quot;}
                                     ]},
                                 { name:&quot;父节点12 - 折叠&quot;, open: false,
                                     children: [
@@ -171,10 +171,54 @@
             // for(var i = 0; i &lt; 5000; i++) {
             //     child.push(child[1])
             // }
-            require([&quot;tree/avalon.tree&quot;], function() {
+            require([&quot;tree/avalon.tree.edit&quot;], function() {
                 avalon.define(&quot;test&quot;, function(vm) {
                     vm.tree = {
-                        children: child
+                        children: child,
+                        edit: {
+                            showRemoveBtn: function(leaf) {
+                                return leaf.level &gt; 0
+                            }
+                        },
+                        data: {
+                            keep: {
+                                leaf: false,
+                                parent: true
+                            }
+                        },
+                        view: {
+                            editNameSelectAll: true,
+                            showLine: function(leaf) {
+                                return true
+                                return leaf.level &gt; 1 || 1
+                            }
+                        },
+                        callback: {
+                            onExpand: function(leaf) {
+                                console.log(leaf)
+                            },
+                            beforeRename: function(arg) {
+                                avalon.log(&quot;before编辑&quot;)
+                            },
+                            beforeNodeCreated: function(arg) {
+                                avalon.log(&quot;before NodeCreated&quot;)
+                            },
+                            onNodeCreated: function(arg) {
+                                avalon.log(&quot;onNodeCreated&quot;)
+                            },
+                            onRename: function(arg) {
+                                avalon.log(&quot;编辑&quot;)
+                            },
+                            beforeRemove: function(obj) {
+                                return confirm(&quot;确认删除?&quot;)
+                            },
+                            beforeAdd: function(obj) {
+                                return confirm(&quot;确认添加?&quot;)
+                            }
+                        }
+                    }
+                    vm.$treeOpt = {
+                        children: [child[0]]
                     }
                     vm.$skipArray = [&quot;tree&quot;]
                 })
@@ -183,8 +227,9 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
-        &lt;h1&gt;tree&lt;/h1&gt;
+        &lt;h1&gt;tree - Edit模块&lt;/h1&gt;
         &lt;div ms-widget=&quot;tree&quot;&gt;&lt;/div&gt;
+        &lt;div ms-widget=&quot;tree,tree2,$treeOpt&quot;&gt;&lt;/div&gt;
         
     &lt;/body&gt;
 &lt;/html&gt;

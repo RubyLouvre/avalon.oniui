@@ -1122,9 +1122,10 @@
             }
         },
         _remove: function(cls) {
-            this._set((" " + this + " ").replace(" " + cls + " ", " ").trim())
+            this._set((" " + this + " ").replace(" " + cls + " ", " "))
         },
         __set: function(cls) {
+            cls = cls.trim()
             var node = this.node
             if (typeof node.className === "string") {
                 node.className = cls
@@ -1705,13 +1706,13 @@
                     fixVML(el)
                 }
             }
-            if (tag === "tr") {
-                for (els = wrapper.children, i = 0; el = els[i++]; ) {
-                    // IE6-8,如果动态生成tr元素，必须会在后面添加早已废弃caption的标签，其nodeName,innerHTML都为""
-                    if (el.nodeName === "") {
-                        el.parentNode.removeChild(el)
-                        i--
-                    }
+        }
+        if (DOC.createStyleSheet && tag === "tr") {
+            for (els = wrapper.children, i = 0; el = els[i++]; ) {
+                // IE6-9,如果动态生成tr元素，必须会在后面添加早已废弃caption的标签，其nodeName,innerHTML都为""
+                if (el.nodeName === "") {
+                    el.parentNode.removeChild(el)
+                    i--
                 }
             }
         }
@@ -2404,6 +2405,7 @@
         for (var i = vars.length, prop; prop = vars[--i]; ) {
             if (scope.hasOwnProperty(prop)) {
                 ret.push(prop + prefix + prop)
+                data.vars.push(prop)
                 if (data.type === "duplex") {
                     vars.get = name + "." + prop
                 }
@@ -2411,7 +2413,6 @@
             }
         }
         return ret
-
     }
 
     function uniqSet(array) {
@@ -2449,7 +2450,7 @@
         var dataType = data.type
         var filters = data.filters ? data.filters.join("") : ""
         var exprId = scopes.map(function(el) {
-            return el.$id.replace(rproxy, "$1")
+            return String(el.$id).replace(rproxy, "$1")
         }) + code + dataType + filters
         var vars = getVariables(code).concat(),
                 assigns = [],
@@ -2458,6 +2459,7 @@
                 prefix = ""
         //args 是一个对象数组， names 是将要生成的求值函数的参数
         scopes = uniqSet(scopes)
+        data.vars = []
         for (var i = 0, sn = scopes.length; i < sn; i++) {
             if (vars.length) {
                 var name = "vm" + expose + "_" + i
@@ -2468,6 +2470,22 @@
         }
         if (!assigns.length && dataType === "duplex") {
             return
+        }
+        if (dataType !== "duplex") {
+            //https://github.com/RubyLouvre/avalon/issues/583
+            data.vars.forEach(function(v) {
+                var reg = new RegExp("\\b" + v + "(?:\\.\\w+|\\[\\w+\\])+", "ig")
+                code = code.replace(reg, function(_) {
+                    var c = _.charAt(v.length)
+                    if (c === "." || c === "[") {
+                        var name = "var" + String(Math.random()).replace(/^0\./, "")
+                        assigns.push(name + " = " + _)
+                        return name
+                    } else {
+                        return _
+                    }
+                })
+            })
         }
         //---------------args----------------
         if (filters) {
@@ -2571,9 +2589,6 @@
         parseExpr(code, scopes, data)
         if (data.evaluator && !noregister) {
             data.handler = bindingExecutors[data.handlerName || data.type]
-            data.evaluator.toString = function() {
-                return data.type + " binding to eval(" + code + ")"
-            }
             //方便调试
             //这里非常重要,我们通过判定视图刷新函数的element是否在DOM树决定
             //将它移出订阅者列表
@@ -3109,10 +3124,9 @@
         },
         "duplex": function(data, vmodels) {
             var elem = data.element,
-
-            hasCast
+                    hasCast
             parseExprProxy(data.value, vmodels, data, 0, 1)
-            //  if (typeof duplexBinding[tagName] === "function") {
+
             data.changed = getBindingCallback(elem, "data-duplex-changed", vmodels) || noop
             if (data.evaluator && data.args) {
                 var params = []
@@ -3164,7 +3178,6 @@
                 var tagName = elem.tagName
                 duplexBinding[tagName] && duplexBinding[tagName](elem, data.evaluator.apply(null, data.args), data)
             }
-            //   }
         },
         "repeat": function(data, vmodels) {
             var type = data.type

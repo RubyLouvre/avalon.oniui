@@ -3,7 +3,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 	function g(id) {return document.getElementById(id)}
 	var undefine = void 0
 	// 排除辅助字段
-	avalon.ui.tree.leafIgnoreField.push("chkFocus", "chkTotal")
+	avalon.ui.tree.leafIgnoreField.push("chkFocus", "chkTotal", "checkedOld")
 	avalon.ui.tree.AddExtention(
 		["check", "data", "callback"],
 		{
@@ -26,7 +26,8 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
                 	chkDisabled: "chkDisabled",
                 	halfCheck: "halfCheck",
                 	chkFocus: "chkFocus",
-                	chkTotal: ""
+                	chkTotal: "",
+                	checkedOld: "checked"
 				}
 			},
 			callback: {
@@ -114,9 +115,15 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 				/**
 	             * @interface 获取输入框勾选状态被改变的节点集合
 	             * @param {Object} 可以指定一个起始的节点
+	             * @param 将当前状态更新到原始数据上
 	             */
-				getChangeCheckedNodes: function(leaf) {
-
+				getChangeCheckedNodes: function(leaf, updateChanges) {
+					return vm.visitor(leaf, function(node) {
+						if(!!node.checkedOld != !!node.checked) {
+							if(updateChanges) node.checkedOld = !!node.checked
+							return node
+						}
+					}, undefine, [])
 				},
 				/**
 	             * @interface 禁用 或 解禁 某个节点的 checkbox / radio [check.enable = true 时有效]

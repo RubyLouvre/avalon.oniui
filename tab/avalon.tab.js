@@ -94,7 +94,8 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
            
             var inited
                 , switchTimer
-            vm.$init = function(force) {
+            vm.$init = function(continueScan) {
+                var force = continueScan && !avalon.isFunction(continueScan)
                 if(inited || !force && !vm.callInit) return
                 inited = true
 
@@ -102,24 +103,24 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                 if(!vm.tabpanels.length) vm.tabpanels = tabpanels
                 vm.active = vm.active >= vm.tabs.length && vm.tabs.length - 1 || vm.active < 0 && 0 || parseInt(vm.active) >> 0
 
-                // avalon.nextTick(function() {
-                    avalon(element).addClass("oni-tab oni-widget oni-widget-content" + (vm.event == "click" ? " oni-tab-click" : "") + (vm.dir == "v" ? " oni-tab-vertical" : "") + (vm.dir != "v" && vm.uiSize == "small" ? " oni-tab-small" : ""))
-                    // tab列表
-                    var tabFrag = _getTemplate(vm._getTemplate(0, vm), vm)
-                        , panelFrag = _getTemplate(vm._getTemplate("panel", vm), vm)
-                    element.innerHTML = vmodel.bottom ? panelFrag + tabFrag : tabFrag + panelFrag
-                   
+                avalon(element).addClass("oni-tab oni-widget oni-widget-content" + (vm.event == "click" ? " oni-tab-click" : "") + (vm.dir == "v" ? " oni-tab-vertical" : "") + (vm.dir != "v" && vm.uiSize == "small" ? " oni-tab-small" : ""))
+                // tab列表
+                var tabFrag = _getTemplate(vm._getTemplate(0, vm), vm)
+                    , panelFrag = _getTemplate(vm._getTemplate("panel", vm), vm)
+                element.innerHTML = vmodel.bottom ? panelFrag + tabFrag : tabFrag + panelFrag
+               
+                if (continueScan) {
+                    continueScan()
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
                     avalon.scan(element, [vmodel].concat(vmodels))
-
-                    if(vm.autoSwitch) {
-                        vm._autoSwitch();
-                    }
-                    // callback after inited
-                    if(typeof options.onInit === "function" ) {
-                        //vmodels是不包括vmodel的 
+                    if (typeof options.onInit === "function") {
                         options.onInit.call(element, vmodel, options, vmodels)
                     }
-                // })
+                }
+                if(vm.autoSwitch) {
+                    vm._autoSwitch();
+                }
             }
 
             vm._clearTimeout = function() {

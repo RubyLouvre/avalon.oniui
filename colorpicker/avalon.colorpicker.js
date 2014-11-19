@@ -260,7 +260,7 @@ define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./a
 				//自动隐藏
 				if(vm.autoHide){
 
-					avalon(cp).addClass("ui-colorpicker-auto-hide");
+					avalon(cp).addClass("oni-colorpicker-auto-hide");
 					
 					cp.setAttribute("ms-visible", "toggle");
 					cp.setAttribute("ms-click", "cpClick");

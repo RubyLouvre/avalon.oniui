@@ -66,33 +66,33 @@
       <p>多数为boolean的配置项，类似ztree，都是可以配置成函数的，都默认传递了一个节点作为参数，enable可能是个例外</p>
       <p>view配置说明</p>
       ```javascript
-        view: { @config 视觉效果相关的配置
-            showLine: true, @config 是否显示连接线
-            dblClickExpand: true, @config 是否双击变化展开状态
-            selectedMulti: true, @config true / false 分别表示 支持 / 不支持 同时选中多个节点
-            txtSelectedEnable: false, @config 节点文本是否可选中
+        view: { config 视觉效果相关的配置
+            showLine: true, config 是否显示连接线
+            dblClickExpand: true, config 是否双击变化展开状态
+            selectedMulti: true, config true / false 分别表示 支持 / 不支持 同时选中多个节点
+            txtSelectedEnable: false, config 节点文本是否可选中
             autoCancelSelected: false,
-            singlePath: false, @config 同一层级节点展开状态是否互斥
-            showIcon: true, @config zTree 是否显示节点的图标
-            showTitle: true, @config 分别表示 显示 / 隐藏 提示信息
+            singlePath: false, config 同一层级节点展开状态是否互斥
+            showIcon: true, config zTree 是否显示节点的图标
+            showTitle: true, config 分别表示 显示 / 隐藏 提示信息
             nameShower: function(leaf) {
                 return leaf.name
-            } @config 节点显示内容过滤器，默认是显示leaf.name
+            } config 节点显示内容过滤器，默认是显示leaf.name
         }
         ```
         <p>data配置说明</p>
         ```javascript
-        data: { @config  数据相关的配置
-            simpleData: { @config  简单数据的配置
-                idKey: "id", @config json数据里作为本身索引的字段映射
-                pIdKey: "pId", @config json数据里作为父节点索引的字段映射
-                enable: false @config 是否启用简单数据模式
+        data: { config  数据相关的配置
+            simpleData: { config  简单数据的配置
+                idKey: "id", config json数据里作为本身索引的字段映射
+                pIdKey: "pId", config json数据里作为父节点索引的字段映射
+                enable: false config 是否启用简单数据模式
             },
-            key: { @config json数据的字段映射
-                children: "children", @config  子节点字段映射
-                name: "name", @config 节点名字字段映射
-                title: "", @config 节点title字段映射，为空的时候，会去name字段映射
-                url: "url" @config 节点链接地址字段映射
+            key: { config json数据的字段映射
+                children: "children", config  子节点字段映射
+                name: "name", config 节点名字字段映射
+                title: "", config 节点title字段映射，为空的时候，会去name字段映射
+                url: "url" config 节点链接地址字段映射
             },
             //edit相关
             keep: {
@@ -702,7 +702,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             vm.transformToArray = function(data, filter, res) {
                 var res = res || [],
                     ignoreKey = arguments[3],
-                    dict = vm.data.key
+                    dict = vm.data.simpleData
                 if(!ignoreKey) {
                     // 忽略的辅助性key
                     ignoreKey = {}
@@ -719,7 +719,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                     for(var i in model) {
                         // ignore ^$
                         if(i.indexOf("$") === 0 || ignoreKey[i] || i === "children" || model[i] == "") continue
-                        var key = dict[i] ? dict[i] : i
+                        var key = dict[i + "Key"] ? dict[i + "Key"] : i
                         item[key] = model[i]
                     }
                     res.push(filter ? filter(item) : item)
@@ -867,7 +867,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             /**
              * @interface 将指定的节点置为选中状态，无任何返回值
              * @param {object} 指定的节点，不能为空
-             * @param 是否保留原来选中的节点，否则清空原来选中的节点，当view.selectedMulti为false的是否，改配置无效，一律清空
+             * @param 是否保留原来选中的节点，否则清空原来选中的节点，当view.selectedMulti为false的时候，该参数无效，一律清空
              */
             vm.selectNode = function(leaf, appendOrReplace) {
                 if(vm.view.selectedMulti === false) appendOrReplace = false

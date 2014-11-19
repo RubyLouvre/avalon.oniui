@@ -335,6 +335,8 @@ define(["avalon"], function() {
  * </table>
  * 
  */
+
+//https://github.com/RubyLouvre/avalon/issues/550
 /**
  @links
  [例子1](avalon.mask.ex1.html)

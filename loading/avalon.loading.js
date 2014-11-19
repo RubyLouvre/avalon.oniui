@@ -1,6 +1,9 @@
 /**
- * @description loading组件，实现各种加载动画效果
- *
+ * @cnName 加载效果组件
+ * @enName loading
+ * @introduce
+ *  <p> 实现各种加载动画效果
+</p>
  */
 define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html", "css!./avalon.loading.css", "css!../chameleon/oniui-common.css"], function(avalon, template, ballTemplate) {
     var widgetCount = 0, 
@@ -55,9 +58,9 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     addType("ball", {
         "width": 32,
         "widthInner": 28,
-        "count": 10, //@param type=ball，loading效果组成的小图形个数
-        "interval": 120,//@param type=ball，毫秒数，动画效果帧间隔
-        "circleMargin": 1,//@param type=ticks，小球之间的间距，单位是一倍小球半径
+        "count": 10, //@config type=ball，loading效果组成的小图形个数
+        "interval": 120,//@config type=ball，毫秒数，动画效果帧间隔
+        "circleMargin": 1,//@config type=ticks，小球之间的间距，单位是一倍小球半径
         "svgDur": "1s"
     }, function(vmodel) {
         var type = vmodel.type,
@@ -126,9 +129,9 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     })
     // 注册ticks，小球排列成一行
     addType("ticks", avalon.mix({}, _config["ball"], {
-        count: 3,//@param type=ticks，小球个数
-        height: 20,//@param type=ticks，高度
-        interval: 360 //@param type=ticks，毫秒数，动画效果帧间隔
+        count: 3,//@config type=ticks，小球个数
+        height: 20,//@config type=ticks，高度
+        interval: 360 //@config type=ticks，毫秒数，动画效果帧间隔
     }), function(vmodel) {
         var count = vmodel.count,
             rate = 2 + vmodel.circleMargin,
@@ -149,14 +152,14 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     addType("spin", {
         width: 32,
         widthInner: 26,
-        angel: 90, //@param type=spin，转动的弧形的角度，单位是1度
+        angel: 90, //@config type=spin，转动的弧形的角度，单位是1度
         arc: "",
         circle: "",
         radius: "",
-        opacity: 0.2, //@param type=spin，背景圆弧的透明度
-        startangle: 0, //@param type=spin，圆弧开始的角度，单位1度
+        opacity: 0.2, //@config type=spin，背景圆弧的透明度
+        startangle: 0, //@config type=spin，圆弧开始的角度，单位1度
         endangle: 0,
-        interval: 36, //@param type=spin，毫秒数，动画效果帧间隔
+        interval: 36, //@config type=spin，毫秒数，动画效果帧间隔
         $circleData: "",
         $partsData: "",
         spinPoint: "23 23",
@@ -203,11 +206,11 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     })
     // 注册小长方形圆形排列效果
     addType("spokes", {
-        count: 8, //@param type=spokes，长方形个数
-        width: 32, //@param type=spokes，效果宽度,
-        spokesWidth: 4, //@param type=spokes，小长方形宽度
-        spokesHeight: 8, //@param type=spokes，小长方形高度
-        interval: 125, //@param type=spokes，效果动画间隔毫秒数
+        count: 8, //@config type=spokes，长方形个数
+        width: 32, //@config type=spokes，效果宽度,
+        spokesWidth: 4, //@config type=spokes，小长方形宽度
+        spokesHeight: 8, //@config type=spokes，小长方形高度
+        interval: 125, //@config type=spokes，效果动画间隔毫秒数
         svgPath: "M14 0 H18 V8 H14 z",
         svgDur: "1s"
     },function(vmodel) {
@@ -243,8 +246,8 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     })
     // 注册小球排列成一个圆，半径变化
     addType("spinning-bubbles", avalon.mix({}, _config["ball"], {
-        width: 64,//@param type=spinning-bubbles 宽度，小球的个数继承自type=ball
-        widthInner: 54,//@param type=spinning-bubbles 内宽
+        width: 64,//@config type=spinning-bubbles 宽度，小球的个数继承自type=ball
+        widthInner: 54,//@config type=spinning-bubbles 内宽
         $zooms: []
     }), function(vmodel) {
         var drawer = _config["ball"].drawer(vmodel), count = vmodel.count
@@ -272,11 +275,11 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     })
     // 注册bubbles, 高级浏览器
     addType("bubbles", avalon.mix({}, _config["spinning-bubbles"], {
-        height: 30, //@param type=bubbles 高度，宽度继承type=spinning-bubbles
-        widthInner:50,//@param type=bubbles 内宽
-        count: 3,//@param type=bubbles 球的个数
-        interval: 360,//@param type=bubbles 动画ms数
-        "circleMargin": 0.5//@param type=bubbles bubbles效果下个小球的间距
+        height: 30, //@config type=bubbles 高度，宽度继承type=spinning-bubbles
+        widthInner:50,//@config type=bubbles 内宽
+        count: 3,//@config type=bubbles 球的个数
+        interval: 360,//@config type=bubbles 动画ms数
+        "circleMargin": 0.5//@config type=bubbles bubbles效果下个小球的间距
     }), function(vmodel) {
         _config["spinning-bubbles"].drawer(vmodel)
         return _config["ticks"].drawer(vmodel)
@@ -286,11 +289,11 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         opacities: [],
         data: [],
         radius: 1,
-        interval: _config["ball"].interval, //@param type=spinning-spin 帧间隔，继承ball
-        count: 8, //@param type=spinning-spin 小圆弧个数，一般请保证 360 / 8 % padding = 0
-        width: 46, //@param type=spinning-spin 圆外直径
-        widthInner: 38, //@param type=spinning-spin 圆内直径
-        padding: 5//@param type=spinning-spin 小圆弧间间隔的角度数
+        interval: _config["ball"].interval, //@config type=spinning-spin 帧间隔，继承ball
+        count: 8, //@config type=spinning-spin 小圆弧个数，一般请保证 360 / 8 % padding = 0
+        width: 46, //@config type=spinning-spin 圆外直径
+        widthInner: 38, //@config type=spinning-spin 圆内直径
+        padding: 5//@config type=spinning-spin 小圆弧间间隔的角度数
     }), function(vmodel) {
         var ct = 360 / vmodel.padding * 3, r = vmodel.width / 2, dt = circleValueList(r, r - vmodel.widthInner / 2, ct), count = vmodel.count, interval = vmodel.interval, step = 360 / count
         vmodel.radius = vmodel.width / 2 - vmodel.widthInner / 2
@@ -348,7 +351,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             vm.$skipArray = ["widgetElement", "template", "opacities", "data"]
 
             var inited
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if (inited)
                     return
                 inited = true
@@ -368,12 +371,16 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                     loop++
                 }
                 elementParent.appendChild(avalon.parseHTML(vmodel.template.replace("{{MS_WIDGET_HTML}}", html).replace("{{MS_WIDGET_ID}}", vmodel.$loadingID)))
-                avalon.scan(elementParent, [vmodel].concat(vmodels))
-                if (typeof options.onInit === "function") {
-                    //vmodels是不包括vmodel的 
-                    options.onInit.call(element, vmodel, options, vmodels)
-                    vmodel._effect()
+                if (continueScan) {
+                    continueScan()
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }
+                vmodel._effect()
             }
             vm._effect = function() {
                 if (vmodel.toggle) {
@@ -392,18 +399,18 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                 element.innerHTML = element.textContent = ""
             }
 
-            //@method showLoading() 显示loading效果
+            //@interface showLoading() 显示loading效果
             vm.showLoading = function() {
                 if (vmodel.toggle)
                     return
                 vmodel.toggle = true
                 vmodel._effect()
             }
-            //@method hideLoading() 隐藏loading
+            //@interface hideLoading() 隐藏loading
             vm.hideLoading = function() {
                 vmodel.toggle = false
             }
-            //@method destroyLoading() 销毁loading
+            //@interface destroyLoading() 销毁loading
             vm.destroyLoading = function() {
                 vmodel.toggle = false
                 vmodel.$remove()
@@ -423,25 +430,22 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
 
         return vmodel
     }
-    //add args like this:
-    //argName: defaultValue, \/\/@param description
-    //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
-        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
+        //@config onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
-        color: "#619FE8", //@param 效果的颜色
-        // width: 32, //@param loading动画的宽度，圆形排列的外直径
-        // height: 32, //@param loading动画的高度，如果不设置，默认等于width
-        // widthInner: 28,//@param loading动画是圆形排列的时候，这个参数指的是内直径
-        type: "ball", //@param 类型，默认是ball，球，可取spin,ticks
-        toggle: true, //@param 是否显示
-        modal: true, //@param 是否显示遮罩
-        modalOpacity: 0.1, //@param 遮罩透明度
-        modalBackground: "#fff",//@param 遮罩背景色
-        container: void 0, //@param loading效果显示的容器，默认是绑定widget的元素
+        color: "#619FE8", //@config 效果的颜色
+        // width: 32, //@config loading动画的宽度，圆形排列的外直径
+        // height: 32, //@config loading动画的高度，如果不设置，默认等于width
+        // widthInner: 28,//@config loading动画是圆形排列的时候，这个参数指的是内直径
+        type: "ball", //@config 类型，默认是ball，球，可取spin,ticks
+        toggle: true, //@config 是否显示
+        modal: true, //@config 是否显示遮罩
+        modalOpacity: 0.1, //@config 遮罩透明度
+        modalBackground: "#fff",//@config 遮罩背景色
+        container: void 0, //@config loading效果显示的容器，默认是绑定widget的元素
         getTemplate: function(tmpl, opts, tplName) {
             return tmpl
-        }, //@optMethod getTemplate(tpl, opts, tplName) 定制修改模板接口
+        }, //@config getTemplate(tpl, opts, tplName) 定制修改模板接口
         $author: "skipper@123"
     }
 })

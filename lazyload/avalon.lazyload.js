@@ -1,6 +1,12 @@
 /**
- * @description lazyload组件，
+ *
+ * @cnName 延迟加载组件
+ * @enName lazyload
+ * @introduce
+ * 延迟加载组件用于对页面中的图片/文档片段进行延迟加载，让页面在初次渲染时不加载图片/文档片段，当其处于浏览器窗口可视范围内再进行加载，以尽可能提高网页渲染速度。
+ * @summary
  */
+
 define(["avalon"], function() {
     var requestAnimationFrame = (function() { //requestAnimationFrame 兼容
         return window.requestAnimationFrame ||
@@ -229,16 +235,25 @@ define(["avalon"], function() {
     }
 
     lazyload.defaults = {
-        contentType: "image", //@param 懒加载内容类型："image"-图片 / "DOM"-文档片段
-        preLoadType: "image", //@param 预加载类型："image"-采用加载中图片 / "text"-采用加载中文字
-        preLoadSrc: "./images/loading1.gif", //@param  预加载图片路径（文字内容）：preLoadType为"image"时为图片路径；preLoadType为"text"时为文字内容。也可以设置元素的data-lazyload-preloadsrc，替代默认值
-        delay: 500, //@param  延迟加载时间（毫秒）。也可以设置元素的data-lazyload-itemdelay，替代默认值
-        effect: "none", //@param  预加载效果 "none"-无效果 / "fadeIn"-渐入效果 / "slideX"-由左向右滑动 / "slideY"-由上向下滑动，建议在图片加载中使用。也可以设置元素的data-lazyload-itemeffect，替代默认值
-        easing: "easeInOut", //@param  动画效果的缓动函数
-        slideDistance: 300, //@param effect-slide模式的滑动长度。也可以设置元素的data-lazyload-distance，替代默认值
+        contentType: "image", //@config 懒加载内容类型："image"-图片 / "DOM"-文档片段
+        preLoadType: "image", //@config 预加载类型："image"-采用加载中图片 / "text"-采用加载中文字
+        preLoadSrc: "./images/loading1.gif", //@config  预加载图片路径（文字内容）：preLoadType为"image"时为图片路径；preLoadType为"text"时为文字内容。也可以设置元素的data-lazyload-preloadsrc，替代默认值
+        delay: 500, //@config  延迟加载时间（毫秒）。也可以设置元素的data-lazyload-itemdelay，替代默认值
+        effect: "none", //@config  预加载效果 "none"-无效果 / "fadeIn"-渐入效果 / "slideX"-由左向右滑动 / "slideY"-由上向下滑动，建议在图片加载中使用。也可以设置元素的data-lazyload-itemeffect，替代默认值
+        easing: "easeInOut", //@config  动画效果的缓动函数
+        slideDistance: 300, //@config effect-slide模式的滑动长度。也可以设置元素的data-lazyload-distance，替代默认值
         $author: "heiwu805@hotmail.com"
     }
 
     avalon.lazyload = lazyload
     return avalon
 })
+
+/**
+ @links
+ [懒加载组件-默认配置](avalon.lazyload.ex.html)
+ [懒加载组件-自定义effect(加载效果)和各自delay(加载延迟)](avalon.lazyload.ex1.html)
+ [懒加载组件-自定义加载中图片](avalon.lazyload.ex2.html)
+ [懒加载组件-预加载采用文字模式](avalon.lazyload.ex3.html)
+ [懒加载组件-懒加载文档片段](avalon.lazyload.ex4.html)
+ */

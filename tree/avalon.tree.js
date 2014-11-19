@@ -3,6 +3,158 @@
  * @enName tree
  * @introduce
  *    <p>借鉴ztree实现的avalon版本树组件，尽量接近ztree的数据结构，接口，功能</p>
+ *    <p>callback配置说明</p>
+        ```javascript
+        callback: {
+            //点击后回调
+            onClick:avalon.noop, 
+            //点击前
+            beforeClick:false, 
+            //双击
+            onDblClick:avalon.noop, 
+            beforeDblClick:false,
+            //折叠
+            onCollapse:avalon.noop, 
+            beforeCollapse:false,
+            //展开
+            onExpand:avalon.noop, 
+            beforeExpand:false,
+            //选中
+            onSelect:avalon.noop, 
+            beforeSelect:false,
+            //右键点击
+            onRightClick:avalon.noop, 
+            beforeRightClick:false,
+            //鼠标键按下
+            onMousedown:avalon.noop, 
+            beforeMousedown:false,
+            //鼠标键弹起
+            onMouseup:avalon.noop, 
+            beforeMouseup:false
+            //edit相关回调
+            //删除
+            beforeRemove: false,
+            //重命名
+            beforeRename: false,
+            //添加
+            beforeNodeCreated: false,
+            onRemove: avalon.noop,
+            onRename: avalon.noop,
+            onNodeCreated: avalon.noop,
+            //check相关回调
+            //勾选
+            beforeCheck: false,
+            onCheck:avalon.noop
+        }
+        ```
+      <p>callback使用说明</p>
+      ```javascript
+        beforeClick: function(arg) {
+            this 事件关联的srcElement or null
+            arg.leaf 节点
+            arg.e 关联的事件或者一个对象
+            arg.preventDefault 
+            arg.newLeaf - Add操作时候指向新增的节点
+            arg.isSilent - 一些操作的时候还有这个参数，用来传递是否不展开涉及的父节点
+            return false || arg.peventDefault() 这样可以阻止节点被选中，并不再向下执行
+        }, onClick: function(arg) {
+            before
+            inner logic
+            on
+        }
+      ```
+      <p>多数为boolean的配置项，类似ztree，都是可以配置成函数的，都默认传递了一个节点作为参数，enable可能是个例外</p>
+      <p>view配置说明</p>
+      ```javascript
+        view: { config 视觉效果相关的配置
+            showLine: true, config 是否显示连接线
+            dblClickExpand: true, config 是否双击变化展开状态
+            selectedMulti: true, config true / false 分别表示 支持 / 不支持 同时选中多个节点
+            txtSelectedEnable: false, config 节点文本是否可选中
+            autoCancelSelected: false,
+            singlePath: false, config 同一层级节点展开状态是否互斥
+            showIcon: true, config zTree 是否显示节点的图标
+            showTitle: true, config 分别表示 显示 / 隐藏 提示信息
+            nameShower: function(leaf) {
+                return leaf.name
+            } config 节点显示内容过滤器，默认是显示leaf.name
+        }
+        ```
+        <p>data配置说明</p>
+        ```javascript
+        data: { config  数据相关的配置
+            simpleData: { config  简单数据的配置
+                idKey: "id", config json数据里作为本身索引的字段映射
+                pIdKey: "pId", config json数据里作为父节点索引的字段映射
+                enable: false config 是否启用简单数据模式
+            },
+            key: { config json数据的字段映射
+                children: "children", config  子节点字段映射
+                name: "name", config 节点名字字段映射
+                title: "", config 节点title字段映射，为空的时候，会去name字段映射
+                url: "url" config 节点链接地址字段映射
+            },
+            //edit相关
+            keep: {
+                leaf: false - 是否锁定子节点状态
+                parent: false - 是否锁定父节点状态
+            }
+        }
+        // 因此初始化时候的数据格式，可能是
+        [
+            {
+                children: [],
+                title: "",
+                name: "",
+                url: "",
+                open:false, - 是否展开
+                isParent: true - 是否是父节点
+                icon: "img url" - 子节点自定义的icon
+                icon_close: "img url" - 父节点折叠时候的icon
+                icon_open: "img ulr" - 父节点展开时候的icon
+                iconSkin: "class prefix" - 前缀，子节点会新增preix_docu className，父节点对应的有prefix_open，prefix_close
+                // 启用check组件后，新增字段
+                checked: "checked" - 是否被勾选
+                nocheck: "nocheck" - 是否没有勾选项
+                chkDisabled: "chkDisabled" - 勾选项被禁用
+                halfCheck: "halfCheck" - 半勾选
+            }
+        ]
+        // or
+        [
+            {pId: 0, id: 2, name: "hehe"},
+            {pId:2, id: 21, name: "hehe - 1"}
+        ]
+      ```
+      <p>edit配置</p>
+      ```javascript
+        edit: {
+            enable: true - 可编辑
+            showAddBtn: true - 显示添加按钮
+            showRemoveBtn: true - 显示删除按钮
+            showRenameBtn: true - 显示重命名按钮
+            editNameSelectAll: true - 重名时，输入框文字是否全选
+            removeTitle: "remove" - 删除按钮显示的title
+            renameTitle:"rename" - 重名title
+            addTitle:"add" - 添加title
+        }
+      ```
+      <p>check配置</p>
+      ```javascript
+        check: {
+            enable: false - 启用
+            radioType: "level" - 单选情况下，是同级节点只能勾选一个, all表示整棵树只能勾选一个
+            chkStyle: "checkbox" - 多选，radio单选
+            nocheckInherit: false - 当父节点设置 nocheck = true 时，设置子节点是否自动继承 nocheck = true 。[check.enable = true 时生效] 只使用于初始化节点时，便于批量操作
+            chkDisabledInherit: false -当父节点设置 chkDisabled = true 时，设置子节点是否自动继承 chkDisabled = true 。[check.enable = true 时生效] 只使用于初始化节点时，便于批量操作
+            autoCheckTrigger: false - 设置自动关联勾选时是否触发 beforeCheck / onCheck 事件回调函数。[check.enable = true 且 check.chkStyle = "checkbox" 时生效]
+            chkboxType: {
+                勾选 checkbox 对于父子节点的关联关系 "p" 表示操作会影响父级节点 "s" 表示操作会影响子级节点
+                Y: "ps" - Y 属性定义 checkbox 被勾选后的情况
+                N: "ps" - N 属性定义 checkbox 取消勾选后的情况
+            } 
+        }
+      ```
  */
 define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "text!./avalon.tree.parent.html",  "text!./avalon.tree.nodes.html", "../live/avalon.live", "css!./avalon.tree.css", "css!../chameleon/oniui-common.css"], function(avalon, template, leafTemplate, parentTemplate, nodesTemplate) {
 
@@ -170,19 +322,23 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             vm._select = []
 
             var inited
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if(inited) return
                 inited = true
                 dataFormator(vm.children, undefine, "构建父子节点衔接关系", function(leaf) {
                     cache[leaf.$id] = leaf
                 }, vm)
-                avalon.scan(element, [vmodel].concat(vmodels))
                 if(!vm.view.txtSelectedEnable && navigator.userAgent.match(/msie\s+[5-8]/gi)) {
                     disabelSelectArr.push(vm.widgetElement)
                 }
-                if(typeof options.onInit === "function" ) {
-                    //vmodels是不包括vmodel的 
-                    options.onInit.call(element, vmodel, options, vmodels)
+                if (continueScan) {
+                    continueScan()
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }
             }
             vm.$remove = function() {
@@ -218,19 +374,20 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                     return leaf.isParent && leaf.open && noline
                 }
             }
+
             vm.toggleOpenStatue = function(event, leaf) {
                 var leaf = leaf || event.leaf
                 if(!leaf) return
                 leaf.open ? vm.excute("collapse", event, leaf, "collapse") : vm.excute("expand", event, leaf, "expand")
             }
+
             /**
              * @interface 展开leaf节点
-             * @param arg {Object} 一个参数对象
-             * @param arg.leaf {leafObject root} 一个节点对象，不能是原始数据
-             * @param all {boolen} 表示是否迭代所有子孙节点
+             * @param {Object} 指定节点，也可以是{leaf:leaf} or leaf
+             * @param {boolen} 表示是否迭代所有子孙节点
              */
             vm.expand = function(arg, all, openOrClose) {
-                var leaf = arg.leaf
+                var leaf = arg && arg.leaf || arg
                 if(!leaf) {
                     leaf = vm
                 } else {
@@ -239,7 +396,8 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 }
                 var children = leaf.children, leafDom = g(leaf.$id)
                 // 节点未渲染，或不可见，向上溯源处理
-                if(!leafDom || !leafDom.scrollHeight) vm.cVisitor(leaf, function(node) {
+                if(!openOrClose && (!leafDom || !leafDom.scrollHeight)) vm.cVisitor(leaf, function(node) {
+                    if(node == vm) return
                     node.open = true
                 })
                 // 互斥
@@ -248,12 +406,25 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                         if(item != leaf && item.open) vm.excute("collapse", arg.e, item, "collapse") 
                     })
                 }
-                if(all) avalon.each(children, function(i, item) {vm.expand(item, "all", openOrClose)})
+                if(all && children) avalon.each(children, function(i, item) {
+                    vm.expand(item, "all", openOrClose)
+                })
             }
+
+            /**
+             * @interface 展开 / 折叠 全部节点，返回true表示展开，false表示折叠，此方法不会触发 beforeExpand / onExpand 和 beforeCollapse / onCollapse 事件回调函数
+             * @param {arr} true 表示 展开 全部节点，false 表示 折叠 全部节点
+             */
             vm.expandAll = function(openOrClose) {
                 openOrClose ? vm.expand(undefine, "all") : vm.collapse(undefine, "all")
+                return openOrClose
             }
-            //@method collapse(leaf, all) 折叠leaf节点的子节点，all表示是否迭代所有子孙节点
+
+            /**
+             * @interface 折叠leaf节点的子节点
+             * @param {Object} 指定节点，也可以是{leaf:leaf} or leaf
+             * @param {boolen} 表示是否迭代所有子孙节点
+             */
             vm.collapse = function(leaf, all, event) {
                 vm.expand(leaf, all, "close", event)
             }
@@ -278,15 +449,57 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 return vm.nodesTemplate.replace(/leaf=\"children\"/g, "leaf=\"leaf.children\"")
             }
 
-            // 节点遍历
-            // 中序遍历，向下
+
+            /**
+             * @interface 隐藏某个节点
+             * @param {Object} 指定节点，也可以是{leaf:leaf} or leaf
+             */
+            vm.hideNode = function(leaf) {
+                leaf = leaf && leaf.leaf || leaf
+                vm.hideNodes([leaf])
+            }
+
+            /**
+             * @interface 隐藏节点集合
+             * @param {Array} 节点集合
+             */
+            vm.hideNodes = function(nodes, flag) {
+                flag = flag === undefine ? false : flag
+                avalon.each(nodes, function(i, node) {
+                    node.isHidden = flag
+                })
+            }
+            /**
+             * @interface 显示某个节点
+             * @param {Object} 指定节点，也可以是{leaf:leaf} or leaf
+             */
+            vm.showNode = function(node) {
+                node = node && node.leaf || node
+                vm.showNodes([node])
+            }
+            /**
+             * @interface 显示节点集合
+             * @param {Array} 节点集合
+             */
+            vm.showNodes = function(nodes) {
+                vm.hideNodes(nodes, true)
+            }
+
+            /**
+             * @interface 中序向下遍历树，返回一个数组
+             * @param {Object} 起点，为空表示根
+             * @param {Function} 递归操作，传递参数是当前节点，options，如果!!return != false，则将返回压入res
+             * @param {Function} 终止遍历判断，传递参数是res,当前节点,起点，return true则终止遍历
+             * @param {Array} 存储结果的数组，为空则会内部声明一个
+             * @param {Object} 用于辅助func的参数
+             */
             vm.visitor = function(startLeaf, func, endFunc, res, options) {
                 var startLeaf = startLeaf || vm,
                     res = res || []
                 if(startLeaf != vm) {
                     var data = func(startLeaf, options)
                     data && res.push(data)
-                    if(endFunc && endFunc(res, startLeaf)) return res
+                    if(endFunc && endFunc(res, startLeaf, startLeaf)) return res
                 }
                 if(startLeaf.children && startLeaf.children.length) {
                     for(var i = 0, children = startLeaf.children, len = children.length; i < len; i++) {
@@ -296,21 +509,35 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 }
                 return res
             }
-            // 向上溯源
+            /**
+             * @interface 向上溯源，返回一个数组
+             * @param {Object} 起点
+             * @param {Function} 递归操作，传递参数是当前节点，options，如果!!return != false，则将返回压入res
+             * @param {Function} 终止遍历判断，传递参数是res,当前节点,起点，return true则终止遍历
+             * @param {Array} 存储结果的数组，为空则会内部声明一个
+             * @param {Object} 用于辅助func的参数
+             */
             vm.cVisitor = function(startLeaf, func, endFunc, res, options) {
                 var res = res || []
                 if(startLeaf) {
                     var data = func(startLeaf, options)
                     data && res.push(data)
                     // 结束溯源
-                    if(endFunc && endFunc(res, startLeaf)) return res
+                    if(endFunc && endFunc(res, startLeaf, startLeaf)) return res
                     // 继续向上
                     if(startLeaf.$parentLeaf) vm.cVisitor(startLeaf.$parentLeaf, func, endFunc, res, options)
                 }
                 return res
             }
 
-            // 同级访问
+            /**
+             * @interface 同级访问，返回一个数组
+             * @param {Object} 起点
+             * @param {Function} 递归操作，传递参数是当前节点，options，如果!!return != false，则将返回压入res
+             * @param {Function} 终止遍历判断，传递参数是res,当前节点,起点，return true则终止遍历
+             * @param {Array} 存储结果的数组，为空则会内部声明一个
+             * @param {Object} 用于辅助func的参数
+             */
             vm.brotherVisitor = function(startLeaf, func, endFunc, res, options) {
                 var res = res || []
                 if(startLeaf) {
@@ -319,7 +546,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                         data = func && func(brothers[i], options)
                         data && res.push(data)
                         // endCheck
-                        if(endFunc && endFunc(res, brothers[i])) break
+                        if(endFunc && endFunc(res, brothers[i], startLeaf)) break
                     }
                 }
                 return res
@@ -330,11 +557,18 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 return leaf.$parentLeaf ? leaf.$parentLeaf.children : vm.children
             }
 
-            // 获取节点
+            /**
+             * @interface 根据$id快速获取节点 JSON 数据对象
+             * @param {Object} $id，avalon生成数据的pid
+             */
             vm.getNodeByTId = function(id) {
                 return cache[id]
             }
 
+            /**
+             * @interface 获取某节点在同级节点中的序号
+             * @param {Object} 指定的节点
+             */
             vm.getNodeIndex = function(leaf) {
                 var c = vm.getBrothers(leaf)
                 for(var i = 0, len = c.length; i < len; i++) {
@@ -343,92 +577,188 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 return -1
             }
 
+            /**
+             * @interface 获取全部节点数据，如果指定了leaf则返回leaf的所有子节点，不包括leaf
+             * @param {Object} 指定节点
+             */
             vm.getNodes = function(leaf) {
                 return leaf ? leaf.children : vm.children
             }
 
+            /**
+             * @interface 根据自定义规则搜索节点数据 JSON 对象集合 或 单个节点数据
+             * @param {Function} 自定义过滤器函数 function filter(node) {...}
+             * @param isSingle = true 表示只查找单个节点 !!isSingle = false 表示查找节点集合
+             * @param 可以指定在某个父节点下的子节点中搜索
+             * @param 用户自定义的数据对象，用于 filter 中进行计算
+             */
             vm.getNodesByFilter = function(fitler, isSingle, startLeaf, options) {
-                return vm.visitor(startLeaf, filter, isSingle ? function(data, node) {
+                return vm.visitor(startLeaf, function(node, opt) {
+                    if(filter && filter(node, opt)) return node
+                }, isSingle ? function(data, node) {
                     return data.length > 1
                 } : false, [], options)
             }
 
+            /**
+             * @interface 根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象
+             * @param {String} 需要精确匹配的属性名称
+             * @param 需要精确匹配的属性值，可以是任何类型，只要保证与 key 指定的属性值保持一致即可
+             * @param 可以指定在某个父节点下的子节点中搜索
+             */
             vm.getNodeByParam = function(key, value, startLeaf) {
                 return vm.getNodesByParam(key, value, startLeaf, function(data, node) {
                     return data.length > 1
                 })
             }
 
+            /**
+             * @interface 根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象集合
+             * @param {String} 需要精确匹配的属性名称
+             * @param 需要精确匹配的属性值，可以是任何类型，只要保证与 key 指定的属性值保持一致即可
+             * @param 可以指定在某个父节点下的子节点中搜索
+             */
             vm.getNodesByParam = function(key, value, startLeaf, endFunc) {
                 return vm.visitor(startLeaf, function(leaf) {
-                    return leaf[key] === value
+                    return leaf[key] === value ? leaf : false
                 }, endFunc, [])
             }
 
+            /**
+             * @interface 根据节点数据的属性搜索，获取条件模糊匹配的节点数据 JSON 对象集合
+             * @param 需要模糊匹配的属性值，用于查找的时候执行正则匹配，不是正则表达式
+             * @param 可以指定在某个父节点下的子节点中搜索
+             */
             vm.getNodesByParamFuzzy = function(key, value, startLeaf) {
                 return vm.visitor(startLeaf, function(leaf) {
-                    return (leaf[key] + "").match(new RegExp(value, "g"))
+                    return (leaf[key] + "").match(new RegExp(value, "g")) ? leaf : false
                 }, false, [])
             }
 
+            /**
+             * @interface 获取节点相邻的前一个节点
+             * @param {Object} 指定的节点
+             */
             vm.getPreNode = function(leaf, next) {
                 var allMates = vm.getBrothers(leaf),
                     index = vm.getNodeIndex(leaf)
-                return allMates[next ? index + 1 : index-1]
+                return index > -1 ? allMates[next ? index + 1 : index-1] : false
             }
 
+            /**
+             * @interface 获取节点相邻的后一个节点
+             * @param {Object} 指定节点
+             */
             vm.getNextNode = function(leaf) {
                 return vm.getPreNode(leaf, "next")
             }
 
+            /**
+             * @interface 获取节点的父节点
+             * @param {Object} 指定的节点
+             */
             vm.getParentNode = function(leaf) {
-                return leaf.$parentLeaf
+                return leaf && leaf.$parentLeaf
             }
 
-            vm.addNode = function(parentLeaf, item, isSilent, noExcute) {
-                // 拷贝
-                var newLeaf = itemFormator(avalon.mix({}, item), parentLeaf, vm), arr = vm.getNodes(parentLeaf)
-                if(noExcute) {
-                    arr.push(newLeaf)
-                } else {
-                    excute('nodeCreated', {
-                        isSilent: isSilent,
-                        newLeaf: newLeaf
-                    }, leaf, function() {
-                        arr.push(newLeaf)
-                        return arr[arr.length - 1]
-                    })
-                }
-                return arr[arr.length - 1]
-            }
-
+            /**
+             * @interface 添加多个节点，返回被添加的节点
+             * @param {Object} 指定的父节点，如果增加根节点，请设置 parentNode 为 null 即可
+             * @param {Array} 需要增加的节点数据 JSON 对象集合
+             * @param 设定增加节点后是否自动展开父节点。isSilent = true 时，不展开父节点，其他值或缺省状态都自动展开。
+             */
             vm.addNodes = function(parentLeaf, nodes, isSilent) {
-                // 数据构建
-                if(vm.data.simpleData.enable) nodes = simpleDataToTreeData(nodes, vm)
-                nodes = dataFormator(nodes, parentLeaf, undefine, undefine, vm)
-                dataFormator(nodes, parentLeaf, "构建父子节点衔接关系", undefine, vm)
-                if(parentLeaf) parentLeaf.isParent = true
-                var arr = vm.getNodes(parentLeaf), len = arr.length
-                vm.excute('nodeCreated', {
+                return vm.excute('nodeCreated', {
                     isSilent: isSilent
                 } , parentLeaf, function() {
+                    // 数据构建
+                    if(vm.data.simpleData.enable && (nodes instanceof Array)) {
+                        nodes = vm.transformTozTreeNodes(nodes)
+                    } else {
+                        nodes = [nodes]
+                    }
+                    nodes = dataFormator(nodes, parentLeaf, undefine, undefine, vm)
+                    dataFormator(nodes, parentLeaf, "构建父子节点衔接关系", undefine, vm)
+                    if(parentLeaf) parentLeaf.isParent = true
+                    var arr = vm.getNodes(parentLeaf), len = arr.length
                     arr.pushArray(nodes)
                     return arr.slice(len) || []
                 })
-                return arr.slice(len) || []
+            }
+            /**
+             * @interface 将简单 Array 格式数据转换为 tree 使用的标准 JSON 嵌套数据格式
+             * @param 需要被转换的简单 Array 格式数据 或 某个单独的数据对象
+             */
+            vm.transformTozTreeNodes = function(data) {
+                if(!(data instanceof Array)) data = [data]
+                return simpleDataToTreeData(nodes, vm)
             }
 
+            /**
+             * @interface 将 tree 使用的标准 JSON 嵌套格式的数据转换为简单 Array 格式
+             * @param  需要被转换的 tree 节点数据对象集合 或 某个单独节点的数据对象
+             * @param {Function} 格式化过滤器函数
+             */
+            vm.transformToArray = function(data, filter, res) {
+                var res = res || [],
+                    ignoreKey = arguments[3],
+                    dict = vm.data.simpleData
+                if(!ignoreKey) {
+                    // 忽略的辅助性key
+                    ignoreKey = {}
+                    avalon.each(avalon.ui.tree.leafIgnoreField, function(i, key) {
+                        ignoreKey[key] = true
+                    })
+                }
+                if(data instanceof Array) {
+                    avalon.each(data, function(i, node) {
+                        vm.transformToArray(node, filter, res, ignoreKey)
+                    })
+                } else if(data){
+                    var item = {}, model = data.$model
+                    for(var i in model) {
+                        // ignore ^$
+                        if(i.indexOf("$") === 0 || ignoreKey[i] || i === "children" || model[i] == "") continue
+                        var key = dict[i + "Key"] ? dict[i + "Key"] : i
+                        item[key] = model[i]
+                    }
+                    res.push(filter ? filter(item) : item)
+                    if(data.isParent) {
+                        vm.transformToArray(data.children, filter, res, ignoreKey)
+                    }
+                }
+                return res
+            }
+
+            /**
+             * @interface 重置树的状态
+             * @param {Array} 指定用来重置的数据，为空表示用第一次初始化时候的数据来重置
+             */
             vm.reset = function(children) {
                 vm.children.clear()
                 vm.addNodes(undefine, dataBak || children)
             }
 
+            /**
+             * @interface 复制节点，返回clone后的节点
+             * @param {Object} 参考节点
+             * @param {Object} 需要被复制的节点数据
+             * @param 复制到目标节点的相对位置 "inner"：成为子节点，"prev"：成为同级前一个节点，"next"：成为同级后一个节点
+             * @param 设定复制节点后是否自动展开父节点，isSilent = true 时，不展开父节点，其他值或缺省状态都自动展开
+             */
             vm.copyNode = function(targetLeaf, leaf, moveType, isSilent) {
                 var newLeaf = avalon.mix({}, leaf.$model)
                 vm.moveNode(targetLeaf, newLeaf, moveType, isSilent)
+                return newLeaf
             }
 
-            // 目测这个是相当费性能的。。。
+            /**
+             * @interface 移动节点，目测这个是相当费性能的。。。，返回被移动的节点
+             * @param {Object} 参考节点
+             * @param {Object} 被移动的节点
+             * @param 指定移动到目标节点的相对位置"inner"：成为子节点，"prev"：成为同级前一个节点，"next"：成为同级后一个节点
+             * @param 设定移动节点后是否自动展开父节点，isSilent = true 时，不展开父节点，其他值或缺省状态都自动展开
+             */
             vm.moveNode = function(targetLeaf, leaf, moveType, isSilent) {
                 var parLeaf = leaf.$parentLeaf || vm,
                     indexA = arrayIndex(parLeaf.children, function(item) {
@@ -463,6 +793,9 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 if(level != leaf.level) vm.visitor(leaf, function(node) {
                     if(node != leaf) node.level = node.$parentLeaf.level + 1
                 })
+                // 展开父节点
+                if(!isSilent && node.$parentLeaf) node.$parentLeaf.open = true
+                return node
             }
 
             // cache管理
@@ -499,7 +832,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             vm.selectFun = function(event, all) {
                 var leaf = event.leaf,
                     event = event.e
-                if(!leaf.url) event.preventDefault()
+                if(!leaf.url) event.preventDefault && event.preventDefault()
                 if(all) {
                     var _s = vm._select,
                         info = vm._getSelectIDs(leaf),
@@ -531,12 +864,21 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 }
             }
 
+            /**
+             * @interface 将指定的节点置为选中状态，无任何返回值
+             * @param {object} 指定的节点，不能为空
+             * @param 是否保留原来选中的节点，否则清空原来选中的节点，当view.selectedMulti为false的时候，该参数无效，一律清空
+             */
             vm.selectNode = function(leaf, appendOrReplace) {
                 if(vm.view.selectedMulti === false) appendOrReplace = false
                 if(appendOrReplace) vm._select.push(leaf)
                 else vm._select = [leaf]
             }
 
+            /**
+             * @interface 获取以指定节点为起点，以数组形式返回所有被选中的节点
+             * @param {object} 指定的节点，为空的时候表示由根开始查找
+             */
             vm.getSelectedNodes = function(startLeaf) {
                 if(!startLeaf) return vm._select
                 var info = vm._getSelectIDs(startLeaf),
@@ -550,17 +892,24 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 return res
             }
 
+            /**
+             * @interface 取消选中子节点的选中状态，无任何返回值
+             * @param {object} 指定的节点，为空的时候表示取消所有
+             */
             vm.cancelSelectedNode = function(leaf) {
                 vm._select.remove(leaf)
             }
 
-            //@method cancelSelectedChildren(event, leaf)取消leaf节点上所有处于选中状态的节点
-            vm.cancelSelectedChildren = function(event, leaf) {
+            /**
+             * @interface 取消节点上所有选中子节点的选中状态，无任何返回值
+             * @param {object} 通过arg.leaf 指定的节点
+             */
+            vm.cancelSelectedChildren = function(arg) {
                 if(!leaf) {
                     // clear all
                     vm._select.clear()
                 } else {
-                    vm.selectFun(event, leaf, "all")
+                    vm.selectFun(arg, "all")
                 }
             }
 
@@ -609,7 +958,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 // 执行前检测，返回
                 vmodel.$fire("e:before" + eventName, arg)
                 if(callbackEnabled) {
-                    if(beforeFunc && beforeFunc.call(ele, arg) === false || arg.cancel) {
+                    if(arg.cancel || beforeFunc && beforeFunc.call(ele, arg) === false) {
                         arg.preventDefault()
                         return
                     }
@@ -645,7 +994,10 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         vmodel.$watch("e:nodeCreated", function(arg) {
             if(arg && arg.e && arg.e.isSilent) return
             var leaf = arg.leaf
-            if(leaf) leaf.isParent = leaf.open = true
+            if(leaf) {
+                leaf.isParent = true
+                vmodel.expand(leaf)
+            }
         })
         avalon.each(callbacks, function(i, func) {
             if(avalon.isFunction(func)) func(vmodel, vmodels)
@@ -664,44 +1016,51 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
     avalon.bind(document.body, "selectstart", disabelSelect)
     avalon.bind(document.body, "drag", disabelSelect)
     widget.defaults = {
-        view: {//@config 视觉效果相关的配置
-            showLine: true,//@config view.showLine是否显示连接线
-            dblClickExpand: true,//@config view.dblClickExpand是否双击变化展开状态
-            selectedMulti: true,//@config view.selectedMulti true / false 分别表示 支持 / 不支持 同时选中多个节点
-            txtSelectedEnable: false,
+        view: {//@config {Object} 视觉效果相关的配置
+            showLine: true,//@config 是否显示连接线
+            dblClickExpand: true,//@config 是否双击变化展开状态
+            selectedMulti: true,//@config true / false 分别表示 支持 / 不支持 同时选中多个节点
+            txtSelectedEnable: false,//@config 节点文本是否可选中
             autoCancelSelected: false,
-            singlePath: false,
-            showIcon: true,//@config view.showIcon zTree 是否显示节点的图标
-            showTitle: true,//@config view.showTitle 分别表示 显示 / 隐藏 提示信息
+            singlePath: false,//@config 同一层级节点展开状态是否互斥
+            showIcon: true,//@config zTree 是否显示节点的图标
+            showTitle: true,//@config 分别表示 显示 / 隐藏 提示信息
             nameShower: function(leaf) {
                 return leaf.name
-            }//@optMethod view.nameShower(leaf)节点显示内容过滤器，默认是显示leaf.name
+            }//@config 节点显示内容过滤器，默认是显示leaf.name
         },
-        data: {
-            simpleData: {
-                idKey: "id",
-                pIdKey: "pId",
-                enable: false
+        data: {//@config {Object} 数据相关的配置
+            simpleData: {//@config {Object} 简单数据的配置
+                idKey: "id",//@config json数据里作为本身索引的字段映射
+                pIdKey: "pId",//@config json数据里作为父节点索引的字段映射
+                enable: false//@config 是否启用简单数据模式
             },
-            key: {
-                children: "children",
-                name: "name",
-                title: "",
-                url: "url"
+            key: {//@config {Object} json数据的字段映射
+                children: "children",//@config {Array} 子节点字段映射
+                name: "name",//@config 节点名字字段映射
+                title: "",//@config 节点title字段映射，为空的时候，会去name字段映射
+                url: "url"//@config 节点链接地址字段映射
             }
         },
-        callback: {//@param 回调相关的配置
-            //@optMethod callback.onExpand(data) 节点展开回调
-            //@optMethod callback.onCollapse(data) 节点收起回调
-            //@optMethod callback.onSelect(data) 节点被选中回调
-            //@optMethod callback.onClick(data) 节点被点击回调
-            //@optMethod callback.onDblClick(data) 节点被双击回调
+        //@config {Object} 回调相关的配置
+        callback: {
         },
-        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
+        /**
+         * @config 完成初始化之后的回调
+         * @param vmodel {vmodel} vmodel
+         * @param options {Object} options
+         * @vmodels {Array} vmodels
+         */
         onInit: avalon.noop,
+        /**
+         * @config 模板函数,方便用户自定义模板
+         * @param str {String} 默认模板
+         * @param opts {Object} vmodel
+         * @returns {String} 新模板
+         */
         getTemplate: function(tmpl, opts, tplName) {
             return tmpl
-        },//@optMethod getTemplate(tpl, opts, tplName) 定制修改模板接口
+        },
         $author: "skipper@123"
     }
     avalon.each(eventList, function(i, item) {
@@ -710,7 +1069,10 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         widget.defaults.callback["before" + upperFirstLetter(item)] = false
     })
 
-    //@method avalon.ui.tree.AddExtention(fixNames, addingDefaults, addingMethodFunc, watchEvents)扩展tree
+    //@interface avalon.ui.tree.AddExtention(fixNames, addingDefaults, addingMethodFunc, watchEvents)扩展tree
+    /**
+     * @interface heh
+     */
     avalon.ui.tree.AddExtention = function(fixNames, addingDefaults, addingMethodFunc, watchEvents, tplHooks, callback) {
         if(fixNames) avalon.each(fixNames, function(i, item) {
             optionKeyToFixMix[item] = item
@@ -721,5 +1083,5 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         if(tplHooks) avalon.mix(tplDict, tplHooks)
         if(callback) callbacks.push(callback)
     }
-    avalon.ui.tree.leafIgnoreField = [] // tree转化成数据的时候，忽略的字段，所有以$开头的，以及这个数组内的
+    avalon.ui.tree.leafIgnoreField = ["level"] // tree转化成数据的时候，忽略的字段，所有以$开头的，以及这个数组内的
 })

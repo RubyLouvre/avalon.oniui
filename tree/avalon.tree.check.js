@@ -3,7 +3,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 	function g(id) {return document.getElementById(id)}
 	var undefine = void 0
 	// 排除辅助字段
-	avalon.ui.tree.leafIgnoreField.push("chkFocus", "chkTotal")
+	avalon.ui.tree.leafIgnoreField.push("chkFocus", "chkTotal", "checkedOld")
 	avalon.ui.tree.AddExtention(
 		["check", "data", "callback"],
 		{
@@ -26,7 +26,8 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
                 	chkDisabled: "chkDisabled",
                 	halfCheck: "halfCheck",
                 	chkFocus: "chkFocus",
-                	chkTotal: ""
+                	chkTotal: "",
+                	checkedOld: "checked"
 				}
 			},
 			callback: {
@@ -62,8 +63,15 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 				getCheckType: function() {
 					return vm.check.chkStyle === "radio" ? "radio" : "checkbox"
 				},
+				/**
+	             * @interface 勾选 或 取消勾选 单个节点
+	             * @param {Object} 节点
+	             * @param true 表示勾选节点  false 表示取消勾选 的节点数据
+	             * @param true 表示按照 setting.check.chkboxType 属性进行父子节点的勾选联动操作 false 表示只修改此节点勾选状态，无任何勾选联动操作
+	             * @param true 表示执行此方法时触发 beforeCheck & onCheck 事件回调函数  false 表示执行此方法时不触发事件回调函数
+	             */
 				checkNode: function(leaf, checked, checkTypeFlag, callbackFlag) {
-					if(!vm.checkEnable() || leaf.chkDisabled) return
+					if(!vm.checkEnable() || leaf.nocheck || leaf.chkDisabled) return
 					vm.excute("checkChange", {
 						cancelCallback: !callbackFlag,
 						checkTypeFlag: checkTypeFlag
@@ -71,12 +79,17 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 						var chk = checked === undefine ? !leaf.checked : !!checked,
 							beforeCheck = vm.callback.beforeCheck,
 							onCheck = vm.callback.onCheck
-						if(callbackFlag && chk && beforeCheck && beforeCheck(arg) || arg.cancel) return 
+						if(callbackFlag && chk && beforeCheck && (beforeCheck(arg) === false) || arg.cancel) return 
 						leaf.checked = chk
 						callbackFlag && chk && onCheck && onCheck(arg)
 						return chk
 					})
 				},
+				/**
+	             * @interface 勾选 或 取消勾选 全部节点
+	             * @param true 表示勾选全部节点 false 表示全部节点取消勾选
+	             * @param {Object} 可以指定一个起始的节点
+	             */
 				checkAllNodes: function(checked, leaf) {
 					if(!vm.checkEnable() && vm.check.chkStyle !== "checkbox") return
 					vm.visitor(leaf, function(node) {
@@ -85,6 +98,11 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 						}
 					})
 				},
+				/**
+	             * @interface 获取输入框被勾选 或 未勾选的节点集合
+	             * @param true 表示勾选 false 表示未勾选
+	             * @param {Object} 可以指定一个起始的节点
+	             */
 				getCheckedNodes: function(checked, leaf) {
 					var checked = checked === undefine ? true : !!checked
 					return vm.visitor(leaf, function(node) {
@@ -94,9 +112,26 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 						return res && res.length > 0
 					} : undefine, [])
 				},
-				getChangeCheckedNodes: function(leaf) {
-
+				/**
+	             * @interface 获取输入框勾选状态被改变的节点集合
+	             * @param {Object} 可以指定一个起始的节点
+	             * @param 将当前状态更新到原始数据上
+	             */
+				getChangeCheckedNodes: function(leaf, updateChanges) {
+					return vm.visitor(leaf, function(node) {
+						if(!!node.checkedOld != !!node.checked) {
+							if(updateChanges) node.checkedOld = !!node.checked
+							return node
+						}
+					}, undefine, [])
 				},
+				/**
+	             * @interface 禁用 或 解禁 某个节点的 checkbox / radio [check.enable = true 时有效]
+	             * @param {Object} 可以指定一个起始的节点
+	             * @param true 表示禁用 checkbox / radio false 表示解禁 checkbox / radio
+	             * @param true 表示全部父节点进行同样的操作 false 表示不影响父节点
+	             * @param true 表示全部子节点进行同样的操作 false 表示不影响子节点
+	             */
 				setChkDisabled: function(leaf, disabled, inheritParent, inheritChildren) {
 					if(vm.checkEnable()) {
 						disabled = !!disabled
@@ -112,7 +147,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 							}, [])
 						}
 						// 影响父节点
-						if(inheritChildren && leaf && leaf.$parentLeaf) {
+						if(inheritParent && leaf && leaf.$parentLeaf) {
 							// 向上溯源
 							vm.cVisitor(leaf, function(node) {
 								var par = node.$parentLeaf
@@ -208,7 +243,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 			                        }
 								}
 								if(!cancelCallback) {
-									if(bool && autoCheckTrigger && beforeCheck && beforeCheck(e)) return
+									if(bool && autoCheckTrigger && beforeCheck && (beforeCheck(e) === false)) return
 								}
 								par.checked = checkedCount > 0
 								par.halfCheck = checkedCount <= 0 || checkedCount >= canCheckedCount ? false : true
@@ -230,7 +265,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 			                        }
 								}
 								if(!cancelCallback) {
-									if(bool && autoCheckTrigger && beforeCheck && beforeCheck(e)) return
+									if(bool && autoCheckTrigger && beforeCheck && (beforeCheck(e) === false)) return
 								}
 								node.checked = bool
 								// 勾选父节点，让子节点的半勾选失效

@@ -21,7 +21,6 @@
         }
     }else{
         // 上传文件
-        // sleep(10);
         // 获取FILES的缓存文件
         $tempFile = $_FILES['images']['tmp_name'];
         // 创建目录
@@ -37,6 +36,7 @@
         if($result){
 
             $data = array(
+                // 自定义数据信息在此
                 'url' => $targetUrl,
                 'id' => $id
             );

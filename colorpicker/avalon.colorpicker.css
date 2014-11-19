@@ -1,10 +1,10 @@
-.ui-colorpicker{
+.oni-colorpicker{
 	position: relative;
 	cursor: crosshair;
 	width: 195px;
 	height: 195px;
 }
-	.ui-colorpicker-wheel{
+	.oni-colorpicker-wheel{
 		position: absolute;
 		width: 100%;
 		height: 100%;
@@ -12,19 +12,19 @@
 		_background: none;
 		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/wheel.png');
 	}
-	.ui-colorpicker-hue, .ui-colorpicker-overlay{
+	.oni-colorpicker-hue, .oni-colorpicker-overlay{
 		position: absolute;
 		width: 101px;
 		height: 101px;
 		top: 47px;
 		left: 47px;
 	}
-	.ui-colorpicker-overlay{
+	.oni-colorpicker-overlay{
 		background: url(img/overlay.png) no-repeat;
 		_background: none;
 		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/overlay.png');
 	}
-		.ui-colorpicker-marker{
+		.oni-colorpicker-marker{
 			position: absolute;
 			width: 17px;
 			height: 17px;
@@ -33,11 +33,11 @@
 			_background: none;
 			_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/marker.png');
 		}
-		.ui-colorpicker-overlay .ui-colorpicker-marker{
+		.oni-colorpicker-overlay .oni-colorpicker-marker{
 			left: 70px;
 			top: 50px;
 		}
 
-.ui-colorpicker.ui-colorpicker-auto-hide{
+.oni-colorpicker.oni-colorpicker-auto-hide{
 	position: absolute;
 }

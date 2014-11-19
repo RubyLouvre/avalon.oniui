@@ -106,8 +106,8 @@
 					onInit: function(vmodel, options, vmodels){
 						console.info('初始化完成！');
 					},
-					onSuccess: function(data){
-						console.info('上传成功！');
+					onSuccess: function(files, data){
+						console.info('上传完成！');
 					},
 					onSingleFailed: function(fileName){
 						console.info('上传失败：' + fileName);

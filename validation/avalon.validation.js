@@ -332,13 +332,13 @@ define(["../promise/avalon.promise"], function(avalon) {
                 var vmValue = [].concat(val).map(String)
                 var domValue = (data.element.getAttribute("data-duplex-contain") || "").split(",")
                 data.data.array = domValue.join('与')
-                if (vmValue.length) {
+                if (!vmValue.length) {
                     var has = false
                 } else {
                     has = true
-                    for (var i = 0, n = vmValue.length; i < n; i++) {
-                        var v = vmValue[i]
-                        if (domValue.indexOf(v) === -1) {
+                    for (var i = 0, n = domValue.length; i < n; i++) {
+                        var v = domValue[i]
+                        if (vmValue.indexOf(v) === -1) {
                             has = false
                             break
                         }
@@ -599,7 +599,15 @@ define(["../promise/avalon.promise"], function(avalon) {
  数值数据变0,数组数据变[],字符串数组变成""
  
  </p>
- 
+                
+<p> 也可以在页面添加不依赖于ms-duplex的绑定</p>
+```javascript
+validateVM.data.push({
+   valueAccessor: function(){}
+   validateParam: "xxx",
+   element: element
+})
+```
  */
 
 /**

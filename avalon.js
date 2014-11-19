@@ -3109,61 +3109,62 @@
         },
         "duplex": function(data, vmodels) {
             var elem = data.element,
-                    tagName = elem.tagName,
-                    hasCast
+
+            hasCast
             parseExprProxy(data.value, vmodels, data, 0, 1)
-            if (typeof duplexBinding[tagName] === "function") {
-                data.changed = getBindingCallback(elem, "data-duplex-changed", vmodels) || noop
-                if (data.evaluator && data.args) {
-                    var params = []
-                    var casting = oneObject("string,number,boolean,checked")
-                    if (elem.type === "radio" && data.param === "") {
-                        data.param = "checked"
-                    }
-                    data.param.replace(/\w+/g, function(name) {
-                        if (/^(checkbox|radio)$/.test(elem.type) && /^(radio|checked)$/.test(name)) {
-                            if (name === "radio")
-                                log("ms-duplex-radio已经更名为ms-duplex-checked")
-                            name = "checked"
-                            data.isChecked = true
-                        }
-                        if (name === "bool") {
-                            name = "boolean"
-                            log("ms-duplex-bool已经更名为ms-duplex-boolean")
-                        } else if (name === "text") {
-                            name = "string"
-                            log("ms-duplex-text已经更名为ms-duplex-string")
-                        }
-                        if (casting[name]) {
-                            hasCast = true
-                        }
-                        avalon.Array.ensure(params, name)
-                    })
-                    if (!hasCast) {
-                        params.push("string")
-                    }
-                    data.param = params.join("-")
-                    data.bound = function(type, callback) {
-                        if (elem.addEventListener) {
-                            elem.addEventListener(type, callback, false)
-                        } else {
-                            elem.attachEvent("on" + type, callback)
-                        }
-                        var old = data.rollback
-                        data.rollback = function() {
-                            avalon.unbind(elem, type, callback)
-                            old && old()
-                        }
-                    }
-                    for (var i in avalon.vmodels) {
-                        var v = avalon.vmodels[i]
-                        v.$fire("avalon-ms-duplex-init", data)
-                    }
-                    var cpipe = data.pipe || (data.pipe = pipe)
-                    cpipe(null, data, "init")
-                    duplexBinding[elem.tagName](elem, data.evaluator.apply(null, data.args), data)
+            //  if (typeof duplexBinding[tagName] === "function") {
+            data.changed = getBindingCallback(elem, "data-duplex-changed", vmodels) || noop
+            if (data.evaluator && data.args) {
+                var params = []
+                var casting = oneObject("string,number,boolean,checked")
+                if (elem.type === "radio" && data.param === "") {
+                    data.param = "checked"
                 }
+                data.param.replace(/\w+/g, function(name) {
+                    if (/^(checkbox|radio)$/.test(elem.type) && /^(radio|checked)$/.test(name)) {
+                        if (name === "radio")
+                            log("ms-duplex-radio已经更名为ms-duplex-checked")
+                        name = "checked"
+                        data.isChecked = true
+                    }
+                    if (name === "bool") {
+                        name = "boolean"
+                        log("ms-duplex-bool已经更名为ms-duplex-boolean")
+                    } else if (name === "text") {
+                        name = "string"
+                        log("ms-duplex-text已经更名为ms-duplex-string")
+                    }
+                    if (casting[name]) {
+                        hasCast = true
+                    }
+                    avalon.Array.ensure(params, name)
+                })
+                if (!hasCast) {
+                    params.push("string")
+                }
+                data.param = params.join("-")
+                data.bound = function(type, callback) {
+                    if (elem.addEventListener) {
+                        elem.addEventListener(type, callback, false)
+                    } else {
+                        elem.attachEvent("on" + type, callback)
+                    }
+                    var old = data.rollback
+                    data.rollback = function() {
+                        avalon.unbind(elem, type, callback)
+                        old && old()
+                    }
+                }
+                for (var i in avalon.vmodels) {
+                    var v = avalon.vmodels[i]
+                    v.$fire("avalon-ms-duplex-init", data)
+                }
+                var cpipe = data.pipe || (data.pipe = pipe)
+                cpipe(null, data, "init")
+                var tagName = elem.tagName
+                duplexBinding[tagName] && duplexBinding[tagName](elem, data.evaluator.apply(null, data.args), data)
             }
+            //   }
         },
         "repeat": function(data, vmodels) {
             var type = data.type
@@ -3335,6 +3336,7 @@
                 data.value = [widget, id, optName].join(",")
                 data[widget + "Id"] = id
                 data.evaluator = noop
+                elem.msData["ms-widget-id"] = id
                 var options = data[widget + "Options"] = avalon.mix({}, constructor.defaults, vmOptions || {}, widgetData)
                 elem.removeAttribute("ms-widget")
                 var vmodel = constructor(elem, data, vmodels) || {} //防止组件不返回VM

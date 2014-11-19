@@ -2,13 +2,44 @@
  * @cnName touch组件
  * @enName touch
  * @introduce
- *  <p> 支持对手机浏览器下touch事件、手势
+ *  <p> 支持对手机浏览器下touch事件、手势</p>
+ *  tap 拍击<br>
+ *  doubletap 双击<br>
+ *  hold 长按<br>
+ *  swipe 单指滑动 <br>
+ *  swipeleft 单指向左滑动 - 必定出发swipe<br>
+ *  swiperight 单指向右滑动 - 必定出发swipe<br>
+ *  swipeup 单指向上滑动 - 必定出发swipe<br>
+ *  swipedown 单指向下滑动 - 必定出发swipe<br>
+ *  ```javascript
+ *      avalon.bind(ele, "swipe*", function(e) {
+ *          e.detail = {direction: left||right||up||down}
+ *      })
+ *  ```
+ *  pinch 双指缩放<br>
+ *  pinchin 双指捏合 - 必定出发pinch<br>
+ *  pinchout 双指展开 - 必定出发pinch<br>
+ *  ```javascript
+ *      avalon.bind(ele, "pinch*", function(e) {
+ *          e.detail = {direction: in||out, scale: 缩放比}
+ *      })
+ *  ```
+ *  squeeze 三指以上指捏合<br>
+ *  splay 三指以上展开<br>
+ *  rotate 双指旋转<br>
+ *  rotatecw 顺时针旋转 - 必定出发rotate<br>
+ *  rotateccw 逆时针旋转 - 必定出发rotate<br>
+ *  ```javascript
+ *  avalon.bind(ele, "rotate*", function(e) {
+ *      e.detail = {direction: cw||ccw,deflection: 旋转角度数，单位一度}
+ *  })
+ *  ```
+ *  <p> 支持对手机浏览器下shake事件绑定的支持</p>
  *	```javascript
- *		avalon.bind(ele, "pinch", function(e) {
- *			e	
+ *		avalon.bind(ele, "shake", function(e) {
+ *   		e.direction = left||right||forward||back||up||down||以及组合，但不准确
  *		})
  *	```
-</p>
  */
 /* 
  * To change this license header, choose License Headers in Project Properties.
@@ -521,5 +552,9 @@ define(['avalon'], function(avalon) {
 
 	}()
 })
-
+/**
+ @links
+ [touch功能全览](avalon.touch.ex.html)
+ [shake摇一摇](avalon.shake.ex.html)
+ */
 

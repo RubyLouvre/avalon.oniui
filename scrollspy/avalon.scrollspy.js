@@ -1,7 +1,10 @@
 /**
-  * @description scrollspy组件，可通过监听元素原生的scroll事件或者结合scrollbar组件使用时，监听其scroll，根据scrollTop，scrollLeft计算判定配置指定的panel list应该切换到什么位置，绑定方式是ms-scrollspy=""，这样可以跟其他组件绑定在一个元素上
-  *
-  */
+ * @cnName scrollspy组件
+ * @enName scrollspy
+ * @introduce
+ *  <p> 可通过监听元素原生的scroll事件或者结合scrollbar组件使用时，监听其scroll，根据scrollTop，scrollLeft计算判定配置指定的panel list应该切换到什么位置，绑定方式是ms-scrollspy=""，这样可以跟其他组件绑定在一个元素上
+</p>
+ */
 define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"], function(avalon, template) {
     function getById(id) {
         return document.getElementById(id)
@@ -9,10 +12,10 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
     // 站位用来生成文档用注释
     // widget.defaults = {
     var defaults = {
-        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
+        //@config onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's interface
         onInit: avalon.noop,
-        onChange: avalon.noop,//@optMethod onChange(index, ele, widgetElement, options) 滚动到应该显示那个tab的index，以及targetListGetter返回的list[index]值，以及绑定scrollspy的元素，options
-        axis: "y",//@param 滚动条滚动的方向，默认是竖直方向y，取值为x的时候，表示水平方向
+        onChange: avalon.noop,//@config onChange(index, ele, widgetElement, options) 滚动到应该显示那个tab的index，以及targetListGetter返回的list[index]值，以及绑定scrollspy的元素，options
+        axis: "y",//@config 滚动条滚动的方向，默认是竖直方向y，取值为x的时候，表示水平方向
         targetListGetter: function(spytarget) {
             var spytarget = getById(spytarget),
             u = spytarget ? spytarget.getElementsByTagName("li") : false,
@@ -25,11 +28,11 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
                 }
             })
             return arr
-        }, //@optMethod targetListGetter() 获取tab list函数，元素是数字或者元素id索引，默认是元素id索引
-        panelListGetter: avalon.noop, //@optMethod panelListGetter() 获取panel list函数，返回一个数组，元素是dom，或者返回空，默认返回空
+        }, //@config targetListGetter() 获取tab list函数，元素是数字或者元素id索引，默认是元素id索引
+        panelListGetter: avalon.noop, //@config panelListGetter() 获取panel list函数，返回一个数组，元素是dom，或者返回空，默认返回空
         panelGetter: function(id, index, list, options) {
             return list != void 0 && list[index]  || id != void 0 && getById(id)
-        }, //@optMethod panelGetter(pannelId, pannelIndex, panelsList, options) 获取panel函数，默认返回 panelsList[pannelIndex] || Id = pannelId
+        }, //@config panelGetter(pannelId, pannelIndex, panelsList, options) 获取panel函数，默认返回 panelsList[pannelIndex] || Id = pannelId
         spytarget: void 0,
         _lock: false,
         scrollTo: avalon.noop,
@@ -104,7 +107,7 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
         })
         // if scrollbar is used
         if(scrollbarBinded) {
-            myScroll = avalon.vmodels[msData["ms-widget-id"]]
+            myScroll = avalon.vmodels[msData["ms-widget-id"] || element.getAttribute("avalonctrl")]
             initTop = myScroll.scrollTop
             initLeft = myScroll.scrollLeft
             scroller = myScroll.getScroller()
@@ -117,7 +120,7 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
                 onScroll(void 0, n, myScroll.getScroller() || scroller)
             })
         }
-        //@method scrollTo(id, index) 滚动到panel位置，滚动到 panelList[index] || dom.id = id的元素的地方，该方法绑定在onInit的返回的options参数上返回，供调用
+        //@interface scrollTo(id, index) 滚动到panel位置，滚动到 panelList[index] || dom.id = id的元素的地方，该方法绑定在onInit的返回的options参数上返回，供调用
         options.scrollTo = function(id, index) {
             var panelList =  options.panelListGetter(options.spytarget, options),
                 ele = options.panelGetter(id, index, panelList, options),

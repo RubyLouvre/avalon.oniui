@@ -1,3 +1,15 @@
+/**
+ * @cnName touch组件
+ * @enName touch
+ * @introduce
+ *  <p> 支持对手机浏览器下touch事件、手势
+ *	```javascript
+ *		avalon.bind(ele, "pinch", function(e) {
+ *			e	
+ *		})
+ *	```
+</p>
+ */
 /* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates

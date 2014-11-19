@@ -110,7 +110,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
             avalon.mix(vm, attrMaps)
 
             var inited
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if(inited) return
                 inited = true
                 var divCon = avalon.parseHTML(formateTpl(vmodel.template))
@@ -134,10 +134,15 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 newDiv.appendChild(inputEle)
                 inputEle.msRetain = false;
 
+                if (continueScan) {
+                    continueScan()
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
+                }
                 avalon.scan(newDiv, [vmodel].concat(vmodels))
-
-                vmodel._draw()
-
 
                 bar = newDiv.firstChild
 
@@ -163,13 +168,6 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                     }
                     avalon.scan(bar, [vmodel].concat(vmodels))
                 }
-
-                // callback after inited
-                if(typeof options.onInit === "function" ) {
-                    //vmodels是不包括vmodel的 
-                    options.onInit.call(element, vmodel, options, vmodels)
-                }
-
             }
             vm.$remove = function() {
                 newDiv.parentNode.insertBefore(inputEle, newDiv)
@@ -251,79 +249,79 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
             }
 
             // 根据样式绘制圆，圆角等
-            //@interface _draw() 动态更换皮肤后，可以调用这个方法更新提取switch样式
-            vm._draw = function() {
-                if(radiusSupport) return
-                var divs = newDiv.getElementsByTagName("div")
-                    , bs = newDiv.getElementsByTagName("b")
-                    , bg
-                    , ball
-                if(vmodel.getStyleFromSkin) {
-                    avalon.each(divs, function(i, item) {
-                        var ae = avalon(item)
-                        if(ae.hasClass("oni-flipswitch-bg")) bg = ae
-                    }) 
-                    avalon.each(bs, function(i, item) {
-                        var ae = avalon(item)
-                        if(ae.hasClass("oni-flipswitch-dragger-ball")) ball = ae
-                    }) 
-                }
-                if(bg) {
-                    // 从css里面提取颜色等设置，写入vmodel
-                    var par = avalon(newDiv),
-                        bgColor = bg.css("background-color"),
-                        offColor = bgColor,
-                        disabledColor = bgColor,
-                        w = bg.css("width"),
-                        h = bg.css("height")
-                    // 防止由于样式没有加载成功造成无法获取正确的样式
-                    if(!parseInt(h)) {
-                        return setTimeout(vmodel._draw, 16)
-                    }
-                    if(vmodel.disabled) {
-                        vmodel.disabled = false
-                        if(vmodel.checked) {
-                            bgColor = bg.css("background-color")
-                            vmodel.checked = false
-                            offColor = bg.css("background-color")
-                            vmodel.checked = true
-                        } else {
-                            offColor = bg.css("background-color")
-                            vmodel.checked = true
-                            bgColor = bg.css("background-color")
-                            vmodel.checked = false
-                        }
-                        vmodel.disabled = true
-                    } else {
-                        if(vmodel.checked) {
-                            bgColor = bg.css("background-color")
-                            vmodel.checked = false
-                            offColor = bg.css("background-color")
-                            vmodel.checked = true
-                        } else {
-                            vmodel.checked = true
-                            bgColor = bg.css("background-color")
-                            vmodel.checked = false
-                        }
-                        vmodel.disabled = true
-                        disabledColor = bg.css("background-color")
-                        vmodel.disabled = false
-                    }
-                    vmodel.onColor = bgColor
-                    vmodel.offColor = offColor
-                    vmodel.disabledColor = disabledColor
-                    vmodel.height = parseInt(h)
-                    vmodel.width = parseInt(w)
-                    bg.css("background-color", "transparent")
-                }
-                if(ball) {
-                    var bbColor = ball.css("background-color"),
-                        bw = parseInt(ball.css("width")) >> 0
-                    vmodel.draggerColor = bbColor
-                    vmodel.draggerRadius = bw / 2
-                    ball.css("background-color", "transparent")
-                }
-            }
+            //interface _draw() 动态更换皮肤后，可以调用这个方法更新提取switch样式
+            // vm._draw = function() {
+            //     if(radiusSupport) return
+            //     var divs = newDiv.getElementsByTagName("div")
+            //         , bs = newDiv.getElementsByTagName("b")
+            //         , bg
+            //         , ball
+            //     if(vmodel.getStyleFromSkin) {
+            //         avalon.each(divs, function(i, item) {
+            //             var ae = avalon(item)
+            //             if(ae.hasClass("oni-flipswitch-bg")) bg = ae
+            //         }) 
+            //         avalon.each(bs, function(i, item) {
+            //             var ae = avalon(item)
+            //             if(ae.hasClass("oni-flipswitch-dragger-ball")) ball = ae
+            //         }) 
+            //     }
+            //     if(bg) {
+            //         // 从css里面提取颜色等设置，写入vmodel
+            //         var par = avalon(newDiv),
+            //             bgColor = bg.css("background-color"),
+            //             offColor = bgColor,
+            //             disabledColor = bgColor,
+            //             w = bg.css("width"),
+            //             h = bg.css("height")
+            //         // 防止由于样式没有加载成功造成无法获取正确的样式
+            //         if(!parseInt(h)) {
+            //             return setTimeout(vmodel._draw, 16)
+            //         }
+            //         if(vmodel.disabled) {
+            //             vmodel.disabled = false
+            //             if(vmodel.checked) {
+            //                 bgColor = bg.css("background-color")
+            //                 vmodel.checked = false
+            //                 offColor = bg.css("background-color")
+            //                 vmodel.checked = true
+            //             } else {
+            //                 offColor = bg.css("background-color")
+            //                 vmodel.checked = true
+            //                 bgColor = bg.css("background-color")
+            //                 vmodel.checked = false
+            //             }
+            //             vmodel.disabled = true
+            //         } else {
+            //             if(vmodel.checked) {
+            //                 bgColor = bg.css("background-color")
+            //                 vmodel.checked = false
+            //                 offColor = bg.css("background-color")
+            //                 vmodel.checked = true
+            //             } else {
+            //                 vmodel.checked = true
+            //                 bgColor = bg.css("background-color")
+            //                 vmodel.checked = false
+            //             }
+            //             vmodel.disabled = true
+            //             disabledColor = bg.css("background-color")
+            //             vmodel.disabled = false
+            //         }
+            //         vmodel.onColor = bgColor
+            //         vmodel.offColor = offColor
+            //         vmodel.disabledColor = disabledColor
+            //         vmodel.height = parseInt(h)
+            //         vmodel.width = parseInt(w)
+            //         bg.css("background-color", "transparent")
+            //     }
+            //     if(ball) {
+            //         var bbColor = ball.css("background-color"),
+            //             bw = parseInt(ball.css("width")) >> 0
+            //         vmodel.draggerColor = bbColor
+            //         vmodel.draggerRadius = bw / 2
+            //         ball.css("background-color", "transparent")
+            //     }
+            // }
 
             return vm
         })

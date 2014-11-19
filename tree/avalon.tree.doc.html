@@ -792,6 +792,49 @@ callback配置说明
                         </td>
                     </tr>
                     <tr>
+                        <td>transformTozTreeNodes(data)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>将简单 Array 格式数据转换为 tree 使用的标准 JSON 嵌套数据格式
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>data</td>
+                                    <td></td>
+                                    <td>需要被转换的简单 Array 格式数据 或 某个单独的数据对象</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>transformToArray(data,filter,res)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>将 tree 使用的标准 JSON 嵌套格式的数据转换为简单 Array 格式
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>data</td>
+                                    <td></td>
+                                    <td>需要被转换的 tree 节点数据对象集合 或 某个单独节点的数据对象</td>
+                                </tr>
+                                <tr>
+                                    <td>filter</td>
+                                    <td>Function</td>
+                                    <td>格式化过滤器函数</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>reset(children)</td>
                         <td>Function</td>
                         <td></td>
@@ -969,16 +1012,16 @@ callback配置说明
             </fieldset>
             <ul class="example-links">
                 <li>
-                    <a href="avalon.tree.ex.html">tree</a>
+                    <a href="avalon.tree.ex.html">tree - Base模块功能</a>
                 </li>
                 <li>
-                    <a href="avalon.tree.ex1.html">tree</a>
+                    <a href="avalon.tree.ex1.html">tree - Edit模块</a>
                 </li>
                 <li>
-                    <a href="avalon.tree.ex2.html">tree</a>
+                    <a href="avalon.tree.ex2.html">tree - 简单数据模式</a>
                 </li>
                 <li>
-                    <a href="avalon.tree.ex3.html">tree</a>
+                    <a href="avalon.tree.ex3.html">tree - Check模块</a>
                 </li>
             </ul>
         </div>

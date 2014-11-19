@@ -1,87 +1,156 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
+    
     <head>
-        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-        <meta http-equiv="x-ua-compatible" content="ie=edge" />
-        <title>textbox文档说明</title>
-        <meta name="description" content="通过给输入域input、textarea设置不同的配置项可以使表单拥有舒服的视觉效果，也可以使其具有提示补全功能" />
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <title>Name 具有提示功能的输入框</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="通过给简单的表单输入域设置不同的配置项可以使表单拥有舒服的视觉效果，也可以使其具有提示补全功能
+ " />
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        />
+        <script src="../highlight/shCore.js"></script>
     </head>
-    <body class="doc">
+    
+    <body>
         <div class="wrapper">
             <h2>textbox</h2>
             <fieldset>
-                <legend>具有提示功能的输入框</legend>
-                通过给简单的表单输入域设置不同的配置项可以使表单拥有舒服的视觉效果，也可以使其具有提示补全功能，接下来列出textbox组件可以使用的配置项，然后分别举例说明
+                <legend>Name 具有提示功能的输入框</legend>
+                <p>通过给简单的表单输入域设置不同的配置项可以使表单拥有舒服的视觉效果，也可以使其具有提示补全功能</p>
             </fieldset>
             <fieldset>
                 <legend>使用说明</legend>
-                <table class="table-doc">
-                    <col width="180"/>
-                    <col width="180"/>
-                    <thead>
-                        <tr>
-                            <th>名字</th>
-                            <th>默认值</th>
-                            <th>说明</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="3" align="center">配置参数</td>
-                        </tr>
-                        <tr>
-                            <td>data-textbox-placeholder</td>
-                            <td>456</td>
-                            <td>置textbox输入框的初始占位符，存在则显示，不存在则隐藏，当focus时隐藏</td>
-                        </tr>
-                        <tr>
-                            <td>data-text-suggest</td>
-                            <td>"test" || "phone" || other </td>
-                            <td>配置输入框有自动提示补全功能，且提示类型为suggest的属性值，由用户自定义，默认配置为false，也就是不开启自动补全功能</td>
-                        </tr>
-                        <tr>
-                            <td>data-textbox-suggest-on-change</td>
-                            <td>"changeCallback" or other 用户的定义</td>
-                            <td>配置提示补全时切换提示项之后的callback</td>
-                        </tr>
-                        <tr>
-                            <td>data-textbox-suggest-focus</td>
-                            <td>true</td>
-                            <td>特殊的suggest，当focus时即显示特定的提示列表</td>
-                        </tr>
-                        <tr>
-                            <td>autoFocus</td>
-                            <td>false</td>
-                            <td>如果想要鼠标悬停在textbox上时就focus textbox，设置此属性为true即可</td>
-                        </tr>
-                        <tr>
-                            <td>tabIndex</td>
-                            <td>-1</td>
-                            <td>配置textbox在进行tab切换时的tabIndex，切换顺序从值小的开始，必须配置为大于0的值</td>
-                        </tr>
-                        <tr>
-                            <td>width</td>
-                            <td>200</td>
-                            <td>配置textbox的显示宽</td>
-                        </tr>
-                        <tr>
-                            <td>disabledClass</td>
-                            <td>"ui-textbox-disabled"</td>
-                            <td>配置输入域disabled时组件包装元素设置的类，多个类以空格分隔</td>
-                        </tr>
-                    </tbody>
+                <table class="table-doc" border="1">
+                    <colgroup>
+                        <col width="180" />
+                        <col width="80" />
+                        <col width="180" />
+                    </colgroup>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>suggest</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>配置输入框有自动提示补全功能，提示类型由用户自定义，默认配置为false，也就是不开启自动补全功能</td>
+                    </tr>
+                    <tr>
+                        <td>autoTrim</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否自动过滤用户输入的内容头部和尾部的空格</td>
+                    </tr>
+                    <tr>
+                        <td>placeholder</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>配置textbox输入框的提示文字(占位符)</td>
+                    </tr>
+                    <tr>
+                        <td>tabIndex</td>
+                        <td>Unary</td>
+                        <td>-1</td>
+                        <td>配置textbox在进行tab切换时的tabIndex，切换顺序从值小的开始，必须配置为大于0的值</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>Unary</td>
+                        <td>-1</td>
+                        <td>配置textbox的显示宽</td>
+                    </tr>
+                    <tr>
+                        <td>autoFocus</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>如果想要鼠标悬停在textbox上时就focus textbox，设置此属性为true即可</td>
+                    </tr>
+                    <tr>
+                        <td>disabledClass</td>
+                        <td>String</td>
+                        <td>"oni-textbox-disabled"</td>
+                        <td>配置输入域disabled时组件包装元素设置的类，多个类以空格分隔</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(tmp)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>模板函数,方便用户自定义模板
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>str</td>
+                                    <td>String</td>
+                                    <td>默认模板</td>
+                                </tr>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>Object</td>
+                                    <td>vmodel</td>
+                                </tr>
+                                <tr>
+                                    <td>返回</td>
+                                    <td>String</td>
+                                    <td>新模板</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>suggestOnChange</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>配置提示补全时切换提示项之后的callback</td>
+                    </tr>
+                    <tr>
+                        <td>suggestFocus</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>特殊的suggest，当focus时即显示特定的提示列表</td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>widgetElement</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>绑定组件元素的dom对象的引用</td>
+                    </tr>
                 </table>
             </fieldset>
-            <h3>demo示例：</h3>
-            <ol class="example-links">
-                <li><a href="avalon.textbox.ex1.html">基本textbox、配置了width、tabIndex的textbox以及配置了disabledClass的textbox</a></li>
-                <li><a href="avalon.textbox.ex2.html">拥有占位符的textbox</a></li>
-                <li><a href="avalon.textbox.ex3.html">切换禁用textbox</a></li>
-                <li><a href="avalon.textbox.ex4.html">有自动补全功能的textbox</a></li>
-                <li><a href="avalon.textbox.ex5.html">无视用户输入的自动补全</a></li>
-                <li><a href="avalon.textbox.ex6.html">添加回调操作的自动补全</a></li>
-            </ol>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.textbox.ex1.html">基本textbox、配置了width、tabIndex的textbox以及配置了disabledClass的textbox</a>
+                </li>
+                <li>
+                    <a href="avalon.textbox.ex2.html">拥有占位符的textbox</a>
+                </li>
+                <li>
+                    <a href="avalon.textbox.ex3.html">切换禁用textbox</a>
+                </li>
+                <li>
+                    <a href="avalon.textbox.ex4.html">有自动补全功能的textbox</a>
+                </li>
+                <li>
+                    <a href="avalon.textbox.ex5.html">无视用户输入的自动补全</a>
+                </li>
+                <li>
+                    <a href="avalon.textbox.ex6.html">添加回调操作的自动补全</a>
+                </li>
+            </ul>
         </div>
     </body>
+
 </html>

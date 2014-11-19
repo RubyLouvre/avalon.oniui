@@ -18,9 +18,19 @@ define(['avalon',
         var options = data.miniswitchOptions;
         var vmodel = avalon.define('miniswitch' + setTimeout("1"), function(vm) {
             vm.$opts = options;
+            vm.$init = function(continueScan) {
+                if(continueScan){
+                    continueScan()
+                }else{
+                    avalon.log("请尽快升到avalon1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels));
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
+                }
+            }
         });
         avalon(element).attr('ms-widget', ['switchdropdown', data.miniswitchId, '$opts'].join());
-        avalon.scan(element, [vmodel].concat(vmodels));
         return vmodel;
     };
 

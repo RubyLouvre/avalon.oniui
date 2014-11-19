@@ -1,3 +1,15 @@
+/**
+ * @cnName 摇一摇组件
+ * @enName shake
+ * @introduce
+ *  <p> 支持对手机浏览器下shake事件绑定的支持
+ *	```javascript
+ *		avalon.bind(window, "shake", function(e) {
+ *			e	
+ *		})
+ *	```
+</p>
+ */
 define(['avalon'], function(avalon) {
 	if('ondevicemotion' in window) {
 		var lastXYZ = {}, // 上一次devicemotion的3个方向的加速度

@@ -1,12 +1,12 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname: "ui-slider";
+$uiname: "oni-slider";
 .#{$uiname} {
     position: relative;
     text-align: left;
     @include inline-block();
     width: 100%;
-    .ui-helper-hidden-accessible {
+    .oni-helper-hidden-accessible {
         position: absolute;
         height: 1px;
         width: 1px;
@@ -16,7 +16,7 @@ $uiname: "ui-slider";
         padding: 0;
         clip: rect(0px 0px 0px 0px);
     }
-    .ui-corner-all {
+    .oni-corner-all {
         @include border-radius(5px);
     }
     @if($oinui-theme == smoothness) {
@@ -35,12 +35,12 @@ $uiname: "ui-slider";
         @if($oinui-theme == smoothness) {
             background: $ui-state-active-background-color;
         }
-        &.ui-state-hover{
+        &.oni-state-hover{
             @if($oinui-theme == smoothness) {
                 background: lighten( $ui-state-active-background-color, 20%);
             }
         }
-        &.ui-state-active, &.ui-state-focus {
+        &.oni-state-active, &.oni-state-focus {
             @if($oinui-theme == smoothness) {
                 background:#22dddd;
             }
@@ -94,7 +94,7 @@ $uiname: "ui-slider";
             }
         }
     }
-    &.ui-state-disabled {
+    &.oni-state-disabled {
         .#{$uiname}-handle, .#{$uiname}-range {
             @if($oinui-theme == smoothness) {
                 background: #ccc;

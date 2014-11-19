@@ -1,8 +1,8 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname: "ui-button";
+$uiname: "oni-button";
 @mixin button-background($startColor, $endColor: $startColor, $textColor: #fff) {
-	&:active, &.ui-state-active,&[disabled], &.ui-state-disabled  {
+	&:active, &.oni-state-active,&[disabled], &.oni-state-disabled  {
         color: $textColor;
         background-color: $endColor;
         *background-color: darken($endColor, 5%);
@@ -10,7 +10,7 @@ $uiname: "ui-button";
 
     // IE 7 + 8 can't handle box-shadow to show active, so we darken a bit ourselves
     &:active,
-        &.ui-state-active {
+        &.oni-state-active {
         background-color: darken($endColor, 10%) \9;
     }
 }
@@ -71,7 +71,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
     &:link {
     	text-decoration: none;
     }
-    &.ui-state-default {
+    &.oni-state-default {
         border-color: #ccc;
         background-color: #f8f8f8;
     }
@@ -81,7 +81,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         border-color: #d9d9d9;
     }
     // Active state
-    &.ui-state-active, &:active {
+    &.oni-state-active, &:active {
         background-color: darken($white, 10%);
         background-color: darken($white, 15%) \9;
         background-image: none;
@@ -90,7 +90,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
     }
     
     // Disabled state
-    &.ui-state-disabled, &[disabled] {
+    &.oni-state-disabled, &[disabled] {
         background-color: #f8f8f8;
         border-color: #d9d9d9;
         color: #cccccc;
@@ -105,7 +105,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
             background-color: #3d8be9;
             border-color: #1a5092;
         }
-        &.ui-state-disabled {
+        &.oni-state-disabled {
             background-color: #428bca;
             color: #357ebd;
             color: #ffffff;
@@ -121,7 +121,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
             background-color: #ec971f;
             border-color: #d58512;
         }
-        &.ui-state-disabled {
+        &.oni-state-disabled {
             background-color: #f0ad4e;
             border-color: #eea236;
             color: #ffffff;
@@ -137,7 +137,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
             background-color: #c9302c;
             border-color: #ac2925;
         }
-        &.ui-state-disabled {
+        &.oni-state-disabled {
             background-color: #d9534f;
             border-color: #d43f3a;
             color: #ffffff;
@@ -153,7 +153,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
             background-color: #68c969;
             border-color: #3e973e;
         }
-        &.ui-state-disabled {
+        &.oni-state-disabled {
             background-color: #5cb85c;
             border-color: #4cae4c;
             color: #ffffff;
@@ -169,7 +169,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
             background-color: #31b0d5;
             border-color: #269abc;
         }
-        &.ui-state-disabled {
+        &.oni-state-disabled {
             background-color: #5bc0de;
             border-color: #46b8da;
             color: #ffffff;
@@ -185,7 +185,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
             background-color: #222;
             border-color: #000;
         }
-        &.ui-state-disabled {
+        &.oni-state-disabled {
             background-color: #333;
             border-color: #222;
             @include opacity(0.6);
@@ -193,24 +193,24 @@ $btnInverseBackgroundHighlight:     $grayDarker;
     }
 
     // button corner
-    &.ui-corner-all {
+    &.oni-corner-all {
     	@include border-radius(2px);
     }
-    &.ui-corner-left {
+    &.oni-corner-left {
         @include border-left-radius(2px);
     }
-    &.ui-corner-right {
+    &.oni-corner-right {
         @include border-right-radius(2px);
     }
-    &.ui-corner-top {
+    &.oni-corner-top {
         @include border-top-radius(2px);
     }
-    &.ui-corner-bottom {
+    &.oni-corner-bottom {
         @include border-bottom-radius(2px);
     }
 
     // icon
-    .ui-icon {
+    .oni-icon {
         font-size: 12px;
     	overflow: hidden;
         line-height: 24px;
@@ -248,7 +248,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
 .#{$uiname}-small {
     padding: 0 5px;
     height: 22px;
-    .ui-icon {
+    .oni-icon {
         font-size: 12px;
         line-height: 20px;
         height: 20px;
@@ -263,7 +263,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
     font-size: 14px;
     padding: 0 15px;
     height: 32px;
-    .ui-icon {
+    .oni-icon {
         font-size: 14px;
         line-height: 30px;
         height: 30px;
@@ -277,7 +277,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
 .#{$uiname}-large {
     padding: 0 25px;
     height: 40px;
-    .ui-icon {
+    .oni-icon {
         font-size: 14px;
         line-height: 38px;
         height: 38px;
@@ -289,7 +289,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
     }
 }
 
-.ui-buttonset {
+.oni-buttonset {
     font-size: 0;
     @include inline-block();
     _display: inline;
@@ -301,14 +301,14 @@ $btnInverseBackgroundHighlight:     $grayDarker;
     .#{$uiname}-first {
         border-left-width: 1px;
     }
-    .ui-icon {
+    .oni-icon {
         *margin-top: 0;
     }
     .#{$uiname}-text {
         *margin-top: 0;
     }
 }
-.ui-buttonset-vertical {
+.oni-buttonset-vertical {
     _width: 100px;
     .#{$uiname} {
         display: block;

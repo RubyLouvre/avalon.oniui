@@ -16,8 +16,7 @@ define(["avalon"], function() {
             var elem = data.element
             var maskText = elem.getAttribute("data-duplex-mask")
             if (maskText) {
-                data.msMask = new Mask(elem, maskText)
-
+                var mask = data.msMask = new Mask(elem, maskText)
                 data.bound("keydown", function(e) {
                     elem.userTrigger = false
                     var k = e.which || e.keyCode
@@ -25,7 +24,7 @@ define(["avalon"], function() {
                         return
                     }
                     var caret = getCaret(elem)
-                    if (k == 39) {//向右
+                    if (k === 39) {//向右
                         var i = mask.caretData.indexOf(null, caret.end)
                         if (i === -1) {
                             i = mask.caretData.indexOf(null)
@@ -47,32 +46,36 @@ define(["avalon"], function() {
                     }
                 })
                 data.bound("click", function(e) {
+                    setTimeout(function() {//搞掉keyup中的  elem.userTrigger = true
+                        elem.userTrigger = false
+                    })
+                    if (elem.userTrigger === true) {//防止触发了keyup的操作又触发这里的
+                        return
+                    }
                     var caret = getCaret(elem)
                     var i = mask.caretData.indexOf(null, caret.end)
                     if (i === -1) {
                         i = mask.caretData.indexOf(null)
                     }
-                    elem.userTrigger = true
                     setTimeout(function() {
                         setCaret(elem, i, i + 1)
                     })
                 })
-                var mask = data.msMask
                 function showMask(e) {
-                    if (!e || !mask.masked) {
-                        elem.value = mask.valueMask
-                        elem.userTrigger = mask.masked = true
-                        var index = mask.vmodelData.indexOf(null)//定位于第一个要填空的位置上
-                        if (index !== -1) {
-                            mask.index = index
-                            setCaret(elem, index, index + 1)
-                        }
+                    elem.value = mask.valueMask
+                    elem.userTrigger = true
+                    var index = mask.vmodelData.indexOf(null)//定位于第一个要填空的位置上
+                    if (index !== -1) {
+                        setCaret(elem, index, index + 1)
                     }
                 }
                 function hideMask() {
-                    if ((mask.hideIfInvalid && !mask.valid) ||
-                            (mask.hideIfPristine && mask.value === mask.valueMask)) {
-                        elem.value = mask.oldValue = mask.masked = ""//注意IE6-8下，this不指向element
+                    var invalid = mask.vmodelData.some(function(el) {
+                        return el === null
+                    })
+                    if ((mask.hideIfInvalid && invalid) ||
+                            (mask.hideIfPristine && elem.value === mask.valueMask)) {
+                        elem.value = elem.oldValue = "" //注意IE6-8下，this不指向element
                     }
                 }
                 if (mask.showAlways) {
@@ -93,35 +96,27 @@ define(["avalon"], function() {
         },
         get: function(val, data) {//用户点击时会先触发这里
             var elem = data.element
-            avalon.log("get", val, elem.userTrigger)
             var mask = data.msMask
-            console.log("++++++++++++")
             if (elem.userTrigger) {
                 mask.getter(val)
                 elem.oldValue = val
                 elem.userTrigger = false
                 var index = mask.vmodelData.indexOf(null)
                 if (index === -1) {
-                    index = mask.index
-                } else {
-                    mask.index = index
-                }
-                //  console.log(index)
-                setTimeout(function() {
-                    setCaret(elem, index, index + 1)
-                })
-                return mask.vmodelData.join("")
-            } else {
-                if (val !== "") {
-                    if (!mask.match(val)) {
-                        console.log("fix")
-                        elem.oldValue = mask.fix(val)
+                    var caret = getCaret(elem)
+                    var index = mask.caretData.indexOf(null, caret.end)
+                    if (index === -1) {
+                        index = mask.caretData.indexOf(null)
                     }
-                    return val
+                    setCaret(elem, index, index + 1)
                 } else {
-                    return ""
+                    setTimeout(function() {
+                        setCaret(elem, index, index + 1)
+                    })
                 }
             }
+            elem.oldValue = val
+            return mask.vmodelData.join("")
         },
         set: function(val, data) {//将vm中数据放到这里进行处理，让用户看到经过格式化的数据
             // 第一次总是得到符合格式的数据
@@ -135,7 +130,6 @@ define(["avalon"], function() {
             } else {
                 return ""
             }
-
         }
     }
 
@@ -152,18 +146,16 @@ define(["avalon"], function() {
         this.dataMask = dataMask //@config {String} 用户在input/textarea元素上通过data-duplex-mask定义的属性值
         //第一次将dataMask放进去，得到element.value为空时，用于提示的valueMask
         getDatas.call(this)
-        // console.log(this.viewData.join("") + " * ")
         this.valueMask = this.viewData.join("")// valueMask中的元字符被全部替换为对应的占位符后的形态，用户实际上在element.value看到的形态
     }
     Mask.defaults = {
         placehoder: "_", //@config {Boolean} "_", 将元字符串换为"_"显示到element.value上，如99/99/9999会替换为__/__/____，可以通过data-duplex-mask-placehoder设置
-        hideIfInvalid: false, //@config {Boolean} false, 如果它不匹配就会在失去焦点时清空value，可以通过data-duplex-mask-hide-if-invalid设置
+        hideIfInvalid: false, //@config {Boolean} false, 如果它不匹配就会在失去焦点时清空value(匹配是指所有占位符都被正确的字符填上)，可以通过data-duplex-mask-hide-if-invalid设置
         hideIfPristine: true, //@config {Boolean} true如果它没有改动过就会在失去焦点时清空value，可以通过data-duplex-mask-hide-if-pristine设置
         showIfHover: false, //@config {Boolean} false 当鼠标掠过其元素上方就显示它出来，可以通过data-duplex-mask-show-if-hover设置
         showIfFocus: true, //@config {Boolean} true 当用户让其元素得到焦点就显示它出来，可以通过data-duplex-mask-show-if-focus设置
         showAlways: false, //@config {Boolean} false 总是显示它，可以通过data-duplex-mask-show-always设置
-        translations: {//@config {Object} 此对象上每个键名都是元字符，都对应一个对象，上面有pattern(正则)，placehoder(占位符，如果你不想用"_"),optional（表示可选）
-            "0": {pattern: /\d/, optional: true},
+        translations: {//@config {Object} 此对象上每个键名都是元字符，都对应一个对象，上面有pattern(正则)，placehoder(占位符，如果你不想用"_")
             "9": {pattern: /\d/},
             "A": {pattern: /[a-zA-Z]/},
             "*": {pattern: /[a-zA-Z0-9]/}
@@ -174,7 +166,7 @@ define(["avalon"], function() {
         var n = array.length
         var translations = this.translations
         this.viewData = array.concat() //占位符
-        this.caretData = array.concat()
+        this.caretData = array.concat()//光标
         this.vmodelData = new Array(n)
         // (9999/99/99) 这个是data-duplex-mask的值，其中“9”为“元字符”，“(”与 “/” 为“提示字符”
         // (____/__/__) 这是用占位符处理后的mask值
@@ -337,7 +329,6 @@ define(["avalon"], function() {
  <col width="190" />
  </colgroup>
  *    <tr><th>元字符</th><th>意义</th></tr>
- *    <tr><td>0</td><td>表示任何数字，0-9，正则为/\d/， <code>可选</code>，即不匹配对最终结果也没关系</td></tr>
  *    <tr><td>9</td><td>表示任何数字，0-9，正则为/\d/</td></tr>
  *    <tr><td>A</td><td>表示任何字母，，正则为/[a-zA-Z]/</td></tr>
  *    <tr><td>*</td><td>表示任何非空字符，正则为/\S/</td></tr>
@@ -348,4 +339,5 @@ define(["avalon"], function() {
  @links
  [例子1](avalon.mask.ex1.html)
  [例子2](avalon.mask.ex2.html)
+ [例子3](avalon.mask.ex2.html)
  */

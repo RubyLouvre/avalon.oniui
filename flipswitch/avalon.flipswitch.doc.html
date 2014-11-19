@@ -1,85 +1,168 @@
 <!DOCTYPE html>
 <html>
+    
     <head>
-        <title>flipswitch组件</title>
+        <title>滑动按钮组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content=" 将checkbox表单元素转化成富UI的开关，不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑
+
+ " />
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        />
         <script src="../highlight/shCore.js"></script>
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
-        <meta name="description" content="flipswitch组件，将checkbox表单元素转化成富UI的开关，不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑"/>
     </head>
+    
     <body>
         <div class="wrapper">
             <h2>flipswitch</h2>
             <fieldset>
-                <legend>滑动式开关</legend>
-                flipswitch组件，将checkbox表单元素转化成富UI的开关，不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑
+                <legend>滑动按钮组件</legend>
+                <p>将checkbox表单元素转化成富UI的开关，不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑</p>
             </fieldset>
             <fieldset>
                 <legend>使用说明</legend>
-                <table class="table-doc">
-                    <col width="180"/>
-                    <col width="180"/>
+                <table class="table-doc" border="1">
+                    <colgroup>
+                        <col width="180" />
+                        <col width="80" />
+                        <col width="180" />
+                    </colgroup>
                     <tr>
-                        <th width="25%">名字</th><th width="25%">默认值</th><th width="50%">说明</th>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
                     </tr>
                     <tr>
-                        <td colspan="3" aligin="center">配置参数</td>
+                        <td align="center" colspan="4">配置参数</td>
                     </tr>
-                    <!--auto doc start-->
                     <tr>
-                        <td>toggle</td><td> true</td><td> 组件是否显示，可以通过设置为false来隐藏组件</td></tr>
+                        <td>toggle</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>组件是否显示，可以通过设置为false来隐藏组件</td>
+                    </tr>
                     <tr>
-                        <td>onText</td><td> "<b class=\"oni-flipswitch-on\"></b>"</td><td> 选中状态提示文字</td></tr>
+                        <td>onText</td>
+                        <td>String</td>
+                        <td>"
+                            <b class=\ "oni-flipswitch-on\"></b>"</td>
+                        <td>选中状态提示文字</td>
+                    </tr>
                     <tr>
-                        <td>offText</td><td> ""//"&times;"</td><td> 未选中状态提示文字</td></tr>
+                        <td>size</td>
+                        <td>String</td>
+                        <td>"normal"</td>
+                        <td>滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成ui-flipswitch-{{size}}添加给flipswitch模板容器</td>
+                    </tr>
                     <tr>
-                        <td>size</td><td> "normal"</td><td> 滑动条类型，默认normal，可设置为large,small,mini，以及其他任意组件不自带的名词，可以用来注入自定义class，生成oni-flipswitch-{{size}}添加给flipswitch模板容器</td></tr>
+                        <td>theme</td>
+                        <td>String</td>
+                        <td>"normal"</td>
+                        <td>主题，normal,success,warning,danger</td>
+                    </tr>
                     <tr>
-                        <td>theme</td><td> "normal"</td><td> 主题，normal,success,warning,danger</td></tr>
+                        <td>draggable</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否支持拖动切换状态</td>
+                    </tr>
                     <tr>
-                        <td>draggable</td><td> false</td><td> 是否支持拖动切换状态</td></tr>
+                        <td>disabled</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>禁用</td>
+                    </tr>
                     <tr>
-                        <td>disabled</td><td> false</td><td> 禁用</td></tr>
+                        <td>checked</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>默认选中状态</td>
+                    </tr>
                     <tr>
-                        <td>checked</td><td> false</td><td> 默认选中状态</td></tr>
+                        <td>animated</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否开启切换动画效果</td>
+                    </tr>
                     <tr>
-                        <td>animated</td><td> true</td><td> 是否开启切换动画效果</td></tr>
+                        <td>hdir</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>开启、关闭选项排列顺序默认为true，即on-off,false为off-on</td>
+                    </tr>
                     <tr>
-                        <td>hdir</td><td> true</td><td> 开启、关闭选项排列顺序默认为true，即on-off,false为off-on</td></tr>
+                        <td>onInit</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td>
+                    </tr>
                     <tr>
-                        <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+                        <td>_animateArrMaker(from,to)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>_animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]</td>
+                    </tr>
                     <tr>
-                        <td>_animateArrMaker</td><td>配置接口</td><td>_animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]</td></tr>
+                        <td>onChange</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onChange(newValue, vmodel) 选中状态发生变化时触发，参数为当前的选中状态及vmodel对象</td>
+                    </tr>
                     <tr>
-                        <td>onChange</td><td>回调函数</td><td>onChange(newValue, vmodel) 选中状态发生变化时触发，参数为当前的选中状态及vmodel对象</td></tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
                     <tr>
-                        <td>getTemplate</td><td>配置接口</td><td>getTemplate(tmpl, opts) 用于修改模板的接口，默认不做修改</td></tr>
+                        <td>toggleStatus()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>toggleStatus 交替改变选中状态</td>
+                    </tr>
                     <tr>
-                        <td>toggleStatus</td><td>接口调用</td><td>toggleStatus 交替改变选中状态</td></tr>
+                        <td>disable()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>disable 禁用组件</td>
+                    </tr>
                     <tr>
-                        <td>disable</td><td>接口调用</td><td>disable 禁用组件</td></tr>
+                        <td>enable()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>enable 启用组件</td>
+                    </tr>
                     <tr>
-                        <td>enable</td><td>接口调用</td><td>enable 启用组件</td></tr>
-                    <tr>
-                        <td>_draw</td><td>接口调用</td><td>_draw() 动态更换皮肤后，可以调用这个方法更新提取switch样式</td></tr>
-                    <!--auto doc end-->
+                        <td>_draw()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>_draw() 动态更换皮肤后，可以调用这个方法更新提取switch样式</td>
+                    </tr>
                 </table>
             </fieldset>
-            <!--source start-->
-            <!--source end-->
-            <h3>例子：</h3>
-            <!--ex list start-->
-            <ol class="example-links">
-                <li><a href="avalon.flipswitch.ex.html">不同大小size，默认设置，选中状态</a></li>
-                <li><a href="avalon.flipswitch.ex1.html">不同大小size，支持可拖动切换，选中状态</a></li>
-                <li><a href="avalon.flipswitch.ex2.html">不同大小size，OFF-ON顺序排列，选中状态</a></li>
-                <li><a href="avalon.flipswitch.ex3.html">不同大小size，disabled状态，选中状态</a></li>
-                <li><a href="avalon.flipswitch.ex4.html">不同大小size，自定义ON-OFF文本，选中状态</a></li>
-                <li><a href="avalon.flipswitch.ex5.html">不同大小size，通过接口修改状态，选中状态</a></li>
-                <li><a href="avalon.flipswitch.ex6.html">flipswitch + tooltip</a></li>
-            </ol>
-            <!--ex list end-->
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.flipswitch.ex.html">不同大小size，默认设置，选中状态</a>
+                </li>
+                <li>
+                    <a href="avalon.flipswitch.ex1.html">不同大小size，支持可拖动切换，选中状态</a>
+                </li>
+                <li>
+                    <a href="avalon.flipswitch.ex2.html">不同大小size，OFF-ON顺序排列，选中状态</a>
+                </li>
+                <li>
+                    <a href="avalon.flipswitch.ex3.html">不同大小size，disabled状态，选中状态</a>
+                </li>
+                <li>
+                    <a href="avalon.flipswitch.ex4.html">不同大小size，自定义ON-OFF文本，选中状态</a>
+                </li>
+                <li>
+                    <a href="avalon.flipswitch.ex5.html">不同大小size，通过接口修改状态，选中状态</a>
+                </li>
+                <li>
+                    <a href="avalon.flipswitch.ex6.html">flipswitch + tooltip</a>
+                </li>
+            </ul>
         </div>
     </body>
+
 </html>

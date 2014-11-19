@@ -1,6 +1,6 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname: "ui-textbox";
+$uiname: "oni-textbox";
 .#{$uiname} {
     @include inline-block();
     outline: medium none;
@@ -11,12 +11,12 @@ $uiname: "ui-textbox";
         background-color: #FFFFFF;
         border: 1px solid #CCCCCC;
     }
-    &.ui-state-hover {
+    &.oni-state-hover {
         @if($oinui-theme == smoothness) {
             border-color: #999999;
         }
     }
-    &.ui-state-focus {
+    &.oni-state-focus {
         @if($oinui-theme == smoothness) {
             border-color: #3775c0;
         }

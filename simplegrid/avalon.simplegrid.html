@@ -1,13 +1,13 @@
-<div class="ui-simplegrid">
-    <div class="ui-simplegrid-scroll-wrapper" 
+<div class="oni-simplegrid">
+    <div class="oni-simplegrid-scroll-wrapper" 
          ms-css-height="tbodyHeight+theadHeight" 
          ms-widget="scrollbar,$simplegrid{{MS_OPTION_ID}},$spgScrollbarOpts" 
          ms-css-padding-bottom="paddingBottom"
          data-scrollbar-position="right,bottom">
-        <div class="ui-simplegrid-wrapper"  
+        <div class="oni-simplegrid-wrapper"  
              ms-css-nowidth="gridWidth" 
              >
-            <table class="ui-simplegrid-thead" 
+            <table class="oni-simplegrid-thead" 
                    ms-css-margin-left="cssLeft" >
                 <tr>
                     MS_OPTION_THEAD_BEGIN
@@ -25,24 +25,24 @@
                         >{{el.text | html}}
                         <span  ms-click="sortColumn(el, $index)"
                                ms-if="el.sortable" 
-                               ms-class="ui-helper-{{ getArrow(el, $index)}}">
-                            <span class="ui-helper-sort-top"></span>
-                            <span class="ui-helper-sort-bottom"></span>
+                               ms-class="oni-helper-{{ getArrow(el, $index)}}">
+                            <span class="oni-helper-sort-top"></span>
+                            <span class="oni-helper-sort-bottom"></span>
                         </span>
                     </td>
                     MS_OPTION_THEAD_END
                 </tr>
             </table>
-            <table class="ui-simplegrid-tbody" 
+            <table class="oni-simplegrid-tbody" 
                    ms-css-margin-left="cssLeft" >
                 <tr data-repeat-rendered="_tbodyRenderedCallback"
                     ms-repeat-row="_data"
                     ms-class="{{rowClass}}:$index % 2 && _data.size()>=2"
-                    ms-hover="ui-state-hover"
-                    ms-class-1="ui-state-selected: row.checked"
+                    ms-hover="oni-state-hover"
+                    ms-class-1="oni-state-selected: row.checked"
                     >
                     MS_OPTION_TBODY_BEGIN
-                    <td class="ui-simplegrid-td"
+                    <td class="oni-simplegrid-td"
                         data-with-sorted="getColumnsOrder"
                         ms-repeat="row" 
                         ms-visible="getCellProperty($key,'toggle')" 
@@ -57,18 +57,18 @@
             <div ms-if="!_data.size()" 
                  ms-css-height="noResultHeight"
                  ms-css-line-height="{{noResultHeight}}px"
-                 class="ui-simplegrid-empty">
+                 class="oni-simplegrid-empty">
                 {{noResultContent|html}}
             </div>
         </div>
-        <div class="ui-scrollbar-scroller">
-            <div class="ui-simplegrid-scroll-marker" ms-css-height="getScrollerHeight()" 
+        <div class="oni-scrollbar-scroller">
+            <div class="oni-simplegrid-scroll-marker" ms-css-height="getScrollerHeight()" 
                  ms-css-nowidth="gridWidth">
             </div>
 
         </div>
     </div>
-    <div class="ui-simplegrid-pager-wrapper"  ms-if="pageable" id="pager-MS_OPTION_ID" >
+    <div class="oni-simplegrid-pager-wrapper"  ms-if="pageable" id="pager-MS_OPTION_ID" >
 
     </div>
     <div ms-widget="loading"></div>

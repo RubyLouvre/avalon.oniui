@@ -5,28 +5,11 @@
         <title>duplexHooks</title>
         <meta http-equiv="X-UA-Compatible" content="IE=8" />
         <script src="../avalon.js"></script>
-        <style>
-            table {
-                border-collapse:collapse;
-            }
-            td {
-                border:1px solid #ddd;
-            }
-            .selected {
-                background: red;
-            }
-        </style>
         <script>
             require(["mask/avalon.mask.js"], function() {
                 var a = avalon.define({
                     $id: "test",
-                    aaa: "",
-                    bbb: "",
-                    ccc: "",
-                    ddd: "",
-                    eee: "",
-                    fff: "",
-                    ggg: ""
+                    aaa: ""
                 })
                 a.$watch("aaa", function(v) {
                     // console.log(v)
@@ -36,22 +19,48 @@
         </script>
     </head>
     <body ms-controller="test">
-        <p>日期 <input ms-duplex-mask="aaa"
-                     data-duplex-mask="9999/99/99"
-                     data-duplex-mask-show-if-hover="true"
-                     data-duplex-mask-clear-if-pristine="false" /></p>
-        <p>时间 <input ms-duplex-mask="bbb"
-                     data-duplex-mask="99/99/99"
-                     data-duplex-mask-show-if-hover="true"
-                     data-duplex-mask-clear-if-pristine="false" /></p>
-        <p>日期+时间 <input ms-duplex-mask="ccc"
-                        data-duplex-mask="9999/99/99 99:99:99"
-                        data-duplex-mask-show-if-hover="true"
-                        data-duplex-mask-clear-if-pristine="false" /></p>
-        <p>邮政编码 <input ms-duplex-mask="ddd"
-                       data-duplex-mask="999999"
-                       data-duplex-mask-show-if-hover="true"
-                       data-duplex-mask-clear-if-pristine="false" /></p>
-  
+        <input  size='30'
+                ms-duplex-mask="aaa"
+                data-duplex-mask="【99/99其他提示字符9999】"
+                data-duplex-mask-clear-if-pristine="false"
+                data-duplex-mask-translations ="{
+                A: {pattern: /[A-Za-z0-9]/}, 
+                S: {pattern: /[A-Za-z]/},  
+                Y: {pattern: /[0-9]/}
+                }"
+                />必须输入数字
+ <pre class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8"&gt;
+        &lt;title&gt;duplexHooks&lt;/title&gt;
+        &lt;meta http-equiv="X-UA-Compatible" content="IE=8" /&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script&gt;
+            require(["mask/avalon.mask.js"], function() {
+                avalon.define({
+                    $id: "test",
+                    aaa: ""
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="test"&gt;
+        &lt;input  size='30'
+                ms-duplex-mask="aaa"
+                data-duplex-mask="【99/99其他提示字符9999】"
+                data-duplex-mask-clear-if-pristine="false"
+                data-duplex-mask-translations="{
+                A: {pattern: /[A-Za-z0-9]/}, 
+                S: {pattern: /[A-Za-z]/},  
+                Y: {pattern: /[0-9]/}
+                }"
+                /&gt;必须输入数字
+
+    &lt;/body&gt;
+&lt;/html&gt;
+        </pre>
     </body>
 </html>

@@ -1,3 +1,12 @@
+// avalon 1.3.6
+/**
+ * 
+ * @cnName 手风琴组件
+ * @enName accordion
+ * @introduce
+ *    <p>手风琴组件可以将多个内容组织到多个小面板中，通过点击面板的<code>小三角</code>(默认)或<code>标题</code>(需要配置)可以展开或者收缩其内容，使用效果很像<code>Tab</code>。作为备选，还可以通过将鼠标放置到标题上来展开或者收缩。
+                此组件能方便我们在有限的区域中放置众多信息。</p>
+ */
 define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/oniui-common.css", "css!./avalon.accordion.css"], function(avalon, sourceHTML) {
     var template = sourceHTML,
         templateArr = template.split("MS_OPTION_MODE_CARET"),
@@ -41,22 +50,30 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
             }
         })
         options.data = !options.data.length ? _data.$model || _data: options.data
+        avalon.each(options.data, function(index, item) {
+            var toggle = item.toggle 
+            item.toggle = toggle !== void 0 ? toggle : false
+        })
         var vmodel = avalon.define(data.accordionId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "rendered","autoRun","template","accordionClass","currentTrigge","initIndex","multiple","trigger","triggerType","data", "accordionVmodel"]
+            vm.$skipArray = ["widgetElement", "rendered","autoRun","template","accordionClass","currentTrigge","initIndex","multiple","trigger","triggerType", "accordionVmodel"]
             vm.widgetElement = element
             vm.$headers = [] // 保存所有面板的header
             vm.$panels = [] // 保存所有的面板content
             vm.$triggers = []
-            vm.rendered = false // 判断是否渲染了组件
-            vm._renderView = function() {
+            /**
+             * @interface 组件是否完成渲染,false未完成，true完成
+             */
+            vm.rendered = false 
+            vm._renderView = function(continueScan) {
                 var template = options.template,
                     accordionItems = "",
-                    elementClass = 'ui-accordion ui-accordion-mode-' + options.mode + ' js-accordion' + accordionNum+" "+options.accordionClass,
+                    elementClass = 'oni-accordion oni-accordion-mode-' + options.mode + ' js-accordion' + accordionNum+" "+options.accordionClass,
                     header, 
                     content, 
                     trigger,
-                    accordionInnerWrapper;
+                    accordionInnerWrapper,
+                    initIndex = options.initIndex
 
                 avalon(element).addClass(elementClass)
                 element.setAttribute("ms-css-width","width")
@@ -81,30 +98,25 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
                     header.setAttribute("ms-on-"+options.triggerType, options.triggerType+"Callback($event,$index)")
                     avalon(header).css("cursor","pointer")
                 }
-                // 当设置multiple为true时模板中的规则将导致异常，所以需要撤销这些异常设置
-                if (options.multiple) {
-                    header.removeAttribute("ms-class")
-                    content.removeAttribute("ms-visible")
-                    content.style.display = "none"
+                if (initIndex !== null) {
+                    vmodel.currentIndex = initIndex
+                    vmodel.data[initIndex].toggle = true 
                 }
-                if (options.initIndex !== null) {
-                    vm.currentIndex = options.initIndex
-                }
-                avalon.scan(element, [vmodel].concat(vmodels))
-                if (typeof options.onInit === "function" ){
-                    //vmodels是不包括vmodel的
-                    options.onInit.call(element, vmodel, options, vmodels)
+                if (continueScan) {
+                    continueScan()
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }
                 vmodel.rendered = true
                 setTimeout(function() { // 渲染完组件之后，将对应面板的header和panel分别保存
                     for (var i=0, el; el = accordionItems[i++];) {
                         var $el = avalon(el)
-                        if ($el.hasClass("ui-accordion-header")) {
+                        if ($el.hasClass("oni-accordion-header")) {
                             vmodel.$headers.push(el)
-                            // 当multiple为true时，如果设置了初始打开的面板，打开对应面板，否则全部收起
-                            if(options.multiple && Math.floor(i/2)==options.initIndex) {
-                                avalon(el).addClass(options.currentTriggerClass)
-                            }
                             if(!!options.trigger) {
                                 var headerChildren = el.children
                                 for(var j=0, subEl; subEl = headerChildren[j++];) {
@@ -117,16 +129,13 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
                                 vmodel.$triggers.push(el)
                             }
 
-                        } else if($el.hasClass("ui-accordion-content")) {
+                        } else if($el.hasClass("oni-accordion-content")) {
                             vmodel.$panels.push(el)
-                            if(options.multiple && (i/2-1)==options.initIndex) {
-                                el.style.display = "block"
-                            }
                         }
                     }
                 }, 400)
             }
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if(!vmodel.data.length) {
                     // 从dom中抓取数据
                     var list = [],
@@ -145,7 +154,8 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
                         if(avalon(subEle).hasClass("title")) {
                             list.push({
                                 title: subEle.innerHTML.trim(),
-                                content: next.innerHTML.trim()
+                                content: next.innerHTML.trim(),
+                                toggle: false
                             })
                         }
                         element.removeChild(subEle)
@@ -155,27 +165,62 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
                 }
                 element.$vmodel = vmodel
                 if (options.autoRun) {
-                    vm._renderView()
+                    vm._renderView(continueScan)
                 }
             }
             // 点击面板header时的回调,设置triggerType为click时执行
             vm.clickCallback = function(event,index) {
                 vmodel._eventCallback(event, index)
             }
-            // mouse over面板header时的回调，设置triggerType为mouseover时执行
-            vm.mouseoverCallback = function(event, index) {
+            // mouseenter面板header时的回调，设置triggerType为mouseenter时执行
+            vm.mouseenterCallback = function(event, index) {
                 vmodel._eventCallback(event, index)
             }
+            /**
+             * @interface 当组件移出DOM树时,系统自动调用的销毁函数
+             */
             vm.$remove = function() {
                 element.innerHTML = element.textContent = ""
             }
-            // 重新渲染accordion
+            
+            /**
+             * @interface 重定义组件配置数据对象
+             * @param data {Array} 结构如下：
+             * <pre class="brush:javascript;gutter:false;toolbar:false">
+                [{
+                title: "标题1",
+                content: "正文1"
+                },
+                {
+                title: "标题2",
+                content: "正文2"
+                }] 
+                </pre>
+             *
+             */
             vm.setData = function(data) {
+                avalon.each(data, function(index, item) {
+                    item.toggle = item.toggle !== void 0 ? item.toggle : false
+                })
                 vmodel.data = data
                 vmodel.currentIndex = -1
                 vmodel._renderView()
             }
-            // 手动渲染accordion
+            /**
+             * @interface 手工刷新组件视图,也可以传递参数data，重渲染组件视图
+             * @param data {Array} 结构如下：
+             * <pre class="brush:javascript;gutter:false;toolbar:false">
+                [{
+                title: "标题1",
+                content: "正文1"
+                },
+                {
+                title: "标题2",
+                content: "正文2"
+                }] 
+                </pre>
+             *
+             */
             vm.refresh = function(data) {
                 if (data) {
                     vmodel.setData(data)
@@ -183,80 +228,104 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
                     vm._renderView()
                 }
             }
+            /**
+             * @interface 获得当前展开的accordion标题对象，仅在config.multiple == false时有效
+             * @returns {ElementObj} 标题dom对象的引用
+             */
             vm.getCurrentHeader = function() {
                 if (options.multiple) {
                     return null
                 }
                 return vmodel.$headers[this.currentIndex]
             }
+            /**
+             * @interface 获得当前展开的accordion面板对象，仅在config.multiple == false时有效
+             * @returns {ElementObj} 面板dom对象的引用
+             */
             vm.getCurrentPanel = function() {
                 if (options.multiple) {
                     return null
                 }
                 return vmodel.$panels[this.currentIndex]
             }
+            /**
+             * @interface 获得指定序号的accordion面板对应的标题节点对象
+             * @param index {Number} 面板序号
+             * @returns {ElementObj} 指定序号的标题dom对象的引用
+             */
             vm.getHeader = function(index) {
                 return vmodel.$headers[index]
             }
+            /**
+             * @interface 获得指定序号的accordion面板对应的面板节点对象
+             * @param index {Number} 面板序号
+             * @returns {ElementObj} 指定序号的面板dom对象的引用
+             */
             vm.getPanel = function(index) {
                 return vmodel.$panels[index]
             }
+            /**
+             * @interface 获得组件的面板数量
+             * @returns {Number} 手风琴面板个数
+             */
             vm.getLength = function() {
                 return options.data.length
             }
+            /**
+             * @interface 获得指定序号的accordion面板展开(1)/收起(0)状态
+             * @param index {Number} 指定面板序号(从0开始)
+             * @returns {Number} 1表示index对应面板展开，0表示收起
+             */
             vm.getStatus = function(index) {
                 return (avalon(vmodel.$panels[index]).css('display') === 'none') ? 0 : 1
             }
+            /**
+             * @interface 切换accordion面板的展开
+             * @param index {Number} 指定面板序号(从0开始)
+             */
             vm.switchTo = function(index) {
                 var event= {
                         target: vmodel.$triggers[index]
                     }
-                if(!options.multiple) { // multiple为false时直接通过currentIndex打开面板
-                    if (options.beforeSwitch.call(event.target, index, vm.getHeader(index), vm.getPanel(index)) === false) {
-                        return false
-                    }
-                    vmodel.currentIndex = index
-                    options.onSwitch.call(event.target, index, vm.getHeader(index), vm.getPanel(index))
-                } else if(options.triggerType=="click") {
-                    event.target[options.triggerType]()
-                } else { // dom元素不可以像调用click一样调用mouseover方法
-                    eventCallback(event, index)                    
+                if (options.onBeforeSwitch.call(event.target, index, vm.getHeader(index), vm.getPanel(index)) === false) {
+                    return false
                 }
+                vmodel.currentIndex = index
+                vmodel.data[index].toggle = true
             }
             vm._eventCallback = eventCallback
         })
-        vmodel.$watch("currentIndex", function(val) {
-            var panel = vmodel.getPanel(val)
+        vmodel.$watch("currentIndex", function(newVal, oldVal) {
+            console.log("currentIndex aguments is :")
+            console.log(arguments)
+            var panel = vmodel.getPanel(newVal)
             if (vmodel.direction == "horizontal" && panel) {
                 clearTimeout(animateTime) 
                 animate(panel, Number(vmodel.contentWidth) || 400)
-            } else {
-                // console.log("垂直accordion panel is: "+val)
+            } 
+            if (!vmodel.multiple && oldVal !== -1) {
+                vmodel.data[oldVal].toggle = false
             }
         })
         function eventCallback(event, index) {
+            console.log(event.type)
             var header = vmodel.getHeader(index),
                 $header = avalon(header),
                 panel = vmodel.getPanel(index),
-                headerActive = (function() {return options.currentTriggerClass.trim().split(/\s/).every(function(c){return $header.hasClass(c)})}());
+                dataItem = vmodel.data[index],
+                itemToggle = !dataItem.toggle
 
-            header.headerActive = headerActive
-            if (options.beforeSwitch.call(event.target, index, header, panel) === false) {
+            if (index === vmodel.currentIndex && event.type === "mouseenter") {
+                return
+            }
+            if (options.onBeforeSwitch.call(event.target, index, header, panel) === false) {
                 return false
             }
-            if (options.multiple && !header.headerActive) {
-                // 基数点击为展开
-                avalon(header).addClass(options.currentTriggerClass)
-                panel.style.display = "block"
 
-
-            } else if (options.multiple && header.headerActive) {
-                // 偶数点击为收起
-                avalon(header).removeClass(options.currentTriggerClass)
-                panel.style.display = "none"
-            } 
-            vmodel.currentIndex = index
-            
+            vmodel.data[index].toggle = itemToggle
+            if (itemToggle) {
+                vmodel.currentIndex = index
+            }
             options.onSwitch.call(event.target, index, header, panel)
         }
 
@@ -279,29 +348,72 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
     }
     widget.version = 1.0
     widget.defaults = {
-        width: '100%',
-        headerWidth: 30,
-        contentWidth: 400,
-        headerAndContentHeight: 200,
-        autoRun: true, // 设为true自动渲染accordion组件，设为false不渲染，只在合适的时候手动调用refresh进行渲染
-        template: "", // 用户自定义template
-        accordionClass: "", // 为accordion容器自定义的class
-        currentTriggerClass: "ui-state-active", // 展开accordion面板时，header添加的class
-        data: [], // 渲染accordion的header和panel信息
-        initIndex: null, // 初始打开的面板
-        mode: "caret", // 有三种类型的template，分别是caret|nav，当是custom需要用户传入合适template
-        multiple: false, // 是否可以同时打开多个面板
-        widgetElement: "", // accordion容器
-        trigger: "ui-accordion-header", // 触发展开面板的dom节点对应class
-        triggerType: 'click', // 触发展开面板的事件类型，可以是：click|mouseover
-        currentIndex: -1, // 当前点击的面板的索引值
-        direction: "vertical",
-        beforeSwitch: avalon.noop,
-        onSwitch: avalon.noop,
-        onInit: avalon.noop,
+        width: '100%', //@config 配置组件宽度(type: Number || Percent)
+        headerWidth: 30, //@config 组件水平展开时，头部的宽
+        contentWidth: 400, //@config 组件水平展开时内容的宽
+        headerAndContentHeight: 200, //@config 组件水平展开时的高度
+        autoRun: true, //@config 告知组件是否自动渲染，设为false时需要手动调用refresh方法进行组件的解析渲染
+        template: "", //@config 用户自定义template
+        accordionClass: "", //@config 为accordion容器自定义的class
+        currentTriggerClass: "oni-state-active", //@config 展开accordion面板时，header添加的class
+        /**
+         * @interface 配置accordion组件要展示的数据对象，格式为
+            <pre class="brush:javascript;gutter:false;toolbar:false">
+            [
+            {title: String, content: String},
+            {title: String, content: String},
+            {title: String, content: String}
+             ]
+            </pre> 
+         */
+        data: [], 
+        initIndex: null, //@config 初始展开第几个面板
+        mode: "caret", //@config 组件展开模式，取值说明："nav"=面板header无小三角图标，"caret"=展开面板有小三角图标，可以定义是点击图标展开面板还是点击header即展开，默认是点击header即展开，当然也可以通过getTemplate自定义模板
+        multiple: false, //@config 是否可以同时打开多个面板
+        widgetElement: "", //@interface 保存绑定组件元素的引用
+        trigger: "oni-accordion-header", //@config 触发展开面板的dom节点对应class，比如mode为caret时想要只通过小图标展开隐藏panel时可以设置为"oni-accordion-trigger"
+        triggerType: 'click', //@config 触发展开面板的事件类型，可以是：click|mouseenter
+        currentIndex: -1, //@interface 组件最新展开的面板序号，不可配置
+        direction: "vertical", //@config 组件的展开方向，默认为垂直展开，也可以水平展开("horizontal")
+        /**
+         * @config {Function} 组件面板展开前回调函数
+         * @param index {Number} 面板序号
+         * @param header {Object} 标题区域节点对象
+         * @param panel {Object} 面板区域节点对象
+         * @returns {Boolean| Undefined} 若返回false则不展开面板 
+         */
+        onBeforeSwitch: avalon.noop, //@config
+        /**
+         * @config {Function} 组件面板展开后的回调函数
+         * @param index {Number} 面板序号
+         * @param header {Object} 标题区域节点对象
+         * @param panel {Object} 面板区域节点对象
+         */
+        onSwitch: avalon.noop, //@config
+        /**
+         * @config {Function} 远程更改数据
+         * @param vmodel {Object} 组件自身vmodel
+         * @param options {Object} 组件的配置对象
+         * @param vmodels {Array} 组件的祖先vmodel组成的数组链
+         */
+        onInit: avalon.noop, //@config
+        /**
+         * @config {Function} 方便用户自定义模板
+         * @param str {String} 默认模板
+         * @param opts {Object} vmodel
+         * @returns {String} 新模板
+         */
         getTemplate: function(str, options) {
             return str
         }
     }
     return avalon
 });
+/**
+ @links
+ [简单例子](avalon.accordion.ex1.html)
+ [使用setData或者refresh(data)重新渲染accordion](avalon.accordion.ex2.html)
+ [accordion提供的各种API](avalon.accordion.ex3.html)
+ [嵌套的accordion](avalon.accordion.ex4.html)
+ [文字内容水平展开的accordion](avalon.accordion.ex5.html)
+ */

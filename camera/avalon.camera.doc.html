@@ -6,13 +6,14 @@
         <meta name="viewport" content="width=device-width">
         <script src="../highlight/shCore.js"></script>
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
-    </head>
+    <meta name="description" content="0"/>
+</head>
     <body>
         <div class="wrapper">
             <h2>camera</h2>
             <fieldset>
                 <legend>camera组件</legend>
-                <p class="doc-description"></p>
+                <p class="doc-description">基于图片轮播组件，增减了更多动画效果。注意：为保证视觉效果，图片尺寸最好与组件尺寸相同。</p>
             </fieldset>
             <fieldset>
                 <legend>使用说明</legend>
@@ -24,16 +25,52 @@
                         <td colspan="3" aligin="center">配置参数</td>
                     </tr>
                     <!--auto doc start-->
-                    <!--auto doc end-->
+<tr>
+    <td>pictures</td><td> []</td><td>  轮播图片素材</td></tr>
+<tr>
+    <td>effect</td><td> "random"</td><td>  图片切换类型，取值：random:全部随机 / none:无特效 / slideX:横向滑动 / slideY:纵向滑动 / fadeIn:渐入 / crossX:横向交叉 / crossY:纵向交叉 / stepX:横向阶梯 / stepY:纵向阶梯 / rotateFadeIn:旋转式渐入</td></tr>
+<tr>
+    <td>timeout</td><td> 2500</td><td>  切换时间间隔</td></tr>
+<tr>
+    <td>during</td><td> 600</td><td>  切换速度，越小越快，单位为毫秒</td></tr>
+<tr>
+    <td>alwaysShowArrow</td><td> true</td><td>  显示左右切换箭头</td></tr>
+<tr>
+    <td>alwaysShowSelection</td><td> true</td><td>  显示底部圆形切换部件</td></tr>
+<tr>
+    <td>hoverStop</td><td> true</td><td>  鼠标经过停止播放</td></tr>
+<tr>
+    <td>adaptiveWidth</td><td> false</td><td>  适应外围宽度</td></tr>
+<tr>
+    <td>adaptiveHeight</td><td> false</td><td>  适应外围高度</td></tr>
+<tr>
+    <td>eventType</td><td> "click"</td><td>  触发tab切换的nav上的事件类型，取值click\mouseenter\both</td></tr>
+<tr>
+    <td>arrowLeftClass</td><td> ""</td><td>  左右箭头的className，可不传</td></tr>
+<tr>
+    <td>arrowRightClass</td><td> ""</td><td>  左右箭头的className，可不传</td></tr>
+<tr>
+    <td>slicedCols</td><td> 5</td><td>  区块列数</td></tr>
+<tr>
+    <td>slicedRows</td><td> 4</td><td>  区块行数</td></tr>
+<tr>
+    <td>onInit</td><td>回调函数</td><td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td></tr>
+<tr>
+    <td>getTemplate</td><td>配置接口</td><td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td></tr>
+<!--auto doc end-->
                 </table>
             </fieldset>
             <!--source start-->
             <!--source end-->
             <h3>例子：</h3>
             <!--ex list start-->
-            <ol class="example-links">
-            </ol>
-            <!--ex list end-->
+<ol class="example-links">
+<li><a href="avalon.camera.ex.html">图片百叶窗切换组件</a></li>
+<li><a href="avalon.camera.ex1.html">图片百叶窗切换组件-自定义宽高</a></li>
+<li><a href="avalon.camera.ex2.html">图片百叶窗切换组件-自定义切换间隔和切换速度</a></li>
+<li><a href="avalon.camera.ex3.html">图片百叶窗切换组件-自定义区块数量</a></li>
+</ol>
+<!--ex list end-->
         </div>
     </body>
 </html>

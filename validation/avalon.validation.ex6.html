@@ -24,6 +24,7 @@
             }
         </style>
         <script>
+         
             require(["validation/avalon.validation", "ready!"], function() {
                 var validationVM
                 avalon.define({
@@ -34,7 +35,9 @@
                     c: "5",
                     d: "",
                     clearAll: function() {
-                        validationVM && validationVM.resetAll()
+                        validationVM && validationVM.resetAll(function(a){
+                            console.log(a)
+                        })
                     },
                     checkAll: function() {
                         validationVM && validationVM.validateAll()

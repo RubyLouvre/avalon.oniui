@@ -1,7 +1,10 @@
 /**
-  * @description tab组件，实现扫描DOM结构或者接受数组传参，生成tab，支持click、mouseenter事件响应切换，支持mouseenter情形延迟响应切换，支持click情形tab选中情况下再次点击回调，支持自动切换效果，支持tab增删禁用启用并可混合设置同步tab可删除状态，支持混合配制panel内容类型并支持panel内容是ajax配置回调，注意扫描dom情形下，会销毁原有的dom，且会忽略所有的ol，ul，li元素上原有的绑定
-  *
-  */
+ * @cnName tab组件
+ * @enName tab
+ * @introduce
+ *  <p> 实现扫描DOM结构或者接受数组传参，生成tab，支持click、mouseenter事件响应切换，支持mouseenter情形延迟响应切换，支持click情形tab选中情况下再次点击回调，支持自动切换效果，支持tab增删禁用启用并可混合设置同步tab可删除状态，支持混合配制panel内容类型并支持panel内容是ajax配置回调，注意扫描dom情形下，会销毁原有的dom，且会忽略所有的ol，ul，li元素上原有的绑定
+</p>
+ */
 define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "text!./avalon.tab.close.html", "css!./avalon.tab.css", "css!../chameleon/oniui-common.css"], function(avalon, template, panelTpl, closeTpl) {
 
     // 对模板进行转换
@@ -62,6 +65,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         })
         // 扫描获取tabs
         if(options.tabs == void 0) {
+            avalon.scan(element, vmodels)
             tabsParent = options.tabContainerGetter(element)
             tabs = _getData(tabsParent, "li", options.target)
             // 销毁dom
@@ -95,7 +99,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                 inited = true
 
                 if(!options.tabs) vm.tabs = tabs
-                if(!vm.tabpanels) vm.tabpanels = tabpanels
+                if(!vm.tabpanels.length) vm.tabpanels = tabpanels
                 vm.active = vm.active >= vm.tabs.length && vm.tabs.length - 1 || vm.active < 0 && 0 || parseInt(vm.active) >> 0
 
                 // avalon.nextTick(function() {
@@ -103,7 +107,6 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                     // tab列表
                     var tabFrag = _getTemplate(vm._getTemplate(0, vm), vm)
                         , panelFrag = _getTemplate(vm._getTemplate("panel", vm), vm)
-
                     element.innerHTML = vmodel.bottom ? panelFrag + tabFrag : tabFrag + panelFrag
                    
                     avalon.scan(element, [vmodel].concat(vmodels))
@@ -200,7 +203,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                 element.innerHTML = element.textContent = ""
             }
             // 修改使用了avalon的几个方法
-            //@method disable(index) 禁用索引指向的tab，index为数字或者元素为数字的数组
+            //@interface disable(index) 禁用索引指向的tab，index为数字或者元素为数字的数组
             vm.disable = function(index, disable) {
                 disable = disable == void 0 ? true : disable
                 if(!(index instanceof Array)) {
@@ -213,11 +216,11 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                     }
                 })
             }
-            //@method enable(index) 启用索引指向的tab，index为数字或者元素为数字的数组
+            //@interface enable(index) 启用索引指向的tab，index为数字或者元素为数字的数组
             vm.enable = function(index) {
                 vm.disable(index, false)
             }
-            //@method add(config) 新增tab, config = {title: "tab title", removable: bool, disabled: bool, content: "panel content", contentType: "ajax" or "content"}
+            //@interface add(config) 新增tab, config = {title: "tab title", removable: bool, disabled: bool, content: "panel content", contentType: "ajax" or "content"}
             vm.add = function(config) {
                 var title = config.title || "Tab Tile"
                 var content = config.content || "<div></div>"
@@ -245,7 +248,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                     })
                 }
             }
-            //@method remove(e, index) 删除索引指向的tab，绑定情形下ms-click="remove($event, index)"，js调用则是vm.remove(index)
+            //@interface remove(e, index) 删除索引指向的tab，绑定情形下ms-click="remove($event, index)"，js调用则是vm.remove(index)
             vm.remove = function(e, index) {
                 if(arguments.length == 2) {
                     e.preventDefault()
@@ -316,36 +319,36 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
     }
 
     widget.defaults = {
-        target: "_blank",//@param tab item链接打开的方式，可以使_blank,_self,_parent
-        toggle: true, //@param 组件是否显示，可以通过设置为false来隐藏组件
-        autoSwitch: false,      //@param 是否自动切换，默认否，如果需要设置自动切换，请传递整数，例如200，即200ms
-        active: 0,              //@param 默认选中的tab，默认第一个tab，可以通过动态设置该参数的值来切换tab，并可通过vmodel.tabs.length来判断active是否越界
-        shallPanelAlwaysShow: false,//@param shallPanelAlwaysShow() panel不通过display:none,block来切换，而是一直显示，通过其他方式切换到视野，默认为false
-        event: "mouseenter",    //@param  tab选中事件，默认mouseenter
-        removable: false,      //@param  是否支持删除，默认否，另外可能存在某些tab可以删除，某些不可以删除的情况，如果某些tab不能删除则需要在li元素或者tabs数组里给对应的元素指定removable : false，例如 li data-removable="false" or {title: "xxx", removable: false}
-        activeDelay: 0,         //@param  比较适用于mouseenter事件情形，延迟切换tab，例如200，即200ms
-        collapsible: false,     //@param  当切换面板的事件为click时，如果对处于激活状态的按钮再点击，将会它失去激活并且对应的面板会收起来,再次点击它时，它还原，并且对应面板重新出现
-        contentType: "content", //@param  panel是静态元素，还是需要通过异步载入，还可取值为ajax，但是需要给对应的panel指定一个正确的ajax地址
-        bottom: false,          //@param  tab显示在底部
-        dir: "h",          //@param  tab排列方向，横向或纵向v - vertical，默认横向h - horizontal
-        callInit: true,         //@param  是否调用即初始化
-        titleCutCount: 8,       //@param  tab title截取长度，默认是8
-        distroyDom: true,       //@param  扫描dom获取数据，是否销毁dom
-        cutEnd: "...",          //@param  tab title截取字符后，连接的字符，默认为省略号
-        forceCut: false,        //@param  强制截断，因为竖直方向默认是不截取的，因此添加一个强制截断，使得在纵向排列的时候title也可以被截断
-        //tabs:undefined,              //@param  <pre>[/n{/ntitle:"xx",/n linkOnly: false,/n disabled:boolen,/n target: "_self",/n removable:boolen/n}/n]</pre>，单个tabs元素的removable针对该元素的优先级会高于组件的removable设置，linkOnly表示这只是一个链接，不响应active事件，也不阻止默认事件，target对应的是链接打开方式_self默认，可以使_blank,_parent，tab里的target配置优先级高于vm的target配置，应用于某个tab上，可以在元素上 data-target="xxx" 这样配置
-        //tabpanels:undefined,         //@param  <pre>[/n{/ncontent:content or url,/n contentType: "content" or "ajax"/n}/n]</pre> 单个panel的contentType配置优先级高于组件的contentType
-        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
+        target: "_blank",//@config tab item链接打开的方式，可以使_blank,_self,_parent
+        toggle: true, //@config 组件是否显示，可以通过设置为false来隐藏组件
+        autoSwitch: false,      //@config 是否自动切换，默认否，如果需要设置自动切换，请传递整数，例如200，即200ms
+        active: 0,              //@config 默认选中的tab，默认第一个tab，可以通过动态设置该参数的值来切换tab，并可通过vmodel.tabs.length来判断active是否越界
+        shallPanelAlwaysShow: false,//@config shallPanelAlwaysShow() panel不通过display:none,block来切换，而是一直显示，通过其他方式切换到视野，默认为false
+        event: "mouseenter",    //@config  tab选中事件，默认mouseenter
+        removable: false,      //@config  是否支持删除，默认否，另外可能存在某些tab可以删除，某些不可以删除的情况，如果某些tab不能删除则需要在li元素或者tabs数组里给对应的元素指定removable : false，例如 li data-removable="false" or {title: "xxx", removable: false}
+        activeDelay: 0,         //@config  比较适用于mouseenter事件情形，延迟切换tab，例如200，即200ms
+        collapsible: false,     //@config  当切换面板的事件为click时，如果对处于激活状态的按钮再点击，将会它失去激活并且对应的面板会收起来,再次点击它时，它还原，并且对应面板重新出现
+        contentType: "content", //@config  panel是静态元素，还是需要通过异步载入，还可取值为ajax，但是需要给对应的panel指定一个正确的ajax地址
+        bottom: false,          //@config  tab显示在底部
+        dir: "h",          //@config  tab排列方向，横向或纵向v - vertical，默认横向h - horizontal
+        callInit: true,         //@config  是否调用即初始化
+        titleCutCount: 8,       //@config  tab title截取长度，默认是8
+        distroyDom: true,       //@config  扫描dom获取数据，是否销毁dom
+        cutEnd: "...",          //@config  tab title截取字符后，连接的字符，默认为省略号
+        forceCut: false,        //@config  强制截断，因为竖直方向默认是不截取的，因此添加一个强制截断，使得在纵向排列的时候title也可以被截断
+        //tabs:undefined,              //@config  <pre>[/n{/ntitle:"xx",/n linkOnly: false,/n disabled:boolen,/n target: "_self",/n removable:boolen/n}/n]</pre>，单个tabs元素的removable针对该元素的优先级会高于组件的removable设置，linkOnly表示这只是一个链接，不响应active事件，也不阻止默认事件，target对应的是链接打开方式_self默认，可以使_blank,_parent，tab里的target配置优先级高于vm的target配置，应用于某个tab上，可以在元素上 data-target="xxx" 这样配置
+        //tabpanels:undefined,         //@config  <pre>[/n{/ncontent:content or url,/n contentType: "content" or "ajax"/n}/n]</pre> 单个panel的contentType配置优先级高于组件的contentType
+        //@config onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
         tabContainerGetter: function(element) {
             return element.getElementsByTagName("ul")[0] || element.getElementsByTagName("ol")[0]
-        }, //@optMethod tabContainerGetter(element) tab容器，如果指定，则到该容器内扫描tabs，参数为绑定组件的元素，默认返回element内第一个ul或者ol元素
+        }, //@config tabContainerGetter(element) tab容器，如果指定，则到该容器内扫描tabs，参数为绑定组件的元素，默认返回element内第一个ul或者ol元素
         panelContainerGetter: function(element) {
             return element.getElementsByTagName("div")[0] || element
-        }, //@optMethod panelContainerGetter(element)  panel容器，如果指定，则到该容器内扫描panel，参数为绑定组件的元素，默认返回第element内第一个div元素
-        onActivate: avalon.noop,  //@optMethod onActivate(event, vmode) 选中tab后的回调，this指向对应的li元素，参数是事件对象，vm对象 fn(event, vmode)，默认为avalon.noop
-        onClickActive: avalon.noop, //@optMethod onClickActive(event, vmode)  点击选中的tab，适用于event是"click"的情况，this指向对应的li元素，参数是事件对象，vm对象 fn(event, vmode)，默认为avalon.noop
-        onAjaxCallback: avalon.noop, //@optMethod onAjaxCallback  panel内容是ajax，ajax响应后的回调函数，this指向对应的panel元素，无参数，默认为空函数
+        }, //@config panelContainerGetter(element)  panel容器，如果指定，则到该容器内扫描panel，参数为绑定组件的元素，默认返回第element内第一个div元素
+        onActivate: avalon.noop,  //@config onActivate(event, vmode) 选中tab后的回调，this指向对应的li元素，参数是事件对象，vm对象 fn(event, vmode)，默认为avalon.noop
+        onClickActive: avalon.noop, //@config onClickActive(event, vmode)  点击选中的tab，适用于event是"click"的情况，this指向对应的li元素，参数是事件对象，vm对象 fn(event, vmode)，默认为avalon.noop
+        onAjaxCallback: avalon.noop, //@config onAjaxCallback  panel内容是ajax，ajax响应后的回调函数，this指向对应的panel元素，无参数，默认为空函数
         // 获取模板，防止用户自定义的getTemplate方法没有返回有效的模板
         _getTemplate: function (tplName, vm) {
             var tpl
@@ -362,7 +365,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         },
         getTemplate: function (template, vm, tplName) {
             return template
-        }, //@optMethod getTemplate(template, vm, tplName)  修改模板的接口，参数分别是模板字符串，vm对象，模板名字，返回如果是空字符串则对应的tplName(close,panel,tab)返回为空，return false,null,undedined等于返回组件自带的模板，其他情况为返回值，默认返回组件自带的模板
+        }, //@config getTemplate(template, vm, tplName)  修改模板的接口，参数分别是模板字符串，vm对象，模板名字，返回如果是空字符串则对应的tplName(close,panel,tab)返回为空，return false,null,undedined等于返回组件自带的模板，其他情况为返回值，默认返回组件自带的模板
         _tabTitle : function (title, tab, count, end) {
             var cut
             if(tab.titleCutCount != void 0) {

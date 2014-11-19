@@ -54,11 +54,21 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
             vm.angel = vm.countDown ? 360 : 360 * vm.angel / 100
 
             var inited
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if(inited) return
                 inited = true
                 newElem.innerHTML = vmodel.template
-                avalon.scan(element, [vmodel].concat(vmodels))
+                if (continueScan) {
+                    continueScan()
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                    // callback after inited
+                    if(typeof options.onInit === "function" ) {
+                        //vmodels是不包括vmodel的 
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
+                }
                 if(vmodel.label) {
                     var nodes = newElem.getElementsByTagName("div")
                     avalon.each(nodes, function(i, item) {
@@ -79,16 +89,14 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                         }
                     })
                 }
-                // get Css from skin
-                vmodel._draw()
-                if(!vmodel.getStyleFromSkin) vmodel.circleBar()
-                // callback after inited
-                if(typeof options.onInit === "function" ) {
-                    //vmodels是不包括vmodel的 
-                    options.onInit.call(element, vmodel, options, vmodels)
-                }
+                vmodel.$d = svgSupport && vmodel.circle && circleValueList(vmodel.circleRadius, vmodel.circleBorderWidth) || []
+                vmodel.circleBar()
+                vmodel.circleCoordinates = vmodel.$d.join("")
                 // 开启模拟效果
                 vmodel._simulater()
+                if (typeof options.onInit === "function") {
+                    options.onInit.call(element, vmodel, options, vmodels)
+                }
             }
             // 适用svg绘制圆圈的v生成方式
             // vml不走这个逻辑，有直接绘制圆弧的方法
@@ -189,26 +197,6 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
             vm.progress = function(value) {
                 vmodel.value = value
             }
-            // get css from css file
-            //@interface _draw 动态切换皮肤之后，如果需要更新提取圆形进度条的样式，可以调用这个方法
-            vm._draw = function() {
-                if(vmodel.circle && vmodel.getStyleFromSkin) {
-                    if(barElement && barParElement) {
-                        var radius = barElement.height(),
-                            outerHeight = barElement.outerHeight()
-                        // wait utill element is rendered
-                        if(!radius) return setTimeout(vmodel._draw, 16)
-                        vmodel.circleColor = barElement.css("color")
-                        vmodel.circleBorderColor = barParElement.css("background-color")
-                        vmodel.circleBarColor = barElement.css("background-color")
-                        vmodel.circleBorderWidth = parseInt((outerHeight - radius) / 2) || 1
-                        vmodel.circleRadius = radius
-                        vmodel.$d = svgSupport && vmodel.circle && circleValueList(vmodel.circleRadius, vmodel.circleBorderWidth) || []
-                        vmodel.circleBar()
-                        vmodel.circleCoordinates =vmodel.$d.join("")
-                    }
-                }
-            }
 
         })
         // 模拟进度条情形下，不监控success属性的变化
@@ -234,12 +222,11 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
         countDown: false,//@config 倒计时
         inTwo: false, //@config 是否显示左右两段
         circle: false,//@config 圆形
-        getStyleFromSkin: true,//@config 是否从皮肤的css里面计算获取圆形进度条样式，默认为true，设置为true的时候，将忽略下面所有circle*样式设置
         circleColor: "#ffffff",//@config 圆形填充色彩，可以配制为从皮肤中提取，只在初始化的时候提取
         circleBorderColor: "#dedede",//@config 圆形边框颜色，，可以配制为从皮肤中提取，只在初始化的时候提取
         circleBarColor: "#619FE8",//@config 圆形进度条边框颜色，可以配制为从皮肤中提取，只在初始化的时候提取
-        circleRadius: 0,//@config 圆形的半径，可以配制为从皮肤中提取，只在初始化的时候提取
-        circleBorderWidth: 0, //@config 圆形的边框宽度，可以配制为从皮肤中提取，只在初始化的时候提取
+        circleRadius: 38,//@config 圆形的半径，可以配制为从皮肤中提取，只在初始化的时候提取
+        circleBorderWidth: 4, //@config 圆形的边框宽度，可以配制为从皮肤中提取，只在初始化的时候提取
         success: false, //@config 是否完成，进度为100时或者外部将success置为true，用于打断模拟效果
         //@config onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,

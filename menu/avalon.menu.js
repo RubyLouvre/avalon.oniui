@@ -78,7 +78,7 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
             vm.$skipArray = ["widgetElement", "template", "_subMenus", "_oldActive"]
 
             var inited, outVmodel = vmodels && vmodels[1], clickKey = "fromMenu" + uid
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if(inited) return
                 inited = true
 
@@ -92,11 +92,14 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
                     element.setAttribute("ms-hover-100", "oni-helper-max-index")
                     avalon(element).addClass("oni-menu oni-helper-clearfix oni-helper-reset" + (vmodel.dir === "v" ? " oni-menu-vertical" : ""))
                 }
-                avalon.scan(element, [vmodel].concat(vmodels))
-                // 只有第一级menu触发onInit
-                if(typeof options.onInit === "function" && vmodel._depth < 2) {
-                    //vmodels是不包括vmodel的 
-                    options.onInit.call(element, vmodel, options, vmodels)
+                if (continueScan) {
+                    continueScan()
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }
                 // mouseleave重置menu
                 vmodel.event === "mouseenter" && avalon(element).bind("mouseleave", function(e) {

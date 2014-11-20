@@ -159,7 +159,7 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
             dataType = promise.preproccess() || dataType
         }
         //设置首部 1、Content-Type首部
-        if (opts.contentType && name !== "upload") {
+        if (opts.contentType ) {
             promise.setRequestHeader("Content-Type", opts.contentType)
         }
         //2.处理Accept首部

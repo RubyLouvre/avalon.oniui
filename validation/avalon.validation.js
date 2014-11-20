@@ -74,7 +74,7 @@ define(["../promise/avalon.promise"], function(avalon) {
     if (!avalon.duplexHooks) {
         throw new Error("你的版本少于avalon1.3.7，不支持ms-duplex2.0，请使用avalon.validation.old.js")
     }
-    //==========================avalon.validation的专有逻辑========================
+//==========================avalon.validation的专有逻辑========================
     function idCard(val) {
         if ((/^\d{15}$/).test(val)) {
             return true;
@@ -403,7 +403,9 @@ define(["../promise/avalon.promise"], function(avalon) {
 
             vm.validateAll = function(callback) {
                 var fn = typeof callback == "function" ? callback : vm.onValidateAll
-                var promise = vm.data.map(function(data) {
+                var promise = vm.data.filter(function(el) {
+                    return el.element
+                }).map(function(data) {
                     return  vm.validate(data, true)
                 })
                 Promise.all(promise).then(function(array) {
@@ -420,7 +422,9 @@ define(["../promise/avalon.promise"], function(avalon) {
              * @param callback {Null|Function} 最后执行的回调，如果用户没传就使用vm.onResetAll
              */
             vm.resetAll = function(callback) {
-                vm.data.forEach(function(data) {
+                vm.data.filter(function(el) {
+                    return el.element
+                }).forEach(function(data) {
                     try {
 //                        if (data.valueResetor) {
 //                            data.valueResetor()
@@ -439,30 +443,6 @@ define(["../promise/avalon.promise"], function(avalon) {
              */
             vm.validate = function(data, isValidateAll) {
                 var value = data.valueAccessor()
-                if (!data.valueResetor) {
-                    switch (avalon.type(value)) {
-                        case "array":
-                            data.valueResetor = function() {
-                                this.valueAccessor([])
-                            }
-                            break
-                        case "boolean":
-                            data.valueResetor = function() {
-                                this.valueAccessor(false)
-                            }
-                            break
-                        case "number":
-                            data.valueResetor = function() {
-                                this.valueAccessor(0)
-                            }
-                            break
-                        default:
-                            data.valueResetor = function() {
-                                this.valueAccessor("")
-                            }
-                            break
-                    }
-                }
                 var inwardHooks = vmodel.validationHooks
                 var globalHooks = avalon.duplexHooks
                 var promises = []
@@ -523,6 +503,30 @@ define(["../promise/avalon.promise"], function(avalon) {
             vm.$watch("avalon-ms-duplex-init", function(data) {
                 var inwardHooks = vmodel.validationHooks
                 data.valueAccessor = data.evaluator.apply(null, data.args)
+
+                switch (avalon.type(data.valueAccessor())) {
+                    case "array":
+                        data.valueResetor = function() {
+                            this.valueAccessor([])
+                        }
+                        break
+                    case "boolean":
+                        data.valueResetor = function() {
+                            this.valueAccessor(false)
+                        }
+                        break
+                    case "number":
+                        data.valueResetor = function() {
+                            this.valueAccessor(0)
+                        }
+                        break
+                    default:
+                        data.valueResetor = function() {
+                            this.valueAccessor("")
+                        }
+                        break
+                }
+
                 var globalHooks = avalon.duplexHooks
                 if (typeof data.pipe !== "function" && avalon.contains(element, data.element)) {
                     var params = []
@@ -560,7 +564,11 @@ define(["../promise/avalon.promise"], function(avalon) {
                             })
                         }
                     }
-                    vm.data.push(data)
+                    var array = vm.data.filter(function(el) {
+                        return el.element
+                    })
+                    avalon.Array.ensure(array, data)
+                    vm.data = array
                     return false
                 }
             })
@@ -599,15 +607,15 @@ define(["../promise/avalon.promise"], function(avalon) {
  数值数据变0,数组数据变[],字符串数组变成""
  
  </p>
-                
-<p> 也可以在页面添加不依赖于ms-duplex的绑定</p>
-```javascript
-validateVM.data.push({
-   valueAccessor: function(){}
-   validateParam: "xxx",
-   element: element
-})
-```
+ 
+ <p> 也可以在页面添加不依赖于ms-duplex的绑定</p>
+ ```javascript
+ validateVM.data.push({
+ valueAccessor: function(){}
+ validateParam: "xxx",
+ element: element
+ })
+ ```
  */
 
 /**

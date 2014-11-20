@@ -402,7 +402,7 @@ define(["../promise/avalon.promise"], function(avalon) {
              */
 
             vm.validateAll = function(callback) {
-                var fn = typeof callback == "function" ? callback : vm.onValidateAll
+                var fn = typeof callback === "function" ? callback : vm.onValidateAll
                 var promise = vm.data.filter(function(el) {
                     return el.element
                 }).map(function(data) {
@@ -426,9 +426,6 @@ define(["../promise/avalon.promise"], function(avalon) {
                     return el.element
                 }).forEach(function(data) {
                     try {
-//                        if (data.valueResetor) {
-//                            data.valueResetor()
-//                        }
                         vm.onReset.call(data.element, {type: "reset"}, data)
                     } catch (e) {
                     }
@@ -557,9 +554,6 @@ define(["../promise/avalon.promise"], function(avalon) {
                         }
                         if (vm.resetInFocus) {
                             data.bound("focus", function(e) {
-//                                if (data.valueResetor) {
-//                                    data.valueResetor()
-//                                }
                                 vm.onReset.call(data.element, e, data)
                             })
                         }

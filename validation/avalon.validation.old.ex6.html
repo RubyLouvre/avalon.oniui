@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>验证框架</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon1.3.6.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <style >
+            .error{
+                border:1px  solid red;
+
+            }
+            .success{
+                border:1px  solid greenyellow;
+            }
+            .error-tip{
+                color: red;
+                background:pink;
+            }
+        </style>
+        <script>
+         
+            require(["validation/avalon.validation.old", "ready!"], function() {
+                var validationVM
+                avalon.define({
+                    $id: "test",
+                    $skipArray: ["validation"],
+                    a: 'bbb',
+                    b: ["4", "5"],
+                    c: "5",
+                    d: "",
+                    clearAll: function() {
+                        validationVM && validationVM.resetAll(function(a){
+                            console.log(a)
+                        })
+                    },
+                    checkAll: function() {
+                        validationVM && validationVM.validateAll()
+                    },
+                    validation: {
+                        validationHooks:{
+                            match12345:{
+                                message: "必须等于12345",
+                                get: function(value, data, next){
+                                    next(value === "12345")
+                                    return value
+                                }
+                            }
+                        },
+                        valiedateInBlur: false,
+                        onInit: function(v) {
+                            validationVM = v
+                        },
+                        onReset: function() {
+                            this.value = ""
+                        },
+                        onValidateAll: function(reasons) {
+                            var msg = []
+                            reasons.forEach(function(reason) {
+                                msg.push(reason.getMessage())
+                            })
+                            if (reasons.length === 0) {
+                                alert("全部验证成功！")
+                            } else {
+                                alert(msg.join("\n"))
+                            }
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <form ms-controller="test" ms-widget="validation">
+            <h3>自定义验证规则</h3>
+            <input ms-duplex-match12345="a" placeholder="请输入内容"></textarea>
+            <br />
+            <input type="button" value="验证" ms-click="checkAll" />
+            <input type="button" value="重置" ms-click="clearAll" />
+        </form>
+    </body>
+</html>

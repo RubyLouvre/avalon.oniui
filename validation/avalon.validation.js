@@ -403,7 +403,9 @@ define(["../promise/avalon.promise"], function(avalon) {
 
             vm.validateAll = function(callback) {
                 var fn = typeof callback == "function" ? callback : vm.onValidateAll
-                var promise = vm.data.map(function(data) {
+                var promise = vm.data.filter(function(el) {
+                    return el.element
+                }).map(function(data) {
                     return  vm.validate(data, true)
                 })
                 Promise.all(promise).then(function(array) {
@@ -420,7 +422,9 @@ define(["../promise/avalon.promise"], function(avalon) {
              * @param callback {Null|Function} 最后执行的回调，如果用户没传就使用vm.onResetAll
              */
             vm.resetAll = function(callback) {
-                vm.data.forEach(function(data) {
+                vm.data.filter(function(el) {
+                    return el.element
+                }).forEach(function(data) {
                     try {
 //                        if (data.valueResetor) {
 //                            data.valueResetor()
@@ -499,30 +503,30 @@ define(["../promise/avalon.promise"], function(avalon) {
             vm.$watch("avalon-ms-duplex-init", function(data) {
                 var inwardHooks = vmodel.validationHooks
                 data.valueAccessor = data.evaluator.apply(null, data.args)
-                if (!data.valueResetor) {
-                    switch (avalon.type(value)) {
-                        case "array":
-                            data.valueResetor = function() {
-                                this.valueAccessor([])
-                            }
-                            break
-                        case "boolean":
-                            data.valueResetor = function() {
-                                this.valueAccessor(false)
-                            }
-                            break
-                        case "number":
-                            data.valueResetor = function() {
-                                this.valueAccessor(0)
-                            }
-                            break
-                        default:
-                            data.valueResetor = function() {
-                                this.valueAccessor("")
-                            }
-                            break
-                    }
+
+                switch (avalon.type(data.valueAccessor())) {
+                    case "array":
+                        data.valueResetor = function() {
+                            this.valueAccessor([])
+                        }
+                        break
+                    case "boolean":
+                        data.valueResetor = function() {
+                            this.valueAccessor(false)
+                        }
+                        break
+                    case "number":
+                        data.valueResetor = function() {
+                            this.valueAccessor(0)
+                        }
+                        break
+                    default:
+                        data.valueResetor = function() {
+                            this.valueAccessor("")
+                        }
+                        break
                 }
+
                 var globalHooks = avalon.duplexHooks
                 if (typeof data.pipe !== "function" && avalon.contains(element, data.element)) {
                     var params = []
@@ -560,7 +564,11 @@ define(["../promise/avalon.promise"], function(avalon) {
                             })
                         }
                     }
-                    vm.data.push(data)
+                    var array = vm.data.filter(function(el) {
+                        return el.element
+                    })
+                    avalon.Array.ensure(array, data)
+                    vm.data = array
                     return false
                 }
             })

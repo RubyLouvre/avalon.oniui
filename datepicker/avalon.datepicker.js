@@ -304,6 +304,7 @@ define(["../avalon.getModel",
                 var timerFilter = avalon.filters.timer,
                     _oldMonth = vmodel.month;
                 event.stopPropagation()
+                event.preventDefault()
                 if (month !== false && !dateDisabled && !vmodel.showDatepickerAlways) {
                     var _date = new Date(year, month, day),
                         date = formatDate(_date),

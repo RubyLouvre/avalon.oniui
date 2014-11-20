@@ -148,7 +148,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                 }
                 tooltipElem = tooltipELementMaker()
                 avalon.scan(tooltipElem, [vmodel].concat(vmodels))
-                vmodel.event && element.setAttribute("ms-" + vmodel.event + "101", "__show($event)")
+                vmodel.event && element.setAttribute("ms-" + vmodel.event + "-101", "__show($event)")
                 if (continueScan) {
                     continueScan()
                 } else {
@@ -429,6 +429,13 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             vm._isShown = function() {
                 var elem = avalon(tooltipElem)
                 return elem.css("display") != "none" && !elem.hasClass("oni-tooltip-hidden")
+            }
+            /**
+             *  @interface 将toolTip元素注入到指定的元素内，请在调用appendTo之后再调用showBy
+             *  @param 目标元素
+             */
+            vm.appendTo = function(ele) {
+                if(ele) ele.appendChild(tooltipElem)
             }
 
         })

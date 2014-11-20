@@ -96,71 +96,11 @@ html .oni-helper-max-index, body .oni-helper-max-index {
 a .oni-icon, .oni-btn .oni-icon {
   cursor: pointer; }
 
+.oni-state-error {
+  border: 1px solid #ff8888; }
+
 .g-icon-start {
   color: #58b359; }
 
 .g-icon-pause {
   color: #333333; }
-
-.oni-helper-hidden {
-  display: none; }
-
-.oni-helper-hidden-accessible {
-  border: 0;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px; }
-
-.oni-helper-reset {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  line-height: 1.3;
-  text-decoration: none;
-  font-size: 100%;
-  list-style: none; }
-
-.oni-helper-noselect {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none; }
-  .oni-helper-noselect img, .oni-helper-noselect a {
-    -webkit-user-drag: none;
-    pointer-events: none; }
-
-.oni-helper-clearfix {
-  *zoom: 1; }
-  .oni-helper-clearfix:after {
-    content: "\0020";
-    display: block;
-    height: 0;
-    clear: both;
-    overflow: hidden;
-    visibility: hidden; }
-
-html .oni-helper-max-index, body .oni-helper-max-index {
-  z-index: 1000; }
-
-.oni-icon {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-  cursor: default;
-  font-family: fontawesome !important;
-  font-size: 14px;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  font-style: normal;
-  font-weight: normal;
-  line-height: 18px;
-  vertical-align: middle; }
-
-a .oni-icon, .oni-btn .oni-icon {
-  cursor: pointer; }

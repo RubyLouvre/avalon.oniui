@@ -222,6 +222,10 @@ define(["avalon",
             vm._disabledData = []
             vm._enabledData = []
             vm.loadingVModel = null
+            vm._hiddenAffixHeader = function(column, allChecked) {
+                var selectable = vmodel.selectable
+                return selectable && selectable.type && column.key=='selected' && !allChecked
+            }
             /**
              * @interface {Function} 获取表格数据,当然也可以通过vmodel.data直接获得表格数据
              * @returns {Array} 表格的渲染数据

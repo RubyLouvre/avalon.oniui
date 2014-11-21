@@ -40,17 +40,19 @@ table.table-doc {
     width: 100%;
 }
 table.table-doc table{
+     width: 99%;
      border-collapse: collapse;
 }
-.table-doc th:nth-child(2) {
-    white-space: nowrap;
+.table-doc td, .table-doc th {
+    word-break:break-words;
 }
+
 .table-doc td:nth-child(1) {
     width: 180px;
 }
-.table-doc td:nth-child(2) {
+/*.table-doc td:nth-child(2) {
     width: 180px;
-}
+}*/
 .table-doc td,.table-doc th{  
     border: 1px solid #e1e1e1;  
     padding: 6px 12px;  

@@ -23,9 +23,9 @@ define(["avalon"], function() {
     var Cookie = {
         /*
          * @interface 将两个字符串变成一个cookie字段 
-         *<pre>
+         *<pre class="brush:javascript;gutter:false;toolbar:false">
          *    Cookie.stringify('foo', 'bar', { httpOnly: true })  => "foo=bar; httpOnly"
-         * </pre>
+         *</pre>
          *  @param name {String} cookie的名字不能为空
          *  @param val {String} cookie的名字不能为空
          *  @param opts {Undefined|Object|Number} 配置对象，如果为数字则当成maxAge,否则为对象时，里面可以配置maxAge, domain, path, expires, httpOnly, secure
@@ -87,7 +87,7 @@ define(["avalon"], function() {
         },
         /*
          *  @interface 获取所有cookie，以对象形式返回
-         *  @return {Object}
+         *  @returns {Object}
          */
         getAll: function() {
             var obj = {}
@@ -104,7 +104,7 @@ define(["avalon"], function() {
          *  @param value {String} 
          *  @return {Undefined|Object|Number}
          */
-        set: function(name, val, opts) {
+        set: function(key, val, opts) {
             document.cookie = Cookie.stringify.apply(0, arguments)
         },
         /*
@@ -112,12 +112,12 @@ define(["avalon"], function() {
          *  @param name {String} 
          *  @param opt {Object|Undefined} 
          */
-        remove: function(name, opt) {
+        remove: function(key, opt) {
             opt = opt || {}
             if (!opt.expires) {
                 opt.expires = new Date(1970, 0, 1)
             }
-            Cookie.set(name, '', opt)
+            Cookie.set(key, '', opt)
         },
         /*
          *  @interface 移除所有cookie

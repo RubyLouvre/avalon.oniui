@@ -26,7 +26,7 @@
                     <colgroup>
                         <col width="180" />
                         <col width="80" />
-                        <col width="180" />
+                        <col width="120" />
                     </colgroup>
                     <tr>
                         <th>名字</th>
@@ -167,6 +167,25 @@
                         <td>Function</td>
                         <td></td>
                         <td>showBy($event, content) 参数满足 {target: elem}这样，或者是一个elem元素亦可，tooltip会按照elem定位，并作为参数传递给contentGetter，如果指定content，则忽略contentGetter的返回，直接显示content内容</td>
+                    </tr>
+                    <tr>
+                        <td>appendTo(ele)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>将toolTip元素注入到指定的元素内，请在调用appendTo之后再调用showBy
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>ele</td>
+                                    <td></td>
+                                    <td>目标元素</td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                 </table>
             </fieldset>

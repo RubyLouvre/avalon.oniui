@@ -4,7 +4,7 @@
         <title>验证框架</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <script src="../avalon.js">
+        <script src="../avalon1.3.6.js">
 
         </script>
         <script src="../highlight/shCore.js">
@@ -24,7 +24,7 @@
             }
         </style>
         <script>
-            require(["validation/avalon.validation", "ready!"], function() {
+             require(["validation/avalon.validation.old", "ready!"], function() {
                 var validationVM
 
                 function showError(el, data) {
@@ -37,13 +37,9 @@
                     next.innerHTML = data.getMessage()
                 }
                 function removeError(el) {
-                   var next = el.nextSibling
-                    while (next) {
-                        if (next.className === "error-tip") {
-                            el.parentNode.removeChild(next)
-                            break
-                        }
-                         next = next.nextSibling
+                    var next = el.nextSibling
+                    if (next && next.className === "error-tip") {
+                        el.parentNode.removeChild(next)
                     }
                 }
                 avalon.define({

@@ -135,7 +135,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             vm.$skipArray = ["widgetElement", "template", "delegate"]
             vm.toggle = ""
             var inited
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if(inited) return
                 inited = true
 
@@ -146,14 +146,17 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                 if(vmodel.event == "mouseenter" && vmodel.delegate) {
                     vmodel.event = "mouseover"
                 }
-                vmodel.event && element.setAttribute("ms-" + vmodel.event, "__show($event)")
                 tooltipElem = tooltipELementMaker()
                 avalon.scan(tooltipElem, [vmodel].concat(vmodels))
-                avalon.scan(element, [vmodel].concat(vmodels))
-                // callback after inited
-                if(typeof options.onInit === "function" ) {
-                    //vmodels是不包括vmodel的 
-                    options.onInit.call(element, vmodel, options, vmodels)
+                vmodel.event && element.setAttribute("ms-" + vmodel.event + "-101", "__show($event)")
+                if (continueScan) {
+                    continueScan()
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }
             }
            
@@ -426,6 +429,13 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             vm._isShown = function() {
                 var elem = avalon(tooltipElem)
                 return elem.css("display") != "none" && !elem.hasClass("oni-tooltip-hidden")
+            }
+            /**
+             *  @interface 将toolTip元素注入到指定的元素内，请在调用appendTo之后再调用showBy
+             *  @param 目标元素
+             */
+            vm.appendTo = function(ele) {
+                if(ele) ele.appendChild(tooltipElem)
             }
 
         })

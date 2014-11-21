@@ -290,7 +290,8 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
             vm.sliderLength = 0
             vm.nextEnable = 0
             vm.prevEnable = 0
-            vm.slider = function(dir) {
+            vm.slider = function($event, dir) {
+                $event.preventDefault()
                 var step
                 if(dir === "prev") {
                     step = vm.sliderIndex - 1

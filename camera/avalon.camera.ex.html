@@ -7,6 +7,16 @@
     <script src="../avalon.js"></script>
     <script src="../highlight/shCore.js"></script>
     <script>
+        avalon.config({
+            paths: {
+                jquery: "./mocha/jquery.js"
+            },
+            shim: {
+                jquery: {
+                    exports: "jQuery"
+                }
+            }
+        })
         require(["camera/avalon.camera"], function () {
             avalon.define("test", function (vm) {
                 vm.camera = {
@@ -47,6 +57,16 @@
     &lt;script src="../avalon.js"&gt;&lt;/script&gt;
     &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
     &lt;script&gt;
+        avalon.config({
+            paths: {
+                jquery: "./mocha/jquery.js"
+            },
+            shim: {
+                jquery: {
+                    exports: "jQuery"
+                }
+            }
+        })
         require(["camera/avalon.camera"], function () {
             avalon.define("test", function (vm) {
                 vm.camera = {

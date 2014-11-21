@@ -3,19 +3,9 @@
  * @cnName 图片百叶窗效果组件
  * @enName camera
  * @introduce
- * 基于carousel图片轮播组件，动画效果由jquery完成。
+ * 基于carousel图片轮播组件。注意：此组件动画效果由jquery完成，需要从外部引入。具体引入方法请看示例代码。
  * @summary
  */
-avalon.config({
-    paths: {
-        jquery: "./mocha/jquery.js"
-    },
-    shim: {
-        jquery: {
-            exports: "jQuery"
-        }
-    }
-})
 
 define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
     var effects = ["slideX", "slideY", "fadeIn", "crossX", "crossY", "stepX", "stepY", "rotateFadeIn"]
@@ -28,8 +18,8 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
         var vmodel = avalon.define(data.cameraId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
-            vm.pictureWidth = avalon.css(element, "width") //@config  图片显示宽度
-            vm.pictureHeight = avalon.css(element, "height") //@config  图片显示高度
+            vm.pictureWidth = avalon.css(element, "width") //图片显示宽度
+            vm.pictureHeight = avalon.css(element, "height") //图片显示高度
             vm.selections = avalon.range(vm.pictures.length) //圆形选择的数据数组（不包括复制到末尾的第一个元素）
             vm.selectionWrapOffset = -vm.pictures.length * 20 / 2 //圆形选择CSS位置修正
             vm.arrowVisible = vm.alwaysShowArrow ? true : false //箭头是否可见

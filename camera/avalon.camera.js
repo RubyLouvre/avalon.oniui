@@ -7,7 +7,6 @@
  * @summary
  */
 
-
 define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
     var effects = ["slideX", "slideY", "fadeIn", "crossX", "crossY", "stepX", "stepY", "rotateFadeIn"]
     var widget = avalon.ui.camera = function(element, data, vmodels) {

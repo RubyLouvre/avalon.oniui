@@ -1,7 +1,10 @@
 /**
-  * @description progressbar组件，可以通过接口控制或者随机模拟进度条效果，支持条形，圆形，倒计时等效果功能
-  *
-  */
+ * @cnName 进度条组件
+ * @enName progressbar
+ * @introduce
+ *  <p> 可以通过接口控制或者随机模拟进度条效果，支持条形，圆形，倒计时等效果功能
+</p>
+ */
 define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 
     // 园的半径，边框宽度
@@ -51,11 +54,21 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
             vm.angel = vm.countDown ? 360 : 360 * vm.angel / 100
 
             var inited
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if(inited) return
                 inited = true
                 newElem.innerHTML = vmodel.template
-                avalon.scan(element, [vmodel].concat(vmodels))
+                if (continueScan) {
+                    continueScan()
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                    // callback after inited
+                    if(typeof options.onInit === "function" ) {
+                        //vmodels是不包括vmodel的 
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
+                }
                 if(vmodel.label) {
                     var nodes = newElem.getElementsByTagName("div")
                     avalon.each(nodes, function(i, item) {
@@ -76,16 +89,14 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                         }
                     })
                 }
-                // get Css from skin
-                vmodel._draw()
-                if(!vmodel.getStyleFromSkin) vmodel.circleBar()
-                // callback after inited
-                if(typeof options.onInit === "function" ) {
-                    //vmodels是不包括vmodel的 
-                    options.onInit.call(element, vmodel, options, vmodels)
-                }
+                vmodel.$d = svgSupport && vmodel.circle && circleValueList(vmodel.circleRadius, vmodel.circleBorderWidth) || []
+                vmodel.circleBar()
+                vmodel.circleCoordinates = vmodel.$d.join("")
                 // 开启模拟效果
                 vmodel._simulater()
+                if (typeof options.onInit === "function") {
+                    options.onInit.call(element, vmodel, options, vmodels)
+                }
             }
             // 适用svg绘制圆圈的v生成方式
             // vml不走这个逻辑，有直接绘制圆弧的方法
@@ -153,21 +164,21 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                 return vmodel.labelShower.call(vmodel, arguments[0], arguments[1], vmodel)
             }
 
-            //@method start() 开始进度推进，该接口适用于模拟进度条
+            //@interface start() 开始进度推进，该接口适用于模拟进度条
             vm.start = function() {
                 vmodel.indeterminate = false
                 vmodel.ended = false
                 vmodel._simulater()
             }
 
-            //@method end(value) 结束进度推进，该接口适用于模拟进度条，value为100表示结束，failed表示失败，undefine等于pause，其他则终止于value，并在label上显示
+            //@interface end(value) 结束进度推进，该接口适用于模拟进度条，value为100表示结束，failed表示失败，undefine等于pause，其他则终止于value，并在label上显示
             vm.end = function(value) {
                 clearTimeout(simulateTimer)
                 vmodel.ended = true
                 if(value != void 0) vmodel.value = value
             }
 
-            //@method reset(value) 重置设置项，参数可选，为需要重设的值
+            //@interface reset(value) 重置设置项，参数可选，为需要重设的值
             vm.reset = function(value) {
                 var obj = {}
                 avalon.mix(obj, {
@@ -182,29 +193,9 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                 vmodel._simulater()
             }
 
-            //@method progress(value) 设置value值，其实也可以直接设置vmodel.value
+            //@interface progress(value) 设置value值，其实也可以直接设置vmodel.value
             vm.progress = function(value) {
                 vmodel.value = value
-            }
-            // get css from css file
-            //@method _draw 动态切换皮肤之后，如果需要更新提取圆形进度条的样式，可以调用这个方法
-            vm._draw = function() {
-                if(vmodel.circle && vmodel.getStyleFromSkin) {
-                    if(barElement && barParElement) {
-                        var radius = barElement.height(),
-                            outerHeight = barElement.outerHeight()
-                        // wait utill element is rendered
-                        if(!radius) return setTimeout(vmodel._draw, 16)
-                        vmodel.circleColor = barElement.css("color")
-                        vmodel.circleBorderColor = barParElement.css("background-color")
-                        vmodel.circleBarColor = barElement.css("background-color")
-                        vmodel.circleBorderWidth = parseInt((outerHeight - radius) / 2) || 1
-                        vmodel.circleRadius = radius
-                        vmodel.$d = svgSupport && vmodel.circle && circleValueList(vmodel.circleRadius, vmodel.circleBorderWidth) || []
-                        vmodel.circleBar()
-                        vmodel.circleCoordinates =vmodel.$d.join("")
-                    }
-                }
             }
 
         })
@@ -222,41 +213,37 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
         })
         return vmodel
     }
-    //add args like this:
-    //argName: defaultValue, \/\/@param description
-    //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
-        toggle: true, //@param 组件是否显示，可以通过设置为false来隐藏组件
-        value: false, //@param 当前进度值 0 - 100 or false
-        label: true, //@param 是否在进度条上显示进度数字提示
-        simulate: false, //@param 是否模拟进度条效果，默认为否，模拟的时候需要调用触发告知完成，模拟会采用模拟函数及算子进行模拟，取值为int表示动画效果间隔ms数
-        indeterminate: false, //@param 是否不确定当前进度，现在loading效果
-        countDown: false,//@param 倒计时
-        inTwo: false, //@param 是否显示左右两段
-        circle: false,//@param 圆形
-        getStyleFromSkin: true,//@param 是否从皮肤的css里面计算获取圆形进度条样式，默认为true，设置为true的时候，将忽略下面所有circle*样式设置
-        circleColor: "#ffffff",//@param 圆形填充色彩，可以配制为从皮肤中提取，只在初始化的时候提取
-        circleBorderColor: "#dedede",//@param 圆形边框颜色，，可以配制为从皮肤中提取，只在初始化的时候提取
-        circleBarColor: "#619FE8",//@param 圆形进度条边框颜色，可以配制为从皮肤中提取，只在初始化的时候提取
-        circleRadius: 0,//@param 圆形的半径，可以配制为从皮肤中提取，只在初始化的时候提取
-        circleBorderWidth: 0, //@param 圆形的边框宽度，可以配制为从皮肤中提取，只在初始化的时候提取
-        success: false, //@param 是否完成，进度为100时或者外部将success置为true，用于打断模拟效果
-        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
+        toggle: true, //@config 组件是否显示，可以通过设置为false来隐藏组件
+        value: false, //@config 当前进度值 0 - 100 or false
+        label: true, //@config 是否在进度条上显示进度数字提示
+        simulate: false, //@config 是否模拟进度条效果，默认为否，模拟的时候需要调用触发告知完成，模拟会采用模拟函数及算子进行模拟，取值为int表示动画效果间隔ms数
+        indeterminate: false, //@config 是否不确定当前进度，现在loading效果
+        countDown: false,//@config 倒计时
+        inTwo: false, //@config 是否显示左右两段
+        circle: false,//@config 圆形
+        circleColor: "#ffffff",//@config 圆形填充色彩，可以配制为从皮肤中提取，只在初始化的时候提取
+        circleBorderColor: "#dedede",//@config 圆形边框颜色，，可以配制为从皮肤中提取，只在初始化的时候提取
+        circleBarColor: "#619FE8",//@config 圆形进度条边框颜色，可以配制为从皮肤中提取，只在初始化的时候提取
+        circleRadius: 38,//@config 圆形的半径，可以配制为从皮肤中提取，只在初始化的时候提取
+        circleBorderWidth: 4, //@config 圆形的边框宽度，可以配制为从皮肤中提取，只在初始化的时候提取
+        success: false, //@config 是否完成，进度为100时或者外部将success置为true，用于打断模拟效果
+        //@config onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
-        //@optMethod simulater(value, vmodel) 模拟进度进行效果函数，参数为当前进度和vmodel，默认return value + 5 * Math.random() >> 0
+        //@config simulater(value, vmodel) 模拟进度进行效果函数，参数为当前进度和vmodel，默认return value + 5 * Math.random() >> 0
         simulater: function(i, vmodel) {
             if(vmodel.countDown) return i - 5 * Math.random() >> 0
             return i + 5 * Math.random() >> 0
         },
-        //@optMethod getTemplate(tmp, opts) 用于修改模板的接口，默认不做修改
+        //@config getTemplate(tmp, opts) 用于修改模板的接口，默认不做修改
         getTemplate: function(tmpl, opts) {
             return tmpl
-        },//@optMethod getTemplate(tpl, opts) 定制修改模板接口
-        //@optMethod onChange(value) value发生变化回调，this指向vmodel
+        },//@config getTemplate(tpl, opts) 定制修改模板接口
+        //@config onChange(value) value发生变化回调，this指向vmodel
         onChange: avalon.noop,
-        //@optMethod onComplete() 完成回调，默认空函数，this指向vmodel
+        //@config onComplete() 完成回调，默认空函数，this指向vmodel
         onComplete: avalon.noop,
-        //@optMethod labelShower(value, isContainerLabel) 用于格式化进度条上label显示文字，默认value为false显示“loading…”，完成显示“complete!”，失败显示“failed!”，第二个参数是是否是居中显示的label，两段显示的时候，默认将这个label内容置空，只显示两边的label,this指向vmodel
+        //@config labelShower(value, isContainerLabel) 用于格式化进度条上label显示文字，默认value为false显示“loading…”，完成显示“complete!”，失败显示“failed!”，第二个参数是是否是居中显示的label，两段显示的时候，默认将这个label内容置空，只显示两边的label,this指向vmodel
         labelShower: function(value, l1, vmodel) {
             var value = l1 == "inTwo" ? 100 - (value || 0) : value
             var successValue = vmodel ? vmodel.successValue : 100

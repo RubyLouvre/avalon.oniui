@@ -6,7 +6,7 @@
  * @introduce
  * <p>按钮组件提供丰富的样式、形式选择，除与bootstrap可用的button样式保持一致外，支持small、default、big、large四种尺寸，同时支持图标button，可以是仅有图标的button，图标在左边的button、图标在右边的button、两边都有图标的button，当然也支持图标组，有水平图标组、垂直图标组两种形式</p>
  */
-define(["avalon", "text!./avalon.button.html", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"], function(avalon, sourceHTML) {
+define(["avalon", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"], function(avalon) {
     var baseClasses = ["oni-button", "oni-widget", "oni-state-default"],
         typeClasses = "oni-button-icons-only oni-button-icon-only oni-button-text-icons oni-button-text-icon-primary oni-button-text-icon-secondary oni-button-text-only"
     var widget = avalon.ui.button = function(element, data, vmodels) {

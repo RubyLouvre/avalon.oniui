@@ -3,20 +3,10 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>colorpicker文档说明</title>
-        <script src="../highlight/shCore.js"></script>
+        <meta name="descriptions" content="一个直观方便的颜色选择器。既可以展示设定的颜色，又可以调试并选择颜色。使用 ms-duplex 可以方便的设置和获取颜色。" />
+        <title>颜色选择器</title>
         <link rel="stylesheet" href="../style/avalon.doc.css"/>
-        <style>
-            code{
-                padding: 1px 3px;
-                font-family: Consolas, monospace, sans-serif;
-                font-size: 0.85em;
-                white-space: pre;
-                border: 1px solid #dddbcc;
-                background: #f1f0ea;
-                border-radius: 2px;
-            }
-        </style>
+        <script src="../highlight/shCore.js"></script>
     </head>
     <body>
         <div class="wrapper">
@@ -28,23 +18,38 @@
             </fieldset>
             <fieldset>
                 <legend>使用说明</legend>
-                <table class="table-doc">
-                    <col width="180"/>
-                    <col width="180"/>
+                <table class="table-doc" border="1">
+                    <colgroup>
+                        <col width="180" />
+                        <col width="80" />
+                        <col width="120" />
+                    </colgroup>
                     <tr>
-                        <th>名字</th><th nowrap >默认值</th><th>说明</th>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
                     </tr>
                     <tr>
-                        <td colspan="3" align="center">配置参数</td>
+                        <td align="center" colspan="4">配置参数</td>
                     </tr>
-                    <tr>  
-                        <td>autoHide</td><td>true</td><td>是否自动隐藏控件</td> 
+                    <tr>
+                        <td>autoHide</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否自动隐藏控件</td>
                     </tr>
-                    <tr>  
-                        <td>defaultColor</td><td>"#ffffff"</td><td>默认颜色</td> 
+                    <tr>
+                        <td>defaultColor</td>
+                        <td>String</td>
+                        <td>"#ffffff"</td>
+                        <td>默认颜色</td>
                     </tr>
-                    <tr>  
-                        <td>bgColor</td><td>""</td><td>背景颜色</td> 
+                    <tr>
+                        <td>bgColor</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>背景颜色</td>
                     </tr>
                 </table>
             </fieldset>

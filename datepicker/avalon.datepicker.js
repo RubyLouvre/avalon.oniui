@@ -304,6 +304,7 @@ define(["../avalon.getModel",
                 var timerFilter = avalon.filters.timer,
                     _oldMonth = vmodel.month;
                 event.stopPropagation()
+                event.preventDefault()
                 if (month !== false && !dateDisabled && !vmodel.showDatepickerAlways) {
                     var _date = new Date(year, month, day),
                         date = formatDate(_date),
@@ -431,14 +432,10 @@ define(["../avalon.getModel",
                 setTimeout(function() {
                     dataSet(vmodel.month, vmodel.year)
                 }, 0)
-                if(continueScan){
-                    continueScan()
-                }else{
-                    avalon.log("请尽快升到avalon1.3.7+")
-                    avalon.scan(calendar, [vmodel].concat(vmodels))
-                    if (typeof options.onInit === "function") {
-                        options.onInit.call(element, vmodel, options, vmodels)
-                    }
+                avalon.scan(calendar, [vmodel].concat(vmodels))
+                if (typeof options.onInit === "function" ){
+                    //vmodels是不包括vmodel的
+                    options.onInit.call(element, vmodel, options, vmodels)
                 }
             }
             vm.$remove = function() {

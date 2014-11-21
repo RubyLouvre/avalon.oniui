@@ -1,7 +1,7 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname: "ui-timer";
-.ui-textbox {
+$uiname: "oni-timer";
+.oni-textbox {
     @include inline-block();
     outline: medium none;
     font-size: 0;
@@ -11,7 +11,7 @@ $uiname: "ui-timer";
         background-color: #FFFFFF;
         border: 1px solid #CCCCCC;
     }
-    .ui-textbox-input-wrap {
+    .oni-textbox-input-wrap {
         position: relative;
         @include inline-block();
         line-height: 18px;
@@ -50,7 +50,7 @@ $uiname: "ui-timer";
                 line-height: 30px;
                 padding: 0 20px;
                 margin: 0;
-                &.ui-state-active {
+                &.oni-state-active {
                     font-weight: bold;
                 }
             }

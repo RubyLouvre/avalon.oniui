@@ -1,30 +1,36 @@
-/*
+/**
  * @cnName 提示组件
  * @enName notice
  * @introduce
  * notice组件用来向用户显示一些提示信息。
  */
-
 define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oniui-common.css", "css!./avalon.notice.css"], function(avalon, sourceHTML) {
     var template = sourceHTML,
-            containerMap = [],
-            affixBoxs = [], // 存储吸顶的notice元素，且只保存弹出的notice
-            affixHeights = [], //存储吸顶元素对应的height、width、offsetTop
-            isIE6 = (window.navigator.userAgent || '').toLowerCase().indexOf('msie 6') !== -1,
-            maxZIndex = getMaxZIndex();
+        containerMap = [],
+        affixBoxs = [], // 存储吸顶的notice元素，且只保存弹出的notice
+        affixHeights = [], //存储吸顶元素对应的height、width、offsetTop
+        isIE6 = (window.navigator.userAgent || '').toLowerCase().indexOf('msie 6') !== -1,
+        maxZIndex = getMaxZIndex();
     var widget = avalon.ui.notice = function(element, data, vmodels) {
-        var options = data.noticeOptions;
-        options.template = template = options.getTemplate(template, options);
+        var options = data.noticeOptions,
+            temp = template
+        if (options.animate) {
+            temp = template.replace('ms-visible="toggle"' , "")
+            options.height = 0
+        } else {
+            options.height = "auto"
+        }
+        options.template = options.getTemplate(temp, options);
         // container选项可以是dom对象，或者元素ID("#id")
         var noticeDefineContainer = options.container;
         // 根据配置值将container转换为完全的dom对象，如果用户未配置container，则container容器默认是应用绑定的元素
         options.container = noticeDefineContainer ? noticeDefineContainer.nodeType === 1 ? noticeDefineContainer : document.getElementById(noticeDefineContainer.substr(1)) : element;
         var templateView = null, // 保存模板解析后的dom对象的引用
-                elementInnerHTML = element.innerHTML.trim(), //如果notice的container是默认配置也就是绑定元素本身，元素的innerHTML就是notice的content
-                onShow = options.onShow,
-                onShowVM = null,
-                onHide = options.onHide,
-                onHideVM = null;
+            elementInnerHTML = element.innerHTML.trim(), //如果notice的container是默认配置也就是绑定元素本身，元素的innerHTML就是notice的content
+            onShow = options.onShow,
+            onShowVM = null,
+            onHide = options.onHide,
+            onHideVM = null;
         if (typeof onShow === "string") {
             onShowVM = avalon.getModel(onShow, vmodels);
             options.onShow = onShowVM && onShowVM[1][onShowVM[0]] || avalon.noop;
@@ -42,7 +48,6 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
             vm.$closeTimer = 0; // 定时器引用
             vm.$skipArray = ["template", "widgetElement", "_isAffix", "container", "elementHeight"];
             vm.elementHeight = 0
-            vm.height = 0
             vm.content = vm.content || elementInnerHTML;
             vm._isAffix = vm.isPlace && vm.isAffix;
             vm.widgetElement = element;
@@ -56,7 +61,9 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
             vm._show = function(display) { // toggle为true时调用此方法显示notice
                 _timerClose();
                 _affix();
-                step(display, vmodel)
+                if (vmodel.animate) {
+                    step(display, vmodel)
+                }
                 vmodel.onShow.call(element, data, vmodels); // 用户回调
             }
             vm._close = function() { //close按钮click时的监听处理函数
@@ -64,7 +71,9 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
             }
             vm._hide = function(display) { //toggle为false时隐藏notice
                 var hideAffixIndex = affixBoxs.indexOf(templateView);
-                step(display, vmodel)
+                if (vmodel.animate) {
+                    step(display, vmodel)
+                }
                 //隐藏吸顶元素后将其从吸顶队列中删除，并修改吸顶队列中所有元素的position为static，以便affixPosition能重新调整吸顶元素位置
                 if (hideAffixIndex !== -1) {
                     templateView.style.position = "static"; //隐藏时改变position，方便再显示时调整元素位置(吸顶还是原位)
@@ -84,7 +93,7 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
             }
             vm.$init = function() {
                 var container = null;
-                var sourceFragment = avalon.parseHTML(template);
+                var sourceFragment = avalon.parseHTML(options.template);
                 var AffixPlaceholder = sourceFragment.lastChild;
                 templateView = sourceFragment.firstChild;
                 container = positionNoticeElement(); //获取存储notice的容器
@@ -105,15 +114,15 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
                 setTimeout(function() {
                     var temp = document.createElement("div"),
                         cloneTemplateView = templateView.cloneNode(true),
-                        $cloneTemplateView
+                        $cloneTemplateView,
+                        width = avalon(templateView).innerWidth()
 
                     temp.style.position = "absolute"
                     temp.style.height = 0
                     document.body.appendChild(temp)
                     temp.appendChild(cloneTemplateView)
                     $cloneTemplateView = avalon(cloneTemplateView)
-                    $cloneTemplateView.css({visibility: "hidden", height: "auto"})
-                    
+                    $cloneTemplateView.css({visibility: "hidden", height: "auto", width: width})
                     vmodel.elementHeight = $cloneTemplateView.height()
                     document.body.removeChild(temp)
                     if (typeof options.onInit === "function") {
@@ -373,6 +382,7 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
         infoClass: "", //@config type为info时的提示类名
         widgetElement: "", //@interface accordion容器
         zIndex: 'auto', //@config 提示组件的zindex css值
+        animate: true, //@config notice的显示隐藏是否添加动画
         /*
          * @config {Function} 用于重写模板的函数 
          * @param {String} tmpl
@@ -394,4 +404,4 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
  [自定义notice的回调](avalon.notice.ex4.html)
  [设置timer使得notice在显示一段时间之后隐藏](avalon.notice.ex5.html)
  [自定义notice type的样式类](avalon.notice.ex6.html)
- **/
+ */

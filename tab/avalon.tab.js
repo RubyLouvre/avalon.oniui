@@ -286,6 +286,49 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
             vm._shallPanelAlwaysShow = function($index) {
                 return vmodel.shallPanelAlwaysShow || $index === vmodel.active
             }
+            vm.sliderIndex = 0
+            vm.sliderLength = 0
+            vm.nextEnable = 0
+            vm.prevEnable = 0
+            vm.slider = function(dir) {
+                var step
+                if(dir === "prev") {
+                    step = vm.sliderIndex - 1
+                    step = step > 0 ? step : 0
+                } else {
+                    step = vm.sliderIndex + 1
+                    step = step <= vm.sliderLength - 1 ? step : vm.sliderLength - 1
+                }
+                vm.sliderIndex = step
+                vm.buttonEnable()
+            }
+            vm.computeSlider = function() {
+                if(vm.dir === "v") return
+                var tabs = document.getElementById("tabs" + vm.tabs.$id)
+                if(tabs) {
+                    var w = tabs.scrollWidth,
+                        pw = tabs.parentNode.parentNode.clientWidth;
+                    if(w > pw) {
+                        vm.sliderLength = w / pw
+                    } else {
+                        vm.sliderLength = 0
+                    }
+                    vm.buttonEnable()
+                }
+
+            }
+            vm.buttonEnable = function() {
+                if(vm.sliderIndex >= vm.sliderLength - 1) {
+                    vm.nextEnable = 0
+                } else {
+                    vm.nextEnable = 1
+                }
+                if(vm.sliderIndex <= 0) {
+                    vm.prevEnable = 0
+                } else {
+                    vm.prevEnable = 1
+                }
+            }
             return vm
         })
 

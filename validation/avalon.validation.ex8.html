@@ -13,7 +13,6 @@
         <style >
             .error{
                 border:1px  solid red;
-
             }
             .success{
                 border:1px  solid greenyellow;
@@ -37,7 +36,7 @@
                     next.innerHTML = data.getMessage()
                 }
                 function removeError(el) {
-                   var next = el.nextSibling
+                    var next = el.nextSibling
                     while (next) {
                         if (next.className === "error-tip") {
                             el.parentNode.removeChild(next)
@@ -45,17 +44,15 @@
                         }
                          next = next.nextSibling
                     }
+
                 }
                 avalon.define({
                     $id: "test",
                     $skipArray: ["validation"],
                     a: "",
-                    b: "a",
-                    c: "d",
-                    d: "",
-                    e: "",
-                    f: "",
-                    g: "",
+                    b: 4,
+                    c: false,
+                    d: [1, 5],
                     reset: function() {
                         validationVM && validationVM.resetAll()
                     },
@@ -63,7 +60,9 @@
                         onInit: function(v) {
                             validationVM = v
                         },
-                        onReset: function() {
+                        resetInFocus: false,
+                        onReset: function(e, data) {
+                            data.valueResetor && data.valueResetor()
                             avalon(this).removeClass("error success")
                             removeError(this)
                         },
@@ -95,14 +94,18 @@
     <body>
         <form ms-controller="test" ms-widget="validation">
             <h3>验证组件</h3>
-            <p>使用data-duplex-event="change"，延迟到失去焦点才验证</p>
-            <p><input ms-duplex-maxlength-minlength="a" maxlength="20" minlength="6" placeholder="限制长度6-20"></p>
-            <p><input ms-duplex-lt="b" min="20"  placeholder="限制数值小于20"></p>
-            <p><input ms-duplex-gt="c" max="444"  placeholder="限制数值大于444"></p>
-            <p><input ms-duplex-eq="d" data-duplex-eq="4567" placeholder="值必须等于4567"></p>
-            <p><input ms-duplex-required-minlength="e" type="password"  id="pw1"  data-duplex-minlength="6" data-duplex-event="change" placeholder="请输入密码"></p>
-            <p><input ms-duplex-required-equal="f" type="password"  data-duplex-equal="pw1" data-duplex-event="change" data-duplex-message="密码必须一致" placeholder="请重复输入密码"></p>
-            <button type="submit">submit 
+            <p><input ms-duplex-required="a" placeholder="不能为空"></p>
+            <p><input ms-duplex-int-number="b" placeholder="必须输入整数"></p>
+            <p><input ms-duplex-contains-boolean="c" type="radio" value="true" data-duplex-contains="true"><input ms-duplex-boolean="c" type="radio" value="false"></p>
+            <p>
+                <input type="checkbox" ms-duplex-number="d" value="1" />
+                <input type="checkbox" ms-duplex-number="d" value="2" />
+                <input type="checkbox" ms-duplex-number="d" value="3"/>
+                <input type="checkbox" ms-duplex-number="d" value="4" />
+                <input type="checkbox" ms-duplex-number-contain="d" value="5" data-duplex-contain="2,3"/>
+            </p>
+
+            <button type="submit">submit
             </button>
             <button type="button" ms-click="reset">reset
             </button>

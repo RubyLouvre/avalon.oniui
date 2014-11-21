@@ -40,6 +40,7 @@ table.table-doc {
     width: 100%;
 }
 table.table-doc table{
+     width: 99%;
      border-collapse: collapse;
 }
 .table-doc td, .table-doc th {

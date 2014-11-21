@@ -58,9 +58,9 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     addType("ball", {
         "width": 32,
         "widthInner": 28,
-        "count": 10, //@config type=ball，loading效果组成的小图形个数
-        "interval": 120,//@config type=ball，毫秒数，动画效果帧间隔
-        "circleMargin": 1,//@config type=ticks，小球之间的间距，单位是一倍小球半径
+        count: 10, //@config type=ball，loading效果组成的小图形个数
+        interval: 120,//@config type=ball，毫秒数，动画效果帧间隔
+        circleMargin: 1,//@config type=ticks，小球之间的间距，单位是一倍小球半径
         "svgDur": "1s"
     }, function(vmodel) {
         var type = vmodel.type,

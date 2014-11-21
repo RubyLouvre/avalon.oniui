@@ -621,4 +621,5 @@ define(["../promise/avalon.promise"], function(avalon) {
  [自带验证规则repeat(重复密码)](avalon.validation.ex5.html)
  [自定义验证规则](avalon.validation.ex6.html)
  [自带验证规则norequied](avalon.validation.ex7.html)
+ [禁止获得焦点时的onRest回调 resetInFocus ](avalon.validation.ex8.html)
  */

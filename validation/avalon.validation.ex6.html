@@ -56,8 +56,8 @@
                         onInit: function(v) {
                             validationVM = v
                         },
-                        onReset: function() {
-                            this.value = ""
+                        onReset: function(e, data) {
+                            data.valueResetor()
                         },
                         onValidateAll: function(reasons) {
                             var msg = []

@@ -341,5 +341,5 @@ define(["avalon"], function() {
  @links
  [例子1](avalon.mask.ex1.html)
  [例子2](avalon.mask.ex2.html)
- [例子3](avalon.mask.ex2.html)
+ [例子3](avalon.mask.ex3.html)
  */

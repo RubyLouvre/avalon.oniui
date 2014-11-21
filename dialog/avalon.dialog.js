@@ -10,7 +10,8 @@ define(["../avalon.getModel",
     "text!./avalon.dialog.html",
     "../button/avalon.button",
     "css!../chameleon/oniui-common.css", 
-    "css!./avalon.dialog.css"
+    "css!./avalon.dialog.css",
+    "../draggable/avalon.draggable"
 ], function(avalon, sourceHTML) {
 
     var template = sourceHTML,
@@ -73,7 +74,7 @@ define(["../avalon.getModel",
         _lastFooter = options.getFooter(_lastFooter, options)
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "template", "container", "modal"]
+            vm.$skipArray = ["widgetElement", "template", "container", "modal", "zIndexIncrementGlobal", "initChange"]
             vm.widgetElement = element
             vm.position = "fixed"
             // 如果显示模式为alert或者配置了showClose为false，不显示关闭按钮
@@ -218,6 +219,24 @@ define(["../avalon.getModel",
                 if (avalon(docBody).height() < clientHeight) {
                     avalon(docBody).css("min-height", clientHeight)
                 }
+                if (vmodel.draggable) {
+                    $element.attr("ms-draggable", "")
+                    vmodel.draggable = {
+                        handle: function(e){
+                            var el = e.target
+                            do {
+                                if (el.className === "oni-dialog-header") {
+                                    return el
+                                }
+                                if (el.className === "oni-dialog") {
+                                    return
+                                }
+                            } while (el = el.parentNode)
+                        }
+                    }
+                }
+                vmodel.initChange = true
+                vmodel.zIndex = vmodel.zIndex + vmodel.zIndexIncrementGlobal
                 vmodel.title = vmodel.title || "&nbsp;"
                 $element.addClass("oni-dialog")
                 element.setAttribute("ms-visible", "toggle")
@@ -272,7 +291,11 @@ define(["../avalon.getModel",
 
             // 可以手动设置最大zIndex
             vm.$watch("zIndex", function(val) {
-                vmodel._open(true)
+                if (vmodel.initChange) {
+                    vmodel.initChange = false
+                } else {
+                    vmodel._open(true)
+                }
             })
         })
         return vmodel
@@ -281,6 +304,7 @@ define(["../avalon.getModel",
     widget.defaults = {
         width: 480, //@config 设置dialog的width
         title: "&nbsp;", //@config 设置弹窗的标题
+        draggable: false,
         type: "confirm", //@config 配置弹窗的类型，可以配置为alert来模拟浏览器
         content: "", //@config 配置dialog的content，默认取dialog的innerHTML作为dialog的content，如果innerHTML为空，再去取content配置项
         /**
@@ -331,7 +355,8 @@ define(["../avalon.getModel",
             return tmp
         },
         modal: true, //@config 是否显示遮罩
-        zIndex: maxZIndex //@config 通过设置vmodel的zIndex来改变dialog的z-index,默认是body直接子元素中的最大z-index值，如果都没有设置就默认的为10
+        zIndex: maxZIndex, //@config 通过设置vmodel的zIndex来改变dialog的z-index,默认是body直接子元素中的最大z-index值，如果都没有设置就默认的为10
+        zIndexIncrementGlobal: 0 //@config 相对于zIndex的增量, 用于全局配置，如果只是作用于单个dialog那么zIndex的配置已足够，设置全局需要通过avalon.ui.dialog.defaults.zIndexIncrementGlobal = Number来设置
     }
     avalon(window).bind("keydown", function(e) {
         var keyCode = e.which,
@@ -390,8 +415,8 @@ define(["../avalon.getModel",
         if (!vmodel.toggle) return
         var bodyHeight = body.scrollHeight,
             bodyWidth = body.scrollWidth,
-            clientWidth = document.documentElement.clientWidth,
-            clientHeight = document.documentElement.clientHeight,
+            clientWidth,
+            clientHeight,
             targetOffsetHeight = target.offsetHeight,
             targetOffsetWidth = target.offsetWidth,
             scrollTop = document.body.scrollTop + document.documentElement.scrollTop,
@@ -399,18 +424,22 @@ define(["../avalon.getModel",
             documentElementStyle = document.documentElement.style,
             t = 0,
             l = 0, 
-            top = (clientHeight - targetOffsetHeight) / 2,
-            left = (clientWidth - targetOffsetWidth) / 2,
+            top,
+            left,
             $target = avalon(target),
             $maskLayer = avalon(maskLayer);
+
+        vmodel.position = isIE6 ? "absolute" : "fixed"
+        isIE6 ? documentElementStyle.overflow = "auto" : documentElementStyle.overflow = "hidden"
+        clientWidth = document.documentElement.clientWidth
+        clientHeight = document.documentElement.clientHeight
+        top = (clientHeight - targetOffsetHeight) / 2
+        left = (clientWidth - targetOffsetWidth) / 2
 
         if (clientHeight < targetOffsetHeight || clientWidth < targetOffsetWidth) {
             vmodel.position = "absolute"
             documentElementStyle.overflow = "auto"
-        } else {
-            vmodel.position = isIE6 ? "absolute" : "fixed"
-            isIE6 ? documentElementStyle.overflow = "auto" : documentElementStyle.overflow = "hidden"
-        }
+        } 
         if (clientHeight < targetOffsetHeight) {
             t = scrollTop + 10
             l = scrollLeft + 10

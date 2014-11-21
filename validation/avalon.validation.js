@@ -402,7 +402,7 @@ define(["../promise/avalon.promise"], function(avalon) {
              */
 
             vm.validateAll = function(callback) {
-                var fn = typeof callback == "function" ? callback : vm.onValidateAll
+                var fn = typeof callback === "function" ? callback : vm.onValidateAll
                 var promise = vm.data.filter(function(el) {
                     return el.element
                 }).map(function(data) {
@@ -426,9 +426,6 @@ define(["../promise/avalon.promise"], function(avalon) {
                     return el.element
                 }).forEach(function(data) {
                     try {
-//                        if (data.valueResetor) {
-//                            data.valueResetor()
-//                        }
                         vm.onReset.call(data.element, {type: "reset"}, data)
                     } catch (e) {
                     }
@@ -557,9 +554,6 @@ define(["../promise/avalon.promise"], function(avalon) {
                         }
                         if (vm.resetInFocus) {
                             data.bound("focus", function(e) {
-//                                if (data.valueResetor) {
-//                                    data.valueResetor()
-//                                }
                                 vm.onReset.call(data.element, e, data)
                             })
                         }
@@ -627,4 +621,5 @@ define(["../promise/avalon.promise"], function(avalon) {
  [自带验证规则repeat(重复密码)](avalon.validation.ex5.html)
  [自定义验证规则](avalon.validation.ex6.html)
  [自带验证规则norequied](avalon.validation.ex7.html)
+ [禁止获得焦点时的onRest回调 resetInFocus ](avalon.validation.ex8.html)
  */

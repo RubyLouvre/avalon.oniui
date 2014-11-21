@@ -1,18 +1,50 @@
+/**
+ * @cnName 本地储存组件
+ * @enName store
+ * @introduce
+ *    <p>   IE8+及高级浏览器使用localStorage，旧式IE使用userData。这些方法放于avalon.store对象上。</p>
+ *  @updatetime 2011-11-21
+ */
 define(["avalon", "json/avalon.json"], function(avalon) {
 
     var store = {
         //一些接口(空实现)
         disabled: false,
+        /*
+         *  @interface 添加或设置某一数据
+         *  @param name {String} 
+         *  @param value {String} 
+         */
         set: function(key, value) {
         },
+        /*
+         *  @interface 获取某一数据
+         *  @param name {String} 
+         *  @return {String}
+         */
         get: function(key) {
         },
+        /*
+         *  @interface 移除某一数据
+         *  @param key {String} 
+         */
         remove: function(key) {
         },
+        /*
+         *  @interface 清空一数据
+         */
         clear: function() {
         },
-        forEach: function() {
+        /*
+         *  @interface 遍历所有数据
+         *  @param callback {Function} 里面会依次传入key与value
+         */
+        forEach: function(callback) {
         },
+        /*
+         *  @interface 得到所有数据，以对象形式返回
+         *  @returns {Object}
+         */
         getAll: function() {
             var ret = {}
             store.forEach(function(key, val) {
@@ -162,15 +194,24 @@ define(["avalon", "json/avalon.json"], function(avalon) {
     avalon.store = store
     return avalon;
 })
-/*这里提供了一个用cookie实现本地储存的方案 https://developer.mozilla.org/en/DOM/Storage
+/*
+ * @other
+ * 这里提供了一个用cookie实现本地储存的方案 https://developer.mozilla.org/en/DOM/Storage
  其他有用的资料
- http://www.cnblogs.com/NNUF/archive/2012/06/01/2531436.html
- http://www.cnblogs.com/zjcn/archive/2012/07/03/2575026.html
- http://dev-test.nemikor.com/web-storage/support-test/
- http://arty.name/localstorage.html
+ <ul>
+ <li><a href="http://www.cnblogs.com/NNUF/archive/2012/06/01/2531436.html">http://www.cnblogs.com/NNUF/archive/2012/06/01/2531436.html</a></li>
+ <li><a href="http://www.cnblogs.com/zjcn/archive/2012/07/03/2575026.html">http://www.cnblogs.com/zjcn/archive/2012/07/03/2575026.html</a></li>
+ <li><a href="http://dev-test.nemikor.com/web-storage/support-test/">http://dev-test.nemikor.com/web-storage/support-test/</a></li>
+ <li><a href="http://arty.name/localstorage.html">http://arty.name/localstorage.html</a></li>
+ </ul>
  firefox中对file://协议的不支持.
  
  当你在firefox中打开一个本地的html文件的时候,也就是使用file://协议运行一个页面的时候,localStorage是不起作用的.无法设置和获取localStorage.
  其实,本地调试这种方式已经很落后了,至少应该再127.0.0.1的环境中调试吧,这样调试的时候localStorage是工作的,有的人说这是一个firefox的bug.
  但是看到一个解释,我觉得还是挺靠谱的,在file协议中,本来就没有domain的概念,而localStorage是根据domain来生效的.所以从道理上来讲就不应该在file://协议上生效.
+ */
+
+/**
+ @links
+ [例子1](avalon.store.ex1.html)
  */

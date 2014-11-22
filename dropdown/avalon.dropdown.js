@@ -20,6 +20,7 @@ define(["avalon",
     "css!./avalon.dropdown.css"
 ], function(avalon, template) {
     var styleReg = /^(\d+).*$/;
+    var ie6=!-[1,]&&!window.XMLHttpRequest;
     var widget = avalon.ui.dropdown = function(element, data, vmodels) {
         var $element = avalon(element),
             elemParent = element.parentNode,
@@ -75,7 +76,7 @@ define(["avalon",
         var titleNode, listNode;
         var vmodel = avalon.define(data.dropdownId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "duplexName", "menuNode", "dropdownNode"];
+            vm.$skipArray = ["widgetElement", "duplexName", "menuNode", "dropdownNode", "scrollWidget"];
             if(vm.multiple && vm.$hasDuplex && vm.$skipArray.indexOf("value") === -1) {
                 vm.$skipArray.push("value")
             }
@@ -205,11 +206,17 @@ define(["avalon",
 
                     //对data的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
                     vmodel.$source && vmodel.$source.$watch && vmodel.$source.$watch('length', function(n) {
+                        vmodel.data.clear();
+                        vmodel.label = "";
                         if(n > 0) {
                             //当data改变时，解锁滚动条
                             vmodel._disabledScrollbar(false);
-                            vmodel.data.clear();
                             vmodel.data.pushArray(getDataFromOption(vmodel.$source.$model || vmodel.$source));
+                            if( vmodel.menuNode ) {
+                                avalon(vmodel.menuNode).css({"height": ""});
+                                avalon(vmodel.dropdownNode).css({"height": ""});
+                                vmodel._styleFix();
+                            }
 
                             //当data改变时，尝试使用之前的value对label和title进行赋值，如果失败，使用data第一项
                             if(!setLabelTitle(vmodel.value)) {
@@ -276,6 +283,7 @@ define(["avalon",
                     if(avalon.type(vmodel.onSelect) === "function") {
                         vmodel.onSelect.call(this, event, vmodel.value);
                     }
+                    vmodel.activeIndex = index
                 }
             };
 
@@ -283,9 +291,7 @@ define(["avalon",
 
                 //如果是单选下拉框，可以通过键盘移动
                 if (!vmodel.multiple) {
-
                     var index = vm.activeIndex || 0
-                    var max = vmodel.data.size()
                     //区分上下箭头和回车
                     switch (event.keyCode) {
                         case 9:
@@ -300,22 +306,30 @@ define(["avalon",
                         case 38:
                         case 63233: //safari 向上
                             event.preventDefault();
-                            index = getEnableOption(vm.data, index)
+                            index = getEnableOption(vmodel.data, index)
                             if(index === null) {
                                 return
                             }
-                            vm.value = vm.data[index].value
+                            vmodel.value = vmodel.data[index].value
                             vmodel.activeIndex = index
+                            vmodel.scrollTo(index)
+                            if(avalon.type(vmodel.onSelect) === "function") {
+                                vmodel.onSelect.call(this, event, vmodel.value);
+                            }
                             break;
                         case 40:
                         case 63235: //safari 向下
                             event.preventDefault();
-                            index = getEnableOption(vm.data, index, true)
+                            index = getEnableOption(vmodel.data, index, true)
                             if(index === null) {
                                 return
                             }
-                            vm.value = vm.data[index].value
+                            vmodel.value = vmodel.data[index].value
                             vmodel.activeIndex = index
+                            vmodel.scrollTo(index)
+                            if(avalon.type(vmodel.onSelect) === "function") {
+                                vmodel.onSelect.call(this, event, vmodel.value);
+                            }
                             break
                     }
                 }
@@ -371,6 +385,7 @@ define(["avalon",
                         }
                         vmodel.activeIndex = selectedItemIndex;
                     }
+                    vmodel.scrollWidget = avalon.vmodels["scrollbar-" + vmodel.$id];
                     vmodel._styleFix();
                     vmodel._position();
                     if(avalon.type(vmodel.onShow) === "function") {
@@ -464,38 +479,57 @@ define(["avalon",
                 }
             }
 
-            //利用scrollbar的样式改变修正父节点的样式
+            //当下拉列表中的项目发生改变时，调用该函数修正显示，顺序是修正下拉框高宽 --> 滚动条更新显示 --> 定位下拉框
             vm._styleFix = function() {
                 var MAX_HEIGHT = options.height || 200,
                     $menu = avalon(vmodel.menuNode),
-                    height = vmodel.dropdownNode.scrollHeight;
+                    height = vmodel.dropdownNode.scrollHeight
 
-                vmodel.menuWidth = vmodel.listWidth - $menu.css("borderLeftWidth").replace(styleReg, "$1") - $menu.css("borderRightWidth").replace(styleReg, "$1");
+                vmodel.menuWidth = !ie6 ? vmodel.listWidth - $menu.css("borderLeftWidth").replace(styleReg, "$1") - $menu.css("borderRightWidth").replace(styleReg, "$1") : vmodel.listWidth;
                 if (height > MAX_HEIGHT) {
                     height = MAX_HEIGHT;
+                    avalon(vmodel.dropdownNode).css({
+                        "width": vmodel.menuWidth - vmodel.scrollWidget.getBars()[0].width()
+                    });
                 } else {
                     vmodel._disabledScrollbar(true);
+                    avalon(vmodel.dropdownNode).css({
+                        "width": vmodel.menuWidth
+                    })
                 }
                 vmodel.menuHeight = height;
                 vmodel.updateScrollbar();
+                vmodel.scrollTo(vmodel.activeIndex);
             };
 
-            //当下拉列表中的项目发生改变时，调用该函数修正显示，顺序是修正下拉框高宽 --> 滚动条更新显示 --> 定位下拉框
+            //利用scrollbar的样式改变修正父节点的样式
             vm.updateScrollbar = function() {
-                var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
-                scrollbar && scrollbar.update();
+                vmodel.scrollWidget.update();
+            }
+
+            //通过当前的activeIndex，更新scrollbar的滚动位置
+            vm.scrollTo = function(activeIndex) {
+
+                if(!vmodel.dropdownNode) return;
+                //计算是否需要滚动
+                var nodes = siblings(vmodel.dropdownNode.firstChild),
+                    $activeNode = avalon(nodes[activeIndex]),
+                    menuHeight = vmodel.menuHeight,
+                    nodeTop = $activeNode.position().top - avalon(nodes[0]).position().top,
+                    nodeHeight = $activeNode.height(),
+                    scrollTop = vmodel.dropdownNode.scrollTop
+
+                if(nodeTop > scrollTop + menuHeight - nodeHeight || nodeTop + nodeHeight < scrollTop) {
+                    vmodel.scrollWidget.scrollTo(0, nodeTop + nodeHeight - menuHeight)
+                }
             }
 
             //禁用滚动条，当下拉列表的高度小于最大高度时，只显示当前高度，需要对滚动条做禁用
             vm._disabledScrollbar = function(b) {
-                var scrollbar = avalon.vmodels["scrollbar-" + vmodel.$id];
-                scrollbar && (scrollbar.disabled = !!b);
+                vmodel.scrollWidget && (vmodel.scrollWidget.disabled = !!b)
             }
 
         });
-
-
-
 
         vmodel.$watch("enable", function(n) {
             if(!n) {
@@ -655,8 +689,9 @@ define(["avalon",
         titleClass: "",   //@config title添加自定义className来控制样式
         activeIndex: NaN,
         size: 1,
-        menuNode: {},
-        dropdownNode: {},
+        menuNode: null,
+        dropdownNode: null,
+        scrollWidget: null,
         position: true, //@config 是否自动定位下拉列表
         onSelect: null,  //@config 点击选项时的回调
         onShow: null,    //@config 下拉框展示的回调函数
@@ -840,12 +875,29 @@ define(["avalon",
     }
     return avalon;
 
+    /**
+     * 获取元素节点的所有兄弟节点
+     * @param n
+     * @returns {Array}
+     */
+    function siblings( n) {
+        var r = [];
+
+        for ( ; n; n = n.nextSibling ) {
+            if ( n.nodeType === 1) {
+                r.push( n );
+            }
+        }
+
+        return r;
+    }
+
 });
 
 /**
  @links
  [使用html配置multiple组件](avalon.dropdown.ex1.html)
- [使用html配置multiple并使用双工绑定](avalon.dropdown.ex2.htmll)
+ [使用html配置multiple并使用双工绑定](avalon.dropdown.ex2.html)
  [使用option配置multiple并使用双工绑定](avalon.dropdown.ex3.html)
  [使用html配置dropdown组件](avalon.dropdown.ex4.html)
  [使用html配置dropdown并使用双工绑定](avalon.dropdown.ex5.html)

@@ -106,6 +106,50 @@ define(["../promise/avalon.promise"], function(avalon) {
     var remail = /^([A-Z0-9]+[_|\_|\.]?)*[A-Z0-9]+@([A-Z0-9]+[_|\_|\.]?)*[A-Z0-9]+\.[A-Z]{2,3}$/i
     var ripv4 = /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i
     var ripv6 = /^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/i
+    //规则取自淘宝注册登录模块
+    var phoneOne = {
+        //中国移动
+        cm: /^(?:0?1)((?:3[56789]|5[0124789]|8[278])\d|34[0-8]|47\d)\d{7}$/,
+        //中国联通
+        cu: /^(?:0?1)(?:3[012]|4[5]|5[356]|8[356]\d|349)\d{7}$/,
+        //中国电信
+        ce: /^(?:0?1)(?:33|53|8[079])\d{8}$/,
+        //中国大陆
+        cn: /^(?:0?1)[3458]\d{9}$/,
+        //中国香港
+        //   hk: /^(?:0?[1569])(?:\d{7}|\d{8}|\d{12})$/,
+        //澳门
+        // macao: /^6\d{7}$/,
+        //台湾
+        //  tw: /^(?:0?[679])(?:\d{7}|\d{8}|\d{10})$//*,
+        //韩国
+        //  kr:/^(?:0?[17])(?:\d{9}|\d{8})$/,
+        //日本
+        // jp:/^(?:0?[789])(?:\d{9}|\d{8})$/*/
+    }
+    /*
+     * http://login.sdo.com/sdo/PRes/4in1_2/js/login.js
+     * function isPhone(val){
+     var gvPhoneRegExpress=new Array();
+     gvPhoneRegExpress.push(/^14[57]\d{8}$/);
+     gvPhoneRegExpress.push(/^15[012356789]\d{8}$/);
+     gvPhoneRegExpress.push(/^13[0-9]\d{8}$/);
+     gvPhoneRegExpress.push(/^18[012456789]\d{8}$/);
+     var lvCellphoneIsOk=false;
+     for (var i=0;i<gvPhoneRegExpress.length;i++){
+     if(gvPhoneRegExpress[i].test(val)){
+     lvCellphoneIsOk=true;
+     break;
+     }
+     }
+     return lvCellphoneIsOk;
+     }
+     其他手机号码正则
+     /^(13\d\d|15[012356789]\d|18[012356789]\d|14[57]\d|17(0[059]|[78]\d))\d{7}$/
+     /^(?:(?:13|18|15)[0-9]{9}|(?:147|170|176|177|178|199|196)[0-9]{8})$/; 
+
+     */
+
     avalon.mix(avalon.duplexHooks, {
         trim: {
             get: function(value, data) {
@@ -135,6 +179,20 @@ define(["../promise/avalon.promise"], function(avalon) {
             get: function(value, data, next) {
                 next(/^\-?\d+$/.test(value))
                 return value
+            }
+        },
+        phone: {
+            message: "手机号码不合法",
+            get: function(value, data, next) {
+                var ok = false
+                for (var i in phoneOne) {
+                    if (phoneOne[i].test(value)) {
+                        ok = true;
+                        break
+                    }
+                }
+                next(ok)
+                return  value
             }
         },
         decimal: {
@@ -614,7 +672,7 @@ define(["../promise/avalon.promise"], function(avalon) {
 
 /**
  @links
- [自带验证规则required,int,decimal,alpha,chs,ipv4](avalon.validation.ex1.html)
+ [自带验证规则required,int,decimal,alpha,chs,ipv4,phone](avalon.validation.ex1.html)
  [自带验证规则qq,id,email,url,date,passport,pattern](avalon.validation.ex2.html)
  [自带验证规则maxlength,minlength,lt,gt,eq,equal](avalon.validation.ex3.html)
  [自带验证规则contains,contain](avalon.validation.ex4.html)

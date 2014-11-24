@@ -132,11 +132,16 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 // 如果输入域有值，则隐藏占位符，否则显示，默认显示
                 vm.elementDisabled = element.disabled;
             }
-        })
-
-        var msData = element.msData["ms-duplex"];
-        if (msData) {
-            vmSub = avalon.getModel(msData, vmodels);
+        })  
+        var  msDuplexValue, maData
+        for (var i in element.msData) {
+            if (i.indexOf("ms-duplex") === 0) {
+                msDuplexValue = element.msData[i]
+                break
+            }
+        }
+        if (msDuplexValue) {
+            vmSub = avalon.getModel(msDuplexValue, vmodels);
             if(vmSub) {
                 // 根据对元素双向绑定的数据的监听来判断是显示还是隐藏占位符，并且判定元素的禁用与否
                 vmSub[1].$watch(vmSub[0], function() {

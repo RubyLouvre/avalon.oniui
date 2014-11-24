@@ -9,42 +9,44 @@
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
         <script>
             require(["carousel/avalon.carousel"], function() {
-                avalon.define("demo1", function(vm) {
-                    vm.carousel = {
+                avalon.define("demo", function(vm) {
+                    vm.$opt1 = {
                         pictures: [
-                        "http://placehold.it/900x200/333/dddddd.jpg&text=1200-200",
-                        "http://placehold.it/900x200/555/dddddd.jpg&text=1200-200",
-                        "http://placehold.it/900x200/777/dddddd.jpg&text=1200-200"],
-                        pictureWidth: 900, //@param pictureWidth 图片显示宽度
-                        pictureHeight: 200 //@param pictureHeight 图片显示高度
+                            "http://placehold.it/800x200/333/dddddd.jpg&text=slide1",
+                            "http://placehold.it/800x200/555/dddddd.jpg&text=slide2",
+                            "http://placehold.it/800x200/777/dddddd.jpg&text=slide3",
+                            "http://placehold.it/800x200/999/dddddd.jpg&text=slide4",
+                            "http://placehold.it/800x200/aaa/dddddd.jpg&text=slide5"
+                        ],
+                        pictureWidth:800,
+                        pictureHeight:200
                     }
-                    vm.$skipArray = ["carousel"]
-                })
-                avalon.define("demo2", function(vm) {
-                    vm.carousel = {
+                    vm.$opt2 = {
                         pictures: [
-                        "http://placehold.it/300x300/333/dddddd.jpg&text=300-300",
-                        "http://placehold.it/300x300/555/dddddd.jpg&text=300-300",
-                        "http://placehold.it/300x300/777/dddddd.jpg&text=300-300"],
-                        pictureWidth: 300, //@param pictureWidth 图片显示宽度
-                        pictureHeight: 300 //@param pictureHeight 图片显示高度
+                            "http://placehold.it/300x300/333/dddddd.jpg&text=slide1",
+                            "http://placehold.it/300x300/555/dddddd.jpg&text=slide2",
+                            "http://placehold.it/300x300/777/dddddd.jpg&text=slide3",
+                            "http://placehold.it/300x300/999/dddddd.jpg&text=slide4",
+                            "http://placehold.it/300x300/aaa/dddddd.jpg&text=slide5"
+                        ],
+                        pictureWidth:300,
+                        pictureHeight:300
                     }
-                    vm.$skipArray = ["carousel"]
                 })
                 avalon.scan()
             })
         </script>
     </head>
     <body>
-        <div class="wrapper">
+        <div class="wrapper" ms-controller="demo">
         <h1>图片轮播组件-自定义宽高</h1>
-        <fieldset ms-controller="demo1">
-            <legend>自定义宽高1200×200</legend>
-            <div ms-widget="carousel"></div>
+        <fieldset >
+            <legend>自定义宽高800×200</legend>
+            <div ms-widget="carousel,carouselDemo1,$opt1"></div>
         </fieldset>
-        <fieldset ms-controller="demo2">
+        <fieldset>
             <legend>自定义宽高300×300</legend>
-            <div ms-widget="carousel"></div>
+            <div ms-widget="carousel,carouselDemo2,$opt2"></div>
         </fieldset>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">
 &lt;!DOCTYPE html&gt;
@@ -58,42 +60,44 @@
         &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
         &lt;script&gt;
             require(["carousel/avalon.carousel"], function() {
-                avalon.define("demo1", function(vm) {
-                    vm.carousel = {
+                avalon.define("demo", function(vm) {
+                    vm.$opt1 = {
                         pictures: [
-                        "http://placehold.it/900x200/333/dddddd.jpg&text=1200-200",
-                        "http://placehold.it/900x200/555/dddddd.jpg&text=1200-200",
-                        "http://placehold.it/900x200/777/dddddd.jpg&text=1200-200"],
-                        pictureWidth: 900, //@param pictureWidth 图片显示宽度
-                        pictureHeight: 200 //@param pictureHeight 图片显示高度
+                            "http://placehold.it/800x200/333/dddddd.jpg&text=slide1",
+                            "http://placehold.it/800x200/555/dddddd.jpg&text=slide2",
+                            "http://placehold.it/800x200/777/dddddd.jpg&text=slide3",
+                            "http://placehold.it/800x200/999/dddddd.jpg&text=slide4",
+                            "http://placehold.it/800x200/aaa/dddddd.jpg&text=slide5"
+                        ],
+                        pictureWidth:800,
+                        pictureHeight:200
                     }
-                    vm.$skipArray = ["carousel"]
-                })
-                avalon.define("demo2", function(vm) {
-                    vm.carousel = {
+                    vm.$opt2 = {
                         pictures: [
-                        "http://placehold.it/300x300/333/dddddd.jpg&text=300-300",
-                        "http://placehold.it/300x300/555/dddddd.jpg&text=300-300",
-                        "http://placehold.it/300x300/777/dddddd.jpg&text=300-300"],
-                        pictureWidth: 300, //@param pictureWidth 图片显示宽度
-                        pictureHeight: 300 //@param pictureHeight 图片显示高度
+                            "http://placehold.it/300x300/333/dddddd.jpg&text=slide1",
+                            "http://placehold.it/300x300/555/dddddd.jpg&text=slide2",
+                            "http://placehold.it/300x300/777/dddddd.jpg&text=slide3",
+                            "http://placehold.it/300x300/999/dddddd.jpg&text=slide4",
+                            "http://placehold.it/300x300/aaa/dddddd.jpg&text=slide5"
+                        ],
+                        pictureWidth:300,
+                        pictureHeight:300
                     }
-                    vm.$skipArray = ["carousel"]
                 })
                 avalon.scan()
             })
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body&gt;
-        &lt;div class="wrapper"&gt;
+        &lt;div class="wrapper" ms-controller="demo"&gt;
         &lt;h1&gt;图片轮播组件-自定义宽高&lt;/h1&gt;
-        &lt;fieldset ms-controller="demo1"&gt;
-            &lt;legend&gt;自定义宽高1200×200&lt;/legend&gt;
-            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+        &lt;fieldset"&gt;
+            &lt;legend&gt;自定义宽高800×200&lt;/legend&gt;
+            &lt;div ms-widget="carousel,carousel1,$opt1"&gt;&lt;/div&gt;
         &lt;/fieldset&gt;
-        &lt;fieldset ms-controller="demo2"&gt;
+        &lt;fieldset&gt;
             &lt;legend&gt;自定义宽高300×300&lt;/legend&gt;
-            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+            &lt;div ms-widget="carousel,carousel2,$opt2"&gt;&lt;/div&gt;
         &lt;/fieldset&gt;
     &lt;/div&gt;
     &lt;/body&gt;

@@ -10,13 +10,13 @@
         <script>
             require(["carousel/avalon.carousel"], function() {
                 avalon.define("demo", function(vm) {
-                    vm.carousel = {
+                    vm.$opt = {
                         pictures: [
-                        "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
-                        "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
-                        "http://placehold.it/500x200/777/dddddd.jpg&text=slide3",
-                        "http://placehold.it/500x200/999/dddddd.jpg&text=slide4",
-                        "http://placehold.it/500x200/aaa/dddddd.jpg&text=slide5"
+                            "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
+                            "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
+                            "http://placehold.it/500x200/777/dddddd.jpg&text=slide3",
+                            "http://placehold.it/500x200/999/dddddd.jpg&text=slide4",
+                            "http://placehold.it/500x200/aaa/dddddd.jpg&text=slide5"
                         ]
                     }
                     vm.$skipArray = ["carousel"]
@@ -30,7 +30,7 @@
             <h1>图片轮播组件-默认配置图片轮播</h1>
             <fieldset>
                 <legend>默认配置图片轮播</legend>
-                <div ms-widget="carousel"></div>
+                <div ms-widget="carousel,carousel,$opt"></div>
             </fieldset>
             <pre ms-skip class="brush:html;gutter:false;toolbar:false">
     &lt;!DOCTYPE html&gt;
@@ -45,18 +45,18 @@
             &lt;script&gt;
                 require(["carousel/avalon.carousel"], function() {
                     avalon.define("demo", function(vm) {
-                        vm.carousel = {
-                            pictures: [
+                    vm.$opt = {
+                        pictures: [
                             "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
                             "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
                             "http://placehold.it/500x200/777/dddddd.jpg&text=slide3",
                             "http://placehold.it/500x200/999/dddddd.jpg&text=slide4",
                             "http://placehold.it/500x200/aaa/dddddd.jpg&text=slide5"
-                            ]
-                        }
-                        vm.$skipArray = ["carousel"]
-                    })
-                    avalon.scan()
+                        ]
+                    }
+                    vm.$skipArray = ["carousel"]
+                })
+                avalon.scan()
                 })
             &lt;/script&gt;
         &lt;/head&gt;

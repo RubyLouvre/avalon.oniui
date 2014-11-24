@@ -10,7 +10,15 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
     var widget = avalon.ui.spinner = function(element, data, vmodels) {
         var options = data.spinnerOptions,
             template = sourceHTML,
-            duplex = element.msData["ms-duplex"],
+            duplex = (function() {
+                var inputMsData, 
+                    duplexValue
+                for (var i in inputMsData) {
+                    if (i.indexOf("ms-duplex") === 0) {
+                        return inputMsData[i]
+                    }
+                }
+            })(),
             duplexVM = duplex && avalon.getModel(duplex, vmodels) || null,
             disabled = element.msData["ms-disabled"],
             disabledVM = disabled && avalon.getModel(disabled, vmodels) || null,

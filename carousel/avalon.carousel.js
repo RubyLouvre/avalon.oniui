@@ -62,14 +62,14 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                 element.innerHTML = pageHTML
                 element.style.display = "block"
 
-                if (vm.adaptiveWidth) { //自动填充外围容器宽度
+                if (vm.adaptiveWidth || vm.pictureWidth === "100%") { //自动填充外围容器宽度
                     vm.pictureWidth = element.offsetWidth
                 }
-                if (vm.adaptiveHeight) { //自动填充外围容器高度
+                if (vm.adaptiveHeight || vm.pictureHeight === "100%") { //自动填充外围容器高度
                     element.style.height = "100%"
                     var children = element.children
                     for (var i = 0, len = children.length; i < len; i++) {
-                        if (children[i].id === "oui-carousel") {
+                        if (children[i].id === "oni-carousel") {
                             children[i].style.height = "100%"
                         }
                     }
@@ -263,7 +263,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
         return vmodel
     }
 
-    widget.vertion = 1.0
+    widget.vertion = "1.0.1"
     widget.defaults = {
         pictures: [], //@config  轮播图片素材
         pictureWidth: 500, //@config  图片显示宽度

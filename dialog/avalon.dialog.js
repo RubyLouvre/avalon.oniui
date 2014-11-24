@@ -304,7 +304,7 @@ define(["../avalon.getModel",
     widget.defaults = {
         width: 480, //@config 设置dialog的width
         title: "&nbsp;", //@config 设置弹窗的标题
-        draggable: false,
+        draggable: false, //@config 设置dialog是否可拖动
         type: "confirm", //@config 配置弹窗的类型，可以配置为alert来模拟浏览器
         content: "", //@config 配置dialog的content，默认取dialog的innerHTML作为dialog的content，如果innerHTML为空，再去取content配置项
         /**

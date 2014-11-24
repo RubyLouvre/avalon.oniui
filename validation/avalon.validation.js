@@ -681,4 +681,5 @@ define(["../promise/avalon.promise"], function(avalon) {
  [自定义验证规则](avalon.validation.ex6.html)
  [自带验证规则norequied](avalon.validation.ex7.html)
  [禁止获得焦点时的onRest回调 resetInFocus ](avalon.validation.ex8.html)
+ [与textbox组件的混用, ms-duplex-string的使用 ](avalon.validation.ex9.html)
  */

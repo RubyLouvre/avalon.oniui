@@ -20,6 +20,8 @@
             .error-tip{
                 color: red;
                 background:pink;
+                font-size: 13px;
+                width:100%;
             }
         </style>
         <script>
@@ -42,14 +44,15 @@
                             el.parentNode.removeChild(next)
                             break
                         }
-                         next = next.nextSibling
+                        next = next.nextSibling
                     }
 
                 }
                 avalon.define({
                     $id: "test",
                     $skipArray: ["validation"],
-                    a: "有内容",
+                    a: "",
+                    sex: "",
                     reset: function() {
                         validationVM && validationVM.resetAll()
                     },
@@ -92,7 +95,9 @@
         <form ms-controller="test" ms-widget="validation">
             <h3>验证组件</h3>
             <p><input ms-duplex-required="a" ms-widget="textbox" data-textbox-placeholder="不能为空"></p>
-         
+            <p><input ms-duplex-string-required="sex" type="radio" value="male"/>男
+                <input ms-duplex-string="sex" type="radio" value="female"/>女
+            </p>
             <button type="submit">submit
             </button>
             <button type="button" ms-click="reset">reset

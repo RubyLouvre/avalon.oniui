@@ -180,11 +180,11 @@ define(["avalon",
         for (var i = 0, len = divs.length; i < len; i++) {
             div = divs[i]
             className = div.className
-            if (className.indexOf("ui-timer-date") != -1) {
+            if (className.indexOf("oni-timer-date") != -1) {
                 dateElement = div
-            } else if (className.indexOf("ui-timer-hour") != -1) {
+            } else if (className.indexOf("oni-timer-hour") != -1) {
                 hourElement = div
-            } else if (className.indexOf("ui-timer-minute") != -1) {
+            } else if (className.indexOf("oni-timer-minute") != -1) {
                 minuteElement = div
             }
         }

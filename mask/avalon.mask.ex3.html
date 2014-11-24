@@ -9,7 +9,8 @@
             require(["mask/avalon.mask.js"], function() {
                 avalon.define({
                     $id: "test",
-                    aaa: ""
+                    aaa: "",
+                    bbb: ""
                 })
                 avalon.duplexHooks.money = {
                     set: function(str, data) {
@@ -17,6 +18,12 @@
                         var ret = avalon.filters.number(str, 2)
                         data.element.oldValue = ret
                         return ret
+                    }
+                }
+                avalon.duplexHooks.nonumber = {
+                    set: function(str, data) {
+                      return  str = String(str).replace(/\d+/g, "")
+ 
                     }
                 }
                 avalon.scan()
@@ -27,6 +34,8 @@
         <input  size='30'
                 ms-duplex-money-number="aaa" 
                 data-duplex-event="blur"/>
+          <input  size='30' ms-duplex-nonumber="bbb" 
+                />
         必须输入数字与一个小数点
         <pre class="brush:html;gutter:false;toolbar:false">
 &lt;!DOCTYPE html&gt;

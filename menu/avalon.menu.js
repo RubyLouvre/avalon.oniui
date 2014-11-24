@@ -1,7 +1,10 @@
 /**
-  * @description menu组件，实现扫描dom元素或者设置传参生成级联菜单的组件，注意扫描dom情形下，会销毁原有的dom，且会忽略所有的ol，ul，li元素上原有的绑定
-  *
-  */
+ * @cnName 菜单组件
+ * @enName menu
+ * @introduce
+ *  <p> 实现扫描dom元素或者设置传参生成级联菜单的组件，注意扫描dom情形下，会销毁原有的dom，且会忽略所有的ol，ul，li元素上原有的绑定
+</p>
+ */
 define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
     var counter = 0
     function getCnt() {
@@ -75,7 +78,7 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
             vm.$skipArray = ["widgetElement", "template", "_subMenus", "_oldActive"]
 
             var inited, outVmodel = vmodels && vmodels[1], clickKey = "fromMenu" + uid
-            vm.$init = function() {
+            vm.$init = function(continueScan) {
                 if(inited) return
                 inited = true
 
@@ -89,11 +92,14 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
                     element.setAttribute("ms-hover-100", "oni-helper-max-index")
                     avalon(element).addClass("oni-menu oni-helper-clearfix oni-helper-reset" + (vmodel.dir === "v" ? " oni-menu-vertical" : ""))
                 }
-                avalon.scan(element, [vmodel].concat(vmodels))
-                // 只有第一级menu触发onInit
-                if(typeof options.onInit === "function" && vmodel._depth < 2) {
-                    //vmodels是不包括vmodel的 
-                    options.onInit.call(element, vmodel, options, vmodels)
+                if (continueScan) {
+                    continueScan()
+                } else {
+                    avalon.log("avalon请尽快升到1.3.7+")
+                    avalon.scan(element, [vmodel].concat(vmodels))
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 }
                 // mouseleave重置menu
                 vmodel.event === "mouseenter" && avalon(element).bind("mouseleave", function(e) {
@@ -124,7 +130,7 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
                 return vmodel.active === index && !menu.disabled
             }
 
-            //@method activate(index)展开菜单索引为index的项目，index置为false,undefined则不会展开任一项目
+            //@interface activate(index)展开菜单索引为index的项目，index置为false,undefined则不会展开任一项目
             vm.activate = function(e, index) {
                 var _index = index === void 0 ? e : index
                 if(!vmodel.data[_index] || vmodel.data[_index].disabled === true || vmodel.disabled) return
@@ -210,7 +216,7 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
                 }
                 return false
             }
-            //@method getActiveList() 获取所有选中的menu list
+            //@interface getActiveList() 获取所有选中的menu list
             vm.getActiveList = function(arr) {
                 var data = arr || []
                 if(vmodel.active !== false && vmodel.data[vmodel.active]) {
@@ -220,7 +226,7 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
                 }
                 return data
             }
-            //@method setActiveList(activeListArray) 设置级联menu的选项，可以一个数组，也可以使一个数字，或者"2,3,4"这样的字符串
+            //@interface setActiveList(activeListArray) 设置级联menu的选项，可以一个数组，也可以使一个数字，或者"2,3,4"这样的字符串
             vm.setActiveList = function(arr) {
                 if(!arr) return
                 if(!Array.isArray(arr)) var arr = ([arr].join("").split(","))
@@ -299,29 +305,26 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
         
         return vmodel
     }
-    //add args like this:
-    //argName: defaultValue, \/\/@param description
-    //methodName: code, \/\/@optMethod optMethodName(args) description 
     widget.defaults = {
-        active:false, //@param 将第几个项目设置为选中，级联情形下，会将设置应用给每一级menu，默认是false，一个都不选中，建议不要通过修改这个值来修改menu的选中状态，而是通过setActiveList接口来做
-        //data: undefined, //@param menu的数据项，如果没有配置这个项目，则默认扫描元素中的li，以及li中的ul或者ol来创建级联菜单，数据结构形式 <pre>[/n{/ntitle: "html",/n data: [...],/n active: false,/n disabled: false/n}/n]</pre>，子元素如果包含有效的data属性表示拥有子菜单
-        event: "mouseenter",    //@param  选中事件，默认mouseenter
+        active:false, //@config 将第几个项目设置为选中，级联情形下，会将设置应用给每一级menu，默认是false，一个都不选中，建议不要通过修改这个值来修改menu的选中状态，而是通过setActiveList接口来做
+        //data: undefined, //@config menu的数据项，如果没有配置这个项目，则默认扫描元素中的li，以及li中的ul或者ol来创建级联菜单，数据结构形式 <pre>[/n{/ntitle: "html",/n data: [...],/n active: false,/n disabled: false/n}/n]</pre>，子元素如果包含有效的data属性表示拥有子菜单
+        event: "mouseenter",    //@config  选中事件，默认mouseenter
         disabled: false,
         _depth: 1,
         index: 0,
-        dir: "h", //@param 方向，取值v,h，默认h是水平方向， v是竖直方向
-        //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
+        dir: "h", //@config 方向，取值v,h，默认h是水平方向， v是竖直方向
+        //@config onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
         menuResetter: function(vmodel) {
             vmodel.active = false
-        }, //@optMethod menuResetter(vmodel) 选中某个menu项之后调用的这个restter，默认是把menu重置为不选中
+        }, //@config menuResetter(vmodel) 选中某个menu项之后调用的这个restter，默认是把menu重置为不选中
         getTemplate: function(tmpl, opts, tplName) {
             return tmpl
-        },//@optMethod getTemplate(tpl, opts, tplName) 定制修改模板接口
+        },//@config getTemplate(tpl, opts, tplName) 定制修改模板接口
         _menuTitle: function (title, tab, count, end) {
             return title
         },
-        onSelect: avalon.noop, //@optMethod onSelect(vmodel, realSelect, _hasSubMenu) this指向选中的menu li元素，realSelect是选中menu项目的数组 <pre>[/n[data, active],/n[data2,active2]/n]</pre>，对应每一级的数据，及每一级的active值，_hasSubMenu表示this元素有无包含子menu
+        onSelect: avalon.noop, //@config onSelect(vmodel, realSelect, _hasSubMenu) this指向选中的menu li元素，realSelect是选中menu项目的数组 <pre>[/n[data, active],/n[data2,active2]/n]</pre>，对应每一级的数据，及每一级的active值，_hasSubMenu表示this元素有无包含子menu
         cutEnd: "",
         $author: "skipper@123"
     }

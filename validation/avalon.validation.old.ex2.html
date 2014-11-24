@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>验证框架</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon1.3.6.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <style >
+            .error{
+                border:1px  solid red;
+
+            }
+            .success{
+                border:1px  solid greenyellow;
+            }
+            .error-tip{
+                color: red;
+                background:pink;
+            }
+        </style>
+        <script>
+            require(["validation/avalon.validation.old", "ready!"], function() {
+                var validationVM
+
+                function showError(el, data) {
+                    var next = el.nextSibling
+                    if (!(next && next.className === "error-tip")) {
+                        next = document.createElement("div")
+                        next.className = "error-tip"
+                        el.parentNode.appendChild(next)
+                    }
+                    next.innerHTML = data.getMessage()
+                }
+                function removeError(el) {
+                    var next = el.nextSibling
+                    if (next && next.className === "error-tip") {
+                        el.parentNode.removeChild(next)
+                    }
+                }
+                avalon.define({
+                    $id: "test",
+                    $skipArray: ["validation"],
+                    a: "",
+                    b: "a",
+                    c: "d",
+                    d: "",
+                    e: "",
+                    f: "",
+                    g: "",
+                    reset: function() {
+                        validationVM && validationVM.resetAll()
+                    },
+                    validation: {
+                        onInit: function(v) {
+                            validationVM = v
+                        },
+                        onReset: function() {
+                            avalon(this).removeClass("error success")
+                            removeError(this)
+                        },
+                        onError: function(reasons) {
+                            reasons.forEach(function(reason) {
+                                avalon(this).removeClass("success").addClass("error")
+                                showError(this, reason)
+                            }, this)
+                        },
+                        onSuccess: function() {
+                            avalon(this).removeClass("error").addClass("success")
+                            removeError(this)
+                        },
+                        onValidateAll: function(reasons) {
+                            reasons.forEach(function(reason) {
+                                avalon(reason.element).removeClass("success").addClass("error")
+                                showError(reason.element, reason)
+                            })
+                            if (reasons.length === 0) {
+                                avalon.log("全部验证成功！")
+                            }
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <form ms-controller="test" ms-widget="validation">
+            <h3>验证组件</h3>
+            <p>使用data-duplex-event="change"，延迟到失去焦点才验证</p>
+            <p><input ms-duplex-qq="a" data-duplex-event="change" placeholder="输入QQ号"></p>
+            <p><input ms-duplex-id="b" data-duplex-event="change" placeholder="输入身份证号码"></p>
+            <p><input ms-duplex-email="c" data-duplex-event="change" placeholder="输入电子邮件"></p>
+            <p><input ms-duplex-url="d" data-duplex-event="change" placeholder="输入网址"></p>
+            <p><input ms-duplex-date="e" data-duplex-event="change" placeholder="输入YYYY-MM-DD这样日期格式"></p>
+            <p><input ms-duplex-passport="f" data-duplex-event="change" placeholder="输入护照号码"></p>
+            <p><input ms-duplex-pattern="g" data-duplex-event="change" pattern="\d{6,8}" placeholder="输入6-8个数字"></p>
+            <button type="submit">submit
+            </button>
+            <button type="button" ms-click="reset">reset
+            </button>
+        </form>
+    </body>
+</html>

@@ -57,7 +57,8 @@
                         onInit: function(v) {
                             validationVM = v
                         },
-                        onReset: function() {
+                        onReset: function(e, data) {
+                            data.valueResetor && data.valueResetor()
                             avalon(this).removeClass("error success")
                             removeError(this)
                         },

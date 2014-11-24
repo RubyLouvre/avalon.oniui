@@ -1798,22 +1798,28 @@
                     }
                 }
             } else if (special === "up" || special === "down") {
-                var element = events.expr && findNode(events.expr)
-                if (!element)
+                var elements = events.expr && findNodes(events.expr)
+                if (elements.length === 0)
                     return
                 for (var i in avalon.vmodels) {
                     var v = avalon.vmodels[i]
                     if (v !== this) {
                         if (v.$events.expr) {
-                            var node = findNode(v.$events.expr)
-                            if (!node) {
+                            var eventNodes = findNodes(v.$events.expr)
+                            if (eventNodes.length === 0) {
                                 continue
                             }
-                            var ok = special === "down" ? element.contains(node) : //向下捕获
-                                    node.contains(element) //向上冒泡
-                            if (ok) {
-                                node._avalon = v //符合条件的加一个标识
-                            }
+                            //循环两个vmodel中的节点，查找匹配（向上匹配或者向下匹配）的节点并设置标识
+                            avalon.each(eventNodes, function(i, node) {
+                                avalon.each(elements, function(j, element) {
+                                    var ok = special === "down" ? element.contains(node) : //向下捕获
+                                        node.contains(element) //向上冒泡
+
+                                    if (ok) {
+                                        node._avalon = v //符合条件的加一个标识
+                                    }
+                                });
+                            })
                         }
                     }
                 }
@@ -1849,16 +1855,18 @@
         }
     }
     var ravalon = /(\w+)\[(avalonctrl)="(\S+)"\]/
-    var findNode = DOC.querySelector ? function(str) {
-        return DOC.querySelector(str)
+    var findNodes = DOC.querySelectorAll ? function(str) {
+        return DOC.querySelectorAll(str)
     } : function(str) {
         var match = str.match(ravalon)
         var all = DOC.getElementsByTagName(match[1])
+        var nodes = []
         for (var i = 0, el; el = all[i++]; ) {
             if (el.getAttribute(match[2]) === match[3]) {
-                return el
+                nodes.push(el)
             }
         }
+        return nodes
     }
     /*********************************************************************
      *                           依赖调度系统                             *
@@ -2170,7 +2178,7 @@
                     var param = match[2] || ""
                     var value = attr.value
                     var name = attr.name
-                    msData[name] = value
+                    msData[name.replace(/(\-[$\w]+)/g,"")] = value
                     if (events[type]) {
                         param = type
                         type = "on"
@@ -3375,7 +3383,7 @@
                             if (!elem.msRetain && !root.contains(elem)) {
                                 vmodel.$remove()
                                 elem.msData = {}
-                                delete VMODELS[vmodel.$id]
+                                delete avalon.vmodels[vmodel.$id]
                                 return false
                             }
                         }
@@ -4342,12 +4350,12 @@
         }
         var DATE_FORMATS_SPLIT = /((?:[^yMdHhmsaZE']+)|(?:'(?:[^']|'')*')|(?:E+|y+|M+|d+|H+|h+|m+|s+|a|Z))(.*)/,
                 NUMBER_STRING = /^\d+$/
-        var R_ISO8601_STR = /^(\d{4})-?(\d\d)-?(\d\d)(?:T(\d\d)(?::?(\d\d)(?::?(\d\d)(?:\.(\d+))?)?)?(Z|([+-])(\d\d):?(\d\d))?)?$/
+        var riso8601= /^(\d{4})-?(\d+)-?(\d+)(?:T(\d+)(?::?(\d+)(?::?(\d+)(?:\.(\d+))?)?)?(Z|([+-])(\d+):?(\d+))?)?$/
         // 1        2       3         4          5          6          7          8  9     10      11
 
         function jsonStringToDate(string) {
             var match
-            if (match = string.match(R_ISO8601_STR)) {
+            if (match = string.match(riso8601)) {
                 var date = new Date(0),
                         tzHour = 0,
                         tzMin = 0,
@@ -4382,7 +4390,7 @@
                     var trimDate = date.trim()
                     date = trimDate.replace(rfixYMD, function(a, b, c, d) {
                         var array = d.length === 4 ? [d, b, c] : [b, c, d]
-                        return array.join("/")
+                        return array.join("-")
                     })
                     date = jsonStringToDate(date)
                 }

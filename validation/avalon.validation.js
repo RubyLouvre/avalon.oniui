@@ -147,7 +147,7 @@ define(["../promise/avalon.promise"], function(avalon) {
      其他手机号码正则
      /^(13\d\d|15[012356789]\d|18[012356789]\d|14[57]\d|17(0[059]|[78]\d))\d{7}$/
      /^(?:(?:13|18|15)[0-9]{9}|(?:147|170|176|177|178|199|196)[0-9]{8})$/; 
-
+     
      */
 
     avalon.mix(avalon.duplexHooks, {
@@ -615,12 +615,13 @@ define(["../promise/avalon.promise"], function(avalon) {
                                 vm.onReset.call(data.element, e, data)
                             })
                         }
+                        var array = vm.data.filter(function(el) {
+                            return el.element
+                        })
+                        avalon.Array.ensure(array, data)
+                        vm.data = array
                     }
-                    var array = vm.data.filter(function(el) {
-                        return el.element
-                    })
-                    avalon.Array.ensure(array, data)
-                    vm.data = array
+
                     return false
                 }
             })

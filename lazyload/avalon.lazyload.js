@@ -265,8 +265,8 @@ define(["avalon"], function() {
     }
 
     lazyload.defaults = {
-        placeholderWidth:"",
-        placeholderHeight:"",
+        placeholderWidth:"", //@config 懒加载占位宽度
+        placeholderHeight:"", //@config 懒加载占位高度
         contentType: "image", //@config 懒加载内容类型："image"-图片 / "DOM"-文档片段
         preLoadType: "image", //@config 预加载类型："image"-采用加载中图片 / "text"-采用加载中文字
         preLoadSrc: path + "/images/loading1.gif", //@config  预加载图片路径（文字内容）：preLoadType为"image"时为图片路径；preLoadType为"text"时为文字内容。也可以设置元素的data-lazyload-preloadsrc，替代默认值

@@ -24,6 +24,30 @@ div#{$uiname} {
 }
 
 #{$uiname} {
+	&-slider{
+		position:relative;
+		overflow: hidden;
+		&-enable {
+			width: 10000px;
+		}
+		&-button{
+			text-decoration: none;
+			position: absolute;
+			right: 0px;
+			top: 0px;
+			padding: 10px 4px;
+			width: 8px;
+			font-weight: bold;
+			background: #ccc;
+			z-index: 10;
+			&-left{
+				left: 0;
+			}
+		}
+	}
+	& &-nav{
+		float: left;
+	}
 	& &-nav .oni-state-default{
 	    float: left;
 	    display: inline;

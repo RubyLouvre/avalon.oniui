@@ -8,6 +8,25 @@ div.oni-tab {
 .oni-tab {
   /*dir=v, small size*/
   /*dir=v, normal size*/ }
+  .oni-tab-slider {
+    position: relative;
+    overflow: hidden; }
+    .oni-tab-slider-enable {
+      width: 10000px; }
+    .oni-tab-slider-button {
+      text-decoration: none;
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      padding: 10px 4px;
+      width: 8px;
+      font-weight: bold;
+      background: #ccc;
+      z-index: 10; }
+      .oni-tab-slider-button-left {
+        left: 0; }
+  .oni-tab .oni-tab-nav {
+    float: left; }
   .oni-tab .oni-tab-nav .oni-state-default {
     float: left;
     display: inline;

@@ -9,8 +9,8 @@
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
         <script>
             require(["carousel/avalon.carousel"], function() {
-                avalon.define("demo1", function(vm) {
-                    vm.carousel = {
+                avalon.define("demo", function(vm) {
+                    vm.$opt1 = {
                         pictures: [
                         "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
                         "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
@@ -18,10 +18,7 @@
                         alwaysShowArrow: false, //@param alwaysShowArrow 显示左右切换箭头
                         alwaysShowSelection: false //@param alwaysShowSelection 显示底部圆形切换部件
                     }
-                    vm.$skipArray = ["carousel"]
-                })
-                avalon.define("demo2", function(vm) {
-                    vm.carousel = {
+                    vm.$opt2 = {
                         pictures: [
                         "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
                         "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
@@ -29,23 +26,19 @@
                         arrowLeftClass: "myArrowLeftClass",
                         arrowRightClass: "myArrowRightClass"
                     }
-                    vm.$skipArray = ["carousel"]
-                })
-                avalon.scan()
-                avalon.define("demo3", function(vm) {
-                    vm.carousel = {
+                    vm.$opt3 = {
                         pictures: [
                         "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
                         "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
                         "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"],
                         hoverStop: false //@param autoSlide 鼠标经过不停止播放
                     }
-                    vm.$skipArray = ["carousel"]
                 })
                 avalon.scan()
             })
         </script>
         <style type="text/css">
+            /* 自定义左右箭头的样式 */
             .oni-carousel .myArrowLeftClass,.oni-carousel .myArrowRightClass{
                 width: 48px; 
                 height: 48px; 
@@ -66,19 +59,19 @@
         </style>
     </head>
     <body>
-        <div class="wrapper">
-        <h1>test图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过不停止播放</h1>
-        <fieldset ms-controller="demo1">
+        <div class="wrapper" ms-controller="demo">
+        <h1>图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过不停止播放</h1>
+        <fieldset>
             <legend>自定义不显示左右切换箭头和底部圆形选择部件</legend>
-            <div ms-widget="carousel"></div>
+            <div ms-widget="carousel,carousel1,$opt1"></div>
         </fieldset>
-        <fieldset ms-controller="demo2">
+        <fieldset>
             <legend>自定义箭头arrowClass，并修改样式</legend>
-            <div ms-widget="carousel"></div>
+            <div ms-widget="carousel,carousel2,$opt2"></div>
         </fieldset>
-        <fieldset ms-controller="demo3">
+        <fieldset>
             <legend>自定义鼠标经过不停止播放</legend>
-            <div ms-widget="carousel"></div>
+            <div ms-widget="carousel,carousel3,$opt3"></div>
         </fieldset>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">
 &lt;html&gt;
@@ -91,8 +84,8 @@
         &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
         &lt;script&gt;
             require(["carousel/avalon.carousel"], function() {
-                avalon.define("demo1", function(vm) {
-                    vm.carousel = {
+                avalon.define("demo", function(vm) {
+                    vm.$opt1 = {
                         pictures: [
                         "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
                         "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
@@ -100,10 +93,7 @@
                         alwaysShowArrow: false, //@param alwaysShowArrow 显示左右切换箭头
                         alwaysShowSelection: false //@param alwaysShowSelection 显示底部圆形切换部件
                     }
-                    vm.$skipArray = ["carousel"]
-                })
-                avalon.define("demo2", function(vm) {
-                    vm.carousel = {
+                    vm.$opt2 = {
                         pictures: [
                         "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
                         "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
@@ -111,23 +101,19 @@
                         arrowLeftClass: "myArrowLeftClass",
                         arrowRightClass: "myArrowRightClass"
                     }
-                    vm.$skipArray = ["carousel"]
-                })
-                avalon.scan()
-                avalon.define("demo3", function(vm) {
-                    vm.carousel = {
+                    vm.$opt3 = {
                         pictures: [
                         "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
                         "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
                         "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"],
                         hoverStop: false //@param autoSlide 鼠标经过不停止播放
                     }
-                    vm.$skipArray = ["carousel"]
                 })
                 avalon.scan()
             })
         &lt;/script&gt;
         &lt;style type="text/css"&gt;
+            /* 自定义左右箭头的样式 */
             .ui-carousel .myArrowLeftClass,.ui-carousel .myArrowRightClass{
                 width: 48px; 
                 height: 48px; 
@@ -148,19 +134,19 @@
         &lt;/style&gt;
     &lt;/head&gt;
     &lt;body&gt;
-        &lt;div class="wrapper"&gt;
-        &lt;h1&gt;test图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过不停止播放&lt;/h1&gt;
-        &lt;fieldset ms-controller="demo1"&gt;
+        &lt;div class="wrapper" ms-controller="demo"&gt;
+        &lt;h1&gt;图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过不停止播放&lt;/h1&gt;
+        &lt;fieldset&gt;
             &lt;legend&gt;自定义不显示左右切换箭头和底部圆形选择部件&lt;/legend&gt;
-            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+            &lt;div ms-widget="carousel,carousel1,$opt1"&gt;&lt;/div&gt;
         &lt;/fieldset&gt;
-        &lt;fieldset ms-controller="demo2"&gt;
+        &lt;fieldset&gt;
             &lt;legend&gt;自定义箭头arrowClass，并修改样式&lt;/legend&gt;
-            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+            &lt;div ms-widget="carousel,carousel2,$opt2"&gt;&lt;/div&gt;
         &lt;/fieldset&gt;
-        &lt;fieldset ms-controller="demo3"&gt;
+        &lt;fieldset&gt;
             &lt;legend&gt;自定义鼠标经过不停止播放&lt;/legend&gt;
-            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+            &lt;div ms-widget="carousel,carousel3,$opt3"&gt;&lt;/div&gt;
         &lt;/fieldset&gt;
         &lt;pre ms-skip class="brush:html;gutter:false;toolbar:false"&gt;
         &lt;/pre&gt;

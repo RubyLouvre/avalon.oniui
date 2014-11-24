@@ -9,38 +9,29 @@
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
         <script>
             require(["carousel/avalon.carousel"], function() {
-                avalon.define("demo1", function(vm) {
-                    vm.carousel = {
+                avalon.define("demo", function(vm) {
+                    vm.$opt1 = {
                         pictures: [
                         "http://placehold.it/500x200/333333/dddddd.jpg&text=linear1", 
                         "http://placehold.it/500x200/555555/dddddd.jpg&text=linear2",
                         "http://placehold.it/500x200/777777/dddddd.jpg&text=linear3"],
                         easing: "linear" 
                     }
-                    vm.$skipArray = ["carousel"]
-                })
-                avalon.define("demo2", function(vm) {
-                    vm.carousel = {
+                    vm.$opt2 = {
                         pictures: [
                         "http://placehold.it/500x200/333333/dddddd.jpg&text=easeIn1", 
                         "http://placehold.it/500x200/555555/dddddd.jpg&text=easeIn2",
                         "http://placehold.it/500x200/777777/dddddd.jpg&text=easeIn3"],
                         easing: "easeIn" 
                     }
-                    vm.$skipArray = ["carousel"]
-                })
-                avalon.define("demo3", function(vm) {
-                    vm.carousel = {
+                    vm.$opt3 = {
                         pictures: [
                         "http://placehold.it/500x200/333333/dddddd.jpg&text=easeOut1", 
                         "http://placehold.it/500x200/555555/dddddd.jpg&text=easeOut2",
                         "http://placehold.it/500x200/777777/dddddd.jpg&text=easeOut3"],
                         easing: "easeOut" 
                     }
-                    vm.$skipArray = ["carousel"]
-                })
-                avalon.define("demo4", function(vm) {
-                    vm.carousel = {
+                    vm.$opt4 = {
                         pictures: [
                         "http://placehold.it/500x200/333333/dddddd.jpg&text=easeInOut1", 
                         "http://placehold.it/500x200/555555/dddddd.jpg&text=easeInOut2",
@@ -54,23 +45,23 @@
         </script>
     </head>
     <body>
-        <div class="wrapper">
+        <div class="wrapper"  ms-controller="demo">
         <h1>图片轮播组件-自定义缓动类型</h1>
-        <fieldset ms-controller="demo1">
+        <fieldset>
             <legend>自定义缓动类型-linear 无缓动效果</legend>
-            <div ms-widget="carousel"></div>
+            <div ms-widget="carousel,carousel1,$opt1"></div>
         </fieldset>
-        <fieldset ms-controller="demo2">
+        <fieldset>
             <legend>自定义缓动类型-easeIn 在过渡的开始提供缓动效果</legend>
-            <div ms-widget="carousel"></div>
+            <div ms-widget="carousel,carousel2,$opt2"></div>
         </fieldset>
-        <fieldset ms-controller="demo3">
-            <legend>自定义缓动类型-easeOut 在过渡的结尾提供缓动效果</legend>
-            <div ms-widget="carousel"></div>
-        </fieldset>
-        <fieldset ms-controller="demo4">
+        <fieldset>
             <legend>自定义缓动类型-easeInOut 在过渡的开始和结尾提供缓动效果</legend>
-            <div ms-widget="carousel"></div>
+            <div ms-widget="carousel,carousel3,$opt3"></div>
+        </fieldset>
+        <fieldset>
+            <legend>自定义缓动类型-easeInOut 在过渡的开始和结尾提供缓动效果</legend>
+            <div ms-widget="carousel,carousel4,$opt4"></div>
         </fieldset>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">
 &lt;!DOCTYPE html&gt;
@@ -84,38 +75,29 @@
         &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
         &lt;script&gt;
             require(["carousel/avalon.carousel"], function() {
-                avalon.define("demo1", function(vm) {
-                    vm.carousel = {
+                avalon.define("demo", function(vm) {
+                    vm.$opt1 = {
                         pictures: [
-                        "http://placehold.it/500x200/333333/dddddd.jpg&text=linear1", 
+                        "http://placehold.it/500x200/333333/dddddd.jpg&text=linear1",
                         "http://placehold.it/500x200/555555/dddddd.jpg&text=linear2",
                         "http://placehold.it/500x200/777777/dddddd.jpg&text=linear3"],
-                        easing: "linear" 
+                        easing: "linear"
                     }
-                    vm.$skipArray = ["carousel"]
-                })
-                avalon.define("demo2", function(vm) {
-                    vm.carousel = {
+                    vm.$opt2 = {
                         pictures: [
-                        "http://placehold.it/500x200/333333/dddddd.jpg&text=easeIn1", 
+                        "http://placehold.it/500x200/333333/dddddd.jpg&text=easeIn1",
                         "http://placehold.it/500x200/555555/dddddd.jpg&text=easeIn2",
                         "http://placehold.it/500x200/777777/dddddd.jpg&text=easeIn3"],
-                        easing: "easeIn" 
+                        easing: "easeIn"
                     }
-                    vm.$skipArray = ["carousel"]
-                })
-                avalon.define("demo3", function(vm) {
-                    vm.carousel = {
+                    vm.$opt3 = {
                         pictures: [
-                        "http://placehold.it/500x200/333333/dddddd.jpg&text=easeOut1", 
+                        "http://placehold.it/500x200/333333/dddddd.jpg&text=easeOut1",
                         "http://placehold.it/500x200/555555/dddddd.jpg&text=easeOut2",
                         "http://placehold.it/500x200/777777/dddddd.jpg&text=easeOut3"],
-                        easing: "easeOut" 
+                        easing: "easeOut"
                     }
-                    vm.$skipArray = ["carousel"]
-                })
-                avalon.define("demo4", function(vm) {
-                    vm.carousel = {
+                    vm.$opt4 = {
                         pictures: [
                         "http://placehold.it/500x200/333333/dddddd.jpg&text=easeInOut1", 
                         "http://placehold.it/500x200/555555/dddddd.jpg&text=easeInOut2",
@@ -129,23 +111,23 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body&gt;
-        &lt;div class="wrapper"&gt;
+        &lt;div class="wrapper" ms-controller="demo"&gt;
         &lt;h1&gt;图片轮播组件-自定义缓动类型&lt;/h1&gt;
-        &lt;fieldset ms-controller="demo1"&gt;
+        &lt;fieldset&gt;
             &lt;legend&gt;自定义缓动类型-linear 无缓动效果&lt;/legend&gt;
-            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+            &lt;div ms-widget="carousel,carousel1,$opt1"&gt;&lt;/div&gt;
         &lt;/fieldset&gt;
-        &lt;fieldset ms-controller="demo2"&gt;
+        &lt;fieldset&gt;
             &lt;legend&gt;自定义缓动类型-easeIn 在过渡的开始提供缓动效果&lt;/legend&gt;
-            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+            &lt;div ms-widget="carousel,carousel2,$opt2"&gt;&lt;/div&gt;
         &lt;/fieldset&gt;
-        &lt;fieldset ms-controller="demo3"&gt;
+        &lt;fieldset&gt;
             &lt;legend&gt;自定义缓动类型-easeOut 在过渡的结尾提供缓动效果&lt;/legend&gt;
-            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+            &lt;div ms-widget="carousel,carousel3,$opt3"&gt;&lt;/div&gt;
         &lt;/fieldset&gt;
-        &lt;fieldset ms-controller="demo4"&gt;
+        &lt;fieldset&gt;
             &lt;legend&gt;自定义缓动类型-easeInOut 在过渡的开始和结尾提供缓动效果&lt;/legend&gt;
-            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+            &lt;div ms-widget="carousel,carousel4,$opt4"&gt;&lt;/div&gt;
         &lt;/fieldset&gt;
     &lt;/div&gt;
     &lt;/body&gt;

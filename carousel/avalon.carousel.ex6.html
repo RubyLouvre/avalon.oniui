@@ -9,40 +9,36 @@
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
         <script>
             require(["carousel/avalon.carousel"], function() {
-                avalon.define("demo1", function(vm) {
-                    vm.carousel = {
+                avalon.define("demo", function(vm) {
+                    vm.$opt1 = {
                         pictures: [
                         "http://placehold.it/500x200/333333/dddddd.jpg&text=slider1", 
                         "http://placehold.it/500x200/555555/dddddd.jpg&text=slider2",
                         "http://placehold.it/500x200/777777/dddddd.jpg&text=slider3"],
-                        adaptiveWidth : true
+                        adaptiveWidth : "100%"
                     }
-                    vm.$skipArray = ["carousel"]
-                })
-                avalon.define("demo2", function(vm) {
-                    vm.carousel = {
+                    vm.$opt2 = {
                         pictures: [
                         "http://placehold.it/500x200/333333/dddddd.jpg&text=slider1", 
                         "http://placehold.it/500x200/555555/dddddd.jpg&text=slider2",
                         "http://placehold.it/500x200/777777/dddddd.jpg&text=slider3"],
-                        adaptiveHeight : true
+                        pictureHeight: "100%"
                     }
-                    vm.$skipArray = ["carousel"]
                 })
                 avalon.scan()
             })
         </script>
     </head>
     <body>
-        <div class="wrapper">
+        <div class="wrapper"  ms-controller="demo">
         <h1>图片轮播组件-自定义填充外围宽度和高度</h1>
-        <fieldset ms-controller="demo1">
+        <fieldset>
             <legend>自定义填充外围宽度</legend>
-            <div ms-widget="carousel"></div>
+            <div ms-widget="carousel,carousel1,$opt1"></div>
         </fieldset>
-        <fieldset ms-controller="demo2" style="height:300px; padding:0 0 30px;">
+        <fieldset style="height:300px; padding:0 0 30px;">
             <legend>自定义填充外围高度</legend>
-            <div ms-widget="carousel"></div>
+            <div ms-widget="carousel,carousel2,$opt2"></div>
         </fieldset>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">
 &lt;!DOCTYPE html&gt;
@@ -56,44 +52,37 @@
         &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
         &lt;script&gt;
             require(["carousel/avalon.carousel"], function() {
-                avalon.define("demo1", function(vm) {
-                    vm.carousel = {
+                avalon.define("demo", function(vm) {
+                    vm.$opt1 = {
                         pictures: [
-                        "http://placehold.it/500x200/333333/dddddd.jpg&text=slider1", 
+                        "http://placehold.it/500x200/333333/dddddd.jpg&text=slider1",
                         "http://placehold.it/500x200/555555/dddddd.jpg&text=slider2",
                         "http://placehold.it/500x200/777777/dddddd.jpg&text=slider3"],
-                        adaptiveWidth : true
+                        adaptiveWidth : "100%"
                     }
-                    vm.$skipArray = ["carousel"]
-                })
-                avalon.define("demo2", function(vm) {
-                    vm.carousel = {
+                    vm.$opt2 = {
                         pictures: [
-                        "http://placehold.it/500x200/333333/dddddd.jpg&text=slider1", 
+                        "http://placehold.it/500x200/333333/dddddd.jpg&text=slider1",
                         "http://placehold.it/500x200/555555/dddddd.jpg&text=slider2",
                         "http://placehold.it/500x200/777777/dddddd.jpg&text=slider3"],
-                        adaptiveHeight : true
+                        pictureHeight: "100%"
                     }
-                    vm.$skipArray = ["carousel"]
                 })
                 avalon.scan()
             })
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body&gt;
-        &lt;div class="wrapper"&gt;
+        &lt;div class="wrapper" ms-controller="demo"&gt;
         &lt;h1&gt;图片轮播组件-自定义填充外围宽度和高度&lt;/h1&gt;
-        &lt;fieldset ms-controller="demo1"&gt;
+        &lt;fieldset&gt;
             &lt;legend&gt;自定义填充外围宽度&lt;/legend&gt;
-            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+            &lt;div ms-widget="carousel,carousel1,$opt1"&gt;&lt;/div&gt;
         &lt;/fieldset&gt;
-        &lt;fieldset ms-controller="demo2" style="height:300px; padding:0 0 30px;"&gt;
+        &lt;fieldset style="height:300px; padding:0 0 30px;"&gt;
             &lt;legend&gt;自定义填充外围高度&lt;/legend&gt;
-            &lt;div ms-widget="carousel"&gt;&lt;/div&gt;
+            &lt;div ms-widget="carousel,carousel1,$opt2"&gt;&lt;/div&gt;
         &lt;/fieldset&gt;
-        &lt;pre ms-skip class="brush:html;gutter:false;toolbar:false"&gt;
-
-        &lt;/pre&gt;
     &lt;/div&gt;
     &lt;/body&gt;
 &lt;/html&gt;

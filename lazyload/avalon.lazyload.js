@@ -8,6 +8,16 @@
  */
 
 define(["avalon"], function() {
+    //获取当前JS绝对路径
+    var path,
+        t=document.getElementsByTagName("SCRIPT");
+    for(var i in t){
+        if(t[i].outerHTML && t[i].outerHTML.indexOf("avalon.lazyload.js") !== -1){
+            var wholePath = t[i].src
+            path = wholePath.substring(0, wholePath.lastIndexOf("/"))
+        }
+    }
+
     var requestAnimationFrame = (function() { //requestAnimationFrame 兼容
         return window.requestAnimationFrame ||
             window.webkitRequestAnimationFrame ||
@@ -33,8 +43,8 @@ define(["avalon"], function() {
         }
     }
 
-    var lazyElementArr = [] //预加载元素数组
-    var options
+    var lazyElementArr = [], //预加载元素数组
+        options
 
     var lazyload = avalon.bindingHandlers.lazyload = function(data, vmodels) {
         var args = data.value.match(avalon.rword) || ["$", "lazyload"]
@@ -64,7 +74,7 @@ define(["avalon"], function() {
 
         //加载占位图片为1像素透明图
         if (element.tagName === "IMG") {
-            element.src = "./images/placeholder.png"
+            element.src = path + "/images/placeholder.png"
         }
 
         //设置preLoadSrc
@@ -84,7 +94,7 @@ define(["avalon"], function() {
 
             //placeholderText尺寸为图片尺寸
             placeholderText.style.cssText = "display:inline-block;*display:inline;*zoom:1;" +
-                "width:" + element.width + "px;"
+            "width:" + element.width + "px;"
             avalon.css(placeholderText, "width", element.width <= 1 ? "auto" : element.width + "px;")
             avalon.css(placeholderText, "height", element.height <= 1 ? "auto" : element.height + "px;")
 
@@ -117,12 +127,28 @@ define(["avalon"], function() {
             effect = ele.getAttribute("data-lazyload-itemeffect") !== null ? ele.getAttribute("data-lazyload-itemeffect") : options.effect
         if (ele.tagName !== "IMG" && isloadingOriginal) {
             var domContent = src
-            src = "./images/placeholder.png"
+            src = path + "/images/placeholder.png"
         }
 
         placeholderImg.onload = function() {
+            options.placeholderWidth = ele.getAttribute("data-lazylad-placeholderWidth") || options.placeholderWidth
+            options.placeholderHeight = ele.getAttribute("data-lazylad-placeholderHeight") || options.placeholderHeight
+
+            if(options.placeholderWidth !== "" || options.placeholderHeight !== ""){
+                if(options.placeholderWidth !== ""){
+                    avalon.css(ele, "width", options.placeholderWidth)
+                    ele.preLoadSetSize = true;
+                }
+                if(options.placeholderHeight !== ""){
+                    avalon.css(ele, "height", options.placeholderHeight)
+                    ele.preLoadSetSize = true;
+                }
+                //置空控制重复设置
+                options.placeholderWidth = ""
+                options.placeholderHeight = ""
+            }
             //CSS设置了DOM宽高时采用originalSize,否则采用src的宽高
-            if (ele.width <= 1 || ele.height <= 1 || typeof ele.width === "undefined" || typeof ele.height === "undefined" || needResize) {
+            else if (ele.width <= 1 || ele.height <= 1 || typeof ele.width === "undefined" || typeof ele.height === "undefined" || needResize) {
                 if (ele.tagName !== "IMG" && needResize) {
                     avalon.css(ele, "width", "auto")
                     avalon.css(ele, "height", "auto")
@@ -178,11 +204,15 @@ define(["avalon"], function() {
 
     var _delayload = function(options) {
         for (var i = 0, len = lazyElementArr.length; i < len; i++) {
-            var imgItem = options.preLoadType === "text" ? lazyElementArr[i].imgEle : lazyElementArr[i]
-            var eleTop = imgItem.offsetTop,
+            var imgItem = options.preLoadType === "text" ? lazyElementArr[i].imgEle : lazyElementArr[i],
+                eleTop = imgItem.offsetTop,
                 eleHeight = imgItem.offsetHeight,
-                winTop = document.documentElement.scrollTop || document.body.scrollTop,
-                winHeight = document.body.clientHeight || document.documentElement.clientHeight
+                winTop = document.compatMode === "BackCompat" ? document.body.scrollTop : document.documentElement.scrollTop,
+                winHeight = document.compatMode === "BackCompat" ? document.body.clientHeight : document.documentElement.clientHeight
+
+            if(winTop === 0){ //修正chrome下取不到的問題
+                winTop = document.body.scrollTop;
+            }
 
             //加载正确的图片(originalSrc),条件是屏幕范围内并且要防止重复设置
             if (eleTop < winTop + winHeight && eleTop + eleHeight > winTop && !imgItem.lazyloaded) {
@@ -235,9 +265,11 @@ define(["avalon"], function() {
     }
 
     lazyload.defaults = {
+        placeholderWidth:"",
+        placeholderHeight:"",
         contentType: "image", //@config 懒加载内容类型："image"-图片 / "DOM"-文档片段
         preLoadType: "image", //@config 预加载类型："image"-采用加载中图片 / "text"-采用加载中文字
-        preLoadSrc: "./images/loading1.gif", //@config  预加载图片路径（文字内容）：preLoadType为"image"时为图片路径；preLoadType为"text"时为文字内容。也可以设置元素的data-lazyload-preloadsrc，替代默认值
+        preLoadSrc: path + "/images/loading1.gif", //@config  预加载图片路径（文字内容）：preLoadType为"image"时为图片路径；preLoadType为"text"时为文字内容。也可以设置元素的data-lazyload-preloadsrc，替代默认值
         delay: 500, //@config  延迟加载时间（毫秒）。也可以设置元素的data-lazyload-itemdelay，替代默认值
         effect: "none", //@config  预加载效果 "none"-无效果 / "fadeIn"-渐入效果 / "slideX"-由左向右滑动 / "slideY"-由上向下滑动，建议在图片加载中使用。也可以设置元素的data-lazyload-itemeffect，替代默认值
         easing: "easeInOut", //@config  动画效果的缓动函数

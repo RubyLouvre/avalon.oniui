@@ -147,7 +147,7 @@ define(["../promise/avalon.promise"], function(avalon) {
      其他手机号码正则
      /^(13\d\d|15[012356789]\d|18[012356789]\d|14[57]\d|17(0[059]|[78]\d))\d{7}$/
      /^(?:(?:13|18|15)[0-9]{9}|(?:147|170|176|177|178|199|196)[0-9]{8})$/; 
-
+     
      */
 
     avalon.mix(avalon.duplexHooks, {
@@ -615,12 +615,13 @@ define(["../promise/avalon.promise"], function(avalon) {
                                 vm.onReset.call(data.element, e, data)
                             })
                         }
+                        var array = vm.data.filter(function(el) {
+                            return el.element
+                        })
+                        avalon.Array.ensure(array, data)
+                        vm.data = array
                     }
-                    var array = vm.data.filter(function(el) {
-                        return el.element
-                    })
-                    avalon.Array.ensure(array, data)
-                    vm.data = array
+
                     return false
                 }
             })
@@ -680,4 +681,5 @@ define(["../promise/avalon.promise"], function(avalon) {
  [自定义验证规则](avalon.validation.ex6.html)
  [自带验证规则norequied](avalon.validation.ex7.html)
  [禁止获得焦点时的onRest回调 resetInFocus ](avalon.validation.ex8.html)
+ [与textbox组件的混用, ms-duplex-string的使用 ](avalon.validation.ex9.html)
  */

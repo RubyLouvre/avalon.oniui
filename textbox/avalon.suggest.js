@@ -58,14 +58,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
             });
             // 当通过键盘上下箭头或者使用鼠标点击来切换提示项时触发
             vm.onChangeCallback = function(val) {
-                // 如果存在双向数据绑定，则更新绑定的属性值?
-                if( options.inputElement.msData && options.inputElement.msData['ms-duplex'] ) {
-                    var d = options.inputElement.msData['ms-duplex'];
-                    var vm = avalon.getModel( d , vmodels );
-                    vm[1][vm[0]] = val;
-                } else {
-                    options.inputElement.value = val;
-                }
+                options.inputElement.value = val;
             }
             // 处理提示项的鼠标点击，也就是更新input值，同时隐藏提示框?
             vm.clickcallback = function(idx, event) {

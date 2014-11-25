@@ -79,7 +79,7 @@ define(["../avalon.getModel",
             vm.position = "fixed"
             // 如果显示模式为alert或者配置了showClose为false，不显示关闭按钮
             vm.showClose = vm.type === "alert" ? false : vm.showClose
-            
+            vm.initChange = true
             // 点击确定按钮，根据回调返回值是否为false决定是否关闭弹窗
             vm._confirm = function(e) {
                 if (typeof vmodel.onConfirm !== "function") {
@@ -235,7 +235,7 @@ define(["../avalon.getModel",
                         }
                     }
                 }
-                vmodel.initChange = true
+                
                 vmodel.zIndex = vmodel.zIndex + vmodel.zIndexIncrementGlobal
                 vmodel.title = vmodel.title || "&nbsp;"
                 $element.addClass("oni-dialog")
@@ -304,7 +304,7 @@ define(["../avalon.getModel",
     widget.defaults = {
         width: 480, //@config 设置dialog的width
         title: "&nbsp;", //@config 设置弹窗的标题
-        draggable: false,
+        draggable: false, //@config 设置dialog是否可拖动
         type: "confirm", //@config 配置弹窗的类型，可以配置为alert来模拟浏览器
         content: "", //@config 配置dialog的content，默认取dialog的innerHTML作为dialog的content，如果innerHTML为空，再去取content配置项
         /**

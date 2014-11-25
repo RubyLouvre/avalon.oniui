@@ -20,10 +20,12 @@
             .error-tip{
                 color: red;
                 background:pink;
+                font-size: 13px;
+                width:100%;
             }
         </style>
         <script>
-            require(["validation/avalon.validation", "ready!"], function() {
+            require(["validation/avalon.validation, textbox/avalon.textbox", "ready!"], function() {
                 var validationVM
 
                 function showError(el, data) {
@@ -37,20 +39,20 @@
                 }
                 function removeError(el) {
                     var next = el.nextSibling
-                    if (next && next.className === "error-tip") {
-                        el.parentNode.removeChild(next)
+                    while (next) {
+                        if (next.className === "error-tip") {
+                            el.parentNode.removeChild(next)
+                            break
+                        }
+                        next = next.nextSibling
                     }
+
                 }
                 avalon.define({
                     $id: "test",
                     $skipArray: ["validation"],
-                    a: "xxxx",
-                    b: "a",
-                    c: "d",
-                    d: "",
-                    e: "",
-                    f: "",
-                    g: "",
+                    a: "",
+                    sex: "",
                     reset: function() {
                         validationVM && validationVM.resetAll()
                     },
@@ -58,6 +60,7 @@
                         onInit: function(v) {
                             validationVM = v
                         },
+                        resetInFocus: false,
                         onReset: function(e, data) {
                             data.valueResetor && data.valueResetor()
                             avalon(this).removeClass("error success")
@@ -91,13 +94,10 @@
     <body>
         <form ms-controller="test" ms-widget="validation">
             <h3>验证组件</h3>
-            <p><input ms-duplex-required="a" placeholder="不能为空"></p>
-            <p><input ms-duplex-int="b" placeholder="必须输入整数"></p>
-            <p><input ms-duplex-decimal="c" placeholder="必须输入小数"></p>
-            <p><input ms-duplex-alpha="d" placeholder="必须输入字母"></p>
-            <p><input ms-duplex-chs="e" placeholder="必须输入中文"></p>
-            <p><input ms-duplex-ipv4="f" placeholder="请输入互联网协议（Internet Protocol，IP）的第四版"></p>
-            <p><input ms-duplex-phone="g" placeholder="必须输入手机号码"></p>
+            <p><input ms-duplex-required="a" ms-widget="textbox" data-textbox-placeholder="不能为空"></p>
+            <p><input ms-duplex-string-required="sex" type="radio" value="male"/>男
+                <input ms-duplex-string="sex" type="radio" value="female"/>女
+            </p>
             <button type="submit">submit
             </button>
             <button type="button" ms-click="reset">reset

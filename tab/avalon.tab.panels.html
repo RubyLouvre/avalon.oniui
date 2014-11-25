@@ -1,6 +1,6 @@
 <div class="oni-tab-panel-container" ms-each-panel="tabpanels"
 	 ms-visible="toggle"
-	 ms-if="tabpanels.length">
+	 ms-if="tabpanels.size()">
      <div class="oni-tab-panel oni-widget-content" 
           ms-visible="_shallPanelAlwaysShow($index)" 
           ms-if-loop="_isAjax(panel)">{{panel.content |html }}</div>

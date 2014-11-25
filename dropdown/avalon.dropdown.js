@@ -202,29 +202,13 @@ define(["avalon",
 
                     } else if(!vmodel.$source.$id) {
                         vmodel.$source = null
+                    } else if(vmodel.$source.length > 0) {
+                        vmodel._refresh(vmodel.$source.length);
                     }
 
                     //对data的改变做监听，由于无法检测到对每一项的改变，检测数据项长度的改变
                     vmodel.$source && vmodel.$source.$watch && vmodel.$source.$watch('length', function(n) {
-                        vmodel.data.clear();
-                        vmodel.label = "";
-                        if(n > 0) {
-                            //当data改变时，解锁滚动条
-                            vmodel._disabledScrollbar(false);
-                            vmodel.data.pushArray(getDataFromOption(vmodel.$source.$model || vmodel.$source));
-                            if( vmodel.menuNode ) {
-                                avalon(vmodel.menuNode).css({"height": ""});
-                                avalon(vmodel.dropdownNode).css({"height": ""});
-                                vmodel._styleFix();
-                            }
-
-                            //当data改变时，尝试使用之前的value对label和title进行赋值，如果失败，使用data第一项
-                            if(!setLabelTitle(vmodel.value)) {
-                                vmodel.currentOption = vmodel.data[0].$model;
-                                vmodel.activeIndex = 0;
-                                setLabelTitle(vmodel.value = vmodel.data[0].value)
-                            }
-                        }
+                        vmodel._refresh(n)
                     });
                 }
 
@@ -286,7 +270,31 @@ define(["avalon",
                     vmodel.activeIndex = index
                 }
             };
-
+            /**
+             *
+             * @param len 新数据长度
+             * @private
+             */
+            vm._refresh = function(len) {
+                vmodel.data.clear();
+                vmodel.label = '';
+                if (len > 0) {
+                    //当data改变时，解锁滚动条
+                    vmodel._disabledScrollbar(false);
+                    vmodel.data.pushArray(getDataFromOption(vmodel.$source.$model || vmodel.$source));
+                    if (vmodel.menuNode) {
+                        avalon(vmodel.menuNode).css({ 'height': '' });
+                        avalon(vmodel.dropdownNode).css({ 'height': '' });
+                        vmodel._styleFix();
+                    }
+                    //当data改变时，尝试使用之前的value对label和title进行赋值，如果失败，使用data第一项
+                    if (!setLabelTitle(vmodel.value)) {
+                        vmodel.currentOption = vmodel.data[0].$model;
+                        vmodel.activeIndex = 0;
+                        setLabelTitle(vmodel.value = vmodel.data[0].value);
+                    }
+                }
+            };
             vm._keydown = function(event) {
 
                 //如果是单选下拉框，可以通过键盘移动
@@ -368,7 +376,7 @@ define(["avalon",
                     }
 
                     //计算activeIndex的值
-                    if (vmodel.activeIndex == void 0) {
+                    if (vmodel.activeIndex == null) {
                         avalon.each(vmodel.data, function(i, item) {
                             if (firstItemIndex === void 0 && item.enable) {
                                 firstItemIndex = i;
@@ -687,7 +695,7 @@ define(["avalon",
         listClass: "",   //@config 列表添加自定义className来控制样式
         title: "",
         titleClass: "",   //@config title添加自定义className来控制样式
-        activeIndex: NaN,
+        activeIndex: null,
         size: 1,
         menuNode: null,
         dropdownNode: null,

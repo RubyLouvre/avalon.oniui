@@ -593,7 +593,7 @@ callback配置说明
                         <td>getNodesByFilter(fitler,isSingle,startLeaf,options)</td>
                         <td>Function</td>
                         <td></td>
-                        <td>根据自定义规则搜索节点数据 JSON 对象集合 或 单个节点数据
+                        <td>根据自定义规则搜索节点数据 JSON 对象集合 或 单个节点数据，不包含指定的起始节点
                             <table border="1">
                                 <tr>
                                     <th style="width:100px">参数名/返回值</th>
@@ -627,7 +627,7 @@ callback配置说明
                         <td>getNodeByParam(key,value,startLeaf)</td>
                         <td>Function</td>
                         <td></td>
-                        <td>根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象
+                        <td>根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象，不包含指定的起始节点
                             <table border="1">
                                 <tr>
                                     <th style="width:100px">参数名/返回值</th>
@@ -656,7 +656,7 @@ callback配置说明
                         <td>getNodesByParam(key,value,startLeaf,endFunc)</td>
                         <td>Function</td>
                         <td></td>
-                        <td>根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象集合
+                        <td>根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象集合，不包含指定的起始节点
                             <table border="1">
                                 <tr>
                                     <th style="width:100px">参数名/返回值</th>
@@ -685,7 +685,7 @@ callback配置说明
                         <td>getNodesByParamFuzzy(key,value,startLeaf)</td>
                         <td>Function</td>
                         <td></td>
-                        <td>根据节点数据的属性搜索，获取条件模糊匹配的节点数据 JSON 对象集合
+                        <td>根据节点数据的属性搜索，获取条件模糊匹配的节点数据 JSON 对象集合，不包含指定的起始节点
                             <table border="1">
                                 <tr>
                                     <th style="width:100px">参数名/返回值</th>
@@ -1007,227 +1007,6 @@ callback配置说明
                         <td>Function</td>
                         <td></td>
                         <td>heh</td>
-                    </tr>
-                    <tr>
-                        <td>checkNode(leaf,checked,checkTypeFlag,callbackFlag)</td>
-                        <td>Function</td>
-                        <td></td>
-                        <td>勾选 或 取消勾选 单个节点
-                            <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>节点</td>
-                                </tr>
-                                <tr>
-                                    <td>checked</td>
-                                    <td></td>
-                                    <td>true 表示勾选节点 false 表示取消勾选 的节点数据</td>
-                                </tr>
-                                <tr>
-                                    <td>checkTypeFlag</td>
-                                    <td></td>
-                                    <td>true 表示按照 setting.check.chkboxType 属性进行父子节点的勾选联动操作 false 表示只修改此节点勾选状态，无任何勾选联动操作</td>
-                                </tr>
-                                <tr>
-                                    <td>callbackFlag</td>
-                                    <td></td>
-                                    <td>true 表示执行此方法时触发 beforeCheck & onCheck 事件回调函数 false 表示执行此方法时不触发事件回调函数</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>checkAllNodes(checked,leaf)</td>
-                        <td>Function</td>
-                        <td></td>
-                        <td>勾选 或 取消勾选 全部节点
-                            <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>checked</td>
-                                    <td></td>
-                                    <td>true 表示勾选全部节点 false 表示全部节点取消勾选</td>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>可以指定一个起始的节点</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>getCheckedNodes(checked,leaf)</td>
-                        <td>Function</td>
-                        <td></td>
-                        <td>获取输入框被勾选 或 未勾选的节点集合
-                            <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>checked</td>
-                                    <td></td>
-                                    <td>true 表示勾选 false 表示未勾选</td>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>可以指定一个起始的节点</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>getChangeCheckedNodes(leaf,updateChanges)</td>
-                        <td>Function</td>
-                        <td></td>
-                        <td>获取输入框勾选状态被改变的节点集合
-                            <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>可以指定一个起始的节点</td>
-                                </tr>
-                                <tr>
-                                    <td>updateChanges</td>
-                                    <td></td>
-                                    <td>将当前状态更新到原始数据上</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>setChkDisabled(leaf,disabled,inheritParent,inheritChildren)</td>
-                        <td>Function</td>
-                        <td></td>
-                        <td>禁用 或 解禁 某个节点的 checkbox / radio [check.enable = true 时有效]
-                            <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>可以指定一个起始的节点</td>
-                                </tr>
-                                <tr>
-                                    <td>disabled</td>
-                                    <td></td>
-                                    <td>true 表示禁用 checkbox / radio false 表示解禁 checkbox / radio</td>
-                                </tr>
-                                <tr>
-                                    <td>inheritParent</td>
-                                    <td></td>
-                                    <td>true 表示全部父节点进行同样的操作 false 表示不影响父节点</td>
-                                </tr>
-                                <tr>
-                                    <td>inheritChildren</td>
-                                    <td></td>
-                                    <td>true 表示全部子节点进行同样的操作 false 表示不影响子节点</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>editName(arg)</td>
-                        <td>Function</td>
-                        <td></td>
-                        <td>设置某节点进入编辑名称状态
-                            <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>arg</td>
-                                    <td>Object</td>
-                                    <td>{leaf:leaf}指定节点</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>cancelEditName(newName)</td>
-                        <td>Function</td>
-                        <td></td>
-                        <td>取消节点的编辑名称状态，可以恢复原名称，也可以强行赋给新的名称
-                            <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>newName</td>
-                                    <td>String</td>
-                                    <td>重新给定的新名称</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>removeNode(leaf,callbackFlag)</td>
-                        <td>Function</td>
-                        <td></td>
-                        <td>删除节点
-                            <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>节点</td>
-                                </tr>
-                                <tr>
-                                    <td>callbackFlag</td>
-                                    <td></td>
-                                    <td>true 表示执行此方法时触发 beforeRemove & onRemove 事件回调函数 false 表示执行此方法时不触发事件回调函数</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>removeChildNodes(parentLeaf)</td>
-                        <td>Function</td>
-                        <td></td>
-                        <td>删除子节点 此方法不会触发任何事件回调函数
-                            <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>parentLeaf</td>
-                                    <td>Object</td>
-                                    <td>节点</td>
-                                </tr>
-                            </table>
-                        </td>
                     </tr>
                 </table>
             </fieldset>

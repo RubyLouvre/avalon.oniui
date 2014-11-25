@@ -586,7 +586,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             }
 
             /**
-             * @interface 根据自定义规则搜索节点数据 JSON 对象集合 或 单个节点数据
+             * @interface 根据自定义规则搜索节点数据 JSON 对象集合 或 单个节点数据，不包含指定的起始节点
              * @param {Function} 自定义过滤器函数 function filter(node) {...}
              * @param isSingle = true 表示只查找单个节点 !!isSingle = false 表示查找节点集合
              * @param 可以指定在某个父节点下的子节点中搜索
@@ -594,43 +594,46 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
              */
             vm.getNodesByFilter = function(fitler, isSingle, startLeaf, options) {
                 return vm.visitor(startLeaf, function(node, opt) {
+                    if(node === startLeaf) return
                     if(filter && filter(node, opt)) return node
                 }, isSingle ? function(data, node) {
-                    return data.length > 1
+                    return data.length > 0
                 } : false, [], options)
             }
 
             /**
-             * @interface 根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象
+             * @interface 根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象，不包含指定的起始节点
              * @param {String} 需要精确匹配的属性名称
              * @param 需要精确匹配的属性值，可以是任何类型，只要保证与 key 指定的属性值保持一致即可
              * @param 可以指定在某个父节点下的子节点中搜索
              */
             vm.getNodeByParam = function(key, value, startLeaf) {
                 return vm.getNodesByParam(key, value, startLeaf, function(data, node) {
-                    return data.length > 1
+                    return data.length > 0
                 })
             }
 
             /**
-             * @interface 根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象集合
+             * @interface 根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象集合，不包含指定的起始节点
              * @param {String} 需要精确匹配的属性名称
              * @param 需要精确匹配的属性值，可以是任何类型，只要保证与 key 指定的属性值保持一致即可
              * @param 可以指定在某个父节点下的子节点中搜索
              */
             vm.getNodesByParam = function(key, value, startLeaf, endFunc) {
                 return vm.visitor(startLeaf, function(leaf) {
+                    if(leaf === startLeaf) return
                     return leaf[key] === value ? leaf : false
                 }, endFunc, [])
             }
 
             /**
-             * @interface 根据节点数据的属性搜索，获取条件模糊匹配的节点数据 JSON 对象集合
+             * @interface 根据节点数据的属性搜索，获取条件模糊匹配的节点数据 JSON 对象集合，不包含指定的起始节点
              * @param 需要模糊匹配的属性值，用于查找的时候执行正则匹配，不是正则表达式
              * @param 可以指定在某个父节点下的子节点中搜索
              */
             vm.getNodesByParamFuzzy = function(key, value, startLeaf) {
                 return vm.visitor(startLeaf, function(leaf) {
+                    if(leaf === startLeaf) return
                     return (leaf[key] + "").match(new RegExp(value, "g")) ? leaf : false
                 }, false, [])
             }

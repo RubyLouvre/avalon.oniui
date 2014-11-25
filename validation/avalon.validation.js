@@ -455,7 +455,7 @@ define(["../promise/avalon.promise"], function(avalon) {
             }
 
             /**
-             * @interface 验证当前表单下的所有非disabled元素
+             * @interface 验证当前元素下的所有非disabled元素
              * @param callback {Null|Function} 最后执行的回调，如果用户没传就使用vm.onValidateAll
              */
 
@@ -492,7 +492,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                 fn.call(vm.widgetElement)
             }
             /**
-             * @interface 验证单个元素对应的VM中的属性是否符合格式
+             * @interface 验证单个元素对应的VM中的属性是否符合格式<br>此方法是框架自己调用
              * @param data {Object} 绑定对象
              * @param isValidateAll {Undefined|Boolean} 是否全部验证,是就禁止onSuccess, onError, onComplete触发
              */

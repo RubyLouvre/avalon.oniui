@@ -179,6 +179,20 @@ callback配置说明
                 N: "ps" - N 属性定义 checkbox 取消勾选后的情况
             }
         }</pre>
+                <p>async配置</p>
+                <pre class="brush:javascript;gutter:false;toolbar:false;">        async: {
+            enable: false - 设置 tree 是否开启异步加载模式
+            url: "./avalon.tree.data.php",
+            -Ajax 获取数据的 URL 地址。[async.enable = true 时生效]
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "json" - Ajax 获取的数据类型。[async.enable = true 时生效]
+            autoParam: [] - 异步加载时需要自动提交父节点属性的参数。[async.enable = true 时生效]
+            1、 将需要作为参数提交的属性名称， 制作成 Array 即可， 例如：["id", "name"]
+            2、 可以设置提交时的参数名称， 例如 server 只接受 zId: ["id=zId"]
+            dataFilter: undefine - 用于对 Ajax 返回数据进行预处理的函数。[async.enable = true 时生效] 默认值： null
+            otherParam: {} - Ajax 请求提交的静态参数键值对。[async.enable = true 时生效]
+            type: "post" - Ajax 的 http 请求模式。[async.enable = true 时生效]
+        }</pre>
             </fieldset>
             <fieldset>
                 <legend>使用说明</legend>
@@ -1006,7 +1020,268 @@ callback配置说明
                         <td>AddExtention(fixNames,addingDefaults,addingMethodFunc,watchEvents,tplHooks,callback)</td>
                         <td>Function</td>
                         <td></td>
-                        <td>heh</td>
+                        <td>avalon.ui.tree.AddExtention(fixNames, addingDefaults, addingMethodFunc,
+                            watchEvents)扩展tree</td>
+                    </tr>
+                    <tr>
+                        <td>reAsyncChildNodes(leaf,reloadType,isSilent,callback,filter)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>强行异步加载父节点的子节点
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>leaf</td>
+                                    <td></td>
+                                    <td>指定需要异步加载的父节点 JSON 数据</td>
+                                </tr>
+                                <tr>
+                                    <td>reloadType</td>
+                                    <td></td>
+                                    <td>reloadType = "refresh" 表示清空后重新加载 reloadType != "refresh" 时，表示追加子节点处理</td>
+                                </tr>
+                                <tr>
+                                    <td>isSilent</td>
+                                    <td></td>
+                                    <td>设定异步加载后是否自动展开父节点。isSilent = true 时，不展开父节点，其他值或缺省状态都自动展开</td>
+                                </tr>
+                                <tr>
+                                    <td>callback</td>
+                                    <td></td>
+                                    <td>異步加載成功之後的回調</td>
+                                </tr>
+                                <tr>
+                                    <td>filter</td>
+                                    <td></td>
+                                    <td>默认是async内的dataFilter</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>checkNode(leaf,checked,checkTypeFlag,callbackFlag)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>勾选 或 取消勾选 单个节点
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>leaf</td>
+                                    <td>Object</td>
+                                    <td>节点</td>
+                                </tr>
+                                <tr>
+                                    <td>checked</td>
+                                    <td></td>
+                                    <td>true 表示勾选节点 false 表示取消勾选 的节点数据</td>
+                                </tr>
+                                <tr>
+                                    <td>checkTypeFlag</td>
+                                    <td></td>
+                                    <td>true 表示按照 setting.check.chkboxType 属性进行父子节点的勾选联动操作 false 表示只修改此节点勾选状态，无任何勾选联动操作</td>
+                                </tr>
+                                <tr>
+                                    <td>callbackFlag</td>
+                                    <td></td>
+                                    <td>true 表示执行此方法时触发 beforeCheck & onCheck 事件回调函数 false 表示执行此方法时不触发事件回调函数</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>checkAllNodes(checked,leaf)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>勾选 或 取消勾选 全部节点
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>checked</td>
+                                    <td></td>
+                                    <td>true 表示勾选全部节点 false 表示全部节点取消勾选</td>
+                                </tr>
+                                <tr>
+                                    <td>leaf</td>
+                                    <td>Object</td>
+                                    <td>可以指定一个起始的节点</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getCheckedNodes(checked,leaf)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获取输入框被勾选 或 未勾选的节点集合
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>checked</td>
+                                    <td></td>
+                                    <td>true 表示勾选 false 表示未勾选</td>
+                                </tr>
+                                <tr>
+                                    <td>leaf</td>
+                                    <td>Object</td>
+                                    <td>可以指定一个起始的节点</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getChangeCheckedNodes(leaf,updateChanges)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获取输入框勾选状态被改变的节点集合
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>leaf</td>
+                                    <td>Object</td>
+                                    <td>可以指定一个起始的节点</td>
+                                </tr>
+                                <tr>
+                                    <td>updateChanges</td>
+                                    <td></td>
+                                    <td>将当前状态更新到原始数据上</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>setChkDisabled(leaf,disabled,inheritParent,inheritChildren)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>禁用 或 解禁 某个节点的 checkbox / radio [check.enable = true 时有效]
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>leaf</td>
+                                    <td>Object</td>
+                                    <td>可以指定一个起始的节点</td>
+                                </tr>
+                                <tr>
+                                    <td>disabled</td>
+                                    <td></td>
+                                    <td>true 表示禁用 checkbox / radio false 表示解禁 checkbox / radio</td>
+                                </tr>
+                                <tr>
+                                    <td>inheritParent</td>
+                                    <td></td>
+                                    <td>true 表示全部父节点进行同样的操作 false 表示不影响父节点</td>
+                                </tr>
+                                <tr>
+                                    <td>inheritChildren</td>
+                                    <td></td>
+                                    <td>true 表示全部子节点进行同样的操作 false 表示不影响子节点</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>editName(arg)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>设置某节点进入编辑名称状态
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>arg</td>
+                                    <td>Object</td>
+                                    <td>{leaf:leaf}指定节点</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>cancelEditName(newName)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>取消节点的编辑名称状态，可以恢复原名称，也可以强行赋给新的名称
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>newName</td>
+                                    <td>String</td>
+                                    <td>重新给定的新名称</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>removeNode(leaf,callbackFlag)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>删除节点
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>leaf</td>
+                                    <td>Object</td>
+                                    <td>节点</td>
+                                </tr>
+                                <tr>
+                                    <td>callbackFlag</td>
+                                    <td></td>
+                                    <td>true 表示执行此方法时触发 beforeRemove & onRemove 事件回调函数 false 表示执行此方法时不触发事件回调函数</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>removeChildNodes(parentLeaf)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>删除子节点 此方法不会触发任何事件回调函数
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>parentLeaf</td>
+                                    <td>Object</td>
+                                    <td>节点</td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                 </table>
             </fieldset>
@@ -1022,6 +1297,9 @@ callback配置说明
                 </li>
                 <li>
                     <a href="avalon.tree.ex3.html">tree - Check模块</a>
+                </li>
+                <li>
+                    <a href="avalon.tree.ex4.html">tree - 異步加載，且必须是携带了async标记的节点</a>
                 </li>
             </ul>
         </div>

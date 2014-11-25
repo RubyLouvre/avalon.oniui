@@ -155,10 +155,25 @@
             } 
         }
       ```
+      <p>async配置</p>
+      ```javascript
+        async: {
+            enable: false - 设置 tree 是否开启异步加载模式
+            url: "./avalon.tree.data.php", - Ajax 获取数据的 URL 地址。[async.enable = true 时生效]
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "json" - Ajax 获取的数据类型。[async.enable = true 时生效]
+            autoParam: [] - 异步加载时需要自动提交父节点属性的参数。[async.enable = true 时生效]
+            1、将需要作为参数提交的属性名称，制作成 Array 即可，例如：["id", "name"]
+            2、可以设置提交时的参数名称，例如 server 只接受 zId : ["id=zId"]
+            dataFilter: undefine - 用于对 Ajax 返回数据进行预处理的函数。[async.enable = true 时生效] 默认值：null
+            otherParam: {} - Ajax 请求提交的静态参数键值对。[async.enable = true 时生效]
+            type: "post" - Ajax 的 http 请求模式。[async.enable = true 时生效]
+        }
+      ```
  */
 define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "text!./avalon.tree.parent.html",  "text!./avalon.tree.nodes.html", "../live/avalon.live", "css!./avalon.tree.css", "css!../chameleon/oniui-common.css"], function(avalon, template, leafTemplate, parentTemplate, nodesTemplate) {
 
-    var optionKeyToFixMix = {view: 1, callback: 1},
+    var optionKeyToFixMix = {view: 1, callback: 1, data: 1},
         eventList = ["click", "dblClick", "collapse", "expand", "select", "contextmenu", "mousedown", "mouseup"],
         ExtentionMethods = [],
         undefine = void 0,
@@ -193,7 +208,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 if(!dataFormated) {
                     newArr[index].children = dataFormator(item.children, newArr[index], dataFormated, undefine, vm)
                 } else {
-                    dataFormator(item.children, item, dataFormated, undefine, vm)
+                    dataFormator(item.children, item, dataFormated, func, vm)
                 }
             }
         })
@@ -681,11 +696,17 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                         nodes = [nodes]
                     }
                     nodes = dataFormator(nodes, parentLeaf, undefine, undefine, vm)
+                    // 这里node依旧没有$id属性
                     dataFormator(nodes, parentLeaf, "构建父子节点衔接关系", undefine, vm)
                     if(parentLeaf) parentLeaf.isParent = true
                     var arr = vm.getNodes(parentLeaf), len = arr.length
                     arr.pushArray(nodes)
-                    return arr.slice(len) || []
+                    var addNodes = arr.slice(len) || []
+                    // 更具$id属性build cache
+                    avalon.each(addNodes, function(i, leaf) {
+                        cache[leaf.$id] = leaf
+                    })
+                    return addNodes
                 })
             }
             /**
@@ -694,7 +715,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
              */
             vm.transformTozTreeNodes = function(data) {
                 if(!(data instanceof Array)) data = [data]
-                return simpleDataToTreeData(nodes, vm)
+                return simpleDataToTreeData(data, vm)
             }
 
             /**
@@ -961,7 +982,8 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 // 执行前检测，返回
                 vmodel.$fire("e:before" + eventName, arg)
                 if(callbackEnabled) {
-                    if(arg.cancel || beforeFunc && beforeFunc.call(ele, arg) === false) {
+                    // callback里面可能只preventDefault
+                    if(arg.cancel || beforeFunc && beforeFunc.call(ele, arg) === false || arg.cancel) {
                         arg.preventDefault()
                         return
                     }
@@ -1072,9 +1094,8 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         widget.defaults.callback["before" + upperFirstLetter(item)] = false
     })
 
-    //@interface avalon.ui.tree.AddExtention(fixNames, addingDefaults, addingMethodFunc, watchEvents)扩展tree
     /**
-     * @interface heh
+     * @interface avalon.ui.tree.AddExtention(fixNames, addingDefaults, addingMethodFunc, watchEvents)扩展tree
      */
     avalon.ui.tree.AddExtention = function(fixNames, addingDefaults, addingMethodFunc, watchEvents, tplHooks, callback) {
         if(fixNames) avalon.each(fixNames, function(i, item) {

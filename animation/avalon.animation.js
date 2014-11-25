@@ -313,7 +313,7 @@ define(["avalon"], function() {
     }
     var root = document.documentElement
 
-    Frame.isHidden = function(node) {
+    avalon.isHidden = function(node) {
         return  node.sourceIndex === 0 || avalon.css(node, "display") === "none" || !avalon.contains(root, node)
     }
 
@@ -394,7 +394,7 @@ define(["avalon"], function() {
             this.build = avalon.noop //让其无效化
         },
         createTweens: function() {
-            var hidden = Frame.isHidden(this.elem)
+            var hidden = avalon.isHidden(this.elem)
             for (var i in this.props) {
                 createTweenImpl(this, i, this.props[i], hidden)
             }

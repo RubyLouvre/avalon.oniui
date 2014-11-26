@@ -9,7 +9,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.edit.html"], function(ava
 		}
 	}
 	avalon.ui.tree.AddExtention(
-		["edit", "data"],
+		["edit"],
 		// 注入默认配置
 		{	
 			edit: {

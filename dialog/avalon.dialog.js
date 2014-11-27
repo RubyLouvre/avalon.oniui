@@ -356,7 +356,8 @@ define(["../avalon.getModel",
         },
         modal: true, //@config 是否显示遮罩
         zIndex: maxZIndex, //@config 通过设置vmodel的zIndex来改变dialog的z-index,默认是body直接子元素中的最大z-index值，如果都没有设置就默认的为10
-        zIndexIncrementGlobal: 0 //@config 相对于zIndex的增量, 用于全局配置，如果只是作用于单个dialog那么zIndex的配置已足够，设置全局需要通过avalon.ui.dialog.defaults.zIndexIncrementGlobal = Number来设置
+        zIndexIncrementGlobal: 0, //@config 相对于zIndex的增量, 用于全局配置，如果只是作用于单个dialog那么zIndex的配置已足够，设置全局需要通过avalon.ui.dialog.defaults.zIndexIncrementGlobal = Number来设置
+        initChange: false
     }
     avalon(window).bind("keydown", function(e) {
         var keyCode = e.which,
@@ -439,7 +440,11 @@ define(["../avalon.getModel",
         if (clientHeight < targetOffsetHeight || clientWidth < targetOffsetWidth) {
             vmodel.position = "absolute"
             documentElementStyle.overflow = "auto"
-        } 
+        } else {
+            bodyHeight = document.documentElement.clientHeight
+            bodyWidth = document.documentElement.clientWidth
+        }
+
         if (clientHeight < targetOffsetHeight) {
             t = scrollTop + 10
             l = scrollLeft + 10

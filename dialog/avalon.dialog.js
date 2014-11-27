@@ -79,7 +79,7 @@ define(["../avalon.getModel",
             vm.position = "fixed"
             // 如果显示模式为alert或者配置了showClose为false，不显示关闭按钮
             vm.showClose = vm.type === "alert" ? false : vm.showClose
-            
+            vm.initChange = true
             // 点击确定按钮，根据回调返回值是否为false决定是否关闭弹窗
             vm._confirm = function(e) {
                 if (typeof vmodel.onConfirm !== "function") {
@@ -235,7 +235,7 @@ define(["../avalon.getModel",
                         }
                     }
                 }
-                vmodel.initChange = true
+                
                 vmodel.zIndex = vmodel.zIndex + vmodel.zIndexIncrementGlobal
                 vmodel.title = vmodel.title || "&nbsp;"
                 $element.addClass("oni-dialog")

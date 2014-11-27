@@ -18,7 +18,7 @@
                 ms-hover="oni-state-hover:!tab.disabled" 
                 ms-{{MS_OPTION_EVENT}}="activate($event, $index)" 
                 > 
-                <a ms-href="tab.href?tab.href:'#'" ms-attr-target="tab.target||target||'_self'">{{_tabTitle(tab.title, tab, _cutCounter(), cutEnd) | html}}</a>
+                <a ms-href="tab.href?tab.href:'#'" ms-attr-target="tab.target||target||'_self'">{{_tabTitle(tab.title, tab, _cutCounter(), cutEnd) | sanitize | html}}</a>
                 {{MS_OPTION_REMOVABLE}}
             </li>
         </ul>

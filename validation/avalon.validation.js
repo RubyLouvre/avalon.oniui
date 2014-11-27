@@ -547,7 +547,6 @@ define(["../promise/avalon.promise"], function(avalon) {
                         }
                         vm.onComplete.call(elem, reasons)
                     }
-                    console.log(reasons)
                     return reasons
                 })
                 return lastPromise

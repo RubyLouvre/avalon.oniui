@@ -14,11 +14,13 @@
    ms-attr-title="exprAnd(leaf, view.showTitle, leaf.title || leaf.name)" 
 	 ms-dblclick="excute('dblclick', $event,leaf,'toggleOpenStatue')">
     <span class="button" 
+          ms-attr-id="'treeIcon'+leaf.$id" 
           ms-css-background="{{computeIcon(leaf)}}" 
           ms-class-100="{{levelClass(leaf)}}" 
           ms-if="exprAnd(leaf, view.showIcon, leaf.icon_close, leaf.icon_open)" 
           ms-class="{{computeIconClass(leaf)}}"></span>
     <span class="button" 
+          ms-attr-id="'treeIcon'+leaf.$id" 
           ms-class-100="{{levelClass(leaf)}}" 
           ms-if="!exprAnd(leaf, view.showIcon, leaf.icon_close, leaf.icon_open)" 
           ms-class="{{computeIconClass(leaf)}}"></span>

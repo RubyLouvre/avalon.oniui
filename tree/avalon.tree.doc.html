@@ -179,6 +179,20 @@ callback配置说明
                 N: "ps" - N 属性定义 checkbox 取消勾选后的情况
             }
         }</pre>
+                <p>async配置</p>
+                <pre class="brush:javascript;gutter:false;toolbar:false;">        async: {
+            enable: false - 设置 tree 是否开启异步加载模式
+            url: "./avalon.tree.data.php",
+            -Ajax 获取数据的 URL 地址。[async.enable = true 时生效]
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "json" - Ajax 获取的数据类型。[async.enable = true 时生效]
+            autoParam: [] - 异步加载时需要自动提交父节点属性的参数。[async.enable = true 时生效]
+            1、 将需要作为参数提交的属性名称， 制作成 Array 即可， 例如：["id", "name"]
+            2、 可以设置提交时的参数名称， 例如 server 只接受 zId: ["id=zId"]
+            dataFilter: undefine - 用于对 Ajax 返回数据进行预处理的函数。[async.enable = true 时生效] 默认值： null
+            otherParam: {} - Ajax 请求提交的静态参数键值对。[async.enable = true 时生效]
+            type: "post" - Ajax 的 http 请求模式。[async.enable = true 时生效]
+        }</pre>
             </fieldset>
             <fieldset>
                 <legend>使用说明</legend>
@@ -593,7 +607,7 @@ callback配置说明
                         <td>getNodesByFilter(fitler,isSingle,startLeaf,options)</td>
                         <td>Function</td>
                         <td></td>
-                        <td>根据自定义规则搜索节点数据 JSON 对象集合 或 单个节点数据
+                        <td>根据自定义规则搜索节点数据 JSON 对象集合 或 单个节点数据，不包含指定的起始节点
                             <table border="1">
                                 <tr>
                                     <th style="width:100px">参数名/返回值</th>
@@ -627,7 +641,7 @@ callback配置说明
                         <td>getNodeByParam(key,value,startLeaf)</td>
                         <td>Function</td>
                         <td></td>
-                        <td>根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象
+                        <td>根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象，不包含指定的起始节点
                             <table border="1">
                                 <tr>
                                     <th style="width:100px">参数名/返回值</th>
@@ -656,7 +670,7 @@ callback配置说明
                         <td>getNodesByParam(key,value,startLeaf,endFunc)</td>
                         <td>Function</td>
                         <td></td>
-                        <td>根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象集合
+                        <td>根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象集合，不包含指定的起始节点
                             <table border="1">
                                 <tr>
                                     <th style="width:100px">参数名/返回值</th>
@@ -685,7 +699,7 @@ callback配置说明
                         <td>getNodesByParamFuzzy(key,value,startLeaf)</td>
                         <td>Function</td>
                         <td></td>
-                        <td>根据节点数据的属性搜索，获取条件模糊匹配的节点数据 JSON 对象集合
+                        <td>根据节点数据的属性搜索，获取条件模糊匹配的节点数据 JSON 对象集合，不包含指定的起始节点
                             <table border="1">
                                 <tr>
                                     <th style="width:100px">参数名/返回值</th>
@@ -1006,7 +1020,47 @@ callback配置说明
                         <td>AddExtention(fixNames,addingDefaults,addingMethodFunc,watchEvents,tplHooks,callback)</td>
                         <td>Function</td>
                         <td></td>
-                        <td>heh</td>
+                        <td>avalon.ui.tree.AddExtention(fixNames, addingDefaults, addingMethodFunc,
+                            watchEvents)扩展tree</td>
+                    </tr>
+                    <tr>
+                        <td>reAsyncChildNodes(leaf,reloadType,isSilent,callback,filter)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>强行异步加载父节点的子节点
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>leaf</td>
+                                    <td></td>
+                                    <td>指定需要异步加载的父节点 JSON 数据</td>
+                                </tr>
+                                <tr>
+                                    <td>reloadType</td>
+                                    <td></td>
+                                    <td>reloadType = "refresh" 表示清空后重新加载 reloadType != "refresh" 时，表示追加子节点处理</td>
+                                </tr>
+                                <tr>
+                                    <td>isSilent</td>
+                                    <td></td>
+                                    <td>设定异步加载后是否自动展开父节点。isSilent = true 时，不展开父节点，其他值或缺省状态都自动展开</td>
+                                </tr>
+                                <tr>
+                                    <td>callback</td>
+                                    <td></td>
+                                    <td>異步加載成功之後的回調</td>
+                                </tr>
+                                <tr>
+                                    <td>filter</td>
+                                    <td></td>
+                                    <td>默认是async内的dataFilter</td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                     <tr>
                         <td>checkNode(leaf,checked,checkTypeFlag,callbackFlag)</td>
@@ -1243,6 +1297,9 @@ callback配置说明
                 </li>
                 <li>
                     <a href="avalon.tree.ex3.html">tree - Check模块</a>
+                </li>
+                <li>
+                    <a href="avalon.tree.ex4.html">tree - 異步加載，且必须是携带了async标记的节点</a>
                 </li>
             </ul>
         </div>

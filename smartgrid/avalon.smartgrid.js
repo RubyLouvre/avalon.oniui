@@ -478,7 +478,7 @@ define(["avalon",
                 dataFracte(vmodel)
                 vmodel._pagerShow = !vmodel.data.length ? false : true
                 tableTemplate = vmodel.addRow(vmodel._getTemplate(), vmodel.columns.$model, vmodels)
-                avalon.innerHTML(container, tableTemplate)
+                avalon.innerHTML(container, avalon.filters.sanitize(tableTemplate))
                 if (selectable && selectable.type === "Checkbox") {
                     var allSelected = isSelectAll(vmodel.data)
                     vmodel._allSelected = allSelected

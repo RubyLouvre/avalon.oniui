@@ -530,9 +530,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                         data.data = {}
                         hook.get(value, data, next)
                     }
-
                 })
-
                 //如果promises不为空，说明经过验证拦截器
                 var lastPromise = Promise.all(promises).then(function(array) {
                     var reasons = []
@@ -682,4 +680,6 @@ define(["../promise/avalon.promise"], function(avalon) {
  [自带验证规则norequied](avalon.validation.ex7.html)
  [禁止获得焦点时的onRest回调 resetInFocus ](avalon.validation.ex8.html)
  [与textbox组件的混用, ms-duplex-string的使用 ](avalon.validation.ex9.html)
+ [验证表单元素存在disabled的情况 ](avalon.validation.ex10.html)
+
  */

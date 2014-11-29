@@ -32,7 +32,8 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                     textboxContainer : sourceList ,
                     focus : options.suggestFocus ,
                     onChange : options.suggestOnChange,
-                    type: "textbox"
+                    type: "textbox",
+                    limit: options.limit
                 },
                 renderItem = options.renderItem;
 

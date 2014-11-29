@@ -26,6 +26,10 @@ $uiname: "oni-suggest";
             background-color: $ui-state-active-background-color;
             color: $ui-state-active-color;
         }
+        &.#{$uiname}-item-hover {
+            background-color: $ui-state-active-background-color;
+            color: $ui-state-active-color;
+        }
     }
 }
 

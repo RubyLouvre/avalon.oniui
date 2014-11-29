@@ -19,7 +19,7 @@
         })
         require(["camera/avalon.camera"], function () {
             avalon.define("test", function (vm) {
-                vm.camera = {
+                vm.$opt = {
                     pictures: [
                         "http://placehold.it/600x300/903/fff.jpg&text=img1",
                         "http://placehold.it/600x300/f36/fff.jpg&text=img2",
@@ -35,8 +35,6 @@
     </script>
     <style type="text/css">
         #widget {
-            width: 600px;
-            height: 300px;
             margin: 0 auto;
         }
     </style>
@@ -46,7 +44,7 @@
         <h1>图片百叶窗切换组件</h1>
         <fieldset>
             <legend>默认配置</legend>
-            <div id="widget" ms-widget="camera"></div>
+            <div id="widget" ms-widget="camera,camera,$opt"></div>
         </fieldset>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">
 &lt;html&gt;
@@ -69,7 +67,7 @@
         })
         require(["camera/avalon.camera"], function () {
             avalon.define("test", function (vm) {
-                vm.camera = {
+                vm.$opt = {
                     pictures: [
                         "http://placehold.it/600x300/903/fff.jpg&text=img1",
                         "http://placehold.it/600x300/f36/fff.jpg&text=img2",
@@ -85,23 +83,18 @@
     &lt;/script&gt;
     &lt;style type="text/css"&gt;
         #widget {
-            width: 600px;
-            height: 300px;
             margin: 0 auto;
         }
     &lt;/style&gt;
 &lt;/head&gt;
 &lt;body ms-controller="test"&gt;
-    &lt;div class="wrapper"&gt;
-        &lt;h1&gt;图片百叶窗切换组件&lt;/h1&gt;
-        &lt;fieldset&gt;
-            &lt;legend&gt;默认配置&lt;/legend&gt;
-            &lt;div id="widget" ms-widget="camera"&gt;&lt;/div&gt;
-        &lt;/fieldset&gt;
-    &lt;pre ms-skip class="brush:html;gutter:false;toolbar:false"&gt;
-    
-    &lt;/pre&gt;
-    &lt;/div&gt;
+&lt;div class="wrapper"&gt;
+    &lt;h1&gt;图片百叶窗切换组件&lt;/h1&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;默认配置&lt;/legend&gt;
+        &lt;div id="widget" ms-widget="camera,camera,$opt"&gt;&lt;/div&gt;
+    &lt;/fieldset&gt;
+&lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;
         </pre>

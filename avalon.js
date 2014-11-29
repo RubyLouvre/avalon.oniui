@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.3.7.2 2014.11.19 support IE6+ and other browsers
+ avalon 1.3.7.2 2014.11.27 support IE6+ and other browsers
  ==================================================*/
 (function(DOC) {
     /*********************************************************************
@@ -1798,7 +1798,7 @@
                     }
                 }
             } else if (special === "up" || special === "down") {
-                var elements = events.expr && findNodes(events.expr)
+                var elements = events.expr ? findNodes(events.expr) : []
                 if (elements.length === 0)
                     return
                 for (var i in avalon.vmodels) {
@@ -2222,20 +2222,22 @@
         if (msData["ms-attr-checked"] && msData["ms-duplex"]) {
             log("warning!一个元素上不能同时定义ms-attr-checked与ms-duplex")
         }
-        var firstBinding = bindings[0] || {}
-
-        switch (firstBinding.type) {
-            case "if":
-            case "repeat":
-            case "widget":
-                executeBindings([firstBinding], vmodels)
+        var scanChild = true
+        for (var i = 0, binding; binding = bindings[i]; i++) {
+            var type = binding.type
+            if (type === "if" || type == "widget") {
+                executeBindings([binding], vmodels)
                 break
-            default:
-                executeBindings(bindings, vmodels)
-                if (!stopScan[elem.tagName] && rbind.test(elem.innerHTML.replace(rlt, "<").replace(rgt, ">"))) {
-                    scanNodeList(elem, vmodels) //扫描子孙元素
-                }
-                break
+            } else if (type === "data") {
+                executeBindings([binding], vmodels)
+            } else {
+                executeBindings(bindings.slice(i), vmodels)
+                bindings = []
+                scanChild = binding.type !== "repeat"
+            }
+        }
+        if (scanChild && !stopScan[elem.tagName] && rbind.test(elem.innerHTML.replace(rlt, "<").replace(rgt, ">"))) {
+            scanNodeList(elem, vmodels) //扫描子孙元素
         }
     }
     //IE67下，在循环绑定中，一个节点如果是通过cloneNode得到，自定义属性的specified为false，无法进入里面的分支，
@@ -2988,6 +2990,7 @@
                 }
                 if (elem.getAttribute(data.name)) {
                     elem.removeAttribute(data.name)
+
                     scanAttr(elem, data.vmodels)
                 }
             } else { //移出DOM树，并用注释节点占据原位置

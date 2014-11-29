@@ -18,8 +18,8 @@
             }
         })
         require(["camera/avalon.camera"], function () {
-            avalon.define("demo1", function (vm) {
-                vm.camera = {
+            avalon.define("demo", function (vm) {
+                vm.$opt1 = {
                     pictures: [
                         "http://placehold.it/800x150/903/fff.jpg&text=img1",
                         "http://placehold.it/800x150/f36/fff.jpg&text=img2",
@@ -28,10 +28,7 @@
                         "http://placehold.it/800x150/09f/fff.jpg&text=img5",
                     ]
                 }
-                vm.$skipArray = ["camera"]
-            })
-            avalon.define("demo2", function (vm) {
-                vm.camera = {
+                vm.$opt2 = {
                     pictures: [
                         "http://placehold.it/400x400/903/fff.jpg&text=img1",
                         "http://placehold.it/400x400/f36/fff.jpg&text=img2",
@@ -59,15 +56,15 @@
     </style>
 </head>
 <body>
-    <div class="wrapper">
+    <div class="wrapper"  ms-controller="demo">
         <h1>图片百叶窗切换组件-自定义宽高</h1>
-        <fieldset ms-controller="demo1">
+        <fieldset>
             <legend>800*150</legend>
-            <div class="widget1" ms-widget="camera"></div>
+            <div class="widget1" ms-widget="camera,camera1,$opt1"></div>
         </fieldset>
-        <fieldset ms-controller="demo2">
+        <fieldset>
             <legend>400*400</legend>
-            <div class="widget2" ms-widget="camera"></div>
+            <div class="widget2" ms-widget="camera,camera1,$opt2"></div>
         </fieldset>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">
 &lt;html&gt;
@@ -89,8 +86,8 @@
             }
         })
         require(["camera/avalon.camera"], function () {
-            avalon.define("demo1", function (vm) {
-                vm.camera = {
+            avalon.define("demo", function (vm) {
+                vm.$opt1 = {
                     pictures: [
                         "http://placehold.it/800x150/903/fff.jpg&text=img1",
                         "http://placehold.it/800x150/f36/fff.jpg&text=img2",
@@ -99,10 +96,7 @@
                         "http://placehold.it/800x150/09f/fff.jpg&text=img5",
                     ]
                 }
-                vm.$skipArray = ["camera"]
-            })
-            avalon.define("demo2", function (vm) {
-                vm.camera = {
+                vm.$opt2 = {
                     pictures: [
                         "http://placehold.it/400x400/903/fff.jpg&text=img1",
                         "http://placehold.it/400x400/f36/fff.jpg&text=img2",
@@ -130,19 +124,17 @@
     &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
-    &lt;div class="wrapper"&gt;
-        &lt;h1&gt;图片百叶窗切换组件-自定义宽高&lt;/h1&gt;
-        &lt;fieldset ms-controller="demo1"&gt;
-            &lt;legend&gt;800*150&lt;/legend&gt;
-            &lt;div class="widget1" ms-widget="camera"&gt;&lt;/div&gt;
-        &lt;/fieldset&gt;
-        &lt;fieldset ms-controller="demo2"&gt;
-            &lt;legend&gt;400*400&lt;/legend&gt;
-            &lt;div class="widget2" ms-widget="camera"&gt;&lt;/div&gt;
-        &lt;/fieldset&gt;
-            &lt;pre ms-skip class="brush:html;gutter:false;toolbar:false"&gt;
-            &lt;/pre&gt;
-    &lt;/div&gt;
+&lt;div class="wrapper"  ms-controller="demo"&gt;
+    &lt;h1&gt;图片百叶窗切换组件-自定义宽高&lt;/h1&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;800*150&lt;/legend&gt;
+        &lt;div class="widget1" ms-widget="camera,camera1,$opt1"&gt;&lt;/div&gt;
+    &lt;/fieldset&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;400*400&lt;/legend&gt;
+        &lt;div class="widget2" ms-widget="camera,camera1,$opt2"&gt;&lt;/div&gt;
+    &lt;/fieldset&gt;
+&lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;
         </pre>

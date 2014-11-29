@@ -439,7 +439,11 @@ define(["../avalon.getModel",
         if (clientHeight < targetOffsetHeight || clientWidth < targetOffsetWidth) {
             vmodel.position = "absolute"
             documentElementStyle.overflow = "auto"
-        } 
+        } else {
+            bodyHeight = document.documentElement.clientHeight
+            bodyWidth = document.documentElement.clientWidth
+        }
+
         if (clientHeight < targetOffsetHeight) {
             t = scrollTop + 10
             l = scrollLeft + 10

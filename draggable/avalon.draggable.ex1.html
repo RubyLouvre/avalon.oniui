@@ -16,8 +16,15 @@
                 })
                 avalon.define("test2", function(vm) {
                     vm.draggable = {
-                        dragFn: function(e, data){
-                           this.innerHTML = data.pageX + " " + data.pageY
+                        dragFn: function(e, data) {
+                            this.innerHTML = data.pageX + " " + data.pageY
+                        }
+                    }
+                })
+                avalon.define("test3", function(vm) {
+                    vm.draggable = {
+                        drag: function(e, data) {
+                            this.innerHTML = data.pageX + " " + data.pageY + " drag3"
                         }
                     }
                 })
@@ -37,8 +44,16 @@
                 width:200px;
                 height: 200px;
                 position: absolute;
-                left: 300px;
+                left: 250px;
                 background: blue;
+                z-index: 20;
+            }
+            #ccc{
+                width:200px;
+                height: 200px;
+                position: absolute;
+                left: 500px;
+                background: yellow;
                 z-index: 20;
             }
         </style>
@@ -47,7 +62,10 @@
         <div ms-controller="test" ms-draggable=""id="aaa">
 
         </div>
-        <div ms-controller="test" ms-draggable=" test2"  data-draggable-drag="dragFn"id="bbb">
+        <div ms-controller="test2" ms-draggable=" test2" data-draggable-drag="dragFn" id="bbb">
+
+        </div>
+        <div ms-controller="test3" ms-draggable=" test3"  id="ccc">
 
         </div>
         <h1>最简单例子</h1>

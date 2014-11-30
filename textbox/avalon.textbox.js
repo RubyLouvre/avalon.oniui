@@ -134,7 +134,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 vm.elementDisabled = element.disabled;
             }
         })  
-        var  msDuplexValue, maData
+        var  msDuplexValue, msData
         for (var i in element.msData) {
             if (i.indexOf("ms-duplex") === 0) {
                 msDuplexValue = element.msData[i]

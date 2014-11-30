@@ -14,6 +14,13 @@
             require(["draggable/avalon.draggable"], function() {
                 avalon.define("test", function(vm) {
                 })
+                avalon.define("test2", function(vm) {
+                    vm.draggable = {
+                        dragFn: function(e, data){
+                           this.innerHTML = data.pageX + " " + data.pageY
+                        }
+                    }
+                })
                 avalon.scan()
             })
 
@@ -26,10 +33,21 @@
                 background: red;
                 z-index: 10;
             }
+            #bbb{
+                width:200px;
+                height: 200px;
+                position: absolute;
+                left: 300px;
+                background: blue;
+                z-index: 20;
+            }
         </style>
     </head>
     <body>
         <div ms-controller="test" ms-draggable=""id="aaa">
+
+        </div>
+        <div ms-controller="test" ms-draggable=" test2"  data-draggable-drag="dragFn"id="bbb">
 
         </div>
         <h1>最简单例子</h1>

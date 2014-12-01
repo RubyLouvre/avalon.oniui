@@ -67,7 +67,7 @@ define(["avalon"], function(avalon) {
         },
         then: function(onSuccess, onFail) {
             var parent = this//在新的Promise上添加回调
-           
+
             return new Promise(function(resolve, reject) {
                 parent._then(function(value) {
                     if (typeof onSuccess === "function") {
@@ -158,6 +158,9 @@ define(["avalon"], function(avalon) {
             }
             for (var i = 0, l = promises.length; i < l; i++) {
                 loop(promises[i], i)
+            }
+            if ((promises.length + any) === 0) {
+                resolve([])
             }
         })
     }

@@ -47,6 +47,7 @@ define(["avalon"], function() {
         options
 
     var lazyload = avalon.bindingHandlers.lazyload = function(data, vmodels) {
+        //获取lazyload元素
         var args = data.value.match(avalon.rword) || ["$", "lazyload"]
         var ID = args[0].trim(),
             opts = args[1],
@@ -60,13 +61,11 @@ define(["avalon"], function() {
         if (!model) { //如果使用$或绑定值为空，那么就默认取最近一个VM，没有拉倒
             model = vmodels.length ? vmodels[0] : null
         }
-        var fnObj = model || {}
         if (model && typeof model[opts] === "object") { //如果指定了配置对象，并且有VM
             vmOptions = model[opts]
             if (vmOptions.$model) {
                 vmOptions = vmOptions.$model
             }
-            fnObj = vmOptions
         }
         var element = data.element
         element.removeAttribute("ms-lazyload")
@@ -110,17 +109,16 @@ define(["avalon"], function() {
             placeholderText.imgEle = element
             lazyElementArr.push(placeholderText)
         }
+
     }
 
     //init
     avalon.bind(window, "load", function() {
         _delayload(options)
     })
-    avalon.bind(document.body, "mousewheel", function() {
-        setTimeout(function() {
-            _delayload(options)
-        }, 0)
-    })
+    setInterval(function(){
+        _delayload(options)
+    },100)
 
     var _renderImg = function(ele, src, isloadingOriginal, needResize, tempImgItem) {
         var placeholderImg = new Image(),
@@ -131,22 +129,23 @@ define(["avalon"], function() {
         }
 
         placeholderImg.onload = function() {
-            options.placeholderWidth = ele.getAttribute("data-lazylad-placeholderWidth") || options.placeholderWidth
-            options.placeholderHeight = ele.getAttribute("data-lazylad-placeholderHeight") || options.placeholderHeight
+            options.width = ele.getAttribute("data-lazyload-width") || options.width
+            options.height = ele.getAttribute("data-lazyload-height") || options.height
 
-            if(options.placeholderWidth !== "" || options.placeholderHeight !== ""){
-                if(options.placeholderWidth !== ""){
-                    avalon.css(ele, "width", options.placeholderWidth)
+            if(options.width !== "" || options.height !== ""){
+                if(options.width !== ""){
+                    avalon.css(ele, "width", options.width)
                     ele.preLoadSetSize = true;
                 }
-                if(options.placeholderHeight !== ""){
-                    avalon.css(ele, "height", options.placeholderHeight)
+                if(options.height !== ""){
+                    avalon.css(ele, "height", options.height)
                     ele.preLoadSetSize = true;
                 }
                 //置空控制重复设置
-                options.placeholderWidth = ""
-                options.placeholderHeight = ""
+                options.width = ""
+                options.height = ""
             }
+
             //CSS设置了DOM宽高时采用originalSize,否则采用src的宽高
             else if (ele.width <= 1 || ele.height <= 1 || typeof ele.width === "undefined" || typeof ele.height === "undefined" || needResize) {
                 if (ele.tagName !== "IMG" && needResize) {
@@ -265,14 +264,14 @@ define(["avalon"], function() {
     }
 
     lazyload.defaults = {
-        placeholderWidth:"", //@config 懒加载占位宽度
-        placeholderHeight:"", //@config 懒加载占位高度
+        width:"", //@config 懒加载占位宽度，可通过设置元素的data-lazyload-width修改
+        height:"", //@config 懒加载占位高度，可通过设置元素的data-lazyload-height修改
         contentType: "image", //@config 懒加载内容类型："image"-图片 / "DOM"-文档片段
         preLoadType: "image", //@config 预加载类型："image"-采用加载中图片 / "text"-采用加载中文字
         preLoadSrc: path + "/images/loading1.gif", //@config  预加载图片路径（文字内容）：preLoadType为"image"时为图片路径；preLoadType为"text"时为文字内容。也可以设置元素的data-lazyload-preloadsrc，替代默认值
         delay: 500, //@config  延迟加载时间（毫秒）。也可以设置元素的data-lazyload-itemdelay，替代默认值
         effect: "none", //@config  预加载效果 "none"-无效果 / "fadeIn"-渐入效果 / "slideX"-由左向右滑动 / "slideY"-由上向下滑动，建议在图片加载中使用。也可以设置元素的data-lazyload-itemeffect，替代默认值
-        easing: "easeInOut", //@config  动画效果的缓动函数
+        easing: "easeInOut", //  动画效果的缓动函数
         slideDistance: 300, //@config effect-slide模式的滑动长度。也可以设置元素的data-lazyload-distance，替代默认值
         $author: "heiwu805@hotmail.com"
     }
@@ -287,5 +286,6 @@ define(["avalon"], function() {
  [懒加载组件-自定义effect(加载效果)和各自delay(加载延迟)](avalon.lazyload.ex1.html)
  [懒加载组件-自定义加载中图片](avalon.lazyload.ex2.html)
  [懒加载组件-预加载采用文字模式](avalon.lazyload.ex3.html)
- [懒加载组件-懒加载文档片段](avalon.lazyload.ex4.html)
+ [懒加载组件-懒加载页面元素](avalon.lazyload.ex4.html)
+ [懒加载组件-自定义懒加载尺寸](avalon.lazyload.ex5.html)
  */

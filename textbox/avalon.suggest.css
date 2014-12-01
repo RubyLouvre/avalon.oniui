@@ -24,3 +24,6 @@
     .oni-suggest .oni-suggest-item.oni-suggest-item-selected {
       background-color: #3775c0;
       color: white; }
+    .oni-suggest .oni-suggest-item.oni-suggest-item-hover {
+      background-color: #3775c0;
+      color: white; }

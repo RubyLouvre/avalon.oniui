@@ -280,11 +280,10 @@ define(["../promise/avalon.promise"], function(avalon) {
             }
         },
         repeat: {
-            message: "必须等于{{other}}",
+            message: "密码输入不一致",
             get: function(value, data, next) {
                 var id = data.element.getAttribute("data-duplex-repeat") || ""
                 var other = avalon(document.getElementById(id)).val() || ""
-                data.data.other = other
                 next(value === other)
                 return value
             }

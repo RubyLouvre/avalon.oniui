@@ -22,6 +22,120 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
          * 设置suggest提示框的position和width
         */
         options.textboxContainer = options.textboxContainer == "" ? options.inputElement : options.textboxContainer;
+
+        /*
+         * suggest 下拉框
+         */
+        var limit = options.limit,  // 最多显示条数配置：最多显示多少条suggest，超出显示滚动条
+            suggest,  // ui-suggest
+            suggestCtr = {
+                _minIndex: 0,           // 显示口第一条suggest index
+                _maxIndex: limit - 1,   // 显示口最后一条suggest index
+                _items: "",            // ui-item
+                moveUp: function(index){
+                    if(index < this._minIndex){
+                    // 如果已经跑到显示口第一条了
+                        if(this._minIndex == 0){
+                        // 如果已经滚动到了最上面，滚到底部
+                            this._minIndex = vmodel.list.length - limit;
+                            this._maxIndex = vmodel.list.length - 1;
+
+                            //先更新高度，再滚动
+                            this._update();
+                            this.scroll.set(this._getHeight(0, this._minIndex-1));
+                        }else{
+                            this._minIndex--;
+                            this._maxIndex--;
+                            
+                            this._update();
+                            this.scroll.pre();
+                        }
+                    }else{
+                        if(this.scroll.isScolled){
+                            this.scroll.recover();
+                        }
+                    }
+                },
+                moveDown: function(index){
+                    if(index > this._maxIndex){
+                    // 如果已经跑到显示口最后一条了
+                        if(this._maxIndex == vmodel.list.length -1){
+                        // 如果已经滚动到了最下面，滚到顶部
+                            this._minIndex = 0;
+                            this._maxIndex = limit - 1;
+
+                            this._update();
+                            this.scroll.set(0);
+                        }else{
+                        // 向下滚动
+                            this._minIndex++;
+                            this._maxIndex++;
+                            
+                            this._update();
+                            this.scroll.next();
+                        }
+                    }else{
+                        if(this.scroll.isScolled){
+                            this.scroll.recover();
+                        }
+                    }
+                },
+                reset: function(){
+                    this._minIndex = 0;
+                    this._maxIndex = limit - 1;
+                    suggest.scrollTop = 0;
+                    this._items = suggest.getElementsByTagName("li");
+                    this._update();
+                },
+                scroll: {
+                    isScolled: false,       // 记录用户是否滚动过
+                    set: function(val){
+                        suggest.scrollTop = val;
+                        this.isScolled = false;
+                    },
+                    pre: function(){
+                        if(this.isScolled){
+                            this.recover();
+                        }else{
+                            suggest.scrollTop -= suggestCtr._items[suggestCtr._minIndex].offsetHeight;
+                        }
+                    },
+                    next: function(){
+                        if(this.isScolled){
+                            this.recover();
+                        }else{
+                            suggest.scrollTop += suggestCtr._items[suggestCtr._minIndex - 1].offsetHeight;
+                        }
+                    },
+                    recover: function(){
+                        this.set(suggestCtr._getHeight(0, suggestCtr._minIndex-1));
+                    }
+                },
+                _update: function(){
+                    
+                    if(vmodel.list.length > limit){
+                    // 如果suggest条数大于配置数，显示滚动条
+                        suggest.style.overflowY = 'scroll';    
+                        suggest.style.height = this._getHeight(this._minIndex, this._maxIndex) + 'px';
+                    }else{
+                    // 否则，取消滚动条
+                        suggest.style.overflowY = 'auto';    
+                        suggest.style.height = 'auto';
+                    }
+                },
+                _getHeight: function(fromIndex, toIndex){
+                    var _height = 0,    //suggest列表高度
+                        _items = this._items;
+
+                    for(var i = fromIndex; i <= toIndex; i++){
+                        _height += _items[i].offsetHeight;
+                    }
+                    return _height;
+                }
+            };
+
+
+
         var vmodel = avalon.define(data.suggestId, function(vm) {
             avalon.mix(vm, options);
             vm.$skipArray = ["widgetElement", "puresuggest"];
@@ -73,7 +187,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                 vmodel.toggle = false;
             };
             vm.$init = function() {
-                avalon.bind(options.inputElement, "keyup", function(event) {
+                avalon.bind(options.inputElement, "keydown", function(event) {
                     switch( event.which ) {
                         case 9:
                             if (!vmodel.toggle) return ;
@@ -90,32 +204,64 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                             vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
                         break;
                         case 38:
-                            // up arrow
+                            // arrow up
                             if (!vmodel.toggle) return ;
                             --vmodel.selectedIndex
+
+                            // 下拉框
+                            if(limit){
+                                suggestCtr.moveUp(vmodel.selectedIndex);
+                            }
+
                             if (vmodel.selectedIndex === -1) {
                                 vmodel.selectedIndex = vmodel.list.length - 1
                             }
                             vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
+
+                            // prevent default behavior to move cursor at the the begenning
+                            event.preventDefault()
+
                         break;
                         case 40:
-                            // down arrow
+                            // arrow down
                             if (!vmodel.toggle) return ;
                             ++vmodel.selectedIndex
+
+                            // 下拉框
+                            if(limit){
+                                suggestCtr.moveDown(vmodel.selectedIndex);
+                            }
+
                             if (vmodel.selectedIndex === vmodel.list.length) {
                                 vmodel.selectedIndex = 0
                             }
                             vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
+                            
+                            // prevent default behavior to move cursor at the the end
+                            event.preventDefault()
+
+
                         break;
                         default:
-                            vmodel.searchText = this.value || String.fromCharCode(event.which);
+                            var keyupFn = avalon.bind(options.inputElement, 'keyup', function(){
+                                vmodel.searchText = this.value || String.fromCharCode(event.which);
+                                avalon.unbind(options.inputElement, 'keyup', keyupFn);
+                            })
+
                         break;
                     }
                 })
                 avalon.bind(document, "click", vm.hidepromptinfo);
                 avalon.nextTick(function() {
                     element.appendChild(suggestHtml);
-                    avalon.scan(element, [vmodel].concat(vmodels)); 
+                    avalon.scan(element, [vmodel].concat(vmodels));
+
+                    // suggest 下拉框初始化
+                    suggest = element.getElementsByTagName('ul')[0];
+                    // 绑定 scroll 事件
+                    avalon.bind(suggest, "scroll", function(){
+                        suggestCtr.scroll.isScolled = true;
+                    });
                 })
             };
             // 自动销毁
@@ -165,6 +311,12 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                 } else {
                     vmodel.toggle = true;
                 }
+
+                
+                //重置suggest列表
+                if(limit){
+                    suggestCtr.reset();
+                }
             });
         };
         return vmodel ;
@@ -182,9 +334,23 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
         focus : false ,
         changed : false,
         renderItem : function(item, vmodel) {
-            return item.replace(vmodel.searchText, "<b style='color:#f55'>$&</b>")
+
+                var query = escapeRegExp(vmodel.searchText)
+                
+                return item.replace(new RegExp('(' + query + ')', 'ig'), function($1, match) {
+                    // ie6 下奇怪的字符
+                    if(match.charCodeAt(0) < 32){
+                        match = "" + match.slice(1)
+                    }
+                    return "<b style='color:#f55'>" + match + "</b>"
+                })
+        
         }
     };
+
+    function escapeRegExp(str) {
+        return str.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+    }
     // 根据提示类型的不同提供提示信息，也就是信息的过滤方式完全由用户自己决定?
     avalon.ui["suggest"].strategies = {
         __getVal: function(value, done) {

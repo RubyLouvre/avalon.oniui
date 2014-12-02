@@ -32,7 +32,8 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                     textboxContainer : sourceList ,
                     focus : options.suggestFocus ,
                     onChange : options.suggestOnChange,
-                    type: "textbox"
+                    type: "textbox",
+                    limit: options.limit
                 },
                 renderItem = options.renderItem;
 
@@ -133,7 +134,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 vm.elementDisabled = element.disabled;
             }
         })  
-        var  msDuplexValue, maData
+        var  msDuplexValue, msData
         for (var i in element.msData) {
             if (i.indexOf("ms-duplex") === 0) {
                 msDuplexValue = element.msData[i]

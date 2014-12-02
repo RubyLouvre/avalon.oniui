@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>lazyload组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script>
+            require(["carousel/avalon.carousel","lazyload/avalon.lazyload"], function() {
+                avalon.define("demo", function(vm) {
+                    vm.$opt = {
+                        pictures: [
+                            "http://placehold.it/750x200/333/dddddd.jpg&text=IMG1",
+                            "http://placehold.it/750x200/555/dddddd.jpg&text=IMG2",
+                            "http://placehold.it/750x200/777/dddddd.jpg&text=IMG3",
+                            "http://placehold.it/750x200/999/dddddd.jpg&text=IMG4",
+                            "http://placehold.it/750x200/aaa/dddddd.jpg&text=IMG5"
+                        ],
+                        pictureWidth: "100%",
+                        pictrueHeight: 200
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h1>lazyload懒加载组件-自定义尺寸</h1>
+            <fieldset ms-controller="demo">
+                <legend>自定义尺寸</legend>
+                通过data-lazyload-width和data-lazyload-height可设置懒加载内容的尺寸，这主要应用于当懒加载的内容为文档节点时，因为加载前无法获取到加载内容的尺寸。下面的样例是加载一个Carousel组件。
+                <div data-lazyload-original="<div ms-widget='carousel,myCarousel,$opt'></div>"
+                     data-lazyload-width="100%"
+                     data-lazyload-height="200px"
+                     ms-lazyload>
+                </div>
+                <br/>
+                还有图片
+                <br/>
+                <img alt=""
+                     data-lazyload-original="images/placeholderimg1.jpg"
+                     data-lazyload-width="100%"
+                     data-lazyload-height="100px"
+                     ms-lazyload>
+                <br/><br/>
+                当然，对于图片，也可以直接设置它的CSS来控制尺寸
+                <br/>
+                <img alt=""
+                     data-lazyload-original="images/placeholderimg1.jpg"
+                     style="width: 100%;height: 100px"
+                     ms-lazyload>
+                <br/>
+            </fieldset>
+            <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;lazyload组件&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width"&gt;
+    &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+    &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+    &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+    &lt;script&gt;
+        require(["carousel/avalon.carousel","lazyload/avalon.lazyload"], function() {
+            avalon.define("demo", function(vm) {
+                vm.$opt = {
+                    pictures: [
+                        "http://placehold.it/750x200/333/dddddd.jpg&text=IMG1",
+                        "http://placehold.it/750x200/555/dddddd.jpg&text=IMG2",
+                        "http://placehold.it/750x200/777/dddddd.jpg&text=IMG3",
+                        "http://placehold.it/750x200/999/dddddd.jpg&text=IMG4",
+                        "http://placehold.it/750x200/aaa/dddddd.jpg&text=IMG5"
+                    ],
+                    pictureWidth: "100%",
+                    pictrueHeight: 200
+                }
+            })
+            avalon.scan()
+        })
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="wrapper"&gt;
+    &lt;h1&gt;lazyload懒加载组件-自定义加载时占位大小&lt;/h1&gt;
+    &lt;fieldset ms-controller="demo"&gt;
+        &lt;legend&gt;自定义占位大小&lt;/legend&gt;
+        通过data-lazyload-width和data-lazyload-height可设置懒加载内容的尺寸，这主要应用于当懒加载的内容为文档节点时。因为加载前无法获取到加载内容的尺寸。下面的样例是加载一个Carousel组件。
+        &lt;div data-lazyload-original="&lt;div ms-widget='carousel,myCarousel,$opt'&gt;&lt;/div&gt;"
+             data-lazyload-width="100%"
+             data-lazyload-height="200px"
+             ms-lazyload&gt;
+        &lt;/div&gt;
+        &lt;br/&gt;
+        还有图片
+        &lt;br/&gt;
+        &lt;img alt=""
+             data-lazyload-original="images/placeholderimg1.jpg"
+             data-lazyload-width="100%"
+             data-lazyload-height="100px"
+             ms-lazyload&gt;
+        &lt;br/&gt;&lt;br/&gt;
+        当然，对于图片，也可以直接设置它的CSS来控制尺寸
+        &lt;br/&gt;
+        &lt;img alt=""
+             data-lazyload-original="images/placeholderimg1.jpg"
+             style="width: 100%;height: 100px"
+             ms-lazyload&gt;
+        &lt;br/&gt;
+    &lt;/fieldset&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>
+

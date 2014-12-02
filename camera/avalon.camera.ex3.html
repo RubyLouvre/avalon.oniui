@@ -18,8 +18,8 @@
             }
         })
         require(["camera/avalon.camera"], function () {
-            avalon.define("demo1", function (vm) {
-                vm.camera = {
+            avalon.define("demo", function (vm) {
+                vm.$opt1 = {
                     pictures: [
                         "http://placehold.it/600x200/903/fff.jpg&text=img1",
                         "http://placehold.it/600x200/f36/fff.jpg&text=img2",
@@ -30,10 +30,7 @@
                     slicedCols: 10,
                     slicedRows: 3
                 }
-                vm.$skipArray = ["camera"]
-            })
-            avalon.define("demo2", function (vm) {
-                vm.camera = {
+                vm.$opt2 = {
                     pictures: [
                         "http://placehold.it/600x200/903/fff.jpg&text=img1",
                         "http://placehold.it/600x200/f36/fff.jpg&text=img2",
@@ -44,10 +41,7 @@
                     slicedCols: 5,
                     slicedRows: 10
                 }
-                vm.$skipArray = ["camera"]
-            })
-            avalon.define("demo3", function (vm) {
-                vm.camera = {
+                vm.$opt3 = {
                     pictures: [
                         "http://placehold.it/600x200/903/fff.jpg&text=img1",
                         "http://placehold.it/600x200/f36/fff.jpg&text=img2",
@@ -73,19 +67,19 @@
     </style>
 </head>
 <body>
-    <div class="wrapper">
+    <div class="wrapper" ms-controller="demo">
         <h1>图片百叶窗切换组件-自定义区块数量</h1>
-        <fieldset ms-controller="demo1">
+        <fieldset>
             <legend>slicedCols: 10,slicedRows: 3</legend>
-            <div class="widget" ms-widget="camera"></div>
+            <div class="widget" ms-widget="camera,camera1,$opt1"></div>
         </fieldset>
-        <fieldset ms-controller="demo2">
+        <fieldset>
             <legend>slicedCols: 5,slicedRows: 10</legend>
-            <div class="widget" ms-widget="camera"></div>
+            <div class="widget" ms-widget="camera,camera2,$opt2"></div>
         </fieldset>
-        <fieldset ms-controller="demo3">
+        <fieldset>
             <legend>slicedCols: 3,slicedRows: 2</legend>
-            <div class="widget" ms-widget="camera"></div>
+            <div class="widget" ms-widget="camera,camera3,$opt3"></div>
         </fieldset>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">
 &lt;html&gt;
@@ -107,8 +101,8 @@
             }
         })
         require(["camera/avalon.camera"], function () {
-            avalon.define("demo1", function (vm) {
-                vm.camera = {
+            avalon.define("demo", function (vm) {
+                vm.$opt1 = {
                     pictures: [
                         "http://placehold.it/600x200/903/fff.jpg&text=img1",
                         "http://placehold.it/600x200/f36/fff.jpg&text=img2",
@@ -119,10 +113,7 @@
                     slicedCols: 10,
                     slicedRows: 3
                 }
-                vm.$skipArray = ["camera"]
-            })
-            avalon.define("demo2", function (vm) {
-                vm.camera = {
+                vm.$opt2 = {
                     pictures: [
                         "http://placehold.it/600x200/903/fff.jpg&text=img1",
                         "http://placehold.it/600x200/f36/fff.jpg&text=img2",
@@ -133,10 +124,7 @@
                     slicedCols: 5,
                     slicedRows: 10
                 }
-                vm.$skipArray = ["camera"]
-            })
-            avalon.define("demo3", function (vm) {
-                vm.camera = {
+                vm.$opt3 = {
                     pictures: [
                         "http://placehold.it/600x200/903/fff.jpg&text=img1",
                         "http://placehold.it/600x200/f36/fff.jpg&text=img2",
@@ -162,23 +150,21 @@
     &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
-    &lt;div class="wrapper"&gt;
-        &lt;h1&gt;图片百叶窗切换组件-自定义区块数量&lt;/h1&gt;
-        &lt;fieldset ms-controller="demo1"&gt;
-            &lt;legend&gt;slicedCols: 10,slicedRows: 3&lt;/legend&gt;
-            &lt;div class="widget" ms-widget="camera"&gt;&lt;/div&gt;
-        &lt;/fieldset&gt;
-        &lt;fieldset ms-controller="demo2"&gt;
-            &lt;legend&gt;slicedCols: 5,slicedRows: 10&lt;/legend&gt;
-            &lt;div class="widget" ms-widget="camera"&gt;&lt;/div&gt;
-        &lt;/fieldset&gt;
-        &lt;fieldset ms-controller="demo3"&gt;
-            &lt;legend&gt;slicedCols: 3,slicedRows: 2&lt;/legend&gt;
-            &lt;div class="widget" ms-widget="camera"&gt;&lt;/div&gt;
-        &lt;/fieldset&gt;
-            &lt;pre ms-skip class="brush:html;gutter:false;toolbar:false"&gt;
-            &lt;/pre&gt;
-    &lt;/div&gt;
+&lt;div class="wrapper" ms-controller="demo"&gt;
+    &lt;h1&gt;图片百叶窗切换组件-自定义区块数量&lt;/h1&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;slicedCols: 10,slicedRows: 3&lt;/legend&gt;
+        &lt;div class="widget" ms-widget="camera,camera1,$opt1"&gt;&lt;/div&gt;
+    &lt;/fieldset&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;slicedCols: 5,slicedRows: 10&lt;/legend&gt;
+        &lt;div class="widget" ms-widget="camera,camera2,$opt2"&gt;&lt;/div&gt;
+    &lt;/fieldset&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;slicedCols: 3,slicedRows: 2&lt;/legend&gt;
+        &lt;div class="widget" ms-widget="camera,camera3,$opt3"&gt;&lt;/div&gt;
+    &lt;/fieldset&gt;
+&lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;
         </pre>

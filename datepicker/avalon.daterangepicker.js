@@ -381,6 +381,7 @@ define(["../avalon.getModel",
                 initToDate,
                 toMinDateFormat,
                 inputToDate;
+            if (!date) return
             for (var i = 0 , type = ['defaultDate', 'minDate', 'maxDate'] ; i < type.length; i++) {
                 if (rangeRules[i]) {
                     df[type[i]] = calcDate(rangeRules[i], date)

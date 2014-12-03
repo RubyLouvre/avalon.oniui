@@ -57,7 +57,8 @@ define(["../avalon.getModel",
         // 如果输入域初始值存在则验证其是否符合日期显示规则，不符合设element.value为null
         parseDate = parseDate.bind(options)
         if (duplexVM) {
-            _value = element.value = duplexVM[1][duplexVM[0]]
+            avalon.scan(element, vmodels)
+            _value = element.value
             duplexVM[1].$watch(duplexVM[0], function(val) {
                 var date,
                     month,
@@ -315,13 +316,11 @@ define(["../avalon.getModel",
                     if (!calendarWrapper && !vmodel.timer) {
                         element.value = date
                         vmodel.toggle = false
-                        duplexVM ? duplexVM[1][duplexVM[0]] = date : ""
                     } else { // range datepicker时需要切换选中日期项的类名
                         if (vmodel.timer) {
                             date = date + " " + timerFilter(vmodel.hour) + ":" + timerFilter(vmodel.minute)
                         }
                         element.value = date
-                        duplexVM ? duplexVM[1][duplexVM[0]] = date : ""
                     }
                     if (month !== _oldMonth) {
                         vmodel.month = _date.getMonth()
@@ -423,7 +422,6 @@ define(["../avalon.getModel",
                     _value = element.value = value
                 }
                 vmodel.weekNames = calendarHeader()
-                duplexVM && (duplexVM[1][duplexVM[0]] = value)
                 element.disabled = options.disabled
                 if (vmodel.type!=="range") {
                     avalon.scan(div, [vmodel])
@@ -432,6 +430,7 @@ define(["../avalon.getModel",
                 setTimeout(function() {
                     dataSet(vmodel.month, vmodel.year)
                 }, 0)
+
                 avalon.scan(calendar, [vmodel].concat(vmodels))
                 if (typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
@@ -618,12 +617,7 @@ define(["../avalon.getModel",
                     return ;
                 }
             })
-            // 输入域的值改变之后相应的更新外部的ms-duplex绑定值
-            avalon.bind(element, "change", function() {
-                if (msDuplexName) {
-                    duplexVM && (duplexVM[1][duplexVM[0]] = element.value)
-                }
-            })
+
             // 处理用户的输入
             avalon.bind(element, "keydown", function(e) {
                 var keyCode = e.keyCode,  operate, eChar;

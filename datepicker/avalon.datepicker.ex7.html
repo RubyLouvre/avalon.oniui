@@ -32,7 +32,7 @@
             <script> 
                 require("datepicker/avalon.datepicker", function(avalon) {
                     var model = avalon.define("demo", function(vm) {
-                        vm.changeCallback = function(date, datepickerId, config) {
+                        vm.changeCallback = function(date, vmodel, data) {
                             avalon.log("选中日期后的用户回调")
                             avalon.log(arguments);
                         }
@@ -88,7 +88,7 @@
                         &lt;script&gt; 
                             require("datepicker/avalon.datepicker", function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
-                                    vm.changeCallback = function(date, datepickerId, config) {
+                                    vm.changeCallback = function(date, vmodel, data) {
                                         avalon.log("选中日期后的用户回调")
                                         avalon.log(arguments);
                                     }

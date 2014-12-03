@@ -181,6 +181,7 @@ define(["avalon",
                     })
                     vmodel.enable = enabledModel[1][enabledModel[0]];
                 }
+                vmodel.enable = !element.disabled;
 
                 //同步readOnly
                 var readOnlyAttr = vmodel.readonlyAttr,
@@ -265,7 +266,7 @@ define(["avalon",
                     vmodel.currentOption = option;
                     vmodel.toggle = false;
                     if(avalon.type(vmodel.onSelect) === "function") {
-                        vmodel.onSelect.call(this, event, vmodel.value);
+                        vmodel.onSelect.call(element, event, vmodel.value, vmodel);
                     }
                     vmodel.activeIndex = index
                 }
@@ -282,16 +283,19 @@ define(["avalon",
                     //当data改变时，解锁滚动条
                     vmodel._disabledScrollbar(false);
                     vmodel.data.pushArray(getDataFromOption(vmodel.$source.$model || vmodel.$source));
+                    var option
+                    //当data改变时，尝试使用之前的value对label和title进行赋值，如果失败，使用data第一项
+                    if (!(option = setLabelTitle(vmodel.value))) {
+                        vmodel.currentOption = vmodel.data[0].$model;
+                        vmodel.activeIndex = 0;
+                        setLabelTitle(vmodel.value = vmodel.data[0].value);
+                    } else {
+                        vmodel.activeIndex = vmodel.data.$model.indexOf(option)
+                    }
                     if (vmodel.menuNode) {
                         avalon(vmodel.menuNode).css({ 'height': '' });
                         avalon(vmodel.dropdownNode).css({ 'height': '' });
                         vmodel._styleFix();
-                    }
-                    //当data改变时，尝试使用之前的value对label和title进行赋值，如果失败，使用data第一项
-                    if (!setLabelTitle(vmodel.value)) {
-                        vmodel.currentOption = vmodel.data[0].$model;
-                        vmodel.activeIndex = 0;
-                        setLabelTitle(vmodel.value = vmodel.data[0].value);
                     }
                 }
             };
@@ -322,7 +326,7 @@ define(["avalon",
                             vmodel.activeIndex = index
                             vmodel.scrollTo(index)
                             if(avalon.type(vmodel.onSelect) === "function") {
-                                vmodel.onSelect.call(this, event, vmodel.value);
+                                vmodel.onSelect.call(element, event, vmodel.value, vmodel);
                             }
                             break;
                         case 40:
@@ -336,7 +340,7 @@ define(["avalon",
                             vmodel.activeIndex = index
                             vmodel.scrollTo(index)
                             if(avalon.type(vmodel.onSelect) === "function") {
-                                vmodel.onSelect.call(this, event, vmodel.value);
+                                vmodel.onSelect.call(element, event, vmodel.value, vmodel);
                             }
                             break
                     }
@@ -495,6 +499,7 @@ define(["avalon",
 
                 vmodel.menuWidth = !ie6 ? vmodel.listWidth - $menu.css("borderLeftWidth").replace(styleReg, "$1") - $menu.css("borderRightWidth").replace(styleReg, "$1") : vmodel.listWidth;
                 if (height > MAX_HEIGHT) {
+                    vmodel._disabledScrollbar(false);
                     height = MAX_HEIGHT;
                     avalon(vmodel.dropdownNode).css({
                         "width": vmodel.menuWidth - vmodel.scrollWidget.getBars()[0].width()

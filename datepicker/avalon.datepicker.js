@@ -70,7 +70,7 @@ define(["../avalon.getModel",
                     _day = vmodel.day = date.getDate()
                     vmodel.dateError = "#cccccc"
                     vmodel.tip = getDateTip(cleanDate(date)).text
-                    vmodel.onSelect.call(null, date, vmodel, avalon(element).data())
+                    vmodel.onSelect.call(null, val, vmodel, avalon(element).data())
                 } else {
                     vmodel.tip = "格式错误"
                     vmodel.dateError = "#ff8888"
@@ -327,7 +327,7 @@ define(["../avalon.getModel",
                         vmodel.year = _date.getFullYear()
                     }
                 }
-                if (!vmodel.showDatepickerAlways) {
+                if (!vmodel.showDatepickerAlways && !duplexVM) {
                     vmodel.onSelect.call(null, date, vmodel, avalon(element).data())
                 }
                 if (month === _oldMonth && !dateDisabled) {

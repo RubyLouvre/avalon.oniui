@@ -214,9 +214,9 @@ define(["avalon",
                 pager.getTemplate = typeof pager.getTemplate === 'function' ? pager.getTemplate : function (tmpl, options) {
                     var optionsStr = '';
                     if (Array.isArray(pager.options) && options.canChangePageSize) {
-                        optionsStr = '<div class="ui-smartgrid-pager-options"><div class="ui-smartgrid-showinfo">\u6BCF\u9875\u663E\u793A</div><select ms-widget="dropdown" data-dropdown-list-width="50" data-dropdown-width="50" ms-duplex="perPages"><option ms-repeat="options" ms-value="el.value" ms-attr-label="el.value">{{el.text}}</option></select><div class="ui-smartgrid-showinfo">\u6761, {{totalItems}}\u6761\u7ED3\u679C</div></div>';
+                        optionsStr = '<div class="oni-smartgrid-pager-options"><div class="oni-smartgrid-showinfo">\u6BCF\u9875\u663E\u793A</div><select ms-widget="dropdown" data-dropdown-list-width="50" data-dropdown-width="50" ms-duplex="perPages"><option ms-repeat="options" ms-value="el.value" ms-attr-label="el.value">{{el.text}}</option></select><div class="oni-smartgrid-showinfo">\u6761, {{totalItems}}\u6761\u7ED3\u679C</div></div>';
                     } else {
-                        optionsStr = '<div class="ui-smartgrid-pager-options">{{totalItems}}\u6761\u7ED3\u679C</div>';
+                        optionsStr = '<div class="oni-smartgrid-pager-options">{{totalItems}}\u6761\u7ED3\u679C</div>';
                     }
                     return tmpl + optionsStr;
                 };
@@ -281,7 +281,7 @@ define(["avalon",
                 var target = event.target, $target = avalon(target), sortTrend = '', field = column.key, trend = 0, onColumnSort = vmodel.onColumnSort;
                 if (!vmodel.data.length)
                     return;
-                if ($target.hasClass('ui-helper-sort-top')) {
+                if ($target.hasClass('oni-helper-sort-top')) {
                     sortTrend = 'asc';
                 } else {
                     sortTrend = 'desc';
@@ -354,7 +354,7 @@ define(["avalon",
                             if (!data.disable) {
                                 data.selected = val;
                                 input.checked = val;
-                                $tr[val ? 'addClass' : 'removeClass']('ui-smartgrid-selected');
+                                $tr[val ? 'addClass' : 'removeClass']('oni-smartgrid-selected');
                             }
                         } else {
                             continue;
@@ -370,12 +370,6 @@ define(["avalon",
                     }
                 }, 100);
             };
-            vm._hover = function() {
-                avalon(this).addClass("ui-state-hover")
-            }
-            vm._leave = function() {
-                avalon(this).removeClass("ui-state-hover")
-            }
             vm._toggleColumn = function (toggle, index) {
                 if (!vmodel._container)
                     return toggle;
@@ -573,7 +567,7 @@ define(["avalon",
                 var elem = document.getElementById('pager-' + vmodel.$id);
                 if (elem && !flagPager) {
                     elem.setAttribute('ms-widget', 'pager,pager-' + vmodel.$id);
-                    avalon(elem).addClass('ui-smartgrid-pager-wrapper');
+                    avalon(elem).addClass('oni-smartgrid-pager-wrapper');
                     avalon.scan(elem, vmodel);
                     flagPager = true;
                 }
@@ -648,11 +642,11 @@ define(["avalon",
                 if ($target.attr('data-role') === 'selected') {
                     var rowData = datas[dataIndex], isSelected = target.checked;
                     if (isSelected) {
-                        options.selectable.type === 'Checkbox' ? $tr.addClass('ui-smartgrid-selected') : 0;
+                        options.selectable.type === 'Checkbox' ? $tr.addClass('oni-smartgrid-selected') : 0;
                         rowData.selected = true;
                         avalon.Array.ensure(enabledData, rowData);
                     } else {
-                        $tr.removeClass('ui-smartgrid-selected');
+                        $tr.removeClass('oni-smartgrid-selected');
                         rowData.selected = false;
                         avalon.Array.remove(enabledData, rowData);
                     }

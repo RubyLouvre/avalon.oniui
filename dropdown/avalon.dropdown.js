@@ -937,4 +937,5 @@ define(["avalon",
  [更改模板，使用button作为触发器](avalon.dropdown.ex10.html)
  [异步渲染组件的选项](avalon.dropdown.ex11.html)
  [联动的dropdown](avalon.dropdown.ex12.html)
+ [dropdown状态保持功能](avalon.dropdown.ex13.html)
  */

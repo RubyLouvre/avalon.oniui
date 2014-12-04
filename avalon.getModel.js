@@ -6,7 +6,7 @@ define(["avalon"], function(avalon) {
             _t = t.$model || t;
             if (typeof _t[k] !== 'undefined') {
                 pre = t;
-                t = _t[k];
+                t = t[k];
             } else {
                 return;
             }

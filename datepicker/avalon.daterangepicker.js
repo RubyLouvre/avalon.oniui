@@ -414,6 +414,9 @@ define(["../avalon.getModel",
             if (inputToDate && isDateDisabled(inputToDate, minDate, maxDate)) {
                 inputTo.value = toMinDateFormat
                 vmodel.inputToValue = toMinDateFormat
+                if (element.init) {
+                    vmodel.label = datesDisplayFormat(options.defaultLabel,vmodel.inputFromValue, vmodel.inputToValue)
+                }
             }
             if (element.init) {
                 element.init = false

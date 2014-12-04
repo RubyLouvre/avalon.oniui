@@ -461,7 +461,7 @@ define(["../promise/avalon.promise"], function(avalon) {
             vm.validateAll = function(callback) {
                 var fn = typeof callback === "function" ? callback : vm.onValidateAll
                 var promise = vm.data.filter(function(el) {
-                    return el.element
+                    return el.element && !el.element.disabled && vmodel.widgetElement.contains(el.element);
                 }).map(function(data) {
                     return  vm.validate(data, true)
                 })

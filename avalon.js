@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon 1.3.7.2 2014.11.19 support IE6+ and other browsers
+ avalon 1.3.7.2 2014.11.27 support IE6+ and other browsers
  ==================================================*/
 (function(DOC) {
     /*********************************************************************
@@ -1642,6 +1642,8 @@
         thead: [1, "<table>", "</table>"],
         //如果这里不写</tbody></table>,在IE6-9会在多出一个奇怪的caption标签
         tr: [2, "<table><tbody>", "</tbody></table>"],
+        //如果这里不写</tr></tbody></table>,在IE6-9会在多出一个奇怪的caption标签
+        th: [3, "<table><tbody><tr>", "</tr></tbody></table>"],
         td: [3, "<table><tbody><tr>"],
         g: [1, '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">', '</svg>'],
         //IE6-8在用innerHTML生成节点时，不能直接创建no-scope元素与HTML5的新标签
@@ -1650,7 +1652,6 @@
 
     tagHooks.optgroup = tagHooks.option
     tagHooks.tbody = tagHooks.tfoot = tagHooks.colgroup = tagHooks.caption = tagHooks.thead
-    tagHooks.th = tagHooks.td
     String("circle,defs,ellipse,image,line,path,polygon,polyline,rect,symbol,text,use").replace(rword, function(tag) {
         tagHooks[tag] = tagHooks.g //处理SVG
     })
@@ -1798,7 +1799,7 @@
                     }
                 }
             } else if (special === "up" || special === "down") {
-                var elements = events.expr && findNodes(events.expr)
+                var elements = events.expr ? findNodes(events.expr) : []
                 if (elements.length === 0)
                     return
                 for (var i in avalon.vmodels) {
@@ -1810,8 +1811,8 @@
                                 continue
                             }
                             //循环两个vmodel中的节点，查找匹配（向上匹配或者向下匹配）的节点并设置标识
-                            avalon.each(eventNodes, function(i, node) {
-                                avalon.each(elements, function(j, element) {
+                            Array.prototype.forEach.call(eventNodes, function(node) {
+                                Array.prototype.forEach.call(elements, function(element) {
                                     var ok = special === "down" ? element.contains(node) : //向下捕获
                                             node.contains(element) //向上冒泡
 
@@ -1856,6 +1857,8 @@
     }
     var ravalon = /(\w+)\[(avalonctrl)="(\S+)"\]/
     var findNodes = DOC.querySelectorAll ? function(str) {
+        //pc safari v5.1: typeof DOC.querySelectorAll(str) === 'function'
+        //https://gist.github.com/DavidBruant/1016007
         return DOC.querySelectorAll(str)
     } : function(str) {
         var match = str.match(ravalon)
@@ -2222,20 +2225,22 @@
         if (msData["ms-attr-checked"] && msData["ms-duplex"]) {
             log("warning!一个元素上不能同时定义ms-attr-checked与ms-duplex")
         }
-        var firstBinding = bindings[0] || {}
-
-        switch (firstBinding.type) {
-            case "if":
-            case "repeat":
-            case "widget":
-                executeBindings([firstBinding], vmodels)
+        var scanChild = true
+        for (var i = 0, binding; binding = bindings[i]; i++) {
+            var type = binding.type
+            if (type === "if" || type == "widget") {
+                executeBindings([binding], vmodels)
                 break
-            default:
-                executeBindings(bindings, vmodels)
-                if (!stopScan[elem.tagName] && rbind.test(elem.innerHTML.replace(rlt, "<").replace(rgt, ">"))) {
-                    scanNodeList(elem, vmodels) //扫描子孙元素
-                }
-                break
+            } else if (type === "data") {
+                executeBindings([binding], vmodels)
+            } else {
+                executeBindings(bindings.slice(i), vmodels)
+                bindings = []
+                scanChild = binding.type !== "repeat"
+            }
+        }
+        if (scanChild && !stopScan[elem.tagName] && rbind.test(elem.innerHTML.replace(rlt, "<").replace(rgt, ">"))) {
+            scanNodeList(elem, vmodels) //扫描子孙元素
         }
     }
     //IE67下，在循环绑定中，一个节点如果是通过cloneNode得到，自定义属性的specified为false，无法进入里面的分支，
@@ -2977,7 +2982,7 @@
             data.vmodels.cb(1)
             avalon.nextTick(function() {
                 scanNodeList(parent, data.vmodels)
-                data.vmodels.cb(-1)
+                data.vmodels && data.vmodels.cb(-1)
             })
         },
         "if": function(val, elem, data) {
@@ -2988,6 +2993,7 @@
                 }
                 if (elem.getAttribute(data.name)) {
                     elem.removeAttribute(data.name)
+
                     scanAttr(elem, data.vmodels)
                 }
             } else { //移出DOM树，并用注释节点占据原位置
@@ -3568,21 +3574,26 @@
             events.replace(rword, function(name) {
                 switch (name) {
                     case "input":
-                        if (W3C) { //IE9+, W3C
+                        if (W3C && (!DOC.documentMode || DOC.documentMode > 9)) { //IE10+, W3C
                             bound("input", updateVModel)
-                            bound("compositionstart", compositionStart)
-                            bound("compositionend", compositionEnd)
-                            //http://www.cnblogs.com/rubylouvre/archive/2013/02/17/2914604.html
-                            //http://www.matts411.com/post/internet-explorer-9-oninput/
-                            if (DOC.documentMode === 9) {
-                                bound("paste", delay)
-                                bound("cut", delay)
+                            if (!window.VBArray) {//非IE浏览器才用这个
+                                bound("compositionstart", compositionStart)
+                                bound("compositionend", compositionEnd)
                             }
                         } else { //onpropertychange事件无法区分是程序触发还是用户触发
-                            bound("propertychange", function(e) {
-                                if (e.propertyName === "value")
-                                    updateVModel()
-                            })
+                            if ("oninput" in element) {
+                                bound("input", updateVModel)
+                            } else {
+                                bound("propertychange", function(e) {//IE6-8下第一次修改时不会触发,需要使用keydown修正
+                                    if (e.propertyName === "value")
+                                        updateVModel()
+                                })
+                            }
+                            bound("paste", delay)//IE9下propertychange不监听粘贴，剪切，回车引发的变动
+                            bound("cut", delay)
+                            bound("keydown", delay)
+                            //http://www.cnblogs.com/rubylouvre/archive/2013/02/17/2914604.html
+                            //http://www.matts411.com/post/internet-explorer-9-oninput/
                         }
                         break
                     default:

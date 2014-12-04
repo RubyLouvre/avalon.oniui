@@ -381,6 +381,7 @@ define(["../avalon.getModel",
                 initToDate,
                 toMinDateFormat,
                 inputToDate;
+            if (!date) return
             for (var i = 0 , type = ['defaultDate', 'minDate', 'maxDate'] ; i < type.length; i++) {
                 if (rangeRules[i]) {
                     df[type[i]] = calcDate(rangeRules[i], date)
@@ -413,6 +414,9 @@ define(["../avalon.getModel",
             if (inputToDate && isDateDisabled(inputToDate, minDate, maxDate)) {
                 inputTo.value = toMinDateFormat
                 vmodel.inputToValue = toMinDateFormat
+                if (element.init) {
+                    vmodel.label = datesDisplayFormat(options.defaultLabel,vmodel.inputFromValue, vmodel.inputToValue)
+                }
             }
             if (element.init) {
                 element.init = false

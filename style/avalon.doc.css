@@ -83,7 +83,7 @@ table.table-doc table{
     line-height: 30px;
     display: inline-block;
 }
-fieldset code{
+.wrapper code{
     background: none repeat scroll 0 0 #f1f0ea;
     border: 1px solid #dddbcc;
     border-radius: 2px;

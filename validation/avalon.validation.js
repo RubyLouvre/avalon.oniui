@@ -115,7 +115,7 @@ define(["../promise/avalon.promise"], function(avalon) {
         //中国电信
         ce: /^(?:0?1)(?:33|53|8[079])\d{8}$/,
         //中国大陆
-        cn: /^(?:0?1)[3458]\d{9}$/,
+        cn: /^(?:0?1)[3458]\d{9}$/
         //中国香港
         //   hk: /^(?:0?[1569])(?:\d{7}|\d{8}|\d{12})$/,
         //澳门
@@ -280,11 +280,10 @@ define(["../promise/avalon.promise"], function(avalon) {
             }
         },
         repeat: {
-            message: "必须等于{{other}}",
+            message: "密码输入不一致",
             get: function(value, data, next) {
                 var id = data.element.getAttribute("data-duplex-repeat") || ""
                 var other = avalon(document.getElementById(id)).val() || ""
-                data.data.other = other
                 next(value === other)
                 return value
             }
@@ -462,7 +461,7 @@ define(["../promise/avalon.promise"], function(avalon) {
             vm.validateAll = function(callback) {
                 var fn = typeof callback === "function" ? callback : vm.onValidateAll
                 var promise = vm.data.filter(function(el) {
-                    return el.element
+                    return el.element && !el.element.disabled && vmodel.widgetElement.contains(el.element);
                 }).map(function(data) {
                     return  vm.validate(data, true)
                 })
@@ -530,9 +529,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                         data.data = {}
                         hook.get(value, data, next)
                     }
-
                 })
-
                 //如果promises不为空，说明经过验证拦截器
                 var lastPromise = Promise.all(promises).then(function(array) {
                     var reasons = []
@@ -682,4 +679,6 @@ define(["../promise/avalon.promise"], function(avalon) {
  [自带验证规则norequied](avalon.validation.ex7.html)
  [禁止获得焦点时的onRest回调 resetInFocus ](avalon.validation.ex8.html)
  [与textbox组件的混用, ms-duplex-string的使用 ](avalon.validation.ex9.html)
+ [验证表单元素存在disabled的情况 ](avalon.validation.ex10.html)
+
  */

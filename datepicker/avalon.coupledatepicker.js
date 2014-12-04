@@ -90,7 +90,7 @@ define(["../avalon.getModel",
 
                 avalon(element).addClass("oni-coupledatepicker")
                 initValues()
-                applyRules(vmodel.inputFromValue && parseDate(vmodel.inputFromValue) || new Date())
+                applyRules(vmodel.inputFromValue && parseDate(vmodel.inputFromValue))
                 if (container.length) {
                     calendarTemplate = inputOnlyTemp 
                     inputOnly = avalon.parseHTML(inputOnlyTemp)
@@ -202,6 +202,7 @@ define(["../avalon.getModel",
                 minDateRule,
                 maxDateRule,
                 inputToDate;
+            if (!date) return 
             for (var i = 0, type = ['defaultDate', 'minDate', 'maxDate']; i < type.length; i++) {
                 if (rangeRules[i]) {
                     df[type[i]] = calcDate(rangeRules[i], date)

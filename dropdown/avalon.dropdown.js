@@ -141,16 +141,8 @@ define(["avalon",
 
                     if (duplexName && (duplexModel = avalon.getModel(duplexName, vmodels))) {
                         duplexModel[1].$watch(duplexModel[0], function(newValue) {
-                            // if (avalon.type(vmodel.onChange) === "function" && avalon.onChange.call(element, newValue) !== false) {
-
-                            // }
                             vmodel.value = newValue;
-                            
                         })
-                        // vmodel.$watch("value", function(newValue) {
-                        //     console.log("duplex change")
-                            
-                        // })
                     }
 
                     vmodel.$watch("value", function(n, o) {

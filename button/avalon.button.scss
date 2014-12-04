@@ -2,7 +2,7 @@
 @import "../chameleon/oniui-theme";
 $uiname: "oni-button";
 @mixin button-background($startColor, $endColor: $startColor, $textColor: #fff) {
-	&:active, &.oni-state-active,&[disabled], &.oni-state-disabled  {
+    &:active, &.oni-state-active,&[disabled], &.oni-state-disabled  {
         color: $textColor;
         background-color: $endColor;
         *background-color: darken($endColor, 5%);
@@ -50,10 +50,15 @@ $btnDangerBackgroundHighlight:      #bd362f;
 
 $btnInverseBackground:              #444;
 $btnInverseBackgroundHighlight:     $grayDarker;
-
-
+button.#{$uiname}, input.#{$uiname} {
+    height: 26px;
+    .oni-icon, .#{$uiname}-text {
+        *margin-top: -2px;
+    }
+}
 .#{$uiname} {
     @include inline-block();
+    overflow: hidden;
     _display: inline;
     padding: 0 10px;
     margin: 0;
@@ -65,11 +70,10 @@ $btnInverseBackgroundHighlight:     $grayDarker;
     color: #333;
     text-decoration: none;
     outline: 0;
-    height: 26px;
+    height: 24px;
     font-family: fontawesome;
-    @include box-sizing(border-box);
     &:link {
-    	text-decoration: none;
+        text-decoration: none;
     }
     &.oni-state-default {
         border-color: #ccc;
@@ -194,7 +198,7 @@ $btnInverseBackgroundHighlight:     $grayDarker;
 
     // button corner
     &.oni-corner-all {
-    	@include border-radius(2px);
+        @include border-radius(2px);
     }
     &.oni-corner-left {
         @include border-left-radius(2px);
@@ -212,10 +216,9 @@ $btnInverseBackgroundHighlight:     $grayDarker;
     // icon
     .oni-icon {
         font-size: 12px;
-    	overflow: hidden;
+        overflow: hidden;
         line-height: 24px;
         height: 24px;
-        *margin-top: -2px;
         @include inline-block();
         _display: inline;
         font-style: normal;
@@ -226,12 +229,8 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         height: 24px;
         word-break: keep-all;
         white-space: nowrap;
-        *margin-top: -2px;
         @include inline-block();
         _display: inline;
-        &.#{$uiname}-text-hidden {
-            display: none;
-        }
         &.#{$uiname}-text-left {
             padding-right: 5px;
         }
@@ -242,12 +241,19 @@ $btnInverseBackgroundHighlight:     $grayDarker;
             padding-left: 5px;
             padding-right: 5px;
         }
+        &.#{$uiname}-text-hidden {
+            display: none;
+            padding: 0;
+        }
     }
 }
 // button size
+button.#{$uiname}-small, input.#{$uiname}-small {
+    height: 22px;
+}
 .#{$uiname}-small {
     padding: 0 5px;
-    height: 22px;
+    height: 20px;
     .oni-icon {
         font-size: 12px;
         line-height: 20px;
@@ -258,11 +264,14 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         line-height: 20px;
         height: 20px;
     }
+}
+button.#{$uiname}-big, input.#{$uiname}-big {
+    height: 32px;
 }
 .#{$uiname}-big {
     font-size: 14px;
     padding: 0 15px;
-    height: 32px;
+    height: 30px;
     .oni-icon {
         font-size: 14px;
         line-height: 30px;
@@ -274,9 +283,12 @@ $btnInverseBackgroundHighlight:     $grayDarker;
         height: 30px;
     }
 }
+button.#{$uiname}-large, input.#{$uiname}-large {
+    height: 40px;
+}
 .#{$uiname}-large {
     padding: 0 25px;
-    height: 40px;
+    height: 38px;
     .oni-icon {
         font-size: 14px;
         line-height: 38px;

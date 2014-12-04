@@ -31,7 +31,8 @@ define(["avalon",
             templates, titleTemplate, listTemplate,
             blurHandler,
             scrollHandler,
-            resizeHandler
+            resizeHandler,
+            keepState = false
 
         //将元素的属性值copy到options中
         "multiple,size".replace(avalon.rword, function(name) {
@@ -142,17 +143,32 @@ define(["avalon",
                         duplexModel[1].$watch(duplexModel[0], function(newValue) {
                             vmodel.value = newValue;
                         })
-                        vmodel.$watch("value", function(newValue) {
-                            duplexModel[1][duplexModel[0]] = newValue
-                            element.value = newValue
-                        })
                     }
 
                     vmodel.$watch("value", function(n, o) {
-                        setLabelTitle(n);
-                        //如果有onChange回调，则执行该回调
-                        if(avalon.type(vmodel.onChange) === "function") {
-                            vmodel.onChange.call(element, n, o, vmodel);
+                        var onChange = avalon.type(vmodel.onChange) === "function" && vmodel.onChange || false
+                        if (keepState) {
+                            keepState = false
+                            return 
+                        }
+                        function valueStateKeep(stateKeep) {
+                            if (stateKeep) {
+                                keepState = true
+                                vmodel.value = o
+                            } else {
+                                if (duplexModel) {
+                                    duplexModel[1][duplexModel[0]] = n
+                                    element.value = n
+                                }
+                                setLabelTitle(n);
+                            }
+                        }
+                        if ((onChange && onChange.call(element, n, o, vmodel, valueStateKeep) !== false) || !onChange) {
+                            if (duplexModel) {
+                                duplexModel[1][duplexModel[0]] = n
+                                element.value = n
+                            }
+                            setLabelTitle(n);
                         }
                     });
                 } else {

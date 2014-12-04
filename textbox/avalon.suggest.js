@@ -5,7 +5,8 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
             options = data.suggestOptions ,
             suggestHtml = avalon.parseHTML(sourceHTML).firstChild ,
             dataValue = data.value.split(","),
-            suggestOptions = !dataValue[2] ? 0 : avalon.getModel( dataValue[2] , vmodels ) || 0;
+            suggestOptions = !dataValue[2] ? 0 : avalon.getModel( dataValue[2] , vmodels ) || 0,
+            styleReg = /^(\d+).*$/;
 
         suggestOptions = !!options.notpuresuggest ? suggestOptions[1][suggestOptions[0]] : 0;
         if(suggestOptions) {
@@ -163,7 +164,8 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                         suggestHtml.style.cssText = "margin:0;left:0;top:0;width:"+suggestHtmlWidth ;
                         return ;
                     }
-                    suggestHtml.style.width = ($textboxContainer.outerWidth()-2)+"px" ;
+                    suggestHtml.style.width = $textboxContainer.outerWidth() - 2 - avalon(suggestHtml).css("paddingLeft").replace(styleReg, '$1') - avalon(suggestHtml).css("paddingRight").replace(styleReg, '$1') + 'px';
+
                 }
             })
             // 监控searchText值的变化，及时更新提示列表?

@@ -2943,28 +2943,23 @@
         },
         "html": function(val, elem, data) {
             val = val == null ? "" : val
-            var parent = "group" in data ? elem.parentNode : elem
-            if ("group" in data) {
-                var fragment, nodes
-                //将值转换为文档碎片，原值可以为元素节点，文档碎片，NodeList，字符串
-                if (val.nodeType === 11) {
-                    fragment = val
-                } else if (val.nodeType === 1 || val.item) {
-                    nodes = val.nodeType === 1 ? val.childNodes : val.item ? val : []
-                    fragment = hyperspace.cloneNode(true)
-                    while (nodes[0]) {
-                        fragment.appendChild(nodes[0])
-                    }
-                } else {
-                    fragment = avalon.parseHTML(val)
+            var isHtmlFilter = "group" in data
+            var parent = isHtmlFilter ? elem.parentNode : elem
+            if (val.nodeType === 11) { //将val转换为文档碎片
+                var fragment = val
+            } else if (val.nodeType === 1 || val.item) {
+                var nodes = val.nodeType === 1 ? val.childNodes : val.item ? val : []
+                fragment = hyperspace.cloneNode(true)
+                while (nodes[0]) {
+                    fragment.appendChild(nodes[0])
                 }
-                nodes = avalon.slice(fragment.childNodes)
-                if (nodes.length === 0) {
-                    var comment = DOC.createComment("ms-html")
-                    fragment.appendChild(comment)
-                    nodes = [comment]
-                }
-                parent.insertBefore(fragment, elem) //fix IE6-8 insertBefore的第2个参数只能为节点或null
+            } else {
+                fragment = avalon.parseHTML(val)
+            }
+            //插入占位符, 如果是过滤器,需要有节制地移除指定的数量,如果是html指令,直接清空
+            var comment = DOC.createComment("ms-html")
+            if (isHtmlFilter) {
+                parent.insertBefore(comment, elem)
                 var length = data.group
                 while (elem) {
                     var nextNode = elem.nextSibling
@@ -2974,14 +2969,23 @@
                         break
                     elem = nextNode
                 }
-                data.element = nodes[0]
-                data.group = nodes.length
+                data.element = comment //防止被CG
             } else {
-                avalon.innerHTML(parent, val)
+                avalon.clearHTML(parent).appendChild(comment)
             }
             data.vmodels.cb(1)
             avalon.nextTick(function() {
-                scanNodeList(parent, data.vmodels)
+                if (isHtmlFilter) {
+                    data.group = fragment.childNodes.length || 1
+                }
+                var nodes = avalon.slice(fragment.childNodes)
+                if (nodes[0]) {
+                    parent.replaceChild(fragment, comment)
+                    if (isHtmlFilter) {
+                        data.element = nodes[0]
+                    }
+                }
+                scanNodeArray(nodes, data.vmodels)
                 data.vmodels && data.vmodels.cb(-1)
             })
         },
@@ -3469,6 +3473,24 @@
         })
         return val
     }
+    function IE() {
+        if (window.VBArray) {
+            var mode = document.documentMode
+            return mode ? mode : window.XMLHttpRequest ? 7 : 6
+        } else {
+            return 0
+        }
+    }
+    var IEVersion = IE()
+    if (IEVersion) {
+        avalon.bind(DOC, "selectionchange", function(e) {
+            var el = DOC.activeElement
+            if (el && typeof el.avalonSelectionChange === "function") {
+                el.avalonSelectionChange()
+            }
+        })
+    }
+
     //如果一个input标签添加了model绑定。那么它对应的字段将与元素的value连结在一起
     //字段变，value就变；value变，字段也跟着变。默认是绑定input事件，
 
@@ -3514,9 +3536,8 @@
                 element.value = val
             }
         }
-
         if (data.isChecked || element.type === "radio") {
-            var IE6 = !window.XMLHttpRequest
+            var IE6 = IEVersion === 6
             updateVModel = function() {
                 if ($elem.data("duplex-observe") !== false) {
                     var lastValue = data.pipe(element.value, data, "get")
@@ -3571,27 +3592,31 @@
                     updateVModel(e)
                 })
             }
+
             events.replace(rword, function(name) {
                 switch (name) {
                     case "input":
-                        if (W3C && (!DOC.documentMode || DOC.documentMode > 9)) { //IE10+, W3C
+                        if (!window.VBArray) { // W3C
                             bound("input", updateVModel)
-                            if (!window.VBArray) {//非IE浏览器才用这个
-                                bound("compositionstart", compositionStart)
-                                bound("compositionend", compositionEnd)
-                            }
+                            //非IE浏览器才用这个
+                            bound("compositionstart", compositionStart)
+                            bound("compositionend", compositionEnd)
+
                         } else { //onpropertychange事件无法区分是程序触发还是用户触发
-                            if ("oninput" in element) {
-                                bound("input", updateVModel)
+                            element.avalonSelectionChange = updateVModel//监听IE点击input右边的X的清空行为
+                            if (IEVersion > 8) {
+                                bound("input", updateVModel)//IE9使用propertychange无法监听中文输入改动
                             } else {
-                                bound("propertychange", function(e) {//IE6-8下第一次修改时不会触发,需要使用keydown修正
-                                    if (e.propertyName === "value")
+                                bound("propertychange", function(e) {//IE6-8下第一次修改时不会触发,需要使用keydown或selectionchange修正
+                                    if (e.propertyName === "value") {
                                         updateVModel()
+                                    }
                                 })
                             }
-                            bound("paste", delay)//IE9下propertychange不监听粘贴，剪切，回车引发的变动
-                            bound("cut", delay)
-                            bound("keydown", delay)
+                            // bound("paste", delay)//IE9下propertychange不监听粘贴，剪切，删除引发的变动
+                            // bound("cut", delay)
+                            // bound("keydown", delay)
+                            bound("dragend", delay)
                             //http://www.cnblogs.com/rubylouvre/archive/2013/02/17/2914604.html
                             //http://www.matts411.com/post/internet-explorer-9-oninput/
                         }
@@ -3629,7 +3654,7 @@
 
     function onTree(value) { //disabled状态下改动不触发input事件
         var newValue = arguments.length ? value : this.value
-        if (!this.disabled && this.oldValue !== newValue) {
+        if (!this.disabled && this.oldValue !== newValue + "") {
             var type = this.getAttribute("data-duplex-event") || "input"
             type = type.match(rword).shift()
             if (W3C) {

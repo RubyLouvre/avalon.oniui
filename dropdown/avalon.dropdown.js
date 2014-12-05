@@ -168,7 +168,7 @@ define(["avalon",
                                 duplexModel[1][duplexModel[0]] = n
                                 element.value = n
                             }
-                            setLabelTitle(n);
+                            vmodel.currentOption = setLabelTitle(n);
                         }
                     });
                 } else {
@@ -279,7 +279,7 @@ define(["avalon",
                     } else {
                         vmodel.value = option.value;
                     }
-                    vmodel.currentOption = option;
+                    // vmodel.currentOption = option;
                     vmodel.toggle = false;
                     if(avalon.type(vmodel.onSelect) === "function") {
                         vmodel.onSelect.call(element, event, vmodel.value, vmodel);

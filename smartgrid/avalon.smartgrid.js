@@ -197,6 +197,10 @@ define(["avalon",
             return String.fromCharCode(parseInt($1, 10));
         });
     };
+    var cnt = 0
+    function guid() {
+        return "smartgridTr" + cnt++
+    }
     var countter = 0
     var widget = avalon.ui.smartgrid = function (element, data, vmodels) {
         var options = data.smartgridOptions, $element = avalon(element), pager = options.pager, vmId = data.smartgridId;
@@ -241,6 +245,7 @@ define(["avalon",
             'pager',
             'noResult',
             'sortable',
+            'data',// 一定不要去掉啊，去掉了就会出错
             'containerMinWidth',
             '_disabledData',
             '_enabledData'
@@ -456,9 +461,18 @@ define(["avalon",
                 if(!containerWrapper) return
                 if(len === 0 || init) avalon.clearHTML(containerWrapper)
                 vmodel._pagerShow = !len ? false : true;
+                // 做数据拷贝
                 if(data) {
-                    vmodel.data.push.apply(vmodel.data, data)
+                    var _data = []
+                    avalon.each(data, function(i, item) {
+                        _data.push(avalon.mix({}, item))
+                        _data[i].$id = guid()
+                    })
+                    vmodel.data.push.apply(vmodel.data, _data)
                 }
+                avalon.each(vmodel.data, function(i, item) {
+                    item.$id = item.$id || guid()
+                })
                 tableTemplate = vmodel.addRow(vmodel._getTemplate(data ? vmodel.data.slice(arrLen) : data, data ? arrLen : 0), vmodel.columns.$model, vmodels)
                 rows = avalon.parseHTML(tableTemplate)
                 containerWrapper.appendChild(rows)
@@ -491,7 +505,7 @@ define(["avalon",
                 if(removeData === false) {
                     data.$id = "remove"
                 } else {
-                    vmodel.data.removeAt(index)
+                    vmodel.data.splice(index, 1)
                 }
                 if(!vmodel.getLen(vmodel.data)) vmodel.render(void 0, true)
             }

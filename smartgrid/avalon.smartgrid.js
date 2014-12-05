@@ -1,6 +1,6 @@
 // avalon 1.3.6
 /**
- * 
+ *
  * @cnName 表格
  * @enName smartgrid
  * @introduce
@@ -172,8 +172,8 @@ define(["avalon",
         }
         t += ' return r; }catch(e){ avalon.log(e);\navalon.log(js' + time + '[line' + time + '-1]) }}';
         var body = [
-                'txt' + time,
-                'js' + time,
+            'txt' + time,
+            'js' + time,
             'filters'
         ];
         var fn = Function.apply(Function, body.concat(helperNames, t));
@@ -476,7 +476,7 @@ define(["avalon",
                 tableTemplate = vmodel.addRow(vmodel._getTemplate(data ? vmodel.data.slice(arrLen) : data, data ? arrLen : 0), vmodel.columns.$model, vmodels)
                 rows = avalon.parseHTML(tableTemplate)
                 containerWrapper.appendChild(rows)
-                if (selectable && selectable.type === 'Checkbox') {
+                if (selectable && (selectable.type === 'Checkbox'|| selectable.type === 'Radio')) {
                     var allSelected = isSelectAll(vmodel.data);
                     vmodel._allSelected = allSelected;
                     getSelectedData(vmodel);
@@ -647,7 +647,7 @@ define(["avalon",
         if (!options.selectable)
             return;
         var type = options.selectable.type, container = options._container;
-        if (type === 'Checkbox') {
+        if (type === 'Checkbox' || type === "Radio") {
             avalon.bind(container, 'click', function (event) {
                 var target = event.target, $target = avalon(target), $tr = avalon(target.parentNode.parentNode), datas = options.data, onSelectAll = options.onSelectAll, enabledData = options._enabledData, disabledData = options._disabledData, dataIndex = $target.attr('data-index');
                 if (!$target.attr('data-role') || dataIndex === null) {
@@ -657,6 +657,9 @@ define(["avalon",
                     var rowData = datas[dataIndex], isSelected = target.checked;
                     if (isSelected) {
                         options.selectable.type === 'Checkbox' ? $tr.addClass('oni-smartgrid-selected') : 0;
+                        if(options.selectable.type === 'Radio'){
+                            enabledData.splice(0, enabledData.length);
+                        }
                         rowData.selected = true;
                         avalon.Array.ensure(enabledData, rowData);
                     } else {
@@ -685,6 +688,7 @@ define(["avalon",
             });
         }
     }
+
     function dataFracte(vmodel) {
         var data = vmodel.data, enabledData = vmodel._enabledData = [], disabledData = vmodel._disabledData = [];
         data.forEach(function (dataItem, index) {
@@ -840,14 +844,14 @@ define(["avalon",
 /**
  * @other
  *  <p>下面附上实现相同展示效果的情况下，smartgrid与simplegrid的渲染情况对比</p>
-    <div>
-        <h2>smartgrid渲染10条表格数据</h2>
-        <img src="smartgrid10.png" style="width:100%"/>
-        <h2>simplegrid渲染10条表格数据</h2>
-        <img src="simplegrid10.png" style="width:100%"/>
-        <h2>smartgrid渲染200条表格数据</h2>
-        <img src="smartgrid200.png" style="width:100%"/>
-        <h2>simplegrid渲染200条表格数据</h2>
-        <img src="simplegrid200.png"style="width:100%"/>
-    </div>
+ <div>
+ <h2>smartgrid渲染10条表格数据</h2>
+ <img src="smartgrid10.png" style="width:100%"/>
+ <h2>simplegrid渲染10条表格数据</h2>
+ <img src="simplegrid10.png" style="width:100%"/>
+ <h2>smartgrid渲染200条表格数据</h2>
+ <img src="smartgrid200.png" style="width:100%"/>
+ <h2>simplegrid渲染200条表格数据</h2>
+ <img src="simplegrid200.png"style="width:100%"/>
+ </div>
  */

@@ -110,6 +110,9 @@ define(["../promise/avalon.promise"], function(avalon) {
                     if (elem.type === "radio" && data.param === "") {
                         data.param = "checked"
                     }
+                    if (elem.msData) {
+                        elem.msData["ms-duplex"] = data.value
+                    }
                     data.param.replace(/\w+/g, function(name) {
                         if (/^(checkbox|radio)$/.test(elem.type) && /^(radio|checked)$/.test(name)) {
                             if (name === "radio")
@@ -222,6 +225,28 @@ define(["../promise/avalon.promise"], function(avalon) {
     var remail = /^([A-Z0-9]+[_|\_|\.]?)*[A-Z0-9]+@([A-Z0-9]+[_|\_|\.]?)*[A-Z0-9]+\.[A-Z]{2,3}$/i
     var ripv4 = /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i
     var ripv6 = /^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/i
+    //规则取自淘宝注册登录模块
+    var phoneOne = {
+        //中国移动
+        cm: /^(?:0?1)((?:3[56789]|5[0124789]|8[278])\d|34[0-8]|47\d)\d{7}$/,
+        //中国联通
+        cu: /^(?:0?1)(?:3[012]|4[5]|5[356]|8[356]\d|349)\d{7}$/,
+        //中国电信
+        ce: /^(?:0?1)(?:33|53|8[079])\d{8}$/,
+        //中国大陆
+        cn: /^(?:0?1)[3458]\d{9}$/,
+        //中国香港
+        //   hk: /^(?:0?[1569])(?:\d{7}|\d{8}|\d{12})$/,
+        //澳门
+        // macao: /^6\d{7}$/,
+        //台湾
+        //  tw: /^(?:0?[679])(?:\d{7}|\d{8}|\d{10})$//*,
+        //韩国
+        //  kr:/^(?:0?[17])(?:\d{9}|\d{8})$/,
+        //日本
+        // jp:/^(?:0?[789])(?:\d{9}|\d{8})$/*/
+    }
+
     avalon.mix(avalon.duplexHooks, {
         trim: {
             get: function(value, data) {
@@ -243,6 +268,20 @@ define(["../promise/avalon.promise"], function(avalon) {
             get: function(value, data, next) {
                 next(/^\-?\d+$/.test(value))
                 return value
+            }
+        },
+        phone: {
+            message: "手机号码不合法",
+            get: function(value, data, next) {
+                var ok = false
+                for (var i in phoneOne) {
+                    if (phoneOne[i].test(value)) {
+                        ok = true;
+                        break
+                    }
+                }
+                next(ok)
+                return  value
             }
         },
         decimal: {
@@ -330,11 +369,10 @@ define(["../promise/avalon.promise"], function(avalon) {
             }
         },
         repeat: {
-            message: "必须等于{{other}}",
+            message: "密码输入不一致",
             get: function(value, data, next) {
                 var id = data.element.getAttribute("data-duplex-repeat") || ""
                 var other = avalon(document.getElementById(id)).val() || ""
-                data.data.other = other
                 next(value === other)
                 return value
             }

@@ -18,7 +18,7 @@
                     ms-css-text-align="column.align" 
                     ms-class="{{column.customClass}}"
                     ms-class-1="oni-state-hidden: _hiddenAffixHeader(column, allChecked)">
-                    {{column.name|html}}
+                    {{column.name|sanitize|html}}
                     <span  ms-click="sortColumn(column, $index, $event)"
                            ms-if="column.sortable" 
                            ms-class="oni-helper-{{column.sortTrend}}">
@@ -33,7 +33,7 @@
                     ms-css-text-align="column.align" 
                     ms-class="{{column.customClass}}"
                     ms-class-1="oni-state-hidden: _hiddenAffixHeader(column, allChecked)">
-                    {{column.name|html}}
+                    {{column.name|sanitize|html}}
                     <span  ms-click="sortColumn(column, $index, $event)"
                            ms-if="column.sortable" 
                            ms-class="oni-helper-{{column.sortTrend}}">

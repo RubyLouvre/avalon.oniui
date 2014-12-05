@@ -5,7 +5,7 @@ define(["avalon", "./avalon.tree", "text!./avalon.tree.check.html"], function(av
 	// 排除辅助字段
 	avalon.ui.tree.leafIgnoreField.push("chkFocus", "chkTotal", "checkedOld")
 	avalon.ui.tree.AddExtention(
-		["check", "data", "callback"],
+		["check"],
 		{
 			check: {
 				enable: false,

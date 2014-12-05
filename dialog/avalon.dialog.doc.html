@@ -25,7 +25,7 @@
                     <colgroup>
                         <col width="180" />
                         <col width="80" />
-                        <col width="180" />
+                        <col width="120" />
                     </colgroup>
                     <tr>
                         <th>名字</th>
@@ -47,6 +47,12 @@
                         <td>String</td>
                         <td>"&nbsp;"</td>
                         <td>设置弹窗的标题</td>
+                    </tr>
+                    <tr>
+                        <td>draggable</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>设置dialog是否可拖动</td>
                     </tr>
                     <tr>
                         <td>type</td>
@@ -229,6 +235,13 @@
                         <td>Identifier</td>
                         <td>maxZIndex</td>
                         <td>通过设置vmodel的zIndex来改变dialog的z-index,默认是body直接子元素中的最大z-index值，如果都没有设置就默认的为10</td>
+                    </tr>
+                    <tr>
+                        <td>zIndexIncrementGlobal</td>
+                        <td>Number</td>
+                        <td>0</td>
+                        <td>相对于zIndex的增量, 用于全局配置，如果只是作用于单个dialog那么zIndex的配置已足够，设置全局需要通过avalon.ui.dialog.defaults.zIndexIncrementGlobal
+                            = Number来设置</td>
                     </tr>
                 </table>
             </fieldset>

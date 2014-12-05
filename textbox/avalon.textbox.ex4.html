@@ -30,7 +30,7 @@
                                 &lt;tbody&gt;
                                     &lt;tr&gt;
                                         &lt;td class="pad30"&gt;
-                                            &lt;input ms-widget="textbox" ms-duplex="x" type="textbox" data-textbox-suggest="test" /&gt;
+                                            &lt;input ms-widget="textbox" ms-duplex="x" type="textbox" data-textbox-suggest="test" data-textbox-limit="5" /&gt;
                                             &lt;p&gt;输入框的值是： {{x}}&lt;/p&gt;
                                         &lt;/td&gt;
 
@@ -61,7 +61,11 @@
                                     done(value ? [
                                         value + "1" ,
                                         value + "2" ,
-                                        value + "3"  
+                                        value + "3 这个建议项有点点长哦哦哦哦哦哦哦" ,
+                                        value + "4" ,
+                                        value + "5" ,
+                                        value + "6" ,
+                                        value + "7"  
                                     ] : [] )
                                 },100)
                             }
@@ -86,7 +90,7 @@
                     <tbody>
                         <tr>
                             <td class="pad30">
-                                <input ms-widget="textbox" ms-duplex="x" type="textbox" data-textbox-suggest="test" />
+                                <input ms-widget="textbox" ms-duplex="x" type="textbox" data-textbox-suggest="test" data-textbox-limit="5" />
                                 <p>输入框的值是： {{x}}</p>
                             </td>
 
@@ -117,7 +121,11 @@
                         done(value ? [
                             value + "1" ,
                             value + "2" ,
-                            value + "3"  
+                            value + "3 这个建议项有点点长哦哦哦哦哦哦哦" ,
+                            value + "4" ,
+                            value + "5" ,
+                            value + "6" ,
+                            value + "7"  
                         ] : [] )
                     },100)
                 }

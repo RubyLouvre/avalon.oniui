@@ -38,8 +38,12 @@
                 }
                 function removeError(el) {
                     var next = el.nextSibling
-                    if (next && next.className === "error-tip") {
-                        el.parentNode.removeChild(next)
+                    while (next) {
+                        if (next.className === "error-tip") {
+                            el.parentNode.removeChild(next)
+                            break
+                        }
+                         next = next.nextSibling
                     }
                 }
                 avalon.define({

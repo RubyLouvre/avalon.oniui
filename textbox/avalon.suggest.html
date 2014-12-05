@@ -2,7 +2,7 @@
     <li class='oni-suggest-item' 
         ms-click='clickcallback($index,$event)' 
         ms-class='oni-suggest-item-selected:list[selectedIndex] == item' tabindex='-1' 
-        ms-hover='oni-suggest-item-selected'>
+        ms-hover='oni-suggest-item-hover'>
             {{ _renderItem(item.text) | html }}
     </li>
 </ul>

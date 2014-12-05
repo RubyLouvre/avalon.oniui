@@ -160,7 +160,7 @@ define(["avalon",
                                     duplexModel[1][duplexModel[0]] = n
                                     element.value = n
                                 }
-                                setLabelTitle(n);
+                                vmodel.currentOption = setLabelTitle(n);
                             }
                         }
                         if ((onChange && onChange.call(element, n, o, vmodel, valueStateKeep) !== false) || !onChange) {

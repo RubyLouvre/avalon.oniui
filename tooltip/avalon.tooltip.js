@@ -494,7 +494,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
         hiddenDelay: 64,    //@config tooltip自动隐藏时间，单位ms
         //@config onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
-        "contentGetter": function(elem) {
+        contentGetter: function(elem) {
             if(elem.tagName.toLowerCase() != "a") return
             return elem.title
         }, //@config contentGetter() 获取内容接口，讲srcElement作为参数传递过来，默认是返回a标签的title，如果该函数返回为空，那么则不会显示tooltip

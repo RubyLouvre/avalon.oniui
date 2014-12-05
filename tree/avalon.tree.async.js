@@ -1,11 +1,13 @@
 //異步插件
 define(["avalon", "./avalon.tree", "./mmRequest"], function () {
 	var undefine = void 0
+	// 排除辅助字段
+	avalon.ui.tree.leafIgnoreField.push("zAsync")
 	avalon.ui.tree.AddExtention(["async"], {
 		data: {
 			// 擴展異步標記key
 			key: {
-				zAsync: "zAsync", // 是否異步加載過
+				zAsync: "zAsync" // 是否異步加載過
 			}
 		},
 		async: {

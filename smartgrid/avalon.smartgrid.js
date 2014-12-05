@@ -262,6 +262,10 @@ define(["avalon",
             vm._disabledData = [];
             vm._enabledData = [];
             vm.loadingVModel = null;
+            vm._hiddenAffixHeader = function(column, allChecked) {
+                var selectable = vmodel.selectable
+                return selectable && selectable.type && column.key=='selected' && !allChecked
+            }
             vm.getRawData = function () {
                 return vmodel.data;
             };

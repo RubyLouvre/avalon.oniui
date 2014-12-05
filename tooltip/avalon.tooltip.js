@@ -197,111 +197,114 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                             constantInited = true
                         }
                     }*/
-                    // 定位toolp元素
-                    tipElem.position({
-                        of: elem, 
-                        at: tipElemAt, 
-                        my: tipElemMy, 
-                        collision: vmodel.collision, 
-                        within: document.body
-                    })
-                     // position组件自动调整的时候调整箭头上下朝向
-                    if(elem.nodeName) {
-                        if(tipElem.position().top > atEle.position().top + elem.offsetHeight && vmodel.arrClass == "bottom") {
-                            vmodel.arrClass = "top"
-                            tipElem.removeClass("oni-tooltip-bottom").addClass("oni-tooltip-top")
-                        } else if(tipElem.position().top + tooltipElem.offsetHeight < atEle.position().top && vmodel.arrClass == "top") {
-                            vmodel.arrClass = "bottom"
-                            tipElem.removeClass("oni-tooltip-top").addClass("oni-tooltip-bottom")
-                        }
+                    // 哎，无语的加个延时
+                    avalon.nextTick(function() {
+                        // 定位toolp元素
+                        tipElem.position({
+                            of: elem, 
+                            at: tipElemAt, 
+                            my: tipElemMy, 
+                            collision: vmodel.collision, 
+                            within: document.body
+                        })
+                         // position组件自动调整的时候调整箭头上下朝向
+                        if(elem.nodeName) {
+                            if(tipElem.position().top > atEle.position().top + elem.offsetHeight && vmodel.arrClass == "bottom") {
+                                vmodel.arrClass = "top"
+                                tipElem.removeClass("oni-tooltip-bottom").addClass("oni-tooltip-top")
+                            } else if(tipElem.position().top + tooltipElem.offsetHeight < atEle.position().top && vmodel.arrClass == "top") {
+                                vmodel.arrClass = "bottom"
+                                tipElem.removeClass("oni-tooltip-top").addClass("oni-tooltip-bottom")
+                            }
 
-                        // 根据元素和tooltip元素的宽高调整箭头位置
-                        if(arrOut && arrIn) {
-                            var dir = vmodel.arrClass == "bottom" || vmodel.arrClass == "left",
-                                avalonElem = avalon(elem),
-                                moveToLeft = tipElem.position().left + tooltipElem.offsetWidth / 2 > avalonElem.position().left + elem.offsetWidth,
-                                moveToRight = tipElem.position().left + tooltipElem.offsetWidth / 2 < avalonElem.position().left
-                            // tip元素中线偏出elem
-                            if((vmodel.arrClass == "top" || vmodel.arrClass == "bottom") && ( moveToRight || moveToLeft)) {
-                                arrOut.position({
-                                    of: tooltipElem, 
-                                    at: (moveToRight ? "right" : "left") + " " + (dir ? "bottom" : "top"), 
-                                    my: (moveToRight ? "right-10" : "left+10") + " " + (dir ? "top" : "bottom"), 
-                                    within: document.body
-                                })
-                                arrIn.position({
-                                    of: tooltipElem, 
-                                    at: (moveToRight ? "right" : "left") + " " + (dir ? "bottom" : "top"), 
-                                    my: (moveToRight ? "right-11" : "left+11") + " " + (dir ? "top-" : "bottom+") + lessH/2, 
-                                    within: document.body
-                                })
-                            // 竖直方向，高度不够  
-                            } else if((vmodel.arrClass == "bottom" || vmodel.arrClass == "top") && tooltipElem.offsetWidth < elem.offsetWidth) {
-                                arrOut.position({
-                                    of: tooltipElem, 
-                                    at: "center " + (dir ? "bottom" : "top"), 
-                                    my: "center " + (dir ? "top" : "bottom"), 
-                                    within: document.body
-                                })
-                                arrIn.position({
-                                    of: tooltipElem, 
-                                    at: "center " + (dir ? "bottom" : "top"), 
-                                    my: "center " + (dir ? "top-" : "bottom+") + lessH, 
-                                    within: document.body
-                                })
-                            // 水平方向，宽度不够
-                            } else if((vmodel.arrClass == "left" || vmodel.arrClass == "right") && tooltipElem.offsetHeight < elem.offsetHeight) {
-                                 arrOut.position({
-                                    of: tooltipElem, 
-                                    at: (dir ? "left" : "right") + " center", 
-                                    my: (dir ? "right" : "left") + " center", 
-                                    within: document.body
-                                })
-                                arrIn.position({
-                                    of: tooltipElem, 
-                                    at: (dir ? "left" : "right") + " center", 
-                                    my: (dir ? "right+" : "left-") + lessW  + " center", 
-                                    within: document.body
-                                })
-                            } else {
-                                // vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-                                var tipPos = tipElem.offset(),
-                                    elemPos = avalon(elem).offset(),
-                                    elemH = elem.offsetHeight,
-                                    elemW = elem.offsetWidth,
-                                    oleft
-                                switch(vmodel.arrClass) {
-                                    case "left":
-                                    case "right":
-                                        if(vmodel.arrClass == "left") {
-                                            arrOut[0].style.left = "-6px"
-                                            arrIn[0].style.left = "-5px"
-                                        } else {
-                                            arrOut[0].style.right = "-5px"
-                                            arrIn[0].style.right = "-4px"
-                                        }
-                                        oleft = (Math.floor(elemH / 2) - tipPos.top + elemPos.top)
-                                        arrOut[0].style.top = oleft + "px"
-                                        arrIn[0].style.top = (oleft + 1) + "px"
-                                        break
-                                    case "top":
-                                    case "bottom":
-                                    default:
-                                        if(vmodel.arrClass == "top") {
-                                            arrOut[0].style.top = "-6px"
-                                            arrIn[0].style.top = "-5px"
-                                        } else {
-                                            arrOut[0].style.top = arrIn[0].style.top = "auto"
-                                            arrOut[0].style.bottom = "-6px"
-                                            arrIn[0].style.bottom = "-5px"
-                                        }
-                                        oleft = (Math.floor(elemW / 2) - tipPos.left + elemPos.left)
-                                        arrOut[0].style.left = oleft + "px"
-                                        arrIn[0].style.left = (oleft + 1) + "px"
+                            // 根据元素和tooltip元素的宽高调整箭头位置
+                            if(arrOut && arrIn) {
+                                var dir = vmodel.arrClass == "bottom" || vmodel.arrClass == "left",
+                                    avalonElem = avalon(elem),
+                                    moveToLeft = tipElem.position().left + tooltipElem.offsetWidth / 2 > avalonElem.position().left + elem.offsetWidth,
+                                    moveToRight = tipElem.position().left + tooltipElem.offsetWidth / 2 < avalonElem.position().left
+                                // tip元素中线偏出elem
+                                if((vmodel.arrClass == "top" || vmodel.arrClass == "bottom") && ( moveToRight || moveToLeft)) {
+                                    arrOut.position({
+                                        of: tooltipElem, 
+                                        at: (moveToRight ? "right" : "left") + " " + (dir ? "bottom" : "top"), 
+                                        my: (moveToRight ? "right-10" : "left+10") + " " + (dir ? "top" : "bottom"), 
+                                        within: document.body
+                                    })
+                                    arrIn.position({
+                                        of: tooltipElem, 
+                                        at: (moveToRight ? "right" : "left") + " " + (dir ? "bottom" : "top"), 
+                                        my: (moveToRight ? "right-11" : "left+11") + " " + (dir ? "top-" : "bottom+") + lessH/2, 
+                                        within: document.body
+                                    })
+                                // 竖直方向，高度不够  
+                                } else if((vmodel.arrClass == "bottom" || vmodel.arrClass == "top") && tooltipElem.offsetWidth < elem.offsetWidth) {
+                                    arrOut.position({
+                                        of: tooltipElem, 
+                                        at: "center " + (dir ? "bottom" : "top"), 
+                                        my: "center " + (dir ? "top" : "bottom"), 
+                                        within: document.body
+                                    })
+                                    arrIn.position({
+                                        of: tooltipElem, 
+                                        at: "center " + (dir ? "bottom" : "top"), 
+                                        my: "center " + (dir ? "top-" : "bottom+") + lessH, 
+                                        within: document.body
+                                    })
+                                // 水平方向，宽度不够
+                                } else if((vmodel.arrClass == "left" || vmodel.arrClass == "right") && tooltipElem.offsetHeight < elem.offsetHeight) {
+                                     arrOut.position({
+                                        of: tooltipElem, 
+                                        at: (dir ? "left" : "right") + " center", 
+                                        my: (dir ? "right" : "left") + " center", 
+                                        within: document.body
+                                    })
+                                    arrIn.position({
+                                        of: tooltipElem, 
+                                        at: (dir ? "left" : "right") + " center", 
+                                        my: (dir ? "right+" : "left-") + lessW  + " center", 
+                                        within: document.body
+                                    })
+                                } else {
+                                    // vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+                                    var tipPos = tipElem.offset(),
+                                        elemPos = avalon(elem).offset(),
+                                        elemH = elem.offsetHeight,
+                                        elemW = elem.offsetWidth,
+                                        oleft
+                                    switch(vmodel.arrClass) {
+                                        case "left":
+                                        case "right":
+                                            if(vmodel.arrClass == "left") {
+                                                arrOut[0].style.left = "-6px"
+                                                arrIn[0].style.left = "-5px"
+                                            } else {
+                                                arrOut[0].style.right = "-5px"
+                                                arrIn[0].style.right = "-4px"
+                                            }
+                                            oleft = (Math.floor(elemH / 2) - tipPos.top + elemPos.top)
+                                            arrOut[0].style.top = oleft + "px"
+                                            arrIn[0].style.top = (oleft + 1) + "px"
+                                            break
+                                        case "top":
+                                        case "bottom":
+                                        default:
+                                            if(vmodel.arrClass == "top") {
+                                                arrOut[0].style.top = "-6px"
+                                                arrIn[0].style.top = "-5px"
+                                            } else {
+                                                arrOut[0].style.top = arrIn[0].style.top = "auto"
+                                                arrOut[0].style.bottom = "-6px"
+                                                arrIn[0].style.bottom = "-5px"
+                                            }
+                                            oleft = (Math.floor(elemW / 2) - tipPos.left + elemPos.left)
+                                            arrOut[0].style.left = oleft + "px"
+                                            arrIn[0].style.left = (oleft + 1) + "px"
+                                    }
                                 }
                             }
                         }
-                    }
+                    })
                 }
                 // IE里面透明箭头显示有问题，屏蔽掉
                 if(vmodel.animated && !!-[1,]) {

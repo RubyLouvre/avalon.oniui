@@ -148,7 +148,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                 }
                 tooltipElem = tooltipELementMaker()
                 avalon.scan(tooltipElem, [vmodel].concat(vmodels))
-                vmodel.event && element.setAttribute("ms-" + vmodel.event + "-101", "__show($event)")
+                vmodel.event && element.setAttribute("ms-" + vmodel.event + "-101", "_showHandlder($event)")
                 if (continueScan) {
                     continueScan()
                 } else {
@@ -186,17 +186,6 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                             arrIn = tb
                         }
                     }
-                    /*if(arrOut && arrIn) {
-                        var w = arrOut[0].offsetWidth,
-                            h = arrOut[0].offsetHeight
-                        lessW = w - arrIn[0].offsetWidth
-                        lessH = h - arrIn[0].offsetHeight
-                        根据arr元素的实际宽高初始化常量
-                        if(!constantInited) {
-                            vmodel.arrClass = _init(vmodel.position)
-                            constantInited = true
-                        }
-                    }*/
                     // 哎，无语的加个延时
                     avalon.nextTick(function() {
                         // 定位toolp元素
@@ -207,7 +196,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                             collision: vmodel.collision, 
                             within: document.body
                         })
-                         // position组件自动调整的时候调整箭头上下朝向
+                        // position组件自动调整的时候调整箭头上下朝向
                         if(elem.nodeName) {
                             if(tipElem.position().top > atEle.position().top + elem.offsetHeight && vmodel.arrClass == "bottom") {
                                 vmodel.arrClass = "top"
@@ -307,20 +296,20 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                     })
                 }
                 // IE里面透明箭头显示有问题，屏蔽掉
-                if(vmodel.animated && !!-[1,]) {
-                    clearInterval(animateTimer)
-                    var now = (avalon(tooltipElem).css("opacity") * 100) >> 0,
-                    dis = vmodel._animateArrMaker(now, 100)
-                    avalon(tooltipElem).css("opacity", dis[0] / 100)
-                    dis.splice(0, 1)
-                    animateTimer = setInterval(function() {
-                        if(dis.length <= 0) {
-                            return clearInterval(animateTimer)
-                        }
-                        avalon(tooltipElem).css("opacity",  dis[0] / 100)
-                        dis.splice(0, 1) 
-                    }, 50)
-                }
+                // if(vmodel.animated && !!-[1,]) {
+                //     clearInterval(animateTimer)
+                //     var now = (avalon(tooltipElem).css("opacity") * 100) >> 0,
+                //     dis = vmodel._animateArrMaker(now, 100)
+                //     avalon(tooltipElem).css("opacity", dis[0] / 100)
+                //     dis.splice(0, 1)
+                //     animateTimer = setInterval(function() {
+                //         if(dis.length <= 0) {
+                //             return clearInterval(animateTimer)
+                //         }
+                //         avalon(tooltipElem).css("opacity",  dis[0] / 100)
+                //         dis.splice(0, 1) 
+                //     }, 50)
+                // }
             }
             //@interface hide($event) 隐藏tooltip，参数是$event，可缺省
             vm.hide = function(e) {
@@ -329,41 +318,38 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             }
             vm._hide = function(e) {
                 if(!tooltipElem) return
-                if(vmodel.animated && !!-[1,]) {
-                    clearInterval(animateTimer)
-                    var now = (avalon(tooltipElem).css("opacity") * 100) >> 0,
-                    dis = vmodel._animateArrMaker(now, 0)
-                    animateTimer = setInterval(function() {
-                        if(dis.length <= 0) {
-                            tooltipElem.style.display = "none"
-                            avalon(tooltipElem).addClass("oni-tooltip-hidden")
-                            return clearInterval(animateTimer)
-                        }
-                        avalon(tooltipElem).css("opacity",  dis[0]/100)
-                        dis.splice(0, 1) 
-                    }, 50)
-                } else {
+                // if(vmodel.animated && !!-[1,]) {
+                //     clearInterval(animateTimer)
+                //     var now = (avalon(tooltipElem).css("opacity") * 100) >> 0,
+                //     dis = vmodel._animateArrMaker(now, 0)
+                //     animateTimer = setInterval(function() {
+                //         if(dis.length <= 0) {
+                //             tooltipElem.style.display = "none"
+                //             avalon(tooltipElem).addClass("oni-tooltip-hidden")
+                //             return clearInterval(animateTimer)
+                //         }
+                //         avalon(tooltipElem).css("opacity",  dis[0]/100)
+                //         dis.splice(0, 1) 
+                //     }, 50)
+                // } else {
                     tooltipElem.style.display = "none"
-                }
+                // }
             }
             // 为了实现通过toggle属性控制显示隐藏
-            vm.__hide = function() {
+            vm._hideHandlder = function() {
                 if(vmodel.toggle) {
                     vmodel.toggle = false
                 } else {
                     vmodel._hide()
                 }
             }
-            vm.__show = function(event, force) {
+            // 响应widget元素的事件
+            vm._showHandlder = function(event, force) {
                 if(event) {
                     _event_ele = this
                     _event = event
                 }
-                if(vmodel._isShown() || vmodel.toggle) {
-                    vmodel._show(_event)
-                } else {
-                    vmodel.toggle = true
-                }
+                vmodel._show(_event)
             }
             vm._show = function(e, content) {
                 var tar =  _event_ele || vmodel.widgetElement
@@ -388,12 +374,13 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                     _event = ofElement
                     return
                 }
+                if(!vmodel.toggle) vmodel.toggle = true
                 clearTimeout(hideTimer)
                 clearTimeout(animateTimer)
                 var inited = tar.getAttribute("oni-tooltip-inited")
                 // 禁用默认的title
                 var oldTitle = tar.title
-                vmodel.content = content
+                if(vmodel.content != content) vmodel.content = content
                 if(tar.title) tar.title = ""
                 if(!tooltipElem) {
                     tooltipElem = tooltipELementMaker()
@@ -409,14 +396,16 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                 if(!inited) {
                     tar.setAttribute("oni-tooltip-inited", 1)
                     // 自动隐藏
-                    vmodel.autohide && avalon(tar).bind(vmodel.event != "focus" ? "mouseleave" : "blur", function(e) {
+                    vmodel.autohide && avalon(tar).bind(vmodel.event != "focus" ? "mouseout" : "blur", function(e) {
                         if(oldTitle) tar.title = oldTitle
                         clearTimeout(hideTimer)
-                        if(vmodel.autohide) hideTimer = setTimeout(vmodel.__hide, vmodel.hiddenDelay)
+                        if(vmodel.autohide) hideTimer = setTimeout(vmodel._hideHandlder, vmodel.hiddenDelay)
                     })
                     // 鼠标跟随
                     if(vmodel.track && (vmodel.event == "mouseover" || vmodel.event == "mouseenter")) {
                         avalon(tar).bind("mousemove", function(e) {
+                            // 阻止冒泡，防止代理情况下的重复执行过多次
+                            e.stopPropagation()
                             _track_event = e
                             vmodel.show(e)
                             // 减少抖动

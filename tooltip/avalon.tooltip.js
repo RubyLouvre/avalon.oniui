@@ -6,7 +6,7 @@
 </p>
  */
 define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  "css!./avalon.tooltip.css","css!../chameleon/oniui-common.css"], function(avalon, template) {
-
+    var undefine
     var widget = avalon.ui.tooltip = function(element, data, vmodels) {
         var options = data.tooltipOptions
             , selfContent = ""
@@ -21,16 +21,15 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             , arrW = 10
             , p = options.position
             , constantInited
-            , _event
-            , ofElement
-            , _event_ele
-            , _track_event
+            , ofElement // 用来给tooltip元素定位的，可以元素，也可以是事件
+            , _event_ele // 事件起始元素
+            , setContent // showBy指定的content
         //方便用户对原始模板进行修改,提高定制性
         options.template = options.getTemplate(template, options)
 
         function _init(p) {
             var cName = "left",
-                p = p == void 0 ? options.position : p
+                p = p == undefine ? options.position : p
             if(!(customMy && customAt)) {
                 switch (p) {
                     case "tc"://正上方
@@ -128,7 +127,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
 
         var vmodel = avalon.define(data.tooltipId, function(vm) {
             avalon.mix(vm, options)
-            if(vm.content == void 0) vm.content = element.getAttribute("title")
+            if(vm.content == undefine) vm.content = element.getAttribute("title")
             vm.widgetElement = element
             vm.arrClass = "left"
             var tooltipElems = {}
@@ -167,8 +166,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             vm.show = function(elem) {
                 if(vmodel.disabled || !tooltipElem) return
                 tooltipElem.style.display = "block"
-                if(!vmodel.toggle) vmodel.toggle = true
-                if(elem == void 0) elem = ofElement
+                if(elem == undefine) elem = ofElement
                 if(elem) {
                     ofElement = elem
                     var tipElem = avalon(tooltipElem), 
@@ -296,44 +294,52 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                     })
                 }
                 // IE里面透明箭头显示有问题，屏蔽掉
-                // if(vmodel.animated && !!-[1,]) {
-                //     clearInterval(animateTimer)
-                //     var now = (avalon(tooltipElem).css("opacity") * 100) >> 0,
-                //     dis = vmodel._animateArrMaker(now, 100)
-                //     avalon(tooltipElem).css("opacity", dis[0] / 100)
-                //     dis.splice(0, 1)
-                //     animateTimer = setInterval(function() {
-                //         if(dis.length <= 0) {
-                //             return clearInterval(animateTimer)
-                //         }
-                //         avalon(tooltipElem).css("opacity",  dis[0] / 100)
-                //         dis.splice(0, 1) 
-                //     }, 50)
-                // }
+                if(vmodel.animated && !!-[1,]) {
+                    clearInterval(animateTimer)
+                    var now = (avalon(tooltipElem).css("opacity") * 100) >> 0
+                    if(now != 100) {
+                        var dis = vmodel._animateArrMaker(now, 100)
+                        dis.splice(0, 1)
+                        animateTimer = setInterval(function() {
+                            if(dis.length <= 0) {
+                                return clearInterval(animateTimer)
+                            }
+                            avalon(tooltipElem).css("opacity",  dis[0] / 100)
+                            dis.splice(0, 1) 
+                        }, 16)
+                    }
+                }
             }
             //@interface hide($event) 隐藏tooltip，参数是$event，可缺省
             vm.hide = function(e) {
                 e && e.preventDefault && e.preventDefault()
-                vmodel.toggle = false
+                if(vmodel.toggle) {
+                    vmodel.toggle = false
+                } else {
+                    vmodel._hide()
+                }
             }
+            // 隐藏效果动画
             vm._hide = function(e) {
                 if(!tooltipElem) return
-                // if(vmodel.animated && !!-[1,]) {
-                //     clearInterval(animateTimer)
-                //     var now = (avalon(tooltipElem).css("opacity") * 100) >> 0,
-                //     dis = vmodel._animateArrMaker(now, 0)
-                //     animateTimer = setInterval(function() {
-                //         if(dis.length <= 0) {
-                //             tooltipElem.style.display = "none"
-                //             avalon(tooltipElem).addClass("oni-tooltip-hidden")
-                //             return clearInterval(animateTimer)
-                //         }
-                //         avalon(tooltipElem).css("opacity",  dis[0]/100)
-                //         dis.splice(0, 1) 
-                //     }, 50)
-                // } else {
+                if(vmodel.animated && !!-[1,]) {
+                    clearInterval(animateTimer)
+                    var now = (avalon(tooltipElem).css("opacity") * 100) >> 0
+                    if(now) {
+                        var dis = vmodel._animateArrMaker(now, 0)
+                        animateTimer = setInterval(function() {
+                            if(dis.length <= 0) {
+                                tooltipElem.style.display = "none"
+                                avalon(tooltipElem).addClass("oni-tooltip-hidden")
+                                return clearInterval(animateTimer)
+                            }
+                            avalon(tooltipElem).css("opacity",  dis[0]/100)
+                            dis.splice(0, 1) 
+                        }, 50)
+                    }
+                } else {
                     tooltipElem.style.display = "none"
-                // }
+                }
             }
             // 为了实现通过toggle属性控制显示隐藏
             vm._hideHandlder = function() {
@@ -345,18 +351,14 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             }
             // 响应widget元素的事件
             vm._showHandlder = function(event, force) {
-                if(event) {
-                    _event_ele = this
-                    _event = event
-                }
-                vmodel._show(_event)
+                vmodel._show(event, undefine, this)
             }
-            vm._show = function(e, content) {
-                var tar =  _event_ele || vmodel.widgetElement
+            vm._show = function(e, content, ele) {
+                var tar =  ele || _event_ele || vmodel.widgetElement
                     , src = e && (e.srcElement || e.target) || ofElement || vmodel.widgetElement
-                    , content = content
+                    , content = content || setContent
                 // delegate情形下，从src->this找到符合要求的元素
-                if(content === void 0) {
+                if(content === undefine) {
                     if(vmodel.delegate) {
                         content = vmodel.contentGetter.call(vmodel, src)
                         while(!content && src && src != tar) {
@@ -370,11 +372,10 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                 } else {
                     tar = src
                 }
-                if(content == void 0) {
-                    _event = ofElement
+                if(content == undefine) {
                     return
                 }
-                if(!vmodel.toggle) vmodel.toggle = true
+                ofElement = tar
                 clearTimeout(hideTimer)
                 clearTimeout(animateTimer)
                 var inited = tar.getAttribute("oni-tooltip-inited")
@@ -406,7 +407,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                         avalon(tar).bind("mousemove", function(e) {
                             // 阻止冒泡，防止代理情况下的重复执行过多次
                             e.stopPropagation()
-                            _track_event = e
+                            ofElement = e
                             vmodel.show(e)
                             // 减少抖动
                             avalon(tooltipElem).removeClass("oni-tooltip-hidden")
@@ -416,7 +417,17 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             }
             //@interface showBy($event, content) 参数满足 {target: elem}这样，或者是一个elem元素亦可，tooltip会按照elem定位，并作为参数传递给contentGetter，如果指定content，则忽略contentGetter的返回，直接显示content内容
             vm.showBy = function(obj, content) {
-                vmodel._show(obj && obj.tagName ? {target: obj} : obj, content)
+                var tar = obj && obj.tagName ? obj : obj.target || obj.srcElement
+                // 如果已显示则更新内容
+                if(vmodel.toggle) vmodel.content = content || vmodel.contentGetter.call(vmodel, tar)
+                _event_ele = ofElement = tar
+                setContent = content
+                if(!vmodel.toggle) {
+                    vmodel.toggle = true
+                } else {
+                    vmodel.show() // 更新位置
+                }
+                setContent = undefine
             }
             vm._isShown = function() {
                 var elem = avalon(tooltipElem)
@@ -427,7 +438,11 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
              *  @param 目标元素
              */
             vm.appendTo = function(ele) {
-                if(ele) ele.appendChild(tooltipElem)
+                if(ele) {
+                    ele.appendChild(tooltipElem)
+                    // 更新位置
+                    vmodel.toggle && vmodel.show()
+                }
             }
 
         })
@@ -458,7 +473,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
 
         vmodel.$watch("toggle", function(n) {
             if(n) {
-                vmodel._show(vmodel.track && _track_event || _event)
+                vmodel._show()
             } else {
                 vmodel._hide()
             }
@@ -483,7 +498,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
         position: "rt",      //@config tooltip相对于element的位置，like: rt,rb,rc...
         positionMy: false,    //@config tooltip元素的定位点，like: left top+11
         positionAt: false,    //@config element元素的定位点，like: left top+11,positionAt && positionMy时候忽略position设置
-        hiddenDelay: 64,    //@config tooltip自动隐藏时间，单位ms
+        hiddenDelay: 16,    //@config tooltip自动隐藏时间，单位ms
         //@config onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
         contentGetter: function(elem) {
@@ -493,8 +508,11 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
         //@config _animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]
         _animateArrMaker: function(from, to) {
             var arr = []
+                , unit = 10
+                , from = Math.floor(from / unit) * unit
+                , to = Math.floor(to / unit) * unit
                 , dis = to - from
-                , d = dis > 0 ? 10 : -10
+                , d = dis > 0 ? unit : -unit
             while(from != to) {
                 from += d
                 from = from > 100 ? 100 : from

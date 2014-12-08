@@ -11,11 +11,22 @@
                 padding-bottom: 400px;
             }
             div.ct{
-                padding: 20px 0;
+                padding: 20px;
+                border: 1px solid #ccc;
+                width: 600px;
+            }
+            .ct2 {
+                padding: 30px;
+                border: 1px solid #ccc;
+            }
+            .ct3{
+                padding: 30px;
+                border: 1px solid #ccc;
             }
             a{
                 font-size: 13px;
                 margin-left: 20px;
+                background: #ccc;
                 display: inline-block;
             }
         </style>
@@ -40,7 +51,11 @@
 <div ms-controller="test">
         <h1>鼠标跟随</h1>
         <div ms-widget="tooltip,ppo, $qqOpt" data-tooltip-delegate="true" data-tooltip-position="tr" class="ct">
-            <a tp="1" href="#">hover me~</a>
+            <div class="ct2">
+                <div class="ct3">
+                    <a tp="1" href="#">hover me~</a>
+                </div>
+            </div>
         </div>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
 &lt;html&gt;

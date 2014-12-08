@@ -40,6 +40,31 @@
  *   		e.direction = left||right||forward||back||up||down||以及组合，但不准确
  *		})
  *	```
+ *	<p>ms-iscroll使用说明</p>
+ *	```html
+ *		<div ms-controller="test">
+ *			<div ms-iscroll="$,$opt" class="gaoxiao">
+ *          	<ul>
+ *               	<li class="g" ms-repeat-item="data" ms-css-margin-top="$index === 0 ? '0' : '-75px'">{{item.title}}</li>
+ *          	</ul>
+ *      	</div>
+ *		</div> 
+ *		<script>
+ *			avalon.define("test", function(vm) {
+ *				vm.data = []  // 成对出现才行
+ *				vm.data$ = [] // 这个必须有，跟repeat或者each对象成对出现
+ *				vm.$options = {
+ *					infiniteElements: null, // 重复加载的元素，最好配选择器，默认为avalon array 所绑定的元素
+ *			        mouseWheel: false, // 是否支持鼠标滚轮（提出来方便测试）
+ *			        infiniteLimit: 25, // 数量极限（到达极限时，会调用getData方法）
+ *			        cacheSize: 25, // 缓存数量
+ *			        showLines: 10, // 显示的数量,
+ *			        getData: avalon.noop // 获取数据的函数
+ *	 			}
+ *			})
+ *		</script>
+ *
+ *	```
  */
 /* 
  * To change this license header, choose License Headers in Project Properties.
@@ -556,5 +581,6 @@ define(['avalon'], function(avalon) {
  @links
  [touch功能全览](avalon.touch.ex.html)
  [shake摇一摇](avalon.shake.ex.html)
+ [iscroll自定义滚动效果](avalon.iscroll.ex.html)
  */
 

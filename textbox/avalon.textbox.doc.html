@@ -6,6 +6,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <meta name="descriptions" content="通过给简单的表单输入域设置不同的配置项可以使表单拥有舒服的视觉效果，也可以使其具有提示补全功能
+
  " />
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
         />
@@ -25,7 +26,7 @@
                     <colgroup>
                         <col width="180" />
                         <col width="80" />
-                        <col width="180" />
+                        <col width="120" />
                     </colgroup>
                     <tr>
                         <th>名字</th>
@@ -43,22 +44,10 @@
                         <td>配置输入框有自动提示补全功能，提示类型由用户自定义，默认配置为false，也就是不开启自动补全功能</td>
                     </tr>
                     <tr>
-                        <td>limit</td>
-                        <td>Number</td>
-                        <td>0</td>
-                        <td>在输入框有自动提示补全功能的时候，配置下拉框视口最多显示条数。为0时表示无限制。</td>
-                    </tr>
-                    <tr>
                         <td>autoTrim</td>
                         <td>Boolean</td>
                         <td>true</td>
                         <td>是否自动过滤用户输入的内容头部和尾部的空格</td>
-                    </tr>
-                    <tr>
-                        <td>placeholder</td>
-                        <td>String</td>
-                        <td>""</td>
-                        <td>配置textbox输入框的提示文字(占位符)</td>
                     </tr>
                     <tr>
                         <td>tabIndex</td>
@@ -112,6 +101,12 @@
                                 </tr>
                             </table>
                         </td>
+                    </tr>
+                    <tr>
+                        <td>stateClass</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>为textbox添加样式，默认可以添加oni-textbox-error</td>
                     </tr>
                     <tr>
                         <td>suggestOnChange</td>

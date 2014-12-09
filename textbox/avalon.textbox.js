@@ -8,7 +8,8 @@
  */
 define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui-common.css", "css!./avalon.textbox.css"], function(avalon, sourceHTML) {
     var htmlStructArray = sourceHTML.split("MS_OPTION_SUGGEST"),
-        suggestHTML = htmlStructArray[1];
+        suggestHTML = htmlStructArray[1],
+        placeholderOrigin = "placeholder" in document.createElement("input")
     var widget = avalon.ui.textbox = function(element, data, vmodels) {
         var elemParent = element.parentNode,
             $element = avalon(element),
@@ -48,8 +49,10 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
             vm.widgetElement = element;
             vm.elementDisabled = "";
             vm.toggle = true;
-            vm.placehold = options.placeholder;
+            vm.placehold = avalon(element).attr("placeholder");
             vm.focusClass = false
+            vm.placeholderOrigin = placeholderOrigin
+            vm.placeWidth = 0
             // input获得焦点时且输入域值为空时隐藏占位符
             vm.hidePlaceholder = function() {
                 vm.toggle = false;
@@ -64,10 +67,12 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 if (options.autoTrim) {
                     element.value = element.value.trim()
                 }
-                if (element.value !="" || !vmodel.placehold.length) {
-                    vmodel.toggle = false
-                } else {
-                    vmodel.toggle = true
+                if (!vmodel.placeholderOrigin) {
+                    if (element.value !="" || !vmodel.placehold.length) {
+                        vmodel.toggle = false
+                    } else {
+                        vmodel.toggle = true
+                    }
                 }
             }
             vm.$remove = function() {
@@ -114,12 +119,18 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 }
                 avalon.bind(element, "focus", function() {
                     vmodel.focusClass = true
-                    vmodel.toggle = false
+                    if (!vmodel.placeholderOrigin) {
+                        vmodel.toggle = false
+                    }
                 })
 
                 avalon.scan(sourceList, [vmodel].concat(vmodels));
-                if (!vmodel.placehold.length || element.value != "") {
-                    vmodel.toggle = false
+                if (!vmodel.placeholderOrigin) {
+                    if (!vmodel.placehold.length || element.value != "") {
+                        vmodel.toggle = false
+                    }
+                    vmodel.placeWidth = avalon(inputWraper).innerWidth()
+
                 }
                 if (continueScan) {
                     continueScan()
@@ -147,10 +158,12 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 // 根据对元素双向绑定的数据的监听来判断是显示还是隐藏占位符，并且判定元素的禁用与否
                 vmSub[1].$watch(vmSub[0], function() {
                     vmodel.elementDisabled = element.disabled;
-                    if (element.value !="" || !vmodel.placehold.length) {
-                        vmodel.toggle = false
-                    } else {
-                        vmodel.toggle = true
+                    if (!vmodel.placeholderOrigin) {
+                        if (element.value !="" || !vmodel.placehold.length) {
+                            vmodel.toggle = false
+                        } else {
+                            vmodel.toggle = true
+                        }
                     }
                 })
             }
@@ -161,10 +174,12 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
             if (vmSub) {
                 vmSub[1].$watch(vmSub[0], function() {
                     vmodel.elementDisabled = element.disabled;
-                    if (element.value !="" || !vmodel.placehold.length) {
-                        vmodel.toggle = false
-                    } else {
-                        vmodel.toggle = true
+                    if (!vmodel.placeholderOrigin) {
+                        if (element.value !="" || !vmodel.placehold.length) {
+                            vmodel.toggle = false
+                        } else {
+                            vmodel.toggle = true
+                        }
                     }
                 })
             }
@@ -178,7 +193,6 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
          */
         suggest : false,  
         autoTrim: true, //@config 是否自动过滤用户输入的内容头部和尾部的空格
-        placeholder: "", //@config 配置textbox输入框的提示文字(占位符)
         widgetElement: "", //@interface 绑定组件元素的dom对象的引用
         tabIndex: -1, //@config 配置textbox在进行tab切换时的tabIndex，切换顺序从值小的开始，必须配置为大于0的值
         width: -1, //@config 配置textbox的显示宽
@@ -193,6 +207,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
         getTemplate: function(tmp) {
             return tmp
         },
+        stateClass: "", //@config 为textbox添加样式，默认可以添加oni-textbox-error
         suggestOnChange: "", //@config 配置提示补全时切换提示项之后的callback
         suggestFocus: false //@config 特殊的suggest，当focus时即显示特定的提示列表
     }

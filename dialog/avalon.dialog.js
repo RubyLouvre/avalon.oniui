@@ -327,6 +327,7 @@ define(["../avalon.getModel",
          * @config {Function} 定义点击"确定"按钮后的回调操作
          * @param event {Number} 事件对象
          * @param vmodel {Object} 组件对应的Vmodel
+         * @returns {Boolean} 如果return false，dialog不会关闭，用于异步操作
          */
         onConfirm: avalon.noop, 
         /**
@@ -338,8 +339,9 @@ define(["../avalon.getModel",
          * @config {Function} 定义点击"取消"按钮后的回调操作
          * @param event {Object} 事件对象
          * @param vmodel {Object} 组件对应的Vmodel
+         * @returns {Boolean} 如果return false，dialog不会关闭，用于异步操作
          */
-        onCancel: avalon.noop, //点击“取消”按钮的回调
+        onCancel: avalon.noop, 
         /**
          * @config {Function} 定义点击"关闭"按钮后的回调操作
          * @param event {Object} 事件对象

@@ -9,7 +9,7 @@
 define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", "css!./avalon.at.css"], function(avalon, template) {
 
     var widget = avalon.ui.at = function(element, data, vmodels) {
-        var options = data.atOptions, $element = avalon(element), keyupCallback, blurCallback, keypressCallback, popup
+        var options = data.atOptions, $element = avalon(element), keyupCallback, blurCallback, keydownCallback, popup
         options.template = options.getTemplate(template, options)
 
         var lastModified = new Date - 0//上次更新时间
@@ -27,10 +27,14 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                         vmodel.toggle = false
                     }
                 })
-                keypressCallback = $element.bind("keypress", function(e) {
+    
+                keydownCallback = $element.bind("keydown", function(e) {
                     if (e.keyCode === 13 && popup) {
                         //我们可以在菜单中上下移动，然后接回车选中并且最后隐藏菜单
                         //在这个过程中，不会触发浏览器默认的回车换行行为
+                        e.preventDefault()
+                    }
+                    if (e.which === 38) {
                         e.preventDefault()
                     }
                 })
@@ -116,9 +120,9 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                     })
 
                 })
-                if(continueScan){
+                if (continueScan) {
                     continueScan()
-                }else{
+                } else {
                     avalon.log("请尽快升到avalon1.3.7+")
                     avalon.scan(element, _vmodels)
                     if (typeof options.onInit === "function") {
@@ -133,7 +137,7 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
                 avalon(element)
                         .unbind("keyup", keyupCallback)
                         .unbind("blur", blurCallback)
-                        .unbind("keypress", blurCallback)
+                        .unbind("keydown", keydownCallback)
                 vm.toggle = false
                 avalon.log("at $remove")
             }
@@ -259,7 +263,7 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
          */
         updateData: function(vm, callback) {
 
-        }, 
+        },
         /**
          * @config 模板函数,方便用户自定义模板
          * @param str {String} 默认模板
@@ -345,6 +349,7 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
         var max = vmodel._datalist.size()
         var code = e.which || e.keyCode
         //firefox down 为37
+
         switch (code) {
             case 13:
                 // enter
@@ -360,7 +365,8 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
             case 63233:
                 //safari
                 // up arrow
-                e.preventDefault();
+                // avalon.log("+++++++++++++")
+
                 var index = vmodel.activeIndex - 1
                 if (index < 0) {
                     index = max - 1
@@ -395,7 +401,7 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
  })
  }
  ```
-*/
+ */
 /*
  <p><a href="http://dddemo.duapp.com/bootstrap"> http://dddemo.duapp.com/bootstrap</a></p>
  <p><a href=" http://www.cnblogs.com/haogj/p/3376874.html"> http://www.cnblogs.com/haogj/p/3376874.html</a></p>

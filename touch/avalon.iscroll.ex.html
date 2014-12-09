@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>touch,gesture</title>
+        <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui" name="viewport" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../avalon.js"></script>
+        <script>
+        	window.onerror = function(e) {
+        		alert(JSON.stringify(e))
+        	}
+        </script>
+        <style type="text/css">
+        	*{
+        		padding: 0;
+        		margin: 0;
+        	}
+            html {
+                height: 100%;
+            }
+            body {
+                height: 100%;
+                width: 100%;
+                position: relative;
+            }
+            .g {
+                vertical-align: middle;
+                background: lightgreen;
+                overflow: hidden;
+                height: 75px;
+                line-height: 75px;
+            }
+            .gaoxiao {
+                height: 100%;
+                overflow: hidden;
+                background: lightgreen;
+            }
+        </style>
+    </head>
+    <body 
+          ms-controller="test">
+        <div ms-iscroll="$,$opt" class="gaoxiao">
+            <ul>
+                <li class="g" 
+                    ms-repeat-item="data" ms-css-margin-top="$index === 0 ? '0' : '-75px'">{{item.title}}</li>
+            </ul>
+        </div>
+        <script>
+            var cnt = 0;
+            function makeData() {
+                console.log(cnt)
+                var res = [],
+                    old = cnt
+                while(cnt - old < 50) {
+                    res.push({
+                        title: "hehe ----- " + cnt 
+                    })
+                    cnt++
+                }
+                return res
+            }
+            require(["touch/avalon.iscroll"], function() {
+                avalon.define("test", function(vm) {
+                    vm.$opt = {
+                        getData: makeData,
+                        infiniteElements: '.g',
+                        infiniteLimit: 50,
+                        cacheSize: 50,
+                        showLines: 15
+                    }
+                    vm.data = []
+                    vm.data$ = []
+                })
+                avalon.scan()
+                setTimeout(function() {
+                    avalon.vmodels.test.data = makeData()
+                }, 100)
+            })
+        </script>
+    </body>
+</html>

@@ -21,6 +21,9 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         config["effect"] = effect
         _config[type] = config
     }
+    function g(id) {
+        return document.getElementById(id)
+    }
     avalon.each(parts, function(i, item) {
         var type,
                 item = item.trim().replace(/^\{\{MS_WIDGET_[^\}]+\}\}/g, function(mat) {
@@ -414,6 +417,17 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             vm.destroyLoading = function() {
                 vmodel.toggle = false
                 vmodel.$remove()
+            }
+            /**
+             * @interface 将loading效果插入到指定的容器里
+             * @param 目标容器元素，默认是绑定widget的元素
+             */
+            vm.appendTo = function(container) {
+                var cnt = container || vm.widgetElement,
+                    modal = g("modal" + vm.$id),
+                    loading = g("loading" + vm.$id)
+                if(modal) cnt.appendChild(modal)
+                if(loading) cnt.appendChild(loading)
             }
 
         })

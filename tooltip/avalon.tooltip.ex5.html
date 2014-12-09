@@ -11,11 +11,22 @@
                 padding-bottom: 400px;
             }
             div.ct{
-                padding: 20px 0;
+                padding: 20px;
+                border: 1px solid #ccc;
+                width: 600px;
+            }
+            .ct2 {
+                padding: 30px;
+                border: 1px solid #ccc;
+            }
+            .ct3{
+                padding: 30px;
+                border: 1px solid #ccc;
             }
             a{
                 font-size: 13px;
                 margin-left: 20px;
+                background: #ccc;
                 display: inline-block;
             }
         </style>
@@ -40,6 +51,12 @@
 <div ms-controller="test">
         <h1>鼠标跟随</h1>
         <div ms-widget="tooltip,ppo, $qqOpt" data-tooltip-delegate="true" data-tooltip-position="tr" class="ct">
+            <div class="ct2">
+                <div class="ct3">
+                    <a tp="1" href="#">hover me~</a>
+                </div>
+                <a tp="1" href="#">hover me~</a>
+            </div>
             <a tp="1" href="#">hover me~</a>
         </div>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
@@ -55,11 +72,22 @@
                 padding-bottom: 400px;
             }
             div.ct{
-                padding: 20px 0;
+                padding: 20px;
+                border: 1px solid #ccc;
+                width: 600px;
+            }
+            .ct2 {
+                padding: 30px;
+                border: 1px solid #ccc;
+            }
+            .ct3{
+                padding: 30px;
+                border: 1px solid #ccc;
             }
             a{
                 font-size: 13px;
                 margin-left: 20px;
+                background: #ccc;
                 display: inline-block;
             }
         &lt;/style&gt;
@@ -84,6 +112,12 @@
 &lt;div ms-controller=&quot;test&quot;&gt;
         &lt;h1&gt;鼠标跟随&lt;/h1&gt;
         &lt;div ms-widget=&quot;tooltip,ppo, $qqOpt&quot; data-tooltip-delegate=&quot;true&quot; data-tooltip-position=&quot;tr&quot; class=&quot;ct&quot;&gt;
+            &lt;div class=&quot;ct2&quot;&gt;
+                &lt;div class=&quot;ct3&quot;&gt;
+                    &lt;a tp=&quot;1&quot; href=&quot;#&quot;&gt;hover me~&lt;/a&gt;
+                &lt;/div&gt;
+                &lt;a tp=&quot;1&quot; href=&quot;#&quot;&gt;hover me~&lt;/a&gt;
+            &lt;/div&gt;
             &lt;a tp=&quot;1&quot; href=&quot;#&quot;&gt;hover me~&lt;/a&gt;
         &lt;/div&gt;
         

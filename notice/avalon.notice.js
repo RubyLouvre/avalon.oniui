@@ -111,25 +111,13 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
                     avalon.scan(AffixPlaceholder, [vmodel]);
                 }
                 avalon.scan(templateView, [vmodel].concat(vmodels))
-                setTimeout(function() {
-                    var temp = document.createElement("div"),
-                        cloneTemplateView = templateView.cloneNode(true),
-                        $cloneTemplateView,
-                        width = avalon(templateView).innerWidth()
-
-                    temp.style.position = "absolute"
-                    temp.style.height = 0
-                    document.body.appendChild(temp)
-                    temp.appendChild(cloneTemplateView)
-                    $cloneTemplateView = avalon(cloneTemplateView)
-                    $cloneTemplateView.css({visibility: "hidden", height: "auto", width: width})
-                    vmodel.elementHeight = $cloneTemplateView.height()
-                    document.body.removeChild(temp)
-                    if (typeof options.onInit === "function") {
-                        //vmodels是不包括vmodel的
-                        options.onInit.call(element, vmodel, options, vmodels)
-                    }
-                }, 10)
+                if (typeof options.onInit === 'function') {
+                    //vmodels是不包括vmodel的
+                    options.onInit.call(element, vmodel, options, vmodels);
+                }
+                if (vmodel.animate) {
+                    animateElementHeight()
+                }
             }
             vm.$remove = function() { //删除组件绑定元素后的自清理方法
                 var templateViewPar = templateView.parentNode;
@@ -177,6 +165,11 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
             maxZIndex = v;
             affixPosition()
         })
+        vmodel.$watch("content", function() {
+            if (vmodel.animate) {
+                animateElementHeight()
+            }
+        })
         // 如果配置了timer，则在notice显示timer时间后自动隐藏
         function _timerClose() {
             if (!vmodel.timer) {
@@ -202,6 +195,38 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
             affixBoxs.push(templateView);
             affixHeights.push([templateViewHieght, templateViewWidth, offset.top, offset.left]);
             affixPosition();
+        }
+        // 当content改变时，重新计算元素高度，保证动画执行正确
+        function animateElementHeight() {
+            setTimeout(function () {
+                var temp = document.createElement('div'), cloneTemplateView = templateView.cloneNode(true), 
+                    $cloneTemplateView, 
+                    width = avalon(templateView).innerWidth(),
+                    templateViewPar = templateView.parentNode
+                if (!width) {
+                    while(templateViewPar) {
+                        if (templateViewPar.nodeType === 1) {
+                            width = avalon(templateViewPar).innerWidth()
+                        }
+                        if (width) {
+                            break;
+                        }
+                        templateViewPar = templateViewPar.parentNode
+                    }
+                } 
+                temp.style.position = 'absolute';
+                temp.style.height = 0;
+                document.body.appendChild(temp);
+                temp.appendChild(cloneTemplateView);
+                $cloneTemplateView = avalon(cloneTemplateView);
+                $cloneTemplateView.css({
+                    visibility: 'hidden',
+                    width: width,
+                    height: "auto"
+                });
+                vmodel.elementHeight = $cloneTemplateView.height();
+                document.body.removeChild(temp);
+            }, 10);
         }
         // 根据占位与否以及配置的container获得最终插入notice的container
         function positionNoticeElement() {

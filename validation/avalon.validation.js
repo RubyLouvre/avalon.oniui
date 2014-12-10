@@ -630,7 +630,7 @@ define(["../promise/avalon.promise"], function(avalon) {
     function getMessage() {
         var data = this.data || {}
         return this.message.replace(rformat, function(_, name) {
-            return data[name] || ""
+            return data[name] == null ?  "" : data[name]
         })
     }
     widget.defaults = {

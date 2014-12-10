@@ -111,7 +111,7 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                         <td>onSuccess</td>
                         <td>Function</td>
                         <td>avalon.noop</td>
-                        <td>空函数，单个验证成功时触发，this指向被验证元素this指向被验证元素，传参为一个对象数组</td>
+                        <td>空函数，单个验证成功时触发，this指向被验证元素this指向被验证元素，传参为一个对象数组外加一个可能存在的事件对象</td>
                     </tr>
                     <tr>
                         <td>onError</td>
@@ -221,7 +221,7 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                         </td>
                     </tr>
                     <tr>
-                        <td>validate(data,isValidateAll)</td>
+                        <td>validate(data,isValidateAll,event)</td>
                         <td>Function</td>
                         <td></td>
                         <td>验证单个元素对应的VM中的属性是否符合格式
@@ -241,6 +241,11 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                                     <td>isValidateAll</td>
                                     <td>Undefined|Boolean</td>
                                     <td>是否全部验证,是就禁止onSuccess, onError, onComplete触发</td>
+                                </tr>
+                                <tr>
+                                    <td>event</td>
+                                    <td>Undefined|Event</td>
+                                    <td>方便用户判定这是由keyup,还是blur等事件触发的</td>
                                 </tr>
                             </table>
                         </td>

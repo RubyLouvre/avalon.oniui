@@ -1,5 +1,5 @@
 define(["avalon"], function () {
-	/*! iScroll v5.1.3 ~ (c) 2008-2014 Matteo Spinelli ~ http://cubiq.org/license */
+/*! iScroll v5.1.3 ~ (c) 2008-2014 Matteo Spinelli ~ http://cubiq.org/license */
 (function (window, document, Math) {
 var rAF = window.requestAnimationFrame	||
 	window.webkitRequestAnimationFrame	||
@@ -34,11 +34,7 @@ var utils = (function () {
 
 	me.getTime = Date.now || function getTime () { return new Date().getTime(); };
 
-	me.extend = function (target, obj) {
-		for ( var i in obj ) {
-			target[i] = obj[i];
-		}
-	};
+	me.extend = avalon.mix;
 
 	me.addEvent = function (el, type, fn, capture) {
 		el.addEventListener(type, fn, !!capture);
@@ -49,7 +45,7 @@ var utils = (function () {
 	};
 
 	me.prefixPointerEvent = function (pointerEvent) {
-		return window.MSPointerEvent ?
+		return window.MSPointerEvent ? 
 			'MSPointer' + pointerEvent.charAt(9).toUpperCase() + pointerEvent.substr(10):
 			pointerEvent;
 	};
@@ -103,44 +99,19 @@ var utils = (function () {
 	});
 
 	me.hasClass = function (e, c) {
-		var re = new RegExp("(^|\\s)" + c + "(\\s|$)");
-		return re.test(e.className);
+		return avalon(e).hasClass(c);
 	};
 
 	me.addClass = function (e, c) {
-		if ( me.hasClass(e, c) ) {
-			return;
-		}
-
-		var newclass = e.className.split(' ');
-		newclass.push(c);
-		e.className = newclass.join(' ');
+		avalon(e).addClass(c);
 	};
 
 	me.removeClass = function (e, c) {
-		if ( !me.hasClass(e, c) ) {
-			return;
-		}
-
-		var re = new RegExp("(^|\\s)" + c + "(\\s|$)", 'g');
-		e.className = e.className.replace(re, ' ');
+		avalon(e).removeClass(c);
 	};
 
 	me.offset = function (el) {
-		var left = -el.offsetLeft,
-			top = -el.offsetTop;
-
-		// jshint -W084
-		while (el = el.offsetParent) {
-			left -= el.offsetLeft;
-			top -= el.offsetTop;
-		}
-		// jshint +W084
-
-		return {
-			left: left,
-			top: top
-		};
+		return avalon(el).offset();
 	};
 
 	me.preventDefaultException = function (el, exceptions) {
@@ -259,7 +230,7 @@ function IScroll (el, options) {
 
 		snapThreshold: 0.334,
 
-// INSERT POINT: OPTIONS
+// INSERT POINT: OPTIONS 
 
 		startX: 0,
 		startY: 0,
@@ -319,7 +290,7 @@ function IScroll (el, options) {
 
 // INSERT POINT: NORMALIZATION
 
-	// Some defaults
+	// Some defaults	
 	this.x = 0;
 	this.y = 0;
 	this.directionX = 0;
@@ -1520,7 +1491,7 @@ IScroll.prototype = {
 			if ( now >= destTime ) {
 				that.isAnimating = false;
 				that._translate(destX, destY);
-
+				
 				if ( !that.resetPosition(that.options.bounceTime) ) {
 					that._execEvent('scrollEnd');
 				}
@@ -1903,7 +1874,7 @@ Indicator.prototype = {
 				this.maxBoundaryX = this.maxPosX;
 			}
 
-			this.sizeRatioX = this.options.speedRatioX || (this.scroller.maxScrollX && (this.maxPosX / this.scroller.maxScrollX));
+			this.sizeRatioX = this.options.speedRatioX || (this.scroller.maxScrollX && (this.maxPosX / this.scroller.maxScrollX));	
 		}
 
 		if ( this.options.listenY ) {

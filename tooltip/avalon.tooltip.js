@@ -165,7 +165,6 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             //@interface show(elem) 不建议使用这个方法，请使用showBy({target: ele})显示tooltip，相对于elem定位，elem为元素或者event事件对象，如果elem为空，则采用之前缓存的对象，两者都为空，则只展示，不改变位置
             vm.show = function(elem) {
                 if(vmodel.disabled || !tooltipElem) return
-                tooltipElem.style.display = "block"
                 if(elem == undefine) elem = ofElement
                 if(elem) {
                     ofElement = elem
@@ -186,6 +185,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                     }
                     // 哎，无语的加个延时
                     avalon.nextTick(function() {
+                        tooltipElem.style.display = "block"
                         // 定位toolp元素
                         tipElem.position({
                             of: elem, 

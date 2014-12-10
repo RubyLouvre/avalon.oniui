@@ -494,8 +494,9 @@ define(["../promise/avalon.promise"], function(avalon) {
              * @interface 验证单个元素对应的VM中的属性是否符合格式<br>此方法是框架自己调用
              * @param data {Object} 绑定对象
              * @param isValidateAll {Undefined|Boolean} 是否全部验证,是就禁止onSuccess, onError, onComplete触发
+             * @param event {Undefined|Event} 方便用户判定这是由keyup,还是blur等事件触发的
              */
-            vm.validate = function(data, isValidateAll) {
+            vm.validate = function(data, isValidateAll, event) {
                 var value = data.valueAccessor()
                 var inwardHooks = vmodel.validationHooks
                 var globalHooks = avalon.duplexHooks
@@ -540,11 +541,11 @@ define(["../promise/avalon.promise"], function(avalon) {
                     }
                     if (!isValidateAll) {
                         if (reasons.length) {
-                            vm.onError.call(elem, reasons)
+                            vm.onError.call(elem, reasons, event)
                         } else {
-                            vm.onSuccess.call(elem, reasons)
+                            vm.onSuccess.call(elem, reasons, event)
                         }
-                        vm.onComplete.call(elem, reasons)
+                        vm.onComplete.call(elem, reasons, event)
                     }
                     return reasons
                 })
@@ -598,13 +599,13 @@ define(["../promise/avalon.promise"], function(avalon) {
                         if (vm.validateInKeyup) {
                             data.bound("keyup", function(e) {
                                 setTimeout(function() {
-                                    vm.validate(data)
+                                    vm.validate(data, 0, e)
                                 })
                             })
                         }
                         if (vm.validateInBlur) {
                             data.bound("blur", function(e) {
-                                vm.validate(data)
+                                vm.validate(data, 0, e)
                             })
                         }
                         if (vm.resetInFocus) {
@@ -635,7 +636,7 @@ define(["../promise/avalon.promise"], function(avalon) {
     }
     widget.defaults = {
         validationHooks: {}, //@config {Object} 空对象，用于放置验证规则
-        onSuccess: avalon.noop, //@config {Function} 空函数，单个验证成功时触发，this指向被验证元素this指向被验证元素，传参为一个对象数组
+        onSuccess: avalon.noop, //@config {Function} 空函数，单个验证成功时触发，this指向被验证元素this指向被验证元素，传参为一个对象数组外加一个可能存在的事件对象
         onError: avalon.noop, //@config {Function} 空函数，单个验证失败时触发，this与传参情况同上
         onComplete: avalon.noop, //@config {Function} 空函数，单个验证无论成功与否都触发，this与传参情况同上
         onValidateAll: avalon.noop, //@config {Function} 空函数，整体验证后或调用了validateAll方法后触发

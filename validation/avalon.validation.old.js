@@ -582,9 +582,10 @@ define(["../promise/avalon.promise"], function(avalon) {
             /**
              * @interface 验证单个元素对应的VM中的属性是否符合格式
              * @param data {Object} 绑定对象
-             * @isValidateAll {Undefined|Boolean} 是否全部验证,是就禁止onSuccess, onError, onComplete触发
+             * @param isValidateAll {Undefined|Boolean} 是否全部验证,是就禁止onSuccess, onError, onComplete触发
+             * @param event {Undefined|Event} 方便用户判定这是由keyup,还是blur等事件触发的
              */
-            vm.validate = function(data, isValidateAll) {
+            vm.validate = function(data, isValidateAll, event) {
                 var value = data.valueAccessor()
 
                 var inwardHooks = vmodel.validationHooks
@@ -629,11 +630,11 @@ define(["../promise/avalon.promise"], function(avalon) {
                     }
                     if (!isValidateAll) {
                         if (reasons.length) {
-                            vm.onError.call(elem, reasons)
+                            vm.onError.call(elem, reasons, event)
                         } else {
-                            vm.onSuccess.call(elem, reasons)
+                            vm.onSuccess.call(elem, reasons, event)
                         }
-                        vm.onComplete.call(elem, reasons)
+                        vm.onComplete.call(elem, reasons,, event)
                     }
                     return reasons
                 })
@@ -687,13 +688,13 @@ define(["../promise/avalon.promise"], function(avalon) {
                         if (vm.validateInKeyup) {
                             data.bound("keyup", function(e) {
                                 setTimeout(function() {
-                                    vm.validate(data)
+                                    vm.validate(data,0,  e)
                                 })
                             })
                         }
                         if (vm.validateInBlur) {
                             data.bound("blur", function(e) {
-                                vm.validate(data)
+                                vm.validate(data, 0,  e)
                             })
                         }
                         if (vm.resetInFocus) {

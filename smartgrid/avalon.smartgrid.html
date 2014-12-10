@@ -77,7 +77,7 @@ MS_OPTION_EJS
             if (tr.disable) {
                 selectedClass += " oni-state-disabled"
             }&>
-        <tr class="<&=selectedClass&>" ms-hover="oni-state-hover">
+        <tr id="<&=tr.$id&>" class="<&=selectedClass&>" ms-hover="oni-state-hover">
             <&- for(var j=0, tdl=@columns.length, td; j<tdl; j++) { &>
                 <&- td=@columns[j].$model; 
                     var display=td.toggle ? "display:table-cell;" : "display:none;", 

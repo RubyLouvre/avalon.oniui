@@ -31,7 +31,8 @@ define(["avalon",
             templates, titleTemplate, listTemplate,
             blurHandler,
             scrollHandler,
-            resizeHandler
+            resizeHandler,
+            keepState = false
 
         //将元素的属性值copy到options中
         "multiple,size".replace(avalon.rword, function(name) {
@@ -142,17 +143,32 @@ define(["avalon",
                         duplexModel[1].$watch(duplexModel[0], function(newValue) {
                             vmodel.value = newValue;
                         })
-                        vmodel.$watch("value", function(newValue) {
-                            duplexModel[1][duplexModel[0]] = newValue
-                            element.value = newValue
-                        })
                     }
 
                     vmodel.$watch("value", function(n, o) {
-                        setLabelTitle(n);
-                        //如果有onChange回调，则执行该回调
-                        if(avalon.type(vmodel.onChange) === "function") {
-                            vmodel.onChange.call(element, n, o, vmodel);
+                        var onChange = avalon.type(vmodel.onChange) === "function" && vmodel.onChange || false
+                        if (keepState) {
+                            keepState = false
+                            return 
+                        }
+                        function valueStateKeep(stateKeep) {
+                            if (stateKeep) {
+                                keepState = true
+                                vmodel.value = o
+                            } else {
+                                if (duplexModel) {
+                                    duplexModel[1][duplexModel[0]] = n
+                                    element.value = n
+                                }
+                                vmodel.currentOption = setLabelTitle(n);
+                            }
+                        }
+                        if ((onChange && onChange.call(element, n, o, vmodel, valueStateKeep) !== false) || !onChange) {
+                            if (duplexModel) {
+                                duplexModel[1][duplexModel[0]] = n
+                                element.value = n
+                            }
+                            vmodel.currentOption = setLabelTitle(n);
                         }
                     });
                 } else {
@@ -181,6 +197,7 @@ define(["avalon",
                     })
                     vmodel.enable = enabledModel[1][enabledModel[0]];
                 }
+                vmodel.enable = !element.disabled;
 
                 //同步readOnly
                 var readOnlyAttr = vmodel.readonlyAttr,
@@ -262,10 +279,10 @@ define(["avalon",
                     } else {
                         vmodel.value = option.value;
                     }
-                    vmodel.currentOption = option;
+                    // vmodel.currentOption = option;
                     vmodel.toggle = false;
                     if(avalon.type(vmodel.onSelect) === "function") {
-                        vmodel.onSelect.call(this, event, vmodel.value);
+                        vmodel.onSelect.call(element, event, vmodel.value, vmodel);
                     }
                     vmodel.activeIndex = index
                 }
@@ -282,16 +299,19 @@ define(["avalon",
                     //当data改变时，解锁滚动条
                     vmodel._disabledScrollbar(false);
                     vmodel.data.pushArray(getDataFromOption(vmodel.$source.$model || vmodel.$source));
+                    var option
+                    //当data改变时，尝试使用之前的value对label和title进行赋值，如果失败，使用data第一项
+                    if (!(option = setLabelTitle(vmodel.value))) {
+                        vmodel.currentOption = vmodel.data[0].$model;
+                        vmodel.activeIndex = 0;
+                        setLabelTitle(vmodel.value = vmodel.data[0].value);
+                    } else {
+                        vmodel.activeIndex = vmodel.data.$model.indexOf(option)
+                    }
                     if (vmodel.menuNode) {
                         avalon(vmodel.menuNode).css({ 'height': '' });
                         avalon(vmodel.dropdownNode).css({ 'height': '' });
                         vmodel._styleFix();
-                    }
-                    //当data改变时，尝试使用之前的value对label和title进行赋值，如果失败，使用data第一项
-                    if (!setLabelTitle(vmodel.value)) {
-                        vmodel.currentOption = vmodel.data[0].$model;
-                        vmodel.activeIndex = 0;
-                        setLabelTitle(vmodel.value = vmodel.data[0].value);
                     }
                 }
             };
@@ -322,7 +342,7 @@ define(["avalon",
                             vmodel.activeIndex = index
                             vmodel.scrollTo(index)
                             if(avalon.type(vmodel.onSelect) === "function") {
-                                vmodel.onSelect.call(this, event, vmodel.value);
+                                vmodel.onSelect.call(element, event, vmodel.value, vmodel);
                             }
                             break;
                         case 40:
@@ -336,7 +356,7 @@ define(["avalon",
                             vmodel.activeIndex = index
                             vmodel.scrollTo(index)
                             if(avalon.type(vmodel.onSelect) === "function") {
-                                vmodel.onSelect.call(this, event, vmodel.value);
+                                vmodel.onSelect.call(element, event, vmodel.value, vmodel);
                             }
                             break
                     }
@@ -495,6 +515,7 @@ define(["avalon",
 
                 vmodel.menuWidth = !ie6 ? vmodel.listWidth - $menu.css("borderLeftWidth").replace(styleReg, "$1") - $menu.css("borderRightWidth").replace(styleReg, "$1") : vmodel.listWidth;
                 if (height > MAX_HEIGHT) {
+                    vmodel._disabledScrollbar(false);
                     height = MAX_HEIGHT;
                     avalon(vmodel.dropdownNode).css({
                         "width": vmodel.menuWidth - vmodel.scrollWidget.getBars()[0].width()
@@ -916,4 +937,5 @@ define(["avalon",
  [更改模板，使用button作为触发器](avalon.dropdown.ex10.html)
  [异步渲染组件的选项](avalon.dropdown.ex11.html)
  [联动的dropdown](avalon.dropdown.ex12.html)
+ [dropdown状态保持功能](avalon.dropdown.ex13.html)
  */

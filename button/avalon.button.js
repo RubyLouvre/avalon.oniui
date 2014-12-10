@@ -9,6 +9,7 @@
 define(["avalon", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"], function(avalon) {
     var baseClasses = ["oni-button", "oni-widget", "oni-state-default"],
         typeClasses = "oni-button-icons-only oni-button-icon-only oni-button-text-icons oni-button-text-icon-primary oni-button-text-icon-secondary oni-button-text-only"
+
     var widget = avalon.ui.button = function(element, data, vmodels) {
         var options = data.buttonOptions,
             btnModel,
@@ -153,9 +154,20 @@ define(["avalon", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"
                 data.buttons = buttons
                 avalon.scan(element, vmodels)
                 if (buttonWidth = parseInt(buttonWidth)) {
-                    for (var i = 0; button = buttons[i++];) {
-                        button.style.width = buttonWidth + "px"
-                    }
+                    (function(buttonWidth) {
+                        var btns = [].concat(buttons)
+                        setTimeout(function() {
+                            for (var i = 0; button = btns[i++];) {
+                                var $button = avalon(button),
+                                    buttonName = button.tagName.toLowerCase()
+                                if (buttonName === "input" || buttonName === "button") {
+                                    button.style.width = buttonWidth + "px"
+                                } else {
+                                    button.style.width = (buttonWidth - parseInt($button.css("border-left-width")) - parseInt($button.css("border-right-width")) - parseInt($button.css("padding-left")) * 2) + "px"
+                                }
+                            }
+                        }, 10)
+                    })(buttonWidth)
                     return 
                 }
 
@@ -164,14 +176,24 @@ define(["avalon", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"
                         maxButtonWidth = 0
                     buttons = buttons.concat()
                     interval = setInterval(function() {
-                        var buttonWidth = 0
+                        var buttonWidth = 0,
+                            innerWidth = 0,
+                            $button
                         for (var i = 0, button; button = buttons[i++];) {
                             buttonWidth = Math.max(buttonWidth, avalon(button).outerWidth())
                         }
                         if (buttonWidth === maxButtonWidth) {
                             maxButtonWidth += 1
                             for (var i = 0, button; button = buttons[i++];) {
-                                button.style.width = maxButtonWidth + "px"
+                                var buttonName = button.tagName.toLowerCase(),
+                                    $button = avalon(button)
+
+                                if (buttonName === "input" || buttonName === "button") {
+                                    button.style.width = maxButtonWidth + "px"
+                                    
+                                } else {
+                                    button.style.width = (maxButtonWidth - parseInt($button.css("border-left-width")) - parseInt($button.css("border-right-width")) - parseInt($button.css("padding-left")) * 2) + "px"
+                                }
                             }
                             clearInterval(interval)
                             return 

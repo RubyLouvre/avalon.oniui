@@ -287,11 +287,8 @@ define(["./iscroll.js"], function(iScroll) {
                 if (options.scrollOpt.scrollY) {
                     _.css(swap, 'height', options.row.total * options.row.height + 'px');
                 }
-                // 这里居然要加一个delay，无语...，不然无法获取正确的offsetHeight
-                _.delay(function() {
-                	scroll.refresh();
-                	computeItems(scroll.x, scroll.y, directionX || 0, directionY || 0);
-                }, 32)
+            	scroll.refresh();
+            	computeItems(scroll.x, scroll.y, directionX || 0, directionY || 0);
             },
             refresh: function() {
             	if(scroll) scroll.refresh()

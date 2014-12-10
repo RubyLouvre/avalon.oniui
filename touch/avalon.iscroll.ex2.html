@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>touch,iscroll-无限下拉</title>
+        <title>touch,iscroll-普通滚动</title>
         <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui" name="viewport" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script src="../avalon.js"></script>
@@ -39,10 +39,12 @@
     <body 
           ms-controller="test">
         <div ms-iscroll="$,$opt" class="gaoxiao">
-            <ul>
-                <li class="g" 
-                    ms-repeat-item="data" ms-css-margin-top="$index === 0 ? '0' : '-75px'">{{item.title}}</li>
-            </ul>
+            <div>
+                <ul>
+                    <li class="g" 
+                        ms-repeat-item="data">{{item.title}}</li>
+                </ul>
+            </div>
         </div>
         <script>
             function makeData(cnt) {
@@ -63,11 +65,14 @@
                         getData: makeData,
                         showLines: 11,
                         lineHeight: 75,
+                        onScroll: function(scroll) {
+                            console.log(scroll)
+                        }
                     }
                     vm.setData = function(data, cnt) {
                         if(cnt == vm.data.length) {
                             avalon.vmodels.test.data.push.apply(avalon.vmodels.test.data, data)
-                            // vm.data = data
+                            vm.refreshScroll()
                         }
                     }
                     vm.data = []

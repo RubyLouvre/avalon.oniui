@@ -357,8 +357,13 @@ define(["avalon",
                     var val = event ? event.target.checked : selected, enableData = datas.concat();
                     vmodel._allSelected = val;
                     for (var i = 0, len = trs.length; i < len; i++) {
-                        var tr = trs[i], data, input = tr.cells[0].getElementsByTagName('input')[0], $tr = avalon(tr), dataIndex = avalon(input).attr('data-index');
-                        if (dataIndex !== null) {
+                        var tr = trs[i], 
+                            $tr = avalon(tr), 
+                            data, 
+                            input = tr.cells[0].getElementsByTagName('input')[0], 
+                            dataIndex = input && avalon(input).attr('data-index');
+
+                        if (dataIndex !== null && dataIndex !== void 0) {
                             data = datas[dataIndex];
                             if (!data.disable) {
                                 data.selected = val;

@@ -3,6 +3,8 @@
 这是每个都组件都应该引用的部分
 */
 .oni-checkboxlist { list-style: none; padding: 0; }
-.oni-checkboxlist .oni-checkboxlist-item.fl { padding-right: 10px; }
-.oni-checkboxlist .oni-checkboxlist-item input { vertical-align: middle; margin: 0 0 0 5px; }
-.oni-checkboxlist .oni-checkboxlist-all.fl { padding-right: 20px; }
+
+.oni-checkboxlist-item.fl { padding-right: 10px; }
+.oni-checkboxlist-item input { vertical-align: middle; margin: 0; }
+
+.oni-checkboxlist-all.fl { padding-right: 20px; }

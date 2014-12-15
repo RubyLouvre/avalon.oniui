@@ -265,8 +265,9 @@ define(["avalon",
 
 
             vm._select = function(index, event) {
-                var option = vm.data[index].$model;
+                var option = vmodel.data[index].$model;
                 if (option && option.enable && !option.group) {
+                    var oldValue = vmodel.value;
                     //根据multiple区分对待, 多选时可以为空值
                     if (vmodel.multiple) {
                         index = vmodel.value.indexOf(option.value)
@@ -282,7 +283,7 @@ define(["avalon",
                     // vmodel.currentOption = option;
                     vmodel.toggle = false;
                     if(avalon.type(vmodel.onSelect) === "function") {
-                        vmodel.onSelect.call(element, event, vmodel.value, vmodel);
+                        vmodel.onSelect.call(element, event, vmodel.value, oldValue, vmodel);
                     }
                     vmodel.activeIndex = index
                 }
@@ -319,7 +320,9 @@ define(["avalon",
 
                 //如果是单选下拉框，可以通过键盘移动
                 if (!vmodel.multiple) {
-                    var index = vm.activeIndex || 0
+                    var index = vmodel.activeIndex || 0,
+                        oldValue = vmodel.value;
+
                     //区分上下箭头和回车
                     switch (event.keyCode) {
                         case 9:
@@ -342,7 +345,7 @@ define(["avalon",
                             vmodel.activeIndex = index
                             vmodel.scrollTo(index)
                             if(avalon.type(vmodel.onSelect) === "function") {
-                                vmodel.onSelect.call(element, event, vmodel.value, vmodel);
+                                vmodel.onSelect.call(element, event, vmodel.value, oldValue, vmodel);
                             }
                             break;
                         case 40:
@@ -356,7 +359,7 @@ define(["avalon",
                             vmodel.activeIndex = index
                             vmodel.scrollTo(index)
                             if(avalon.type(vmodel.onSelect) === "function") {
-                                vmodel.onSelect.call(element, event, vmodel.value, vmodel);
+                                vmodel.onSelect.call(element, event, vmodel.value, oldValue, vmodel);
                             }
                             break
                     }

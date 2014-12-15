@@ -233,16 +233,20 @@ define(["avalon",
                     avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
                     if(continueScan){
                         continueScan()
-                    }
-                    else{
+                    } else{
                         avalon.log("请尽快升到avalon1.3.7+")
-                        avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
                         if (typeof options.onInit === "function") {
                             options.onInit.call(element, vmodel, options, vmodels)
                         }
                     }
                     vmodel.multiple && optionsSync()
                 });
+            }
+
+            vm.repeatRendered = function() {
+                if(vmodel.multiple) {
+                    avalon.vmodels["scrollbar-" + vmodel.$id].update()
+                }
             }
 
             /**

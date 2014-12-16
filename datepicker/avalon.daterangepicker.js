@@ -315,18 +315,22 @@ define(["../avalon.getModel",
                 setValues(duplexLen, duplexVal1, duplexVal2)
                 if (duplexVM1) {
                     duplexVM1[1].$watch(duplexVM1[0], function(val) {
-                        vmodel.inputFromValue = val
-                        if (parseDate(vmodel.inputToValue) && parseDate(val)) {
-                            vmodel.label = datesDisplayFormat(vmodel.defaultLabel,val, vmodel.inputToValue)
-                        }
+                        setTimeout(function() {
+                            vmodel.inputFromValue = val
+                            if (parseDate(vmodel.inputToValue) && parseDate(val)) {
+                                vmodel.label = datesDisplayFormat(vmodel.defaultLabel,val, vmodel.inputToValue)
+                            }
+                        }, 10)
                     })
                 }
                 if (duplexVM2) {
                     duplexVM2[1].$watch(duplexVM2[0], function(val) {
-                        vmodel.inputToValue = val
-                        if (parseDate(vmodel.inputFromValue) && parseDate(val)) { 
-                            vmodel.label = datesDisplayFormat(vmodel.defaultLabel,vmodel.inputFromValue, val)
-                        }
+                        setTimeout(function() {
+                            vmodel.inputToValue = val
+                            if (parseDate(vmodel.inputFromValue) && parseDate(val)) { 
+                                vmodel.label = datesDisplayFormat(vmodel.defaultLabel,vmodel.inputFromValue, val)
+                            }
+                        }, 10)
                     })
                 }
                 vmodel.label =  options.label ? options.label : vmodel.label

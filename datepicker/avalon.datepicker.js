@@ -59,76 +59,19 @@ define(["../avalon.getModel",
         if (duplexVM) {
             avalon.scan(element, vmodels)
             _value = element.value
-            duplexVM[1].$watch(duplexVM[0], function(val) {
-                var date,
-                    month,
-                    _day;
-                _value = element.value = val;
-                if (date = parseDate(val)) {
-                    vmodel.year = date.getFullYear()
-                    month = vmodel.month = date.getMonth()
-                    _day = vmodel.day = date.getDate()
-                    vmodel.dateError = "#cccccc"
-                    vmodel.tip = getDateTip(cleanDate(date)).text
-                    vmodel.onSelect.call(null, val, vmodel, avalon(element).data())
-                } else {
-                    vmodel.tip = "格式错误"
-                    vmodel.dateError = "#ff8888"
-                }
-
-                if (vmodel.numberOfMonths === 1 && date) {
-                    var rows = vmodel.data[0] && vmodel.data[0].rows.$model,
-                        days,
-                        day;
-                    if (!rows) return 
-                    for (var i = 0; i < rows.length; i++) {
-                        days = rows[i]
-                        for (var j = 0; j < days.length; j++) {
-                            day = days[j]
-                            if (month == day.month && day.day == _day && !day.selected) {
-                                toggleActiveClass(day.outerIndex, day.innerIndex)
-                                return 
-                            }
-                        }
-                    }
-                } else if (!date) {
-                    removeActiveClass()
-                }
-            })
         }
         date = _getDate()
-        if(disabledVM) {
-            disabledVal= disabledVM[1][disabledVM[0]]
-            disabledVM[1].$watch(disabledVM[0], function(val) {
-                if(vmodel) {
-                    vmodel.disabled = val
-                }
-            })
-        }
-        if (toggleVM) {
-            toggleVM[1].$watch(toggleVM[0], function(val) {
-                vmodel.toggle = val
-            })  
-        }
+        disabledVM && (disabledVal = disabledVM[1][disabledVM[0]]);
         minDate = validateDate(options.minDate)
         maxDate = validateDate(options.maxDate)
         if(options.minDate && !minDate) {
             minDateVM = avalon.getModel(options.minDate, vmodels);
-            if(minDateVM) {
-                minDateVM[1].$watch(minDateVM[0], function(val) {
-                    vmodel.minDate = val
-                })
-                minDate = validateDate(minDateVM[1][minDateVM[0]])
-            }
+            minDateVM && (minDate = validateDate(minDateVM[1][minDateVM[0]]))
         } 
         if(options.maxDate && !maxDate) {
             maxDateVM = avalon.getModel(options.maxDate, vmodels)
-            if(maxDateVM) {
-                maxDateVM[1].$watch(maxDateVM[0], function(val) {
-                    vmodel.maxDate = val;
-                })
-                maxDate = validateDate(maxDateVM[1][maxDateVM[0]])
-            }
+            maxDateVM && (maxDate = validateDate(maxDateVM[1][maxDateVM[0]]))
+
         }
         if(typeof onSelect === "string") {
             var changeVM = avalon.getModel(onSelect, vmodels)
@@ -487,6 +430,54 @@ define(["../avalon.getModel",
             var maxDate = validateDate(val);
             vmodel.maxDate = maxDate && cleanDate(maxDate);
             dataSet(vmodel.month, vmodel.year)
+        })
+        duplexVM && duplexVM[1].$watch(duplexVM[0], function (val) {
+            var date, month, _day;
+            _value = element.value = val;
+            if (date = parseDate(val)) {
+                vmodel.year = date.getFullYear();
+                month = vmodel.month = date.getMonth();
+                _day = vmodel.day = date.getDate();
+                vmodel.dateError = '#cccccc';
+                vmodel.tip = getDateTip(cleanDate(date)).text;
+                vmodel.onSelect.call(null, val, vmodel, avalon(element).data());
+            } else {
+                vmodel.tip = '\u683C\u5F0F\u9519\u8BEF';
+                vmodel.dateError = '#ff8888';
+            }
+            if (vmodel.numberOfMonths === 1 && date) {
+                var rows = vmodel.data[0] && vmodel.data[0].rows.$model, days, day;
+                if (!rows)
+                    return;
+                for (var i = 0; i < rows.length; i++) {
+                    days = rows[i];
+                    for (var j = 0; j < days.length; j++) {
+                        day = days[j];
+                        if (month == day.month && day.day == _day && !day.selected) {
+                            toggleActiveClass(day.outerIndex, day.innerIndex);
+                            return;
+                        }
+                    }
+                }
+            } else if (!date) {
+                removeActiveClass();
+            }
+        });
+            
+        disabledVM && disabledVM[1].$watch(disabledVM[0], function (val) {
+            if (vmodel) {
+                vmodel.disabled = val;
+            }
+        });
+    
+        toggleVM && toggleVM[1].$watch(toggleVM[0], function (val) {
+            vmodel.toggle = val;
+        });
+        minDateVM && minDateVM[1].$watch(minDateVM[0], function(val) {
+            vmodel.minDate = val
+        })
+        maxDateVM && maxDateVM[1].$watch(maxDateVM[0], function(val) {
+            vmodel.maxDate = val;
         })
         function initValue() {
             // 如果输入域不允许为空，且_originValue不存在则强制更新element.value

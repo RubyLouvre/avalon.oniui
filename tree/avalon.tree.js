@@ -179,10 +179,15 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         undefine = void 0,
         tplDict = {},
         disabelSelectArr = [],
-        callbacks = []
+        callbacks = [],
+        cnt = 0
     //  tool functions
     function g(id) {
         return document.getElementById(id)
+    }
+
+    function guid() {
+        return "tree" + cnt++
     }
 
     function tplFormate(tpl, options) {
@@ -202,6 +207,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 newArr[index] = itemFormator(avalon.mix({}, item), parentLeaf, vm)
             } else if(item){
                 item.$parentLeaf = parentLeaf
+                item.level = parentLeaf ? parentLeaf.level + 1 : 0
                 func && func(item)
             }
             if(item && item.children && item.children.length) {
@@ -309,8 +315,8 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         options.template = options.getTemplate(template, options)
         options.parentTemplate = options.getTemplate(parentTemplate, options, "parent")
         options.leafTemplate = options.getTemplate(leafTemplate, options, "leaf")
-        options.nodesTemplate = nodesTemplate
-        var newOpt = {}, dataBak
+        options.nodesTemplate = options.getTemplate(nodesTemplate, options, "nodes")
+        var newOpt = {$guid: guid()}, dataBak
         avalon.mix(newOpt, options)
         avalon.each(optionKeyToFixMix, function(key) {
             avalon.mix(true, newOpt[key], avalon.mix(true, {}, widget.defaults[key], newOpt[key]))
@@ -318,6 +324,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         dataBak = options.children
         if(newOpt.data.simpleData.enable) {
             newOpt.children = simpleDataToTreeData(newOpt.children, newOpt)
+            console.log(newOpt.children)
         } else {
             newOpt.children = dataFormator(newOpt.children, undefine, undefine, undefine, newOpt)
         }
@@ -362,7 +369,15 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 vm._select = null
             }
             vm.computeIconClass = function(leaf) {
-                return (leaf.iconSkin ? leaf.iconSkin + "_" : "") + "ico_" + (leaf.isParent ? vm.hasClassOpen(leaf) ? "open" : "close" : "docu")
+                return (leaf.iconSkin ? leaf.iconSkin + "_" : "") + "ico_" + (leaf.isParent ? vm.hasClassOpen(leaf, "ignoreNoline") ? "open" : "close" : "docu")
+            }
+            vm.shallIconShow = function(leaf) {
+                if(!vm.exprAnd(leaf, vm.view.showIcon)) return false
+                return vm.exprAnd.apply(null, arguments)
+            }
+            vm.shallIconShowReverse = function(leaf) {
+                if(!vm.exprAnd(leaf, vm.view.showIcon)) return false
+                return !vm.exprAnd.apply(null, arguments)
             }
             vm.computeIcon = function(leaf) {
                 var ico = leaf.isParent ? vm.hasClassOpen(leaf) ? leaf.icon_open || "" : leaf.icon_close || "" : leaf.icon ? leaf.icon : ""
@@ -377,8 +392,9 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                 if(!vm.optionToBoolen(vm.view.showLine,leaf)) pos = "noline"
                 return pos + "_" + status
             }
-            vm.levelClass = function(leaf) {
-                return "level" + (leaf.level || 0)
+            vm.levelClass = function(leaf, adding) {
+                var adding = adding || 0
+                return "level" + ((leaf.level || 0) + adding)
             }
             // 展开相关
             // 展开
@@ -979,6 +995,8 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                         }
                     }, ele = event ? event.srcElement || event.target : null,
                     callbackEnabled = !event || !event.cancelCallback
+                if(cmd === "dblclick" && !vm.dblClickExpand
+                    ) return
                 // 执行前检测，返回
                 vmodel.$fire("e:before" + eventName, arg)
                 if(callbackEnabled) {
@@ -1014,6 +1032,11 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             vm.timeStamp = function() {
                 return Date.now()
             }
+
+            vm.toggleStatus = function() {
+                vm.toggle = !vm.toggle
+                return vm.toggle
+            }
         })
         // 展开父节点
         vmodel.$watch("e:nodeCreated", function(arg) {
@@ -1041,6 +1064,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
     avalon.bind(document.body, "selectstart", disabelSelect)
     avalon.bind(document.body, "drag", disabelSelect)
     widget.defaults = {
+        toggle: true,
         view: {//@config {Object} 视觉效果相关的配置
             showLine: true,//@config 是否显示连接线
             dblClickExpand: true,//@config 是否双击变化展开状态
@@ -1050,6 +1074,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             singlePath: false,//@config 同一层级节点展开状态是否互斥
             showIcon: true,//@config zTree 是否显示节点的图标
             showTitle: true,//@config 分别表示 显示 / 隐藏 提示信息
+            showSwitch: true,//@config 显示折叠展开ico
             nameShower: function(leaf) {
                 return leaf.name
             }//@config 节点显示内容过滤器，默认是显示leaf.name

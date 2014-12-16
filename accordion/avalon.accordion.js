@@ -296,8 +296,6 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
             vm._eventCallback = eventCallback
         })
         vmodel.$watch("currentIndex", function(newVal, oldVal) {
-            console.log("currentIndex aguments is :")
-            console.log(arguments)
             var panel = vmodel.getPanel(newVal)
             if (vmodel.direction == "horizontal" && panel) {
                 clearTimeout(animateTime) 
@@ -308,7 +306,6 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
             }
         })
         function eventCallback(event, index) {
-            console.log(event.type)
             var header = vmodel.getHeader(index),
                 $header = avalon(header),
                 panel = vmodel.getPanel(index),

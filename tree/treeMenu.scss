@@ -8,6 +8,10 @@
     }
     .oni-tree li{
         position:relative;
+        zoom: 1;
+        float: left;
+        width: 100%;
+        display: inline;
     }
     .oni-tree li.level0 {
         border:1px solid #dadada;
@@ -18,10 +22,16 @@
     }
     .oni-tree li ul {
         padding: 0;
+        zoom: 1;
+        overflow: hidden;
+        width: 100%;
+        float: left;
+        display: inline;
     }
     .oni-tree li a:hover{
         background:#f8f8f8;
         color: #3775C0;
+        text-decoration: none;
     }
     .oni-tree li a.level0{
         display: block;
@@ -33,8 +43,9 @@
     }
     .oni-tree li a.level0 span {
         line-height: 32px;
+        display: inline-block;
     }
-    li.level0 a.curSelectedNode{
+    .oni-tree li.level0 a.curSelectedNode{
         background: #E0EEF5;
         color: #3775C0;
         font-weight:bolder;
@@ -63,7 +74,7 @@
         position: absolute;
         z-index: 10;
         left: 10px;
-        top: 6px;
+        top:8px;
         background: url(menu-tree.gif) no-repeat 7px -104px;
     }
     .level1 span.noline_open {
@@ -85,7 +96,7 @@
         background: url(menu-tree.gif) no-repeat 0 -9px;
     }
 }
-.oni-menu-tree-hidden{
+.oni-menu-tree-hidden {
     width: 18px;
     overflow: hidden;
     border-top-color:transparent;

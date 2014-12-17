@@ -324,7 +324,6 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
         dataBak = options.children
         if(newOpt.data.simpleData.enable) {
             newOpt.children = simpleDataToTreeData(newOpt.children, newOpt)
-            console.log(newOpt.children)
         } else {
             newOpt.children = dataFormator(newOpt.children, undefine, undefine, undefine, newOpt)
         }
@@ -995,7 +994,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                         }
                     }, ele = event ? event.srcElement || event.target : null,
                     callbackEnabled = !event || !event.cancelCallback
-                if(cmd === "dblclick" && !vm.dblClickExpand
+                if(cmd === "dblclick" && !vm.view.dblClickExpand
                     ) return
                 // 执行前检测，返回
                 vmodel.$fire("e:before" + eventName, arg)

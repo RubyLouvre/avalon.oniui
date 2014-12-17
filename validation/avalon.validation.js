@@ -116,16 +116,16 @@ define(["../promise/avalon.promise"], function(avalon) {
         ce: /^(?:0?1)(?:33|53|8[079])\d{8}$/,
         //中国大陆
         cn: /^(?:0?1)[3458]\d{9}$/
-        //中国香港
-        //   hk: /^(?:0?[1569])(?:\d{7}|\d{8}|\d{12})$/,
-        //澳门
-        // macao: /^6\d{7}$/,
-        //台湾
-        //  tw: /^(?:0?[679])(?:\d{7}|\d{8}|\d{10})$//*,
-        //韩国
-        //  kr:/^(?:0?[17])(?:\d{9}|\d{8})$/,
-        //日本
-        // jp:/^(?:0?[789])(?:\d{9}|\d{8})$/*/
+                //中国香港
+                //   hk: /^(?:0?[1569])(?:\d{7}|\d{8}|\d{12})$/,
+                //澳门
+                // macao: /^6\d{7}$/,
+                //台湾
+                //  tw: /^(?:0?[679])(?:\d{7}|\d{8}|\d{10})$//*,
+                //韩国
+                //  kr:/^(?:0?[17])(?:\d{9}|\d{8})$/,
+                //日本
+                // jp:/^(?:0?[789])(?:\d{9}|\d{8})$/*/
     }
     /*
      * http://login.sdo.com/sdo/PRes/4in1_2/js/login.js
@@ -420,6 +420,35 @@ define(["../promise/avalon.promise"], function(avalon) {
     })
 //<input type="number" max=x min=y step=z/> <input type="range" max=x min=y step=z/>
 //
+    function fixEvent(event) {
+        if (event.target) {
+            return event
+        }
+        var ret = {}
+        for (var i in event) {
+            ret[i] = event[i]
+        }
+        var target = ret.target = event.srcElement
+        if (event.type.indexOf("key") === 0) {
+            ret.which = event.charCode != null ? event.charCode : event.keyCode
+        } else if (/mouse|click/.test(event.type)) {
+            var doc = target.ownerDocument || document
+            var box = doc.compatMode === "BackCompat" ? doc.body : doc.documentElement
+            ret.pageX = event.clientX + (box.scrollLeft >> 0) - (box.clientLeft >> 0)
+            ret.pageY = event.clientY + (box.scrollTop >> 0) - (box.clientTop >> 0)
+            ret.wheelDeltaY = ret.wheelDelta
+            ret.wheelDeltaX = 0
+        }
+        ret.timeStamp = new Date - 0
+        ret.originalEvent = event
+        ret.preventDefault = function() { //阻止默认行为
+            event.returnValue = false
+        }
+        ret.stopPropagation = function() { //阻止事件在DOM树中的传播
+            event.cancelBubble = true
+        }
+        return ret
+    }
     var widget = avalon.ui.validation = function(element, data, vmodels) {
         var options = data.validationOptions
         var onSubmitCallback
@@ -598,19 +627,20 @@ define(["../promise/avalon.promise"], function(avalon) {
                     if (validateParams.length) {
                         if (vm.validateInKeyup) {
                             data.bound("keyup", function(e) {
+                                var ev = fixEvent(e)
                                 setTimeout(function() {
-                                    vm.validate(data, 0, e)
+                                    vm.validate(data, 0, ev)
                                 })
                             })
                         }
                         if (vm.validateInBlur) {
                             data.bound("blur", function(e) {
-                                vm.validate(data, 0, e)
+                                vm.validate(data, 0, fixEvent(e))
                             })
                         }
                         if (vm.resetInFocus) {
                             data.bound("focus", function(e) {
-                                vm.onReset.call(data.element, e, data)
+                                vm.onReset.call(data.element, fixEvent(e), data)
                             })
                         }
                         var array = vm.data.filter(function(el) {
@@ -631,7 +661,7 @@ define(["../promise/avalon.promise"], function(avalon) {
     function getMessage() {
         var data = this.data || {}
         return this.message.replace(rformat, function(_, name) {
-            return data[name] == null ?  "" : data[name]
+            return data[name] == null ? "" : data[name]
         })
     }
     widget.defaults = {
@@ -681,5 +711,5 @@ define(["../promise/avalon.promise"], function(avalon) {
  [禁止获得焦点时的onRest回调 resetInFocus ](avalon.validation.ex8.html)
  [与textbox组件的混用, ms-duplex-string的使用 ](avalon.validation.ex9.html)
  [验证表单元素存在disabled的情况 ](avalon.validation.ex10.html)
-
+ 
  */

@@ -201,6 +201,54 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
             })
         };
     })
+    function isDate(a) {
+        return Object.prototype.toString.call(a) === "[object Date]"
+    }
+    if (!Date.prototype.toISOString) {
+        (function() {
+
+            function pad(number) {
+                if (number < 10) {
+                    return '0' + number;
+                }
+                return number;
+            }
+
+            Date.prototype.toISOString = function() {
+                return this.getUTCFullYear() +
+                        '-' + pad(this.getUTCMonth() + 1) +
+                        '-' + pad(this.getUTCDate()) +
+                        'T' + pad(this.getUTCHours()) +
+                        ':' + pad(this.getUTCMinutes()) +
+                        ':' + pad(this.getUTCSeconds()) +
+                        '.' + (this.getUTCMilliseconds() / 1000).toFixed(3).slice(2, 5) +
+                        'Z';
+            };
+        }());
+    }
+    
+    function paramInner(json, prefix, buffer) {
+        prefix = prefix || ""
+        for (var key in json) {
+            if (json.hasOwnProperty(key)) {
+                var val = json[key]
+                var name = prefix ? prefix + encode("[" + key + "]") : encode(key)
+                if (isDate(val)) {
+                    buffer.push(name + "=" + val.toISOString())
+                } else if (isValidParamValue(val)) {//如果是简单数据类型
+                    buffer.push(name + "=" + encode(val))
+                } else if (Array.isArray(val) || avalon.isPlainObject(val)) {
+                    avalon.each(val, function(subKey, subVal) {
+                        if (isValidParamValue(subVal)) {
+                            buffer.push(name + encode("[" + subKey + "]") + "=" + encode(subVal))
+                        } else if (Array.isArray(val) || avalon.isPlainObject(val)) {
+                            paramInner(subVal, name + encode("[" + subKey + "]"), buffer)
+                        }
+                    })
+                }
+            }
+        }
+    }
 
     function isValidParamValue(val) {
         var t = typeof val; // 值只能为 null, undefined, number, string, boolean
@@ -422,30 +470,13 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
             });
         },
         //将一个对象转换为字符串
-        param: function(json, bracket) {
+        param: function(json) {
             if (!avalon.isPlainObject(json)) {
                 return "";
             }
-            bracket = typeof bracket === "boolean" ? bracket : !0;
-            var buf = [],
-                    key, val;
-            for (key in json) {
-                if (json.hasOwnProperty(key)) {
-                    val = json[key];
-                    key = encode(key)
-                    if (isValidParamValue(val)) { //只处理基本数据类型,忽略空数组,函数,正则,日期,节点等
-                        buf.push(key, "=", encode(val + ""), "&")
-                    } else if (Array.isArray(val) && val.length) { //不能为空数组
-                        for (var i = 0, n = val.length; i < n; i++) {
-                            if (isValidParamValue(val[i])) {
-                                buf.push(key, (bracket ? encode("[]") : ""), "=", encode(val[i] + ""), "&")
-                            }
-                        }
-                    }
-                }
-            }
-            buf.pop()
-            return buf.join("").replace(r20, "+")
+            var buffer = []
+            paramInner(json, "", buffer)
+            return buffer.join("&").replace(r20, "+")
         },
         //将一个字符串转换为对象
         //avalon.deparam = jq_deparam = function( params, coerce ) {

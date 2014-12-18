@@ -285,6 +285,10 @@ define(["../avalon.getModel",
                 vmodel.minute = date.getMinutes()
                 return now
             }
+            vm._dateCellRender = function(date, item) {
+                if(vmodel.dateCellRender) return vmodel.dateCellRender(date, vmodel, item)
+                return date
+            }
             vm._selectTime = function() {
                 var timeFilter = avalon.filters.timer,
                     hour = timeFilter(vmodel.hour),
@@ -827,6 +831,13 @@ define(["../avalon.getModel",
          * @param vmodel {Number} 日历组件对应vmodel
          */
         onChangeMonthYear: avalon.noop, 
+        /**
+         * @config {Function} 格式化输出日期单元格内容
+         * @param date {Date} 当前的日期
+         * @param vmodel {Vmodel} 日历组件对应vmodel
+         * @param dateItem {Object} 对应的包含日期相关信息的对象
+         */
+        dateCellRender: false,
         watermark: true,
         zIndex: -1,
         showDatepickerAlways: false,
@@ -982,4 +993,5 @@ define(["../avalon.getModel",
  [切换日历组件的禁用与否，以及手动输入日期的结果](avalon.datepicker.ex9.html)
  [移动端日期、年份选择](avalon.datepicker.ex10.html)
  [具有时间选择功能的datepicker](avalon.datepicker.ex11.html)
+ [带格式化输出配置的datepicker](avalon.datepicker.ex12.html)
  */

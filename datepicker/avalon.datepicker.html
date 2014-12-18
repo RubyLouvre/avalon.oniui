@@ -58,7 +58,7 @@
                                 ms-class-2="oni-datepicker-selected:item.selected"
                                 ms-class-3="oni-state-disabled:item.dateDisabled"
                                 ms-click="_selectDate(calendar.year, item.month, item.day, item.dateDisabled, $outer.$index, $index, $event)"
-                                >{{item._day}}</td>
+                                >{{_dateCellRender(item._day, item)|html}}</td>
                         </tr>
                     </tbody>
                 </table>

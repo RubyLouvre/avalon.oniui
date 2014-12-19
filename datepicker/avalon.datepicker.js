@@ -442,8 +442,12 @@ define(["../avalon.getModel",
                 vmodel.tip = getDateTip(cleanDate(date)).text;
                 vmodel.onSelect.call(null, val, vmodel, avalon(element).data());
             } else {
-                vmodel.tip = '\u683C\u5F0F\u9519\u8BEF';
-                vmodel.dateError = '#ff8888';
+                if (!vmodel.allowBlank) {
+                    vmodel.tip = '格式错误';
+                    vmodel.dateError = '#ff8888';
+                } else {
+                    vmodel.tip = ""
+                }
             }
             if (vmodel.numberOfMonths === 1 && date) {
                 var rows = vmodel.data[0] && vmodel.data[0].rows.$model, days, day;
@@ -585,10 +589,12 @@ define(["../avalon.getModel",
             })
             if (!vmodel.timer) {
                 avalon.bind(element, "blur", function() {
-                    var date = new Date(vmodel.year, vmodel.month, vmodel.day);
-                    element.value = formatDate(date);
-                    vmodel.dateError = "#cccccc";
-                    vmodel.tip = getDateTip(cleanDate(date)).text;
+                    if (!vmodel.allowBlank) {
+                        var date = new Date(vmodel.year, vmodel.month, vmodel.day);
+                        element.value = formatDate(date);
+                        vmodel.dateError = "#cccccc";
+                        vmodel.tip = getDateTip(cleanDate(date)).text;
+                    }
                 })
             } else {
                 return ;

@@ -63,6 +63,25 @@ avalon.bind(ele, &quot;swipe*&quot;, " />
                 <pre class="brush:javascript;gutter:false;toolbar:false;">avalon.bind(ele, "shake", function(e) {
     e.direction = left || right || forward || back || up || down || 以及组合， 但不准确
 })</pre>
+                <p>ms-iscroll使用说明</p>
+                <pre class="brush:html;gutter:false;toolbar:false;">&lt;div ms-controller=&quot;test&quot;&gt;
+    &lt;div ms-iscroll=&quot;$,$opt&quot; class=&quot;gaoxiao&quot;&gt;
+        &lt;ul&gt;
+            &lt;li class=&quot;g&quot; ms-repeat-item=&quot;data&quot; ms-css-margin-top=&quot;$index === 0 ? '0' : '-75px'&quot;&gt;{{item.title}}&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/div&gt;当没有找到直系ms-repeat元素的时候，则会创建普通的iscroll
+&lt;script&gt;
+    avalon.define(&quot;test&quot;, function(vm) {
+    vm.data = []  // 成对出现才行
+    vm.data$ = [] // 这个必须有，跟repeat或者each对象成对出现
+    vm.$options = {
+    lineHeight: 25, // repeat元素的行高
+    showLines: 10, // 显示的数量,
+    getData: avalon.noop // 获取数据的函数
+    }
+    })
+&lt;/script&gt;*</pre>
             </fieldset>
             <fieldset>
                 <legend>使用说明</legend>
@@ -86,6 +105,12 @@ avalon.bind(ele, &quot;swipe*&quot;, " />
                 </li>
                 <li>
                     <a href="avalon.shake.ex.html">shake摇一摇</a>
+                </li>
+                <li>
+                    <a href="avalon.iscroll.ex.html">iscroll无限下拉效果</a>
+                </li>
+                <li>
+                    <a href="avalon.iscroll.ex2.html">iscroll普通效果</a>
                 </li>
             </ul>
         </div>

@@ -1,6 +1,6 @@
 // avalon 1.3.6
 /**
- * 
+ *
  * @cnName 表格
  * @enName smartgrid
  * @introduce
@@ -172,8 +172,8 @@ define(["avalon",
         }
         t += ' return r; }catch(e){ avalon.log(e);\navalon.log(js' + time + '[line' + time + '-1]) }}';
         var body = [
-                'txt' + time,
-                'js' + time,
+            'txt' + time,
+            'js' + time,
             'filters'
         ];
         var fn = Function.apply(Function, body.concat(helperNames, t));
@@ -197,6 +197,10 @@ define(["avalon",
             return String.fromCharCode(parseInt($1, 10));
         });
     };
+    var cnt = 0
+    function guid() {
+        return "smartgridTr" + cnt++
+    }
     var countter = 0
     var widget = avalon.ui.smartgrid = function (element, data, vmodels) {
         var options = data.smartgridOptions, $element = avalon(element), pager = options.pager, vmId = data.smartgridId;
@@ -241,6 +245,7 @@ define(["avalon",
             'pager',
             'noResult',
             'sortable',
+            'data',// 一定不要去掉啊，去掉了就会出错
             'containerMinWidth',
             '_disabledData',
             '_enabledData'
@@ -257,6 +262,10 @@ define(["avalon",
             vm._disabledData = [];
             vm._enabledData = [];
             vm.loadingVModel = null;
+            vm._hiddenAffixHeader = function(column, allChecked) {
+                var selectable = vmodel.selectable
+                return selectable && selectable.type && column.key=='selected' && !allChecked
+            }
             vm.getRawData = function () {
                 return vmodel.data;
             };
@@ -348,8 +357,13 @@ define(["avalon",
                     var val = event ? event.target.checked : selected, enableData = datas.concat();
                     vmodel._allSelected = val;
                     for (var i = 0, len = trs.length; i < len; i++) {
-                        var tr = trs[i], data, input = tr.cells[0].getElementsByTagName('input')[0], $tr = avalon(tr), dataIndex = avalon(input).attr('data-index');
-                        if (dataIndex !== null) {
+                        var tr = trs[i], 
+                            $tr = avalon(tr), 
+                            data, 
+                            input = tr.cells[0].getElementsByTagName('input')[0], 
+                            dataIndex = input && avalon(input).attr('data-index');
+
+                        if (dataIndex !== null && dataIndex !== void 0) {
                             data = datas[dataIndex];
                             if (!data.disable) {
                                 data.selected = val;
@@ -456,13 +470,22 @@ define(["avalon",
                 if(!containerWrapper) return
                 if(len === 0 || init) avalon.clearHTML(containerWrapper)
                 vmodel._pagerShow = !len ? false : true;
+                // 做数据拷贝
                 if(data) {
-                    vmodel.data.push.apply(vmodel.data, data)
+                    var _data = []
+                    avalon.each(data, function(i, item) {
+                        _data.push(avalon.mix({}, item))
+                        _data[i].$id = guid()
+                    })
+                    vmodel.data.push.apply(vmodel.data, _data)
                 }
+                avalon.each(vmodel.data, function(i, item) {
+                    item.$id = item.$id || guid()
+                })
                 tableTemplate = vmodel.addRow(vmodel._getTemplate(data ? vmodel.data.slice(arrLen) : data, data ? arrLen : 0), vmodel.columns.$model, vmodels)
                 rows = avalon.parseHTML(tableTemplate)
                 containerWrapper.appendChild(rows)
-                if (selectable && selectable.type === 'Checkbox') {
+                if (selectable && (selectable.type === 'Checkbox'|| selectable.type === 'Radio')) {
                     var allSelected = isSelectAll(vmodel.data);
                     vmodel._allSelected = allSelected;
                     getSelectedData(vmodel);
@@ -491,7 +514,7 @@ define(["avalon",
                 if(removeData === false) {
                     data.$id = "remove"
                 } else {
-                    vmodel.data.removeAt(index)
+                    vmodel.data.splice(index, 1)
                 }
                 if(!vmodel.getLen(vmodel.data)) vmodel.render(void 0, true)
             }
@@ -633,7 +656,7 @@ define(["avalon",
         if (!options.selectable)
             return;
         var type = options.selectable.type, container = options._container;
-        if (type === 'Checkbox') {
+        if (type === 'Checkbox' || type === "Radio") {
             avalon.bind(container, 'click', function (event) {
                 var target = event.target, $target = avalon(target), $tr = avalon(target.parentNode.parentNode), datas = options.data, onSelectAll = options.onSelectAll, enabledData = options._enabledData, disabledData = options._disabledData, dataIndex = $target.attr('data-index');
                 if (!$target.attr('data-role') || dataIndex === null) {
@@ -643,6 +666,9 @@ define(["avalon",
                     var rowData = datas[dataIndex], isSelected = target.checked;
                     if (isSelected) {
                         options.selectable.type === 'Checkbox' ? $tr.addClass('oni-smartgrid-selected') : 0;
+                        if(options.selectable.type === 'Radio'){
+                            enabledData.splice(0, enabledData.length);
+                        }
                         rowData.selected = true;
                         avalon.Array.ensure(enabledData, rowData);
                     } else {
@@ -671,6 +697,7 @@ define(["avalon",
             });
         }
     }
+
     function dataFracte(vmodel) {
         var data = vmodel.data, enabledData = vmodel._enabledData = [], disabledData = vmodel._disabledData = [];
         data.forEach(function (dataItem, index) {
@@ -826,14 +853,14 @@ define(["avalon",
 /**
  * @other
  *  <p>下面附上实现相同展示效果的情况下，smartgrid与simplegrid的渲染情况对比</p>
-    <div>
-        <h2>smartgrid渲染10条表格数据</h2>
-        <img src="smartgrid10.png" style="width:100%"/>
-        <h2>simplegrid渲染10条表格数据</h2>
-        <img src="simplegrid10.png" style="width:100%"/>
-        <h2>smartgrid渲染200条表格数据</h2>
-        <img src="smartgrid200.png" style="width:100%"/>
-        <h2>simplegrid渲染200条表格数据</h2>
-        <img src="simplegrid200.png"style="width:100%"/>
-    </div>
+ <div>
+ <h2>smartgrid渲染10条表格数据</h2>
+ <img src="smartgrid10.png" style="width:100%"/>
+ <h2>simplegrid渲染10条表格数据</h2>
+ <img src="simplegrid10.png" style="width:100%"/>
+ <h2>smartgrid渲染200条表格数据</h2>
+ <img src="smartgrid200.png" style="width:100%"/>
+ <h2>simplegrid渲染200条表格数据</h2>
+ <img src="simplegrid200.png"style="width:100%"/>
+ </div>
  */

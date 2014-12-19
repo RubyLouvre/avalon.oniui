@@ -20,10 +20,10 @@
                     <div class="oni-datepicker-title">
                         <!-- <span >{{year}}年</span> -->
                         <select ms-each="years" data-each-rendered="_afterYearRendered">
-                            <option ms-value="el">{{el}}</option>
+                            <option ms-attr-value="el">{{el}}</option>
                         </select>&nbsp;年&nbsp;
                         <select ms-each="months" data-each-rendered="_afterMonthRendered">
-                            <option ms-value="{{el}}">{{el}}</option>
+                            <option ms-attr-value="{{el}}">{{el}}</option>
                         </select>&nbsp;月
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                                 ms-class-2="oni-datepicker-selected:item.selected"
                                 ms-class-3="oni-state-disabled:item.dateDisabled"
                                 ms-click="_selectDate(calendar.year, item.month, item.day, item.dateDisabled, $outer.$index, $index, $event)"
-                                >{{item._day}}</td>
+                                >{{_dateCellRender(item._day, item)|html}}</td>
                         </tr>
                     </tbody>
                 </table>

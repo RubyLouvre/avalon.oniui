@@ -11,19 +11,11 @@ $uiname: "oni-textbox";
         background-color: #FFFFFF;
         border: 1px solid #CCCCCC;
     }
-    &.oni-state-hover {
-        @if($oinui-theme == smoothness) {
-            border-color: #999999;
-        }
-    }
-    &.oni-state-focus {
-        @if($oinui-theme == smoothness) {
-            border-color: #3775c0;
-        }
-    }
+    
     .#{$uiname}-input-wrap {
         position: relative;
         @include inline-block();
+        overflow: hidden;
         line-height: 18px;
         .#{$uiname}-input {
             position: relative;
@@ -54,9 +46,11 @@ $uiname: "oni-textbox";
         top: 0;
         right: 0;
         bottom: 0;
-        font-size: 12px;
+        font-size: 14px;
         z-index: 1;
         overflow: hidden;
+        word-wrap: break-word; 
+        word-break: break-all; 
         @if($oinui-theme == smoothness) {
             color: #999999;
         }
@@ -83,4 +77,16 @@ $uiname: "oni-textbox";
         }
     }
 }
-
+.#{$uiname}-hover {
+    @if($oinui-theme == smoothness) {
+        border-color: #999999;
+    }
+}
+.#{$uiname}-focus {
+    @if($oinui-theme == smoothness) {
+        border-color: #3775c0;
+    }
+}
+.#{$uiname}-error {
+    border-color: #ff8888;
+}

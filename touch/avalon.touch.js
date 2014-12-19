@@ -40,6 +40,29 @@
  *   		e.direction = left||right||forward||back||up||down||以及组合，但不准确
  *		})
  *	```
+ *	<p>ms-iscroll使用说明</p>
+ *	```html
+ *		<div ms-controller="test">
+ *			<div ms-iscroll="$,$opt" class="gaoxiao">
+ *          	<ul>
+ *               	<li class="g" ms-repeat-item="data" ms-css-margin-top="$index === 0 ? '0' : '-75px'">{{item.title}}</li>
+ *          	</ul>
+ *      	</div>
+ *		</div> 
+ *		当没有找到直系ms-repeat元素的时候，则会创建普通的iscroll
+ *		<script>
+ *			avalon.define("test", function(vm) {
+ *				vm.data = []  // 成对出现才行
+ *				vm.data$ = [] // 这个必须有，跟repeat或者each对象成对出现
+ *				vm.$options = {
+ *					lineHeight: 25, // repeat元素的行高
+ *			        showLines: 10, // 显示的数量,
+ *			        getData: avalon.noop // 获取数据的函数
+ *	 			}
+ *			})
+ *		</script>
+ *
+ *	```
  */
 /* 
  * To change this license header, choose License Headers in Project Properties.
@@ -556,5 +579,7 @@ define(['avalon'], function(avalon) {
  @links
  [touch功能全览](avalon.touch.ex.html)
  [shake摇一摇](avalon.shake.ex.html)
+ [iscroll无限下拉效果](avalon.iscroll.ex.html)
+ [iscroll普通效果](avalon.iscroll.ex2.html)
  */
 

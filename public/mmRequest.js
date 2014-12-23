@@ -415,7 +415,11 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
             upload: {
                 preproccess: function() {
                     var opts = this.options;
-                    var formdata = new FormData(opts.form)  //将二进制什么一下子打包到formdata
+                    if (typeof opts.form.append==="function") { //简单判断opts.form是否为FormData
+                        var formdata = opts.form;
+                    }else{
+                      var formdata = new FormData(opts.form)  //将二进制什么一下子打包到formdata
+                    }
                     avalon.each(opts.data, function(key, val) {
                         formdata.append(key, val)  //添加客外数据
                     })

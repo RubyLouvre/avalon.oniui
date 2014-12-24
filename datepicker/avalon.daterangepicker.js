@@ -444,7 +444,7 @@ define(["../avalon.getModel",
             arr = re.exec(desc)
             key = arr && ((arr[1] || '+') + (arr[3] || 'D'))
             time = date ? date : new Date()
-            _date = new Date(time)
+            _date = new Date((typeof time === "string") ? parseDate(time) : time)
             if(key && _c[key]){
                 _c[key](_date ,arr[2] * 1)
             }

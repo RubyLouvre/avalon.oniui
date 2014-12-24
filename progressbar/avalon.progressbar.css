@@ -29,7 +29,7 @@ div.oni-progressbar-circle {
     z-index: 1;
     height: 100%;
     overflow: hidden;
-    background: url("indeterminate.gif") repeat-x #dddddd; }
+    background: url("images/indeterminate.gif") repeat-x #dddddd; }
   .oni-progressbar-label {
     position: absolute;
     left: 50%;

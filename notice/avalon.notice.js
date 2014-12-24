@@ -66,12 +66,19 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
                 }
                 vmodel.onShow.call(element, data, vmodels); // 用户回调
             }
+            vm.$watch("elementHeightOk", function() {
+                vmodel.height = "auto"
+            })
             vm._close = function() { //close按钮click时的监听处理函数
                 vmodel.toggle = false;
             }
             vm._hide = function(display) { //toggle为false时隐藏notice
-                var hideAffixIndex = affixBoxs.indexOf(templateView);
+                var hideAffixIndex = affixBoxs.indexOf(templateView),
+                    $templateView = avalon(templateView)
+
                 if (vmodel.animate) {
+                    vmodel.elementHeight = $templateView.innerHeight()
+                    $templateView.css("height", vmodel.elementHeight)
                     step(display, vmodel)
                 }
                 //隐藏吸顶元素后将其从吸顶队列中删除，并修改吸顶队列中所有元素的position为static，以便affixPosition能重新调整吸顶元素位置
@@ -360,7 +367,18 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
             interval
         if (supportCss3("transition")) {
             height = display ? elementHeight : 0
-            vmodel.height = height 
+            if (!display) {
+                setTimeout(function() {
+                    vmodel.height = height
+                }, 10)
+            } else {
+                vmodel.height = height 
+            }
+            if (height) {
+                setTimeout(function() {
+                    vmodel.$fire("elementHeightOk")
+                }, 600)
+            }
         } else {
             height = display ? 0 : elementHeight
             function animate() {
@@ -370,6 +388,9 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
                     return 
                 } else if (height > elementHeight) {
                     vmodel.height = elementHeight
+                    setTimeout(function() {
+                        vmodel.$fire("elementHeightOk")
+                    }, 600)
                     return 
                 }
                 vmodel.height = height

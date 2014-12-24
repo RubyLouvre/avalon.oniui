@@ -76,9 +76,11 @@
                 $cityOpts: {
                     onChange: function() {
                         var area = dropdown.places[avalon(this).data("index")];
-                        alert(area.city)
-                        alert(area.area)
-                        alert(area.province)
+                        console.log(avalon(this).data("index"))
+                        console.log(area)
+                   //     alert(area.city)
+                     //   alert(area.area)
+                      //  alert(area.province)
                     }
                 },
                 places: []

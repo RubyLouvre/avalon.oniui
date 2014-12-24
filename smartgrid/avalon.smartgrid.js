@@ -460,6 +460,8 @@ define(["avalon",
              * @param 新增的行
              */
             vm.addRows = function(data, init) {
+                // 防止 addRows([])带来问题
+                if((!data || !data.length) && !init) return
                 var tableTemplate = "",
                     rows,
                     container = vmodel.container,

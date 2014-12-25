@@ -1,3 +1,14 @@
+/**
+ * 伪XMLHttpRequest类,用于屏蔽浏览器差异性
+ * var ajax = new(self.XMLHttpRequest||ActiveXObject)("Microsoft.XMLHTTP")
+ * ajax.onreadystatechange = function(){
+ *   if (ajax.readyState==4 && ajax.status==200){
+ *        alert(ajax.responseText)
+ *   }
+ * }
+ * ajax.open("POST", url, true) 
+ * ajax.send("key=val&key1=val2") 
+ */
 var XHRMethods = {
     setRequestHeader: function(name, value) {
         this.requestHeaders[name] = value;

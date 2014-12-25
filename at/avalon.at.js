@@ -411,3 +411,31 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
  @links
  [例子1](avalon.at.ex1.html)
  */
+/*
+//针对可编辑div的定位
+        function positionCursor(obj) {
+            //光标定位到最后
+            if (obj.createTextRange) { //ie
+                var rtextRange = obj.createTextRange();
+                rtextRange.moveStart('character', obj.value.length);
+                rtextRange.collapse(true);
+                rtextRange.select();
+            } else if (obj.selectionStart) { //chrome "<input>"、"<textarea>"
+                obj.selectionStart = obj.value.length;
+            } else if (window.getSelection) {
+
+                var sel = window.getSelection();
+
+                var tempRange = document.createRange();
+                var t = obj.lastChild;
+                if (obj.childNodes.length == 1) {
+                    tempRange.setStart(obj.firstChild, obj.firstChild.length); //单行时可以定位到最后
+                } else if (obj.childNodes.length > 1) { //多行定位到最后
+                    tempRange.setStart(that, that.childNodes.length);
+                }
+
+                sel.removeAllRanges();
+                sel.addRange(tempRange);
+            }
+        }
+ */

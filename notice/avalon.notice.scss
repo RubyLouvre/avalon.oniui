@@ -24,28 +24,30 @@ $uiname: "oni-notice";
         background-color: #ffe44f;
         color: #a65a00;
     }
-    .#{$uiname}-inner {
-        padding: 7px 10px;
-        .#{$uiname}-header {
-            font-weight: 700;
-        }
-        .#{$uiname}-content {
-            .#{$uiname}-close {
-                cursor: pointer;
-                text-decoration: underline;
-            }
-        }
+}
+.#{$uiname}-inner {
+    padding: 7px 10px;
+}
+.#{$uiname}-header {
+    font-weight: 700;
+}
+.#{$uiname}-close {
+    cursor: pointer;
+    text-decoration: underline;
+}
+#{$uiname}-info {
+    @if($oinui-theme == smoothness) {
+        background-color: #58b359;
+        color: #ffffff;
     }
-    &.#{$uiname}-info {
-        @if($oinui-theme == smoothness) {
-            background-color: #58b359;
-            color: #ffffff;
-        }
+}
+#{$uiname}-danger {
+    @if($oinui-theme == smoothness) {
+        background-color: #bb0000;
+        color: #ffffff;
     }
-    &.#{$uiname}-danger {
-        @if($oinui-theme == smoothness) {
-            background-color: #bb0000;
-            color: #ffffff;
-        }
-    }
+}
+#{$uiname}-content a, #{$uiname}-content a:hover {
+    color: #a65a00;
+    text-decoration: underline;
 }

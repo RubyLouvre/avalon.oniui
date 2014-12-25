@@ -25,7 +25,7 @@
                     <colgroup>
                         <col width="180" />
                         <col width="80" />
-                        <col width="180" />
+                        <col width="120" />
                     </colgroup>
                     <tr>
                         <th>名字</th>
@@ -127,6 +127,35 @@
                                     <td>vmodel</td>
                                     <td>Number</td>
                                     <td>日历组件对应vmodel</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>dateCellRender</td>
+                        <td>Function</td>
+                        <td>false</td>
+                        <td>格式化输出日期单元格内容
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>date</td>
+                                    <td>Date</td>
+                                    <td>当前的日期</td>
+                                </tr>
+                                <tr>
+                                    <td>vmodel</td>
+                                    <td>Vmodel</td>
+                                    <td>日历组件对应vmodel</td>
+                                </tr>
+                                <tr>
+                                    <td>dateItem</td>
+                                    <td>Object</td>
+                                    <td>对应的包含日期相关信息的对象</td>
                                 </tr>
                             </table>
                         </td>
@@ -302,6 +331,9 @@
                 </li>
                 <li>
                     <a href="avalon.datepicker.ex11.html">具有时间选择功能的datepicker</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex12.html">带格式化输出配置的datepicker</a>
                 </li>
             </ul>
         </div>

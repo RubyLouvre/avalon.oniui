@@ -49,7 +49,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
             vm.widgetElement = element;
             vm.elementDisabled = "";
             vm.toggle = true;
-            vm.placehold = avalon(element).attr("placeholder");
+            vm.placehold = avalon(element).attr("placeholder") || "";
             vm.focusClass = false
             vm.placeholderOrigin = placeholderOrigin
             vm.placeWidth = 0

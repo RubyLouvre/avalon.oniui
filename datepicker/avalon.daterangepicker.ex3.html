@@ -22,12 +22,7 @@
                 <div ms-widget="daterangepicker" data-daterangepicker-disabled="true"></div>
                 <p>说明：配置双日历组件的disabled为true来禁用组件，配置值可以是布尔值，也可以是controller下的一个属性变量名，如果是属性名则可以通过控制此属性值控制组件的禁用与否</p>
             </fieldset>
-            <fieldset style="position:relative;">
-                <legend>日期范围框，禁用日期范围框</legend>
-                <div ms-widget="daterangepicker" data-daterangepicker-disabled="disabled"></div>
-                <p>说明：配置disabled为一个变量名，点击右边的"切换禁用"按钮来切换日期范围框的禁用与否</p>
-                <button ms-click="toggleDisabled" style="position:absolute;right:0;top: 20px;">切换禁用</button>
-            </fieldset>
+            
             <fieldset style="position:relative;">
                 <legend>日期范围框，禁用日期范围框</legend>
                 <div ms-widget="daterangepicker, a"></div>
@@ -39,10 +34,6 @@
                     var model = avalon.define("demo", function(vm) {
                         vm.from = "2014-06-03";
                         vm.to = "2014-06-26";
-                        vm.disabled = true;
-                        vm.toggleDisabled = function() {
-                            vm.disabled = !vm.disabled;
-                        }
                         vm.setDisabled = function() {
                             var daterangepickerVM = avalon.vmodels.a;
                             daterangepickerVM.setDisabled(true);
@@ -73,12 +64,7 @@
                             &lt;div ms-widget="daterangepicker" data-daterangepicker-disabled="true"&gt;&lt;/div&gt;
                             &lt;p&gt;说明：配置双日历组件的disabled为true来禁用组件，配置值可以是布尔值，也可以是controller下的一个属性变量名，如果是属性名则可以通过控制此属性值控制组件的禁用与否&lt;/p&gt;
                         &lt;/fieldset&gt;
-                        &lt;fieldset style="position:relative;"&gt;
-                            &lt;legend&gt;日期范围框，禁用日期范围框&lt;/legend&gt;
-                            &lt;div ms-widget="daterangepicker" data-daterangepicker-disabled="disabled"&gt;&lt;/div&gt;
-                            &lt;p&gt;说明：配置disabled为一个变量名，点击右边的"切换禁用"按钮来切换日期范围框的禁用与否&lt;/p&gt;
-                            &lt;button ms-click="toggleDisabled" style="position:absolute;right:0;top: 20px;"&gt;切换禁用&lt;/button&gt;
-                        &lt;/fieldset&gt;
+                        
                         &lt;fieldset style="position:relative;"&gt;
                             &lt;legend&gt;日期范围框，禁用日期范围框&lt;/legend&gt;
                             &lt;div ms-widget="daterangepicker, a"&gt;&lt;/div&gt;
@@ -90,10 +76,6 @@
                                 var model = avalon.define("demo", function(vm) {
                                     vm.from = "2014-06-03";
                                     vm.to = "2014-06-26";
-                                    vm.disabled = true;
-                                    vm.toggleDisabled = function() {
-                                        vm.disabled = !vm.disabled;
-                                    }
                                     vm.setDisabled = function() {
                                         var daterangepickerVM = avalon.vmodels.a;
                                         daterangepickerVM.setDisabled(true);

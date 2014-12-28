@@ -33,13 +33,14 @@
                 <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="fromD, toD" data-coupledatepicker-rules="cOpts"></div>
                 <p>通过配置rules对象，设置初始日期的最小日期fromMinDate、最大日期fromMaxDate和结束日期的最小日期toMinDate和最大日期toMaxDate,在显式设置结束日历的最小日期和最大日期的情况下，当结束日期不在其最小和最大日期范围之内时，组件会将结束日期设为其最小日期</p>
             </fieldset>
+           
             <fieldset style="position: relative; z-index: 1">
                 <legend>双日历框 结束初始日期异常时，rules defaultDate的设置</legend>
                 <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="fromE, toE" data-coupledatepicker-rules="eOpts"></div>
                 from: {{fromE}}
                 to2: {{toE}}
                 <p>通过配置结束日期初始值异常时的默认值、最小间隔天数、最大间隔天数对应的rules属性，可以使结束日期初始为起始初始日期+2</p>
-            </fieldset>
+            </fieldset> 
             <script> 
                 require("datepicker/avalon.coupledatepicker", function(avalon) {
                     var model = avalon.define("demo", function(vm) {

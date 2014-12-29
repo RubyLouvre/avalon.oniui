@@ -13,42 +13,37 @@ define(["../avalon.getModel",
         "css!./avalon.coupledatepicker.css"], function(avalon, sourceHTML) {
     var widget = avalon.ui.coupledatepicker = function(element, data, vmodels) {
         var options = data.coupledatepickerOptions,
-            disabled = options.disabled.toString(),
-            disabledVM = avalon.getModel(disabled, vmodels),
+            parseDate = ((typeof options.parseDate === "function") && options.parseDate.bind(options)) || widget.defaults.parseDate.bind(options),
+            formatDate = ((typeof options.formatDate === "function") && options.formatDate.bind(options)) || widget.defaults.formatDate.bind(options),
             duplex = options.duplex && options.duplex.split(","),
-            duplexFrom,
-            duplexTo,
+            container = options.container,
             rules = options.rules,
             _toMinDate = "",
             _toMaxDate = "",
-            calendarTemplate = sourceHTML,
             rangeRules = "",
-            container = options.container,
-            parseDate = options.parseDate.bind(options),
-            formatDate = options.formatDate.bind(options);
+            duplexFrom,
+            duplexTo,
+            inputFromVM,
+            inputToVM
 
+        // 获取rules配置对象
         if (rules && avalon.type(rules) === 'string') {
             var ruleVM = avalon.getModel(rules, vmodels)
-            rules = ruleVM[1][ruleVM[0]]
+            rules = ruleVM[1][ruleVM[0]];
         }
         rules = rules.$model || rules
-        if (rules) {
+        if (rules) { // 让rules对象的toMinDate、toMaxDate、fromMinDate、fromMaxDate是可监控的属性
             rules.toMinDate = rules.toMinDate || ""
             rules.toMaxDate = rules.toMaxDate || ""
             rules.fromMinDate = rules.fromMinDate || ""
             rules.fromMaxDate = rules.fromMaxDate || ""
         }
-        _toMinDate = rules.toMinDate 
-        _toMaxDate = rules.toMaxDate 
         options.rules = rules
+        _toMinDate = rules.toMinDate
+        _toMaxDate = rules.toMaxDate
         rangeRules = options.rules && options.rules.rules || ""
         rangeRules = rangeRules.length > 0 ? rangeRules.split(",") : []
-        if (disabled !== "true" && disabled !== "false" && disabledVM) {
-            options.disabled = disabledVM[1][disabledVM[0]]
-            disabledVM[1].$watch(disabledVM[0], function(val) {
-                vmodel.disabled = val
-            })
-        }
+
         if (typeof container === "string") {
             container = container.split(",")
             container[0] = document.getElementById(container[0])
@@ -57,27 +52,55 @@ define(["../avalon.getModel",
         if (!container.length) {
             container = element.getElementsByTagName("div")
         }
-        options.container = container = container.length ? avalon.slice(container, 0) : container
-        calendarTemplate = options.template = options.getTemplate(calendarTemplate, options)
+        options.container = container = (container.length ? avalon.slice(container, 0) : container)
+        options.template = initValues(options.getTemplate(sourceHTML, options))
+
         var vmodel = avalon.define(data.coupledatepickerId, function(vm) {
             avalon.mix(vm, options)
-            vm.msg = ""
-            vm.$skipArray = ["widgetElement","container","calendarWrapper", "template", "changeMonthAndYear", "startDay", "fromLabel", "toLabel"]
+            vm.$skipArray = ["widgetElement","container","calendarWrapper", "template", "changeMonthAndYear", "startDay", "fromLabel", "toLabel", "duplex"]
             vm.widgetElement = element
-            vm.fromDisabled = options.disabled
-            vm.toDisabled = options.disabled
-            vm.inputFromValue = ""
-            vm.inputToValue = ""
             vm.fromSelectCal = function(date) {
-                applyRules(date)
-            };
+                if (vmodel.rules && vmodel.rules.rules) {
+                    applyRules(date)
+                }
+            }
             vm.getDates = function() {
-                var inputFromDate = parseDate(vmodel.inputFromValue),
-                    inputToDate = parseDate(vmodel.inputToValue);
-                return (inputFromDate && inputToDate && [inputFromDate, inputToDate]) || null;
+                var inputFromValue = duplexFrom ? duplexFrom[1][duplexFrom[0]] : vmodel.inputFromValue,
+                    inputFromDate = parseDate(inputFromValue),
+                    inputToValue = duplexTo ? duplexTo[1][duplexTo[0]] : vmodel.inputToValue,
+                    inputToDate = parseDate(inputToValue)
+
+                return (inputFromDate && inputToDate && [inputFromDate, inputToDate]) || null
             } 
+            vm.$fromConfig = {
+                changeMonthAndYear: options.changeMonthAndYear,
+                startDay: options.startDay,
+                parseDate: parseDate,
+                formatDate: formatDate,
+                minDate: "rules.fromMinDate",
+                maxDate: "rules.fromMaxDate",
+                onSelect: vm.fromSelectCal,
+                calendarLabel: options.fromLabel,
+                onInit: function(fromVM) {
+                    inputFromVM = fromVM
+                    options.disabled && (inputFromVM.disabled = true)
+                }
+            }
+            vm.$toConfig = {
+                changeMonthAndYear: options.changeMonthAndYear,
+                startDay: options.startDay,
+                parseDate: parseDate,
+                formatDate: formatDate,
+                minDate: "rules.toMinDate",
+                maxDate: "rules.toMaxDate",
+                calendarLabel: options.toLabel,
+                onInit: function(toVM) {
+                    inputToVM = toVM
+                    options.disabled && (inputToVM.disabled = true)
+                }
+            }
             vm.$init = function(continueScan) {
-                var template = options.template.replace(/MS_OPTION_FROM_LABEL/g,vmodel.fromLabel).replace(/MS_OPTION_TO_LABEL/g,vmodel.toLabel).replace(/MS_OPTION_START_DAY/g, vmodel.startDay).replace(/MS_OPTION_CHANGE_MONTH_AND_YEAR/g, vmodel.changeMonthAndYear).split("MS_OPTION_TEMPLATE"),
+                var template = options.template.split("MS_OPTION_TEMPLATE"),
                     containerTemp = template[0],
                     inputOnlyTemp = template[1],
                     calendar = null,
@@ -86,11 +109,15 @@ define(["../avalon.getModel",
                     toInput = null,
                     fromContainer = null,
                     toContainer = null,
-                    calendarTemplate = "";
+                    calendarTemplate = "",
+                    inputFromValue = ""
 
                 avalon(element).addClass("oni-coupledatepicker")
-                initValues()
-                applyRules(vmodel.inputFromValue && parseDate(vmodel.inputFromValue))
+                if (duplexFrom) {
+                    inputFromValue = duplexFrom[1][duplexFrom[0]]
+                }
+                applyRules(inputFromValue && parseDate(inputFromValue))
+
                 if (container.length) {
                     calendarTemplate = inputOnlyTemp 
                     inputOnly = avalon.parseHTML(inputOnlyTemp)
@@ -122,18 +149,10 @@ define(["../avalon.getModel",
             };
         })
         vmodel.$watch("disabled", function(val) {
-            vmodel.fromDisabled = vmodel.toDisabled = val
+            inputFromVM.disabled = val
+            inputToVM.disabled = val
         })
-        vmodel.$watch("inputFromValue", function(val) {
-            if(duplexFrom) {
-                duplexFrom[1][duplexFrom[0]] = val
-            }
-        })
-        vmodel.$watch("inputToValue", function(val) {
-            if(duplexTo) {
-                duplexTo[1][duplexTo[0]] = val
-            }
-        })
+
         var _c = {  
             '+M': function(time ,n) {
                 var _d = time.getDate()
@@ -162,7 +181,8 @@ define(["../avalon.getModel",
                 time.setFullYear(time.getFullYear() - n) 
             }
         };
-        function initValues() {
+
+        function initValues(template) {
             if (duplex) {
                 var duplexLen = duplex.length,
                     duplexVM1 = avalon.getModel(duplex[0].trim(), vmodels),
@@ -172,36 +192,55 @@ define(["../avalon.getModel",
                 duplexFrom = duplexVM1
                 duplexTo = duplexVM2
                 setValues(duplexLen, duplexVal1, duplexVal2)
-                if (duplexVM1) {
-                    duplexVM1[1].$watch(duplexVM1[0], function(val) {
-                        vmodel.inputFromValue = val
-                    })
+                if (duplexFrom) {
+                    template = template.replace(/MS_OPTION_FROMDUPLEX/g, duplex[0].trim())
                 }
-                if (duplexVM2) {
-                    duplexVM2[1].$watch(duplexVM2[0], function(val) {
-                        vmodel.inputToValue = val
-                    })
+                if (duplexTo) {
+                    template = template.replace(/MS_OPTION_TODUPLEX/g, duplex[1].trim())
                 }
             } 
+            if (!duplexFrom) {
+                options.inputFromValue = ""
+                template = template.replace(/MS_OPTION_FROMDUPLEX/g, "inputFromValue")
+            }
+            if (!duplexTo) {
+                options.inputToValue = ""
+                template = template.replace(/MS_OPTION_TODUPLEX/g, "inputToValue")
+            }
+            return template
         }
         function setValues(len, from, to) {
             if (len) {
                 if (len == 2) {
-                    vmodel.inputFromValue = from && parseDate(from) && from || ""
-                    vmodel.inputToValue = to && parseDate(to) && to || ""
-                } else if ( len == 1){
-                    vmodel.inputFromValue = from && parseDate(from) && from || ""
+                    if (duplexFrom) {
+                        duplexFrom[1][duplexFrom[0]] = from && parseDate(from) && from || ""
+                    } else {
+                        vmodel.inputFromValue = from && parseDate(from) && from || ""
+                    }
+                    if (duplexTo) {
+                        duplexTo[1][duplexTo[0]] = to && parseDate(to) && to || ""
+                    } else {
+                        vmodel.inputToValue = to && parseDate(to) && to || ""
+                    }
+                } else if (len == 1) {
+                    if (duplexFrom) {
+                        duplexFrom[1][duplexFrom[0]] = from && parseDate(from) && from || ""
+                    } else {
+                        vmodel.inputFromValue = from && parseDate(from) && from || ""
+                    }
                 }
             }
         }
         function applyRules(date) {
-            var df = {},
-                rules = vmodel.rules,
-                minDate = _toMinDate && parseDate(_toMinDate), 
+            var minDate = _toMinDate && parseDate(_toMinDate), 
                 maxDate = _toMaxDate && parseDate(_toMaxDate),
+                inputToValue = duplexTo ? duplexTo[1][duplexTo[0]] : vmodel.inputToValue,
+                rules = vmodel.rules,
                 minDateRule,
                 maxDateRule,
-                inputToDate;
+                inputToDate,
+                df = {}
+
             if (!date) return 
             for (var i = 0, type = ['defaultDate', 'minDate', 'maxDate']; i < type.length; i++) {
                 if (rangeRules[i]) {
@@ -212,22 +251,29 @@ define(["../avalon.getModel",
             maxDateRule = df['maxDate']
             minDate = (minDateRule ? minDateRule.getTime() : -1) > (minDate ? minDate.getTime() : -1) ? minDateRule : minDate
             maxDate = (maxDateRule ? maxDateRule.getTime() : Number.MAX_VALUE) > (maxDate ? maxDate.getTime() : Number.MAX_VALUE) ? maxDate : maxDateRule
-            if(!vmodel.inputToValue && df["defaultDate"]){
-                vmodel.inputToValue = formatDate(df["defaultDate"])
+            if(!inputToValue && df["defaultDate"]){
+                inputToValue = formatDate(df["defaultDate"])
             }
             if(minDate){
                 var toMinDateFormat = formatDate(minDate)
-                rules.toMinDate = toMinDateFormat
-                if(!vmodel.inputToValue) {
-                    vmodel.inputToValue = toMinDateFormat
+                if(!inputToValue) {
+                    inputToValue = toMinDateFormat
                 }
             }
-            if(maxDate) {
-                rules.toMaxDate = formatDate(maxDate)
-            }
-            inputToDate = vmodel.inputToValue && parseDate(vmodel.inputToValue)
+            inputToDate = inputToValue && parseDate(inputToValue)
             if(inputToDate && isDateDisabled(inputToDate, minDate, maxDate)) {
-                vmodel.inputToValue = toMinDateFormat
+                inputToValue = toMinDateFormat
+            }
+            if (duplexTo) {
+                duplexTo[1][duplexTo[0]] = inputToValue
+            } else {
+                vmodel.inputToValue = inputToValue
+            }
+            if (minDate) {
+                rules.toMinDate = cleanDate(minDate)
+            } 
+            if (maxDate) {
+                rules.toMaxDate = cleanDate(maxDate)
             }
         }
         // 根据minDate和maxDate的设置判断给定的日期是否不可选
@@ -257,6 +303,14 @@ define(["../avalon.getModel",
             return _date
         }
         return vmodel
+    }
+    // 将日期时间转为00:00:00
+    function cleanDate( date ){
+        date.setHours(0)
+        date.setMinutes(0)
+        date.setSeconds(0)
+        date.setMilliseconds(0)
+        return date
     }
     widget.version = 1.0
     widget.defaults = {

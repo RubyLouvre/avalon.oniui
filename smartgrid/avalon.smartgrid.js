@@ -210,6 +210,18 @@ define(["avalon",
         options.loading.onInit = function (vm, options, vmodels) {
             vmodel.loadingVModel = vm;
         };
+        options.$pagerConfig = {
+            canChangePageSize: true,
+            options: [
+                10,
+                20,
+                50,
+                100
+            ],    //默认[10,20,50,100]
+            onInit: function(pagerVM, options, vmodels) {
+                vmodel && (vmodel.pager = pagerVM)
+            }
+        }
         options.pageable = options.pageable !== void 0 ? options.pageable : true;
         if (avalon.type(pager) === 'object') {
             pager.prevText = pager.prevText || '\u4E0A\u4E00\u9875';
@@ -225,9 +237,18 @@ define(["avalon",
                     return tmpl + optionsStr;
                 };
             }
+            if (pager.onInit && typeof pager.onInit === "function") {
+                var onInit = pager.onInit
+                pager.onInit = function(pagerVM, options, vmodels) {
+                    vmodel && (vmodel.pager = pagerVM)
+                    onInit(pagerVM, options, vmodels)
+                }
+            }
+            avalon.mix(options.$pagerConfig, options.pager)
         } else {
             options.pager = {};
         }
+        options.pager = null
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options);
         options.$skipArray = [
@@ -242,9 +263,9 @@ define(["avalon",
             'loadingVModel',
             'loading',
             'pageable',
-            'pager',
             'noResult',
             'sortable',
+            'pager',
             'data',// 一定不要去掉啊，去掉了就会出错
             'containerMinWidth',
             '_disabledData',
@@ -536,7 +557,7 @@ define(["avalon",
                 }
             };
             vm.$init = function () {
-                var container = vmodel.container, pagerVM = null, intervalID = 0, gridFrame = '';
+                var container = vmodel.container, gridFrame = '';
                 gridFrame = gridHeader.replace('MS_OPTION_ID', vmodel.$id);
                 container.innerHTML = gridFrame;
                 avalon.scan(container, vmodel);
@@ -586,24 +607,6 @@ define(["avalon",
                 avalon(window).unbind('resize', callbacksNeedRemove.resizeCallback).unbind('scroll', callbacksNeedRemove.scrollCallback);
             };
         });
-        if (vmodel.pageable) {
-            var flagPager = false;
-            var intervalID = setInterval(function () {
-                var elem = document.getElementById('pager-' + vmodel.$id);
-                if (elem && !flagPager) {
-                    elem.setAttribute('ms-widget', 'pager,pager-' + vmodel.$id);
-                    avalon(elem).addClass('oni-smartgrid-pager-wrapper');
-                    avalon.scan(elem, vmodel);
-                    flagPager = true;
-                }
-                var pagerVM = avalon.vmodels['pager-' + vmodel.$id];
-                if (pagerVM) {
-                    vmodel.pager = pagerVM;
-                    clearInterval(intervalID);
-                    element.removeAttribute('id');
-                }
-            }, 100);
-        }
         return vmodel;
     };
     widget.defaults = {
@@ -624,15 +627,7 @@ define(["avalon",
             modal: true,
             modalBackground: '#000'
         },
-        pager: {
-            canChangePageSize: true,
-            options: [
-                10,
-                20,
-                50,
-                100
-            ]    //默认[10,20,50,100]
-        },
+        
         sortable: { remoteSort: true },
         addRow: function (tmpl, columns, vmodel) {
             return tmpl;

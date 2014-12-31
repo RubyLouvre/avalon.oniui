@@ -169,12 +169,11 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
             })
             // 监控searchText值的变化，及时更新提示列表?
             vm.$watch('searchText',function(v){
-                vmodel.updateSource( v , vmodel, limit);
+                vmodel.updateSource(v , vmodel, limit);
             });
             
             // 处理提示项的鼠标点击，也就是更新input值，同时隐藏提示框?
             vm.clickcallback = function(idx, event) {
-                debugger
                 var selectValue = vmodel.list[idx].value
                 vmodel.onChangeCallback(selectValue, vmodel.inputElement, event);
                 if (typeof vmodel.onSelectItem === "function") {
@@ -225,9 +224,6 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                 }
             })
         }
-        avalon.bind(options.inputElement,"blur", function(event) {
-            vmodel.toggle = false
-        })
         if (options.onChange) {
             var arr = avalon.getModel( options.onChange , vmodels );
             var _onchange = vmodel.onChangeCallback;
@@ -236,7 +232,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                 arr[1][arr[0]].apply( arr[1] , arguments );
             }
         }
-        return vmodel ;
+        return vmodel
     };
     // 判断点击目标元素是否在查找元素内部，在则返回true，否则返回false
     function findParent( element , findElement ) {
@@ -245,9 +241,6 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
         return findParent( element.parentNode , findElement );
     }
     function keyDownOperation(vmodel, event, limit) {
-        var selectValue = vmodel.list[vmodel.selectedIndex] && vmodel.list[vmodel.selectedIndex].value,
-            suggestCtr = vmodel.suggestCtr
-
         switch( event.which ) {
             case 9:
                 if (!vmodel.toggle) return ;
@@ -261,7 +254,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                 event.preventDefault();
                 if (!vmodel.toggle) return ;
                 vmodel.toggle = false;
-                vmodel.onChangeCallback(selectValue , vmodel.inputElement, event );
+                vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
             break;
             case 38:
                 // arrow up
@@ -270,17 +263,16 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
 
                 // 下拉框
                 if(limit){
-                    suggestCtr.moveUp(vmodel.selectedIndex);
+                    vmodel.suggestCtr.moveUp(vmodel.selectedIndex);
                 }
 
                 if (vmodel.selectedIndex === -1) {
                     vmodel.selectedIndex = vmodel.list.length - 1
                 }
-                vmodel.onChangeCallback(selectValue , vmodel.inputElement, event );
+                vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
 
                 // prevent default behavior to move cursor at the the begenning
                 event.preventDefault()
-
             break;
             case 40:
                 // arrow down
@@ -289,13 +281,13 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
 
                 // 下拉框
                 if(limit){
-                    suggestCtr.moveDown(vmodel.selectedIndex);
+                    vmodel.suggestCtr.moveDown(vmodel.selectedIndex);
                 }
 
                 if (vmodel.selectedIndex === vmodel.list.length) {
                     vmodel.selectedIndex = 0
                 }
-                vmodel.onChangeCallback(selectValue , vmodel.inputElement, event );
+                vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
                 
                 // prevent default behavior to move cursor at the the end
                 event.preventDefault()

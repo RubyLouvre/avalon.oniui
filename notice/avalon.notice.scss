@@ -35,19 +35,19 @@ $uiname: "oni-notice";
     cursor: pointer;
     text-decoration: underline;
 }
-#{$uiname}-info {
+.#{$uiname}-info {
     @if($oinui-theme == smoothness) {
         background-color: #58b359;
         color: #ffffff;
     }
 }
-#{$uiname}-danger {
+.#{$uiname}-danger {
     @if($oinui-theme == smoothness) {
         background-color: #bb0000;
         color: #ffffff;
     }
 }
-#{$uiname}-content a, #{$uiname}-content a:hover {
+.#{$uiname}-content a, #{$uiname}-content a:hover {
     color: #a65a00;
     text-decoration: underline;
 }

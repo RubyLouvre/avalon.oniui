@@ -15,29 +15,29 @@ define(["../avalon.getModel",
     var calendarTemplate = sourceHTML;
     var widget = avalon.ui.daterangepicker = function(element, data, vmodels) {
         var options = data.daterangepickerOptions,
-            inputFrom, //绑定datepicker组件的初始日期输入域元素的引用
-            inputTo, //绑定datepicker组件的结束日期输入域元素的引用
-            disabled = options.disabled.toString(), //组件的配置项，可能是Boolean类型也可能代表一个属性变量名的字符串，通过此属性来决定组件的禁用与否
-            disabledVM = avalon.getModel(disabled, vmodels),
+            datesDisplayFormat = options.opts && options.opts.datesDisplayFormat,
+            parseDate = ((typeof options.parseDate === "function") && options.parseDate.bind(options)) || widget.defaults.parseDate.bind(options),
+            formatDate = ((typeof options.formatDate === "function") && options.formatDate.bind(options)) || widget.defaults.formatDate.bind(options),
             duplex = options.duplex && options.duplex.split(","), //options.duplex保存起始日期和结束日期初始化值的引用，逗号分隔
-            duplexFrom,
-            duplexTo,
-            rules = options.rules, //日期选择框起始日期和结束日期之间关系的规则
-            selectFuncVM = typeof options.onSelect ==="string" ? avalon.getModel(options.onSelect, vmodels) : null, //得到onSelect回调所在的VM域onSelect值所组成的数组
             _confirmClick = false, //判断是否点击了确定按钮，没点击为false，点击为true
-            _oldValue, //保存最近一次选择的起始日期和结束日期组成的日期对象数组，因为当选择了日期但没有点确定按钮时，日期选择范围不改变，相应的对应的日历默认输入域也应该恢复到最近一次的选择
+            rules = options.rules, //日期选择框起始日期和结束日期之间关系的规则
+            fromSelected = null,
+            inputFromVM = null,
+            inputToVM = null,
             _toMinDate = "", //保存rules指向的对象的toMinDate属性值，以便于rules属性计算所得的minDate做比较
             _toMaxDate = "", //保存rules指向的对象的toMaxDate属性值，以便于rules属性计算所得的maxDate做比较
-            fromSelected = null,
-            datesDisplayFormat = options.opts && options.opts.datesDisplayFormat,
-            rangeRules,
-            parseDate = options.parseDate.bind(options),
-            formatDate = options.formatDate.bind(options);
+            inputFrom, //绑定datepicker组件的初始日期输入域元素的引用
+            inputTo, //绑定datepicker组件的结束日期输入域元素的引用
+            duplexFrom,
+            duplexTo,
+            _oldValue, //保存最近一次选择的起始日期和结束日期组成的日期对象数组，因为当选择了日期但没有点确定按钮时，日期选择范围不改变，相应的对应的日历默认输入域也应该恢复到最近一次的选择
+            rangeRules
         
         // 获取用户定义的模拟输入框显示内容形式的方法
         if (datesDisplayFormat && typeof datesDisplayFormat ==="function") {
             options.datesDisplayFormat = datesDisplayFormat
         }
+        datesDisplayFormat = options.datesDisplayFormat
         // 获取rules配置对象
         if (rules && avalon.type(rules) === 'string') {
             var ruleVM = avalon.getModel(rules, vmodels)
@@ -50,34 +50,23 @@ define(["../avalon.getModel",
             rules.fromMinDate = rules.fromMinDate || ""
             rules.fromMaxDate = rules.fromMaxDate || ""
         }
+        options.rules = rules
         _toMinDate = rules.toMinDate
         _toMaxDate = rules.toMaxDate
-        options.rules = rules
         rangeRules = options.rules && options.rules.rules || ""
         rangeRules = rangeRules.length > 0 ? rangeRules.split(",") : []
-        if (selectFuncVM) {
-            options.onSelect = selectFuncVM[1][selectFuncVM[0]]
-        }
-        // 如果disabled配置为字符串，说明是通过外部vm控制组件的禁用与否，取得外部disabled所在vm并监控
-        if( disabled !== "true" && disabled !== "false" && disabledVM) {
-            options.disabled = disabledVM[1][disabledVM[0]]
-            disabledVM[1].$watch(disabledVM[0], function(val) {
-                vmodel.disabled = val
-            })
-        }
-        datesDisplayFormat = options.datesDisplayFormat
+        
         options.template = options.getTemplate(calendarTemplate, options)
+        initValues()
         var vmodel = avalon.define(data.daterangepickerId, function(vm) {
             avalon.mix(vm, options)
             vm.msg = ""
-            vm.$skipArray = ["widgetElement","container","inputElement","calendarWrapper", "fromLabel", "toLabel"]
+            vm.$skipArray = ["widgetElement","container","inputElement","calendarWrapper", "fromLabel", "toLabel", "duplex"]
             vm.widgetElement = element
             vm.toggle = false
             vm.container = null
             vm.inputElement = null
             vm.calendarWrapper = null
-            vm.inputFromValue = ""
-            vm.inputToValue = ""
             // 切换组件的显示隐藏
             vm._toggleDatepicker = function(val) {
                 if (!vmodel.disabled) {
@@ -106,12 +95,6 @@ define(["../avalon.getModel",
                     vmodel.msg = msg
                     return false
                 }
-                if (duplexFrom) {
-                    duplexFrom[1][duplexFrom[0]] = inputFromValue
-                }
-                if (duplexTo) {
-                    duplexTo[1][duplexTo[0]] = inputToValue
-                }
                 vmodel.label = label
                 _confirmClick = true
                 _oldValue = [inputFromDate, inputToDate]
@@ -132,8 +115,11 @@ define(["../avalon.getModel",
                 vmodel.toggle ? vmodel.toggle = false : 0
             }
             vm.getDates = function() {
-                var inputFromDate = parseDate(vmodel.inputFromValue),
-                    inputToDate = parseDate(vmodel.inputToValue);
+                var inputFromValue = duplexFrom ? duplexFrom[1][duplexFrom[0]] : vmodel.inputFromValue,
+                    inputFromDate = parseDate(inputFromValue),
+                    inputToValue = duplexTo ? duplexTo[1][duplexTo[0]] : vmodel.inputToValue,
+                    inputToDate = parseDate(inputToValue)
+                    
                 return (inputFromDate && inputToDate && [inputFromDate, inputToDate]) || null
             }
             // 设置日期范围框的起始日期和结束日期
@@ -219,15 +205,45 @@ define(["../avalon.getModel",
             }
             // 选择了初始日期之后根据rules的设置及时更新结束日期的选择范围
             vm.fromSelectCal = function(date) {
-                applyRules(date)
+                if (vmodel.rules && vmodel.rules.rules) {
+                    applyRules(date)
+                }
                 fromSelected = date
             }
+            vm.$fromConfig = {
+                type: "range",
+                allowBlank: true,
+                parseDate: parseDate,
+                formatDate: formatDate,
+                onSelect: vm.fromSelectCal,
+                minDate: "rules.fromMinDate",
+                maxDate: "rules.fromMaxDate",
+                startDay: options.startDay,
+                calendarLabel: options.fromLabel,
+                onInit: function(fromVM) {
+                    inputFromVM = fromVM
+                }
+            }
+            vm.$toConfig = {
+                type: "range",
+                allowBlank: true,
+                parseDate: parseDate,
+                formatDate: formatDate,
+                minDate: "rules.toMinDate",
+                maxDate: "rules.toMaxDate",
+                startDay: options.startDay,
+                calendarLabel: options.toLabel,
+                onInit: function(toVM) {
+                    inputToVM = toVM
+                }
+            }
             vm.$init = function() {
-                var daterangepicker,
-                    inputs,
+                var inputFromValue = "",
+                    daterangepicker,
+                    calendarWrapper,
                     container,
-                    calendarWrapper;
-                options.template = options.template.replace(/MS_OPTION_START_DAY/g, vmodel.startDay)
+                    inputs
+
                 daterangepicker = avalon.parseHTML(options.template).firstChild
                 inputs = daterangepicker.getElementsByTagName("input")
                 container = daterangepicker.children[0]
@@ -244,20 +260,24 @@ define(["../avalon.getModel",
                         vmodel.toggle = false
                     }
                 })
-                initValues()
+                
                 element.init = true
-                applyRules(vmodel.inputFromValue && parseDate(vmodel.inputFromValue))
+                if (duplexFrom) {
+                    inputFromValue = duplexFrom[1][duplexFrom[0]]
+                }
+                applyRules(inputFromValue && parseDate(inputFromValue))
                 avalon.scan(element, [vmodel].concat(vmodels)) 
                 // 扫描完daterangepicker组件之后才扫描datepicker
                 avalon.nextTick(function() {
-                    inputFrom.setAttribute("ms-widget", "datepicker")
-                    inputTo.setAttribute("ms-widget", "datepicker")
-                    inputFrom.setAttribute("ms-duplex", "inputFromValue")
-                    inputTo.setAttribute("ms-duplex", "inputToValue")
-                    inputFrom.setAttribute("data-toggle", "toggle")
-                    inputTo.setAttribute("data-toggle","toggle")
-                    avalon.scan(inputFrom, [vmodel])
-                    avalon.scan(inputTo, [vmodel])
+                    var duplexFromName = duplexFrom ? duplexFrom[0].trim() : "inputFromValue",
+                        duplexToName = duplexTo ? duplexTo[0].trim() : "inputToValue"
+
+                    inputFrom.setAttribute("ms-widget", "datepicker, $, $fromConfig")
+                    inputTo.setAttribute("ms-widget", "datepicker, $, $toConfig")
+                    inputFrom.setAttribute("ms-duplex", duplexFromName)
+                    inputTo.setAttribute("ms-duplex", duplexToName)
+                    avalon.scan(inputFrom, [vmodel].concat(vmodels))
+                    avalon.scan(inputTo, [vmodel].concat(vmodels))
                     if(typeof options.onInit === "function" ){
                         //vmodels是不包括vmodel的
                         options.onInit.call(element, vmodel, options, vmodels)
@@ -268,12 +288,16 @@ define(["../avalon.getModel",
                 element.innerHTML = element.textContent = ""
             }
         })
-        vmodel.$watch("inputFromValue", function(val) {
-            updateMsg()
-        })
-        vmodel.$watch("inputToValue", function(val) {
-            updateMsg()
-        })
+        if (!duplexFrom) {
+            vmodel.$watch("inputFromValue", function(val) {
+                updateMsg()
+            })
+        }
+        if (!duplexTo) {
+            vmodel.$watch("inputToValue", function(val) {
+                updateMsg()
+            })
+        }
         var _c = {  
             '+M': function(time ,n) { //+M表示相隔n个月
                 var _d = time.getDate()
@@ -312,31 +336,31 @@ define(["../avalon.getModel",
                     duplexVal2 = duplexVM2 ? duplexVM2[1][duplexVM2[0]] : "";
                 duplexFrom = duplexVM1
                 duplexTo = duplexVM2
-                setValues(duplexLen, duplexVal1, duplexVal2)
-                if (duplexVM1) {
-                    duplexVM1[1].$watch(duplexVM1[0], function(val) {
-                        vmodel.inputFromValue = val
-                        if (parseDate(vmodel.inputToValue) && parseDate(val)) {
-                            vmodel.label = datesDisplayFormat(vmodel.defaultLabel,val, vmodel.inputToValue)
-                        }
+                setValues(duplexLen, duplexVal1, duplexVal2, true)
+                if (duplexFrom) {
+                    duplexFrom[1].$watch(duplexFrom[0], function(val) {
+                        updateMsg()
                     })
                 }
-                if (duplexVM2) {
-                    duplexVM2[1].$watch(duplexVM2[0], function(val) {
-                        vmodel.inputToValue = val
-                        if (parseDate(vmodel.inputFromValue) && parseDate(val)) { 
-                            vmodel.label = datesDisplayFormat(vmodel.defaultLabel,vmodel.inputFromValue, val)
-                        }
+                if (duplexTo) {
+                    duplexTo[1].$watch(duplexTo[0], function(val) {
+                        updateMsg()
                     })
                 }
-                vmodel.label =  options.label ? options.label : vmodel.label
-                initMsgAndOldValue()
             } 
+            if (!duplexFrom) {
+                options.inputFromValue = ""
+            }
+            if (!duplexTo) {
+                options.inputToValue = ""
+            }
         }
         // 根据参数个数进行日期的初始日期设置
-        function setValues(len, from, to) {
+        function setValues(len, from, to, init) {
             var fromValue = "",
-                toValue = "";
+                toValue = "",
+                dateranpickerVM = vmodel ? vmodel : options
+
             if (len) {
                 if (len==2) {
                     if (avalon.type(from) === "date") {
@@ -348,32 +372,52 @@ define(["../avalon.getModel",
                     if (avalon.type(to) === "date") {
                         toValue = formatDate(to)
                     } else {
-                        toValue = to && parseDate(to) && to || ""
+                        if (init) {
+                            toValue = to ? to : ""
+                        } else {
+                            toValue = to && parseDate(to) && to || ""
+                        }
+                    }
+                    if (duplexFrom) {
+                        duplexFrom[1][duplexFrom[0]] = fromValue
+                    } else {
+                        dateranpickerVM.inputFromValue = fromValue
+                    }
+                    if (duplexTo) {
+                        duplexTo[1][duplexTo[0]] = toValue
+                    } else {
+                        dateranpickerVM.inputToValue = toValue
                     }
 
-                    vmodel.inputFromValue = inputFrom.value = fromValue
-                    vmodel.inputToValue = inputTo.value = toValue
-
-                    vmodel.label = datesDisplayFormat(vmodel.defaultLabel, fromValue, toValue)
+                    dateranpickerVM.label = datesDisplayFormat(dateranpickerVM.defaultLabel, fromValue, toValue)
                 } else if(len==1){
                     if (avalon.type(from) === "date") {
                         fromValue = formatDate(from)
                     } else {
                         fromValue = from && parseDate(from) && from || ""
                     }
-                    vmodel.inputFromValue = inputFrom.value = fromValue
+
+                    if (duplexFrom) {
+                        duplexFrom[1][duplexFrom[0]] = fromValue
+                    } else {
+                        dateranpickerVM.inputFromValue = fromValue
+                    }
                 }
-                if(!vmodel.inputToValue && !vmodel.inputFromValue) { // 只要inputTo.value为null都提示不限日期
-                    vmodel.label = "不限日期"
+                toValue = toValue || (duplexTo ? duplexTo[1][duplexTo[0]] : dateranpickerVM.inputToValue)
+
+                if(!fromValue && !toValue) { // 只要inputTo.value为null都提示不限日期
+                    dateranpickerVM.label = "不限日期"
                 }
             }
         }
         // 根据rules的设置确定结束日期可选的范围及默认值
         function applyRules(date) {
-            var df = {},
-                rules = vmodel.rules,
-                minDate = _toMinDate && parseDate(_toMinDate), 
+            var minDate = _toMinDate && parseDate(_toMinDate), 
                 maxDate = _toMaxDate && parseDate(_toMaxDate),
+                inputFromValue = duplexFrom ? duplexFrom[1][duplexFrom[0]] : vmodel.inputFromValue,
+                inputToValue = duplexTo ? duplexTo[1][duplexTo[0]] : vmodel.inputToValue,
+                rules = vmodel.rules,
+                df = {},
                 minDateRule,
                 maxDateRule,
                 initFromDate,
@@ -381,7 +425,16 @@ define(["../avalon.getModel",
                 initToDate,
                 toMinDateFormat,
                 inputToDate;
-            if (!date) return
+            if (!date) {
+                if (element.init) {
+                    initMsgAndOldValue()
+                    element.init = false
+                } else {
+                    rules.toMinDate = minDate || ""
+                    rules.toMaxDate = maxDate || ""
+                }
+                return
+            }
             for (var i = 0 , type = ['defaultDate', 'minDate', 'maxDate'] ; i < type.length; i++) {
                 if (rangeRules[i]) {
                     df[type[i]] = calcDate(rangeRules[i], date)
@@ -391,34 +444,39 @@ define(["../avalon.getModel",
             maxDateRule = df['maxDate']
             minDate = (minDateRule ? minDateRule.getTime() : -1) > (minDate ? minDate.getTime() : -1) ? minDateRule : minDate
             maxDate = (maxDateRule ? maxDateRule.getTime() : Number.MAX_VALUE) > (maxDate ? maxDate.getTime() : Number.MAX_VALUE) ? maxDate : maxDateRule
+            
             if (element.init) {
-                initFromDate = parseDate(vmodel.inputFromValue)
+                initFromDate = parseDate(inputFromValue)
                 inputToInitValue = duplexTo && duplexTo[1][duplexTo[0]] || ""
                 initToDate = parseDate(inputToInitValue)
                 if (initFromDate && inputToInitValue && !initToDate) {
-                    vmodel.inputToValue = formatDate(df["defaultDate"])
-                    vmodel.label = datesDisplayFormat(options.defaultLabel,vmodel.inputFromValue, vmodel.inputToValue)
+                    inputToValue = formatDate(df["defaultDate"])
                 }
             }
             if (minDate){
                 toMinDateFormat = formatDate(minDate)
-                rules.toMinDate = toMinDateFormat
-                if (!vmodel.inputToValue && !element.init) {
-                    vmodel.inputToValue = toMinDateFormat
+                if (!inputToValue && !element.init) {
+                    inputToValue = toMinDateFormat
                 }
             }
-            if (maxDate) {
-                rules.toMaxDate = formatDate(maxDate)
-            }
-            inputToDate = vmodel.inputToValue && parseDate(vmodel.inputToValue)
+            inputToDate = inputToValue && parseDate(inputToValue)
             if (inputToDate && isDateDisabled(inputToDate, minDate, maxDate)) {
-                inputTo.value = toMinDateFormat
-                vmodel.inputToValue = toMinDateFormat
-                if (element.init) {
-                    vmodel.label = datesDisplayFormat(options.defaultLabel,vmodel.inputFromValue, vmodel.inputToValue)
-                }
+                inputToValue = toMinDateFormat
+            }
+            if (duplexTo) {
+                duplexTo[1][duplexTo[0]] = inputToValue
+            } else {
+                vmodel.inputToValue = inputToValue
+            }
+            if (minDate) {
+                rules.toMinDate = cleanDate(minDate)
+            } 
+            if (maxDate) {
+                rules.toMaxDate = cleanDate(maxDate)
             }
             if (element.init) {
+                initMsgAndOldValue()
+                vmodel.label = datesDisplayFormat(options.defaultLabel, inputFromValue, inputToValue)
                 element.init = false
             }
         }
@@ -451,28 +509,38 @@ define(["../avalon.getModel",
             return _date
         }
         function initMsgAndOldValue() {
-            _oldValue = [parseDate(inputFrom.value), parseDate(inputTo.value)]
+            var inputFromValue = duplexFrom ? duplexFrom[1][duplexFrom[0]] : vmodel.inputFromValue,
+                inputToValue = duplexTo ? duplexTo[1][duplexTo[0]] : vmodel.inputToValue
+
+            _oldValue = [parseDate(inputFromValue), parseDate(inputToValue)]
             if(vmodel.label) {
                 updateMsg()
             }
         }
         // 根据选择的日期更新日历框下方的显示内容
         function updateMsg() {
-            var msg = "",
-                day = 0,
-                inputToValue = vmodel.inputToValue,
-                inputFromValue = vmodel.inputFromValue,
+            var inputFromValue = duplexFrom ? duplexFrom[1][duplexFrom[0]] : vmodel.inputFromValue,
+                inputToValue = duplexTo ? duplexTo[1][duplexTo[0]] : vmodel.inputToValue,
                 inputToDate = parseDate(inputToValue),
                 msgFormat = options.opts && options.opts.msgFormat,
-                inputFromDate = null;
+                inputFromDate = null,
+                msg = "",
+                day = 0
+
             if(inputToValue && !inputToDate) {
-                vmodel.inputToValue = ""
+                if (duplexTo) {
+                    duplexTo[1][duplexTo[0]] = ""
+                } else {
+                    vmodel.inputToValue = ""
+                }
             } 
             if(inputToValue && (inputFromValue || fromSelected)) {
                 inputFromDate = parseDate(inputFromValue) || fromSelected
                 day = Math.floor(((inputToDate.getTime()-inputFromDate.getTime()))/1000/60/60/24 +1)
                 if(msgFormat && typeof msgFormat === "function") {
-                    msg = options.opts.msgFormat(inputFrom.vmodel, inputTo.vmodel)
+                    if (inputFromVM && inputToVM) {
+                        msg = msgFormat(inputFromVM, inputToVM)
+                    }
                 } else {
                     msg = "已选时间段："+inputFromValue+" 至 "+inputToValue+" 共计"+day+"天"
                 } 
@@ -482,23 +550,28 @@ define(["../avalon.getModel",
             vmodel.msg = msg
             fromSelected ? fromSelected = null : 0
         }
-        // 将日期时间转为00:00:00
-        function cleanDate( date ){
-            date.setHours(0)
-            date.setMinutes(0)
-            date.setSeconds(0)
-            date.setMilliseconds(0)
-            return date
-        }
         vmodel.$watch("toggle", function(val) {
+            var fromOldValue = formatDate(_oldValue && _oldValue[0] || ""),
+                toOldValue = formatDate(_oldValue && _oldValue[1] || "")
+
             if(!val && !_confirmClick) {
-                inputFrom.value = vmodel.inputFromValue = formatDate(_oldValue && _oldValue[0] || "") 
-                inputTo.value = vmodel.inputToValue = formatDate(_oldValue && _oldValue[1] || "") 
+                if (duplexFrom && duplexFrom[1][duplexFrom[0]] != fromOldValue) {
+                    duplexFrom[1][duplexFrom[0]] = fromOldValue
+                    applyRules()
+                } else if (!duplexFrom && vmodel.inputFromValue != fromOldValue) {
+                    vmodel.inputFromValue = fromOldValue
+                    applyRules()
+                }
+                if (duplexTo && duplexTo[1][duplexTo[0]] != toOldValue) {
+                    duplexTo[1][duplexTo[0]] = toOldValue
+                } else if (!duplexTo && vmodel.inputToValue != toOldValue) {
+                    vmodel.inputToValue = toOldValue
+                }
             } else if(_confirmClick){
-                vmodel.inputFromValue = inputFrom.value
-                vmodel.inputToValue = inputTo.value
                 _confirmClick = false
             }
+            inputFromVM.toggle = val
+            inputToVM.toggle = val
             if (val) {
                 avalon.type(vmodel.onOpen) === "function" && vmodel.onOpen(vmodel)
             } else {
@@ -506,6 +579,14 @@ define(["../avalon.getModel",
             }
         })
         return vmodel
+    }
+    // 将日期时间转为00:00:00
+    function cleanDate( date ){
+        date.setHours(0)
+        date.setMinutes(0)
+        date.setSeconds(0)
+        date.setMilliseconds(0)
+        return date
     }
     widget.version = 1.0
     widget.defaults = {

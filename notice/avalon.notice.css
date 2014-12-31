@@ -16,8 +16,8 @@
 
 .oni-notice-close { cursor: pointer; text-decoration: underline; }
 
-oni-notice-info { background-color: #58b359; color: #ffffff; }
+.oni-notice-info { background-color: #58b359; color: #ffffff; }
 
-oni-notice-danger { background-color: #bb0000; color: #ffffff; }
+.oni-notice-danger { background-color: #bb0000; color: #ffffff; }
 
-oni-notice-content a, oni-notice-content a:hover { color: #a65a00; text-decoration: underline; }
+.oni-notice-content a, oni-notice-content a:hover { color: #a65a00; text-decoration: underline; }

@@ -32,6 +32,7 @@
                                 return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
                             },
                             formatDate : function(date){
+                                if (!date) return
                                 var separator = this.separator,
                                     year = date.getFullYear(),
                                     month = date.getMonth(),
@@ -74,6 +75,7 @@
                                             return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
                                         },
                                         formatDate : function(date){
+                                            if (!date) return
                                             var separator = this.separator,
                                                 year = date.getFullYear(),
                                                 month = date.getMonth(),

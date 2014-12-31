@@ -60,11 +60,10 @@
 			window.__log = function(log) {
 				model.log.unshift(log)
 			}
-			avalon.bind(window, 'shake', function(e) {
-				__log("shaked " + e.direction + " " + index++)
-			})
 			require(["./touch/avalon.shake"], function() {
-				
+				avalon.bind(window, 'shake', function(e) {
+					__log("shaked " + e.direction + " " + index++)
+				})
 			})
 		</script>
 	</body>

@@ -2,10 +2,10 @@
 <html>
     
     <head>
-        <title>Name 数字输入框</title>
+        <title>下拉提示搜索框</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <meta name="descriptions" content="spinner组件是用来增强输入框的能力，使其可以通过上下按钮或者键盘上的up、down键来改变输入域的数值，而且确保输入域始终是数值字符，非数值字符无效，组件会默认将非数值字符转换为最近一次的输入域数值
+        <meta name="descriptions" content="dropdownList使得可以通过下拉搜索功能减少显示内容，方便用户查找选择
  " />
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
         />
@@ -14,10 +14,10 @@
     
     <body>
         <div class="wrapper">
-            <h2>spinner</h2>
+            <h2>dropdownList</h2>
             <fieldset>
-                <legend>Name 数字输入框</legend>
-                <p>spinner组件是用来增强输入框的能力，使其可以通过上下按钮或者键盘上的up、down键来改变输入域的数值，而且确保输入域始终是数值字符，非数值字符无效，组件会默认将非数值字符转换为最近一次的输入域数值</p>
+                <legend>下拉提示搜索框</legend>
+                <p>dropdownList使得可以通过下拉搜索功能减少显示内容，方便用户查找选择</p>
             </fieldset>
             <fieldset>
                 <legend>使用说明</legend>
@@ -25,7 +25,7 @@
                     <colgroup>
                         <col width="180" />
                         <col width="80" />
-                        <col width="180" />
+                        <col width="120" />
                     </colgroup>
                     <tr>
                         <th>名字</th>
@@ -37,46 +37,16 @@
                         <td align="center" colspan="4">配置参数</td>
                     </tr>
                     <tr>
-                        <td>min</td>
+                        <td>widgetElement</td>
                         <td>Identifier</td>
-                        <td>NaN</td>
-                        <td>spinner的最小值,默认不存在最小值限制</td>
+                        <td>element</td>
+                        <td>绑定组件的元素引用</td>
                     </tr>
                     <tr>
-                        <td>max</td>
-                        <td>Identifier</td>
-                        <td>NaN</td>
-                        <td>spinner的最大值，默认不存在最大值限制</td>
-                    </tr>
-                    <tr>
-                        <td>step</td>
-                        <td>Number</td>
-                        <td>1</td>
-                        <td>spinner的步长</td>
-                    </tr>
-                    <tr>
-                        <td>width</td>
-                        <td>String</td>
-                        <td>"auto"</td>
-                        <td>设置spinner的width</td>
-                    </tr>
-                    <tr>
-                        <td>value</td>
-                        <td>Number</td>
-                        <td>0</td>
-                        <td>spinner的当前值</td>
-                    </tr>
-                    <tr>
-                        <td>disabled</td>
-                        <td>Boolean</td>
-                        <td>false</td>
-                        <td>是否禁用spinner</td>
-                    </tr>
-                    <tr>
-                        <td>onDecrease</td>
+                        <td>render(data)</td>
                         <td>Function</td>
-                        <td>avalon.noop</td>
-                        <td>减值更新spinner之后的回调
+                        <td></td>
+                        <td>重新渲染模板源
                             <table border="1">
                                 <tr>
                                     <th style="width:100px">参数名/返回值</th>
@@ -84,18 +54,30 @@
                                     <th>说明</th>
                                 </tr>
                                 <tr>
-                                    <td>value</td>
-                                    <td>Number</td>
-                                    <td>当前值</td>
+                                    <td>data</td>
+                                    <td>Array</td>
+                                    <td>要渲染的数据源</td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
                     <tr>
-                        <td>onIncrease</td>
+                        <td>data</td>
+                        <td>Array</td>
+                        <td>[]</td>
+                        <td>搜索源</td>
+                    </tr>
+                    <tr>
+                        <td>limit</td>
+                        <td>Number</td>
+                        <td>10</td>
+                        <td>显示条数，超过限制出滚动条</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(tmp,opts)</td>
                         <td>Function</td>
-                        <td>avalon.noop</td>
-                        <td>增值更新spinner之后的回调
+                        <td></td>
+                        <td>模板函数,方便用户自定义模板
                             <table border="1">
                                 <tr>
                                     <th style="width:100px">参数名/返回值</th>
@@ -103,30 +85,31 @@
                                     <th>说明</th>
                                 </tr>
                                 <tr>
-                                    <td>value</td>
-                                    <td>Number</td>
-                                    <td>当前值</td>
+                                    <td>tmp</td>
+                                    <td>String</td>
+                                    <td>默认模板</td>
+                                </tr>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>Object</td>
+                                    <td>vmodel</td>
+                                </tr>
+                                <tr>
+                                    <td>返回</td>
+                                    <td>String</td>
+                                    <td>新模板</td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
                 </table>
             </fieldset>
-            <div class="others">
-                <h1>spinner使用注意点</h1>
-                <ol>
-                    <li>请保证输入域的值是数值或者字符串型的数值，否则会报错</li>
-                    <li>当通过手动输入值时，如果输入的值不是数值型的，组件会默认将其置为修改之前的值，如果输入大于最大值，组件会自动将其置为最大值，小于最小值时同理</li>
-                    <li>在输入域获得焦点时可通过键盘上的上下箭头控制spinner的增减</li>
-                    <li>spinner会判断初始输入域值是否在用户设置的数值范围呢，不在的话会进行调整</li>
-                </ol>
-            </div>
             <ul class="example-links">
                 <li>
-                    <a href="avalon.spinner.ex.html">spinner demo</a>
+                    <a href="avalon.dropdownList.ex1.html">dropdownList demo</a>
                 </li>
                 <li>
-                    <a href="avalon.spinner.ex1.html">动态设置spinner的min、max的值</a>
+                    <a href="avalon.dropdownList.ex2.html">render重新渲染搜索列表源</a>
                 </li>
             </ul>
         </div>

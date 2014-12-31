@@ -228,6 +228,7 @@ define(["avalon", "text!./avalon.dropdownList.html", "text!./avalon.suggest.html
                                     })
                                 }
                             })
+                            suggestVM.selectedIndex = 0
                             suggestVM.list = _data
                             return 
                         } else if (initList) {
@@ -353,10 +354,12 @@ define(["avalon", "text!./avalon.dropdownList.html", "text!./avalon.suggest.html
             }
 
         options.textbox = avalon.mix(options.textbox, textboxConfig)
+        options.template = options.getTemplate(sourceHTML)
         var vmodel = avalon.define(data.dropdownListId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "data", "textbox", "searchBox", "suggestVM"];
-            vm.widgetElement = element;
+            vm.$skipArray = ["widgetElement", "data", "textbox", "searchBox", "suggestVM", "template"];
+            // @config 绑定组件的元素引用
+            vm.widgetElement = element; 
             vm.searchItem = ""
             vm.textboxToggle = false
             vm.searchBox = null
@@ -377,6 +380,10 @@ define(["avalon", "text!./avalon.dropdownList.html", "text!./avalon.suggest.html
                 }
                 vmodel.textboxToggle = textboxToggle
             }
+            /**
+             * @config 重新渲染模板源
+             * @param data {Array} 要渲染的数据源
+             */
             vm.render = function(data) {
                 suggestVM = vmodel.suggestVM
                 if (avalon.type(data) == "array") {
@@ -385,7 +392,7 @@ define(["avalon", "text!./avalon.dropdownList.html", "text!./avalon.suggest.html
                 suggestVM.updateSource("", suggestVM, vmodel, true)
             }
             vm.$init = function() {
-                element.innerHTML = sourceHTML
+                element.innerHTML = options.template
                 $element.addClass("oni-dropdownList")
                 vmodel.searchBox = element.getElementsByTagName("input")[0]
                 avalon.scan(element, [vmodel].concat(vmodels))
@@ -410,13 +417,22 @@ define(["avalon", "text!./avalon.dropdownList.html", "text!./avalon.suggest.html
     }
     widget.version = 1.0
     widget.defaults = {
-        data: [],
-        limit: 10
+        data: [], // @config搜索源
+        limit: 10, // @config显示条数，超过限制出滚动条
+        /**
+         * @config 模板函数,方便用户自定义模板
+         * @param tmp {String} 默认模板
+         * @param opts {Object} vmodel
+         * @returns {String} 新模板
+         */
+        getTemplate: function(tmp, opts) {
+            return tmp
+        }
     }
     return avalon;
 })
 /**
  @links
- [dropdownList demo](avalon.dropdownList.ex.html)
- [动态设置dropdownList的min、max的值](avalon.dropdownList.ex1.html)
+ [dropdownList demo](avalon.dropdownList.ex1.html)
+ [render重新渲染搜索列表源](avalon.dropdownList.ex2.html)
  */

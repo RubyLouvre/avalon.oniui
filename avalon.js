@@ -5,8 +5,8 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
-avalon.js 1.3.8 build in 2014.12.17 
-__________________________________
+avalon.js 1.38 build in 2014.12.24 
+___________________________________
 support IE6+ and other browsers
  ==================================================*/
 (function() {
@@ -21,6 +21,7 @@ var DOC = window.document
 var head = DOC.getElementsByTagName("head")[0] //HEAD元素
 var ifGroup = head.insertBefore(document.createElement("avalon"), head.firstChild) //避免IE6 base标签BUG
 ifGroup.innerHTML = "X<style id='avalonStyle'>.avalonHide{ display: none!important }</style>"
+ifGroup.setAttribute("ms-skip", "1")
 function log() {
     if (window.console && avalon.config.debug) {
         // http://stackoverflow.com/questions/8785624/how-to-safely-wrap-console-log
@@ -234,7 +235,7 @@ function _number(a, len) { //用于模拟slice, splice的效果
 avalon.mix({
     rword: rword,
     subscribers: subscribers,
-    version: 1.37,
+    version: 1.38,
     ui: {},
     log: log,
     slice: W3C ? function(nodes, start, end) {
@@ -991,10 +992,7 @@ try {
 } catch (e) {
     canHideOwn = false
 }
-var fakeHead = {
-    nodeType: 1,
-    sourceIndex: 1
-}
+
 function modelFactory($scope, $special, $model) {
     if (Array.isArray($scope)) {
         var arr = $scope.concat()
@@ -1041,34 +1039,26 @@ function modelFactory($scope, $special, $model) {
                             return
                         }
                         if (isFunction(setter)) {
-                            var backup = $events[name]
+                            var lock = $events[name]
                             $events[name] = [] //清空回调，防止内部冒泡而触发多次$fire
                             setter.call($vmodel, newValue)
-                            $events[name] = backup
+                            $events[name] = lock
                         }
                     } else {
-                        if (avalon.openComputedCollect) { // 收集视图刷新函数
-                            collectSubscribers($events[name])
-                        }
+                        //计算属性不需要收集视图刷新函数,都是由其他监控属性代劳
                     }
                     newValue = $model[name] = getter.call($vmodel) //同步$model
                     if (!isEqual(oldValue, newValue)) {
-                        withProxyCount && updateWithProxy($vmodel.$id, name, newValue) //同步循环绑定中的代理VM
                         notifySubscribers($events[name]) //同步视图
                         safeFire($vmodel, name, newValue, oldValue) //触发$watch回调
                     }
                     return newValue
                 }
                 computedProperties.push(function() {
-                    Registry[expose] = {
-                        evaluator: accessor,
-                        element: fakeHead,
-                        type: "computed::" + name,
-                        handler: noop,
-                        args: []
+                    Registry[expose] = function() {
+                        $vmodel.$model[name] = getter.call($vmodel)
                     }
                     accessor()
-                    collectSubscribers($events[name])
                     delete Registry[expose]
                 })
             } else if (rcomplexType.test(valueType)) {
@@ -1081,9 +1071,9 @@ function modelFactory($scope, $special, $model) {
                             return
                         }
                         if (!isEqual(oldValue, newValue)) {
-                            childVmodel = accessor.child = updateChild($vmodel, name, newValue, valueType)
+                            childVmodel = accessor.child = neutrinoFactory($vmodel, name, newValue, valueType)
                             newValue = $model[name] = childVmodel.$model //同步$model
-                            var fn = rebindings[childVmodel.$id]
+                            var fn = midway[childVmodel.$id]
                             fn && fn() //同步视图
                             safeFire($vmodel, name, newValue, oldValue) //触发$watch回调
                         }
@@ -1101,7 +1091,6 @@ function modelFactory($scope, $special, $model) {
                     if (arguments.length) {
                         if (!isEqual(oldValue, newValue)) {
                             $model[name] = newValue //同步$model
-                            withProxyCount && updateWithProxy($vmodel.$id, name, newValue) //同步代理VM
                             notifySubscribers($events[name]) //同步视图
                             safeFire($vmodel, name, newValue, oldValue) //触发$watch回调
                         }
@@ -1191,20 +1180,12 @@ var descriptorFactory = W3C ? function(obj) {
     return a
 }
 
-//ms-with, ms-repeat绑定生成的代理对象储存池
-var withProxyPool = {}
-var withProxyCount = 0
-var rebindings = {}
+//ms-with,ms-each, ms-repeat绑定生成的代理对象储存池
+var midway = {}
 
-function updateWithProxy($id, name, val) {
-    var pool = withProxyPool[$id]
-    if (pool && pool[name]) {
-        pool[name].$val = val
-    }
-}
 //应用于第2种accessor
 
-function updateChild(parent, name, value, valueType) {
+function neutrinoFactory(parent, name, value, valueType) {
     //a为原来的VM， b为新数组或新对象
     var son = parent[name]
     if (valueType === "array") {
@@ -1216,13 +1197,14 @@ function updateChild(parent, name, value, valueType) {
         return son
     } else {
         var iterators = parent.$events[name]
-        if (withProxyPool[son.$id]) {
-            withProxyCount--
-            delete withProxyPool[son.$id]
+        var pool = son.$events.$withProxyPool
+        if (pool) {
+            recycleProxies(pool, "with")
+            son.$events.$withProxyPool = null
         }
         var ret = modelFactory(value)
         ret.$events[subscribers] = iterators
-        rebindings[ret.$id] = function(data) {
+        midway[ret.$id] = function(data) {
             while (data = iterators.shift()) {
                 (function(el) {
                     if (el.type) { //重新绑定
@@ -1233,7 +1215,7 @@ function updateChild(parent, name, value, valueType) {
                     }
                 })(data)
             }
-            delete rebindings[ret.$id]
+            delete midway[ret.$id]
         }
         return ret
     }
@@ -2073,22 +2055,30 @@ if (!"1" [0]) {
     }
 }
 
-var rfilters = /\|\s*(\w+)\s*(\([^)]*\))?/g,
+var rhasHtml = /\|\s*html\s*/,
         r11a = /\|\|/g,
-        r11b = /U2hvcnRDaXJjdWl0/g,
+        r11b = /\u1122\u3344/g,
         rlt = /&lt;/g,
         rgt = /&gt;/g
 
-function trimFilter(value, leach) {
-    if (value.indexOf("|") > 0) { // 抽取过滤器 先替换掉所有短路与
-        value = value.replace(r11a, "U2hvcnRDaXJjdWl0") //btoa("ShortCircuit")
-        value = value.replace(rfilters, function(c, d, e) {
-            leach.push(d + (e || ""))
-            return ""
-        })
-        value = value.replace(r11b, "||") //还原短路与
+function getToken(value) {
+    if (value.indexOf("|") > 0) {
+        value = value.replace(r11a, "\u1122\u3344") //干掉所有短路或
+        var index = value.indexOf("|")
+        if (index > -1) {
+            return {
+                filters: value.slice(index).replace(r11b, "||"),
+                value: value.slice(0, index).replace(r11b, "||"),
+                expr: true
+            }
+        }
+        value = value.replace(r11b, "||")
     }
-    return value
+    return {
+        value: value,
+        filters: "",
+        expr: true
+    }
 }
 
 function scanExpr(str) {
@@ -2114,13 +2104,7 @@ function scanExpr(str) {
         }
         value = str.slice(start, stop)
         if (value) { //处理{{ }}插值表达式
-            var leach = []
-            value = trimFilter(value, leach)
-            tokens.push({
-                value: value,
-                expr: true,
-                filters: leach.length ? leach : void 0
-            })
+            tokens.push(getToken(value))
         }
         start = stop + closeTag.length
     } while (1)
@@ -2131,22 +2115,13 @@ function scanExpr(str) {
             expr: false
         })
     }
-
     return tokens
 }
 
 function scanText(textNode, vmodels) {
     var bindings = []
     if (textNode.nodeType === 8) {
-        var leach = []
-        var value = trimFilter(textNode.nodeValue, leach)
-        var token = {
-            expr: true,
-            value: value
-        }
-        if (leach.length) {
-            token.filters = leach
-        }
+        var token = getToken(textNode.nodeValue)
         var tokens = [token]
     } else {
         tokens = scanExpr(textNode.data)
@@ -2155,21 +2130,18 @@ function scanText(textNode, vmodels) {
         for (var i = 0, token; token = tokens[i++]; ) {
             var node = DOC.createTextNode(token.value) //将文本转换为文本节点，并替换原来的文本节点
             if (token.expr) {
-                var filters = token.filters
+                var filters = token.filters || ""
                 var binding = {
                     type: "text",
                     element: node,
-                    value: token.value,
-                    filters: filters
+                    value: token.value
                 }
-                if (filters && filters.indexOf("html") !== -1) {
-                    avalon.Array.remove(filters, "html")
+                if (rhasHtml.test(filters)) {
+                    filters = filters.replace(rhasHtml, "")
                     binding.type = "html"
                     binding.group = 1
-                    if (!filters.length) {
-                        delete bindings.filters
-                    }
                 }
+                binding.filters = filters
                 bindings.push(binding) //收集带有插值表达式的文本
             }
             hyperspace.appendChild(node)
@@ -2220,10 +2192,11 @@ var ClassListMethods = {
     __set: function(cls) {
         cls = cls.trim()
         var node = this.node
-        if (typeof node.className === "string") {
-            node.className = cls
-        } else { //SVG元素的className是一个对象 SVGAnimatedString { baseVal="", animVal=""}，只能通过set/getAttribute操作
+        if (rsvg.test(node)) {
+            //SVG元素的className是一个对象 SVGAnimatedString { baseVal="", animVal=""}，只能通过set/getAttribute操作
             node.setAttribute("class", cls)
+        } else {
+            node.className = cls
         }
     } //toggle存在版本差异，因此不使用它
 }
@@ -2378,7 +2351,7 @@ avalon.fn.mix({
 
 function parseData(data) {
     try {
-        if(typeof data === "object")
+        if (typeof data === "object")
             return data
         data = data === "true" ? true :
                 data === "false" ? false :
@@ -2433,7 +2406,7 @@ function getWindow(node) {
 var cssHooks = avalon.cssHooks = {}
 var prefixes = ["", "-webkit-", "-o-", "-moz-", "-ms-"]
 var cssMap = {
-    "float":  W3C ? "cssFloat" : "styleFloat"
+    "float": W3C ? "cssFloat" : "styleFloat"
 }
 avalon.cssNumber = oneObject("columnCount,order,fillOpacity,fontWeight,lineHeight,opacity,orphans,widows,zIndex,zoom")
 
@@ -2810,10 +2783,32 @@ var cacheExprs = createCache(128)
 //取得求值函数及其传参
 var rduplex = /\w\[.*\]|\w\.\w/
 var rproxy = /(\$proxy\$[a-z]+)\d+$/
+var rthimRightParentheses = /\)\s*$/
+var rthimOtherParentheses = /\)\s*\|/g
+var rquoteFilterName = /\|\s*([$\w]+)/g
+var rpatchBracket = /"\s*\["/g
+var rthimLeftParentheses = /"\s*\(/g
+function parseFilter(val, filters) {
+    filters = filters
+            .replace(rthimRightParentheses, "")//处理最后的小括号
+            .replace(rthimOtherParentheses, function() {//处理其他小括号
+                return "],|"
+            })
+            .replace(rquoteFilterName, function(a, b) { //处理|及它后面的过滤器的名字
+                return "[" + quote(b)
+            })
+            .replace(rpatchBracket, function() {
+                return '"],["'
+            })
+            .replace(rthimLeftParentheses, function() {
+                return '",'
+            }) + "]"
+    return  "return avalon.filters.$filter(" + val + ", " + filters + ")"
+}
 
 function parseExpr(code, scopes, data) {
     var dataType = data.type
-    var filters = data.filters ? data.filters.join("") : ""
+    var filters = data.filters || ""
     var exprId = scopes.map(function(el) {
         return String(el.$id).replace(rproxy, "$1")
     }) + code + dataType + filters
@@ -2864,9 +2859,6 @@ function parseExpr(code, scopes, data) {
         })
     }
     //---------------args----------------
-    if (filters) {
-        args.push(avalon.filters)
-    }
     data.args = args
     //---------------cache----------------
     var fn = cacheExprs[exprId] //直接从缓存，免得重复生成
@@ -2878,26 +2870,12 @@ function parseExpr(code, scopes, data) {
     if (prefix) {
         prefix = "var " + prefix
     }
-    if (filters) { //文本绑定，双工绑定才有过滤器
-        code = "\nvar ret" + expose + " = " + code
-        var textBuffer = [],
-                fargs
-        textBuffer.push(code, "\r\n")
-        for (var i = 0, fname; fname = data.filters[i++]; ) {
-            var start = fname.indexOf("(")
-            if (start !== -1) {
-                fargs = fname.slice(start + 1, fname.lastIndexOf(")")).trim()
-                fargs = "," + fargs
-                fname = fname.slice(0, start).trim()
-            } else {
-                fargs = ""
-            }
-            textBuffer.push(" if(filters", expose, ".", fname, "){\n\ttry{\nret", expose,
-                    " = filters", expose, ".", fname, "(ret", expose, fargs, ")\n\t}catch(e){} \n}\n")
+    if (/\S/.test(filters)) { //文本绑定，双工绑定才有过滤器
+        if (!/text|html/.test(data.type)) {
+            throw Error("ms-" + data.type + "不支持过滤器")
         }
-        code = textBuffer.join("")
-        code += "\nreturn ret" + expose
-        names.push("filters" + expose)
+        code = "\nvar ret" + expose + " = " + code + ";\r\n"
+        code += parseFilter("ret" + expose, filters)
     } else if (dataType === "duplex") { //双工绑定
         var _body = "'use strict';\nreturn function(vvv){\n\t" +
                 prefix +
@@ -3295,22 +3273,18 @@ bindingExecutors.html = function(val, elem, data) {
     } else {
         avalon.clearHTML(parent).appendChild(comment)
     }
-    data.vmodels.cb(1)
-    avalon.nextTick(function() {
+    if (isHtmlFilter) {
+        data.group = fragment.childNodes.length || 1
+    }
+    var nodes = avalon.slice(fragment.childNodes)
+    if (nodes[0]) {
+        if (comment.parentNode)
+            comment.parentNode.replaceChild(fragment, comment)
         if (isHtmlFilter) {
-            data.group = fragment.childNodes.length || 1
+            data.element = nodes[0]
         }
-        var nodes = avalon.slice(fragment.childNodes)
-        if (nodes[0]) {
-            if (comment.parentNode)
-                comment.parentNode.replaceChild(fragment, comment)
-            if (isHtmlFilter) {
-                data.element = nodes[0]
-            }
-        }
-        scanNodeArray(nodes, data.vmodels)
-        data.vmodels && data.vmodels.cb(-1)
-    })
+    }
+    scanNodeArray(nodes, data.vmodels)
 }
 
 bindingHandlers["if"] =
@@ -3643,8 +3617,10 @@ function ticker() {
 }
 
 function newSetter(value) {
-    onSetter.call(this, value)
-    onTree.call(this, value)
+    if (avalon.contains(root, this)) {
+        onSetter.call(this, value)
+        onTree.call(this, value)
+    }
 }
 try {
     var inputProto = HTMLInputElement.prototype
@@ -3901,7 +3877,27 @@ bindingHandlers.repeat = function(data, vmodels) {
         freturn = true
         avalon.log("warning:" + data.value + "编译出错")
     }
+
+    var arr = data.value.split(".") || []
+    if (arr.length > 1) {
+        arr.pop()
+        var n = arr[0]
+        for (var i = 0, v; v = vmodels[i++]; ) {
+            if (v && v.hasOwnProperty(n)) {
+                var events = v[n].$events || {}
+                events[subscribers] = events[subscribers] || []
+                events[subscribers].push(data)
+                break
+            }
+        }
+    }
     var elem = data.element
+    if (freturn) {
+        return avalon(elem).addClass("avalonHide")
+    }
+
+    avalon(elem).removeClass("avalonHide")
+
     elem.removeAttribute(data.name)
     data.sortedCallback = getBindingCallback(elem, "data-with-sorted", vmodels)
     data.renderedCallback = getBindingCallback(elem, "data-" + type + "-rendered", vmodels)
@@ -3934,22 +3930,6 @@ bindingHandlers.repeat = function(data, vmodels) {
         target = data.element = data.type === "repeat" ? target : parentNode
         data.group = target.setAttribute(data.name, data.value)
     }
-    var arr = data.value.split(".") || []
-    if (arr.length > 1) {
-        arr.pop()
-        var n = arr[0]
-        for (var i = 0, v; v = vmodels[i++]; ) {
-            if (v && v.hasOwnProperty(n)) {
-                var events = v[n].$events
-                events[subscribers] = events[subscribers] || []
-                events[subscribers].push(data)
-                break
-            }
-        }
-    }
-    if (freturn) {
-        return
-    }
 
     data.handler = bindingExecutors.repeat
     data.$outer = {}
@@ -3970,25 +3950,8 @@ bindingHandlers.repeat = function(data, vmodels) {
         addSubscribers(data, $list)
     }
     if (xtype === "object") {
-        var id = $repeat.$id
-        var pool = id ? withProxyPool[id] : null
-        if (!pool) {
-            pool = {}
-            if (id) {
-                withProxyCount++
-                withProxyPool[id] = pool
-            }
-            for (var key in $repeat) {
-                if ($repeat.hasOwnProperty(key) && key !== "hasOwnProperty") {
-                    (function(k, v) {
-                        pool[k] = createWithProxy(k, v, $repeat)
-                        //    pool[k].$watch("$val", function(val) {
-                        //        $repeat[k] = val //#303
-                        //     })
-                    })(key, $repeat[key])
-                }
-            }
-        }
+        var $events = $repeat.$events
+        var pool = !$events ? {} : $events.$withProxyPool || ($events.$withProxyPool = {})
         data.handler("append", $repeat, pool)
     } else {
         data.handler("add", 0, $repeat)
@@ -4013,7 +3976,7 @@ bindingExecutors.repeat = function(method, pos, el) {
                 var fragments = []
                 for (var i = 0, n = arr.length; i < n; i++) {
                     var ii = i + pos
-                    var proxy = getEachProxy(ii, arr[i], data, last)
+                    var proxy = eachProxyAgent(ii, data)
                     proxies.splice(ii, 0, proxy)
                     shimController(data, transation, proxy, fragments)
                 }
@@ -4029,7 +3992,7 @@ bindingExecutors.repeat = function(method, pos, el) {
                 var removed = proxies.splice(pos, el)
                 var transation = removeFragment(locatedNode, group, el)
                 avalon.clearHTML(transation)
-                recycleEachProxies(removed)
+                recycleProxies(removed, "each")
                 break
             case "index": //将proxies中的第pos个起的所有元素重新索引（pos为数字，el用作循环变量）
                 var last = proxies.length - 1
@@ -4048,7 +4011,7 @@ bindingExecutors.repeat = function(method, pos, el) {
                         break
                     }
                 }
-                recycleEachProxies(proxies)
+                recycleProxies(proxies, "each")
                 break
             case "move": //将proxies中的第pos个元素移动el位置上(pos, el都是数字)
                 var t = proxies.splice(pos, 1)[0]
@@ -4062,7 +4025,7 @@ bindingExecutors.repeat = function(method, pos, el) {
             case "set": //将proxies中的第pos个元素的VM设置为el（pos为数字，el任意）
                 var proxy = proxies[pos]
                 if (proxy) {
-                    proxy[proxy.$itemName] = el
+                    notifySubscribers(proxy.$events.$index)
                 }
                 break
             case "append": //将pos的键值对从el中取出（pos为一个普通对象，el为预先生成好的代理VM对象池）
@@ -4082,6 +4045,9 @@ bindingExecutors.repeat = function(method, pos, el) {
                 }
                 for (var i = 0, key; key = keys[i++]; ) {
                     if (key !== "hasOwnProperty") {
+                        if (!pool[key]) {
+                            pool[key] = withProxyAgent(key, data)
+                        }
                         shimController(data, transation, pool[key], fragments)
                     }
                 }
@@ -4113,7 +4079,6 @@ function shimController(data, transation, proxy, fragments) {
     var dom = avalon.parseHTML(data.template)
     var nodes = avalon.slice(dom.childNodes)
     transation.appendChild(dom)
-    proxy.$outer = data.$outer
     var ov = data.vmodels
     var nv = [proxy].concat(ov)
     nv.cb = ov.cb
@@ -4172,82 +4137,127 @@ function calculateFragmentGroup(data) {
         data.group = length / n
     }
 }
-// 为ms-each, ms-repeat创建一个代理对象，通过它们能使用一些额外的属性与功能（$index,$first,$last,$remove,$key,$val,$outer）
-var watchEachOne = oneObject("$index,$first,$last")
+// 为ms-each,ms-with, ms-repeat会创建一个代理VM，
+// 通过它们保持一个下上文，让用户能调用$index,$first,$last,$remove,$key,$val,$outer等属性与方法
+// 所有代理VM的产生,消费,收集,存放通过xxxProxyFactory,xxxProxyAgent, recycleProxies,xxxProxyPool实现
+var eachProxyPool = []
+var withProxyPool = []
+function eachProxyFactory(name) {
+    var source = {
+        $host: [],
+        $outer: {},
+        $index: 0,
+        $first: false,
+        $last: false,
+        $remove: avalon.noop
+    }
+    source[name] = {
+        get: function() {
+            return this.$host[this.$index]
+        },
+        set: function(val) {
+            this.$host.set(this.$index, val)
+        }
+    }
+    var second = {
+        $last: 1,
+        $first: 1,
+        $index: 1
+    }
+    var proxy = modelFactory(source, second)
+    var e = proxy.$events
+    e[name] = e.$first = e.$last = e.$index
+    proxy.$id = ("$proxy$each" + Math.random()).replace(/0\./, "")
+    return proxy
+}
 
-function createWithProxy(key, val, $outer) {
+function eachProxyAgent(index, data) {
+    var param = data.param || "el", proxy
+    for (var i = 0, n = eachProxyPool.length; i < n; i++) {
+        var candidate = eachProxyPool[i]
+        if (candidate && candidate.hasOwnProperty(param)) {
+            proxy = candidate
+            eachProxyPool.splice(i, 1)
+        }
+    }
+    if (!proxy) {
+        proxy = eachProxyFactory(param)
+    }
+    var host = data.$repeat
+    var last = host.length - 1
+    proxy.$index = index
+    proxy.$first = index === 0
+    proxy.$last = index === last
+    proxy.$host = host
+    proxy.$outer = data.$outer
+    proxy.$remove = function() {
+        return host.removeAt(proxy.$index)
+    }
+    return proxy
+}
+
+function withProxyFactory() {
     var proxy = modelFactory({
-        $key: key,
-        $outer: $outer,
-        $val: val
+        $key: "",
+        $outer: {},
+        $host: {},
+        $val: {
+            get: function() {
+                return this.$host[this.$key]
+            },
+            set: function(val) {
+                this.$host[this.$key] = val
+            }
+        }
     }, {
-        $val: 1,
-        $key: 1
+        $val: 1
     })
     proxy.$id = ("$proxy$with" + Math.random()).replace(/0\./, "")
     return proxy
 }
 
-
-var eachProxyPool = []
-
-function getEachProxy(index, item, data, last) {
-    var param = data.param || "el",
-            proxy
-    var source = {
-        $remove: function() {
-            return data.$repeat.removeAt(proxy.$index)
-        },
-        $itemName: param,
-        $index: index,
-        $outer: data.$outer,
-        $first: index === 0,
-        $last: index === last
+function withProxyAgent(key, data) {
+    var proxy = withProxyPool.pop()
+    if (!proxy) {
+        proxy = withProxyFactory()
     }
-    source[param] = item
-    for (var i = 0, n = eachProxyPool.length; i < n; i++) {
-        var proxy = eachProxyPool[i]
-        if (proxy.hasOwnProperty(param) && (avalon.type(proxy[param]) === avalon.type(item))) {
-            for (var k in source) {
-                proxy[k] = source[k]
-            }
-            eachProxyPool.splice(i, 1)
-            proxy.$watch(param, function(val) {
-                data.$repeat.set(proxy.$index, val)
-            })
-            return proxy
-        }
+    var host = data.$repeat
+    proxy.$key = key
+    proxy.$host = host
+    proxy.$outer = data.$outer
+    if (host.$events) {
+        proxy.$events.$val = host.$events[key]
+    } else {
+        proxy.$events = {}
     }
-    if (rcomplexType.test(avalon.type(item))) {
-        source.$skipArray = [param]
-    }
-    proxy = modelFactory(source, watchEachOne)
-    proxy.$watch(param, function(val) {
-        data.$repeat.set(proxy.$index, val)
-    })
-    proxy.$id = ("$proxy$" + data.type + Math.random()).replace(/0\./, "")
     return proxy
 }
 
-
-
-function recycleEachProxies(array) {
-    for (var i = 0, el; el = array[i++]; ) {
-        recycleEachProxy(el)
-    }
-    array.length = 0
-}
-
-function recycleEachProxy(proxy) {
-    for (var i in proxy.$events) {
-        if (Array.isArray(proxy.$events[i])) {
-            proxy.$events[i].length = 0
+function recycleProxies(proxies, type) {
+    var proxyPool = type === "each" ? eachProxyPool : withProxyPool
+    avalon.each(proxies, function(key, proxy) {
+        if (proxy.$events) {
+            for (var i in proxy.$events) {
+                if (Array.isArray(proxy.$events[i])) {
+                    proxy.$events[i].forEach(function(data) {
+                        if (typeof data === "object")
+                            disposeData(data)
+                    })
+                    proxy.$events[i].length = 0
+                }
+            }
+            proxy.$host = proxy.$outer = {}
+            if (proxyPool.unshift(proxy) > kernel.maxRepeatSize) {
+                proxyPool.pop()
+            }
         }
-    }
-    if (eachProxyPool.unshift(proxy) > kernel.maxRepeatSize) {
-        eachProxyPool.pop()
-    }
+    })
+    if (type === "each")
+        proxies.length = 0
 }
+
+
+
 
 /*********************************************************************
  *                             自带过滤器                            *
@@ -4274,6 +4284,17 @@ var filters = avalon.filters = {
         length = length || 30
         truncation = truncation === void(0) ? "..." : truncation
         return target.length > length ? target.slice(0, length - truncation.length) + truncation : String(target)
+    },
+    $filter: function(val) {
+        for (var i = 1, n = arguments.length; i < n; i++) {
+            var array = arguments[i]
+            var fn = avalon.filters[array.shift()]
+            if (typeof fn === "function") {
+                var arr = [val].concat(array)
+                val = fn.apply(null, arr)
+            }
+        }
+        return val
     },
     camelize: camelize,
     //https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
@@ -4760,9 +4781,26 @@ new function() {
         if (typeof kernel.shim[url] === "object") {
             shim = kernel.shim[url]
         }
-        if (kernel.paths[url]) { //别名机制
-            url = kernel.paths[url]
+        url = url.split('/');
+        //For each module name segment, see if there is a path
+        //registered for it. Start with most specific name
+        //and work up from it.
+        for (var i = url.length, parentModule, parentPath; i > 0; i -= 1) {
+            parentModule = url.slice(0, i).join('/');
+
+            parentPath = kernel.paths[parentModule];
+            if (parentPath) {
+                //If an array, it means there are a few choices,
+                //Choose the one that is desired
+                if (Array.isArray(parentPath)) {
+                    parentPath = parentPath[0];
+                }
+                url.splice(0, i, parentPath);
+                break;
+            }
         }
+        //Join the path parts together, then figure out if baseUrl is needed.
+        url = url.join('/');
 
         //4. 补全路径
         if (/^(\w+)(\d)?:.*/.test(url)) {
@@ -4930,6 +4968,7 @@ new function() {
     innerRequire.config = kernel
     innerRequire.checkDeps = checkDeps
 }
+
 /*********************************************************************
  *                           DOMReady                               *
  **********************************************************************/

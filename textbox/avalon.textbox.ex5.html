@@ -25,22 +25,26 @@
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body&gt;
-                &lt;div class="demo-show" ms-controller="demo5"&gt;
+                    &lt;div class="demo-show" ms-controller="demo5"&gt;
                         &lt;form&gt;
-                            &lt;input ms-widget="textbox" ms-duplex="sfocus" type="textbox" data-textbox-suggest="phone" data-textbox-suggest-focus="true" /&gt;
+                            &lt;input ms-widget="textbox" ms-duplex="sfocus" type="textbox" data-textbox-suggest="phone" data-textbox-suggest-focus="true"/&gt;
                             &lt;input type="text" style="display: none"/&gt;
                             &lt;p&gt;输入框的值是： {{sfocus}}&lt;/p&gt;
                         &lt;/form&gt;
                     &lt;/div&gt;
 
                     &lt;script&gt;
-                        require("avalon.textbox", function() {
+                        require("textbox/avalon.textbox", function() {
                             avalon.define("demo5", function(vm) {
+                                vm.$skipArray = ["suggest"]
                                 vm.sfocus = "";
+                                vm.textbox = {
+                                    suggestion: {
+                                        emphasize: false
+                                    }
+                                }
                             })
-
                             avalon.scan();
-
                             avalon.ui["suggest"].strategies['phone'] = function( value , done ) {
                                 setTimeout(function(){
                                     done(value ? [] : [
@@ -55,19 +59,23 @@
                 &lt;/html&gt;
             </pre>
         </div>
-
         <div class="demo-show" ms-controller="demo5">
             <form>
-                <input ms-widget="textbox" ms-duplex="sfocus" type="textbox" data-textbox-suggest="phone" data-textbox-suggest-focus="true" />
+                <input ms-widget="textbox" ms-duplex="sfocus" type="textbox" data-textbox-suggest="phone" data-textbox-suggest-focus="true"/>
                 <input type="text" style="display: none"/>
                 <p>输入框的值是： {{sfocus}}</p>
             </form>
         </div>
-
         <script>
             require("textbox/avalon.textbox", function() {
                 avalon.define("demo5", function(vm) {
+                    vm.$skipArray = ["suggest"]
                     vm.sfocus = "";
+                    vm.textbox = {
+                        suggestion: {
+                            emphasize: false
+                        }
+                    }
                 })
                 avalon.scan();
                 avalon.ui["suggest"].strategies['phone'] = function( value , done ) {

@@ -2,10 +2,11 @@
 <html>
     
     <head>
-        <title>Name 按钮组件</title>
+        <title>按钮组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <meta name="descriptions" content="按钮组件提供丰富的样式、形式选择，除与bootstrap可用的button样式保持一致外，支持small、default、big、large四种尺寸，同时支持图标button，可以是仅有图标的button，图标在左边的button、图标在右边的button、两边都有图标的button，当然也支持图标组，有水平图标组、垂直图标组两种形式
+
  " />
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
         />
@@ -16,7 +17,7 @@
         <div class="wrapper">
             <h2>button</h2>
             <fieldset>
-                <legend>Name 按钮组件</legend>
+                <legend>按钮组件</legend>
                 <p>按钮组件提供丰富的样式、形式选择，除与bootstrap可用的button样式保持一致外，支持small、default、big、large四种尺寸，同时支持图标button，可以是仅有图标的button，图标在左边的button、图标在右边的button、两边都有图标的button，当然也支持图标组，有水平图标组、垂直图标组两种形式</p>
             </fieldset>
             <fieldset>
@@ -25,7 +26,7 @@
                     <colgroup>
                         <col width="180" />
                         <col width="80" />
-                        <col width="180" />
+                        <col width="120" />
                     </colgroup>
                     <tr>
                         <th>名字</th>
@@ -58,28 +59,51 @@
                             <p>当然还有一种直接列出button组内容的方式，不过这种情况需要指定组件名为buttonset，请看
                                 <a href="./avalon.button.ex4.html">demo 4</a>a></p>
                             <pre>
+
             data: [{
+
                 type: "labeledIcon",
+
                 iconPosition: "right",
+
                 icon: "\&\#xf04c;",
+
                 size: "large",
+
                 color: "success",
+
                 text: "暂停"
+
             }, {
+
                 type: "labeledIcon",
+
                 iconPosition: "right",
+
                 icon: "\&\#xf04b;",
+
                 size: "large",
+
                 color: "success",
+
                 text: "播放"
+
             }, {
+
                 type: "labeledIcon",
+
                 iconPosition: "right",
+
                 icon: "\&\#xf074;",
+
                 size: "large",
+
                 color: "success",
+
                 text: "拖曳"
+
             }]                                
+
          </pre>
                         </td>
                     </tr>

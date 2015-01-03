@@ -15,7 +15,7 @@
         <div class="demo-show ms-controller" ms-controller="demo">
             <fieldset>
                 <legend>日期范围框 支持onSelect、onOpen、onClose回调函数</legend>
-                <div ms-widget="daterangepicker, A, $AOpts" data-daterangepicker-on-select="select" data-daterangepicker-rules="$rules"></div>
+                <div ms-widget="daterangepicker, A, $AOpts" data-daterangepicker-rules="$rules"></div>
                 <p>onSelect是在点击日历框下的确定按钮后的回调方法，参数分别是起始日期fromDate、 结束日期toDate、 上次选中的日期范围的起始日期和结束日期组成的数组、绑定元素生成的widget VM的引用 vmodel, 绑定元素上的配置数据形成的数据对象data</p>
             </fieldset>
             <fieldset>
@@ -33,8 +33,8 @@
             <fieldset>
                 <legend>日期范围框setDate</legend>
                 <div ms-widget="daterangepicker, dp" data-daterangepicker-duplex="from3, to3"></div>
-                {{from3}}
-                {{to3}}
+                <p>fromEmpty is : {{from3}}</p>
+                <p>toEmpty is : {{to3}}</p>
                 <button ms-click="setdates">设置时间为'2013-09-09', '2014-09-09'</button>
                 <button ms-click="setlabel">设置标签为'我是label'</button>
             </fieldset>
@@ -49,20 +49,20 @@
                             onClose: function(vmodel) {
                                 avalon.log("datepicker 的 close回调，参数是组件对应的vmodel")
                                 avalon.log(vmodel)
+                            },
+                            onSelect: function(fromDate, toDate, oldValue, vmodel, data) {
+                                avalon.log("选择日期范围之后的回调");
+                                avalon.log("fromDate");
+                                avalon.log(fromDate);
+                                avalon.log("toDate");
+                                avalon.log(toDate);
+                                avalon.log("oldValue");
+                                avalon.log(oldValue);
+                                avalon.log("daterangepicker vmodel");
+                                avalon.log(vmodel);
+                                avalon.log("data is : ");
+                                avalon.log(data);
                             }
-                        }
-                        vm.select = function(fromDate, toDate, oldValue, vmodel, data) {
-                            avalon.log("选择日期范围之后的回调");
-                            avalon.log("fromDate");
-                            avalon.log(fromDate);
-                            avalon.log("toDate");
-                            avalon.log(toDate);
-                            avalon.log("oldValue");
-                            avalon.log(oldValue);
-                            avalon.log("daterangepicker vmodel");
-                            avalon.log(vmodel);
-                            avalon.log("data is : ");
-                            avalon.log(data);
                         }
                         //最小开始日期为2014-02-14，两天最小相隔5天，最大相隔10天
                         vm.opts2 = {
@@ -115,8 +115,8 @@
                 &lt;body&gt;
                     &lt;div class="demo-show ms-controller" ms-controller="demo"&gt;
                         &lt;fieldset&gt;
-                            &lt;legend&gt;日期范围框 支持onSelect回调函数&lt;/legend&gt;
-                            &lt;div ms-widget="daterangepicker" data-daterangepicker-on-select="select" data-daterangepicker-rules="$rules"&gt;&lt;/div&gt;
+                            &lt;legend&gt;日期范围框 支持onSelect、onOpen、onClose回调函数&lt;/legend&gt;
+                            &lt;div ms-widget="daterangepicker, A, $AOpts" data-daterangepicker-rules="$rules"&gt;&lt;/div&gt;
                             &lt;p&gt;onSelect是在点击日历框下的确定按钮后的回调方法，参数分别是起始日期fromDate、 结束日期toDate、 上次选中的日期范围的起始日期和结束日期组成的数组、绑定元素生成的widget VM的引用 vmodel, 绑定元素上的配置数据形成的数据对象data&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;fieldset&gt;
@@ -127,33 +127,41 @@
                         &lt;fieldset&gt;
                             &lt;legend&gt;日期范围框 默认值为空&lt;/legend&gt;
                             &lt;div ms-widget="daterangepicker" data-daterangepicker-duplex="fromEmpty, toEmpty" data-daterangepicker-rules="opts2"&gt;&lt;/div&gt;
-                            {{fromEmpty}}
-                            {{toEmpty}}
+                            &lt;p&gt;fromEmpty is : {{fromEmpty}}&lt;/p&gt;
+                            &lt;p&gt;toEmpty is : {{toEmpty}}&lt;/p&gt;
                             &lt;p&gt;初始日期和结束日期为空的情况下，模拟的输入域会显示"不限日期"的label&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;fieldset&gt;
                             &lt;legend&gt;日期范围框setDate&lt;/legend&gt;
                             &lt;div ms-widget="daterangepicker, dp" data-daterangepicker-duplex="from3, to3"&gt;&lt;/div&gt;
-                            {{from3}}
-                            {{to3}}
                             &lt;button ms-click="setdates"&gt;设置时间为'2013-09-09', '2014-09-09'&lt;/button&gt;
                             &lt;button ms-click="setlabel"&gt;设置标签为'我是label'&lt;/button&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
                             require("datepicker/avalon.daterangepicker", function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
-                                    vm.select = function(fromDate, toDate, oldValue, vmodel, data) {
-                                        avalon.log("选择日期范围之后的回调");
-                                        avalon.log("fromDate");
-                                        avalon.log(fromDate);
-                                        avalon.log("toDate");
-                                        avalon.log(toDate);
-                                        avalon.log("oldValue");
-                                        avalon.log(oldValue);
-                                        avalon.log("daterangepicker vmodel");
-                                        avalon.log(vmodel);
-                                        avalon.log("data is : ");
-                                        avalon.log(data);
+                                    vm.$AOpts = {
+                                        onOpen: function(vmodel) {
+                                            avalon.log("datepicker 的 open回调，参数是组件对应的vmodel")
+                                            avalon.log(vmodel)
+                                        },
+                                        onClose: function(vmodel) {
+                                            avalon.log("datepicker 的 close回调，参数是组件对应的vmodel")
+                                            avalon.log(vmodel)
+                                        },
+                                        onSelect: function(fromDate, toDate, oldValue, vmodel, data) {
+                                            avalon.log("选择日期范围之后的回调");
+                                            avalon.log("fromDate");
+                                            avalon.log(fromDate);
+                                            avalon.log("toDate");
+                                            avalon.log(toDate);
+                                            avalon.log("oldValue");
+                                            avalon.log(oldValue);
+                                            avalon.log("daterangepicker vmodel");
+                                            avalon.log(vmodel);
+                                            avalon.log("data is : ");
+                                            avalon.log(data);
+                                        }
                                     }
                                     //最小开始日期为2014-02-14，两天最小相隔5天，最大相隔10天
                                     vm.opts2 = {

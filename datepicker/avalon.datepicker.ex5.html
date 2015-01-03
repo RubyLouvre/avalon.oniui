@@ -15,10 +15,9 @@
         <div class="demo-show" ms-controller="demo">
             <fieldset style="position: relative; z-index: 2">
                 <legend>toggle切换日期的显示隐藏</legend>
-                <input ms-widget="datepicker" data-toggle ="toggle"/>
+                <input ms-widget="datepicker, a"/>
                 <button ms-click="toggleDatepicker" style="float:right;">toggle calendar</button>
-                <p>说明：可以通过toggle切换datepicker的显示与隐藏，这需要在绑定datepicker时，设置ms-data-toggle属性指向demo controller中的属性</p>
-                <p>可以通过配置timer来使组件可选择时间</p>
+                <p>说明：可以通过toggle切换datepicker的显示与隐藏</p>
             </fieldset>
             <fieldset style="position: relative; z-index: 1">
                 <legend>calendarLabel配置日历的说明label</legend>
@@ -28,9 +27,8 @@
             <script> 
                 require(["datepicker/avalon.datepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
-                        vm.toggle = false;
                         vm.toggleDatepicker = function(event) {
-                            model.toggle = !model.toggle;
+                            avalon.vmodels.a.toggle = !avalon.vmodels.a.toggle;
                             event.stopPropagation();
                         }
                     })
@@ -51,10 +49,9 @@
                     &lt;div class="demo-show" ms-controller="demo"&gt;
                         &lt;fieldset style="position: relative; z-index: 2"&gt;
                             &lt;legend&gt;toggle切换日期的显示隐藏&lt;/legend&gt;
-                            &lt;input ms-widget="datepicker" data-toggle ="toggle"/&gt;
+                            &lt;input ms-widget="datepicker, a"/&gt;
                             &lt;button ms-click="toggleDatepicker" style="float:right;"&gt;toggle calendar&lt;/button&gt;
-                            &lt;p&gt;说明：可以通过toggle切换datepicker的显示与隐藏，这需要在绑定datepicker时，设置ms-data-toggle属性指向demo controller中的属性&lt;/p&gt;
-                            &lt;p&gt;可以通过配置timer来使组件可选择时间&lt;/p&gt;
+                            &lt;p&gt;说明：可以通过toggle切换datepicker的显示与隐藏&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;fieldset style="position: relative; z-index: 1"&gt;
                             &lt;legend&gt;calendarLabel配置日历的说明label&lt;/legend&gt;
@@ -64,9 +61,8 @@
                         &lt;script&gt; 
                             require(["datepicker/avalon.datepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
-                                    vm.toggle = false;
                                     vm.toggleDatepicker = function(event) {
-                                        model.toggle = !model.toggle;
+                                        avalon.vmodels.a.toggle = !avalon.vmodels.a.toggle;
                                         event.stopPropagation();
                                     }
                                 })

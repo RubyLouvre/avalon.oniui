@@ -63,6 +63,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
             vm.arrowRightBg = vm.arrowRightNormalSrc !== "" ? "url("+vm.arrowRightNormalSrc+")" : ""
             vm.$skipArray = ["widgetElement", "template", "selectionWrapOffset"]
 
+
             var inited
             vm.$init = function(continueScan) {
                 if (inited) return
@@ -79,7 +80,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
                     element.style.height = "100%"
                     var children = element.children
                     for (var i = 0, len = children.length; i < len; i++) {
-                        if (children[i].id === "oni-carousel") {
+                        if (children[i].getAttribute("class") === "oni-carousel") {
                             children[i].style.height = "100%"
                         }
                     }

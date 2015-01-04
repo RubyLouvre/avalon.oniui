@@ -20,4 +20,4 @@
 
 .oni-notice-danger { background-color: #bb0000; color: #ffffff; }
 
-.oni-notice-content a, .oni-notice-content a:hover { color: #a65a00; text-decoration: underline; }
+.oni-notice-content a, oni-notice-content a:hover { color: #a65a00; text-decoration: underline; }

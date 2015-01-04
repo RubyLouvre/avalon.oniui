@@ -17,7 +17,9 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
             vmSub = "",
             sourceList = "",
             inputWraper = "",
-            placeholder = "";
+            placeholder = "",
+            placehold = options.placeholder;
+        
         // 解析html并获取需要的Dom对象引用
         sourceHTML = sourceHTML.replace(/MS_OPTION_DISABLEDCLASS/gm, options.disabledClass);
         sourceHTML = options.getTemplate(sourceHTML);
@@ -27,29 +29,27 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
         placeholder = sourceList.getElementsByTagName("span")[0];
 
         if (options.suggest) {
-            var $suggestopts = {
+            var suggestConfig = {
                     inputElement : element , 
                     strategy : options.suggest , 
                     textboxContainer : sourceList ,
-                    focus : options.suggestFocus ,
-                    onChange : options.suggestOnChange,
+                    focus : options.suggestFocus || false ,
+                    onChange : options.suggestOnChange || "",
                     type: "textbox",
-                    limit: options.limit
-                },
-                renderItem = options.renderItem;
-
-            if (renderItem && avalon.type(renderItem) === "function") {
-                $suggestopts.renderItem = renderItem;
-            }
+                    limit: options.limit || 8
+                }
+            $suggestopts = avalon.mix(suggestConfig, options.suggestion)
             options.$suggestopts = $suggestopts;
         }
+        placehold = avalon(element).attr("placeholder") || placehold || "";
+
         var vmodel = avalon.define(data.textboxId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "disabledClass", "autoTrim"];
+            vm.$skipArray = ["widgetElement", "disabledClass", "autoTrim", "suggest"];
             vm.widgetElement = element;
             vm.elementDisabled = "";
             vm.toggle = true;
-            vm.placehold = avalon(element).attr("placeholder") || "";
+            vm.placehold = placehold
             vm.focusClass = false
             vm.placeholderOrigin = placeholderOrigin
             vm.placeWidth = 0
@@ -123,7 +123,6 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                         vmodel.toggle = false
                     }
                 })
-
                 avalon.scan(sourceList, [vmodel].concat(vmodels));
                 if (!vmodel.placeholderOrigin) {
                     if (!vmodel.placehold.length || element.value != "") {
@@ -131,6 +130,8 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                     }
                     vmodel.placeWidth = avalon(inputWraper).innerWidth()
 
+                } else if (vmodel.placehold.length) {
+                    $element.attr("placeholder", vmodel.placehold)
                 }
                 if (continueScan) {
                     continueScan()
@@ -191,7 +192,8 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
         /**
          * @config 配置输入框有自动提示补全功能，提示类型由用户自定义，默认配置为false，也就是不开启自动补全功能
          */
-        suggest : false,  
+        suggest : false, 
+        suggestion: {}, 
         autoTrim: true, //@config 是否自动过滤用户输入的内容头部和尾部的空格
         widgetElement: "", //@interface 绑定组件元素的dom对象的引用
         tabIndex: -1, //@config 配置textbox在进行tab切换时的tabIndex，切换顺序从值小的开始，必须配置为大于0的值
@@ -205,7 +207,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
          * @returns {String} 新模板
          */
         getTemplate: function(tmp) {
-            return tmp
+            return tmp.replace(/MS_OPTION_ICON/, '')
         },
         stateClass: "", //@config 为textbox添加样式，默认可以添加oni-textbox-error
         suggestOnChange: "", //@config 配置提示补全时切换提示项之后的callback

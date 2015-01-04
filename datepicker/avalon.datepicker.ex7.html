@@ -15,13 +15,13 @@
         <div class="demo-show" ms-controller="demo">
             <fieldset style="position: relative; z-index: 3">
                 <legend>onSelect回调</legend>
-                <input ms-widget="datepicker" data-datepicker-on-select="changeCallback"/>
-                <p>说明：通过data-datepicker-on-select配置日历的onSelect回调，值changeCallback映射到一个回调方法。onSelect回调是在选中日期之后的回调操作。onSelect回调参数分别是：选中的日期，绑定元素生成的datepicker VM的id，通过data-*设置的配置项组成的对象</p>
+                <input ms-widget="datepicker, c, $cOpts"/>
+                <p>说明：onSelect回调是在选中日期之后的回调操作。onSelect回调参数分别是：选中的日期，组件对应的VM，通过data-*设置的配置项组成的对象</p>
             </fieldset>
             <fieldset style="position: relative; z-index: 2">
                 <legend>onClose回调</legend>
                 <input ms-widget="datepicker, a, $aOpts" />
-                <p>说明：配置onClose回调，使得日历关闭之后可以调用它做一些自定义操作，添加回调时我希望都能通过绑定组件时的config配置项来添加，而不是通过data-datapicker-name这种方式映射回调，这样避免过多的查找操作，上例中的onSelect回调是个特例，纯粹是为了兼容以前adapter，而且其名后期也会废弃，转而使用onSelect。</p>
+                <p>说明：配置onClose回调，使得日历关闭之后可以调用它做一些自定义操作</p>
                 <p>onClose回调的参数分别是：最近一次选中date，datepicker生成的VM引用</p>
             </fieldset>
             <fieldset style="position: relative; z-index: 1">
@@ -32,10 +32,6 @@
             <script> 
                 require("datepicker/avalon.datepicker", function(avalon) {
                     var model = avalon.define("demo", function(vm) {
-                        vm.changeCallback = function(date, vmodel, data) {
-                            avalon.log("选中日期后的用户回调")
-                            avalon.log(arguments);
-                        }
                         vm.$aOpts = {
                             onClose: function(date, vmodel) {
                                 avalon.log("关闭隐藏日历后的用户回调")
@@ -51,6 +47,12 @@
                                 avalon.log("month is : "+month);
                                 avalon.log("vmodel is :");
                                 avalon.log(vmodel);
+                            }
+                        }
+                        vm.$cOpts = {
+                            onSelect: function(date, vmodel, data) {
+                                avalon.log("选中日期后的用户回调")
+                                avalon.log(arguments);
                             }
                         }
                     })
@@ -71,13 +73,13 @@
                     &lt;div class="demo-show" ms-controller="demo"&gt;
                         &lt;fieldset style="position: relative; z-index: 3"&gt;
                             &lt;legend&gt;onSelect回调&lt;/legend&gt;
-                            &lt;input ms-widget="datepicker" data-datepicker-on-select="changeCallback"/&gt;
-                            &lt;p&gt;说明：通过data-datepicker-on-select配置日历的onSelect回调，值changeCallback映射到一个回调方法。onSelect回调是在选中日期之后的回调操作。onSelect回调参数分别是：选中的日期，绑定元素生成的datepicker VM的id，通过data-*设置的配置项组成的对象&lt;/p&gt;
+                            &lt;input ms-widget="datepicker, c, $cOpts"/&gt;
+                            &lt;p&gt;说明：onSelect回调是在选中日期之后的回调操作。onSelect回调参数分别是：选中的日期，组件对应的VM，通过data-*设置的配置项组成的对象&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;fieldset style="position: relative; z-index: 2"&gt;
                             &lt;legend&gt;onClose回调&lt;/legend&gt;
                             &lt;input ms-widget="datepicker, a, $aOpts" /&gt;
-                            &lt;p&gt;说明：配置onClose回调，使得日历关闭之后可以调用它做一些自定义操作，添加回调时我希望都能通过绑定组件时的config配置项来添加，而不是通过data-datapicker-name这种方式映射回调，这样避免过多的查找操作，上例中的onSelect回调是个特例，纯粹是为了兼容以前adapter，而且其名后期也会废弃，转而使用onSelect。&lt;/p&gt;
+                            &lt;p&gt;说明：配置onClose回调，使得日历关闭之后可以调用它做一些自定义操作&lt;/p&gt;
                             &lt;p&gt;onClose回调的参数分别是：最近一次选中date，datepicker生成的VM引用&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;fieldset style="position: relative; z-index: 1"&gt;
@@ -88,10 +90,6 @@
                         &lt;script&gt; 
                             require("datepicker/avalon.datepicker", function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
-                                    vm.changeCallback = function(date, vmodel, data) {
-                                        avalon.log("选中日期后的用户回调")
-                                        avalon.log(arguments);
-                                    }
                                     vm.$aOpts = {
                                         onClose: function(date, vmodel) {
                                             avalon.log("关闭隐藏日历后的用户回调")
@@ -107,6 +105,12 @@
                                             avalon.log("month is : "+month);
                                             avalon.log("vmodel is :");
                                             avalon.log(vmodel);
+                                        }
+                                    }
+                                    vm.$cOpts = {
+                                        onSelect: function(date, vmodel, data) {
+                                            avalon.log("选中日期后的用户回调")
+                                            avalon.log(arguments);
                                         }
                                     }
                                 })

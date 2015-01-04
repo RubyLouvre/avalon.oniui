@@ -3,11 +3,11 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
 
         var $element = avalon(element),
             options = data.suggestOptions ,
-            suggestHtml = avalon.parseHTML(sourceHTML).firstChild ,
+            template = options.getTemplate(sourceHTML),
+            suggestHtml = avalon.parseHTML(template).firstChild ,
             dataValue = data.value.split(","),
             suggestOptions = !dataValue[2] ? 0 : avalon.getModel( dataValue[2] , vmodels ) || 0,
             styleReg = /^(\d+).*$/;
-
         suggestOptions = !!options.notpuresuggest ? suggestOptions[1][suggestOptions[0]] : 0;
         if(suggestOptions) {
             avalon.mix(options, suggestOptions);
@@ -29,7 +29,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
          */
         var limit = options.limit,  // 最多显示条数配置：最多显示多少条suggest，超出显示滚动条
             suggest,  // ui-suggest
-            suggestCtr = {
+            suggestCtr = options.suggestCtr || {
                 _minIndex: 0,           // 显示口第一条suggest index
                 _maxIndex: limit - 1,   // 显示口最后一条suggest index
                 _items: "",            // ui-item
@@ -135,18 +135,18 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                 }
             };
 
-
-
         var vmodel = avalon.define(data.suggestId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "puresuggest"];
+            vm.$skipArray = ["widgetElement", "puresuggest", "limit", "suggestCtr"];
             vm.widgetElement = element;
+            vm.list = []
             vm.searchText = "";
-            vm.list = [{text: "sss"}];
             vm.toggle = false;
             vm.loading = false;
             vm.selectedIndex = 0;
+            vm.suggestCtr = suggestCtr;
             vm._renderItem = function(item) {
+                if (!item) return
                 return vmodel.renderItem(item, vmodel);
             }
             // 监控toggle值变化，当toggle为true时更新提示框尺寸
@@ -165,20 +165,20 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                         return ;
                     }
                     suggestHtml.style.width = $textboxContainer.outerWidth() - 2 - avalon(suggestHtml).css("paddingLeft").replace(styleReg, '$1') - avalon(suggestHtml).css("paddingRight").replace(styleReg, '$1') + 'px';
-
                 }
             })
             // 监控searchText值的变化，及时更新提示列表?
             vm.$watch('searchText',function(v){
-                updateSource( v , vmodel);
+                vmodel.updateSource(v , vmodel, limit);
             });
-            // 当通过键盘上下箭头或者使用鼠标点击来切换提示项时触发
-            vm.onChangeCallback = function(val) {
-                options.inputElement.value = val;
-            }
+            
             // 处理提示项的鼠标点击，也就是更新input值，同时隐藏提示框?
             vm.clickcallback = function(idx, event) {
-                vmodel.onChangeCallback(vmodel.list[idx].value, vmodel.inputElement, event);
+                var selectValue = vmodel.list[idx].value
+                vmodel.onChangeCallback(selectValue, vmodel.inputElement, event);
+                if (typeof vmodel.onSelectItem === "function") {
+                    vmodel.onSelectItem.call(null, selectValue, vmodel.inputElement)
+                }
                 vmodel.toggle = false;
             }
             // 当点击input框之外的区域时，隐藏提示框?
@@ -190,80 +190,21 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
             };
             vm.$init = function() {
                 avalon.bind(options.inputElement, "keydown", function(event) {
-                    switch( event.which ) {
-                        case 9:
-                            if (!vmodel.toggle) return ;
-                            vmodel.toggle = false;
-                        break;
-                        case 27:
-                            if (!vmodel.toggle) return ;
-                            vmodel.toggle = false;
-                        break;
-                        case 13:
-                            event.preventDefault();
-                            if (!vmodel.toggle) return ;
-                            vmodel.toggle = false;
-                            vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
-                        break;
-                        case 38:
-                            // arrow up
-                            if (!vmodel.toggle) return ;
-                            --vmodel.selectedIndex
-
-                            // 下拉框
-                            if(limit){
-                                suggestCtr.moveUp(vmodel.selectedIndex);
-                            }
-
-                            if (vmodel.selectedIndex === -1) {
-                                vmodel.selectedIndex = vmodel.list.length - 1
-                            }
-                            vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
-
-                            // prevent default behavior to move cursor at the the begenning
-                            event.preventDefault()
-
-                        break;
-                        case 40:
-                            // arrow down
-                            if (!vmodel.toggle) return ;
-                            ++vmodel.selectedIndex
-
-                            // 下拉框
-                            if(limit){
-                                suggestCtr.moveDown(vmodel.selectedIndex);
-                            }
-
-                            if (vmodel.selectedIndex === vmodel.list.length) {
-                                vmodel.selectedIndex = 0
-                            }
-                            vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
-                            
-                            // prevent default behavior to move cursor at the the end
-                            event.preventDefault()
-
-
-                        break;
-                        default:
-                            var keyupFn = avalon.bind(options.inputElement, 'keyup', function(){
-                                vmodel.searchText = this.value || String.fromCharCode(event.which);
-                                avalon.unbind(options.inputElement, 'keyup', keyupFn);
-                            })
-
-                        break;
-                    }
+                    vmodel.keyDownOperation(vmodel, event, limit)
                 })
                 avalon.bind(document, "click", vm.hidepromptinfo);
                 avalon.nextTick(function() {
                     element.appendChild(suggestHtml);
                     avalon.scan(element, [vmodel].concat(vmodels));
-
                     // suggest 下拉框初始化
-                    suggest = element.getElementsByTagName('ul')[0];
+                    suggestCtr.suggest = suggest = element.getElementsByTagName('ul')[0];
                     // 绑定 scroll 事件
                     avalon.bind(suggest, "scroll", function(){
                         suggestCtr.scroll.isScolled = true;
                     });
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
                 })
             };
             // 自动销毁
@@ -277,7 +218,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
             avalon.bind(options.inputElement,"focus", function(event) {
                 var v = this.value;
                 if( vmodel.searchText == v ) {
-                    updateSource( v , vmodel);
+                    vmodel.updateSource( v , vmodel, limit);
                 } else {
                     vmodel.searchText = v;
                 }
@@ -291,37 +232,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                 arr[1][arr[0]].apply( arr[1] , arguments );
             }
         }
-        function updateSource(value , vmodel) {
-            if( vmodel.loading == true ) return;
-            var s = avalon.ui["suggest"].strategies[ options.strategy ];
-            if( !s ) return;
-            vmodel.loading = true;
-            // 根据提示类型提供的方法过滤的数据来渲染提示视图?
-            s(value, function(array){
-                vmodel.selectedIndex = 0;
-                vmodel.list.removeAll();
-                avalon.each(array , function(idx, val){
-                    if( typeof val == 'string' ) {
-                        vmodel.list.push({text: val , value: val});
-                    } else {
-                        vmodel.list.push( val );
-                    }
-                })
-                vmodel.loading = false;
-                if( array.length == 0 ) {
-                    vmodel.toggle = false;
-                } else {
-                    vmodel.toggle = true;
-                }
-
-                
-                //重置suggest列表
-                if(limit){
-                    suggestCtr.reset();
-                }
-            });
-        };
-        return vmodel ;
+        return vmodel
     };
     // 判断点击目标元素是否在查找元素内部，在则返回true，否则返回false
     function findParent( element , findElement ) {
@@ -329,24 +240,128 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
         if( element == findElement ) return true;
         return findParent( element.parentNode , findElement );
     }
+    function keyDownOperation(vmodel, event, limit) {
+        switch( event.which ) {
+            case 9:
+                if (!vmodel.toggle) return ;
+                vmodel.toggle = false;
+            break;
+            case 27:
+                if (!vmodel.toggle) return ;
+                vmodel.toggle = false;
+            break;
+            case 13:
+                event.preventDefault();
+                if (!vmodel.toggle) return ;
+                vmodel.toggle = false;
+                vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
+            break;
+            case 38:
+                // arrow up
+                if (!vmodel.toggle) return ;
+                --vmodel.selectedIndex
+
+                // 下拉框
+                if(limit){
+                    vmodel.suggestCtr.moveUp(vmodel.selectedIndex);
+                }
+
+                if (vmodel.selectedIndex === -1) {
+                    vmodel.selectedIndex = vmodel.list.length - 1
+                }
+                vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
+
+                // prevent default behavior to move cursor at the the begenning
+                event.preventDefault()
+            break;
+            case 40:
+                // arrow down
+                if (!vmodel.toggle) return ;
+                ++vmodel.selectedIndex
+
+                // 下拉框
+                if(limit){
+                    vmodel.suggestCtr.moveDown(vmodel.selectedIndex);
+                }
+
+                if (vmodel.selectedIndex === vmodel.list.length) {
+                    vmodel.selectedIndex = 0
+                }
+                vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
+                
+                // prevent default behavior to move cursor at the the end
+                event.preventDefault()
+            break;
+            default:
+                var keyupFn = avalon.bind(vmodel.inputElement, 'keyup', function(){
+                    vmodel.searchText = this.value || String.fromCharCode(event.which);
+                    avalon.unbind(vmodel.inputElement, 'keyup', keyupFn);
+                })
+            break;
+        }
+    }
+    function updateSource(value , vmodel, limit) {
+
+        if( vmodel.loading == true ) return;
+        var s = avalon.ui["suggest"].strategies[vmodel.strategy ];
+        if( !s ) return;
+        vmodel.loading = true;
+        // 根据提示类型提供的方法过滤的数据来渲染提示视图?
+        s(value, function(array){
+            vmodel.selectedIndex = 0;
+            vmodel.list.removeAll();
+            avalon.each(array , function(idx, val){
+                if( typeof val == 'string' ) {
+                    vmodel.list.push({text: val , value: val});
+                } else {
+                    vmodel.list.push( val );
+                }
+            })
+            vmodel.loading = false;
+            if( array.length == 0 ) {
+                vmodel.toggle = false;
+            } else {
+                vmodel.toggle = true;
+            }
+
+            
+            //重置suggest列表
+            if(limit){
+                vmodel.suggestCtr.reset();
+            }
+        });
+    };
     widget.defaults = {
         inputElement : "" , 
         strategy : "__getVal" , 
         textboxContainer : "" ,
+        
         focus : false ,
         changed : false,
+        onSelectItem: "",
+        emphasize: true,
+        getTemplate: function(tmp) {
+            return tmp
+        },
+        keyDownOperation: keyDownOperation,
+        // 当通过键盘上下箭头或者使用鼠标点击来切换提示项时触发
+        onChangeCallback: function(val, input) {
+            input.value = val;
+        },
+        updateSource: updateSource,
         renderItem : function(item, vmodel) {
-
-                var query = escapeRegExp(vmodel.searchText)
-                
-                return item.replace(new RegExp('(' + query + ')', 'ig'), function($1, match) {
-                    // ie6 下奇怪的字符
-                    if(match.charCodeAt(0) < 32){
-                        match = "" + match.slice(1)
-                    }
-                    return "<b style='color:#f55'>" + match + "</b>"
-                })
-        
+            if (!vmodel.emphasize) {
+                return item.text
+            }
+            item = item.text
+            var query = escapeRegExp(vmodel.searchText)
+            return item.replace(new RegExp('(' + query + ')', 'ig'), function($1, match) {
+                // ie6 下奇怪的字符
+                if(match.charCodeAt(0) < 32){
+                    match = "" + match.slice(1)
+                }
+                return "<b style='color:#f55'>" + match + "</b>"
+            })
         }
     };
 

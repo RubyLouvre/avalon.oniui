@@ -1,2 +1,6 @@
 /my.ui
 /nbproject/private/
+.sass-cache/
+tools/
+ms-widget/
+.*css.map

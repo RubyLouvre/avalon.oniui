@@ -47,7 +47,7 @@ $uiname: "oni-notice";
         color: #ffffff;
     }
 }
-.#{$uiname}-content a, .#{$uiname}-content a:hover {
+.#{$uiname}-content a, #{$uiname}-content a:hover {
     color: #a65a00;
     text-decoration: underline;
 }

@@ -1,0 +1,22 @@
+{
+  "name": "mmRequest",
+  "version": "0.1.0",
+  "homepage": "https://github.com/RubyLouvre/mmRequest",
+  "authors": [
+    "RubyLouvre"
+  ],
+  "description": "An Avalon based AJAX library",
+  "main": "public/mmRequest.js",
+  "keywords": [
+    "ajax",
+    "avalon"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

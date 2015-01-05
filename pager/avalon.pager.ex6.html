@@ -15,7 +15,10 @@
                 avalon.define("test", function(vm) {
                     vm.pager = {
                         alwaysShowNext: true,
-                        alwaysShowPrev: true
+                        alwaysShowPrev: true,
+                        onJump: function(a){
+                            avalon.log(a)
+                        }
                     }
                     vm.$skipArray = ["pager"]
                 })

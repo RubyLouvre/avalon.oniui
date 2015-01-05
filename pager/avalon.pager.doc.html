@@ -202,7 +202,7 @@
 
                         <td>Function</td>
 
-                        <td></td>   <td>页面跳转时触发的函数
+                        <td></td>   <td>页面跳转时触发的函数,如果当前链接处于不可以点状态(oni-state-disabled),是不会触发的
 
                         
 
@@ -260,7 +260,9 @@
 
                         </tr></table>
 
-            </fieldset><div class="others "><p>pager 组件有一个重要的jumpPage方法，用于决定它的跳转方式。它有两个参数，第一个事件对象，第二个是跳转方式，见源码：</p>
+            </fieldset>
+
+            <div class="others "><p>pager 组件有一个重要的jumpPage方法，用于决定它的跳转方式。它有两个参数，第一个事件对象，第二个是跳转方式，见源码：</p>
 
  <pre class="brush:javascript;gutter:false;toolbar:false; "> vm.jumpPage = function(event, page) {
      event.preventDefault()

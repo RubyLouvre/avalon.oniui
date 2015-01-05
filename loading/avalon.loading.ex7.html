@@ -10,6 +10,7 @@
             require(["loading/avalon.loading"], function() {
                 avalon.define("test", function(vm) {
                     vm.loading = {
+                        type: "img"
                     }
                     vm.$skipArray = ["loading"]
                 })
@@ -18,8 +19,8 @@
         </script>
     </head>
     <body ms-controller="test">
-        <h1>loading</h1>
-        <div ms-widget="loading"></div>
+        <h1>loading:img</h1>
+        <div ms-widget="loading" style="width:150px;height:150px;position:relative;zoom:1;"></div>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
@@ -32,6 +33,7 @@
             require([&quot;loading/avalon.loading&quot;], function() {
                 avalon.define(&quot;test&quot;, function(vm) {
                     vm.loading = {
+                        type: &quot;img&quot;
                     }
                     vm.$skipArray = [&quot;loading&quot;]
                 })
@@ -40,8 +42,8 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
-        &lt;h1&gt;loading&lt;/h1&gt;
-        &lt;div ms-widget=&quot;loading&quot;&gt;&lt;/div&gt;
+        &lt;h1&gt;loading:img&lt;/h1&gt;
+        &lt;div ms-widget=&quot;loading&quot; style=&quot;width:150px;height:150px;position:relative;zoom:1;&quot;&gt;&lt;/div&gt;
         
     &lt;/body&gt;
 &lt;/html&gt;

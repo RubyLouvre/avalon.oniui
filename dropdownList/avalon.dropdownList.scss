@@ -3,12 +3,18 @@
 $uiname: "oni-dropdownList";
 .#{$uiname} {
     display: inline-block;
+    *display: inline;
+    _display: inline;
+    zoom: 1;
+    position: relative;
     .oni-textbox {
         display: block;
         position: absolute;
         left: 0;
         right: 0;
         top: -1px;
+        _width: expression(parseInt(this.parentNode.offsetWidth) - 12);
+        zoom: 1;
     }
     .oni-textbox-focus {
         border: 1px solid #ccc;
@@ -18,7 +24,7 @@ $uiname: "oni-dropdownList";
     }
 }
 .#{$uiname}-search {
-    position: relative;
+    _position: relative;
     display: block;
 }
 .#{$uiname}-input {

@@ -343,15 +343,6 @@ define(["../avalon.getModel",
                     
                     vmodel.tip = getDateTip(cleanDate(new Date(year, month, day))).text
                     vmodel.dateError = "#cccccc"
-                    if (!calendarWrapper && !vmodel.timer) {
-                        element.value = date
-                        vmodel.toggle = false
-                    } else { // range datepicker时需要切换选中日期项的类名
-                        if (vmodel.timer) {
-                            date = date + " " + timerFilter(vmodel.hour) + ":" + timerFilter(vmodel.minute)
-                        }
-                        element.value = date
-                    }
                     vmodel.day = day
                     if (month !== _oldMonth && year !== _oldYear) {
                         monthYearChangedBoth = true
@@ -362,7 +353,15 @@ define(["../avalon.getModel",
                     } else if (year !== _oldYear) {
                         vmodel.year = year
                     }
-                    
+                    if (!calendarWrapper && !vmodel.timer) {
+                        element.value = date
+                        vmodel.toggle = false
+                    } else { // range datepicker时需要切换选中日期项的类名
+                        if (vmodel.timer) {
+                            date = date + " " + timerFilter(vmodel.hour) + ":" + timerFilter(vmodel.minute)
+                        }
+                        element.value = date
+                    }
                 }
                 if (!vmodel.showDatepickerAlways && !duplexVM) {
                     if (typeof vmodel.onSelect === "string") {
@@ -479,7 +478,7 @@ define(["../avalon.getModel",
                 } else if (vmodel.month != elementMonth) {
                     vmodel.month = elementMonth
                 } 
-                vmodel.onClose(new Date(vmodel.year,vmodel.month+1,vmodel.day), vmodel)
+                vmodel.onClose(new Date(vmodel.year,vmodel.month,vmodel.day), vmodel)
             }
         })
         vmodel.$watch("year", function(year) {

@@ -1049,6 +1049,7 @@ define(["../avalon.getModel",
             if (!str) {
                 return null
             }
+            if (avalon.type(str) === "date") return str
             var separator = this.separator;
             var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})[\\s\\w\\W]*$";
             reg = new RegExp(reg);
@@ -1061,7 +1062,10 @@ define(["../avalon.getModel",
          * @returns {String} 格式化后的日期
          */
         formatDate: function(date){
-            if (avalon.type(date) !== "date") return ""
+            if (avalon.type(date) !== "date") {
+                avalon.log("the type of " + date + "must be Date")
+                return ""
+            }
             var separator = this.separator,
                 year = date.getFullYear(),
                 month = date.getMonth(),

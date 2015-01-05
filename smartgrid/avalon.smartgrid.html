@@ -49,7 +49,7 @@
             <tr>
                 <td ms-attr-colspan="{{columns.size()}}" class="oni-smartgrid-pager-wrapper">
                     <div ms-visible="pageable && _pagerShow">
-                        <div id="pager-MS_OPTION_ID"></div>
+                        <div ms-if="pageable" ms-widget="pager, $, $pagerConfig"></div>
                     </div>
                 </td>
             </tr>

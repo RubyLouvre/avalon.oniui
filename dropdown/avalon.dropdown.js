@@ -322,6 +322,10 @@ define(["avalon",
             };
             vm._keydown = function(event) {
 
+                if(vmodel.keyboardEvent === false) {
+                    return;
+                }
+
                 //如果是单选下拉框，可以通过键盘移动
                 if (!vmodel.multiple) {
                     var index = vmodel.activeIndex || 0,
@@ -734,7 +738,8 @@ define(["avalon",
         onHide: null,    //@config 下拉框隐藏的回调函数
         onChange: null,  //@config value改变时的回调函数
         $hasDuplex: false, 
-        multipleChange: false, 
+        multipleChange: false,
+        keyboardEvent: true,  //@config 是否支持键盘事件
         /**
          * @config 模板函数,方便用户自定义模板
          * @param str {String} 默认模板

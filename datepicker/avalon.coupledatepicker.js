@@ -31,12 +31,14 @@ define(["../avalon.getModel",
             var ruleVM = avalon.getModel(rules, vmodels)
             rules = ruleVM[1][ruleVM[0]];
         }
-        rules = avalon.mix({}, rules.$model || rules)
-        if (rules) { // 让rules对象的toMinDate、toMaxDate、fromMinDate、fromMaxDate是可监控的属性
+        if (rules && avalon.type(rules) === "object") { // 让rules对象的toMinDate、toMaxDate、fromMinDate、fromMaxDate是可监控的属性
+            rules = avalon.mix({}, rules.$model || rules)
             rules.toMinDate = rules.toMinDate || ""
             rules.toMaxDate = rules.toMaxDate || ""
             rules.fromMinDate = rules.fromMinDate || ""
             rules.fromMaxDate = rules.fromMaxDate || ""
+        } else {
+            rules = ""
         }
         options.rules = rules
         _toMinDate = rules.toMinDate

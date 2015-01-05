@@ -89,8 +89,8 @@ define(["avalon",
                     }
                     if (this.className.indexOf("state-disabled") === -1) {
                         vm.onJump.call(element, event, vm)
+                        efficientChangePages(vm.pages, getPages(vm))
                     }
-                    efficientChangePages(vm.pages, getPages(vm))
                 }
             }
             vm.$watch("totalItems", function() {

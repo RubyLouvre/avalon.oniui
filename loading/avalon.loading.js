@@ -34,7 +34,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             type = type
             item = item.split("{{MS_WIDGET_DIVIDER}}")
             templateCache[type] = {
-                "svg": item[1],
+                "svg": item[1] || item[0],
                 "vml": item[0]
             }
         }
@@ -327,6 +327,13 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     }, function(vmodel, ele) {
         return _config["ball"].effect(vmodel, ele, ["path", "arc"])
     })
+    // 注册自定义图片
+    addType("img", {
+        src: "https://source.qunarzz.com/piao/images/loading_camel.gif",//@config type=img，loading效果的gif图片
+        width: 52,//@config type=img，loading效果宽度
+        height: 39,//@config type=img，loading效果高度
+        miao: 0
+    }, void 0, void 0)
     var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect
     var widget = avalon.ui.loading = function(element, data, vmodels) {
 
@@ -368,10 +375,12 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                 vmodel.width = vmodel.width == false ? vmodel.height : vmodel.width
                 vmodel.height = vmodel.height == false ? vmodel.width : vmodel.height
                 // 计算绘图数据
-                var loop = 0, drawer = vmodel.drawer(vmodel)
-                while(loop < vmodel.count && drawer) {
-                    drawer(loop)
-                    loop++
+                if(vmodel.drawer) {
+                    var loop = 0, drawer = vmodel.drawer(vmodel)
+                    while(loop < vmodel.count && drawer) {
+                        drawer(loop)
+                        loop++
+                    }
                 }
                 elementParent.appendChild(avalon.parseHTML(vmodel.template.replace("{{MS_WIDGET_HTML}}", html).replace("{{MS_WIDGET_ID}}", vmodel.$loadingID)))
                 if (continueScan) {

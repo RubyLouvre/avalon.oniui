@@ -30,8 +30,8 @@ define(["avalon",
         } else {
             options.options = []
         }
-        if(vmodels.cb){
-            template  = template.replace(/ms-title/g, "ms-attr-title")
+        if (vmodels.cb) {
+            template = template.replace(/ms-title/g, "ms-attr-title")
         }
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
@@ -87,7 +87,9 @@ define(["avalon",
                             vm.currentPage = page
                             break
                     }
-                    vm.onJump.call(element, event, vm)
+                    if (this.className.indexOf("state-disabled") === -1) {
+                        vm.onJump.call(element, event, vm)
+                    }
                     efficientChangePages(vm.pages, getPages(vm))
                 }
             }
@@ -212,7 +214,7 @@ define(["avalon",
         },
         options: [], // @config {Array}数字数组或字符串数组或对象数组,但都转换为对象数组,每个对象都应包含text,value两个属性, 用于决定每页有多少页(看avalon.pager.ex3.html) 
         /**
-         * @config {Function} 页面跳转时触发的函数
+         * @config {Function} 页面跳转时触发的函数,如果当前链接处于不可以点状态(oni-state-disabled),是不会触发的
          * @param {Event} e
          * @param {Number} page  当前页码
          */

@@ -269,7 +269,8 @@ define(["avalon",
             'data',// 一定不要去掉啊，去掉了就会出错
             'containerMinWidth',
             '_disabledData',
-            '_enabledData'
+            '_enabledData',
+            '_filterCheckboxData'
         ].concat(options.$skipArray);
         var vmodel = avalon.define(vmId, function (vm) {
             avalon.mix(vm, options);
@@ -282,7 +283,9 @@ define(["avalon",
             vm._allEnabledData = [];
             vm._disabledData = [];
             vm._enabledData = [];
+            vm._filterCheckboxData = [];
             vm.loadingVModel = null;
+            vm._dataRender = false
             vm._hiddenAffixHeader = function(column, allChecked) {
                 var selectable = vmodel.selectable
                 return selectable && selectable.type && column.key=='selected' && !allChecked
@@ -383,7 +386,6 @@ define(["avalon",
                             data, 
                             input = tr.cells[0].getElementsByTagName('input')[0], 
                             dataIndex = input && avalon(input).attr('data-index');
-
                         if (dataIndex !== null && dataIndex !== void 0) {
                             data = datas[dataIndex];
                             if (!data.disable) {
@@ -475,6 +477,13 @@ define(["avalon",
                 });
                 return html;
             };
+            vm._getAllCheckboxDisabledStatus = function(allSelected) {
+                if (allSelected) {
+                    return !vmodel._enabledData.length ? true : false
+                } else {
+                    return false
+                }
+            };
 
             /**
              * @interface 增加行，已經渲染的不會再操作
@@ -544,10 +553,11 @@ define(["avalon",
             vm.render = function (data, init) {
                 if (avalon.type(data) === 'array') {
                     vmodel.data = data;
+                    dataFracte(vmodel);
+                    vmodel._dataRender = !vmodel._dataRender
                 } else {
                     init = data;
                 }
-                dataFracte(vmodel);
                 init = init === void 0 || init ? true : false
                 vmodel.addRows(void 0, init)
                 if (sorting) {
@@ -560,6 +570,7 @@ define(["avalon",
                 var container = vmodel.container, gridFrame = '';
                 gridFrame = gridHeader.replace('MS_OPTION_ID', vmodel.$id);
                 container.innerHTML = gridFrame;
+                dataFracte(vmodel)
                 avalon.scan(container, vmodel);
                 avalon.nextTick(function () {
                     vmodel._container = container.getElementsByTagName('tbody')[0];
@@ -655,7 +666,8 @@ define(["avalon",
         var type = options.selectable.type, container = options._container;
         if (type === 'Checkbox' || type === "Radio") {
             avalon.bind(container, 'click', function (event) {
-                var target = event.target, $target = avalon(target), $tr = avalon(target.parentNode.parentNode), datas = options.data, onSelectAll = options.onSelectAll, enabledData = options._enabledData, disabledData = options._disabledData, dataIndex = $target.attr('data-index');
+                var target = event.target, $target = avalon(target), $tr = avalon(target.parentNode.parentNode), datas = options.data, onSelectAll = options.onSelectAll, enabledData = options._enabledData, disabledData = options._disabledData, dataIndex = $target.attr('data-index'),
+                    filterCheckboxData = options._filterCheckboxData;
                 if (!$target.attr('data-role') || dataIndex === null) {
                     return;
                 }
@@ -677,7 +689,7 @@ define(["avalon",
                         options.onRowSelect.call($tr[0], rowData, isSelected);
                     }
                 }
-                if (enabledData.length == datas.length - disabledData.length) {
+                if (enabledData.length == datas.length - disabledData.length- filterCheckboxData.length) {
                     options._allSelected = true    // 是否全选的回调，通过用户点击单独的行来确定是否触发
                         // if (avalon.type(onSelectAll) === "function") {
                         //     onSelectAll.call(options, datas, true)
@@ -696,14 +708,21 @@ define(["avalon",
     }
 
     function dataFracte(vmodel) {
-        var data = vmodel.data, enabledData = vmodel._enabledData = [], disabledData = vmodel._disabledData = [];
-        data.forEach(function (dataItem, index) {
+        var data = vmodel.data, enabledData = vmodel._enabledData = [], disabledData = vmodel._disabledData = [],
+            filterCheckboxData = vmodel._filterCheckboxData = []
+
+        for(var i = 0, len = data.length, dataItem; i < len; i++) {
+            dataItem = data[i]
             if (dataItem.disable) {
                 disabledData.push(dataItem);
-            } else {
-                enabledData.push(dataItem);
+                continue
             }
-        });
+            if (dataItem.checkboxShow == false) {
+                filterCheckboxData.push(dataItem)
+                continue
+            }
+            enabledData.push(dataItem);
+        }
         vmodel._allEnabledData = enabledData;
     }
     function getSelectedData(vmodel) {
@@ -740,16 +759,24 @@ define(["avalon",
         return showColumnWidth;
     }
     function isSelectAll(datas) {
-        var allSelected = true, len = datas.length;
+        var allSelected = true, len = datas.length,
+            checkboxFilterAll = 0
+
         if (!len) {
             allSelected = false;
             return;
         }
         for (var i = 0; i < len; i++) {
             var data = datas[i];
-            if (!data.selected && !data.disable) {
+            if (data.checkboxShow !== false && !data.selected && !data.disable) {
                 allSelected = false;
             }
+            if (data.checkboxShow === false) {
+                checkboxFilterAll++
+            }
+        }
+        if (checkboxFilterAll === len) {
+            allSelected = false
         }
         return allSelected;
     }
@@ -798,7 +825,10 @@ define(["avalon",
                 selectFormat = function (vmId, field, index, selected, rowData, disable, allSelected) {
                     if (allSelected && type === 'Radio')
                         return;
-                    return '<input type=\'' + type.toLowerCase() + '\'' + (disable ? 'disabled ' : '') + (selected ? 'checked=\'checked\'' : '') + 'name=\'selected\' ' + (allSelected ? 'ms-click=\'_selectAll\' ms-duplex-radio=\'_allSelected\'' : 'data-index=\'' + index + '\'') + 'data-role=\'selected\'/>';
+                    if (rowData.checkboxShow === false) {
+                        return ""
+                    }
+                    return '<input type=\'' + type.toLowerCase() + '\'' + 'ms-disabled=\'_getAllCheckboxDisabledStatus('+ (allSelected ? true : false) + ', _dataRender)\'' + (selected ? 'checked=\'checked\'' : '') + 'name=\'selected\' ' + (allSelected ? 'ms-click=\'_selectAll\' ms-duplex-radio=\'_allSelected\'' : 'data-index=\'' + index + '\'') + 'data-role=\'selected\'/>';
                 };
                 allSelected = isSelectAll(options.data) || false;
                 options._allSelected = allSelected;

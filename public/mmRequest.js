@@ -101,7 +101,15 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
         return xml;
     }
     var head = document.getElementsByTagName("head")[0] || document.head
-
+    function IE() {
+        if (window.VBArray) {
+            var mode = document.documentMode
+            return mode ? mode : window.XMLHttpRequest ? 7 : 6
+        } else {
+            return 0
+        }
+    }
+    var useOnload = IE() === 0 || IE() > 8
     function parseJS(code) {
         var indirect = eval
         code = code.trim()
@@ -159,7 +167,7 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
             dataType = promise.preproccess() || dataType
         }
         //设置首部 1、Content-Type首部
-        if (opts.contentType && name !== "upload") {
+        if (opts.contentType) {
             promise.setRequestHeader("Content-Type", opts.contentType)
         }
         //2.处理Accept首部
@@ -171,7 +179,7 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
         if (opts.async && opts.timeout > 0) {
             promise.timeoutID = setTimeout(function() {
                 promise.abort("timeout")
-		promise.dispatch(0, "timeout")
+                promise.dispatch(0, "timeout")
             }, opts.timeout)
         }
         promise.request()
@@ -193,6 +201,54 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
             })
         };
     })
+    function isDate(a) {
+        return Object.prototype.toString.call(a) === "[object Date]"
+    }
+    if (!Date.prototype.toISOString) {
+        (function() {
+
+            function pad(number) {
+                if (number < 10) {
+                    return '0' + number;
+                }
+                return number;
+            }
+
+            Date.prototype.toISOString = function() {
+                return this.getUTCFullYear() +
+                        '-' + pad(this.getUTCMonth() + 1) +
+                        '-' + pad(this.getUTCDate()) +
+                        'T' + pad(this.getUTCHours()) +
+                        ':' + pad(this.getUTCMinutes()) +
+                        ':' + pad(this.getUTCSeconds()) +
+                        '.' + (this.getUTCMilliseconds() / 1000).toFixed(3).slice(2, 5) +
+                        'Z';
+            };
+        }());
+    }
+    
+    function paramInner(json, prefix, buffer) {
+        prefix = prefix || ""
+        for (var key in json) {
+            if (json.hasOwnProperty(key)) {
+                var val = json[key]
+                var name = prefix ? prefix + encode("[" + key + "]") : encode(key)
+                if (isDate(val)) {
+                    buffer.push(name + "=" + val.toISOString())
+                } else if (isValidParamValue(val)) {//如果是简单数据类型
+                    buffer.push(name + "=" + encode(val))
+                } else if (Array.isArray(val) || avalon.isPlainObject(val)) {
+                    avalon.each(val, function(subKey, subVal) {
+                        if (isValidParamValue(subVal)) {
+                            buffer.push(name + encode("[" + subKey + "]") + "=" + encode(subVal))
+                        } else if (Array.isArray(val) || avalon.isPlainObject(val)) {
+                            paramInner(subVal, name + encode("[" + subKey + "]"), buffer)
+                        }
+                    })
+                }
+            }
+        }
+    }
 
     function isValidParamValue(val) {
         var t = typeof val; // 值只能为 null, undefined, number, string, boolean
@@ -233,7 +289,7 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
                     if (!opts.async || transport.readyState === 4) {
                         this.respond()
                     } else {
-                        if (transport.onerror === null) { //如果支持onerror, onload新API
+                        if (useOnload) { //如果支持onerror, onload新API
                             transport.onload = transport.onerror = function(e) {
                                 this.readyState = 4 //IE9+ 
                                 this.status = e.type === "load" ? 200 : 500
@@ -257,7 +313,7 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
                         var completed = transport.readyState === 4
                         if (forceAbort || completed) {
                             transport.onreadystatechange = avalon.noop
-                            if ("onerror" in transport) {//IE6下对XHR对象设置onerror属性可能报错
+                            if (useOnload) {//IE6下对XHR对象设置onerror属性可能报错
                                 transport.onerror = transport.onload = null
                             }
                             if (forceAbort) {
@@ -330,9 +386,8 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
                     if (opts.charset) {
                         node.charset = opts.charset;
                     }
-                    var load = node.onerror === null; //判定是否支持onerror
                     var self = this;
-                    node.onerror = node[load ? "onload" : "onreadystatechange"] = function() {
+                    node.onerror = node[useOnload ? "onload" : "onreadystatechange"] = function() {
                         self.respond()
                     };
                     node.src = opts.url;
@@ -360,7 +415,11 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
             upload: {
                 preproccess: function() {
                     var opts = this.options;
-                    var formdata = new FormData(opts.form)  //将二进制什么一下子打包到formdata
+                    if (typeof opts.form.append==="function") { //简单判断opts.form是否为FormData
+                        var formdata = opts.form;
+                    }else{
+                      var formdata = new FormData(opts.form)  //将二进制什么一下子打包到formdata
+                    }
                     avalon.each(opts.data, function(key, val) {
                         formdata.append(key, val)  //添加客外数据
                     })
@@ -415,30 +474,13 @@ define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
             });
         },
         //将一个对象转换为字符串
-        param: function(json, bracket) {
+        param: function(json) {
             if (!avalon.isPlainObject(json)) {
                 return "";
             }
-            bracket = typeof bracket === "boolean" ? bracket : !0;
-            var buf = [],
-                    key, val;
-            for (key in json) {
-                if (json.hasOwnProperty(key)) {
-                    val = json[key];
-                    key = encode(key)
-                    if (isValidParamValue(val)) { //只处理基本数据类型,忽略空数组,函数,正则,日期,节点等
-                        buf.push(key, "=", encode(val + ""), "&")
-                    } else if (Array.isArray(val) && val.length) { //不能为空数组
-                        for (var i = 0, n = val.length; i < n; i++) {
-                            if (isValidParamValue(val[i])) {
-                                buf.push(key, (bracket ? encode("[]") : ""), "=", encode(val[i] + ""), "&")
-                            }
-                        }
-                    }
-                }
-            }
-            buf.pop()
-            return buf.join("").replace(r20, "+")
+            var buffer = []
+            paramInner(json, "", buffer)
+            return buffer.join("&").replace(r20, "+")
         },
         //将一个字符串转换为对象
         //avalon.deparam = jq_deparam = function( params, coerce ) {

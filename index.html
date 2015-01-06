@@ -24,7 +24,7 @@
                 vm.get = function() {
                     avalon.get("/get", function(a) {
                         avalon.log(a)
-                    },"text")
+                    }, "text")
                 }
                 vm.getJSON = function() {
                     avalon.getJSON("/getjson", function(a) {
@@ -34,13 +34,23 @@
             })
 
 
-            require(["./mmRequest","ready!"], function(avalon) {
+            require(["./mmRequest", "ready!"], function(avalon) {
                 avalonAjax = avalon.ajax
                 var form = document.getElementById("ttt")
-                console.log(avalon.serialize(form))
+                avalon.log(avalon.serialize(form))
+
+                var x = {
+                    a: 22222,
+                    comList: [{
+                            a: 33333
+                        }, {
+                            b: 44444
+                        }]
+                }
+                avalon.log(avalon.param(x))
+
                 // avalon.log(avalonAjax)
             })
-
 
 
 
@@ -54,8 +64,8 @@
             <li>avalon.get</li>
             <li>avalon.upload</li>
         </ul>
-   
-        <form action="/post"   ms-on-submit="ajax" >
+
+        <form action="/post"  id="ttt"  ms-on-submit="ajax" >
             <div>帐号:<input name="username" ms-duplex="username"></div>
             <div>密码:<input name="password" ms-duplex="password"></div>
             <div>邮箱:<input name="email" ms-duplex="email"></div>

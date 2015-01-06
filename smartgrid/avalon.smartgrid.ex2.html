@@ -10,7 +10,7 @@
     <body ms-controller="test">
         <h1>通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数</h1>
         <p>配置selectable设置表格是否需要添加选中行功能，type可以设置为"Checkbox"或者"Radio"</p>
-        
+        <p>说明：当selectable.type设为Checkbox时，设置数据的checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false时务必保证对应的selected为false或者不存在selected的设置</p>
         <div ms-widget="smartgrid, sg1, opts" style="width:760px; margin: 0 auto"></div>
         <script>
             require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
@@ -18,7 +18,7 @@
                     var data = []
                     for (var i = 0; i < number; i++) {
                         data.push({
-                            description: "北上广经济型计划",
+                            description: "北上广经济型计划"+i,
                             operate: i % 5 ? 0 : 1,
                             buget: 5800,
                             display: 13534646,
@@ -27,9 +27,10 @@
                             consume: 1135800,
                             averageClickRate: 1.82,
                             disable: i == 3 ? true : false,
-                            selected: true
+                            selected: i == 0 ? false: true
                         })
                     }
+                    data[0].checkboxShow = false //当selectable.type为Checkbox时，设置checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false，务必保证selected为false或者不存在selected的设置
                     return data
                 } 
                 
@@ -156,7 +157,7 @@
                                 var data = []
                                 for (var i = 0; i &lt; number; i++) {
                                     data.push({
-                                        description: "北上广经济型计划",
+                                        description: "北上广经济型计划"+i,
                                         operate: i % 5 ? 0 : 1,
                                         buget: 5800,
                                         display: 13534646,
@@ -165,9 +166,10 @@
                                         consume: 1135800,
                                         averageClickRate: 1.82,
                                         disable: i == 3 ? true : false,
-                                        selected: true
+                                        selected: i == 0 ? false: true
                                     })
                                 }
+                                data[0].checkboxShow = false //当selectable.type为Checkbox时，设置checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false，务必保证selected为false或者不存在selected的设置
                                 return data
                             } 
                             

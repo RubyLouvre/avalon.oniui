@@ -271,15 +271,17 @@ define(["../avalon.getModel",
                 avalon.scan(element, [vmodel].concat(vmodels)) 
                 // 扫描完daterangepicker组件之后才扫描datepicker
                 avalon.nextTick(function() {
-                    var duplexFromName = duplexFrom ? duplexFrom[0].trim() : "inputFromValue",
-                        duplexToName = duplexTo ? duplexTo[0].trim() : "inputToValue"
+                    var duplexFromName = duplexFrom ? duplexFrom[0].trim() : 'inputFromValue', 
+                        duplexToName = duplexTo ? duplexTo[0].trim() : 'inputToValue',
+                        fromVM = duplexFrom ? [vmodel, duplexFrom[1]] : [vmodel],
+                        toVM = duplexTo ? [vmodel, duplexTo[1]] : [vmodel];
 
-                    inputFrom.setAttribute("ms-widget", "datepicker, $, $fromConfig")
-                    inputTo.setAttribute("ms-widget", "datepicker, $, $toConfig")
-                    inputFrom.setAttribute("ms-duplex", duplexFromName)
-                    inputTo.setAttribute("ms-duplex", duplexToName)
-                    avalon.scan(inputFrom, [vmodel].concat(vmodels))
-                    avalon.scan(inputTo, [vmodel].concat(vmodels))
+                    inputFrom.setAttribute('ms-widget', 'datepicker, $, $fromConfig');
+                    inputTo.setAttribute('ms-widget', 'datepicker, $, $toConfig');
+                    inputFrom.setAttribute('ms-duplex', duplexFromName);
+                    inputTo.setAttribute('ms-duplex', duplexToName);
+                    avalon.scan(inputFrom, fromVM.concat(vmodels));
+                    avalon.scan(inputTo, toVM.concat(vmodels));
                     if(typeof options.onInit === "function" ){
                         //vmodels是不包括vmodel的
                         options.onInit.call(element, vmodel, options, vmodels)

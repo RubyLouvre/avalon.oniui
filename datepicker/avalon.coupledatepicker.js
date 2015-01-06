@@ -112,11 +112,16 @@ define(["../avalon.getModel",
                     fromContainer = null,
                     toContainer = null,
                     calendarTemplate = "",
-                    inputFromValue = ""
+                    inputFromValue = "",
+                    scanVM = [vmodel]
 
                 avalon(element).addClass("oni-coupledatepicker")
                 if (duplexFrom) {
                     inputFromValue = duplexFrom[1][duplexFrom[0]]
+                    scanVM.push(duplexFrom[1])
+                }
+                if (duplexTo) {
+                    scanVM.push(duplexTo[1])
                 }
                 applyRules(inputFromValue && parseDate(inputFromValue))
 
@@ -136,14 +141,9 @@ define(["../avalon.getModel",
                     calendar = avalon.parseHTML(calendarTemplate)
                     element.appendChild(calendar)
                 }
-                if (continueScan) {
-                    continueScan()
-                } else {
-                    avalon.log("avalon请尽快升到1.3.7+")
-                    avalon.scan(element, [vmodel].concat(vmodels))
-                    if (typeof options.onInit === "function") {
-                        options.onInit.call(element, vmodel, options, vmodels)
-                    }
+                avalon.scan(element, scanVM.concat(vmodels))
+                if (typeof options.onInit === "function") {
+                    options.onInit.call(element, vmodel, options, vmodels)
                 }
             };
             vm.$remove = function() {

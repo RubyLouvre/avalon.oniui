@@ -11,13 +11,15 @@
         <h1>通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数</h1>
         <p>配置selectable设置表格是否需要添加选中行功能，type可以设置为"Checkbox"或者"Radio"</p>
         
-        <div ms-widget="smartgrid, sg1" style="width:760px; margin: 0 auto"></div>
+        <div ms-widget="smartgrid, sg1"></div>
+        <button ms-click="noneSelected">让所有的数据都不可选中</button>
+        <button ms-click="partsSelectable">部分数据可选中</button>
         <script>
             require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
-                function getDatas(number) {
+                function getDatas(number, selected) {
                     var data = []
                     for (var i = 0; i < number; i++) {
-                        data.push({
+                        var dataItem = {
                             description: "北上广经济型计划",
                             operate: i % 5 ? 0 : 1,
                             buget: 5800,
@@ -26,7 +28,18 @@
                             clickRate : "50.21%",
                             consume: 1135800,
                             averageClickRate: 1.82
-                        })
+                        }
+                        switch (selected) {
+                            case "none":
+                                dataItem.checkboxShow = false
+                            break;
+                            case "parts":
+                                if (!(i % 3)) {
+                                    dataItem.checkboxShow = false
+                                }
+                            break
+                        }
+                        data.push(dataItem)
                     }
                     return data
                 } 
@@ -34,6 +47,14 @@
                 avalon.define("test", function(vm) {
                     vm.$skipArray = ["smartgrid"] //不需要转为监控属性的属性务必放到$skipArray数组中，减少开销提高性能
                     vm.test = "通过此行进行批量操作"
+                    vm.noneSelected = function() {
+                        var data = getDatas(10, "none")
+                        avalon.vmodels.sg1.render(data)
+                    }
+                    vm.partsSelectable = function() {
+                        var data = getDatas(10, "parts")
+                        avalon.vmodels.sg1.render(data)
+                    }
                     vm.smartgrid = {
                         // 不希望组件的配置项被smartgrid监控，将其放到$skipArray数组中，添加其他组件同理
                         $skipArray: ["switchdropdown", "dropdown", "pager"],
@@ -143,12 +164,14 @@
                 &lt;/head&gt;
                 &lt;body ms-controller="test"&gt;
                     &lt;div ms-widget="smartgrid, sg1" style="width:760px; margin: 0 auto"&gt;&lt;/div&gt;
+                    &lt;button ms-click="noneSelected">让所有的数据都不可选中&lt;/button&gt;
+                    &lt;button ms-click="partsSelectable"&gt;部分数据可选中&lt;/button&gt;
                     &lt;script&gt;
                         require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
-                            function getDatas(number) {
+                            function getDatas(number, selected) {
                                 var data = []
                                 for (var i = 0; i &lt; number; i++) {
-                                    data.push({
+                                    var dataItem = {
                                         description: "北上广经济型计划",
                                         operate: i % 5 ? 0 : 1,
                                         buget: 5800,
@@ -157,7 +180,18 @@
                                         clickRate : "50.21%",
                                         consume: 1135800,
                                         averageClickRate: 1.82
-                                    })
+                                    }
+                                    switch (selected) {
+                                        case "none":
+                                            dataItem.checkboxShow = false
+                                        break;
+                                        case "parts":
+                                            if (!(i % 3)) {
+                                                dataItem.checkboxShow = false
+                                            }
+                                        break
+                                    }
+                                    data.push(dataItem)
                                 }
                                 return data
                             } 
@@ -165,6 +199,14 @@
                             avalon.define("test", function(vm) {
                                 vm.$skipArray = ["smartgrid"] //不需要转为监控属性的属性务必放到$skipArray数组中，减少开销提高性能
                                 vm.test = "通过此行进行批量操作"
+                                vm.noneSelected = function() {
+                                    var data = getDatas(10, "none")
+                                    avalon.vmodels.sg1.render(data)
+                                }
+                                vm.partsSelectable = function() {
+                                    var data = getDatas(10, "parts")
+                                    avalon.vmodels.sg1.render(data)
+                                }
                                 vm.smartgrid = {
                                     // 不希望组件的配置项被smartgrid监控，将其放到$skipArray数组中，添加其他组件同理
                                     $skipArray: ["switchdropdown", "dropdown", "pager"],

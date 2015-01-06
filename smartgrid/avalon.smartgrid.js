@@ -203,7 +203,8 @@ define(["avalon",
     }
     var countter = 0
     var widget = avalon.ui.smartgrid = function (element, data, vmodels) {
-        var options = data.smartgridOptions, $element = avalon(element), pager = options.pager, vmId = data.smartgridId;
+        var options = data.smartgridOptions, $element = avalon(element), pager = options.pager, vmId = data.smartgridId,
+            $initRender = true
         perfectColumns(options, element);
         initContainer(options, element);
         options._position = positionAbsolute ? 'absolute' : 'fixed';
@@ -557,12 +558,16 @@ define(["avalon",
             vm.render = function (data, init) {
                 if (avalon.type(data) === 'array') {
                     vmodel.data = data;
-                    dataFracte(vmodel);
-                    vmodel._dataRender = !vmodel._dataRender
                 } else {
                     init = data;
                 }
                 init = init === void 0 || init ? true : false
+                if (!$initRender) {
+                    dataFracte(vmodel);
+                    vmodel._dataRender = !vmodel._dataRender
+                } else {
+                    $initRender = false
+                }
                 vmodel.addRows(void 0, init)
                 if (sorting) {
                     sorting = false;
@@ -712,6 +717,7 @@ define(["avalon",
     }
 
     function dataFracte(vmodel) {
+        console.log("dataFracte")
         var data = vmodel.data, enabledData = vmodel._enabledData = [], disabledData = vmodel._disabledData = [],
             filterCheckboxData = vmodel._filterCheckboxData = []
 

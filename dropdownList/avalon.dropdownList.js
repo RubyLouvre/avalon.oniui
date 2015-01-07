@@ -249,7 +249,6 @@ define(["avalon", "text!./avalon.dropdownList.html", "text!./avalon.suggest.html
                         suggestVM.suggestCtr.fixMinMaxIndex(suggestVM.selectedIndex)
                     },
                     keyDownOperation: function(vmodel, event, limit) {
-                        console.log("keyDownOperation")
                         var selectValue = vmodel.list[vmodel.selectedIndex] && vmodel.list[vmodel.selectedIndex].value,
                             selectedIndex = vmodel.selectedIndex
 

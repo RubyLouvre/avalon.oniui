@@ -76,7 +76,7 @@ define(["../avalon.getModel",
         _lastFooter = options.getFooter(_lastFooter, options)
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "template", "container", "modal", "zIndexIncrementGlobal", "initChange"]
+            vm.$skipArray = ["widgetElement", "template", "container", "modal", "zIndexIncrementGlobal", "initChange", "content"]
             vm.widgetElement = element
             vm.position = position
             // 如果显示模式为alert或者配置了showClose为false，不显示关闭按钮
@@ -322,7 +322,7 @@ define(["../avalon.getModel",
         title: "&nbsp;", //@config 设置弹窗的标题
         draggable: false, //@config 设置dialog是否可拖动
         type: "confirm", //@config 配置弹窗的类型，可以配置为alert来模拟浏览器
-        content: "", //@config 配置dialog的content，默认取dialog的innerHTML作为dialog的content，如果innerHTML为空，再去取content配置项
+        content: "", //@config 配置dialog的content，默认取dialog的innerHTML作为dialog的content，如果innerHTML为空，再去取content配置项.需要注意的是：content只在初始化配置的起作用，之后需要通过setContent来动态的修改
         /**
          * @config {Function} 定义点击"确定"按钮后的回调操作
          * @param event {Number} 事件对象

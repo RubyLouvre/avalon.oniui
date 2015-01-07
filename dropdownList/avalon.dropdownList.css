@@ -2,12 +2,12 @@
 /*
 这是每个都组件都应该引用的部分
 */
-.oni-dropdownList { display: inline-block; }
-.oni-dropdownList .oni-textbox { display: block; position: absolute; left: 0; right: 0; top: -1px; }
+.oni-dropdownList { display: inline-block; *display: inline; _display: inline; zoom: 1; position: relative; }
+.oni-dropdownList .oni-textbox { display: block; position: absolute; left: 0; right: 0; top: -1px; _width: expression(parseInt(this.parentNode.offsetWidth) - 12); zoom: 1; }
 .oni-dropdownList .oni-textbox-focus { border: 1px solid #ccc; }
 .oni-dropdownList .oni-textbox-focus .oni-textbox-icon { color: #3775c0; }
 
-.oni-dropdownList-search { position: relative; display: block; }
+.oni-dropdownList-search { _position: relative; display: block; }
 
 .oni-dropdownList-input { display: block; font-size: 12px; height: 24px; line-height: 24px; padding: 0 6px; width: 200px; border: 1px solid #cccccc; position: relative; }
 

@@ -285,6 +285,7 @@ define(["avalon",
             vm._enabledData = [];
             vm._filterCheckboxData = [];
             vm.loadingVModel = null;
+            vm._dataRender = false
             vm._hiddenAffixHeader = function(column, allChecked) {
                 var selectable = vmodel.selectable
                 return selectable && selectable.type && column.key=='selected' && !allChecked
@@ -476,6 +477,17 @@ define(["avalon",
                 });
                 return html;
             };
+            vm._getAllCheckboxDisabledStatus = function(allSelected) {
+                var disabledCheckboxLen = vmodel._filterCheckboxData.length,
+                    disabledData = vmodel._disabledData.length,
+                    noneSelectedDataLen = disabledCheckboxLen + disabledData
+
+                if (allSelected) {
+                    return noneSelectedDataLen === vmodel.data.length ? true : false
+                } else {
+                    return false
+                }
+            };
 
             /**
              * @interface 增加行，已經渲染的不會再操作
@@ -545,10 +557,11 @@ define(["avalon",
             vm.render = function (data, init) {
                 if (avalon.type(data) === 'array') {
                     vmodel.data = data;
+                    dataFracte(vmodel);
+                    vmodel._dataRender = !vmodel._dataRender
                 } else {
                     init = data;
                 }
-                dataFracte(vmodel);
                 init = init === void 0 || init ? true : false
                 vmodel.addRows(void 0, init)
                 if (sorting) {
@@ -561,6 +574,7 @@ define(["avalon",
                 var container = vmodel.container, gridFrame = '';
                 gridFrame = gridHeader.replace('MS_OPTION_ID', vmodel.$id);
                 container.innerHTML = gridFrame;
+                dataFracte(vmodel)
                 avalon.scan(container, vmodel);
                 avalon.nextTick(function () {
                     vmodel._container = container.getElementsByTagName('tbody')[0];
@@ -749,16 +763,27 @@ define(["avalon",
         return showColumnWidth;
     }
     function isSelectAll(datas) {
-        var allSelected = true, len = datas.length;
+        var allSelected = true, len = datas.length,
+            checkboxFilterAll = 0
+
         if (!len) {
             allSelected = false;
             return;
         }
         for (var i = 0; i < len; i++) {
             var data = datas[i];
+            if (data.selected === void 0) {
+                data.selected = false
+            }
             if (data.checkboxShow !== false && !data.selected && !data.disable) {
                 allSelected = false;
             }
+            if (data.checkboxShow === false) {
+                checkboxFilterAll++
+            }
+        }
+        if (checkboxFilterAll === len) {
+            allSelected = false
         }
         return allSelected;
     }
@@ -810,7 +835,7 @@ define(["avalon",
                     if (rowData.checkboxShow === false) {
                         return ""
                     }
-                    return '<input type=\'' + type.toLowerCase() + '\'' + (disable ? 'disabled ' : '') + (selected ? 'checked=\'checked\'' : '') + 'name=\'selected\' ' + (allSelected ? 'ms-click=\'_selectAll\' ms-duplex-radio=\'_allSelected\'' : 'data-index=\'' + index + '\'') + 'data-role=\'selected\'/>';
+                    return '<input type=\'' + type.toLowerCase() + '\'' + ' ms-disabled=\'_getAllCheckboxDisabledStatus('+ (allSelected ? true : false) + ', _dataRender)\' ' + (selected ? 'checked=\'checked\'' : '') + ' name=\'selected\' ' + (allSelected ? ' ms-click=\'_selectAll\' ms-duplex-radio=\'_allSelected\'' : ' data-index=\'' + index + '\'') + ' data-role=\'selected\'/>';
                 };
                 allSelected = isSelectAll(options.data) || false;
                 options._allSelected = allSelected;

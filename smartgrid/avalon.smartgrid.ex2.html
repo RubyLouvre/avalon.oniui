@@ -12,6 +12,7 @@
         <p>配置selectable设置表格是否需要添加选中行功能，type可以设置为"Checkbox"或者"Radio"</p>
         <p>说明：当selectable.type设为Checkbox时，设置数据的checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false时务必保证对应的selected为false或者不存在selected的设置</p>
         <div ms-widget="smartgrid, sg1, opts" style="width:760px; margin: 0 auto"></div>
+        <button ms-click="render">重新渲染数据</button>
         <script>
             require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
                 function getDatas(number) {
@@ -27,15 +28,23 @@
                             consume: 1135800,
                             averageClickRate: 1.82,
                             disable: i == 3 ? true : false,
-                            selected: i == 0 ? false: true
+                            selected: false,
+                            checkboxShow: false
                         })
                     }
-                    data[0].checkboxShow = false //当selectable.type为Checkbox时，设置checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false，务必保证selected为false或者不存在selected的设置
+                    data[2].checkboxShow = true
+                    
+                    // data[0].checkboxShow = false //当selectable.type为Checkbox时，设置checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false，务必保证selected为false或者不存在selected的设置
                     return data
                 } 
                 
                 avalon.define("test", function(vm) {
                     vm.$skipArray = ["opts"] //不需要转为监控属性的属性务必放到$skipArray数组中，减少开销提高性能
+                    vm.render = function() {
+                        var data = getDatas(8)
+                        data[0].checkboxShow = true
+                        avalon.vmodels.sg1.render(data)
+                    }
                     vm.opts = {
                         // 不希望组件的配置项被smartgrid监控，将其放到$skipArray数组中，添加其他组件同理
                         $skipArray: ["switchdropdown", "dropdown", "pager"],
@@ -151,6 +160,7 @@
                     &lt;p&gt;配置selectable设置表格是否需要添加选中行功能，type可以设置为"Checkbox"或者"Radio"&lt;/p&gt;
                     
                     &lt;div ms-widget="smartgrid, sg1, opts" style="width:760px; margin: 0 auto"&gt;&lt;/div&gt;
+                    &lt;button ms-click="render"&gt;重新渲染数据&lt;/button&gt;
                     &lt;script&gt;
                         require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
                             function getDatas(number) {
@@ -166,15 +176,21 @@
                                         consume: 1135800,
                                         averageClickRate: 1.82,
                                         disable: i == 3 ? true : false,
-                                        selected: i == 0 ? false: true
+                                        selected: false,
+                                        checkboxShow: false
                                     })
                                 }
-                                data[0].checkboxShow = false //当selectable.type为Checkbox时，设置checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false，务必保证selected为false或者不存在selected的设置
+                                // data[0].checkboxShow = false //当selectable.type为Checkbox时，设置checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false，务必保证selected为false或者不存在selected的设置
                                 return data
                             } 
                             
                             avalon.define("test", function(vm) {
                                 vm.$skipArray = ["opts"] //不需要转为监控属性的属性务必放到$skipArray数组中，减少开销提高性能
+                                vm.render = function() {
+                                    var data = getDatas(8)
+                                    data[0].checkboxShow = true
+                                    avalon.vmodels.sg1.render(data)
+                                }
                                 vm.opts = {
                                     // 不希望组件的配置项被smartgrid监控，将其放到$skipArray数组中，添加其他组件同理
                                     $skipArray: ["switchdropdown", "dropdown", "pager"],

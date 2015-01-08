@@ -35,7 +35,7 @@ define(["../avalon.getModel",
             month, 
             day, 
             year
-
+            
         calendarTemplate = options.template = options.getTemplate(calendarTemplate, options)
         HOLIDAYS = initHoliday.call(options, holidayDate) || {}
         avalon.scan(element, vmodels)
@@ -962,7 +962,7 @@ define(["../avalon.getModel",
                                 setCalendarDate(cellDate, vmodel, valueDate,dateMonth, dateYear, dateDay, day, i, m, n)
                             } else {
                                 vmodel.data[i]["rows"][m].set(n, "")
-                                avalon.mix(datepickerData[i]["rows"][m][n], {day:"", month: false, weekend: false, selected:false,dateDisabled: true})
+                                avalon.mix(datepickerData[i]["rows"][m][n], {day:"",_day: "", month: false, weekend: false, selected:false,dateDisabled: true})
                             }
                         }
                         cellDate = new Date(cellDate.setDate(dateDay+1))

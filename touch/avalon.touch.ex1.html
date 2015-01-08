@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>touch,gesture</title>
+        <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui" name="viewport" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../../avalon/avalon.mobile.js"></script>
+        <script src="http://zeptojs.com/zepto.min.js"></script>
+        <script src="/touch.js"></script>
+        <script>
+        	window.onerror = function(e) {
+        		// alert(JSON.stringify(e))
+        	}
+        </script>
+        <style type="text/css">
+        	*{
+        		padding: 0;
+        		margin: 0;
+        	}
+            html, body {
+                height: 100%;
+            }
+			.type{
+				border: 1px solid #ccc;
+				width: 300px;
+				margin:10px auto;
+				height: 300px;
+				position: relative;
+				overflow: hidden;
+			}
+			.type .box{
+				border: 1px solid #c00;
+				width: 100px;
+				height: 100px;
+				margin: 20px auto;
+				text-align: center;
+			}
+			.list{
+				position: absolute;
+				top:20px;
+				width: 500%;
+				border-top: 1px solid #c00;
+				border-bottom: 1px solid #c00;
+				transition: all 0.5s;
+			}
+			.item{
+				width: 20%;
+				text-align: center;
+				line-height: 150px;
+				height: 150px;
+				list-style: none;
+				float: left;
+			}
+			#log{
+				position: fixed;
+				right: 0;
+				top:0;
+				width:200px;
+				height: 100px;
+				overflow-y: scroll;
+				overflow-x: hidden;
+				background: green;
+				z-index: 1000;
+			}
+            fieldset {
+                font-size: 12px;
+                width: 90%;
+                padding: 5px;
+                margin: 10px auto;
+            }
+        </style>
+    </head>
+    <body ms-controller="test">
+        avalon.mobile.js和zepto混用，出现tap，swipe等事件冲突，avalon的事件绑定受zepto影响会触发两次，但是avalon不会影响zepto的事件绑定
+        <div id="log" ms-on-tap="tap">
+            tap me!
+        </div>
+        
+    	<script>
+			window.__log = function(log) {
+				model.log.unshift(log)
+			}
+            var model
+        	require([], function() {
+	        	var index = 0
+                model = avalon.define("test", function(vm){
+                    vm.index = 0
+                    vm.log = []
+                    vm.value = ""
+                    vm.stop = function(e) {
+                        e.stopPropagation()
+                    }
+                    vm.tap = function(e) {
+                        // 屏蔽掉zepto的事件
+                        if(e.isDefaultPrevented) return
+                        console.log(e)
+                    }
+                })
+                avalon.scan()
+			})
+        </script>
+    </body>
+</html>

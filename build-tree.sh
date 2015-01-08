@@ -1,3 +1,5 @@
+#!/usr/bin/env
+echo "now building tree"
 cp tree/avalon.tree.js tree/avalon.tree.jsbak
 cat tree/avalon.tree.*.js >> tree/avalon.tree.js
 avalon-doc tree

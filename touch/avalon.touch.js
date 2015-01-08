@@ -328,9 +328,8 @@ define(['avalon'], function(avalon) {
 	            function W3CFire(el, name, detail) {
 	                var event = DOC.createEvent("Events")
 	                event.initEvent(name, true, true)
-	                if (detail) {
-	                    event.detail = detail
-	                }
+                    event.detail = detail || {}
+                    event.detail.by = "avalon"
 	                el.dispatchEvent(event)
 	            }
 	            function swipeDirection(x1, x2, y1, y2) {

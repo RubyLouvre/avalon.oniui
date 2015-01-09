@@ -326,12 +326,15 @@ define(['avalon'], function(avalon) {
 	                    rotateThreshold = 15, // 判断方向的角度
 	                    pinchThreshold = 10 // 判定 pinch 的位移偏移量
 	            function W3CFire(el, name, detail) {
-	                var event = DOC.createEvent("Events")
-	                event.initEvent(name, true, true)
-                    event.detail = detail || {}
-                    event.detail.by = "avalon"
-	                el.dispatchEvent(event)
-	            }
+				    var event = DOC.createEvent("Events")
+				    event.initEvent(name, true, true)
+				    event.fireByAvalon = true//签名，标记事件是由avalon触发
+				    //event.isTrusted = false 设置这个opera会报错
+				    if (detail)
+				        event.detail = detail
+				    el.dispatchEvent(event)
+				}
+
 	            function swipeDirection(x1, x2, y1, y2) {
 	                return Math.abs(x1 - x2) >=
 	                        Math.abs(y1 - y2) ? (x1 - x2 > 0 ? "left" : "right") : (y1 - y2 > 0 ? "up" : "down")

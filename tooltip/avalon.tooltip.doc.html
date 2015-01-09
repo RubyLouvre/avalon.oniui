@@ -58,70 +58,82 @@
                         <td>显示tooltip的事件，默认hover的时候显示tooltip，为false的时候就不绑定事件，如果后面设置了自动隐藏，则mouseenter对应的是mouseleave,focus对应的是blur，进行自动隐藏事件侦听，使用代理的时候，目测不支持focus,blur，event可以配置为空，则不会添加事件侦听</td>
                     </tr>
                     <tr>
-                        <td>height</td>
+                        <td>content</td>
+                        <td>Unary</td>
+                        <td>void 0</td>
+                        <td>tooltip显示内容，默认去获取element的title属性</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
                         <td>String</td>
                         <td>"auto"</td>
                         <td>tip宽度，默认是auto</td>
                     </tr>
                     <tr>
-                        <td>arrow</td>
-                        <td>Boolean</td>
-                        <td>true</td>
+                        <td>height</td>
+                        <td>String</td>
+                        <td>"auto"</td>
                         <td>tip高度，默认是auto</td>
                     </tr>
                     <tr>
-                        <td>autohide</td>
+                        <td>arrow</td>
                         <td>Boolean</td>
                         <td>true</td>
                         <td>是否显示尖角图标，默认为true</td>
                     </tr>
                     <tr>
-                        <td>delegate</td>
+                        <td>autohide</td>
                         <td>Boolean</td>
-                        <td>false</td>
+                        <td>true</td>
                         <td>元素hoverout之后，是否自动隐藏tooltip，默认true</td>
                     </tr>
                     <tr>
-                        <td>disabled</td>
+                        <td>delegate</td>
                         <td>Boolean</td>
                         <td>false</td>
                         <td>元素是否只作为一个代理元素，这样适合对元素内多个子元素进行tooltip绑定</td>
                     </tr>
                     <tr>
-                        <td>track</td>
+                        <td>disabled</td>
                         <td>Boolean</td>
                         <td>false</td>
                         <td>禁用</td>
                     </tr>
                     <tr>
+                        <td>track</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>tooltip是否跟随鼠标，默认否</td>
+                    </tr>
+                    <tr>
                         <td>animated</td>
                         <td>Boolean</td>
                         <td>true</td>
-                        <td>tooltip是否跟随鼠标，默认否</td>
+                        <td>是否开启显示隐藏切换动画效果</td>
                     </tr>
                     <tr>
                         <td>position</td>
                         <td>String</td>
                         <td>"rt"</td>
-                        <td>是否开启显示隐藏切换动画效果</td>
+                        <td>tooltip相对于element的位置，like: rt,rb,rc...</td>
                     </tr>
                     <tr>
                         <td>positionMy</td>
                         <td>Boolean</td>
                         <td>false</td>
-                        <td>tooltip相对于element的位置，like: rt,rb,rc...</td>
+                        <td>tooltip元素的定位点，like: left top+11</td>
                     </tr>
                     <tr>
                         <td>positionAt</td>
                         <td>Boolean</td>
                         <td>false</td>
-                        <td>tooltip元素的定位点，like: left top+11</td>
+                        <td>element元素的定位点，like: left top+11,positionAt && positionMy时候忽略position设置</td>
                     </tr>
                     <tr>
                         <td>hiddenDelay</td>
                         <td>Number</td>
                         <td>16</td>
-                        <td>element元素的定位点，like: left top+11,positionAt && positionMy时候忽略position设置</td>
+                        <td>tooltip自动隐藏时间，单位ms</td>
                     </tr>
                     <tr>
                         <td>onInit</td>

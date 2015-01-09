@@ -1,0 +1,33 @@
+{
+  "name": "oniui",
+  "version": "0.0.0",
+  "description": "avalon.oniui ========================== 基于avalon的组件库,由<a href=\"http://hotelued.qunar.com/\">去哪儿网</a>前端架构组倾力打造 <p>当前进度表</p> <ul>     <li>UI组件，有界面的，通过ms-widget调用</li>     <li>功能组件，没有界面的，添加辅助性功能的 </li> </ul> <table border=\"1\" width=\"90%\">     <tr>         <th>名称</th><th>类别</th><th>状态</th><th>说明</th>     </tr>     <tr>         <td colspan=4>第1期</td>     </tr>     <tr>         <td>hotkeys</td><td>功能组件</td><td>完成</td><td>钟，组合键</td>     </tr>     <tr>         <td>position</td><td>功能组件</td><td>完成</td><td>杨，定位</td>     </tr>     <tr>         <td>draggable</td><td>功能组件</td><td>完成</td><td>钟，拖拽</td>     </tr>     <tr>         <td>resizable</td><td>功能组件</td><td>完成</td><td>钟，缩放</td>     </tr>     <tr>         <td>checkboxlist</td><td>UI组件</td><td>完成</td><td>田，全选非全选</td>     </tr>     <tr>         <td>textbox+suggest</td><td>UI组件</td><td>完成</td><td>田，文本域及智能提示</td>     </tr>     <tr>         <td>at</td><td>UI组件</td><td>完成</td><td>钟，@提示列表</td>     </tr>     <tr>         <td>pager</td><td>UI组件</td><td>完成</td><td>钟，分页栏</td>     </tr>     <tr>         <td>dialog</td><td>UI组件</td><td>完成</td><td>田，弹出层 </td>     </tr>     <tr>         <td>grid</td><td>UI组件</td><td>完成</td><td>钟， 表格</td>     </tr>     <tr>         <td>according</td><td>UI组件</td><td>完成</td><td>田， 手风琴</td>     </tr>     <tr>         <td>slider</td><td>UI组件</td><td>完成</td><td>田，滑动条 </td>     </tr>     <tr>         <td>flipswitch</td><td>UI组件</td><td>完成</td><td>杨， 拖动切换 </td>     </tr>     <tr>         <td>tabs</td><td>UI组件</td><td>完成</td><td>杨， 切换卡 </td>     </tr>     <tr>         <td>spinner</td><td>UI组件</td><td>完成</td><td>田，数字输入框 </td>     </tr>     <tr>         <td>progressbar</td><td>UI组件</td><td>完成</td><td>杨， 进度条</td>     </tr>     <tr>         <td>dropdown</td><td>UI组件</td><td>完成</td><td>姚，下拉框</td>     </tr>        <tr>         <td>switchdropdown</td><td>UI组件</td><td>完成</td><td>姚，切换下拉框(图标加提示)</td>     </tr>     <tr>         <td>miniswitch</td><td>UI组件</td><td>完成</td><td>姚， 迷你下拉框(只有图标)</td>     </tr>     <tr>         <td>tooltip</td><td>UI组件</td><td>完成</td><td>杨，气泡提示（有小三角，围绕元素的任意位置出现） </td>     </tr>     <tr>         <td>notice</td><td>UI组件</td><td>完成</td><td>田，信息提示（能并排出现）</td>     </tr>     <tr>         <td>doublelist</td><td>UI组件</td><td>完成</td><td>姚，角色选择</td>     </tr>     <tr>         <td>datepicker</td><td>UI组件</td><td>完成</td><td>田， 日期选框器</td>     </tr>     <tr>         <td>scrollbar</td><td>UI组件</td><td>完成</td><td>杨， 滚动条</td>     </tr>     <tr>         <td colspan=4>第2期</td>     </tr>    <tr>         <td>json</td><td>功能组件</td><td>完成</td><td>钟，json2</td>     </tr>     <tr>         <td>cookie</td><td>功能组件</td><td>完成</td><td>钟，cookie</td>     </tr>     <tr>         <td>store</td><td>功能组件</td><td>完成</td><td>钟，本地储存</td>     </tr>     <tr>         <td>promise</td><td>功能组件</td><td>完成</td><td>钟, es6的Promise组件</td>     </tr>     <tr>         <td>colorpicker</td><td>UI组件</td><td>完成</td><td>王，颜色选择器</td>     </tr>     <tr>         <td>lazyload</td><td>功能组件</td><td>完成</td><td>懒加载</td>     </tr>     <tr>         <td>editor</td><td>UI组件</td><td></td><td>富文本编辑器</td>     </tr>     <tr>         <td>menu</td><td>UI组件</td><td>完成</td><td>多级菜单</td>     </tr>     <tr>         <td>tree</td><td>UI组件</td><td>开发中</td><td>树</td>     </tr>     <tr>         <td>waterfall</td><td>UI组件</td><td></td><td>瀑布流</td>     </tr>     <tr>         <td> button</td><td>UI组件</td><td>完成</td><td>按钮</td>     </tr>     <tr>         <td> carousel</td><td>UI组件</td><td>完成</td><td>单个照片http://owlgraphic.com/owlcarousel/demos/custom.html</td>     </tr>     <tr>         <td> rating</td><td>UI组件</td><td>完成</td><td>林 星级评分</td>     </tr>     <tr>         <td> uploader</td><td>UI组件</td><td>完成</td><td> 上传</td>     </tr>     <tr>         <td>preview</td><td>UI组件</td><td>完成</td><td>钟， 图片预览</td>     </tr>       <tr>         <td>scrollspy</td><td>UI组件</td><td>完成</td><td>杨， 滚动监听</td>     </tr>     <tr>         <td> imagecropper</td><td>UI组件</td><td></td><td> 图片剪切</td>     </tr>     <tr>         <td> validator</td><td>功能组件</td><td>完成</td><td> 验证框架</td>     </tr> </table> 如何使用OniUI ========================== <ul>    <li>将项目下载地本地</li>    <li>如果有netBeans的同学，可以直接新建一个项目，将它放在里面，然后点击上方的运行（R）菜单，设置项目浏览器，然后在IDE左方找到index.html文件，右键运行</li>    <li>其他同学可以到<a href=\"https://github.com/RubyLouvre/avalon\">avalon项目</a>，将它的server.exe（一个迷你的.Net服务器）文件拷过来，然后运行它，选中index.html打开</li> </ul> <img src=\"https://raw.githubusercontent.com/RubyLouvre/avalon.oniui/master/style/homepage.jpg\"/> license ========================== MIT 如何为OniUI贡献一套新的皮肤 ========================== <b>chameleon</b>是OniUI的皮肤生成系统,基于sass的compass框架改写而成. 直接路径下有oniui-theme.scss,oniui-common.scss这两个文件,  其中oniui-common.scss会生成oniui-common.css,这个文件所有UI组件都应该引用,如simplegrid.js就是这样引用 ```javascript",
+  "main": "avalon.getModel.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ilife5/avalon.oniui.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ilife5/avalon.oniui/issues"
+  },
+  "homepage": "https://github.com/ilife5/avalon.oniui",
+  "devDependencies": {
+    "mocha": "*",
+    "chai": "*",
+    "sinon": "*",
+    "jsdom": "*",
+    "access-log": "^0.3.9",
+    "longjohn": "^0.2.4",
+    "phantomjs": "^1.9.13",
+    "phantom": "^0.7.1",
+    "promise": "^6.0.1"
+  }
+}

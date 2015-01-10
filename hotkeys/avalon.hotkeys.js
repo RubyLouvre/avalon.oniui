@@ -69,6 +69,7 @@ define(["avalon"], function(avalon) {
                 delete data.specialUnbind
             }
         }
+        data.type = "on"
         avalon.bindingHandlers.on(data, vmodels)
     }
     avalon.bindingExecutors.hotkeys = avalon.bindingExecutors.on

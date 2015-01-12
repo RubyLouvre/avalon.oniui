@@ -10,7 +10,7 @@ var app,
 module.exports = {
     install: function() {
         app = http.createServer(function(req, res){
-            log(req, res);
+            //log(req, res);
             send(req, url.parse(req.url).pathname, {root: process.cwd()})
                 .pipe(res);
         }).listen(3000);
@@ -27,10 +27,10 @@ module.exports = {
         });
     },
     close: function() {
-        app.close(function () { console.log('Server closed!'); });
+        app.close();
         // Destroy all open sockets
         for (var socketId in sockets) {
-            console.log('socket', socketId, 'destroyed');
+            //console.log('socket', socketId, 'destroyed');
             sockets[socketId].destroy();
         }
     }

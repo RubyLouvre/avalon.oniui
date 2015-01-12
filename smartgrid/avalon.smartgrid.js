@@ -699,25 +699,15 @@ define(["avalon",
                     }
                 }
                 if (enabledData.length == datas.length - disabledData.length- filterCheckboxData.length) {
-                    options._allSelected = true    // 是否全选的回调，通过用户点击单独的行来确定是否触发
-                        // if (avalon.type(onSelectAll) === "function") {
-                        //     onSelectAll.call(options, datas, true)
-                        // }
-                    ;
+                    options._allSelected = true 
                 } else {
-                    options._allSelected = false    // if (!selectedData.length) { // 通过点击每一行最终确定是否全选的回调
-                        //     if (avalon.type(onSelectAll) === "function") {
-                        //         onSelectAll.call(options, datas, false)
-                        //     }
-                        // }
-                    ;
+                    options._allSelected = false  
                 }
             });
         }
     }
 
     function dataFracte(vmodel) {
-        console.log("dataFracte")
         var data = vmodel.data, enabledData = vmodel._enabledData = [], disabledData = vmodel._disabledData = [],
             filterCheckboxData = vmodel._filterCheckboxData = []
 

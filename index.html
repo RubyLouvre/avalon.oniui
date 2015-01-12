@@ -48,6 +48,11 @@
                         }]
                 }
                 avalon.log(avalon.param(x))
+                
+                var b = avalon.unparam("a=1&b=2")
+                console.log(b)
+                 var b2 = avalon.unparam("a[]=1&a[]=2&a[]=3&d=false")
+                console.log(b2)
 
                 // avalon.log(avalonAjax)
             })

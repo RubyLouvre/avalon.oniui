@@ -19,7 +19,15 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 <p>avalon.getJSON( url [, data ] [, success( data, textStatus, jqXHR ) ] )
 <p>avalon.getScript( url [, success(script, textStatus, jqXHR) ] )
 <p>avalon.param(obj) 将一个对象转换为字符串
+
+
 <p>avalon.unparam(str) 将一个字符串转换为对象
+```javascript
+   var b = avalon.unparam("a=1&b=2")
+    console.log(b) ==> {a: "1", b: "2"}
+    var b2 = avalon.unparam("a[]=1&a[]=2&a[]=3&d=false")
+   console.log(b2) ==> {a: ["1","2","3"], d: false}
+```
 <p>avalon.serializ(form)  将表单元素变字符串
 
 用法与jQuery的同名方法用法完全一样，将avalon.js, mmRequest.js, mmDeferred.js放到同一目录下，然后

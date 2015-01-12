@@ -1,4 +1,4 @@
-avalo.ajaxConverters = {//转换器，返回用户想要做的数据
+avalon.ajaxConverters = {//转换器，返回用户想要做的数据
     text: function(text) {
         return text || "";
     },

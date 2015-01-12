@@ -16,7 +16,7 @@ function comboFiles(files, writer, lastCallback) {
             return
         }
 
-        var filePath = path.join(curDir, fileName + ".js")
+        var filePath = path.join(curDir, "src", fileName + ".js")
         var readable = fs.createReadStream(filePath)
 
         readable.pipe(writer, {end: false})
@@ -45,7 +45,7 @@ modernFiles[modernFiles.indexOf("11 avalon.ajaxTransports.old")] = "11 avalon.aj
 
 //开始合并mmRequest.js
 new function() {
-    var writable = fs.createWriteStream(path.join(curDir, 'mmRequest.js'), {
+    var writable = fs.createWriteStream(path.join(curDir, 'public/mmRequest.js'), {
         encoding: "utf8"
     });
     writable.setMaxListeners(100) //默认只有添加11个事件，很容易爆栈
@@ -57,7 +57,7 @@ new function() {
 
 //开始合并mmRequest.modern.js
 new function() {
-    var writable = fs.createWriteStream(path.join(curDir, 'mmRequest.modern.js'), {
+    var writable = fs.createWriteStream(path.join(curDir, 'public/mmRequest.modern.js'), {
         encoding: "utf8"
     })
     writable.setMaxListeners(100) //默认只有添加11个事件，很容易爆栈

@@ -1,31 +1,21 @@
 'use strict';
 
-var phantom = require('phantom'),
-    staticServer = require("./support/staticServer"),
-    expect = require('chai').expect,
+var staticServer = require("./support/staticServer"),
     fs = require("fs"),
     path = require("path"),
-    predecessor = {
-        before: function() {
-            staticServer.install();
-        },
-        after: function() {
-            staticServer.close();
-        }
-    };
+    casesRender = require("./support/casesRender");
 
-var cases = [];
+staticServer.install();
 
-fs.readdirSync(path.join(__dirname, "suites/")).forEach(function(filename) {
-    cases.push(require(path.join(__dirname, "suites/", filename)))
+var cases = [{
+    pageUrl: "/accordion/avalon.accordion.ex1.html",
+    caseUrl: "/test/suites/accordion.ex1.js"
+}];
+
+casesRender(cases, function() {
+    staticServer.close();
+    process.exit(0);
 });
 
-cases.forEach(function(tc) {
-    for(var name in tc) {
-        if(tc.hasOwnProperty(name)) {
-            predecessor[name] = tc[name];
-        }
-    }
-});
 
-module.exports = predecessor;
+

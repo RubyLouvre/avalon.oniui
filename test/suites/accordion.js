@@ -27,12 +27,12 @@ module.exports = {
                                         result.length = vmodel.data.length;
 
                                         //模拟点击第一个选项卡
-                                        testUtils.dispatchClickEvent(triggers.get(0))
+                                        testUtils.dispatchClickEvent(triggers.get(0));
                                         result.data_first_click_toggle = vmodel.data[0].toggle;
                                         result.panel_first_click_visible = panels.eq(0).is(":visible");
 
                                         //模拟点击第二个选项卡
-                                        testUtils.dispatchClickEvent(triggers.get(1))
+                                        testUtils.dispatchClickEvent(triggers.get(1));
                                         result.data_second_click_toggle = vmodel.data[1].toggle;
                                         result.panel_second_click_visible = panels.eq(1).is(":visible");
 
@@ -52,7 +52,6 @@ module.exports = {
                             } catch (e) {}
 
                         })
-
                     });
                 });
             },

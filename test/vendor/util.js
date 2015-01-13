@@ -18,3 +18,8 @@ var testUtils = {
         el.dispatchEvent(ev);
     }
 };
+
+//config avalon
+avalon.config({
+    debug: false
+});

@@ -172,11 +172,15 @@ define(["../avalon.getModel",
                     vmodel._close(e)
                 }
             }
-
+/**
+         * @config {Function} 动态修改dialog的content
+         * @param m {Object} 重新渲染dialog的配置对象，包括title、content、content中涉及的插值表达式，需要注意的是，title和content不是真正渲染的内容，所以不需要avalon进行扫描监控，定义的时候必须在其前面加上"$",否则组件不会渲染成想要的效果
+         */
             /**
-             * desc: 可以动态改变dialog的显示内容
-             * @param content: 要替换的content，可以是已经渲染ok的view也可以是未解析渲染的模板
-             * @param noScan: 当content是模板时noScan设为false或者不设置，组件会自动解析渲染模板，如果是已经渲染ok的，将noScan设为true，组件将不再进行解析操作
+             * @config {Function} 可以动态改变dialog的显示内容
+             * @param content {String} 要替换的content，可以是已经渲染ok的view也可以是未解析渲染的模板
+             * @param noScan {Boolean} 当content是模板时noScan设为false或者不设置，组件会自动解析渲染模板，如果是已经渲染ok的，将noScan设为true，组件将不再进行解析操作
+             * @param contentVmodels {Array} 如果content为未解析的模板，noScan为false，contentVmodels是用来解析模板content的vmodels
              */
             vm.setContent = function(content, noScan, contentVmodels) {
                 var scanVmodels = contentVmodels ? contentVmodels : [vmodel].concat(vmodels)
@@ -348,16 +352,18 @@ define(["../avalon.getModel",
          * @param vmodel {Object} 组件对应的Vmodel
          */
         onClose: avalon.noop, //点击右上角的“关闭”按钮的回调
-        setTitle: avalon.noop, //动态修改dialog的title
-        setContent: avalon.noop, //动态修改dialog的content
+        //@config 动态修改dialog的title,也可通过dialogVM.title直接修改
+        setTitle: avalon.noop, 
+        setContent: avalon.noop, 
         /**
          * @config {Function} 重新渲染模板
          * @param m {Object} 重新渲染dialog的配置对象，包括title、content、content中涉及的插值表达式，需要注意的是，title和content不是真正渲染的内容，所以不需要avalon进行扫描监控，定义的时候必须在其前面加上"$",否则组件不会渲染成想要的效果
          */
-        setModel: avalon.noop, //重新渲染dialog
-        showClose: true, //@config 配置dialog是否显示"取消"按钮，但是如果type为alert，不论showClose为true or false都不会显示"取消"按钮
-        toggle: false, //通过此属性的决定dialog的显示或者隐藏状态
-        widgetElement: "", //保存对绑定元素的引用
+        setModel: avalon.noop, 
+        //@config配置dialog是否显示"取消"按钮，但是如果type为alert，不论showClose为true or false都不会显示"取消"按钮
+        showClose: true, 
+        toggle: false, //@config 通过此属性的决定dialog的显示或者隐藏状态
+        widgetElement: "", //@config 保存对绑定元素的引用
         container: "body", //@config dialog元素的上下文父元素，container必须是dialog要appendTo的父元素的id或者元素dom对象
         confirmName: "确定", //@config 配置dialog的"确定"按钮的显示文字
         cancelName: "取消", //@config 配置dialog的"取消"按钮的显示文字

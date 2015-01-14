@@ -23,7 +23,7 @@ describe('accordion', function(){
         it('#点击第一个选项卡后，data的第一项toggle为true', function(){
 
             //模拟点击第一个选项卡
-            testUtils.dispatchClickEvent(triggers.get(0));
+            triggers.eq(0).simulate("click");
             expect(vmodel.data[0].toggle).to.equal(true);
         });
 
@@ -33,7 +33,7 @@ describe('accordion', function(){
 
         it('#点击第二个选项卡后，data的第二项toggle为false', function() {
             //模拟点击第二个选项卡
-            testUtils.dispatchClickEvent(triggers.get(1));
+            triggers.eq(1).simulate("click");
             expect(vmodel.data[1].toggle).to.equal(false);
         });
 

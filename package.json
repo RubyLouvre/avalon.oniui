@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node test/test.js"
+    "test": "node_modules/elves/bin/elves"
   },
   "repository": {
     "type": "git",
@@ -20,15 +20,6 @@
   },
   "homepage": "https://github.com/ilife5/avalon.oniui",
   "devDependencies": {
-    "mocha": "*",
-    "chai": "*",
-    "sinon": "*",
-    "jsdom": "*",
-    "send": "*",
-    "access-log": "^0.3.9",
-    "longjohn": "^0.2.4",
-    "phantomjs": "^1.9.13",
-    "phantom": "^0.7.1",
-    "promise": "^6.0.1"
+    "elves": "0.0.*"
   }
 }

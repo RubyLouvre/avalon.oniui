@@ -5025,7 +5025,8 @@ avalon.ready = function(fn) {
 }
 
 avalon.config({
-    loader: true
+    loader: true,
+    debug: false
 })
 
 avalon.ready(function() {

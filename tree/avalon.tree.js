@@ -714,6 +714,8 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
                     // 这里node依旧没有$id属性
                     dataFormator(nodes, parentLeaf, "构建父子节点衔接关系", undefine, vm)
                     if(parentLeaf) parentLeaf.isParent = true
+                    // open的监听可能没有捕捉到
+                    if(!isSilent) parentLeaf.open = true
                     var arr = vm.getNodes(parentLeaf), len = arr.length
                     arr.pushArray(nodes)
                     var addNodes = arr.slice(len) || []

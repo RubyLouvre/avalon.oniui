@@ -343,7 +343,11 @@ define(["../avalon.getModel",
                     
                     vmodel.tip = getDateTip(cleanDate(new Date(year, month, day))).text
                     vmodel.dateError = "#cccccc"
-                    vmodel.day = day
+                    if (month === _oldMonth && year === _oldYear && vmodel.day == day) {
+                        vmodel.$fire("day", day)
+                    } else {
+                        vmodel.day = day
+                    }
                     if (month !== _oldMonth && year !== _oldYear) {
                         monthYearChangedBoth = true
                         vmodel.year = year
@@ -962,7 +966,7 @@ define(["../avalon.getModel",
                                 setCalendarDate(cellDate, vmodel, valueDate,dateMonth, dateYear, dateDay, day, i, m, n)
                             } else {
                                 vmodel.data[i]["rows"][m].set(n, "")
-                                avalon.mix(datepickerData[i]["rows"][m][n], {day:"", month: false, weekend: false, selected:false,dateDisabled: true})
+                                avalon.mix(datepickerData[i]["rows"][m][n], {day:"",_day: "", month: false, weekend: false, selected:false,dateDisabled: true})
                             }
                         }
                         cellDate = new Date(cellDate.setDate(dateDay+1))

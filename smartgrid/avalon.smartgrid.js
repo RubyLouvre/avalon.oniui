@@ -203,7 +203,8 @@ define(["avalon",
     }
     var countter = 0
     var widget = avalon.ui.smartgrid = function (element, data, vmodels) {
-        var options = data.smartgridOptions, $element = avalon(element), pager = options.pager, vmId = data.smartgridId;
+        var options = data.smartgridOptions, $element = avalon(element), pager = options.pager, vmId = data.smartgridId,
+            $initRender = true
         perfectColumns(options, element);
         initContainer(options, element);
         options._position = positionAbsolute ? 'absolute' : 'fixed';
@@ -557,12 +558,16 @@ define(["avalon",
             vm.render = function (data, init) {
                 if (avalon.type(data) === 'array') {
                     vmodel.data = data;
-                    dataFracte(vmodel);
-                    vmodel._dataRender = !vmodel._dataRender
                 } else {
                     init = data;
                 }
                 init = init === void 0 || init ? true : false
+                if (!$initRender) {
+                    dataFracte(vmodel);
+                    vmodel._dataRender = !vmodel._dataRender
+                } else {
+                    $initRender = false
+                }
                 vmodel.addRows(void 0, init)
                 if (sorting) {
                     sorting = false;
@@ -694,18 +699,9 @@ define(["avalon",
                     }
                 }
                 if (enabledData.length == datas.length - disabledData.length- filterCheckboxData.length) {
-                    options._allSelected = true    // 是否全选的回调，通过用户点击单独的行来确定是否触发
-                        // if (avalon.type(onSelectAll) === "function") {
-                        //     onSelectAll.call(options, datas, true)
-                        // }
-                    ;
+                    options._allSelected = true 
                 } else {
-                    options._allSelected = false    // if (!selectedData.length) { // 通过点击每一行最终确定是否全选的回调
-                        //     if (avalon.type(onSelectAll) === "function") {
-                        //         onSelectAll.call(options, datas, false)
-                        //     }
-                        // }
-                    ;
+                    options._allSelected = false  
                 }
             });
         }

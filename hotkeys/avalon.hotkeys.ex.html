@@ -13,14 +13,20 @@
         </style>
         <script>
             require(["hotkeys/avalon.hotkeys"], function(avalon) {
-                avalon.define("test", function(vm) {
-                    vm.callback1 = function(e) {
+                avalon.define({
+                    $id: "test",
+                    callback1: function(e) {
                         alert(new Date - 0 + "  ctrl+1")
+                        console.log(this)
                         e.preventDefault()
-                    }
-                    vm.callback2 = function(e) {
+                    },
+                    callback2: function(e) {
                         alert(new Date - 0 + "  ctrl+alt+f")
+                        console.log(this)
                         e.preventDefault()
+                    },
+                    callback3: function() {
+                        alert(this.innerHTML)
                     }
                 })
                 avalon.scan()
@@ -31,6 +37,8 @@
         <div id="aaa" ms-controller="test" >
             <textarea class="bbb" ms-hotkeys-ctrl+1="callback1">ctrl+1</textarea>
             <textarea class="bbb" ms-hotkeys-ctrl+alt+f="callback2">ctrl+alt+f</textarea>
+            <p ms-click="callback3">普通的触发</p>
+
         </div>
 
     </body>

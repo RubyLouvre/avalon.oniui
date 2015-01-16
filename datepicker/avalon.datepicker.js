@@ -10,6 +10,7 @@ define(["../avalon.getModel",
         "./avalon.datepicker.lang",
         "text!./avalon.datepicker.html", 
         "../dropdown/avalon.dropdown.js",
+        "../slider/avalon.slider.js",
         "css!./avalon.datepicker.css"], function(avalon, holidayDate, sourceHTML) {
     var calendarTemplate = sourceHTML,
         HOLIDAYS,

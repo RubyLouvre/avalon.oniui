@@ -207,6 +207,7 @@ var XHRMethods = {
         this._transport = this.transport;
         // 到这要么成功，调用success, 要么失败，调用 error, 最终都会调用 complete
         if (isSuccess) {
+            avalon.log("成功加载数据")
             this._resolve(this.response, statusText, this)
         } else {
             this._reject(this, statusText, this.error || statusText)
@@ -421,7 +422,10 @@ avalon.unparam = function(url, query) {
 
 var rinput = /select|input|button|textarea/i
 var rcheckbox = /radio|checkbox/
-var rCRLF = /\r?\n/g
+var rline = /\r?\n/g
+function trimLine(val) {
+    return val.replace(rline, "\r\n")
+}
 //表单元素变字符串, form为一个元素节点
 avalon.serialize = function(form) {
     var json = {};
@@ -431,15 +435,18 @@ avalon.serialize = function(form) {
             return  rcheckbox.test(el.type) ? el.checked : true //只处理拥有name并且没有disabled的表单元素
         }
     }).forEach(function(el) {
-        var val = avalon(el).val(),
-                vs;
-        val = Array.isArray(val) ? val : typeof val === "string" ? [val] : [];
-        val = val.map(function(v) {
-            return v.replace(rCRLF, "\r\n")
-        })
-        // 全部搞成数组，防止同名
-        vs = json[el.name] || (json[el.name] = [])
-        vs.push.apply(vs, val)
+        var val = avalon(el).val()
+        val = Array.isArray(val) ? val.map(trimLine) : trimLine(val)
+        var name = el.name
+        if (name in json) {
+            if (Array.isArray(val)) {
+                json[name].push(val)
+            } else {
+                json[name] = [json[name], val]
+            }
+        } else {
+            json[name] = val
+        }
     })
     return avalon.param(json, false)  // 名值键值对序列化,数组元素名字前不加 []
 }

@@ -2,7 +2,8 @@
 var fs = require("fs")
 var path = require("path") //不同的操作系统，其 文件目录 分割符是不一样的，不能直接使用 + "/"来实现
 var curDir = process.cwd() //当前目录
-var otherDir = curDir.replace(/avalon[\/\\]src/, "")
+var otherDir = curDir.replace(/mmRequest([\/\\]src)/, "mmRequest")
+
 var Buffer = require('buffer').Buffer
 
 
@@ -16,7 +17,7 @@ function comboFiles(files, writer, lastCallback) {
             return
         }
 
-        var filePath = path.join(curDir, "src", fileName + ".js")
+        var filePath = path.join(curDir, fileName + ".js")
         var readable = fs.createReadStream(filePath)
 
         readable.pipe(writer, {end: false})
@@ -45,7 +46,8 @@ modernFiles[modernFiles.indexOf("11 avalon.ajaxTransports.old")] = "11 avalon.aj
 
 //开始合并mmRequest.js
 new function() {
-    var writable = fs.createWriteStream(path.join(curDir, 'public/mmRequest.js'), {
+    console.log(path.join(otherDir, 'public/mmRequest.js'))
+    var writable = fs.createWriteStream(path.join(otherDir, 'public/mmRequest.js'), {
         encoding: "utf8"
     });
     writable.setMaxListeners(100) //默认只有添加11个事件，很容易爆栈
@@ -57,7 +59,7 @@ new function() {
 
 //开始合并mmRequest.modern.js
 new function() {
-    var writable = fs.createWriteStream(path.join(curDir, 'public/mmRequest.modern.js'), {
+    var writable = fs.createWriteStream(path.join(otherDir, 'public/mmRequest.modern.js'), {
         encoding: "utf8"
     })
     writable.setMaxListeners(100) //默认只有添加11个事件，很容易爆栈

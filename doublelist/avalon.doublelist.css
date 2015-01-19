@@ -6,7 +6,7 @@ div.oni-doublelist { font-size: 12px; }
 
 .oni-doublelist-menu { width: 180px; height: 190px; border: 1px solid #d4d4d4; background: white; float: left; display: inline; }
 .oni-doublelist ul { width: 100%; }
-.oni-doublelist-option { width: 58px; height: 62px; padding: 10px; vertical-align: middle; float: left; display: inline; margin-top: 40px; }
+.oni-doublelist-option { width: 58px; height: 62px; padding: 10px; vertical-align: middle; float: left; display: inline; margin-top: 40px; box-sizing:content-box;}
 .oni-doublelist li { list-style: none; padding: 5px 6px; cursor: pointer; color: black; }
 .oni-doublelist li.oni-state-hover { background-color: #f8f8f8; }
 .oni-doublelist li.oni-state-active { background-color: #3775c0; color: white; }

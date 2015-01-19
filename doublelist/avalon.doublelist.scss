@@ -37,6 +37,7 @@ div#{$uiname} {
 		float: left;
 		display: inline;
 		margin-top: 40px;
+		box-sizing:content-box;
 	}
 	li {
 		list-style: none;

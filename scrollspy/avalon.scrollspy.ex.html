@@ -39,7 +39,7 @@
                         },
                         onInit: function(vmodel) {
                             this.getElementsByTagName("ul")[0].id = "nav" + this.getAttribute("rank")
-                            var rank = document.getElementById("rank" + this.getAttribute("rank")) || this.getElementsByTagName("div")[0],
+                            var rank = document.getElementById("rank" + this.getAttribute("rank")) || this.children[1],
                                 s = "$,$cc" + this.getAttribute("rank")
                             rank != 2 && v.cb.push(function() {
                                 rank.setAttribute("ms-scrollspy", s)
@@ -52,7 +52,9 @@
                             }  else {
                                 v.tabVmodel0 = vmodel
                                 rank.setAttribute("data-scrollspy-spytarget", "nav0")
-                                v.cb[0]()
+                                setTimeout(function() {
+                                    v.cb[0]()
+                                }, 1)
                             }
                         },
                         onActivate: function(e, tabModel) {
@@ -69,7 +71,7 @@
                     vm.$cc0 = {
                         onChange: vm.scrollspy.onChange,
                         panelListGetter: function(spytarget, option) {
-                            var par = v.tabVmodel0.widgetElement.getElementsByTagName("div")[0]
+                            var par = v.tabVmodel0.widgetElement.children[1]
                             return par.getElementsByTagName("div")
                         },
                         targetListGetter: function() {
@@ -219,7 +221,9 @@
                     vm.scrollbar = {
                         onInit: function(vmodel) {
                             v.bar = vmodel
-                            vmodel.update()
+                            setTimeout(function() {
+                                vmodel.update()
+                            }, 1000)
                         }
                     }
                     vm.tab = {
@@ -229,7 +233,7 @@
                         },
                         onInit: function(vmodel) {
                             this.getElementsByTagName(&quot;ul&quot;)[0].id = &quot;nav&quot; + this.getAttribute(&quot;rank&quot;)
-                            var rank = document.getElementById(&quot;rank&quot; + this.getAttribute(&quot;rank&quot;)) || this.getElementsByTagName(&quot;div&quot;)[0],
+                            var rank = document.getElementById(&quot;rank&quot; + this.getAttribute(&quot;rank&quot;)) || this.children[1],
                                 s = &quot;$,$cc&quot; + this.getAttribute(&quot;rank&quot;)
                             rank != 2 &amp;&amp; v.cb.push(function() {
                                 rank.setAttribute(&quot;ms-scrollspy&quot;, s)
@@ -242,7 +246,9 @@
                             }  else {
                                 v.tabVmodel0 = vmodel
                                 rank.setAttribute(&quot;data-scrollspy-spytarget&quot;, &quot;nav0&quot;)
-                                v.cb[0]()
+                                setTimeout(function() {
+                                    v.cb[0]()
+                                }, 1)
                             }
                         },
                         onActivate: function(e, tabModel) {
@@ -259,7 +265,7 @@
                     vm.$cc0 = {
                         onChange: vm.scrollspy.onChange,
                         panelListGetter: function(spytarget, option) {
-                            var par = v.tabVmodel0.widgetElement.getElementsByTagName(&quot;div&quot;)[0]
+                            var par = v.tabVmodel0.widgetElement.children[1]
                             return par.getElementsByTagName(&quot;div&quot;)
                         },
                         targetListGetter: function() {

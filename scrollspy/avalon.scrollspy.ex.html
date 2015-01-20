@@ -27,7 +27,9 @@
                     vm.scrollbar = {
                         onInit: function(vmodel) {
                             v.bar = vmodel
-                            vmodel.update()
+                            setTimeout(function() {
+                                vmodel.update()
+                            }, 1000)
                         }
                     }
                     vm.tab = {

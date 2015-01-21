@@ -23,7 +23,6 @@ define(["../avalon.getModel",
         maskLayerSimulate = avalon.parseHTML(_maskLayerSimulate).firstChild, 
         dialogShows = [], //存在层上层时由此数组判断层的个数
         dialogNum = 0, //保存页面dialog的数量，当dialogNum为0时，清除maskLayer
-        maxZIndex = getMaxZIndex(), //保存body直接子元素中最大的z-index值， 保证dialog在最上层显示
         //IE6 userAgent Mozilla/4.0(compatible;MISE 6.0;Windows NT 6.1;...)
         isIE6 = (window.navigator.userAgent || '').toLowerCase().indexOf('msie 6') !== -1,
         iFrame = null,
@@ -235,7 +234,11 @@ define(["../avalon.getModel",
                     clientHeight = body.clientHeight,
                     docBody = document.body,
                     // container必须是dom tree中某个元素节点对象或者元素的id，默认将dialog添加到body元素
-                    elementParent = ((avalon.type(container) === "object" && container.nodeType === 1 && docBody.contains(container)) ? container : document.getElementById(container)) || docBody
+                    elementParent = ((avalon.type(container) === "object" && container.nodeType === 1 && docBody.contains(container)) ? container : document.getElementById(container)) || docBody,
+                    defaults = avalon.ui.dialog.defaults
+                if (!defaults.zIndex) {
+                    defaults.zIndex = getMaxZIndex() //保存body直接子元素中最大的z-index值， 保证dialog在最上层显示
+                }
                 if (avalon(docBody).height() < clientHeight) {
                     avalon(docBody).css("min-height", clientHeight)
                 }
@@ -379,7 +382,7 @@ define(["../avalon.getModel",
             return tmp
         },
         modal: true, //@config 是否显示遮罩
-        zIndex: maxZIndex, //@config 通过设置vmodel的zIndex来改变dialog的z-index,默认是body直接子元素中的最大z-index值，如果都没有设置就默认的为10
+        zIndex: 0, //@config 通过设置vmodel的zIndex来改变dialog的z-index,默认是body直接子元素中的最大z-index值，如果都没有设置就默认的为10
         zIndexIncrementGlobal: 0 //@config 相对于zIndex的增量, 用于全局配置，如果只是作用于单个dialog那么zIndex的配置已足够，设置全局需要通过avalon.ui.dialog.defaults.zIndexIncrementGlobal = Number来设置
     }
     avalon(window).bind("keydown", function(e) {

@@ -383,14 +383,10 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                     }
                 }
                 elementParent.appendChild(avalon.parseHTML(vmodel.template.replace("{{MS_WIDGET_HTML}}", html).replace("{{MS_WIDGET_ID}}", vmodel.$loadingID)))
-                if (continueScan) {
-                    continueScan()
-                } else {
-                    avalon.log("avalon请尽快升到1.3.7+")
-                    avalon.scan(element, [vmodel].concat(vmodels))
-                    if (typeof options.onInit === "function") {
-                        options.onInit.call(element, vmodel, options, vmodels)
-                    }
+                avalon.log("avalon请尽快升到1.3.7+")
+                avalon.scan(elementParent, [vmodel].concat(vmodels))
+                if (typeof options.onInit === "function") {
+                    options.onInit.call(element, vmodel, options, vmodels)
                 }
                 vmodel._effect()
             }

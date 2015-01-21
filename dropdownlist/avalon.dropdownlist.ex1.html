@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
-<title>dropdownList demo </title>
+<title>dropdownlist demo </title>
 <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
 <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
 <script src="../highlight/shCore.js"></script>
@@ -11,17 +11,17 @@
 </head>
 <body>
     <div class="wrapper">
-        <h1>dropdownList demo</h1>
-        <div class="demo-show" ms-controller="dropdownList" style="position: relative; z-index: 1;">
+        <h1>dropdownlist demo</h1>
+        <div class="demo-show" ms-controller="dropdownlist" style="position: relative; z-index: 1;">
             <fieldset>
                 <legend>下拉搜索dropdown</legend>
-                <div ms-widget="dropdownList, a, dropdownList1"></div>
+                <div ms-widget="dropdownlist, a, dropdownlist1"></div>
             </fieldset>
             <script>
-                require(["dropdownList/avalon.dropdownList"], function(avalon) {
-                        avalon.define("dropdownList", function(vm) {
-                            vm.$skipArray = ["dropdownList1", "dropdownList2"]
-                            vm.dropdownList1 = {
+                require(["dropdownlist/avalon.dropdownlist"], function(avalon) {
+                        avalon.define("dropdownlist", function(vm) {
+                            vm.$skipArray = ["dropdownlist1", "dropdownlist2"]
+                            vm.dropdownlist1 = {
                                 textbox: {
                                     placeholder: "请输入要查找的姓名"
                                 },
@@ -39,20 +39,20 @@
                 &lt;html&gt;
                 &lt;head&gt;
                     &lt;meta charset='utf-8'/&gt;
-                    &lt;title&gt;dropdownList demo&lt;/title&gt;
+                    &lt;title&gt;dropdownlist demo&lt;/title&gt;
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body&gt;
-                    &lt;div class="demo-show" ms-controller="dropdownList" style="position: relative; z-index: 1;"&gt;
+                    &lt;div class="demo-show" ms-controller="dropdownlist" style="position: relative; z-index: 1;"&gt;
                         &lt;fieldset&gt;
                             &lt;legend&gt;下拉搜索dropdown&lt;/legend&gt;
-                            &lt;div ms-widget="dropdownList, a, dropdownList1"&gt;&lt;/div&gt;
+                            &lt;div ms-widget="dropdownlist, a, dropdownlist1"&gt;&lt;/div&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt;
-                            require(["dropdownList/avalon.dropdownList"], function(avalon) {
-                                    avalon.define("dropdownList", function(vm) {
-                                        vm.$skipArray = ["dropdownList1", "dropdownList2"]
-                                        vm.dropdownList1 = {
+                            require(["dropdownlist/avalon.dropdownlist"], function(avalon) {
+                                    avalon.define("dropdownlist", function(vm) {
+                                        vm.$skipArray = ["dropdownlist1", "dropdownlist2"]
+                                        vm.dropdownlist1 = {
                                             textbox: {
                                                 placeholder: "请输入要查找的姓名"
                                             },

@@ -29,11 +29,11 @@ define(["avalon", "text!./avalon.scrollspy.html", "css!./avalon.scrollspy.css"],
             })
             return arr
         }, //@config targetListGetter() 获取tab list函数，元素是数字或者元素id索引，默认是元素id索引
-        panelListGetter: avalon.noop, //@config panelListGetter() 获取panel list函数，返回一个数组，元素是dom，或者返回空，默认返回空
+        panelListGetter: avalon.noop, //@config panelListGetter() 获取panel list函数，返回一个数组，元素是dom，或者返回空，默认返回空，panel跟targetListGetter返回的数组项，是一一对应的，来实现menu的切换，而内容滚动或切换到对应的panel
         panelGetter: function(id, index, list, options) {
             return list != void 0 && list[index]  || id != void 0 && getById(id)
         }, //@config panelGetter(pannelId, pannelIndex, panelsList, options) 获取panel函数，默认返回 panelsList[pannelIndex] || Id = pannelId
-        spytarget: void 0,
+        spytarget: void 0, //@config 指定滚动关联的元素id，默认的targetListGetter会到这个指定元素内寻找li元素作为所有的菜单选项，spytarget会作为第一个参数传递给targetListGetter,panelListGetter
         _lock: false,
         scrollTo: avalon.noop,
         $author: "skipper@123"

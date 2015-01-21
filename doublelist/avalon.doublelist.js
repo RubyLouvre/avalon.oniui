@@ -11,8 +11,8 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
         //方便用户对原始模板进行修改,提高定制性
         options.template = options.getTemplate(template, options)
         var vmodel = avalon.define(data.doublelistId, function(vm) {
-            vm.data = []
-            vm.select = []
+            vm.data = []//@config 配置左侧待选项列表，数据 [{value: xxx, name: xx}]
+            vm.select = []//@config 选中的value list，[value1,value2]，取的是data 里面item的value
             vm._selectData = []
             vm.dataTmpSelect = []
             vm.selectTmpSelect = []
@@ -196,9 +196,9 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                 }
                 if(select) {
                     if(select.length == vmodel.select.length && select != vmodel.select) {
-                        vmodel.select.clear()
+                        vm.select.clear()
                     }
-                    vmodel.select = select
+                    vm.select = select
                 } 
                 vmodel.selectTmpSelect.clear()
                 vmodel.dataTmpSelect.clear()
@@ -217,8 +217,8 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
         return vmodel
     }
     widget.defaults = {
-        toggle: true, //@param 组件是否显示，可以通过设置为false来隐藏组件
-        hideSelect: false, //@param 是否隐藏以选中的项目，默认不隐藏
+        toggle: true, //@config 组件是否显示，可以通过设置为false来隐藏组件
+        hideSelect: false, //@config 是否隐藏以选中的项目，默认不隐藏
         //@config onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
         getTemplate: function(tmpl, opts, tplName) {
@@ -227,8 +227,8 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
         countLimit: function(select) {
             return true
         },//@config countLimit(select) 选择条目限制，必须有return true or false，参数是当前已选中条数和add or delete操作
-        // select:[],//@param 选中的value list，[value1,value2]，取的是data 里面item的value
-        // data:[],//@param 配置左侧待选项列表，数据 [{value: xxx, name: xx}]
+        // select:[],//@config 选中的value list，[value1,value2]，取的是data 里面item的value
+        // data:[],//@config 配置左侧待选项列表，数据 [{value: xxx, name: xx}]
         // $changeCBS: [],
         change: avalon.noop, //@config change(newValue, oldValue, vmodel) 所选变化的回调，不建议使用，等价于onChange
         onChange: avalon.noop,//@config onChange(newValue, oldValue, vmodel) 所选变化的对调，同change，第一、二个参数分别是数组变化前后的长度

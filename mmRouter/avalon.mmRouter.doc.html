@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Name 路由器</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="路由器插件，实现类似angular ui-router的功能
+ 添加一个state
+ 	avalon.state(&quot;contacts&quot;, {
+	    controller: &quot;test&quot;, // 指定controller
+	    abstract: true, // 是否是抽象状态
+	    url: &quot;/contacts&quot;, // 触发的url
+	    templateUrl: &quot;contacts.html&quot;, // 模板url
+	    " />
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        />
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>mmRouter</h2>
+            <fieldset>
+                <legend>Name 路由器</legend>
+                <p>路由器插件，实现类似angular ui-router的功能</p>
+                <h5>添加一个state</h5>
+                <pre class="brush:javascript;gutter:false;toolbar:false;">	avalon.state("contacts", {
+	    controller: "test", // 指定controller
+	    abstract: true, // 是否是抽象状态
+	    url: "/contacts", // 触发的url
+	    templateUrl: "contacts.html", // 模板url
+	    onChange: function() { // 回调
+	        ...
+	    }
+	})</pre>
+            </fieldset>
+            <fieldset>
+                <legend>使用说明</legend>
+                <table class="table-doc" border="1">
+                    <colgroup>
+                        <col width="180" />
+                        <col width="80" />
+                        <col width="120" />
+                    </colgroup>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                </table>
+            </fieldset>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.mmRouter.ex.html">mmRouter综合实例一</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex1.html">mmRouter综合示例二</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex2.html">mmRouter综合示例三</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

@@ -1,7 +1,7 @@
 <script>
 var widgets = ["accordion", "at", "browser","button", "camera", "carousel", "checkboxlist", "colorpicker", "cookie",
     "coupledatepicker", "datepicker", "daterangepicker", "dialog",
-    "doublelist", "draggable", "dropdown", "flipswitch", "lazyload", "loading", "live","mask", "menu", "miniswitch",
+    "doublelist", "draggable", "dropdown", "flipswitch", "lazyload", "loading", "live","mask", "menu", "miniswitch", "mmRouter", 
     "notice", "pager", "position", "preview", "progressbar", "promise", "rating",
     "resizable", "scrollbar", "scrollspy", "smartgrid", "simplegrid", "slider",
     "spinner", "store", "switchdropdown", "tab", "textbox", "timer", "tree","tooltip", "uploader","validation"
@@ -12,9 +12,13 @@ var vmodel = avalon.define("library", function(vm) {
     vm.activeIndex = 0
     vm.widgetHref = ""
     vm.frameContentHeight = 3500 //默认iframe高度，过后通过iframeLoaded重新设置
-    vm.changeActiveIndex = function(index) { //左侧边栏点击和页面初始化时，更新iframe的src以及页面url
+    vm.changeActiveIndex = function(index, e) { //左侧边栏点击和页面初始化时，更新iframe的src以及页面url
         var name, prefix
         if (index !== -1) { //左侧边栏点击
+            if(vm.widgets[index] == "mmRouter") {
+                window.open("mmRouter/avalon.mmRouter.doc.html")
+                return e.preventDefault()
+            }
             vm.activeIndex = index
             name = vm.widgets[index]
         } else { //页面初始化
@@ -212,7 +216,7 @@ function init() {
                     <a  href="javascript:void(0)"
                         ms-class-odd="$index % 2 === 1"
                         ms-class="active: $index===activeIndex"
-                        ms-click="changeActiveIndex($index)">
+                        ms-click="changeActiveIndex($index, $event)">
                         {{el}}
                     </a>
                 </li>

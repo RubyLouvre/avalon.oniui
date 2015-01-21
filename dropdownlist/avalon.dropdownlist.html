@@ -1,0 +1,14 @@
+<div class="oni-dropdownlist-input"
+     ms-hover="oni-dropdownlist-input-hover"
+     ms-class="oni-dropdownlist-input-focus:textboxToggle"
+     ms-click="toggleDropdownList($event, textboxToggle)">{{searchItem}}
+     <div class="oni-dropdownlist-icon-wrap">
+        <i class="oni-icon"
+           ms-visible="textboxToggle">&#xf106;</i>
+        <i class="oni-icon"
+           ms-visible="!textboxToggle">&#xf107;</i>
+    </div>
+</div>
+<div class="oni-dropdownlist-search">
+    <input ms-widget="textbox" ms-duplex="_search" data-textbox-suggest="_search"/>    
+</div>

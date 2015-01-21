@@ -33,7 +33,7 @@ avalon.ajax = function(opts, promise) {
     var dataType = opts.dataType  //目标返回数据类型
     var transports = avalon.ajaxTransports
 
-    if (opts.crossDomain && !supportCors && dataType === "json" && opts.type === "GET" ) {
+    if (opts.crossDomain && !supportCors && dataType === "json" && opts.type === "GET" || dataType === "json" && opts.type === "GET" && rjsonp.test(opts.url)) {
         dataType = opts.dataType = "jsonp"
     }
     var name = opts.form ? "upload" : dataType

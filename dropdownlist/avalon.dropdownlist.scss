@@ -1,6 +1,6 @@
 @charset "utf-8";
 @import "../chameleon/oniui-theme";
-$uiname: "oni-dropdownList";
+$uiname: "oni-dropdownlist";
 .#{$uiname} {
     display: inline-block;
     *display: inline;
@@ -24,7 +24,7 @@ $uiname: "oni-dropdownList";
     }
 }
 .#{$uiname}-search {
-    _position: relative;
+    position: relative;
     display: block;
 }
 .#{$uiname}-input {

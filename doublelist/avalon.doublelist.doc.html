@@ -37,6 +37,30 @@
                         <td align="center" colspan="4">配置参数</td>
                     </tr>
                     <tr>
+                        <td>data</td>
+                        <td>Array</td>
+                        <td>[]</td>
+                        <td>配置左侧待选项列表，数据 [{value: xxx, name: xx}]</td>
+                    </tr>
+                    <tr>
+                        <td>select</td>
+                        <td>Array</td>
+                        <td>[]</td>
+                        <td>选中的value list，[value1,value2]，取的是data 里面item的value</td>
+                    </tr>
+                    <tr>
+                        <td>toggle</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>组件是否显示，可以通过设置为false来隐藏组件</td>
+                    </tr>
+                    <tr>
+                        <td>hideSelect</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否隐藏以选中的项目，默认不隐藏</td>
+                    </tr>
+                    <tr>
                         <td>onInit</td>
                         <td>Member</td>
                         <td>avalon.noop</td>

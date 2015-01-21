@@ -66,7 +66,7 @@
                         <td>panelListGetter</td>
                         <td>Member</td>
                         <td>avalon.noop</td>
-                        <td>panelListGetter() 获取panel list函数，返回一个数组，元素是dom，或者返回空，默认返回空</td>
+                        <td>panelListGetter() 获取panel list函数，返回一个数组，元素是dom，或者返回空，默认返回空，panel跟targetListGetter返回的数组项，是一一对应的，来实现menu的切换，而内容滚动或切换到对应的panel</td>
                     </tr>
                     <tr>
                         <td>panelGetter(id,index,list,options)</td>
@@ -74,6 +74,12 @@
                         <td></td>
                         <td>panelGetter(pannelId, pannelIndex, panelsList, options) 获取panel函数，默认返回
                             panelsList[pannelIndex] || Id = pannelId</td>
+                    </tr>
+                    <tr>
+                        <td>spytarget</td>
+                        <td>Unary</td>
+                        <td>void 0</td>
+                        <td>指定滚动关联的元素id，默认的targetListGetter会到这个指定元素内寻找li元素作为所有的菜单选项，spytarget会作为第一个参数传递给targetListGetter,panelListGetter</td>
                     </tr>
                     <tr>
                         <td align="center" colspan="4">接口方法与固有属性</td>

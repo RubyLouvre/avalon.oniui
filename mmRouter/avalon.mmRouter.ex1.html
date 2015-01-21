@@ -29,7 +29,7 @@
             }
         </style>
         <script >
-            avalon.config({debug: true})
+            avalon.config({debug: false})
             require(["ready!", "mmState"], function() {
 
                 //一个顶层VM
@@ -94,6 +94,7 @@
                             var lastId
                             var vmodel = avalon.define({
                                 $id: "contacts",
+                                $skipArray: ["contact", "item"],
                                 edit: function() {
                                     avalon.router.go("contacts.detail.item.edit")
                                 },

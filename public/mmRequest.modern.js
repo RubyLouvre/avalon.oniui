@@ -189,23 +189,15 @@ var XHRMethods = {
                 statusText = "notmodified";
             } else {
                 //如果浏览器能直接返回转换好的数据就最好不过,否则需要手动转换
-                if (typeof this.response === "undefined" && (this.responseText || this.responseXML)) {
+                if (typeof this.response === "undefined") {
                     var dataType = this.options.dataType || this.options.mimeType
-                    if (!dataType) { //如果没有指定dataType，则根据mimeType或Content-Type进行揣测
+                    if (this.responseText || this.responseXML || !dataType) { //如果没有指定dataType，则根据mimeType或Content-Type进行揣测
                         dataType = this.getResponseHeader("Content-Type") || ""
                         dataType = dataType.match(/json|xml|script|html/) || ["text"]
                         dataType = dataType[0];
                     }
                     try {
                         this.response = avalon.ajaxConverters[dataType].call(this, this.responseText, this.responseXML)
-                    } catch (e) {
-                        isSuccess = false
-                        this.error = e
-                        statusText = "parsererror"
-                    }
-                } else if (this.options.dataType === "jsonp") {
-                    try {
-                        this.response = avalon.ajaxConverters.jsonp.call(this)
                     } catch (e) {
                         isSuccess = false
                         this.error = e
@@ -270,7 +262,7 @@ avalon.ajax = function(opts, promise) {
     var dataType = opts.dataType  //目标返回数据类型
     var transports = avalon.ajaxTransports
 
-    if (opts.crossDomain && !supportCors && dataType === "json" && opts.type === "GET" || dataType === "json" && opts.type === "GET" && rjsonp.test(opts.url)) {
+    if ((opts.crossDomain && !supportCors || rjsonp.test(opts.url)) && dataType === "json" && opts.type === "GET") {
         dataType = opts.dataType = "jsonp"
     }
     var name = opts.form ? "upload" : dataType

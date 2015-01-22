@@ -13,6 +13,7 @@ var rnoContent = /^(?:GET|HEAD)$/
 var rprotocol = /^\/\//
 var rhash = /#.*$/
 var rquery = /\?/
+var rjsonp = /(=)\?(?=&|$)|\?\?/
 var r20 = /%20/g
 
 var originAnchor = document.createElement("a")
@@ -181,7 +182,7 @@ var XHRMethods = {
                 statusText = "notmodified";
             } else {
                 //如果浏览器能直接返回转换好的数据就最好不过,否则需要手动转换
-                if (typeof this.response === "undefined") {
+                if (typeof this.response === "undefined" && (this.responseText || this.responseXML)) {
                     var dataType = this.options.dataType || this.options.mimeType
                     if (!dataType) { //如果没有指定dataType，则根据mimeType或Content-Type进行揣测
                         dataType = this.getResponseHeader("Content-Type") || ""
@@ -207,6 +208,7 @@ var XHRMethods = {
         this._transport = this.transport;
         // 到这要么成功，调用success, 要么失败，调用 error, 最终都会调用 complete
         if (isSuccess) {
+            avalon.log("成功加载数据")
             this._resolve(this.response, statusText, this)
         } else {
             this._reject(this, statusText, this.error || statusText)
@@ -421,7 +423,10 @@ avalon.unparam = function(url, query) {
 
 var rinput = /select|input|button|textarea/i
 var rcheckbox = /radio|checkbox/
-var rCRLF = /\r?\n/g
+var rline = /\r?\n/g
+function trimLine(val) {
+    return val.replace(rline, "\r\n")
+}
 //表单元素变字符串, form为一个元素节点
 avalon.serialize = function(form) {
     var json = {};
@@ -431,15 +436,18 @@ avalon.serialize = function(form) {
             return  rcheckbox.test(el.type) ? el.checked : true //只处理拥有name并且没有disabled的表单元素
         }
     }).forEach(function(el) {
-        var val = avalon(el).val(),
-                vs;
-        val = Array.isArray(val) ? val : typeof val === "string" ? [val] : [];
-        val = val.map(function(v) {
-            return v.replace(rCRLF, "\r\n")
-        })
-        // 全部搞成数组，防止同名
-        vs = json[el.name] || (json[el.name] = [])
-        vs.push.apply(vs, val)
+        var val = avalon(el).val()
+        val = Array.isArray(val) ? val.map(trimLine) : trimLine(val)
+        var name = el.name
+        if (name in json) {
+            if (Array.isArray(val)) {
+                json[name].push(val)
+            } else {
+                json[name] = [json[name], val]
+            }
+        } else {
+            json[name] = val
+        }
     })
     return avalon.param(json, false)  // 名值键值对序列化,数组元素名字前不加 []
 }
@@ -515,7 +523,11 @@ var transports = avalon.ajaxTransports = {
         preproccess: function() {
             var opts = this.options;
             var name = this.jsonpCallback = opts.jsonpCallback || "jsonp" + setTimeout("1")
-            opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=avalon." + name
+            if (rjsonp.test(opts.url)) {
+                opts.url = opts.url.replace(rjsonp, "$1" + "avalon." + name)
+            } else {
+                opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=avalon." + name
+            }
             //将后台返回的json保存在惰性函数中
             avalon[name] = function(json) {
                 avalon[name] = json

@@ -26,6 +26,7 @@ var transports = avalon.ajaxTransports = {
             //标准规定的 multipart/form-data 发送必须用 utf-8 格式， 记得 ie 会受到 document.charset 的影响
             transport.send(opts.hasContent && (this.formdata || this.querystring) || null)
             //在同步模式中,IE6,7可能会直接从缓存中读取数据而不会发出请求,因此我们需要手动发出请求
+
             if (!opts.async || transport.readyState === 4) {
                 this.respond()
             } else {
@@ -110,7 +111,11 @@ var transports = avalon.ajaxTransports = {
         preproccess: function() {
             var opts = this.options;
             var name = this.jsonpCallback = opts.jsonpCallback || "jsonp" + setTimeout("1")
-            opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=avalon." + name
+            if (rjsonp.test(opts.url)) {
+                opts.url = opts.url.replace(rjsonp, "$1" + "avalon." + name)
+            } else {
+                opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=avalon." + name
+            }
             //将后台返回的json保存在惰性函数中
             avalon[name] = function(json) {
                 avalon[name] = json

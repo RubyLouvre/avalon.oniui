@@ -19,6 +19,7 @@ router.get('/', function(req, res) {
 app.use('/', router);
 router.post("/post", function(req, res) {
     console.log(req.body)
+    console.log("收到post请求"+ req.xhr)
 
     if (req.xhr) {
         res.json({msg: '提交成功'});

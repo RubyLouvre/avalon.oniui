@@ -13,13 +13,29 @@
                 vm.username = ""
                 vm.password = ""
                 vm.email = ""
-                vm.ajax = function(e) {
+                vm.ajax = function(e) {//异步请求
                     if (avalonAjax) {
                         avalon.post("/post", avalon.serialize(this), function(a) {
                             avalon.log(a)
                         }, "text")
                     }
+                }
+                vm.syncAjax = function(e) { //同步请求
                     e.preventDefault()
+
+                    if (avalonAjax) {
+                        console.log("发出同步请求")
+                        avalon.ajax({
+                            type: "post",
+                            url: "/post",
+                            async: false,
+                            data: avalon.serialize(this),
+                            success: function(a) {
+                                console.log(a)
+                            }
+                        })
+                        console.log("async false")
+                    }
                 }
                 vm.get = function() {
                     avalon.get("/get", function(a) {
@@ -49,6 +65,11 @@
                 }
                 avalon.log(avalon.param(x))
 
+                var b = avalon.unparam("a=1&b=2")
+                console.log(b)
+                var b2 = avalon.unparam("a[]=1&a[]=2&a[]=3&d=false")
+                console.log(b2)
+
                 // avalon.log(avalonAjax)
             })
 
@@ -65,7 +86,7 @@
             <li>avalon.upload</li>
         </ul>
 
-        <form action="/post"  id="ttt"  ms-on-submit="ajax" >
+        <form action="/post"  id="ttt"  ms-on-submit="syncAjax" >
             <div>帐号:<input name="username" ms-duplex="username"></div>
             <div>密码:<input name="password" ms-duplex="password"></div>
             <div>邮箱:<input name="email" ms-duplex="email"></div>

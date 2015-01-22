@@ -10,8 +10,25 @@
             require(["mmRequest"], function() {
                 var vm = avalon.define("test", function(vm) {
                     vm.loadScript = function() {
-                        avalon.getScript("test.js", function(script, textStatus, jqXHR) {
-                            avalon.log("success with" + arguments.join("-----"))
+                        avalon.getScript("test.js", function() {
+                            console.log("success")
+                            vm.time = + new Date()
+                            change()
+                        })
+                    }
+                    vm.loadAJAX = function() {
+                        avalon.ajax({
+                            url: "test.js",
+                            dataType: "script",
+                            data: {
+                                page: 1,
+                                name: 1
+                            },
+                            success: function() {
+                                console.log("success")
+                                vm.time = + new Date()
+                                change()
+                            }
                         })
                     }
                     vm.jsonData = []
@@ -25,7 +42,9 @@
         <h1>mmRequest-getScript</h1>
         <div>
             <button 
-                    ms-click="loadScript">点我加载点数据</button>
+                    ms-click="loadScript">点我加载点数据-avalon.getScript</button>
+            <button 
+                    ms-click="loadAJAX">点我加载点数据-avalon.ajax</button>
             <p>---------</p>
             <p 
                ms-if="!jsonData.length">还没有加载数据</p>
@@ -46,15 +65,30 @@
             require([&quot;mmRequest&quot;], function() {
                 var vm = avalon.define(&quot;test&quot;, function(vm) {
                     vm.loadScript = function() {
-                        avalon.getScript(&quot;ajax.php?callback=callback&quot;)
+                        avalon.getScript(&quot;test.js&quot;, function() {
+                            console.log(&quot;success&quot;)
+                            vm.time = + new Date()
+                            change()
+                        })
+                    }
+                    vm.loadAJAX = function() {
+                        avalon.ajax({
+                            url: &quot;test.js&quot;,
+                            dataType: &quot;script&quot;,
+                            data: {
+                                page: 1,
+                                name: 1
+                            },
+                            success: function() {
+                                console.log(&quot;success&quot;)
+                                vm.time = + new Date()
+                                change()
+                            }
+                        })
                     }
                     vm.jsonData = []
                     vm.time = &quot;&quot;
                 })
-                window.callback = function(json) {
-                    vm.time = +new Date()
-                    vm.jsonData = json
-                }
                 avalon.scan()
             })
         &lt;/script&gt;
@@ -63,7 +97,9 @@
         &lt;h1&gt;mmRequest-getScript&lt;/h1&gt;
         &lt;div&gt;
             &lt;button 
-                    ms-click=&quot;loadScript&quot;&gt;点我加载点数据&lt;/button&gt;
+                    ms-click=&quot;loadScript&quot;&gt;点我加载点数据-avalon.getScript&lt;/button&gt;
+            &lt;button 
+                    ms-click=&quot;loadAJAX&quot;&gt;点我加载点数据-avalon.ajax&lt;/button&gt;
             &lt;p&gt;---------&lt;/p&gt;
             &lt;p 
                ms-if=&quot;!jsonData.length&quot;&gt;还没有加载数据&lt;/p&gt;

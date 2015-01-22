@@ -11,18 +11,19 @@
             require(["mmRequest"], function() {
                 avalon.define("test", function(vm) {
                     vm.loadJSON = function() {
-                        avalon.getJSON("ajax.php", {
+                        avalon.get("ajax.php", {
                             page: 1,
                             name: 2
                         }, function(res) {
                             vm.time = +new Date()
                             vm.jsonData = res
-                        })
+                        }, "json")
                     }
                     vm.loadAJAX = function() {
                         avalon.ajax({
                             url: "ajax.php",
                             dataType: "json",
+                            type: "get",
                             data: {
                                 page: 1,
                                 name: 1
@@ -41,10 +42,10 @@
         </script>
     </head>
     <body ms-controller="test">
-        <h1>mmRequest-getJSON</h1>
+        <h1>mmRequest-get</h1>
         <div>
             <button 
-                    ms-click="loadJSON">点我加载点数据-avalon.getJSON</button>
+                    ms-click="loadJSON">点我加载点数据-avalon.get</button>
             <button 
                     ms-click="loadAJAX">点我加载点数据-avalon.ajax</button>
             <p>---------</p>
@@ -70,18 +71,19 @@
             require([&quot;mmRequest&quot;], function() {
                 avalon.define(&quot;test&quot;, function(vm) {
                     vm.loadJSON = function() {
-                        avalon.getJSON(&quot;ajax.php&quot;, {
+                        avalon.get(&quot;ajax.php&quot;, {
                             page: 1,
                             name: 2
                         }, function(res) {
                             vm.time = +new Date()
                             vm.jsonData = res
-                        })
+                        }, &quot;json&quot;)
                     }
                     vm.loadAJAX = function() {
                         avalon.ajax({
                             url: &quot;ajax.php&quot;,
                             dataType: &quot;json&quot;,
+                            type: &quot;get&quot;,
                             data: {
                                 page: 1,
                                 name: 1
@@ -100,10 +102,10 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
-        &lt;h1&gt;mmRequest-getJSON&lt;/h1&gt;
+        &lt;h1&gt;mmRequest-get&lt;/h1&gt;
         &lt;div&gt;
             &lt;button 
-                    ms-click=&quot;loadJSON&quot;&gt;点我加载点数据-avalon.getJSON&lt;/button&gt;
+                    ms-click=&quot;loadJSON&quot;&gt;点我加载点数据-avalon.get&lt;/button&gt;
             &lt;button 
                     ms-click=&quot;loadAJAX&quot;&gt;点我加载点数据-avalon.ajax&lt;/button&gt;
             &lt;p&gt;---------&lt;/p&gt;

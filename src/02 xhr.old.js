@@ -15,7 +15,7 @@ new function() {
         "ActiveXObject('MSXML2.XMLHTTP')",
         "ActiveXObject('Microsoft.XMLHTTP')"
     ]
-    s[0] = IE() < 8 && isLocal ? "!" : s[0] //IE下只能使用ActiveXObject
+    s[0] = IE() < 8 && IE() !== 0 && isLocal ? "!" : s[0] //IE下只能使用ActiveXObject
     for (var i = 0, axo; axo = s[i++]; ) {
         try {
             if (eval("new " + axo)) {

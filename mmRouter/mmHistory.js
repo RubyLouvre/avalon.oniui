@@ -123,6 +123,7 @@ define(["avalon"], function(avalon) {
             // 支持hashchange 就监听hashchange
             // 否则的话只能每隔一段时间进行检测了
             function checkUrl() {
+                if(avalon.history.locked) return false
                 var iframe = that.iframe
                 if (that.monitorMode === "iframepoll" && !iframe) {
                     return false

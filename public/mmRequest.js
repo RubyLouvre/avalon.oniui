@@ -52,6 +52,13 @@ function parseJS(code) {
     }
 }
 
+if (!String.prototype.startsWith) {
+    String.prototype.startsWith = function(searchString, position) {
+        position = position || 0;
+        return this.lastIndexOf(searchString, position) === position;
+    }
+}
+
 var head = DOC.getElementsByTagName("head")[0] //HEAD元素
 var isLocal = false
 try {
@@ -224,6 +231,14 @@ var XHRMethods = {
                         this.error = e
                         statusText = "parsererror"
                     }
+                } else if (this.options.dataType === "jsonp") {
+                    try {
+                        this.response = avalon.ajaxConverters.jsonp.call(this)
+                    } catch (e) {
+                        isSuccess = false
+                        this.error = e
+                        statusText = "parsererror"
+                    }
                 }
             }
         }
@@ -283,7 +298,7 @@ avalon.ajax = function(opts, promise) {
     var dataType = opts.dataType  //目标返回数据类型
     var transports = avalon.ajaxTransports
 
-    if (opts.crossDomain && !supportCors && dataType === "json" && opts.type === "GET" ) {
+    if (opts.crossDomain && !supportCors && dataType === "json" && opts.type === "GET" || dataType === "json" && opts.type === "GET" && rjsonp.test(opts.url)) {
         dataType = opts.dataType = "jsonp"
     }
     var name = opts.form ? "upload" : dataType
@@ -369,8 +384,14 @@ avalon.ajaxConverters = {//转换器，返回用户想要做的数据
         parseJS(text)
     },
     jsonp: function() {
-        var json = avalon[this.jsonpCallback];
-        delete avalon[this.jsonpCallback];
+        var json, callbackName;
+        if (this.jsonpCallback.startsWith('avalon.')) {
+            callbackName = this.jsonpCallback.replace(/avalon\./,'')
+            json = avalon[callbackName]
+            delete avalon[callbackName]
+        } else {
+            json = window[this.jsonpCallback]
+        }
         return json;
     }
 }
@@ -613,15 +634,22 @@ var transports = avalon.ajaxTransports = {
     jsonp: {
         preproccess: function() {
             var opts = this.options;
-            var name = this.jsonpCallback = opts.jsonpCallback || "jsonp" + setTimeout("1")
+            var name = this.jsonpCallback = opts.jsonpCallback || "avalon.jsonp" + setTimeout("1")
             if (rjsonp.test(opts.url)) {
-                opts.url = opts.url.replace(rjsonp, "$1" + "avalon." + name)
+                opts.url = opts.url.replace(rjsonp, "$1" + name)
             } else {
-                opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=avalon." + name
+                opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=" + name
             }
             //将后台返回的json保存在惰性函数中
-            avalon[name] = function(json) {
-                avalon[name] = json
+            if (name.startsWith('avalon.')) {
+                name = name.replace(/avalon\./, '')
+                avalon[name] = function(json) {
+                    avalon[name] = json
+                }
+            } else {
+                window[name] = function(json) {
+                    window[name] = json
+                }
             }
             return "script"
         }
@@ -654,7 +682,8 @@ var transports = avalon.ajaxTransports = {
                     parent.removeChild(node)
                 }
                 if (!forceAbort) {
-                    var args = typeof avalon[this.jsonpCallback] === "function" ? [500, "error"] : [200, "success"]
+                    var jsonpCallback = this.jsonpCallback.startsWith('avalon.') ? avalon[this.jsonpCallback.replace(/avalon\./, '')] : window[this.jsonpCallback]
+                    var args = typeof jsonpCallback === "function" ? [500, "error"] : [200, "success"]
                     this.dispatch.apply(this, args)
                 }
             }

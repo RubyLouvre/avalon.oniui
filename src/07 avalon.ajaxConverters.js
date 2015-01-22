@@ -18,8 +18,14 @@ avalon.ajaxConverters = {//转换器，返回用户想要做的数据
         parseJS(text)
     },
     jsonp: function() {
-        var json = avalon[this.jsonpCallback];
-        delete avalon[this.jsonpCallback];
+        var json, callbackName;
+        if (this.jsonpCallback.startsWith('avalon.')) {
+            callbackName = this.jsonpCallback.replace(/avalon\./,'')
+            json = avalon[callbackName]
+            delete avalon[callbackName]
+        } else {
+            json = window[this.jsonpCallback]
+        }
         return json;
     }
 }

@@ -73,6 +73,14 @@ var XHRMethods = {
                         this.error = e
                         statusText = "parsererror"
                     }
+                } else if (this.options.dataType === "jsonp") {
+                    try {
+                        this.response = avalon.ajaxConverters.jsonp.call(this)
+                    } catch (e) {
+                        isSuccess = false
+                        this.error = e
+                        statusText = "parsererror"
+                    }
                 }
             }
         }

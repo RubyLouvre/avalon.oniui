@@ -25,10 +25,6 @@ avalon.ajax = function(opts, promise) {
     promise._resolve = _resolve
 
     avalon.mix(promise, XHRProperties, XHRMethods)
-    promise.then(opts.success, opts.error)
-    "success error".replace(avalon.rword, function(name) { //绑定回调
-        delete opts[name]
-    })
 
     var dataType = opts.dataType  //目标返回数据类型
     var transports = avalon.ajaxTransports

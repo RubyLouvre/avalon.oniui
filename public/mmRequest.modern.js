@@ -13,6 +13,7 @@ var rnoContent = /^(?:GET|HEAD)$/
 var rprotocol = /^\/\//
 var rhash = /#.*$/
 var rquery = /\?/
+var rjsonp = /(=)\?(?=&|$)|\?\?/
 var r20 = /%20/g
 
 var originAnchor = document.createElement("a")
@@ -522,7 +523,11 @@ var transports = avalon.ajaxTransports = {
         preproccess: function() {
             var opts = this.options;
             var name = this.jsonpCallback = opts.jsonpCallback || "jsonp" + setTimeout("1")
-            opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=avalon." + name
+            if (rjsonp.test(opts.url)) {
+                opts.url = opts.url.replace(rjsonp, "$1" + "avalon." + name)
+            } else {
+                opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=avalon." + name
+            }
             //将后台返回的json保存在惰性函数中
             avalon[name] = function(json) {
                 avalon[name] = json

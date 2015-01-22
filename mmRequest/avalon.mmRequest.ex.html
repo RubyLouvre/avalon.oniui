@@ -19,6 +19,20 @@
                             vm.jsonData = res
                         })
                     }
+                    vm.loadAJAX = function() {
+                        avalon.ajax({
+                            url: "ajax.php",
+                            dataType: "json",
+                            data: {
+                                page: 1,
+                                name: 1
+                            },
+                            success: function(res) {
+                                vm.time = +new Date()
+                                vm.jsonData = res
+                            }
+                        })
+                    }
                     vm.time = ""
                     vm.jsonData = []
                 })
@@ -30,7 +44,9 @@
         <h1>mmRequest-getJSON</h1>
         <div>
             <button 
-                    ms-click="loadJSON">点我加载点数据</button>
+                    ms-click="loadJSON">点我加载点数据-avalon.getJSON</button>
+            <button 
+                    ms-click="loadAJAX">点我加载点数据-avalon.ajax</button>
             <p>---------</p>
             <div>
                 <p 
@@ -62,6 +78,20 @@
                             vm.jsonData = res
                         })
                     }
+                    vm.loadAJAX = function() {
+                        avalon.ajax({
+                            url: &quot;ajax.php&quot;,
+                            dataType: &quot;json&quot;,
+                            data: {
+                                page: 1,
+                                name: 1
+                            },
+                            success: function(res) {
+                                vm.time = +new Date()
+                                vm.jsonData = res
+                            }
+                        })
+                    }
                     vm.time = &quot;&quot;
                     vm.jsonData = []
                 })
@@ -73,7 +103,9 @@
         &lt;h1&gt;mmRequest-getJSON&lt;/h1&gt;
         &lt;div&gt;
             &lt;button 
-                    ms-click=&quot;loadJSON&quot;&gt;点我加载点数据&lt;/button&gt;
+                    ms-click=&quot;loadJSON&quot;&gt;点我加载点数据-avalon.getJSON&lt;/button&gt;
+            &lt;button 
+                    ms-click=&quot;loadAJAX&quot;&gt;点我加载点数据-avalon.ajax&lt;/button&gt;
             &lt;p&gt;---------&lt;/p&gt;
             &lt;div&gt;
                 &lt;p 

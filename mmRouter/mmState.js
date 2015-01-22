@@ -41,7 +41,7 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             }
         }
         if (to) {
-            if (from.url === to.url && from.stateName === to.stateName) {
+            if (from && from.url === to.url && from.stateName === to.stateName) {
                 from = avalon.mix(true, {}, from)
             }
             if (!to.params || to.parentState) {
@@ -52,15 +52,15 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                 return to.params [el.name] || ""
             })
             mmState.transitionTo(from, to, args)
-            if(avalon.history && params) {
+            if(avalon.history && params && from != to) {
                 // 更新url
-                avalon.history.locked = true // 关闭历史监听，防止触发两次
-                var query = params.query ? queryToString(params.query) : ""
-                avalon.history.updateLocation(to.url.replace(/\{[^\/\}]+\}/g, function(mat) {
+                avalon.router.locked = true // 关闭历史监听，防止触发两次
+                var query = params.query ? queryToString(params.query) : "",
+                    hash = to.url.replace(/\{[^\/\}]+\}/g, function(mat) {
                     var key = mat.replace(/[\{\}]/g, '')
                     return params[key] || ''
-                }).replace(/^\//g, '') + query)
-                avalon.history.locked = false // 开启
+                }).replace(/^\//g, '') + query
+                avalon.history.updateLocation(hash)
             }
         }
     }

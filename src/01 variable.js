@@ -9,6 +9,7 @@ var rnoContent = /^(?:GET|HEAD)$/
 var rprotocol = /^\/\//
 var rhash = /#.*$/
 var rquery = /\?/
+var rjsonp = /(=)\?(?=&|$)|\?\?/
 var r20 = /%20/g
 
 var originAnchor = document.createElement("a")

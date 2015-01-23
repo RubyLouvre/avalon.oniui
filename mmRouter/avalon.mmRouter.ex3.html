@@ -33,9 +33,6 @@
                 display: inline;
                 margin-right: 10px;
             }
-            .codelist {
-                height: 200px;
-            }
         </style>
         <script >
             avalon.config({debug: false})
@@ -59,6 +56,9 @@
                         eval(code)
                     }
                 })
+                // avalon.router.get("/*path", function() {
+                //     console.log(arguments)
+                // })
                 //接着下来通过mmState这个基于状态机的高级路由器，定义各种状态
                 //（每个状态包含各个要处理的模板容器，获取模板的手段，中途会发生的各种回调）
                 //////////////
@@ -91,11 +91,7 @@
                         "": {
                             templateProvider: new Promise(function(fn) {
                                 fn('<p class="lead">UI-Router Resources</p><ul>' +
-                                        '<li><a href="https://github.com/angular-ui/ui-router/tree/master/sample">Source for this Sample</a></li>' +
-                                        '<li><a href="https://github.com/angular-ui/ui-router">Github Main Page</a></li>' +
-                                        '<li><a href="https://github.com/angular-ui/ui-router#quick-start">Quick Start</a></li>' +
-                                        '<li><a href="https://github.com/angular-ui/ui-router/wiki">In-Depth Guide</a></li>' +
-                                        '<li><a href="https://github.com/angular-ui/ui-router/wiki/Quick-Reference">API Reference</a></li>' +
+                                        '<li>薩瓦迪卡</li>' +
                                         '</ul>')
                             })
                         },
@@ -305,12 +301,13 @@
                 })
                 //启动路由
                 avalon.history.start({
-                    basepath: "/mmRouter"
+                    basepath: "/mmRouter",
+                    fireAnchor: false
                 })
-                //go!!!!!!!!!
+                //go!!!!!!!!! 
                 avalon.scan()
             })
-
+ 
         </script>
     </head>
     <body>
@@ -327,6 +324,7 @@
                         <button 
                                 ms-click="run('c'+$index)">点击到状态：{{code.state}}</button>
                     </p>
+                    <li style="clear:both;display:block;float:none;"></li>
                 </li>
             </ul>
             <div class="header">
@@ -371,9 +369,6 @@
                 display: inline;
                 margin-right: 10px;
             }
-            .codelist {
-                height: 200px;
-            }
         &lt;/style&gt;
         &lt;script &gt;
             avalon.config({debug: false})
@@ -397,6 +392,9 @@
                         eval(code)
                     }
                 })
+                // avalon.router.get(&quot;/*path&quot;, function() {
+                //     console.log(arguments)
+                // })
                 //接着下来通过mmState这个基于状态机的高级路由器，定义各种状态
                 //（每个状态包含各个要处理的模板容器，获取模板的手段，中途会发生的各种回调）
                 //////////////
@@ -429,11 +427,7 @@
                         &quot;&quot;: {
                             templateProvider: new Promise(function(fn) {
                                 fn('&lt;p class=&quot;lead&quot;&gt;UI-Router Resources&lt;/p&gt;&lt;ul&gt;' +
-                                        '&lt;li&gt;&lt;a href=&quot;https://github.com/angular-ui/ui-router/tree/master/sample&quot;&gt;Source for this Sample&lt;/a&gt;&lt;/li&gt;' +
-                                        '&lt;li&gt;&lt;a href=&quot;https://github.com/angular-ui/ui-router&quot;&gt;Github Main Page&lt;/a&gt;&lt;/li&gt;' +
-                                        '&lt;li&gt;&lt;a href=&quot;https://github.com/angular-ui/ui-router#quick-start&quot;&gt;Quick Start&lt;/a&gt;&lt;/li&gt;' +
-                                        '&lt;li&gt;&lt;a href=&quot;https://github.com/angular-ui/ui-router/wiki&quot;&gt;In-Depth Guide&lt;/a&gt;&lt;/li&gt;' +
-                                        '&lt;li&gt;&lt;a href=&quot;https://github.com/angular-ui/ui-router/wiki/Quick-Reference&quot;&gt;API Reference&lt;/a&gt;&lt;/li&gt;' +
+                                        '&lt;li&gt;薩瓦迪卡&lt;/li&gt;' +
                                         '&lt;/ul&gt;')
                             })
                         },
@@ -643,12 +637,13 @@
                 })
                 //启动路由
                 avalon.history.start({
-                    basepath: &quot;/mmRouter&quot;
+                    basepath: &quot;/mmRouter&quot;,
+                    fireAnchor: false
                 })
-                //go!!!!!!!!!
+                //go!!!!!!!!! 
                 avalon.scan()
             })
-
+ 
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body&gt;
@@ -665,6 +660,7 @@
                         &lt;button 
                                 ms-click=&quot;run('c'+$index)&quot;&gt;点击到状态：{{code.state}}&lt;/button&gt;
                     &lt;/p&gt;
+                    &lt;li style=&quot;clear:both;display:block;float:none;&quot;&gt;&lt;/li&gt;
                 &lt;/li&gt;
             &lt;/ul&gt;
             &lt;div class=&quot;header&quot;&gt;

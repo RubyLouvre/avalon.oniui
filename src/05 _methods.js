@@ -59,9 +59,9 @@ var XHRMethods = {
                 statusText = "notmodified";
             } else {
                 //如果浏览器能直接返回转换好的数据就最好不过,否则需要手动转换
-                if (typeof this.response === "undefined" && (this.responseText || this.responseXML)) {
+                if (typeof this.response === "undefined") {
                     var dataType = this.options.dataType || this.options.mimeType
-                    if (!dataType) { //如果没有指定dataType，则根据mimeType或Content-Type进行揣测
+                    if (!dataType && this.responseText || this.responseXML) { //如果没有指定dataType，则根据mimeType或Content-Type进行揣测
                         dataType = this.getResponseHeader("Content-Type") || ""
                         dataType = dataType.match(/json|xml|script|html/) || ["text"]
                         dataType = dataType[0];

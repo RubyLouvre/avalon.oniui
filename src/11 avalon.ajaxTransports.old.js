@@ -32,7 +32,7 @@ var transports = avalon.ajaxTransports = {
             } else {
                 if (useOnload) { //如果支持onerror, onload新API
                     transport.onload = transport.onerror = function(e) {
-                        this.readyState = 4 //IE9+ 
+                        this.readyState = 4 //IE9+
                         this.status = e.type === "load" ? 200 : 500
                         self.respond()
                     }
@@ -110,15 +110,22 @@ var transports = avalon.ajaxTransports = {
     jsonp: {
         preproccess: function() {
             var opts = this.options;
-            var name = this.jsonpCallback = opts.jsonpCallback || "jsonp" + setTimeout("1")
+            var name = this.jsonpCallback = opts.jsonpCallback || "avalon.jsonp" + setTimeout("1")
             if (rjsonp.test(opts.url)) {
-                opts.url = opts.url.replace(rjsonp, "$1" + "avalon." + name)
+                opts.url = opts.url.replace(rjsonp, "$1" + name)
             } else {
-                opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=avalon." + name
+                opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=" + name
             }
             //将后台返回的json保存在惰性函数中
-            avalon[name] = function(json) {
-                avalon[name] = json
+            if (name.startsWith('avalon.')) {
+                name = name.replace(/avalon\./, '')
+                avalon[name] = function(json) {
+                    avalon[name] = json
+                }
+            } else {
+                window[name] = function(json) {
+                    window[name] = json
+                }
             }
             return "script"
         }
@@ -151,7 +158,8 @@ var transports = avalon.ajaxTransports = {
                     parent.removeChild(node)
                 }
                 if (!forceAbort) {
-                    var args = typeof avalon[this.jsonpCallback] === "function" ? [500, "error"] : [200, "success"]
+                    var jsonpCallback = this.jsonpCallback.startsWith('avalon.') ? avalon[this.jsonpCallback.replace(/avalon\./, '')] : window[this.jsonpCallback]
+                    var args = typeof jsonpCallback === "function" ? [500, "error"] : [200, "success"]
                     this.dispatch.apply(this, args)
                 }
             }
@@ -162,6 +170,7 @@ var transports = avalon.ajaxTransports = {
             var opts = this.options, formdata
             if (typeof opts.form.append === "function") { //简单判断opts.form是否为FormData
                 formdata = opts.form;
+                opts.contentType = '';
             } else {
                 formdata = new FormData(opts.form)  //将二进制什么一下子打包到formdata
             }

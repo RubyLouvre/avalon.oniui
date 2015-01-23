@@ -121,12 +121,14 @@ define(["mmHistory"], function() {
         setLastPath: function(path) {
             setCookie("msLastPath", path)
         },
-        navigate: function(hash) {
-            var parsed = parseQuery(hash)
+        // doNotNotifyUrlChecker，当这个参数为true的时候，是不能触发url检测监听的
+        navigate: function(hash, doNotNotifyUrlChecker) {
+            var parsed = parseQuery((hash.charAt(0) !== "/" ? "/" : "") + hash)
             if(hash.charAt(0) === "/")
                 hash = hash.slice(1)// 修正出现多扛的情况 fix http://localhost:8383/mmRouter/index.html#!//
-            avalon.history.updateLocation(hash)
-            this.route("get", parsed.path, parsed.query)
+            // 只是写历史而已
+            avalon.history && avalon.history.updateLocation(hash, "doNotNotifyUrlChecker")
+            if(!doNotNotifyUrlChecker) this.route("get", parsed.path, parsed.query)
         },
         /* *
          `'/hello/'` - 匹配'/hello/'或'/hello'

@@ -32,7 +32,7 @@ var transports = avalon.ajaxTransports = {
             } else {
                 if (useOnload) { //如果支持onerror, onload新API
                     transport.onload = transport.onerror = function(e) {
-                        this.readyState = 4 //IE9+ 
+                        this.readyState = 4 //IE9+
                         this.status = e.type === "load" ? 200 : 500
                         self.respond()
                     }
@@ -170,6 +170,7 @@ var transports = avalon.ajaxTransports = {
             var opts = this.options, formdata
             if (typeof opts.form.append === "function") { //简单判断opts.form是否为FormData
                 formdata = opts.form;
+                opts.contentType = '';
             } else {
                 formdata = new FormData(opts.form)  //将二进制什么一下子打包到formdata
             }

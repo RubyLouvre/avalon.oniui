@@ -219,7 +219,7 @@ var XHRMethods = {
                 //如果浏览器能直接返回转换好的数据就最好不过,否则需要手动转换
                 if (typeof this.response === "undefined") {
                     var dataType = this.options.dataType || this.options.mimeType
-                    if (this.responseText || this.responseXML || !dataType) { //如果没有指定dataType，则根据mimeType或Content-Type进行揣测
+                    if (!dataType && this.responseText || this.responseXML) { //如果没有指定dataType，则根据mimeType或Content-Type进行揣测
                         dataType = this.getResponseHeader("Content-Type") || ""
                         dataType = dataType.match(/json|xml|script|html/) || ["text"]
                         dataType = dataType[0];
@@ -553,7 +553,7 @@ var transports = avalon.ajaxTransports = {
             } else {
                 if (useOnload) { //如果支持onerror, onload新API
                     transport.onload = transport.onerror = function(e) {
-                        this.readyState = 4 //IE9+ 
+                        this.readyState = 4 //IE9+
                         this.status = e.type === "load" ? 200 : 500
                         self.respond()
                     }
@@ -830,3 +830,4 @@ if (!window.FormData) {
  http://www.cnblogs.com/heyuquan/archive/2013/05/13/3076465.html
  2014.12.25  v4 大重构
  */
+

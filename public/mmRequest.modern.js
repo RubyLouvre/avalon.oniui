@@ -189,15 +189,23 @@ var XHRMethods = {
                 statusText = "notmodified";
             } else {
                 //如果浏览器能直接返回转换好的数据就最好不过,否则需要手动转换
-                if (typeof this.response === "undefined") {
+                if (typeof this.response === "undefined" && (this.responseText || this.responseXML)) {
                     var dataType = this.options.dataType || this.options.mimeType
-                    if (this.responseText || this.responseXML || !dataType) { //如果没有指定dataType，则根据mimeType或Content-Type进行揣测
+                    if (!dataType) { //如果没有指定dataType，则根据mimeType或Content-Type进行揣测
                         dataType = this.getResponseHeader("Content-Type") || ""
                         dataType = dataType.match(/json|xml|script|html/) || ["text"]
                         dataType = dataType[0];
                     }
                     try {
                         this.response = avalon.ajaxConverters[dataType].call(this, this.responseText, this.responseXML)
+                    } catch (e) {
+                        isSuccess = false
+                        this.error = e
+                        statusText = "parsererror"
+                    }
+                } else if (this.options.dataType === "jsonp") {
+                    try {
+                        this.response = avalon.ajaxConverters.jsonp.call(this)
                     } catch (e) {
                         isSuccess = false
                         this.error = e
@@ -623,3 +631,4 @@ avalon.mix(transports.upload, transports.xhr)
  http://www.cnblogs.com/heyuquan/archive/2013/05/13/3076465.html
  2014.12.25  v4 大重构
  */
+

@@ -149,8 +149,9 @@ define(["avalon"], function(avalon) {
                 }
                 if (hash !== void 0) {
                     that.fragment = hash
-                    that.fireRouteChange(hash)
+                    if(!avalon.router.locked) that.fireRouteChange(hash)
                 }
+                avalon.router.locked =false
             }
 
             //thanks https://github.com/browserstate/history.js/blob/master/scripts/uncompressed/history.html4.js#L272
@@ -194,10 +195,19 @@ define(["avalon"], function(avalon) {
         updateLocation: function(hash) {
             if (this.monitorMode === "popstate") {
                 var path = this.rootpath + hash
-                history.pushState({path: path}, document.title, path)
-                this._fireLocationChange()
+                // 防止同一個url觸發
+                if(this.location.pathname != path) {
+                    history.pushState({path: path}, document.title, path)
+                    this._fireLocationChange()
+                } else {
+                    avalon.router.locked = false
+                }
             } else {
-                this.location.hash = this.prefix + hash
+                if(this.prefix + hash != this.location.hash) {
+                    this.location.hash = this.prefix + hash
+                } else {
+                    avalon.router.locked = false
+                }
             }
         }
     }

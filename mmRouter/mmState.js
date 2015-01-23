@@ -3,9 +3,13 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
     avalon.router.route = function(method, path, query) {
         path = path.trim()
         var states = this.routingTable[method]
+        var currentState = mmState.currentState
         for (var i = 0, el; el = states[i++]; ) {//el为一个个状态对象，状态对象的callback总是返回一个Promise
             var args = path.match(el.regexp)
             if (args && el.abstract !== true) {//不能是抽象状态
+                if (currentState && el.url === currentState.url && el.stateName === currentState.stateName) {
+                    currentState = avalon.mix(true, {}, currentState)
+                }
                 el.query = query || {}
                 el.path = path
                 el.params = {}
@@ -15,7 +19,7 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                     this._parseArgs(args, el)
                 }
                 if (el.stateName) {
-                    mmState.transitionTo(mmState.currentState, el, args)
+                    mmState.transitionTo(currentState, el, args)
                 } else {
                     el.callback.apply(el, args)
                 }
@@ -37,7 +41,10 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             }
         }
         if (to) {
-            if (!to.params) {
+            if (from && from.url === to.url && from.stateName === to.stateName) {
+                from = avalon.mix(true, {}, from)
+            }
+            if (!to.params || to.parentState) {
                 to.params = to.parentState ? to.parentState.params || {} : {}
             }
             avalon.mix(true, to.params, params || {})
@@ -45,6 +52,16 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                 return to.params [el.name] || ""
             })
             mmState.transitionTo(from, to, args)
+            if(avalon.history && params && from != to) {
+                // 更新url
+                avalon.router.locked = true // 关闭历史监听，防止触发两次
+                var query = params.query ? queryToString(params.query) : "",
+                    hash = to.url.replace(/\{[^\/\}]+\}/g, function(mat) {
+                    var key = mat.replace(/[\{\}]/g, '')
+                    return params[key] || ''
+                }).replace(/^\//g, '') + query
+                avalon.history.updateLocation(hash)
+            }
         }
     }
 
@@ -163,6 +180,9 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             }
             topCtrlName = topCtrlName.$id
             var prevState = mmState.prevState && (mmState.prevState.stateName +'.')
+            var currentState = mmState.currentState
+            var defKey = 'viewDefaultInnerHTMLKey'
+            var defViewEle = null
             avalon.each(opts.views, function(keyname, view) {
                 if (keyname.indexOf("@") >= 0) {
                     var match = keyname.split("@")
@@ -172,11 +192,30 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                     viewname = keyname || ""
                     statename = stateName
                 }
-                if(!prevState || prevState.indexOf(stateName + '.') !== 0) {
+                var _stateName = stateName + '.'
+                if(!prevState || prevState === _stateName || prevState.indexOf(_stateName) !== 0 || stateName === currentState.stateName) {
                     var nodes = getViews(topCtrlName, statename)
                     var node = getNamedView(nodes, viewname)
                     var warnings = "warning: " + stateName + "状态对象的【" + keyname + "】视图对象" //+ viewname
+                    var defViewIndex = -1
+                    // 重置view
+                    avalon.each(nodes, function(i, _node) {
+                        if (_node === node || avalon.contains(node, _node)) return
+                        if (defViewEle === _node) defViewIndex = i
+                        if (defViewEle && (defViewIndex === -1 || i <= defViewIndex)) return
+                        var $node = avalon(_node)
+                        var _html = $node.data(defKey)
+                        if (_html) {
+                            avalon.innerHTML(_node, _html)
+                            avalon.scan(_node, vmodes)
+                        }
+                    })
                     if (node) {
+                        if (!viewname) defViewEle = node
+                        // 需要记下当前view下的所有子view的默认innerHTML
+                        // 以便在恢复到当前view的时候重置回来
+                        var _html = avalon(node).data(defKey)
+                        _html === null && avalon(node).data(defKey, node.innerHTML)
                         var promise = fromPromise(view, that.params)
                         nodeList.push(node)
                         funcList.push(function() {
@@ -367,5 +406,13 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             }
             throw new Error("必须先定义[" + parentName + "]")
         }
+    }
+    function queryToString(obj) {
+        if(typeof obj == 'string') return obj
+        var str = []
+        for(var i in obj) {
+            str.push(i + '=' + encodeURIComponent(obj[i]))
+        }
+        return str.length ? '?' + str.join("&") : ''
     }
 })

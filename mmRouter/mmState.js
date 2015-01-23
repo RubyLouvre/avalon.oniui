@@ -52,15 +52,14 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                 return to.params [el.name] || ""
             })
             mmState.transitionTo(from, to, args)
-            if(avalon.history && params && from != to) {
+            if(avalon.history && params) {
                 // 更新url
-                avalon.router.locked = true // 关闭历史监听，防止触发两次
                 var query = params.query ? queryToString(params.query) : "",
                     hash = to.url.replace(/\{[^\/\}]+\}/g, function(mat) {
                     var key = mat.replace(/[\{\}]/g, '')
                     return params[key] || ''
                 }).replace(/^\//g, '') + query
-                avalon.history.updateLocation(hash)
+                avalon.router.navigate(hash, "doNotNotifyUrlChecker")
             }
         }
     }
@@ -72,18 +71,24 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             mmState.prevState = fromState
             mmState.currentState = toState
             var states = []
-            var t = toState
+            var t = toState, tmp
             if (!fromState) {
                 while (t) {
+                    tmp = t
                     states.push(t)
                     t = t.parentState
+                    // 共享params，解决父级状态获取不到参数
+                    if(t && !t.params) t.params = tmp.params
                 }
             } else if (fromState === toState) {
                 states.push(t)
             } else {
                 while (t && t !== fromState) {
+                    tmp = t
                     states.push(t)
                     t = t.parentState
+                    // 共享params，解决父级状态获取不到参数
+                    if(t && !t.params) t.params = tmp.params
                 }
             }
             states.reverse();

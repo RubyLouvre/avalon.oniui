@@ -149,9 +149,10 @@ define(["avalon"], function(avalon) {
                 }
                 if (hash !== void 0) {
                     that.fragment = hash
-                    if(!avalon.router.locked) that.fireRouteChange(hash)
+                    // 状态改变，同步url的时候，不能再去触发状态变化
+                    if(!avalon.history.locked) that.fireRouteChange(hash)
+                    avalon.history.locked = false
                 }
-                avalon.router.locked =false
             }
 
             //thanks https://github.com/browserstate/history.js/blob/master/scripts/uncompressed/history.html4.js#L272
@@ -192,22 +193,24 @@ define(["avalon"], function(avalon) {
             clearInterval(this.checkUrl)
             History.started = false
         },
-        updateLocation: function(hash) {
+        updateLocation: function(hash, doNotNotifyUrlChecker) {
             if (this.monitorMode === "popstate") {
                 var path = this.rootpath + hash
-                // 防止同一個url觸發
+                // 防止多次觸發
                 if(this.location.pathname != path) {
                     history.pushState({path: path}, document.title, path)
-                    this._fireLocationChange()
+                    if(!doNotNotifyUrlChecker) this._fireLocationChange()
                 } else {
-                    avalon.router.locked = false
+                    avalon.history.locked = false
                 }
             } else {
-                if(this.prefix + hash != this.location.hash) {
-                    this.location.hash = this.prefix + hash
-                } else {
-                    avalon.router.locked = false
+                if(doNotNotifyUrlChecker) {
+                    avalon.history.locked = true
                 }
+                if(this.location.hash == this.prefix + hash) {
+                    avalon.history.locked = false
+                }
+                this.location.hash = this.prefix + hash
             }
         }
     }
@@ -239,7 +242,7 @@ define(["avalon"], function(avalon) {
             var hash = href.replace(prefix, "").trim()
             if (href.indexOf(prefix) === 0 && hash !== "") {
                 event.preventDefault()
-                avalon.history.updateLocation(hash)
+                avalon.router && avalon.router.navigate(hash)
             }
         }
     })

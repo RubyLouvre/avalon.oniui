@@ -634,7 +634,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                         } else {
                             vm.onSuccess.call(elem, reasons, event)
                         }
-                        vm.onComplete.call(elem, reasons,, event)
+                        vm.onComplete.call(elem, reasons, event)
                     }
                     return reasons
                 })
@@ -687,14 +687,18 @@ define(["../promise/avalon.promise"], function(avalon) {
                     if (validateParams.length) {
                         if (vm.validateInKeyup) {
                             data.bound("keyup", function(e) {
-                                setTimeout(function() {
-                                    vm.validate(data,0,  e)
-                                })
+                                var type = data.element && data.element.getAttribute("data-duplex-event")
+                                if (!type || /^(?:key|mouse|click|input)/.test(type)) {
+                                    var ev = fixEvent(e)
+                                    setTimeout(function() {
+                                        vm.validate(data, 0, ev)
+                                    })
+                                }
                             })
                         }
                         if (vm.validateInBlur) {
                             data.bound("blur", function(e) {
-                                vm.validate(data, 0,  e)
+                                vm.validate(data, 0, e)
                             })
                         }
                         if (vm.resetInFocus) {
@@ -718,7 +722,7 @@ define(["../promise/avalon.promise"], function(avalon) {
     function getMessage() {
         var data = this.data || {}
         return this.message.replace(rformat, function(_, name) {
-            return data[name] == null ?  "" : data[name]
+            return data[name] == null ? "" : data[name]
         })
     }
     widget.defaults = {

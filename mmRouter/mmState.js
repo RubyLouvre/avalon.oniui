@@ -103,7 +103,6 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             })
         }
     }
-    window.mmState = mmState
     //【avalon.state】的辅助函数，用于收集可用于扫描的vmodels
     function getVModels(opts) {
         var array = []

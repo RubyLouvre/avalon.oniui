@@ -51,6 +51,7 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             var args = to.keys.map(function(el) {
                 return to.params [el.name] || ""
             })
+            params = to.params
             mmState.transitionTo(from, to, args)
             if(avalon.history && params) {
                 // 更新url
@@ -77,8 +78,8 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                     tmp = t
                     states.push(t)
                     t = t.parentState
-                    // 共享params，解决父级状态获取不到参数
-                    if(t && !t.params) t.params = tmp.params
+                    // 强制共享params，解决父级状态获取不到参数
+                    if(t && tmp.params) t.params = tmp.params
                 }
             } else if (fromState === toState) {
                 states.push(t)
@@ -87,8 +88,8 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                     tmp = t
                     states.push(t)
                     t = t.parentState
-                    // 共享params，解决父级状态获取不到参数
-                    if(t && !t.params) t.params = tmp.params
+                    // 强制共享params，解决父级状态获取不到参数
+                    if(t && tmp.params) t.params = tmp.params
                 }
             }
             states.reverse();

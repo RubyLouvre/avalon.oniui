@@ -31,7 +31,7 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
         }
     }
     //跳转到一个已定义状态上，params对参数对象
-    avalon.router.go = function(toName, params) {
+    avalon.router.go = function(toName, params, options) {
         var from = mmState.currentState, to
         var states = this.routingTable.get
         for (var i = 0, el; el = states[i++]; ) {
@@ -60,7 +60,7 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                     var key = mat.replace(/[\{\}]/g, '')
                     return params[key] || ''
                 }).replace(/^\//g, '') + query
-                avalon.router.navigate(hash, "doNotNotifyUrlChecker")
+                avalon.router.navigate(hash, avalon.mix({}, options|| {}, {silent: true}))
             }
         }
     }

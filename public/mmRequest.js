@@ -531,7 +531,7 @@ var transports = avalon.ajaxTransports = {
             if (this.mimeType && transport.overrideMimeType) {
                 transport.overrideMimeType(this.mimeType)
             }
-            //如果transport中没有withCredentials，直接设置会报错
+            //IE6下，如果transport中没有withCredentials，直接设置会报错
             if (opts.crossDomain && "withCredentials" in transport) {
                 transport.withCredentials = true
             }

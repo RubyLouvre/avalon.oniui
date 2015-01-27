@@ -24,17 +24,17 @@
                     e.preventDefault()
 
                     if (avalonAjax) {
-                        console.log("发出同步请求")
+                        avalon.log("发出同步请求")
                         avalon.ajax({
                             type: "post",
                             url: "/post",
                             async: false,
                             data: avalon.serialize(this),
                             success: function(a) {
-                                console.log(a)
+                                avalon.log(a)
                             }
                         })
-                        console.log("async false")
+                        avalon.log("async false")
                     }
                 }
                 vm.get = function() {
@@ -66,9 +66,9 @@
                 avalon.log(avalon.param(x))
 
                 var b = avalon.unparam("a=1&b=2")
-                console.log(b)
+                avalon.log(b)
                 var b2 = avalon.unparam("a[]=1&a[]=2&a[]=3&d=false")
-                console.log(b2)
+                avalon.log(b2)
 
                 // avalon.log(avalonAjax)
             })

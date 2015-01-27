@@ -31,7 +31,7 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
         }
     }
     //跳转到一个已定义状态上，params对参数对象
-    avalon.router.go = function(toName, params) {
+    avalon.router.go = function(toName, params, options) {
         var from = mmState.currentState, to
         var states = this.routingTable.get
         for (var i = 0, el; el = states[i++]; ) {
@@ -60,7 +60,7 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                     var key = mat.replace(/[\{\}]/g, '')
                     return params[key] || ''
                 }).replace(/^\//g, '') + query
-                avalon.router.navigate(hash, "doNotNotifyUrlChecker")
+                avalon.router.navigate(hash, avalon.mix({}, options|| {}, {silent: true}))
             }
         }
     }
@@ -195,8 +195,8 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                     var viewname = match[0]
                     var statename = match[1]
                 } else {
-                    viewname = keyname || ""
-                    statename = stateName
+                    var viewname = keyname || ""
+                    var statename = stateName
                 }
                 var _stateName = stateName + '.'
                 if(!prevState || prevState === _stateName || prevState.indexOf(_stateName) !== 0 || stateName === currentState.stateName) {
@@ -238,12 +238,17 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                     }
                 }    
             })
-            getFn(opts, "onBeforeLoad").call(nodeList, that)
-            avalon.each(funcList, function(key, func) {
-                func()
-            })
+            // 下面的这个判断待斟酌，暂且认为如果url存在chain关系，那么就在一个chain上面吧
+            // var onStateChain = nodeList.length
+            // if(onStateChain) {
+                getFn(opts, "onBeforeLoad").call(nodeList, that)
+                avalon.each(funcList, function(key, func) {
+                    func()
+                })
+            // }
             
             return Promise.all(promises).then(function(values) {
+                // onStateChain && getFn(opts, "onAfterLoad").call(nodeList, that)
                 getFn(opts, "onAfterLoad").call(nodeList, that)
             })
 

@@ -3,22 +3,11 @@ define(["avalon"], function(avalon) {
 //另还多了一个chain(onSuccess, onFail)原型方法，意义不明
 //目前，firefox24, opera19也支持原生Promise(chrome32就支持了，但需要打开开关，自36起直接可用)
 //本模块提供的Promise完整实现ECMA262v6 的Promise规范
-
-    function done(onSuccess) {//添加成功回调
-        return this.then(onSuccess)
-    }
-    function fail(onFail) {//添加出错回调
-        return this.then(null, onFail)
-    }
-
-    var nativePromise = window.Promise
+    var mmPromise
     if (/native code/.test(window.Promise)) {
-        nativePromise.prototype.done = done
-        nativePromise.prototype.fail = fail
-        nativePromise.any = nativePromise.race
-        return avalon.mmPromise = nativePromise
+        mmPromise = window.Promise
     } else {
-        var Promise = function(executor) {
+        var msPromise = function(executor) {
             this._callbacks = []
             var that = this
             if (typeof this !== 'object')
@@ -37,24 +26,24 @@ define(["avalon"], function(avalon) {
             window.setTimeout(fn, 0)
         }
         //返回一个已经处于`resolved`状态的Promise对象
-        Promise.resolve = function(value) {
-            return new Promise(function(resolve) {
+        msPromise.resolve = function(value) {
+            return new msPromise(function(resolve) {
                 resolve(value)
             })
         }
         //返回一个已经处于`rejected`状态的Promise对象
-        Promise.reject = function(reason) {
-            return new Promise(function(resolve, reject) {
+        msPromise.reject = function(reason) {
+            return new msPromise(function(resolve, reject) {
                 reject(reason)
             })
         }
 
-        Promise.prototype = {
+        msPromise.prototype = {
             //一个Promise对象一共有3个状态：
             //- `pending`：还处在等待状态，并没有明确最终结果
             //- `resolved`：任务已经完成，处在成功状态
             //- `rejected`：任务已经完成，处在失败状态
-            constructor: Promise,
+            constructor: msPromise,
             _state: "pending",
             _fired: false, //判定是否已经被触发
             _fire: function(onSuccess, onFail) {
@@ -83,7 +72,7 @@ define(["avalon"], function(avalon) {
             then: function(onSuccess, onFail) {
                 var parent = this//在新的Promise上添加回调
 
-                return new Promise(function(resolve, reject) {
+                return new msPromise(function(resolve, reject) {
                     parent._then(function(value) {
                         if (typeof onSuccess === "function") {
                             try {
@@ -109,9 +98,9 @@ define(["avalon"], function(avalon) {
                     })
                 })
             },
-            "done":  done,
+            "done": done,
             "catch": fail,
-            "fail":  fail
+            "fail": fail
         }
         function _resolve(promise, value) {//触发成功回调
             if (promise._state !== "pending")
@@ -119,7 +108,7 @@ define(["avalon"], function(avalon) {
             promise._state = "fulfilled"
             if (value && typeof value.then === "function") {
                 //thenable对象使用then，Promise实例使用_then
-                var method = value instanceof Promise ? "_then" : "then"
+                var method = value instanceof msPromise ? "_then" : "then"
                 value[method](function(val) {
                     _transmit(promise, val)
                 }, function(reason) {
@@ -146,16 +135,18 @@ define(["avalon"], function(avalon) {
                 })
             })
         }
-        function _some(any, promises) {
-            promises = Array.isArray(promises) ? promises : []
+        function _some(any, iterable) {
+            iterable = Array.isArray(iterable) ? iterable : []
             var n = 0, result = [], end
-            return new Promise(function(resolve, reject) {
+            return new msPromise(function(resolve, reject) {
+                // 空数组直接resolve
+                if(!iterable.length) resolve()
                 function loop(a, index) {
                     a.then(function(ret) {
                         if (!end) {
                             result[index] = ret//保证回调的顺序
                             n++
-                            if (any || n >= promises.length) {
+                            if (any || n >= iterable.length) {
                                 resolve(any ? ret : result)
                                 end = true
                             }
@@ -165,21 +156,41 @@ define(["avalon"], function(avalon) {
                         reject(e)
                     })
                 }
-                for (var i = 0, l = promises.length; i < l; i++) {
-                    loop(promises[i], i)
+                for (var i = 0, l = iterable.length; i < l; i++) {
+                    loop(iterable[i], i)
                 }
             })
         }
 
-        Promise.all = function(array) {
-            return _some(false, array)
+        msPromise.all = function(iterable) {
+            return _some(false, iterable)
         }
-        Promise.race = function(array) {
-            return _some(true, array)
+        msPromise.race = function(iterable) {
+            return _some(true, iterable)
         }
-        Promise.any =  Promise.race
-        return window.Promise = avalon.mmPromise = Promise
+        mmPromise = msPromise
     }
+    function done(onSuccess) {//添加成功回调
+        return this.then(onSuccess)
+    }
+    function fail(onFail) {//添加出错回调
+        return this.then(null, onFail)
+    }
+
+    mmPromise.prototype.done = done
+    mmPromise.prototype.fail = fail
+    mmPromise.any = mmPromise.race
+    if (!mmPromise.defer) { //chrome实现的私有方法
+        mmPromise.defer = function() {
+            var ret = {};
+            ret.promise = new this(function(resolve, reject) {
+                ret.resolve = resolve
+                ret.reject = reject
+            });
+            return ret
+        }
+    }
+    return window.Promise = avalon.Promise = mmPromise
 })
 //https://github.com/ecomfe/er/blob/master/src/Deferred.js
 //http://jser.info/post/77696682011/es6-promises

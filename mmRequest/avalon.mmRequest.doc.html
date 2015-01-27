@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Name ajax请求</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="avalon AJAX组件
+ 它提供如下方法
+avalon.ajax 要求传入一个对象， 对象要有url, type, success, dataType等属性，这与jQuery的设置保持一致
+avlaon.get( url [, data ] [, success(data, textStatus, XHR) ] [, dataType ] )
+avlaon.post( url [, data ] [, success(data, textStatus, XHR) ] [, dataType ] )
+avlaon.upload( url, form [," />
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        />
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>mmRequest</h2>
+            <fieldset>
+                <legend>Name ajax请求</legend>
+                <p>avalon AJAX组件</p>它提供如下方法
+                <p>avalon.ajax 要求传入一个对象， 对象要有url, type, success, dataType等属性，这与jQuery的设置保持一致
+                    <p>avlaon.get( url [, data ] [, success(data, textStatus, XHR) ] [, dataType
+                        ] )
+                        <p>avlaon.post( url [, data ] [, success(data, textStatus, XHR) ] [, dataType
+                            ] )
+                            <p>avlaon.upload( url, form [,data] [,success(data, textStatus, XHR)] [,
+                                dataType])
+                                <p>avalon.getJSON( url [, data ] [, success( data, textStatus, jqXHR ) ]
+                                    )
+                                    <p>avalon.getScript( url [, success() ] )
+                                        <p>avalon.param(obj) 将一个对象转换为字符串
+                                            <p>avalon.unparam(str) 将一个字符串转换为对象
+                                                <pre class="brush:javascript;gutter:false;toolbar:false;">   var b = avalon.unparam("a=1&b=2")
+   console.log(b) == > {
+       a: "1",
+       b: "2"
+   }
+   var b2 = avalon.unparam("a[]=1&a[]=2&a[]=3&d=false")
+   console.log(b2) == > {
+       a: ["1", "2", "3"],
+       d: false
+   }</pre>
+                                                <p>avalon.serializ(form) 将表单元素变字符串 用法与jQuery的同名方法用法完全一样，将avalon.js, mmRequest.js,
+                                                    mmDeferred.js放到同一目录下，然后
+                                                    <pre class="brush:html;gutter:false;toolbar:false;">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    
+    &lt;head&gt;
+        &lt;title&gt;&lt;/title&gt;
+        &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+        &lt;script src=&quot;avalon.js&quot;&gt;&lt;/script&gt;
+        &lt;!--不能直接用script引入mmRequest.js--&gt;
+        &lt;script&gt;
+            var avalonAjax
+            var model = avalon.define(&quot;test&quot;, function(vm) {
+                vm.username = &quot;&quot;
+                vm.password = &quot;&quot;
+                vm.email = &quot;&quot;
+                vm.ajax = function(e) {
+                    if (avalonAjax) {
+                        avalon.post(&quot;/registry&quot;, avalon.serialize(this), function(a) {
+                            alert(a)
+                        }, &quot;text&quot;)
+                    }
+                    e.preventDefault()
+                }
+            })
+
+            require([&quot;./mmRequest&quot;], function(avalon) {
+                avalonAjax = avalon.ajax
+                avalon.log(avalonAjax)
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    
+    &lt;body&gt;
+        &lt;h3&gt;测试AJAX&lt;/h3&gt;
+        &lt;ul&gt;
+            &lt;li&gt;avalon.ajax&lt;/li&gt;
+            &lt;li&gt;avalon.post&lt;/li&gt;
+            &lt;li&gt;avalon.get&lt;/li&gt;
+            &lt;li&gt;avalon.upload&lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;form action=&quot;/registry&quot; ms-controller=&quot;test&quot; ms-on-submit=&quot;ajax&quot;&gt;
+            &lt;div&gt;帐号:
+                &lt;input name=&quot;username&quot; ms-duplex=&quot;username&quot;&gt;
+            &lt;/div&gt;
+            &lt;div&gt;密码:
+                &lt;input name=&quot;password&quot; ms-duplex=&quot;password&quot;&gt;
+            &lt;/div&gt;
+            &lt;div&gt;邮箱:
+                &lt;input name=&quot;email&quot; ms-duplex=&quot;email&quot;&gt;
+            &lt;/div&gt;
+            &lt;button type=&quot;submit&quot;&gt;提交&lt;/button&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+
+&lt;/html&gt;</pre>如果想上传东西,可以使用
+                                                    <pre class="brush:javascript;gutter:false;toolbar:false;">  avalon.ajax({
+      contentType: "multipart/form-data",
+      data: formData //这是一个formData 对象,详看这里https://developer.mozilla.org/zh-CN/docs/Web/Guide/Using_FormData_Objects
+      type: "post", //get也可以
+      url: url,
+      success: callback,
+      dataType: dataType //你想返回什么类型的数据给你
+
+  })
+
+  //或者用upload方法
+  avalon.upload(url, form, data, callback ? , dataType ? )</pre>
+            </fieldset>
+            <fieldset>
+                <legend>使用说明</legend>
+                <table class="table-doc" border="1">
+                    <colgroup>
+                        <col width="180" />
+                        <col width="80" />
+                        <col width="120" />
+                    </colgroup>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                </table>
+            </fieldset>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.mmRequest.ex.html">mmRequest-getJSON</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRequest.ex1.html">mmRequest-getScript</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRequest.ex2.html">mmRequest-post</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRequest.ex3.html">mmRequest-get</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

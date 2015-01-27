@@ -1,15 +1,15 @@
 // avalon 1.3.6
 /**
  * @cnName 下拉提示搜索框
- * @enName dropdownList
+ * @enName dropdownlist
  * @introduce
- *    <p>dropdownList使得可以通过下拉搜索功能减少显示内容，方便用户查找选择</p>
+ *    <p>dropdownlist使得可以通过下拉搜索功能减少显示内容，方便用户查找选择</p>
  */
-define(["avalon", "text!./avalon.dropdownList.html", "text!./avalon.suggest.html", "../scrollbar/avalon.scrollbar.js", "../textbox/avalon.textbox.js", "css!../chameleon/oniui-common.css", "css!./avalon.dropdownList.css"], function(avalon, sourceHTML, suggestHTML) {
+define(["avalon", "text!./avalon.dropdownlist.html", "text!./avalon.suggest.html", "../scrollbar/avalon.scrollbar.js", "../textbox/avalon.textbox.js", "css!../chameleon/oniui-common.css", "css!./avalon.dropdownlist.css"], function(avalon, sourceHTML, suggestHTML) {
     var dropdownVM = null
 
-    var widget = avalon.ui.dropdownList = function(element, data, vmodels) {
-        var options = data.dropdownListOptions,
+    var widget = avalon.ui.dropdownlist = function(element, data, vmodels) {
+        var options = data.dropdownlistOptions,
             $element = avalon(element),
             limit = options.limit,
             listSeparation = [],
@@ -354,7 +354,7 @@ define(["avalon", "text!./avalon.dropdownList.html", "text!./avalon.suggest.html
 
         options.textbox = avalon.mix(options.textbox, textboxConfig)
         options.template = options.getTemplate(sourceHTML)
-        var vmodel = avalon.define(data.dropdownListId, function(vm) {
+        var vmodel = avalon.define(data.dropdownlistId, function(vm) {
             avalon.mix(vm, options);
             vm.$skipArray = ["widgetElement", "data", "textbox", "searchBox", "suggestVM", "template"];
             // @config 绑定组件的元素引用
@@ -392,7 +392,7 @@ define(["avalon", "text!./avalon.dropdownList.html", "text!./avalon.suggest.html
             }
             vm.$init = function() {
                 element.innerHTML = options.template
-                $element.addClass("oni-dropdownList")
+                $element.addClass("oni-dropdownlist")
                 vmodel.searchBox = element.getElementsByTagName("input")[0]
                 avalon.scan(element, [vmodel].concat(vmodels))
                 avalon.bind(vmodel.searchBox, "focus", function() {
@@ -432,6 +432,6 @@ define(["avalon", "text!./avalon.dropdownList.html", "text!./avalon.suggest.html
 })
 /**
  @links
- [dropdownList demo](avalon.dropdownList.ex1.html)
- [render重新渲染搜索列表源](avalon.dropdownList.ex2.html)
+ [dropdownlist demo](avalon.dropdownlist.ex1.html)
+ [render重新渲染搜索列表源](avalon.dropdownlist.ex2.html)
  */

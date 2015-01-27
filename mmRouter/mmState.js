@@ -55,12 +55,7 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             mmState.transitionTo(from, to, args)
             if(avalon.history && params) {
                 // 更新url
-                var query = params.query ? queryToString(params.query) : "",
-                    hash = to.url.replace(/\{[^\/\}]+\}/g, function(mat) {
-                    var key = mat.replace(/[\{\}]/g, '')
-                    return params[key] || ''
-                }).replace(/^\//g, '') + query
-                avalon.router.navigate(hash, avalon.mix({}, options|| {}, {silent: true}))
+                avalon.router.navigate(avalon.router.urlFormate(to.url, params), avalon.mix({}, options|| {}, {silent: true}))
             }
         }
     }
@@ -417,13 +412,5 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             }
             throw new Error("必须先定义[" + parentName + "]")
         }
-    }
-    function queryToString(obj) {
-        if(typeof obj == 'string') return obj
-        var str = []
-        for(var i in obj) {
-            str.push(i + '=' + encodeURIComponent(obj[i]))
-        }
-        return str.length ? '?' + str.join("&") : ''
     }
 })

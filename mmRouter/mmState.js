@@ -322,7 +322,7 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             if (match(parent)) {
                 return array[i] = {
                     node: node,
-                    parent: parent
+                    parent: parent.parentNode
                 }
             }
             parent = parent.parentNode

@@ -10,12 +10,10 @@ var transports = avalon.ajaxTransports = {
             if (this.mimeType && transport.overrideMimeType) {
                 transport.overrideMimeType(this.mimeType)
             }
-            alert(1)
             //如果transport中没有withCredentials，直接设置会报错
             if (opts.crossDomain && "withCredentials" in transport) {
                 transport.withCredentials = true
             }
-            alert(2)
             this.requestHeaders["X-Requested-With"] = "XMLHttpRequest"
             for (var i in this.requestHeaders) {
                 transport.setRequestHeader(i, this.requestHeaders[i] + "")

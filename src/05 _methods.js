@@ -59,9 +59,9 @@ var XHRMethods = {
                 statusText = "notmodified";
             } else {
                 //如果浏览器能直接返回转换好的数据就最好不过,否则需要手动转换
-                if (typeof this.response === "undefined" && (this.responseText || this.responseXML)) {
+                if (typeof this.response === "undefined") {
                     var dataType = this.options.dataType || this.options.mimeType
-                    if (!dataType) { //如果没有指定dataType，则根据mimeType或Content-Type进行揣测
+                    if (!dataType && this.responseText || this.responseXML) { //如果没有指定dataType，则根据mimeType或Content-Type进行揣测
                         dataType = this.getResponseHeader("Content-Type") || ""
                         dataType = dataType.match(/json|xml|script|html/) || ["text"]
                         dataType = dataType[0];
@@ -84,13 +84,22 @@ var XHRMethods = {
         }
         this._transport = this.transport;
         // 到这要么成功，调用success, 要么失败，调用 error, 最终都会调用 complete
+        var successFn = this.options.success,
+            errorFn = this.options.error,
+            completeFn = this.options.complete
+
         if (isSuccess) {
             avalon.log("成功加载数据")
+            if (typeof successFn === "function") {
+                successFn.call(this, this.response, statusText, this)
+            }
             this._resolve(this.response, statusText, this)
         } else {
+            if (typeof errorFn === "function") {
+                errorFn.call(this, statusText, this.error || statusText)
+            }
             this._reject(this, statusText, this.error || statusText)
         }
-        var completeFn = this.options.complete
         if (typeof completeFn === "function") {
             completeFn.call(this, this, statusText)
         }

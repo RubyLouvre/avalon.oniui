@@ -10,7 +10,8 @@ var transports = avalon.ajaxTransports = {
             if (this.mimeType && transport.overrideMimeType) {
                 transport.overrideMimeType(this.mimeType)
             }
-            if (opts.crossDomain) {
+            //IE6下，如果transport中没有withCredentials，直接设置会报错
+            if (opts.crossDomain && "withCredentials" in transport) {
                 transport.withCredentials = true
             }
             this.requestHeaders["X-Requested-With"] = "XMLHttpRequest"
@@ -110,15 +111,22 @@ var transports = avalon.ajaxTransports = {
     jsonp: {
         preproccess: function() {
             var opts = this.options;
-            var name = this.jsonpCallback = opts.jsonpCallback || "jsonp" + setTimeout("1")
+            var name = this.jsonpCallback = opts.jsonpCallback || "avalon.jsonp" + setTimeout("1")
             if (rjsonp.test(opts.url)) {
-                opts.url = opts.url.replace(rjsonp, "$1" + "avalon." + name)
+                opts.url = opts.url.replace(rjsonp, "$1" + name)
             } else {
-                opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=avalon." + name
+                opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=" + name
             }
             //将后台返回的json保存在惰性函数中
-            avalon[name] = function(json) {
-                avalon[name] = json
+            if (name.startsWith('avalon.')) {
+                name = name.replace(/avalon\./, '')
+                avalon[name] = function(json) {
+                    avalon[name] = json
+                }
+            } else {
+                window[name] = function(json) {
+                    window[name] = json
+                }
             }
             return "script"
         }
@@ -151,7 +159,8 @@ var transports = avalon.ajaxTransports = {
                     parent.removeChild(node)
                 }
                 if (!forceAbort) {
-                    var args = typeof avalon[this.jsonpCallback] === "function" ? [500, "error"] : [200, "success"]
+                    var jsonpCallback = this.jsonpCallback.startsWith('avalon.') ? avalon[this.jsonpCallback.replace(/avalon\./, '')] : window[this.jsonpCallback]
+                    var args = typeof jsonpCallback === "function" ? [500, "error"] : [200, "success"]
                     this.dispatch.apply(this, args)
                 }
             }

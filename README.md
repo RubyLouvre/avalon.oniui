@@ -84,13 +84,12 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 如果想上传东西,可以使用
 ```javascript
   avalon.ajax({
-    contentType: "multipart/form-data",
-    data: formData //这是一个formData 对象,详看这里https://developer.mozilla.org/zh-CN/docs/Web/Guide/Using_FormData_Objects
-    type: "post",//get也可以
+    form: formData, // 这是一个formData 对象,详看这里 https://developer.mozilla.org/zh-CN/docs/Web/Guide/Using_FormData_Objects
+    data: data,     // 附加的内容，它会在传输前添加进 formData 中
+    type: "post",   // get也可以
     url: url,
     success: callback,
     dataType: dataType //你想返回什么类型的数据给你
-
  })
 
   //或者用upload方法

@@ -26,7 +26,7 @@
         <script src="../highlight/shCore.js"></script>
     </head>
     <body>
-        <h1>mmRouter综合实例一</h1>
+        <h1>mmRouter综合实例一: avalon.get</h1>
         <div class="contents" ms-controller="box">
             <ul class="tb cl">
                 <li ms-repeat="tab.page" ms-class="a:tab.currpage===el.name"><a ms-href="el.url" ms-class-1="tbtxt1:el.name!=='tab1'" ms-class-2="tbtxt2:el.name==='tab1'">{{ el.title }}</a><a ms-if="el.name!='tab1'" ms-click="tab_close(el.name)" href="javascript:;" class="tbclose">X</a></li>
@@ -35,13 +35,13 @@
                 <p>{{tab.content}}</p>
             </div>
             <div>
-                <a href="#/tab1">显示tab1</a> <a href="#/tab2">显示tab2</a> <a href="#/tab3">显示tab3</a>
+                <a href="#!/tab1">显示tab1</a> <a href="#!/tab2">显示tab2</a> <a href="#!/tab3">显示tab3</a>
             </div>
         </div>
         <script>
         require(["mmRouter"], function () {
             var model = avalon.define('box', function(vm) {
-                vm.tab = {currpage:'tab1',content:'tab1', page:[{name:'tab1', title:'选项卡一',url:'#/tab1'}]};
+                vm.tab = {currpage:'tab1',content:'tab1', page:[{name:'tab1', title:'选项卡一',url:'#!/tab1'}]};
                 vm.tab_close = function (tname) {
                     while(true) {
                         var l = vm.tab.page.length;
@@ -66,7 +66,7 @@
             });
             avalon.router.get("/tab2", function(a) {
                 var page = 'tab2';
-                var a = {name:page, title:'选项卡二', url:'#/tab2'};
+                var a = {name:page, title:'选项卡二', url:'#!/tab2'};
                 if (!loaded[page]) {
                     loaded[page] = 1;
                     model.tab.page.push(a);
@@ -76,7 +76,7 @@
             });
             avalon.router.get("/tab3", function(a) {
                 var page = 'tab3';
-                var a = {name:page, title:'选项卡三', url:'#/tab3'};
+                var a = {name:page, title:'选项卡三', url:'#!/tab3'};
                 if(!loaded[page]) {
                     loaded[page] = 1;
                     model.tab.page.push(a);
@@ -119,7 +119,7 @@
         
     &lt;/head&gt;
     &lt;body&gt;
-        &lt;h1&gt;mmRouter综合实例一&lt;/h1&gt;
+        &lt;h1&gt;mmRouter综合实例一: avalon.get&lt;/h1&gt;
         &lt;div class=&quot;contents&quot; ms-controller=&quot;box&quot;&gt;
             &lt;ul class=&quot;tb cl&quot;&gt;
                 &lt;li ms-repeat=&quot;tab.page&quot; ms-class=&quot;a:tab.currpage===el.name&quot;&gt;&lt;a ms-href=&quot;el.url&quot; ms-class-1=&quot;tbtxt1:el.name!=='tab1'&quot; ms-class-2=&quot;tbtxt2:el.name==='tab1'&quot;&gt;{{ el.title }}&lt;/a&gt;&lt;a ms-if=&quot;el.name!='tab1'&quot; ms-click=&quot;tab_close(el.name)&quot; href=&quot;javascript:;&quot; class=&quot;tbclose&quot;&gt;X&lt;/a&gt;&lt;/li&gt;
@@ -128,13 +128,13 @@
                 &lt;p&gt;{{tab.content}}&lt;/p&gt;
             &lt;/div&gt;
             &lt;div&gt;
-                &lt;a href=&quot;#/tab1&quot;&gt;显示tab1&lt;/a&gt; &lt;a href=&quot;#/tab2&quot;&gt;显示tab2&lt;/a&gt; &lt;a href=&quot;#/tab3&quot;&gt;显示tab3&lt;/a&gt;
+                &lt;a href=&quot;#!/tab1&quot;&gt;显示tab1&lt;/a&gt; &lt;a href=&quot;#!/tab2&quot;&gt;显示tab2&lt;/a&gt; &lt;a href=&quot;#!/tab3&quot;&gt;显示tab3&lt;/a&gt;
             &lt;/div&gt;
         &lt;/div&gt;
         &lt;script&gt;
         require([&quot;mmRouter&quot;], function () {
             var model = avalon.define('box', function(vm) {
-                vm.tab = {currpage:'tab1',content:'tab1', page:[{name:'tab1', title:'选项卡一',url:'#/tab1'}]};
+                vm.tab = {currpage:'tab1',content:'tab1', page:[{name:'tab1', title:'选项卡一',url:'#!/tab1'}]};
                 vm.tab_close = function (tname) {
                     while(true) {
                         var l = vm.tab.page.length;
@@ -159,7 +159,7 @@
             });
             avalon.router.get(&quot;/tab2&quot;, function(a) {
                 var page = 'tab2';
-                var a = {name:page, title:'选项卡二', url:'#/tab2'};
+                var a = {name:page, title:'选项卡二', url:'#!/tab2'};
                 if (!loaded[page]) {
                     loaded[page] = 1;
                     model.tab.page.push(a);
@@ -169,7 +169,7 @@
             });
             avalon.router.get(&quot;/tab3&quot;, function(a) {
                 var page = 'tab3';
-                var a = {name:page, title:'选项卡三', url:'#/tab3'};
+                var a = {name:page, title:'选项卡三', url:'#!/tab3'};
                 if(!loaded[page]) {
                     loaded[page] = 1;
                     model.tab.page.push(a);

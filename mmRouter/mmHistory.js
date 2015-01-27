@@ -132,11 +132,7 @@ define(["avalon"], function(avalon) {
                     var iframeHash = that.getHash(iframe)
                     //与当前页面hash不等于之前的页面hash，这主要是用户通过点击链接引发的
                     if (pageHash !== that.fragment) {
-                        var idoc = iframe.document
-                        idoc.open()
-                        idoc.write(that.iframeHTML)
-                        idoc.close()
-                        iframe.location.hash = that.prefix + pageHash
+                        that._setIframeHistory(that.prefix + pageHash)
                         hash = pageHash
                         //如果是后退按钮触发hash不一致
                     } else if (iframeHash !== that.fragment) {
@@ -191,14 +187,37 @@ define(["avalon"], function(avalon) {
             clearInterval(this.checkUrl)
             History.started = false
         },
-        updateLocation: function(hash) {
+        updateLocation: function(hash, options) {
+            var options = options || {},
+                rp = options.replace,
+                st =    options.silent
             if (this.monitorMode === "popstate") {
                 var path = this.rootpath + hash
-                history.pushState({path: path}, document.title, path)
-                this._fireLocationChange()
+                if(path != this.location.pathname) history[rp ? "replaceState" : "pushState"]({path: path}, document.title, path)
+                if(!st) this._fireLocationChange()
             } else {
-                this.location.hash = this.prefix + hash
+                var newHash = this.prefix + hash
+                this._setHash(this.location, newHash, rp)
+                if(st) {
+                    this._setIframeHistory(newHash, rp)
+                    this.fragment = this.getFragment()
+                }
             }
+        },
+        _setHash: function(location, hash, replace){
+            var href = location.href.replace(/(javascript:|#).*$/, '');
+            if (replace){
+                location.replace(href + hash);
+            }
+            else location.hash = hash
+        },
+        _setIframeHistory: function(hash, replace) {
+            if(!this.iframe) return
+            var idoc = this.iframe.document
+                idoc.open()
+                idoc.write(this.iframeHTML)
+                idoc.close()
+            this._setHash(idoc.location, hash, replace)
         }
     }
 
@@ -229,7 +248,7 @@ define(["avalon"], function(avalon) {
             var hash = href.replace(prefix, "").trim()
             if (href.indexOf(prefix) === 0 && hash !== "") {
                 event.preventDefault()
-                avalon.history.updateLocation(hash)
+                avalon.router && avalon.router.navigate(hash)
             }
         }
     })

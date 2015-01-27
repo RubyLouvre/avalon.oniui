@@ -627,10 +627,13 @@ define(["../promise/avalon.promise"], function(avalon) {
                     if (validateParams.length) {
                         if (vm.validateInKeyup) {
                             data.bound("keyup", function(e) {
-                                var ev = fixEvent(e)
-                                setTimeout(function() {
-                                    vm.validate(data, 0, ev)
-                                })
+                                var type = data.element && data.element.getAttribute("data-duplex-event")
+                                if (!type || /^(?:key|mouse|click|input)/.test(type)) {
+                                    var ev = fixEvent(e)
+                                    setTimeout(function() {
+                                        vm.validate(data, 0, ev)
+                                    })
+                                }
                             })
                         }
                         if (vm.validateInBlur) {

@@ -27,15 +27,38 @@
                 top: 8px;
                 right: 40px;
             }
+            .codelist li{
+                list-style-type: none;
+                float: left;
+                display: inline;
+                margin-right: 10px;
+            }
         </style>
         <script >
             avalon.config({debug: false})
+            var cs = [], arr = "contacts.detail.item.edit".split(".")
+            for(var i = 0; i < arr.length; i++) {
+                cs.push({
+                    state: i ? arr.slice(0, i+1).join(".") : "contacts.list",
+                    arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
+                })
+            }
             require(["ready!", "mmState"], function() {
 
                 //一个顶层VM
                 avalon.define({
-                    $id: "test"
+                    $id: "test",
+                    codes: cs,
+                    run: function(id) {
+                        var code  = document.getElementById(id)
+                        if(!code) return
+                        code = code.value
+                        eval(code)
+                    }
                 })
+                // avalon.router.get("/*path", function() {
+                //     console.log(arguments)
+                // })
                 //接着下来通过mmState这个基于状态机的高级路由器，定义各种状态
                 //（每个状态包含各个要处理的模板容器，获取模板的手段，中途会发生的各种回调）
                 //////////////
@@ -278,18 +301,32 @@
                 })
                 //启动路由
                 avalon.history.start({
-                    basepath: "/mmRouter"
+                    basepath: "/mmRouter",
+                    fireAnchor: false
                 })
-                //go!!!!!!!!!
+                //go!!!!!!!!! 
                 avalon.scan()
             })
-
+ 
         </script>
     </head>
     <body>
-        <h1>mmRouter综合示例二: avalon.router + avalon.state</h1>
+        <h1>mmRouter综合示例二: avalon.router.go</h1>
         <div ms-controller="test">
-
+            <ul class="codelist">
+                <li 
+                     ms-repeat-code="codes">
+                    <textarea 
+                              ms-attr-id="'c'+$index" cols="30" rows="10" 
+                              ms-attr-value="'avalon.router.go(\''+code.state+'\','+code.arg+')'">
+                              </textarea>
+                    <p>
+                        <button 
+                                ms-click="run('c'+$index)">点击到状态：{{code.state}}</button>
+                    </p>
+                    <li style="clear:both;display:block;float:none;"></li>
+                </li>
+            </ul>
             <div class="header">
                 <a href="#!/">mmState</a>  <a href="#!/contacts">contacts</a>  <a href="#!/about">about</a>
                 <p class="hint" ms-view="hint"></p>
@@ -326,15 +363,38 @@
                 top: 8px;
                 right: 40px;
             }
+            .codelist li{
+                list-style-type: none;
+                float: left;
+                display: inline;
+                margin-right: 10px;
+            }
         &lt;/style&gt;
         &lt;script &gt;
             avalon.config({debug: false})
+            var cs = [], arr = &quot;contacts.detail.item.edit&quot;.split(&quot;.&quot;)
+            for(var i = 0; i &lt; arr.length; i++) {
+                cs.push({
+                    state: i ? arr.slice(0, i+1).join(&quot;.&quot;) : &quot;contacts.list&quot;,
+                    arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
+                })
+            }
             require([&quot;ready!&quot;, &quot;mmState&quot;], function() {
 
                 //一个顶层VM
                 avalon.define({
-                    $id: &quot;test&quot;
+                    $id: &quot;test&quot;,
+                    codes: cs,
+                    run: function(id) {
+                        var code  = document.getElementById(id)
+                        if(!code) return
+                        code = code.value
+                        eval(code)
+                    }
                 })
+                // avalon.router.get(&quot;/*path&quot;, function() {
+                //     console.log(arguments)
+                // })
                 //接着下来通过mmState这个基于状态机的高级路由器，定义各种状态
                 //（每个状态包含各个要处理的模板容器，获取模板的手段，中途会发生的各种回调）
                 //////////////
@@ -577,18 +637,32 @@
                 })
                 //启动路由
                 avalon.history.start({
-                    basepath: &quot;/mmRouter&quot;
+                    basepath: &quot;/mmRouter&quot;,
+                    fireAnchor: false
                 })
-                //go!!!!!!!!!
+                //go!!!!!!!!! 
                 avalon.scan()
             })
-
+ 
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body&gt;
-        &lt;h1&gt;mmRouter综合示例二: avalon.router + avalon.state&lt;/h1&gt;
+        &lt;h1&gt;mmRouter综合示例二: avalon.router.go&lt;/h1&gt;
         &lt;div ms-controller=&quot;test&quot;&gt;
-
+            &lt;ul class=&quot;codelist&quot;&gt;
+                &lt;li 
+                     ms-repeat-code=&quot;codes&quot;&gt;
+                    &lt;textarea 
+                              ms-attr-id=&quot;'c'+$index&quot; cols=&quot;30&quot; rows=&quot;10&quot; 
+                              ms-attr-value=&quot;'avalon.router.go(\''+code.state+'\','+code.arg+')'&quot;&gt;
+                              &lt;/textarea&gt;
+                    &lt;p&gt;
+                        &lt;button 
+                                ms-click=&quot;run('c'+$index)&quot;&gt;点击到状态：{{code.state}}&lt;/button&gt;
+                    &lt;/p&gt;
+                    &lt;li style=&quot;clear:both;display:block;float:none;&quot;&gt;&lt;/li&gt;
+                &lt;/li&gt;
+            &lt;/ul&gt;
             &lt;div class=&quot;header&quot;&gt;
                 &lt;a href=&quot;#!/&quot;&gt;mmState&lt;/a&gt;  &lt;a href=&quot;#!/contacts&quot;&gt;contacts&lt;/a&gt;  &lt;a href=&quot;#!/about&quot;&gt;about&lt;/a&gt;
                 &lt;p class=&quot;hint&quot; ms-view=&quot;hint&quot;&gt;&lt;/p&gt;

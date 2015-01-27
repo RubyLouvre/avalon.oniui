@@ -399,7 +399,7 @@ define(["avalon",
                         }
                     }
                     if (val) {
-                        vmodel._enabledData = vmodel._allEnabledData;
+                        vmodel._enabledData = vmodel._allEnabledData.concat();
                     } else {
                         vmodel._enabledData = [];
                     }
@@ -614,7 +614,7 @@ define(["avalon",
                         element.style.width = vmodel.containerMinWidth + 'px';
                     }
                     element.resizeTimeoutId = setTimeout(function () {
-                        vmodel._setColumnWidth(true);
+                        vmodel._container && vmodel._setColumnWidth(true);
                     }, 150);
                 });
                 if (typeof options.onInit === 'function') {
@@ -723,7 +723,7 @@ define(["avalon",
             }
             enabledData.push(dataItem);
         }
-        vmodel._allEnabledData = enabledData;
+        vmodel._allEnabledData = enabledData.concat();
     }
     function getSelectedData(vmodel) {
         var datas = vmodel.data, enabledData = vmodel._enabledData = [];

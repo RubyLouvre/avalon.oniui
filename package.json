@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/ilife5/avalon.oniui/issues"
   },
-  "homepage": "https://github.com/ilife5/avalon.oniui"
+  "homepage": "https://github.com/ilife5/avalon.oniui",
+  "devDependencies": {
+    "elves": "0.0.*"
+  }
 }

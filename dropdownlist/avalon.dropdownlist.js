@@ -298,7 +298,7 @@ define(["avalon", "text!./avalon.dropdownlist.html", "text!./avalon.suggest.html
                                 if (limit && listSeparation.length){
                                     vmodel.suggestCtr.moveUp(selectedIndex)
                                 }
-                                vmodel.onChangeCallback(selectValue, vmodel.inputElement, event );
+                                vmodel.onChangeCallback(vmodel.list[vmodel.selectedIndex].value, vmodel.inputElement, event );
                             break;
                             case 40:
                                 event.preventDefault()

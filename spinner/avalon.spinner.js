@@ -11,8 +11,7 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
         var options = data.spinnerOptions,
             template = sourceHTML,
             duplex = (function() {
-                var inputMsData, 
-                    duplexValue
+                var inputMsData =  element.msData
                 for (var i in inputMsData) {
                     if (i.indexOf("ms-duplex") === 0) {
                         return inputMsData[i]
@@ -29,7 +28,7 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
 
         if (duplexVM) {
             duplexVM[1].$watch(duplexVM[0], function(val) {
-                vmodel.value = val;
+                vmodel.value = element.value = checkNum(val);
             })
         }
         if (disabledVM) {
@@ -61,7 +60,10 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
         }
 
         options.template = options.getTemplate(template, options);
-        options.value = options.value || element.value;
+        element.value  = options.value || element.value;
+        if (options.value === void 0) {
+            options.value = element.value
+        }
         options.disabled = disabled && disabledVM && disabledVM[1][disabledVM[0]] || element.disabled || false;
         var vmodel = avalon.define(data.spinnerId, function(vm) {
             avalon.mix(vm, options);
@@ -83,13 +85,12 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
                 elementParent.replaceChild(wrapper, tmpDiv);
 
                 avalon.scan(wrapper, [vmodel].concat(vmodels));
+                // 如果输入域的初始值不在spinner的范围，调整它
+                ajustValue()
                 if(typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
                     options.onInit.call(element, vmodel, options, vmodels)
                 }
-                setTimeout(function() { // 如果输入域的初始值不在spinner的范围，调整它
-                    ajustValue()
-                }, 400)
             }
             vm.$remove = function() {
                 wrapper.innerHTML = wrapper.textContent = "";
@@ -118,21 +119,19 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
                 vmodel.value = element.value = subValue;
                 options.onDecrease.call(event.target, subValue);
             }
-            vm.$watch("value", function(val) {
-                element.value = val;
-            })
             vm.$watch("min", function() {
                 ajustValue()
             })
             vm.$watch("max", function() {
                 ajustValue()
             })
-            
         });
         function ajustValue() {
-            var value = Number(element.value),
-                min = vmodel.min,
-                max = vmodel.max;
+            console.log('ajustValue value')
+            var min = vmodel.min,
+                max = vmodel.max,
+                value = Number(element.value);
+
             if (typeof min == 'number' && !isNaN(Number(min)) && value < min) {
                 value = min;
             } 
@@ -146,16 +145,14 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
             $element.addClass("oni-textbox-input");
             $element.attr("ms-css-width", "width");
             $element.attr("ms-class", "oni-state-disabled:disabled")
-            // $element.bind("focus", function() {
-            //     focusValue = element.value;
-            // })
             $element.bind("blur", function() {
                 value = element.value;
-                // if(!isNaN(Number(value))) {
-                //     value = checkNum(element.value);
-                // } else {
-                //     value = focusValue;
-                // }
+                if (!isNaN(Number(value))) {
+                    value = checkNum(element.value);
+                } else {
+                    value = focusValue;
+                }
+                console.log('blur event')
                 vmodel.value = element.value = value;
             })
             $element.bind("keydown", function(event) {

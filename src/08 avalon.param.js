@@ -1,10 +1,23 @@
-avalon.param = function(json) {
-    if (!avalon.isPlainObject(json)) {
-        return ""
+avalon.param = function( a ) {
+    var prefix,
+        s = [],
+        add = function( key, value ) {
+            value = ( value == null ? "" : value );
+            s[ s.length ] = encode( key ) + "=" + encode( value );
+        };
+
+    if (Array.isArray(a) || !jQuery.isPlainObject(a)) {
+        avalon.each(a, function(subKey, subVal) {
+            add(subKey, subVal);
+        });
+    } else {
+        for (prefix in a) {
+            paramInner(prefix, a[prefix], add);
+        }
     }
-    var buffer = []
-    paramInner(json, "", buffer)
-    return buffer.join("&").replace(r20, "+")
+
+    // Return the resulting serialization
+    return s.join( "&" ).replace( r20, "+" );
 }
 
 function isDate(a) {
@@ -14,26 +27,20 @@ function isValidParamValue(val) {
     var t = typeof val; // 值只能为 null, undefined, number, string, boolean
     return val == null || (t !== 'object' && t !== 'function')
 }
-function paramInner(json, prefix, buffer) {
-    prefix = prefix || ""
-    for (var key in json) {
-        if (json.hasOwnProperty(key)) {
-            var val = json[key]
-            var name = prefix ? prefix + encode("[" + key + "]") : encode(key)
-            if (isDate(val)) {
-                buffer.push(name + "=" + val.toISOString())
-            } else if (isValidParamValue(val)) {//如果是简单数据类型
-                buffer.push(name + "=" + encode(val))
-            } else if (Array.isArray(val) || avalon.isPlainObject(val)) {
-                avalon.each(val, function(subKey, subVal) {
-                    if (isValidParamValue(subVal)) {
-                        buffer.push(name + encode("[" + subKey + "]") + "=" + encode(subVal))
-                    } else if (Array.isArray(val) || avalon.isPlainObject(val)) {
-                        paramInner(subVal, name + encode("[" + subKey + "]"), buffer)
-                    }
-                })
-            }
+function paramInner( prefix, obj, add ) {
+    var name;
+    if (Array.isArray( obj ) ) {
+        // Serialize array item.
+        avalon.each( obj, function( i, v ) {
+            paramInner( prefix + "[" + ( typeof v === "object" ? i : "" ) + "]", v, add );
+        });
+    } else if (avalon.isPlainObject(obj)) {
+        // Serialize object item.
+        for ( name in obj ) {
+            paramInner( prefix + "[" + name + "]", obj[ name ], add);
         }
+    } else {
+        // Serialize scalar item.
+        add( prefix, obj );
     }
 }
-

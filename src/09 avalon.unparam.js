@@ -1,33 +1,66 @@
 //将一个字符串转换为对象
-//https://github.com/cowboy/jquery-bbq/blob/master/jquery.ba-bbq.js
-avalon.unparam = function(url, query) {
-    var json = {};
-    if (!url || !avalon.type(url) === "string") {
-        return json;
-    }
-    url = url.replace(/^[^?=]*\?/ig, '').split('#')[0]; //去除网址与hash信息
-    //考虑到key中可能有特殊符号如“[].”等，而[]却有是否被编码的可能，所以，牺牲效率以求严谨，就算传了key参数，也是全部解析url。
-    var pairs = url.split("&"),
-            pair, key, val, i = 0,
-            len = pairs.length;
-    for (; i < len; ++i) {
-        pair = pairs[i].split("=")
-        key = decode(pair[0])
-        try {
-            val = decode(pair[1] || "")
-        } catch (e) {
-            avalon.log(e + "decodeURIComponent error : " + pair[1], 3)
-            val = pair[1] || "";
+avalon.unparam = function(input) {
+    var items, temp,
+        expBrackets = /\[(.*?)\]/g,
+        expVarname = /(.+?)\[/,
+        result = {};
+
+    if ((temp = avalon.type(input)) != 'string' || (temp == 'string' && !temp.length))
+        return {};
+
+    items = decode(input).split('&');
+
+    if (!(temp = items.length) || (temp == 1 && temp === ''))
+        return result;
+
+    avalon.each(items, function(index, item) {
+        if (!item.length)
+            return;
+        temp = item.split('=');
+        var key = temp.shift(),
+            value = temp.join('=').replace(/\+/g, ' '),
+            size, link, subitems = [];
+
+        if (!key.length)
+            return;
+
+        while((temp = expBrackets.exec(key)))
+            subitems.push(temp[1]);
+
+        if (!(size = subitems.length)) {
+            result[key] = value;
+            return;
         }
-        key = key.replace(/\[\]$/, "")  //如果参数名以[]结尾，则当作数组
-        var item = json[key];
-        if (item === void 0) {
-            json[key] = val; //第一次
-        } else if (Array.isArray(item)) {
-            item.push(val)  //第三次或三次以上
-        } else {
-            json[key] = [item, val]; //第二次,将它转换为数组
-        }
-    }
-    return query ? json[query] : json;
-}
+        size--;
+        temp = expVarname.exec(key);
+
+        if (!temp || !(key = temp[1]) || !key.length)
+            return;
+
+        if (avalon.type(result[key]) != 'object')
+            result[key] = {};
+
+        link = result[key];
+        
+        avalon.each(subitems, function(subindex, subitem) {
+            if (!(temp = subitem).length) {
+                temp = 0;
+
+                avalon.each(link, function(num) {
+                    if (!isNaN(num) && num >= 0 && (num%1 === 0) && num >= temp)
+                        temp = Number(num)+1;
+                });
+            }
+            if (subindex == size) {
+                link[temp] = value;
+            } else if (avalon.type(link[temp]) != 'object') {
+                link = link[temp] = {};
+            } else {
+                link = link[temp];
+            }
+
+        });
+
+    });
+    return result;
+};

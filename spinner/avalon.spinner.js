@@ -136,7 +136,6 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
             })
         });
         function ajustValue() {
-            console.log('ajustValue value')
             var min = vmodel.min,
                 max = vmodel.max,
                 value = Number(element.value);

@@ -198,7 +198,7 @@ define(["avalon"], function(avalon) {
             } else {
                 var newHash = this.prefix + hash
                 this._setHash(this.location, newHash, rp)
-                if(st) {
+                if(st && hash != this.getFragment()) {
                     this._setIframeHistory(newHash, rp)
                     this.fragment = this.getFragment()
                 }

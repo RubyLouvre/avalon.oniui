@@ -131,10 +131,7 @@ define(["../avalon.getModel",
                     return ""
                 }
                 dayItem = datepickerData[rowIndex]["rows"][outerIndex][index]
-                if (dayItem.month) {
-                    className = "oni-datepicker-day-hover"
-                }
-
+                className = "oni-datepicker-day-hover"
                 return className
             }
             vm._setMobileYearClass = function(yearItem, elementYear, monthItem, elementMonth) {
@@ -342,8 +339,18 @@ define(["../avalon.getModel",
                         date = formatDate(_date),
                         calendarWrapper = options.type ==="range" ? element["data-calenderwrapper"] : null
                     
-                    vmodel.tip = getDateTip(cleanDate(new Date(year, month, day))).text
+                    vmodel.tip = getDateTip(cleanDate(_date)).text
                     vmodel.dateError = "#cccccc"
+                    if (!calendarWrapper && !vmodel.timer) {
+                        element.value = date
+                        vmodel.toggle = false
+                    } else { // range datepicker时需要切换选中日期项的类名
+                        if (vmodel.timer) {
+                            date = date + " " + timerFilter(vmodel.hour) + ":" + timerFilter(vmodel.minute)
+                        }
+                        element.value = date
+                    }
+
                     if (month === _oldMonth && year === _oldYear && vmodel.day == day) {
                         vmodel.$fire("day", day)
                     } else {
@@ -357,15 +364,6 @@ define(["../avalon.getModel",
                         vmodel.month = month
                     } else if (year !== _oldYear) {
                         vmodel.year = year
-                    }
-                    if (!calendarWrapper && !vmodel.timer) {
-                        element.value = date
-                        vmodel.toggle = false
-                    } else { // range datepicker时需要切换选中日期项的类名
-                        if (vmodel.timer) {
-                            date = date + " " + timerFilter(vmodel.hour) + ":" + timerFilter(vmodel.minute)
-                        }
-                        element.value = date
                     }
                 }
                 if (!vmodel.showDatepickerAlways && !duplexVM) {
@@ -516,7 +514,6 @@ define(["../avalon.getModel",
                 dateMonth, 
                 dateDay
 
-
             for (var i = 0, len = data.length; i < len; i++) {
                 var dataItem = data[i]
 
@@ -530,7 +527,7 @@ define(["../avalon.getModel",
                             var dayItem = dataRow[k],
                                 date = dayItem.day
 
-                            if (date == newDay) {
+                            if (date == newDay && dayItem.month == month && dayItem.year == year) {
                                 dayItem.selected = true
                                 vmodel.data[i]["rows"][j].set(k, "").set(k, dayItem._day)
                             } else if (dayItem.selected) {
@@ -739,7 +736,7 @@ define(["../avalon.getModel",
                     vmodel.toggle = true;
                 }
                 // 37:向左箭头； 39:向右箭头；8:backspace；46:Delete
-                if((keyCode<48 || keyCode>57) && keyCode !==13 && keyCode!==8 && options.separator !== operate && keyCode !== 27 && keyCode !== 9 && keyCode !== 37 && keyCode!== 39 && keyCode!==46) {
+                if((keyCode<48 || (keyCode>57 && keyCode<96) || keyCode>105) && keyCode !==13 && keyCode!==8 && options.separator !== operate && keyCode !== 27 && keyCode !== 9 && keyCode !== 37 && keyCode!== 39 && keyCode!==46) {
                     e.preventDefault();
                     return false;
                 } 

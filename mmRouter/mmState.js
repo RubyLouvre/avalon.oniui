@@ -31,7 +31,7 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
         }
     }
     //跳转到一个已定义状态上，params对参数对象
-    avalon.router.go = function(toName, params) {
+    avalon.router.go = function(toName, params, options) {
         var from = mmState.currentState, to
         var states = this.routingTable.get
         for (var i = 0, el; el = states[i++]; ) {
@@ -51,16 +51,16 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             var args = to.keys.map(function(el) {
                 return to.params [el.name] || ""
             })
+            params = to.params
             mmState.transitionTo(from, to, args)
-            if(avalon.history && params && from != to) {
+            if(avalon.history && params) {
                 // 更新url
-                avalon.router.locked = true // 关闭历史监听，防止触发两次
                 var query = params.query ? queryToString(params.query) : "",
                     hash = to.url.replace(/\{[^\/\}]+\}/g, function(mat) {
                     var key = mat.replace(/[\{\}]/g, '')
                     return params[key] || ''
                 }).replace(/^\//g, '') + query
-                avalon.history.updateLocation(hash)
+                avalon.router.navigate(hash, avalon.mix({}, options|| {}, {silent: true}))
             }
         }
     }
@@ -72,18 +72,24 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             mmState.prevState = fromState
             mmState.currentState = toState
             var states = []
-            var t = toState
+            var t = toState, tmp
             if (!fromState) {
                 while (t) {
+                    tmp = t
                     states.push(t)
                     t = t.parentState
+                    // 强制共享params，解决父级状态获取不到参数
+                    if(t && tmp.params) t.params = tmp.params
                 }
             } else if (fromState === toState) {
                 states.push(t)
             } else {
                 while (t && t !== fromState) {
+                    tmp = t
                     states.push(t)
                     t = t.parentState
+                    // 强制共享params，解决父级状态获取不到参数
+                    if(t && tmp.params) t.params = tmp.params
                 }
             }
             states.reverse();
@@ -189,8 +195,8 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                     var viewname = match[0]
                     var statename = match[1]
                 } else {
-                    viewname = keyname || ""
-                    statename = stateName
+                    var viewname = keyname || ""
+                    var statename = stateName
                 }
                 var _stateName = stateName + '.'
                 if(!prevState || prevState === _stateName || prevState.indexOf(_stateName) !== 0 || stateName === currentState.stateName) {
@@ -232,12 +238,17 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                     }
                 }    
             })
-            getFn(opts, "onBeforeLoad").call(nodeList, that)
-            avalon.each(funcList, function(key, func) {
-                func()
-            })
+            // 下面的这个判断待斟酌，暂且认为如果url存在chain关系，那么就在一个chain上面吧
+            // var onStateChain = nodeList.length
+            // if(onStateChain) {
+                getFn(opts, "onBeforeLoad").call(nodeList, that)
+                avalon.each(funcList, function(key, func) {
+                    func()
+                })
+            // }
             
             return Promise.all(promises).then(function(values) {
+                // onStateChain && getFn(opts, "onAfterLoad").call(nodeList, that)
                 getFn(opts, "onAfterLoad").call(nodeList, that)
             })
 
@@ -311,7 +322,7 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             if (match(parent)) {
                 return array[i] = {
                     node: node,
-                    parent: parent
+                    parent: parent.parentNode
                 }
             }
             parent = parent.parentNode

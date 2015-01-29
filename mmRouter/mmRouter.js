@@ -148,8 +148,8 @@ define(["mmHistory"], function() {
             })
             return this
         },
-        urlFormate: function(url, params) {
-            var query = params.query ? queryToString(params.query) : "",
+        urlFormate: function(url, params, query) {
+            var query = query ? queryToString(query) : "",
                 hash = url.replace(placeholder, function(mat) {
                     var key = mat.replace(/[\{\}]/g, '').split(":")
                     key = key[0] ? key[0] : key[1]

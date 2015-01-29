@@ -66,8 +66,10 @@ var XHRMethods = {
                         dataType = dataType.match(/json|xml|script|html/) || ["text"]
                         dataType = dataType[0];
                     }
+                    var responseText = this.responseText || '',
+                        responseXML = this.responseXML || '';
                     try {
-                        this.response = avalon.ajaxConverters[dataType].call(this, this.responseText, this.responseXML)
+                        this.response = avalon.ajaxConverters[dataType].call(this, responseText, responseXML)
                     } catch (e) {
                         isSuccess = false
                         this.error = e

@@ -19,13 +19,14 @@ function ajaxExtend(opts) {
 
     if (typeof opts.crossDomain !== "boolean") { //判定是否跨域
         var urlAnchor = document.createElement("a");
-        // Support: IE8-11+
+        // Support: IE6-11+
         // IE throws exception if url is malformed, e.g. http://example.com:80x/
         try {
             urlAnchor.href = opts.url;
-            urlAnchor.href = urlAnchor.href;
-            opts.crossDomain = originAnchor.protocol + "//" + originAnchor.host !==
-                    urlAnchor.protocol + "//" + urlAnchor.host;
+            // in IE7-, get the absolute path
+            var absUrl = !"1"[0] ? urlAnchor.getAttribute("href", 4) : urlAnchor.href;
+            urlAnchor.href = absUrl
+            opts.crossDomain = originAnchor.protocol + "//" + originAnchor.host !== urlAnchor.protocol + "//" + urlAnchor.host;
         } catch (e) {
             opts.crossDomain = true;
         }

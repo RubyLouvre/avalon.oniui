@@ -1,6 +1,7 @@
 avalon.ajaxConverters = {//转换器，返回用户想要做的数据
     text: function(text) {
-        return text || "";
+        // return text || "";
+        return text;
     },
     xml: function(text, xml) {
         return xml !== void 0 ? xml : parseXML(text)
@@ -16,6 +17,7 @@ avalon.ajaxConverters = {//转换器，返回用户想要做的数据
     },
     script: function(text) {
         parseJS(text)
+        return text;
     },
     jsonp: function() {
         var json, callbackName;

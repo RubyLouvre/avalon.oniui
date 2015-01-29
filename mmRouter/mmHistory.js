@@ -122,7 +122,7 @@ define(["avalon"], function(avalon) {
             // 支持popstate 就监听popstate
             // 支持hashchange 就监听hashchange
             // 否则的话只能每隔一段时间进行检测了
-            function checkUrl() {
+            function checkUrl(e) {
                 var iframe = that.iframe
                 if (that.monitorMode === "iframepoll" && !iframe) {
                     return false
@@ -198,7 +198,7 @@ define(["avalon"], function(avalon) {
             } else {
                 var newHash = this.prefix + hash
                 this._setHash(this.location, newHash, rp)
-                if(st) {
+                if(st && hash != this.getFragment()) {
                     this._setIframeHistory(newHash, rp)
                     this.fragment = this.getFragment()
                 }

@@ -27,6 +27,16 @@ define(["mmHistory"], function() {
         }
     }
 
+
+    function queryToString(obj) {
+        if(typeof obj == 'string') return obj
+        var str = []
+        for(var i in obj) {
+            str.push(i + '=' + encodeURIComponent(obj[i]))
+        }
+        return str.length ? '?' + str.join("&") : ''
+    }
+
     var placeholder = /([:*])(\w+)|\{(\w+)(?:\:((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g
     Router.prototype = {
         error: function(callback) {
@@ -130,6 +140,22 @@ define(["mmHistory"], function() {
             // 只是写历史而已
             avalon.history && avalon.history.updateLocation(hash, avalon.mix({}, options, {silent: true}))
             if(!options.silent) this.route("get", parsed.path, parsed.query)
+        },
+        when: function(path, redirect) {
+            console.log(this._pathToRegExp(redirect, {}))
+            this.add("get", path, function() {
+                // this.
+            })
+            return this
+        },
+        urlFormate: function(url, params, query) {
+            var query = query ? queryToString(query) : "",
+                hash = url.replace(placeholder, function(mat) {
+                    var key = mat.replace(/[\{\}]/g, '').split(":")
+                    key = key[0] ? key[0] : key[1]
+                    return params[key] || ''
+                }).replace(/^\//g, '') + query
+            return hash
         },
         /* *
          `'/hello/'` - 匹配'/hello/'或'/hello'

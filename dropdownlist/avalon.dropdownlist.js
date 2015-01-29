@@ -338,11 +338,6 @@ define(["avalon", "text!./avalon.dropdownlist.html", "text!./avalon.suggest.html
                         }
                     },
                     onInit: function(vm) {
-                        vm.$watch("toggle", function(val) {
-                            if (val) {
-                                vm.suggestCtr.reset()
-                            }
-                        })
                         vmodel.suggestVM = vm
                         vm.updateSource("", vm, vmodel, true)
                     }
@@ -371,6 +366,12 @@ define(["avalon", "text!./avalon.dropdownlist.html", "text!./avalon.suggest.html
                 }
                 if (textboxToggle) {
                     dropdownVM = vmodel
+                    var suggestVM = dropdownVM.suggestVM
+                    suggestVM.updateSource("", suggestVM, vmodel, true)
+                    setTimeout(function() {
+                        suggestVM.toggle = true
+                        suggestVM.suggestCtr.reset()
+                    },100)
                 } else {
                     if (dropdownVM) {
                         dropdownVM.searchBox && (dropdownVM.searchBox.value = "")
@@ -395,11 +396,11 @@ define(["avalon", "text!./avalon.dropdownlist.html", "text!./avalon.suggest.html
                 $element.addClass("oni-dropdownlist")
                 vmodel.searchBox = element.getElementsByTagName("input")[0]
                 avalon.scan(element, [vmodel].concat(vmodels))
-                avalon.bind(vmodel.searchBox, "focus", function() {
-                    var suggestVM = vmodel.suggestVM
-                    suggestVM.updateSource("", suggestVM, vmodel, true)
-                    suggestVM.toggle = true
-                })
+                // avalon.bind(vmodel.searchBox, "focus", function() {
+                //     var suggestVM = vmodel.suggestVM
+                //     suggestVM.updateSource("", suggestVM, vmodel, true)
+                //     suggestVM.toggle = true
+                // })
                 element.clickCallback = avalon.bind(document.body, "click", function(event) {
                     var target = event.target
                     if (!element.contains(target)) {

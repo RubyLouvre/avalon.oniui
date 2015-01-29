@@ -23,12 +23,21 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
             disabledVM = disabled && avalon.getModel(disabled, vmodels) || null,
             min = Number(options.min),
             max = Number(options.max),
+            oldValue = 0,
             minVM,
             maxVM
 
         if (duplexVM) {
             duplexVM[1].$watch(duplexVM[0], function(val) {
-                vmodel.value = element.value = checkNum(val);
+                if (/[^0-9]/.test(val + '')) {
+                    vmodel.value = element.value = oldValue;
+                    return
+                }
+                if (val === '') {
+                    return
+                }
+                val = checkNum(val);
+                vmodel.value = element.value = oldValue = val;
             })
         }
         if (disabledVM) {
@@ -127,7 +136,6 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
             })
         });
         function ajustValue() {
-            console.log('ajustValue value')
             var min = vmodel.min,
                 max = vmodel.max,
                 value = Number(element.value);
@@ -149,10 +157,7 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
                 value = element.value;
                 if (!isNaN(Number(value))) {
                     value = checkNum(element.value);
-                } else {
-                    value = focusValue;
                 }
-                console.log('blur event')
                 vmodel.value = element.value = value;
             })
             $element.bind("keydown", function(event) {

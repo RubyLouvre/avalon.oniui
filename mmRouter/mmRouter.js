@@ -160,6 +160,12 @@ define(["mmRouter/mmHistory"], function() {
             })
             return this
         },
+        /*
+         *  @interface avalon.router.get 添加一个router规则
+         *  @param path url表达式
+         *  @param callback 对应这个url的回调
+        */
+        get: function(path, callback) {},
         urlFormate: function(url, params, query) {
             var query = query ? queryToString(query) : "",
                 hash = url.replace(placeholder, function(mat) {
@@ -210,12 +216,6 @@ define(["mmRouter/mmHistory"], function() {
         }
     }
 
-    /*
-     *  @interface avalon.router.get 添加一个router规则
-     *  @param path url表达式
-     *  @param callback 对应这个url的回调
-    */
-    avalon.router.get = function(path, callback) {}// 该死的占位
     "get,put,delete,post".replace(avalon.rword, function(method) {
         return  Router.prototype[method] = function(a, b, c) {
             this.add(method, a, b, c)

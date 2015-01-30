@@ -28,11 +28,11 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         }
     }
     /*
-        @interface avalon.router.go 跳转到一个已定义状态上，params对参数对象
-        @param toName 状态name
-        @param params 附加参数
-        @param options 扩展配置
-        @param options.replace true替换history，否则生成一条新的历史记录
+     *  @interface avalon.router.go 跳转到一个已定义状态上，params对参数对象
+     *  @param toName 状态name
+     *  @param params 附加参数
+     *  @param options 扩展配置
+     *  @param options.replace true替换history，否则生成一条新的历史记录
     */
     avalon.router.go = function(toName, params, options) {
         var from = mmState.currentState, to = getStateByName(toName)
@@ -326,10 +326,10 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         return this
     }
     /*
-        @interface avalon.state.config 全局配置
-        @param config 配置对象
-        @param config.unload url切换时候触发，返回值不会影响切换进程，this指向切换前的当前状态
-        @param config.onload 切换完成并成功，this指向切换后的当前状态
+     *  @interface avalon.state.config 全局配置
+     *  @param config 配置对象
+     *  @param config.unload url切换时候触发，返回值不会影响切换进程，this指向切换前的当前状态
+     *  @param config.onload 切换完成并成功，this指向切换后的当前状态
     */
     avalon.state.config = function(config) {
         avalon.mix(avalon.state, config || {})
@@ -376,7 +376,8 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             }
             break
         }
-        if(i + 1 == lenA) {
+        // 存在父子关系
+        if(i + 1 == lenA || i == partsB.length) {
             return getStateByName(i > 1 ? partsA.slice(0, i - 1).join(".") : null)
         }
         return getStateByName(partsA.slice(0, i).join("."))

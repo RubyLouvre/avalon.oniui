@@ -117,7 +117,6 @@ You wanted to upload something?
   avalon.upload(url, form, data, callback?, dataType?)
 ```
 
-
 -------------------------------------------
 
 avalon的三柱臣之一（ 路由，动画，AJAX）
@@ -214,3 +213,8 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
   //或者用upload方法
   avalon.upload(url, form, data, callback?, dataType?)
 ```
+
+贡献
+====
+
+请切换到 `src` 目录，执行 `node "$$combo.js" ` 合并生成最终文件。

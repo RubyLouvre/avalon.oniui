@@ -1,4 +1,4 @@
-define("mmState", ["mmPromise", "mmRouter"], function() {
+define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
 //重写mmRouter中的route方法     
     avalon.router.route = function(method, path, query) {
         path = path.trim()
@@ -27,7 +27,13 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             this.errorback()
         }
     }
-    //跳转到一个已定义状态上，params对参数对象
+    /*
+        @interface avalon.router.go 跳转到一个已定义状态上，params对参数对象
+        @param toName 状态name
+        @param params 附加参数
+        @param options 扩展配置
+        @param options.replace true替换history，否则生成一条新的历史记录
+    */
     avalon.router.go = function(toName, params, options) {
         var from = mmState.currentState, to = getStateByName(toName)
         if (to) {
@@ -42,38 +48,40 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             mmState.transitionTo(from, to, args, options)
         }
     }
-    var mmState = {
+
+    var mmState = window.mmState = {
         prevState: null,
         currentState: null, // 当前状态，可能还未切换到该状态
         activeState: null, // 当前实际处于的状态
         params: {},
         // 状态离开
-        popState: function(end, options, callback) {
+        popState: function(end, args, callback) {
             callback = callback || avalon.noop
-            if(end == this.activeState) return callback()
-            this.popOne(end, options, callback)
+            if(!this.activeState || end == this.activeState) return callback()
+            this.popOne(end, args, callback)
         },
-        popOne: function(end, options, callback) {
-            if(end == this.activeState) return callback()
-            var currentState = this.activeState, me = this
+        popOne: function(end, args, callback) {
+            var cur = this.activeState, me = this
+            if(end == this.activeState || !cur) return callback()
             // 阻止退出
-            if(currentState.onBeforeUnload() === false) return
-            currentState.done = function(success) {
-                avalon.mix(currentState, {
+            if(cur.onBeforeUnload() === false) return
+            cur.done = function(success) {
+                avalon.mix(cur, {
                     _pending: false,
                     done: null
                 })
-                if(success !== false && currentState.parentState) {
-                    me.activeState = currentState.parentState
-                    return me.popOne(end, options, callback)
+                if(success !== false) {
+                    // 如果没有父状态了，说明已经退出到最上层，需要退出，不再继续迭代
+                    me.activeState = cur.parentState || null
+                    if(me.activeState) return me.popOne(end, args, callback)
                 }
                 return callback(success)
             }
-            var success = currentState.onAfterUnload()
-            if(!currentState._pending && currentState.done) currentState.done(success)
+            var success = cur.onAfterUnload()
+            if(!cur._pending && cur.done) cur.done(success)
         },
         // 状态进入
-        pushState: function(end, options, callback){
+        pushState: function(end, args, callback){
             callback = callback || avalon.noop
             var active = this.activeState
             // 切换到目标状态
@@ -84,34 +92,42 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                 end = end.parentState
             }
             // 逐一迭代
-            this.pushOne(chain, options, callback)
+            this.pushOne(chain, args, callback)
         },
-        pushOne: function(chain, options, callback) {
-            var currentState = chain.pop(), me = this
+        pushOne: function(chain, args, callback) {
+            var cur = chain.pop(), me = this
             // 退出
-            if(!currentState) return callback()
+            if(!cur) return callback()
             // 阻止进入该状态
-            if(currentState.onBeforeChange() === false) return
-            currentState.done = function(success) {
-                avalon.mix(currentState, {
+            if(cur.onBeforeChange() === false) return
+            cur.done = function(success) {
+                avalon.mix(cur, {
                     _pending: false,
                     done: null,
                     visited: true
                 })
-                this.activeState = currentState // 更新当前实际处于的状态
-                if(success !== false) return me.pushOne(chain, options, callback)
+                me.activeState = cur // 更新当前实际处于的状态
+                if(success !== false) return me.pushOne(chain, args, callback)
                 return callback(success)
             }
             new Promise(function(resolve) {
                 resolve()
             }).then(function() {
-                currentState.params = me.params
-                var success = currentState.onChange.apply(currentState, options),
-                    out = currentState.callback.apply(currentState, options)
+                cur.params = me.params
+                var success = cur.onChange.apply(cur, args),
+                    out = cur.callback.apply(cur, args)
                 return out
             }).done(function() {
-                if(!currentState._pending && currentState.done) currentState.done()
+                if(!cur._pending && cur.done) cur.done()
             })
+        },
+        // 向上更新参数
+        _update: function(state, args) {
+            if(!state) return
+            while(state) {
+                state.onChange.apply(state, args)
+                state = state.parentState
+            }
         },
         transitionTo: function(fromState, toState, args, options) {
             // 状态机正处于切换过程中
@@ -119,7 +135,6 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                 avalon.log("navigating to [" + this.currentState.stateName + "] will be stopped, redirect to [" + toState.stateName + "] now")
                 this.activeState.done && this.activeState.done(!"stopped")
             }
-
             this.params = toState.params
 
             var me = this,
@@ -127,7 +142,6 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                 commonParent = findCommonBranch(fromState && fromState.stateName || "", toState.stateName || ""),
                 done = function(success) {
                     over = true
-                    me.activeState = me.activeState || me.currentState
                     me.currentState = me.activeState
                     if(success !== false) {
                         avalon.log("transitionTo " + toState.stateName + " success")
@@ -135,7 +149,8 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                         // update hash
                         if(avalon.history) {
                             // 更新url
-                            avalon.router.navigate(avalon.router.urlFormate(toState.url, toState.params, toState.query), avalon.mix({}, options|| {}, {silent: true}))
+                            // avalon.router.navigate
+                            avalon.history.updateLocation(avalon.router.urlFormate(toState.url, toState.params, toState.query), avalon.mix({}, options|| {}, {silent: true}))
                         }
                     }
                 }
@@ -148,6 +163,7 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                 this.currentState = toState
                 this.prevState = fromState
                 this.popState(commonParent, args, function(success) {
+                    me._update(commonParent, args)
                     // 中断
                     if(success === false) return done(!"stop poping [" + (commonParent && commonParent.stateName || "unknown"))
                     fromState && callStateFunc("unload", fromState)
@@ -155,6 +171,9 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
                 })
             // 仅仅是参数发生了变化
             } else {
+                // 这里也抛出一个unload事件，如果参数发生变化
+                fromState && callStateFunc("unload", fromState)
+                me._update(commonParent, args)
                 // just do update
                 toState.onChange.apply(toState, args)
                 done()
@@ -182,36 +201,35 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
         delete  oldObj[name]
     }
     /*
-     * 对 avalon.router.get 进行重新封装，生成一个状态对象
-     * stateName： 指定当前状态名
-     * url:  当前状态对应的路径规则，与祖先状态们组成一个完整的匹配规则
-     * controller： 指定当前所在的VM的名字（如果是顶级状态对象，必须指定）
-     * views: 对多个[ms-view]容器进行处理,
-     *     每个对象应拥有template, templateUrl, templateProvider, onBeforeLoad, onAfterLoad属性
-     *     template,templateUrl,templateProvider属性必须指定其一,要求返回一个字符串或一个Promise对象
-     *     onBeforeLoad, onAfterLoad是可选
-     *     如果不写views属性,则默认view为"",这四个属性可以直接写在opts对象上
+     * @interface avalon.state 对avalon.router.get 进行重新封装，生成一个状态对象
+     * @param stateName： 指定当前状态名
+     * @param opts 配置
+     * @param opts.url:  当前状态对应的路径规则，与祖先状态们组成一个完整的匹配规则
+     * @param opts.controller： 指定当前所在的VM的名字（如果是顶级状态对象，必须指定）
+     * @param opts.views: 如果不写views属性,则默认view为""，对多个[ms-view]容器进行处理,每个对象应拥有template, templateUrl, templateProvider
+     * @param opts.views.template 指定当前模板，也可以为一个函数，传入opts.params作参数
+     * @param opts.views.templateUrl 指定当前模板的路径，也可以为一个函数，传入opts.params作参数
+     * @param opts.views.templateProvider 指定当前模板的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数
      *     views的结构为
+     *```javascript
      *     {
      *        "": {template: "xxx", onBeforeLoad: function(){} }
      *        "aaa": {template: "xxx", onBeforeLoad: function(){} }
      *        "bbb@": {template: "xxx", onBeforeLoad: function(){} }
      *     }
+     *```
      *     views的每个键名(keyname)的结构为viewname@statename，
      *         如果名字不存在@，则viewname直接为keyname，statename为opts.stateName
      *         如果名字存在@, viewname为match[0], statename为match[1]
-     *     
-     * template: 指定当前模板，也可以为一个函数，传入opts.params作参数
-     * templateUrl: 指定当前模板的路径，也可以为一个函数，传入opts.params作参数
-     * templateProvider: 指定当前模板的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数
-     * onChange: 当切换为当前状态时调用的回调，this指向状态对象，参数为匹配的参数，
-     *           我们可以在此方法 定义此模板用到的VM， 或修改VM的属性
-     * onBeforeLoad: 模板还没有插入DOM树执行的回调，this指向[ms-view]元素节点，参数为状态对象
-     * onAfterLoad: 模板插入DOM树执行的回调，this指向[ms-view]元素节点，参数为状态对象
-     * abstract:  表示它不参与匹配
-     * parentState: 父状态对象（框架内部生成）
+     * @param opts.onBeforeLoad 模板还没有插入DOM树执行的回调，this指向[ms-view]元素节点集合，参数为状态对象
+     * @param opts.onAfterLoad 模板插入DOM树执行的回调，this指向[ms-view]元素节点，参数为状态对象
+     * @param opts.onBeforeChange 切入某个state之前触发，this指向对应的state，如果return false则会中断并退出整个状态机
+     * @param opts.onChange 当切换为当前状态时调用的回调，this指向状态对象，参数为匹配的参数， 我们可以在此方法 定义此模板用到的VM， 或修改VM的属性
+     * @param opts.onBeforeUnload state退出前触发，this指向对应的state，如果return false则会中断并退出整个状态机
+     * @param opts.onAfterUnload 退出后触发，this指向对应的state
+     * @param opts.abstract  表示它不参与匹配，this指向对应的state
+     * @param {private} opts.parentState 父状态对象（框架内部生成）
      */
-
     avalon.state = function(stateName, opts) {
         var parent = getParent(stateName), state = StateModel(stateName, opts)
         if (state.url === void 0) {
@@ -307,6 +325,12 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
 
         return this
     }
+    /*
+        @interface avalon.state.config 全局配置
+        @param config 配置对象
+        @param config.unload url切换时候触发，返回值不会影响切换进程，this指向切换前的当前状态
+        @param config.onload 切换完成并成功，this指向切换后的当前状态
+    */
     avalon.state.config = function(config) {
         avalon.mix(avalon.state, config || {})
     }
@@ -340,6 +364,7 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
     function getFn(object, name) {
         return typeof object[name] === "function" ? object[name] : avalon.noop
     }
+    // 找共同的父状态，注意但a是b孩子或者父亲的时候，是需要取parent.parent
     function findCommonBranch(a, b) {
         var partsA = a.split("."),
             partsB = b.split("."),
@@ -351,11 +376,14 @@ define("mmState", ["mmPromise", "mmRouter"], function() {
             }
             break
         }
+        if(i + 1 == lenA) {
+            return getStateByName(i > 1 ? partsA.slice(0, i - 1).join(".") : null)
+        }
         return getStateByName(partsA.slice(0, i).join("."))
     }
     function getStateByName(stateName) {
         var states = avalon.router.routingTable.get,
-            state
+            state = null
         for (var i = 0, el; el = states[i++]; ) {
             if (el.stateName === stateName) {
                 state = el

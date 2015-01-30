@@ -66,7 +66,6 @@ try {
     //http://www.cnblogs.com/WuQiang/archive/2012/09/21/2697474.html
     isLocal = rlocalProtocol.test(location.protocol)
 } catch (e) {
-
 }
 
 new function() {
@@ -157,7 +156,6 @@ function ajaxExtend(opts) {
     }
     return opts;
 }
-
 /**
  * 伪XMLHttpRequest类,用于屏蔽浏览器差异性
  * var ajax = new(self.XMLHttpRequest||ActiveXObject)("Microsoft.XMLHTTP")
@@ -407,7 +405,7 @@ avalon.param = function( a ) {
             s[ s.length ] = encode( key ) + "=" + encode( value );
         };
 
-    if (Array.isArray(a) || !jQuery.isPlainObject(a)) {
+    if (Array.isArray(a) || !avalon.isPlainObject(a)) {
         avalon.each(a, function(subKey, subVal) {
             add(subKey, subVal);
         });
@@ -883,3 +881,4 @@ if (!window.FormData) {
  http://www.cnblogs.com/heyuquan/archive/2013/05/13/3076465.html
  2014.12.25  v4 大重构
  */
+

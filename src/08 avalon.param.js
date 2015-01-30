@@ -6,7 +6,7 @@ avalon.param = function( a ) {
             s[ s.length ] = encode( key ) + "=" + encode( value );
         };
 
-    if (Array.isArray(a) || !jQuery.isPlainObject(a)) {
+    if (Array.isArray(a) || !avalon.isPlainObject(a)) {
         avalon.each(a, function(subKey, subVal) {
             add(subKey, subVal);
         });

@@ -1,4 +1,4 @@
-define(["mmHistory"], function() {
+define(["mmRouter/mmHistory"], function() {
 
     function Router() {
         var table = {}
@@ -131,16 +131,28 @@ define(["mmHistory"], function() {
         setLastPath: function(path) {
             setCookie("msLastPath", path)
         },
-        // options.silent，当这个参数为true的时候，是不能触发url检测监听的
+        /*
+         *  @interface avalon.router.navigate
+         *  @param hash 访问的url hash
+         *  @param options 扩展配置
+         *  @param options.replace true替换history，否则生成一条新的历史记录
+         *  @param options.silent true表示只同步url，不触发url变化监听绑定
+        */
         navigate: function(hash, options) {
             var parsed = parseQuery((hash.charAt(0) !== "/" ? "/" : "") + hash),
                 options = options || {}
             if(hash.charAt(0) === "/")
                 hash = hash.slice(1)// 修正出现多扛的情况 fix http://localhost:8383/mmRouter/index.html#!//
             // 只是写历史而已
-            avalon.history && avalon.history.updateLocation(hash, avalon.mix({}, options, {silent: true}))
-            if(!options.silent) this.route("get", parsed.path, parsed.query)
+            if(!options.silent) {
+                this.route("get", parsed.path, parsed.query)
+            } else {
+                avalon.history && avalon.history.updateLocation(hash, avalon.mix({}, options, {silent: true}))
+            }
         },
+        /*
+         *  @interface avalon.router.when 完善中
+        */
         when: function(path, redirect) {
             console.log(this._pathToRegExp(redirect, {}))
             this.add("get", path, function() {
@@ -148,6 +160,12 @@ define(["mmHistory"], function() {
             })
             return this
         },
+        /*
+         *  @interface avalon.router.get 添加一个router规则
+         *  @param path url表达式
+         *  @param callback 对应这个url的回调
+        */
+        get: function(path, callback) {},
         urlFormate: function(url, params, query) {
             var query = query ? queryToString(query) : "",
                 hash = url.replace(placeholder, function(mat) {
@@ -197,7 +215,6 @@ define(["mmHistory"], function() {
             }
         }
     }
-
 
     "get,put,delete,post".replace(avalon.rword, function(method) {
         return  Router.prototype[method] = function(a, b, c) {

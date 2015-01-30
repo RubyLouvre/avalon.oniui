@@ -4,11 +4,11 @@
         <title>mmRequest组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <script src="avalon.js"></script>
+        <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
         <script>
 
-            require(["mmRequest"], function() {
+            require(["mmRequest/mmRequest"], function() {
                 avalon.define("test", function(vm) {
                     vm.loadJSON = function() {
                         avalon.get("ajax.php", {
@@ -64,11 +64,11 @@
         &lt;title&gt;mmRequest组件&lt;/title&gt;
         &lt;meta charset=&quot;UTF-8&quot;&gt;
         &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
-        &lt;script src=&quot;avalon.js&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
         
         &lt;script&gt;
 
-            require([&quot;mmRequest&quot;], function() {
+            require([&quot;mmRequest/mmRequest&quot;], function() {
                 avalon.define(&quot;test&quot;, function(vm) {
                     vm.loadJSON = function() {
                         avalon.get(&quot;ajax.php&quot;, {

@@ -4,7 +4,7 @@
         <title>mmRouter组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <script src="avalon.js"></script>
+        <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
         <style>
             .header{
@@ -43,7 +43,7 @@
                     arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
                 })
             }
-            require(["ready!", "mmState"], function() {
+            require(["ready!", "mmRouter/mmState"], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -60,6 +60,7 @@
                     onload: function() {
                         avalon.log("onload")
                         avalon.log(this.params)
+                        avalon.log(this.path)
                     },
                     unload: function() {
                         avalon.log("unload")
@@ -125,10 +126,14 @@
                                 $id: "contacts",
                                 // $skipArray: ["contact", "item"],
                                 edit: function() {
-                                    avalon.router.go("contacts.detail.item.edit")
+                                    avalon.router.go("contacts.detail.item.edit", {
+                                        contactId: vmodel.contact.id
+                                    })
                                 },
                                 done: function() {
-                                    avalon.router.go("contacts.detail.item")
+                                    avalon.router.go("contacts.detail.item", {
+                                        contactId: vmodel.contact.id
+                                    })
                                 },
                                 goToRandom: function() {
                                     var contacts = vmodel.contacts
@@ -350,7 +355,7 @@
         &lt;title&gt;mmRouter组件&lt;/title&gt;
         &lt;meta charset=&quot;UTF-8&quot;&gt;
         &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
-        &lt;script src=&quot;avalon.js&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
         
         &lt;style&gt;
             .header{
@@ -389,7 +394,7 @@
                     arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
                 })
             }
-            require([&quot;ready!&quot;, &quot;mmState&quot;], function() {
+            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -406,6 +411,7 @@
                     onload: function() {
                         avalon.log(&quot;onload&quot;)
                         avalon.log(this.params)
+                        avalon.log(this.path)
                     },
                     unload: function() {
                         avalon.log(&quot;unload&quot;)
@@ -471,10 +477,14 @@
                                 $id: &quot;contacts&quot;,
                                 // $skipArray: [&quot;contact&quot;, &quot;item&quot;],
                                 edit: function() {
-                                    avalon.router.go(&quot;contacts.detail.item.edit&quot;)
+                                    avalon.router.go(&quot;contacts.detail.item.edit&quot;, {
+                                        contactId: vmodel.contact.id
+                                    })
                                 },
                                 done: function() {
-                                    avalon.router.go(&quot;contacts.detail.item&quot;)
+                                    avalon.router.go(&quot;contacts.detail.item&quot;, {
+                                        contactId: vmodel.contact.id
+                                    })
                                 },
                                 goToRandom: function() {
                                     var contacts = vmodel.contacts

@@ -31,16 +31,22 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
      *  @interface avalon.router.go 跳转到一个已定义状态上，params对参数对象
      *  @param toName 状态name
      *  @param params 附加参数
+     *  @param params.query 在hash后面附加的类似search'的参数对
      *  @param options 扩展配置
      *  @param options.replace true替换history，否则生成一条新的历史记录
+     *  @param options.replaceParams true表示完全覆盖params，而不是merge
+     *  @param options.replaceQuery true表示完全覆盖query，而不是merge
     */
     avalon.router.go = function(toName, params, options) {
-        var from = mmState.currentState, to = getStateByName(toName)
+        var from = mmState.currentState, to = getStateByName(toName), replaceParams = options && options.replaceParams, replaceQuery =  options && options.replaceQuery
         if (to) {
             if(!to.params) {
                 to.params = to.parentState ? to.parentState.params || {} : {}
             }
-            avalon.mix(true, to.params, params || {})
+            if(params && params.query) {
+                to.query = avalon.mix({}, replaceQuery ? {} : to.query || {}, params.query)
+            }
+            avalon.mix(true, replaceParams ? {} : to.params, params || {})
             var args = to.keys.map(function(el) {
                 return to.params [el.name] || ""
             })

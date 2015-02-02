@@ -221,12 +221,27 @@ mmRouter的使用
                                 <tr>
                                     <td>options</td>
                                     <td></td>
+                                    <td>params.query 在hash后面附加的类似search'的参数对</td>
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td></td>
                                     <td>options 扩展配置</td>
                                 </tr>
                                 <tr>
                                     <td>options.replace</td>
                                     <td></td>
                                     <td>options.replace true替换history，否则生成一条新的历史记录</td>
+                                </tr>
+                                <tr>
+                                    <td>options.replaceParams</td>
+                                    <td></td>
+                                    <td>options.replaceParams true表示完全覆盖params，而不是merge</td>
+                                </tr>
+                                <tr>
+                                    <td>options.replaceQuery</td>
+                                    <td></td>
+                                    <td>options.replaceQuery true表示完全覆盖query，而不是merge</td>
                                 </tr>
                             </table>
                         </td>
@@ -386,6 +401,9 @@ mmRouter的使用
                 </li>
                 <li>
                     <a href="avalon.mmRouter.ex5.html">mmRouter综合示例五: html5Mode[pushState,popState]，可能需要服务器支持</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex6.html">mmRouter：登录跳转</a>
                 </li>
             </ul>
         </div>

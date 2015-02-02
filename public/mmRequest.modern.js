@@ -105,13 +105,14 @@ function ajaxExtend(opts) {
 
     if (typeof opts.crossDomain !== "boolean") { //判定是否跨域
         var urlAnchor = document.createElement("a");
-        // Support: IE8-11+
+        // Support: IE6-11+
         // IE throws exception if url is malformed, e.g. http://example.com:80x/
         try {
             urlAnchor.href = opts.url;
-            urlAnchor.href = urlAnchor.href;
-            opts.crossDomain = originAnchor.protocol + "//" + originAnchor.host !==
-                    urlAnchor.protocol + "//" + urlAnchor.host;
+            // in IE7-, get the absolute path
+            var absUrl = !"1"[0] ? urlAnchor.getAttribute("href", 4) : urlAnchor.href;
+            urlAnchor.href = absUrl
+            opts.crossDomain = originAnchor.protocol + "//" + originAnchor.host !== urlAnchor.protocol + "//" + urlAnchor.host;
         } catch (e) {
             opts.crossDomain = true;
         }
@@ -127,7 +128,6 @@ function ajaxExtend(opts) {
     }
     return opts;
 }
-
 /**
  * 伪XMLHttpRequest类,用于屏蔽浏览器差异性
  * var ajax = new(self.XMLHttpRequest||ActiveXObject)("Microsoft.XMLHTTP")
@@ -196,8 +196,10 @@ var XHRMethods = {
                         dataType = dataType.match(/json|xml|script|html/) || ["text"]
                         dataType = dataType[0];
                     }
+                    var responseText = this.responseText || '',
+                        responseXML = this.responseXML || '';
                     try {
-                        this.response = avalon.ajaxConverters[dataType].call(this, this.responseText, this.responseXML)
+                        this.response = avalon.ajaxConverters[dataType].call(this, responseText, responseXML)
                     } catch (e) {
                         isSuccess = false
                         this.error = e
@@ -335,7 +337,8 @@ avalon.upload = function(url, form, data, callback, dataType) {
 }
 avalon.ajaxConverters = {//转换器，返回用户想要做的数据
     text: function(text) {
-        return text || "";
+        // return text || "";
+        return text;
     },
     xml: function(text, xml) {
         return xml !== void 0 ? xml : parseXML(text)
@@ -351,6 +354,7 @@ avalon.ajaxConverters = {//转换器，返回用户想要做的数据
     },
     script: function(text) {
         parseJS(text)
+        return text;
     },
     jsonp: function() {
         var json, callbackName;
@@ -373,7 +377,7 @@ avalon.param = function( a ) {
             s[ s.length ] = encode( key ) + "=" + encode( value );
         };
 
-    if (Array.isArray(a) || !jQuery.isPlainObject(a)) {
+    if (Array.isArray(a) || !avalon.isPlainObject(a)) {
         avalon.each(a, function(subKey, subVal) {
             add(subKey, subVal);
         });

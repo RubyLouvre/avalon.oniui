@@ -31,16 +31,22 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
      *  @interface avalon.router.go 跳转到一个已定义状态上，params对参数对象
      *  @param toName 状态name
      *  @param params 附加参数
+     *  @param params.query 在hash后面附加的类似search'的参数对
      *  @param options 扩展配置
      *  @param options.replace true替换history，否则生成一条新的历史记录
+     *  @param options.replaceParams true表示完全覆盖params，而不是merge
+     *  @param options.replaceQuery true表示完全覆盖query，而不是merge
     */
     avalon.router.go = function(toName, params, options) {
-        var from = mmState.currentState, to = getStateByName(toName)
+        var from = mmState.currentState, to = getStateByName(toName), replaceParams = options && options.replaceParams, replaceQuery =  options && options.replaceQuery
         if (to) {
             if(!to.params) {
                 to.params = to.parentState ? to.parentState.params || {} : {}
             }
-            avalon.mix(true, to.params, params || {})
+            if(params && params.query) {
+                to.query = avalon.mix({}, replaceQuery ? {} : to.query || {}, params.query)
+            }
+            avalon.mix(true, replaceParams ? {} : to.params, params || {})
             var args = to.keys.map(function(el) {
                 return to.params [el.name] || ""
             })
@@ -125,6 +131,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         _update: function(state, args) {
             if(!state) return
             while(state) {
+                state.onUpdate.apply(state, args)
                 state.onChange.apply(state, args)
                 state = state.parentState
             }
@@ -149,7 +156,6 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         // update hash
                         if(avalon.history) {
                             // 更新url
-                            // avalon.router.navigate
                             avalon.history.updateLocation(avalon.router.urlFormate(toState.url, toState.params, toState.query), avalon.mix({}, options|| {}, {silent: true}))
                         }
                     }
@@ -175,6 +181,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 fromState && callStateFunc("unload", fromState)
                 me._update(commonParent, args)
                 // just do update
+                toState.onUpdate.apply(toState, args)
                 toState.onChange.apply(toState, args)
                 done()
             }
@@ -225,6 +232,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
      * @param opts.onAfterLoad 模板插入DOM树执行的回调，this指向[ms-view]元素节点，参数为状态对象
      * @param opts.onBeforeChange 切入某个state之前触发，this指向对应的state，如果return false则会中断并退出整个状态机
      * @param opts.onChange 当切换为当前状态时调用的回调，this指向状态对象，参数为匹配的参数， 我们可以在此方法 定义此模板用到的VM， 或修改VM的属性
+     * @param opts.onUpdate 当状态未切换，只是参数发生变化的时候触发，this指向当前状态，为了保持接口不变，onUpdate触发时，也会触发onChange
      * @param opts.onBeforeUnload state退出前触发，this指向对应的state，如果return false则会中断并退出整个状态机
      * @param opts.onAfterUnload 退出后触发，this指向对应的state
      * @param opts.abstract  表示它不参与匹配，this指向对应的state
@@ -355,6 +363,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         },
         onBeforeChange: avalon.noop, // 切入某个state之前触发
         onChange: avalon.noop, // 切入触发
+        onUpdate: avalon.noop, // 状态未切换，只是params发生变化时候触发
         onBeforeLoad: avalon.noop, // 所有资源开始加载前触发
         onAfterLoad: avalon.noop, // 加载后触发
         onBeforeUnload: avalon.noop, // state退出前触发

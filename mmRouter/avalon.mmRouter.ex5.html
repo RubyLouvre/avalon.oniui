@@ -36,6 +36,7 @@
         </style>
         <script >
             avalon.config({debug: true})
+            var root = location.pathname.split("avalon.mmRouter")[0]
             var cs = [], arr = "contacts.detail.item.edit".split(".")
             for(var i = 0; i < arr.length; i++) {
                 cs.push({
@@ -118,7 +119,7 @@
                     controller: "test",
                     abstract: true,
                     url: "/contacts",
-                    templateUrl: "contacts.html",
+                    templateUrl: root + "contacts.html",
                     onChange: function() {
                         if (!avalon.vmodels.contacts) {
                             var lastId
@@ -244,7 +245,7 @@
                     },
                     views: {
                         "": {
-                            templateUrl: "contacts.list.html"
+                            templateUrl: root + "contacts.list.html"
                         },
                         "hint@": {
                             template: "当前状态是contacts.list"
@@ -262,7 +263,7 @@
                     },
                     views: {
                         "": {
-                            templateUrl: "contacts.detail.html"
+                            templateUrl: root + "contacts.detail.html"
                         },
                         'hint@': {
                             template: "当前状态是contacts.detail"
@@ -307,17 +308,21 @@
                 avalon.state("contacts.detail.item.edit", {
                     views: {
                         "@contacts.detail.item": {
-                            templateUrl: "contacts.detail.item.edit.html"
+                            templateUrl: root + "contacts.detail.item.edit.html"
                         },
                         "hint@": {
                             template: "当前状态是contacts.detail.item.edit"
                         }
                     }
                 })
+                avalon.router.errorback = function() {
+                    avalon.router.go("home", {}, {replace: true})
+                }
                 //启动路由
                 avalon.history.start({
-                    basepath: "/mmRouter",
-                    fireAnchor: false
+                    basepath: root,
+                    fireAnchor: false,
+                    html5Mode: true
                 })
                 //go!!!!!!!!! 
                 avalon.scan()
@@ -326,7 +331,7 @@
         </script>
     </head>
     <body>
-        <h1>mmRouter综合示例四: avalon.router.go</h1>
+        <h1>mmRouter综合示例五: html5Mode[pushState,popState]，可能需要服务器支持</h1>
         <div ms-controller="test">
             <ul class="codelist">
                 <li 
@@ -387,6 +392,7 @@
         &lt;/style&gt;
         &lt;script &gt;
             avalon.config({debug: true})
+            var root = location.pathname.split(&quot;avalon.mmRouter&quot;)[0]
             var cs = [], arr = &quot;contacts.detail.item.edit&quot;.split(&quot;.&quot;)
             for(var i = 0; i &lt; arr.length; i++) {
                 cs.push({
@@ -469,7 +475,7 @@
                     controller: &quot;test&quot;,
                     abstract: true,
                     url: &quot;/contacts&quot;,
-                    templateUrl: &quot;contacts.html&quot;,
+                    templateUrl: root + &quot;contacts.html&quot;,
                     onChange: function() {
                         if (!avalon.vmodels.contacts) {
                             var lastId
@@ -595,7 +601,7 @@
                     },
                     views: {
                         &quot;&quot;: {
-                            templateUrl: &quot;contacts.list.html&quot;
+                            templateUrl: root + &quot;contacts.list.html&quot;
                         },
                         &quot;hint@&quot;: {
                             template: &quot;当前状态是contacts.list&quot;
@@ -613,7 +619,7 @@
                     },
                     views: {
                         &quot;&quot;: {
-                            templateUrl: &quot;contacts.detail.html&quot;
+                            templateUrl: root + &quot;contacts.detail.html&quot;
                         },
                         'hint@': {
                             template: &quot;当前状态是contacts.detail&quot;
@@ -658,17 +664,21 @@
                 avalon.state(&quot;contacts.detail.item.edit&quot;, {
                     views: {
                         &quot;@contacts.detail.item&quot;: {
-                            templateUrl: &quot;contacts.detail.item.edit.html&quot;
+                            templateUrl: root + &quot;contacts.detail.item.edit.html&quot;
                         },
                         &quot;hint@&quot;: {
                             template: &quot;当前状态是contacts.detail.item.edit&quot;
                         }
                     }
                 })
+                avalon.router.errorback = function() {
+                    avalon.router.go(&quot;home&quot;, {}, {replace: true})
+                }
                 //启动路由
                 avalon.history.start({
-                    basepath: &quot;/mmRouter&quot;,
-                    fireAnchor: false
+                    basepath: root,
+                    fireAnchor: false,
+                    html5Mode: true
                 })
                 //go!!!!!!!!! 
                 avalon.scan()
@@ -677,7 +687,7 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body&gt;
-        &lt;h1&gt;mmRouter综合示例四: avalon.router.go&lt;/h1&gt;
+        &lt;h1&gt;mmRouter综合示例五: html5Mode[pushState,popState]，可能需要服务器支持&lt;/h1&gt;
         &lt;div ms-controller=&quot;test&quot;&gt;
             &lt;ul class=&quot;codelist&quot;&gt;
                 &lt;li 

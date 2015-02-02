@@ -143,20 +143,25 @@ define(["mmRouter/mmHistory"], function() {
                 options = options || {}
             if(hash.charAt(0) === "/")
                 hash = hash.slice(1)// 修正出现多扛的情况 fix http://localhost:8383/mmRouter/index.html#!//
+            // 在state之内有写history的逻辑
+            if(!avalon.state || options.silent) avalon.history && avalon.history.updateLocation(hash, avalon.mix({}, options, {silent: true}))
             // 只是写历史而已
             if(!options.silent) {
                 this.route("get", parsed.path, parsed.query)
-            } else {
-                avalon.history && avalon.history.updateLocation(hash, avalon.mix({}, options, {silent: true}))
             }
         },
         /*
-         *  @interface avalon.router.when 完善中
+         *  @interface avalon.router.when 配置重定向规则
+         *  @param path 被重定向的表达式，可以是字符串或者数组
+         *  @param redirect 重定向的表示式或者url
         */
         when: function(path, redirect) {
-            console.log(this._pathToRegExp(redirect, {}))
-            this.add("get", path, function() {
-                // this.
+            var me = this,
+                path = path instanceof Array ? path : [path]
+            avalon.each(path, function(index, p) {
+                me.add("get", p, function() {
+                    me.navigate(me.urlFormate(redirect, this.params, this.query), {replace: true})
+                })
             })
             return this
         },

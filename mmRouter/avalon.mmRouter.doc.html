@@ -153,7 +153,25 @@ mmRouter的使用
                         <td>when(path,redirect)</td>
                         <td>Function</td>
                         <td></td>
-                        <td>avalon.router.when 完善中</td>
+                        <td>avalon.router.when 配置重定向规则
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>path</td>
+                                    <td></td>
+                                    <td>path 被重定向的表达式，可以是字符串或者数组</td>
+                                </tr>
+                                <tr>
+                                    <td>redirect</td>
+                                    <td></td>
+                                    <td>redirect 重定向的表示式或者url</td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                     <tr>
                         <td>get(path,callback)</td>
@@ -292,6 +310,11 @@ mmRouter的使用
                                         或修改VM的属性</td>
                                 </tr>
                                 <tr>
+                                    <td>opts.onUpdate</td>
+                                    <td></td>
+                                    <td>opts.onUpdate 当状态未切换，只是参数发生变化的时候触发，this指向当前状态，为了保持接口不变，onUpdate触发时，也会触发onChange</td>
+                                </tr>
+                                <tr>
                                     <td>opts.onBeforeUnload</td>
                                     <td></td>
                                     <td>opts.onBeforeUnload state退出前触发，this指向对应的state，如果return false则会中断并退出整个状态机</td>
@@ -356,10 +379,13 @@ mmRouter的使用
                     <a href="avalon.mmRouter.ex2.html">mmRouter综合示例三: scrolltoview</a>
                 </li>
                 <li>
-                    <a href="avalon.mmRouter.ex3.html">mmRouter综合示例二: avalon.router.go</a>
+                    <a href="avalon.mmRouter.ex3.html">mmRouter综合示例四: avalon.router.go</a>
                 </li>
                 <li>
                     <a href="avalon.mmRouter.ex4.html">mmRouter: avalon.state</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex5.html">mmRouter综合示例五: html5Mode[pushState,popState]，可能需要服务器支持</a>
                 </li>
             </ul>
         </div>

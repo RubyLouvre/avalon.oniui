@@ -59,7 +59,7 @@
                 }
             });
             var loaded = {};
-            avalon.router.when("/nihao/:id", "/tab2/:id")
+            avalon.router.when(["/nihao/:id"], "/tab:id")
             avalon.router.get("/tab1", function(a) {
                 var page = 'tab1';
                 model.tab.content = "页面："+page;
@@ -153,7 +153,7 @@
                 }
             });
             var loaded = {};
-            avalon.router.when(&quot;/nihao/:id&quot;, &quot;/tab2/:id&quot;)
+            avalon.router.when([&quot;/nihao/:id&quot;], &quot;/tab:id&quot;)
             avalon.router.get(&quot;/tab1&quot;, function(a) {
                 var page = 'tab1';
                 model.tab.content = &quot;页面：&quot;+page;

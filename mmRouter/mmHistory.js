@@ -166,14 +166,14 @@ define(["avalon"], function(avalon) {
             }
             //根据当前的location立即进入不同的路由回调
             avalon.ready(function() {
-                that.fireRouteChange(that.fragment || "/")
+                that.fireRouteChange(that.fragment || "/", {replace: true})
             })
         },
-        fireRouteChange: function(hash) {
+        fireRouteChange: function(hash, options) {
             var router = avalon.router
             if (router && router.navigate) {
                 router.setLastPath(hash)
-                router.navigate(hash === "/" ? hash : "/" + hash)
+                router.navigate(hash === "/" ? hash : "/" + hash, options)
             }
             if (this.options.fireAnchor) {
                 scrollToAnchorId(hash.replace(/\?.*/g,""))

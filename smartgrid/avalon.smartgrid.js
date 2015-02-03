@@ -494,7 +494,7 @@ define(["avalon",
              * @interface 增加行，已經渲染的不會再操作
              * @param 新增的行
              */
-            vm.addRows = function(data, init) {
+            vm.addRows = function(data, init, noShowLoading) {
                 // 防止 addRows([])带来问题
                 if((!data || !data.length) && !init) return
                 var tableTemplate = "",
@@ -527,11 +527,11 @@ define(["avalon",
                     vmodel._allSelected = allSelected;
                     getSelectedData(vmodel);
                 }
-                vmodel.showLoading(vmodel.data);
+                if (!noShowLoading) vmodel.showLoading(vmodel.data);
                 avalon.nextTick(function () {
                     avalon.scan(vmodel.container, [vmodel].concat(vmodels));
                     vmodel._setColumnWidth();
-                    vmodel.hideLoading();
+                    if (!noShowLoading) vmodel.hideLoading();
                 });
                 if (sorting) sorting = false
             }
@@ -555,7 +555,7 @@ define(["avalon",
                 }
                 if(!vmodel.getLen(vmodel.data)) vmodel.render(void 0, true)
             }
-            vm.render = function (data, init) {
+            vm.render = function (data, init, noShowLoading) {
                 if (avalon.type(data) === 'array') {
                     vmodel.data = data;
                 } else {
@@ -568,7 +568,7 @@ define(["avalon",
                 } else {
                     $initRender = false
                 }
-                vmodel.addRows(void 0, init)
+                vmodel.addRows(void 0, init, noShowLoading)
                 if (sorting) {
                     sorting = false;
                 } else if (!init) {

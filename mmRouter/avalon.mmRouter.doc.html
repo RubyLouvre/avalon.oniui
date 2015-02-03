@@ -297,11 +297,15 @@ mmRouter的使用
                                     <td>opts.views.templateProvider</td>
                                     <td></td>
                                     <td>opts.views.templateProvider 指定当前模板的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数
-                                        views的结构为 ```javascript { "": {template: "xxx", onBeforeLoad: function(){}
-                                        } "aaa": {template: "xxx", onBeforeLoad: function(){} } "bbb@": {template:
-                                        "xxx", onBeforeLoad: function(){} } } ``` views的每个键名(keyname)的结构为viewname@statename，
-                                        如果名字不存在@，则viewname直接为keyname，statename为opts.stateName 如果名字存在@, viewname为match[0],
-                                        statename为match[1]</td>
+                                        views的结构为
+                                        <pre>
+{
+"": {template: "xxx", onBeforeLoad: function(){} }
+"aaa": {template: "xxx", onBeforeLoad: function(){} }
+"bbb@": {template: "xxx", onBeforeLoad: function(){} }
+}
+</pre>views的每个键名(keyname)的结构为viewname@statename， 如果名字不存在@，则viewname直接为keyname，statename为opts.stateName
+                                        如果名字存在@, viewname为match[0], statename为match[1]</td>
                                 </tr>
                                 <tr>
                                     <td>opts.onBeforeLoad</td>
@@ -323,6 +327,16 @@ mmRouter的使用
                                     <td></td>
                                     <td>opts.onChange 当切换为当前状态时调用的回调，this指向状态对象，参数为匹配的参数， 我们可以在此方法 定义此模板用到的VM，
                                         或修改VM的属性</td>
+                                </tr>
+                                <tr>
+                                    <td>opts.onBeforeEnter切入某个state之前触发，this指向对应的state，如果return</td>
+                                    <td></td>
+                                    <td>opts.onBeforeEnter切入某个state之前触发，this指向对应的state，如果return false则会中断并退出整个状态机</td>
+                                </tr>
+                                <tr>
+                                    <td>opts.onEnter</td>
+                                    <td></td>
+                                    <td>opts.onEnter 进入状态，this指向当前状态，为了保持接口不变，也会出发onChange，建议使用onEnter和onUpdate替换onChange</td>
                                 </tr>
                                 <tr>
                                     <td>opts.onUpdate</td>
@@ -381,6 +395,19 @@ mmRouter的使用
                             </table>
                         </td>
                     </tr>
+                    <tr>
+                        <td>async()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>state.async 表示当前的状态是异步，中断状态chain的继续执行，返回一个done函数，通过done(false)终止状态链的执行，任意其他非false参数，将继续
+                            <pre>
+onChange: function() {
+var done = this.async()
+setTimeout(done, 4000)
+}
+</pre>
+                        </td>
+                    </tr>
                 </table>
             </fieldset>
             <ul class="example-links">
@@ -404,6 +431,9 @@ mmRouter的使用
                 </li>
                 <li>
                     <a href="avalon.mmRouter.ex6.html">mmRouter：登录跳转</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex7.html">mmRouter：异步</a>
                 </li>
             </ul>
         </div>

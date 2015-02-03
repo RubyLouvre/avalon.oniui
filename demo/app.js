@@ -28,7 +28,6 @@ app.use(cookieParser());
 // 设置public文件夹为存放静态文件的目录
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.static(path.join(__dirname, 'public')));
-console.log(__dirname)
 
 // 路由控制器
 app.use('/demo', routes);

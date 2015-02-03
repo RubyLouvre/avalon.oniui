@@ -7,6 +7,17 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 	var vmodel = avalon.define({
 		$id: 'demo',
 
+		// serialize
+		serializeStr: '',
+		serialize: function(){
+
+			var str = avalon.serialize(document.getElementById('test-form'));
+
+			avalon.log(str);
+			vmodel.serializeStr = str;
+		},
+
+		// ajax
 		state: {
 			text: '无请求',
 			setSend: function(sendType) {
@@ -22,7 +33,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			var sendType = 'avalon.get';
 			vmodel.state.setSend(sendType);
 
-			avalon.get('api', {
+			avalon.get('demo/api', {
 				sendType: sendType,
 				arr: ['html', 'css', 'js']
 			}).done(function(res) {
@@ -35,7 +46,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			vmodel.state.setSend(sendType);
 
 			avalon.ajax({
-				url: 'api',
+				url: 'demo/api',
 				type: 'get',
 				cache: false,
 				data: {
@@ -52,7 +63,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			var sendType = 'avalon.post';
 			vmodel.state.setSend(sendType);
 
-			avalon.post('api?age=12', {
+			avalon.post('demo/api?age=12', {
 				sendType: sendType
 			}).done(function(res) {
 				avalon.log(res);
@@ -64,7 +75,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			vmodel.state.setSend(sendType);
 
 			avalon.ajax({
-				url: 'api',
+				url: 'demo/api',
 				type: 'post',
 				data: {
 					sendType: sendType
@@ -83,7 +94,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			formData.append('sendType', sendType);
 			vmodel.state.setSend(sendType);
 
-			avalon.upload('api?age=12', formData, {
+			avalon.upload('demo/api?age=12', formData, {
 				name: 'avalon'
 			}).done(function(res) {
 				avalon.log(res);
@@ -98,7 +109,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			vmodel.state.setSend(sendType);
 
 			avalon.ajax({
-				url: 'api',
+				url: 'demo/api',
 				form: formData,
 				data: {
 					name: 'avalon'
@@ -115,7 +126,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			var sendType = 'avalon.getJSON';
 			vmodel.state.setSend(sendType);
 
-			avalon.getJSON('api', {
+			avalon.getJSON('demo/api', {
 				sendType: sendType
 			}).done(function(res) {
 				avalon.log(res);
@@ -127,7 +138,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			vmodel.state.setSend(sendType);
 
 			avalon.ajax({
-				url: 'api',
+				url: 'demo/api',
 				data: {
 					sendType: sendType
 				},

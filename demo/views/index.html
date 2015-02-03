@@ -23,9 +23,9 @@
 	<!-- get -->
 	<fieldset>
 		<legend><h2>get</h2></legend>
+		<p>通过 get 方式发送/请求数据。</p>
 
 		<p><button ms-click="get">avalon.get</button></p>
-
 <pre><code class="javascript">var sendType = 'avalon.get';
 vmodel.state.setSend(sendType);
 
@@ -38,7 +38,6 @@ avalon.get('/api', {
 });</code></pre>
 		
 		<p><button ms-click="ajaxGet">avalon.ajax</button></p>
-
 <pre><code class="javascript">var sendType = 'type 为 \'get\' 的 avalon.ajax';
 vmodel.state.setSend(sendType);
 
@@ -59,9 +58,9 @@ avalon.ajax({
 	<!-- post -->
 	<fieldset>
 		<legend><h2>post</h2></legend>
+		<p>通过 post 方式发送/请求数据。</p>
 
 		<p><button ms-click="post">avalon.post</button></p>
-
 <pre><code class="javascript">var sendType = 'avalon.post';
 vmodel.state.setSend(sendType);
 
@@ -73,7 +72,6 @@ avalon.post('/api?age=12', {
 });</code></pre>
 
 		<p><button ms-click="ajaxPost">avalon.ajax</button></p>
-
 <pre><code class="javascript">var sendType = 'type 为 \'post\' 的 avalon.ajax';
 vmodel.state.setSend(sendType);
 
@@ -93,9 +91,9 @@ avalon.ajax({
 	<!-- upload -->
 	<fieldset>
 		<legend><h2>upload</h2></legend>
+		<p>通过 xhr 方式提交 <code>FormData</code> 类型数据。</p>
 
 		<p><button ms-click="upload">avalon.upload</button></p>
-
 <pre><code class="javascript">var sendType = 'avalon.upload',
 	formData = new FormData();
 
@@ -110,7 +108,6 @@ avalon.upload('/api?age=12', formData, {
 });</code></pre>
 
 		<p><button ms-click="ajaxUpload">avalon.ajax</button></p>
-
 <pre><code class="javascript">var sendType = '拥有 form 的 avalon.ajax',
 	formData = new FormData();
 
@@ -133,9 +130,9 @@ avalon.ajax({
 	<!-- getJSON -->
 	<fieldset>
 		<legend><h2>getJSON</h2></legend>
+		<p>获取 <code>json</code> 类型数据。</p>
 
 		<p><button ms-click="getJSON">avalon.getJSON</button></p>
-
 <pre><code class="javascript">var sendType = 'avalon.getJSON';
 vmodel.state.setSend(sendType);
 
@@ -147,7 +144,6 @@ avalon.getJSON('/api', {
 });</code></pre>
 
 		<p><button ms-click="ajaxGetJSON">avalon.ajax</button></p>
-
 <pre><code class="javascript">var sendType = 'dataType 为 \'json\' 的 avalon.ajax';
 vmodel.state.setSend(sendType);
 
@@ -168,9 +164,9 @@ avalon.ajax({
 	<!-- getScript -->
 	<fieldset>
 		<legend><h2>getScript</h2></legend>
+		<p>加载脚本。</p>
 
 		<p><button ms-click="getScript">avalon.getScript</button></p>
-
 <pre><code class="javascript">var sendType = 'avalon.getScript';
 vmodel.state.setSend(sendType);
 
@@ -184,7 +180,6 @@ avalon.getScript('/js/test.js', {
 });</code></pre>
 
 		<p><button ms-click="ajaxGetScript">avalon.ajax</button></p>
-
 <pre><code class="javascript">var sendType = 'dataType 为 \'script\' 的 avalon.ajax';
 vmodel.state.setSend(sendType);
 
@@ -203,7 +198,6 @@ avalon.ajax({
 });</code></pre>
 
 		<p><button ms-click="ajaxGetScriptNoDataType">avalon.ajax</button>（未设置 <code>dataType</code>，使用 xhr 加载脚本，可以获取脚本内容，无法跨域）</p>
-
 <pre><code class="javascript">var sendType = '未设置 dataType 的 avalon.ajax';
 vmodel.state.setSend(sendType);
 
@@ -224,6 +218,7 @@ avalon.ajax({
 	<!-- 跨域 -->
 	<fieldset>
 		<legend><h2>跨域</h2></legend>
+		<p>通过 <code>jsonp</code> 方式实现跨域。</p>
 
 		<p><button ms-click="corsAjax">avalon.ajax</button>（<code>dataType</code> 设为 <code>'jsonp'</code>）</p>
 
@@ -277,9 +272,10 @@ avalon.ajax({
 
 	<!-- param -->
 	<fieldset>
-	<legend><h2>param &amp; unparam</h2></legend>
+		<legend><h2>param &amp; unparam</h2></legend>
+		<p><code>avalon.param</code> 和 <code>avalon.unparam</code> 提供了复杂对象和字符串之间相互装换的方法，一般用于 url 末端作为携带参数。</p>
 
-	<p><code>avalon.param(obj)</code> 将一个对象转换为字符串，<code>avalon.unparam(str)</code> 将一个字符串转换为对象</p>
+		<p><code>avalon.param(obj)</code> 将一个对象转换为字符串，<code>avalon.unparam(str)</code> 将一个字符串转换为对象</p>
 
 <pre><code class="javascript">var obj = {
 	name: 'Tom',
@@ -297,7 +293,42 @@ avalon.log(avalon.unparam(str));
 // 	lan: ['html', 'css', 'js']
 // }</code></pre>
 
-</fieldset>
+	</fieldset>
+
+	<!-- serialize -->
+	<fieldset>
+	<legend><h2>serialize</h2></legend>
+	<p>通过表单元素生成字符串。</p>
+	
+
+	<div id="test-form">
+		<p>
+			<label>name:</label>
+			<input type="text" name="name">
+		</p>
+		<p>
+			<label>sex:</label>
+			<select name="sex">
+				<option value="male">male</option>
+				<option value="female">female</option>
+				<option value="ohter">other</option>
+			</select>
+		</p>
+		<p>
+			<label>lan:</label>
+			<input type="checkbox" name="lan" value="html">html
+			<input type="checkbox" name="lan" value="css">css
+			<input type="checkbox" name="lan" value="js">js
+		</p>
+	</div>
+	<p><button ms-click="serialize">serialize</button></p>
+	<p>结果：<code>{{serializeStr}}</code></p>
+
+<pre><code class="javascript">var str = avalon.serialize(document.getElementById('test-form'));
+avalon.log(str);
+vmodel.serializeStr = str;</code></pre>
+
+	</fieldset>
 
 
 <!-- 

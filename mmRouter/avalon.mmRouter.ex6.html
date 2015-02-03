@@ -9,11 +9,17 @@
         <script src="../highlight/shCore.js"></script>
         <script>
             var arr = "doublelist flipswitch loading menu progressbar scrollbar scrollspy tab tooltip tree dragsort treeMunu mmPromise".split(" ")
-            require(["mmRouter/mmState"], function() {
+            require(["mmRouter/mmState", "dialog/avalon.dialog", "dropdownlist/avalon.dropdownlist"], function() {
                 var home = avalon.define("home", function(vm) {
                     vm.user = {
                         username: "",
                         pwd: ""
+                    }
+                    vm.dropdownlist1 = {
+                        textbox: {
+                            placeholder: "请输入组件名字"
+                        },
+                        data: arr
                     }
                     vm.admin = {
                         username: "skipper",
@@ -36,6 +42,7 @@
                     vm.login = function(e) {
                         e.preventDefault()
                         if(home.user.username && home.user.pwd) {
+                            avalon.vmodels.dialogName.toggle = false
                             if(currentState && currentState.query) {
                                 var jumpUrl = currentState.query.jumpUrl
                                 if(jumpUrl) {
@@ -74,7 +81,16 @@
                             templateUrl: "ui/login.html"
                         }
                     },
+                    onBeforeChange: function() {
+                        if(avalon.vmodels.dialogName) {
+                            avalon.vmodels.dialogName.toggle = true
+                            return false
+                        }
+                    },
                     onChange: function() {
+                    },
+                    onAfterLoad: function() {
+                        avalon.vmodels.dialogName.toggle = true
                     }
                 })
 
@@ -143,11 +159,17 @@
         
         &lt;script&gt;
             var arr = &quot;doublelist flipswitch loading menu progressbar scrollbar scrollspy tab tooltip tree dragsort treeMunu mmPromise&quot;.split(&quot; &quot;)
-            require([&quot;mmRouter/mmState&quot;], function() {
+            require([&quot;mmRouter/mmState&quot;, &quot;dialog/avalon.dialog&quot;, &quot;dropdownlist/avalon.dropdownlist&quot;], function() {
                 var home = avalon.define(&quot;home&quot;, function(vm) {
                     vm.user = {
                         username: &quot;&quot;,
                         pwd: &quot;&quot;
+                    }
+                    vm.dropdownlist1 = {
+                        textbox: {
+                            placeholder: &quot;请输入组件名字&quot;
+                        },
+                        data: arr
                     }
                     vm.admin = {
                         username: &quot;skipper&quot;,
@@ -170,6 +192,7 @@
                     vm.login = function(e) {
                         e.preventDefault()
                         if(home.user.username &amp;&amp; home.user.pwd) {
+                            avalon.vmodels.dialogName.toggle = false
                             if(currentState &amp;&amp; currentState.query) {
                                 var jumpUrl = currentState.query.jumpUrl
                                 if(jumpUrl) {
@@ -208,7 +231,16 @@
                             templateUrl: &quot;ui/login.html&quot;
                         }
                     },
+                    onBeforeChange: function() {
+                        if(avalon.vmodels.dialogName) {
+                            avalon.vmodels.dialogName.toggle = true
+                            return false
+                        }
+                    },
                     onChange: function() {
+                    },
+                    onAfterLoad: function() {
+                        avalon.vmodels.dialogName.toggle = true
                     }
                 })
 

@@ -41,9 +41,12 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
     avalon.router.go = function(toName, params, options) {
         var from = mmState.currentState, to = getStateByName(toName), replaceParams = options && options.replaceParams, replaceQuery =  options && options.replaceQuery
         if (to) {
+            // params is not defined
             if(!to.params) {
                 to.params = to.parentState ? to.parentState.params || {} : {}
+                to.query = to.params.query || {}
             }
+            // query is defined
             if(params && params.query) {
                 to.query = avalon.mix({}, replaceQuery ? {} : to.query || {}, params.query)
             }
@@ -162,9 +165,16 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         // 向上更新参数
         _update: function(state, args) {
             if(!state) return
+            var tmp
             while(state) {
+                // 共享query & params
+                if(tmp) {
+                    state.params = tmp.params
+                    state.query = tmp.params.query || {}
+                }
                 state.onUpdate.apply(state, args)
                 state.onChange.apply(state, args)
+                tmp = state
                 state = state.parentState
             }
         },

@@ -1,0 +1,42 @@
+body {
+	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+	color: #00B7FF;
+}
+
+p {
+	line-height: 1.6em;
+}
+
+pre {
+	line-height: 1.3em;
+}
+
+fieldset {
+	margin-bottom: 20px;
+}
+
+legend {
+	padding: 0 10px;
+}
+
+code, tt {
+	padding: 1px 3px;
+	font-family: Consolas, monospace, sans-serif;
+	font-size: 0.85em;
+	white-space: pre;
+	border: 1px solid #dddbcc;
+	background: #f1f0ea;
+	border-radius: 2px;
+}
+
+label {
+	display: inline-block;
+	width: 60px;
+}
+
+.ms-controller {
+	display: none;
+}

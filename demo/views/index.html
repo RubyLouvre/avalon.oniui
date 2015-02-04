@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mmRequest demo</title>
+<link rel="stylesheet" href="/css/style.css" />
+<!-- highlight.js -->
+<link rel="stylesheet" href="/css/monokai_sublime.css">
+<script src="/js/highlight.pack.js"></script>
+<script>
+	if(hljs){
+		hljs.configure({tabReplace: '    '}); // 4 spaces
+		hljs.initHighlightingOnLoad();
+	}
+</script>
+<script src="/avalon.js"></script>
+<script src="/js/index.js"></script>
+
+</head>
+<body class="ms-controller" ms-controller="demo">
+	<h1>mmRequest demo</h1>
+	<p>状态：{{state.text}}</p>
+
+	<!-- get -->
+	<fieldset>
+		<legend><h2>get</h2></legend>
+		<p>通过 get 方式发送/请求数据。</p>
+
+		<p><button ms-click="get">avalon.get</button></p>
+<pre><code class="javascript">var sendType = 'avalon.get';
+vmodel.state.setSend(sendType);
+
+avalon.get('/api', {
+	sendType: sendType,
+	arr: ['html', 'css', 'js']
+}).done(function(res) {
+	avalon.log(res);
+	vmodel.state.setSucc(res);
+});</code></pre>
+		
+		<p><button ms-click="ajaxGet">avalon.ajax</button></p>
+<pre><code class="javascript">var sendType = 'type 为 \'get\' 的 avalon.ajax';
+vmodel.state.setSend(sendType);
+
+avalon.ajax({
+	url: '/api',
+	type: 'get',
+	cache: false,
+	data: {
+		sendType: sendType
+	}
+}).done(function(res) {
+	avalon.log(res);
+	vmodel.state.setSucc(res);
+});</code></pre>
+
+	</fieldset>
+
+	<!-- post -->
+	<fieldset>
+		<legend><h2>post</h2></legend>
+		<p>通过 post 方式发送/请求数据。</p>
+
+		<p><button ms-click="post">avalon.post</button></p>
+<pre><code class="javascript">var sendType = 'avalon.post';
+vmodel.state.setSend(sendType);
+
+avalon.post('/api?age=12', {
+	sendType: sendType
+}).done(function(res) {
+	avalon.log(res);
+	vmodel.state.setSucc(res);
+});</code></pre>
+
+		<p><button ms-click="ajaxPost">avalon.ajax</button></p>
+<pre><code class="javascript">var sendType = 'type 为 \'post\' 的 avalon.ajax';
+vmodel.state.setSend(sendType);
+
+avalon.ajax({
+	url: '/api',
+	type: 'post',
+	data: {
+		sendType: sendType
+	}
+}).done(function(res) {
+	avalon.log(res);
+	vmodel.state.setSucc(res);
+});</code></pre>
+
+	</fieldset>
+
+	<!-- upload -->
+	<fieldset>
+		<legend><h2>upload</h2></legend>
+		<p>通过 xhr 方式提交 <code>FormData</code> 类型数据。</p>
+
+		<p><button ms-click="upload">avalon.upload</button></p>
+<pre><code class="javascript">var sendType = 'avalon.upload',
+	formData = new FormData();
+
+formData.append('sendType', sendType);
+vmodel.state.setSend(sendType);
+
+avalon.upload('/api?age=12', formData, {
+	name: 'avalon'
+}).done(function(res) {
+	avalon.log(res);
+	vmodel.state.setSucc(res);
+});</code></pre>
+
+		<p><button ms-click="ajaxUpload">avalon.ajax</button></p>
+<pre><code class="javascript">var sendType = '拥有 form 的 avalon.ajax',
+	formData = new FormData();
+
+formData.append('sendType', sendType);
+vmodel.state.setSend(sendType);
+
+avalon.ajax({
+	url: '/api',
+	form: formData,
+	data: {
+		name: 'avalon'
+	},
+	type: 'post' //get也可以
+}).done(function(res) {
+	avalon.log(res);
+	vmodel.state.setSucc(res);
+});</code></pre>
+	</fieldset>
+
+	<!-- getJSON -->
+	<fieldset>
+		<legend><h2>getJSON</h2></legend>
+		<p>获取 <code>json</code> 类型数据。</p>
+
+		<p><button ms-click="getJSON">avalon.getJSON</button></p>
+<pre><code class="javascript">var sendType = 'avalon.getJSON';
+vmodel.state.setSend(sendType);
+
+avalon.getJSON('/api', {
+	sendType: sendType
+}).done(function(res) {
+	avalon.log(res);
+	vmodel.state.setSucc(res);
+});</code></pre>
+
+		<p><button ms-click="ajaxGetJSON">avalon.ajax</button></p>
+<pre><code class="javascript">var sendType = 'dataType 为 \'json\' 的 avalon.ajax';
+vmodel.state.setSend(sendType);
+
+avalon.ajax({
+	url: '/api',
+	data: {
+		sendType: sendType
+	},
+	dataType: "json",
+	cache: false
+}).done(function(res) {
+	avalon.log(res);
+	vmodel.state.setSucc(res);
+});</code></pre>
+
+	</fieldset>
+
+	<!-- getScript -->
+	<fieldset>
+		<legend><h2>getScript</h2></legend>
+		<p>加载脚本。</p>
+
+		<p><button ms-click="getScript">avalon.getScript</button></p>
+<pre><code class="javascript">var sendType = 'avalon.getScript';
+vmodel.state.setSend(sendType);
+
+avalon.getScript('/js/test.js', {
+	sendType: sendType
+}).done(function(res) {
+	avalon.log(res)
+	vmodel.state.setSucc({
+		sendType: sendType
+	});
+});</code></pre>
+
+		<p><button ms-click="ajaxGetScript">avalon.ajax</button></p>
+<pre><code class="javascript">var sendType = 'dataType 为 \'script\' 的 avalon.ajax';
+vmodel.state.setSend(sendType);
+
+avalon.ajax({
+	url: '/js/test.js',
+	data: {
+		sendType: sendType
+	},
+	dataType: 'script',
+	cache: false
+}).done(function(res) {
+	avalon.log(res)
+	vmodel.state.setSucc({
+		sendType: sendType
+	});
+});</code></pre>
+
+		<p><button ms-click="ajaxGetScriptNoDataType">avalon.ajax</button>（未设置 <code>dataType</code>，使用 xhr 加载脚本，可以获取脚本内容，无法跨域）</p>
+<pre><code class="javascript">var sendType = '未设置 dataType 的 avalon.ajax';
+vmodel.state.setSend(sendType);
+
+avalon.ajax({
+	url: '/js/test.js',
+	data: {
+		sendType: sendType
+	}
+}).done(function(res) {
+	avalon.log(res)
+	vmodel.state.setSucc({
+		sendType: sendType
+	});
+});</code></pre>
+
+	</fieldset>
+
+	<!-- 跨域 -->
+	<fieldset>
+		<legend><h2>跨域</h2></legend>
+		<p>通过 <code>jsonp</code> 方式实现跨域。</p>
+
+		<p><button ms-click="corsAjax">avalon.ajax</button>（<code>dataType</code> 设为 <code>'jsonp'</code>）</p>
+
+<pre><code class="javascript">var sendType = '使用 jsonp 跨域的 avalon.ajax';
+vmodel.state.setSend(sendType);
+
+avalon.ajax({
+	url: corssDomain + '/jsonp',
+	data: {
+		sendType: sendType
+	},
+	dataType: 'jsonp',
+	cache: false
+}).done(function(res) {
+	avalon.log(res)
+	vmodel.state.setSucc({
+		sendType: sendType
+	})
+});</code></pre>
+		
+		<p><button ms-click="corsGetJSON">avalon.getJSON</button>（<code>url</code> 最后包含 <code>'?callback=?'</code>）</p>
+
+<pre><code class="javascript">var sendType = '通过 url 后缀识别跨域的 avalon.getJSON';
+vmodel.state.setSend(sendType);
+
+avalon.getJSON(corssDomain + '/jsonp?callback=?', {
+	sendType: sendType
+}).done(function(res) {
+	avalon.log(res);
+	vmodel.state.setSucc(res);
+});</code></pre>
+		
+		<p><button ms-click="corsAjaxGetJSON">avalon.ajax</button>（<code>url</code> 最后包含 <code>'?callback=?'</code>）</p>
+
+<pre><code class="javascript">var sendType = '通过 url 后缀识别跨域的 avalon.ajax';
+vmodel.state.setSend(sendType);
+
+avalon.ajax({
+	url: corssDomain + '/jsonp?callback=?',
+	data: {
+		sendType: sendType
+	},
+	dataType: "json",
+	cache: false
+}).done(function(res) {
+	avalon.log(res);
+	vmodel.state.setSucc(res);
+});</code></pre>
+	
+	</fieldset>
+
+	<!-- param -->
+	<fieldset>
+		<legend><h2>param &amp; unparam</h2></legend>
+		<p><code>avalon.param</code> 和 <code>avalon.unparam</code> 提供了复杂对象和字符串之间相互装换的方法，一般用于 url 末端作为携带参数。</p>
+
+		<p><code>avalon.param(obj)</code> 将一个对象转换为字符串，<code>avalon.unparam(str)</code> 将一个字符串转换为对象</p>
+
+<pre><code class="javascript">var obj = {
+	name: 'Tom',
+	age: 12,
+	lan: ['html', 'css', 'js']
+}, str;
+
+str = avalon.param(obj);
+avalon.log(str);
+// 'name=Tom&age=12&lan%5B%5D=html&lan%5B%5D=css&lan%5B%5D=js'
+avalon.log(avalon.unparam(str));
+// {
+// 	name: 'Tom',
+// 	age: 12,
+// 	lan: ['html', 'css', 'js']
+// }</code></pre>
+
+	</fieldset>
+
+	<!-- serialize -->
+	<fieldset>
+	<legend><h2>serialize</h2></legend>
+	<p>通过表单元素生成字符串。</p>
+	
+
+	<div id="test-form">
+		<p>
+			<label>name:</label>
+			<input type="text" name="name">
+		</p>
+		<p>
+			<label>sex:</label>
+			<select name="sex">
+				<option value="male">male</option>
+				<option value="female">female</option>
+				<option value="ohter">other</option>
+			</select>
+		</p>
+		<p>
+			<label>lan:</label>
+			<input type="checkbox" name="lan" value="html">html
+			<input type="checkbox" name="lan" value="css">css
+			<input type="checkbox" name="lan" value="js">js
+		</p>
+	</div>
+	<p><button ms-click="serialize">serialize</button></p>
+	<p>结果：<code>{{serializeStr}}</code></p>
+
+<pre><code class="javascript">var str = avalon.serialize(document.getElementById('test-form'));
+avalon.log(str);
+vmodel.serializeStr = str;</code></pre>
+
+	</fieldset>
+
+
+<!-- 
+<p>dataType 为 jsonp，type 为 post，无法传输 data</p>
+<p>dataType 为 json，type 为 post，报错，没有根据 url 含有 callback 自动改为 jsonp</p>
+ -->
+</body>
+</html>

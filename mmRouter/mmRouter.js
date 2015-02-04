@@ -161,7 +161,8 @@ define(["mmRouter/mmHistory"], function() {
                 path = path instanceof Array ? path : [path]
             avalon.each(path, function(index, p) {
                 me.add("get", p, function() {
-                    me.navigate(me.urlFormate(redirect, this.params, this.query), {replace: true})
+                    var info = me.urlFormate(redirect, this.params, this.query)
+                    me.navigate(info.path + info.query, {replace: true})
                 })
             })
             return this
@@ -178,8 +179,11 @@ define(["mmRouter/mmHistory"], function() {
                     var key = mat.replace(/[\{\}]/g, '').split(":")
                     key = key[0] ? key[0] : key[1]
                     return params[key] || ''
-                }).replace(/^\//g, '') + query
-            return hash
+                }).replace(/^\//g, '')
+            return {
+                path: hash,
+                query: query
+            }
         },
         /* *
          `'/hello/'` - 匹配'/hello/'或'/hello'

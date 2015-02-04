@@ -33,6 +33,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
      *  @param params 附加参数
      *  @param params.query 在hash后面附加的类似search'的参数对
      *  @param options 扩展配置
+     *  @param options.reload true强制reload，即便url、参数并未发生变化
      *  @param options.replace true替换history，否则生成一条新的历史记录
      *  @param options.replaceParams true表示完全覆盖params，而不是merge
      *  @param options.replaceQuery true表示完全覆盖query，而不是merge
@@ -50,16 +51,37 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             var args = to.keys.map(function(el) {
                 return to.params [el.name] || ""
             })
-            params = to.params
             mmState.transitionTo(from, to, args, options)
         }
     }
-
+    var undefine = void 0
     var mmState = window.mmState = {
         prevState: NaN,
         currentState: NaN, // 当前状态，可能还未切换到该状态
         activeState: NaN, // 当前实际处于的状态
         params: {},
+        _oldParams: {},
+        // params changed
+        isParamsChanged: function(p, op, query) {
+            var p = p == undefine ? this.params : p,
+                op = op == undefine ? this._oldParams : op
+            if(!query && this.isParamsChanged(p.query || {}, op.query || {}, "query")) return true
+            for(var i in p) {
+                if(i == "query") {
+                    if(!op[i]) return true
+                    continue
+                }
+                if(!op[i] || op[i] != p[i]) return true
+            }
+            for(var i in op) {
+                if(i == "query") {
+                    if(!p[i]) return true
+                    continue
+                }
+                if(!p[i] || op[i] != p[i]) return true
+            }
+            return false
+        },
         // 状态离开
         popState: function(end, args, callback) {
             callback = callback || avalon.noop
@@ -71,14 +93,14 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             if(end === this.activeState || !cur) return callback()
             // 阻止退出
             if(cur.onBeforeUnload() === false) return callback(false)
+            // 如果没有父状态了，说明已经退出到最上层，需要退出，不再继续迭代
+            me.activeState = cur.parentState || NaN
             cur.done = function(success) {
                 avalon.mix(cur, {
                     _pending: false,
                     done: null
                 })
                 if(success !== false) {
-                    // 如果没有父状态了，说明已经退出到最上层，需要退出，不再继续迭代
-                    me.activeState = cur.parentState || NaN
                     if(me.activeState) return me.popOne(end, args, callback)
                 }
                 return callback(success)
@@ -107,25 +129,28 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             // 阻止进入该状态
             if(cur.onBeforeChange() === false) return callback(false)
             if(cur.onBeforeEnter() === false) return callback(false)
+            me.activeState = cur // 更新当前实际处于的状态
             cur.done = function(success) {
+                // 防止async处触发已经销毁的done
+                if(!cur.done) return
                 avalon.mix(cur, {
                     _pending: false,
                     done: null,
                     visited: true
                 })
-                me.activeState = cur // 更新当前实际处于的状态
+                // 退出
+                if(success === false) {
+                    cur.callback.apply(cur, args)
+                    return callback(success)
+                }
                 new Promise(function(resolve) {
                     resolve()
                 }).then(function() {
                     // view的load，切换以及scan
                     return cur.callback.apply(cur, args)
                 }).done(function() {
-                    // 继续状态链或者退出
-                    if(success !== false){
-                        me.pushOne(chain, args, callback)
-                    } else {
-                        callback(success)
-                    }
+                    // 继续状态链
+                    me.pushOne(chain, args, callback)
                 })
             }
             cur.params = me.params
@@ -148,10 +173,14 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             if(this.activeState && this.activeState != this.currentState) {
                 avalon.log("navigating to [" + this.currentState.stateName + "] will be stopped, redirect to [" + toState.stateName + "] now")
                 this.activeState.done && this.activeState.done(!"stopped")
+                fromState = this.activeState // 更新实际的fromState
             }
-            this.params = toState.params
+            toState.params.query = toState.params.query || toState.query || {}
+            this.params = avalon.mix(true, {}, toState.params)
 
             var me = this,
+                // 是否强制reload或者params发生变化
+                reload = options && options.reload || this.isParamsChanged(),
                 over,
                 commonParent = findCommonBranch(fromState && fromState.stateName || "", toState.stateName || ""),
                 done = function(success) {
@@ -167,7 +196,8 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         }
                     }
                 }
-
+            // 做拷贝，防止引用
+            this._oldParams = avalon.mix(true, {}, this.params)
             if(fromState !== toState) {
                 avalon.log("begin transitionTo " + toState.stateName + " from " + (fromState && fromState.stateName || "unknown"))
                 if(over === true) {
@@ -176,7 +206,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 this.currentState = toState
                 this.prevState = fromState
                 this.popState(commonParent, args, function(success) {
-                    me._update(commonParent, args)
+                    reload && me._update(commonParent, args)
                     // 中断
                     if(success === false) return done(!"stop poping [" + (commonParent && commonParent.stateName || "unknown"))
                     fromState && callStateFunc("unload", fromState)
@@ -184,6 +214,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 })
             // 仅仅是参数发生了变化
             } else {
+                if(!reload) return
                 // 这里也抛出一个unload事件，如果参数发生变化
                 fromState && callStateFunc("unload", fromState)
                 me._update(commonParent, args)

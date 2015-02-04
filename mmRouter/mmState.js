@@ -71,14 +71,14 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             if(end === this.activeState || !cur) return callback()
             // 阻止退出
             if(cur.onBeforeUnload() === false) return callback(false)
+            // 如果没有父状态了，说明已经退出到最上层，需要退出，不再继续迭代
+            me.activeState = cur.parentState || NaN
             cur.done = function(success) {
                 avalon.mix(cur, {
                     _pending: false,
                     done: null
                 })
                 if(success !== false) {
-                    // 如果没有父状态了，说明已经退出到最上层，需要退出，不再继续迭代
-                    me.activeState = cur.parentState || NaN
                     if(me.activeState) return me.popOne(end, args, callback)
                 }
                 return callback(success)
@@ -107,25 +107,28 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             // 阻止进入该状态
             if(cur.onBeforeChange() === false) return callback(false)
             if(cur.onBeforeEnter() === false) return callback(false)
+            me.activeState = cur // 更新当前实际处于的状态
             cur.done = function(success) {
+                // 防止async处触发已经销毁的done
+                if(!cur.done) return
                 avalon.mix(cur, {
                     _pending: false,
                     done: null,
                     visited: true
                 })
-                me.activeState = cur // 更新当前实际处于的状态
+                // 退出
+                if(success === false) {
+                    cur.callback.apply(cur, args)
+                    return callback(success)
+                }
                 new Promise(function(resolve) {
                     resolve()
                 }).then(function() {
                     // view的load，切换以及scan
                     return cur.callback.apply(cur, args)
                 }).done(function() {
-                    // 继续状态链或者退出
-                    if(success !== false){
-                        me.pushOne(chain, args, callback)
-                    } else {
-                        callback(success)
-                    }
+                    // 继续状态链
+                    me.pushOne(chain, args, callback)
                 })
             }
             cur.params = me.params
@@ -148,6 +151,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             if(this.activeState && this.activeState != this.currentState) {
                 avalon.log("navigating to [" + this.currentState.stateName + "] will be stopped, redirect to [" + toState.stateName + "] now")
                 this.activeState.done && this.activeState.done(!"stopped")
+                fromState = this.activeState // 更新实际的fromState
             }
             this.params = toState.params
 

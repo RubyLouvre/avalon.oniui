@@ -32,6 +32,7 @@ define(["mmRouter/mmHistory"], function() {
         if(typeof obj == 'string') return obj
         var str = []
         for(var i in obj) {
+            if(i == "query") continue
             str.push(i + '=' + encodeURIComponent(obj[i]))
         }
         return str.length ? '?' + str.join("&") : ''

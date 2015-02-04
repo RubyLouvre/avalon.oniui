@@ -75,6 +75,9 @@
                         }
                     })
                 })
+                avalon.router.errorback = function() {
+                    avalon.router.go("home", {}, {replace: true})
+                }
                 avalon.config({debug: false})
                 //启动路由
                 avalon.history.start({

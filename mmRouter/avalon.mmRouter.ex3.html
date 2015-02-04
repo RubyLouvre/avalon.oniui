@@ -40,7 +40,8 @@
             for(var i = 0; i < arr.length; i++) {
                 cs.push({
                     state: i ? arr.slice(0, i+1).join(".") : "contacts.list",
-                    arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
+                    arg: "{contactId: 1, itemID: 'b'}"
+                    // arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
                 })
             }
             require(["ready!", "mmRouter/mmState"], function() {
@@ -395,7 +396,8 @@
             for(var i = 0; i &lt; arr.length; i++) {
                 cs.push({
                     state: i ? arr.slice(0, i+1).join(&quot;.&quot;) : &quot;contacts.list&quot;,
-                    arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
+                    arg: &quot;{contactId: 1, itemID: 'b'}&quot;
+                    // arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
                 })
             }
             require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;], function() {

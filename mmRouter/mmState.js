@@ -7,7 +7,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         for (var i = 0, el; el = states[i++]; ) {//el为一个个状态对象，状态对象的callback总是返回一个Promise
             var args = path.match(el.regexp)
             if (args && el.abstract !== true) {//不能是抽象状态
-                el.query = query || {}
+                mmState.query = query || {}
                 el.path = path
                 el.params = {}
                 var keys = el.keys
@@ -35,52 +35,53 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
      *  @param options 扩展配置
      *  @param options.reload true强制reload，即便url、参数并未发生变化
      *  @param options.replace true替换history，否则生成一条新的历史记录
-     *  @param options.replaceParams true表示完全覆盖params，而不是merge
-     *  @param options.replaceQuery true表示完全覆盖query，而不是merge
+     *  @param options.replaceQuery true表示完全覆盖query，而不是merge，默认为true，如果options.query为空或者未定义则会清空search参数
     */
     avalon.router.go = function(toName, params, options) {
-        var from = mmState.currentState, to = getStateByName(toName), replaceParams = options && options.replaceParams, replaceQuery =  options && options.replaceQuery
+        var from = mmState.currentState, to = getStateByName(toName), replaceQuery =  options && options.replaceQuery !== false || !options, params = params || {}
         if (to) {
+            // params is not defined
             if(!to.params) {
                 to.params = to.parentState ? to.parentState.params || {} : {}
             }
-            if(params && params.query) {
-                to.query = avalon.mix({}, replaceQuery ? {} : to.query || {}, params.query)
-            }
-            avalon.mix(true, replaceParams ? {} : to.params, params || {})
+            // query is shared by all states
+            mmState.query = avalon.mix({}, replaceQuery ? {} : mmState.query || {}, params.query || {})
+            // merge params
             var args = to.keys.map(function(el) {
-                return to.params [el.name] || ""
+                return params[el.name] || to.params[el.name] || ""
             })
+            avalon.router._parseArgs(args, to)
             mmState.transitionTo(from, to, args, options)
         }
     }
-    var undefine = void 0
     var mmState = window.mmState = {
         prevState: NaN,
         currentState: NaN, // 当前状态，可能还未切换到该状态
         activeState: NaN, // 当前实际处于的状态
+        oldQuery: {},
+        query: {},
         params: {},
-        _oldParams: {},
         // params changed
-        isParamsChanged: function(p, op, query) {
-            var p = p == undefine ? this.params : p,
-                op = op == undefine ? this._oldParams : op
-            if(!query && this.isParamsChanged(p.query || {}, op.query || {}, "query")) return true
+        isParamsChanged: function(p, op) {
+            var p = p == void 0 ? this.query : p,
+                op = op == void 0 ? this.oldQuery : op,
+                res = false
             for(var i in p) {
-                if(i == "query") {
-                    if(!op[i]) return true
-                    continue
+                if(!(i in op) || op[i] != p[i]) {
+                    res = true
+                    break
                 }
-                if(!op[i] || op[i] != p[i]) return true
             }
-            for(var i in op) {
-                if(i == "query") {
-                    if(!p[i]) return true
-                    continue
+            if(!res) {
+                for(var i in op) {
+                    if(!(i in p) || op[i] != p[i]) {
+                        res = true
+                        break
+                    }
                 }
-                if(!p[i] || op[i] != p[i]) return true
             }
-            return false
+            if(res) avalon.mix(this.oldQuery, this.query)
+            return res
         },
         // 状态离开
         popState: function(end, args, callback) {
@@ -96,10 +97,8 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             // 如果没有父状态了，说明已经退出到最上层，需要退出，不再继续迭代
             me.activeState = cur.parentState || NaN
             cur.done = function(success) {
-                avalon.mix(cur, {
-                    _pending: false,
-                    done: null
-                })
+                cur._pending = false
+                cur.done = null
                 if(success !== false) {
                     if(me.activeState) return me.popOne(end, args, callback)
                 }
@@ -133,11 +132,9 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             cur.done = function(success) {
                 // 防止async处触发已经销毁的done
                 if(!cur.done) return
-                avalon.mix(cur, {
-                    _pending: false,
-                    done: null,
-                    visited: true
-                })
+                cur._pending = false
+                cur.done = null
+                cur.visited = true
                 // 退出
                 if(success === false) {
                     cur.callback.apply(cur, args)
@@ -153,18 +150,23 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     me.pushOne(chain, args, callback)
                 })
             }
-            cur.params = me.params
+            avalon.router._parseArgs(args, cur)
+            avalon.mix(cur.oldParams, cur.params)
             // 一般在这个回调里准备数据
             cur.onChange.apply(cur, args)
             cur.onEnter.apply(cur, args)
             if(!cur._pending && cur.done) cur.done()
         },
         // 向上更新参数
-        _update: function(state, args) {
+        _update: function(state, args, reload) {
             if(!state) return
+            var tmp
             while(state) {
-                state.onUpdate.apply(state, args)
-                state.onChange.apply(state, args)
+                avalon.router._parseArgs(args, state)
+                if(reload || mmState.isParamsChanged(state.oldParams, state.params)) {
+                    state.onUpdate.apply(state, args)
+                    state.onChange.apply(state, args)
+                }
                 state = state.parentState
             }
         },
@@ -175,11 +177,10 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 this.activeState.done && this.activeState.done(!"stopped")
                 fromState = this.activeState // 更新实际的fromState
             }
-            toState.params.query = toState.params.query || toState.query || {}
-            this.params = avalon.mix(true, {}, toState.params)
 
-            var me = this,
-                // 是否强制reload或者params发生变化
+            var info = avalon.router.urlFormate(toState.url, toState.params, mmState.query),
+                me = this,
+                // 是否强制reload或者query发生变化
                 reload = options && options.reload || this.isParamsChanged(),
                 over,
                 commonParent = findCommonBranch(fromState && fromState.stateName || "", toState.stateName || ""),
@@ -189,15 +190,10 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     if(success !== false) {
                         avalon.log("transitionTo " + toState.stateName + " success")
                         callStateFunc("onload")
-                        // update hash
-                        if(avalon.history) {
-                            // 更新url
-                            avalon.history.updateLocation(avalon.router.urlFormate(toState.url, toState.params, toState.query), avalon.mix({}, options|| {}, {silent: true}))
-                        }
+                        if(avalon.history) avalon.history.updateLocation(info.path + info.query, avalon.mix({}, options|| {}, {silent: true}))
                     }
                 }
-            // 做拷贝，防止引用
-            this._oldParams = avalon.mix(true, {}, this.params)
+            toState.path = info.path
             if(fromState !== toState) {
                 avalon.log("begin transitionTo " + toState.stateName + " from " + (fromState && fromState.stateName || "unknown"))
                 if(over === true) {
@@ -206,7 +202,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 this.currentState = toState
                 this.prevState = fromState
                 this.popState(commonParent, args, function(success) {
-                    reload && me._update(commonParent, args)
+                    me._update(commonParent, args, reload)
                     // 中断
                     if(success === false) return done(!"stop poping [" + (commonParent && commonParent.stateName || "unknown"))
                     fromState && callStateFunc("unload", fromState)
@@ -214,10 +210,12 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 })
             // 仅仅是参数发生了变化
             } else {
+                avalon.router._parseArgs(args, fromState)
+                reload = reload || mmState.isParamsChanged(fromState.oldParams, fromState.params)
                 if(!reload) return
                 // 这里也抛出一个unload事件，如果参数发生变化
                 fromState && callStateFunc("unload", fromState)
-                me._update(commonParent, args)
+                me._update(commonParent, args, reload)
                 // just do update
                 toState.onUpdate.apply(toState, args)
                 toState.onChange.apply(toState, args)
@@ -390,12 +388,20 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             this.stateName = stateName
             this._pending = false
             this.visited = false
+            this.params = {}
+            this.oldParams = {}
+            this.keys = []
             avalon.mix(this, options)
         } else {
             return new StateModel(stateName, options || {})
         }
     }
     StateModel.prototype = {
+        isParamsChanged: function() {
+            var res = mmState.isParamsChanged(this.params, this._params)
+            if(res) avalon.mix(this._params, this.params)
+            return res
+        },
         /*
          * @interface state.async 表示当前的状态是异步，中断状态chain的继续执行，返回一个done函数，通过done(false)终止状态链的执行，任意其他非false参数，将继续
          *<pre>
@@ -406,8 +412,9 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
          *</pre> 
         */
         async: function() {
-            this._pending = true
-            return this.done
+            // 没有done回调的时候，防止死球
+            if(this.done) this._pending = true
+            return this.done || avalon.noop
         },
         onBeforeChange: avalon.noop, // 切入某个state之前触发
         onChange: avalon.noop, // 切入触发

@@ -22,14 +22,14 @@ $uiname: "oni-suggest";
         font-size: 12px;
         padding: 3px 5px;
         word-break: break-all;
-        &.#{$uiname}-item-selected {
-            background-color: $ui-state-active-background-color;
-            color: $ui-state-active-color;
-        }
-        &.#{$uiname}-item-hover {
-            background-color: $ui-state-active-background-color;
-            color: $ui-state-active-color;
-        }
+    }
+    .#{$uiname}-item-selected {
+        background-color: $ui-state-active-background-color;
+        color: $ui-state-active-color;
+    }
+    .#{$uiname}-item-hover {
+        background-color: #f8f8f8;
+        color: #333333;
     }
 }
 

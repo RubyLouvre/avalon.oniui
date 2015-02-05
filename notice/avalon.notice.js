@@ -10,7 +10,7 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
         affixBoxs = [], // 存储吸顶的notice元素，且只保存弹出的notice
         affixHeights = [], //存储吸顶元素对应的height、width、offsetTop
         isIE6 = (window.navigator.userAgent || '').toLowerCase().indexOf('msie 6') !== -1,
-        maxZIndex = getMaxZIndex();
+        maxZIndex = 0;
     var widget = avalon.ui.notice = function(element, data, vmodels) {
         var options = data.noticeOptions,
             temp = template
@@ -102,6 +102,9 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
                 var container = null;
                 var sourceFragment = avalon.parseHTML(options.template);
                 var AffixPlaceholder = sourceFragment.lastChild;
+                if (!maxZIndex) {
+                    maxZIndex = getMaxZIndex()                    
+                }
                 templateView = sourceFragment.firstChild;
                 container = positionNoticeElement(); //获取存储notice的容器
                 container.appendChild(templateView);

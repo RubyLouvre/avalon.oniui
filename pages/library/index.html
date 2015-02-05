@@ -1,8 +1,9 @@
 <script>
+if (!vmodel) {
 var widgets = ["accordion", "at", "browser","button", "camera", "carousel", "checkboxlist", "colorpicker", "cookie",
     "coupledatepicker", "datepicker", "daterangepicker", "dialog",
-    "doublelist", "draggable", "dropdown", "flipswitch", "lazyload", "loading", "live","mask", "menu", "miniswitch",
-    "notice", "pager", "position", "preview", "progressbar", "promise", "rating",
+    "doublelist", "draggable", "dropdown", "dropdownlist", "flipswitch", "lazyload", "loading", "live","mask", "menu", "miniswitch", "mmPromise", "mmRouter",
+    "notice", "pager", "position", "preview", "progressbar", "rating",
     "resizable", "scrollbar", "scrollspy", "smartgrid", "simplegrid", "slider",
     "spinner", "store", "switchdropdown", "tab", "textbox", "timer", "tree","tooltip", "uploader","validation"
 ].sort()
@@ -12,19 +13,23 @@ var vmodel = avalon.define("library", function(vm) {
     vm.activeIndex = 0
     vm.widgetHref = ""
     vm.frameContentHeight = 3500 //默认iframe高度，过后通过iframeLoaded重新设置
-    vm.changeActiveIndex = function(index) { //左侧边栏点击和页面初始化时，更新iframe的src以及页面url
+    vm.changeActiveIndex = function(index, e) { //左侧边栏点击和页面初始化时，更新iframe的src以及页面url
         var name, prefix
         if (index !== -1) { //左侧边栏点击
+            if(vm.widgets[index] == "mmRouter") {
+                window.open("mmRouter/avalon.mmRouter.doc.html")
+                return e.preventDefault()
+            }
             vm.activeIndex = index
             name = vm.widgets[index]
         } else { //页面初始化
-            if (location.href.indexOf("#") > -1) { //exp: http.....avalon.oniui/index.html#avalon.datepicker.doc.html
-                var curLocation = location.href.split("#")[1] //exp: avalon.datepicker.doc.html
+            if (window.location.href.indexOf("#") > -1) { //exp: http.....avalon.oniui/index.html#avalon.datepicker.doc.html
+                var curLocation = window.location.href.split("#")[1] //exp: avalon.datepicker.doc.html
                 name = curLocation.split(".")[1] //exp: datepicker
-                vm.activeIndex = vm.widgets.indexOf(name)
             } else { //exp：..../avalon.oniui/index.html
                 name = "accordion"
             }
+            vm.activeIndex = vm.widgets.indexOf(name)
         }
         prefix = name //处理一般情况
         switch (name) {
@@ -39,6 +44,7 @@ var vmodel = avalon.define("library", function(vm) {
         }
         if (window.location.href.indexOf("?ex") > -1 && index === -1) { //ex页面，exp:...avalon.oniui/index.html#avalon.datepicker.doc.html?ex=ex1
             vm.widgetHref = prefix + "/avalon." + name + "." + window.location.href.split("example=")[1] + ".html" //寻找目录下示例页
+            avalon.log("ex");
         } else {
             var curLocation = window.location.href.split("#")[0]
             vm.widgetHref = prefix + "/avalon." + name + ".doc.html?ts=" + Date.parse(new Date()) //使页面刷新
@@ -56,8 +62,6 @@ function replaceLocation(location) {
     }
 }
 
-avalon.bind(window, "load", init) //等待iframe加载
-
 function init() {
     var historys = [] //浏览历史
     var historyIndex = -1
@@ -68,6 +72,7 @@ function init() {
     
     var iframe = document.getElementById("widgetFrame")
     vmodel.changeActiveIndex(-1) //页面初始化
+    if (!iframe) return
 
     if (iframe.attachEvent) { //响应iframe load事件
         iframe.attachEvent("onload", function() {
@@ -203,6 +208,9 @@ function init() {
         return ""
     }
 }
+
+avalon.ready(init)
+}
 </script>
 <table class="oniui-content" width="100%" ms-controller="library">
     <tr>
@@ -212,7 +220,7 @@ function init() {
                     <a  href="javascript:void(0)"
                         ms-class-odd="$index % 2 === 1"
                         ms-class="active: $index===activeIndex"
-                        ms-click="changeActiveIndex($index)">
+                        ms-click="changeActiveIndex($index, $event)">
                         {{el}}
                     </a>
                 </li>

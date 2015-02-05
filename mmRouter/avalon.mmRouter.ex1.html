@@ -4,7 +4,7 @@
         <title>mmRouter组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <script src="avalon.js"></script>
+        <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
         <style>
             .header{
@@ -29,8 +29,8 @@
             }
         </style>
         <script >
-            avalon.config({debug: true})
-            require(["ready!", "mmState"], function() {
+            avalon.config({debug: false})
+            require(["ready!", "mmRouter/mmState"], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -68,11 +68,7 @@
                         "": {
                             templateProvider: new Promise(function(fn) {
                                 fn('<p class="lead">UI-Router Resources</p><ul>' +
-                                        '<li><a href="https://github.com/angular-ui/ui-router/tree/master/sample">Source for this Sample</a></li>' +
-                                        '<li><a href="https://github.com/angular-ui/ui-router">Github Main Page</a></li>' +
-                                        '<li><a href="https://github.com/angular-ui/ui-router#quick-start">Quick Start</a></li>' +
-                                        '<li><a href="https://github.com/angular-ui/ui-router/wiki">In-Depth Guide</a></li>' +
-                                        '<li><a href="https://github.com/angular-ui/ui-router/wiki/Quick-Reference">API Reference</a></li>' +
+                                        '<li>薩瓦迪卡</li>' +
                                         '</ul>')
                             })
                         },
@@ -94,6 +90,7 @@
                             var lastId
                             var vmodel = avalon.define({
                                 $id: "contacts",
+                                $skipArray: ["contact", "item"],
                                 edit: function() {
                                     avalon.router.go("contacts.detail.item.edit")
                                 },
@@ -290,7 +287,7 @@
         </script>
     </head>
     <body>
-        <h1>mmRouter综合示例二</h1>
+        <h1>mmRouter综合示例二: avalon.router + avalon.state</h1>
         <div ms-controller="test">
 
             <div class="header">
@@ -306,7 +303,7 @@
         &lt;title&gt;mmRouter组件&lt;/title&gt;
         &lt;meta charset=&quot;UTF-8&quot;&gt;
         &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
-        &lt;script src=&quot;avalon.js&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
         
         &lt;style&gt;
             .header{
@@ -331,8 +328,8 @@
             }
         &lt;/style&gt;
         &lt;script &gt;
-            avalon.config({debug: true})
-            require([&quot;ready!&quot;, &quot;mmState&quot;], function() {
+            avalon.config({debug: false})
+            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -370,11 +367,7 @@
                         &quot;&quot;: {
                             templateProvider: new Promise(function(fn) {
                                 fn('&lt;p class=&quot;lead&quot;&gt;UI-Router Resources&lt;/p&gt;&lt;ul&gt;' +
-                                        '&lt;li&gt;&lt;a href=&quot;https://github.com/angular-ui/ui-router/tree/master/sample&quot;&gt;Source for this Sample&lt;/a&gt;&lt;/li&gt;' +
-                                        '&lt;li&gt;&lt;a href=&quot;https://github.com/angular-ui/ui-router&quot;&gt;Github Main Page&lt;/a&gt;&lt;/li&gt;' +
-                                        '&lt;li&gt;&lt;a href=&quot;https://github.com/angular-ui/ui-router#quick-start&quot;&gt;Quick Start&lt;/a&gt;&lt;/li&gt;' +
-                                        '&lt;li&gt;&lt;a href=&quot;https://github.com/angular-ui/ui-router/wiki&quot;&gt;In-Depth Guide&lt;/a&gt;&lt;/li&gt;' +
-                                        '&lt;li&gt;&lt;a href=&quot;https://github.com/angular-ui/ui-router/wiki/Quick-Reference&quot;&gt;API Reference&lt;/a&gt;&lt;/li&gt;' +
+                                        '&lt;li&gt;薩瓦迪卡&lt;/li&gt;' +
                                         '&lt;/ul&gt;')
                             })
                         },
@@ -396,6 +389,7 @@
                             var lastId
                             var vmodel = avalon.define({
                                 $id: &quot;contacts&quot;,
+                                $skipArray: [&quot;contact&quot;, &quot;item&quot;],
                                 edit: function() {
                                     avalon.router.go(&quot;contacts.detail.item.edit&quot;)
                                 },
@@ -592,7 +586,7 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body&gt;
-        &lt;h1&gt;mmRouter综合示例二&lt;/h1&gt;
+        &lt;h1&gt;mmRouter综合示例二: avalon.router + avalon.state&lt;/h1&gt;
         &lt;div ms-controller=&quot;test&quot;&gt;
 
             &lt;div class=&quot;header&quot;&gt;

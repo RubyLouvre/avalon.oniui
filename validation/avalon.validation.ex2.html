@@ -77,6 +77,7 @@
                             avalon(this).removeClass("error").addClass("success")
                             removeError(this)
                         },
+                        validateInKeyup: false,
                         onValidateAll: function(reasons) {
                             reasons.forEach(function(reason) {
                                 avalon(reason.element).removeClass("success").addClass("error")

@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>dropdownlist demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>dropdownlist demo</h1>
+        <div class="demo-show" ms-controller="dropdownlist" style="position: relative; z-index: 1;">
+            <fieldset>
+                <legend>下拉搜索dropdown</legend>
+                <div ms-widget="dropdownlist, a, dropdownlist1"></div>
+            </fieldset>
+            <script>
+                require(["dropdownlist/avalon.dropdownlist"], function(avalon) {
+                        avalon.define("dropdownlist", function(vm) {
+                            vm.$skipArray = ["dropdownlist1", "dropdownlist2"]
+                            vm.dropdownlist1 = {
+                                textbox: {
+                                    placeholder: "请输入要查找的姓名"
+                                },
+                                data: ["name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "name 7", "name 8", "name 9", "name 10", "name 1_1", "name 1_2", "name 1_3", "name 1_4", "name 1_5", "name 1_6", "name 1_7", "name 1_8", "name 1_9", "name 1_10", "name 2_1", "name 2_2", "name 2_3", "name 2_4", "name 2_5", "name 2_6", "name 2_7", "name 2_8", "name 2_9", "name 2_10", "name 3_1", "name 3_2", "name 3_3", "name 3_4", "name 3_5", "name 3_6", "name 3_7", "name 3_8", "name 3_9", "name 3_10", "name 4_1", "name 4_2", "name 4_3", "name 4_4", "name 4_4", "name 4_5", "name 4_6", "name 4_7", "name 4_8", "name 4_9", "name 4_10", "name 5_1"]
+                            }
+                        })
+                        avalon.scan()
+                    }
+                )
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;dropdownlist demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="dropdownlist" style="position: relative; z-index: 1;"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;下拉搜索dropdown&lt;/legend&gt;
+                            &lt;div ms-widget="dropdownlist, a, dropdownlist1"&gt;&lt;/div&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt;
+                            require(["dropdownlist/avalon.dropdownlist"], function(avalon) {
+                                    avalon.define("dropdownlist", function(vm) {
+                                        vm.$skipArray = ["dropdownlist1", "dropdownlist2"]
+                                        vm.dropdownlist1 = {
+                                            textbox: {
+                                                placeholder: "请输入要查找的姓名"
+                                            },
+                                            data: ["name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "name 7", "name 8", "name 9", "name 10", "name 1_1", "name 1_2", "name 1_3", "name 1_4", "name 1_5", "name 1_6", "name 1_7", "name 1_8", "name 1_9", "name 1_10", "name 2_1", "name 2_2", "name 2_3", "name 2_4", "name 2_5", "name 2_6", "name 2_7", "name 2_8", "name 2_9", "name 2_10", "name 3_1", "name 3_2", "name 3_3", "name 3_4", "name 3_5", "name 3_6", "name 3_7", "name 3_8", "name 3_9", "name 3_10", "name 4_1", "name 4_2", "name 4_3", "name 4_4", "name 4_4", "name 4_5", "name 4_6", "name 4_7", "name 4_8", "name 4_9", "name 4_10", "name 5_1"]
+                                        }
+                                    })
+                                    avalon.scan()
+                                }
+                            )
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>

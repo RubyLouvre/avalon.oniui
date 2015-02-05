@@ -35,10 +35,10 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
      *  @param options 扩展配置
      *  @param options.reload true强制reload，即便url、参数并未发生变化
      *  @param options.replace true替换history，否则生成一条新的历史记录
-     *  @param options.replaceQuery true表示完全覆盖query，而不是merge，默认为true，如果options.query为空或者未定义则会清空search参数
+     *  @param options.replaceQuery true表示完全覆盖query，而不是merge，默认为false，为true则会用params指定的query去清空
     */
     avalon.router.go = function(toName, params, options) {
-        var from = mmState.currentState, to = getStateByName(toName), replaceQuery =  options && options.replaceQuery !== false || !options, params = params || {}
+        var from = mmState.currentState, to = getStateByName(toName), replaceQuery =  options && options.replaceQuery, params = params || {}
         if (to) {
             // params is not defined or is {}
             if(!to.params || !mmState.isParamsChanged(to.params, {})) {
@@ -180,16 +180,13 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         if(avalon.history) avalon.history.updateLocation(info.path + info.query, avalon.mix({}, options|| {}, {silent: true}))
                     }
                 }
-            if(toState == this.activeState) {
-                toState.path = info.path
-            }
+            toState.path = info.path
             if(!reload && fromState == toState && !mmState.isParamsChanged(toState.oldParams, toState.params)) {
                 // redirect的目的状态 == this.activeState
                 if(toState == this.activeState) return done()
                 // 重复点击直接return
                 return
             }
-            toState.path = info.path
             avalon.log("begin transitionTo " + toState.stateName + " from " + (fromState && fromState.stateName || "unknown"))
             if(over === true) {
                 return

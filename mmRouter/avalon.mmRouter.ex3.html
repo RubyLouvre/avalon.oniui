@@ -66,6 +66,9 @@
                     unload: function() {
                         avalon.log("unload")
                         avalon.log(this.params)
+                    },
+                    onloadError: function() {
+                        avalon.router.navigate("/", {replace:})
                     }
                 })
                 // avalon.router.get("/*path", function() {
@@ -255,7 +258,7 @@
                 ///////////////////
                 // contacts.detail //
                 //////////////////
-                avalon.state("contacts.detail", {
+                avalon.state("contactfs.detail", {
                     controller: "contacts",
                     url: "/{contactId}",
                     onChange: function(a) {
@@ -333,6 +336,9 @@
                     onload: function() {
                         var loading = avalon.vmodels.loading
                         if(loading) loading.toggle = false
+                    },
+                    onloadError: function() {
+                        avalon.router.navigate("/", {replace: true})
                     }
                 })
                 //启动路由

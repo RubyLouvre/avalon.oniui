@@ -396,6 +396,33 @@ mmRouter的使用
                         </td>
                     </tr>
                     <tr>
+                        <td>getQuery()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>state.getQuery 获取state的query，注意
+                            <font color="red">不能通过state.query获取</font>
+                            <pre>
+onChange: function() {
+var query = this.getQuery()
+}
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getParams()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>state.getParams 获取state的params，等价于state.params
+                            <pre>
+onChange: function() {
+var params = this.getParams()
+or
+this.params
+}
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>async()</td>
                         <td>Function</td>
                         <td></td>

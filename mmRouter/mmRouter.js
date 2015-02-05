@@ -148,7 +148,7 @@ define(["mmRouter/mmHistory"], function() {
             if(!avalon.state || options.silent) avalon.history && avalon.history.updateLocation(hash, avalon.mix({}, options, {silent: true}))
             // 只是写历史而已
             if(!options.silent) {
-                this.route("get", parsed.path, parsed.query)
+                this.route("get", parsed.path, parsed.query, options)
             }
         },
         /*

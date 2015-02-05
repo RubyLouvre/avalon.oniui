@@ -1,6 +1,6 @@
 define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
 //重写mmRouter中的route方法     
-    avalon.router.route = function(method, path, query) {
+    avalon.router.route = function(method, path, query, options) {
         path = path.trim()
         var states = this.routingTable[method]
         var currentState = mmState.currentState
@@ -16,7 +16,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     this._parseArgs(args, el)
                 }
                 if (el.stateName) {
-                    mmState.transitionTo(currentState, el, args)
+                    mmState.transitionTo(currentState, el, args, options)
                 } else {
                     el.callback.apply(el, args)
                 }
@@ -63,8 +63,9 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         params: {},
         // params changed
         isParamsChanged: function(p, op) {
-            var p = p == void 0 ? this.query : p,
-                op = op == void 0 ? this.oldQuery : op,
+            var isQuery = p == void 0,
+                p = isQuery ? this.query : p,
+                op = isQuery ? this.oldQuery : op,
                 res = false
             for(var i in p) {
                 if(!(i in op) || op[i] != p[i]) {
@@ -80,7 +81,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     }
                 }
             }
-            if(res) avalon.mix(this.oldQuery, this.query)
+            if(res && isQuery) this.oldQuery = avalon.mix({}, this.query)
             return res
         },
         // 状态离开
@@ -151,7 +152,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 })
             }
             avalon.router._parseArgs(args, cur)
-            avalon.mix(cur.oldParams, cur.params)
+            cur.oldParams = avalon.mix({}, cur.params)
             // 一般在这个回调里准备数据
             cur.onChange.apply(cur, args)
             cur.onEnter.apply(cur, args)
@@ -163,7 +164,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             var tmp
             while(state) {
                 avalon.router._parseArgs(args, state)
-                if(reload || mmState.isParamsChanged(state.oldParams, state.params)) {
+                if(state.paramsChanged(state.oldParams, state.params) || reload) {
                     state.onUpdate.apply(state, args)
                     state.onChange.apply(state, args)
                 }
@@ -172,7 +173,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         },
         transitionTo: function(fromState, toState, args, options) {
             // 状态机正处于切换过程中
-            if(this.activeState && this.activeState != this.currentState) {
+            if(this.activeState && (this.activeState != this.currentState || this.isParamsChanged(this.activeState.oldParams, this.activeState.params))) {
                 avalon.log("navigating to [" + this.currentState.stateName + "] will be stopped, redirect to [" + toState.stateName + "] now")
                 this.activeState.done && this.activeState.done(!"stopped")
                 fromState = this.activeState // 更新实际的fromState
@@ -194,6 +195,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     }
                 }
             toState.path = info.path
+            callStateFunc("begin", toState)
             if(fromState !== toState) {
                 avalon.log("begin transitionTo " + toState.stateName + " from " + (fromState && fromState.stateName || "unknown"))
                 if(over === true) {
@@ -210,16 +212,21 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 })
             // 仅仅是参数发生了变化
             } else {
-                avalon.router._parseArgs(args, fromState)
-                reload = reload || mmState.isParamsChanged(fromState.oldParams, fromState.params)
-                if(!reload) return
+                avalon.router._parseArgs(args, toState)
+                var newReload = fromState.paramsChanged(toState.oldParams, toState.params) || reload
+                if(!newReload) return
                 // 这里也抛出一个unload事件，如果参数发生变化
-                fromState && callStateFunc("unload", fromState)
+                callStateFunc("unload", toState)
                 me._update(commonParent, args, reload)
+                toState.done = function(success) {
+                    toState.done = null
+                    toState._pending = false
+                    done(success)
+                }
                 // just do update
                 toState.onUpdate.apply(toState, args)
                 toState.onChange.apply(toState, args)
-                done()
+                if(!toState._pending && toState.done) toState.done()
             }
         }
     }
@@ -397,11 +404,31 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         }
     }
     StateModel.prototype = {
-        isParamsChanged: function() {
-            var res = mmState.isParamsChanged(this.params, this._params)
-            if(res) avalon.mix(this._params, this.params)
+        paramsChanged: function() {
+            var res = mmState.isParamsChanged(this.oldParams, this.params)
+            if(res) this.oldParams = avalon.mix({}, this.params)
             return res
         },
+        /*
+         * @interface state.getQuery 获取state的query，注意<font color="red">不能通过state.query获取</font>
+         *<pre>
+         *  onChange: function() {
+         *      var query = this.getQuery()
+         *  }
+         *</pre> 
+         */
+        getQuery: function() {return mmState.query},
+        /*
+         * @interface state.getParams 获取state的params，等价于state.params
+         *<pre>
+         *  onChange: function() {
+         *      var params = this.getParams()
+         *      or
+         *      this.params
+         *  }
+         *</pre> 
+         */
+        getParams: function() {return this.params},
         /*
          * @interface state.async 表示当前的状态是异步，中断状态chain的继续执行，返回一个done函数，通过done(false)终止状态链的执行，任意其他非false参数，将继续
          *<pre>

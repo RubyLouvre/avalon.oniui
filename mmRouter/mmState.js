@@ -158,10 +158,12 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         },
         transitionTo: function(fromState, toState, args, options) {
             // 状态机正处于切换过程中
+            var abort
             if(this.activeState && (this.activeState != this.currentState)) {
                 avalon.log("navigating to [" + this.currentState.stateName + "] will be stopped, redirect to [" + toState.stateName + "] now")
                 this.activeState.done && this.activeState.done(!"stopped")
                 fromState = this.activeState // 更新实际的fromState
+                abort = true
             }
 
             var info = avalon.router.urlFormate(toState.url, toState.params, mmState.query),
@@ -180,10 +182,10 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         if(avalon.history) avalon.history.updateLocation(info.path + info.query, avalon.mix({}, options|| {}, {silent: true}))
                     }
                 }
-            toState.path = info.path
+            toState.path = ("/" + info.path).replace(/^[\/]{2,}/g, "/")
             if(!reload && fromState == toState && !mmState.isParamsChanged(toState.oldParams, toState.params)) {
-                // redirect的目的状态 == this.activeState
-                if(toState == this.activeState) return done()
+                // redirect的目的状态 == this.activeState && abort
+                if(toState == this.activeState && abort) return done()
                 // 重复点击直接return
                 return
             }

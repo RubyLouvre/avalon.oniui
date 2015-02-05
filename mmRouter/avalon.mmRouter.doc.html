@@ -241,7 +241,7 @@ mmRouter的使用
                                 <tr>
                                     <td>options.replaceQuery</td>
                                     <td></td>
-                                    <td>options.replaceQuery true表示完全覆盖query，而不是merge，默认为true，如果options.query为空或者未定义则会清空search参数</td>
+                                    <td>options.replaceQuery true表示完全覆盖query，而不是merge，默认为false，为true则会用params指定的query去清空</td>
                                 </tr>
                             </table>
                         </td>
@@ -300,9 +300,9 @@ mmRouter的使用
                                         views的结构为
                                         <pre>
 {
-"": {template: "xxx", onBeforeLoad: function(){} }
-"aaa": {template: "xxx", onBeforeLoad: function(){} }
-"bbb@": {template: "xxx", onBeforeLoad: function(){} }
+"": {template: "xxx"}
+"aaa": {template: "xxx"}
+"bbb@": {template: "xxx"}
 }
 </pre>views的每个键名(keyname)的结构为viewname@statename， 如果名字不存在@，则viewname直接为keyname，statename为opts.stateName
                                         如果名字存在@, viewname为match[0], statename为match[1]</td>
@@ -310,12 +310,12 @@ mmRouter的使用
                                 <tr>
                                     <td>opts.onBeforeLoad</td>
                                     <td></td>
-                                    <td>opts.onBeforeLoad 模板还没有插入DOM树执行的回调，this指向[ms-view]元素节点集合，参数为状态对象</td>
+                                    <td>opts.onBeforeLoad 模板还没有插入DOM树执行的回调，this指向[ms-view]元素节点集合，参数为关联的state对象</td>
                                 </tr>
                                 <tr>
                                     <td>opts.onAfterLoad</td>
                                     <td></td>
-                                    <td>opts.onAfterLoad 模板插入DOM树执行的回调，this指向[ms-view]元素节点，参数为状态对象</td>
+                                    <td>opts.onAfterLoad 模板插入DOM树执行的回调，this指向[ms-view]元素节点，参数为为关联的state对象</td>
                                 </tr>
                                 <tr>
                                     <td>opts.onBeforeChange</td>
@@ -327,21 +327,6 @@ mmRouter的使用
                                     <td></td>
                                     <td>opts.onChange 当切换为当前状态时调用的回调，this指向状态对象，参数为匹配的参数， 我们可以在此方法 定义此模板用到的VM，
                                         或修改VM的属性</td>
-                                </tr>
-                                <tr>
-                                    <td>opts.onBeforeEnter切入某个state之前触发，this指向对应的state，如果return</td>
-                                    <td></td>
-                                    <td>opts.onBeforeEnter切入某个state之前触发，this指向对应的state，如果return false则会中断并退出整个状态机</td>
-                                </tr>
-                                <tr>
-                                    <td>opts.onEnter</td>
-                                    <td></td>
-                                    <td>opts.onEnter 进入状态，this指向当前状态，为了保持接口不变，也会出发onChange，建议使用onEnter和onUpdate替换onChange</td>
-                                </tr>
-                                <tr>
-                                    <td>opts.onUpdate</td>
-                                    <td></td>
-                                    <td>opts.onUpdate 当状态未切换，只是参数发生变化的时候触发，this指向当前状态，为了保持接口不变，onUpdate触发时，也会触发onChange</td>
                                 </tr>
                                 <tr>
                                     <td>opts.onBeforeUnload</td>
@@ -392,7 +377,40 @@ mmRouter的使用
                                     <td></td>
                                     <td>config.onload 切换完成并成功，this指向切换后的当前状态</td>
                                 </tr>
+                                <tr>
+                                    <td>config.begin</td>
+                                    <td></td>
+                                    <td>config.begin 开始切换的回调，this指向router对象</td>
+                                </tr>
                             </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getQuery()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>state.getQuery 获取state的query，等价于state.query
+                            <pre>
+onChange: function() {
+var query = this.getQuery()
+or
+this.query
+}
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getParams()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>state.getParams 获取state的params，等价于state.params
+                            <pre>
+onChange: function() {
+var params = this.getParams()
+or
+this.params
+}
+</pre>
                         </td>
                     </tr>
                     <tr>

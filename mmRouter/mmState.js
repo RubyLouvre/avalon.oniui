@@ -180,7 +180,15 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         if(avalon.history) avalon.history.updateLocation(info.path + info.query, avalon.mix({}, options|| {}, {silent: true}))
                     }
                 }
-            if(!reload && fromState == toState && !mmState.isParamsChanged(toState.oldParams, toState.params)) return
+            if(toState == this.activeState) {
+                toState.path = info.path
+            }
+            if(!reload && fromState == toState && !mmState.isParamsChanged(toState.oldParams, toState.params)) {
+                // redirect的目的状态 == this.activeState
+                if(toState == this.activeState) return done()
+                // 重复点击直接return
+                return
+            }
             toState.path = info.path
             avalon.log("begin transitionTo " + toState.stateName + " from " + (fromState && fromState.stateName || "unknown"))
             if(over === true) {

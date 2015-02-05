@@ -125,16 +125,12 @@
                             var lastId
                             var vmodel = avalon.define({
                                 $id: "contacts",
-                                // $skipArray: ["contact", "item"],
+                                $skipArray: ["contact", "item"],
                                 edit: function() {
-                                    avalon.router.go("contacts.detail.item.edit", {
-                                        contactId: vmodel.contact.id
-                                    })
+                                    avalon.router.go("contacts.detail.item.edit")
                                 },
                                 done: function() {
-                                    avalon.router.go("contacts.detail.item", {
-                                        contactId: vmodel.contact.id
-                                    })
+                                    avalon.router.go("contacts.detail.item")
                                 },
                                 goToRandom: function() {
                                     var contacts = vmodel.contacts
@@ -351,7 +347,7 @@
         </script>
     </head>
     <body ms-controller="test"
-          mss-widget="loading,loading" data-loading-type="img" data-loading-modal-background="#ccc" data-loading-modal-opacity="0.5">
+          ms-widget="loading,loading" data-loading-type="img" data-loading-modal-background="#ccc" data-loading-modal-opacity="0.5">
         <h1>mmRouter综合示例四: avalon.router.go</h1>
         <div>
             <ul class="codelist">
@@ -421,7 +417,7 @@
                     arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
                 })
             }
-            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;], function() {
+            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -502,16 +498,12 @@
                             var lastId
                             var vmodel = avalon.define({
                                 $id: &quot;contacts&quot;,
-                                // $skipArray: [&quot;contact&quot;, &quot;item&quot;],
+                                $skipArray: [&quot;contact&quot;, &quot;item&quot;],
                                 edit: function() {
-                                    avalon.router.go(&quot;contacts.detail.item.edit&quot;, {
-                                        contactId: vmodel.contact.id
-                                    })
+                                    avalon.router.go(&quot;contacts.detail.item.edit&quot;)
                                 },
                                 done: function() {
-                                    avalon.router.go(&quot;contacts.detail.item&quot;, {
-                                        contactId: vmodel.contact.id
-                                    })
+                                    avalon.router.go(&quot;contacts.detail.item&quot;)
                                 },
                                 goToRandom: function() {
                                     var contacts = vmodel.contacts
@@ -640,7 +632,17 @@
                     controller: &quot;contacts&quot;,
                     url: &quot;/{contactId}&quot;,
                     onChange: function(a) {
-                        avalon.vmodels.contacts.id = a
+                        var done = this.async(),
+                            me = this
+                        setTimeout(function() {
+                            if(a == me.params.contactId) {
+                                avalon.vmodels.contacts.id = a
+                                done()
+                            } else {
+                                done(false)
+                            }
+                        }, 1000)
+                        window.sb = this
                     },
                     views: {
                         &quot;&quot;: {
@@ -696,6 +698,16 @@
                         }
                     }
                 })
+                avalon.state.config({
+                    begin: function() {
+                        var loading = avalon.vmodels.loading
+                        if(loading) loading.toggle = true
+                    },
+                    onload: function() {
+                        var loading = avalon.vmodels.loading
+                        if(loading) loading.toggle = false
+                    }
+                })
                 //启动路由
                 avalon.history.start({
                     basepath: &quot;/mmRouter&quot;,
@@ -707,9 +719,10 @@
  
         &lt;/script&gt;
     &lt;/head&gt;
-    &lt;body&gt;
+    &lt;body ms-controller=&quot;test&quot;
+          ms-widget=&quot;loading,loading&quot; data-loading-type=&quot;img&quot; data-loading-modal-background=&quot;#ccc&quot; data-loading-modal-opacity=&quot;0.5&quot;&gt;
         &lt;h1&gt;mmRouter综合示例四: avalon.router.go&lt;/h1&gt;
-        &lt;div ms-controller=&quot;test&quot;&gt;
+        &lt;div&gt;
             &lt;ul class=&quot;codelist&quot;&gt;
                 &lt;li 
                      ms-repeat-code=&quot;codes&quot;&gt;

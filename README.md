@@ -43,7 +43,7 @@ avalon.getScript( url [, success(script, textStatus, jqXHR) ] )
 avalon.param(obj)
 // 将一个用于 URL 中传递请求参数的字符串转换成一个对象
 avalon.unparam(str)
-// 讲一个元素中的表单元素编码成字符串
+// 将一个元素中的表单元素编码成字符串
 avalon.serialize(Element)
 
 ```

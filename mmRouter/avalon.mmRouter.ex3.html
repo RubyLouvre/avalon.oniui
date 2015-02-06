@@ -333,6 +333,9 @@
                     onload: function() {
                         var loading = avalon.vmodels.loading
                         if(loading) loading.toggle = false
+                    },
+                    onloadError: function() {
+                        avalon.router.navigate("/", {replace: true})
                     }
                 })
                 //启动路由
@@ -706,6 +709,9 @@
                     onload: function() {
                         var loading = avalon.vmodels.loading
                         if(loading) loading.toggle = false
+                    },
+                    onloadError: function() {
+                        avalon.router.navigate(&quot;/&quot;, {replace: true})
                     }
                 })
                 //启动路由

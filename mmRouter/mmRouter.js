@@ -135,6 +135,13 @@ define(["mmRouter/mmHistory"], function() {
         /*
          *  @interface avalon.router.navigate
          *  @param hash 访问的url hash
+         */
+        redirect: function(hash) {
+            this.navigate(hash, {replace: true})
+        },
+        /*
+         *  @interface avalon.router.navigate
+         *  @param hash 访问的url hash
          *  @param options 扩展配置
          *  @param options.replace true替换history，否则生成一条新的历史记录
          *  @param options.silent true表示只同步url，不触发url变化监听绑定

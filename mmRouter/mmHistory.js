@@ -16,6 +16,7 @@ define(["avalon"], function(avalon) {
         basepath: "/",
         html5Mode: false,
         hashPrefix: "!",
+        iframeID: null, //IE6-7，如果有在页面写死了一个iframe，这样似乎刷新的时候不会丢掉之前的历史
         interval: 50, //IE6-7,使用轮询，这是其时间时隔
         fireAnchor: true//决定是否将滚动条定位于与hash同ID的元素上
     }
@@ -28,9 +29,9 @@ define(["avalon"], function(avalon) {
         getFragment: function(fragment) {
             if (fragment == null) {
                 if (this.monitorMode === "popstate") {
-                    fragment = this.getPath();
+                    fragment = this.getPath()
                 } else {
-                    fragment = this.getHash();
+                    fragment = this.getHash()
                 }
             }
             return fragment.replace(/^[#\/]|\s+$/g, "")
@@ -105,16 +106,13 @@ define(["avalon"], function(avalon) {
             if (this.monitorMode === "iframepoll") {
                 //IE6,7在hash改变时不会产生历史，需要用一个iframe来共享历史
                 avalon.ready(function() {
-                    var iframe = document.createElement('iframe');
+                    var iframe = that.iframe || document.getElementById(that.iframeID) || document.createElement('iframe')
                     iframe.src = 'javascript:0'
                     iframe.style.display = 'none'
                     iframe.tabIndex = -1
                     document.body.appendChild(iframe)
                     that.iframe = iframe.contentWindow
-                    var idoc = that.iframe.document
-                    idoc.open()
-                    idoc.write(that.iframeHTML)
-                    idoc.close()
+                    that._setIframeHistory(that.prefix + that.fragment)
                 })
 
             }
@@ -122,7 +120,7 @@ define(["avalon"], function(avalon) {
             // 支持popstate 就监听popstate
             // 支持hashchange 就监听hashchange
             // 否则的话只能每隔一段时间进行检测了
-            function checkUrl() {
+            function checkUrl(e) {
                 var iframe = that.iframe
                 if (that.monitorMode === "iframepoll" && !iframe) {
                     return false
@@ -167,14 +165,15 @@ define(["avalon"], function(avalon) {
                     break;
             }
             //根据当前的location立即进入不同的路由回调
-            this.fireRouteChange(this.fragment || "/")
-
+            avalon.ready(function() {
+                that.fireRouteChange(that.fragment || "/", {replace: true})
+            })
         },
-        fireRouteChange: function(hash) {
+        fireRouteChange: function(hash, options) {
             var router = avalon.router
             if (router && router.navigate) {
                 router.setLastPath(hash)
-                router.navigate(hash === "/" ? hash : "/" + hash)
+                router.navigate(hash === "/" ? hash : "/" + hash, options)
             }
             if (this.options.fireAnchor) {
                 scrollToAnchorId(hash.replace(/\?.*/g,""))
@@ -197,17 +196,17 @@ define(["avalon"], function(avalon) {
                 if(!st) this._fireLocationChange()
             } else {
                 var newHash = this.prefix + hash
-                this._setHash(this.location, newHash, rp)
-                if(st) {
+                if(st && hash != this.getHash()) {
                     this._setIframeHistory(newHash, rp)
-                    this.fragment = this.getFragment()
+                    this.fragment = this._getHash(newHash)
                 }
+                this._setHash(this.location, newHash, rp)
             }
         },
         _setHash: function(location, hash, replace){
-            var href = location.href.replace(/(javascript:|#).*$/, '');
+            var href = location.href.replace(/(javascript:|#).*$/, '')
             if (replace){
-                location.replace(href + hash);
+                location.replace(href + hash)
             }
             else location.hash = hash
         },

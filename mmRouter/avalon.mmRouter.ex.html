@@ -4,7 +4,7 @@
         <title>mmRouter组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <script src="avalon.js"></script>
+        <script src="../avalon.js"></script>
         <style>
         * {word-wrap: break-word;margin:0;padding:0}
         body {background: #f9f9f9;font-size: 14px;}
@@ -39,7 +39,7 @@
             </div>
         </div>
         <script>
-        require(["mmRouter"], function () {
+        require(["mmRouter/mmRouter"], function () {
             var model = avalon.define('box', function(vm) {
                 vm.tab = {currpage:'tab1',content:'tab1', page:[{name:'tab1', title:'选项卡一',url:'#!/tab1'}]};
                 vm.tab_close = function (tname) {
@@ -59,6 +59,7 @@
                 }
             });
             var loaded = {};
+            avalon.router.when(["/nihao/:id"], "/tab:id")
             avalon.router.get("/tab1", function(a) {
                 var page = 'tab1';
                 model.tab.content = "页面："+page;
@@ -97,7 +98,7 @@
         &lt;title&gt;mmRouter组件&lt;/title&gt;
         &lt;meta charset=&quot;UTF-8&quot;&gt;
         &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
-        &lt;script src=&quot;avalon.js&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
         &lt;style&gt;
         * {word-wrap: break-word;margin:0;padding:0}
         body {background: #f9f9f9;font-size: 14px;}
@@ -132,7 +133,7 @@
             &lt;/div&gt;
         &lt;/div&gt;
         &lt;script&gt;
-        require([&quot;mmRouter&quot;], function () {
+        require([&quot;mmRouter/mmRouter&quot;], function () {
             var model = avalon.define('box', function(vm) {
                 vm.tab = {currpage:'tab1',content:'tab1', page:[{name:'tab1', title:'选项卡一',url:'#!/tab1'}]};
                 vm.tab_close = function (tname) {
@@ -152,6 +153,7 @@
                 }
             });
             var loaded = {};
+            avalon.router.when([&quot;/nihao/:id&quot;], &quot;/tab:id&quot;)
             avalon.router.get(&quot;/tab1&quot;, function(a) {
                 var page = 'tab1';
                 model.tab.content = &quot;页面：&quot;+page;

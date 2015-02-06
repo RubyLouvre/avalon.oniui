@@ -11,31 +11,28 @@
 
         </script>
         <script>
-            require(["promise/avalon.promise", "ready!"], function() {
+            require(["mmPromise/mmPromise", "ready!"], function() {
                 var vmodel = avalon.define("test", function(vm) {
                     vm.array = ["准备开始"]
                 })
                 avalon.scan()
                 var originalThenable = {
                     id: "originalThenable",
-                    then: function(onFulfilled, onRejected) {
+                    then: function(onFulfilled) {
                         vmodel.array.push(this.id)
                         setTimeout(function() {
-                            onRejected('original reason');
+                            onFulfilled('original value');
                         }, 2000);
                     }
                 };
                 var promise = new Promise(function(resolve) {
                     resolve(originalThenable);
                 });
-//                  var promise = new avalon.mmPromise(function(resolve) {
-//                      resolve(originalThenable);
-//                  });
-                promise.then(function() {
-                    vmodel.array.push("resolve")
-                }, function(reason) {
-                    vmodel.array.push("reject")
-                    vmodel.array.push(reason === 'original reason');
+              //  var promise = new avalon.mmPromise(function(resolve) {
+              //      resolve(originalThenable);
+              //  });
+                promise.then(function(value) {
+                    vmodel.array.push(value);
                 });
             })
         </script>
@@ -45,31 +42,28 @@
             <li ms-repeat="array">{{el}}</li>
         </ul>
         <pre class="brush:javascript;gutter:false;toolbar:false;">
-            require(["promise/avalon.promise", "ready!"], function() {
+            require(["mmPromise/mmPromise", "ready!"], function() {
                 var vmodel = avalon.define("test", function(vm) {
                     vm.array = ["准备开始"]
                 })
                 avalon.scan()
                 var originalThenable = {
                     id: "originalThenable",
-                    then: function(onFulfilled, onRejected) {
+                    then: function(onFulfilled) {
                         vmodel.array.push(this.id)
                         setTimeout(function() {
-                            onRejected('original reason');
+                            onFulfilled('original value');
                         }, 2000);
                     }
                 };
                 var promise = new Promise(function(resolve) {
                     resolve(originalThenable);
                 });
-//                  var promise = new avalon.mmPromise(function(resolve) {
-//                      resolve(originalThenable);
-//                  });
-                promise.then(function() {
-                    vmodel.array.push("resolve")
-                }, function(reason) {
-                    vmodel.array.push("reject")
-                    vmodel.array.push(reason === 'original reason');
+              //  var promise = new avalon.mmPromise(function(resolve) {
+              //      resolve(originalThenable);
+              //  });
+                promise.then(function(value) {
+                    vmodel.array.push(value);
                 });
             })
         </pre>

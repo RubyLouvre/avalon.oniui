@@ -1,8 +1,12 @@
 #!/usr/bin/env
-echo "now building tree"
-cp tree/avalon.tree.js tree/avalon.tree.jsbak
-cat tree/avalon.tree.*.js >> tree/avalon.tree.js
-avalon-doc tree
-rm tree/avalon.tree.js
-mv tree/avalon.tree.jsbak tree/avalon.tree.js
-scss tree/treeMenu.scss > tree/tree-menu.css
+echo "now building $1"
+cp ${1}/avalon.${1}.js ${1}/avalon.${1}.jsbak
+if [ $1"" == "tree" ];then
+	cat ${1}/avalon.${1}.*.js >> ${1}/avalon.${1}.js
+else
+	cat ${1}/mm*.js >> ${1}/avalon.${1}.js
+fi
+avalon-doc ${1}
+rm ${1}/avalon.${1}.js
+mv ${1}/avalon.${1}.jsbak ${1}/avalon.${1}.js
+scss ${1}/treeMenu.scss > ${1}/${1}-menu.css

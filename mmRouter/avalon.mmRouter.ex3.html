@@ -66,9 +66,6 @@
                     unload: function() {
                         avalon.log("unload")
                         avalon.log(this.params)
-                    },
-                    onloadError: function() {
-                        avalon.router.navigate("/", {replace:})
                     }
                 })
                 // avalon.router.get("/*path", function() {
@@ -258,7 +255,7 @@
                 ///////////////////
                 // contacts.detail //
                 //////////////////
-                avalon.state("contactfs.detail", {
+                avalon.state("contacts.detail", {
                     controller: "contacts",
                     url: "/{contactId}",
                     onChange: function(a) {

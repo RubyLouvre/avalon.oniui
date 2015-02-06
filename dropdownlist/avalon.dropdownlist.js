@@ -354,7 +354,7 @@ define(["avalon", "text!./avalon.dropdownlist.html", "text!./avalon.suggest.html
             vm.$skipArray = ["widgetElement", "data", "textbox", "searchBox", "suggestVM", "template"];
             // @config 绑定组件的元素引用
             vm.widgetElement = element; 
-            vm.searchItem = ""
+            vm.searchItem = "" //@config 获取当前选项
             vm.textboxToggle = false
             vm.searchBox = null
             vm.suggestVM = null

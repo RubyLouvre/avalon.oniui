@@ -60,7 +60,7 @@
         </div>
     </fieldset> 
     <script> 
-        require("dialog/avalon.dialog", function(avalon) {
+        require(["dialog/avalon.dialog"], function(avalon) {
             var model = avalon.define("demo", function(vm) {
                 var dialog;
                 // 要求组件的配置项一定要放在组件的配置对象中，不可放在外部定义的controller，比如这里的demo

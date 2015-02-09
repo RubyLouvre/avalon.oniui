@@ -55,7 +55,7 @@
                     <input type="button" value="切换组件禁用" ms-click="toggleSliderDisabled">
                 </div>
                 <script>
-                    require("slider/avalon.slider", function() {
+                    require(["slider/avalon.slider"], function() {
                         var ttModel = null;
                         var model = avalon.define("sliderWidget", function(vm) {
                             vm.toggleSliderDisabled = function() {

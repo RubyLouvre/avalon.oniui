@@ -45,7 +45,7 @@
                     &lt;/div&gt;
 
                     &lt;script&gt;
-                        require("avalon.textbox", function() {
+                        require(["textbox/avalon.textbox"], function() {
                             avalon.define("demo4", function(vm) {
                                 // 注意不可通过suggest重写suggest值，要不然就不能加载suggest插件
                                 vm.x = "";
@@ -105,7 +105,7 @@
         </div>
 
         <script>
-            require("textbox/avalon.textbox", function() {
+            require(["textbox/avalon.textbox"], function() {
                 avalon.define("demo4", function(vm) {
                     // 注意不可通过suggest重写suggest值，要不然就不能加载suggest插件
                     vm.x = "";

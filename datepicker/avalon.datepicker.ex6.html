@@ -51,7 +51,7 @@
                 <p>如果不想显示水印效果，则配置watermark为false</p>
             </fieldset>
             <script> 
-                require("datepicker/avalon.datepicker", function(avalon) {
+                require(["datepicker/avalon.datepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.date = "2014-06-29";
                     })
@@ -108,7 +108,7 @@
                             &lt;p&gt;如果不想显示水印效果，则配置watermark为false&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.datepicker", function(avalon) {
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.date = "2014-06-29";
                                 })

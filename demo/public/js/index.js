@@ -213,9 +213,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 				cache: false
 			}).done(function(res) {
 				avalon.log(res);
-				vmodel.state.setSucc({
-					sendType: sendType
-				});
+				vmodel.state.setSucc(res);
 			});
 		},
 		corsGetJSON: function() {

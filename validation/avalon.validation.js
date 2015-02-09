@@ -70,7 +70,7 @@
  * <p>如果用户指定了<code>norequired</code>验证规则，如果input为空, 那么就会跳过之后的所有验证</p>
  */
 
-define(["../promise/avalon.promise"], function(avalon) {
+define(["avalon","../mmPromise/mmPromise"], function(avalon) {
     if (!avalon.duplexHooks) {
         throw new Error("你的版本少于avalon1.3.7，不支持ms-duplex2.0，请使用avalon.validation.old.js")
     }

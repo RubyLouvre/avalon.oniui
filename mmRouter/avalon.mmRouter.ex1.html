@@ -4,7 +4,7 @@
         <title>mmRouter组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <script src="avalon.js"></script>
+        <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
         <style>
             .header{
@@ -30,7 +30,7 @@
         </style>
         <script >
             avalon.config({debug: false})
-            require(["ready!", "mmState"], function() {
+            require(["ready!", "mmRouter/mmState"], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -303,7 +303,7 @@
         &lt;title&gt;mmRouter组件&lt;/title&gt;
         &lt;meta charset=&quot;UTF-8&quot;&gt;
         &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
-        &lt;script src=&quot;avalon.js&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
         
         &lt;style&gt;
             .header{
@@ -329,7 +329,7 @@
         &lt;/style&gt;
         &lt;script &gt;
             avalon.config({debug: false})
-            require([&quot;ready!&quot;, &quot;mmState&quot;], function() {
+            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;], function() {
 
                 //一个顶层VM
                 avalon.define({

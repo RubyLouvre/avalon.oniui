@@ -11,7 +11,7 @@
 
         </script>
         <script>
-            require(["promise/avalon.promise", "ready!"], function() {
+            require(["mmPromise/mmPromise", "ready!"], function() {
                 function aaa() {
                     return new Promise(function(resolve) {
                         setTimeout(function() {
@@ -45,7 +45,7 @@
         <div>mmPromise的any方法可以传入多个Promise对象作为参数</div>
         <div>原生Promise的race方法只能传入一个Promise对象数组作为参数</div>
         <pre class="brush:javascript;gutter:false;toolbar:false">
-            require(["promise/avalon.promise", "ready!"], function() {
+            require(["mmPromise/mmPromise", "ready!"], function() {
                 function aaa() {
                     return new Promise(function(resolve) {
                         setTimeout(function() {

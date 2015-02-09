@@ -75,7 +75,7 @@
                         &lt;button ms-click="toggleNotice('f')"&gt;toggle notice f&lt;/button&gt;
                         &lt;button ms-click="toggleNotice('g')"&gt;toggle notice g&lt;/button&gt;
                         &lt;script&gt;
-                            require("notice/avalon.notice", function(avalon) {
+                            require(["notice/avalon.notice"], function(avalon) {
 
                                 var model = avalon.define("noticeDemo", function(vm) {
                                     vm.$dOpts = {
@@ -135,7 +135,7 @@
             <button ms-click="toggleNotice('f')">toggle notice f</button>
             <button ms-click="toggleNotice('g')">toggle notice g</button>
             <script>
-                require("notice/avalon.notice", function(avalon) {
+                require(["notice/avalon.notice"], function(avalon) {
 
                     var model = avalon.define("noticeDemo", function(vm) {
                         vm.$dOpts = {

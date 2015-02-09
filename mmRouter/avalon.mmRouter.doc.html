@@ -116,6 +116,25 @@ mmRouter的使用
                         <td align="center" colspan="4">接口方法与固有属性</td>
                     </tr>
                     <tr>
+                        <td>redirect(hash)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.router.navigate
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>hash</td>
+                                    <td></td>
+                                    <td>hash 访问的url hash</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>navigate(hash,options)</td>
                         <td>Function</td>
                         <td></td>
@@ -382,6 +401,11 @@ mmRouter的使用
                                     <td></td>
                                     <td>config.begin 开始切换的回调，this指向router对象</td>
                                 </tr>
+                                <tr>
+                                    <td>config.onloadError</td>
+                                    <td></td>
+                                    <td>config.onloadError 开始切换的回调，this指向router对象</td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
@@ -452,6 +476,9 @@ setTimeout(done, 4000)
                 </li>
                 <li>
                     <a href="avalon.mmRouter.ex7.html">mmRouter：异步</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex8.html">todos</a>
                 </li>
             </ul>
         </div>

@@ -36,7 +36,7 @@
                             &lt;/div&gt;
                         &lt;/fieldset&gt; 
                         &lt;script&gt; 
-                            require("dialog/avalon.dialog", function(avalon) {
+                            require(["dialog/avalon.dialog"], function(avalon) {
                                 avalon.define("demo", function(vm) {
                                     vm.$ffOpts = {
                                         title: "配置dialog宽度",
@@ -67,7 +67,7 @@
                 </div>
             </fieldset> 
             <script> 
-                require("dialog/avalon.dialog", function(avalon) {
+                require(["dialog/avalon.dialog"], function(avalon) {
                     avalon.define("demo", function(vm) {
                         vm.$ffOpts = {
                             title: "配置dialog宽度",

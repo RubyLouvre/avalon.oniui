@@ -34,7 +34,7 @@
                 <p>说明：根据minDate和maxDate配置可选的年份和月份</p>
             </fieldset>
             <script> 
-                require("datepicker/avalon.datepicker", function(avalon) {
+                require(["datepicker/avalon.datepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.$aOpts = {
                             dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -76,7 +76,7 @@
                             &lt;p&gt;说明：根据minDate和maxDate配置可选的年份和月份&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.datepicker", function(avalon) {
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.$aOpts = {
                                         dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]

@@ -68,7 +68,7 @@
                         &lt;button ms-click="toggleNotice('a')"&gt;toggle notice a&lt;/button&gt;
                         &lt;button ms-click="toggleNotice('b')"&gt;toggle notice b&lt;/button&gt;
                         &lt;script&gt;
-                            require("notice/avalon.notice", function(avalon) {
+                            require(["notice/avalon.notice","ready!"], function(avalon) {
                                 var model = avalon.define("noticeDemo", function(vm) {
                                     vm.toggleNotice = function(id) {
                                         var noticeVm = avalon.vmodels[id]

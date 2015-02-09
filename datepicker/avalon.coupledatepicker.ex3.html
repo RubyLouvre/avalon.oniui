@@ -32,7 +32,7 @@
                 <button ms-click="toggleDisabled" style="position:absolute;right:0;top: 20px;">切换禁用</button>
             </fieldset>
             <script> 
-                require("datepicker/avalon.coupledatepicker", function(avalon) {
+                require(["datepicker/avalon.coupledatepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.from = "2014-06-03";
                         vm.to = "2014-06-26";
@@ -72,7 +72,7 @@
                             &lt;button ms-click="toggleDisabled" style="position:absolute;right:0;top: 20px;"&gt;切换禁用&lt;/button&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.coupledatepicker", function(avalon) {
+                            require(["datepicker/avalon.coupledatepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.from = "2014-06-03";
                                     vm.to = "2014-06-26";

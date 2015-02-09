@@ -18,7 +18,7 @@
                 <input ms-widget="datepicker" data-datepicker-show-other-months="true"/>
                 <p>说明：配置showOtherMonths为true，使得日历可以显示非当前月的日期，当然只会显示上月日期，下月日期不显示</p>
             </fieldset>
-            <!-- <fieldset style="position: relative; z-index: 2">
+            <fieldset style="position: relative; z-index: 2">
                 <legend>一次显示3个月份</legend>
                 <input ms-widget="datepicker" data-datepicker-number-of-months="3" />
                 <p>说明：配置numberOfMonths为3，使得日历同时显示3个月份</p>
@@ -27,9 +27,9 @@
                 <legend>通过next、prev切换月份时，一次跳过3个月</legend>
                 <input ms-widget="datepicker" data-datepicker-step-months="3" />
                 <p>说明：配置stepMonths选项，使得通过next、prev切换月份时，可以一次跳过3个月，当然希望跳过几个月根据需要随意配置，默认切换到下个月或者上个月</p>
-            </fieldset> -->
+            </fieldset>
             <script> 
-                require("datepicker/avalon.datepicker", function(avalon) {
+                require(["datepicker/avalon.datepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.$aOpts = {
                             dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -66,7 +66,7 @@
                             &lt;p&gt;说明：配置stepMonths选项，使得通过next、prev切换月份时，可以一次跳过3个月，当然希望跳过几个月根据需要随意配置，默认切换到下个月或者上个月&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.datepicker", function(avalon) {
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.$aOpts = {
                                         dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]

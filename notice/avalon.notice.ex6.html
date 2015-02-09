@@ -35,7 +35,7 @@
                         &lt;button ms-click="toggleNotice('a')"&gt;toggle notice a&lt;/button&gt;
                         &lt;button ms-click="changeTypeClass('a')"&gt;change class of notice a&lt;/button&gt;
                         &lt;script&gt;
-                            require("notice/avalon.notice", function(avalon) {
+                            require(["notice/avalon.notice"], function(avalon) {
                                 var model = avalon.define("noticeDemo", function(vm) {
                                     vm.toggleNotice = function(id) {
                                         var noticeVm = avalon.vmodels[id]
@@ -59,7 +59,7 @@
             <button ms-click="toggleNotice('a')">toggle notice a</button>
             <button ms-click="changeTypeClass('a')">change class of notice a</button>
             <script>
-                require("notice/avalon.notice", function(avalon) {
+                require(["notice/avalon.notice"], function(avalon) {
                     var model = avalon.define("noticeDemo", function(vm) {
                         vm.toggleNotice = function(id) {
                             var noticeVm = avalon.vmodels[id]

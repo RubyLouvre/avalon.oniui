@@ -294,14 +294,14 @@
                 avalon.scan(dialog, dialogVM);
             })
 
-            require("datepicker/avalon.daterangepicker", function(avalon) {
+            require(["datepicker/avalon.daterangepicker"], function(avalon) {
                 var daterangepickerVM = avalon.define("daterangepicker", function(vm) {
 
                 })
                 var daterangepicker = document.getElementById("daterangepicker");
                 avalon.scan(daterangepicker, daterangepickerVM);
             })
-            require("datepicker/avalon.coupledatepicker", function(avalon) {
+            require(["datepicker/avalon.coupledatepicker"], function(avalon) {
                 var coupledatepickerVM = avalon.define("coupledatepicker", function(vm) {
                 })
                 var daterangepicker = document.getElementById("coupledatepicker");
@@ -338,7 +338,7 @@
                 avalon.scan(doublelist, doublelistVM)
             })
 
-            require("textbox/avalon.textbox", function() {
+            require(["textbox/avalon.textbox"], function() {
                 var textboxVM = avalon.define("textbox", function(vm) {
                     vm.val = "";
                 })
@@ -413,14 +413,14 @@
                 })
             })
 
-            require("datepicker/avalon.datepicker", function(avalon) {
+            require(["datepicker/avalon.datepicker"], function(avalon) {
                 var datepickerVM = avalon.define("datepicker", function(vm) {
                 })
                 var datepicker = document.getElementById("datepicker");
                 avalon.scan(datepicker, datepickerVM);
             })
 
-            require("slider/avalon.slider", function() {
+            require(["slider/avalon.slider"], function() {
                 var sliderVM = avalon.define("slider", function(vm) {
 
                 })

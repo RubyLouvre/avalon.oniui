@@ -43,7 +43,7 @@
                 <p>通过配置结束日期初始值异常时的默认值、最小间隔天数、最大间隔天数对应的rules属性，可以使结束日期初始为起始初始日期+2</p>
             </fieldset>
             <script> 
-                require("datepicker/avalon.daterangepicker", function(avalon) {
+                require(["datepicker/avalon.daterangepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.from = "2014-06-12"
                         vm.to = "2014-06-02"
@@ -120,7 +120,7 @@
                             &lt;p&gt;通过配置结束日期初始值异常时的默认值、最小间隔天数、最大间隔天数对应的rules属性，可以使结束日期初始为起始初始日期+2&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.daterangepicker", function(avalon) {
+                            require(["datepicker/avalon.daterangepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.from = "2014-06-12"
                                     vm.to = "2014-06-02"

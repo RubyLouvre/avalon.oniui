@@ -22,7 +22,7 @@
                 <div ms-widget="daterangepicker" data-daterangepicker-shortcut="true"></div>
             </fieldset>
             <script> 
-                require("datepicker/avalon.daterangepicker", function(avalon) {
+                require(["datepicker/avalon.daterangepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.$aOpts = {
                             parseDate : function(str){
@@ -65,7 +65,7 @@
                             &lt;div ms-widget="daterangepicker" data-daterangepicker-shortcut="true"&gt;&lt;/div&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.daterangepicker", function(avalon) {
+                            require(["datepicker/avalon.daterangepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.$aOpts = {
                                         parseDate : function(str){

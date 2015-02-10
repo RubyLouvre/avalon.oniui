@@ -10,3 +10,8 @@ sed -i "s/bower_components\///g" avalon.mmRouter.ex8.html
 sed -i "s/oniui\//..\//g" avalon.mmRouter.ex8.html
 sed -i "s/..\/..\/js/mmRouter\/js/g" avalon.mmRouter.ex8.html
 sed -i "s/..\/..\/js/mmRouter\/js/g" js/app.js
+cp ../mmPromise/mmPromise.js ../../mmRouter/
+cp mm*.js ../../mmRouter/
+cd ../../mmRouter/
+sed -i "s/..\/mmPromise\///g" mm*.js
+sed -i "s/mmRouter\///g" mm*.js

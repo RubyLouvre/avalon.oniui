@@ -36,6 +36,7 @@ MS_OPTION_TEMPLATE
             <div ms-repeat="data" class="oni-dropdown-item"
                  ms-click-12="_select($index, $event)"
                  ms-title="el.title||el.label"
+                 ms-visible="el.toggle"
                  ms-hover="oni-state-hover: el.enable"
                  ms-class-1="oni-state-disabled:!el.enable"
                  ms-class-2="oni-state-active:isActive(el, multipleChange)"

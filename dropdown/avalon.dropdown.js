@@ -314,14 +314,11 @@ define(["avalon",
                         vmodel.activeIndex = vmodel.data.$model.indexOf(option)
                     }
                     if (vmodel.menuNode) {
-                        avalon(vmodel.menuNode).css({ 'height': '' });
-                        avalon(vmodel.dropdownNode).css({ 'height': '' });
-                        vmodel._styleFix();
+                        vmodel._styleFix(true)
                     }
                 }
             };
             vm._keydown = function(event) {
-
                 if(vmodel.keyboardEvent === false) {
                     return;
                 }
@@ -519,10 +516,17 @@ define(["avalon",
             }
 
             //当下拉列表中的项目发生改变时，调用该函数修正显示，顺序是修正下拉框高宽 --> 滚动条更新显示 --> 定位下拉框
-            vm._styleFix = function() {
+            vm._styleFix = function(resetHeight) {
                 var MAX_HEIGHT = options.height || 200,
                     $menu = avalon(vmodel.menuNode),
-                    height = vmodel.dropdownNode.scrollHeight
+                    height = '' 
+
+                if (resetHeight) {
+                    $menu.css({ 'height': '' });
+                    avalon(vmodel.dropdownNode).css({ 'height': '' });
+                }
+                
+                height = vmodel.dropdownNode.scrollHeight
 
                 vmodel.menuWidth = !ie6 ? vmodel.listWidth - $menu.css("borderLeftWidth").replace(styleReg, "$1") - $menu.css("borderRightWidth").replace(styleReg, "$1") : vmodel.listWidth;
                 if (height > MAX_HEIGHT) {
@@ -780,7 +784,8 @@ define(["avalon",
                     value: el.value,
                     enable: ensureBool(el.enable, true),
                     group: true,
-                    parent: parent
+                    parent: parent,
+                    toggle: true
                 })
                 getDataFromOption(el.options, ret, el)
             } else {
@@ -798,7 +803,8 @@ define(["avalon",
                     enable: ensureBool(parent && parent.enable, true) && ensureBool(el.enable, true),
                     group: false,
                     parent: parent,
-                    data: el            //只有在dataModel的模式下有效
+                    data: el,           //只有在dataModel的模式下有效
+                    toggle: true
                 })
             }
         }
@@ -851,7 +857,8 @@ define(["avalon",
                         value: "",
                         enable: !el.disabled,
                         group: true,        //group不能添加ui-state-active
-                        parent: false
+                        parent: false,
+                        toggle: true
                     }
                     ret.push(parent)
                     getDataFromHTML(el, ret, parent)
@@ -862,7 +869,8 @@ define(["avalon",
                         value: parseData(el.value.trim()||el.text.trim()),
                         enable: ensureBool(parent && parent.enable, true) && !el.disabled,
                         group: false,
-                        parent: parent
+                        parent: parent,
+                        toggle: true
                     })
                 }
             }
@@ -881,6 +889,7 @@ define(["avalon",
         var size = data.size(),
             left = [],
             right = [],
+            dataItem = {},
             i,
             ret
 
@@ -888,12 +897,14 @@ define(["avalon",
         //当向上选择时，选择从左段的队尾到右段的队头
         //当向下选择时，选择从右端的对头到左段的队尾
         for(i = 0; i < index; i ++) {
-            if(data[i].enable && !data[i].group) {
+            dataItem = data[i]
+            if(dataItem.enable && !dataItem.group && dataItem.toggle) {
                 left.push(i)
             }
         }
         for(i = index + 1; i < size; i ++) {
-            if(data[i].enable && !data[i].group) {
+            dataItem = data[i]
+            if(dataItem.enable && !dataItem.group && dataItem.toggle) {
                 right.push(i)
             }
         }

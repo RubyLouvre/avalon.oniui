@@ -7,7 +7,7 @@
     <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
     <script src="../avalon.js"></script>
     <script type="text/javascript">
-        require('dropdown/avalon.dropdown.js', function() {
+        require(['dropdown/avalon.dropdown.js'], function() {
             avalon.ready(function() {
                 var dropdownVm = avalon.define('dropdown', function(vm) {
                     vm.$skipArray = ['opts'];

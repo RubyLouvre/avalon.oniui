@@ -295,8 +295,8 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     var viewname = keyname || ""
                     var statename = stateName
                 }
-                var _stateName = stateName + "."
-                if(!prevState || prevState === _stateName || prevState.indexOf(_stateName) !== 0 || stateName === currentState.stateName) {
+                // ：模板的状态是当前状态的父状态
+                if(currentState.stateName.indexOf(statename) == 0) {
                     var nodes = getViews(topCtrlName, statename)
                     var node = getNamedView(nodes, viewname)
                     var warnings = "warning: " + stateName + "状态对象的【" + keyname + "】视图对象" //+ viewname
@@ -320,11 +320,14 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         var _html = avalon(node).data(defKey)
                         _html === null && avalon(node).data(defKey, node.innerHTML)
                         var promise = fromPromise(view, that.params)
+                        var modelBindOnNode = node.getAttribute("avalonctrl")
+                        modelBindOnNode = avalon.vmodels[modelBindOnNode]
+                        var newVmodes = vmodes && (modelBindOnNode ? [modelBindOnNode] : []).concat(vmodes)
                         nodeList.push(node)
                         funcList.push(function() {
                             promise.then(function(s) {
                                 avalon.innerHTML(node, s)
-                                avalon.scan(node, vmodes)
+                                avalon.scan(node, newVmodes)
                             }, function(msg) {
                                 avalon.log(warnings + " " + msg)
                                 callStateFunc("onloadError", that, keyname)
@@ -460,7 +463,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             }
             var state = true, lenA = partsA.length, res = true
             while(res && state && lenA) {
-                partsA.splice(lenA - 1)
+                partsA.splice(lenA - 1, 1)
                 lenA = partsA.length
                 state = getStateByName(partsA.join("."))
                 if(state) {

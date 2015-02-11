@@ -30,7 +30,7 @@ avalon.ajax(opts)
  */
 avalon.get( url [, data ] [, success(data, textStatus, XHR) ] [, dataType ] )
 avalon.post( url [, data ] [, success(data, textStatus, XHR) ] [, dataType ] )
-avalon.upload( url, form [,data] [,success(data, textStatus, XHR)] [, dataType])
+avalon.upload( url, form [,data] [, success(data, textStatus, XHR)] [, dataType])
 avalon.getJSON( url [, data ] [, success( data, textStatus, jqXHR ) ] )
 avalon.getScript( url [, success(script, textStatus, jqXHR) ] )
 

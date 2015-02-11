@@ -122,7 +122,7 @@ A set of key/value pairs that configure the Ajax request. `url` is required whil
 
 > ---
 
-> mimeType
+> **mimeType**
 
 > Type: String
 
@@ -176,6 +176,7 @@ A set of key/value pairs that configure the Ajax request. `url` is required whil
 
 > A username to be used with XMLHttpRequest in response to an HTTP access authentication request.
 
+<br />
 
 The `avalon.ajax()` function underlies all Ajax requests sent by avalon. It is often unnecessary to directly call this function, as several higher-level alternatives like `avalon.get()` and `avalon.upload()` are available and are easier to use.
 
@@ -197,6 +198,25 @@ The msXHR objects returned by `avalon.ajax()` implement the Promise interface, g
 - msXHR.then(function( data ) {}, function( msXHR ) {});
 
     Incorporates the functionality of the .done() and .fail() methods, allowing the underlying Promise to be manipulated.
+
+**Notice:** What these promise callbacks return are **pure** promise objects but not msXHR objects.
+
+```javascript
+var aa = avalon.ajax({
+    url: '/demo/api'
+});
+
+console.log(aa.readyState)
+// -> 0
+
+var bb = avalon.ajax({
+    url: '/demo/api'
+}).done(function() {});
+
+console.log(bb.readyState)
+// -> undefined
+
+```
 
 Callback Function Queues
 ------------------------

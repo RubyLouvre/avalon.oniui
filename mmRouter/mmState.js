@@ -60,7 +60,6 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         activeState: NaN, // 当前实际处于的状态
         oldQuery: {},
         query: {},
-        params: {},
         // params changed
         isParamsChanged: function(p, op) {
             var isQuery = p == void 0,
@@ -193,6 +192,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             if(over === true) {
                 return
             }
+            // if(callStateFunc("begin", this) === false)
             this.currentState = toState
             this.prevState = fromState
             callStateFunc("begin", this)
@@ -355,13 +355,14 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
      *  @param config.unload url切换时候触发，返回值不会影响切换进程，this指向切换前的当前状态
      *  @param config.onload 切换完成并成功，this指向切换后的当前状态
      *  @param config.begin 开始切换的回调，this指向router对象
-     *  @param config.onloadError 开始切换的回调，this指向router对象
+     *  @param config.onloadError 加载模板资源出错的回调，this指向router对象
     */
     avalon.state.config = function(config) {
         avalon.mix(avalon.state, config || {})
+        return this
     }
     function callStateFunc(name, state) {
-        avalon.state[name] && avalon.state[name].apply(state || mmState.currentState, [].slice.call(arguments, 2))
+        return avalon.state[name] && avalon.state[name].apply(state || mmState.currentState, [].slice.call(arguments, 2))
     }
     // 状态原型，所有的状态都要继承这个原型
     function StateModel(stateName, options) {

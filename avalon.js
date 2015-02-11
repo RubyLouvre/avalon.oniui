@@ -4775,7 +4775,7 @@ new function() {
         }
         module = modules[urlNoQuery]
         if (module && module.state >= 3) {
-            innerRequire(module.deps, module.factory, urlNoQuery)
+            innerRequire(module.deps || [], module.factory, urlNoQuery)
             return urlNoQuery
         }
         if (name && !module) {
@@ -5361,7 +5361,8 @@ new function() {
     loaderUrl = kernel.baseUrl = loaderUrl.slice(0, loaderUrl.lastIndexOf("/") + 1)
     var mainScript = mainNode.getAttribute("data-main")
     if (mainScript) {
-        loadJS(joinPath(loaderUrl, mainScript + ".js"))
+        mainScript = mainScript.split("/").pop()
+        loadJS(joinPath(loaderUrl, mainScript.replace(rjsext, "") + ".js"))
     }
 }
 

@@ -50,6 +50,7 @@ This is a shorthand Ajax function, which is equivalent to:
 
 ```javascript
 avalon.ajax({
+    type: 'post',
     url: url,
     form: formData,
     data: data,
@@ -57,3 +58,5 @@ avalon.ajax({
     dataType: dataType
 });
 ```
+
+**Notice:** The value of the `type` option must be `post`.

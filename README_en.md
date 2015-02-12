@@ -41,8 +41,8 @@ avalon.getScript( url [, success(script, textStatus, jqXHR) ] )
 avalon.param(obj)
 // Convert a URL query string back to an object.
 avalon.unparam(str)
-// Encode a set of form elements as a string.
-avalon.serialize(Element)
+// Convert a set of form elements to a string.
+avalon.serialize(element)
 
 ```
 

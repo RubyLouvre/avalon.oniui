@@ -114,7 +114,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 				data: {
 					name: 'avalon'
 				},
-				type: 'post' //get也可以
+				type: 'post'
 			}).done(function(res) {
 				avalon.log(res);
 				vmodel.state.setSucc(res);
@@ -155,8 +155,8 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			var sendType = 'avalon.getScript';
 			vmodel.state.setSend(sendType);
 
-			avalon.getScript('/js/test.js', {
-				sendType: sendType
+			avalon.getScript('/js/test.js', function() {
+				avalon.log(arguments)
 			}).done(function(res) {
 				avalon.log(res);
 				vmodel.state.setSucc({

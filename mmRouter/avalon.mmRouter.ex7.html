@@ -30,9 +30,9 @@
                 })
 
                 avalon.state.config({
-                    onload: function() {
-                        var me = this
-                        if(mmState.currentState && mmState.currentState.stateName == me.stateName) {
+                    onload: function(from, to) {
+                        var me = to
+                        if(this.currentState && this.currentState.stateName == me.stateName) {
                             loading = avalon.vmodels.loading
                             if(loading) loading.toggle = false
                         }
@@ -45,18 +45,14 @@
                         loading = avalon.vmodels.loading,
                         me = this
                     // 这个状态是异步，所有需要经由该状态的状态都会受影响
-                    if(me.stateName == "country.province.city" || 1) {
-                        // 标记该状态是异步
-                        var done = me.async()
-                        home.logs.push(me.stateName + "正在等待中...")
-                        // if(loading) loading.toggle = true
-                        setTimeout(function() {
-                            // 告知done
-                            done && done()
-                        }, 2000)
-                    } else {
-                        home.logs.push(me.stateName + "正在执行...")
-                    }
+                    // 标记该状态是异步
+                    var done = me.async()
+                    home.logs.push(me.stateName + "正在等待中...")
+                    // if(loading) loading.toggle = true
+                    setTimeout(function() {
+                        // 告知done
+                        done && done()
+                    }, 2000)
                 }
 
                 avalon.each(links, function(index, state) {
@@ -134,9 +130,9 @@
                 })
 
                 avalon.state.config({
-                    onload: function() {
-                        var me = this
-                        if(mmState.currentState &amp;&amp; mmState.currentState.stateName == me.stateName) {
+                    onload: function(from, to) {
+                        var me = to
+                        if(this.currentState &amp;&amp; this.currentState.stateName == me.stateName) {
                             loading = avalon.vmodels.loading
                             if(loading) loading.toggle = false
                         }
@@ -149,18 +145,14 @@
                         loading = avalon.vmodels.loading,
                         me = this
                     // 这个状态是异步，所有需要经由该状态的状态都会受影响
-                    if(me.stateName == &quot;country.province.city&quot; || 1) {
-                        // 标记该状态是异步
-                        var done = me.async()
-                        home.logs.push(me.stateName + &quot;正在等待中...&quot;)
-                        // if(loading) loading.toggle = true
-                        setTimeout(function() {
-                            // 告知done
-                            done &amp;&amp; done()
-                        }, 2000)
-                    } else {
-                        home.logs.push(me.stateName + &quot;正在执行...&quot;)
-                    }
+                    // 标记该状态是异步
+                    var done = me.async()
+                    home.logs.push(me.stateName + &quot;正在等待中...&quot;)
+                    // if(loading) loading.toggle = true
+                    setTimeout(function() {
+                        // 告知done
+                        done &amp;&amp; done()
+                    }, 2000)
                 }
 
                 avalon.each(links, function(index, state) {

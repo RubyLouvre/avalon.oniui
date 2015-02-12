@@ -3,7 +3,7 @@ avalon.getJSON()
 
 **Description:** Load JSON-encoded data from the server using a GET HTTP request.
 
-avalon.getJSON( url [, data ] [, success( data, textStatus, jqXHR ) ] )
+avalon.getJSON( url [, data ] [, success ] )
 -----------------------
 
 **url**

@@ -30,7 +30,7 @@ avalon.ajax(opts)
  */
 avalon.get( url [, data ] [, success(data, textStatus, XHR) ] [, dataType ] )
 avalon.post( url [, data ] [, success(data, textStatus, XHR) ] [, dataType ] )
-avalon.upload( url, form [,data] [,success(data, textStatus, XHR)] [, dataType])
+avalon.upload( url, form [,data] [, success(data, textStatus, XHR)] [, dataType])
 avalon.getJSON( url [, data ] [, success( data, textStatus, jqXHR ) ] )
 avalon.getScript( url [, success(script, textStatus, jqXHR) ] )
 
@@ -41,8 +41,8 @@ avalon.getScript( url [, success(script, textStatus, jqXHR) ] )
 avalon.param(obj)
 // Convert a URL query string back to an object.
 avalon.unparam(str)
-// Encode a set of form elements as a string.
-avalon.serialize(Element)
+// Convert a set of form elements to a string.
+avalon.serialize(element)
 
 ```
 

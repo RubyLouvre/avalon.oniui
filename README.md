@@ -32,7 +32,7 @@ avalon.ajax(opts)
  */
 avalon.get( url [, data ] [, success(data, textStatus, XHR) ] [, dataType ] )
 avalon.post( url [, data ] [, success(data, textStatus, XHR) ] [, dataType ] )
-avalon.upload( url, form [,data] [,success(data, textStatus, XHR)] [, dataType])
+avalon.upload( url, form [,data] [, success(data, textStatus, XHR)] [, dataType])
 avalon.getJSON( url [, data ] [, success( data, textStatus, jqXHR ) ] )
 avalon.getScript( url [, success(script, textStatus, jqXHR) ] )
 
@@ -43,8 +43,8 @@ avalon.getScript( url [, success(script, textStatus, jqXHR) ] )
 avalon.param(obj)
 // 将一个用于 URL 中传递请求参数的字符串转换成一个对象
 avalon.unparam(str)
-// 讲一个元素中的表单元素编码成字符串
-avalon.serialize(Element)
+// 将一个元素中的表单元素编码成字符串
+avalon.serialize(element)
 
 ```
 

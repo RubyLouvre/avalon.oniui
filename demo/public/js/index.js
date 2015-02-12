@@ -33,7 +33,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			var sendType = 'avalon.get';
 			vmodel.state.setSend(sendType);
 
-			avalon.get('demo/api', {
+			avalon.get('/demo/api', {
 				sendType: sendType,
 				arr: ['html', 'css', 'js']
 			}).done(function(res) {
@@ -46,7 +46,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			vmodel.state.setSend(sendType);
 
 			avalon.ajax({
-				url: 'demo/api',
+				url: '/demo/api',
 				type: 'get',
 				cache: false,
 				data: {
@@ -63,7 +63,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			var sendType = 'avalon.post';
 			vmodel.state.setSend(sendType);
 
-			avalon.post('demo/api?age=12', {
+			avalon.post('/demo/api?age=12', {
 				sendType: sendType
 			}).done(function(res) {
 				avalon.log(res);
@@ -75,7 +75,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			vmodel.state.setSend(sendType);
 
 			avalon.ajax({
-				url: 'demo/api',
+				url: '/demo/api',
 				type: 'post',
 				data: {
 					sendType: sendType
@@ -94,7 +94,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			formData.append('sendType', sendType);
 			vmodel.state.setSend(sendType);
 
-			avalon.upload('demo/api?age=12', formData, {
+			avalon.upload('/demo/api?age=12', formData, {
 				name: 'avalon'
 			}).done(function(res) {
 				avalon.log(res);
@@ -109,12 +109,12 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			vmodel.state.setSend(sendType);
 
 			avalon.ajax({
-				url: 'demo/api',
+				url: '/demo/api',
 				form: formData,
 				data: {
 					name: 'avalon'
 				},
-				type: 'post' //get也可以
+				type: 'post'
 			}).done(function(res) {
 				avalon.log(res);
 				vmodel.state.setSucc(res);
@@ -126,7 +126,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			var sendType = 'avalon.getJSON';
 			vmodel.state.setSend(sendType);
 
-			avalon.getJSON('demo/api', {
+			avalon.getJSON('/demo/api', {
 				sendType: sendType
 			}).done(function(res) {
 				avalon.log(res);
@@ -138,7 +138,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			vmodel.state.setSend(sendType);
 
 			avalon.ajax({
-				url: 'demo/api',
+				url: '/demo/api',
 				data: {
 					sendType: sendType
 				},
@@ -155,8 +155,8 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 			var sendType = 'avalon.getScript';
 			vmodel.state.setSend(sendType);
 
-			avalon.getScript('/js/test.js', {
-				sendType: sendType
+			avalon.getScript('/js/test.js', function() {
+				avalon.log(arguments)
 			}).done(function(res) {
 				avalon.log(res);
 				vmodel.state.setSucc({
@@ -213,9 +213,7 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 				cache: false
 			}).done(function(res) {
 				avalon.log(res);
-				vmodel.state.setSucc({
-					sendType: sendType
-				});
+				vmodel.state.setSucc(res);
 			});
 		},
 		corsGetJSON: function() {
@@ -247,8 +245,8 @@ require(['./mmRequest', 'ready!'], function(avalon) {
 		}
 
 
-		
-		
+
+
 	});
 
 	avalon.scan();

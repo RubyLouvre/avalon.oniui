@@ -1,0 +1,35 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-layout {
+  position: relative; }
+  .oni-layout .resizer {
+    position: absolute;
+    z-index: 10;
+    background-color: #E6EEF8;
+    opacity: 0.5; }
+  .oni-layout .north-resizer, .oni-layout .south-resizer {
+    cursor: row-resize; }
+  .oni-layout .west-resizer, .oni-layout .east-resizer {
+    cursor: e-resize; }
+  .oni-layout .region {
+    display: inline-block;
+    position: absolute;
+    border: 1px solid #95B8E7; }
+  .oni-layout .nested-region {
+    border-style: none; }
+
+.north-region-unresizable .east-region, .north-region-unresizable .centre-region, .north-region-unresizable .west-region {
+  border-top-style: none; }
+
+.south-region-unresizable .east-region, .south-region-unresizable .centre-region, .south-region-unresizable .west-region {
+  border-bottom-style: none; }
+
+.east-region-unresizable .centre-region {
+  border-right-style: none; }
+
+.west-region-unresizable .centre-region {
+  border-left-style: none; }
+
+/*# sourceMappingURL=avalon.layout.css.map */

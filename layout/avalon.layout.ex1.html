@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Basic Layout demo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script type="text/javascript" src="../avalon.js"></script>
+    </head>
+    <body ms-controller="demo">
+        <div style="width: 600px; height: 500px;">
+            <div ms-widget="layout,layoutVM" class="container" style="margin:10px 0 0 50px;">
+                <div ms-layout-dock="north" class="north" ms-layout-size="100"></div>
+                <div ms-layout-dock="west" class="west" ms-layout-size="110"></div>
+                <div ms-layout-dock="centre" class="centre"></div>
+                <div ms-layout-dock="east" ms-layout-resizable class="east" ms-layout-size="120"></div>
+                <div ms-layout-dock="south" ms-layout-resizable class="south" ms-layout-size="130"></div>
+            </div>
+        </div>
+        <script>
+            require(["./layout/avalon.layout"], function() {
+                avalon.define("demo", function(vm) {
+                })
+                avalon.scan()
+            })
+        </script>
+    </body>
+</html>

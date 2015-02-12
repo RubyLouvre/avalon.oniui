@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Nested Layout demo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script type="text/javascript" src="../avalon.js"></script>
+    </head>
+    <body ms-controller="demo">
+        <input ms-widget="button" value="移除" type="button" ms-click="removeLayout"/>
+        <input ms-widget="button" value="添加" type="button" ms-click="addLayout"/>
+        <input ms-widget="button" value="添加" type="button" ms-click="resizeLayout"/>
+        <div style="width:100%;height: 500px;" id="big">
+            <div ms-widget="layout,layoutVM" class="container" style="margin:10px 0 0 50px;">
+                <div ms-layout-dock="north" ms-layout-resizable class="north" ms-layout-size="100"></div>
+                <div ms-layout-dock="west" ms-layout-resizable class="west" ms-layout-size="110">
+                </div>
+                <div ms-layout-dock="centre" class="centre">
+                    <div ms-widget="layout"class="container">
+                        <div ms-layout-dock="north" ms-layout-resizable class="north" ms-layout-size="60"></div>
+                        <div ms-layout-dock="centre" class="centre"></div>
+                        <div ms-layout-dock="east" ms-layout-resizable class="east" ms-layout-size="80"></div>
+                    </div>
+                </div>
+                <div ms-layout-dock="east" ms-layout-resizable class="east" ms-layout-size="120"></div>
+                <div ms-layout-dock="south" ms-layout-resizable class="south" ms-layout-size="130"></div>
+            </div>
+        </div>
+        <script>
+            require(["./layout/avalon.layout","./button/avalon.button"], function() {
+                avalon.define("demo", function(vm) {
+                    vm.removeLayout = function() {
+                        var layoutVM = avalon.vmodels.layoutVM;
+                        layoutVM.removeRegion('west');
+                    };
+                    vm.addLayout = function() {
+                        var layoutVM = avalon.vmodels.layoutVM;
+                        layoutVM.addRegion('west', {
+                            resizable: true,
+                            size: 100,
+                            regionClass: "west"
+                        });
+                    };
+                    vm.resizeLayout = function () {
+                        document.getElementById('big').style.width = "600px";
+                        document.getElementById('big').style.height = "400px";
+                        avalon.vmodels.layoutVM.updateLayout();
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </body>
+</html>

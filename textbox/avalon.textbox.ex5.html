@@ -34,7 +34,7 @@
                     &lt;/div&gt;
 
                     &lt;script&gt;
-                        require("textbox/avalon.textbox", function() {
+                        require(["textbox/avalon.textbox"], function() {
                             avalon.define("demo5", function(vm) {
                                 vm.$skipArray = ["suggest"]
                                 vm.sfocus = "";
@@ -67,7 +67,7 @@
             </form>
         </div>
         <script>
-            require("textbox/avalon.textbox", function() {
+            require(["textbox/avalon.textbox"], function() {
                 avalon.define("demo5", function(vm) {
                     vm.$skipArray = ["suggest"]
                     vm.sfocus = "";

@@ -21,4 +21,5 @@ if [ x$1 != "x" ] && [ x$2 != "x" ];then
 			ui buildex $uiname
 		fi
 	fi
+	sh mvc.sh
 fi

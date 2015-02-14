@@ -27,7 +27,7 @@
                         &lt;div ms-widget="notice,a,$aOpts"&gt;此demo用来演示notice的onHide、onShow回调方法的使用,请打开控制台查看回调执行情况&lt;/div&gt;
                         &lt;button ms-click="toggleNotice('a')"&gt;toggle notice a&lt;/button&gt;
                         &lt;script&gt;
-                            require("notice/avalon.notice", function(avalon) {
+                            require(["notice/avalon.notice"], function(avalon) {
                                 var model = avalon.define("noticeDemo", function(vm) {
                                     var number = 0;
                                     vm.$aOpts = {
@@ -60,7 +60,7 @@
             <div ms-widget="notice,a,$aOpts">此demo用来演示notice的onHide、onShow回调方法的使用,请打开控制台查看回调执行情况</div>
             <button ms-click="toggleNotice('a')">toggle notice a</button>
             <script>
-                require("notice/avalon.notice", function(avalon) {
+                require(["notice/avalon.notice"], function(avalon) {
                     var model = avalon.define("noticeDemo", function(vm) {
                         var number = 0;
                         vm.$aOpts = {

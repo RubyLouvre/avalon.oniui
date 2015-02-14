@@ -28,7 +28,7 @@
                 <p>laebl设置日期范围框的默认说明文字，当选中日期时会自动更新此label</p>
             </fieldset>
             <script> 
-                require("datepicker/avalon.daterangepicker", function(avalon) {
+                require(["datepicker/avalon.daterangepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         
                     })
@@ -62,7 +62,7 @@
                             &lt;p&gt;laebl设置日期范围框的默认说明文字，当选中日期时会自动更新此label&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.daterangepicker", function(avalon) {
+                            require(["datepicker/avalon.daterangepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     
                                 })

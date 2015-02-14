@@ -34,7 +34,7 @@
                 <p>说明：当输入域设置了初始值时，如初始值在minDate和maxDate范围内，则高亮输入域的日期，超出范围则自动修正，如果设了minDate则修正为minDate，没设minDate但设了maxDate则自动修正为maxDate</p>
             </fieldset> 
             <script> 
-                require("datepicker/avalon.datepicker", function(avalon) {
+                require(["datepicker/avalon.datepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.$aOpts = {
                             dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -76,7 +76,7 @@
                             &lt;p&gt;说明：当输入域设置了初始值时，如初始值在minDate和maxDate范围内，则高亮输入域的日期，如果超出范围会警示说明初始日期超出日期范围&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.datepicker", function(avalon) {
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.$aOpts = {
                                         dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]

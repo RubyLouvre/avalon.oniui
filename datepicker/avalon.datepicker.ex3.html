@@ -29,7 +29,7 @@
                 <p>说明：配置stepMonths选项，使得通过next、prev切换月份时，可以一次跳过3个月，当然希望跳过几个月根据需要随意配置，默认切换到下个月或者上个月</p>
             </fieldset>
             <script> 
-                require("datepicker/avalon.datepicker", function(avalon) {
+                require(["datepicker/avalon.datepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.$aOpts = {
                             dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -66,7 +66,7 @@
                             &lt;p&gt;说明：配置stepMonths选项，使得通过next、prev切换月份时，可以一次跳过3个月，当然希望跳过几个月根据需要随意配置，默认切换到下个月或者上个月&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.datepicker", function(avalon) {
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.$aOpts = {
                                         dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]

@@ -169,7 +169,7 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 })
             }
         }
-        msData = element.msData["ms-disabled"] || element.msData["ms-enabled"];
+        msData = element.msData["ms-disabled"] || element.msData["ms-attr-disabled"] || element.msData["ms-enabled"] || element.msData["ms-attr-enabled"];
         if (msData) {
             vmSub = avalon.getModel(msData, vmodels);
             if (vmSub) {

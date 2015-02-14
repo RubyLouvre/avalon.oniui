@@ -133,6 +133,13 @@ define(["mmRouter/mmHistory"], function() {
             setCookie("msLastPath", path)
         },
         /*
+         *  @interface avalon.router.redirect
+         *  @param hash 访问的url hash
+         */
+        redirect: function(hash) {
+            this.navigate(hash, {replace: true})
+        },
+        /*
          *  @interface avalon.router.navigate
          *  @param hash 访问的url hash
          *  @param options 扩展配置
@@ -148,7 +155,7 @@ define(["mmRouter/mmHistory"], function() {
             if(!avalon.state || options.silent) avalon.history && avalon.history.updateLocation(hash, avalon.mix({}, options, {silent: true}))
             // 只是写历史而已
             if(!options.silent) {
-                this.route("get", parsed.path, parsed.query)
+                this.route("get", parsed.path, parsed.query, options)
             }
         },
         /*

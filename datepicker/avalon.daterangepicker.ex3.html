@@ -30,7 +30,7 @@
                 <button ms-click="setDisabled" style="position:absolute;right:0;top: 20px;">禁用组件</button>
             </fieldset>
             <script> 
-                require("datepicker/avalon.daterangepicker", function(avalon) {
+                require(["datepicker/avalon.daterangepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.from = "2014-06-03";
                         vm.to = "2014-06-26";
@@ -72,7 +72,7 @@
                             &lt;button ms-click="setDisabled" style="position:absolute;right:0;top: 20px;"&gt;禁用组件&lt;/button&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.daterangepicker", function(avalon) {
+                            require(["datepicker/avalon.daterangepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.from = "2014-06-03";
                                     vm.to = "2014-06-26";

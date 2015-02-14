@@ -38,7 +38,7 @@
                         {{ val }}
                     &lt;/div&gt;
                     &lt;script&gt;
-                        require("./checkboxlist/avalon.checkboxlist", function(avalon) {
+                        require(["./checkboxlist/avalon.checkboxlist"], function(avalon) {
                             var sss = avalon.define('demo5',function(vm){
                                 vm.val = ["1", "2"];
                                 vm.onselect = function() {
@@ -75,7 +75,7 @@
             {{ val }}
         </div>
         <script>
-            require("./checkboxlist/avalon.checkboxlist", function(avalon) {
+            require(["./checkboxlist/avalon.checkboxlist"], function(avalon) {
                 var sss = avalon.define('demo5',function(vm){
                     vm.val = ["1", "2"];
                     vm.onselect = function() {

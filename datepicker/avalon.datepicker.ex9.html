@@ -32,7 +32,7 @@
                 <p>date: {{date1}}</p>
             </fieldset>
             <script> 
-                require("datepicker/avalon.datepicker", function(avalon) {
+                require(["datepicker/avalon.datepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.disabled = true;
                         vm.toggleDisabled = function() {
@@ -79,7 +79,7 @@
                             &lt;p&gt;date: {{date1}}&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.datepicker", function(avalon) {
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.disabled = true;
                                     vm.toggleDisabled = function() {

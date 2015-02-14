@@ -39,7 +39,7 @@
                 <button ms-click="setlabel">设置标签为'我是label'</button>
             </fieldset>
             <script> 
-                require("datepicker/avalon.daterangepicker", function(avalon) {
+                require(["datepicker/avalon.daterangepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.$AOpts = {
                             onOpen: function(vmodel) {
@@ -138,7 +138,7 @@
                             &lt;button ms-click="setlabel"&gt;设置标签为'我是label'&lt;/button&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.daterangepicker", function(avalon) {
+                            require(["datepicker/avalon.daterangepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.$AOpts = {
                                         onOpen: function(vmodel) {

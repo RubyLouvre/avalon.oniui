@@ -7,7 +7,7 @@
         <script src="../avalon.js" ></script>
 
         <script>
-            require("live/avalon.live", function() {
+            require(["live/avalon.live"], function() {
                 var model = avalon.define("model", function(vm) {
                     vm.aaa = "<b>ddd</b>"
                     vm.live = function(e) {

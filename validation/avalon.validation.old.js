@@ -1,4 +1,4 @@
-define(["../promise/avalon.promise"], function(avalon) {
+define(["avalon","../mmPromise/mmPromise"], function(avalon) {
 //如果avalon的版本少于1.3.7，那么重写ms-duplex指令，方便直接使用ms-duplex2.0, 只兼容到1.2x
 //但它不支持pipe方法，换言之，不支持类型转换，只做验证
     if (!avalon.duplexHooks) {

@@ -143,7 +143,7 @@ define(["avalon"], function(avalon) {
                 }
                 if (hash !== void 0) {
                     that.fragment = hash
-                    that.fireRouteChange(hash)
+                    that.fireRouteChange(hash, {fromHistory: true})
                 }
             }
 

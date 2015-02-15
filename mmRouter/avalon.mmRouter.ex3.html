@@ -330,16 +330,30 @@
                         }
                     }
                 })
+                var confirmed
                 avalon.state.config({
-                    begin: function() {
+                    beforeUnload: function(from, to) {
+                        if(confirmed) return
+                        if(to && to.stateName.indexOf("contacts") == 0) {
+                            confirmed = confirm("读取contacts需要授权，确认授权？")
+                            return confirmed
+                        }
+                    },
+                    abort: function(from, to) {
+                        if(!from) {
+                            avalon.router.redirect("/")
+                        }
+                    },
+                    begin: function(from, to) {
                         var loading = avalon.vmodels.loading
                         if(loading) loading.toggle = true
                     },
-                    onload: function() {
+                    onload: function(from, to) {
                         var loading = avalon.vmodels.loading
                         if(loading) loading.toggle = false
                     },
-                    onloadError: function() {
+                    onloadError: function(keyname, state) {
+                        // state == this
                         avalon.router.navigate("/", {replace: true})
                     }
                 })
@@ -711,16 +725,30 @@
                         }
                     }
                 })
+                var confirmed
                 avalon.state.config({
-                    begin: function() {
+                    beforeUnload: function(from, to) {
+                        if(confirmed) return
+                        if(to &amp;&amp; to.stateName.indexOf(&quot;contacts&quot;) == 0) {
+                            confirmed = confirm(&quot;读取contacts需要授权，确认授权？&quot;)
+                            return confirmed
+                        }
+                    },
+                    abort: function(from, to) {
+                        if(!from) {
+                            avalon.router.redirect(&quot;/&quot;)
+                        }
+                    },
+                    begin: function(from, to) {
                         var loading = avalon.vmodels.loading
                         if(loading) loading.toggle = true
                     },
-                    onload: function() {
+                    onload: function(from, to) {
                         var loading = avalon.vmodels.loading
                         if(loading) loading.toggle = false
                     },
-                    onloadError: function() {
+                    onloadError: function(keyname, state) {
+                        // state == this
                         avalon.router.navigate(&quot;/&quot;, {replace: true})
                     }
                 })

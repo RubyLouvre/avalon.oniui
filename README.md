@@ -15,6 +15,19 @@ mmRequest 是 avalon 三柱臣之一（另外两个是 route 和 animation）。
 bower install mm-request
 ```
 
+开始
+------------
+
+Avalon 遵循 [AMD](https://github.com/amdjs/amdjs-api) 规范。保证文件夹下有 `avalon.js`、`mmRequest.js` 和 `mmPromise.js`。之后，你便可以像下面这样使用 mmRequest 了：
+
+```javascript
+require(['./mmRequest'], function(avalon) {
+    avalon.ajax({
+        url: '/foobar'
+    });
+});
+```
+
 文档
 -------------
 
@@ -45,8 +58,9 @@ avalon.param(obj)
 avalon.unparam(str)
 // 将一个元素中的表单元素编码成字符串
 avalon.serialize(element)
-
 ```
+
+更多信息请参考 `/docs`。
 
 示例
 ----

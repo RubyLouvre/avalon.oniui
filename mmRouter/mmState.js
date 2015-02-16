@@ -167,19 +167,26 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
 
             var info = avalon.router.urlFormate(toState.url, toState.params, mmState.query),
                 me = this,
+                options = options || {},
                 // 是否强制reload或者query发生变化，参照angular，这个时候会触发整个页面重刷
-                reload = options && options.reload || this.isParamsChanged(),
+                reload = options.reload || this.isParamsChanged(),
                 over,
                 // 找共同的父节点，那么也是需要参考params和reload，reload情况，将所有栈里的state全部退出，否则退出到params没有发生变化的地方
                 commonParent = reload ? NaN : findCommonBranch(fromState, toState, args),
                 done = function(success) {
+                    if(over) return
                     over = true
                     me.currentState = me.activeState
                     if(success !== false) {
                         avalon.log("transitionTo " + toState.stateName + " success")
-                        callStateFunc("onload")
-                        if(avalon.history) avalon.history.updateLocation(info.path + info.query, avalon.mix({}, options|| {}, {silent: true}))
+                        callStateFunc("onload", me, fromState, toState)
+                    } else if(options.fromHistory){
+                        var cur = me.currentState
+                        info = avalon.router.urlFormate(cur.url, cur.params, mmState.query)
+                    } else {
+                        info = null 
                     }
+                    if(info && avalon.history) avalon.history.updateLocation(info.path + info.query, avalon.mix({}, options, {silent: true}))
                 }
             toState.path = ("/" + info.path).replace(/^[\/]{2,}/g, "/")
             if(!reload && fromState == toState && !mmState.isParamsChanged(toState.oldParams, toState.params)) {
@@ -188,18 +195,21 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 // 重复点击直接return
                 return
             }
-            avalon.log("begin transitionTo " + toState.stateName + " from " + (fromState && fromState.stateName || "unknown"))
+            if(callStateFunc("beforeUnload", this, fromState, toState) === false) {
+                if(fromState) done(false)
+                return callStateFunc("abort", this, fromState, toState)
+            }
             if(over === true) {
                 return
             }
-            // if(callStateFunc("begin", this) === false)
+            avalon.log("begin transitionTo " + toState.stateName + " from " + (fromState && fromState.stateName || "unknown"))
+            callStateFunc("unload", this, fromState, toState)
             this.currentState = toState
             this.prevState = fromState
-            callStateFunc("begin", this)
+            callStateFunc("begin", this, fromState, toState)
             this.popState(commonParent, args, function(success) {
                 // 中断
                 if(success === false) return done(!"stop poping [" + (commonParent && commonParent.stateName || "unknown"))
-                fromState && callStateFunc("unload", fromState)
                 me.pushState(toState, args, done)
             })
         }
@@ -295,8 +305,8 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     var viewname = keyname || ""
                     var statename = stateName
                 }
-                var _stateName = stateName + "."
-                if(!prevState || prevState === _stateName || prevState.indexOf(_stateName) !== 0 || stateName === currentState.stateName) {
+                // ：模板的状态是当前状态的父状态
+                if(currentState.stateName.indexOf(statename) == 0) {
                     var nodes = getViews(topCtrlName, statename)
                     var node = getNamedView(nodes, viewname)
                     var warnings = "warning: " + stateName + "状态对象的【" + keyname + "】视图对象" //+ viewname
@@ -320,14 +330,17 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         var _html = avalon(node).data(defKey)
                         _html === null && avalon(node).data(defKey, node.innerHTML)
                         var promise = fromPromise(view, that.params)
+                        var modelBindOnNode = node.getAttribute("avalonctrl")
+                        modelBindOnNode = avalon.vmodels[modelBindOnNode]
+                        var newVmodes = vmodes && (modelBindOnNode ? [modelBindOnNode] : []).concat(vmodes)
                         nodeList.push(node)
                         funcList.push(function() {
                             promise.then(function(s) {
                                 avalon.innerHTML(node, s)
-                                avalon.scan(node, vmodes)
+                                avalon.scan(node, newVmodes)
                             }, function(msg) {
                                 avalon.log(warnings + " " + msg)
-                                callStateFunc("onloadError", that, keyname)
+                                callStateFunc("onloadError", that, keyname, state)
                             })
                         })
                         promises.push(promise)
@@ -351,18 +364,20 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
     }
     /*
      *  @interface avalon.state.config 全局配置
-     *  @param config 配置对象
-     *  @param config.unload url切换时候触发，返回值不会影响切换进程，this指向切换前的当前状态
-     *  @param config.onload 切换完成并成功，this指向切换后的当前状态
-     *  @param config.begin 开始切换的回调，this指向router对象
-     *  @param config.onloadError 加载模板资源出错的回调，this指向router对象
+     *  @param {object} config 配置对象
+     *  @param {function} config.beforeUnload 开始切前的回调，this指向router对象，第一个参数是fromState，第二个参数是toState，return false可以用来阻止切换进行
+     *  @param {function} config.abort beforeUnload return false之后，触发的回调，this指向mmState对象，参数同beforeUnload
+     *  @param {function} config.begin  开始切换的回调，this指向mmState对象，参数同beforeUnload
+     *  @param {function} config.unload url切换时候触发，this指向mmState对象，参数同beforeUnload
+     *  @param {function} config.onload 切换完成并成功，this指向mmState对象，参数同beforeUnload
+     *  @param {function} config.onloadError 加载模板资源出错的回调，this指向对应的state，第一个参数对应的模板配置keyname，第二个参数是对应的state
     */
     avalon.state.config = function(config) {
         avalon.mix(avalon.state, config || {})
         return this
     }
     function callStateFunc(name, state) {
-        return avalon.state[name] && avalon.state[name].apply(state || mmState.currentState, [].slice.call(arguments, 2))
+        return avalon.state[name] ? avalon.state[name].apply(state || mmState.currentState, [].slice.call(arguments, 2)) : 0
     }
     // 状态原型，所有的状态都要继承这个原型
     function StateModel(stateName, options) {
@@ -460,7 +475,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             }
             var state = true, lenA = partsA.length, res = true
             while(res && state && lenA) {
-                partsA.splice(lenA - 1)
+                partsA.splice(lenA - 1, 1)
                 lenA = partsA.length
                 state = getStateByName(partsA.join("."))
                 if(state) {

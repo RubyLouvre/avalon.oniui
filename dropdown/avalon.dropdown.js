@@ -81,6 +81,15 @@ define(["avalon",
             if(vm.multiple && vm.$hasDuplex && vm.$skipArray.indexOf("value") === -1) {
                 vm.$skipArray.push("value")
             }
+            vm.render = function(data) {
+                if (data === void 0) {
+                    return
+                }
+                vmodel.data = getDataFromOption(data.$model || data)
+                if (vmodel.toggle) {
+                    vmodel._styleFix(true)
+                }
+            }
             vm.widgetElement = element;
             vm.menuWidth = "auto";   //下拉列表框宽度
             vm.menuHeight = vm.height;  //下拉列表框高度
@@ -372,7 +381,7 @@ define(["avalon",
             }
             //下拉列表的显示依赖toggle值，该函数用来处理下拉列表的初始化，定位
             vm._toggle = function(b) {
-                if (vmodel.data.length ===0 || !vmodel.enable || vmodel.readOnly) {
+                if ((vmodel.data.length ===0 && !vmodel.realTimeData)|| !vmodel.enable || vmodel.readOnly) {
                     vmodel.toggle = false;
                     return;
                 }
@@ -419,7 +428,7 @@ define(["avalon",
                         if (!selectedItemIndex) {
                             selectedItemIndex = firstItemIndex;
                         }
-                        vmodel.activeIndex = selectedItemIndex;
+                        vmodel.activeIndex = selectedItemIndex || 0;
                     }
                     vmodel.scrollWidget = avalon.vmodels["scrollbar-" + vmodel.$id];
                     vmodel._styleFix();
@@ -522,12 +531,11 @@ define(["avalon",
                     height = '' 
 
                 if (resetHeight) {
-                    $menu.css({ 'height': '' });
+                    vmodel.menuHeight = ''
                     avalon(vmodel.dropdownNode).css({ 'height': '' });
                 }
                 
                 height = vmodel.dropdownNode.scrollHeight
-
                 vmodel.menuWidth = !ie6 ? vmodel.listWidth - $menu.css("borderLeftWidth").replace(styleReg, "$1") - $menu.css("borderRightWidth").replace(styleReg, "$1") : vmodel.listWidth;
                 if (height > MAX_HEIGHT) {
                     vmodel._disabledScrollbar(false);
@@ -559,8 +567,8 @@ define(["avalon",
                 var nodes = siblings(vmodel.dropdownNode.firstChild),
                     $activeNode = avalon(nodes[activeIndex]),
                     menuHeight = vmodel.menuHeight,
-                    nodeTop = $activeNode.position().top - avalon(nodes[0]).position().top,
-                    nodeHeight = $activeNode.height(),
+                    nodeTop = nodes.length ? $activeNode.position().top - avalon(nodes[0]).position().top : 0,
+                    nodeHeight = nodes.length ? $activeNode.height() : 0,
                     scrollTop = vmodel.dropdownNode.scrollTop
 
                 if(nodeTop > scrollTop + menuHeight - nodeHeight || nodeTop + nodeHeight < scrollTop) {
@@ -712,6 +720,7 @@ define(["avalon",
     widget.version = "1.0";
 
     widget.defaults = {
+        realTimeData: false,
         container: null, //@config 放置列表的容器
         width: 200, //@config 自定义宽度
         listWidth: 200, //@config 自定义下拉列表的宽度

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <script src="../avalon.js"></script>
+    <script type="text/javascript">
+        require(['dropdownlist/avalon.dropdownlist.js', "ready!"], function() {
+            avalon.define('dropdown', function(vm) {
+                vm.$skipArray = ['dropdownlist']
+                vm.dropdownlist = {
+                    data: [
+                        {
+                            label: "group1",
+                            options: [
+                                {
+                                    value: "name 1", 
+                                    label: "name 1"
+                                }, {
+                                    value: "name 2", 
+                                    label: "name 2"
+                                }, {
+                                    value: "name 3", 
+                                    label: "name 3"
+                                }, {
+                                    value: "name 4", 
+                                    label: "name 4"
+                                }, {
+                                    value: "name 5", 
+                                    label: "name 5"
+                                }, {
+                                    value: "name 6", 
+                                    label: "name 6"
+                                }, {
+                                    value: "name 7", 
+                                    label: "name 7"
+                                }, {
+                                    value: "name 8", 
+                                    label: "name 8"
+                                }, {
+                                    value: "name 9", 
+                                    label: "name 9"
+                                }, {
+                                    value: "name 10", 
+                                    label: "name 10"
+                                }
+                            ]
+                        }, {
+                            label: 'group2',
+                            options: [
+                                {
+                                    value: "name 1_1", 
+                                    label: "name 1_1"
+                                }, {
+                                    value: "name 1_2", 
+                                    label: "name 1_2"
+                                }, {
+                                    value: "name 1_3", 
+                                    label: "name 1_3"
+                                }, {
+                                    value: "name 1_4", 
+                                    label: "name 1_4"
+                                }, {
+                                    value: "name 1_5", 
+                                    label: "name 1_5"
+                                }, {
+                                    value: "name 1_6", 
+                                    label: "name 1_6"
+                                }, {
+                                    value: "name 1_7", 
+                                    label: "name 1_7"
+                                }, {
+                                    value: "name 1_8", 
+                                    label: "name 1_8"
+                                }, {
+                                    value: "name 1_9", 
+                                    label: "name 1_9"
+                                }, {
+                                    value: "name 1_10", 
+                                    label: "name 1_10"
+                                }
+                            ]
+                        }, {
+                            label: 'group3',
+                            options: [
+                                {
+                                    value: "name 2_1", 
+                                    label: "name 2_1"
+                                }, {
+                                    value: "name 2_2", 
+                                    label: "name 2_2"
+                                }, {
+                                    value: "name 2_3", 
+                                    label: "name 2_3"
+                                }, {
+                                    value: "name 2_4", 
+                                    label: "name 2_4"
+                                }, {
+                                    value: "name 2_5", 
+                                    label: "name 2_5"
+                                }, {
+                                    value: "name 2_6", 
+                                    label: "name 2_6"
+                                }, {
+                                    value: "name 2_7", 
+                                    label: "name 2_7"
+                                }, {
+                                    value: "name 2_8", 
+                                    label: "name 2_8"
+                                }, {
+                                    value: "name 2_9", 
+                                    label: "name 2_9"
+                                }, {
+                                    value: "name 2_10", 
+                                    label: "name 2_10"
+                                }, {
+                                    value: "name 3_1", 
+                                    label: "name 3_1"
+                                }
+                            ]
+                        }, {
+                            label: "group4",
+                            options: [
+                                {
+                                    value: "name 3_2", 
+                                    label: "name 3_2"
+                                }, {
+                                    value: "name 3_3", 
+                                    label: "name 3_3"
+                                }, {
+                                    value: "name 3_4", 
+                                    label: "name 3_4"
+                                }, {
+                                    value: "name 3_5", 
+                                    label: "name 3_5"
+                                }, {
+                                    value: "name 3_6", 
+                                    label: "name 3_6"
+                                }, {
+                                    value: "name 3_7", 
+                                    label: "name 3_7"
+                                }, {
+                                    value: "name 3_8", 
+                                    label: "name 3_8"
+                                }, {
+                                    value: "name 3_9", 
+                                    label: "name 3_9"
+                                }, {
+                                    value: "name 3_10", 
+                                    label: "name 3_10"
+                                }
+                            ]
+                        }, {
+                            label: 'group5',
+                            options: [
+                                {
+                                    value: "name 4_1", 
+                                    label: "name 4_1"
+                                }, {
+                                    value: "name 4_2", 
+                                    label: "name 4_2"
+                                }, {
+                                    value: "name 4_3", 
+                                    label: "name 4_3"
+                                }, {
+                                    value: "name 4_4", 
+                                    label: "name 4_4"
+                                }, {
+                                    value: "name 4_4", 
+                                    label: "name 4_4"
+                                }, {
+                                    value: "name 4_5", 
+                                    label: "name 4_5"
+                                }, {
+                                    value: "name 4_6", 
+                                    label: "name 4_6"
+                                }, {
+                                    value: "name 4_7", 
+                                    label: "name 4_7"
+                                }, {
+                                    value: "name 4_8", 
+                                    label: "name 4_8"
+                                }, {
+                                    value: "name 4_9", 
+                                    label: "name 4_9"
+                                }, {
+                                    value: "name 4_10", 
+                                    label: "name 4_10"
+                                }
+                            ]
+                        }, {
+                            label: 'group6',
+                            options: [
+                                {
+                                    value: "name 5_1",
+                                    label: "name 5_1"
+                                }
+                            ]
+                        }
+                    ],
+                    placeholder: '请选择查找的name'
+                }
+                vm.reRenderOptions = function() {
+                    var data = [
+                        {
+                            label: 'group1',
+                            options: [
+                                {
+                                    value: "item 1",
+                                    label: "item 1"
+                                }, { 
+                                    value: "item 2",
+                                    label: "item 2"
+                                }, { 
+                                    value: "item 3",
+                                    label: "item 3"
+                                }, { 
+                                    value: "item 4",
+                                    label: "item 4"
+                                }, { 
+                                    value: "item 5",
+                                    label: "item 5"
+                                }, { 
+                                    value: "item 6",
+                                    label: "item 6"
+                                }, { 
+                                    value: "item 7",
+                                    label: "item 7"
+                                }, { 
+                                    value: "item 8",
+                                    label: "item 8"
+                                }, { 
+                                    value: "item 9",
+                                    label: "item 9"
+                                }, { 
+                                    value: "item 10",
+                                    label: "item 10"
+                                }
+                            ]
+                        }, {
+                            label: 'group2',
+                            options: [
+                                { 
+                                    value: "item 1_1",
+                                    label: "item 1_1"
+                                }, { 
+                                    value: "item 1_2",
+                                    label: "item 1_2"
+                                }, { 
+                                    value: "item 1_3",
+                                    label: "item 1_3"
+                                }, { 
+                                    value: "item 1_4",
+                                    label: "item 1_4"
+                                }
+                            ]
+                        }
+                    ]
+                    avalon.vmodels.a.render(data)
+                    avalon.vmodels.a.placeholder = '查找新的选项'
+                }
+            });
+            avalon.scan();
+        });
+    </script>
+    <script src="../highlight/shCore.js"></script>
+</head>
+<body>
+<div class="wrapper" ms-controller="dropdown">
+    <div>
+        <h2>dropdownlist（下拉框）</h2>
+        <p>配置data使得搜索列表进行合理的分组，设置placeholder来给出搜索提示</p>
+        <select ms-widget="dropdownlist, a"> 
+        </select>
+    </div>
+    <button ms-click="reRenderOptions">Rerender options</button>
+<pre class="brush:html;gutter:false;toolbar:false;" ms-skip>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript"&gt;
+        require(['dropdownlist/avalon.dropdownlist.js', "ready!"], function() {
+            avalon.define('dropdown', function(vm) {
+                vm.$skipArray = ['dropdownlist']
+                vm.dropdownlist = {
+                    data: [
+                        {
+                            label: "group1",
+                            options: [
+                                {
+                                    value: "name 1", 
+                                    label: "name 1"
+                                }, {
+                                    value: "name 2", 
+                                    label: "name 2"
+                                }, {
+                                    value: "name 3", 
+                                    label: "name 3"
+                                }, {
+                                    value: "name 4", 
+                                    label: "name 4"
+                                }, {
+                                    value: "name 5", 
+                                    label: "name 5"
+                                }, {
+                                    value: "name 6", 
+                                    label: "name 6"
+                                }, {
+                                    value: "name 7", 
+                                    label: "name 7"
+                                }, {
+                                    value: "name 8", 
+                                    label: "name 8"
+                                }, {
+                                    value: "name 9", 
+                                    label: "name 9"
+                                }, {
+                                    value: "name 10", 
+                                    label: "name 10"
+                                }
+                            ]
+                        }, {
+                            label: 'group2',
+                            options: [
+                                {
+                                    value: "name 1_1", 
+                                    label: "name 1_1"
+                                }, {
+                                    value: "name 1_2", 
+                                    label: "name 1_2"
+                                }, {
+                                    value: "name 1_3", 
+                                    label: "name 1_3"
+                                }, {
+                                    value: "name 1_4", 
+                                    label: "name 1_4"
+                                }, {
+                                    value: "name 1_5", 
+                                    label: "name 1_5"
+                                }, {
+                                    value: "name 1_6", 
+                                    label: "name 1_6"
+                                }, {
+                                    value: "name 1_7", 
+                                    label: "name 1_7"
+                                }, {
+                                    value: "name 1_8", 
+                                    label: "name 1_8"
+                                }, {
+                                    value: "name 1_9", 
+                                    label: "name 1_9"
+                                }, {
+                                    value: "name 1_10", 
+                                    label: "name 1_10"
+                                }
+                            ]
+                        }, {
+                            label: 'group3',
+                            options: [
+                                {
+                                    value: "name 2_1", 
+                                    label: "name 2_1"
+                                }, {
+                                    value: "name 2_2", 
+                                    label: "name 2_2"
+                                }, {
+                                    value: "name 2_3", 
+                                    label: "name 2_3"
+                                }, {
+                                    value: "name 2_4", 
+                                    label: "name 2_4"
+                                }, {
+                                    value: "name 2_5", 
+                                    label: "name 2_5"
+                                }, {
+                                    value: "name 2_6", 
+                                    label: "name 2_6"
+                                }, {
+                                    value: "name 2_7", 
+                                    label: "name 2_7"
+                                }, {
+                                    value: "name 2_8", 
+                                    label: "name 2_8"
+                                }, {
+                                    value: "name 2_9", 
+                                    label: "name 2_9"
+                                }, {
+                                    value: "name 2_10", 
+                                    label: "name 2_10"
+                                }, {
+                                    value: "name 3_1", 
+                                    label: "name 3_1"
+                                }
+                            ]
+                        }, {
+                            label: "group4",
+                            options: [
+                                {
+                                    value: "name 3_2", 
+                                    label: "name 3_2"
+                                }, {
+                                    value: "name 3_3", 
+                                    label: "name 3_3"
+                                }, {
+                                    value: "name 3_4", 
+                                    label: "name 3_4"
+                                }, {
+                                    value: "name 3_5", 
+                                    label: "name 3_5"
+                                }, {
+                                    value: "name 3_6", 
+                                    label: "name 3_6"
+                                }, {
+                                    value: "name 3_7", 
+                                    label: "name 3_7"
+                                }, {
+                                    value: "name 3_8", 
+                                    label: "name 3_8"
+                                }, {
+                                    value: "name 3_9", 
+                                    label: "name 3_9"
+                                }, {
+                                    value: "name 3_10", 
+                                    label: "name 3_10"
+                                }
+                            ]
+                        }, {
+                            label: 'group5',
+                            options: [
+                                {
+                                    value: "name 4_1", 
+                                    label: "name 4_1"
+                                }, {
+                                    value: "name 4_2", 
+                                    label: "name 4_2"
+                                }, {
+                                    value: "name 4_3", 
+                                    label: "name 4_3"
+                                }, {
+                                    value: "name 4_4", 
+                                    label: "name 4_4"
+                                }, {
+                                    value: "name 4_4", 
+                                    label: "name 4_4"
+                                }, {
+                                    value: "name 4_5", 
+                                    label: "name 4_5"
+                                }, {
+                                    value: "name 4_6", 
+                                    label: "name 4_6"
+                                }, {
+                                    value: "name 4_7", 
+                                    label: "name 4_7"
+                                }, {
+                                    value: "name 4_8", 
+                                    label: "name 4_8"
+                                }, {
+                                    value: "name 4_9", 
+                                    label: "name 4_9"
+                                }, {
+                                    value: "name 4_10", 
+                                    label: "name 4_10"
+                                }
+                            ]
+                        }, {
+                            label: 'group6',
+                            options: [
+                                {
+                                    value: "name 5_1",
+                                    label: "name 5_1"
+                                }
+                            ]
+                        }
+                    ],
+                    placeholder: '请选择查找的name'
+                }
+                vm.reRenderOptions = function() {
+                    var data = [
+                        {
+                            label: 'group1',
+                            options: [
+                                {
+                                    value: "item 1",
+                                    label: "item 1"
+                                }, { 
+                                    value: "item 2",
+                                    label: "item 2"
+                                }, { 
+                                    value: "item 3",
+                                    label: "item 3"
+                                }, { 
+                                    value: "item 4",
+                                    label: "item 4"
+                                }, { 
+                                    value: "item 5",
+                                    label: "item 5"
+                                }, { 
+                                    value: "item 6",
+                                    label: "item 6"
+                                }, { 
+                                    value: "item 7",
+                                    label: "item 7"
+                                }, { 
+                                    value: "item 8",
+                                    label: "item 8"
+                                }, { 
+                                    value: "item 9",
+                                    label: "item 9"
+                                }, { 
+                                    value: "item 10",
+                                    label: "item 10"
+                                }
+                            ]
+                        }, {
+                            label: 'group2',
+                            options: [
+                                { 
+                                    value: "item 1_1",
+                                    label: "item 1_1"
+                                }, { 
+                                    value: "item 1_2",
+                                    label: "item 1_2"
+                                }, { 
+                                    value: "item 1_3",
+                                    label: "item 1_3"
+                                }, { 
+                                    value: "item 1_4",
+                                    label: "item 1_4"
+                                }
+                            ]
+                        }
+                    ]
+                    avalon.vmodels.a.render(data)
+                    avalon.vmodels.a.placeholder = '查找新的选项'
+                }
+            });
+            avalon.scan();
+        });
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="wrapper" ms-controller="dropdown"&gt;
+    &lt;div&gt;
+        &lt;h2&gt;dropdownlist（下拉框）&lt;/h2&gt;
+        &lt;p&gt;配置data使得搜索列表进行合理的分组，设置placeholder来给出搜索提示&lt;/p&gt;
+        &lt;select ms-widget="dropdownlist, a"&gt; 
+        &lt;/select&gt;
+    &lt;/div&gt;
+    &lt;button ms-click="reRenderOptions"&gt;Rerender options&lt;/button&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+</div>
+</body>
+</html>

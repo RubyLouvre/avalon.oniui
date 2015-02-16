@@ -10,18 +10,39 @@
         <script type="text/javascript" src="../avalon.js"></script>
     </head>
     <body ms-controller="demo">
-        <div style="width: 600px; height: 500px;">
-            <div ms-widget="layout,layoutVM" class="container" style="margin:10px 0 0 50px;">
-                <div ms-layout-dock="north" class="north" ms-layout-size="100"></div>
-                <div ms-layout-dock="west" class="west" ms-layout-size="110"></div>
-                <div ms-layout-dock="centre" class="centre"></div>
-                <div ms-layout-dock="east" ms-layout-resizable class="east" ms-layout-size="120"></div>
-                <div ms-layout-dock="south" ms-layout-resizable class="south" ms-layout-size="130"></div>
-            </div>
+        <div style="width: 600px; height: 500px;" ms-css-border-top-style="{{c?'none':'solid'}}">
+            <div ms-widget="layout,layoutVM,$layoutVMOptions" class="container" style="margin:10px 0 0 50px;"></div>
         </div>
         <script>
             require(["./layout/avalon.layout"], function() {
                 avalon.define("demo", function(vm) {
+                    vm.c = true;
+                    vm.$layoutVMOptions = {
+                        northRegion: {
+                            size: 100,
+                            resizable: true,
+                            regionClass: "north"
+                        },
+                        southRegion: {
+                            size: 110,
+                            resizable: false,
+                            regionClass: "some-css-class0 some-css-class1"
+                        },
+                        eastRegion: {
+                            size: 120,
+                            resizable: true
+                        },
+                        westRegion: {
+                            size: 130,
+                            resizable: true
+                        },
+                        centreRegion: {
+                            regionClass: "addtional-class-for-centre"
+                        },
+                        stretchMax: true,
+                        resizerSize: 5,
+                        regionBorderWidth: 1
+                    };
                 })
                 avalon.scan()
             })

@@ -1,201 +1,272 @@
-//avalon 1.2.5 2014.4.2
+/**
+ * @cnName 布局组件
+ * @enName Layout
+ * @introduce
+ *    <p>区域布局管理组件。一个组件中最多分为5个区域，分别为东西南北中区。其中中区是默认存在并不可移除的。</p>
+ *  @updatetime 2015-2-15
+ */
 define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
     function(avalon, tpl) {
         var widgetName = 'layout';
-        var widget = avalon.ui[widgetName] = function(element, data, vmodels) {
-            var options = data[widgetName+'Options'],
-                $element = avalon(element),
-                docks = {
-                    "north": {
-                        attrBindings: {
-                            "ms-css-width": "{{layoutWidth-regionBorderWidth*2}}",
-                            "ms-css-height": "{{northHeight-(northResizable?(resizerSize+regionBorderWidth*2):regionBorderWidth)}}",
-                            "ms-css-top": "layoutTop",
-                            "ms-css-left": "layoutLeft"
-                        },
-                        resizerConfig: {
-                            "data-draggable-axis": "y",
-                            "ms-css-width": "layoutWidth",
-                            "ms-css-height": "resizerSize",
-                            "ms-css-top": "{{layoutTop+northHeight-(northResizable?resizerSize:0)}}",
-                            "ms-css-left": "layoutLeft"
-                        },
-                        resizerManageProperty: {
-                            name: "northHeight",
-                            plusLocation: true,
-                            eventDataDirection: "Y",
-                            getContainment: function() {
-                                var $offset = $element.offset();
-                                return [0, $offset.top, 0, $offset.top + vmodel.layoutHeight - vmodel.southHeight - vmodel.resizerSize];
-                            }
-                        }
+        var ewcNoTopBorder = "(northRegion.$inLayoutFlow&&!northRegion.resizable)",   // 判断East, West, Centre区域是否有上边框的条件语句
+            ewcNoBottomBorder = "(southRegion.$inLayoutFlow&&!southRegion.resizable)",// 判断East, West, Centre区域是否有下边框的条件语句
+
+            centreNoLeftBorder = "(westRegion.$inLayoutFlow && !westRegion.resizable)",
+            centreNoRightBorder = "(eastRegion.$inLayoutFlow && !eastRegion.resizable)",
+
+            northResizerHeight = "(northRegion.$inLayoutFlow && northRegion.resizable ? resizerSize : 0)",  // North区域高度的计算表达式
+            southResizerHeight = "(southRegion.$inLayoutFlow && southRegion.resizable ? resizerSize : 0)",  // South区域高度的计算表达式
+            westResizerWidth = "(westRegion.$inLayoutFlow && westRegion.resizable ? resizerSize : 0)",  // West区域宽度的计算表达式
+            eastResizerWidth = "(eastRegion.$inLayoutFlow && eastRegion.resizable ? resizerSize : 0)",  // East区域宽度的计算表达式
+
+            ewcResizerHeight = ["(layoutHeight - northRegion.size - southRegion.size)", 
+                                    northResizerHeight, southResizerHeight
+                                ].join("-"),    // East, West, Centre三个区域的包含border-width的高度的表达式。最终应用到区域上时需要减除各个区域的border-with
+            ewcRegionHeigth = [ewcResizerHeight, 
+                                ["(", ewcNoTopBorder, "?0:regionBorderWidth)"].join(""),
+                                ["(", ewcNoBottomBorder, "?0:regionBorderWidth)"].join("")].join("-"),
+            ewcRegionTop = ["layoutTop+northRegion.size+", northResizerHeight].join(""),    // East, West, Centre三个区域Top的表达式。
+
+            docks = {
+                "north": {
+                    attrBindings: {
+                        "ms-css-width": "layoutWidth - (isSubLayout?0:regionBorderWidth*2)",
+                        "ms-css-height": "northRegion.size - (isSubLayout?regionBorderWidth:regionBorderWidth*2)",
+                        "ms-css-top": "layoutTop",
+                        "ms-css-left": "layoutLeft",
+                        "ms-css-border-style": "isSubLayout?'none none solid none':'solid'",
+                        "ms-css-border-width": "regionBorderWidth"
                     },
-                    "east": {
-                        attrBindings: {
-                            "ms-css-width": "eastWidth-(eastResizable?(resizerSize+regionBorderWidth*2):regionBorderWidth)",
-                            "ms-css-height": "{{layoutHeight-northHeight-southHeight-(northResizable?regionBorderWidth:0)-(southResizable?regionBorderWidth:0)}}",
-                            "ms-css-top": "{{layoutTop+northHeight}}",
-                            "ms-css-left": "{{layoutLeft+layoutWidth-eastWidth+(eastResizable?resizerSize:0)}}"
-                        },
-                        resizerConfig: {
-                            "data-draggable-axis": "x",
-                            "ms-css-width": "resizerSize",
-                            "ms-css-top": "{{layoutTop+northHeight}}",
-                            "ms-css-left": "{{layoutLeft+layoutWidth-eastWidth}}",
-                            "ms-css-height": "{{layoutHeight-northHeight-southHeight}}"
-                        },
-                        resizerManageProperty: {
-                            name: "eastWidth",
-                            plusLocation: false,
-                            eventDataDirection: "X",
-                            getContainment: function() {
-                                var $offset = $element.offset();
-                                return [$offset.left + vmodel.westWidth + 1, 0, $offset.left + vmodel.layoutWidth - vmodel.resizerSize, 0];
-                            }
-                        }
+                    resizerConfig: {
+                        "data-draggable-axis": "y",
+                        "ms-css-width": "layoutWidth",
+                        "ms-css-height": "resizerSize",
+                        "ms-css-top": "layoutTop+northRegion.size",
+                        "ms-css-left": "layoutLeft"
                     },
-                    "south": {
-                        attrBindings: {
-                            "ms-css-width": "{{layoutWidth-regionBorderWidth*2}}",
-                            "ms-css-height": "southHeight-(southResizable?resizerSize:0)",
-                            "ms-css-top": "{{layoutTop+layoutHeight-southHeight+(southResizable?resizerSize:0)}}",
-                            "ms-css-left": "layoutLeft"
-                        },
-                        resizerConfig: {
-                            "data-draggable-axis": "y",
-                            "ms-css-width": "layoutWidth",
-                            "ms-css-height": "resizerSize",
-                            "ms-css-top": "{{layoutTop+layoutHeight-southHeight}}",
-                            "ms-css-left": "layoutLeft"
-                        },
-                        resizerManageProperty: {
-                            name: "southHeight",
-                            plusLocation: false,
-                            eventDataDirection: "Y",
-                            getContainment: function() {
-                                var $offset = $element.offset();
-                                return [0, $offset.top + vmodel.northHeight + 1, 0, $offset.top + vmodel.layoutHeight - vmodel.resizerSize];
-                            }
-                        }
-                    },
-                    "west": {
-                        attrBindings: {
-                            "ms-css-width": "westWidth-(westResizable?(resizerSize+regionBorderWidth*2):regionBorderWidth)",
-                            "ms-css-height": "{{layoutHeight-northHeight-southHeight-(northResizable?regionBorderWidth:0)-(southResizable?regionBorderWidth:0)}}",
-                            "ms-css-top": "{{layoutTop+northHeight}}",
-                            "ms-css-left": "{{layoutLeft}}"
-                        },
-                        resizerConfig: {
-                            "data-draggable-axis": "x",
-                            "ms-css-width": "resizerSize",
-                            "ms-css-height": "{{layoutHeight-northHeight-southHeight}}",
-                            "ms-css-top": "{{layoutTop+northHeight}}",
-                            "ms-css-left": "{{layoutLeft+westWidth-resizerSize}}"
-                        },
-                        resizerManageProperty: {
-                            name: "westWidth",
-                            plusLocation: true,
-                            eventDataDirection: "X",
-                            getContainment: function() {
-                                var $offset = $element.offset();
-                                return [$offset.left + 1, 0, $offset.left + vmodel.layoutWidth - vmodel.eastWidth - 1 - vmodel.resizerSize, 0];
-                            }
-                        }
-                    },
-                    "centre": {
-                        attrBindings: {
-                            "ms-css-width": "{{layoutWidth-eastWidth-westWidth-(westResizable?regionBorderWidth:0)-(eastResizable?regionBorderWidth:0)}}",
-                            "ms-css-height": "{{layoutHeight-northHeight-southHeight-(northResizable?regionBorderWidth:0)-(southResizable?regionBorderWidth:0)}}",
-                            "ms-css-top": "{{layoutTop+northHeight}}",
-                            "ms-css-left": "{{layoutLeft+westWidth}}"
+                    resizerManageProperty: {
+                        plusLocation: true,
+                        eventDataDirection: "Y",
+                        getContainment: function(vmodel) {
+                            var $offset = vmodel.$element.offset();
+                            return [0, $offset.top + vmodel.regionBorderWidth*2, 0, $offset.top + vmodel.layoutHeight - vmodel.southRegion.size - vmodel.resizerSize * 2 - vmodel.regionBorderWidth * 2];
                         }
                     }
-                };
+                },
+                "south": {
+                    attrBindings: {
+                        "ms-css-width": "layoutWidth - (isSubLayout?0:regionBorderWidth*2)",
+                        "ms-css-height": "southRegion.size - (isSubLayout?regionBorderWidth:regionBorderWidth*2)",
+                        "ms-css-top": "layoutTop+layoutHeight-southRegion.size",
+                        "ms-css-left": "layoutLeft",
+                        "ms-css-border-style": "isSubLayout?'solid none none none':'solid'",
+                        "ms-css-border-width": "regionBorderWidth"
+                    },
+                    resizerConfig: {
+                        "data-draggable-axis": "y",
+                        "ms-css-width": "layoutWidth",
+                        "ms-css-height": "resizerSize",
+                        "ms-css-top": "layoutTop+layoutHeight-southRegion.size-resizerSize",
+                        "ms-css-left": "layoutLeft"
+                    },
+                    resizerManageProperty: {
+                        plusLocation: false,
+                        eventDataDirection: "Y",
+                        getContainment: function(vmodel) {
+                            var $offset = vmodel.$element.offset();
+                            return [0, $offset.top + vmodel.northRegion.size + vmodel.regionBorderWidth*2 + vmodel.resizerSize, 0, $offset.top + vmodel.layoutHeight - vmodel.resizerSize];
+                        }
+                    }
+                },
+                "east": {
+                    attrBindings: {
+                        "ms-css-width": "eastRegion.size-(isSubLayout?regionBorderWidth:regionBorderWidth*2)",
+                        "ms-css-height": ewcRegionHeigth,
+                        "ms-css-top": ewcRegionTop,
+                        "ms-css-left": "layoutLeft + layoutWidth - eastRegion.size",
+                        "ms-css-border-top-style": [ewcNoTopBorder,"?'none':'solid'"].join(""),
+                        "ms-css-border-bottom-style": [ewcNoBottomBorder, "?'none':'solid'"].join(""),
+                        "ms-css-border-left-style": "'solid'",
+                        "ms-css-border-right-style": "isSubLayout?'none':'solid'",
+                        "ms-css-border-width": "regionBorderWidth"
+                    },
+                    resizerConfig: {
+                        "data-draggable-axis": "x",
+                        "ms-css-width": "resizerSize",
+                        "ms-css-top": ewcRegionTop,
+                        "ms-css-left": "layoutLeft+layoutWidth-eastRegion.size-resizerSize",
+                        "ms-css-height": ewcResizerHeight
+                    },
+                    resizerManageProperty: {
+                        plusLocation: false,
+                        eventDataDirection: "X",
+                        getContainment: function(vmodel) {
+                            var $offset = vmodel.$element.offset();
+                            return [
+                                $offset.left + vmodel.westRegion.size + vmodel.regionBorderWidth*2 + vmodel.resizerSize, 
+                                0, 
+                                $offset.left + vmodel.layoutWidth - vmodel.resizerSize - vmodel.regionBorderWidth * 2, 
+                            0];
+                        }
+                    }
+                },
+                "west": {
+                    attrBindings: {
+                        "ms-css-width": "westRegion.size - (isSubLayout?regionBorderWidth:regionBorderWidth*2)",
+                        "ms-css-height": ewcRegionHeigth,
+                        "ms-css-top": ewcRegionTop,
+                        "ms-css-left": "layoutLeft",
+                        "ms-css-border-top-style": [ewcNoTopBorder,"?'none':'solid'"].join(""),
+                        "ms-css-border-bottom-style": [ewcNoBottomBorder, "?'none':'solid'"].join(""),
+                        "ms-css-border-left-style": "isSubLayout?'none':'solid'",
+                        "ms-css-border-right-style": "'solid'",
+                        "ms-css-border-width": "regionBorderWidth"
+                    },
+                    resizerConfig: {
+                        "data-draggable-axis": "x",
+                        "ms-css-width": "resizerSize",
+                        "ms-css-height": ewcResizerHeight,
+                        "ms-css-top": ewcRegionTop,
+                        "ms-css-left": "layoutLeft+westRegion.size"
+                    },
+                    resizerManageProperty: {
+                        plusLocation: true,
+                        eventDataDirection: "X",
+                        getContainment: function(vmodel) {
+                            var $offset = vmodel.$element.offset();
+                            return [
+                                $offset.left + vmodel.regionBorderWidth + vmodel.regionBorderWidth*2, 
+                                0, 
+                                $offset.left + vmodel.layoutWidth - vmodel.eastRegion.size - vmodel.regionBorderWidth*2 - vmodel.resizerSize*2, 
+                                0
+                            ];
+                        }
+                    }
+                },
+                "centre": {
+                    attrBindings: {
+                        "ms-css-width": ["layoutWidth-eastRegion.size-westRegion.size", 
+                                            westResizerWidth,
+                                            eastResizerWidth,
+                                            ["(", centreNoLeftBorder, "?0:regionBorderWidth)"].join(""),
+                                            ["(", centreNoRightBorder, "?0:regionBorderWidth)"].join("")
+                                        ].join("-"),
+                        "ms-css-height": ewcRegionHeigth,
+                        "ms-css-top": ewcRegionTop,
+                        "ms-css-left": "layoutLeft+westRegion.size+" + westResizerWidth,
+                        "ms-css-border-top-style": [ewcNoTopBorder,"?'none':'solid'"].join(""),
+                        "ms-css-border-bottom-style": [ewcNoBottomBorder, "?'none':'solid'"].join(""),
+                        "ms-css-border-left-style": centreNoLeftBorder + "?'none':'solid'",
+                        "ms-css-border-right-style": centreNoRightBorder + "?'none':'solid'",
+                        "ms-css-border-width": "regionBorderWidth"
+                    }
+                }
+            };
+        var widget = avalon.ui[widgetName] = function(element, data, vmodels) {
+            var options = data[widgetName+'Options'],
+                $element = avalon(element);
 
             var domCreator = document.createElement("div");
             var vmodel = avalon.define(data[widgetName+'Id'], function(vm) {
-                avalon.mix(vm, options);
                 vm.$dockedAreas = {  };    // 存放5个区域的$(element)的字典
                 vm.$resizers = { };   // 存放4个resizer的字典
                 vm.$nestedLayouts = [];
+                avalon.mix(true, vm, {
+                    centreRegion: { $inLayoutFlow: true, isNested: false },
+                    westRegion: { resizable:false, size: 0, regionClass: "", $inLayoutFlow: false, isNested: false },
+                    eastRegion: { resizable:false, size: 0, regionClass: "", $inLayoutFlow: false, isNested: false },
+                    southRegion: { resizable:false, size: 0, regionClass: "", $inLayoutFlow: false, isNested: false },
+                    northRegion: { resizable:false, size: 0, regionClass: "", $inLayoutFlow: false, isNested: false }
+                }, options);
+
                 vm.$init = function() {
-                    if (vmodel.layoutFullSize) {
-                        // var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
-                        vmodel.layoutWidth = avalon(element.parentNode).width();
-                        vmodel.layoutHeight = avalon(element.parentNode).height();
-                        // if (MutationObserver) {
-                        //     var parentSizeObserver = new MutationObserver(function(mutations) {
-                        //         mutations.forEach(function(e) {
-                        //             avalon.log("aaa");
-                        //         });
-                        //     });
-                        //     parentSizeObserver.observe(element.parentNode, {
-                        //         subtree: false,
-                        //         childList: false,
-                        //         attributes: true,
-                        //         attributeOldValue: false
-                        //     });
-                        // }
-                    }
-                    $element.addClass("oni-layout");
-                    $element.attr("ms-css-width", "layoutWidth");
-                    $element.attr("ms-css-height", "layoutHeight");
-                    var draggableVM = avalon.define(vmodel.$id + "Docker", function(dragVM) {
-                        dragVM.draggable = {
-                            startFn: function(e, data) {
-                                for(var side in vmodel.$resizers) {
-                                    if (vmodel.$resizers.hasOwnProperty(side) && vmodel.$resizers[side].element == data.element) {
-                                        data.containment = docks[side].resizerManageProperty.getContainment(vmodel);
-                                        break;
-                                    }
-                                }
-                            },
-                            stopFn: function(e, data) {
-                                for(var side in vmodel.$resizers) {
-                                    if (vmodel.$resizers.hasOwnProperty(side) && vmodel.$resizers[side].element == data.element) {
-                                        var vmPropertyName = docks[side].resizerManageProperty.name,
-                                            plusLocation = docks[side].resizerManageProperty.plusLocation,
-                                            eventDataDirection = docks[side].resizerManageProperty.eventDataDirection;
-                                        vmodel[vmPropertyName] += (data["page"+eventDataDirection] - data["startPage"+eventDataDirection]) * (plusLocation ? 1 : -1);
-                                        break;
-                                    }
-                                }
-                                vmodel.$updateNestedLayouts();
-                            }
-                        }
-                        dragVM.$skipArray = ["draggable"];
-                    });
-                    
-                    for (var i = 0; i < element.children.length; i++) {
-                        var node = element.children[i],
-                            $node = avalon(node),
-                            dockTo = $node.attr("ms-layout-dock"),
-                            resizable = false;
-
-                        if (docks.hasOwnProperty(dockTo)) {
-                            node.removeAttribute("ms-layout-dock");
-                            if (dockTo!="centre") {
-                                vmodel[docks[dockTo].resizerManageProperty.name] = parseFloat($node.attr("ms-layout-size"));
-                                if (node.hasAttribute ? node.hasAttribute("ms-layout-resizable") : (node.getAttribute("ms-layout-resizable")!=null)) {
-                                    node.removeAttribute("ms-layout-resizable");
-                                    vmodel[dockTo+"Resizable"] = true;
-                                    resizable = true;
-                                }
-                            }
-                            $element.addClass(dockTo + "-region-" + (resizable? "resizable" : "unresizable"));
-                            vmodel.$bindRegionNode(dockTo, node, resizable);
-                        }
-                    }
-
-                    vmodels = [draggableVM, vmodel].concat(vmodels);
-
                     if (vmodel.parentLayoutId!="" && !!avalon.vmodels[vmodel.parentLayoutId]) {
                         avalon.vmodels[vmodel.parentLayoutId].$registNestedLayout(vmodel);
                     }
 
+                    if (vmodel.stretchMax) {
+                        vmodel.layoutWidth = avalon(element.parentNode).width();
+                        vmodel.layoutHeight = avalon(element.parentNode).height();
+                    }
+                    $element.addClass("oni-layout");
+                    $element.attr("ms-css-width", "layoutWidth");
+                    $element.attr("ms-css-height", "layoutHeight");
+
+
+                    var childNodesDictionary = {};  // 临时存放Region DOM的字典
+                    for (var i = 0; i < element.children.length; i++) {
+                        var $node = avalon(element.children[i]),
+                            dockTo = $node.attr("ms-layout-dock");
+
+                        if (docks.hasOwnProperty(dockTo)) {
+                            $node.element.removeAttribute("ms-layout-dock");
+                            childNodesDictionary[dockTo] = $node;
+                        }
+                    }
+
+                    ["northRegion", "westRegion", "eastRegion", "southRegion", "centreRegion"].forEach(function(region) {
+                        var resizable = false;
+                        if (options.hasOwnProperty(region)) {
+                            vm[region].$inLayoutFlow = true;
+                        }
+                        if (vm[region].$inLayoutFlow) {
+                            resizable = vmodel[region].resizable;
+                            var regionName = region.replace("Region", "");
+
+                            // 从childNodesDictionary中寻找region的DOM节点。如果没有，创建一个新DIV。
+                            if (!childNodesDictionary[regionName]) {
+                                domCreator.innerHTML = "<div></div>";
+                                var regionNode = domCreator.childNodes[0];
+                                element.appendChild(regionNode);
+                                vm.$dockedAreas[regionName] = avalon(regionNode);
+                                domCreator.innerHTML = "";
+                            } else {
+                                vm.$dockedAreas[regionName] = childNodesDictionary[regionName];  
+                            }
+                            vm.$dockedAreas[regionName].addClass(vm[region].regionClass);
+
+                            // if (regionName != "centre") {
+                            //     $element.addClass(regionName + "-region-" + (resizable? "resizable" : "unresizable"));
+                            // }
+                            vmodel.$bindRegionNode(regionName, vm.$dockedAreas[regionName].element, resizable);
+                        }
+                    });
+                    childNodesDictionary = null;
+
+                    vmodels = [vmodel].concat(vmodels);
+
                     avalon.scan(element, vmodels);
                     if(typeof vmodel.onInit === "function"){
                         vmodel.onInit.call(element, vmodel, options, vmodels)
+                    }
+                };                       
+                vm.draggable = {
+                    startFn: function(e, data) {
+                        for(var side in vmodel.$resizers) {
+                            if (vmodel.$resizers.hasOwnProperty(side) && vmodel.$resizers[side].element == data.element) {
+                                data.containment = docks[side].resizerManageProperty.getContainment(vmodel);
+                                break;
+                            }
+                        }
+                    },
+                    stopFn: function(e, data) {
+                        for(var side in vmodel.$resizers) {
+                            if (vmodel.$resizers.hasOwnProperty(side) && vmodel.$resizers[side].element == data.element) {
+                                var plusLocation = docks[side].resizerManageProperty.plusLocation,
+                                    eventDataDirection = docks[side].resizerManageProperty.eventDataDirection,
+                                    callback = vmodel[side+"Region"].afterResize || vmodel.afterResize,
+                                    beforeSize = vmodel[side+"Region"].size,
+                                    afterSize = beforeSize + (data["page"+eventDataDirection] - data["startPage"+eventDataDirection]) * (plusLocation ? 1 : -1);
+                                vmodel[side+"Region"].size = afterSize;
+                                
+                                if (typeof callback == "function") {
+                                    callback.call(element, side, beforeSize, afterSize);
+                                }
+
+                                break;
+                            }
+                        }
+                        vmodel.$updateNestedLayouts();
                     }
                 };
                 vm.$remove = function() {
@@ -203,65 +274,15 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                         avalon.vmodels[vmodel.parentLayoutId].$unregistNestedLayout(vmodel);
                     }
                     vmodel.$nestedLayouts = null;
+                    vmodel.$element = $element = null;
                     element.innerHTML = element.textContent = "";
                     vmodel.$dockedAreas = null;
                     vmodel.$resizers = null;
-                    $element = null;
                     domCreator = null;
-                };
-                vm.removeRegion = function(region) {
-                    if (region != "centre" && docks.hasOwnProperty(region) && !!vm.$dockedAreas[region]) {
-                        element.removeChild(vm.$dockedAreas[region].element);
-                        if (vmodel[region+"Resizable"]) {
-                            element.removeChild(vm.$resizers[region].element);
-                            delete vmodel.$resizers[region];
-                        }
-                        delete vmodel.$dockedAreas[region];
-                        vmodel[docks[region].resizerManageProperty.name] = 0;
-                    }
-                    vmodel.$updateNestedLayouts();
-                };
-                vm.addRegion = function(region, regionConfig) {
-                    if (region != "centre" && docks.hasOwnProperty(region) && !vm.$dockedAreas[region]) {
-                        // 更新VM中的尺寸和Resizable属性
-                        vmodel[docks[region].resizerManageProperty.name] = regionConfig.size;
-                        vmodel[region + "Resizable"] = regionConfig.size;
-
-                        // 创建Region的DOM元素并插入文档
-                        domCreator.innerHTML = 
-                            "<div ms-layout-dock='#ms-layout-dock#' #ms-layout-resizable# ms-layout-size='#ms-layout-size#'></div>"
-                                .replace("#ms-layout-dock#", region)
-                                .replace("#ms-layout-resizable#", regionConfig.resizable ? "ms-layout-resizable" : "")
-                                .replace("#ms-layout-size#", regionConfig.size);
-                        var node = domCreator.childNodes[0];
-                        avalon(node).addClass(regionConfig.regionClass);
-                        domCreator.innerHTML = ""
-                        element.appendChild(node);
-                        vmodel.$bindRegionNode(region, node, regionConfig.resizable);
-                        avalon(node).bind("propertychange", function() {
-                            debugger
-                        })
-                    }
-                    avalon.scan(element, vmodels);
-                    vmodel.$updateNestedLayouts();
-                };
-                vm.updateLayout = function (layoutData) {
-                    if (vmodel.layoutFullSize) {
-                        vmodel.layoutWidth = avalon(element.parentNode).width();
-                        vmodel.layoutHeight = avalon(element.parentNode).height();
-                    } else {
-                        if (layoutData.hasOwnProperty('layoutWidth')) {
-                            vmodel.layoutWidth = layoutData.layoutWidth;
-                        }
-                        if (layoutData.hasOwnProperty('layoutHeight')) {
-                            vmodel.layoutHeight = layoutData.layoutHeight;
-                        }
-                    }
-                    vmodel.$updateNestedLayouts();
                 };
                 vm.$updateNestedLayouts = function () {
                     vmodel.$nestedLayouts.forEach(function(nestedVM) {
-                        nestedVM.updateLayout();
+                        nestedVM.updateLayoutSize();
                     });
                 };
 
@@ -276,7 +297,6 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                         }
 
                         // 检测是否有Nested的Layout，如果有，需要为Nested的Layout指定父级Layout的Id和Region
-
                         for (var i = 0; i < domNode.children.length; i++) {
                             var childNode = domNode.children[i],
                                 childWidgetName = childNode.getAttribute("ms-widget");
@@ -294,7 +314,7 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                             resizer = null,
                             $resizer = null;
 
-                        domCreator.innerHTML = "<div ms-draggable ms-controller=\"" + vmodel.$id + "Docker\" data-draggable-ghosting=\"true\" data-draggable-start=\"startFn\" data-draggable-stop=\"stopFn\"></div>";
+                        domCreator.innerHTML = "<div ms-draggable ms-controller=\"" + vmodel.$id + "\" data-draggable-ghosting=\"true\" data-draggable-start=\"startFn\" data-draggable-stop=\"stopFn\"></div>";
                         resizer = domCreator.childNodes[0];
                         $resizer = avalon(resizer);
                         $resizer.addClass(region + "-resizer resizer");
@@ -312,38 +332,197 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                 vm.$registNestedLayout = function(nestedVM) {
                     vm.$dockedAreas[nestedVM.parentLayoutRegion].addClass("nested-region");
                     avalon.Array.ensure(vm.$nestedLayouts, nestedVM);
+                    nestedVM.isSubLayout = true;
+                    vm[nestedVM.parentLayoutRegion+"Region"].isNested = true;
                 };
                 vm.$unregistNestedLayout = function (nestedVM) {
                     vm.$dockedAreas[nestedVM.parentLayoutRegion].removeClass("nested-region");
                     avalon.Array.remove(vm.$nestedLayouts, nestedVM);
+                    nestedVM.isSubLayout = false;
+                    vm[nestedVM.parentLayoutRegion+"Region"].isNested = false;
                 };
+
+                vm.$element = $element;
+
+                vm.isSubLayout = false;
+
+                // var borderGetFn = function () { return this.regionBorderWidth; };
+                // var emptySetFn = function() { return; };
+                // vm.northRegionTopBorderWidth = vm.northRegionBottomBorderWidth = {
+                //     get: function () {
+                //         if (vmodel.parentLayoutId!="" && !!avalon.p[vmodel.parentLayoutId]) {
+                //             var parentLayoutVM = avalon.vmodels[vmodel.parentLayoutId];
+                //             if (parentLayoutVM.northRegion.resizable && parentLayoutVM.regionBorderWidth > 0) {
+                //                 return 0;
+                //             } else {
+                //                 return this.regionBorderWidth;
+                //             }
+                //         } else {
+                //             return this.regionBorderWidth;
+                //         }
+                //     },
+                //     set: emptySetFn
+                // };
                 // vm.parentLayoutId = undefined;
                 // vm.parentLayoutRegion = undefined; // 如果当前VM是某个Layout的SubLayout，这个变量表示当前VM在父级Layout中所在区域。
                 vm.$isLayoutVM = true;
-                vm.$skipArray = ["northResizable", "westResizable", "southResizable", "eastResizable", "removeRegion", "addRegion", "updateLayout", "parentLayoutId", "parentLayoutRegion"];
+                vm.$skipArray = ["draggable", "parentLayoutId", "parentLayoutRegion"];
             });
             return vmodel;
         }
         widget.defaults = {
-            eastWidth: 0,
-            westWidth: 0,
-            northHeight: 0,
-            southHeight: 0,
-
-            layoutFullSize: true,
-            layoutWidth: 0,
-            layoutHeight: 0,
             layoutTop: 0,
             layoutLeft: 0,
             parentLayoutRegion: "",
             parentLayoutId: "",
-            regionBorderWidth: 1,
-            resizerSize: 12,
-            northResizable:false,
-            westResizable:false,
-            southResizable:false,
-            eastResizable:false
+
+            stretchMax: true,   //@config Layout的元素是否填充满父级DOM。此参数为true时，layoutWidth和layoutHeight不参与计算
+            layoutWidth: 0,     //@config Layout组件的整体宽度。stretchMax为true时，此参数不参与计算
+            layoutHeight: 0,    //@config Layout组件的整体高度。stretchMax为true时，此参数不参与计算
+            regionBorderWidth: 1,   //@config 区域的边框的宽度
+            resizerSize: 5,          //@config 区域的拖放元素的尺
+
+            eastRegion: {},     //@config {Object} 东区配置对象。参看region配置
+            southRegion: {},    //@config {Object} 南区配置对象。参看region配置
+            westRegion: {},     //@config {Object} 西区配置对象。参看region配置
+            northRegion: {},    //@config {Object} 北区配置对象。参看region配置
+            centreRegion: {},   //@config {Object} 中区配置对象。参看region配置
+
+            /**
+             * @config {Function} 删除一个Region并将DOM移出文档
+             * @param opts {Object} vmodel
+             * @param region {Object} east, south, west或者north。centre区域不可移除。
+             */
+            removeRegion: function(opts, region) {
+                if (region != "centre" && docks.hasOwnProperty(region) && !!opts.$dockedAreas[region]) {
+                    var callback = opts[region+"Region"].afterRemove || opts.afterRemove,
+                        element = opts.$element.element;
+                    element.removeChild(opts.$dockedAreas[region].element);
+                    if (opts[region+"Region"].resizable) {
+                        element.removeChild(opts.$resizers[region].element);
+                        delete opts.$resizers[region];
+                    }
+                    delete opts.$dockedAreas[region];
+                    opts[region+"Region"].size = 0;
+                    opts[region+"Region"].$inLayoutFlow = false;
+                    opts[region+"Region"].resizable = false;
+                    if (typeof callback == "function") {
+                        callback.call(element, region);
+                    }
+                }
+                opts.$updateNestedLayouts();
+            },
+            /**
+             * @config {Function} 新增一个不存在的区域
+             * @param opts {Object} vmodel
+             * @param region {Object} east, south, west或者north。
+             * @param cfg {Object} 区域配置对象。参看region配置
+             */
+            addRegion: function(opts, region, cfg) {
+                // 检查Region名称和是否已经有同名Region。名称必须是south, east, north, west或者centre. 
+                if (!docks.hasOwnProperty(region) || !!opts.$dockedAreas[region]) return;
+                var callback = opts.afterAdd,
+                    element = opts.$element.element;
+                if (region != "centre") {
+                    // 更新VM中的尺寸和Resizable属性
+                    opts[region+"Region"].size = cfg.size;
+                    opts[region+"Region"].$inLayoutFlow = true;
+                    opts[region+"Region"].resizable = cfg.resizable;
+
+                    // 创建Region的DOM元素并插入文档 
+                    var node = document.createElement("div");
+                    avalon(node).addClass(cfg.regionClass);
+                    element.appendChild(node);
+                    opts.$bindRegionNode(region, node, cfg.resizable);
+                }
+                avalon.scan(element, opts);
+                opts.$updateNestedLayouts();
+                if (typeof callback=="function") {
+                    callback.call(element, region, node, cfg);
+                }
+            },
+            /**
+             * @config {Function} 拖动拖放器后区域大小改变的回调函数。单独的区域配置中若有相同的回调函数，则该区域被拖动后主配置的回调不会触发
+             * @param region {Object} east, south, west或者north。
+             * @param beforeSize {Number} 拖放前的尺寸
+             * @param afterSize {Number} 拖放后的尺寸
+             */
+             afterResize: function(region, beforeSize, afterSize) {},
+            /**
+             * @config {Function} 移除一个区域后的回调函数。单独的区域配置中若有相同的回调函数，则该区域被移除后主配置的回调不会触发
+             * @param region {Object} east, south, west或者north。
+             */
+             afterRemove: function(region) {},
+            /**
+             * @config {Function} 新增一个区域后的回调函数。
+             * @param region {Object} east, south, west或者north。
+             * @param dom {Object} 新增区域的DOM节点
+             * @param cfg {Object} region配置对象。参看region配置
+             */
+             afterAdd: function(region, dom, cfg) {},
+
+
+            /**
+             * @config {Function} 当stretchMax配置为true后，layout的父容器尺寸改变后，需要调用此函数重新计算布局大小。
+             */
+            updateLayoutSize: function () {
+                var element = this.$element.element;
+                if (this.stretchMax) {
+                    this.layoutWidth = avalon(element.parentNode).width();
+                    this.layoutHeight = avalon(element.parentNode).height();
+                }
+                this.$updateNestedLayouts();
+            }
+            //
         };
         return avalon;
     }
 );
+/**
+ * @other
+ * <p><b>region配置</b></p>
+ * region配置是一个非常重要的配置项，下面是说明和默认值
+ * ```js
+ {
+    size: 0,            //区域尺寸。不可用于centre区域
+    resizable: false,   //是否增加一个resizer。不可用于centre区域
+    regionClass: "",    //额外的CSS
+    afterRemove: undefined, //区域被移除后的回调。不可用于centre区域。配置了本项后，移除区域时不会触发主配置的afterRemove回调
+    afterResize: undefined  //区域改变大小后的回调。不可用于centre区域。配置了本项后，改变区域大小时不会触发主要的afterResize回调
+ }
+ ```
+ */
+
+ /**
+ @links
+ [最基础的Layout配置](avalon.layout.ex1.html)
+ [移除和增加区域](avalon.layout.ex2.html)
+ [嵌套的Layout](avalon.layout.ex3.html)
+ *//*
+//针对可编辑div的定位
+        function positionCursor(obj) {
+            //光标定位到最后
+            if (obj.createTextRange) { //ie
+                var rtextRange = obj.createTextRange();
+                rtextRange.moveStart('character', obj.value.length);
+                rtextRange.collapse(true);
+                rtextRange.select();
+            } else if (obj.selectionStart) { //chrome "<input>"、"<textarea>"
+                obj.selectionStart = obj.value.length;
+            } else if (window.getSelection) {
+
+                var sel = window.getSelection();
+
+                var tempRange = document.createRange();
+                var t = obj.lastChild;
+                if (obj.childNodes.length == 1) {
+                    tempRange.setStart(obj.firstChild, obj.firstChild.length); //单行时可以定位到最后
+                } else if (obj.childNodes.length > 1) { //多行定位到最后
+                    tempRange.setStart(that, that.childNodes.length);
+                }
+
+                sel.removeAllRanges();
+                sel.addRange(tempRange);
+            }
+        }
+ */

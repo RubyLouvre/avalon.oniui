@@ -9,46 +9,61 @@
         <script src="../highlight/shCore.js"></script>
         <script type="text/javascript" src="../avalon.js"></script>
     </head>
-    <body ms-controller="demo">
-        <input ms-widget="button" value="移除" type="button" ms-click="removeLayout"/>
-        <input ms-widget="button" value="添加" type="button" ms-click="addLayout"/>
-        <input ms-widget="button" value="添加" type="button" ms-click="resizeLayout"/>
-        <div style="width:100%;height: 500px;" id="big">
-            <div ms-widget="layout,layoutVM" class="container" style="margin:10px 0 0 50px;">
-                <div ms-layout-dock="north" ms-layout-resizable class="north" ms-layout-size="100"></div>
-                <div ms-layout-dock="west" ms-layout-resizable class="west" ms-layout-size="110">
-                </div>
-                <div ms-layout-dock="centre" class="centre">
-                    <div ms-widget="layout"class="container">
-                        <div ms-layout-dock="north" ms-layout-resizable class="north" ms-layout-size="60"></div>
-                        <div ms-layout-dock="centre" class="centre"></div>
-                        <div ms-layout-dock="east" ms-layout-resizable class="east" ms-layout-size="80"></div>
-                    </div>
-                </div>
-                <div ms-layout-dock="east" ms-layout-resizable class="east" ms-layout-size="120"></div>
-                <div ms-layout-dock="south" ms-layout-resizable class="south" ms-layout-size="130"></div>
+    <body ms-controller="demo" style="padding: 50px;">
+        <div style="width:700px; height: 500px; padding-top:10px;">
+            <div ms-widget="layout,layoutVM,$layoutVMOptions" class="container">
+                <div ms-layout-dock="centre">
+                <div ms-widget="layout,layoutVM2,$layoutVMOptions2"></div></div>
             </div>
         </div>
         <script>
             require(["./layout/avalon.layout","./button/avalon.button"], function() {
                 avalon.define("demo", function(vm) {
-                    vm.removeLayout = function() {
-                        var layoutVM = avalon.vmodels.layoutVM;
-                        layoutVM.removeRegion('west');
-                    };
-                    vm.addLayout = function() {
-                        var layoutVM = avalon.vmodels.layoutVM;
-                        layoutVM.addRegion('west', {
-                            resizable: true,
+                    vm.$layoutVMOptions = {
+                        northRegion: {
                             size: 100,
-                            regionClass: "west"
-                        });
+                            resizable: false,
+                            regionClass: "north"
+                        },
+                        southRegion: {
+                            size: 110,
+                            resizable: true
+                        },
+                        eastRegion: {
+                            size: 120,
+                            resizable: true
+                        },
+                        westRegion: {
+                            size: 130,
+                            resizable: true
+                        },
+                        stretchMax: true,
+                        resizerSize: 5,
+
+                        regionBorderWidth: 1
                     };
-                    vm.resizeLayout = function () {
-                        document.getElementById('big').style.width = "600px";
-                        document.getElementById('big').style.height = "400px";
-                        avalon.vmodels.layoutVM.updateLayout();
-                    }
+                    vm.$layoutVMOptions2 = {
+                        northRegion: {
+                            size: 20,
+                            resizable: true,
+                            regionClass: "north"
+                        },
+                        southRegion: {
+                            size: 21,
+                            resizable: true
+                        },
+                        eastRegion: {
+                            size: 22,
+                            resizable: true
+                        },
+                        westRegion: {
+                            size: 23,
+                            resizable: true
+                        },
+                        stretchMax: true,
+                        resizerSize: 2,
+                        regionBorderWidth: 1
+                    };
                 })
                 avalon.scan()
             })

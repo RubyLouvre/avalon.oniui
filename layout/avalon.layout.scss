@@ -1,14 +1,15 @@
-@charset "utf-8";
+@charset "utf-8"; 
 @import "../chameleon/oniui-theme";
 $uiname : ".oni-layout";
 
 #{$uiname} {
 	position: relative;
 	.resizer {
-	    position: absolute;
+	    position: absolute; 
 	    z-index: 10;
         background-color:#E6EEF8;
 	    opacity: 0.5;
+        font-size: 0px; // IE6下Resizer尺寸修复
     }
     .north-resizer,.south-resizer {
 	    cursor: row-resize;
@@ -19,29 +20,7 @@ $uiname : ".oni-layout";
     .region {
     	display: inline-block;
     	position: absolute;
-        border: 1px solid #95B8E7;
-    }
-    .nested-region {
-        border-style: none;
-    }
-}
-.north-region-unresizable {
-    .east-region,.centre-region,.west-region {
-        border-top-style: none;
-    }
-}
-.south-region-unresizable {
-    .east-region,.centre-region,.west-region {
-        border-bottom-style: none;
-    }
-}
-.east-region-unresizable {
-    .centre-region {
-        border-right-style: none;
-    }
-}
-.west-region-unresizable {
-    .centre-region {
-        border-left-style: none;
+        border-style: solid;
+        border-color: #95B8E7;
     }
 }

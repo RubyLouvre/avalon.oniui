@@ -116,7 +116,7 @@ define(["avalon", "text!./avalon.camera.html", "css!./avalon.camera.css", "css!.
                 fakepartHeight = vmodel.pictureHeight / vmodel.slicedRows
 
                 // 分割区块
-                require('jquery,ready!', function($) {
+                require(['jquery', 'ready!'], function($) {
                     var fakeHover = $(element).find(".oni-camera-fakehover")
                     fakeHover.css("display", "none")
                     for (var i = 0; i < vmodel.slicedRows; i++) {

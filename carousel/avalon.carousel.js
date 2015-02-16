@@ -46,6 +46,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 	var widget = avalon.ui.carousel = function(element, data, vmodels) {
 		var options = data.carouselOptions,
 			inited;
+
+		template = template.replace("MS_OPTION_CONTENT", options.content);
 		
 		options.template = options.getTemplate(template, options);
 
@@ -95,12 +97,12 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				}
 
 				//预加载图片
-				var images = [],
-					icons = []
-				images.push(vmodel.pictures)
+				var images = vmodel.pictures,
+					icons = [];
+
 				for (var i = 0; i < images.length; i++) {
 					var image_preload = new Image()
-					image_preload.src = images[i]
+					image_preload.src = images[i].src
 				}
 				icons.push("/images/arrows-left-hover-icon.png","/images/arrows-right-hover-icon.png")
 				for (var i = 0; i < icons.length; i++) {
@@ -293,6 +295,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 		pictures: [], //@config  轮播图片素材
 		pictureWidth: 500, //@config  图片显示宽度
 		pictureHeight: 200, //@config  图片显示高度
+		content: "",	// @config 图片内容模板
 		effect: "slide", //@config  图片切换类型，取值：none:无特效 / fade:渐隐 / slide:滑动
 		easing: "easeInOut", //@config  缓动类型，取值 linear:无缓动效果 / easeIn:在过渡的开始提供缓动效果 / easeOut:在过渡的结尾提供缓动效果 / easeInOut 在过渡的开始和结尾提供缓动效果
 		timeout: 2500, //@config  切换时间间隔

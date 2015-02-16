@@ -11,16 +11,23 @@
 			require(["carousel/avalon.carousel"], function() {
 				avalon.define("demo", function(vm) {
 					vm.$opt = {
+						content: '<h2>{{el.title}}</h2>',
 						pictures: [{
-							src: "http://placehold.it/500x200/333/dddddd.jpg&text=slide1"
+							src: "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
+							title: 'picture-1'
 						}, {
-							src: "http://placehold.it/500x200/555/dddddd.jpg&text=slide2"
+							src: "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
+							title: 'picture-2'
 						}, {
-							src: "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"
+							src: "http://placehold.it/500x200/777/dddddd.jpg&text=slide3",
+							title: 'picture-3'
 						}, {
-							src: "http://placehold.it/500x200/999/dddddd.jpg&text=slide4"
+							src: "http://placehold.it/500x200/999/dddddd.jpg&text=slide4",
+							title: 'picture-4'
+
 						}, {
-							src: "http://placehold.it/500x200/aaa/dddddd.jpg&text=slide5"
+							src: "http://placehold.it/500x200/aaa/dddddd.jpg&text=slide5",
+							title: 'picture-5'
 						}]
 					}
 					vm.$skipArray = ["carousel"]
@@ -31,9 +38,9 @@
 	</head>
 	<body ms-controller="demo">
 		<div class="wrapper">
-			<h1>图片轮播组件-默认配置图片轮播</h1>
+			<h1>图片轮播组件-自定义图片内容模板</h1>
 			<fieldset>
-				<legend>默认配置图片轮播</legend>
+				<legend>自定义图片内容模板</legend>
 				<div ms-widget="carousel,carousel,$opt"></div>
 			</fieldset>
 			<pre ms-skip class="brush:html;gutter:false;toolbar:false">
@@ -51,15 +58,21 @@
 					avalon.define("demo", function(vm) {
 					vm.$opt = {
 						pictures: [{
-							src: "http://placehold.it/500x200/333/dddddd.jpg&text=slide1"
+							src: "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
+							title: 'picture-1'
 						}, {
-							src: "http://placehold.it/500x200/555/dddddd.jpg&text=slide2"
+							src: "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
+							title: 'picture-2'
 						}, {
-							src: "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"
+							src: "http://placehold.it/500x200/777/dddddd.jpg&text=slide3",
+							title: 'picture-3'
 						}, {
-							src: "http://placehold.it/500x200/999/dddddd.jpg&text=slide4"
+							src: "http://placehold.it/500x200/999/dddddd.jpg&text=slide4",
+							title: 'picture-4'
+
 						}, {
-							src: "http://placehold.it/500x200/aaa/dddddd.jpg&text=slide5"
+							src: "http://placehold.it/500x200/aaa/dddddd.jpg&text=slide5",
+							title: 'picture-5'
 						}]
 					}
 					vm.$skipArray = ["carousel"]
@@ -70,9 +83,9 @@
 		&lt;/head&gt;
 		&lt;body ms-controller="demo"&gt;
 			&lt;div class="wrapper"&gt;
-			&lt;h1&gt;图片轮播组件-默认配置图片轮播&lt;/h1&gt;
+			&lt;h1&gt;图片轮播组件-自定义图片内容模板&lt;/h1&gt;
 			&lt;fieldset&gt;
-				&lt;legend&gt;默认配置图片轮播&lt;/legend&gt;
+				&lt;legend&gt;自定义图片内容模板&lt;/legend&gt;
 				&lt;div ms-widget="carousel"&gt;&lt;/div&gt;
 			&lt;/fieldset&gt;
 		&lt;/div&gt;

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../avalon.js"></script>
+        <script type="text/javascript">
+            require(["dropdownlist/avalon.dropdownlist", "ready!"], function() {
+                avalon.define('dropdown', function(vm) {
+                    vm.d2 = 'textValue'
+                    vm.getAValue = function() {
+                        console.log('调用getSelected方法获得组件A的选项值：' + avalon.vmodels.a.getSelected())
+                    }
+                    vm.getBValue = function() {
+                        console.log('调用getSelected方法获得组件B的选项值: ' + avalon.vmodels.b.getSelected())
+                    }
+                    vm.getBValueByDuplex = function() {
+                        console.log('通过d2获得组件B的选项值: ' + avalon.vmodels.dropdown.d2)
+                    }
+                });
+                avalon.scan();
+            });
+        </script>
+        <script src="../highlight/shCore.js"></script>
+        <style>
+            .margin50 {
+                margin-bottom: 50px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div ms-controller="dropdown" class="frame">
+                <div class="margin50">
+                    <h2>dropdownlist（下拉框）</h2>
+                    <p>通过duplex的设置获取选中值或者通过调用getSelected方法来得到选中值</p>
+                    <select ms-widget="dropdownlist, a">
+                        <optgroup label="group1">
+                            <option value="value1">Value 1</option>
+                            <option>textValue</option>
+                            <option label="label" value="labelValue">with label</option>
+                            <option value="value2" selected>Value 2</option>
+                            <option value="value3">Value 3</option>
+                        </optgroup>
+                        <optgroup label="group2">
+                            <option value="value4">Value 4</option>
+                            <option value="value5" disabled>Value 5</option>
+                            <option value="value6">Value 6</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="margin50">
+                    <select ms-widget="dropdownlist, b" ms-duplex='d2'>
+                        <optgroup label="group1">
+                            <option value="value1">Value 1</option>
+                            <option>textValue</option>
+                            <option label="label" value="labelValue">with label</option>
+                            <option value="value2">Value 2</option>
+                            <option value="value3">Value 3</option>
+                        </optgroup>
+                        <optgroup label="group2">
+                            <option value="value4">Value 4</option>
+                            <option value="value5" disabled>Value 5</option>
+                            <option value="value6">Value 6</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <button ms-click='getAValue'>调用getSelected获取组件a的选项值</button>
+                <button ms-click='getBValue'>调用getSelected获取组件b的选项值</button>
+                <button ms-click='getBValueByDuplex'>通过duplex获取组件b的选项值</button>
+            </div>
+            <pre class="brush:html;gutter:false;toolbar:false;" ms-skip>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script type="text/javascript"&gt;
+            require(["dropdownlist/avalon.dropdownlist", "ready!"], function() {
+                avalon.define('dropdown', function(vm) {
+                    vm.d2 = 'textValue'
+                    vm.getAValue = function() {
+                        console.log('调用getSelected方法获得组件A的选项值：' + avalon.vmodels.a.getSelected())
+                    }
+                    vm.getBValue = function() {
+                        console.log('调用getSelected方法获得组件B的选项值: ' + avalon.vmodels.b.getSelected())
+                    }
+                    vm.getBValueByDuplex = function() {
+                        console.log('通过d2获得组件B的选项值: ' + avalon.vmodels.dropdown.d2)
+                    }
+                });
+                avalon.scan();
+            });
+        &lt;/script&gt;
+        &lt;style&gt;
+            .margin50 {
+                margin-bottom: 50px;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class="wrapper"&gt;
+            &lt;div ms-controller="dropdown" class="frame"&gt;
+                &lt;div class="margin50"&gt;
+                    &lt;h2&gt;dropdownlist（下拉框）&lt;/h2&gt;
+                    &lt;p&gt;通过duplex的设置获取选中值或者通过调用getSelected方法来得到选中值&lt;/p&gt;
+                    &lt;select ms-widget="dropdownlist, a"&gt;
+                        &lt;optgroup label="group1"&gt;
+                            &lt;option value="value1"&gt;Value 1&lt;/option&gt;
+                            &lt;option&gt;textValue&lt;/option&gt;
+                            &lt;option label="label" value="labelValue"&gt;with label&lt;/option&gt;
+                            &lt;option value="value2" selected&gt;Value 2&lt;/option&gt;
+                            &lt;option value="value3"&gt;Value 3&lt;/option&gt;
+                        &lt;/optgroup&gt;
+                        &lt;optgroup label="group2"&gt;
+                            &lt;option value="value4"&gt;Value 4&lt;/option&gt;
+                            &lt;option value="value5" disabled&gt;Value 5&lt;/option&gt;
+                            &lt;option value="value6"&gt;Value 6&lt;/option&gt;
+                        &lt;/optgroup&gt;
+                    &lt;/select&gt;
+                &lt;/div&gt;
+
+                &lt;div class="margin50"&gt;
+                    &lt;select ms-widget="dropdownlist, b" ms-duplex='d2'&gt;
+                        &lt;optgroup label="group1"&gt;
+                            &lt;option value="value1"&gt;Value 1&lt;/option&gt;
+                            &lt;option&gt;textValue&lt;/option&gt;
+                            &lt;option label="label" value="labelValue"&gt;with label&lt;/option&gt;
+                            &lt;option value="value2"&gt;Value 2&lt;/option&gt;
+                            &lt;option value="value3"&gt;Value 3&lt;/option&gt;
+                        &lt;/optgroup&gt;
+                        &lt;optgroup label="group2"&gt;
+                            &lt;option value="value4"&gt;Value 4&lt;/option&gt;
+                            &lt;option value="value5" disabled&gt;Value 5&lt;/option&gt;
+                            &lt;option value="value6"&gt;Value 6&lt;/option&gt;
+                        &lt;/optgroup&gt;
+                    &lt;/select&gt;
+                &lt;/div&gt;
+                &lt;button ms-click='getAValue'&gt;调用getSelected获取组件a的选项值&lt;/button&gt;
+                &lt;button ms-click='getBValue'&gt;调用getSelected获取组件b的选项值&lt;/button&gt;
+                &lt;button ms-click='getBValueByDuplex'&gt;通过duplex获取组件b的选项值&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+        </div>
+    </body>
+</html>

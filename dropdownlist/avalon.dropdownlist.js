@@ -106,9 +106,7 @@ define(["../textbox/avalon.textbox.js", "../dropdown/avalon.dropdown.js", "css!.
                         }
                     })
                     vmodel.$watch('_dataRerender', function() {
-                        if (vmodel.realTimeData) {
-                            dropdown.activeIndex = 0
-                        }
+                        dropdown.activeIndex = 0
                         dropdown.render(vmodel.data)
                     })
                     vmodel.$watch('enable', function(val) {

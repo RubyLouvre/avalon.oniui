@@ -137,7 +137,7 @@
                                 var panel = document.getElementById("panel");
                                 var panel_content = document.getElementById("panel_content");
                                 var scrollWidth = avalon(panel_content).width()-avalon(panel).width();
-                                require("slider/avalon.slider", function() {
+                                require(["slider/avalon.slider"], function() {
                                     var model = avalon.define("theme", function(vm) {
                                         vm.scrollMarginLeft = 0
                                         vm.$aaaOpts = {
@@ -190,7 +190,7 @@
                     var panel = document.getElementById("panel");
                     var panel_content = document.getElementById("panel_content");
                     var scrollWidth = avalon(panel_content).width()-avalon(panel).width();
-                    require("slider/avalon.slider", function() {
+                    require(["slider/avalon.slider"], function() {
                         var model = avalon.define("theme", function(vm) {
                             vm.scrollMarginLeft = 0
                             vm.$aaaOpts = {

@@ -5,7 +5,7 @@
  *    <p>   IE8+及高级浏览器使用localStorage，旧式IE使用userData。这些方法放于avalon.store对象上。</p>
  *  @updatetime 2011-11-21
  */
-define(["avalon", "json/avalon.json"], function(avalon) {
+define(["avalon", "../json/avalon.json"], function(avalon) {
 
     var store = {
         //一些接口(空实现)

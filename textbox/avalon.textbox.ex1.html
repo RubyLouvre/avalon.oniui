@@ -49,7 +49,7 @@
                         &lt;/form&gt;
                     &lt;/div&gt;
                     &lt;script&gt;
-                        require("textbox/avalon.textbox", function() {
+                        require(["textbox/avalon.textbox"], function() {
                             avalon.define("demo1", function(vm) {
                                 vm.$aOpts = {
                                     width: 300,
@@ -97,7 +97,7 @@
             </form>
         </div>
         <script>
-            require("textbox/avalon.textbox", function() {
+            require(["textbox/avalon.textbox"], function() {
                 avalon.define("demo1", function(vm) {
                     vm.$aOpts = {
                         width: 300,

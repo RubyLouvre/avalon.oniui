@@ -37,7 +37,7 @@
                 <div ms-widget="rating, $, $rating_5"></div>
             </fieldset>
             <script>
-                require("rating/avalon.rating", function(avalon) {
+                require(["rating/avalon.rating"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
 
                         vm.ratingValue_1 = 1;
@@ -113,7 +113,7 @@
                 &lt;div ms-widget="rating, $, $rating_5"&gt;&lt;/div&gt;
             &lt;/fieldset&gt;
             &lt;script&gt;
-                require("rating/avalon.rating", function(avalon) {
+                require(["rating/avalon.rating"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
 
                         vm.ratingValue_1 = 1;

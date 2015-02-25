@@ -33,7 +33,7 @@
                     &lt;/div&gt;
 
                     &lt;script&gt;
-                        require("avalon.textbox", function() {
+                        require(["textbox/avalon.textbox"], function() {
                             avalon.define("demo3", function(vm) {
                                 vm.txt = "点击 “切换禁用” 按钮，来切换禁用输入域";
                                 vm.disable = true;
@@ -56,7 +56,7 @@
             </form>
         </div>
         <script>
-            require("textbox/avalon.textbox", function() {
+            require(["textbox/avalon.textbox"], function() {
                 avalon.define("demo3", function(vm) {
                     vm.txt = "点击 “切换禁用” 按钮，来切换禁用输入域";
                     vm.disable = true;

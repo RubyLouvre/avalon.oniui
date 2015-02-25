@@ -24,7 +24,7 @@
                 <p>通过opts.msgFormat设置日期选择框下方日期选择说明文字内容形式</p>
             </fieldset>
             <script> 
-                require("datepicker/avalon.daterangepicker", function(avalon) {
+                require(["datepicker/avalon.daterangepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.fromK = "2014-07-28"
                         vm.toK = "2014-08-04"
@@ -73,7 +73,7 @@
                             &lt;p&gt;通过opts.msgFormat设置日期选择框下方日期选择说明文字内容形式&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.daterangepicker", function(avalon) {
+                            require(["datepicker/avalon.daterangepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.$aOpts = {
                                         opts: {

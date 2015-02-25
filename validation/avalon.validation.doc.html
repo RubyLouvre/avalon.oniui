@@ -129,7 +129,7 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                         <td>onValidateAll</td>
                         <td>Function</td>
                         <td>avalon.noop</td>
-                        <td>空函数，整体验证后或调用了validateAll方法后触发</td>
+                        <td>空函数，整体验证后或调用了validateAll方法后触发；有了这东西你就不需要在form元素上ms-on-submit="submitForm"，直接将提交逻辑写在onValidateAll回调上</td>
                     </tr>
                     <tr>
                         <td>onReset</td>
@@ -252,7 +252,7 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                     </tr>
                 </table>
             </fieldset>
-            <div class="others">er
+            <div class="others">
                 <p>avalon.validation自带了许多
                     <code>验证规则</code>，满足你一般的业务需求。</p>
                 <p>大家可以在onReset的回调里得到第二个参数data, 然后调用data.valueResetor()将VM中的数据也置空,如布尔数据变false,

@@ -4,7 +4,7 @@
         <title>mmRouter组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <script src="avalon.js"></script>
+        <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
         <style>
             .header{
@@ -35,15 +35,16 @@
             }
         </style>
         <script >
-            avalon.config({debug: false})
+            avalon.config({debug: true})
             var cs = [], arr = "contacts.detail.item.edit".split(".")
             for(var i = 0; i < arr.length; i++) {
                 cs.push({
                     state: i ? arr.slice(0, i+1).join(".") : "contacts.list",
-                    arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
+                    arg: "{contactId: 1, itemID: 'b'}"
+                    // arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
                 })
             }
-            require(["ready!", "mmState"], function() {
+            require(["ready!", "mmRouter/mmState", "loading/avalon.loading"], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -54,6 +55,23 @@
                         if(!code) return
                         code = code.value
                         eval(code)
+                    }
+                })
+                avalon.define("form", function(vm) {
+                    vm.cid = "nihao"
+                    vm.randomID = function() {
+                        return Math.random()
+                    }
+                })
+                avalon.state.config({
+                    onload: function() {
+                        avalon.log("onload")
+                        avalon.log(this.params)
+                        avalon.log(this.path)
+                    },
+                    unload: function() {
+                        avalon.log("unload")
+                        avalon.log(this.params)
                     }
                 })
                 // avalon.router.get("/*path", function() {
@@ -213,6 +231,10 @@
                             })
 
                         }
+
+                        var done = this.async()
+                        // setTimeout(done, 4000)
+                        done && done()
                     }
                 })
                 ///////////////////
@@ -243,7 +265,16 @@
                     controller: "contacts",
                     url: "/{contactId}",
                     onChange: function(a) {
-                        avalon.vmodels.contacts.id = a
+                        var done = this.async(),
+                            me = this
+                        setTimeout(function() {
+                            if(a == me.params.contactId) {
+                                avalon.vmodels.contacts.id = a
+                                done()
+                            } else {
+                                done(false)
+                            }
+                        }, 1000)
                     },
                     views: {
                         "": {
@@ -299,6 +330,33 @@
                         }
                     }
                 })
+                var confirmed
+                avalon.state.config({
+                    beforeUnload: function(from, to) {
+                        if(confirmed) return
+                        if(to && to.stateName.indexOf("contacts") == 0) {
+                            confirmed = confirm("读取contacts需要授权，确认授权？")
+                            return confirmed
+                        }
+                    },
+                    abort: function(from, to) {
+                        if(!from) {
+                            avalon.router.redirect("/")
+                        }
+                    },
+                    begin: function(from, to) {
+                        var loading = avalon.vmodels.loading
+                        if(loading) loading.toggle = true
+                    },
+                    onload: function(from, to) {
+                        var loading = avalon.vmodels.loading
+                        if(loading) loading.toggle = false
+                    },
+                    onloadError: function(keyname, state) {
+                        // state == this
+                        avalon.router.navigate("/", {replace: true})
+                    }
+                })
                 //启动路由
                 avalon.history.start({
                     basepath: "/mmRouter",
@@ -310,9 +368,10 @@
  
         </script>
     </head>
-    <body>
-        <h1>mmRouter综合示例二: avalon.router.go</h1>
-        <div ms-controller="test">
+    <body ms-controller="test"
+          ms-widget="loading,loading" data-loading-type="img" data-loading-modal-background="#ccc" data-loading-modal-opacity="0.5">
+        <h1>mmRouter综合示例四: avalon.router.go</h1>
+        <div>
             <ul class="codelist">
                 <li 
                      ms-repeat-code="codes">
@@ -328,7 +387,7 @@
                 </li>
             </ul>
             <div class="header">
-                <a href="#!/">mmState</a>  <a href="#!/contacts">contacts</a>  <a href="#!/about">about</a>
+                <a href="#!//">mmState</a>  <a href="#!/contacts">contacts</a>  <a href="#!/about">about</a>
                 <p class="hint" ms-view="hint"></p>
             </div>
 
@@ -340,7 +399,7 @@
         &lt;title&gt;mmRouter组件&lt;/title&gt;
         &lt;meta charset=&quot;UTF-8&quot;&gt;
         &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
-        &lt;script src=&quot;avalon.js&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
         
         &lt;style&gt;
             .header{
@@ -371,15 +430,16 @@
             }
         &lt;/style&gt;
         &lt;script &gt;
-            avalon.config({debug: false})
+            avalon.config({debug: true})
             var cs = [], arr = &quot;contacts.detail.item.edit&quot;.split(&quot;.&quot;)
             for(var i = 0; i &lt; arr.length; i++) {
                 cs.push({
                     state: i ? arr.slice(0, i+1).join(&quot;.&quot;) : &quot;contacts.list&quot;,
-                    arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
+                    arg: &quot;{contactId: 1, itemID: 'b'}&quot;
+                    // arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
                 })
             }
-            require([&quot;ready!&quot;, &quot;mmState&quot;], function() {
+            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -390,6 +450,23 @@
                         if(!code) return
                         code = code.value
                         eval(code)
+                    }
+                })
+                avalon.define(&quot;form&quot;, function(vm) {
+                    vm.cid = &quot;nihao&quot;
+                    vm.randomID = function() {
+                        return Math.random()
+                    }
+                })
+                avalon.state.config({
+                    onload: function() {
+                        avalon.log(&quot;onload&quot;)
+                        avalon.log(this.params)
+                        avalon.log(this.path)
+                    },
+                    unload: function() {
+                        avalon.log(&quot;unload&quot;)
+                        avalon.log(this.params)
                     }
                 })
                 // avalon.router.get(&quot;/*path&quot;, function() {
@@ -549,6 +626,10 @@
                             })
 
                         }
+
+                        var done = this.async()
+                        // setTimeout(done, 4000)
+                        done &amp;&amp; done()
                     }
                 })
                 ///////////////////
@@ -579,7 +660,16 @@
                     controller: &quot;contacts&quot;,
                     url: &quot;/{contactId}&quot;,
                     onChange: function(a) {
-                        avalon.vmodels.contacts.id = a
+                        var done = this.async(),
+                            me = this
+                        setTimeout(function() {
+                            if(a == me.params.contactId) {
+                                avalon.vmodels.contacts.id = a
+                                done()
+                            } else {
+                                done(false)
+                            }
+                        }, 1000)
                     },
                     views: {
                         &quot;&quot;: {
@@ -635,6 +725,33 @@
                         }
                     }
                 })
+                var confirmed
+                avalon.state.config({
+                    beforeUnload: function(from, to) {
+                        if(confirmed) return
+                        if(to &amp;&amp; to.stateName.indexOf(&quot;contacts&quot;) == 0) {
+                            confirmed = confirm(&quot;读取contacts需要授权，确认授权？&quot;)
+                            return confirmed
+                        }
+                    },
+                    abort: function(from, to) {
+                        if(!from) {
+                            avalon.router.redirect(&quot;/&quot;)
+                        }
+                    },
+                    begin: function(from, to) {
+                        var loading = avalon.vmodels.loading
+                        if(loading) loading.toggle = true
+                    },
+                    onload: function(from, to) {
+                        var loading = avalon.vmodels.loading
+                        if(loading) loading.toggle = false
+                    },
+                    onloadError: function(keyname, state) {
+                        // state == this
+                        avalon.router.navigate(&quot;/&quot;, {replace: true})
+                    }
+                })
                 //启动路由
                 avalon.history.start({
                     basepath: &quot;/mmRouter&quot;,
@@ -646,9 +763,10 @@
  
         &lt;/script&gt;
     &lt;/head&gt;
-    &lt;body&gt;
-        &lt;h1&gt;mmRouter综合示例二: avalon.router.go&lt;/h1&gt;
-        &lt;div ms-controller=&quot;test&quot;&gt;
+    &lt;body ms-controller=&quot;test&quot;
+          ms-widget=&quot;loading,loading&quot; data-loading-type=&quot;img&quot; data-loading-modal-background=&quot;#ccc&quot; data-loading-modal-opacity=&quot;0.5&quot;&gt;
+        &lt;h1&gt;mmRouter综合示例四: avalon.router.go&lt;/h1&gt;
+        &lt;div&gt;
             &lt;ul class=&quot;codelist&quot;&gt;
                 &lt;li 
                      ms-repeat-code=&quot;codes&quot;&gt;
@@ -664,7 +782,7 @@
                 &lt;/li&gt;
             &lt;/ul&gt;
             &lt;div class=&quot;header&quot;&gt;
-                &lt;a href=&quot;#!/&quot;&gt;mmState&lt;/a&gt;  &lt;a href=&quot;#!/contacts&quot;&gt;contacts&lt;/a&gt;  &lt;a href=&quot;#!/about&quot;&gt;about&lt;/a&gt;
+                &lt;a href=&quot;#!//&quot;&gt;mmState&lt;/a&gt;  &lt;a href=&quot;#!/contacts&quot;&gt;contacts&lt;/a&gt;  &lt;a href=&quot;#!/about&quot;&gt;about&lt;/a&gt;
                 &lt;p class=&quot;hint&quot; ms-view=&quot;hint&quot;&gt;&lt;/p&gt;
             &lt;/div&gt;
 

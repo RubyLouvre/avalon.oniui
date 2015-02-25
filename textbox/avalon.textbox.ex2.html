@@ -46,7 +46,7 @@
                         &lt;/form&gt;
                     &lt;/div&gt;
                     &lt;script&gt;
-                        require("textbox/avalon.textbox", function() {
+                        require(["textbox/avalon.textbox"], function() {
                             avalon.define("demo2", function(vm) {
                                 vm.areaempty = "";
                                 vm.areavalue = "表单域存在占位符但是有值的情况";
@@ -81,7 +81,7 @@
         </div>
 
         <script>
-            require("textbox/avalon.textbox", function() {
+            require(["textbox/avalon.textbox"], function() {
                 avalon.define("demo2", function(vm) {
                     vm.areaempty = "";
                     vm.areavalue = "表单域存在占位符但是有值的情况";

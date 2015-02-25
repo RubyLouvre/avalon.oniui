@@ -35,7 +35,7 @@
                         &lt;/fieldset&gt;
                     &lt;/div&gt;
                     &lt;script&gt;
-                        require("./checkboxlist/avalon.checkboxlist", function(avalon) {
+                        require(["./checkboxlist/avalon.checkboxlist"], function(avalon) {
                             var sss = avalon.define('demo1',function(vm){
                             });
                             avalon.scan();
@@ -63,7 +63,7 @@
             </fieldset>
         </div>
         <script>
-            require("./checkboxlist/avalon.checkboxlist", function(avalon) {
+            require(["./checkboxlist/avalon.checkboxlist"], function(avalon) {
                 var sss = avalon.define('demo1',function(vm){
                     vm.check1 = [];
                     vm.check2 = [];

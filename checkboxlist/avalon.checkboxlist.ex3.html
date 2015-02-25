@@ -33,7 +33,7 @@
                         {{ val }}
                     &lt;/div&gt;
                     &lt;script&gt;
-                        require("./checkboxlist/avalon.checkboxlist", function(avalon) {
+                        require(["./checkboxlist/avalon.checkboxlist"], function(avalon) {
                             avalon.define('demo3',function(vm){
                                 vm.val = ['TUESDAY'];
                             });
@@ -54,7 +54,7 @@
             {{ val }}
         </div>
         <script>
-            require("./checkboxlist/avalon.checkboxlist", function(avalon) {
+            require(["./checkboxlist/avalon.checkboxlist"], function(avalon) {
                 avalon.define('demo3',function(vm){
                     vm.val = ['TUESDAY','MONDAY'];
                 });

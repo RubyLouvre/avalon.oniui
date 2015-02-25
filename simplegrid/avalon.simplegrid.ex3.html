@@ -59,6 +59,9 @@
                                     return val
                             }
                         },
+                        tbodyRenderedCallback: function() {
+                            console.log("render tbody")
+                        },
                         data: getData(10)
                     }
                     vm.$skipArray = ["simplegrid"]

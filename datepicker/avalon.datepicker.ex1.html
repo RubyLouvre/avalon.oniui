@@ -20,11 +20,11 @@
             </fieldset>
             <fieldset style="position:relative; z-index: 1">
                 <legend>默认配置的单日历框</legend>
-                <input ms-widget="datepicker" data-datepicker-allow-blank="true"/>
+                <input ms-widget="datepicker" data-datepicker-allow-blank="true" data-datepicker-show-other-months="true"/>
                 <p>说明：此demo配置allowBlank为true，使得输入域可以为空,与第一个demo做对比</p>
             </fieldset>
             <script> 
-                require("datepicker/avalon.datepicker", function(avalon) {
+                require(["datepicker/avalon.datepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                     })
                     avalon.scan();
@@ -53,7 +53,7 @@
                             &lt;p&gt;说明：此demo配置allowBlank为true，使得输入域可以为空,与第一个demo做对比&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.datepicker", function(avalon) {
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                 })
                                 avalon.scan();

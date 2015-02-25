@@ -1,0 +1,17 @@
+
+@import "../chameleon/oniui-theme";
+$uiname : ".oni-mmPromise";
+@if($oinui-theme == smoothness) {
+	$mmPromise: (
+		bg: #fff,
+		borderColor:#aaaaaa
+	) !global
+}
+
+#{$uiname} {
+	// current style
+	// means #{$uiname}-bar
+	&-class {
+		border: 1px solid map-get($mmPromise, borderColor);
+	}
+}

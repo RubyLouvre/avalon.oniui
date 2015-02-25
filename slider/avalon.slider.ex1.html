@@ -27,7 +27,7 @@
                                 &lt;p ms-controller="aaa"&gt;值为{{value}}，百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}&lt;/p&gt;
                             &lt;/div&gt;
                             &lt;script&gt;
-                                require("slider/avalon.slider", function() {
+                                require(["slider/avalon.slider"], function() {
                                     var model = avalon.define("theme", function(vm) {
                                         vm.$aaaOpts = {
                                             onDragStart: function(event, data){
@@ -60,7 +60,7 @@
                     <p ms-controller="aaa">值为{{value}}，百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
                 </div>
                 <script>
-                    require("slider/avalon.slider", function() {
+                    require(["slider/avalon.slider"], function() {
                         var model = avalon.define("theme", function(vm) {
                             vm.$aaaOpts = {
                                 onDragStart: function(event, data){

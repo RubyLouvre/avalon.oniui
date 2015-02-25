@@ -453,9 +453,6 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         //@config onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
         color: "#619FE8", //@config 效果的颜色
-        // width: 32, //@config loading动画的宽度，圆形排列的外直径
-        // height: 32, //@config loading动画的高度，如果不设置，默认等于width
-        // widthInner: 28,//@config loading动画是圆形排列的时候，这个参数指的是内直径
         type: "ball", //@config 类型，默认是ball，球，可取spin,ticks
         toggle: true, //@config 是否显示
         modal: true, //@config 是否显示遮罩

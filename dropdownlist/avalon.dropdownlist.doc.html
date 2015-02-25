@@ -6,6 +6,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <meta name="descriptions" content="dropdownlist使得可以通过下拉搜索功能减少显示内容，方便用户查找选择
+
  " />
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
         />
@@ -37,16 +38,35 @@
                         <td align="center" colspan="4">配置参数</td>
                     </tr>
                     <tr>
-                        <td>widgetElement</td>
-                        <td>Identifier</td>
-                        <td>element</td>
-                        <td>绑定组件的元素引用</td>
+                        <td>searchBox</td>
+                        <td>Object</td>
+                        <td>null</td>
+                        <td>搜索框对应的VM</td>
+                    </tr>
+                    <tr>
+                        <td>getSelected()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获取选项值
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>返回</td>
+                                    <td>String</td>
+                                    <td>选项值</td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                     <tr>
                         <td>render(data)</td>
                         <td>Function</td>
                         <td></td>
-                        <td>重新渲染模板源
+                        <td>重新渲染搜索选项列表
                             <table border="1">
                                 <tr>
                                     <th style="width:100px">参数名/返回值</th>
@@ -56,22 +76,58 @@
                                 <tr>
                                     <td>data</td>
                                     <td>Array</td>
-                                    <td>要渲染的数据源</td>
+                                    <td>选项列表，必传</td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
                     <tr>
-                        <td>data</td>
-                        <td>Array</td>
-                        <td>[]</td>
-                        <td>搜索源</td>
+                        <td>widgetElement</td>
+                        <td>Identifier</td>
+                        <td>element</td>
+                        <td>绑定组件的元素引用</td>
                     </tr>
                     <tr>
-                        <td>limit</td>
-                        <td>Number</td>
-                        <td>10</td>
-                        <td>显示条数，超过限制出滚动条</td>
+                        <td>placeholder</td>
+                        <td>String</td>
+                        <td>''</td>
+                        <td>搜索框的占位符</td>
+                    </tr>
+                    <tr>
+                        <td>realTimeData</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否动态的从远程获取数据</td>
+                    </tr>
+                    <tr>
+                        <td>enable</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否禁用组件</td>
+                    </tr>
+                    <tr>
+                        <td>getRealTimeData(search,dropdownlist)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>当需要实时获取搜索数据时设置realTimeData为true，组件就会调用此方法来实时渲染搜索列表
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>search</td>
+                                    <td>String</td>
+                                    <td>搜索内容</td>
+                                </tr>
+                                <tr>
+                                    <td>dropdownlist</td>
+                                    <td>Object</td>
+                                    <td>组件对应的VM</td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                     <tr>
                         <td>getTemplate(tmp,opts)</td>
@@ -106,10 +162,22 @@
             </fieldset>
             <ul class="example-links">
                 <li>
-                    <a href="avalon.dropdownlist.ex1.html">dropdownlist demo</a>
+                    <a href="avalon.dropdownlist.ex1.html">使用html配置dropdownlist组件</a>
                 </li>
                 <li>
-                    <a href="avalon.dropdownlist.ex2.html">render重新渲染搜索列表源</a>
+                    <a href="avalon.dropdownlist.ex2.html">使用data配置dropdownlist组件</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdownlist.ex3.html">使用data分组配置dropdownlist组件</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdownlist.ex4.html">通过搜索条件实时获取选项列表</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdownlist.ex5.html">禁用dropdownlist</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdownlist.ex6.html">获取选项值</a>
                 </li>
             </ul>
         </div>

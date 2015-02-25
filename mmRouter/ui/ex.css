@@ -1,0 +1,67 @@
+html,body,div,p,form,h5,ul,li {
+	margin: 0;
+	padding: 0;
+	list-style:none;
+}
+p{
+	margin: 10px 0;
+}
+
+legend {
+	text-align: center;
+	color: red;
+	font-weight: bolder;
+}
+
+.login {
+	width: 300px;
+	padding: 30px 10px 30px 50px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	margin: 10px auto;
+}
+.button {
+	padding-left: 64px;
+}
+.clr{
+	clear: both;
+	display: block;
+}
+.car {
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 10px;
+	float: left;
+}
+.img{
+	width: 50px;
+	float: left;
+	overflow: hidden;
+	border: 5px solid #ccc;
+}
+.img img{
+	margin-left: -25px;
+	float: left;
+	display: inline;
+}
+.intr {
+	float: left;
+	padding-left: 10px;
+	width: 300px;
+	height: 100px;
+	margin-left: 20px;
+	border-left:1px dashed #ccc;
+}
+.uilist {
+	border: 1px solid #ccc;
+	float: left;
+	padding: 10px;
+	display: inline;
+	margin-left: 10px;
+}
+.uilist .clr {
+	display: block;
+}
+.oni-dropdownlist {
+	margin-left: 20px;
+}

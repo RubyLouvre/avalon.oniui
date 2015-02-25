@@ -9,8 +9,8 @@ if [ x$1 != "x" ] && [ x$2 != "x" ];then
 			ui buildcss $uiname
 		elif [ $2 = "js" ];then
 			#build docs
-			if [ $uiname = "tree" ];then
-				sh build-tree.sh
+			if [ $uiname = "tree" ] || [ ${uiname/mm/} != $uiname ];then
+				sh build-tree.sh $uiname
 			else
 				avalon-doc $uiname
 			fi
@@ -21,4 +21,5 @@ if [ x$1 != "x" ] && [ x$2 != "x" ];then
 			ui buildex $uiname
 		fi
 	fi
+	sh mvc.sh
 fi

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <script src="../avalon.js"></script>
+    <script type="text/javascript">
+        function getData(search) {
+            var data = [],
+                random = Math.floor(Math.random() * 40 + 5)
+            for (var i = 0; i < random; i++) {
+                var value = search + Math.floor(Math.random() * 100)
+                var item = {
+                    value: value,
+                    label: value
+                }
+                data.push(item)
+            }
+            return data
+        }
+        require(['dropdownlist/avalon.dropdownlist.js', "ready!"], function() {
+            avalon.define('dropdown', function(vm) {
+                vm.$skipArray = ['dropdownlist']
+                vm.dropdownlist = {
+                    getRealTimeData: function(search, dropdownlist) {
+                        setTimeout(function() {
+                            dropdownlist.render(getData(search))
+                        }, 100)
+                    },
+                    realTimeData: true
+                }
+            });
+            avalon.scan();
+        });
+    </script>
+    <script src="../highlight/shCore.js"></script>
+</head>
+<body>
+<div class="wrapper" ms-controller="dropdown">
+    <div>
+        <h2>dropdownlist（下拉框）</h2>
+        <p>配置getRealTimeData根据搜索内容实时从远程获取数据来渲染选项列表，注意必须配置realTimeData为true</p>
+        <select ms-widget="dropdownlist, a"> 
+        </select>
+    </div>
+<pre class="brush:html;gutter:false;toolbar:false;" ms-skip>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript"&gt;
+        function getData(search) {
+            var data = [],
+                random = Math.floor(Math.random() * 40 + 5)
+            for (var i = 0; i &lt; random; i++) {
+                var value = search + Math.floor(Math.random() * 100)
+                var item = {
+                    value: value,
+                    label: value
+                }
+                data.push(item)
+            }
+            return data
+        }
+        require(['dropdownlist/avalon.dropdownlist.js', "ready!"], function() {
+            avalon.define('dropdown', function(vm) {
+                vm.$skipArray = ['dropdownlist']
+                vm.dropdownlist = {
+                    getRealTimeData: function(search, dropdownlist) {
+                        setTimeout(function() {
+                            dropdownlist.render(getData(search))
+                        }, 100)
+                    },
+                    realTimeData: true
+                }
+            });
+            avalon.scan();
+        });
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="wrapper" ms-controller="dropdown"&gt;
+    &lt;div&gt;
+        &lt;h2&gt;dropdownlist（下拉框）&lt;/h2&gt;
+        &lt;p&gt;配置getRealTimeData根据搜索内容实时从远程获取数据来渲染选项列表，注意必须配置realTimeData为true&lt;/p&gt;
+        &lt;select ms-widget="dropdownlist, a"&gt; 
+        &lt;/select&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+</div>
+</body>
+</html>

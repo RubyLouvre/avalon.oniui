@@ -383,38 +383,53 @@ mmRouter的使用
                                 </tr>
                                 <tr>
                                     <td>config</td>
-                                    <td>object</td>
+                                    <td>Object</td>
                                     <td>config 配置对象</td>
                                 </tr>
                                 <tr>
                                     <td>config.beforeUnload</td>
-                                    <td>function</td>
+                                    <td>Function</td>
                                     <td>config.beforeUnload 开始切前的回调，this指向router对象，第一个参数是fromState，第二个参数是toState，return
                                         false可以用来阻止切换进行</td>
                                 </tr>
                                 <tr>
                                     <td>config.abort</td>
-                                    <td>function</td>
+                                    <td>Function</td>
                                     <td>config.abort beforeUnload return false之后，触发的回调，this指向mmState对象，参数同beforeUnload</td>
                                 </tr>
                                 <tr>
                                     <td>config.begin</td>
-                                    <td>function</td>
+                                    <td>Function</td>
                                     <td>config.begin 开始切换的回调，this指向mmState对象，参数同beforeUnload</td>
                                 </tr>
                                 <tr>
                                     <td>config.unload</td>
-                                    <td>function</td>
+                                    <td>Function</td>
                                     <td>config.unload url切换时候触发，this指向mmState对象，参数同beforeUnload</td>
                                 </tr>
                                 <tr>
                                     <td>config.onload</td>
-                                    <td>function</td>
+                                    <td>Function</td>
                                     <td>config.onload 切换完成并成功，this指向mmState对象，参数同beforeUnload</td>
                                 </tr>
                                 <tr>
+                                    <td>config.onViewEnter</td>
+                                    <td>Function</td>
+                                    <td>config.onViewEnter 视图插入动画函数，有一个默认效果</td>
+                                </tr>
+                                <tr>
+                                    <td>config.onViewEnter.arguments[0]</td>
+                                    <td>Node</td>
+                                    <td>config.onViewEnter.arguments[0] 新视图节点</td>
+                                </tr>
+                                <tr>
+                                    <td>config.onViewEnter.arguments[0]</td>
+                                    <td>Node</td>
+                                    <td>config.onViewEnter.arguments[0] 旧的节点</td>
+                                </tr>
+                                <tr>
                                     <td>config.onloadError</td>
-                                    <td>function</td>
+                                    <td>Function</td>
                                     <td>config.onloadError 加载模板资源出错的回调，this指向对应的state，第一个参数对应的模板配置keyname，第二个参数是对应的state</td>
                                 </tr>
                             </table>
@@ -490,6 +505,9 @@ setTimeout(done, 4000)
                 </li>
                 <li>
                     <a href="avalon.mmRouter.ex8.html">todos</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex9.html">mmRouter-基于状态机的路由器</a>
                 </li>
             </ul>
         </div>

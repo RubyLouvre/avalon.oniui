@@ -1,4 +1,4 @@
-define(["browser/avalon.browser", "text!./avalon.uploader.html", "uploader/mmRequest", "./swfobject/swfobject"], function(avalon, sourceHTML){
+define(["browser/avalon.browser", "text!./avalon.uploader.html", "mmRequest/mmRequest", "./swfobject/swfobject"], function(avalon, sourceHTML){
 
 	var widget = avalon.ui.uploader = function(element, data, vmodels){
 

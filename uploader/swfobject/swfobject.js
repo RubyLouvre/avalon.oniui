@@ -2,7 +2,7 @@
 	is released under the MIT License <http://www.opensource.org/licenses/mit-license.php> 
 */
 define(["avalon"], function(){
-	avalon.swfobject = function() {
+	var swfobject = avalon.swfobject = function() {
 		var D = "undefined",
 			r = "object",
 			S = "Shockwave Flash",

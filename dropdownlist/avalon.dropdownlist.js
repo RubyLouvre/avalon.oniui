@@ -19,13 +19,16 @@ define(["../textbox/avalon.textbox.js", "../dropdown/avalon.dropdown.js", "css!.
                 }
             },
             dropdownConfig = {
+                realTimeData: options.realTimeData,
+                enable: options.enable,
                 getTemplate: function(tmp) {
-                    return tmp.replace('ms-visible="toggle||multiple">', "$&<input ms-widget='textbox' ms-css-width='{{listWidth-12}}' ms-duplex='_search' ms-keydown='_keydown'/>")
+                    return tmp.replace('ms-visible="toggle||multiple">', "$&<input ms-widget='textbox' ms-css-width='{{listWidth-12}}' ms-duplex='_search' ms-keydown='_keydown' ms-attr-placeholder='placeholder'/>")
                 },
                 onShow: function() {
                     vmodel.searchBox.widgetElement.focus()
                 },
                 onInit: function(dropdown) {
+                    vmodel.dropdown = dropdown
                     vmodel.$watch('_search', function(val) {
                         var data = dropdown.data,
                             groups = {},
@@ -34,6 +37,11 @@ define(["../textbox/avalon.textbox.js", "../dropdown/avalon.dropdown.js", "css!.
                             groupLabel = '',
                             group = {},
                             activeIndexInvalidate = false
+
+                        if (vmodel.realTimeData) {
+                            vmodel.getRealTimeData(val, vmodel)
+                            return
+                        }
 
                         activeIndexInvalidate = data[dropdown.activeIndex].label.toLowerCase().indexOf(val) == -1
 
@@ -76,12 +84,15 @@ define(["../textbox/avalon.textbox.js", "../dropdown/avalon.dropdown.js", "css!.
                         _groups.forEach(function(group, index) {
                             var _group = group
                             group = groups[_group]
-                            if (!group.t) {
-                                for (var i = 0, len = data.length; i < len; i++) {
-                                    var item = data[i]
-                                    if (item.group && item.label == _group) {
+                            for (var i = 0, len = data.length; i < len; i++) {
+                                var item = data[i]
+                                if (item.group && item.label == _group) {
+                                    if (!group.t) {
                                         item.toggle = false
+                                    } else {
+                                        item.toggle = true
                                     }
+                                    break
                                 }
                             }
                         })
@@ -94,37 +105,66 @@ define(["../textbox/avalon.textbox.js", "../dropdown/avalon.dropdown.js", "css!.
                             vmodel._search = ''
                         }
                     })
+                    vmodel.$watch('_dataRerender', function() {
+                        dropdown.activeIndex = 0
+                        dropdown.render(vmodel.data)
+                    })
+                    vmodel.$watch('enable', function(val) {
+                        dropdown.enable = val
+                    })
                 }
             }
 
         options.textbox = avalon.mix(options.textbox, textboxConfig)
         options.dropdown = avalon.mix(options.dropdown, dropdownConfig)
-
-        // options.template = options.getTemplate(sourceHTML)
+        options.dropdown.data = options.data
         var vmodel = avalon.define(data.dropdownlistId, function(vm) {
-            avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "data", "textbox", "dropdown", "searchBox"]
-            vm.searchBox = null
+            avalon.mix(vm, options)
+            vm.$skipArray = ["widgetElement", "data", "textbox", "dropdown", "searchBox", "realTimeData"]
+            vm.searchBox = null //@config 搜索框对应的VM
             vm._search = ""
+            vm._dataRerender = false
+            /**
+             * @config 获取选项值
+             * @returns {String} 选项值
+             */
+            vm.getSelected = function() {
+                return vmodel.dropdown.value
+            }
+            /**
+             * @config 重新渲染搜索选项列表
+             * @param data {Array} 选项列表，必传
+             */
+            vm.render = function(data) {
+                if (data === void 0) {
+                    return
+                }
+                vmodel.data = data
+                vmodel._dataRerender = !vmodel._dataRerender
+            }
             // @config 绑定组件的元素引用
             vm.widgetElement = element
-
             vm.$init = function() {
                 $element.addClass('oni-dropdownlist')
                 $element.attr('ms-widget', ['dropdown', '$', 'dropdown'].join())
                 avalon.scan(element, [vmodel].concat(vmodels))
             }
-            vm.$remove = function() {
-
-            }
-
         });
         return vmodel
     }
     widget.version = 1.0
     widget.defaults = {
-        data: [], // @config搜索源
-        limit: 10, // @config显示条数，超过限制出滚动条
+        placeholder: '', //@config 搜索框的占位符
+        realTimeData: false, //@config 是否动态的从远程获取数据
+        enable: true, //@config 是否禁用组件
+        /**
+         * @config 当需要实时获取搜索数据时设置realTimeData为true，组件就会调用此方法来实时渲染搜索列表
+         * @param search {String} 搜索内容
+         * @param dropdownlist {Object} 组件对应的VM
+         */
+        getRealTimeData: function(search, dropdownlist) {
+            dropdownlist.render()
+        },
         /**
          * @config 模板函数,方便用户自定义模板
          * @param tmp {String} 默认模板
@@ -137,9 +177,15 @@ define(["../textbox/avalon.textbox.js", "../dropdown/avalon.dropdown.js", "css!.
     }
     return avalon
 })
+
+// 功能参考：http://select2.github.io/examples.html
 /**
  @links
- [dropdownlist demo](avalon.dropdownlist.ex1.html)
- [render重新渲染搜索列表源](avalon.dropdownlist.ex2.html)
+ [使用html配置dropdownlist组件](avalon.dropdownlist.ex1.html)
+ [使用data配置dropdownlist组件](avalon.dropdownlist.ex2.html)
+ [使用data分组配置dropdownlist组件](avalon.dropdownlist.ex3.html)
+ [通过搜索条件实时获取选项列表](avalon.dropdownlist.ex4.html)
+ [禁用dropdownlist](avalon.dropdownlist.ex5.html)
+ [获取选项值](avalon.dropdownlist.ex6.html)
  */
 // 参考http://demos.telerik.com/kendo-ui/dropdownlist/serverfiltering

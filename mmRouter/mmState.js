@@ -88,10 +88,10 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         oldNodes: [],
         _onloadCallback: {},
         addCallback: function(key, func) {
-            this._onloadCallback[key] = func
+            if(!this._onloadCallback[key]) this._onloadCallback[key] = func
         },
         removeCallback: function(key) {
-            delete this._onloadCallback[key]
+            this._onloadCallback[key] = avalon.noop
         },
         // params changed
         isParamsChanged: function(p, op) {
@@ -164,7 +164,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     for(var n in cv) {
                         var pts = n.split("@"),
                             viewName = pts[0],
-                            statename = pts[1] || ""
+                            statename = (pts.length == 2 ? pts[1] : cur.stateName) || ""
                         _local.template[viewName + "@" + (statename || (viewName ? "" : cur.stateName || ""))] = cv[n]
                         // 没有模板名字，却指定了其他的状态名，创建一个别名
                         if(!viewName && statename && statename != cur.stateName) _local.template["@" + cur.stateName] = cv[n]
@@ -286,6 +286,22 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         newObj[name] = oldObj[name]
         delete  oldObj[name]
     }
+    function viewAnimate(oldNode, topCtrlName, statename, me) {
+        var $node = avalon(oldNode)
+        if($node.hasClass("oni-mmRouter-slide")) {
+            var node = oldNode.cloneNode(true)
+            avalon(node).addClass("oni-mmRouter-enter")
+            $node.addClass("oni-mmRouter-leave")
+            oldNode.removeAttribute("ms-view")
+            avalon.each(getViews(topCtrlName, statename, oldNode), function(i, n) {
+                n.removeAttribute("ms-view")
+            })
+            oldNode.parentNode.insertBefore(node, oldNode.nextSibling)
+            callStateFunc("onViewEnter", me, node, oldNode)
+            return node
+        }
+        return oldNode
+    }
     /*
      * @interface avalon.state 对avalon.router.get 进行重新封装，生成一个状态对象
      * @param stateName： 指定当前状态名
@@ -366,15 +382,18 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     avalon.each(nodes, function(i, _node) {
                         var $node = avalon(_node),
                             viewname = $node.attr("ms-view")
-                            vn = viewname + "@" + (viewname ? "" : state.stateName || "")
-                        if((vn in currentState._local.template) || $node.hasClass("oni-mmRouter-leave") || avalon.contains(node, _node)) return
+                            vn = viewname + "@" + (viewname ? "" : state.stateName || ""),
+                            vnCurrent = viewname + "@" + (mmState.currentState.stateName || "")
+                        // 如何盘点这个节点是否需要回复默认内容
+                        if((vn in currentState._local.template) || (vnCurrent in currentState._local.template) || $node.hasClass("oni-mmRouter-leave") || avalon.contains(node, _node)) return
                         // 通过这种方式方式消除重复刷新
                         var _html = $node.data(defKey),
                             key = viewKey(_node)
                         if (_html) {
                             mmState.addCallback(key, function() {
+                                _node = viewAnimate(_node, topCtrlName, statename, me)
                                 avalon.innerHTML(_node, _html)
-                                avalon.scan(_node, vmodes)
+                                avalon.scan(node, vmodes)
                             })
                         }
                     })
@@ -382,17 +401,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         var oldNode = avalon(node),
                             key = viewKey(node)
                         key && mmState.removeCallback(key)
-                        if(oldNode.hasClass("oni-mmRouter-slide")) {
-                            node = node.cloneNode(true)
-                            avalon(node).addClass("oni-mmRouter-enter")
-                            oldNode.addClass("oni-mmRouter-leave")
-                            oldNode.attr("ms-view", null)
-                            avalon.each(getViews(topCtrlName, statename, oldNode[0]), function(i, n) {
-                                n.removeAttribute("ms-view")
-                            })
-                            oldNode[0].parentNode.insertBefore(node, oldNode.nextSibling)
-                            callStateFunc("onViewEnter", me, node, oldNode[0])
-                        }
+                        node = viewAnimate(node, topCtrlName, statename, me)
                         // 需要记下当前view下的所有子view的默认innerHTML
                         // 以便在恢复到当前view的时候重置回来
                         var _html = avalon(node).data(defKey)

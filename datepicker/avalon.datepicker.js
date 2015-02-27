@@ -915,6 +915,8 @@ define(["../avalon.getModel",
                 dayItem = datepickerData[i]["rows"][m][n],
                 rowItem = vmodel.data[i]["rows"][m]
 
+            _day = _day + ''
+
             if (dateDay === +day && dateMonth === month && dateYear === year) {
                 selected = true
             }    
@@ -924,7 +926,7 @@ define(["../avalon.getModel",
             } else if (dayItem._day == _day) {
                 avalon.mix(dayItem, {month: dateMonth, year: dateYear})
             } else {
-                avalon.mix(dayItem, {day:dateDay+"",_day: _day+"", month: dateMonth, year: dateYear, weekend: weekend, selected: selected, dateDisabled: dateDisabled})
+                avalon.mix(dayItem, {day:dateDay+"",_day: _day, month: dateMonth, year: dateYear, weekend: weekend, selected: selected, dateDisabled: dateDisabled})
                 rowItem.set(n, _day)
             }
         }

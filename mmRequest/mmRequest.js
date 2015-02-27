@@ -1,7 +1,7 @@
 //=========================================
 //  数据交互模块 by 司徒正美
 //==========================================
-define("mmRequest", ["avalon", "../mmPromise/mmPromise"], function(avalon) {
+define("mmRequest", ["avalon", "mmPromise/mmPromise"], function(avalon) {
 var global = this || (0, eval)("this")
 var DOC = global.document
 var encode = encodeURIComponent
@@ -13,6 +13,7 @@ var rnoContent = /^(?:GET|HEAD)$/
 var rprotocol = /^\/\//
 var rhash = /#.*$/
 var rquery = /\?/
+var rjsonp = /(=)\?(?=&|$)|\?\?/
 var r20 = /%20/g
 
 var originAnchor = document.createElement("a")
@@ -51,6 +52,13 @@ function parseJS(code) {
     }
 }
 
+if (!String.prototype.startsWith) {
+    String.prototype.startsWith = function(searchString, position) {
+        position = position || 0;
+        return this.lastIndexOf(searchString, position) === position;
+    }
+}
+
 var head = DOC.getElementsByTagName("head")[0] //HEAD元素
 var isLocal = false
 try {
@@ -68,7 +76,7 @@ new function() {
         "ActiveXObject('MSXML2.XMLHTTP')",
         "ActiveXObject('Microsoft.XMLHTTP')"
     ]
-    s[0] = IE() < 8 && isLocal ? "!" : s[0] //IE下只能使用ActiveXObject
+    s[0] = IE() < 8 && IE() !== 0 && isLocal ? "!" : s[0] //IE下只能使用ActiveXObject
     for (var i = 0, axo; axo = s[i++]; ) {
         try {
             if (eval("new " + axo)) {
@@ -125,13 +133,14 @@ function ajaxExtend(opts) {
 
     if (typeof opts.crossDomain !== "boolean") { //判定是否跨域
         var urlAnchor = document.createElement("a");
-        // Support: IE8-11+
+        // Support: IE6-11+
         // IE throws exception if url is malformed, e.g. http://example.com:80x/
         try {
             urlAnchor.href = opts.url;
-            urlAnchor.href = urlAnchor.href;
-            opts.crossDomain = originAnchor.protocol + "//" + originAnchor.host !==
-                    urlAnchor.protocol + "//" + urlAnchor.host;
+            // in IE7-, get the absolute path
+            var absUrl = !"1"[0] ? urlAnchor.getAttribute("href", 4) : urlAnchor.href;
+            urlAnchor.href = absUrl
+            opts.crossDomain = originAnchor.protocol + "//" + originAnchor.host !== urlAnchor.protocol + "//" + urlAnchor.host;
         } catch (e) {
             opts.crossDomain = true;
         }
@@ -147,7 +156,6 @@ function ajaxExtend(opts) {
     }
     return opts;
 }
-
 /**
  * 伪XMLHttpRequest类,用于屏蔽浏览器差异性
  * var ajax = new(self.XMLHttpRequest||ActiveXObject)("Microsoft.XMLHTTP")
@@ -209,15 +217,17 @@ var XHRMethods = {
                 statusText = "notmodified";
             } else {
                 //如果浏览器能直接返回转换好的数据就最好不过,否则需要手动转换
-                if (typeof this.response === "undefined" && (this.responseText || this.responseXML)) {
+                if (typeof this.response === "undefined") {
                     var dataType = this.options.dataType || this.options.mimeType
-                    if (!dataType) { //如果没有指定dataType，则根据mimeType或Content-Type进行揣测
+                    if (!dataType && this.responseText || this.responseXML) { //如果没有指定dataType，则根据mimeType或Content-Type进行揣测
                         dataType = this.getResponseHeader("Content-Type") || ""
                         dataType = dataType.match(/json|xml|script|html/) || ["text"]
                         dataType = dataType[0];
                     }
+                    var responseText = this.responseText || '',
+                        responseXML = this.responseXML || '';
                     try {
-                        this.response = avalon.ajaxConverters[dataType].call(this, this.responseText, this.responseXML)
+                        this.response = avalon.ajaxConverters[dataType].call(this, responseText, responseXML)
                     } catch (e) {
                         isSuccess = false
                         this.error = e
@@ -234,13 +244,22 @@ var XHRMethods = {
         }
         this._transport = this.transport;
         // 到这要么成功，调用success, 要么失败，调用 error, 最终都会调用 complete
+        var successFn = this.options.success,
+            errorFn = this.options.error,
+            completeFn = this.options.complete
+
         if (isSuccess) {
             avalon.log("成功加载数据")
+            if (typeof successFn === "function") {
+                successFn.call(this, this.response, statusText, this)
+            }
             this._resolve(this.response, statusText, this)
         } else {
+            if (typeof errorFn === "function") {
+                errorFn.call(this, statusText, this.error || statusText)
+            }
             this._reject(this, statusText, this.error || statusText)
         }
-        var completeFn = this.options.complete
         if (typeof completeFn === "function") {
             completeFn.call(this, this, statusText)
         }
@@ -274,15 +293,11 @@ avalon.ajax = function(opts, promise) {
     promise._resolve = _resolve
 
     avalon.mix(promise, XHRProperties, XHRMethods)
-    promise.then(opts.success, opts.error)
-    "success error".replace(avalon.rword, function(name) { //绑定回调
-        delete opts[name]
-    })
 
     var dataType = opts.dataType  //目标返回数据类型
     var transports = avalon.ajaxTransports
 
-    if (opts.crossDomain && !supportCors && dataType === "json" && opts.type === "GET" ) {
+    if ((opts.crossDomain && !supportCors || rjsonp.test(opts.url)) && dataType === "json" && opts.type === "GET") {
         dataType = opts.dataType = "jsonp"
     }
     var name = opts.form ? "upload" : dataType
@@ -350,7 +365,8 @@ avalon.upload = function(url, form, data, callback, dataType) {
 }
 avalon.ajaxConverters = {//转换器，返回用户想要做的数据
     text: function(text) {
-        return text || "";
+        // return text || "";
+        return text;
     },
     xml: function(text, xml) {
         return xml !== void 0 ? xml : parseXML(text)
@@ -366,21 +382,41 @@ avalon.ajaxConverters = {//转换器，返回用户想要做的数据
     },
     script: function(text) {
         parseJS(text)
+        return text;
     },
     jsonp: function() {
-        var json = avalon[this.jsonpCallback];
-        delete avalon[this.jsonpCallback];
+        var json, callbackName;
+        if (this.jsonpCallback.startsWith('avalon.')) {
+            callbackName = this.jsonpCallback.replace(/avalon\./,'')
+            json = avalon[callbackName]
+            delete avalon[callbackName]
+        } else {
+            json = window[this.jsonpCallback]
+        }
         return json;
     }
 }
 
-avalon.param = function(json) {
-    if (!avalon.isPlainObject(json)) {
-        return ""
+avalon.param = function( a ) {
+    var prefix,
+        s = [],
+        add = function( key, value ) {
+            value = ( value == null ? "" : value );
+            s[ s.length ] = encode( key ) + "=" + encode( value );
+        };
+
+    if (Array.isArray(a) || !avalon.isPlainObject(a)) {
+        avalon.each(a, function(subKey, subVal) {
+            add(subKey, subVal);
+        });
+    } else {
+        for (prefix in a) {
+            paramInner(prefix, a[prefix], add);
+        }
     }
-    var buffer = []
-    paramInner(json, "", buffer)
-    return buffer.join("&").replace(r20, "+")
+
+    // Return the resulting serialization
+    return s.join( "&" ).replace( r20, "+" );
 }
 
 function isDate(a) {
@@ -390,29 +426,23 @@ function isValidParamValue(val) {
     var t = typeof val; // 值只能为 null, undefined, number, string, boolean
     return val == null || (t !== 'object' && t !== 'function')
 }
-function paramInner(json, prefix, buffer) {
-    prefix = prefix || ""
-    for (var key in json) {
-        if (json.hasOwnProperty(key)) {
-            var val = json[key]
-            var name = prefix ? prefix + encode("[" + key + "]") : encode(key)
-            if (isDate(val)) {
-                buffer.push(name + "=" + val.toISOString())
-            } else if (isValidParamValue(val)) {//如果是简单数据类型
-                buffer.push(name + "=" + encode(val))
-            } else if (Array.isArray(val) || avalon.isPlainObject(val)) {
-                avalon.each(val, function(subKey, subVal) {
-                    if (isValidParamValue(subVal)) {
-                        buffer.push(name + encode("[" + subKey + "]") + "=" + encode(subVal))
-                    } else if (Array.isArray(val) || avalon.isPlainObject(val)) {
-                        paramInner(subVal, name + encode("[" + subKey + "]"), buffer)
-                    }
-                })
-            }
+function paramInner( prefix, obj, add ) {
+    var name;
+    if (Array.isArray( obj ) ) {
+        // Serialize array item.
+        avalon.each( obj, function( i, v ) {
+            paramInner( prefix + "[" + ( typeof v === "object" ? i : "" ) + "]", v, add );
+        });
+    } else if (avalon.isPlainObject(obj)) {
+        // Serialize object item.
+        for ( name in obj ) {
+            paramInner( prefix + "[" + name + "]", obj[ name ], add);
         }
+    } else {
+        // Serialize scalar item.
+        add( prefix, obj );
     }
 }
-
 
 if (!Date.prototype.toISOString) {
     new function() {
@@ -436,38 +466,71 @@ if (!Date.prototype.toISOString) {
 }
 
 //将一个字符串转换为对象
-//https://github.com/cowboy/jquery-bbq/blob/master/jquery.ba-bbq.js
-avalon.unparam = function(url, query) {
-    var json = {};
-    if (!url || !avalon.type(url) === "string") {
-        return json;
-    }
-    url = url.replace(/^[^?=]*\?/ig, '').split('#')[0]; //去除网址与hash信息
-    //考虑到key中可能有特殊符号如“[].”等，而[]却有是否被编码的可能，所以，牺牲效率以求严谨，就算传了key参数，也是全部解析url。
-    var pairs = url.split("&"),
-            pair, key, val, i = 0,
-            len = pairs.length;
-    for (; i < len; ++i) {
-        pair = pairs[i].split("=")
-        key = decode(pair[0])
-        try {
-            val = decode(pair[1] || "")
-        } catch (e) {
-            avalon.log(e + "decodeURIComponent error : " + pair[1], 3)
-            val = pair[1] || "";
+avalon.unparam = function(input) {
+    var items, temp,
+        expBrackets = /\[(.*?)\]/g,
+        expVarname = /(.+?)\[/,
+        result = {};
+
+    if ((temp = avalon.type(input)) != 'string' || (temp == 'string' && !temp.length))
+        return {};
+
+    items = decode(input).split('&');
+
+    if (!(temp = items.length) || (temp == 1 && temp === ''))
+        return result;
+
+    avalon.each(items, function(index, item) {
+        if (!item.length)
+            return;
+        temp = item.split('=');
+        var key = temp.shift(),
+            value = temp.join('=').replace(/\+/g, ' '),
+            size, link, subitems = [];
+
+        if (!key.length)
+            return;
+
+        while((temp = expBrackets.exec(key)))
+            subitems.push(temp[1]);
+
+        if (!(size = subitems.length)) {
+            result[key] = value;
+            return;
         }
-        key = key.replace(/\[\]$/, "")  //如果参数名以[]结尾，则当作数组
-        var item = json[key];
-        if (item === void 0) {
-            json[key] = val; //第一次
-        } else if (Array.isArray(item)) {
-            item.push(val)  //第三次或三次以上
-        } else {
-            json[key] = [item, val]; //第二次,将它转换为数组
-        }
-    }
-    return query ? json[query] : json;
-}
+        size--;
+        temp = expVarname.exec(key);
+
+        if (!temp || !(key = temp[1]) || !key.length)
+            return;
+
+        if (avalon.type(result[key]) != 'object')
+            result[key] = {};
+
+        link = result[key];
+        
+        avalon.each(subitems, function(subindex, subitem) {
+            if (!(temp = subitem).length) {
+                temp = 0;
+
+                avalon.each(link, function(num) {
+                    if (!isNaN(num) && num >= 0 && (num%1 === 0) && num >= temp)
+                        temp = Number(num)+1;
+                });
+            }
+            if (subindex == size) {
+                link[temp] = value;
+            } else if (avalon.type(link[temp]) != 'object') {
+                link = link[temp] = {};
+            } else {
+                link = link[temp];
+            }
+
+        });
+
+    });
+    return result;
+};
 
 var rinput = /select|input|button|textarea/i
 var rcheckbox = /radio|checkbox/
@@ -512,7 +575,8 @@ var transports = avalon.ajaxTransports = {
             if (this.mimeType && transport.overrideMimeType) {
                 transport.overrideMimeType(this.mimeType)
             }
-            if (opts.crossDomain) {
+            //IE6下，如果transport中没有withCredentials，直接设置会报错
+            if (opts.crossDomain && "withCredentials" in transport) {
                 transport.withCredentials = true
             }
             this.requestHeaders["X-Requested-With"] = "XMLHttpRequest"
@@ -534,7 +598,7 @@ var transports = avalon.ajaxTransports = {
             } else {
                 if (useOnload) { //如果支持onerror, onload新API
                     transport.onload = transport.onerror = function(e) {
-                        this.readyState = 4 //IE9+ 
+                        this.readyState = 4 //IE9+
                         this.status = e.type === "load" ? 200 : 500
                         self.respond()
                     }
@@ -612,11 +676,22 @@ var transports = avalon.ajaxTransports = {
     jsonp: {
         preproccess: function() {
             var opts = this.options;
-            var name = this.jsonpCallback = opts.jsonpCallback || "jsonp" + setTimeout("1")
-            opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=avalon." + name
+            var name = this.jsonpCallback = opts.jsonpCallback || "avalon.jsonp" + setTimeout("1")
+            if (rjsonp.test(opts.url)) {
+                opts.url = opts.url.replace(rjsonp, "$1" + name)
+            } else {
+                opts.url = opts.url + (rquery.test(opts.url) ? "&" : "?") + opts.jsonp + "=" + name
+            }
             //将后台返回的json保存在惰性函数中
-            avalon[name] = function(json) {
-                avalon[name] = json
+            if (name.startsWith('avalon.')) {
+                name = name.replace(/avalon\./, '')
+                avalon[name] = function(json) {
+                    avalon[name] = json
+                }
+            } else {
+                window[name] = function(json) {
+                    window[name] = json
+                }
             }
             return "script"
         }
@@ -649,7 +724,14 @@ var transports = avalon.ajaxTransports = {
                     parent.removeChild(node)
                 }
                 if (!forceAbort) {
-                    var args = typeof avalon[this.jsonpCallback] === "function" ? [500, "error"] : [200, "success"]
+                    var args;
+                    if (this.jsonpCallback) {
+                        var jsonpCallback = this.jsonpCallback.startsWith('avalon.') ? avalon[this.jsonpCallback.replace(/avalon\./, '')] : window[this.jsonpCallback]
+                        args = typeof jsonpCallback === "function" ? [500, "error"] : [200, "success"]
+                    } else {
+                        args = [200, "success"]
+                    }
+
                     this.dispatch.apply(this, args)
                 }
             }
@@ -660,6 +742,7 @@ var transports = avalon.ajaxTransports = {
             var opts = this.options, formdata
             if (typeof opts.form.append === "function") { //简单判断opts.form是否为FormData
                 formdata = opts.form;
+                opts.contentType = '';
             } else {
                 formdata = new FormData(opts.form)  //将二进制什么一下子打包到formdata
             }
@@ -798,3 +881,4 @@ if (!window.FormData) {
  http://www.cnblogs.com/heyuquan/archive/2013/05/13/3076465.html
  2014.12.25  v4 大重构
  */
+

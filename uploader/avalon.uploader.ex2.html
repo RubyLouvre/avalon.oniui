@@ -104,13 +104,13 @@
 					maxFileCount: 4,
 					maxFileSize: 1048576000,
 					onInit: function(vmodel, options, vmodels){
-						console.info('初始化完成！');
+						avalon.log('初始化完成！');
 					},
 					onSuccess: function(files, data){
-						console.info('上传完成！');
+						avalon.log('上传完成！');
 					},
 					onSingleFailed: function(fileName){
-						console.info('上传失败：' + fileName);
+						avalon.log('上传失败：' + fileName);
 					},
 					onFileSizeErr: function(fileName){
 						alert('自定义信息：' + fileName + '大小超过1M啦~')
@@ -119,10 +119,10 @@
 						alert('超出 ' + (selectNum - availableNum) + ' 个！');
 					},
 					onDeleteSuccess: function(data){
-						console.info('删除成功！');
+						avalon.log('删除成功！');
 					},
 					onDeleteFailed: function(data){
-						console.info('删除失败！');
+						avalon.log('删除失败！');
 					}
 				};
 

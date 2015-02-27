@@ -2,7 +2,7 @@
     <h3>联系人</h3>
     <table ms-controller="contacts" border="1" width="100%">
         <tr>
-            <td width="300px">
+            <td width="300px" style="overflow:hidden;">
                 <ul>
                     <li>
                         <a href="#!/contacts">所有联系人</a>
@@ -13,8 +13,11 @@
                 </ul>
                 <hr/>
                 <button class="btn" ms-click="goToRandom()">Show random contact</button>
-                <div ms-view="tip">
-                    默认tip内容
+                <div class="oni-helper-clearfix slider oni-helper-reset">
+                    <div ms-view="tip" class="oni-mmRouter-slide">
+                    默认tip内容---搞得再复杂一点...
+                    <div ms-view="complex"></div>
+                </div>
                 </div>
             </td>
             <td ms-view>

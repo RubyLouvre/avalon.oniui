@@ -106,6 +106,7 @@ define(["avalon"], function(avalon) {
             if (this.monitorMode === "iframepoll") {
                 //IE6,7在hash改变时不会产生历史，需要用一个iframe来共享历史
                 avalon.ready(function() {
+                    if(that.iframe) return
                     var iframe = that.iframe || document.getElementById(that.iframeID) || document.createElement('iframe')
                     iframe.src = 'javascript:0'
                     iframe.style.display = 'none'

@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon.js 1.4 built in 2015.2.15
+ avalon.js 1.4 built in 2015.2.27
  support IE6+ and other browsers
  ==================================================*/
 (function(global, factory) {
@@ -283,7 +283,7 @@ avalon.mix({
     noop: noop,
     /*如果不用Error对象封装一下，str在控制台下可能会乱码*/
     error: function(str, e) {
-        throw new (e || Error)(str)
+        throw  (e || Error)(str)
     },
     /*将一个以空格或逗号隔开的字符串或数组,转换成一个键值都为1的对象*/
     oneObject: oneObject,
@@ -702,7 +702,7 @@ function fixEvent(event) {
     return ret
 }
 
-var eventHooks = avalon.eventHooks 
+var eventHooks = avalon.eventHooks
 //针对firefox, chrome修正mouseenter, mouseleave
 if (!("onmouseenter" in root)) {
     avalon.each({
@@ -878,7 +878,9 @@ var EventBus = {
             special = RegExp.$1
             type = RegExp.$2
         }
-        var events = this.$events
+        var events = this.$events 
+        if(!events)
+            return
         var args = aslice.call(arguments, 1)
         var detail = [type].concat(args)
         if (special === "all") {
@@ -2193,7 +2195,7 @@ var rhasHtml = /\|\s*html\s*/,
 function getToken(value) {
     if (value.indexOf("|") > 0) {
         var scapegoat = value.replace( rstringLiteral, function(_){
-            return Math.pow(10,_.length)
+            return Array(_.length+1).join("1")
         })
         var index = scapegoat.replace(r11a, "\u1122\u3344").indexOf("|") //干掉所有短路或
         if (index > -1) {
@@ -2499,10 +2501,10 @@ avalon.parseJSON = window.JSON ? JSON.parse : function(data) {
             if (rvalidchars.test(data.replace(rvalidescape, "@")
                     .replace(rvalidtokens, "]")
                     .replace(rvalidbraces, ""))) {
-                return (new Function("return " + data))();
+                return (new Function("return " + data))()
             }
         }
-        avalon.error("Invalid JSON: " + data);
+        avalon.error("Invalid JSON: " + data)
     }
     return data
 }
@@ -3541,8 +3543,7 @@ duplexBinding.INPUT = function(element, evaluator, data) {
         composing = false
     }
     //当value变化时改变model的值
-
-    function updateVModel() {
+    var updateVModel = function() {
         if (composing)  //处理中文输入法在minlengh下引发的BUG
             return
         var val = element.oldValue = element.value //防止递归调用形成死循环
@@ -4363,18 +4364,18 @@ var rsanitize = {
 var rsurrogate = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g
 var rnoalphanumeric = /([^\#-~| |!])/g;
 
-function numberFormat(number, decimals, dec_point, thousands_sep) {
+function numberFormat(number, decimals, point, thousands) {
     //form http://phpjs.org/functions/number_format/
     //number	必需，要格式化的数字
     //decimals	可选，规定多少个小数位。
-    //dec_point	可选，规定用作小数点的字符串（默认为 . ）。
-    //thousands_sep	可选，规定用作千位分隔符的字符串（默认为 , ），如果设置了该参数，那么所有其他参数都是必需的。
+    //point	可选，规定用作小数点的字符串（默认为 . ）。
+    //thousands	可选，规定用作千位分隔符的字符串（默认为 , ），如果设置了该参数，那么所有其他参数都是必需的。
     number = (number + '')
             .replace(/[^0-9+\-Ee.]/g, '')
     var n = !isFinite(+number) ? 0 : +number,
-            prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
-            sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
-            dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+            prec = !isFinite(+decimals) ? 3 : Math.abs(decimals),
+            sep = thousands || ",",
+            dec = point || ".",
             s = '',
             toFixedFix = function(n, prec) {
                 var k = Math.pow(10, prec)
@@ -4461,9 +4462,7 @@ var filters = avalon.filters = {
     currency: function(amount, symbol, fractionSize) {
         return (symbol || "\uFFE5") + numberFormat(amount, isFinite(fractionSize) ? fractionSize : 2)
     },
-    number: function(number, fractionSize) {
-        return  numberFormat(number, isFinite(fractionSize) ? fractionSize : 3)
-    }
+    number: numberFormat
 }
 /*
  'yyyy': 4 digit representation of year (e.g. AD 1 => 0001, AD 2010 => 2010)
@@ -5373,9 +5372,10 @@ new function() {
  *                           DOMReady                               *
  **********************************************************************/
 
-var readyList = []
-function fireReady() {
-    if (DOC.body) { //  在IE8 iframe中doScrollCheck可能不正确
+var readyList = [], isReady
+var fireReady = function() {
+    if (!isReady) {
+        isReady = true
         if (innerRequire) {
             modules["domReady!"].state = 4
             innerRequire.checkDeps()
@@ -5383,7 +5383,6 @@ function fireReady() {
         readyList.forEach(function(a) {
             a(avalon)
         })
-        fireReady = noop //隋性函数，防止IE9二次调用_checkDeps
     }
 }
 
@@ -5410,17 +5409,17 @@ if (DOC.readyState === "complete") {
         var isTop = window.frameElement === null
     } catch (e) {
     }
-    if (root.doScroll && isTop && window.external) {//只有不处于iframe时才用doScroll判断,否则可能会不准
+    if (root.doScroll && isTop && window.external) {//fix IE iframe BUG
         doScrollCheck()
     }
 }
 avalon.bind(window, "load", fireReady)
 
 avalon.ready = function(fn) {
-    if (fireReady === noop) {
-        fn(avalon)
-    } else {
+    if (!isReady) {
         readyList.push(fn)
+    } else {
+        fn(avalon)
     }
 }
 

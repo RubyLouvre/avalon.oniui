@@ -5,7 +5,7 @@
     z-index: 10;
     background-color: #E6EEF8;
     opacity: 0.5;
-    font-size: 0px; }
+    overflow: hidden; }
   .oni-layout .north-resizer, .oni-layout .south-resizer {
     cursor: row-resize; }
   .oni-layout .west-resizer, .oni-layout .east-resizer {
@@ -14,6 +14,7 @@
     display: inline-block;
     position: absolute;
     border-style: solid;
-    border-color: #95B8E7; }
+    border-color: #95B8E7;
+    overflow: hidden; }
 
 /*# sourceMappingURL=avalon.layout.css.map */

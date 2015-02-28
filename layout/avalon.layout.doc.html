@@ -70,31 +70,31 @@
                         <td>eastRegion</td>
                         <td>Object</td>
                         <td>{}</td>
-                        <td>东区配置对象。参看region配置</td>
+                        <td>东区配置对象。参看region对象</td>
                     </tr>
                     <tr>
                         <td>southRegion</td>
                         <td>Object</td>
                         <td>{}</td>
-                        <td>南区配置对象。参看region配置</td>
+                        <td>南区配置对象。参看region对象</td>
                     </tr>
                     <tr>
                         <td>westRegion</td>
                         <td>Object</td>
                         <td>{}</td>
-                        <td>西区配置对象。参看region配置</td>
+                        <td>西区配置对象。参看region对象</td>
                     </tr>
                     <tr>
                         <td>northRegion</td>
                         <td>Object</td>
                         <td>{}</td>
-                        <td>北区配置对象。参看region配置</td>
+                        <td>北区配置对象。参看region对象</td>
                     </tr>
                     <tr>
                         <td>centreRegion</td>
                         <td>Object</td>
                         <td>{}</td>
-                        <td>中区配置对象。参看region配置</td>
+                        <td>中区配置对象。参看region对象</td>
                     </tr>
                     <tr>
                         <td>removeRegion(opts,region)</td>
@@ -227,23 +227,93 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>updateLayoutSize()</td>
+                        <td>updateLayoutSize(opts)</td>
                         <td>Function</td>
                         <td></td>
-                        <td>当stretchMax配置为true后，layout的父容器尺寸改变后，需要调用此函数重新计算布局大小。</td>
+                        <td>当更改Layout尺寸后，需要调用此函数重新计算布局大小。
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>Object</td>
+                                    <td>vmodel</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>hasRegion(opts,region)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>检测Layout是否包含一个区域。
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>Object</td>
+                                    <td>vmodel</td>
+                                </tr>
+                                <tr>
+                                    <td>region</td>
+                                    <td>Object</td>
+                                    <td>east, south, west, north或者centre。</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getRegionRealSize(opts,region)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获取一个区域的真实尺寸。
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>Object</td>
+                                    <td>vmodel</td>
+                                </tr>
+                                <tr>
+                                    <td>region</td>
+                                    <td>Object</td>
+                                    <td>east, south, west或者north。</td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                 </table>
             </fieldset>
             <div class="others">
                 <p>
-                    <b>region配置</b>
-                </p>region配置是一个非常重要的配置项，下面是说明和默认值
+                    <b>region对象</b>
+                </p>region对象是一个非常重要的对象，下面是说明和默认值
                 <pre class="brush:javascript;gutter:false;toolbar:false;"> {
-     size: 0, //区域尺寸。不可用于centre区域
-     resizable: false, //是否增加一个resizer。不可用于centre区域
-     regionClass: "", //额外的CSS
-     afterRemove: undefined, //区域被移除后的回调。不可用于centre区域。配置了本项后，移除区域时不会触发主配置的afterRemove回调
-     afterResize: undefined //区域改变大小后的回调。不可用于centre区域。配置了本项后，改变区域大小时不会触发主要的afterResize回调
+     //区域尺寸。不可用于centre区域。数字或者百分比。
+     size: 0, 
+
+     //是否增加一个resizer。不可用于centre区域
+     resizable: false,
+
+     //增加在区域上的CSS
+     regionClass: "", 
+
+     //区域被移除后的回调。不可用于centre区域。配置了本项后，移除区域时不会触发主配置的afterRemove回调
+     afterRemove: undefined,
+
+     //区域改变大小后的回调。不可用于centre区域。配置了本项后，改变区域大小时不会触发主要的afterResize回调
+     afterResize: undefined 
  }</pre>
             </div>
             <ul class="example-links">
@@ -255,6 +325,9 @@
                 </li>
                 <li>
                     <a href="avalon.layout.ex3.html">嵌套的Layout</a>
+                </li>
+                <li>
+                    <a href="avalon.layout.ex4.html">百分比尺寸的Layout，改变Layout尺寸</a>
                 </li>
             </ul>
         </div>

@@ -8,30 +8,30 @@
 define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
     function(avalon, tpl) {
         var widgetName = 'layout';
-        var ewcNoTopBorder = "(northRegion.$inLayoutFlow&&!northRegion.resizable)",   // 判断East, West, Centre区域是否有上边框的条件语句
-            ewcNoBottomBorder = "(southRegion.$inLayoutFlow&&!southRegion.resizable)",// 判断East, West, Centre区域是否有下边框的条件语句
+        var ewcNoTopBorder = "(northRegion.inLayoutFlow&&!northRegion.resizable)",   // 判断East, West, Centre区域是否有上边框的条件语句
+            ewcNoBottomBorder = "(southRegion.inLayoutFlow&&!southRegion.resizable)",// 判断East, West, Centre区域是否有下边框的条件语句
 
-            centreNoLeftBorder = "(westRegion.$inLayoutFlow && !westRegion.resizable)",
-            centreNoRightBorder = "(eastRegion.$inLayoutFlow && !eastRegion.resizable)",
+            centreNoLeftBorder = "(westRegion.inLayoutFlow && !westRegion.resizable)",
+            centreNoRightBorder = "(eastRegion.inLayoutFlow && !eastRegion.resizable)",
 
-            northResizerHeight = "(northRegion.$inLayoutFlow && northRegion.resizable ? resizerSize : 0)",  // North区域高度的计算表达式
-            southResizerHeight = "(southRegion.$inLayoutFlow && southRegion.resizable ? resizerSize : 0)",  // South区域高度的计算表达式
-            westResizerWidth = "(westRegion.$inLayoutFlow && westRegion.resizable ? resizerSize : 0)",  // West区域宽度的计算表达式
-            eastResizerWidth = "(eastRegion.$inLayoutFlow && eastRegion.resizable ? resizerSize : 0)",  // East区域宽度的计算表达式
+            northResizerHeight = "(northRegion.inLayoutFlow && northRegion.resizable ? resizerSize : 0)",  // North区域高度的计算表达式
+            southResizerHeight = "(southRegion.inLayoutFlow && southRegion.resizable ? resizerSize : 0)",  // South区域高度的计算表达式
+            westResizerWidth = "(westRegion.inLayoutFlow && westRegion.resizable ? resizerSize : 0)",  // West区域宽度的计算表达式
+            eastResizerWidth = "(eastRegion.inLayoutFlow && eastRegion.resizable ? resizerSize : 0)",  // East区域宽度的计算表达式
 
-            ewcResizerHeight = ["(layoutHeight - northRegion.size - southRegion.size)", 
+            ewcResizerHeight = ["(layoutHeight - northRegion.realSize - southRegion.realSize)", 
                                     northResizerHeight, southResizerHeight
                                 ].join("-"),    // East, West, Centre三个区域的包含border-width的高度的表达式。最终应用到区域上时需要减除各个区域的border-with
             ewcRegionHeigth = [ewcResizerHeight, 
                                 ["(", ewcNoTopBorder, "?0:regionBorderWidth)"].join(""),
                                 ["(", ewcNoBottomBorder, "?0:regionBorderWidth)"].join("")].join("-"),
-            ewcRegionTop = ["layoutTop+northRegion.size+", northResizerHeight].join(""),    // East, West, Centre三个区域Top的表达式。
+            ewcRegionTop = ["layoutTop+northRegion.realSize+", northResizerHeight].join(""),    // East, West, Centre三个区域Top的表达式。
 
             docks = {
                 "north": {
                     attrBindings: {
                         "ms-css-width": "layoutWidth - (isSubLayout?0:regionBorderWidth*2)",
-                        "ms-css-height": "northRegion.size - (isSubLayout?regionBorderWidth:regionBorderWidth*2)",
+                        "ms-css-height": "northRegion.realSize - (isSubLayout?regionBorderWidth:regionBorderWidth*2)",
                         "ms-css-top": "layoutTop",
                         "ms-css-left": "layoutLeft",
                         "ms-css-border-style": "isSubLayout?'none none solid none':'solid'",
@@ -41,7 +41,7 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                         "data-draggable-axis": "y",
                         "ms-css-width": "layoutWidth",
                         "ms-css-height": "resizerSize",
-                        "ms-css-top": "layoutTop+northRegion.size",
+                        "ms-css-top": "layoutTop+northRegion.realSize",
                         "ms-css-left": "layoutLeft"
                     },
                     resizerManageProperty: {
@@ -49,15 +49,15 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                         eventDataDirection: "Y",
                         getContainment: function(vmodel) {
                             var $offset = vmodel.$element.offset();
-                            return [0, $offset.top + vmodel.regionBorderWidth*2, 0, $offset.top + vmodel.layoutHeight - vmodel.southRegion.size - vmodel.resizerSize * 2 - vmodel.regionBorderWidth * 2];
+                            return [0, $offset.top + vmodel.regionBorderWidth*2, 0, $offset.top + vmodel.layoutHeight - vmodel.southRegion.realSize - vmodel.resizerSize * 2 - vmodel.regionBorderWidth * 2];
                         }
                     }
                 },
                 "south": {
                     attrBindings: {
                         "ms-css-width": "layoutWidth - (isSubLayout?0:regionBorderWidth*2)",
-                        "ms-css-height": "southRegion.size - (isSubLayout?regionBorderWidth:regionBorderWidth*2)",
-                        "ms-css-top": "layoutTop+layoutHeight-southRegion.size",
+                        "ms-css-height": "southRegion.realSize - (isSubLayout?regionBorderWidth:regionBorderWidth*2)",
+                        "ms-css-top": "layoutTop+layoutHeight-southRegion.realSize",
                         "ms-css-left": "layoutLeft",
                         "ms-css-border-style": "isSubLayout?'solid none none none':'solid'",
                         "ms-css-border-width": "regionBorderWidth"
@@ -66,7 +66,7 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                         "data-draggable-axis": "y",
                         "ms-css-width": "layoutWidth",
                         "ms-css-height": "resizerSize",
-                        "ms-css-top": "layoutTop+layoutHeight-southRegion.size-resizerSize",
+                        "ms-css-top": "layoutTop+layoutHeight-southRegion.realSize-resizerSize",
                         "ms-css-left": "layoutLeft"
                     },
                     resizerManageProperty: {
@@ -74,16 +74,16 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                         eventDataDirection: "Y",
                         getContainment: function(vmodel) {
                             var $offset = vmodel.$element.offset();
-                            return [0, $offset.top + vmodel.northRegion.size + vmodel.regionBorderWidth*2 + vmodel.resizerSize, 0, $offset.top + vmodel.layoutHeight - vmodel.resizerSize];
+                            return [0, $offset.top + vmodel.northRegion.realSize + vmodel.regionBorderWidth*2 + vmodel.resizerSize, 0, $offset.top + vmodel.layoutHeight - vmodel.resizerSize];
                         }
                     }
                 },
                 "east": {
                     attrBindings: {
-                        "ms-css-width": "eastRegion.size-(isSubLayout?regionBorderWidth:regionBorderWidth*2)",
+                        "ms-css-width": "eastRegion.realSize-(isSubLayout?regionBorderWidth:regionBorderWidth*2)",
                         "ms-css-height": ewcRegionHeigth,
                         "ms-css-top": ewcRegionTop,
-                        "ms-css-left": "layoutLeft + layoutWidth - eastRegion.size",
+                        "ms-css-left": "layoutLeft + layoutWidth - eastRegion.realSize",
                         "ms-css-border-top-style": [ewcNoTopBorder,"?'none':'solid'"].join(""),
                         "ms-css-border-bottom-style": [ewcNoBottomBorder, "?'none':'solid'"].join(""),
                         "ms-css-border-left-style": "'solid'",
@@ -94,7 +94,7 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                         "data-draggable-axis": "x",
                         "ms-css-width": "resizerSize",
                         "ms-css-top": ewcRegionTop,
-                        "ms-css-left": "layoutLeft+layoutWidth-eastRegion.size-resizerSize",
+                        "ms-css-left": "layoutLeft+layoutWidth-eastRegion.realSize-resizerSize",
                         "ms-css-height": ewcResizerHeight
                     },
                     resizerManageProperty: {
@@ -103,7 +103,7 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                         getContainment: function(vmodel) {
                             var $offset = vmodel.$element.offset();
                             return [
-                                $offset.left + vmodel.westRegion.size + vmodel.regionBorderWidth*2 + vmodel.resizerSize, 
+                                $offset.left + vmodel.westRegion.realSize + vmodel.regionBorderWidth*2 + vmodel.resizerSize, 
                                 0, 
                                 $offset.left + vmodel.layoutWidth - vmodel.resizerSize - vmodel.regionBorderWidth * 2, 
                             0];
@@ -112,7 +112,7 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                 },
                 "west": {
                     attrBindings: {
-                        "ms-css-width": "westRegion.size - (isSubLayout?regionBorderWidth:regionBorderWidth*2)",
+                        "ms-css-width": "westRegion.realSize - (isSubLayout?regionBorderWidth:regionBorderWidth*2)",
                         "ms-css-height": ewcRegionHeigth,
                         "ms-css-top": ewcRegionTop,
                         "ms-css-left": "layoutLeft",
@@ -127,7 +127,7 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                         "ms-css-width": "resizerSize",
                         "ms-css-height": ewcResizerHeight,
                         "ms-css-top": ewcRegionTop,
-                        "ms-css-left": "layoutLeft+westRegion.size"
+                        "ms-css-left": "layoutLeft+westRegion.realSize"
                     },
                     resizerManageProperty: {
                         plusLocation: true,
@@ -137,7 +137,7 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                             return [
                                 $offset.left + vmodel.regionBorderWidth + vmodel.regionBorderWidth*2, 
                                 0, 
-                                $offset.left + vmodel.layoutWidth - vmodel.eastRegion.size - vmodel.regionBorderWidth*2 - vmodel.resizerSize*2, 
+                                $offset.left + vmodel.layoutWidth - vmodel.eastRegion.realSize - vmodel.regionBorderWidth*2 - vmodel.resizerSize*2, 
                                 0
                             ];
                         }
@@ -145,7 +145,7 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                 },
                 "centre": {
                     attrBindings: {
-                        "ms-css-width": ["layoutWidth-eastRegion.size-westRegion.size", 
+                        "ms-css-width": ["layoutWidth-eastRegion.realSize-westRegion.realSize", 
                                             westResizerWidth,
                                             eastResizerWidth,
                                             ["(", centreNoLeftBorder, "?0:regionBorderWidth)"].join(""),
@@ -153,7 +153,7 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                                         ].join("-"),
                         "ms-css-height": ewcRegionHeigth,
                         "ms-css-top": ewcRegionTop,
-                        "ms-css-left": "layoutLeft+westRegion.size+" + westResizerWidth,
+                        "ms-css-left": "layoutLeft+westRegion.realSize+" + westResizerWidth,
                         "ms-css-border-top-style": [ewcNoTopBorder,"?'none':'solid'"].join(""),
                         "ms-css-border-bottom-style": [ewcNoBottomBorder, "?'none':'solid'"].join(""),
                         "ms-css-border-left-style": centreNoLeftBorder + "?'none':'solid'",
@@ -172,11 +172,11 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                 vm.$resizers = { };   // 存放4个resizer的字典
                 vm.$nestedLayouts = [];
                 avalon.mix(true, vm, {
-                    centreRegion: { $inLayoutFlow: true, isNested: false },
-                    westRegion: { resizable:false, size: 0, regionClass: "", $inLayoutFlow: false, isNested: false },
-                    eastRegion: { resizable:false, size: 0, regionClass: "", $inLayoutFlow: false, isNested: false },
-                    southRegion: { resizable:false, size: 0, regionClass: "", $inLayoutFlow: false, isNested: false },
-                    northRegion: { resizable:false, size: 0, regionClass: "", $inLayoutFlow: false, isNested: false }
+                    centreRegion: { inLayoutFlow: true, isNested: false },
+                    westRegion: { resizable:false, size: 0, regionClass: "", inLayoutFlow: false, isNested: false, realSize: 0 },
+                    eastRegion: { resizable:false, size: 0, regionClass: "", inLayoutFlow: false, isNested: false, realSize: 0 },
+                    southRegion: { resizable:false, size: 0, regionClass: "", inLayoutFlow: false, isNested: false, realSize: 0 },
+                    northRegion: { resizable:false, size: 0, regionClass: "", inLayoutFlow: false, isNested: false, realSize: 0 }
                 }, options);
 
                 vm.$init = function() {
@@ -193,6 +193,7 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                     $element.attr("ms-css-height", "layoutHeight");
 
 
+                    // 
                     var childNodesDictionary = {};  // 临时存放Region DOM的字典
                     for (var i = 0; i < element.children.length; i++) {
                         var $node = avalon(element.children[i]),
@@ -205,12 +206,15 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                     }
 
                     ["northRegion", "westRegion", "eastRegion", "southRegion", "centreRegion"].forEach(function(region) {
-                        var resizable = false;
-                        if (options.hasOwnProperty(region)) {
-                            vm[region].$inLayoutFlow = true;
+                        var resizable = false,
+                            size;
+                        // Size是必须定义的属性，否则不计算入layout
+                        if (options.hasOwnProperty(region) && options[region].hasOwnProperty('size')) {
+                            vm[region].inLayoutFlow = true;
                         }
-                        if (vm[region].$inLayoutFlow) {
-                            resizable = vmodel[region].resizable;
+                        if (vm[region].inLayoutFlow) {
+                            resizable = vm[region].resizable;
+                            size = vm[region].size;
                             var regionName = region.replace("Region", "");
 
                             // 从childNodesDictionary中寻找region的DOM节点。如果没有，创建一个新DIV。
@@ -223,17 +227,18 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                             } else {
                                 vm.$dockedAreas[regionName] = childNodesDictionary[regionName];  
                             }
+                            vm.updateRealSize(vm, vm[region], region);
                             vm.$dockedAreas[regionName].addClass(vm[region].regionClass);
 
                             // if (regionName != "centre") {
                             //     $element.addClass(regionName + "-region-" + (resizable? "resizable" : "unresizable"));
                             // }
-                            vmodel.$bindRegionNode(regionName, vm.$dockedAreas[regionName].element, resizable);
+                            vm.$bindRegionNode(regionName, vm.$dockedAreas[regionName].element, resizable);
                         }
                     });
                     childNodesDictionary = null;
 
-                    vmodels = [vmodel].concat(vmodels);
+                    vmodels = [vm].concat(vmodels);
 
                     avalon.scan(element, vmodels);
                     if(typeof vmodel.onInit === "function"){
@@ -255,12 +260,15 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                                 var plusLocation = docks[side].resizerManageProperty.plusLocation,
                                     eventDataDirection = docks[side].resizerManageProperty.eventDataDirection,
                                     callback = vmodel[side+"Region"].afterResize || vmodel.afterResize,
-                                    beforeSize = vmodel[side+"Region"].size,
+                                    beforeSize = vmodel[side+"Region"].realSize,
                                     afterSize = beforeSize + (data["page"+eventDataDirection] - data["startPage"+eventDataDirection]) * (plusLocation ? 1 : -1);
-                                vmodel[side+"Region"].size = afterSize;
                                 
-                                if (typeof callback == "function") {
-                                    callback.call(element, side, beforeSize, afterSize);
+                                if (beforeSize != afterSize) {
+                                    vmodel[side+"Region"].size = vmodel[side+"Region"].realSize = afterSize;
+                                    
+                                    if (typeof callback == "function") {
+                                        callback.call(element, side, beforeSize, afterSize);
+                                    }
                                 }
 
                                 break;
@@ -282,7 +290,7 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                 };
                 vm.$updateNestedLayouts = function () {
                     vmodel.$nestedLayouts.forEach(function(nestedVM) {
-                        nestedVM.updateLayoutSize();
+                        nestedVM.updateLayoutSize(nestedVM);
                     });
                 };
 
@@ -382,11 +390,11 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
             regionBorderWidth: 1,   //@config 区域的边框的宽度
             resizerSize: 5,          //@config 区域的拖放元素的尺
 
-            eastRegion: {},     //@config {Object} 东区配置对象。参看region配置
-            southRegion: {},    //@config {Object} 南区配置对象。参看region配置
-            westRegion: {},     //@config {Object} 西区配置对象。参看region配置
-            northRegion: {},    //@config {Object} 北区配置对象。参看region配置
-            centreRegion: {},   //@config {Object} 中区配置对象。参看region配置
+            eastRegion: {},     //@config {Object} 东区配置对象。参看region对象
+            southRegion: {},    //@config {Object} 南区配置对象。参看region对象
+            westRegion: {},     //@config {Object} 西区配置对象。参看region对象
+            northRegion: {},    //@config {Object} 北区配置对象。参看region对象
+            centreRegion: {},   //@config {Object} 中区配置对象。参看region对象
 
             /**
              * @config {Function} 删除一个Region并将DOM移出文档
@@ -404,7 +412,8 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                     }
                     delete opts.$dockedAreas[region];
                     opts[region+"Region"].size = 0;
-                    opts[region+"Region"].$inLayoutFlow = false;
+                    opts[region+"Region"].realSize = 0;
+                    opts[region+"Region"].inLayoutFlow = false;
                     opts[region+"Region"].resizable = false;
                     if (typeof callback == "function") {
                         callback.call(element, region);
@@ -419,15 +428,16 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
              * @param cfg {Object} 区域配置对象。参看region配置
              */
             addRegion: function(opts, region, cfg) {
-                // 检查Region名称和是否已经有同名Region。名称必须是south, east, north, west或者centre. 
+                // 检查Region名称和是否已经有同名Region。名称必须是south, east, north或者west. 
                 if (!docks.hasOwnProperty(region) || !!opts.$dockedAreas[region]) return;
                 var callback = opts.afterAdd,
                     element = opts.$element.element;
-                if (region != "centre") {
+                if (region != "centre" && cfg.hasOwnProperty("size")) {
                     // 更新VM中的尺寸和Resizable属性
                     opts[region+"Region"].size = cfg.size;
-                    opts[region+"Region"].$inLayoutFlow = true;
+                    opts[region+"Region"].inLayoutFlow = true;
                     opts[region+"Region"].resizable = cfg.resizable;
+                    opts.updateRealSize(opts, opts[region+"Region"], region+"Region");
 
                     // 创建Region的DOM元素并插入文档 
                     var node = document.createElement("div");
@@ -463,15 +473,59 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
 
 
             /**
-             * @config {Function} 当stretchMax配置为true后，layout的父容器尺寸改变后，需要调用此函数重新计算布局大小。
+             * @config {Function} 当更改Layout尺寸后，需要调用此函数重新计算布局大小。
+             * @param opts {Object} vmodel
              */
-            updateLayoutSize: function () {
-                var element = this.$element.element;
-                if (this.stretchMax) {
-                    this.layoutWidth = avalon(element.parentNode).width();
-                    this.layoutHeight = avalon(element.parentNode).height();
+            updateLayoutSize: function (opts) {
+                var element = opts.$element.element;
+                if (opts.stretchMax) {
+                    opts.layoutWidth = avalon(element.parentNode).width();
+                    opts.layoutHeight = avalon(element.parentNode).height();
                 }
-                this.$updateNestedLayouts();
+
+                ["northRegion", "westRegion", "eastRegion", "southRegion"].forEach(function(region) {
+                    var resizable = false,
+                        size = opts[region].size;
+                    if (!opts[region].inLayoutFlow) return;
+                    opts.updateRealSize(opts, opts[region], region);
+                });
+
+                opts.$updateNestedLayouts();
+            },
+
+            /**
+             * @config {Function} 检测Layout是否包含一个区域。
+             * @param opts {Object} vmodel
+             * @param region {Object} east, south, west, north或者centre。
+             */
+            hasRegion: function(opts, region) {
+                var region = region + "Region";
+                return opts.hasOwnProperty(region) && opts[region].inLayoutFlow;
+            },
+
+            /**
+             * @config {Function} 获取一个区域的真实尺寸。
+             * @param opts {Object} vmodel
+             * @param region {Object} east, south, west或者north。
+             */
+            getRegionRealSize: function(opts, region) {
+                var region = region + "Region",
+                    regionSize = 0;
+                if (opts.hasOwnProperty(region) && opts[region].inLayoutFlow && region != "centreRegion") {
+                    regionSize = opts[region].realSize;
+                }
+                return regionSize;
+            },
+
+            updateRealSize: function(opts, regionConfig, region) {
+                if (region == "centreRegion") return;
+                var size = regionConfig.size,
+                    layoutSize = (region=="westRegion" || region=="eastRegion") ? opts.layoutWidth : opts.layoutHeight;
+                if (typeof size == 'string' && /^(100|[1-9]?\d(\.\d+?)?)%$/.test(size)) {
+                    regionConfig.realSize = layoutSize * parseFloat(size) / 100;
+                } else {
+                    regionConfig.realSize = regionConfig.size;
+                }
             }
             //
         };
@@ -480,15 +534,24 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
 );
 /**
  * @other
- * <p><b>region配置</b></p>
- * region配置是一个非常重要的配置项，下面是说明和默认值
+ * <p><b>region对象</b></p>
+ * region对象是一个非常重要的对象，下面是说明和默认值
  * ```js
- {
-    size: 0,            //区域尺寸。不可用于centre区域
-    resizable: false,   //是否增加一个resizer。不可用于centre区域
-    regionClass: "",    //额外的CSS
-    afterRemove: undefined, //区域被移除后的回调。不可用于centre区域。配置了本项后，移除区域时不会触发主配置的afterRemove回调
-    afterResize: undefined  //区域改变大小后的回调。不可用于centre区域。配置了本项后，改变区域大小时不会触发主要的afterResize回调
+{
+     //区域尺寸。不可用于centre区域。数字或者百分比。
+     size: 0, 
+
+     //是否增加一个resizer。不可用于centre区域
+     resizable: false,
+
+     //增加在区域上的CSS
+     regionClass: "", 
+
+     //区域被移除后的回调。不可用于centre区域。配置了本项后，移除区域时不会触发主配置的afterRemove回调
+     afterRemove: undefined,
+
+     //区域改变大小后的回调。不可用于centre区域。配置了本项后，改变区域大小时不会触发主要的afterResize回调
+     afterResize: undefined 
  }
  ```
  */
@@ -498,31 +561,5 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
  [最基础的Layout配置](avalon.layout.ex1.html)
  [移除和增加区域](avalon.layout.ex2.html)
  [嵌套的Layout](avalon.layout.ex3.html)
- *//*
-//针对可编辑div的定位
-        function positionCursor(obj) {
-            //光标定位到最后
-            if (obj.createTextRange) { //ie
-                var rtextRange = obj.createTextRange();
-                rtextRange.moveStart('character', obj.value.length);
-                rtextRange.collapse(true);
-                rtextRange.select();
-            } else if (obj.selectionStart) { //chrome "<input>"、"<textarea>"
-                obj.selectionStart = obj.value.length;
-            } else if (window.getSelection) {
-
-                var sel = window.getSelection();
-
-                var tempRange = document.createRange();
-                var t = obj.lastChild;
-                if (obj.childNodes.length == 1) {
-                    tempRange.setStart(obj.firstChild, obj.firstChild.length); //单行时可以定位到最后
-                } else if (obj.childNodes.length > 1) { //多行定位到最后
-                    tempRange.setStart(that, that.childNodes.length);
-                }
-
-                sel.removeAllRanges();
-                sel.addRange(tempRange);
-            }
-        }
+ [百分比尺寸的Layout，改变Layout尺寸](avalon.layout.ex4.html)
  */

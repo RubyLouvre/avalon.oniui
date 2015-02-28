@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>mmRouter-基于状态机的路由器</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="../chameleon/oniui-common.css">
+        <link rel="stylesheet" href="ppt/css/ppt.css">
+        <script src="../avalon.js"></script>
+        <script>
+            require(["mmRouter/ppt/app"], function() {
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="ppt" class="oni-helper-reset oni-helper-clearfix" 
+          ms-widget="loading, $loading" data-loading-type="img" data-loading-modal-background="#ccc" data-loading-modal-opacity="0.5">
+        <h1 style="display:none;">mmRouter-基于状态机的路由器</h1>
+        <div class="slider-view oni-helper-reset">
+            <div class="oni-mmRouter-slide oni-helper-reset slider-item" ms-view>
+            </div>
+        </div>
+    </body>
+</html>

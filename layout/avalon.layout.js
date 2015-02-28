@@ -537,12 +537,21 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
  * <p><b>region对象</b></p>
  * region对象是一个非常重要的对象，下面是说明和默认值
  * ```js
- {
-    size: 0,            //区域尺寸。不可用于centre区域。数字或者百分比。
-    resizable: false,   //是否增加一个resizer。不可用于centre区域
-    regionClass: "",    //额外的CSS
-    afterRemove: undefined, //区域被移除后的回调。不可用于centre区域。配置了本项后，移除区域时不会触发主配置的afterRemove回调
-    afterResize: undefined  //区域改变大小后的回调。不可用于centre区域。配置了本项后，改变区域大小时不会触发主要的afterResize回调
+{
+     //区域尺寸。不可用于centre区域。数字或者百分比。
+     size: 0, 
+
+     //是否增加一个resizer。不可用于centre区域
+     resizable: false,
+
+     //增加在区域上的CSS
+     regionClass: "", 
+
+     //区域被移除后的回调。不可用于centre区域。配置了本项后，移除区域时不会触发主配置的afterRemove回调
+     afterRemove: undefined,
+
+     //区域改变大小后的回调。不可用于centre区域。配置了本项后，改变区域大小时不会触发主要的afterResize回调
+     afterResize: undefined 
  }
  ```
  */

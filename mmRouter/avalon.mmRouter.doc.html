@@ -398,14 +398,14 @@ mmRouter的使用
                                     <td>config.abort beforeUnload return false之后，触发的回调，this指向mmState对象，参数同beforeUnload</td>
                                 </tr>
                                 <tr>
-                                    <td>config.begin</td>
-                                    <td>Function</td>
-                                    <td>config.begin 开始切换的回调，this指向mmState对象，参数同beforeUnload</td>
-                                </tr>
-                                <tr>
                                     <td>config.unload</td>
                                     <td>Function</td>
                                     <td>config.unload url切换时候触发，this指向mmState对象，参数同beforeUnload</td>
+                                </tr>
+                                <tr>
+                                    <td>config.begin</td>
+                                    <td>Function</td>
+                                    <td>config.begin 开始切换的回调，this指向mmState对象，参数同beforeUnload</td>
                                 </tr>
                                 <tr>
                                     <td>config.onload</td>
@@ -423,9 +423,9 @@ mmRouter的使用
                                     <td>config.onViewEnter.arguments[0] 新视图节点</td>
                                 </tr>
                                 <tr>
-                                    <td>config.onViewEnter.arguments[0]</td>
+                                    <td>config.onViewEnter.arguments[1]</td>
                                     <td>Node</td>
-                                    <td>config.onViewEnter.arguments[0] 旧的节点</td>
+                                    <td>config.onViewEnter.arguments[1] 旧的节点</td>
                                 </tr>
                                 <tr>
                                     <td>config.onloadError</td>

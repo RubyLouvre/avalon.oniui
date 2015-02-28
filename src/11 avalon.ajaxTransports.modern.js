@@ -116,8 +116,13 @@ var transports = avalon.ajaxTransports = {
                 parent.removeChild(node)
             }
             if (!forceAbort) {
-                var jsonpCallback = this.jsonpCallback.startsWith('avalon.') ? avalon[this.jsonpCallback.replace(/avalon\./, '')] : window[this.jsonpCallback]
-                var args = typeof jsonpCallback === "function" ? [500, "error"] : [200, "success"]
+                var args;
+                if (this.jsonpCallback) {
+                    var jsonpCallback = this.jsonpCallback.startsWith('avalon.') ? avalon[this.jsonpCallback.replace(/avalon\./, '')] : window[this.jsonpCallback]
+                    args = typeof jsonpCallback === "function" ? [500, "error"] : [200, "success"]
+                } else {
+                    args = [200, "success"]
+                }
                 this.dispatch.apply(this, args)
             }
         }

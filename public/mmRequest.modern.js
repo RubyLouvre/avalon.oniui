@@ -568,10 +568,12 @@ var transports = avalon.ajaxTransports = {
 
                     var text = transport.responseText
                     var statusText = transport.statusText
-                    var status = transport.status
-                    var status = xhrSuccessStatus[status] || status
+                    var status = xhrSuccessStatus[status] || transport.status
 
-                    this.response = transport.response
+                    //设置response
+                    if (this.useResponseType) {
+                        this.response = transport.response
+                    }
                     this.responseText = typeof text === "string" ? text : void 0
                     this.responseXML = (transport.responseXML || {}).documentElement
                     this.responseHeadersString = transport.getAllResponseHeaders()

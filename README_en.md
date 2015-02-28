@@ -14,6 +14,19 @@ Install with [bower](http://bower.io/):
 bower install mm-request
 ```
 
+Starting
+------------
+
+Avalon follows the [AMD](https://github.com/amdjs/amdjs-api) specification. Make sure you have `avalon.js`, `mmRequest.js` and `mmPromise.js` in the folder. Then, you can use mmRequest like the following:
+
+```javascript
+require(['./mmRequest'], function(avalon) {
+    avalon.ajax({
+        url: '/foobar'
+    });
+});
+```
+
 Document
 -------------
 mmRequest provides the following methods:
@@ -43,8 +56,9 @@ avalon.param(obj)
 avalon.unparam(str)
 // Convert a set of form elements to a string.
 avalon.serialize(element)
-
 ```
+
+For more information, see the `/docs`.
 
 Demo
 ----

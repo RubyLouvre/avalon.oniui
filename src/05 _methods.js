@@ -86,25 +86,28 @@ var XHRMethods = {
         }
         this._transport = this.transport;
         // 到这要么成功，调用success, 要么失败，调用 error, 最终都会调用 complete
-        var successFn = this.options.success,
-            errorFn = this.options.error,
-            completeFn = this.options.complete
+//        var successFn = this.options.success,
+//            errorFn = this.options.error,
+//            completeFn = this.options.complete
 
         if (isSuccess) {
             avalon.log("成功加载数据")
-            if (typeof successFn === "function") {
-                successFn.call(this, this.response, statusText, this)
-            }
-            this._resolve(this.response, statusText, this)
+            this.resolve(this.response, statusText, this)
+//            if (typeof successFn === "function") {
+//                successFn.call(this, this.response, statusText, this)
+//            }
+//            this._resolve(this.response, statusText, this)
         } else {
-            if (typeof errorFn === "function") {
-                errorFn.call(this, statusText, this.error || statusText)
-            }
-            this._reject(this, statusText, this.error || statusText)
+             this.reject(statusText, this.error || statusText)
+//            if (typeof errorFn === "function") {
+//                errorFn.call(this, statusText, this.error || statusText)
+//            }
+//            this._reject(this, statusText, this.error || statusText)
         }
-        if (typeof completeFn === "function") {
-            completeFn.call(this, this, statusText)
-        }
+        this.always(this, statusText)
+//        if (typeof completeFn === "function") {
+//            completeFn.call(this, this, statusText)
+//        }
         delete this.transport
     }
 }

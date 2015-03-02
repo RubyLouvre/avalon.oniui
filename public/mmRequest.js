@@ -1,7 +1,7 @@
 //=========================================
 //  数据交互模块 by 司徒正美
 //==========================================
-define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
+define("mmRequest", ["avalon"], function(avalon) {
 var global = this || (0, eval)("this")
 var DOC = global.document
 var encode = encodeURIComponent
@@ -244,25 +244,28 @@ var XHRMethods = {
         }
         this._transport = this.transport;
         // 到这要么成功，调用success, 要么失败，调用 error, 最终都会调用 complete
-        var successFn = this.options.success,
-            errorFn = this.options.error,
-            completeFn = this.options.complete
+//        var successFn = this.options.success,
+//            errorFn = this.options.error,
+//            completeFn = this.options.complete
 
         if (isSuccess) {
             avalon.log("成功加载数据")
-            if (typeof successFn === "function") {
-                successFn.call(this, this.response, statusText, this)
-            }
-            this._resolve(this.response, statusText, this)
+            this.resolve(this.response, statusText, this)
+//            if (typeof successFn === "function") {
+//                successFn.call(this, this.response, statusText, this)
+//            }
+//            this._resolve(this.response, statusText, this)
         } else {
-            if (typeof errorFn === "function") {
-                errorFn.call(this, statusText, this.error || statusText)
-            }
-            this._reject(this, statusText, this.error || statusText)
+             this.reject(statusText, this.error || statusText)
+//            if (typeof errorFn === "function") {
+//                errorFn.call(this, statusText, this.error || statusText)
+//            }
+//            this._reject(this, statusText, this.error || statusText)
         }
-        if (typeof completeFn === "function") {
-            completeFn.call(this, this, statusText)
-        }
+        this.always(this, statusText)
+//        if (typeof completeFn === "function") {
+//            completeFn.call(this, this, statusText)
+//        }
         delete this.transport
     }
 }
@@ -282,15 +285,59 @@ avalon.ajax = function(opts, promise) {
         uniqueID: ("" + Math.random()).replace(/0\./, ""),
         status: 0
     }
-    var _reject, _resolve
-    var promise = new Promise(function(resolve, reject) {
-        _resolve = resolve
-        _reject = reject
-    })
+//    var _reject, _resolve
+//    var promise = new Promise(function(resolve, reject) {
+//        _resolve = resolve
+//        _reject = reject
+//    })
+//
+//    promise.options = opts
+//    promise._reject = _reject
+//    promise._resolve = _resolve
 
-    promise.options = opts
-    promise._reject = _reject
-    promise._resolve = _resolve
+    var promise = {
+        then: function(a, b) {
+            if (typeof a === "function")
+                callbacks.successList.push(a)
+            if (typeof b === "function")
+                callbacks.errorList.push(b)
+            return promise
+        },
+        complete: function(a) {
+            if (typeof a === "function")
+                callbacks.completeList.push(a)
+            return promise
+        },
+        success: function(a) {
+            return promise.then(a)
+        },
+        error: function(a) {
+            return promise.then(null, a)
+        },
+        options: opts
+    }
+    var callbacks = {}
+    var methods = {
+        success: "resolve",
+        error: "reject",
+        complete: "always"
+    }
+    promise.done = promise.success
+    promise.fail = promise.error
+    "success,error,complete".replace(/\w+/g, function(name) {
+        var list = callbacks[name + "List"] = [] //添加各种回调列队
+        promise[methods[name]] = function() { //添加各种执行回调的方法
+            for (var i = 0, fn; fn = list[i++]; ) {
+                fn.apply(promise, arguments)
+                promise[methods[name]] = function() {
+                }
+            }
+        }
+        if (typeof opts[name] === "function") {//将各种回调放入对应的列队中
+            list.push(opts[name])
+            delete opts[name]
+        }
+    })
 
     avalon.mix(promise, XHRProperties, XHRMethods)
 
@@ -419,13 +466,13 @@ avalon.param = function( a ) {
     return s.join( "&" ).replace( r20, "+" );
 }
 
-function isDate(a) {
-    return Object.prototype.toString.call(a) === "[object Date]"
-}
-function isValidParamValue(val) {
-    var t = typeof val; // 值只能为 null, undefined, number, string, boolean
-    return val == null || (t !== 'object' && t !== 'function')
-}
+//function isDate(a) {
+//    return Object.prototype.toString.call(a) === "[object Date]"
+//}
+//function isValidParamValue(val) {
+//    var t = typeof val; // 值只能为 null, undefined, number, string, boolean
+//    return val == null || (t !== 'object' && t !== 'function')
+//}
 function paramInner( prefix, obj, add ) {
     var name;
     if (Array.isArray( obj ) ) {
@@ -441,27 +488,6 @@ function paramInner( prefix, obj, add ) {
     } else {
         // Serialize scalar item.
         add( prefix, obj );
-    }
-}
-
-if (!Date.prototype.toISOString) {
-    new function() {
-        function pad(number) {
-            if (number < 10) {
-                return '0' + number
-            }
-            return number
-        }
-        Date.prototype.toISOString = function() {
-            return this.getUTCFullYear() +
-                    '-' + pad(this.getUTCMonth() + 1) +
-                    '-' + pad(this.getUTCDate()) +
-                    'T' + pad(this.getUTCHours()) +
-                    ':' + pad(this.getUTCMinutes()) +
-                    ':' + pad(this.getUTCSeconds()) +
-                    '.' + (this.getUTCMilliseconds() / 1000).toFixed(3).slice(2, 5) +
-                    'Z';
-        }
     }
 }
 

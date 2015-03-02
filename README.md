@@ -18,7 +18,7 @@ bower install mm-request
 开始
 ------------
 
-Avalon 遵循 [AMD](https://github.com/amdjs/amdjs-api) 规范。保证能加载到 `avalon.js`、`mmRequest.js` 和 `mmPromise.js` 这三个文件。之后，你便可以像下面这样使用 mmRequest 了：
+Avalon 遵循 [AMD](https://github.com/amdjs/amdjs-api) 规范。在引入 `avalon.js` 和 `mmRequest.js` 之后，你便可以像下面这样使用 mmRequest 了：
 
 ```javascript
 require(['./mmRequest'], function(avalon) {

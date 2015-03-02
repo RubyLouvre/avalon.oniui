@@ -1,6 +1,6 @@
 'use strict';
 
-require(['./mmRequest', 'ready!'], function(avalon) {
+require(['./mmRequest', 'domReady!'], function(avalon) {
 
 	var corssDomain = '//127.0.0.1:9000/demo';
 

@@ -1,7 +1,19 @@
-## mmState
+## mmRouter插件
+
+#### √ mmState
+
+状态机驱动视图 + controller运作
+
+url变化 => 状态机状态变化 => 更新数据、刷新视图 => 更新url
+
 #### √ 抽象页面：SPA = state machine
 
-![states](./ppt/img/states.jpg)
 
-+ 逐层进入，逐层退出
-+ 切换过程可阻止、暂停、继续
+##### 状态机要素
+
++ 状态集
++ 当前状态 - currentState & activeState
++ transition
+
+##### 模型
+![states](./ppt/img/states.jpg)

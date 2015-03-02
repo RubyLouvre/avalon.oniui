@@ -1,7 +1,9 @@
 define(["mmRouter/mmState", 
 		"mmRouter/ppt/model/ppt", 
 		"mmRequest/mmRequest", 
-		"loading/avalon.loading", "mmRouter/ppt/markdown.min"], function () {
+		"loading/avalon.loading", 
+		"mmRouter/ppt/highlight.pack", 
+		"mmRouter/ppt/markdown.min"], function () {
 	avalon.state("ppt", {
 		url: "/:pageNumber",
 		controller: "ppt",
@@ -43,6 +45,22 @@ define(["mmRouter/mmState",
         onload: function() {
         	if(avalon.vmodels.$loading) avalon.vmodels.$loading.toggle = false
         	avalon.vmodels.ppt.curentPage = avalon.vmodels.ppt._curentPage
+        	// 语法高亮
+        	// only in modern browser
+        	if(document.querySelectorAll) {
+        		avalon.each(document.querySelectorAll(".oni-mmRouter-enter"), function(i, node) {
+        			var $node = avalon(node)
+        			if($node.hasClass("oni-mmRouter-leave")) return
+        			avalon.each(node.querySelectorAll("code"), function(i, code) {
+        				if(code.textContent.match(/<[^>]+>/g)) {
+        					code.className = "lang-html"
+        				} else {
+        					// code.className = "lang-javascript"
+        				}
+        				hljs.highlightBlock(code)
+        			})
+        		})
+        	}
         }
 	})
 	avalon.router.errorback = function() {

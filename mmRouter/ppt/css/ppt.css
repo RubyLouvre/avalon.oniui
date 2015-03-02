@@ -25,7 +25,7 @@ body {
     float: left;
     display: inline;
     transition: margin-left .5s;
-    overflow-y:auto; 
+    overflow-y: auto;
 }
 .slider-1 {
     width: 800px;
@@ -36,9 +36,11 @@ body {
 }
 .slider-1 h5 {
     text-align: right;
-    font-size: 20px;
     padding-right: 130px;
     margin-top: 30px;
+}
+h5 {
+    font-size: 20px;
 }
 .slider-1 h1 {
     text-align: center;
@@ -61,8 +63,7 @@ body {
 }
 .slider-page p {
     font-size: 18px;
-    text-indent: 20px;
-    line-height: 20px;
+    line-height: 24px;
 }
 .slider-page ol {
     margin-left: 20px;
@@ -90,5 +91,5 @@ blockquote {
     margin-bottom: 10px;
 }
 .slider-page blockquote p {
-	text-indent: 0;
+    text-indent: 0;
 }

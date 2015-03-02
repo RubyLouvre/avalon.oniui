@@ -93,3 +93,26 @@ blockquote {
 .slider-page blockquote p {
     text-indent: 0;
 }
+p img {
+    vertical-align: top;
+}
+.list {
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+.list li {
+	list-style: none;
+}
+.toggle {
+	/*visibility: hidden;*/
+}
+.hover-show {
+	display: none;
+}
+.hover-show a {
+	color: #000;
+}
+.hover .hover-show {
+	display: list-item;
+}

@@ -21,7 +21,7 @@ define(["mmRouter/mmState",
 				ppt.content = markdown.toHTML(res)
 				setTimeout(function() {
 					done()
-				}, pageNumber > 1 ? 0 : 0 * 2000)
+				}, pageNumber > 1 ? 0 : 2000)
 			}, "text")
 		}
 	})

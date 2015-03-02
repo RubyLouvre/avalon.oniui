@@ -447,12 +447,12 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
      *  @param {Object} config 配置对象
      *  @param {Function} config.beforeUnload 开始切前的回调，this指向router对象，第一个参数是fromState，第二个参数是toState，return false可以用来阻止切换进行
      *  @param {Function} config.abort beforeUnload return false之后，触发的回调，this指向mmState对象，参数同beforeUnload
-     *  @param {Function} config.begin  开始切换的回调，this指向mmState对象，参数同beforeUnload
      *  @param {Function} config.unload url切换时候触发，this指向mmState对象，参数同beforeUnload
+     *  @param {Function} config.begin  开始切换的回调，this指向mmState对象，参数同beforeUnload
      *  @param {Function} config.onload 切换完成并成功，this指向mmState对象，参数同beforeUnload
      *  @param {Function} config.onViewEnter 视图插入动画函数，有一个默认效果
      *  @param {Node} config.onViewEnter.arguments[0] 新视图节点
-     *  @param {Node} config.onViewEnter.arguments[0] 旧的节点
+     *  @param {Node} config.onViewEnter.arguments[1] 旧的节点
      *  @param {Function} config.onloadError 加载模板资源出错的回调，this指向对应的state，第一个参数对应的模板配置keyname，第二个参数是对应的state
     */
     avalon.state.config = function(config) {

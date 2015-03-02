@@ -33,12 +33,12 @@ function comboFiles(files, writer, lastCallback) {
 var compatibleFiles = [
     "00 inter", "01 variable", "02 xhr.old", "03 parseXML", "04 ajaxExtend",
     "05 _methods", "06 methods", "07 avalon.ajaxConverters", "08 avalon.param",
-    "08 avalon.param.shim", "09 avalon.unparam", "10 avalon.serialize",
+     "09 avalon.unparam", "10 avalon.serialize",//"08 avalon.param.shim",
     "11 avalon.ajaxTransports.old", "12 outer"
 ]
 //avalon.modern.js 所需要合并的子文件
 var modernFiles = compatibleFiles.concat()
-modernFiles.splice(modernFiles.indexOf("08 avalon.param.shim"), 1)
+// modernFiles.splice(modernFiles.indexOf("08 avalon.param.shim"), 1)
 modernFiles[modernFiles.indexOf("02 xhr.old")] = "02 xhr.modern"
 modernFiles[modernFiles.indexOf("03 parseXML")] = "03 parseXML.modern"
 modernFiles[modernFiles.indexOf("11 avalon.ajaxTransports.old")] = "11 avalon.ajaxTransports.modern"

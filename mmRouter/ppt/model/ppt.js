@@ -1,5 +1,5 @@
 define([], function() {
-	var dict = ["", "home", 1, 2, 3, 4, 5, 6, 7, 8, 9, "thx"]
+	var dict = ["", 1, 2, 3, 4, 5, 6, 7, 8, 9, "thx"]
 	var dict = ["", "home", "work", 2, 3, 4, 5, 6, 7, 8, 9, "thx", "tree", "tree.thx", "velocity", "velocity.thx", "weAPI", "oniui.tool", "qa"]
 	var ppt = avalon.define("ppt", function(vm) {
 		vm.dict = dict

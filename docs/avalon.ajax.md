@@ -30,7 +30,7 @@ A set of key/value pairs that configure the Ajax request. `url` is required whil
 
 > **complete**
 
-> Type: Function( [msXHR](#msXHR) msXHR, String textStatus )
+> Type: Function( [msXHR](#the-msxhr-object) msXHR, String textStatus )
 
 > A function to be called when the request finishes. The function gets passed two arguments: The msXHR object and a string categorizing the status of the request.
 

@@ -20,13 +20,13 @@ avalon.param = function( a ) {
     return s.join( "&" ).replace( r20, "+" );
 }
 
-function isDate(a) {
-    return Object.prototype.toString.call(a) === "[object Date]"
-}
-function isValidParamValue(val) {
-    var t = typeof val; // 值只能为 null, undefined, number, string, boolean
-    return val == null || (t !== 'object' && t !== 'function')
-}
+//function isDate(a) {
+//    return Object.prototype.toString.call(a) === "[object Date]"
+//}
+//function isValidParamValue(val) {
+//    var t = typeof val; // 值只能为 null, undefined, number, string, boolean
+//    return val == null || (t !== 'object' && t !== 'function')
+//}
 function paramInner( prefix, obj, add ) {
     var name;
     if (Array.isArray( obj ) ) {

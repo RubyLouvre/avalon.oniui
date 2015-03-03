@@ -1,7 +1,9 @@
 ## 如何使用 - Base
 
 #### √ mmRouter or mmRouter + mmHistory
-    
+
+Browser    
+
     require(["mmRouter/mmRouter"], function () {
         // 添加一条rule规则
         avalon.router.get("/tab1", function(a) {
@@ -24,6 +26,27 @@
             hashPrefix: ""
             // more options
         });
+    })
+
+maybe Server：mmRouter only
+
+    require(["mmRouter/mmRouter"], function () {
+        // 添加一条rule规则
+        avalon.router.get("/tab1", function(a) {
+            // out push
+        })
+        // 重定向
+        avalon.router.when(["/nihao/:id"], "/tab:id");
+
+        // 出错情况回调
+        avalon.router.errorback = function() {
+            // output
+        };
+
+        // your server listen code
+        yourServer.listen(xxx, function(url) {
+            avalon.router.navigate(url)
+        })
     })
 
 #### √ 存在的一些问题：

@@ -4,12 +4,25 @@
 
 layout
 
-    <!-- 父容器埋点 -->
-    <div class="slider-view oni-helper-reset">
-        <!-- 带oni-mmRouter-slide的会使用cloneNode，用以实现一些动画效果 -->
-        <div class="oni-mmRouter-slide oni-helper-reset slider-item" ms-view="viewname">
-        </div>
-    </div>
+    <html>
+        <head>
+            <title>mmRouter-基于状态机的路由器</title>
+            <script>
+                require(["mmRouter/ppt/app"], function() {
+                    avalon.scan()
+                })
+            </script>
+        </head>
+        <body 
+               ms-controller="ppt">
+                <!-- 父容器埋点 -->
+                <div class="slider-view oni-helper-reset">
+                    <!-- 带oni-mmRouter-slide的会使用cloneNode，用以实现一些动画效果 -->
+                    <div class="oni-mmRouter-slide oni-helper-reset slider-item" ms-view="viewname">
+                    </div>
+                </div>
+        </body>
+    </html>
 
 ppt/views/tpl.html
 
@@ -18,7 +31,7 @@ ppt/views/tpl.html
         {\{content|html}}
     </div>
 
-JavaScript
+app.js
 
     define(["mmRouter/mmState", 
             "mmRouter/ppt/model/ppt"], function () {
@@ -65,6 +78,14 @@ JavaScript
         avalon.history.start({
             hashPrefix: "",
             fireAnchor: false
+        })
+    })
+
+ppt.js
+
+    define([], function() {
+        var ppt = avalon.define("ppt", function(vm) {
+            // xxx
         })
     })
 

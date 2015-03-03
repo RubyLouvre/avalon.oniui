@@ -21,7 +21,7 @@ define(["mmRouter/mmState",
 				ppt.content = markdown.toHTML(res)
 				setTimeout(function() {
 					done()
-				}, pageNumber > 1 ? 0 : 2000)
+				}, pageNumber > 1 ? 0 : mmState.prevState ? 0 : 2000)
 			}, "text")
 		}
 	})
@@ -51,6 +51,8 @@ define(["mmRouter/mmState",
         		avalon.each(document.querySelectorAll(".oni-mmRouter-enter"), function(i, node) {
         			var $node = avalon(node)
         			if($node.hasClass("oni-mmRouter-leave")) return
+		        	var h2 = node.getElementsByTagName("h2")[0] || node.getElementsByTagName("h1")[0]
+		        	if(h2) document.title = h2.innerHTML
         			avalon.each(node.querySelectorAll("code"), function(i, code) {
         				if(code.textContent.match(/<[^>]+>/g)) {
         					code.className = "lang-html"

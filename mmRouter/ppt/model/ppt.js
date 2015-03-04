@@ -1,19 +1,27 @@
 define([], function() {
+	var dict = ["", "home", 1, 2, 3, 4, 5, 6, 7, 8, 9, "thx"]
+	var dict = ["", "home", "work", 2, 3, 4, 5, 6, 7, 8, 9, "thx", "tree", "qa"]
 	var ppt = avalon.define("ppt", function(vm) {
-		vm.curentPage = 1
-		vm.totalPage = 20
+		vm.curentPage = vm.firstPage
+		vm._curentPage = vm.firstPage
+		vm.totalPage = dict.length - 1
 		vm.content = ""
 
 		vm.$skipArray = ["content"]
 
 		vm.next = function() {
-			if(vm.curentPage + 1 <= vm.totalPage) vm.curentPage++
+			if(vm._curentPage + 1 <= vm.totalPage) {
+				vm._curentPage++
+			}
 		}
 		vm.prev = function() {
-			if(vm.curentPage - 1 > 0) vm.curentPage--
+			if(vm._curentPage - 1 > 0) vm._curentPage--
+		}
+		vm.getHTML = function(pageNumber) {
+			return dict[pageNumber] || "qa"
 		}
 	})
-	ppt.$watch("curentPage", function(now) {
+	ppt.$watch("_curentPage", function(now) {
 		avalon.router.navigate("/" + now)
 	})
 	avalon.bind(window, "keyup", function(e) {

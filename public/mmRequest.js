@@ -605,7 +605,21 @@ var transports = avalon.ajaxTransports = {
             if (opts.crossDomain && "withCredentials" in transport) {
                 transport.withCredentials = true
             }
-            this.requestHeaders["X-Requested-With"] = "XMLHttpRequest"
+
+            /*
+             * header 中设置 X-Requested-With 用来给后端做标示：
+             * 这是一个 ajax 请求。
+             *
+             * 在 Chrome、Firefox 3.5+ 和 Safari 4+ 下，
+             * 在进行跨域请求时设置自定义 header，会触发 preflighted requests，
+             * 会预先发送 method 为 OPTIONS 的请求。
+             *
+             * 于是，如果跨域，禁用此功能。
+             */
+            if (!opts.crossDomain) {
+                this.requestHeaders["X-Requested-With"] = "XMLHttpRequest"
+            }
+
             for (var i in this.requestHeaders) {
                 transport.setRequestHeader(i, this.requestHeaders[i] + "")
             }

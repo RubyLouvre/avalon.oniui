@@ -2,7 +2,11 @@
 
 #### √ mmRouter + mmHistory + mmState
 
-layout
+
+##### 代码目录结构
+![工程化](./ppt/img/gch.jpg)
+
+##### layout.html
 
     <html>
         <head>
@@ -24,14 +28,13 @@ layout
         </body>
     </html>
 
-ppt/views/tpl.html
+##### ppt/views/tpl.html
 
-    <div class="slider-page"
-         ms-if="curentPage!=firstPage">
+    <div class="slider-page">
         {\{content|html}}
     </div>
 
-app.js
+##### app.js
 
     define(["mmRouter/mmState", 
             "mmRouter/ppt/model/ppt"], function () {
@@ -81,7 +84,7 @@ app.js
         })
     })
 
-ppt.js
+##### ppt.js
 
     define([], function() {
         var ppt = avalon.define("ppt", function(vm) {

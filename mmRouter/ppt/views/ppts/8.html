@@ -1,0 +1,71 @@
+## 如何使用
+
+#### √ mmRouter + mmHistory + mmState
+
+layout
+
+    <!-- 父容器埋点 -->
+    <div class="slider-view oni-helper-reset">
+        <!-- 带oni-mmRouter-slide的会使用cloneNode，用以实现一些动画效果 -->
+        <div class="oni-mmRouter-slide oni-helper-reset slider-item" ms-view="viewname">
+        </div>
+    </div>
+
+ppt/views/tpl.html
+
+    <div class="slider-page"
+         ms-if="curentPage!=firstPage">
+        {\{content|html}}
+    </div>
+
+JavaScript
+
+    define(["mmRouter/mmState", 
+            "mmRouter/ppt/model/ppt"], function () {
+        avalon.state("ppt", {//定义一个状态
+            url: "/:pageNumber",
+            controller: "ppt",
+            views: {// 视图
+                "viewname": {
+                    templateUrl: "ppt/views/tpl.html"
+                }
+            },
+            onChange: function(pageNumber) {
+                // 异步
+                var done = this.async()
+                setTimeout(function() {
+                    done()
+                }, 1000)
+            }
+        })
+        // 全局配置
+        avalon.state.config({
+            // 动画效果，需要在绑定了ms-view的元素上加oni-mmRouter-slide className
+            onViewEnter: function(newNode, oldNode) {
+                ...
+            },
+            // 退出当前状态前
+            beforeUnload: function() {
+            },
+            // 退出当前状态
+            unload: function() {
+            },
+            // 开始切换
+            begin: function() {
+                比如，显示loading效果
+            },
+            // 切换完成
+            onload: function() {
+                比如，隐藏loading
+            }
+        })
+        avalon.router.errorback = function() {
+            avalon.router.redirect("/1")
+        }
+        avalon.history.start({
+            hashPrefix: "",
+            fireAnchor: false
+        })
+    })
+
+[more](http://ued.qunar.com/oniui/mmRouter/avalon.mmRouter.doc.html)

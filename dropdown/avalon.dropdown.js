@@ -392,8 +392,8 @@ define(["avalon",
                     listNode = createListNode();
                     list = listNode.firstChild;
                     vmodel.container.appendChild(listNode)
-                    avalon.scan(list, [vmodel].concat(vmodels))
                     listNode = list
+                    avalon.scan(list, [vmodel].concat(vmodels))
                     vmodel.menuNode = document.getElementById("menu-" + vmodel.$id)     //下拉列表框内层容器 （包裹滚动条部分的容器）
                     vmodel.dropdownNode = document.getElementById("list-" + vmodel.$id) //下拉列表框内容（有滚动条的部分）
                 }

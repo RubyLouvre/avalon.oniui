@@ -164,6 +164,8 @@ define(["../avalon.getModel",
                     })
                 }
             }
+            vm.$yearVmId = vm.$id+"year";
+            vm.$monthVmId = vm.$id+"month";
             vm.$yearOpts = {
                 width: 60,
                 listWidth: 60,
@@ -312,13 +314,13 @@ define(["../avalon.getModel",
             }
             // 年份选择器渲染ok之后为其绑定dropdown组件并扫描渲染出dropdown
             vm._afterYearRendered = function() {
-                this.setAttribute("ms-widget", "dropdown,$,$yearOpts")
+                this.setAttribute("ms-widget", ["dropdown", vm.$yearVmId, "$yearOpts"].join(","))
                 this.setAttribute("ms-duplex", "year")
                 avalon.scan(this, vmodel)
             }
             // 月份选择器渲染ok之为其绑定dropdown组件并扫描渲染出dropdown
             vm._afterMonthRendered = function() {
-                this.setAttribute("ms-widget", "dropdown,$,$monthOpts")
+                this.setAttribute("ms-widget", ["dropdown", vm.$monthVmId, "$monthOpts"].join(","))
                 this.setAttribute("ms-duplex", "_month")
                 avalon.scan(this, vmodel)
             }
@@ -480,7 +482,12 @@ define(["../avalon.getModel",
                     vmodel.year = elementYear
                 } else if (vmodel.month != elementMonth) {
                     vmodel.month = elementMonth
-                } 
+                }
+
+                // 防止Month, Year下拉框的浮层不被关闭。
+                avalon.vmodels[vmodel.$yearVmId] && (avalon.vmodels[vmodel.$yearVmId].toggle = false);
+                avalon.vmodels[vmodel.$monthVmId] && (avalon.vmodels[vmodel.$monthVmId].toggle = false);
+
                 vmodel.onClose(new Date(vmodel.year,vmodel.month,vmodel.day), vmodel)
             }
         })

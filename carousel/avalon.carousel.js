@@ -9,7 +9,7 @@
 
 define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 	//获取当前JS绝对路径
-	var path,
+	var path = "",
 		t=document.getElementsByTagName("SCRIPT");
 	for(var i in t){
 		if(t[i].outerHTML && t[i].outerHTML.indexOf("avalon.carousel.js") !== -1){
@@ -104,7 +104,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 					var image_preload = new Image()
 					image_preload.src = images[i].src
 				}
-				icons.push("/images/arrows-left-hover-icon.png","/images/arrows-right-hover-icon.png")
+				icons.push("./images/arrows-left-hover-icon.png","./images/arrows-right-hover-icon.png")
 				for (var i = 0; i < icons.length; i++) {
 					icons[i] = path + icons[i]
 					var image_preload = new Image()

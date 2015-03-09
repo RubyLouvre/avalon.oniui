@@ -443,7 +443,7 @@ define(["avalon",
             };
             vm._setColumnWidth = function (resize) {
                 var cells = vmodel._container.getElementsByTagName('tr')[0].cells, columns = vmodel.columns, _columns = columns.$model, $gridContainer = avalon(vmodel.container), containerWidth = $gridContainer.width(), minColumnWidth = getMinColumnWidth(_columns), firstStringColumn = getFirstStringColumn(columns, vmodel);
-                if (minColumnWidth > containerWidth && !resize) {
+                if (minColumnWidth > containerWidth && !resize || !vm.autoResize) {
                     $gridContainer.css('width', minColumnWidth);
                     firstStringColumn.width = firstStringColumn.configWidth;
                 } else {
@@ -624,6 +624,7 @@ define(["avalon",
                 }
                 element.resizeTimeoutId = 0;
                 callbacksNeedRemove.resizeCallback = avalon(window).bind('resize', function () {
+                    if(!vmodel.autoResize) return
                     clearTimeout(element.resizeTimeoutId);
                     var clientWidth = avalon(window).width();
                     if (clientWidth <= vmodel.containerMinWidth) {
@@ -648,6 +649,7 @@ define(["avalon",
     widget.defaults = {
         container: '',
         // element | id
+        autoResize: true,
         data: [],
         columns: [],
         allChecked: true,

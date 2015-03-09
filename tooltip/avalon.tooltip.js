@@ -451,7 +451,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
         function tooltipELementMaker(container) {
             var f = avalon.parseHTML(vmodel.template)
             var tooltipElem = f.childNodes[0]
-            container = container || document.body
+            container = (avalon.isFunction(container) ? container() : container) || document.body
             container.appendChild(f)
             return tooltipElem
         }

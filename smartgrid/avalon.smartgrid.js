@@ -221,6 +221,7 @@ define(["avalon",
             ],    //默认[10,20,50,100]
             onInit: function(pagerVM, options, vmodels) {
                 vmodel && (vmodel.pager = pagerVM)
+                pagerVM && vmodel._entryCount(pagerVM)
             }
         }
         options.pageable = options.pageable !== void 0 ? options.pageable : true;
@@ -243,6 +244,7 @@ define(["avalon",
                 pager.onInit = function(pagerVM, options, vmodels) {
                     vmodel && (vmodel.pager = pagerVM)
                     onInit(pagerVM, options, vmodels)
+                    pagerVM && vmodel._entryCount(pagerVM)
                 }
             }
             avalon.mix(options.$pagerConfig, options.pager)
@@ -287,6 +289,7 @@ define(["avalon",
             vm._filterCheckboxData = [];
             vm.loadingVModel = null;
             vm._dataRender = false
+            vm.perPages = void 0
             vm._hiddenAffixHeader = function(column, allChecked) {
                 var selectable = vmodel.selectable
                 return selectable && selectable.type && column.key=='selected' && !allChecked
@@ -303,6 +306,16 @@ define(["avalon",
                 });
                 return selectedData.concat(vmodel._enabledData);
             };
+            vm._entryCount = function(pagerVM) {
+                if(vm.perPages !== void 0) return
+                function countEntry(n) {
+                    var data = vm.data
+                    vm.perPages = n
+                    if(data.length > n) vm.render(data.slice(0, n))
+                }
+                pagerVM.$watch("perPages", countEntry)
+                countEntry(pagerVM.perPages)
+            }
             vm.selectAll = function (b) {
                 b = b !== void 0 ? b : true;
                 vmodel._selectAll(null, b);
@@ -466,6 +479,9 @@ define(["avalon",
                         var data = datas[j];
                         data[name] = data[name] !== void 0 ? data[name] : column.defaultValue;
                     }
+                }
+                if(vm.pageable && vm.pager && vm.pager.perPages) {
+                    if(datas.length > vm.pager.perPages) datas = datas.slice(0, vm.pager.perPages)
                 }
                 html = fn({
                     data: datas,

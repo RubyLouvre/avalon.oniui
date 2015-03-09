@@ -26,7 +26,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             this.errorback()
         }
     }
-    var _root 
+    var _root, undefine
     /*
      *  @interface avalon.router.go 跳转到一个已定义状态上，params对参数对象
      *  @param toName 状态name
@@ -152,8 +152,13 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             var cur = chain.pop(), me = this
             // 退出
             if(!cur) return callback()
+            cur.syncParams(params)
             // 阻止进入该状态
-            if(cur.onBeforeChange() === false) return callback(false)
+            if(cur.onBeforeChange() === false) {
+                // 恢复params
+                avalon.mix(true, cur.params, cur.oldParams)
+                return callback(false)
+            }
             me.activeState = cur // 更新当前实际处于的状态
             cur.done = function(success) {
                 // 防止async处触发已经销毁的done
@@ -165,8 +170,6 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 if(success === false) {
                     // 这里斟酌一下
                     cur.callback.apply(cur, params)
-                    // 恢复params
-                    avalon.mix(true, cur.params, cur.oldParams)
                     return callback(success)
                 }
                 new Promise(function(resolve) {
@@ -177,17 +180,22 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 }).done(function() {
                     // sync params to oldParams
                     avalon.mix(true, cur.oldParams, cur.params)
+                    cur.parentState.fire("updateview", cur)
                     // 继续状态链
                     me.pushOne(chain, params, callback)
                 })
             }
-            cur.oldParams = avalon.mix({}, cur.params)
             // 一般在这个回调里准备数据
-            cur._onChange.apply(cur, params)
+            var args = []
+            avalon.each(cur.keys, function(index, item) {
+                var key = item.name
+                args.push(cur.params[key])
+            })
+            cur._onChange.apply(cur, args)
             if(!cur._pending && cur.done) cur.done()
         },
         transitionTo: function(fromState, toState, toParams, options) {
-            var toParams = toParams || toState.params
+            var toParams = toParams || toState.params, fromAbort
             // state machine on transition
             if(this.activeState && (this.activeState != this.currentState)) {
                 avalon.log("navigating to [" + 
@@ -196,9 +204,10 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     toState.stateName + "] now")
                 this.activeState.done && this.activeState.done(!"stopped")
                 fromState = this.activeState // 更新实际的fromState
+                fromAbort = true
             }
 
-            var info = avalon.router.urlFormate(toState.url, toState.params, mmState.query),
+            var info = avalon.router.urlFormate(toState.url, toParams, toParams.query),
                 me = this,
                 options = options || {},
                 // 是否强制reload或者query发生变化，参照angular，这个时候会触发整个页面重刷
@@ -225,11 +234,13 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     if(info && avalon.history) avalon.history.updateLocation(info.path + info.query, avalon.mix({}, options, {silent: true}))
                 }
             toState.path = ("/" + info.path).replace(/^[\/]{2,}/g, "/")
-            if(!reload && fromState == toState && !mmState.isParamsChanged(toState.oldParams, toState.params)) {
-                // redirect的目的状态 == this.activeState && abort
-                if(toState == this.activeState && abort) return done()
-                // 重复点击直接return
-                return
+            if(!reload && fromState === toState) {
+                if(!toState.paramsChanged(toParams)) {
+                    // redirect的目的状态 == this.activeState && abort
+                    if(toState == this.activeState && fromAbort) return done()
+                    // 重复点击直接return
+                    return
+                }
             }
             if(callStateFunc("beforeUnload", this, fromState, toState) === false) {
                 if(fromState) done(false)
@@ -288,12 +299,53 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
     }
 
     // 靠谱的解决方法
+    var count = 0
     avalon.bindingHandlers.view = function(data, vmodels) {
         var element = data.element,
+            $element = avalon(element),
             viewname = data.value,
             comment = document.createComment("ms-view:" + viewname),
-            par = element.parentNode
+            par = element.parentNode,
+            defaultHTML = element.innerHTML,
+            statename = $element.data("statename") || "",
+            state = getStateByName(statename) || _root
+        if (viewname.indexOf('@') < 0) viewname += '@' + (state.parentState ? state.parentState.stateName || "" : "")
+        if(!state) return
         par.insertBefore(comment, element)
+        function update(firsttime, state) {
+            if(!comment.parentNode) return !"delete from watch"
+            var state = mmState.currentState, _local,
+                statename = $element.data("statename") || "",
+                state = getStateByName(statename) || state || _root
+            if(state === _root) return
+            if (viewname.indexOf('@') < 0) viewname += '@' + (state.parentState ? state.parentState.stateName || "" : "")
+            if(firsttime && state && !state.resolve) return
+            var _state = state
+            while(_local === undefine && _state != _root) {
+                if(viewname in _state._local) {
+                    _local = _state._local[viewname]
+                    break
+                }
+                _state = _state.parentState
+            }
+            count++
+            // if(count > 20) return
+            var a = 1
+            element.innerHTML = _local === undefine ? defaultHTML : _local.template
+            element.removeAttribute("ms-view")
+            element.setAttribute("ui-view", data.value)
+            var me = state
+            avalon.each(getViewNodes(element), function(i, node) {
+                // if(node.tagName === "TD") debugger
+                avalon(node).data("statename", me.stateName)
+            })
+            var vm = getVModels(state)
+            avalon.scan(element, vm)
+        }
+        update("firsttime")
+        state.watch("updateview", function(state) {
+            update.call(this, undefine, state)
+        })
     }
     function renderView(element) {
         var defaultHTML = element.innerHTML
@@ -456,6 +508,24 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             this.oldParams = {}
             this.keys = []
             this._local = {}
+
+            this.events = {}
+        },
+        watch: function(eventName, func) {
+            var events = this.events[eventName] || []
+            this.events[eventName] = events
+            events.push(func)
+        },
+        fire: function(eventName, state) {
+            var events = this.events[eventName] || [], i = 0
+            while(events[i]) {
+                var res = events[i].call(this, state)
+                if(res === false) {
+                    events.splice(i, 1)
+                } else {
+                    i++
+                }
+            }
         },
         paramsChanged: function(toParams) {
             var changed = false, keys = this.keys, me= this, params = this.params
@@ -464,6 +534,13 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 if(params[key] != toParams[key]) changed = true
             })
             return changed
+        },
+        syncParams: function(toParams) {
+            var me = this
+            avalon.each(this.keys, function(index, item) {
+                var key = item.name
+                if(key in toParams) me.params[key] = toParams[key]
+            })
         },
         _onChange: function() {
             this.query = this.getQuery()
@@ -524,39 +601,18 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         return typeof object[name] === "function" ? object[name] : avalon.noop
     }
 
-    // 找共同的父状态，注意但a是b孩子或者父亲的时候，是需要取parent.parent
+    // find common parentState
     function findCommonBranch(fromState, toState, toParams) {
+        if(!fromState || fromState === _root) return _root
         var fromChain = fromState && fromState.chain || [],
             toChain = toState.chain,
             i = 0,
-            lenA = fromChain.length
-        for(; i < lenA; i++) {
-            if(fromChain[i] == toChain[i]) {
-                continue
-            }
-            break
+            state = toChain[i]
+        while(state && state === fromChain[i] && !state.paramsChanged(toParams)) {
+            i++
+            state = toChain[i]
         }
-        // 存在父子关系
-        if(i == lenA || i == toChain.length) {
-            if(i < 1) return _root
-            // 继续向上寻找到params未发生变化为止
-            if(i == toChain.length) {
-                var tmp = toChain
-                toChain = fromChain
-                fromChain = tmp
-            }
-            var state = true, lenA = fromChain.length, res = true
-            while(res && state && lenA) {
-                fromChain.splice(lenA - 1, 1)
-                lenA = fromChain.length
-                state = fromChain[lenA - 1]
-                if(state) {
-                    res = state.paramsChanged(toParams)
-                }
-            }
-            return state || _root
-        }
-        return fromChain[i - 1]
+        return toChain[i - 1] || _root
     }
     
     function getStateByName(stateName) {
@@ -569,6 +625,17 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             }
         }
         return state
+    }
+    function getViewNodes(node) {
+        var nodes
+        if(node.querySelectorAll) {
+            nodes = node.querySelectorAll("[ms-view]")
+        } else {
+            nodes = Array.prototype.filter.call(node.getElementsByTagName("*"), function(node) {
+                return typeof node.getAttribute("ms-view") === "string"
+            })
+        }
+        return nodes
     }
     // 【avalon.state】的辅助函数，收集所有要渲染的[ms-view]元素
     function getViews(ctrl, name, node) {

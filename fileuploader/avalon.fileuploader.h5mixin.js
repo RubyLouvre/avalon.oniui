@@ -1,95 +1,136 @@
-define(["avalon"], function() {
+define(["avalon", "./spark-md5"], function(avalon, fileKeyGen) {
     return {
         fileManager: function (uploaderVm) {
             var fileManager = this,
                 managedFiles = {};
             
             uploaderVm.useNativeInput = true;
+
+            function getFileExtensionName(fileName) {
+                var dotIndex = fileName.lastIndexOf('.');
+                return dotIndex > 0 ? fileName.substr(dotIndex) : "";
+            }
+
+            function generatePreview(uploaderVm, fileName, fileKey, readerResult) {
+                var fileType = getFileExtensionName(fileName),
+                    previewConfig = uploaderVm.getPreviewConfig(fileType);
+
+                // 生成新文件的预览
+                if (uploaderVm.isImagePreviewConfig(previewConfig)) {
+                    var img = new Image();
+                    img.onload = function () {
+                        // 压缩图像
+                        var canvasEl = document.createElement("canvas"),
+                            ctx = canvasEl.getContext('2d'),
+                            imgWidth = img.width,
+                            imgHeight = img.height,
+                            imageAspectRatio = imgWidth / imgHeight,
+                            canvasAspectRatio = uploaderVm.previewWidth / uploaderVm.previewHeight,
+                            drawX = drawY = 0,
+                            drawHeight = uploaderVm.previewHeight,
+                            drawWidth = uploaderVm.previewWidth;
+
+                        canvasEl.width = uploaderVm.previewWidth;
+                        canvasEl.height = uploaderVm.previewHeight
+                        if (imageAspectRatio > canvasAspectRatio) {
+                            drawHeight = imgHeight * uploaderVm.previewWidth / imgWidth;
+                            drawY = (uploaderVm.previewHeight - drawHeight) / 2;
+                        } else if (imageAspectRatio < canvasAspectRatio) {
+                            drawWidth = imgWidth * uploaderVm.previewHeight / imgHeight;
+                            drawX = (uploaderVm.previewWidth - drawWidth) / 2;
+                        }
+                        // ctx.fillStyle = '#a3a3a3';
+                        // ctx.fillRect(0,0, vm.previewWidth, vm.previewHeight);
+
+                        ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+                        uploaderVm.previewGenerated.call(uploaderVm, fileKey, canvasEl.toDataURL("image/png"), fileName);
+                        ctx.clearRect(0, 0, uploaderVm.previewWidth, uploaderVm.previewHeight);
+                    }
+                    img.onerror = function () {
+                        uploaderVm.previewGenerated.call(uploaderVm, fileKey, uploaderVm.noPreviewPath, fileName);
+                    }
+                    img.src = readerResult;
+                } else {
+                    uploaderVm.previewGenerated.call(uploaderVm, fileKey, previewConfig, fileName);
+                }
+            }
+
             uploaderVm.onFileFieldChanged = function (event) {
-                var files = event.target.files,
-                    fileKey;
+                var files = event.target.files;
 
                 for (var i = 0; i < files.length; i++) {
-                    fileKey = uploaderVm.getFileKey(files[i]);
+                    (function(file){
+                        var fileKey;
+                        new Promise(function(resolve, reject) {
+                            var reader = new FileReader()
+                        
+                            reader.onload = function() {
+                                resolve(reader.result);
+                            };
+                            reader.readAsDataURL(file);
+                        }).then(function(readerResult) {
+                            // 生成文件Key。默认采用MD5
+                            fileKey = fileKeyGen(file.name);
 
-                    if (!managedFiles.hasOwnProperty(fileKey)) {
-                        managedFiles[fileKey] = files[0];
-                        if (uploaderVm.showPreview) {
-                            generatePreview(fileKey, files[i], uploaderVm.previewGenerated, uploaderVm.$id);
-                        }
-                    }
+                            // 查找文件，如果已经添加过就结束。
+                            if (managedFiles.hasOwnProperty(fileKey)) return;
+                            managedFiles[fileKey] = file;
+                            
+                            if (uploaderVm.showPreview) generatePreview(uploaderVm, file.name, fileKey, readerResult);
+                        }, function() {
+                            if (!!fileKey) {
+                                delete managedFiles[fileKey];
+                                uploaderVm.removePreviewByKey(fileKey);
+                            }
+                        });
+                    }(files[i]));
                 }
             };
 
-            uploaderVm.getFileKey = function (file) {
-                return [file.name, file.size, file.type].join("");
-            };
-
             uploaderVm.uploadClicked = function (event) {
-                var files = getInputField(event).files,
-                    i = 0;
+                for (var fileKey in managedFiles) {
+                    var file = managedFiles[fileKey],
+                        fileSize = file.size,
+                        chunkAmount = uploaderVm.chunked ? Math.ceil(fileSize / uploaderVm.chunkSize) : 1,
+                        fileBlobStart = 0,
+                        fileBlobEnd = chunkAmount == 1 ? fileSize : uploaderVm.chunkSize,
+                        fileType = getFileExtensionName(file.name),
+                        allChunkProgress = [];
 
-                var file = files[i],
-                    fileSize = file.size;
+                    for (var j = 0; j < chunkAmount; j++) {
+                        var formData = new FormData();
+                        formData.append('blob', file.slice(fileBlobStart, fileBlobEnd));
+                        fileBlobStart = fileBlobEnd;
+                        fileBlobEnd = Math.min(fileBlobEnd + uploaderVm.chunkSize, fileSize);
+                        formData.append('fileKey', fileKey);
+                        formData.append('total', chunkAmount);
+                        formData.append('chunk', j);
+                        formData.append('fileType', fileType);
+                        allChunkProgress.push({ uploadedBytes: 0 });
 
-  
-
-                // formData.append('upload', files[0]);
-                // formData.append('xx', "x");
-                // var fireRequest = new avalon.xhr();
-                // fireRequest.open("POST", uploaderVm.fileServerUrl, true, uploaderVm.serverUserName, uploaderVm.serverPassword);
-                // fireRequest.upload.onprogress = function(e) {
-                //     if (e.lengthComputable) {
-                //         avalon.log((e.loaded / e.total) * 100);
-                //     }
-                // };
-                // fireRequest.send(true);
+                        ((function (progressObj) {
+                            var fireRequest = new avalon.xhr();
+                            fireRequest.open("POST", uploaderVm.fileServerUrl, true, uploaderVm.serverUserName, uploaderVm.serverPassword);
+                            fireRequest.upload.onprogress = function(e) {
+                                if (e.lengthComputable) {
+                                    progressObj.uploadedBytes = e.loaded;
+                                    var total = 0;
+                                    allChunkProgress.forEach(function (g) {
+                                        total += g.uploadedBytes;
+                                    });
+                                    uploaderVm.setUploadedPrgress(fileKey, Math.round(total / fileSize * 100));
+                                }
+                            };
+                            fireRequest.send(formData);
+                        })(allChunkProgress[allChunkProgress.length - 1]));
+                    }
+                }
             };
 
             /** Button点击后打开文件选择框的事件绑定 **/
             uploaderVm.addFileClicked = function(event) {
                 getInputField(event).click();
             };
-
-            function generatePreview (key, file, callback, vmId) {
-                var reader = new FileReader(),
-                    vm = avalon.vmodels[vmId]; 
-
-                reader.onload = function(e) {
-                    var img = new Image(),
-                        canvasEl = document.createElement("canvas");
-                    canvasEl.width = vm.previewWidth;
-                    canvasEl.height = vm.previewHeight;
-
-                    img.onload = function () {
-                        // 压缩图像
-                        var ctx = canvasEl.getContext('2d'),
-                            imgWidth = img.width,
-                            imgHeight = img.height,
-                            imageAspectRatio = imgWidth / imgHeight,
-                            canvasAspectRatio = vm.previewWidth / vm.previewHeight,
-                            drawX = drawY = 0,
-                            drawHeight = vm.previewHeight,
-                            drawWidth = vm.previewWidth;
-
-                        if (imageAspectRatio > canvasAspectRatio) {
-                            drawHeight = imgHeight * vm.previewWidth / imgWidth;
-                            drawY = (vm.previewHeight - drawHeight) / 2;
-                        } else if (imageAspectRatio < canvasAspectRatio) {
-                            drawWidth = imgWidth * vm.previewHeight / imgHeight;
-                            drawX = (vm.previewWidth - drawWidth) / 2;
-                        }
-                        // ctx.fillStyle = '#a3a3a3';
-                        // ctx.fillRect(0,0, vm.previewWidth, vm.previewHeight);
-
-                        ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
-                        callback.call(vm, key, canvasEl.toDataURL("image/png"));
-                        ctx.clearRect(0, 0, vm.previewWidth, vm.previewHeight);
-                    }
-                    img.src = this.result;
-                }
-                reader.readAsDataURL(file); 
-            }
 
             function getInputField(event) {
                 var $wrapper = avalon(event.target.parentNode);
@@ -101,21 +142,13 @@ define(["avalon"], function() {
                 }
                 return null;
             }
-            return this;
-        },
 
-        previewManager: function (uploaderVm) {
-            uploaderVm.previews = [];
-            this.push = function (key, base64Preview) {
-                if (!uploaderVm.multipleFileAllowed) {
-                    while(uploaderVm.previews.length > 0) {
-                        avalon.Array.removeAt(uploaderVm.previews, 0);
-                    }
-                }
-                uploaderVm.previews.push({
-                    key: key,
-                    img: base64Preview
-                });
+            this.remove = function (fileKey) {
+                delete managedFiles[fileKey];
+            };
+
+            this.getFileLocalPath = function (fileKey) {
+                return false; // For security reason, the mordern browsers does not allow access to absolute path & file systems directly to Javascript
             };
             return this;
         }

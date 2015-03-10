@@ -1,6 +1,11 @@
 
-define(["avalon", "text!./avalon.fileuploader.html", "./avalon.fileuploader.h5mixin", "./avalon.fileuploader.flmixin", "mmRequest/mmRequest", "mmPromise/mmPromise"], 
-    function (avalon, template, h5mixin, flmixin) {
+define(["avalon", "text!./avalon.fileuploader.html", 
+    "./avalon.fileuploader.h5mixin", 
+    "./avalon.fileuploader.flmixin", 
+    "./avalon.fileuploader.previewmanager",
+    "mmRequest/mmRequest", 
+    "mmPromise/mmPromise"], 
+    function (avalon, template, h5mixin, flmixin, previewManager) {
         var widgetName = 'fileuploader';
         var widget = avalon.ui[widgetName] = function(element, data, vmodels) {
         	var options = data[widgetName+'Options'],
@@ -8,8 +13,9 @@ define(["avalon", "text!./avalon.fileuploader.html", "./avalon.fileuploader.h5mi
 
             var vmodel = avalon.define(data[widgetName+'Id'], function(vm) {
             	avalon.mix(vm, options);
-	            vm.$fileManager = new flmixin.fileManager(vm);
-	            vm.$previewManager = new h5mixin.previewManager(vm);
+                vm.$fileManager = new h5mixin.fileManager(vm);
+	            vm.$previewManager = new previewManager(vm);
+                vm.base64Preview = true;
             	vm.$init = function() {
 	            	element.innerHTML = template;
 
@@ -24,24 +30,56 @@ define(["avalon", "text!./avalon.fileuploader.html", "./avalon.fileuploader.h5mi
 	            };
                 vm.$remove = function() {
                 };
-	            vm.previewGenerated = function(key, base64Preview) {
-	            	vm.$previewManager.push(key, base64Preview);
-	            }
+	            vm.previewGenerated = function(key, priview, fileName) {
+	            	vm.$previewManager.push(key, priview, fileName);
+	            };
+                vm.getPreviewConfig = function(fileType) {
+                    var config = vm.$previewFileTypes[fileType];
+                    return !config ? vm.noPreviewPath : config;
+                }
+                vm.removePreviewByKey = function(fileKey) {
+                    vm.$previewManager.remove(fileKey);
+                }
+                vm.removeFileByKey = function(fileKey) {
+                    vm.$fileManager.remove(fileKey);
+                }
+                vm.isImagePreviewConfig = function(previewConfig) {
+                    return previewConfig == "#image-preview";
+                }
+                vm.onRemoveClick = function (event) {
+                    var fileKey = avalon(event.target.parentNode).attr("file-id");
+                    vm.removeFileByKey(fileKey);
+                    vm.removePreviewByKey(fileKey);
+                }
+                vm.setUploadedPrgress = function (fileKey, progress) {
+                    vm.$previewManager.setProgress(fileKey, progress);
+                }
             });
             return vmodel;
         };
         widget.defaults = {
             preview: 0,
             acceptFileTypes: "*.gif,*.jpg,*.png,*.jpeg",
-            previewWidth: 80,
-            previewHeight: 80,
+            previewWidth: 100,
+            previewHeight: 85,
             showPreview: true,
-            multipleFileAllowed: false,
+            showProgress: true,
+            multipleFileAllowed: true,
             fileServerUrl: "http://localhost:53066/Handler1.ashx",
             serverUserName: undefined,
             serverPassword: undefined,
             chunked: true,
-            chunkSize: 1024 * 1024
+            chunkSize: 1024 * 1024,
+            maxThred: 3,
+            noPreviewPath: "no-preview.png",
+            $previewFileTypes: {
+                ".png": "#image-preview",
+                ".jpg": "#image-preview",
+                ".jpeg": "#image-preview",
+                ".gif": "#image-preview",
+                ".bmp": "#image-preview",
+                ".zip": "zip.png"
+            }
         };
         return avalon;
     }

@@ -12,7 +12,7 @@
 	<input type="file"
 		ms-if="useNativeInput"
 		ms-on-change="onFileFieldChanged"
-		ms-attr-multiple="{{multiple}}"
+		ms-attr-multiple="multipleFileAllowed"
 		style="display:none" />
 
 	<div ms-if="!useNativeInput" style="padding:10px; top:100px; width:120px;height:40px;display:inline-block;">
@@ -44,7 +44,25 @@
 		</object>
 
 	</div>
+
 	<div>
-		<img ms-repeat="previews" ms-attr-src="{{el.img}}"/>
+		<div ms-repeat="previews" ms-css-width="previewWidth" ms-css-height="previewHeight" style="display:inline-block;margin: 5px; border:1px solid black;">
+			<div ms-attr-file-id="el.key"
+				ms-css-width="previewWidth"
+				ms-css-height="previewHeight"
+				style="position:relative;z-index:0;overflow:hidden;"
+				>
+				<span ms-css-width="previewWidth" style="white-space:nowrap;">{{el.name}}</span>
+				<a href="javascript:void(0);" ms-on-click="onRemoveClick">Remove</a>
+			</div>
+			<img ms-if="base64Preview" ms-attr-src="{{el.img}}" ms-css-top="previewHeight*-1" style="position:relative;z-index:-1;"/>
+			<!--div ms-if="!base64Preview"  ms-css-width="previewWidth" ms-css-height="previewHeight" style="background-color:red;filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale',src='file://{{el.localPath}});">
+			</div-->
+			<div ms-if="(showProgress && el.uploadedProgress!=0)" class="meter" style="top:-125px;">
+				<div ms-css-width="{{el.uploadedProgress}}%"></div>
+				<span ms-if="(el.uploadedProgress!=100)" style="display:inline;">progress: {{el.uploadedProgress}}</span>
+				<span ms-if="(el.uploadedProgress==100)" style="display:inline;">Done</span>
+			</div>
+		</div>
 	</div>
 </div>

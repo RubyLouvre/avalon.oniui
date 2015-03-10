@@ -31,7 +31,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
      *  @interface avalon.router.go 跳转到一个已定义状态上，params对参数对象
      *  @param toName 状态name
      *  @param params 附加参数
-     *  @param params.query 在hash后面附加的类似search'的参数对
+     *  @param params.query 在hash后面附加的类似search的参数对
      *  @param options 扩展配置
      *  @param options.reload true强制reload，即便url、参数并未发生变化
      *  @param options.replace true替换history，否则生成一条新的历史记录
@@ -71,7 +71,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             nodes.splice(i, 1)
         }
     }
-    Event.$watch("abort", removeOld)
+    Event.$watch("onAbort", removeOld)
     var mmState = window.mmState = {
         prevState: NaN,
         currentState: NaN, // 当前状态，可能还未切换到该状态
@@ -126,6 +126,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 cur._pending = false
                 cur.done = null
                 if(success !== false) {
+                    // me.activeState.fire("unloadView", cur)
                     if(me.activeState) return me.popOne(end, params, callback)
                 }
                 return callback(success)
@@ -180,7 +181,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 }).done(function() {
                     // sync params to oldParams
                     avalon.mix(true, cur.oldParams, cur.params)
-                    cur.parentState.fire("updateview", cur)
+                    // cur.parentState.fire("updateview", cur)
                     // 继续状态链
                     me.pushOne(chain, params, callback)
                 })
@@ -223,6 +224,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     over = true
                     me.currentState = me.activeState
                     if(success !== false) {
+                        _root.fire("updateview", me.currentState)
                         avalon.log("transitionTo " + toState.stateName + " success")
                         callStateFunc("onload", me, fromState, toState)
                     } else if(options.fromHistory){
@@ -244,7 +246,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             }
             if(callStateFunc("beforeUnload", this, fromState, toState) === false) {
                 if(fromState) done(false)
-                return callStateFunc("abort", this, fromState, toState)
+                return callStateFunc("onAbort", this, fromState, toState)
             }
             if(over === true) {
                 return
@@ -253,7 +255,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             callStateFunc("unload", this, fromState, toState)
             this.currentState = toState
             this.prevState = fromState
-            callStateFunc("begin", this, fromState, toState)
+            callStateFunc("onBegin", this, fromState, toState)
             this.popState(commonParent, toParams, function(success) {
                 // 中断
                 if(success === false) return done(success)
@@ -301,51 +303,72 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
     // 靠谱的解决方法
     var count = 0
     avalon.bindingHandlers.view = function(data, vmodels) {
-        var element = data.element,
+        var currentState = mmState.currentState,
+            element = data.element,
             $element = avalon(element),
             viewname = data.value,
             comment = document.createComment("ms-view:" + viewname),
             par = element.parentNode,
             defaultHTML = element.innerHTML,
             statename = $element.data("statename") || "",
-            state = getStateByName(statename) || _root
-        if (viewname.indexOf('@') < 0) viewname += '@' + (state.parentState ? state.parentState.stateName || "" : "")
-        if(!state) return
+            parentState = getStateByName(statename) || _root,
+            currentLocal = {}
+        // if (viewname.indexOf("@") < 0) viewname += "@" + parentState.stateName
+        if(!parentState) return
         par.insertBefore(comment, element)
         function update(firsttime, state) {
-            if(!comment.parentNode) return !"delete from watch"
-            var state = mmState.currentState, _local,
-                statename = $element.data("statename") || "",
-                state = getStateByName(statename) || state || _root
-            if(state === _root) return
-            if (viewname.indexOf('@') < 0) viewname += '@' + (state.parentState ? state.parentState.stateName || "" : "")
-            if(firsttime && state && !state.resolve) return
-            var _state = state
-            while(_local === undefine && _state != _root) {
-                if(viewname in _state._local) {
-                    _local = _state._local[viewname]
+            // node removed, remove callback
+            if(!document.contains(comment)) return !"delete from watch"
+            var definedParentStateName = $element.data("statename") || "",
+                parentState = getStateByName(definedParentStateName) || _root,
+                me = state || _root,
+                _local
+
+            if(me === _root) return
+            if (viewname.indexOf("@") < 0) viewname += "@" + parentState.stateName
+            if(firsttime && me && !me.resolved) return
+            var _currentState = mmState.currentState
+            while(_local === undefine && _currentState != _root) {
+                if(viewname in _currentState._local) {
+                    _local = _currentState._local[viewname]
                     break
                 }
-                _state = _state.parentState
+                for(var i in _currentState._local) {
+                    if(viewname.indexOf(i) == 0) {
+                        _local = _currentState._local[i]
+                        break
+                    }
+                }
+                if(_local) break
+                _currentState = _currentState.parentState
             }
-            count++
-            // if(count > 20) return
-            var a = 1
+            // if(!_local) debugger
+            if(currentLocal === _local) return
+            currentLocal = _local
+        
             element.innerHTML = _local === undefine ? defaultHTML : _local.template
             element.removeAttribute("ms-view")
             element.setAttribute("ui-view", data.value)
-            var me = state
             avalon.each(getViewNodes(element), function(i, node) {
-                // if(node.tagName === "TD") debugger
-                avalon(node).data("statename", me.stateName)
+                avalon(node).data("statename", _currentState.stateName)
             })
             var vm = getVModels(state)
             avalon.scan(element, vm)
         }
-        update("firsttime")
-        state.watch("updateview", function(state) {
-            update.call(this, undefine, state)
+        // update("firsttime")
+        _root.watch("updateview", function(state) {
+            return update.call(this, undefine, state)
         })
+        // parentState.watch("updateview", function(state) {
+        //     return update.call(this, undefine, state)
+        // })
+        // parentState.watch("unloadView", function(state) {
+        //     // if(!document.contains(element)) return !"element removed"
+        //     // element.innerHTML = defaultHTML
+        //     // var vm = getVModels(state)
+        //     // avalon.scan(element, vm)
+        //     var a
+        // })
     }
     function renderView(element) {
         var defaultHTML = element.innerHTML
@@ -431,9 +454,9 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
      *  @interface avalon.state.config 全局配置
      *  @param {Object} config 配置对象
      *  @param {Function} config.beforeUnload 开始切前的回调，this指向router对象，第一个参数是fromState，第二个参数是toState，return false可以用来阻止切换进行
-     *  @param {Function} config.abort beforeUnload return false之后，触发的回调，this指向mmState对象，参数同beforeUnload
+     *  @param {Function} config.onAbort beforeUnload return false之后，触发的回调，this指向mmState对象，参数同beforeUnload
      *  @param {Function} config.unload url切换时候触发，this指向mmState对象，参数同beforeUnload
-     *  @param {Function} config.begin  开始切换的回调，this指向mmState对象，参数同beforeUnload
+     *  @param {Function} config.onBegin  开始切换的回调，this指向mmState对象，参数同beforeUnload
      *  @param {Function} config.onload 切换完成并成功，this指向mmState对象，参数同beforeUnload
      *  @param {Function} config.onViewEnter 视图插入动画函数，有一个默认效果
      *  @param {Node} config.onViewEnter.arguments[0] 新视图节点
@@ -497,7 +520,12 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             }
             var views = {}
             avalon.each(this.views, function(name, view) {
-                if (name.indexOf('@') < 0) name += '@' + (parent ? parent.stateName || "" : "")
+                if (name.indexOf("@") < 0) {
+                    name += "@" + (parent ? parent.stateName || "" : "")
+                }
+                //  else if(name.indexOf("@") == 0) {
+                //     var targetStateName = name.split()
+                // }
                 views[name] = view
             })
             this.views = views
@@ -515,6 +543,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             var events = this.events[eventName] || []
             this.events[eventName] = events
             events.push(func)
+            return func
         },
         fire: function(eventName, state) {
             var events = this.events[eventName] || [], i = 0
@@ -525,6 +554,15 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 } else {
                     i++
                 }
+            }
+        },
+        unwatch: function(eventName, func) {
+            var events = this.events[eventName]
+            if(!events) return
+            var i = 0
+            while(events[i]) {
+                if(events[i] == func) return events.splice(i, 1)
+                i++
             }
         },
         paramsChanged: function(toParams) {

@@ -268,7 +268,7 @@
                         "hint@": {
                             template: "当前状态是contacts.list"
                         },
-                        "complex": {
+                        "complex@": {
                             template: "<font color='red'>默认内容内不能包含ms-view-这是由于现在的设计造成的，可以后续考虑重写ms-view的逻辑</font>"
                         }
                     }
@@ -300,6 +300,9 @@
                         },
                         'tip@': {
                             template: "当前ID是{{contact.id}}"
+                        },
+                        "complex@": {
+                            template: "<font color='red'>我只有呵呵了</font>"
                         }
                     }
                 })
@@ -337,7 +340,7 @@
                 ///////////////////////////////
                 avalon.state("contacts.detail.item.edit", {
                     views: {
-                        "@contacts.detail.item": {
+                        "@contacts.detail": {
                             templateUrl: "contacts.detail.item.edit.html"
                         },
                         "hint@": {
@@ -458,6 +461,10 @@
                 width: 200%;
                 overflow: hidden;
             }
+            .oni-mmRouter-leave {
+                position: relative;
+                z-index: -1;                
+            }
             .oni-mmRouter-slide {
                 width: 50%;
                 float: left;
@@ -476,7 +483,7 @@
                     // arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
                 })
             }
-            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;], function() {
+            require([&quot;ready!&quot;, &quot;mmRouter/mmState-new&quot;, &quot;loading/avalon.loading&quot;], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -682,7 +689,7 @@
                         &quot;hint@&quot;: {
                             template: &quot;当前状态是contacts.list&quot;
                         },
-                        &quot;complex&quot;: {
+                        &quot;complex@&quot;: {
                             template: &quot;&lt;font color='red'&gt;默认内容内不能包含ms-view-这是由于现在的设计造成的，可以后续考虑重写ms-view的逻辑&lt;/font&gt;&quot;
                         }
                     }
@@ -714,6 +721,9 @@
                         },
                         'tip@': {
                             template: &quot;当前ID是{{contact.id}}&quot;
+                        },
+                        &quot;complex@&quot;: {
+                            template: &quot;&lt;font color='red'&gt;我只有呵呵了&lt;/font&gt;&quot;
                         }
                     }
                 })
@@ -751,7 +761,7 @@
                 ///////////////////////////////
                 avalon.state(&quot;contacts.detail.item.edit&quot;, {
                     views: {
-                        &quot;@contacts.detail.item&quot;: {
+                        &quot;@contacts.detail&quot;: {
                             templateUrl: &quot;contacts.detail.item.edit.html&quot;
                         },
                         &quot;hint@&quot;: {

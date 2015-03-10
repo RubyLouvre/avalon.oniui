@@ -78,7 +78,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             nodes.splice(i, 1)
         }
     }
-    Event.$watch("abort", removeOld)
+    Event.$watch("onAbort", removeOld)
     var mmState = window.mmState = {
         prevState: NaN,
         currentState: NaN, // 当前状态，可能还未切换到该状态
@@ -249,7 +249,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             }
             if(callStateFunc("beforeUnload", this, fromState, toState) === false) {
                 if(fromState) done(false)
-                return callStateFunc("abort", this, fromState, toState)
+                return callStateFunc("onAbort", this, fromState, toState)
             }
             if(over === true) {
                 return
@@ -258,7 +258,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             callStateFunc("unload", this, fromState, toState)
             this.currentState = toState
             this.prevState = fromState
-            callStateFunc("begin", this, fromState, toState)
+            callStateFunc("onBegin", this, fromState, toState)
             this.popState(commonParent, args, function(success) {
                 // 中断
                 if(success === false) return done(success)
@@ -446,9 +446,11 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
      *  @interface avalon.state.config 全局配置
      *  @param {Object} config 配置对象
      *  @param {Function} config.beforeUnload 开始切前的回调，this指向router对象，第一个参数是fromState，第二个参数是toState，return false可以用来阻止切换进行
-     *  @param {Function} config.abort beforeUnload return false之后，触发的回调，this指向mmState对象，参数同beforeUnload
+     *  @param {Function} config.abort 请使用onAbort
+     *  @param {Function} config.onAbort beforeUnload return false之后，触发的回调，this指向mmState对象，参数同beforeUnload
      *  @param {Function} config.unload url切换时候触发，this指向mmState对象，参数同beforeUnload
-     *  @param {Function} config.begin  开始切换的回调，this指向mmState对象，参数同beforeUnload
+     *  @param {Function} config.begin 请使用onBegin
+     *  @param {Function} config.onBegin  开始切换的回调，this指向mmState对象，参数同beforeUnload，如果配置了onBegin，则忽略begin
      *  @param {Function} config.onload 切换完成并成功，this指向mmState对象，参数同beforeUnload
      *  @param {Function} config.onViewEnter 视图插入动画函数，有一个默认效果
      *  @param {Node} config.onViewEnter.arguments[0] 新视图节点
@@ -457,6 +459,8 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
     */
     avalon.state.config = function(config) {
         avalon.mix(avalon.state, config || {})
+        if(avalon.state.begin && !avalon.state.onBegin) avalon.state.onBegin = avalon.state.begin
+        if(avalon.state.abort && !avalon.state.onAbort) avalon.state.onAbort = avalon.state.abort
         return this
     }
     function callStateFunc(name, state) {

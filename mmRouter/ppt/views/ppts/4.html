@@ -1,7 +1,9 @@
-## 如何使用
+## 如何使用 - Base
 
 #### √ mmRouter or mmRouter + mmHistory
-    
+
+Browser    
+
     require(["mmRouter/mmRouter"], function () {
         // 添加一条rule规则
         avalon.router.get("/tab1", function(a) {
@@ -26,9 +28,30 @@
         });
     })
 
+maybe Server：mmRouter only
+
+    require(["mmRouter/mmRouter"], function () {
+        // 添加一条rule规则
+        avalon.router.get("/tab1", function(a) {
+            // out push
+        })
+        // 重定向
+        avalon.router.when(["/nihao/:id"], "/tab:id");
+
+        // 出错情况回调
+        avalon.router.errorback = function() {
+            // output
+        };
+
+        // your server listen code
+        yourServer.listen(xxx, function(url) {
+            avalon.router.navigate(url)
+        })
+    })
+
 #### √ 存在的一些问题：
 
 + 没有封装视图管理、刷新逻辑
 + 不能干涉url切换
 
-使得远不足以支持一个复杂SPA
+远不足以支持一个复杂SPA，我们需要一个晋级版

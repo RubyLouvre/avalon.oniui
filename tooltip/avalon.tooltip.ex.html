@@ -27,7 +27,9 @@
                     vm.$qqOpt = {
                         "contentGetter": function(elem) {
                             if(elem && elem.tagName && (elem.tagName.toLowerCase() == 'input' || elem.getAttribute("tp"))) return str + str + str + str + str + str + str + str + str + str + str
-                        }
+                        },
+                        container: document.getElementsByTagName("div")[2],
+                        collision: "fit"
                         , autohide: !true
                     }
                     vm.showTip = function() {
@@ -42,9 +44,9 @@
     <body class="oni-helper-reset">
 <div ms-controller="test">
         <h1 tp="1">input元素不绑定事件，人工触发</h1>
-        <div class="oni-helper-reset ct" ms-widget="tooltip,ppo, $qqOpt" data-tooltip-event="" data-tooltip-delegate="true" data-tooltip-position="tr">
+        <div class="oni-helper-reset ct" ms-widget="tooltip,ppo, $qqOpt" data-tooltip-event="" data-tooltip-delegate="true" data-tooltip-position="tr"><div style="display:inline-block;position:relative;width:400px;height:21px;">
             <input type="text" value="test"/>
-            <input type="button" ms-click="showTip" value="click me to show tip"/>
+            <input type="button" ms-click="showTip" value="click me to show tip"/></div>
         </div>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -75,7 +77,9 @@
                     vm.$qqOpt = {
                         &quot;contentGetter&quot;: function(elem) {
                             if(elem &amp;&amp; elem.tagName &amp;&amp; (elem.tagName.toLowerCase() == 'input' || elem.getAttribute(&quot;tp&quot;))) return str + str + str + str + str + str + str + str + str + str + str
-                        }
+                        },
+                        container: document.getElementsByTagName(&quot;div&quot;)[2],
+                        collision: &quot;fit&quot;
                         , autohide: !true
                     }
                     vm.showTip = function() {
@@ -90,9 +94,9 @@
     &lt;body class=&quot;oni-helper-reset&quot;&gt;
 &lt;div ms-controller=&quot;test&quot;&gt;
         &lt;h1 tp=&quot;1&quot;&gt;input元素不绑定事件，人工触发&lt;/h1&gt;
-        &lt;div class=&quot;oni-helper-reset ct&quot; ms-widget=&quot;tooltip,ppo, $qqOpt&quot; data-tooltip-event=&quot;&quot; data-tooltip-delegate=&quot;true&quot; data-tooltip-position=&quot;tr&quot;&gt;
+        &lt;div class=&quot;oni-helper-reset ct&quot; ms-widget=&quot;tooltip,ppo, $qqOpt&quot; data-tooltip-event=&quot;&quot; data-tooltip-delegate=&quot;true&quot; data-tooltip-position=&quot;tr&quot;&gt;&lt;div style=&quot;display:inline-block;position:relative;width:400px;height:21px;&quot;&gt;
             &lt;input type=&quot;text&quot; value=&quot;test&quot;/&gt;
-            &lt;input type=&quot;button&quot; ms-click=&quot;showTip&quot; value=&quot;click me to show tip&quot;/&gt;
+            &lt;input type=&quot;button&quot; ms-click=&quot;showTip&quot; value=&quot;click me to show tip&quot;/&gt;&lt;/div&gt;
         &lt;/div&gt;
         
     &lt;/div&gt;

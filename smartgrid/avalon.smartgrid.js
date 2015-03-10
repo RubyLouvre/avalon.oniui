@@ -221,6 +221,7 @@ define(["avalon",
             ],    //默认[10,20,50,100]
             onInit: function(pagerVM, options, vmodels) {
                 vmodel && (vmodel.pager = pagerVM)
+                pagerVM && vmodel._entryCount(pagerVM)
             }
         }
         options.pageable = options.pageable !== void 0 ? options.pageable : true;
@@ -243,6 +244,7 @@ define(["avalon",
                 pager.onInit = function(pagerVM, options, vmodels) {
                     vmodel && (vmodel.pager = pagerVM)
                     onInit(pagerVM, options, vmodels)
+                    pagerVM && vmodel._entryCount(pagerVM)
                 }
             }
             avalon.mix(options.$pagerConfig, options.pager)
@@ -287,6 +289,7 @@ define(["avalon",
             vm._filterCheckboxData = [];
             vm.loadingVModel = null;
             vm._dataRender = false
+            vm.perPages = void 0
             vm._hiddenAffixHeader = function(column, allChecked) {
                 var selectable = vmodel.selectable
                 return selectable && selectable.type && column.key=='selected' && !allChecked
@@ -303,6 +306,16 @@ define(["avalon",
                 });
                 return selectedData.concat(vmodel._enabledData);
             };
+            vm._entryCount = function(pagerVM) {
+                if(vm.perPages !== void 0) return
+                function countEntry(n) {
+                    var data = vm.data
+                    vm.perPages = n
+                    if(data.length > n) vm.render(data.slice(0, n))
+                }
+                pagerVM.$watch("perPages", countEntry)
+                countEntry(pagerVM.perPages)
+            }
             vm.selectAll = function (b) {
                 b = b !== void 0 ? b : true;
                 vmodel._selectAll(null, b);
@@ -430,7 +443,7 @@ define(["avalon",
             };
             vm._setColumnWidth = function (resize) {
                 var cells = vmodel._container.getElementsByTagName('tr')[0].cells, columns = vmodel.columns, _columns = columns.$model, $gridContainer = avalon(vmodel.container), containerWidth = $gridContainer.width(), minColumnWidth = getMinColumnWidth(_columns), firstStringColumn = getFirstStringColumn(columns, vmodel);
-                if (minColumnWidth > containerWidth && !resize) {
+                if (minColumnWidth > containerWidth && !resize || !vm.autoResize) {
                     $gridContainer.css('width', minColumnWidth);
                     firstStringColumn.width = firstStringColumn.configWidth;
                 } else {
@@ -466,6 +479,9 @@ define(["avalon",
                         var data = datas[j];
                         data[name] = data[name] !== void 0 ? data[name] : column.defaultValue;
                     }
+                }
+                if(vm.pageable && vm.pager && vm.pager.perPages) {
+                    if(datas.length > vm.pager.perPages) datas = datas.slice(0, vm.pager.perPages)
                 }
                 html = fn({
                     data: datas,
@@ -608,6 +624,7 @@ define(["avalon",
                 }
                 element.resizeTimeoutId = 0;
                 callbacksNeedRemove.resizeCallback = avalon(window).bind('resize', function () {
+                    if(!vmodel.autoResize) return
                     clearTimeout(element.resizeTimeoutId);
                     var clientWidth = avalon(window).width();
                     if (clientWidth <= vmodel.containerMinWidth) {
@@ -632,6 +649,7 @@ define(["avalon",
     widget.defaults = {
         container: '',
         // element | id
+        autoResize: true,
         data: [],
         columns: [],
         allChecked: true,

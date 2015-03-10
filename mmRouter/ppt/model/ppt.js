@@ -1,7 +1,8 @@
 define([], function() {
-	var dict = ["", "home", 1, 2, 3, 4, 5, 6, 7, 8, 9, "thx"]
-	var dict = ["", "home", "work", 2, 3, 4, 5, 6, 7, 8, 9, "thx", "tree", "qa"]
+	var dict = ["", 1, 2, 3, "mmRouter", "mmHistory", 4, "mmState", 6, 7, 8, 9, "thx"]
+	// var dict = ["", "home", "work", 2, 3, "mmRouter", "mmHistory", 4, "mmState", 6, 7, 8, 9, "thx", "tree", "tree.thx", "velocity", "velocity.thx", "weAPI", "oniui.tool", "qa"]
 	var ppt = avalon.define("ppt", function(vm) {
+		vm.dict = dict
 		vm.curentPage = vm.firstPage
 		vm._curentPage = vm.firstPage
 		vm.totalPage = dict.length - 1

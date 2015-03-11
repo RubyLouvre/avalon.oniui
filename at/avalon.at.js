@@ -344,6 +344,58 @@ define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", 
             range.select()
         }
     }
+    /**
+     * //获取光标位置 
+function getCursor(elem) {
+     //IE 9 ，10，其他浏览器
+     if (elem.selectionStart !== undefined) {
+         return elem.selectionStart;
+     } else { //IE 6,7,8
+         var range = document.selection.createRange();
+         range.moveStart("character", -elem.value.length);
+         var len = range.text.length;
+         return len;
+     }
+ }
+//设置光标位置
+ function setCursor(elem, index) {
+     //IE 9 ，10，其他浏览器
+     if (elem.selectionStart !== undefined) {
+         elem.selectionStart = index;
+         elem.selectionEnd = index;
+     } else { //IE 6,7,8
+         var range = elem.createTextRange();
+         range.moveStart("character", -elem.value.length); //左边界移动到起点
+         range.move("character", index); //光标放到index位置
+         range.select();
+     }
+ }
+//获取选中文字
+ function getSelection(elem) {
+     //IE 9 ，10，其他浏览器
+     if (elem.selectionStart !== undefined) {
+         return elem.value.substring(elem.selectionStart, elem.selectionEnd);
+     } else { //IE 6,7,8
+         var range = document.selection.createRange();
+         return range.text;
+     }
+ }
+//设置选中范围
+ function setSelection(elem, leftIndex, rightIndex) {
+     if (elem.selectionStart !== undefined) { //IE 9 ，10，其他浏览器
+         elem.selectionStart = leftIndex;
+         elem.selectionEnd = rightIndex;
+     } else { //IE 6,7,8
+         var range = elem.createTextRange();
+         range.move("character", -elem.value.length); //光标移到0位置。
+         //这里一定是先moveEnd再moveStart
+         //因为如果设置了左边界大于了右边界，那么浏览器会自动让右边界等于左边界。
+         range.moveEnd("character", rightIndex);
+         range.moveStart("character", leftIndex);
+         range.select();
+     }
+ }
+     * /
     //通过监听textarea,input的keyup进行，移动列表项的高亮位置
     function moveIndex(e, vmodel) {
         var max = vmodel._datalist.size()

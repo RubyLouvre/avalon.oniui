@@ -1,0 +1,64 @@
+## velocity js
+
+#### √ 目的
+
+解除前端对后端依赖的，基于velocity js版本开发模式及环境的技术探索
+
+##### 对比
+
+![model](./ppt/img/v.jpg)
+
+##### now：what we need
+
++ jdk & lots jars
++ server & complex configuration
++ compile, WTF jetty & maven
+
+##### 理想的流程:
+
+1. 协商接口字段
+2. coding ...
+3. 联调
+
+优势：
+
++ 快
++ 依赖少
++ 轻松搭建环境
+
+##### 构想
+
+![model](./ppt/img/model.png)
+
+#### √ 例子
+
+    module.exports = {
+        server: true,
+        // 默认渲染的模板，可以通过tplRouter修改
+        template: './template/hotelWxRed.vm',
+        // 默认渲染的模板用的模拟数据，可以通过contextRouter修改
+        context: './context.js',
+        // 以下可以配置成数组
+        root: './template',
+        macro: './template/global_library.vm',
+        // 路由不同的模板文件，默认提取search tpl参数
+        // tplRouter: function(tpl, req){},
+        // 路由不同模拟数据文件
+        // contextRouter: function(tpl, req){},
+        // 加工模拟数据
+        contextChanger: function(data, tpl, req) {
+            if(tpl == "v2.vm") {
+                data.nima = "呵呵"
+            }
+
+            return data
+        }
+    }
+
+![model](./ppt/img/vs.png)
+![model](./ppt/img/v1.png)
+![model](./ppt/img/v2.png)
+
+#### √ 项目
+
+[gogoyqj/velocity](https://github.com/gogoyqj/velocity)

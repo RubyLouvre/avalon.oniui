@@ -55,13 +55,6 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             return "flag" + vm.$flag++
         }
     })
-    Event.$watch("onload", function(e) {
-        var _onloadCallback = mmState._onloadCallback
-        mmState._onloadCallback = {}
-        for(var i in _onloadCallback) {
-            _onloadCallback[i].apply(arguments[0], [].slice.call(arguments, 2))
-        }
-    })
     function removeOld() {
         var nodes = mmState.oldNodes
         while(nodes.length) {
@@ -77,16 +70,8 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         currentState: NaN, // 当前状态，可能还未切换到该状态
         activeState: NaN, // 当前实际处于的状态
         oldQuery: {},
-        query: {},
         _local: {},
         oldNodes: [],
-        _onloadCallback: {},
-        addCallback: function(key, func) {
-            if(!this._onloadCallback[key]) this._onloadCallback[key] = func
-        },
-        removeCallback: function(key) {
-            this._onloadCallback[key] = avalon.noop
-        },
         // params changed
         isParamsChanged: function(p, op) {
             var isQuery = p == void 0,
@@ -109,49 +94,26 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             }
             return res
         },
-        // 状态离开
-        popState: function(end, params, callback) {
-            callback = callback || avalon.noop
-            if(!this.activeState || end === this.activeState) return callback()
-            this.popOne(end, params, callback)
-        },
-        popOne: function(end, params, callback) {
-            var cur = this.activeState, me = this
-            if(end === this.activeState || cur == _root) return callback()
+        popOne: function(chain, params, callback) {
+            var cur = chain.pop(), me = this
+            if(!cur) return callback()
             // 阻止退出
             if(cur.onBeforeUnload() === false) return callback(false)
-            // 如果没有父状态了，说明已经退出到最上层，需要退出，不再继续迭代
             me.activeState = cur.parentState || _root
             cur._local = null
             cur.done = function(success) {
                 cur._pending = false
                 cur.done = null
                 if(success !== false) {
-                    // me.activeState.fire("unloadView", cur)
-                    if(me.activeState) return me.popOne(end, params, callback)
+                    if(me.activeState) return me.popOne(chain, params, callback)
                 }
                 return callback(success)
             }
             var success = cur.onAfterUnload()
             if(!cur._pending && cur.done) cur.done(success)
         },
-        // 状态进入
-        pushState: function(end, params, callback, _local){
-            callback = callback || avalon.noop
-            var active = this.activeState
-            // 切换到目标状态
-            if(active == end) return callback()
-            var chain = [] // 状态链
-            while(end !== active && end != _root){
-                chain.push(end)
-                var tmp = end
-                end = end.parentState
-            }
-            // 逐一迭代
-            this.pushOne(chain, params, callback, _local)
-        },
         pushOne: function(chain, params, callback, _local) {
-            var cur = chain.pop(), me = this
+            var cur = chain.shift(), me = this
             // 退出
             if(!cur) return callback()
             cur.syncParams(params)
@@ -222,23 +184,17 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 i = 0,
                 state = toChain[i],
                 _local = _root._local,
-                toLocals = [],
-                commonParent = _root
+                toLocals = []
                 if(!reload) {
-                    // 是否需要退出
+                    // 找到共有父状态chain，params未变化
                     while(state && state === fromChain[i] && !state.paramsChanged(toParams)) {
                         _local = toLocals[i] = state._local
                         i++
                         state = toChain[i]
                     }
-                    if(i == toChain.length) {
-                        state = toChain[i - 1]
-                    } else if(i == fromChain.length) {
-                        state = fromChain[i - 1]
-                    }
-                    // 找共同的父节点，那么也是需要参考params和reload，reload情况，将所有栈里的state全部退出，否则退出到params没有发生变化的地方
-                    commonParent = ( fromState === toState && state && state.paramsChanged(toParams) || fromState !== toState ? state && state.parentState : state) || _root
                 }
+                var exitChain = fromChain.slice(i),// 需要退出的chain
+                    enterChain = toChain.slice(i)// 需要进入的chain
                 done = function(success) {
                     if(over) return
                     over = true
@@ -264,7 +220,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     return
                 }
             }
-            if(callStateFunc("beforeUnload", this, fromState, toState) === false) {
+            if(callStateFunc("onBeforeUnload", this, fromState, toState) === false) {
                 if(fromState) done(false)
                 return callStateFunc("onAbort", this, fromState, toState)
             }
@@ -272,14 +228,14 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 return
             }
             avalon.log("begin transitionTo " + toState.stateName + " from " + (fromState && fromState.stateName || "unknown"))
-            callStateFunc("unload", this, fromState, toState)
+            callStateFunc("onUnload", this, fromState, toState)
             this.currentState = toState
             this.prevState = fromState
             callStateFunc("onBegin", this, fromState, toState)
-            this.popState(commonParent, toParams, function(success) {
+            this.popOne(exitChain, toParams, function(success) {
                 // 中断
                 if(success === false) return done(success)
-                me.pushState(toState, toParams, done, _local)
+                me.pushOne(enterChain, toParams, done, _local)
             })
         }
     }
@@ -305,7 +261,6 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
     }
 
     // 靠谱的解决方法
-    var count = 0
     avalon.bindingHandlers.view = function(data, vmodels) {
         var currentState = mmState.currentState,
             element = data.element,
@@ -319,7 +274,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             currentLocal = {},
             oldElement = element,
             tpl = element.outerHTML
-        if(!parentState) return
+        element.removeAttribute("ms-view") // remove right now
         par.insertBefore(comment, element)
         function update(firsttime) {
             // node removed, remove callback
@@ -329,20 +284,20 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 _local
             if (viewname.indexOf("@") < 0) viewname += "@" + parentState.stateName
             _local = mmState.currentState._local && mmState.currentState._local[viewname]
-            if(!_local) return
-            if(currentLocal === _local) return
+            if(firsttime && !_local || currentLocal === _local) return
             currentLocal = _local
             _currentState = _local && _local.state
             var _element = compileNode(tpl, element, $element, oldElement, _currentState)
             oldElement = _element
-            _element.innerHTML = _local === undefine ? defaultHTML : _local.template
+            _element.innerHTML = _local ? _local.template : defaultHTML
             _element.removeAttribute("ms-view")
             _element.setAttribute("ui-view", data.value)
             avalon.each(getViewNodes(_element), function(i, node) {
                 avalon(node).data("statename", _currentState && _currentState.stateName || "")
             })
             // var vm = getVModels(_currentState)
-            avalon.scan(_element, vmodels/*vm*/)
+            // avalon.scan(_element, vmodels/*vm*/)
+            avalon.scan(_element, _local && _local.vmodels || vmodels/*vm*/)
         }
         update("firsttime")
         _root.watch("updateview", function(state) {
@@ -355,6 +310,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             avalon(element).addClass("oni-mmRouter-enter")
             avalon(oldElement).removeClass("oni-mmRouter-enter").addClass("oni-mmRouter-leave")
             oldElement.parentNode.insertBefore(element, oldElement.nextSibling)
+            mmState.oldNodes.push(oldElement)
             callStateFunc("onViewEnter", _currentState, element, oldElement)
             return element
         }
@@ -404,9 +360,8 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 avalon.log("topController不存在")
                 return
             }
-            // if(state.resolved) return state.resolved
-            var me = this, promises = []
-
+            var me = this, promises = [], resolved = state.resolved
+            !resolved && getFn(state, "onBeforeLoad").call(null, me)
             avalon.each(state.views, function(name, view) {
                 var promise = fromPromise(view, me.params), 
                     warnings = "warning: " + stateName + "状态对象的【" + name + "】视图对象"
@@ -416,8 +371,8 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         template: s,
                         name: name,
                         state: state,
-                        params: state.filterParams(params)//,
-                        // vmodels: getVModels(state)
+                        params: state.filterParams(params),
+                        vmodels: getVModels(state)
                     }
                 }, function(msg) {
                     avalon.log(warnings + " " + msg)
@@ -427,7 +382,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             })
             state.resolved = Promise.all(promises).then(function(values) {
                 state._local = _local
-                getFn(state, "onAfterLoad").call(null, me)
+                !resolved && getFn(state, "onAfterLoad").call(null, me)
             })
             return state.resolved
 
@@ -441,17 +396,29 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
     /*
      *  @interface avalon.state.config 全局配置
      *  @param {Object} config 配置对象
-     *  @param {Function} config.beforeUnload 开始切前的回调，this指向router对象，第一个参数是fromState，第二个参数是toState，return false可以用来阻止切换进行
-     *  @param {Function} config.onAbort beforeUnload return false之后，触发的回调，this指向mmState对象，参数同beforeUnload
-     *  @param {Function} config.unload url切换时候触发，this指向mmState对象，参数同beforeUnload
-     *  @param {Function} config.onBegin  开始切换的回调，this指向mmState对象，参数同beforeUnload
-     *  @param {Function} config.onload 切换完成并成功，this指向mmState对象，参数同beforeUnload
+     *  @param {Function} config.beforeUnload 请使用onBeforeUnload
+     *  @param {Function} config.onBeforeUnload 开始切前的回调，this指向router对象，第一个参数是fromState，第二个参数是toState，return false可以用来阻止切换进行
+     *  @param {Function} config.abort 请使用onAbort
+     *  @param {Function} config.onAbort onBeforeUnload return false之后，触发的回调，this指向mmState对象，参数同onBeforeUnload
+     *  @param {Function} config.unload 请使用onUnload
+     *  @param {Function} config.onUnload url切换时候触发，this指向mmState对象，参数同onBeforeUnload
+     *  @param {Function} config.begin 请使用onBegin
+     *  @param {Function} config.onBegin  开始切换的回调，this指向mmState对象，参数同onBeforeUnload，如果配置了onBegin，则忽略begin
+     *  @param {Function} config.onload 切换完成并成功，this指向mmState对象，参数同onBeforeUnload
      *  @param {Function} config.onViewEnter 视图插入动画函数，有一个默认效果
      *  @param {Node} config.onViewEnter.arguments[0] 新视图节点
      *  @param {Node} config.onViewEnter.arguments[1] 旧的节点
      *  @param {Function} config.onloadError 加载模板资源出错的回调，this指向对应的state，第一个参数对应的模板配置keyname，第二个参数是对应的state
     */
     avalon.state.config = function(config) {
+        avalon.each(config, function(key, func) {
+            if(key.indexOf("on") !== 0) {
+                delete config[key]
+                config["on" + key.replace(/^[a-z]/g, function(mat) {
+                    return mat.toUpperCase()
+                })] = func
+            }
+        })
         avalon.mix(avalon.state, config || {})
         return this
     }

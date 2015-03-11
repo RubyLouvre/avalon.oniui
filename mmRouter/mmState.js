@@ -255,7 +255,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 return
             }
             avalon.log("begin transitionTo " + toState.stateName + " from " + (fromState && fromState.stateName || "unknown"))
-            callStateFunc("unload", this, fromState, toState)
+            callStateFunc("onUnload", this, fromState, toState)
             this.currentState = toState
             this.prevState = fromState
             callStateFunc("onBegin", this, fromState, toState)

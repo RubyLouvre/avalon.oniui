@@ -112,7 +112,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             var success = cur.onAfterUnload()
             if(!cur._pending && cur.done) cur.done(success)
         },
-        pushOne: function(chain, params, callback, _local) {
+        pushOne: function(chain, params, callback, _local, toLocals) {
             var cur = chain.shift(), me = this
             // 退出
             if(!cur) return callback()
@@ -125,6 +125,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 return callback(false)
             }
             _local = inherit(_local)
+            toLocals && toLocals.push(_local)
             me.activeState = cur // 更新当前实际处于的状态
             cur.done = function(success) {
                 // 防止async处触发已经销毁的done
@@ -235,7 +236,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             this.popOne(exitChain, toParams, function(success) {
                 // 中断
                 if(success === false) return done(success)
-                me.pushOne(enterChain, toParams, done, _local)
+                me.pushOne(enterChain, toParams, done, _local, toLocals)
             })
         }
     }
@@ -486,7 +487,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             this._self = options
             this._pending = false
             this.visited = false
-            this.params = inherit(parent && parent.params || new function(){})
+            this.params = inherit(parent && parent.params || {})
             this.oldParams = {}
             this.keys = []
 

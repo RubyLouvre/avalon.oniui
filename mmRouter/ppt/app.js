@@ -1,7 +1,9 @@
 define(["mmRouter/mmState", 
 		"mmRouter/ppt/model/ppt", 
 		"mmRequest/mmRequest", 
-		"loading/avalon.loading", "mmRouter/ppt/markdown.min"], function () {
+		"loading/avalon.loading", 
+		"mmRouter/ppt/highlight.pack", 
+		"mmRouter/ppt/markdown.min"], function () {
 	avalon.state("ppt", {
 		url: "/:pageNumber",
 		controller: "ppt",
@@ -19,7 +21,7 @@ define(["mmRouter/mmState",
 				ppt.content = markdown.toHTML(res)
 				setTimeout(function() {
 					done()
-				}, pageNumber > 1 ? 0 : 0 * 2000)
+				}, pageNumber > 1 ? 0 : mmState.prevState ? 0 : 2000)
 			}, "text")
 		}
 	})
@@ -43,6 +45,24 @@ define(["mmRouter/mmState",
         onload: function() {
         	if(avalon.vmodels.$loading) avalon.vmodels.$loading.toggle = false
         	avalon.vmodels.ppt.curentPage = avalon.vmodels.ppt._curentPage
+        	// 语法高亮
+        	// only in modern browser
+        	if(document.querySelectorAll) {
+        		avalon.each(document.querySelectorAll(".oni-mmRouter-enter"), function(i, node) {
+        			var $node = avalon(node)
+        			if($node.hasClass("oni-mmRouter-leave")) return
+		        	var h2 = node.getElementsByTagName("h2")[0] || node.getElementsByTagName("h1")[0]
+		        	if(h2) document.title = h2.innerHTML
+        			avalon.each(node.querySelectorAll("code"), function(i, code) {
+        				if(code.textContent.match(/<[^>]+>/g)) {
+        					code.className = "lang-html"
+        				} else {
+        					// code.className = "lang-javascript"
+        				}
+        				hljs.highlightBlock(code)
+        			})
+        		})
+        	}
         }
 	})
 	avalon.router.errorback = function() {

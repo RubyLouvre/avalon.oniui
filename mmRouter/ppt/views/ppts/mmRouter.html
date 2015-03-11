@@ -1,0 +1,23 @@
+## mmRouter
+
+#### √ what
+
+链接url和callback
+
+#### √ rules
+
+    '/hello/' - 匹配'/hello/'或'/hello'    
+    '/user/:id' - 匹配 '/user/bob' 或 '/user/1234!!!' 或 '/user/' 但不匹配 '/user' 与 '/user/bob/details'    
+    '/user/{id}' - 同上    
+    '/user/{id:[^/]*}' - 同上    
+    '/user/{id:[0-9a-fA-F]{1,8}}' - 要求ID匹配/[0-9a-fA-F]{1,8}/这个子正则    
+    '/files/{path:.*}' - Matches any URL starting with '/files/' and captures the rest of the    
+
+#### √ script
+
+    avalon.router.get("/ddd/:dddID/",callback)
+    avalon.router.get("/ddd/{dddID}/",callback)
+    avalon.router.get("/ddd/{dddID:[0-9]{4}}/",callback)
+    avalon.router.get("/ddd/{dddID:int}/",callback)
+    我们甚至可以在这里添加新的类型，avalon.router.$type.d4 = { pattern: '[0-9]{4}', decode: Number}
+    avalon.router.get("/ddd/{dddID:d4}/",callback)

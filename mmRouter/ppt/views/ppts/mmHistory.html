@@ -1,0 +1,22 @@
+## mmHistory
+
+#### √ 浏览器的history，都被我承包了
+
++ 实现无刷新的前进后退历史记录
++ 监听url变化，格式化数据之后分发
++ 提供读写替换url的接口
++ 劫持a链接
+
+#### √ 配置说明
+    {
+        basepath: "/", //根目录
+        html5Mode: false, //使用pushState //
+        hashPrefix: "!", //前缀
+        iframeID: null, //IE6-7，如果有在页面写死了一个iframe，这样似乎刷新的时候不会丢掉之前的历史
+        interval: 50, //IE6-7,使用轮询，这是其时间时隔
+        fireAnchor: true//决定是否将滚动条定位于与hash同ID的元素上
+    }
+
+#### √ 技术点
+
++ pushState、replaceState、popState，hashChange，iframe实现IE 6+的前进后退全兼容

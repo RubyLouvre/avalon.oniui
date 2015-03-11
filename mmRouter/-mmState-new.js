@@ -237,7 +237,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         state = fromChain[i - 1]
                     }
                     // 找共同的父节点，那么也是需要参考params和reload，reload情况，将所有栈里的state全部退出，否则退出到params没有发生变化的地方
-                    commonParent = (state && state.paramsChanged(toParams) ? state.parentState : state) || _root
+                    commonParent = ( fromState === toState && state && state.paramsChanged(toParams) || fromState !== toState ? state && state.parentState : state) || _root
                 }
                 done = function(success) {
                     if(over) return
@@ -321,33 +321,15 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             tpl = element.outerHTML
         if(!parentState) return
         par.insertBefore(comment, element)
-        function update(firsttime, state) {
+        function update(firsttime) {
             // node removed, remove callback
             if(!document.contains(comment)) return !"delete from watch"
             var definedParentStateName = $element.data("statename") || "",
                 parentState = getStateByName(definedParentStateName) || _root,
-                me = state || _root,
                 _local
-
-            if(me === _root) return
             if (viewname.indexOf("@") < 0) viewname += "@" + parentState.stateName
-            if(firsttime && me && !me.resolved) return
-            // var _currentState = mmState.currentState
-            // while(_local === undefine && _currentState != _root) {
-            //     if(viewname in _currentState._local) {
-            //         _local = _currentState._local[viewname]
-            //         break
-            //     }
-            //     for(var i in _currentState._local) {
-            //         if(viewname.indexOf(i) == 0) {
-            //             _local = _currentState._local[i]
-            //             break
-            //         }
-            //     }
-            //     if(_local) break
-            //     _currentState = _currentState.parentState
-            // }
-            _local = mmState.currentState._local[viewname]
+            _local = mmState.currentState._local && mmState.currentState._local[viewname]
+            if(!_local) return
             if(currentLocal === _local) return
             currentLocal = _local
             _currentState = _local && _local.state
@@ -359,27 +341,17 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             avalon.each(getViewNodes(_element), function(i, node) {
                 avalon(node).data("statename", _currentState && _currentState.stateName || "")
             })
-            var vm = getVModels(state)
-            avalon.scan(_element, vm)
+            // var vm = getVModels(_currentState)
+            avalon.scan(_element, vmodels/*vm*/)
         }
-        // update("firsttime")
+        update("firsttime")
         _root.watch("updateview", function(state) {
             return update.call(this, undefine, state)
         })
-        // parentState.watch("updateview", function(state) {
-        //     return update.call(this, undefine, state)
-        // })
-        // parentState.watch("unloadView", function(state) {
-        //     // if(!document.contains(element)) return !"element removed"
-        //     // element.innerHTML = defaultHTML
-        //     // var vm = getVModels(state)
-        //     // avalon.scan(element, vm)
-        //     var a
-        // })
     }
     function compileNode(tpl, tplElement, $tplElement, oldElement, _currentState) {
         if($tplElement.hasClass("oni-mmRouter-slide")) {
-            var element = avalon.parseHTML(tpl).children[0]
+            var element = avalon.parseHTML(tpl).childNodes[0]
             avalon(element).addClass("oni-mmRouter-enter")
             avalon(oldElement).removeClass("oni-mmRouter-enter").addClass("oni-mmRouter-leave")
             oldElement.parentNode.insertBefore(element, oldElement.nextSibling)
@@ -444,8 +416,8 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         template: s,
                         name: name,
                         state: state,
-                        params: state.filterParams(params),
-                        vmodels: getVModels(state)
+                        params: state.filterParams(params)//,
+                        // vmodels: getVModels(state)
                     }
                 }, function(msg) {
                     avalon.log(warnings + " " + msg)
@@ -547,7 +519,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             this._self = options
             this._pending = false
             this.visited = false
-            this.params = inherit(parent && parent.params || {})
+            this.params = inherit(parent && parent.params || new function(){})
             this.oldParams = {}
             this.keys = []
 

@@ -62,7 +62,7 @@
                     // arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
                 })
             }
-            require(["ready!", "mmRouter/mmState-new", "loading/avalon.loading"], function() {
+            require(["ready!", "mmRouter/-mmState-new", "loading/avalon.loading"], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -298,7 +298,7 @@
                         'hint@': {
                             template: "当前状态是contacts.detail"
                         },
-                        'tip@': {
+                        'tip': {
                             template: "当前ID是{{contact.id}}"
                         },
                         "complex@": {
@@ -397,7 +397,8 @@
           mss-widget="loading,loading" data-loading-type="img" data-loading-modal-background="#ccc" data-loading-modal-opacity="0.5">
         <h1>mmRouter综合示例四: avalon.router.go</h1>
         <div style="overflow:hidden;">
-            <ul class="codelist">
+            <ul class="codelist" 
+                ms-visible="false">
                 <li 
                      ms-repeat-code="codes">
                     <textarea 
@@ -413,7 +414,8 @@
             </ul>
             <div class="header">
                 <a href="#!//">mmState</a>  <a href="#!/contacts">contacts</a>  <a href="#!/about">about</a>
-                <p class="hint" ms-view="hint"></p>
+                <p class="hint" ms-view="hint" 
+                   ms-class="b2"></p>
             </div>
             <div class="oni-helper-clearfix slider oni-helper-reset">
                 <div ms-view class="oni-mmRouter-slide"></div>

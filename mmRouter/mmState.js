@@ -247,7 +247,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 // 重复点击直接return
                 return
             }
-            if(callStateFunc("beforeUnload", this, fromState, toState) === false) {
+            if(callStateFunc("onBeforeUnload", this, fromState, toState) === false) {
                 if(fromState) done(false)
                 return callStateFunc("onAbort", this, fromState, toState)
             }
@@ -445,22 +445,30 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
     /*
      *  @interface avalon.state.config 全局配置
      *  @param {Object} config 配置对象
-     *  @param {Function} config.beforeUnload 开始切前的回调，this指向router对象，第一个参数是fromState，第二个参数是toState，return false可以用来阻止切换进行
+     *  @param {Function} config.beforeUnload 请使用onBeforeUnload
+     *  @param {Function} config.onBeforeUnload 开始切前的回调，this指向router对象，第一个参数是fromState，第二个参数是toState，return false可以用来阻止切换进行
      *  @param {Function} config.abort 请使用onAbort
-     *  @param {Function} config.onAbort beforeUnload return false之后，触发的回调，this指向mmState对象，参数同beforeUnload
-     *  @param {Function} config.unload url切换时候触发，this指向mmState对象，参数同beforeUnload
+     *  @param {Function} config.onAbort onBeforeUnload return false之后，触发的回调，this指向mmState对象，参数同onBeforeUnload
+     *  @param {Function} config.unload 请使用onUnload
+     *  @param {Function} config.onUnload url切换时候触发，this指向mmState对象，参数同onBeforeUnload
      *  @param {Function} config.begin 请使用onBegin
-     *  @param {Function} config.onBegin  开始切换的回调，this指向mmState对象，参数同beforeUnload，如果配置了onBegin，则忽略begin
-     *  @param {Function} config.onload 切换完成并成功，this指向mmState对象，参数同beforeUnload
+     *  @param {Function} config.onBegin  开始切换的回调，this指向mmState对象，参数同onBeforeUnload，如果配置了onBegin，则忽略begin
+     *  @param {Function} config.onload 切换完成并成功，this指向mmState对象，参数同onBeforeUnload
      *  @param {Function} config.onViewEnter 视图插入动画函数，有一个默认效果
      *  @param {Node} config.onViewEnter.arguments[0] 新视图节点
      *  @param {Node} config.onViewEnter.arguments[1] 旧的节点
      *  @param {Function} config.onloadError 加载模板资源出错的回调，this指向对应的state，第一个参数对应的模板配置keyname，第二个参数是对应的state
     */
     avalon.state.config = function(config) {
+        avalon.each(config, function(key, func) {
+            if(key.indexOf("on") !== 0) {
+                delete config[key]
+                config["on" + key.replace(/^[a-z]/g, function(mat) {
+                    return mat.toUpperCase()
+                })] = func
+            }
+        })
         avalon.mix(avalon.state, config || {})
-        if(avalon.state.begin && !avalon.state.onBegin) avalon.state.onBegin = avalon.state.begin
-        if(avalon.state.abort && !avalon.state.onAbort) avalon.state.onAbort = avalon.state.abort
         return this
     }
     function callStateFunc(name, state) {

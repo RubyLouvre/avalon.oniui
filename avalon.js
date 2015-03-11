@@ -2103,6 +2103,7 @@ var priorityMap = {
     "repeat": 90,
     "data": 100,
     "widget": 110,
+    "view": 111,
     "each": 1400,
     "with": 1500,
     "duplex": 2000,

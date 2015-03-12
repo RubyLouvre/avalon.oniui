@@ -11,6 +11,9 @@
                 background-color: #ccc;
                 height:40px;
             }
+            body {
+                overflow-x: hidden; 
+            }
             .header a{
                 width:140px;
                 display: inline-block;
@@ -33,6 +36,21 @@
                 display: inline;
                 margin-right: 10px;
             }
+            .slider{
+                width: 200%;
+                overflow: hidden;
+            }
+            .oni-mmRouter-leave {
+                position: relative;
+                z-index: -1;                
+            }
+            .oni-mmRouter-slide {
+                width: 50%;
+                float: left;
+                display: inline;
+                background: #fff;
+                transition: margin-left .5s;
+            }
         </style>
         <script >
             avalon.config({debug: true})
@@ -44,7 +62,7 @@
                     // arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
                 })
             }
-            require(["ready!", "mmRouter/mmState", "loading/avalon.loading"], function() {
+            require(["ready!", "mmRouter/-mmState-new", "loading/avalon.loading"], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -55,12 +73,6 @@
                         if(!code) return
                         code = code.value
                         eval(code)
-                    }
-                })
-                avalon.define("form", function(vm) {
-                    vm.cid = "nihao"
-                    vm.randomID = function() {
-                        return Math.random()
                     }
                 })
                 avalon.state.config({
@@ -255,6 +267,9 @@
                         },
                         "hint@": {
                             template: "当前状态是contacts.list"
+                        },
+                        "complex@": {
+                            template: "<font color='red'>默认内容内不能包含ms-view-这是由于现在的设计造成的，可以后续考虑重写ms-view的逻辑</font>"
                         }
                     }
                 })
@@ -274,7 +289,7 @@
                             } else {
                                 done(false)
                             }
-                        }, 1000)
+                        }, 500)
                     },
                     views: {
                         "": {
@@ -283,8 +298,11 @@
                         'hint@': {
                             template: "当前状态是contacts.detail"
                         },
-                        'tip@': {
+                        'tip': {
                             template: "当前ID是{{contact.id}}"
+                        },
+                        "complex@": {
+                            template: "<font color='red'>我只有呵呵了</font>"
                         }
                     }
                 })
@@ -322,7 +340,7 @@
                 ///////////////////////////////
                 avalon.state("contacts.detail.item.edit", {
                     views: {
-                        "@contacts.detail.item": {
+                        "@contacts.detail": {
                             templateUrl: "contacts.detail.item.edit.html"
                         },
                         "hint@": {
@@ -355,6 +373,13 @@
                     onloadError: function(keyname, state) {
                         // state == this
                         avalon.router.navigate("/", {replace: true})
+                    },
+                    onViewEnter: function(newNode, oldNode) {
+                        oldNode.style.marginLeft = "-50%"
+                        mmState.oldNodes.push(oldNode)
+                        setTimeout(function() {
+                            oldNode.parentNode && oldNode.parentNode.removeChild(oldNode)
+                        }, 1000)
                     }
                 })
                 //启动路由
@@ -369,10 +394,11 @@
         </script>
     </head>
     <body ms-controller="test"
-          ms-widget="loading,loading" data-loading-type="img" data-loading-modal-background="#ccc" data-loading-modal-opacity="0.5">
+          mss-widget="loading,loading" data-loading-type="img" data-loading-modal-background="#ccc" data-loading-modal-opacity="0.5">
         <h1>mmRouter综合示例四: avalon.router.go</h1>
-        <div>
-            <ul class="codelist">
+        <div style="overflow:hidden;">
+            <ul class="codelist" 
+                ms-visible="false">
                 <li 
                      ms-repeat-code="codes">
                     <textarea 
@@ -388,10 +414,12 @@
             </ul>
             <div class="header">
                 <a href="#!//">mmState</a>  <a href="#!/contacts">contacts</a>  <a href="#!/about">about</a>
-                <p class="hint" ms-view="hint"></p>
+                <p class="hint" ms-view="hint" 
+                   ms-class="b2"></p>
             </div>
-
-            <div ms-view></div>
+            <div class="oni-helper-clearfix slider oni-helper-reset">
+                <div ms-view class="oni-mmRouter-slide"></div>
+            </div>
         </div>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -405,6 +433,9 @@
             .header{
                 background-color: #ccc;
                 height:40px;
+            }
+            body {
+                overflow-x: hidden; 
             }
             .header a{
                 width:140px;
@@ -428,6 +459,21 @@
                 display: inline;
                 margin-right: 10px;
             }
+            .slider{
+                width: 200%;
+                overflow: hidden;
+            }
+            .oni-mmRouter-leave {
+                position: relative;
+                z-index: -1;                
+            }
+            .oni-mmRouter-slide {
+                width: 50%;
+                float: left;
+                display: inline;
+                background: #fff;
+                transition: margin-left .5s;
+            }
         &lt;/style&gt;
         &lt;script &gt;
             avalon.config({debug: true})
@@ -439,7 +485,7 @@
                     // arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
                 })
             }
-            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;], function() {
+            require([&quot;ready!&quot;, &quot;mmRouter/mmState-new&quot;, &quot;loading/avalon.loading&quot;], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -450,12 +496,6 @@
                         if(!code) return
                         code = code.value
                         eval(code)
-                    }
-                })
-                avalon.define(&quot;form&quot;, function(vm) {
-                    vm.cid = &quot;nihao&quot;
-                    vm.randomID = function() {
-                        return Math.random()
                     }
                 })
                 avalon.state.config({
@@ -650,6 +690,9 @@
                         },
                         &quot;hint@&quot;: {
                             template: &quot;当前状态是contacts.list&quot;
+                        },
+                        &quot;complex@&quot;: {
+                            template: &quot;&lt;font color='red'&gt;默认内容内不能包含ms-view-这是由于现在的设计造成的，可以后续考虑重写ms-view的逻辑&lt;/font&gt;&quot;
                         }
                     }
                 })
@@ -669,7 +712,7 @@
                             } else {
                                 done(false)
                             }
-                        }, 1000)
+                        }, 500)
                     },
                     views: {
                         &quot;&quot;: {
@@ -680,6 +723,9 @@
                         },
                         'tip@': {
                             template: &quot;当前ID是{{contact.id}}&quot;
+                        },
+                        &quot;complex@&quot;: {
+                            template: &quot;&lt;font color='red'&gt;我只有呵呵了&lt;/font&gt;&quot;
                         }
                     }
                 })
@@ -717,7 +763,7 @@
                 ///////////////////////////////
                 avalon.state(&quot;contacts.detail.item.edit&quot;, {
                     views: {
-                        &quot;@contacts.detail.item&quot;: {
+                        &quot;@contacts.detail&quot;: {
                             templateUrl: &quot;contacts.detail.item.edit.html&quot;
                         },
                         &quot;hint@&quot;: {
@@ -750,6 +796,13 @@
                     onloadError: function(keyname, state) {
                         // state == this
                         avalon.router.navigate(&quot;/&quot;, {replace: true})
+                    },
+                    onViewEnter: function(newNode, oldNode) {
+                        oldNode.style.marginLeft = &quot;-50%&quot;
+                        mmState.oldNodes.push(oldNode)
+                        setTimeout(function() {
+                            oldNode.parentNode &amp;&amp; oldNode.parentNode.removeChild(oldNode)
+                        }, 1000)
                     }
                 })
                 //启动路由
@@ -764,9 +817,9 @@
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;
-          ms-widget=&quot;loading,loading&quot; data-loading-type=&quot;img&quot; data-loading-modal-background=&quot;#ccc&quot; data-loading-modal-opacity=&quot;0.5&quot;&gt;
+          mss-widget=&quot;loading,loading&quot; data-loading-type=&quot;img&quot; data-loading-modal-background=&quot;#ccc&quot; data-loading-modal-opacity=&quot;0.5&quot;&gt;
         &lt;h1&gt;mmRouter综合示例四: avalon.router.go&lt;/h1&gt;
-        &lt;div&gt;
+        &lt;div style=&quot;overflow:hidden;&quot;&gt;
             &lt;ul class=&quot;codelist&quot;&gt;
                 &lt;li 
                      ms-repeat-code=&quot;codes&quot;&gt;
@@ -785,8 +838,9 @@
                 &lt;a href=&quot;#!//&quot;&gt;mmState&lt;/a&gt;  &lt;a href=&quot;#!/contacts&quot;&gt;contacts&lt;/a&gt;  &lt;a href=&quot;#!/about&quot;&gt;about&lt;/a&gt;
                 &lt;p class=&quot;hint&quot; ms-view=&quot;hint&quot;&gt;&lt;/p&gt;
             &lt;/div&gt;
-
-            &lt;div ms-view&gt;&lt;/div&gt;
+            &lt;div class=&quot;oni-helper-clearfix slider oni-helper-reset&quot;&gt;
+                &lt;div ms-view class=&quot;oni-mmRouter-slide&quot;&gt;&lt;/div&gt;
+            &lt;/div&gt;
         &lt;/div&gt;
         
     &lt;/body&gt;

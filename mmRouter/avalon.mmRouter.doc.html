@@ -158,12 +158,12 @@ mmRouter的使用
                                 <tr>
                                     <td>options.replace</td>
                                     <td></td>
-                                    <td>options.replace true替换history，否则生成一条新的历史记录</td>
+                                    <td>true替换history，否则生成一条新的历史记录</td>
                                 </tr>
                                 <tr>
                                     <td>options.silent</td>
                                     <td></td>
-                                    <td>options.silent true表示只同步url，不触发url变化监听绑定</td>
+                                    <td>true表示只同步url，不触发url变化监听绑定</td>
                                 </tr>
                             </table>
                         </td>
@@ -245,22 +245,22 @@ mmRouter的使用
                                 <tr>
                                     <td>options</td>
                                     <td></td>
-                                    <td>options 扩展配置</td>
+                                    <td>扩展配置</td>
                                 </tr>
                                 <tr>
                                     <td>options.reload</td>
                                     <td></td>
-                                    <td>options.reload true强制reload，即便url、参数并未发生变化</td>
+                                    <td>true强制reload，即便url、参数并未发生变化</td>
                                 </tr>
                                 <tr>
                                     <td>options.replace</td>
                                     <td></td>
-                                    <td>options.replace true替换history，否则生成一条新的历史记录</td>
+                                    <td>true替换history，否则生成一条新的历史记录</td>
                                 </tr>
                                 <tr>
                                     <td>options.replaceQuery</td>
                                     <td></td>
-                                    <td>options.replaceQuery true表示完全覆盖query，而不是merge，默认为false，为true则会用params指定的query去清空</td>
+                                    <td>true表示完全覆盖query，而不是merge，默认为false，为true则会用params指定的query去清空</td>
                                 </tr>
                             </table>
                         </td>
@@ -287,36 +287,35 @@ mmRouter的使用
                                     <td>opts 配置</td>
                                 </tr>
                                 <tr>
-                                    <td>opts.url:</td>
+                                    <td>opts.url</td>
                                     <td></td>
-                                    <td>opts.url: 当前状态对应的路径规则，与祖先状态们组成一个完整的匹配规则</td>
+                                    <td>当前状态对应的路径规则，与祖先状态们组成一个完整的匹配规则</td>
                                 </tr>
                                 <tr>
-                                    <td>opts.controller：</td>
+                                    <td>opts.controller</td>
                                     <td></td>
-                                    <td>opts.controller： 指定当前所在的VM的名字（如果是顶级状态对象，必须指定）</td>
+                                    <td>指定当前所在的VM的名字（如果是顶级状态对象，必须指定）</td>
                                 </tr>
                                 <tr>
-                                    <td>opts.views:</td>
+                                    <td>opts.views</td>
                                     <td></td>
-                                    <td>opts.views: 如果不写views属性,则默认view为""，对多个[ms-view]容器进行处理,每个对象应拥有template,
-                                        templateUrl, templateProvider</td>
+                                    <td>如果不写views属性,则默认view为""，对多个[ms-view]容器进行处理,每个对象应拥有template, templateUrl,
+                                        templateProvider</td>
                                 </tr>
                                 <tr>
                                     <td>opts.views.template</td>
                                     <td></td>
-                                    <td>opts.views.template 指定当前模板，也可以为一个函数，传入opts.params作参数</td>
+                                    <td>指定当前模板，也可以为一个函数，传入opts.params作参数</td>
                                 </tr>
                                 <tr>
                                     <td>opts.views.templateUrl</td>
                                     <td></td>
-                                    <td>opts.views.templateUrl 指定当前模板的路径，也可以为一个函数，传入opts.params作参数</td>
+                                    <td>指定当前模板的路径，也可以为一个函数，传入opts.params作参数</td>
                                 </tr>
                                 <tr>
                                     <td>opts.views.templateProvider</td>
                                     <td></td>
-                                    <td>opts.views.templateProvider 指定当前模板的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数
-                                        views的结构为
+                                    <td>指定当前模板的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数 views的结构为
                                         <pre>
 {
 "": {template: "xxx"}
@@ -329,43 +328,42 @@ mmRouter的使用
                                 <tr>
                                     <td>opts.onBeforeLoad</td>
                                     <td></td>
-                                    <td>opts.onBeforeLoad 模板还没有插入DOM树执行的回调，this指向[ms-view]元素节点集合，参数为关联的state对象</td>
+                                    <td>模板还没有插入DOM树执行的回调，this指向[ms-view]元素节点集合，参数为关联的state对象</td>
                                 </tr>
                                 <tr>
                                     <td>opts.onAfterLoad</td>
                                     <td></td>
-                                    <td>opts.onAfterLoad 模板插入DOM树执行的回调，this指向[ms-view]元素节点，参数为为关联的state对象</td>
+                                    <td>模板插入DOM树执行的回调，this指向[ms-view]元素节点，参数为为关联的state对象</td>
                                 </tr>
                                 <tr>
                                     <td>opts.onBeforeChange</td>
                                     <td></td>
-                                    <td>opts.onBeforeChange 切入某个state之前触发，this指向对应的state，如果return false则会中断并退出整个状态机</td>
+                                    <td>切入某个state之前触发，this指向对应的state，如果return false则会中断并退出整个状态机</td>
                                 </tr>
                                 <tr>
                                     <td>opts.onChange</td>
                                     <td></td>
-                                    <td>opts.onChange 当切换为当前状态时调用的回调，this指向状态对象，参数为匹配的参数， 我们可以在此方法 定义此模板用到的VM，
-                                        或修改VM的属性</td>
+                                    <td>当切换为当前状态时调用的回调，this指向状态对象，参数为匹配的参数， 我们可以在此方法 定义此模板用到的VM， 或修改VM的属性</td>
                                 </tr>
                                 <tr>
                                     <td>opts.onBeforeUnload</td>
                                     <td></td>
-                                    <td>opts.onBeforeUnload state退出前触发，this指向对应的state，如果return false则会中断并退出整个状态机</td>
+                                    <td>state退出前触发，this指向对应的state，如果return false则会中断并退出整个状态机</td>
                                 </tr>
                                 <tr>
                                     <td>opts.onAfterUnload</td>
                                     <td></td>
-                                    <td>opts.onAfterUnload 退出后触发，this指向对应的state</td>
+                                    <td>退出后触发，this指向对应的state</td>
                                 </tr>
                                 <tr>
                                     <td>opts.abstract</td>
                                     <td></td>
-                                    <td>opts.abstract 表示它不参与匹配，this指向对应的state</td>
+                                    <td>表示它不参与匹配，this指向对应的state</td>
                                 </tr>
                                 <tr>
                                     <td>opts.parentState</td>
                                     <td>private</td>
-                                    <td>opts.parentState 父状态对象（框架内部生成）</td>
+                                    <td>父状态对象（框架内部生成）</td>
                                 </tr>
                             </table>
                         </td>
@@ -383,39 +381,63 @@ mmRouter的使用
                                 </tr>
                                 <tr>
                                     <td>config</td>
-                                    <td>object</td>
+                                    <td>Object</td>
                                     <td>config 配置对象</td>
                                 </tr>
                                 <tr>
                                     <td>config.beforeUnload</td>
-                                    <td>function</td>
-                                    <td>config.beforeUnload 开始切前的回调，this指向router对象，第一个参数是fromState，第二个参数是toState，return
-                                        false可以用来阻止切换进行</td>
+                                    <td>Function</td>
+                                    <td>开始切前的回调，this指向router对象，第一个参数是fromState，第二个参数是toState，return false可以用来阻止切换进行</td>
                                 </tr>
                                 <tr>
                                     <td>config.abort</td>
-                                    <td>function</td>
-                                    <td>config.abort beforeUnload return false之后，触发的回调，this指向mmState对象，参数同beforeUnload</td>
+                                    <td>Function</td>
+                                    <td>请使用onAbort</td>
                                 </tr>
                                 <tr>
-                                    <td>config.begin</td>
-                                    <td>function</td>
-                                    <td>config.begin 开始切换的回调，this指向mmState对象，参数同beforeUnload</td>
+                                    <td>config.onAbort</td>
+                                    <td>Function</td>
+                                    <td>beforeUnload return false之后，触发的回调，this指向mmState对象，参数同beforeUnload</td>
                                 </tr>
                                 <tr>
                                     <td>config.unload</td>
-                                    <td>function</td>
-                                    <td>config.unload url切换时候触发，this指向mmState对象，参数同beforeUnload</td>
+                                    <td>Function</td>
+                                    <td>url切换时候触发，this指向mmState对象，参数同beforeUnload</td>
+                                </tr>
+                                <tr>
+                                    <td>config.begin</td>
+                                    <td>Function</td>
+                                    <td>请使用onBegin</td>
+                                </tr>
+                                <tr>
+                                    <td>config.onBegin</td>
+                                    <td>Function</td>
+                                    <td>开始切换的回调，this指向mmState对象，参数同beforeUnload，如果配置了onBegin，则忽略begin</td>
                                 </tr>
                                 <tr>
                                     <td>config.onload</td>
-                                    <td>function</td>
-                                    <td>config.onload 切换完成并成功，this指向mmState对象，参数同beforeUnload</td>
+                                    <td>Function</td>
+                                    <td>切换完成并成功，this指向mmState对象，参数同beforeUnload</td>
+                                </tr>
+                                <tr>
+                                    <td>config.onViewEnter</td>
+                                    <td>Function</td>
+                                    <td>视图插入动画函数，有一个默认效果</td>
+                                </tr>
+                                <tr>
+                                    <td>config.onViewEnter.arguments[0]</td>
+                                    <td>Node</td>
+                                    <td>新视图节点</td>
+                                </tr>
+                                <tr>
+                                    <td>config.onViewEnter.arguments[1]</td>
+                                    <td>Node</td>
+                                    <td>旧的节点</td>
                                 </tr>
                                 <tr>
                                     <td>config.onloadError</td>
-                                    <td>function</td>
-                                    <td>config.onloadError 加载模板资源出错的回调，this指向对应的state，第一个参数对应的模板配置keyname，第二个参数是对应的state</td>
+                                    <td>Function</td>
+                                    <td>加载模板资源出错的回调，this指向对应的state，第一个参数对应的模板配置keyname，第二个参数是对应的state</td>
                                 </tr>
                             </table>
                         </td>
@@ -490,6 +512,12 @@ setTimeout(done, 4000)
                 </li>
                 <li>
                     <a href="avalon.mmRouter.ex8.html">todos</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex9.html">mmRouter-基于状态机的路由器</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex13.html">mmRouter综合示例四: avalon.router.go</a>
                 </li>
             </ul>
         </div>

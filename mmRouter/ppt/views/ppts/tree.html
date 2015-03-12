@@ -1,0 +1,110 @@
+## oniui tree
+
+#### √ what
+
+zTree的avalon实现，几乎完全一致的接口
+
+#### √ model
+
+##### tree model
+
+多叉树
+
+##### leaf model
+
+    {
+        $parentLeaf: 父节点
+        children: 子节点
+    }
+
+#### √ module
+
+功能多而复杂，拆分
+
++ async.js - 异步
++ check.js - 单选、多选
++ edit.js  - 编辑
++ menu.js  - 基于tree封装的菜单
+
+#### √ 一些有意思的设计
+
+##### 模块化
+
+    // 扩展接口
+    avalon.ui.tree.AddExtention = function() {...}
+
+    // 写入扩展
+    avalon.each(ExtentionMethods, function(i, func) {
+        func && func(vm, vmodels)
+    })
+
+    // 开发扩展
+    avalon.ui.tree.AddExtention("async", ...)
+    avalon.ui.tree.AddExtention("edit", ...)
+    // ...
+
+##### 组合
+
+基本的编辑接口、查找接口拼凑出复杂的接口
+
+##### 支持灵活的配置项
+
+    vm.exprAnd = function() {
+        var len = arguments.length, step = 1, res = step, leaf = arguments[0]
+        while(step < len) {
+            res = res && vm.optionToBoolen(arguments[step], leaf)
+            step++
+        }
+        return res
+    }
+
+    vm.optionToBoolen = function() {
+        var arg = arguments[0]
+        if(!avalon.isFunction(arg)) return arg
+        return arg.apply(vm, [].slice.call(arguments,1))
+    }
+
+##### 命令执行器
+
+抽象为：beforeCMD => do CMD => onCMD
+
+    // 事件分发中心
+    vm.excute = function(cmd, event, leaf, action) {
+        var evt = cmd, eventName = upperFirstLetter(cmd),
+            beforeFunc = vm.callback["before" + eventName],
+            onFunc = vm.callback["on" + eventName],
+            res,
+            arg = {
+                e: event,
+                leaf: leaf,
+                vm: vm,
+                vmodels: vmodels,
+                preventDefault: function() {
+                    this.cancel = true
+                }
+            }, ele = event ? event.srcElement || event.target : null,
+            callbackEnabled = !event || !event.cancelCallback
+        if(cmd === "dblclick" && !vm.view.dblClickExpand
+            ) return
+        // 执行前检测，返回
+        vmodel.$fire("e:before" + eventName, arg)
+        if(callbackEnabled) {
+            // callback里面可能只preventDefault
+            if(arg.cancel || beforeFunc && beforeFunc.call(ele, arg) === false || arg.cancel) {
+                arg.preventDefault()
+                return
+            }
+        }
+        if(action) {
+            if(!avalon.isFunction(action)) action = vm[action]
+            if(avalon.isFunction(action)) res = action.call(ele, arg)
+        }
+        if(res !== undefine) arg.res = res
+        // 被消除
+        if(arg.cancel) return
+        vmodel.$fire("e:" + cmd, arg) 
+        if(callbackEnabled) {
+            onFunc && onFunc.call(ele, arg)
+        }
+        return res
+    }

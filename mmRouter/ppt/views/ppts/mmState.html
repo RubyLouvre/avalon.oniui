@@ -1,0 +1,23 @@
+## mmState
+
+#### √ what
+
+> mmRouter is a routing framework for Avalon, which allows you to organize the parts of your interface into a state machine. Unlike other router framework, which is organized around URL routes, mmRouter is organized around states, which may optionally have routes, as well as other behavior, attached.
+
+> States are bound to named, nested and parallel views, allowing you to powerfully manage your application's interface.
+
+状态机驱动视图 + controller运作
+
+url变化 => 状态机状态变化 => 更新数据、刷新视图 => 更新url
+
+#### √ 抽象页面：SPA = state machine
+
+
+##### 状态机要素
+
++ 状态集
++ 当前状态 - currentState & activeState
++ transition
+
+##### 模型
+![states](./ppt/img/states.jpg)

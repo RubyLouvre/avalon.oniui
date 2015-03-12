@@ -14,58 +14,42 @@ avalon.ajax = function(opts, promise) {
         uniqueID: ("" + Math.random()).replace(/0\./, ""),
         status: 0
     }
-//    var _reject, _resolve
-//    var promise = new Promise(function(resolve, reject) {
-//        _resolve = resolve
-//        _reject = reject
-//    })
-//
-//    promise.options = opts
-//    promise._reject = _reject
-//    promise._resolve = _resolve
+    var _reject, _resolve
+    var promise = new avalon.Promise(function(resolve, reject) {
+        _resolve = resolve
+        _reject = reject
+    })
+    var completeFns = []
+    promise.options = opts
+    promise._reject = _reject
+    promise._resolve = _resolve
+    var isSync = opts.async === false
+    if (isSync) {
+        avalon.log("warnning:与jquery1.8一样,async:false这配置已经被废弃")
+        promise.async = false
+    }
+    promise._complete = function(fn) {
+        while (fn = completeFns.shift()) {
+            fn.apply(promise, arguments)
+        }
+    }
+    promise.always = function(fn) {
+        if (typeof fn === "function") {
+            completeFns.push(fn)
+        }
+        return this
+    }
+    
+    function makeFn(fn){
+        return typeof fn === "function" ? fn : avalon.noop
+    }
 
-    var promise = {
-        then: function(a, b) {
-            if (typeof a === "function")
-                callbacks.successList.push(a)
-            if (typeof b === "function")
-                callbacks.errorList.push(b)
-            return promise
-        },
-        complete: function(a) {
-            if (typeof a === "function")
-                callbacks.completeList.push(a)
-            return promise
-        },
-        success: function(a) {
-            return promise.then(a)
-        },
-        error: function(a) {
-            return promise.then(null, a)
-        },
-        options: opts
-    }
-    var callbacks = {}
-    var methods = {
-        success: "resolve",
-        error: "reject",
-        complete: "always"
-    }
-    promise.done = promise.success
-    promise.fail = promise.error
-    "success,error,complete".replace(/\w+/g, function(name) {
-        var list = callbacks[name + "List"] = [] //添加各种回调列队
-        promise[methods[name]] = function() { //添加各种执行回调的方法
-            for (var i = 0, fn; fn = list[i++]; ) {
-                fn.apply(promise, arguments)
-                promise[methods[name]] = function() {
-                }
-            }
-        }
-        if (typeof opts[name] === "function") {//将各种回调放入对应的列队中
-            list.push(opts[name])
-            delete opts[name]
-        }
+    promise.then(function(args) {
+        var fn = makeFn(opts.success)
+        return fn.apply(promise, args)
+    }, function(args) {
+        var fn = makeFn(opts.error)
+        return fn.apply(promise, args)
     })
 
     avalon.mix(promise, XHRProperties, XHRMethods)

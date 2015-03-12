@@ -48,7 +48,7 @@ var XHRMethods = {
         var statusText = nativeStatusText
         // 只能执行一次，防止重复执行
         if (!this.transport) { //2:已执行回调
-            return;
+            return
         }
         this.readyState = 4;
         var isSuccess = status >= 200 && status < 300 || status === 304
@@ -67,7 +67,7 @@ var XHRMethods = {
                         dataType = dataType[0];
                     }
                     var responseText = this.responseText || '',
-                        responseXML = this.responseXML || '';
+                            responseXML = this.responseXML || '';
                     try {
                         this.response = avalon.ajaxConverters[dataType].call(this, responseText, responseXML)
                     } catch (e) {
@@ -86,28 +86,13 @@ var XHRMethods = {
         }
         this._transport = this.transport;
         // 到这要么成功，调用success, 要么失败，调用 error, 最终都会调用 complete
-//        var successFn = this.options.success,
-//            errorFn = this.options.error,
-//            completeFn = this.options.complete
-
         if (isSuccess) {
             avalon.log("成功加载数据")
-            this.resolve(this.response, statusText, this)
-//            if (typeof successFn === "function") {
-//                successFn.call(this, this.response, statusText, this)
-//            }
-//            this._resolve(this.response, statusText, this)
+            this._resolve(this.response, statusText, this)
         } else {
-             this.reject(statusText, this.error || statusText)
-//            if (typeof errorFn === "function") {
-//                errorFn.call(this, statusText, this.error || statusText)
-//            }
-//            this._reject(this, statusText, this.error || statusText)
+            this._reject(statusText, this.error || statusText)
         }
-        this.always(this, statusText)
-//        if (typeof completeFn === "function") {
-//            completeFn.call(this, this, statusText)
-//        }
+        this._complete(this, statusText)
         delete this.transport
     }
 }

@@ -7,7 +7,9 @@ avalon.unparam = function(input) {
 
     if ((temp = avalon.type(input)) != 'string' || (temp == 'string' && !temp.length))
         return {};
-
+    if(input.charAt(0) === "?"){
+        input = input.slice(1)
+    }
     items = decode(input).split('&');
 
     if (!(temp = items.length) || (temp == 1 && temp === ''))

@@ -1,7 +1,7 @@
 //=========================================
 //  数据交互模块 by 司徒正美
 //==========================================
-define("mmRequest", ["avalon"], function(avalon) {
+define("mmRequest", ["avalon","mmPromise"], function(avalon) {
 var global = this || (0, eval)("this")
 var DOC = global.document
 var encode = encodeURIComponent
@@ -178,7 +178,7 @@ var XHRMethods = {
         var statusText = nativeStatusText
         // 只能执行一次，防止重复执行
         if (!this.transport) { //2:已执行回调
-            return;
+            return
         }
         this.readyState = 4;
         var isSuccess = status >= 200 && status < 300 || status === 304
@@ -197,7 +197,7 @@ var XHRMethods = {
                         dataType = dataType[0];
                     }
                     var responseText = this.responseText || '',
-                        responseXML = this.responseXML || '';
+                            responseXML = this.responseXML || '';
                     try {
                         this.response = avalon.ajaxConverters[dataType].call(this, responseText, responseXML)
                     } catch (e) {
@@ -216,28 +216,13 @@ var XHRMethods = {
         }
         this._transport = this.transport;
         // 到这要么成功，调用success, 要么失败，调用 error, 最终都会调用 complete
-//        var successFn = this.options.success,
-//            errorFn = this.options.error,
-//            completeFn = this.options.complete
-
         if (isSuccess) {
             avalon.log("成功加载数据")
-            this.resolve(this.response, statusText, this)
-//            if (typeof successFn === "function") {
-//                successFn.call(this, this.response, statusText, this)
-//            }
-//            this._resolve(this.response, statusText, this)
+            this._resolve(this.response, statusText, this)
         } else {
-             this.reject(statusText, this.error || statusText)
-//            if (typeof errorFn === "function") {
-//                errorFn.call(this, statusText, this.error || statusText)
-//            }
-//            this._reject(this, statusText, this.error || statusText)
+            this._reject(statusText, this.error || statusText)
         }
-        this.always(this, statusText)
-//        if (typeof completeFn === "function") {
-//            completeFn.call(this, this, statusText)
-//        }
+        this._complete(this, statusText)
         delete this.transport
     }
 }
@@ -257,58 +242,42 @@ avalon.ajax = function(opts, promise) {
         uniqueID: ("" + Math.random()).replace(/0\./, ""),
         status: 0
     }
-//    var _reject, _resolve
-//    var promise = new Promise(function(resolve, reject) {
-//        _resolve = resolve
-//        _reject = reject
-//    })
-//
-//    promise.options = opts
-//    promise._reject = _reject
-//    promise._resolve = _resolve
+    var _reject, _resolve
+    var promise = new avalon.Promise(function(resolve, reject) {
+        _resolve = resolve
+        _reject = reject
+    })
+    var completeFns = []
+    promise.options = opts
+    promise._reject = _reject
+    promise._resolve = _resolve
+    var isSync = opts.async === false
+    if (isSync) {
+        avalon.log("warnning:与jquery1.8一样,async:false这配置已经被废弃")
+        promise.async = false
+    }
+    promise._complete = function(fn) {
+        while (fn = completeFns.shift()) {
+            fn.apply(promise, arguments)
+        }
+    }
+    promise.always = function(fn) {
+        if (typeof fn === "function") {
+            completeFns.push(fn)
+        }
+        return this
+    }
+    
+    function makeFn(fn){
+        return typeof fn === "function" ? fn : avalon.noop
+    }
 
-    var promise = {
-        then: function(a, b) {
-            if (typeof a === "function")
-                callbacks.successList.push(a)
-            if (typeof b === "function")
-                callbacks.errorList.push(b)
-            return promise
-        },
-        complete: function(a) {
-            if (typeof a === "function")
-                callbacks.completeList.push(a)
-            return promise
-        },
-        success: function(a) {
-            return promise.then(a)
-        },
-        error: function(a) {
-            return promise.then(null, a)
-        },
-        options: opts
-    }
-    var callbacks = {}
-    var methods = {
-        success: "resolve",
-        error: "reject",
-        complete: "always"
-    }
-    promise.done = promise.success
-    promise.fail = promise.error
-    "success,error,complete".replace(/\w+/g, function(name) {
-        var list = callbacks[name + "List"] = [] //添加各种回调列队
-        promise[methods[name]] = function() { //添加各种执行回调的方法
-            for (var i = 0, fn; fn = list[i++]; ) {
-                fn.apply(promise, arguments)
-                promise[methods[name]] = function() {
-                }
-            }
-        }
-        if (typeof opts[name] === "function") {//将各种回调放入对应的列队中
-            list.push(opts[name])
-            delete opts[name]
-        }
+    promise.then(function(args) {
+        var fn = makeFn(opts.success)
+        return fn.apply(promise, args)
+    }, function(args) {
+        var fn = makeFn(opts.error)
+        return fn.apply(promise, args)
     })
 
     avalon.mix(promise, XHRProperties, XHRMethods)
@@ -438,13 +407,6 @@ avalon.param = function( a ) {
     return s.join( "&" ).replace( r20, "+" );
 }
 
-//function isDate(a) {
-//    return Object.prototype.toString.call(a) === "[object Date]"
-//}
-//function isValidParamValue(val) {
-//    var t = typeof val; // 值只能为 null, undefined, number, string, boolean
-//    return val == null || (t !== 'object' && t !== 'function')
-//}
 function paramInner( prefix, obj, add ) {
     var name;
     if (Array.isArray( obj ) ) {
@@ -466,61 +428,61 @@ function paramInner( prefix, obj, add ) {
 //将一个字符串转换为对象
 avalon.unparam = function(input) {
     var items, temp,
-        expBrackets = /\[(.*?)\]/g,
-        expVarname = /(.+?)\[/,
-        result = {};
+            expBrackets = /\[(.*?)\]/g,
+            expVarname = /(.+?)\[/,
+            result = {};
 
     if ((temp = avalon.type(input)) != 'string' || (temp == 'string' && !temp.length))
         return {};
-    if(input.charAt(0) === "?"){
-        input = input.slice(1)
+    if (input.indexOf("?") !== -1) {
+        input = input.split("?").pop()
     }
-    items = decode(input).split('&');
+    items = decode(input).split('&')
 
     if (!(temp = items.length) || (temp == 1 && temp === ''))
         return result;
 
-    avalon.each(items, function(index, item) {
+    items.forEach(function(item) {
         if (!item.length)
-            return;
-        temp = item.split('=');
+            return
+        temp = item.split("=")
         var key = temp.shift(),
-            value = temp.join('=').replace(/\+/g, ' '),
-            size, link, subitems = [];
+                value = temp.join('=').replace(/\+/g, ' '),
+                size, link, subitems = [];
 
         if (!key.length)
-            return;
+            return
 
-        while((temp = expBrackets.exec(key)))
-            subitems.push(temp[1]);
+        while ((temp = expBrackets.exec(key)))
+            subitems.push(temp[1])
 
         if (!(size = subitems.length)) {
-            result[key] = value;
-            return;
+            result[key] = value
+            return
         }
-        size--;
-        temp = expVarname.exec(key);
+        size--
+        temp = expVarname.exec(key)
 
         if (!temp || !(key = temp[1]) || !key.length)
-            return;
+            return
 
-        if (avalon.type(result[key]) != 'object')
-            result[key] = {};
+        if (avalon.type(result[key]) !== 'object')
+            result[key] = {}
 
-        link = result[key];
-        
+        link = result[key]
+
         avalon.each(subitems, function(subindex, subitem) {
             if (!(temp = subitem).length) {
-                temp = 0;
+                temp = 0
 
                 avalon.each(link, function(num) {
-                    if (!isNaN(num) && num >= 0 && (num%1 === 0) && num >= temp)
-                        temp = Number(num)+1;
+                    if (!isNaN(num) && num >= 0 && (num % 1 === 0) && num >= temp)
+                        temp = Number(num) + 1;
                 });
             }
             if (subindex == size) {
                 link[temp] = value;
-            } else if (avalon.type(link[temp]) != 'object') {
+            } else if (avalon.type(link[temp]) !== 'object') {
                 link = link[temp] = {};
             } else {
                 link = link[temp];
@@ -735,6 +697,8 @@ avalon.mix(transports.upload, transports.xhr)
  2012.3.31 v2 大重构,支持XMLHttpRequest Level2
  2013.4.8 v3 大重构 支持二进制上传与下载
  http://www.cnblogs.com/heyuquan/archive/2013/05/13/3076465.html
- 2014.12.25  v4 大重构
+ 2014.12.25  v4 大重构 
+ 2015.3.2   去掉mmPromise
+ 2014.3.13  使用加强版mmPromise
  */
 

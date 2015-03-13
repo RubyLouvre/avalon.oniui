@@ -3,7 +3,6 @@
  * @enName kindeditor
  * @introduce
  *    <p>kindeditor文本编辑器组件</p>
- *  @updatetime
  */
 
 define(["avalon", "./kindeditor.4.1.0.js"], function(avalon, K) {
@@ -11,10 +10,13 @@ define(["avalon", "./kindeditor.4.1.0.js"], function(avalon, K) {
         widget = avalon.ui[widgetName] = function(element, data, vmodels) {
 
             var options = data[widgetName+'Options'],
-                $element = avalon(element);
+                $element = avalon(element)
 
             var vmodel = avalon.define(avalon.mix(true, {
                 $id: data[widgetName+'Id'],
+                /**
+                 * @interface kindeditor实例引用
+                 */
                 $instance: null,
                 $duplexBinded: null,
                 /**
@@ -70,10 +72,10 @@ define(["avalon", "./kindeditor.4.1.0.js"], function(avalon, K) {
 
             //如果element绑定了ms-duplex，对editor中的内容进行同步
             vmodel.$watch("avalon-ms-duplex-init", function(data) {
-                vmodel.$duplexBinded = data;
-            });
+                vmodel.$duplexBinded = data
+            })
 
-            return vmodel;
+            return vmodel
         }
 
     widget.defaults = {

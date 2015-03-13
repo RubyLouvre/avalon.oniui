@@ -330,6 +330,29 @@ vmodel.serializeStr = str;</code></pre>
 
 	</fieldset>
 
+	<!-- Promise -->
+	<fieldset>
+		<legend><h2>Promise</h2></legend>
+		<p>和 Promise 配合使用。</p>
+
+<pre><code class="javascript">var url1 = '/demo/api',
+	url2 = '/demo/api',
+	callback1, callback2;
+callback1 = function() {
+	return 1;
+}
+callback2 = function() {
+	return 2;
+}
+Promise.all([
+	avalon.get(url1).then(callback1),
+	avalon.get(url2).then(callback2)
+]).then(function(data) {
+	console.log(data);
+	// [1, 2]
+});</code></pre>
+
+	</fieldset>
 
 <!--
 <p>dataType 为 jsonp，type 为 post，无法传输 data</p>

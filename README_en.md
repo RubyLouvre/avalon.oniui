@@ -95,3 +95,8 @@ cd src/ && node \$\$combo.js
 ```
 
 to combine them into one file in `public/`.
+
+Changelog
+------------
+
+2015.3.13 Import mmPromise.js again

@@ -5545,8 +5545,7 @@ avalon.ready = function(fn) {
 }
 
 avalon.config({
-    loader: true,
-    debug: false
+    loader: true
 })
 
 avalon.ready(function() {

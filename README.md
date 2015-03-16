@@ -91,17 +91,19 @@ cd ../ && node demo/bin/www
 贡献
 ------------
 
-请在 `src/` 目录下开发并编辑相应的模块。
+请在 `src/` 目录下开发相应的模块。
 
-mmRequest 使用 [gulp](http://gulpjs.com/) 构建，请先安装
-
-你可以执行以下命令：
+mmRequest 使用 [gulp](http://gulpjs.com/) 构建，请先安装依赖模块：
 
 ```
-cd src/ && node \$\$combo.js
+npm install
 ```
 
-来将这些模块合并成 `public/` 路径下的文件。
+然后开启 `gulp`，监听 `src/` 下的变化并自动合并文件至 `public/`：
+
+```
+gulp
+```
 
 更新日志
 ------------

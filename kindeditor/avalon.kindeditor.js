@@ -64,6 +64,10 @@ define(["avalon", "./kindeditor.4.1.0.js"], function(avalon, K) {
                         vmodel.onInit.call(element, vmodel, options, vmodels)
                     }
                 },
+                remove: function() {
+                    K.remove(element)
+                    delete avalon.vmodels[vmodel.$id]
+                },
                 /**
                  * @interface 当组件移出DOM树时,系统自动调用的销毁函数
                  */

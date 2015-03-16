@@ -91,7 +91,11 @@ cd ../ && node demo/bin/www
 贡献
 ------------
 
-请在 `src/` 目录下开发并编辑相应的模块。你可以执行以下命令：
+请在 `src/` 目录下开发并编辑相应的模块。
+
+mmRequest 使用 [gulp](http://gulpjs.com/) 构建，请先安装
+
+你可以执行以下命令：
 
 ```
 cd src/ && node \$\$combo.js

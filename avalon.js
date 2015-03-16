@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon.js 1.4 built in 2015.3.4
+ avalon.js 1.4 built in 2015.3.13
  support IE6+ and other browsers
  ==================================================*/
 (function(global, factory) {
@@ -1211,19 +1211,19 @@ function modelFactory(source, $special, $model) {
                     }
                     if (!isEqual(oldValue, newValue)) {
                         $model[name] = newValue
-                        if ($events.$digest) {
-                            if (!accessor.pedding) {
-                                accessor.pedding = true
-                                setTimeout(function() {
-                                    notifySubscribers($events[name]) //同步视图
-                                    safeFire($vmodel, name, $model[name], oldValue) //触发$watch回调
-                                    accessor.pedding = false
-                                })
-                            }
-                        } else {
+//                        if ($events.$digest) {
+//                            if (!accessor.pedding) {
+//                                accessor.pedding = true
+//                                setTimeout(function() {
+//                                    notifySubscribers($events[name]) //同步视图
+//                                    safeFire($vmodel, name, $model[name], oldValue) //触发$watch回调
+//                                    accessor.pedding = false
+//                                })
+//                            }
+//                        } else {
                             notifySubscribers($events[name]) //同步视图
                             safeFire($vmodel, name, newValue, oldValue) //触发$watch回调
-                        }
+//                        }
                     }
                 } else {
                     if (accessor.type === 0) { //type 0 计算属性 1 监控属性 2 对象属性
@@ -1232,17 +1232,17 @@ function modelFactory(source, $special, $model) {
                         if (oldValue !== newValue) {
                             $model[name] = newValue
                             //这里不用同步视图
-                            if ($events.$digest) {
-                                if (!accessor.pedding) {
-                                    accessor.pedding = true
-                                    setTimeout(function() {
-                                        safeFire($vmodel, name, $model[name], oldValue) //触发$watch回调
-                                        accessor.pedding = false
-                                    })
-                                }
-                            } else {
+//                            if ($events.$digest) {
+//                                if (!accessor.pedding) {
+//                                    accessor.pedding = true
+//                                    setTimeout(function() {
+//                                        safeFire($vmodel, name, $model[name], oldValue) //触发$watch回调
+//                                        accessor.pedding = false
+//                                    })
+//                                }
+//                            } else {
                                 safeFire($vmodel, name, newValue, oldValue) //触发$watch回调
-                            }
+//                            }
                         }
                         return newValue
                     } else {
@@ -1908,27 +1908,24 @@ function notifySubscribers(list) { //通知依赖于这个访问器的订阅者�
 /************************************************************************
  *            HTML处理(parseHTML, innerHTML, clearHTML)                  *
  ************************************************************************/
-//parseHTML的辅助变量
+// We have to close these tags to support XHTML 
 var tagHooks = {
-    area: [1, "<map>"],
-    param: [1, "<object>"],
-    col: [2, "<table><tbody></tbody><colgroup>", "</table>"],
-    legend: [1, "<fieldset>"],
-    option: [1, "<select multiple='multiple'>"],
+    area: [1, "<map>", "</map>"],
+    param: [1, "<object>", "</object>"],
+    col: [2, "<table><colgroup>", "</colgroup></table>"],
+    legend: [1, "<fieldset>", "</fieldset>"],
+    option: [1, "<select multiple='multiple'>", "</select>"],
     thead: [1, "<table>", "</table>"],
-    //如果这里不写</tbody></table>,在IE6-9会在多出一个奇怪的caption标签
-    tr: [2, "<table><tbody>", "</tbody></table>"],
-    //如果这里不写</tr></tbody></table>,在IE6-9会在多出一个奇怪的caption标签
-    th: [3, "<table><tbody><tr>", "</tr></tbody></table>"],
-    td: [3, "<table><tbody><tr>"],
+    tr: [2, "<table>", "</table>"],
+    td: [3, "<table><tr>", "</tr></table>"],
     g: [1, '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">', '</svg>'],
     //IE6-8在用innerHTML生成节点时，不能直接创建no-scope元素与HTML5的新标签
-    _default: W3C ? [0, ""] : [1, "X<div>"] //div可以不用闭合
+    _default: W3C ? [0, "", ""] : [1, "X<div>", "</div>"] //div可以不用闭合
 }
-
+tagHooks.th = tagHooks.td
 tagHooks.optgroup = tagHooks.option
 tagHooks.tbody = tagHooks.tfoot = tagHooks.colgroup = tagHooks.caption = tagHooks.thead
-String("circle,defs,ellipse,image,line,path,polygon,polyline,rect,symbol,text,use").replace(rword, function(tag) {
+String("circle,defs,ellipse,image,line,path,polygon,polyline,rect,symbol,text,use").replace(rword, function (tag) {
     tagHooks[tag] = tagHooks.g //处理SVG
 })
 var rtagName = /<([\w:]+)/  //取得其tagName
@@ -1937,8 +1934,8 @@ var rcreate = W3C ? /[^\d\D]/ : /(<(?:script|link|style|meta|noscript))/ig
 var scriptTypes = oneObject(["", "text/javascript", "text/ecmascript", "application/ecmascript", "application/javascript"])
 var rnest = /<(?:tb|td|tf|th|tr|col|opt|leg|cap|area)/ //需要处理套嵌关系的标签
 var script = DOC.createElement("script")
-avalon.parseHTML = function(html) {
-    if (typeof html !== "string" ) {
+avalon.parseHTML = function (html) {
+    if (typeof html !== "string") {
         return DOC.createDocumentFragment()
     }
     html = html.replace(rxhtml, "<$1></$2>").trim()
@@ -1951,14 +1948,14 @@ avalon.parseHTML = function(html) {
     if (!W3C) { //fix IE
         html = html.replace(rcreate, "<br class=msNoScope>$1") //在link style script等标签之前添加一个补丁
     }
-    wrapper.innerHTML = wrap[1] + html + (wrap[2] || "")
+    wrapper.innerHTML = wrap[1] + html + wrap[2]
     var els = wrapper.getElementsByTagName("script")
     if (els.length) { //使用innerHTML生成的script节点不会发出请求与执行text属性
         for (var i = 0, el; el = els[i++]; ) {
             if (scriptTypes[el.type]) {
                 //以偷龙转凤方式恢复执行脚本功能
                 neo = script.cloneNode(false) //FF不能省略参数
-                ap.forEach.call(el.attributes, function(attr) {
+                ap.forEach.call(el.attributes, function (attr) {
                     if (attr && attr.specified) {
                         neo[attr.name] = attr.value //复制其属性
                         neo.setAttribute(attr.name, attr.value)
@@ -1969,11 +1966,21 @@ avalon.parseHTML = function(html) {
             }
         }
     }
-    //移除我们为了符合套嵌关系而添加的标签
-    for (i = wrap[0]; i--; wrapper = wrapper.lastChild) {
-    }
     if (!W3C) { //fix IE
-        els = wrapper.getElementsByTagName("br"), n = els.length
+        var target = wrap[1] === "X<div>" ? wrapper.lastChild.firstChild : wrapper.lastChild
+        if (target.tagName === "TABLE" && tag !== "tbody") {
+            //IE6-7处理 <thead> --> <thead>,<tbody>
+            //<tfoot> --> <tfoot>,<tbody>
+            //<table> --> <table><tbody></table>
+            for (els = target.childNodes, i = 0; el = els[i++]; ) {
+                if (el.tagName === "TBODY" && !el.innerHTML) {
+                    target.removeChild(el)
+                    break
+                }
+            }
+        }
+        els = wrapper.getElementsByTagName("br")
+        var n = els.length
         while (el = els[--n]) {
             if (el.className === "msNoScope") {
                 el.parentNode.removeChild(el)
@@ -1985,7 +1992,9 @@ avalon.parseHTML = function(html) {
             }
         }
     }
-
+    //移除我们为了符合套嵌关系而添加的标签
+    for (i = wrap[0]; i--; wrapper = wrapper.lastChild) {
+    }
     while (firstChild = wrapper.firstChild) { // 将wrapper上的节点转移到文档碎片上！
         fragment.appendChild(firstChild)
     }
@@ -2004,7 +2013,7 @@ function fixVML(node) {
         node.style.zoom = 1 //hasLayout
     }
 }
-avalon.innerHTML = function(node, html) {
+avalon.innerHTML = function (node, html) {
     if (!W3C && (!rcreate.test(html) && !rnest.test(html))) {
         try {
             node.innerHTML = html
@@ -2015,7 +2024,7 @@ avalon.innerHTML = function(node, html) {
     var a = this.parseHTML(html)
     this.clearHTML(node).appendChild(a)
 }
-avalon.clearHTML = function(node) {
+avalon.clearHTML = function (node) {
     node.textContent = ""
     while (node.firstChild) {
         node.removeChild(node.firstChild)
@@ -2103,7 +2112,6 @@ var priorityMap = {
     "repeat": 90,
     "data": 100,
     "widget": 110,
-    "view": 111,
     "each": 1400,
     "with": 1500,
     "duplex": 2000,
@@ -3600,6 +3608,7 @@ function ticker() {
 }
 
 var watchValueInTimer = noop
+ var rmsinput = /text|password|hidden/
 new function() {
     try {//#272 IE9-IE11, firefox
         var setters = {}
@@ -3608,6 +3617,8 @@ new function() {
         function newSetter(value) {
             if (avalon.contains(root, this)) {
                 setters[this.tagName].call(this, value)
+                if (!rmsinput.test(this.type))
+                    return
                 if (!this.msFocus && this.avalonSetter) {
                     this.avalonSetter()
                 }
@@ -3639,7 +3650,7 @@ if (IEVersion) {
 
 //处理radio, checkbox, text, textarea, password
 duplexBinding.INPUT = function(element, evaluator, data) {
-    var type = element.type,
+    var $type = element.type,
             bound = data.bound,
             $elem = avalon(element),
             composing = false
@@ -3678,7 +3689,7 @@ duplexBinding.INPUT = function(element, evaluator, data) {
             element.value = val
         }
     }
-    if (data.isChecked || element.type === "radio") {
+    if (data.isChecked || $type === "radio") {
         var IE6 = IEVersion === 6
         updateVModel = function() {
             if ($elem.data("duplex-observe") !== false) {
@@ -3704,7 +3715,7 @@ duplexBinding.INPUT = function(element, evaluator, data) {
             }
         }
         bound("click", updateVModel)
-    } else if (type === "checkbox") {
+    } else if ($type === "checkbox") {
         updateVModel = function() {
             if ($elem.data("duplex-observe") !== false) {
                 var method = element.checked ? "ensure" : "remove"
@@ -3771,7 +3782,7 @@ duplexBinding.INPUT = function(element, evaluator, data) {
         element.msFocus = false
     })
     
-    if (/text|password/.test(element.type)) {
+    if (rmsinput.test($type)) {
         watchValueInTimer(function() {
             if (root.contains(element)) {
                 if (!element.msFocus && element.oldValue !== element.value) {
@@ -5494,16 +5505,14 @@ new function() {
  **********************************************************************/
 
 var readyList = [], isReady
-var fireReady = function() {
-    if (!isReady) {
-        isReady = true
-        if (innerRequire) {
-            modules["domReady!"].state = 4
-            innerRequire.checkDeps()
-        }
-        readyList.forEach(function(a) {
-            a(avalon)
-        })
+var fireReady = function(fn) {
+    isReady = true
+    if (innerRequire) {
+        modules["domReady!"].state = 4
+        innerRequire.checkDeps()
+    }
+    while(fn = readyList.shift()){
+        fn(avalon)
     }
 }
 

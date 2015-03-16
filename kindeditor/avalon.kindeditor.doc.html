@@ -39,7 +39,8 @@
                     <tr>
                         <td>$options</td>
                         <td>Object</td>
-                        <td>{}</td>
+                        <td>{ wellFormatMode: false //美化HTML数据，默认为false，美化HTML在duplex模式下会额外触发变量的改变事件
+                            }</td>
                         <td>传递给kindeditor的配置项</td>
                     </tr>
                     <tr>
@@ -64,6 +65,12 @@
                         <td>组件初始化函数</td>
                     </tr>
                     <tr>
+                        <td>remove()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>textarea移除编辑器，删除属性并回收vmodel</td>
+                    </tr>
+                    <tr>
                         <td>$remove()</td>
                         <td>Function</td>
                         <td></td>
@@ -74,6 +81,21 @@
             <ul class="example-links">
                 <li>
                     <a href="avalon.kindeditor.ex1.html">默认配置</a>
+                </li>
+                <li>
+                    <a href="avalon.kindeditor.ex2.html">简单模式</a>
+                </li>
+                <li>
+                    <a href="avalon.kindeditor.ex3.html">异步加载</a>
+                </li>
+                <li>
+                    <a href="avalon.kindeditor.ex4.html">多语言设置</a>
+                </li>
+                <li>
+                    <a href="avalon.kindeditor.ex5.html">只读模式</a>
+                </li>
+                <li>
+                    <a href="avalon.kindeditor.ex6.html">统计字数</a>
                 </li>
             </ul>
         </div>

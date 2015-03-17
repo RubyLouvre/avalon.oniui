@@ -65,6 +65,14 @@ define(["avalon", "./kindeditor.4.1.0.js"], function(avalon, K) {
                     }
                 },
                 /**
+                 * @interface textarea移除编辑器，删除属性并回收vmodel
+                 */
+                remove: function() {
+                    K.remove(element)
+                    element.removeAttribute("avalonctrl")
+                    delete avalon.vmodels[vmodel.$id]
+                },
+                /**
                  * @interface 当组件移出DOM树时,系统自动调用的销毁函数
                  */
                 $remove: function() {}
@@ -81,8 +89,6 @@ define(["avalon", "./kindeditor.4.1.0.js"], function(avalon, K) {
     widget.defaults = {
         //@config 传递给kindeditor的配置项
         $options: {
-            allowFileManager : true,
-            afterChange: avalon.noop,
             wellFormatMode: false       //美化HTML数据，默认为false，美化HTML在duplex模式下会额外触发变量的改变事件
         },
         onInit: avalon.noop     //@config 初始化时执行方法
@@ -94,4 +100,9 @@ define(["avalon", "./kindeditor.4.1.0.js"], function(avalon, K) {
 /**
  @links
  [默认配置](avalon.kindeditor.ex1.html)
+ [简单模式](avalon.kindeditor.ex2.html)
+ [异步加载](avalon.kindeditor.ex3.html)
+ [多语言设置](avalon.kindeditor.ex4.html)
+ [只读模式](avalon.kindeditor.ex5.html)
+ [统计字数](avalon.kindeditor.ex6.html)
  */

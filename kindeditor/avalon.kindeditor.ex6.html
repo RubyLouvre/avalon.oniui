@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>统计字数</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="descriptions" content="kindeditor统计字数"/>
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <script src="../highlight/shCore.js"></script>
+    <script type="text/javascript" src="../avalon.js"></script>
+</head>
+<body ms-controller="demo">
+    <div class="wrapper">
+        <h1>统计字数</h1>
+        <textarea name="content" ms-widget="kindeditor,$,$opts"></textarea>
+        <p>
+            您当前输入了 <span class="word_count1">{{htmlCount}}</span> 个文字。（字数统计包含HTML代码。）<br />
+            您当前输入了 <span class="word_count2">{{textCount}}</span> 个文字。（字数统计包含纯文本、IMG、EMBED，不包含换行符，IMG和EMBED算一个文字。）
+        </p>
+        <pre class="brush:html;gutter:false;" ms-skip>
+            &lt;!DOCTYPE html&gt;
+            &lt;html&gt;
+            &lt;head lang="en"&gt;
+                &lt;meta charset="UTF-8"&gt;
+                &lt;title&gt;统计字数&lt;/title&gt;
+                &lt;meta name="viewport" content="width=device-width"&gt;
+                &lt;meta name="descriptions" content="kindeditor统计字数"/&gt;
+                &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+                &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+                &lt;script type="text/javascript" src="../avalon.js"&gt;&lt;/script&gt;
+            &lt;/head&gt;
+            &lt;body ms-controller="demo"&gt;
+                &lt;div class="wrapper"&gt;
+                    &lt;h1&gt;统计字数&lt;/h1&gt;
+                    &lt;textarea name="content" ms-widget="kindeditor,$,$opts"&gt;&lt;/textarea&gt;
+                    &lt;p&gt;
+                        您当前输入了 &lt;span class="word_count1"&gt;&#123;&#123;htmlCount&#125;&#125;&lt;/span&gt; 个文字。（字数统计包含HTML代码。）&lt;br /&gt;
+                        您当前输入了 &lt;span class="word_count2"&gt;&#123;&#123;textCount&#125;&#125;&lt;/span&gt; 个文字。（字数统计包含纯文本、IMG、EMBED，不包含换行符，IMG和EMBED算一个文字。）
+                    &lt;/p&gt;
+                &lt;/div&gt;
+            &lt;script&gt;
+                require(["./kindeditor/avalon.kindeditor", "domReady!"], function() &#123;
+                    var demoVM = avalon.define(&#123;
+                        $id: "demo",
+                        htmlCount: 0,
+                        textCount: 0,
+                        $opts: &#123;
+                            $options: &#123;
+                                afterChange: function() &#123;
+                                    demoVM.htmlCount = this.count()
+                                    demoVM.textCount = this.count("text")
+                                &#125;
+                            &#125;
+                        &#125;
+                    &#125;)
+                    avalon.scan()
+                &#125;)
+            &lt;/script&gt;
+            &lt;/body&gt;
+            &lt;/html&gt;
+        </pre>
+    </div>
+<script>
+    require(["./kindeditor/avalon.kindeditor", "domReady!"], function() {
+        var demoVM = avalon.define({
+            $id: "demo",
+            htmlCount: 0,
+            textCount: 0,
+            $opts: {
+                $options: {
+                    afterChange: function() {
+                        demoVM.htmlCount = this.count()
+                        demoVM.textCount = this.count("text")
+                    }
+                }
+            }
+        })
+        avalon.scan()
+    })
+</script>
+</body>
+</html>

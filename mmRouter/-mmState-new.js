@@ -415,10 +415,14 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
     */
     avalon.state.config = function(config) {
         avalon.each(config, function(key, func) {
+            delete config[key]
             if(key.indexOf("on") !== 0) {
-                delete config[key]
                 config["on" + key.replace(/^[a-z]/g, function(mat) {
                     return mat.toUpperCase()
+                })] = func
+            } else {
+                config[key.replace(/^on[a-z]/g, function(mat) {
+                    return "on" + mat.split("")[2].toUpperCase()
                 })] = func
             }
         })

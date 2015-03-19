@@ -14,31 +14,23 @@
         <h1>datepicker lang demo</h1>
         <div class="demo-show" ms-controller="demo">
             <fieldset style="position: relative; z-index: 2">
-                <legend>默认配置的单日历框</legend>
+                <legend>使用en语言包</legend>
                 <input ms-widget="datepicker"/>
-                <p>说明：默认情况下，日历显示方式从周一到周日，显示一个月份，输输入域不允许为空，点击next、pre切换月份时，默认切换一个月，并且不可通过下拉框切换月份和年份</p>
-            </fieldset>
-            <fieldset style="position:relative; z-index: 1">
-                <legend>默认配置的单日历框</legend>
-                <input ms-widget="datepicker" data-datepicker-allow-blank="true" data-datepicker-show-other-months="true"/>
-                <p>说明：此demo配置allowBlank为true，使得输入域可以为空,与第一个demo做对比</p>
             </fieldset>
             <script>
                 //将语言包加载即可
-                require(["datepicker/avalon.datepicker", "i18n/avalon.datepicker.lang-en"], function(avalon) {
-                    var model = avalon.define("demo", function(vm) {
-                        //设置业务部分的文案
-                        vm.datepicker = {
-                            calendarLabel: "Datepicker",
-                            formatErrorTip: "Malformed"
-                        }
+                require(["datepicker/avalon.datepicker"], function(avalon) {
+                    require(["i18n/avalon.datepicker.lang-en"], function() {
+                        var model = avalon.define("demo", function(vm) {
+                            //设置业务部分的文案
+                            vm.datepicker = {
+                                calendarLabel: "Datepicker",
+                                formatErrorTip: "Malformed"
+                            }
+                        })
+                        avalon.scan();
                     })
-                    avalon.scan();
                 })
-                require(["datepicker/avalon.datepicker"], function() {})
-                require(["datepicker/avalon.datepicker"], function() {})
-                require(["datepicker/avalon.datepicker"], function() {})
-                require(["datepicker/avalon.datepicker"], function() {})
             </script>
         </div>
     </div>

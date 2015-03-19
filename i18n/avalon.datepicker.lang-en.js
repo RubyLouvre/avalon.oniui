@@ -2,7 +2,7 @@ define(["../datepicker/avalon.datepicker.js"], function() {
 
     var datepicker = avalon.ui.datepicker
 
-    datepicker.regional["en"] = {
+    datepicker.defaultRegional = datepicker.regional["en"] = {
         dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],  //该变量被注册到了vm中，同时在方法中使用
         weekDayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
         monthNames: ['January','February','March','April','May','June',
@@ -31,7 +31,5 @@ define(["../datepicker/avalon.datepicker.js"], function() {
         nowText: "Now",
         confirmText: "Confirm"
     }
-
-    datepicker.defaultRegional = datepicker.regional["en"]
 
 })

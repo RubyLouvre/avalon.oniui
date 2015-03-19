@@ -11,7 +11,7 @@
 
         </script>
         <script>
-            require(["mmPromise/mmPromise", "ready!"], function() {
+            require(["mmPromise/mmPromise", "domReady!"], function() {
 
 
                 function aaa() {
@@ -32,7 +32,7 @@
                     return new Promise(function(resolve) {
                         setTimeout(function() {
                             resolve(3000)
-                        }, 3000)
+                        }, 5000)
                     })
                 }
 

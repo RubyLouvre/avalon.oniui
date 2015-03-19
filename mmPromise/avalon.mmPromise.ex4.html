@@ -11,7 +11,7 @@
 
         </script>
         <script>
-            require(["mmPromise/mmPromise", "ready!"], function() {
+            require(["mmPromise/mmPromise", "domReady!"], function() {
                 var _resolve, _reject
                 var originalPromise = new Promise(function(resolve, reject) {
                     _resolve = resolve

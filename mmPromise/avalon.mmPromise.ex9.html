@@ -11,7 +11,7 @@
 
         </script>
         <script>
-            require(["mmPromise/mmPromise", "ready!"], function() {
+            require(["mmPromise/mmPromise", "domReady!"], function() {
                 function aaa() {
                     return new Promise(function(resolve) {
                         setTimeout(function() {
@@ -34,7 +34,7 @@
                     })
                 }
 
-                //待到所有完成才触发
+                //待到一个完成就触发
                 Promise.race([aaa(), bbb(), ccc()]).then(function(a) {
                     alert(a)
                 })
@@ -68,7 +68,7 @@
                     })
                 }
 
-                //待到所有完成才触发
+                //待到一个完成就触发
                 Promise.race([aaa(), bbb(), ccc()]).then(function(a) {
                     alert(a)
                 })

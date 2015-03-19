@@ -242,6 +242,7 @@ define(["avalon",
 
     }
 
+    //默认语言包为中文简体
     widget.regional = []
     widget.regional["zh-CN"] = {
         prevText: "上一页",
@@ -258,10 +259,8 @@ define(["avalon",
         numberText: "第"
     }
 
-
-
     //设置默认语言包
-    widget.defaultRegional = widget.regional["en"]
+    widget.defaultRegional = widget.regional["zh-CN"]
 
     widget.defaults = {
         perPages: 10, //@config {Number} 每页包含多少条目
@@ -379,7 +378,8 @@ define(["avalon",
  [指定上一页,下一页的文本](avalon.pager.ex4.html)
  [通过左右方向键或滚轮改变页码](avalon.pager.ex5.html)
  [总是显示上一页与下一页按钮](avalon.pager.ex6.html)
- * 
+ [多语言支持](avalon.pager.ex7.html)
+ *
  */
 //http://luis-almeida.github.io/jPages/defaults.html
 //http://gist.corp.qunar.com/jifeng.yao/gist/demos/pager/pager.html

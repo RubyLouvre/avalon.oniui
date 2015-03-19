@@ -1255,4 +1255,5 @@ define(["../avalon.getModel",
  [移动端日期、年份选择](avalon.datepicker.ex10.html)
  [具有时间选择功能的datepicker](avalon.datepicker.ex11.html)
  [带格式化输出配置的datepicker](avalon.datepicker.ex12.html)
+ [多语言支持](avalon.datepicker.ex13.html)
  */

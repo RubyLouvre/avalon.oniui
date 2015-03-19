@@ -38,7 +38,6 @@ define(["../avalon.getModel",
             year
 
         calendarTemplate = options.template = options.getTemplate(calendarTemplate, options)
-        HOLIDAYS = initHoliday.call(options, holidayDate) || {}
         avalon.scan(element, vmodels)
         options.disabled = element.disabled || options.disabled
         formatDate = formatDate.bind(options) //兼容IE6、7使得formatDate方法中的this指向options
@@ -71,8 +70,18 @@ define(["../avalon.getModel",
         initValue()
 
         var vmodel = avalon.define(data.datepickerId, function(vm) {
-            avalon.mix(vm, options)
-            vm.$skipArray = ["container", "showDatepickerAlways", "timer", "sliderMinuteOpts", "sliderHourOpts", "template", "widgetElement", "dayNames", "allowBlank", "months", "years", "numberOfMonths", "showOtherMonths", "watermark", "weekNames", "stepMonths", "changeMonthAndYear", "startDay", "mobileMonthAndYear"]
+
+            //初始化增加语言包设置
+            avalon.mix(vm, options, {
+                regional: widget.defaultRegional
+            })
+            vm.$skipArray = ["container", "showDatepickerAlways", "timer", "sliderMinuteOpts",
+                "sliderHourOpts", "template", "widgetElement", "dayNames", "allowBlank",
+                "months", "years", "numberOfMonths",
+                "showOtherMonths", "watermark", "weekNames",
+                "stepMonths", "changeMonthAndYear", "startDay", "mobileMonthAndYear",
+                "formatErrorTip"    //格式错误提示文案
+            ]
             vm.dateError = vm.dateError || ""
             vm.weekNames = []
             vm.tip = vm.tip || ""
@@ -96,7 +105,7 @@ define(["../avalon.getModel",
             vm.elementYear = year
             vm.elementMonth = month
             vm._setWeekClass = function(dayName) {
-                var dayNames = vmodel.dayNames
+                var dayNames = vmodel.regional.day
                 if ((dayNames.indexOf(dayName) % 7 == 0) || (dayNames.indexOf(dayName) % 7 == 6)) {
                     return "oni-datepicker-week-end"
                 } else {
@@ -376,6 +385,11 @@ define(["../avalon.getModel",
                     vmodel.onSelect.call(null, date, vmodel, avalon(element).data())
                 }
             }
+
+            //设置语言包
+            vm.setRegional = function(regional) {
+                vmodel.regional = regional
+            }
             
             vm.$init = function(continueScan) {
                 var elementPar = element.parentNode
@@ -434,6 +448,9 @@ define(["../avalon.getModel",
                     //vmodels是不包括vmodel的
                     options.onInit.call(element, vmodel, options, vmodels)
                 }
+            }
+            vm._getTitle = function(year, month) {
+                return vmodel.regional.titleFormat.call(vmodel.regional, year, month)
             }
             vm.$remove = function() {
                 var elementPar = element.parentNode,
@@ -619,7 +636,7 @@ define(["../avalon.getModel",
                 vmodel.onSelect.call(null, date, vmodel, avalon(element).data())
             } else {
                 if (!vmodel.allowBlank) {
-                    vmodel.tip = '格式错误';
+                    vmodel.tip = vmodel.formatErrorTip;
                     vmodel.dateError = '#ff8888';
                 } else {
                     vmodel.tip = ""
@@ -640,7 +657,7 @@ define(["../avalon.getModel",
                 dateDisabled = false;
 
             if (value && !_date) {
-                options.tip = "格式错误"
+                options.tip = options.formatErrorTip
                 options.dateError = "#ff8888"
                 _initDate = today
             }
@@ -786,7 +803,7 @@ define(["../avalon.getModel",
                         vmodel.dateError = "#cccccc"
                         return
                     }
-                    vmodel.tip = "格式错误";
+                    vmodel.tip = vmodel.formatErrorTip;
                     vmodel.dateError = "#ff8888";
                 }
             })
@@ -821,7 +838,7 @@ define(["../avalon.getModel",
         function calendarHeader() {
             var weekNames = [],
                 startDay = options.startDay;
-            for(var j = 0 , w = options.dayNames ; j < 7 ; j++){
+            for(var j = 0 , w = vmodel.regional.dayNames ; j < 7 ; j++){
                 var n = ( j + startDay ) % 7;
                 weekNames.push(w[n]);
             }
@@ -997,9 +1014,44 @@ define(["../avalon.getModel",
         }
         return vmodel
     }
+
+    widget.regional = []
+    widget.regional["zh-CN"] = {
+        holidayDate: initHoliday(holidayDate),
+        dayNames: ['日', '一', '二', '三', '四', '五', '六'],  //该变量被注册到了vm中，同时在方法中使用
+        weekDayNames: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+        monthNames: ['一月','二月','三月','四月','五月','六月',
+            '七月','八月','九月','十月','十一月','十二月'],
+        monthNamesShort: ['一月','二月','三月','四月','五月','六月',
+            '七月','八月','九月','十月','十一月','十二月'],
+        closeText: "Done",
+        prevText: "前",
+        prevDayText: "昨天",
+        nextText: "后",
+        nextDayText: "明天",
+        dayAfterTomorrow: "后天",
+        currentDayText: "今天",
+        currentDayFullText: "今天",
+        showMonthAfterYear: true,
+        titleFormat: function(year, month) {
+            return year + "年" + " " + this.monthNames[month]
+        },
+        dayText: "天",
+        weekText: "周",
+        yearText: "年",
+        monthText: "月",
+        timerText: "时间",
+        hourText: "时",
+        minuteText: "分",
+        nowText: "现在",
+        confirmText: "确定"
+    }
+
+    //设置默认语言包
+    widget.defaultRegional = widget.regional["zh-CN"]
+
     widget.version = 1.0
     widget.defaults = {
-        dayNames : ['日', '一', '二', '三', '四', '五', '六'], //@interface 日期名列表，从周日开始，可以配置为["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] 
         startDay: 1, //@config 设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推, 默认从周一开始
         width: 90,
         showTip: true,
@@ -1056,17 +1108,7 @@ define(["../avalon.getModel",
          * @param str {String} 要解析的日期字符串
          * @returns {Date} Date格式的日期
          */
-        parseDate: function(str){
-            if (!str) {
-                return null
-            }
-            if (avalon.type(str) === "date") return str
-            var separator = this.separator;
-            var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})[\\s\\w\\W]*$";
-            reg = new RegExp(reg);
-            var x = str.match(reg);
-            return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
-        },
+        parseDate: parseDate,
         /**
          * @config {Function} 将日期对象转换为符合要求的日期字符串
          * @param date {Date} 要格式化的日期对象
@@ -1091,6 +1133,7 @@ define(["../avalon.getModel",
             return n;
         },
         widgetElement: "", // accordion容器
+        formatErrorTip: "格式错误",
         getTemplate: function(str, options) {
             return str;
         }
@@ -1109,13 +1152,13 @@ define(["../avalon.getModel",
         date.setMilliseconds(0);
         return date;
     }
-    // 获取节日信息
+    // 获取节日信息并设置相应显示，提供中文语言包对于节日的支持
     function initHoliday( data ){
         var _table = {},
             _data = [];
         for( var k in data ){
             var v = data[ k ],
-                _date = this.parseDate( k );
+                _date = parseDate( k );
 
             if( _date ){
                 v.date = _date;
@@ -1141,34 +1184,57 @@ define(["../avalon.getModel",
             }
         }
         return _table;
-    };
+    }
+
+    function parseDate(str){
+        if (!str) {
+            return null
+        }
+        if (avalon.type(str) === "date") return str
+        var separator = this.separator || "-";
+        var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})[\\s\\w\\W]*$";
+        reg = new RegExp(reg);
+        var x = str.match(reg);
+        return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
+    }
+
     // 解析传入日期，如果是节日或者节日前三天和后三天只能，会相应的显示节日前几天信息，如果是今天就显示今天，其他情况显示日期对应的是周几
     function getDateTip(curDate) {
         if(!curDate)
             return;
+
+        //如果没有传递语言设置，使用默认的语言包
+        var regional
+        if(this.$id && this.regional) {
+            regional = this.regional
+        } else {
+            regional = widget.defaultRegional
+        }
+
+        var holidays = regional.holidayDate || {}
         var now = (cleanDate(new Date())).getTime(),
             curTime = curDate.getTime(),
-            dayNames = ['日', '一', '二', '三', '四', '五', '六'];
+            dayNames = regional.dayNames;
         if(now == curTime) {
-            return { 
-                    text : '今天', 
-                    cellClass : 'c_today', 
-                    cellText : '今天'
+            return {
+                    text : regional.currentDayFullText,
+                    cellClass : 'c_today',
+                    cellText : regional.currentDayText
                 };
         } else if(now == curTime - ONE_DAY) {
-            return { 
-                    text : '明天', 
-                    cellClass : "" 
+            return {
+                    text : regional.nextDayText,
+                    cellClass : ""
                 };
         } else if(now == curTime - ONE_DAY * 2) {
             return {
-                    text : '后天' , 
-                    cellClass : "" 
+                    text : regional.dayAfterTomorrow ,
+                    cellClass : ""
                 };
         }
-        var tip = HOLIDAYS && HOLIDAYS[curDate.getTime()];
+        var tip = holidays && holidays[curDate.getTime()];
         if(!tip) {
-            return {text: '周' + dayNames[curDate.getDay()]};
+            return {text: regional.weekDayNames[curDate.getDay()]};
         } else {
             return tip;
         }

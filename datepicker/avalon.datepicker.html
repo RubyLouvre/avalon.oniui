@@ -24,23 +24,31 @@
                     <i class="oni-datepicker-next oni-icon"    
                        ms-click="_next(nextMonth, $event)"
                        ms-class="oni-datepicker-next-disabled:!nextMonth">&#xf054;</i>
-                    <div class="oni-datepicker-title" ms-if="changeMonthAndYear">
+                    <div class="oni-datepicker-title" ms-if="changeMonthAndYear && regional.showMonthAfterYear">
                         <select ms-each="years" data-each-rendered="_afterYearRendered">
                             <option ms-attr-value="el">{{el}}</option>
-                        </select>&nbsp;年&nbsp;
+                        </select>&nbsp;{{regional.yearText}}&nbsp;
                         <select ms-each="months" data-each-rendered="_afterMonthRendered">
                             <option ms-attr-value="{{el}}">{{el}}</option>
-                        </select>&nbsp;月
+                        </select>&nbsp;{{regional.monthText}}
+                    </div>
+                    <div class="oni-datepicker-title" ms-if="changeMonthAndYear && !regional.showMonthAfterYear">
+                        <select ms-each="months" data-each-rendered="_afterMonthRendered">
+                            <option ms-attr-value="{{el}}">{{el}}</option>
+                        </select>&nbsp;{{regional.monthText}}
+                        <select ms-each="years" data-each-rendered="_afterYearRendered">
+                            <option ms-attr-value="el">{{el}}</option>
+                        </select>&nbsp;{{regional.yearText}}&nbsp;
                     </div>
                     <div class="oni-datepicker-title"
                          ms-click="_selectMonths"
                          ms-if="!changeMonthAndYear">
-                        <span ms-hover="oni-state-hover:mobileMonthAndYear">{{calendar.year}}年{{calendar.month+1}}月</span>
+                        <span ms-hover="oni-state-hover:mobileMonthAndYear" ms-html="_getTitle(calendar.year, calendar.month)"></span>
                     </div> 
                 </div>
                 <div class="oni-datepicker-header" ms-if="numberOfMonths!==1">
                     <div class="oni-datepicker-title">
-                        <span ms-hover="oni-state-hover:mobileMonthAndYear">{{calendar.year}}年{{calendar.month+1}}月</span>
+                        <span ms-hover="oni-state-hover:mobileMonthAndYear" ms-html="_getTitle(calendar.year, calendar.month)"></span>
                     </div> 
                 </div>
                 <table class="oni-datepicker-calendar-week">
@@ -67,22 +75,22 @@
                 </table>
                 <div class="oni-datepicker-timer" ms-if="timer">
                     <label>
-                        <span>时间</span>
+                        <span>{{regional.timerText}}</span>
                         <b>{{hour|timer}}</b>&nbsp;:
                         <b>{{minute|timer}}</b>
                     </label>
                     <p>
-                        <span>时</span>
+                        <span>{{regional.hourText}}</span>
                         <input ms-widget="slider, $, sliderHourOpts" data-slider-max="23" data-slider-min="0" data-slider-value="hour" data-slider-width="140">
                     </p>
                     <p>
-                        <span>分</span>
+                        <span>{{regional.minuteText}}</span>
                         <input ms-widget="slider, $, sliderMinuteOpts" data-slider-max="59" data-slider-min="0" data-slider-width="140" data-slider-value="minute">
                     </p>
                 </div>
                 <div class="oni-datepicker-timer oni-helper-clearfix" ms-if="timer">
-                    <button type="button" class="oni-btn oni-btn-small" style="float: left" ms-click="_getNow">现在</button>
-                    <button type="button" class="oni-btn oni-btn-primary oni-btn-small" style="float:right" ms-click="_selectTime">确定</button>
+                    <button type="button" class="oni-btn oni-btn-small" style="float: left" ms-click="_getNow">{{regional.nowText}}</button>
+                    <button type="button" class="oni-btn oni-btn-primary oni-btn-small" style="float:right" ms-click="_selectTime">{{regional.confirmText}}</button>
                 </div>
                 <div class="oni-datepicker-watermark" ms-if="watermark">
                     {{calendar.month+1}}
@@ -113,7 +121,7 @@
                                 <span ms-repeat-m="months" 
                                       ms-class="oni-datepicker-selected: (m-1)===elementMonth && mobileYear===elementYear"
                                       ms-click="_selectDates(m-1)"
-                                      ms-hover="oni-datepicker-day-hover">{{m}}月</span>
+                                      ms-hover="oni-datepicker-day-hover">{{regional.monthNamesShort[m - 1]}}</span>
                             </td>
                         </tr>
                     </tbody>

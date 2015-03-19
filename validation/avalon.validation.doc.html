@@ -257,12 +257,35 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                     <code>验证规则</code>，满足你一般的业务需求。</p>
                 <p>大家可以在onReset的回调里得到第二个参数data, 然后调用data.valueResetor()将VM中的数据也置空,如布尔数据变false,
                     数值数据变0,数组数据变[],字符串数组变成""</p>
-                <p>也可以在页面添加不依赖于ms-duplex的绑定</p>
-                <pre class="brush:javascript;gutter:false;toolbar:false;"> validateVM.data.push({
-     valueAccessor: function() {}
-     validateParam: "xxx",
-     element: element
- })</pre>
+                <h2>错误提示信息的添加</h2>
+                <p>比如说&lt;input ms-duplex-alpha="aaa"/&lt;要求用户输出的都是字母，如果输入其他类型的内容， 它就会报错
+                    <b
+                    style="color:red">必须是字母</p>。为什么呢，因为alpha为一个内置拦截器， 定义在avalon.duplexHooks上，结构为</p>
+                <pre class="brush:javascript;gutter:false;toolbar:false;">        alpha: {
+            message: '必须是字母',
+            get: function(value, data, next) {
+                next(/^[a-z]+$/i.test(value))
+                return value
+            }
+        },</pre>如果想显示别的提示信息有三种办法，一就是重写这个栏截器的message属性； 二就是添加data-duplex-message="新提示信息"（不过这个已经不提倡使用了，
+                因为一个表单控制可能使用N个拦截器做验证，如ms-duplex-required-alpha-minlength， 这会覆盖其他拦截器的默认提示信息）；三就是使用data-duplex-alpha-message="专门用于alpha提示信息"
+                <pre
+                class="brush:html;gutter:false;toolbar:false;"></pre>此外，提示信息里面可以使用插值表达式，虽然不能使用变量，也应该够用，比如说minlength拦截器
+                    <pre class="brush:javascript;gutter:false;toolbar:false;">        minlength: {
+            message: '最少输入{{min}}个字',
+            get: function(value, data, next) {
+                var elem = data.element
+                var a = parseInt(elem.getAttribute("minlength"), 10)
+                if (!isFinite(a)) {
+                    a = parseInt(elem.getAttribute("data-duplex-minlength"), 10)
+                }
+                var num = data.data.min = a
+                next(value.length >= num)
+                return value
+            }
+        },</pre>我们必须传入一个min参数,这要在元素上添加
+                    <pre class="brush:html;gutter:false;toolbar:false;"></pre>这样报错时就提示要
+                    <b>最少输入6个字</b>
             </div>
             <ul class="example-links">
                 <li>

@@ -8,8 +8,17 @@
         <script src="../avalon.js"></script>
         <script type="text/javascript">
             require(['dropdown/avalon.dropdown', "ready!"], function() {
-                avalon.define('dropdown', function(vm) {
+                var dm = avalon.define('dropdown', function(vm) {
                     vm.value = 'value5';
+                    vm.dropdown = {
+                        onChange: function() {
+                            console.log(dm.value)
+                            return false
+                        },
+                        onSelect: function() {
+                            console.log(dm.value)
+                        }
+                    }
                 });
                 avalon.scan();
             });

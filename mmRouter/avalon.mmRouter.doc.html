@@ -114,6 +114,107 @@ mmRouter的使用
                         <td align="center" colspan="4">接口方法与固有属性</td>
                     </tr>
                     <tr>
+                        <td>redirect(hash)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.router.redirect
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>hash</td>
+                                    <td></td>
+                                    <td>hash 访问的url hash</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>navigate(hash,options)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.router.navigate
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>hash</td>
+                                    <td></td>
+                                    <td>hash 访问的url hash</td>
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td></td>
+                                    <td>options 扩展配置</td>
+                                </tr>
+                                <tr>
+                                    <td>options.replace</td>
+                                    <td></td>
+                                    <td>true替换history，否则生成一条新的历史记录</td>
+                                </tr>
+                                <tr>
+                                    <td>options.silent</td>
+                                    <td></td>
+                                    <td>true表示只同步url，不触发url变化监听绑定</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>when(path,redirect)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.router.when 配置重定向规则
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>path</td>
+                                    <td></td>
+                                    <td>path 被重定向的表达式，可以是字符串或者数组</td>
+                                </tr>
+                                <tr>
+                                    <td>redirect</td>
+                                    <td></td>
+                                    <td>redirect 重定向的表示式或者url</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>get(path,callback)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.router.get 添加一个router规则
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>path</td>
+                                    <td></td>
+                                    <td>path url表达式</td>
+                                </tr>
+                                <tr>
+                                    <td>callback</td>
+                                    <td></td>
+                                    <td>callback 对应这个url的回调</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>go(toName,params,options)</td>
                         <td>Function</td>
                         <td></td>
@@ -371,107 +472,6 @@ setTimeout(done, 4000)
 </pre>
                         </td>
                     </tr>
-                    <tr>
-                        <td>redirect(hash)</td>
-                        <td>Function</td>
-                        <td></td>
-                        <td>avalon.router.redirect
-                            <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>hash</td>
-                                    <td></td>
-                                    <td>hash 访问的url hash</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>navigate(hash,options)</td>
-                        <td>Function</td>
-                        <td></td>
-                        <td>avalon.router.navigate
-                            <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>hash</td>
-                                    <td></td>
-                                    <td>hash 访问的url hash</td>
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td></td>
-                                    <td>options 扩展配置</td>
-                                </tr>
-                                <tr>
-                                    <td>options.replace</td>
-                                    <td></td>
-                                    <td>true替换history，否则生成一条新的历史记录</td>
-                                </tr>
-                                <tr>
-                                    <td>options.silent</td>
-                                    <td></td>
-                                    <td>true表示只同步url，不触发url变化监听绑定</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>when(path,redirect)</td>
-                        <td>Function</td>
-                        <td></td>
-                        <td>avalon.router.when 配置重定向规则
-                            <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>path</td>
-                                    <td></td>
-                                    <td>path 被重定向的表达式，可以是字符串或者数组</td>
-                                </tr>
-                                <tr>
-                                    <td>redirect</td>
-                                    <td></td>
-                                    <td>redirect 重定向的表示式或者url</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>get(path,callback)</td>
-                        <td>Function</td>
-                        <td></td>
-                        <td>avalon.router.get 添加一个router规则
-                            <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>path</td>
-                                    <td></td>
-                                    <td>path url表达式</td>
-                                </tr>
-                                <tr>
-                                    <td>callback</td>
-                                    <td></td>
-                                    <td>callback 对应这个url的回调</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
                 </table>
             </fieldset>
             <ul class="example-links">
@@ -506,7 +506,7 @@ setTimeout(done, 4000)
                     <a href="avalon.mmRouter.ex9.html">mmRouter-基于状态机的路由器</a>
                 </li>
                 <li>
-                    <a href="avalon.mmRouter.ex10.html">new-mmRouter示例: avalon.router.go</a>
+                    <a href="avalon.mmRouter.ex10.html">mmRouter示例: avalon.router.go</a>
                 </li>
             </ul>
         </div>

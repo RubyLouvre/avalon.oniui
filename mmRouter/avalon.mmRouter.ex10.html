@@ -62,7 +62,7 @@
                     // arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
                 })
             }
-            require(["ready!", "mmRouter/new-mmState", "loading/avalon.loading"], function() {
+            require(["ready!", "mmRouter/mmState", "loading/avalon.loading"], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -347,7 +347,7 @@
                 })
                 var confirmed
                 avalon.state.config({
-                    onBeforeUnload: function(from, to) {
+                    onBeforeExit: function(from, to) {
                         if(confirmed) return
                         if(to && to.stateName.indexOf("contacts") == 0) {
                             confirmed = confirm("读取contacts需要授权，确认授权？")
@@ -392,7 +392,7 @@
     </head>
     <body ms-controller="test"
           mss-widget="loading,loading" data-loading-type="img" data-loading-modal-background="#ccc" data-loading-modal-opacity="0.5">
-        <h1>new-mmRouter示例: avalon.router.go</h1>
+        <h1>mmRouter示例: avalon.router.go</h1>
         <div style="overflow:hidden;">
             <ul class="codelist" 
                 ms-visible="false">
@@ -482,7 +482,7 @@
                     // arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
                 })
             }
-            require([&quot;ready!&quot;, &quot;mmRouter/new-mmState&quot;, &quot;loading/avalon.loading&quot;], function() {
+            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -767,7 +767,7 @@
                 })
                 var confirmed
                 avalon.state.config({
-                    onBeforeUnload: function(from, to) {
+                    onBeforeExit: function(from, to) {
                         if(confirmed) return
                         if(to &amp;&amp; to.stateName.indexOf(&quot;contacts&quot;) == 0) {
                             confirmed = confirm(&quot;读取contacts需要授权，确认授权？&quot;)
@@ -812,7 +812,7 @@
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;
           mss-widget=&quot;loading,loading&quot; data-loading-type=&quot;img&quot; data-loading-modal-background=&quot;#ccc&quot; data-loading-modal-opacity=&quot;0.5&quot;&gt;
-        &lt;h1&gt;new-mmRouter示例: avalon.router.go&lt;/h1&gt;
+        &lt;h1&gt;mmRouter示例: avalon.router.go&lt;/h1&gt;
         &lt;div style=&quot;overflow:hidden;&quot;&gt;
             &lt;ul class=&quot;codelist&quot; 
                 ms-visible=&quot;false&quot;&gt;

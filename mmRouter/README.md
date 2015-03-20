@@ -44,6 +44,9 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 | "viewname@statename" | 指向statename状态之内的view，覆盖其配置|
 | "@statename" | 指向statename状态内的""view，可以理解为用这个view去覆盖statename状态的""view |
 
+3、迁移可能碰到的问题
+
+* 由于视图刷新逻辑的修改，在state的onload事件去获取视图的一些ui组件可能获取不到
 
 mmRouter的使用
 ----------------------------------------

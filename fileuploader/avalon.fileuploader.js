@@ -1,9 +1,11 @@
 
-define(["avalon", "text!./avalon.fileuploader.html",
-    "./blob",
+define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
+    "./blob",   // NO EVENT MIXIN
     "./runtime",
-    "./spark-md5"], 
-    function (avalon, template, blobConstructor, runtimeConstructor, md5) {
+    "./blobqueue",
+    "./spark-md5",
+    "mmRequest/mmRequest"], 
+    function (avalon, template, eventMixin, blobConstructor, runtimeConstructor, blobqueueConstructor, md5) {
         var FILE_CACHED = 0; // 已被runtime缓存
         var FILE_QUEUED = 1; // 已进入发送队列
         var FILE_IN_UPLOADING = 5;  // 文件已经开始上传
@@ -18,6 +20,9 @@ define(["avalon", "text!./avalon.fileuploader.html",
         	var options = data[widgetName+'Options'],
                 $element = avalon(element);
 
+            eventMixin(blobqueueConstructor);
+            eventMixin(runtimeConstructor);
+
             var vmodel = avalon.define(data[widgetName+'Id'], function(vm) {
                 avalon.mix(vm, options);
 
@@ -26,7 +31,7 @@ define(["avalon", "text!./avalon.fileuploader.html",
                 vm.$runtime = null;
 
             	vm.$init = function() {
-                    vm.$runtime = new runtimeConstructor(vm, md5);
+                    vm.$runtime = new runtimeConstructor(vm, blobConstructor, blobqueueConstructor, md5);
 
                     vm.$runtime.attachEvent("beforeFileCache", function (plainFileObject) {
                         var isDuplicatedFile = false;

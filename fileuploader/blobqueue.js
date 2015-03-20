@@ -1,4 +1,4 @@
-define(["avalon", "./eventmixin", "mmRequest/mmRequest"], function (avalon, mixEvent) {
+define(["avalon"], function (avalon) {
 	function blobQueue (runtime, serverConfig) {
 		var me = this;
 		this.$runtime = runtime;
@@ -180,8 +180,5 @@ define(["avalon", "./eventmixin", "mmRequest/mmRequest"], function (avalon, mixE
 		this.requestPool = null;
 		clearInterval(this.sendTaskId);
 	}
-
-	mixEvent(blobQueue);
-
 	return blobQueue;
 });

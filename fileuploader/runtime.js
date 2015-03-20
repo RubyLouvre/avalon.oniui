@@ -1,6 +1,6 @@
 
-define(["avalon", "./eventmixin", "./blobqueue", "./blob"], 
-function (avalon, mixEvent, blobqueueConstructor, blobConstructor) {
+define(["avalon"], 
+function (avalon) {
 	/*
 	 * 文件状态代码。0-100为正常状态，101以后为错误状态
 	 */
@@ -16,7 +16,7 @@ function (avalon, mixEvent, blobqueueConstructor, blobConstructor) {
 	//var FILE_ERROR_FAIL_SLICE = 102;	// FileQueue无法拆分文件
 	var FILE_ERROR_FAIL_UPLOAD = 103;	// FileQueue发送文件时碰见错误
 
-	var runtimeContructor = function (uploaderVm, md5) {
+	var runtimeContructor = function (uploaderVm, blobConstructor, blobqueueConstructor, md5) {
 		this.vm = uploaderVm;
 		this.md5gen = md5;
 		this.files = {};
@@ -37,6 +37,8 @@ function (avalon, mixEvent, blobqueueConstructor, blobConstructor) {
 		this.blobqueue.attachEvent("blobFailToUpload", function(blob, textStatus, error) {
 			this.setFileObjectStatus(blob.fileObj, FILE_ERROR_FAIL_UPLOAD);
 		}, this)
+
+		this.blobConstructor = blobConstructor;
 	};
 
 	runtimeContructor.prototype.purgeFileData = function (fileObj) {
@@ -211,12 +213,12 @@ function (avalon, mixEvent, blobqueueConstructor, blobConstructor) {
 
 		var blobs = [];
 		if (!chunked || fileObj.size <= chunkSize) {
-			blobs.push(new blobConstructor(0, fileObj.size, fileObj, blobs.length));
+			blobs.push(new me.blobConstructor(0, fileObj.size, fileObj, blobs.length));
 		} else {
 			var offset = 0;
 			while (offset < fileObj.size) {
 				blobs.push(
-					new blobConstructor(offset, Math.min(fileObj.size - offset, chunkSize), fileObj, blobs.length)
+					new me.blobConstructor(offset, Math.min(fileObj.size - offset, chunkSize), fileObj, blobs.length)
 				);
 				offset+=chunkSize;
 			}
@@ -269,9 +271,9 @@ function (avalon, mixEvent, blobqueueConstructor, blobConstructor) {
 		delete this.blobqueue;
 		delete this.files;
 		delete this.md5gen;
+		delete this.blobConstructor;
 	}
 
-	mixEvent(runtimeContructor);
 	return runtimeContructor;
 });
 

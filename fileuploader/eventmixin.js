@@ -1,5 +1,7 @@
 define(["avalon"], function(avalon) {
 	var mixEvent = function mixEvent(jsClass) {
+		if (jsClass.prototype.__eventmixed) return;
+		jsClass.prototype.__eventmixed = true;	// 防止被Mix两次
 		jsClass.prototype.attachEvent = function (event, fn, scope) {
 			if (!this.listeners) {
 				this.listeners = {};

@@ -34,6 +34,15 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 |avalon.state.config.onload|onLoad|跳转成功，规范命名，参数未变|
 |avalon.state.config.onloadError|onError|出错，规范命名，并修改参数参数第一个参数是一个object，object.type表示出错的类型，比如view表示加载出错，object.name则对应出错的view name，第二个参数是对应的state|
 
+* 视图命名
+
+|语句|说明|
+| ------------- | ----------- |
+| "" | 指向父状态内views[""]配置的template |
+| "viewname" | 指向父状态内views[viewname]配置的template |
+| "viewname@" | 指向root状态之内的template，即从currentState一直向上寻找，优先级是子覆盖父，父覆盖爷 |
+| "viewname@statename" | 指向statename状态之内的template，即从statename状态寻找 |
+
 mmRouter的使用
 ----------------------------------------
 1、引入依赖(直接依赖于mmRouter, 总共依赖于avalon, mmRouter, mmHistory)

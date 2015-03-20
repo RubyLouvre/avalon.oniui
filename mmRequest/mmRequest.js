@@ -243,12 +243,11 @@ define("mmRequest", ["avalon", "mmPromise/mmPromise"], function(avalon) {
             this._transport = this.transport
             // 到这要么成功，调用success, 要么失败，调用 error, 最终都会调用 complete
             if (isSuccess) {
-                avalon.log("成功加载数据")
-                this._resolve(this.response, statusText, this)
+                this._resolve([this.response, statusText, this])
             } else {
-                this._reject([statusText, this.error || statusText])
+                this._reject([statusText, this.error || statusText, this])
             }
-            this._complete(this, statusText)
+            this._complete([this.response || statusText, this.error || statusText, this])
             delete this.transport
         }
     }
@@ -277,14 +276,25 @@ define("mmRequest", ["avalon", "mmPromise/mmPromise"], function(avalon) {
         promise.options = opts
         promise._reject = _reject
         promise._resolve = _resolve
+        promise.done = function(onSuccess) {
+            return this.then(function(value) {
+                onSuccess.apply(this, value)
+            })
+        }
+        promise.fail = function(onFail) {
+            return this.then(null, function(reason) {
+                onFail.apply(this, reason)
+            })
+        }
         var isSync = opts.async === false
         if (isSync) {
             avalon.log("warnning:与jquery1.8一样,async:false这配置已经被废弃")
             promise.async = false
         }
-        promise._complete = function(fn) {
+        promise._complete = function(args) {
+            var fn
             while (fn = completeFns.shift()) {
-                fn.apply(promise, arguments)
+                fn.apply(promise, args)
             }
         }
         promise.always = function(fn) {
@@ -558,7 +568,6 @@ define("mmRequest", ["avalon", "mmPromise/mmPromise"], function(avalon) {
             request: function() {
                 var self = this
                 var opts = this.options
-                avalon.log("XhrTransport.request.....")
                 var transport = this.transport = new avalon.xhr
                 transport.open(opts.type, opts.url, opts.async, opts.username, opts.password)
                 if (this.mimeType && transport.overrideMimeType) {
@@ -591,7 +600,11 @@ define("mmRequest", ["avalon", "mmPromise/mmPromise"], function(avalon) {
                  * progress
                  */
                 if (opts.progressCallback) {
-                    transport.onprogress = opts.progressCallback
+                    // 判断是否 ie6-9
+                    var isOldIE = document.all && !window.atob
+                    if (!isOldIE) {
+                        transport.onprogress = opts.progressCallback
+                    }
                 }
 
                 var dataType = opts.dataType
@@ -710,7 +723,6 @@ define("mmRequest", ["avalon", "mmPromise/mmPromise"], function(avalon) {
             request: function() {
                 var opts = this.options
                 var node = this.transport = DOC.createElement("script")
-                avalon.log("ScriptTransport.sending.....")
                 if (opts.charset) {
                     node.charset = opts.charset
                 }
@@ -835,7 +847,6 @@ define("mmRequest", ["avalon", "mmPromise/mmPromise"], function(avalon) {
                     form.action = opts.url
                     form.method = "POST"
                     form.enctype = "multipart/form-data"
-                    avalon.log("iframe transport...")
                     this.uploadcallback = avalon.bind(iframe, "load", function(event) {
                         self.respond(event)
                     })
@@ -871,7 +882,6 @@ define("mmRequest", ["avalon", "mmPromise/mmPromise"], function(avalon) {
                     delete this.uploadcallback
                     setTimeout(function() { // Fix busy state in FF3
                         node.parentNode.removeChild(node)
-                        avalon.log("iframe.parentNode.removeChild(iframe)")
                     })
                 }
             }

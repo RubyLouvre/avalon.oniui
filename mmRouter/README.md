@@ -39,9 +39,11 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 |语句|说明|
 | ------------- | ----------- |
 | "" | 指向父状态内views[""]配置的template |
-| "viewname" | 指向父状态内views[viewname]配置的template |
-| "viewname@" | 指向root状态之内的template，即从currentState一直向上寻找，优先级是子覆盖父，父覆盖爷 |
-| "viewname@statename" | 指向statename状态之内的template，即从statename状态寻找 |
+| "viewname" | 指向父状态内views[viewname]配置的template，覆盖其配置 |
+| "viewname@" | 指向root状态之内viewname指定的template，覆盖掉其所有父级状态的配置|
+| "viewname@statename" | 指向statename状态之内的view，覆盖其配置|
+| "@statename" | 指向statename状态内的""view，可以理解为用这个view去覆盖statename状态的""view |
+
 
 mmRouter的使用
 ----------------------------------------

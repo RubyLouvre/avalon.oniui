@@ -17,6 +17,7 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
   })
 ```
 * 接口修改对应
+* 
 |旧接口|新接口|说明|
 | ------------- | ----------- | ----------- |
 |state.onBeforeChange|onBeforeEnter|进入状态之前回调，参数未变化|
@@ -31,6 +32,7 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 |avalon.state.config.begin|onBegin|开始跳转，规范命名，参数未变|
 |avalon.state.config.onload|onLoad|跳转成功，规范命名，参数未变|
 |avalon.state.config.onloadError|onError|出错，规范命名，并修改参数参数第一个参数是一个object，object.type表示出错的类型，比如view表示加载出错，object.name则对应出错的view name，第二个参数是对应的state|
+
 mmRouter的使用
 ----------------------------------------
 1、引入依赖(直接依赖于mmRouter, 总共依赖于avalon, mmRouter, mmHistory)

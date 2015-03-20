@@ -1,51 +1,19 @@
-<div class="oni-uploader-wrapper">
 
-    <input 	type="button"
-    	ms-if="useNativeInput" 
-    	ms-click="addFileClicked"
-    	ms-widget="button"
-    	value="选择文件" />
-    <input 	type="button"
-    	ms-click="uploadClicked"
-    	ms-widget="button"
-    	value="上传" />
-	<input type="file"
-		ms-if="useNativeInput"
-		ms-on-change="onFileFieldChanged"
-		ms-attr-multiple="multipleFileAllowed"
-		style="display:none" />
 
-	<div ms-if="!useNativeInput" style="padding:10px; top:100px; width:120px;height:40px;display:inline-block;">
-		<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
-			width="120"
-			align="middle"
-			height="40"
-			codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0"
-			ms-attr-id="{{flashId}}"
-			style="position:absolute;"
-			>
-			<param name="allowScriptAccess" value="sameDomain" />
-			<param name="wmode" value="transparent">
-			<param name="allowFullScreen" value="false" />
-			<param name="movie" value="avalon.fileuploader.swf" />
-			<param name="quality" value="high" />
-			<embed src="avalon.fileuploader.swf" style="float:right;"
-				type="application/x-shockwave-flash"
-				align="middle"
-				width="120"
-				height="40"
-				wmode="transparent"
-				quality="high"
-				pluginspage="http://www.adobe.com/go/getflashplayer_cn"
-				allowScriptAccess="sameDomain"
-				allowFullScreen="false" 
-				ms-attr-name="{{flashId}}"
-			/>
-		</object>
-
+<div class="oni-uploader-wrapper" ms-if="showPreview">
+	<div ms-repeat="previews" ms-css-width="previewWidth" ms-css-height="previewHeight" style="display:inline-block;margin: 5px; border:1px solid black;overflow:hidden;">
+		<div style="position:relative;z-index:0;overflow:hidden;width:100%;height:100%;">
+			<span ms-css-width="previewWidth" style="white-space:nowrap;">{{el.name}}</span>
+			<a href="javascript:void(0);" ms-on-click="$remove">Remove</a>
+		</div>
+		<img ms-attr-src="el.preview" ms-css-top="-previewHeight" style="position:relative;z-index:-1;"/>
+		<div class="meter" style="top:-125px;">
+			<div ms-css-width="{{el.uploadProgress}}%"></div>
+			<span style="display:inline;">{{el.message}}</span>
+		</div>
 	</div>
 
-	<div>
+<!-- 	<div>
 		<div ms-repeat="previews" ms-css-width="previewWidth" ms-css-height="previewHeight" style="display:inline-block;margin: 5px; border:1px solid black;">
 			<div ms-attr-file-id="el.key"
 				ms-css-width="previewWidth"
@@ -55,14 +23,14 @@
 				<span ms-css-width="previewWidth" style="white-space:nowrap;">{{el.name}}</span>
 				<a href="javascript:void(0);" ms-on-click="onRemoveClick">Remove</a>
 			</div>
-			<img ms-if="base64Preview" ms-attr-src="{{el.img}}" ms-css-top="previewHeight*-1" style="position:relative;z-index:-1;"/>
+			<img ms-if="base64Preview" ms-attr-src="{{el.img}}" ms-css-top="previewHeight*-1" style="position:relative;z-index:-1;"/> -->
 			<!--div ms-if="!base64Preview"  ms-css-width="previewWidth" ms-css-height="previewHeight" style="background-color:red;filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale',src='file://{{el.localPath}});">
 			</div-->
-			<div ms-if="(showProgress && el.uploadedProgress!=0)" class="meter" style="top:-125px;">
+<!-- 			<div ms-if="(showProgress && el.uploadedProgress!=0)" class="meter" style="top:-125px;">
 				<div ms-css-width="{{el.uploadedProgress}}%"></div>
 				<span ms-if="(el.uploadedProgress!=100)" style="display:inline;">progress: {{el.uploadedProgress}}</span>
 				<span ms-if="(el.uploadedProgress==100)" style="display:inline;">Done</span>
 			</div>
 		</div>
-	</div>
+	</div> -->
 </div>

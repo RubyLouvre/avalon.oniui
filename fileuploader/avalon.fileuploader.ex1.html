@@ -5,6 +5,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>uploader demo 概览</title>
 	<script src="../avalon.js"></script>
+	<script src="../jquery-1.11.2.js"></script>
+	<script>
+	</script>
 	<link rel="stylesheet" href="../style/avalon.doc.css"/>
 	<style>
 
@@ -87,6 +90,48 @@
 </head>
 <body ms-controller="demo" style="background-color:gray;">
     <div ms-widget="fileuploader,demoUploader"></div>
+
+    <input 	type="button"
+    	ms-click="addFileClicked"
+    	ms-widget="button"
+    	value="选择文件" />
+    <input 	type="button"
+    	ms-click="uploadClicked"
+    	ms-widget="button"
+    	value="上传" />
+	<input type="file"
+		ms-on-change="onFileFieldChanged"
+		ms-attr-multiple="multipleFileAllowed"
+		style="display:none" />
+
+
+	<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+		width="500"
+		align="middle"
+		height="200"
+		codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0"
+		id="flashId"
+		style="position:absolute;"
+		>
+		<param name="allowScriptAccess" value="sameDomain" />
+		<param name="wmode" value="transparent">
+		<param name="allowFullScreen" value="false" />
+		<param name="movie" value="avalon.fileuploader.swf?vmid=demoUploader" />
+		<param name="quality" value="high" />
+		<embed src="avalon.fileuploader.swf?vmid=demoUploader" style="float:right;"
+			type="application/x-shockwave-flash"
+			align="middle"
+			width="500"
+			height="200"
+			wmode="transparent"
+			quality="high"
+			pluginspage="http://www.adobe.com/go/getflashplayer_cn"
+			allowScriptAccess="sameDomain"
+			allowFullScreen="false" 
+			name="flashId"
+		/>
+	</object>
+
 	<script>
 		// var needFlash = (function() {
 		// 	var supportMultiple = (document.createElement('input').multiple != undefined),
@@ -99,6 +144,57 @@
 
 		require(["./button/avalon.button","./fileuploader/avalon.fileuploader","ready!"], function(){
 			var model = avalon.define("demo", function(vm){
+				vm.addFileClicked = function () {
+					getInputField(event).click();
+				}
+
+				vm.onFileFieldChanged = function (event) {
+					var target = event.target || event.srcElement;
+	                var files = target.files || target.value;
+	                var demoUploader = avalon.vmodels.demoUploader;
+	                demoUploader.addFiles(files);
+	                // for (var i = 0; i < files.length; i++) {
+	                //     (function(file){
+	                //         var fileKey;
+	                //         new Promise(function(resolve, reject) {
+	                //             var reader = new FileReader()
+	                        
+	                //             reader.onload = function() {
+	                //                 resolve(reader.result);
+	                //             };
+	                //             reader.readAsDataURL(file);
+	                //         }).then(function(readerResult) {
+	                //             // 生成文件Key。默认采用MD5
+	                //             fileKey = fileKeyGen(file.name);
+
+	                //             // 查找文件，如果已经添加过就结束。
+	                //             if (managedFiles.hasOwnProperty(fileKey)) return;
+	                //             managedFiles[fileKey] = file;
+	                            
+	                //             if (uploaderVm.showPreview) generatePreview(uploaderVm, file.name, fileKey, readerResult);
+	                //         }, function() {
+	                //             if (!!fileKey) {
+	                //                 delete managedFiles[fileKey];
+	                //                 uploaderVm.removePreviewByKey(fileKey);
+	                //             }
+	                //         });
+	                //     }(files[i]));
+	                // }
+				}
+				vm.uploadClicked = function (event) {
+					avalon.vmodels.demoUploader.uploadAll(avalon.vmodels.demoUploader);
+				};
+                function getInputField(event) {
+                	var target = event.target || event.srcElement;
+                    var $wrapper = avalon(target.parentNode);
+                    for (var i = 0; i < $wrapper.element.children.length; i++) {
+                        var subNode = $wrapper.element.children[i];
+                        if (subNode.type == "file" && subNode.nodeType == 1) {
+                            return subNode;
+                        }
+                    }
+                    return null;
+                }
 			});
 			avalon.scan();
 		});

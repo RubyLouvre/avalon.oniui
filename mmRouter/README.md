@@ -18,8 +18,6 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 ```
 * 接口修改对应
 
-<table><tr><td>ca</td></tr><table>
-
 |旧接口|新接口|说明|
 | ------------- | ----------- | ----------- |
 |state.onBeforeChange|onBeforeEnter|进入状态之前回调，参数未变化|

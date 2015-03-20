@@ -10,6 +10,7 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 * 调整了状态机模型，去掉累赘的逻辑
 * 明确viewname[@statename]语法规则
 * 规范接口命名
+
 2、如何迁移
 * 引用新的script文件
 ```javascript

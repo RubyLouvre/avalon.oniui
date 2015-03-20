@@ -20,13 +20,14 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
         	var options = data[widgetName+'Options'],
                 $element = avalon(element);
 
-            eventMixin(blobqueueConstructor);
-            eventMixin(runtimeConstructor);
 
             var vmodel = avalon.define(data[widgetName+'Id'], function(vm) {
                 avalon.mix(vm, options);
 
                 vm.previews = [];
+                
+                eventMixin(blobqueueConstructor);
+                eventMixin(runtimeConstructor);
 
                 vm.$runtime = null;
 
@@ -148,7 +149,8 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
             showPreview: true,
             showProgress: true,
             serverConfig: {
-                url: "http://localhost:8081/Handler1.ashx",
+                url: "../../Handler1.ashx",
+                // url: "http://192.168.113.153/fileuploader/serverResponse.json",
                 userName: undefined,
                 password: undefined
             },

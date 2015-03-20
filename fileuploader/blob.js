@@ -1,7 +1,6 @@
 /*
 blob: {
   fileObj:
-  loaded:       // 数据是否已经加载
   offset:       // 相对于文件的Offset
   size:         // blob的尺寸
   data:         // 装载的文件二进制字节

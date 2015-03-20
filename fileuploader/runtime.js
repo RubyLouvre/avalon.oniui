@@ -38,6 +38,10 @@ function (avalon) {
 			this.setFileObjectStatus(blob.fileObj, FILE_ERROR_FAIL_UPLOAD);
 		}, this)
 
+		this.blobqueue.attachEvent("failToSendRequest", function (blob, error) {
+			alert(error.message)
+			debugger
+		}, this);
 		this.blobConstructor = blobConstructor;
 	};
 

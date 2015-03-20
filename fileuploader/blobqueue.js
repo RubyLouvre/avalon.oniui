@@ -16,6 +16,7 @@ define(["avalon"], function (avalon) {
 		if (this.queue.length <= 0) {
 			return false;
 		} else {
+			avalon.log("****FileUploader.blobQueue: Blob poped. Index: ", this.queue[0].index)
 			return this.queue.shift();
 		}
 	}
@@ -43,13 +44,12 @@ define(["avalon"], function (avalon) {
 	}
 
 	blobQueue.prototype.taskFn = function () {
-		var me = this,
-			nextBlob = this.pop();
-		if (!nextBlob || this.isRequestPoolFull()) {
+		var me = this;
+		if (this.isRequestPoolFull() || this.queue.length == 0) {
 			return;
 		}
 
-		this.$runtime.readBlob(nextBlob, function (blob) {
+		this.$runtime.readBlob(this.pop(), function (blob) {
 			var formData = this.buildRequestParams(blob);
 			//request.send(request.formData);
 			var requestPoolItem = {
@@ -66,7 +66,6 @@ define(["avalon"], function (avalon) {
 			    	me.onBlobSuccess.call(me, blob, this.response, requestPoolItem);
 			    },
 			    cache: false,
-			    contentType: false,
 			    progressCallback: function (e) {
 			    	me.onBlobProgress.call(me, e, blob, this, requestPoolItem);			    	
 			    },
@@ -74,7 +73,6 @@ define(["avalon"], function (avalon) {
 			    	me.onBlobError.call(me, blob, textStatus, error, requestPoolItem);
 			    }
 			};
-
 			if (window.FormData == undefined || !(formData instanceof FormData)) {
 				requestConfig.data = formData;
 			} else {

@@ -3,6 +3,48 @@ mmRouter
 
 avalon的三柱臣之一（ 路由，动画，AJAX）
 
+如何从mmState迁移到new-mmState
+-----------------------------------
+1、新版new-mmState特性
+* 通过ms-view binding来实现视图刷新，效率更高、可用性更强
+* 调整了状态机模型，去掉累赘的逻辑
+* 明确viewname[@statename]语法规则
+* 规范接口命名
+
+2、如何迁移
+* 引用新的script文件
+```javascript
+  require(["new-mmState"], function() {
+  })
+```
+* 接口修改对应
+
+|旧接口|新接口|说明|
+| ------------- | ----------- | ----------- |
+|state.onBeforeChange|onBeforeEnter|进入状态之前回调，参数未变化|
+|state.onChange|onEnter|进入状态回调，参数未变化|
+|state.onBeforeUnload|onBeforeExit|退出状态之前回调，参数未变化|
+|state.onAfterUnload|onExit|退出状态之前回调，参数未变化|
+|state.onBeforeLoad|onBeforeLoad|view加载完成前回调，不再与节点关联，只触发一次|
+|state.onAfterLoad|onBeforeLoad|view加载完成后回调，不再与节点关联，只触发一次|
+|avalon.state.config.beforeUnload|onBeforeUnload|A=>B触发，全局，只跳转前触发一次，用以展示提示信息，规范命名，参数未变|
+|avalon.state.config.abort|onAbort|取消跳转，规范命名，参数未变|
+|avalon.state.config.unload|onUnload|全局，规范命名，参数未变|
+|avalon.state.config.begin|onBegin|开始跳转，规范命名，参数未变|
+|avalon.state.config.onload|onLoad|跳转成功，规范命名，参数未变|
+|avalon.state.config.onloadError|onError|出错，规范命名，并修改参数参数第一个参数是一个object，object.type表示出错的类型，比如view表示加载出错，object.name则对应出错的view name，第二个参数是对应的state|
+
+* 视图命名
+
+|语句|说明|
+| ------------- | ----------- |
+| "" | 指向父状态内views[""]配置的template |
+| "viewname" | 指向父状态内views[viewname]配置的template，覆盖其配置 |
+| "viewname@" | 指向root状态之内viewname指定的template，覆盖掉其所有父级状态的配置|
+| "viewname@statename" | 指向statename状态之内的view，覆盖其配置|
+| "@statename" | 指向statename状态内的""view，可以理解为用这个view去覆盖statename状态的""view |
+
+
 mmRouter的使用
 ----------------------------------------
 1、引入依赖(直接依赖于mmRouter, 总共依赖于avalon, mmRouter, mmHistory)

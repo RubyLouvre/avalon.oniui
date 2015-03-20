@@ -40,7 +40,7 @@
                 width: 200%;
                 overflow: hidden;
             }
-            .oni-mmRouter-leave {
+            .oni-mmRouter-exit {
                 position: relative;
                 z-index: -1;                
             }
@@ -62,7 +62,7 @@
                     // arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
                 })
             }
-            require(["ready!", "mmRouter/mmState", "loading/avalon.loading"], function() {
+            require(["ready!", "mmRouter/new-mmState", "loading/avalon.loading"], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -76,19 +76,16 @@
                     }
                 })
                 avalon.state.config({
-                    onload: function() {
+                    onLoad: function() {
                         avalon.log("onload")
                         avalon.log(this.params)
                         avalon.log(this.path)
                     },
-                    unload: function() {
+                    onUnload: function() {
                         avalon.log("unload")
                         avalon.log(this.params)
                     }
                 })
-                // avalon.router.get("/*path", function() {
-                //     console.log(arguments)
-                // })
                 //接着下来通过mmState这个基于状态机的高级路由器，定义各种状态
                 //（每个状态包含各个要处理的模板容器，获取模板的手段，中途会发生的各种回调）
                 //////////////
@@ -138,7 +135,7 @@
                     abstract: true,
                     url: "/contacts",
                     templateUrl: "contacts.html",
-                    onChange: function() {
+                    onEnter: function() {
                         if (!avalon.vmodels.contacts) {
                             var lastId
                             var vmodel = avalon.define({
@@ -268,7 +265,7 @@
                         "hint@": {
                             template: "当前状态是contacts.list"
                         },
-                        "complex": {
+                        "complex@": {
                             template: "<font color='red'>默认内容内不能包含ms-view-这是由于现在的设计造成的，可以后续考虑重写ms-view的逻辑</font>"
                         }
                     }
@@ -279,7 +276,7 @@
                 avalon.state("contacts.detail", {
                     controller: "contacts",
                     url: "/{contactId}",
-                    onChange: function(a) {
+                    onEnter: function(a) {
                         var done = this.async(),
                             me = this
                         setTimeout(function() {
@@ -298,8 +295,11 @@
                         'hint@': {
                             template: "当前状态是contacts.detail"
                         },
-                        'tip@': {
+                        'tip': {
                             template: "当前ID是{{contact.id}}"
+                        },
+                        "complex@": {
+                            template: "<font color='red'>我只有呵呵了</font>"
                         }
                     }
                 })
@@ -309,7 +309,7 @@
                 avalon.state("contacts.detail.item", {
                     controller: "contacts",
                     url: "/item/{itemID}",
-                    onChange: function() {
+                    onEnter: function() {
                         var itemID = this.params.itemID
                         var vmodel = avalon.vmodels.contacts
                         var el = vmodel.contact
@@ -337,7 +337,7 @@
                 ///////////////////////////////
                 avalon.state("contacts.detail.item.edit", {
                     views: {
-                        "@contacts.detail.item": {
+                        "@contacts.detail": {
                             templateUrl: "contacts.detail.item.edit.html"
                         },
                         "hint@": {
@@ -347,27 +347,27 @@
                 })
                 var confirmed
                 avalon.state.config({
-                    beforeUnload: function(from, to) {
+                    onBeforeUnload: function(from, to) {
                         if(confirmed) return
                         if(to && to.stateName.indexOf("contacts") == 0) {
                             confirmed = confirm("读取contacts需要授权，确认授权？")
                             return confirmed
                         }
                     },
-                    abort: function(from, to) {
+                    onAbort: function(from, to) {
                         if(!from) {
                             avalon.router.redirect("/")
                         }
                     },
-                    begin: function(from, to) {
+                    onBegin: function(from, to) {
                         var loading = avalon.vmodels.loading
                         if(loading) loading.toggle = true
                     },
-                    onload: function(from, to) {
+                    onLoad: function(from, to) {
                         var loading = avalon.vmodels.loading
                         if(loading) loading.toggle = false
                     },
-                    onloadError: function(keyname, state) {
+                    onError: function(e, state) {
                         // state == this
                         avalon.router.navigate("/", {replace: true})
                     },
@@ -392,9 +392,10 @@
     </head>
     <body ms-controller="test"
           mss-widget="loading,loading" data-loading-type="img" data-loading-modal-background="#ccc" data-loading-modal-opacity="0.5">
-        <h1>mmRouter综合示例四: avalon.router.go</h1>
+        <h1>new-mmRouter示例: avalon.router.go</h1>
         <div style="overflow:hidden;">
-            <ul class="codelist">
+            <ul class="codelist" 
+                ms-visible="false">
                 <li 
                      ms-repeat-code="codes">
                     <textarea 
@@ -410,7 +411,8 @@
             </ul>
             <div class="header">
                 <a href="#!//">mmState</a>  <a href="#!/contacts">contacts</a>  <a href="#!/about">about</a>
-                <p class="hint" ms-view="hint"></p>
+                <p class="hint" ms-view="hint" 
+                   ms-class="b2"></p>
             </div>
             <div class="oni-helper-clearfix slider oni-helper-reset">
                 <div ms-view class="oni-mmRouter-slide"></div>
@@ -458,6 +460,10 @@
                 width: 200%;
                 overflow: hidden;
             }
+            .oni-mmRouter-exit {
+                position: relative;
+                z-index: -1;                
+            }
             .oni-mmRouter-slide {
                 width: 50%;
                 float: left;
@@ -476,7 +482,7 @@
                     // arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
                 })
             }
-            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;], function() {
+            require([&quot;ready!&quot;, &quot;mmRouter/new-mmState&quot;, &quot;loading/avalon.loading&quot;], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -490,19 +496,16 @@
                     }
                 })
                 avalon.state.config({
-                    onload: function() {
+                    onLoad: function() {
                         avalon.log(&quot;onload&quot;)
                         avalon.log(this.params)
                         avalon.log(this.path)
                     },
-                    unload: function() {
+                    onUnload: function() {
                         avalon.log(&quot;unload&quot;)
                         avalon.log(this.params)
                     }
                 })
-                // avalon.router.get(&quot;/*path&quot;, function() {
-                //     console.log(arguments)
-                // })
                 //接着下来通过mmState这个基于状态机的高级路由器，定义各种状态
                 //（每个状态包含各个要处理的模板容器，获取模板的手段，中途会发生的各种回调）
                 //////////////
@@ -552,7 +555,7 @@
                     abstract: true,
                     url: &quot;/contacts&quot;,
                     templateUrl: &quot;contacts.html&quot;,
-                    onChange: function() {
+                    onEnter: function() {
                         if (!avalon.vmodels.contacts) {
                             var lastId
                             var vmodel = avalon.define({
@@ -682,7 +685,7 @@
                         &quot;hint@&quot;: {
                             template: &quot;当前状态是contacts.list&quot;
                         },
-                        &quot;complex&quot;: {
+                        &quot;complex@&quot;: {
                             template: &quot;&lt;font color='red'&gt;默认内容内不能包含ms-view-这是由于现在的设计造成的，可以后续考虑重写ms-view的逻辑&lt;/font&gt;&quot;
                         }
                     }
@@ -693,7 +696,7 @@
                 avalon.state(&quot;contacts.detail&quot;, {
                     controller: &quot;contacts&quot;,
                     url: &quot;/{contactId}&quot;,
-                    onChange: function(a) {
+                    onEnter: function(a) {
                         var done = this.async(),
                             me = this
                         setTimeout(function() {
@@ -712,8 +715,11 @@
                         'hint@': {
                             template: &quot;当前状态是contacts.detail&quot;
                         },
-                        'tip@': {
+                        'tip': {
                             template: &quot;当前ID是{{contact.id}}&quot;
+                        },
+                        &quot;complex@&quot;: {
+                            template: &quot;&lt;font color='red'&gt;我只有呵呵了&lt;/font&gt;&quot;
                         }
                     }
                 })
@@ -723,7 +729,7 @@
                 avalon.state(&quot;contacts.detail.item&quot;, {
                     controller: &quot;contacts&quot;,
                     url: &quot;/item/{itemID}&quot;,
-                    onChange: function() {
+                    onEnter: function() {
                         var itemID = this.params.itemID
                         var vmodel = avalon.vmodels.contacts
                         var el = vmodel.contact
@@ -751,7 +757,7 @@
                 ///////////////////////////////
                 avalon.state(&quot;contacts.detail.item.edit&quot;, {
                     views: {
-                        &quot;@contacts.detail.item&quot;: {
+                        &quot;@contacts.detail&quot;: {
                             templateUrl: &quot;contacts.detail.item.edit.html&quot;
                         },
                         &quot;hint@&quot;: {
@@ -761,27 +767,27 @@
                 })
                 var confirmed
                 avalon.state.config({
-                    beforeUnload: function(from, to) {
+                    onBeforeUnload: function(from, to) {
                         if(confirmed) return
                         if(to &amp;&amp; to.stateName.indexOf(&quot;contacts&quot;) == 0) {
                             confirmed = confirm(&quot;读取contacts需要授权，确认授权？&quot;)
                             return confirmed
                         }
                     },
-                    abort: function(from, to) {
+                    onAbort: function(from, to) {
                         if(!from) {
                             avalon.router.redirect(&quot;/&quot;)
                         }
                     },
-                    begin: function(from, to) {
+                    onBegin: function(from, to) {
                         var loading = avalon.vmodels.loading
                         if(loading) loading.toggle = true
                     },
-                    onload: function(from, to) {
+                    onLoad: function(from, to) {
                         var loading = avalon.vmodels.loading
                         if(loading) loading.toggle = false
                     },
-                    onloadError: function(keyname, state) {
+                    onError: function(e, state) {
                         // state == this
                         avalon.router.navigate(&quot;/&quot;, {replace: true})
                     },
@@ -806,9 +812,10 @@
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;
           mss-widget=&quot;loading,loading&quot; data-loading-type=&quot;img&quot; data-loading-modal-background=&quot;#ccc&quot; data-loading-modal-opacity=&quot;0.5&quot;&gt;
-        &lt;h1&gt;mmRouter综合示例四: avalon.router.go&lt;/h1&gt;
+        &lt;h1&gt;new-mmRouter示例: avalon.router.go&lt;/h1&gt;
         &lt;div style=&quot;overflow:hidden;&quot;&gt;
-            &lt;ul class=&quot;codelist&quot;&gt;
+            &lt;ul class=&quot;codelist&quot; 
+                ms-visible=&quot;false&quot;&gt;
                 &lt;li 
                      ms-repeat-code=&quot;codes&quot;&gt;
                     &lt;textarea 
@@ -824,7 +831,8 @@
             &lt;/ul&gt;
             &lt;div class=&quot;header&quot;&gt;
                 &lt;a href=&quot;#!//&quot;&gt;mmState&lt;/a&gt;  &lt;a href=&quot;#!/contacts&quot;&gt;contacts&lt;/a&gt;  &lt;a href=&quot;#!/about&quot;&gt;about&lt;/a&gt;
-                &lt;p class=&quot;hint&quot; ms-view=&quot;hint&quot;&gt;&lt;/p&gt;
+                &lt;p class=&quot;hint&quot; ms-view=&quot;hint&quot; 
+                   ms-class=&quot;b2&quot;&gt;&lt;/p&gt;
             &lt;/div&gt;
             &lt;div class=&quot;oni-helper-clearfix slider oni-helper-reset&quot;&gt;
                 &lt;div ms-view class=&quot;oni-mmRouter-slide&quot;&gt;&lt;/div&gt;

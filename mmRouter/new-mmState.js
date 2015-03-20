@@ -98,7 +98,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             var cur = chain.pop(), me = this
             if(!cur) return callback()
             // 阻止退出
-            if(cur.onBeforeUnload() === false) return callback(false)
+            if(cur.onBeforeExit() === false) return callback(false)
             me.activeState = cur.parentState || _root
             cur._local = null
             cur.done = function(success) {
@@ -109,7 +109,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 }
                 return callback(success)
             }
-            var success = cur.onAfterUnload()
+            var success = cur.onExit()
             if(!cur._pending && cur.done) cur.done(success)
         },
         pushOne: function(chain, params, callback, _local, toLocals) {
@@ -118,7 +118,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             if(!cur) return callback()
             cur.syncParams(params)
             // 阻止进入该状态
-            if(cur.onBeforeChange() === false) {
+            if(cur.onBeforeEnter() === false) {
                 // 恢复params
                 // avalon.mix(true, cur.params, cur.oldParams)
                 cur.syncParams(cur.oldParams)
@@ -150,6 +150,8 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     // cur.parentState.fire("updateview", cur)
                     // 继续状态链
                     me.pushOne(chain, params, callback, _local)
+                }).catch(function() {
+                    callback(false)
                 })
             }
             // 一般在这个回调里准备数据
@@ -158,7 +160,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 var key = item.name
                 args.push(cur.params[key])
             })
-            cur._onChange.apply(cur, args)
+            cur._onEnter.apply(cur, args)
             if(!cur._pending && cur.done) cur.done()
         },
         transitionTo: function(fromState, toState, toParams, options) {
@@ -309,7 +311,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         if($tplElement.hasClass("oni-mmRouter-slide")) {
             var element = avalon.parseHTML(tpl).childNodes[0]
             avalon(element).addClass("oni-mmRouter-enter")
-            avalon(oldElement).removeClass("oni-mmRouter-enter").addClass("oni-mmRouter-leave")
+            avalon(oldElement).removeClass("oni-mmRouter-enter").addClass("oni-mmRouter-exit")
             oldElement.parentNode.insertBefore(element, oldElement.nextSibling)
             mmState.oldNodes.push(oldElement)
             callStateFunc("onViewEnter", _currentState, element, oldElement)
@@ -343,12 +345,12 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
      *     views的每个键名(keyname)的结构为viewname@statename，
      *         如果名字不存在@，则viewname直接为keyname，statename为opts.stateName
      *         如果名字存在@, viewname为match[0], statename为match[1]
-     * @param opts.onBeforeLoad 模板还没有插入DOM树执行的回调，this指向[ms-view]元素节点集合，参数为关联的state对象
-     * @param opts.onAfterLoad 模板插入DOM树执行的回调，this指向[ms-view]元素节点，参数为为关联的state对象
-     * @param opts.onBeforeChange 切入某个state之前触发，this指向对应的state，如果return false则会中断并退出整个状态机
-     * @param opts.onChange 当切换为当前状态时调用的回调，this指向状态对象，参数为匹配的参数， 我们可以在此方法 定义此模板用到的VM， 或修改VM的属性
-     * @param opts.onBeforeUnload state退出前触发，this指向对应的state，如果return false则会中断并退出整个状态机
-     * @param opts.onAfterUnload 退出后触发，this指向对应的state
+     * @param opts.onBeforeLoad 所有view资源开始加载前触发，参数为关联的state对象
+     * @param opts.onAfterLoad 所有view资源开始加载后触发，参数为为关联的state对象
+     * @param opts.onBeforeEnter 切入某个state之前触发，this指向对应的state，如果return false则会中断并退出整个状态机
+     * @param opts.onEnter 当切换为当前状态时调用的回调，this指向状态对象，参数为匹配的参数， 我们可以在此方法 定义此模板用到的VM， 或修改VM的属性
+     * @param opts.onBeforeExit state退出前触发，this指向对应的state，如果return false则会中断并退出整个状态机
+     * @param opts.onExit 退出后触发，this指向对应的state
      * @param opts.abstract  表示它不参与匹配，this指向对应的state
      * @param {private} opts.parentState 父状态对象（框架内部生成）
      */
@@ -377,7 +379,11 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     }
                 }, function(msg) {
                     avalon.log(warnings + " " + msg)
-                    callStateFunc("onLoadError", me, name, state)
+                    callStateFunc("onError", me, {
+                        type: "view",
+                        name: name,
+                        message: "view " + name + " not found"
+                    }, state)
                 })
                 
             })
@@ -397,37 +403,19 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
     /*
      *  @interface avalon.state.config 全局配置
      *  @param {Object} config 配置对象
-     *  @param {Function} config.beforeUnload 请使用onBeforeUnload
      *  @param {Function} config.onBeforeUnload 开始切前的回调，this指向router对象，第一个参数是fromState，第二个参数是toState，return false可以用来阻止切换进行
-     *  @param {Function} config.abort 请使用onAbort
      *  @param {Function} config.onAbort onBeforeUnload return false之后，触发的回调，this指向mmState对象，参数同onBeforeUnload
-     *  @param {Function} config.unload 请使用onUnload
      *  @param {Function} config.onUnload url切换时候触发，this指向mmState对象，参数同onBeforeUnload
-     *  @param {Function} config.begin 请使用onBegin
      *  @param {Function} config.onBegin  开始切换的回调，this指向mmState对象，参数同onBeforeUnload，如果配置了onBegin，则忽略begin
-     *  @param {Function} config.onload 请使用onLoad
      *  @param {Function} config.onLoad 切换完成并成功，this指向mmState对象，参数同onBeforeUnload
      *  @param {Function} config.onViewEnter 视图插入动画函数，有一个默认效果
      *  @param {Node} config.onViewEnter.arguments[0] 新视图节点
      *  @param {Node} config.onViewEnter.arguments[1] 旧的节点
-     *  @param {Function} config.onloadError 请使用onLoadError
-     *  @param {Function} config.onLoadError 加载模板资源出错的回调，this指向对应的state，第一个参数对应的模板配置keyname，第二个参数是对应的state
+     *  @param {Function} config.onError 出错的回调，this指向对应的state，第一个参数是一个object，object.type表示出错的类型，比如view表示加载出错，object.name则对应出错的view name，第二个参数是对应的state
     */
     avalon.state.config = function(config) {
-        avalon.each(config, function(key, func) {
-            delete config[key]
-            if(key.indexOf("on") !== 0) {
-                config["on" + key.replace(/^[a-z]/g, function(mat) {
-                    return mat.toUpperCase()
-                })] = func
-            } else {
-                config[key.replace(/^on[a-z]/g, function(mat) {
-                    return "on" + mat.split("")[2].toUpperCase()
-                })] = func
-            }
-        })
         avalon.mix(avalon.state, config || {})
-        return this
+        return avalon.state
     }
     function callStateFunc(name, state) {
         Event.$fire.apply(Event, arguments)
@@ -547,14 +535,14 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 if(key in toParams) me.params[key] = toParams[key]
             })
         },
-        _onChange: function() {
+        _onEnter: function() {
             this.query = this.getQuery()
-            this.onChange.apply(this, arguments)
+            this.onEnter.apply(this, arguments)
         },
         /*
          * @interface state.getQuery 获取state的query，等价于state.query
          *<pre>
-         *  onChange: function() {
+         *  onEnter: function() {
          *      var query = this.getQuery()
          *      or
          *      this.query
@@ -565,7 +553,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         /*
          * @interface state.getParams 获取state的params，等价于state.params
          *<pre>
-         *  onChange: function() {
+         *  onEnter: function() {
          *      var params = this.getParams()
          *      or
          *      this.params
@@ -576,7 +564,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         /*
          * @interface state.async 表示当前的状态是异步，中断状态chain的继续执行，返回一个done函数，通过done(false)终止状态链的执行，任意其他非false参数，将继续
          *<pre>
-         *  onChange: function() {
+         *  onEnter: function() {
          *      var done = this.async()
          *      setTimeout(done, 4000)
          *  }
@@ -587,12 +575,12 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             if(this.done) this._pending = true
             return this.done || avalon.noop
         },
-        onBeforeChange: avalon.noop, // 切入某个state之前触发
-        onChange: avalon.noop, // 切入触发
+        onBeforeEnter: avalon.noop, // 切入某个state之前触发
+        onEnter: avalon.noop, // 切入触发
         onBeforeLoad: avalon.noop, // 所有资源开始加载前触发
         onAfterLoad: avalon.noop, // 加载后触发
-        onBeforeUnload: avalon.noop, // state退出前触发
-        onAfterUnload: avalon.noop // 退出后触发
+        onBeforeExit: avalon.noop, // state退出前触发
+        onExit: avalon.noop // 退出后触发
     }
 
     _root = StateModel("", {
@@ -696,4 +684,4 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     reject("必须存在template, templateUrl, templateProvider中的一个")
                 })
     }
-});
+})

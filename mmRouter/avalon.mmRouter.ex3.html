@@ -485,7 +485,7 @@
                     // arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
                 })
             }
-            require([&quot;ready!&quot;, &quot;mmRouter/mmState-new&quot;, &quot;loading/avalon.loading&quot;], function() {
+            require([&quot;ready!&quot;, &quot;mmRouter/-mmState-new&quot;, &quot;loading/avalon.loading&quot;], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -721,7 +721,7 @@
                         'hint@': {
                             template: &quot;当前状态是contacts.detail&quot;
                         },
-                        'tip@': {
+                        'tip': {
                             template: &quot;当前ID是{{contact.id}}&quot;
                         },
                         &quot;complex@&quot;: {
@@ -820,7 +820,8 @@
           mss-widget=&quot;loading,loading&quot; data-loading-type=&quot;img&quot; data-loading-modal-background=&quot;#ccc&quot; data-loading-modal-opacity=&quot;0.5&quot;&gt;
         &lt;h1&gt;mmRouter综合示例四: avalon.router.go&lt;/h1&gt;
         &lt;div style=&quot;overflow:hidden;&quot;&gt;
-            &lt;ul class=&quot;codelist&quot;&gt;
+            &lt;ul class=&quot;codelist&quot; 
+                ms-visible=&quot;false&quot;&gt;
                 &lt;li 
                      ms-repeat-code=&quot;codes&quot;&gt;
                     &lt;textarea 
@@ -836,7 +837,8 @@
             &lt;/ul&gt;
             &lt;div class=&quot;header&quot;&gt;
                 &lt;a href=&quot;#!//&quot;&gt;mmState&lt;/a&gt;  &lt;a href=&quot;#!/contacts&quot;&gt;contacts&lt;/a&gt;  &lt;a href=&quot;#!/about&quot;&gt;about&lt;/a&gt;
-                &lt;p class=&quot;hint&quot; ms-view=&quot;hint&quot;&gt;&lt;/p&gt;
+                &lt;p class=&quot;hint&quot; ms-view=&quot;hint&quot; 
+                   ms-class=&quot;b2&quot;&gt;&lt;/p&gt;
             &lt;/div&gt;
             &lt;div class=&quot;oni-helper-clearfix slider oni-helper-reset&quot;&gt;
                 &lt;div ms-view class=&quot;oni-mmRouter-slide&quot;&gt;&lt;/div&gt;

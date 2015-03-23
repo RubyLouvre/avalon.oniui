@@ -89,13 +89,10 @@
     <div ms-widget="fileuploader,demoUploader"></div>
 
 
-    <input 	type="button"
-    	ms-click="uploadClicked"
-    	ms-widget="button"
-    	value="上传" />
+    
 
 
-	<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+	<!-- <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
 		width="500"
 		align="middle"
 		height="200"
@@ -104,6 +101,7 @@
 		style="position:absolute;"
 		>
 		<param name="allowScriptAccess" value="sameDomain" />
+		<param name="wmode" value="transparent">
 		<param name="allowFullScreen" value="false" />
 		<param name="movie" value="avalon.fileuploader.swf?vmid=demoUploader" />
 		<param name="quality" value="high" />
@@ -112,13 +110,14 @@
 			align="middle"
 			width="500"
 			height="200"
+			wmode="transparent"
 			quality="high"
 			pluginspage="http://www.adobe.com/go/getflashplayer_cn"
 			allowScriptAccess="sameDomain"
 			allowFullScreen="false" 
 			name="flashId"
 		/>
-	</object>
+	</object> -->
 
 	<script>
 		// var needFlash = (function() {
@@ -170,9 +169,6 @@
 	                //     }(files[i]));
 	                // }
 				}
-				vm.uploadClicked = function (event) {
-					avalon.vmodels.demoUploader.uploadAll(avalon.vmodels.demoUploader);
-				};
                 function getInputField(event) {
                 	var target = event.target || event.srcElement;
                     var $wrapper = avalon(target.parentNode);

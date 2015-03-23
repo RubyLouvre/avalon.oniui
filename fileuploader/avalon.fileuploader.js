@@ -15,6 +15,13 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
             var vmodel = avalon.define(data[widgetName+'Id'], function(vm) {
                 avalon.mix(vm, options);
 
+                var supportMultiple = (document.createElement('input').multiple != undefined),
+                supportBase64Decode = (window.atob != undefined),
+                supportCanvas = (document.createElement('canvas').getContext && document.createElement('canvas').getContext('2d'));
+
+                vm.useHtml5Runtime = supportMultiple && supportBase64Decode && supportCanvas;
+                vm.useFlashRuntime = true;
+
                 vm.previews = [];
                 
                 eventMixin(blobqueueConstructor);
@@ -27,6 +34,27 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     vm.previews.remove(el);
                     vm.$runtime.removeFileByMd5(el.md5);
                 }
+                vm.addFileClicked = function (e) {
+                    if (vm.useHtml5Runtime) {
+                        var target = e.target || e.srcElement;
+                        var $wrapper = avalon(target);
+                        for (var i = 0; i < $wrapper.element.children.length; i++) {
+                            var subNode = $wrapper.element.children[i];
+                            if (subNode.type == "file" && subNode.nodeType == 1) {
+                                subNode.click();
+                                return;
+                            }
+                        }
+                    }
+                }
+                vm.uploadClicked = function (event) {
+                    vm.uploadAll(vm);
+                };
+                vm.onFileFieldChanged = function (event) {
+                    var target = event.target || event.srcElement;
+                    var files = target.files || target.value;
+                    vm.addFiles(files);
+                };
                 // Flash和H5都会调用此方法来生成文件扩展名过滤
                 vm.getInputAcceptTypes = function (_isFalsh) {
                     var types = vm.acceptFileTypes.split(",");
@@ -157,7 +185,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
 
 
 
-	            	element.innerHTML = template;
+	            	element.innerHTML = template.replace(/##VM_ID##/ig, vm.$id);  // 将vmid附加如flash的url中
 
                     vmodels = [vm].concat(vmodels);
                     avalon.scan(element, vmodels);

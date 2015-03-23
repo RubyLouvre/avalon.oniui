@@ -10,7 +10,7 @@ avalon.state("todos", {
 			templateUrl: "js/views/footer.html"
 		}
 	},
-	onEnter: function(status) {
+	onChange: function(status) {
 		if(status in {"": 1, active: 1, completed:1}) {
 			var todos = avalon.vmodels.todos
 			if(todos) {

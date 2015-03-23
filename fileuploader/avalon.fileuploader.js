@@ -4,7 +4,8 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
     "./runtime",
     "./blobqueue",
     "./spark-md5",
-    "mmRequest/mmRequest"], 
+    "mmRequest/mmRequest",
+    "css!./avalon.fileuploader.css"], 
     function (avalon, template, eventMixin, blobConstructor, runtimeConstructor, blobqueueConstructor, md5) {
         var widgetName = 'fileuploader';
         var widget = avalon.ui[widgetName] = function(element, data, vmodels) {

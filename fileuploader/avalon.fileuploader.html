@@ -1,18 +1,32 @@
 
 
 <div class="oni-uploader-wrapper" ms-if="showPreview">
+	<div class="preview-stage">
+		<div 
+			class="preview-image-wrapper"
+			ms-repeat="previews"
+			ms-css-width="previewWidth"
+			ms-css-height="previewHeight">
+			<div class="preview-menu">
+				<div><a class="icon" href="javascript:void(0);" ms-on-click="onPreviewRemoveClicked(el)">&times;</a>{{el.name}}</div>
+			</div>
+			<img ms-attr-src="el.preview"/>
+			<div class="preview-progress-wrapper">
+				<div class="preview-progress-body">
+					<div class='progress-bar' ms-css-width="{{el.uploadProgress}}%"></div>
+					<span class="message">{{el.message}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
 
-	<input 	type="button"
-    	ms-click="uploadClicked"
-    	ms-widget="button"
-    	value="上传" />
-	<button type="button" ms-widget="button" ms-click="addFileClicked">
+	<button type="button" ms-click="addFileClicked" class="uploader-button-add uploader-button">
 		Click Me!
 		<object ms-if="useFlashRuntime"
 			classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
-			width="500"
+			width="168"
 			align="middle"
-			height="200"
+			height="44"
 			codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0"
 			id="flashId"
 			style="position:absolute;"
@@ -24,8 +38,8 @@
 			<embed src="avalon.fileuploader.swf?vmid=##VM_ID##" style="float:right;"
 				type="application/x-shockwave-flash"
 				align="middle"
-				width="500"
-				height="200"
+				width="168"
+				height="44"
 				quality="high"
 				pluginspage="http://www.adobe.com/go/getflashplayer_cn"
 				allowScriptAccess="sameDomain"
@@ -40,16 +54,9 @@
 				ms-attr-multiple="multipleFileAllowed"
 				style="display:none" />
 	</button>
-
-	<div ms-repeat="previews" ms-css-width="previewWidth" ms-css-height="previewHeight" style="display:inline-block;margin: 5px; border:1px solid black;overflow:hidden;" data-repeat-rendered="previewRendered">
-		<div style="position:relative;z-index:0;overflow:hidden;width:100%;height:100%;">
-			<span ms-css-width="previewWidth" style="white-space:nowrap;">{{el.name}}</span>
-			<a href="javascript:void(0);" ms-on-click="onPreviewRemoveClicked(el)">Remove</a>
-		</div>
-		<img ms-attr-src="el.preview" ms-css-top="-previewHeight" style="position:relative;z-index:-1;"/>
-		<div class="meter" style="top:-125px;">
-			<div ms-css-width="{{el.uploadProgress}}%"></div>
-			<span style="display:inline;">{{el.message}}</span>
-		</div>
-	</div>
+		<button 
+			type="button"
+	    	ms-click="uploadClicked">
+	    	上传
+	    </button>
 </div>

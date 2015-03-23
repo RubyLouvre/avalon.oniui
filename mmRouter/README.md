@@ -3,6 +3,56 @@ mmRouter
 
 avalon的三柱臣之一（ 路由，动画，AJAX）
 
+如何从mmState迁移到new-mmState
+-----------------------------------
+1、新版new-mmState特性
+* 通过ms-view binding来实现视图刷新，效率更高、可用性更强
+* 调整了状态机模型，去掉累赘的逻辑
+* 明确viewname[@statename]语法规则
+* 规范接口命名
+
+2、如何迁移
+* 引用新的script文件，默认已经切换到新版
+```javascript
+  require(["mmState"], function() {
+  })
+```
+如果需要继续使用老版的mmRouter
+```javascript
+  require(["old-mmState"], function() {
+  })
+```
+* 接口修改对应
+
+|旧接口|新接口|说明|
+| ------------- | ----------- | ----------- |
+|state.onBeforeChange|onBeforeEnter|进入状态之前回调，参数未变化|
+|state.onChange|onEnter|进入状态回调，参数未变化|
+|state.onBeforeUnload|onBeforeExit|退出状态之前回调，参数未变化|
+|state.onAfterUnload|onExit|退出状态之前回调，参数未变化|
+|state.onBeforeLoad|onBeforeLoad|view加载完成前回调，不再与节点关联，只触发一次|
+|state.onAfterLoad|onBeforeLoad|view加载完成后回调，不再与节点关联，只触发一次|
+|avalon.state.config.beforeUnload|onBeforeUnload|A=>B触发，全局，只跳转前触发一次，用以展示提示信息，规范命名，参数未变|
+|avalon.state.config.abort|onAbort|取消跳转，规范命名，参数未变|
+|avalon.state.config.unload|onUnload|全局，规范命名，参数未变|
+|avalon.state.config.begin|onBegin|开始跳转，规范命名，参数未变|
+|avalon.state.config.onload|onLoad|跳转成功，规范命名，参数未变|
+|avalon.state.config.onloadError|onError|出错，规范命名，并修改参数参数第一个参数是一个object，object.type表示出错的类型，比如view表示加载出错，object.name则对应出错的view name，第二个参数是对应的state|
+
+* 视图命名
+
+|语句|说明|
+| ------------- | ----------- |
+| "" | 指向父状态内views[""]配置的template |
+| "viewname" | 指向父状态内views[viewname]配置的template，覆盖其配置 |
+| "viewname@" | 指向root状态之内viewname指定的template，覆盖掉其所有父级状态的配置|
+| "viewname@statename" | 指向statename状态之内的view，覆盖其配置|
+| "@statename" | 指向statename状态内的""view，可以理解为用这个view去覆盖statename状态的""view |
+
+3、迁移可能碰到的问题
+
+* 由于视图刷新逻辑的修改，在state的onload事件去获取视图的一些ui组件可能获取不到
+
 mmRouter的使用
 ----------------------------------------
 1、引入依赖(直接依赖于mmRouter, 总共依赖于avalon, mmRouter, mmHistory)
@@ -63,13 +113,19 @@ avalon.scan()
 ```
 mmRouter与mmHistory的API列表
 ----------------------------------------
-* `avalon.history.start(opts)`， 开始监听URL变化，opts。 enter image description here
-<div><img src="http://htmljs.b0.upaiyun.com/uploads/1411112779022-router2.jpg"/></div>
+* `avalon.history.start(opts)`， 开始监听URL变化，opts：
+  
+  ![router2](http://htmljs.b0.upaiyun.com/uploads/1411112779022-router2.jpg)
+
 * `avalon.history.stop()`， 中止监听URL变化。
-* `avalon.router.get(path, callback)`，用于添加路由规则。第一个为路由规则，<br>
-如"/aaa", "/bbb/:bbbId","/eee/{eeeId}/ddd/{dddId:[0-9]{6}}" 冒号后的东西或花括号的东西表示为参数，<br>
-花括号模式下还可以指定匹配规则。callback为回调函数，框架会将冒号后的或花括中的匹配内容传进来，<br>
-此外this对象，包含了path、 params、 query等对象与属性。
+* `avalon.router.get(path, callback)`，用于添加路由规则。第一个为路由规则，
+  
+  如"/aaa", "/bbb/:bbbId","/eee/{eeeId}/ddd/{dddId:[0-9]{6}}" 冒号后的东西或花括号的东西表示为参数，
+
+  花括号模式下还可以指定匹配规则。callback为回调函数，框架会将冒号后的或花括中的匹配内容传进来，
+
+  此外this对象，包含了path、 params、 query等对象与属性。
+
 ```javascript
          `'/hello/'` - 匹配'/hello/'或'/hello'
          `'/user/:id'` - 匹配 '/user/bob' 或 '/user/1234!!!' 或 '/user/' 但不匹配 '/user' 与 '/user/bob/details'
@@ -96,7 +152,8 @@ mmRouter与mmHistory的API列表
 * `avalon.router.getLastPath()` 取得最近一次跳转的路径，比如用户F5强制页面，你在ready回调中执行此方法，
 得到path，然后将它放进navigate中就能回到原来的页面了。
 [http://rubylouvre.github.io/mvvm/avalon.router.html](http://rubylouvre.github.io/mvvm/avalon.router.html)
-<h3>路由器与多个VM的协作（每个VM定义在不同的JS文件中）</h3>
+
+### 路由器与多个VM的协作（每个VM定义在不同的JS文件中）
 ```javascript
 
 //aaa.js
@@ -183,8 +240,9 @@ mmState的使用
 
     })
 ```
-注意，第一个状态，<b>必须指定controller</b>，controller为顶层VM的`$id`。
-注意，添加状态的顺序，必须先添加aaa, 再添加aaa.bbb，再添加aaa.bbb.ccc，不能先添加aaa.bbb，再添加aaa
+注意，第一个状态，__必须指定controller__，controller为顶层VM的`$id`。
+注意，添加状态的顺序，必须先添加aaa, 再添加aaa.bbb，再添加aaa.bbb.ccc，不能先添加aaa.bbb，再添加aaa。
+
 4、启动历史管理器
 ```javascript
     avalon.history.start({
@@ -204,12 +262,18 @@ avalon.state(stateName: opts)
 * stateName： 指定当前状态名
 * url:  当前状态对应的路径规则，与祖先状态们组成一个完整的匹配规则
 * controller： 指定当前所在的VM的名字（如果是顶级状态对象，必须指定）
-* views: 对多个[ms-view]容器进行处理,<br>
-    每个对象应拥有template, templateUrl, templateProvider, onBeforeLoad, onAfterLoad属性<br>
-    template,templateUrl,templateProvider属性必须指定其一,要求返回一个字符串或一个Promise对象<br>
-    onBeforeLoad, onAfterLoad是可选<br>
-    如果不写views属性,则默认view为"",这四个属性可以直接写在opts对象上<br>
-    views的结构为<br>
+* views: 对多个[ms-view]容器进行处理,
+
+  每个对象应拥有template, templateUrl, templateProvider, onBeforeLoad, onAfterLoad属性
+
+  template,templateUrl,templateProvider属性必须指定其一,要求返回一个字符串或一个Promise对象
+
+  onBeforeLoad, onAfterLoad是可选
+
+  如果不写views属性,则默认view为"",这四个属性可以直接写在opts对象上
+
+  views的结构为：
+
 ```
     {
        "": {template: "xxx", onBeforeLoad: function(){} }
@@ -223,13 +287,12 @@ avalon.state(stateName: opts)
 * template: 指定当前模板，也可以为一个函数，传入opts.params作参数
 * templateUrl: 指定当前模板的路径，也可以为一个函数，传入opts.params作参数
 * templateProvider: 指定当前模板的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数
-* onChange: 当切换为当前状态时调用的回调，this指向状态对象，参数为匹配的参数，
-          我们可以在此方法 定义此模板用到的VM， 或修改VM的属性
+* onEnter: 当切换为当前状态时调用的回调，this指向状态对象，参数为匹配的参数，我们可以在此方法 定义此模板用到的VM， 或修改VM的属性
 * onBeforeLoad: 模板还没有插入DOM树执行的回调，this指向[ms-view]元素节点，参数为状态对象
 * onAfterLoad: 模板插入DOM树执行的回调，this指向[ms-view]元素节点，参数为状态对象
 * abstract:  表示它不参与匹配
 * parentState: 父状态对象（框架内部生成）
 
 
-<p>具体可以看http://localhost:xxx/mmRouter/index2.html 示例页面</p>
+具体可以看<https://rawgit.com/RubyLouvre/mmRouter/master/index2.html>示例页面
 

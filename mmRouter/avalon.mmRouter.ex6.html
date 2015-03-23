@@ -69,7 +69,7 @@
                             templateUrl: "ui/home.html"
                         }
                     },
-                    onChange: function() {
+                    onEnter: function() {
                                                 
                     }
                 })
@@ -81,16 +81,16 @@
                             templateUrl: "ui/login.html"
                         }
                     },
-                    onBeforeChange: function() {
+                    onBeforeEnter: function() {
                         if(avalon.vmodels.dialogName) {
                             avalon.vmodels.dialogName.toggle = true
                             return false
                         }
                     },
-                    onChange: function() {
+                    onEnter: function() {
                     },
                     onAfterLoad: function() {
-                        avalon.vmodels.dialogName.toggle = true
+                        if(avalon.vmodels.dialogName) avalon.vmodels.dialogName.toggle = true
                     }
                 })
 
@@ -102,7 +102,7 @@
                             templateUrl: "ui/user.html"
                         }
                     },
-                    onBeforeChange: home.isLogin
+                    onBeforeEnter: home.isLogin
                 })
 
                 avalon.state("user.developer", {
@@ -113,16 +113,19 @@
                             templateUrl: "ui/list.html"
                         }
                     },
-                    onChange: function() {
+                    onEnter: function() {
                         home.user.username = this.params.username
                         home.user.pwd = this.params.pwd
                     }
                 })
 
                 avalon.state.config({
-                    onload: function() {
-                        home.page = this.stateName
-                        currentState = this
+                    onLoad: function() {
+                        currentState = this.currentState
+                        home.page = currentState.stateName
+                    },
+                    onError: function(e, state) {
+                        avalon.log(e.error)
                     }
                 })
 
@@ -219,7 +222,7 @@
                             templateUrl: &quot;ui/home.html&quot;
                         }
                     },
-                    onChange: function() {
+                    onEnter: function() {
                                                 
                     }
                 })
@@ -231,16 +234,16 @@
                             templateUrl: &quot;ui/login.html&quot;
                         }
                     },
-                    onBeforeChange: function() {
+                    onBeforeEnter: function() {
                         if(avalon.vmodels.dialogName) {
                             avalon.vmodels.dialogName.toggle = true
                             return false
                         }
                     },
-                    onChange: function() {
+                    onEnter: function() {
                     },
                     onAfterLoad: function() {
-                        avalon.vmodels.dialogName.toggle = true
+                        if(avalon.vmodels.dialogName) avalon.vmodels.dialogName.toggle = true
                     }
                 })
 
@@ -252,7 +255,7 @@
                             templateUrl: &quot;ui/user.html&quot;
                         }
                     },
-                    onBeforeChange: home.isLogin
+                    onBeforeEnter: home.isLogin
                 })
 
                 avalon.state(&quot;user.developer&quot;, {
@@ -263,16 +266,19 @@
                             templateUrl: &quot;ui/list.html&quot;
                         }
                     },
-                    onChange: function() {
+                    onEnter: function() {
                         home.user.username = this.params.username
                         home.user.pwd = this.params.pwd
                     }
                 })
 
                 avalon.state.config({
-                    onload: function() {
-                        home.page = this.stateName
-                        currentState = this
+                    onLoad: function() {
+                        currentState = this.currentState
+                        home.page = currentState.stateName
+                    },
+                    onError: function(e, state) {
+                        avalon.log(e.error)
                     }
                 })
 

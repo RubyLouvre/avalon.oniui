@@ -88,18 +88,11 @@
 <body ms-controller="demo" style="background-color:gray;">
     <div ms-widget="fileuploader,demoUploader"></div>
 
-    <input 	type="button"
-    	ms-click="addFileClicked"
-    	ms-widget="button"
-    	value="选择文件" />
+
     <input 	type="button"
     	ms-click="uploadClicked"
     	ms-widget="button"
     	value="上传" />
-	<input type="file"
-		ms-on-change="onFileFieldChanged"
-		ms-attr-multiple="multipleFileAllowed"
-		style="display:none" />
 
 
 	<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
@@ -111,7 +104,6 @@
 		style="position:absolute;"
 		>
 		<param name="allowScriptAccess" value="sameDomain" />
-		<param name="wmode" value="transparent">
 		<param name="allowFullScreen" value="false" />
 		<param name="movie" value="avalon.fileuploader.swf?vmid=demoUploader" />
 		<param name="quality" value="high" />
@@ -120,7 +112,6 @@
 			align="middle"
 			width="500"
 			height="200"
-			wmode="transparent"
 			quality="high"
 			pluginspage="http://www.adobe.com/go/getflashplayer_cn"
 			allowScriptAccess="sameDomain"

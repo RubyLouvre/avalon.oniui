@@ -291,43 +291,22 @@ function (avalon) {
 		delete this.blobConstructor;
 	}
 
+	runtimeContructor.prototype.getFilesSizeSum = function () {
+		var sum = 0;
+		for (var i in this.files) {
+			if (this.files.hasOwnProperty(i)) {
+				sum += this.files[i].size;
+			}
+		}
+		return sum;
+	}
+
+	runtimeContructor.prototype.FILE_CACHED = FILE_CACHED;
+	runtimeContructor.prototype.FILE_QUEUED = FILE_QUEUED;
+	runtimeContructor.prototype.FILE_IN_UPLOADING = FILE_IN_UPLOADING;
+	runtimeContructor.prototype.FILE_UPLOADED = FILE_UPLOADED;
+	runtimeContructor.prototype.FILE_ERROR_FAIL_READ = FILE_ERROR_FAIL_READ;
+	runtimeContructor.prototype.FILE_ERROR_FAIL_UPLOAD = FILE_ERROR_FAIL_UPLOAD;
+
 	return runtimeContructor;
 });
-
-
-
-	// runtimeContructor.prototype.readFileBytes = function (fileObj, start, length, callback, scope) {
-	// 	if (fileObj.data instanceof File) {
-	// 		return fileObj.data.slice(start, length);
-	// 	} else {
-
-	// 	}
-	// };
-	// runtimeContructor.prototype.queueHtml5File = function (fileObj, chunked, chunkSize) {
-	// 	var blobs = [];
-	// 	fileObj.status = FILE_IN_READING;
-	// 	if (chunked && fileObj.size > chunkSize) {
-	// 		var fileCursor = 0;
-	// 		while (fileCursor < fileObj.size) {
-	// 			var fileStart = fileCursor,
-	// 				fileEnd = Math.min(fileCursor+chunkSize, fileObj.size);
-	// 			blobs.push(fileObj.data.slice(fileStart, fileEnd));
-	// 			fileCursor = fileEnd;
-	// 		}
-	// 	} else {
-	// 		blobs.push(fileObj.data.slice(0, fileObj.size));
-	// 	}
-
-	// 	fileObj.status = FILE_SLICED;
-	// 	this.blobqueue.queueBlobs(blobs, fileObj);
-	// }
-
-	// runtimeContructor.prototype.queueFlashFile = function (fileObj, chunked, chunkSize) {
-	// 	fileObj.status = FILE_IN_READING;
-	// 	this.flash.startChunkFile(fileObj.md5, chunked, chunkSize);
-	// }
-
-	// // flash.startChunkFile执行结束后的回调，由Flash元素调用。Html5运行时不会调用此函数
-	// runtimeContructor.prototype.onFlashFileChunked = function (fileMd5, blobs) {
-
-	// }

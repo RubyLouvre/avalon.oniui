@@ -36,7 +36,6 @@ package
 		
 		// 来自JS的外部参数
 		private var _vmId:String;	// VM的ID
-		private var _acceptFileTypes:String;
 		private var _buttonStyle:Object;
 		private var _generatePreview:Boolean = false;
 		private var _displayPreview:Boolean = false;
@@ -103,21 +102,20 @@ package
 		private function init(e:Event = null):void {
             removeEventListener(Event.ADDED_TO_STAGE, init);
             // entry point
-			this.addEventListener(MouseEvent.CLICK, clickHandler);
+			stage.addEventListener(MouseEvent.CLICK, clickHandler);
 			
 			_fileDics = new Dictionary();
         }
         
 		// 生成文件的过滤器
         private function getFilterTypes():Array {
-			var types:Array = _acceptFileTypes.split(",");
-			for (var i:int = 0; i < types.length; i++) {
-				var fileType:String = types[i] as String;
-				var filePrefix:String = fileType.replace("*.", "").toUpperCase();
-				types[i] = new FileFilter(filePrefix + "文件 (" + fileType + ")", fileType);
+			var jsFilters:Array = ExternalInterface.call("avalon.vmodels." + _vmId + ".getInputAcceptTypes", true);
+			var types:Array = new Array();
+			for (var i:int = 0; i < jsFilters.length; i++) {
+				types.push(new FileFilter(jsFilters[i].description as String, jsFilters[i].types as String));
 			}
 			
-            return [new FileFilter("Images", "*.jpg;*.gif;*.png")].concat(types);
+            return types;
         }
         
 		// 按钮的Click事件
@@ -133,7 +131,7 @@ package
             _fileRef = new FileReferenceList();
             _fileRef.addEventListener(Event.SELECT, selectHandler, false, 0, true);
             
-            _fileRef.browse();
+            _fileRef.browse(getFilterTypes());
         }
         
 		// 生成文件的Key。以后可以用MD5

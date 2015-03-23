@@ -6,15 +6,6 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
     "./spark-md5",
     "mmRequest/mmRequest"], 
     function (avalon, template, eventMixin, blobConstructor, runtimeConstructor, blobqueueConstructor, md5) {
-        var FILE_CACHED = 0; // 已被runtime缓存
-        var FILE_QUEUED = 1; // 已进入发送队列
-        var FILE_IN_UPLOADING = 5;  // 文件已经开始上传
-        var FILE_UPLOADED = 6;  // 文件上传结束
-
-        var FILE_ERROR_FAIL_READ = 101; // FileQueue无法读取文件
-        var FILE_ERROR_FAIL_UPLOAD = 103;   // FileQueue发送文件时碰见错误
-
-
         var widgetName = 'fileuploader';
         var widget = avalon.ui[widgetName] = function(element, data, vmodels) {
         	var options = data[widgetName+'Options'],
@@ -36,11 +27,73 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     vm.previews.remove(el);
                     vm.$runtime.removeFileByMd5(el.md5);
                 }
+                // Flash和H5都会调用此方法来生成文件扩展名过滤
+                vm.getInputAcceptTypes = function (_isFalsh) {
+                    var types = vm.acceptFileTypes.split(",");
+                    var allTypes = "*.*";
+                    var specialTypes = ["image.*", "audio.*", "video.*"];
 
+                    if (_isFalsh) {
+                        if (types.indexOf(allTypes) >= 0) return [];
+
+                        var allFilters = [];
+                        // category = image.* or audio.* or video.*
+                        var getMIME4SpecialType = function (category) {
+
+                            var filters = [];
+                            var categoryMime = category.replace(".*", "/"); //替换成 image/  audio/ video/
+                            for (var i in vm.$mime) {
+                                if (vm.$mime.hasOwnProperty(i) && vm.$mime[i].indexOf(categoryMime) == 0) {
+                                    filters.push("*." + i);
+                                }
+                            }
+                            allFilters.push({ description: categoryMime.replace("/", ""), types: filters.join(";") });
+                        };
+                        for (var i = 0; i < specialTypes.length; i++) {
+                            if (types.indexOf(specialTypes[i]) >= 0) {
+                                getMIME4SpecialType(specialTypes[i]);
+                            }
+                        }
+
+                        for (var i = 0; i < types.length; i++) {
+                            if (specialTypes.indexOf(types[i]) >= 0) continue;
+                            var extNameNoDot = types[i].replace("*.","");
+                            allFilters.push({ description: extNameNoDot, types:types[i] });
+                        }
+                        return allFilters;
+                    } else {
+                        if (types.indexOf(allTypes) >= 0) return "*/*";
+
+                        for (var i = 0; i < types.length; i++) {
+                            if (specialTypes.indexOf(types[i]) >= 0) {
+                                types[i] = types[i].replace(".", "/");
+                            } else if (vm.$mime.hasOwnProperty(types[i].replace(".",""))) {
+                                types[i] = vm.$mime[types[i].replace(".","")] + '/' + types[i].replace(".","");
+                            } else {
+                                continue;
+                            }
+                        }
+                        return types.join(",");
+                    }
+                }
             	vm.$init = function() {
                     vm.$runtime = new runtimeConstructor(vm, blobConstructor, blobqueueConstructor, md5);
 
                     vm.$runtime.attachEvent("beforeFileCache", function (plainFileObject) {
+                        // 检查单个文件的尺寸
+                        if (plainFileObject.size > vm.maxFileSize) {
+                            vm.onFileOverSize.call(vm, plainFileObject);
+                            avalon.log("****FileUploader: 文件尺寸超出限制。");
+                            return false;
+                        }
+
+                        // 检查所有待上传文件的尺寸
+                        if (vm.$runtime.getFilesSizeSum() + plainFileObject.size > vm.filePoolSize) {
+                            vm.onFilePoolOverSize.call(vm, plainFileObject);
+                            avalon.log("****FileUploader: 待上传文件尺寸超出限制。");
+                            return false;
+                        }
+
                         var isDuplicatedFile = false;
                         for (var i = 0; i < vm.previews.length; i++) {
                             if (vm.previews[i].md5 == plainFileObject.md5) {
@@ -49,7 +102,8 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                             }
                         }
                         if (isDuplicatedFile) {
-                            alert("SAME FILE"); // TODO
+                            vm.onSameFileAdded.call(vm, plainFileObject);
+                            avalon.log("****FileUploader: 不能添加一样的文件。");
                             return false;   // False会阻止runtime缓存文件。
                         } else {
                             vm.previews.push({
@@ -70,22 +124,22 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                             return;
                         }
                         switch (afterStatus) {
-                            case FILE_QUEUED:
+                            case vm.$runtime.FILE_QUEUED:
                                 previewVm.message = "QUEUED";
                                 break;
-                            case FILE_IN_UPLOADING:
+                            case vm.$runtime.FILE_IN_UPLOADING:
                                 previewVm.message = "UPLOADING";
                                 break;
-                            case FILE_UPLOADED:
+                            case vm.$runtime.FILE_UPLOADED:
                                 previewVm.message = "UPLOADED";
                                 previewVm.uploadProgress = 100;
                                 break;
-                            case FILE_ERROR_FAIL_READ:
+                            case vm.$runtime.FILE_ERROR_FAIL_READ:
                                 previewVm.message = "FAIL_TO_READ";
                                 debugger
                                 alert(1)
                                 break;
-                            case FILE_ERROR_FAIL_UPLOAD:
+                            case vm.$runtime.FILE_ERROR_FAIL_UPLOAD:
                                 previewVm.message = "FAIL_TO_UPLOAD";
                                 break;
                             default:
@@ -148,39 +202,222 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
         };
         widget.defaults = {
             md5Size: 1024*64,
-            acceptFileTypes: "*.gif,*.jpg,*.png,*.jpeg",
+            maxFileSize: 1024*1024*100,
+            filePoolSize: 1024*1024*200,
+            chunkSize: 1024 * 100,
+            chunked: true,
+            acceptFileTypes: "image.*,*.txt,*.js",
             previewWidth: 100,
             previewHeight: 85,
             enablePreviewGenerating: true,
             showPreview: true,
             showProgress: true,
+            multipleFileAllowed: true,
             serverConfig: {
                 url: "../../Handler1.ashx",
                 // url: "http://192.168.113.153/fileuploader/serverResponse.json",
                 userName: undefined,
                 password: undefined
             },
-            chunked: true,
-            chunkSize: 1024 * 100,
             noPreviewPath: "no-preview.png",
-            $imageTypes: [".png", ".jpg", ".jpeg", ".gif", ".bmp"],
             $previewFileTypes: {
                 ".zip": "zip.png"
             },
 
-            compareFileObjects: function (fileA, fileB) {
-                return (!fileA.$blob || !fileA.$blob) ? (fileA.address == fileB.address) : (fileA.name == fileB.name || fileA.$blob.size == fileB.$blob.size);
+            $mime: {
+                "acx": "application/internet-property-stream",
+                "ai": "application/postscript",
+                "aif": "audio/x-aiff",
+                "aifc": "audio/x-aiff",
+                "aiff": "audio/x-aiff",
+                "asf": "video/x-ms-asf",
+                "asr": "video/x-ms-asf",
+                "asx": "video/x-ms-asf",
+                "au": "audio/basic",
+                "avi": "video/x-msvideo",
+                "axs": "application/olescript",
+                "bas": "text/plain",
+                "bcpio": "application/x-bcpio",
+                "bin": "application/octet-stream",
+                "bmp": "image/bmp",
+                "c": "text/plain",
+                "cat": "application/vnd.ms-pkiseccat",
+                "cdf": "application/x-cdf",
+                "cer": "application/x-x509-ca-cert",
+                "class": "application/octet-stream",
+                "clp": "application/x-msclip",
+                "cmx": "image/x-cmx",
+                "cod": "image/cis-cod",
+                "cpio": "application/x-cpio",
+                "crd": "application/x-mscardfile",
+                "crl": "application/pkix-crl",
+                "crt": "application/x-x509-ca-cert",
+                "csh": "application/x-csh",
+                "css": "text/css",
+                "dcr": "application/x-director",
+                "der": "application/x-x509-ca-cert",
+                "dir": "application/x-director",
+                "dll": "application/x-msdownload",
+                "dms": "application/octet-stream",
+                "doc": "application/msword",
+                "dot": "application/msword",
+                "dvi": "application/x-dvi",
+                "dxr": "application/x-director",
+                "eps": "application/postscript",
+                "etx": "text/x-setext",
+                "evy": "application/envoy",
+                "exe": "application/octet-stream",
+                "fif": "application/fractals",
+                "flr": "x-world/x-vrml",
+                "gif": "image/gif",
+                "gtar": "application/x-gtar",
+                "gz": "application/x-gzip",
+                "h": "text/plain",
+                "hdf": "application/x-hdf",
+                "hlp": "application/winhlp",
+                "hqx": "application/mac-binhex40",
+                "hta": "application/hta",
+                "htc": "text/x-component",
+                "htm": "text/html",
+                "html": "text/html",
+                "htt": "text/webviewhtml",
+                "ico": "image/x-icon",
+                "ief": "image/ief",
+                "iii": "application/x-iphone",
+                "ins": "application/x-internet-signup",
+                "isp": "application/x-internet-signup",
+                "jfif": "image/pipeg",
+                "jpe": "image/jpeg",
+                "jpeg": "image/jpeg",
+                "jpg": "image/jpeg",
+                "js": "application/x-javascript",
+                "latex": "application/x-latex",
+                "lha": "application/octet-stream",
+                "lsf": "video/x-la-asf",
+                "lsx": "video/x-la-asf",
+                "lzh": "application/octet-stream",
+                "m13": "application/x-msmediaview",
+                "m14": "application/x-msmediaview",
+                "m3u": "audio/x-mpegurl",
+                "man": "application/x-troff-man",
+                "mdb": "application/x-msaccess",
+                "me": "application/x-troff-me",
+                "mht": "message/rfc822",
+                "mhtml": "message/rfc822",
+                "mid": "audio/mid",
+                "mny": "application/x-msmoney",
+                "mov": "video/quicktime",
+                "movie": "video/x-sgi-movie",
+                "mp2": "video/mpeg",
+                "mp3": "audio/mpeg",
+                "mpa": "video/mpeg",
+                "mpe": "video/mpeg",
+                "mpeg": "video/mpeg",
+                "mpg": "video/mpeg",
+                "mpp": "application/vnd.ms-project",
+                "mpv2": "video/mpeg",
+                "ms": "application/x-troff-ms",
+                "mvb": "application/x-msmediaview",
+                "nws": "message/rfc822",
+                "oda": "application/oda",
+                "png": "image/png",
+                "p10": "application/pkcs10",
+                "p12": "application/x-pkcs12",
+                "p7b": "application/x-pkcs7-certificates",
+                "p7c": "application/x-pkcs7-mime",
+                "p7m": "application/x-pkcs7-mime",
+                "p7r": "application/x-pkcs7-certreqresp",
+                "p7s": "application/x-pkcs7-signature",
+                "pbm": "image/x-portable-bitmap",
+                "pdf": "application/pdf",
+                "pfx": "application/x-pkcs12",
+                "pgm": "image/x-portable-graymap",
+                "pko": "application/ynd.ms-pkipko",
+                "pma": "application/x-perfmon",
+                "pmc": "application/x-perfmon",
+                "pml": "application/x-perfmon",
+                "pmr": "application/x-perfmon",
+                "pmw": "application/x-perfmon",
+                "pnm": "image/x-portable-anymap",
+                "pot,": "application/vnd.ms-powerpoint",
+                "ppm": "image/x-portable-pixmap",
+                "pps": "application/vnd.ms-powerpoint",
+                "ppt": "application/vnd.ms-powerpoint",
+                "prf": "application/pics-rules",
+                "ps": "application/postscript",
+                "pub": "application/x-mspublisher",
+                "qt": "video/quicktime",
+                "ra": "audio/x-pn-realaudio",
+                "ram": "audio/x-pn-realaudio",
+                "ras": "image/x-cmu-raster",
+                "rgb": "image/x-rgb",
+                "rmi": "audio/mid",
+                "roff": "application/x-troff",
+                "rtf": "application/rtf",
+                "rtx": "text/richtext",
+                "scd": "application/x-msschedule",
+                "sct": "text/scriptlet",
+                "setpay": "application/set-payment-initiation",
+                "setreg": "application/set-registration-initiation",
+                "sh": "application/x-sh",
+                "shar": "application/x-shar",
+                "sit": "application/x-stuffit",
+                "snd": "audio/basic",
+                "spc": "application/x-pkcs7-certificates",
+                "spl": "application/futuresplash",
+                "src": "application/x-wais-source",
+                "sst": "application/vnd.ms-pkicertstore",
+                "stl": "application/vnd.ms-pkistl",
+                "stm": "text/html",
+                "svg": "image/svg+xml",
+                "sv4cpio": "application/x-sv4cpio",
+                "sv4crc": "application/x-sv4crc",
+                "swf": "application/x-shockwave-flash",
+                "t": "application/x-troff",
+                "tar": "application/x-tar",
+                "tcl": "application/x-tcl",
+                "tex": "application/x-tex",
+                "texi": "application/x-texinfo",
+                "texinfo": "application/x-texinfo",
+                "tgz": "application/x-compressed",
+                "tif": "image/tiff",
+                "tiff": "image/tiff",
+                "tr": "application/x-troff",
+                "trm": "application/x-msterminal",
+                "tsv": "text/tab-separated-values",
+                "txt": "text/plain",
+                "uls": "text/iuls",
+                "ustar": "application/x-ustar",
+                "vcf": "text/x-vcard",
+                "vrml": "x-world/x-vrml",
+                "wav": "audio/x-wav",
+                "wcm": "application/vnd.ms-works",
+                "wdb": "application/vnd.ms-works",
+                "wks": "application/vnd.ms-works",
+                "wmf": "application/x-msmetafile",
+                "wps": "application/vnd.ms-works",
+                "wri": "application/x-mswrite",
+                "wrl": "x-world/x-vrml",
+                "wrz": "x-world/x-vrml",
+                "xaf": "x-world/x-vrml",
+                "xbm": "image/x-xbitmap",
+                "xla": "application/vnd.ms-excel",
+                "xlc": "application/vnd.ms-excel",
+                "xlm": "application/vnd.ms-excel",
+                "xls": "application/vnd.ms-excel",
+                "xlt": "application/vnd.ms-excel",
+                "xlw": "application/vnd.ms-excel",
+                "xof": "x-world/x-vrml",
+                "xpm": "image/x-xpixmap",
+                "xwd": "image/x-xwindowdump",
+                "z": "application/x-compress",
+                "zip": "application/zip"
             },
-            isDuplicatedFile: function (opts, fileObj) {
-                var hasSameFile = false;
-                for (var i = 0; i < opts.files.length; i++) {
-                    if (opts.compareFileObjects(opts.files[i], fileObj)) {
-                        hasSameFile = true; 
-                        break;
-                    }
-                }
-                return hasSameFile;
-            },
+
+            onFileOverSize: avalon.noop,
+            onSameFileAdded: avalon.noop,
+            onFilePoolOverSize: avalon.noop,
+
             uploadAll: function (opts) {
                 opts.previews.forEach(function(p) {
                     opts.uploadFile(opts, p.md5);
@@ -216,9 +453,10 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     opts = avalon.vmodels[opts];
 
 
+                var extNameNoDot = extName.replace(".", "");
                 var r = {
                     md5Size: opts.md5Size,
-                    isImageFile: (opts.$imageTypes.indexOf(extName) >= 0),
+                    isImageFile: (opts.$mime.hasOwnProperty(extNameNoDot) && opts.$mime[extNameNoDot].indexOf("image/") == 0),
                     enablePreview: opts.enablePreviewGenerating,
                     previewWidth: opts.previewWidth,
                     previewHeight: opts.previewHeight,

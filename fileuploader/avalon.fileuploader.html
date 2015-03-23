@@ -1,6 +1,14 @@
 
 
 <div class="oni-uploader-wrapper" ms-if="showPreview">
+	<input type="file" ms-attr-accept="getInputAcceptTypes(false)"
+		ms-on-change="onFileFieldChanged"
+		ms-attr-multiple="multipleFileAllowed"
+		style="display:none" />
+		    <input 	type="button"
+    	ms-click="addFileClicked"
+    	ms-widget="button"
+    	value="选择文件" />
 	<div ms-repeat="previews" ms-css-width="previewWidth" ms-css-height="previewHeight" style="display:inline-block;margin: 5px; border:1px solid black;overflow:hidden;" data-repeat-rendered="previewRendered">
 		<div style="position:relative;z-index:0;overflow:hidden;width:100%;height:100%;">
 			<span ms-css-width="previewWidth" style="white-space:nowrap;">{{el.name}}</span>

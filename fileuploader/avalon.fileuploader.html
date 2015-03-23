@@ -20,8 +20,11 @@
 		</div>
 	</div>
 
-	<button type="button" ms-click="addFileClicked" class="uploader-button-add uploader-button">
-		Click Me!
+	<button 
+		type="button" 
+		class="uploader-button-add uploader-button"
+		ms-click="addFileClicked" >
+		{{addButtonText}}
 		<object ms-if="useFlashRuntime"
 			classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
 			width="168"
@@ -32,6 +35,7 @@
 			style="position:absolute;"
 			>
 			<param name="allowScriptAccess" value="sameDomain" />
+			<param name="wmode" value="transparent">
 			<param name="allowFullScreen" value="false" />
 			<param name="movie" value="avalon.fileuploader.swf?vmid=##VM_ID##" />
 			<param name="quality" value="high" />
@@ -41,6 +45,7 @@
 				width="168"
 				height="44"
 				quality="high"
+				wmode="transparent"
 				pluginspage="http://www.adobe.com/go/getflashplayer_cn"
 				allowScriptAccess="sameDomain"
 				allowFullScreen="false" 
@@ -54,9 +59,10 @@
 				ms-attr-multiple="multipleFileAllowed"
 				style="display:none" />
 	</button>
-		<button 
-			type="button"
-	    	ms-click="uploadClicked">
-	    	上传
-	    </button>
+	<button 
+		type="button"
+		class="uploader-button-upload uploader-button"
+    	ms-click="uploadClicked">
+    	{{uploadButtonText}}
+    </button>
 </div>

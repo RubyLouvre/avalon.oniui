@@ -21,7 +21,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                 supportCanvas = (document.createElement('canvas').getContext && document.createElement('canvas').getContext('2d'));
 
                 vm.useHtml5Runtime = supportMultiple && supportBase64Decode && supportCanvas;
-                vm.useFlashRuntime = true;
+                vm.useFlashRuntime = !vm.useHtml5Runtime;
 
                 vm.previews = [];
                 
@@ -234,20 +234,22 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
             maxFileSize: 1024*1024*100,
             filePoolSize: 1024*1024*200,
             chunkSize: 1024 * 100,
-            chunked: true,
-            acceptFileTypes: "image.*,*.txt,*.js",
+            chunked: false,
+
+            addButtonText: "Add Files",
+            uploadButtonText: "Upload",
+
+            acceptFileTypes: "*.*",
+
             previewWidth: 100,
             previewHeight: 85,
+
             enablePreviewGenerating: true,
             showPreview: true,
             showProgress: true,
+
             multipleFileAllowed: true,
-            serverConfig: {
-                url: "../../Handler1.ashx",
-                // url: "http://192.168.113.153/fileuploader/serverResponse.json",
-                userName: undefined,
-                password: undefined
-            },
+            serverConfig: {},
             noPreviewPath: "no-preview.png",
             $previewFileTypes: {
                 ".zip": "zip.png"

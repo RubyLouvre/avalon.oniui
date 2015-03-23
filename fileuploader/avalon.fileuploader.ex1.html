@@ -3,183 +3,36 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>uploader demo 概览</title>
+	<title>uploader demo 基础配置项</title>
 	<script src="../avalon.js"></script>
 	<link rel="stylesheet" href="../style/avalon.doc.css"/>
-	<style>
-
-		/*.meter {
-			z-index:0;
-			font-size:.8em;
-			height: 10px;
-			position: relative;
-			background: #555;
-			-moz-border-radius: 4px;
-			-webkit-border-radius: 4px;
-			border-radius: 4px;
-			padding: 4px 4px 20px;
-			color: #aaa;
-			-webkit-box-shadow: inset 0 -1px 1px rgba(255,255,255,0.3);
-			-moz-box-shadow   : inset 0 -1px 1px rgba(255,255,255,0.3);
-			box-shadow        : inset 0 -1px 1px rgba(255,255,255,0.3);
-		}
-		.meter > div {
-			display: block;
-			height: 100%;
-			-webkit-border-radius: 4px;
-			-moz-border-radius: 4px;
-			border-radius: 4px;
-			background-color: rgb(43,194,83);
-			background-image: -webkit-gradient(
-			  linear,
-			  left bottom,
-			  left top,
-			  color-stop(0, rgb(43,194,83)),
-			  color-stop(1, rgb(84,240,84))
-			 );
-			background-image: -moz-linear-gradient(
-			  center bottom,
-			  rgb(43,194,83) 37%,
-			  rgb(84,240,84) 69%
-			 );
-			-webkit-box-shadow:
-			  inset 0 2px 9px  rgba(255,255,255,0.3),
-			  inset 0 -2px 6px rgba(0,0,0,0.4);
-			-moz-box-shadow:
-			  inset 0 2px 9px  rgba(255,255,255,0.3),
-			  inset 0 -2px 6px rgba(0,0,0,0.4);
-			box-shadow:
-			  inset 0 2px 9px  rgba(255,255,255,0.3),
-			  inset 0 -2px 6px rgba(0,0,0,0.4);
-			position: relative;
-			overflow: hidden;
-		}
-		.meter > div:after {
-			content: "";
-			position: absolute;
-			top: 0; left: 0; bottom: 0; right: 0;
-			background-image:
-			   -webkit-gradient(linear, 0 0, 100% 100%,
-			      color-stop(.25, rgba(255, 255, 255, .2)),
-			      color-stop(.25, transparent), color-stop(.5, transparent),
-			      color-stop(.5, rgba(255, 255, 255, .2)),
-			      color-stop(.75, rgba(255, 255, 255, .2)),
-			      color-stop(.75, transparent), to(transparent)
-			   );
-			background-image:
-				-moz-linear-gradient(
-				  -45deg,
-			      rgba(255, 255, 255, .2) 25%,
-			      transparent 25%,
-			      transparent 50%,
-			      rgba(255, 255, 255, .2) 50%,
-			      rgba(255, 255, 255, .2) 75%,
-			      transparent 75%,
-			      transparent
-			   );
-			z-index: 1;
-			-webkit-background-size: 50px 50px;
-			-moz-background-size: 50px 50px;
-			background-size: 50px 50px;
-			overflow: hidden;
-		}*/
-	</style>
 </head>
 <body ms-controller="demo">
-    <div ms-widget="fileuploader,demoUploader" style="width:800px; text-align:center; padding: 100px;"></div>
-
-
-    
-
-
-	<!-- <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
-		width="500"
-		align="middle"
-		height="200"
-		codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0"
-		id="flashId"
-		style="position:absolute;"
-		>
-		<param name="allowScriptAccess" value="sameDomain" />
-		<param name="wmode" value="transparent">
-		<param name="allowFullScreen" value="false" />
-		<param name="movie" value="avalon.fileuploader.swf?vmid=demoUploader" />
-		<param name="quality" value="high" />
-		<embed src="avalon.fileuploader.swf?vmid=demoUploader" style="float:right;"
-			type="application/x-shockwave-flash"
-			align="middle"
-			width="500"
-			height="200"
-			wmode="transparent"
-			quality="high"
-			pluginspage="http://www.adobe.com/go/getflashplayer_cn"
-			allowScriptAccess="sameDomain"
-			allowFullScreen="false" 
-			name="flashId"
-		/>
-	</object> -->
+    <div ms-widget="fileuploader,demoUploader,$uploaderOptions" style="width:800px;"></div>
 
 	<script>
-		// var needFlash = (function() {
-		// 	var supportMultiple = (document.createElement('input').multiple != undefined),
-		// 		supportBase64Decode = (window.atob != undefined),
-		// 		supportCanvas = (document.createElement('canvas').getContext && document.createElement('canvas').getContext('2d'));
-
-		// 	return !supportMultiple || !supportBase64Decode || !supportCanvas;
-		// })();
-
-
 		require(["./button/avalon.button","./fileuploader/avalon.fileuploader","domReady!"], function(){
-			avalon.log("dom ready.")
 			var model = avalon.define("demo", function(vm){
-				vm.addFileClicked = function () {
-					getInputField(event).click();
-				}
+				vm.$uploaderOptions = {
 
-				vm.onFileFieldChanged = function (event) {
-					var target = event.target || event.srcElement;
-	                var files = target.files || target.value;
-	                var demoUploader = avalon.vmodels.demoUploader;
-	                demoUploader.addFiles(files);
-	                // for (var i = 0; i < files.length; i++) {
-	                //     (function(file){
-	                //         var fileKey;
-	                //         new Promise(function(resolve, reject) {
-	                //             var reader = new FileReader()
-	                        
-	                //             reader.onload = function() {
-	                //                 resolve(reader.result);
-	                //             };
-	                //             reader.readAsDataURL(file);
-	                //         }).then(function(readerResult) {
-	                //             // 生成文件Key。默认采用MD5
-	                //             fileKey = fileKeyGen(file.name);
+		            addButtonText: "添加文件",
 
-	                //             // 查找文件，如果已经添加过就结束。
-	                //             if (managedFiles.hasOwnProperty(fileKey)) return;
-	                //             managedFiles[fileKey] = file;
-	                            
-	                //             if (uploaderVm.showPreview) generatePreview(uploaderVm, file.name, fileKey, readerResult);
-	                //         }, function() {
-	                //             if (!!fileKey) {
-	                //                 delete managedFiles[fileKey];
-	                //                 uploaderVm.removePreviewByKey(fileKey);
-	                //             }
-	                //         });
-	                //     }(files[i]));
-	                // }
-				}
-                function getInputField(event) {
-                	var target = event.target || event.srcElement;
-                    var $wrapper = avalon(target.parentNode);
-                    for (var i = 0; i < $wrapper.element.children.length; i++) {
-                        var subNode = $wrapper.element.children[i];
-                        if (subNode.type == "file" && subNode.nodeType == 1) {
-                            return subNode;
-                        }
-                    }
-                    return null;
-                }
+		            uploadButtonText: "开始上传",
+
+            		acceptFileTypes: "image.*,*.txt,*.js",
+
+		            previewWidth: 200,
+		            previewHeight: 170,
+
+
+
+
+		            serverConfig: {
+		                url: "../../Handler1.ashx",
+		                userName: undefined,
+		                password: undefined
+		            }
+				};
 			});
 			avalon.scan();
 		});

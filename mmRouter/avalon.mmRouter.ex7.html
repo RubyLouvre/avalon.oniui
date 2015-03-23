@@ -30,7 +30,7 @@
                 })
 
                 avalon.state.config({
-                    onload: function(from, to) {
+                    onLoad: function(from, to) {
                         var me = to
                         if(this.currentState && this.currentState.stateName == me.stateName) {
                             loading = avalon.vmodels.loading
@@ -40,7 +40,7 @@
                     }
                 })
 
-                function onChange() {
+                function onEnter() {
                     var state = this.stateName,
                         loading = avalon.vmodels.loading,
                         me = this
@@ -64,7 +64,7 @@
                         url: tmp,
                         onAfterLoad: function() {
                         },
-                        onChange: onChange,
+                        onEnter: onEnter,
                         onUpdate: function() {
                             avalon.log(arguments)
                         }
@@ -130,7 +130,7 @@
                 })
 
                 avalon.state.config({
-                    onload: function(from, to) {
+                    onLoad: function(from, to) {
                         var me = to
                         if(this.currentState &amp;&amp; this.currentState.stateName == me.stateName) {
                             loading = avalon.vmodels.loading
@@ -140,7 +140,7 @@
                     }
                 })
 
-                function onChange() {
+                function onEnter() {
                     var state = this.stateName,
                         loading = avalon.vmodels.loading,
                         me = this
@@ -164,7 +164,7 @@
                         url: tmp,
                         onAfterLoad: function() {
                         },
-                        onChange: onChange,
+                        onEnter: onEnter,
                         onUpdate: function() {
                             avalon.log(arguments)
                         }

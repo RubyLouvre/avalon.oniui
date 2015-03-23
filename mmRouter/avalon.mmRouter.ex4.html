@@ -70,7 +70,7 @@
                         template:  "<div>状态：form</div>"
                     }
                 },
-                onChange: function() {
+                onEnter: function() {
                     avalon.vmodels.form.db_name = this.params ? this.params.db_name + "【从/*/*获取】" : "未获取到db_name"
                 }
             })
@@ -83,7 +83,7 @@
                     }
                 },
                 // abstract: true,
-                onChange: function() {
+                onEnter: function() {
                     avalon.vmodels.form.db_name = this.params ? this.params.db_name + "【从/*/*/*获取】" : "未获取到db_name"
                 }
             });
@@ -96,7 +96,7 @@
                         template: "表名：{{table_name}}"
                     }
                 },
-                onChange: function() {
+                onEnter: function() {
                     avalon.vmodels.table.table_name = this.params.table_name;
                     avalon.vmodels.form.db_name = this.params ? this.params.db_name + "【从/*/*/*/sql获取】" : "未获取到db_name"
                 }
@@ -180,7 +180,7 @@
                         template:  &quot;&lt;div&gt;状态：form&lt;/div&gt;&quot;
                     }
                 },
-                onChange: function() {
+                onEnter: function() {
                     avalon.vmodels.form.db_name = this.params ? this.params.db_name + &quot;【从/*/*获取】&quot; : &quot;未获取到db_name&quot;
                 }
             })
@@ -193,7 +193,7 @@
                     }
                 },
                 // abstract: true,
-                onChange: function() {
+                onEnter: function() {
                     avalon.vmodels.form.db_name = this.params ? this.params.db_name + &quot;【从/*/*/*获取】&quot; : &quot;未获取到db_name&quot;
                 }
             });
@@ -206,7 +206,7 @@
                         template: &quot;表名：{{table_name}}&quot;
                     }
                 },
-                onChange: function() {
+                onEnter: function() {
                     avalon.vmodels.table.table_name = this.params.table_name;
                     avalon.vmodels.form.db_name = this.params ? this.params.db_name + &quot;【从/*/*/*/sql获取】&quot; : &quot;未获取到db_name&quot;
                 }

@@ -39,8 +39,7 @@ function (avalon) {
 		}, this)
 
 		this.blobqueue.attachEvent("failToSendRequest", function (blob, error) {
-			alert(error.message)
-			debugger
+			this.setFileObjectStatus(blob.fileObj, FILE_ERROR_FAIL_UPLOAD);
 		}, this);
 		this.blobConstructor = blobConstructor;
 	};
@@ -50,6 +49,18 @@ function (avalon) {
 		if (fileObj.__flashfile) {
 			this.flash.removeCacheFileByMd5(fileObj.md5);
 		}
+	}
+
+	runtimeContructor.prototype.removeFileByMd5 = function (md5) {
+		var fileObj = this.files[md5];
+		if (!fileObj) return;
+
+		if (fileObj.__flashfile) {
+			this.flash.removeCacheFileByMd5(md5);
+		}
+		this.files.length--;
+		this.purgeFileData(fileObj);
+		delete this.files[md5];
 	}
 
 
@@ -176,12 +187,12 @@ function (avalon) {
 				me.files[fileObj.md5] = fileObj;
 				me.files.length++;
 
-				// 由于Flash读取文件后已经缓存，如果不需要缓存，需要通知Flash移除该文件并释放内存。
+				// 由于Flash读取文件后是放在读取区域，还未进入文件缓存区域，所以需要通知Flash进行缓存。
 				if (fileObj.__flashfile) {
 					me.flash.cacheFileByMd5(fileObj.md5);
 				}
 			} else {
-				// 由于Flash读取文件后已经缓存，如果不需要缓存，需要通知Flash移除该文件并释放内存。
+				// 如果不需要对此文件进行处理，从文件读取区域和缓存区域，移除此文件数据的引用以释放内存。
 				if (fileObj.__flashfile) {
 					me.flash.removeCacheFileByMd5(fileObj.md5);
 				}
@@ -261,12 +272,14 @@ function (avalon) {
 		}
 	}
 
-	runtimeContructor.prototype.setFileObjectStatus = function (fileObj, status) {
+	runtimeContructor.prototype.setFileObjectStatus = function (fileObj, status, silent) {
 		if (status == fileObj.status) return;
 		var beforeStatus = fileObj.status,
 			afterStatus = status;
 		fileObj.status = status;
-		this.fireEvent("fileStatusChanged", fileObj, beforeStatus, afterStatus);
+		if (!silent) {
+			this.fireEvent("fileStatusChanged", fileObj, beforeStatus, afterStatus);
+		}
 	}
 
 	runtimeContructor.prototype.purge = function () {

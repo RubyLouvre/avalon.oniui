@@ -5,8 +5,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>uploader demo 概览</title>
 	<script src="../avalon.js"></script>
-	<script>
-	</script>
 	<link rel="stylesheet" href="../style/avalon.doc.css"/>
 	<style>
 
@@ -141,7 +139,8 @@
 		// })();
 
 
-		require(["./button/avalon.button","./fileuploader/avalon.fileuploader","ready!"], function(){
+		require(["./button/avalon.button","./fileuploader/avalon.fileuploader","domReady!"], function(){
+			avalon.log("dom ready.")
 			var model = avalon.define("demo", function(vm){
 				vm.addFileClicked = function () {
 					getInputField(event).click();

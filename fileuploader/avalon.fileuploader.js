@@ -31,6 +31,12 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
 
                 vm.$runtime = null;
 
+                vm.onPreviewRemoveClicked = function (el) {
+                    var md5 = el.md5;
+                    vm.previews.remove(el);
+                    vm.$runtime.removeFileByMd5(el.md5);
+                }
+
             	vm.$init = function() {
                     vm.$runtime = new runtimeConstructor(vm, blobConstructor, blobqueueConstructor, md5);
 

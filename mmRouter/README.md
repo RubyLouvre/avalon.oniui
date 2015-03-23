@@ -12,9 +12,14 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 * 规范接口命名
 
 2、如何迁移
-* 引用新的script文件
+* 引用新的script文件，默认已经切换到新版
 ```javascript
-  require(["new-mmState"], function() {
+  require(["mmState"], function() {
+  })
+```
+如果需要继续使用老版的mmRouter
+```javascript
+  require(["old-mmState"], function() {
   })
 ```
 * 接口修改对应

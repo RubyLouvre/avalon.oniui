@@ -225,13 +225,13 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     }
                 };
 
-                vm.$skipArray = ["serverConfig", "md5Size", "acceptFileTypes", "previewWidth", "previewHeight", "enablePreviewGenerating", "chunked", "chunkSize", "noPreviewPath"];
+                vm.$skipArray = ["serverConfig", "previewFileTypes", "md5Size", "acceptFileTypes", "previewWidth", "previewHeight", "enablePreviewGenerating", "chunked", "chunkSize", "noPreviewPath"];
             });
             return vmodel;
         };
         widget.defaults = {
             md5Size: 1024*64,
-            maxFileSize: 1024*1024*100,
+            maxFileSize: 1024*1024*5,
             filePoolSize: 1024*1024*200,
             chunkSize: 1024 * 100,
             chunked: false,
@@ -249,11 +249,12 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
             showProgress: true,
 
             multipleFileAllowed: true,
-            serverConfig: {},
-            noPreviewPath: "no-preview.png",
-            $previewFileTypes: {
-                ".zip": "zip.png"
+            serverConfig: {
+                timeout: 30000,
+                requestQueueSize: 3
             },
+            noPreviewPath: "no-preview.png",
+            previewFileTypes: { },
 
             $mime: {
                 "acx": "application/internet-property-stream",
@@ -493,8 +494,8 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     previewHeight: opts.previewHeight,
                     noPreviewPath: opts.noPreviewPath
                 }
-                if (!r.isImageFile && opts.$previewFileTypes.hasOwnProperty(extName)) {
-                    r.noPreviewPath = opts.$previewFileTypes[extName];
+                if (!r.isImageFile && opts.previewFileTypes.hasOwnProperty(extName)) {
+                    r.noPreviewPath = opts.previewFileTypes[extName];
                 }
                 return r;
             }

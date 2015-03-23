@@ -6,27 +6,18 @@
 	<title>uploader demo 基础配置项</title>
 	<script src="../avalon.js"></script>
 	<link rel="stylesheet" href="../style/avalon.doc.css"/>
+	<link rel="stylesheet" href="avalon.fileuploader.ex.css"/>
 </head>
 <body ms-controller="demo">
-    <div ms-widget="fileuploader,demoUploader,$uploaderOptions" style="width:800px;"></div>
+    <div ms-widget="fileuploader,demoUploader,$uploaderOptions"></div>
 
 	<script>
-		require(["./button/avalon.button","./fileuploader/avalon.fileuploader","domReady!"], function(){
+		require(["./fileuploader/avalon.fileuploader","domReady!"], function(){
 			var model = avalon.define("demo", function(vm){
 				vm.$uploaderOptions = {
-
 		            addButtonText: "添加文件",
-
 		            uploadButtonText: "开始上传",
-
             		acceptFileTypes: "image.*,*.txt,*.js",
-
-		            previewWidth: 200,
-		            previewHeight: 170,
-
-
-
-
 		            serverConfig: {
 		                url: "../../Handler1.ashx",
 		                userName: undefined,

@@ -59,7 +59,7 @@ define(["avalon"], function (avalon) {
 			var requestConfig = {
 			    type: "post",
 			    url: this.serverConfig.url,
-			    timeout: 30000,
+			    timeout: this.serverConfig.timeout || 30000,
 			    password: this.serverConfig.password,
 			    username: this.serverConfig.userName,
 			    success: function () {
@@ -170,7 +170,7 @@ define(["avalon"], function (avalon) {
 	}
 
 	blobQueue.prototype.isRequestPoolFull = function () {
-		return this.requestPool.length >= 3;
+		return this.requestPool.length >= this.serverConfig.requestQueueSize || 3;
 	}
 
 	blobQueue.prototype.purge = function () {

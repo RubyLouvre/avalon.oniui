@@ -192,7 +192,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         }, me.currentState)
                     }
 
-                    if(info && avalon.history) avalon.history.updateLocation(info.path + info.query, avalon.mix({}, options, {silent: true}))
+                    if(info && avalon.history) avalon.history.updateLocation(info.path + info.query, avalon.mix({}, options, {silent: true}), !fromState && location.hash)
                 }
             toState.path = ("/" + info.path).replace(/^[\/]{2,}/g, "/")
             if(!reload && fromState === toState) {

@@ -28,8 +28,8 @@
     <div ms-widget="fileuploader,demoUploader4,$uploaderOptions4"></div>
 
 	<script>
-		require(["./fileuploader/avalon.fileuploader","domReady!"], function(){
-			var model = avalon.define("demo", function(vm){
+		require(["./fileuploader/avalon.fileuploader","domReady!"], function($$){
+			var model = $$.define("demo", function(vm){
 				var basicOptions = {
 		            addButtonText: "添加文件",
 		            uploadButtonText: "开始上传",
@@ -41,14 +41,14 @@
 				};
 
 
-				vm.$uploaderOptions1 = avalon.mix({
+				vm.$uploaderOptions1 = $$.mix({
 		            previewWidth: 200,
 		            previewHeight: 170,
 		            acceptFileTypes: "image.*"
 				}, basicOptions);
 
 
-				vm.$uploaderOptions2 = avalon.mix({
+				vm.$uploaderOptions2 = $$.mix({
 		            previewFileTypes: {
 		                ".zip": "zip.png"
 		            },
@@ -56,18 +56,18 @@
 				}, basicOptions);
 
 
-				vm.$uploaderOptions3 = avalon.mix({
+				vm.$uploaderOptions3 = $$.mix({
 		            enablePreviewGenerating: false
 				}, basicOptions);
 
-				vm.$uploaderOptions4 = avalon.mix({
+				vm.$uploaderOptions4 = $$.mix({
 					showPreview: false,
 		            enablePreviewGenerating: false
 				}, basicOptions);
 
 
 			});
-			avalon.scan();
+			$$.scan();
 		});
 	</script>
 </body>

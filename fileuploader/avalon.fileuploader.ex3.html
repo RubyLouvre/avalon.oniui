@@ -27,8 +27,8 @@
 
 
 	<script>
-		require(["./fileuploader/avalon.fileuploader","domReady!"], function(){
-			var model = avalon.define("demo", function(vm){
+		require(["./fileuploader/avalon.fileuploader","domReady!"], function($$){
+			var model = $$.define("demo", function(vm){
 				var basicOptions = {
 		            addButtonText: "添加文件",
 		            uploadButtonText: "开始上传",
@@ -46,17 +46,17 @@
 				};
 
 
-				vm.$uploaderOptions1 = avalon.mix({
+				vm.$uploaderOptions1 = $$.mix({
 					maxFileSize: 1024 * 500,
 					filePoolSize: 1024 * 1024
 				}, basicOptions);
 
-				vm.$uploaderOptions2 = avalon.mix({
+				vm.$uploaderOptions2 = $$.mix({
 					chunked: true,
 					chunkSize: 1024 * 500
 				}, basicOptions);
 
-				vm.$uploaderOptions3 = avalon.mix({
+				vm.$uploaderOptions3 = $$.mix({
 					maxFileSize: 1024 * 1024 * 10,
 					filePoolSize: 1024 * 1024 * 100,
 					chunked: true,
@@ -71,7 +71,7 @@
 
 
 			});
-			avalon.scan();
+			$$.scan();
 		});
 	</script>
 </body>

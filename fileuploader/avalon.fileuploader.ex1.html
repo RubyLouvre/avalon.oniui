@@ -12,8 +12,8 @@
     <div ms-widget="fileuploader,demoUploader,$uploaderOptions"></div>
 
 	<script>
-		require(["./fileuploader/avalon.fileuploader","domReady!"], function(){
-			var model = avalon.define("demo", function(vm){
+		require(["./fileuploader/avalon.fileuploader","domReady!"], function($$){
+			var model = $$.define("demo", function(vm){
 				vm.$uploaderOptions = {
 		            addButtonText: "添加文件",
 		            uploadButtonText: "开始上传",
@@ -25,7 +25,7 @@
 		            }
 				};
 			});
-			avalon.scan();
+			$$.scan();
 		});
 	</script>
 </body>

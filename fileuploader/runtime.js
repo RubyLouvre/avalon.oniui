@@ -170,7 +170,10 @@ function (avalon) {
 							fileReader.onload = null;
 							fileReader = null;
 						}
-						fileReader.readAsDataURL(file);
+						// 用setTimeout来解决图片过大时，浏览器卡死的问题
+						setTimeout(function() {
+							fileReader.readAsDataURL(fileObj.data);
+						},100)
 					}
 				}
 				fileReader.readAsDataURL(fileObj.data.slice(0, Math.min(fileConfig.md5Size, fileObj.size)));

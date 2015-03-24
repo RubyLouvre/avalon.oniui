@@ -6,7 +6,7 @@
     	<p>使用 <code>ms-duplex</code> 可以方便的设置和获取颜色。</p>
  * @updatetime 2014-07-24
  */
-define(["draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./avalon.colorpicker.css"], function(avalon, sourceHTML){
+define(["../draggable/avalon.draggable", "text!./avalon.colorpicker.html", "css!./avalon.colorpicker.css"], function(avalon, sourceHTML){
 
 	var vm_temp = {},	// 记录前一个被打开的ctr
 		defaultColor = '#ffffff';	// 默认颜色，用于在初始化时 duplex 或 defaultColor 没有输入或不合法时赋值

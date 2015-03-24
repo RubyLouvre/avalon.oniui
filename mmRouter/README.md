@@ -10,7 +10,7 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 * 调整了状态机模型，去掉累赘的逻辑
 * 明确viewname[@statename]语法规则
 * 规范接口命名
-* 给state新增配置ignoreChange，当mmState.currentState.parentState == state时，更新视图的时候调用该函数，return true mmRouter则不会去重写视图和scan，请确保该视图内用到的数据没有放到avalon，用以特定情况下提升性能
+* 给state新增配置ignoreChange，当mmState.currentState == state时，更新视图的时候调用该函数，return true mmRouter则不会去重写视图和scan，请确保该视图内用到的数据没有放到avalon，用以特定情况下提升性能
 * query只参与mmState.currentState是否需要执行onEnter && 刷新视图的逻辑判定，但是在所有state内都是可以通过this.query或者this.getQuery获取
 
 2、如何迁移

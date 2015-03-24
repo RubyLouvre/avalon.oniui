@@ -267,12 +267,12 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             var definedParentStateName = $element.data("statename") || "",
                 parentState = getStateByName(definedParentStateName) || _root,
                 _local
-            if(parentState.ignoreChange && parentState.ignoreChange(changeType, viewname)) return
             if (viewname.indexOf("@") < 0) viewname += "@" + parentState.stateName
             _local = mmState.currentState._local && mmState.currentState._local[viewname]
             if(firsttime && !_local || currentLocal === _local) return
             currentLocal = _local
             _currentState = _local && _local.state
+            if(_currentState && _currentState === currentState && _currentState.ignoreChange && _currentState.ignoreChange(changeType, viewname)) return
             var _element = compileNode(tpl, element, $element, oldElement, _currentState)
             oldElement = _element
             _element.innerHTML = _local ? _local.template : defaultHTML
@@ -332,7 +332,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
      * @param {Function} opts.onEnter 当切换为当前状态时调用的回调，this指向状态对象，参数为匹配的参数， 我们可以在此方法 定义此模板用到的VM， 或修改VM的属性
      * @param {Function} opts.onBeforeExit state退出前触发，this指向对应的state，如果return false则会中断并退出整个状态机
      * @param {Function} opts.onExit 退出后触发，this指向对应的state
-     * @param {Function} opts.ignoreChange 当mmState.currentState.parentState == this时，更新视图的时候调用该函数，return true mmRouter则不会去重写视图和scan，请确保该视图内用到的数据没有放到avalon vmodel $skipArray内
+     * @param {Function} opts.ignoreChange 当mmState.currentState == this时，更新视图的时候调用该函数，return true mmRouter则不会去重写视图和scan，请确保该视图内用到的数据没有放到avalon vmodel $skipArray内
      * @param opts.ignoreChange.changeType 值为"param"，表示params变化，值为"query"，表示query变化
      * @param opts.ignoreChange.viewname 关联的ms-view name
      * @param opts.abstract  表示它不参与匹配，this指向对应的state

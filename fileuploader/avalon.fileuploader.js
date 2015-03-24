@@ -109,20 +109,6 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     vm.$runtime = new runtimeConstructor(vm, blobConstructor, blobqueueConstructor, md5);
 
                     vm.$runtime.attachEvent("beforeFileCache", function (plainFileObject) {
-                        // 检查单个文件的尺寸
-                        if (plainFileObject.size > vm.maxFileSize) {
-                            vm.onFileOverSize.call(vm, plainFileObject);
-                            avalon.log("****FileUploader: 文件尺寸超出限制。");
-                            return false;
-                        }
-
-                        // 检查所有待上传文件的尺寸
-                        if (vm.$runtime.getFilesSizeSum() + plainFileObject.size > vm.filePoolSize) {
-                            vm.onFilePoolOverSize.call(vm, plainFileObject);
-                            avalon.log("****FileUploader: 待上传文件尺寸超出限制。");
-                            return false;
-                        }
-
                         var isDuplicatedFile = false;
                         for (var i = 0; i < vm.previews.length; i++) {
                             if (vm.previews[i].md5 == plainFileObject.md5) {
@@ -166,7 +152,6 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                             case vm.$runtime.FILE_ERROR_FAIL_READ:
                                 previewVm.message = "FAIL_TO_READ";
                                 debugger
-                                alert(1)
                                 break;
                             case vm.$runtime.FILE_ERROR_FAIL_UPLOAD:
                                 previewVm.message = "FAIL_TO_UPLOAD";
@@ -183,7 +168,14 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                         }
                         previewVm.uploadProgress = Math.min(100, uploadedSize / fileSize);
                     }, vm);
-
+                    vm.$runtime.attachEvent("onFileOverSize", function (fileObj) {
+                        vm.onFileOverSize.call(vm, fileObj);
+                        avalon.log("****FileUploader: 文件大小超出限制。");
+                    }, vm);
+                    vm.$runtime.attachEvent("onPoolOverSize", function (fileObj) {
+                        vm.onFilePoolOverSize.call(vm, fileObj);
+                        avalon.log("****FileUploader: 待上传文件总大小超出限制。");
+                    }, vm);
 
 
 	            	element.innerHTML = template.replace(/##VM_ID##/ig, vm.$id);  // 将vmid附加如flash的url中
@@ -214,7 +206,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
 
                     files.forEach(function (f) {
                         if ((window.File != undefined && f instanceof File) || f.__flashfile) {
-                            vm.$runtime.addFile(f);
+                            vm.$runtime.tryAddFile(f);
                         }
                     });
                 };
@@ -233,7 +225,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
             md5Size: 1024*64,
             maxFileSize: 1024*1024*5,
             filePoolSize: 1024*1024*200,
-            chunkSize: 1024 * 100,
+            chunkSize: 1024 * 1024,
             chunked: false,
 
             addButtonText: "Add Files",
@@ -251,7 +243,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
             multipleFileAllowed: true,
             serverConfig: {
                 timeout: 30000,
-                requestQueueSize: 3
+                concurrentRequest: 3
             },
             noPreviewPath: "no-preview.png",
             previewFileTypes: { },
@@ -492,7 +484,8 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     enablePreview: opts.enablePreviewGenerating,
                     previewWidth: opts.previewWidth,
                     previewHeight: opts.previewHeight,
-                    noPreviewPath: opts.noPreviewPath
+                    noPreviewPath: opts.noPreviewPath,
+                    fileSizeLimitation: opts.maxFileSize
                 }
                 if (!r.isImageFile && opts.previewFileTypes.hasOwnProperty(extName)) {
                     r.noPreviewPath = opts.previewFileTypes[extName];

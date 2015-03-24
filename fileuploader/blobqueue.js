@@ -170,7 +170,7 @@ define(["avalon"], function (avalon) {
 	}
 
 	blobQueue.prototype.isRequestPoolFull = function () {
-		return this.requestPool.length >= this.serverConfig.requestQueueSize || 3;
+		return this.requestPool.length >= (this.serverConfig.concurrentRequest || 3);
 	}
 
 	blobQueue.prototype.purge = function () {

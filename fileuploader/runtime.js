@@ -78,30 +78,36 @@ function (avalon) {
 		return s;
 	}
 
+	// 只有H5会调用此方法，参数必须是一个H5的File对象。增加文件时，检查文件大小限制和缓存池限制。
+	runtimeContructor.prototype.tryAddFile = function (file) {
+		var fileObj = {
+			name: file.name,
+			data: file,
+			md5: undefined,
+			size: file.size,
+			status: null,
+			preview: null,
+			__flashfile: false,
+			__html5file: true,
+			chunkAmount: 0,	// 进入实际发送队列后此属性才会被真正计算
+			blobsProgress: [] // 每个Blob已经上传完毕的字节数
+		};
+		if (this.testFileSize(fileObj)) {
+			this.addFile(fileObj);
+		}
+	}
+
 	// file参数只接受两种类型，第一为HTML5的File对象，第二为Flash生成的FileObj
-	runtimeContructor.prototype.addFile = function (file) {
+	runtimeContructor.prototype.addFile = function (fileObj) {
 		var me = this;
+		fileObj.status = FILE_CACHED;
 
 		var promise = new Promise(function(resolve, reject) {
-			var fileObj = null;
-
-			if (window.File != undefined && file instanceof File) {
-				var extName = file.name.substr(file.name.lastIndexOf('.')),
+			if (fileObj.__html5file) {
+				var extName = fileObj.name.substr(fileObj.name.lastIndexOf('.')),
 					fileConfig = me.vm.getFileConfigByExtName(me.vm, extName);
-				fileObj = {
-					name: file.name,
-					data: file,
-					md5: undefined,
-					size: file.size,
-					status: 0,
-					preview: fileConfig.noPreviewPath,
-					__flashfile: false,
-					__html5file: true,
-					chunkAmount: 0,	// 进入实际发送队列后此属性才会被真正计算
-					blobsProgress: [] // 每个Blob已经上传完毕的字节数
-				};
+				fileObj.preview = fileConfig.noPreviewPath;
 				var fileReader = new FileReader();
-
 				fileReader.onload = function () {
 					var result = this.result;
 
@@ -167,17 +173,17 @@ function (avalon) {
 						fileReader.readAsDataURL(file);
 					}
 				}
-				fileReader.readAsDataURL(file.slice(0, fileConfig.md5Size <= fileObj.size ? fileConfig.md5Size : fileObj.size));
-			} else if (file.__flashfile) {
+				fileReader.readAsDataURL(fileObj.data.slice(0, Math.min(fileConfig.md5Size, fileObj.size)));
+			} else if (fileObj.__flashfile) {
 				// ---Flash文件在读入时---
 				// 已经生成了Preview和Md5
 				// name, size等其他属性已经预备完毕
-				fileObj = file;
-				// fileObj.md5 = me.md5Bytes(fileObj.md5);
 				resolve(fileObj);
 			} else {
-				debugger;
-				reject("无法识别的文件块");
+				reject({
+					event: "unknownFileBlob",
+					file: fileObj
+				});
 			}
 		});
 
@@ -197,9 +203,12 @@ function (avalon) {
 					me.flash.removeCacheFileByMd5(fileObj.md5);
 				}
 			}
+		}, function (reason) {
+			if (reason.hasOwnProperty('event')) {
+				me.fireEvent(reason.event, reason.args);
+			}
 		});
 	};
-
 
 	runtimeContructor.prototype.md5Bytes = function (bytes) {
 		var m = bytes;
@@ -207,6 +216,24 @@ function (avalon) {
 			m = bytes.slice(0, this.vm.md5Size);
 		}
 		return this.md5gen(m);
+	}
+
+	runtimeContructor.prototype.testFileSize = function (fileObj) {
+		var fileSizeLimitation = this.vm.maxFileSize,
+			poolSizeLimitation = this.vm.filePoolSize,
+			size = fileObj.size;
+		
+		var fileSizeOK = (fileSizeLimitation > 0) && (size <= fileSizeLimitation);
+		var poolSizeOK = (poolSizeLimitation > 0) && (this.getFilesSizeSum() + size <= poolSizeLimitation);
+
+		if (fileSizeOK && poolSizeOK) {
+			return true;
+		} else if (!fileSizeOK) {
+			this.fireEvent("onFileOverSize", fileObj);
+		} else {
+			this.fireEvent("onPoolOverSize", fileObj);
+		}
+		return false;
 	}
 
 	// flash在按钮第一次被点击时，调用此函数注册FlashObject。在HTML5状态下不会被调用。
@@ -294,7 +321,7 @@ function (avalon) {
 	runtimeContructor.prototype.getFilesSizeSum = function () {
 		var sum = 0;
 		for (var i in this.files) {
-			if (this.files.hasOwnProperty(i)) {
+			if (this.files.hasOwnProperty(i) && i!="length") {
 				sum += this.files[i].size;
 			}
 		}

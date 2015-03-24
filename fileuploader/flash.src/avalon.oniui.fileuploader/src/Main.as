@@ -175,30 +175,25 @@ package
 				fileObj.preview =  runtimeConfig.noPreviewPath;
 				
 				
-				if (runtimeConfig.fileSizeLimitation > 0 && fileObj.size <= runtimeConfig.fileSizeLimitation) {
-					// 加载文件，并将文件考前的数个字节编码，发送给JS。
-					var callback:Function = function():void {
-						file.removeEventListener(Event.COMPLETE, callback);
-						
-						var c:ByteArray = new ByteArray();
-						file.data.readBytes(c, 0, Math.min(runtimeConfig.md5Size as Number, file.size));
-						var b:Base64Encoder = new Base64Encoder();
-						b.encodeBytes(c);
-						fileObj.md5 = ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.md5Bytes", b.toString().replace(/[\r\n]/g, ""));
-						_fileCacheDics[fileObj.md5] = file;
-						
-						if (runtimeConfig.enablePreview && runtimeConfig.isImageFile) {
-							generatePreview(file, runtimeConfig, fileObj);
-						} else {
-							ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.addFile", fileObj);
-						}
-					};
-					file.addEventListener(Event.COMPLETE, callback, false, 0, true);
-					file.load();
-				} else {
-					fileObj.overSize = true;
-					ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.addFile", fileObj);
-				}
+				// 加载文件，并将文件考前的数个字节编码，发送给JS。
+				var callback:Function = function():void {
+					file.removeEventListener(Event.COMPLETE, callback);
+					
+					var c:ByteArray = new ByteArray();
+					file.data.readBytes(c, 0, Math.min(runtimeConfig.md5Size as Number, file.size));
+					var b:Base64Encoder = new Base64Encoder();
+					b.encodeBytes(c);
+					fileObj.md5 = ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.md5Bytes", b.toString().replace(/[\r\n]/g, ""));
+					_fileCacheDics[fileObj.md5] = file;
+					
+					if (runtimeConfig.enablePreview && runtimeConfig.isImageFile) {
+						generatePreview(file, runtimeConfig, fileObj);
+					} else {
+						ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.addFile", fileObj);
+					}
+				};
+				file.addEventListener(Event.COMPLETE, callback, false, 0, true);
+				file.load();
             }
         }
 		

@@ -90,12 +90,13 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         pushOne: function(chain, params, callback, _local, toLocals) {
             var cur = chain.shift(), me = this
             // 退出
-            if(!cur) return callback()
+            if(!cur) {
+                return callback()
+            }
             cur.syncParams(params)
             // 阻止进入该状态
             if(cur.onBeforeEnter() === false) {
                 // 恢复params
-                // avalon.mix(true, cur.params, cur.oldParams)
                 cur.syncParams(cur.oldParams)
                 return callback(false)
             }
@@ -125,6 +126,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     // 继续状态链
                     me.pushOne(chain, params, callback, _local)
                 }).catch(function(e) {
+                    avalon.log(e)
                     callback(false, e)
                 })
             }
@@ -241,8 +243,10 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
     }
     //将template,templateUrl,templateProvider,onBeforeLoad,onAfterLoad这五个属性从opts对象拷贝到新生成的view对象上的
     function copyTemplateProperty(newObj, oldObj, name) {
-        newObj[name] = oldObj[name]
-        delete  oldObj[name]
+        if(name in oldObj) {
+            newObj[name] = oldObj[name]
+            delete  oldObj[name]
+        }
     }
 
     // 靠谱的解决方法
@@ -281,7 +285,9 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             avalon.each(getViewNodes(_element), function(i, node) {
                 avalon(node).data("statename", _currentState && _currentState.stateName || "")
             })
-            avalon.scan(_element, _local && _local.vmodels)
+            avalon.scan(_element, (_local && _local.vmodels || [].concat(vmodels || [])))
+            // 出发视图绑定的controller的事件
+            if(_local && _local.$ctrl && _local.$ctrl.$onRendered) _local.$ctrl.$onRendered.apply(_local.state, [_local]) 
         }
         update("firsttime")
         _root.watch("updateview", function(state, changeType) {
@@ -341,12 +347,6 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
     avalon.state = function(stateName, opts) {
         var state = StateModel(stateName, opts)
         avalon.router.get(state.url, function(params, _local) {
-            var vmodes = getVModels(state)
-            var topCtrlName = vmodes[vmodes.length - 1]
-            if (!topCtrlName) {
-                avalon.log("topController不存在")
-                return
-            }
             var me = this, promises = [], resolved = state.resolved
             !resolved && getFn(state, "onBeforeLoad").call(null, me)
             avalon.each(state.views, function(name, view) {
@@ -358,8 +358,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         template: s,
                         name: name,
                         state: state,
-                        params: state.filterParams(params),
-                        vmodels: getVModels(state)
+                        params: state.filterParams(params)
                     }
                 }, function(msg) {
                     avalon.log(warnings + " " + msg)
@@ -369,7 +368,32 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         message: "view " + name + " not found"
                     }, state)
                 })
-                
+                var prom,
+                    callback = function($ctrl) {
+                        if(_local && _local[name]) {
+                            _local[name].vmodels = $ctrl.vmodels
+                            _local[name].$ctrl = $ctrl
+                        }
+                    }
+                // 加载controller，模块化搞定...
+                if(view.controller) {
+                    callback(avalon.controller(view.controller))
+                } else if(view.controllerUrl) {
+                    prom = new Promise(function(rs, rj) {
+                        avalon.controller.loader(view.controllerUrl, callback)
+                    })
+                } else if(view.controllerProvider) {
+                    prom = view.controllerProvider()
+                    promise.done(function() {
+                        prom.done(callback)
+                    })
+                }
+                if(prom) {
+                    prom.catch(function(e) {
+                        avalon.log(e)
+                    })
+                    promises.push(prom)
+                }
             })
             state.resolved = Promise.all(promises).then(function(values) {
                 state._local = _local
@@ -405,7 +429,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         Event.$fire.apply(Event, arguments)
         return avalon.state[name] ? avalon.state[name].apply(state || mmState.currentState, [].slice.call(arguments, 2)) : 0
     }
-    var _states = {}
+    var _states = window._states = {}
     // 状态原型，所有的状态都要继承这个原型
     function StateModel(stateName, options) {
         if(this instanceof StateModel) {
@@ -447,7 +471,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             }
             if (!this.views) {
                 var view = {}
-                "template,templateUrl,templateProvider,onBeforeLoad,onAfterLoad".replace(/\w+/g, function(prop) {
+                "template,templateUrl,templateProvider,controller,controllerUrl,controllerProvider,onBeforeLoad,onAfterLoad".replace(/\w+/g, function(prop) {
                     copyTemplateProperty(view, me, prop)
                 })
                 this.views = {
@@ -577,6 +601,44 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         "abstract": true
     })
     window._root = _root
+
+    /*
+     *  @interface avalon.controller 给avalon.state定义的状态配置控制器
+     */
+    avalon.controller = function() {
+        var first = arguments[0],
+            second = arguments[1]
+        var $ctrl = _controller()
+        if(avalon.isFunction(first)) {
+            first($ctrl)
+        } else if(avalon.isFunction(second)) {
+            $ctrl.name = first
+            second($ctrl)
+        } else if(typeof first == "string" || typeof first == "object") {
+            first = Array.apply(null, arguments)
+            $ctrl.vmodels = first
+        } else {
+            throw new Error("参数错误" + arguments)
+        }
+        return $ctrl
+    }
+    /*
+     *  @interface avalon.controller.loader avalon.controller异步引入模块的加载器，默认是通过avalon.require加载
+     */
+    avalon.controller.loader = function(url, callback) {
+        avalon.require(url, function($ctrl) {
+            callback && callback($ctrl)
+        })
+    }
+
+    function _controller() {
+        if(!(this instanceof _controller)) return new _controller
+        this.vmodels = []
+    }
+    _controller.prototype = {
+        $viewContentLoaded: avalon.noop,
+        $noop: avalon.noop
+    }
 
     function objectCompare(objA, objB) {
         for(var i in objA) {

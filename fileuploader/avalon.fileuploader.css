@@ -122,3 +122,11 @@
 	overflow: hidden;
 	margin: 5px;
 }
+.oni-uploader-wrapper .flash-wrapper {
+	position:absolute;
+	width:168px;
+	height:44px;
+	right:50%;
+	display:inline-block;
+	margin:0 5px 0 0;
+}

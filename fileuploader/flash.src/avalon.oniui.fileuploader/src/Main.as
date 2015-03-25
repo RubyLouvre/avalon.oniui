@@ -100,7 +100,10 @@ package
 			ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.printFlashLog", logs);
 		}
 		private function init(e:Event = null):void {
-            removeEventListener(Event.ADDED_TO_STAGE, init);
+			stage.scaleMode = "exactFit";
+			this.graphics.beginFill(0xFFCC00, 0);
+			this.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
+			removeEventListener(Event.ADDED_TO_STAGE, init);
             // entry point
 			stage.addEventListener(MouseEvent.CLICK, clickHandler);
 			

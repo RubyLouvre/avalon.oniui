@@ -58,8 +58,8 @@
             for(var i = 0; i < arr.length; i++) {
                 cs.push({
                     state: i ? arr.slice(0, i+1).join(".") : "contacts.list",
-                    arg: "{contactId: 1, itemID: 'b'}"
-                    // arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
+                    // arg: "{contactId: 1, itemID: 'b'}"
+                    arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
                 })
             }
             require(["ready!", "mmRouter/mmState", "loading/avalon.loading"], function() {
@@ -143,7 +143,7 @@
                             var lastId
                             var vmodel = avalon.define({
                                 $id: "contacts",
-                                $skipArray: ["contact", "item"],
+                                // $skipArray: ["contact", "item"],
                                 edit: function() {
                                     avalon.router.go("contacts.detail.item.edit")
                                 },
@@ -291,6 +291,10 @@
                             }
                         }, 500)
                     },
+                    // 只要是query或者params变化，屏蔽掉通过innerHTML重写视图
+                    ignoreChange: function(changeType) {
+                        if(changeType) return true
+                    },
                     views: {
                         "": {
                             templateUrl: "contacts.detail.html"
@@ -397,8 +401,7 @@
           mss-widget="loading,loading" data-loading-type="img" data-loading-modal-background="#ccc" data-loading-modal-opacity="0.5">
         <h1>mmRouter综合示例四: avalon.router.go</h1>
         <div style="overflow:hidden;">
-            <ul class="codelist" 
-                ms-visible="false">
+            <ul class="codelist">
                 <li 
                      ms-repeat-code="codes">
                     <textarea 
@@ -481,8 +484,8 @@
             for(var i = 0; i &lt; arr.length; i++) {
                 cs.push({
                     state: i ? arr.slice(0, i+1).join(&quot;.&quot;) : &quot;contacts.list&quot;,
-                    arg: &quot;{contactId: 1, itemID: 'b'}&quot;
-                    // arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
+                    // arg: &quot;{contactId: 1, itemID: 'b'}&quot;
+                    arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
                 })
             }
             require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;], function() {
@@ -566,7 +569,7 @@
                             var lastId
                             var vmodel = avalon.define({
                                 $id: &quot;contacts&quot;,
-                                $skipArray: [&quot;contact&quot;, &quot;item&quot;],
+                                // $skipArray: [&quot;contact&quot;, &quot;item&quot;],
                                 edit: function() {
                                     avalon.router.go(&quot;contacts.detail.item.edit&quot;)
                                 },
@@ -714,6 +717,10 @@
                             }
                         }, 500)
                     },
+                    // 只要是query或者params变化，屏蔽掉通过innerHTML重写视图
+                    ignoreChange: function(changeType) {
+                        if(changeType) return true
+                    },
                     views: {
                         &quot;&quot;: {
                             templateUrl: &quot;contacts.detail.html&quot;
@@ -820,8 +827,7 @@
           mss-widget=&quot;loading,loading&quot; data-loading-type=&quot;img&quot; data-loading-modal-background=&quot;#ccc&quot; data-loading-modal-opacity=&quot;0.5&quot;&gt;
         &lt;h1&gt;mmRouter综合示例四: avalon.router.go&lt;/h1&gt;
         &lt;div style=&quot;overflow:hidden;&quot;&gt;
-            &lt;ul class=&quot;codelist&quot; 
-                ms-visible=&quot;false&quot;&gt;
+            &lt;ul class=&quot;codelist&quot;&gt;
                 &lt;li 
                      ms-repeat-code=&quot;codes&quot;&gt;
                     &lt;textarea 

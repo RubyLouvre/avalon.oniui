@@ -187,12 +187,13 @@ define(["avalon"], function(avalon) {
             clearInterval(this.checkUrl)
             History.started = false
         },
-        updateLocation: function(hash, options) {
+        updateLocation: function(hash, options, urlHash) {
             var options = options || {},
                 rp = options.replace,
                 st =    options.silent
             if (this.monitorMode === "popstate") {
-                var path = this.rootpath + hash
+                // html5 mode 第一次加载的时候保留之前的hash
+                var path = this.rootpath + hash + (urlHash || "")
                 if(path != this.location.pathname) history[rp ? "replaceState" : "pushState"]({path: path}, document.title, path)
                 if(!st) this._fireLocationChange()
             } else {

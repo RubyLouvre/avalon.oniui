@@ -272,7 +272,7 @@ mmRouter的使用
                                 <tr>
                                     <td>stateName</td>
                                     <td></td>
-                                    <td>stateName： 指定当前状态名</td>
+                                    <td>stateName 指定当前状态名</td>
                                 </tr>
                                 <tr>
                                     <td>opts</td>
@@ -285,20 +285,36 @@ mmRouter的使用
                                     <td>当前状态对应的路径规则，与祖先状态们组成一个完整的匹配规则</td>
                                 </tr>
                                 <tr>
+                                    <td>opts.ignoreChange</td>
+                                    <td>Function</td>
+                                    <td>当mmState.currentState == this时，更新视图的时候调用该函数，return true mmRouter则不会去重写视图和scan，请确保该视图内用到的数据没有放到avalon
+                                        vmodel $skipArray内</td>
+                                </tr>
+                                <tr>
                                     <td>opts.controller</td>
                                     <td></td>
-                                    <td>指定当前所在的VM的名字（如果是顶级状态对象，必须指定）</td>
+                                    <td>如果不写views属性,则默认view为""，为默认的view指定一个控制器</td>
+                                </tr>
+                                <tr>
+                                    <td>opts.controllerUrl</td>
+                                    <td></td>
+                                    <td>指定默认view控制器的路径，适用于模块化开发，该情形下默认通过avalon.controller.loader去加载一个符合amd规范，并返回一个avalon.controller定义的对象，传入opts.params作参数</td>
+                                </tr>
+                                <tr>
+                                    <td>opts.controllerProvider</td>
+                                    <td></td>
+                                    <td>指定默认view控制器的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数</td>
                                 </tr>
                                 <tr>
                                     <td>opts.views</td>
                                     <td></td>
                                     <td>如果不写views属性,则默认view为""，对多个[ms-view]容器进行处理,每个对象应拥有template, templateUrl,
-                                        templateProvider</td>
+                                        templateProvider，可以给每个对象搭配一个controller||controllerUrl||controllerProvider属性</td>
                                 </tr>
                                 <tr>
                                     <td>opts.views.template</td>
                                     <td></td>
-                                    <td>指定当前模板，也可以为一个函数，传入opts.params作参数</td>
+                                    <td>指定当前模板，也可以为一个函数，传入opts.params作参数，</td>
                                 </tr>
                                 <tr>
                                     <td>opts.views.templateUrl</td>
@@ -308,7 +324,12 @@ mmRouter的使用
                                 <tr>
                                     <td>opts.views.templateProvider</td>
                                     <td></td>
-                                    <td>指定当前模板的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数 views的结构为
+                                    <td>指定当前模板的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数</td>
+                                </tr>
+                                <tr>
+                                    <td>opts.views.ignoreChange</td>
+                                    <td></td>
+                                    <td>用法同state.ignoreChange，只是针对的粒度更细一些，针对到具体的view views的结构为
                                         <pre>
 {
 "": {template: "xxx"}
@@ -317,16 +338,6 @@ mmRouter的使用
 }
 </pre>views的每个键名(keyname)的结构为viewname@statename， 如果名字不存在@，则viewname直接为keyname，statename为opts.stateName
                                         如果名字存在@, viewname为match[0], statename为match[1]</td>
-                                </tr>
-                                <tr>
-                                    <td>opts.onBeforeLoad</td>
-                                    <td>Function</td>
-                                    <td>所有view资源开始加载前触发，参数为关联的state对象</td>
-                                </tr>
-                                <tr>
-                                    <td>opts.onAfterLoad</td>
-                                    <td>Function</td>
-                                    <td>所有view资源开始加载后触发，参数为为关联的state对象</td>
                                 </tr>
                                 <tr>
                                     <td>opts.onBeforeEnter</td>
@@ -347,12 +358,6 @@ mmRouter的使用
                                     <td>opts.onExit</td>
                                     <td>Function</td>
                                     <td>退出后触发，this指向对应的state</td>
-                                </tr>
-                                <tr>
-                                    <td>opts.ignoreChange</td>
-                                    <td>Function</td>
-                                    <td>当mmState.currentState == this时，更新视图的时候调用该函数，return true mmRouter则不会去重写视图和scan，请确保该视图内用到的数据没有放到avalon
-                                        vmodel $skipArray内</td>
                                 </tr>
                                 <tr>
                                     <td>opts.ignoreChange.changeType</td>
@@ -482,6 +487,18 @@ setTimeout(done, 4000)
 }
 </pre>
                         </td>
+                    </tr>
+                    <tr>
+                        <td>controller()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.controller 给avalon.state定义的状态配置控制器</td>
+                    </tr>
+                    <tr>
+                        <td>loader(url,callback)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.controller.loader avalon.controller异步引入模块的加载器，默认是通过avalon.require加载</td>
                     </tr>
                 </table>
             </fieldset>

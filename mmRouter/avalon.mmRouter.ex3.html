@@ -62,7 +62,7 @@
                     arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
                 })
             }
-            require(["ready!", "mmRouter/mmState", "loading/avalon.loading"], function() {
+            require(["ready!", "mmRouter/mmState", "loading/avalon.loading", "mmRequest/mmRequest"], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -137,15 +137,15 @@
                     abstract: true,
                     url: "/contacts",
                     templateUrl: "contacts.html",
-                    controllerProvider: function(params) {
-                        var prom = new Promise(function(rs, rj) {
-                            require(["mmRouter/js/contacts.js"], function($ctrl) {
-                                rs($ctrl)
-                            })
-                        })
-                        return prom
-                    },
-                    // controllerUrl: ["mmRouter/js/contacts.js"],
+                    // controllerProvider: function(params) {
+                    //     var prom = new Promise(function(rs, rj) {
+                    //         require(["mmRouter/js/contacts.js"], function($ctrl) {
+                    //             rs($ctrl)
+                    //         })
+                    //     })
+                    //     return prom
+                    // },
+                    controllerUrl: ["mmRouter/js/contacts.js"],
                     onEnter: function() {
                         // var done = this.async()
                         // // setTimeout(done, 4000)
@@ -156,17 +156,10 @@
                 // contacts.list //
                 //////////////////
                 avalon.state("contacts.list", {
-                    controller: "contacts",
                     url: "",
-                    // onBeforeLoad: function() {
-                    //     avalon.log("contacts.list:onBeforeLoad")
-                    // },
-                    // onAfterLoad: function() {
-                    //     avalon.log("contacts.list:onAfterLoad")
-                    // },
                     views: {
                         "": {
-                            templateUrl: "contacts.list.html"
+                            templateUrl: "contactssss.list.html"
                         },
                         "hint@": {
                             template: "当前状态是contacts.list"
@@ -180,33 +173,42 @@
                 // contacts.detail //
                 //////////////////
                 avalon.state("contacts.detail", {
-                    controller: "contacts",
                     url: "/{contactId}",
                     onEnter: function(a) {
-                        var done = this.async(),
-                            me = this
-                        setTimeout(function() {
-                            if(a == me.params.contactId) {
+                        // var done = this.async(),
+                        //     me = this
+                        // setTimeout(function() {
+                        //     if(a == me.params.contactId) {
                                 avalon.vmodels.contacts.id = a
-                                done()
-                            } else {
-                                done(false)
-                            }
-                        }, 500)
-                    },
-                    // 只要是query或者params变化，屏蔽掉通过innerHTML重写视图
-                    ignoreChange: function(changeType) {
-                        if(changeType) return true
+                        //         done()
+                        //     } else {
+                        //         done(false)
+                        //     }
+                        // }, 500)
                     },
                     views: {
                         "": {
-                            templateUrl: "contacts.detail.html"
+                            templateUrl: "contacts.detail.html",
+                            // 只要是query或者params变化，屏蔽掉通过innerHTML重写视图
+                            ignoreChange: function(changeType) {
+                                if(changeType) return true
+                            },
+                            controller: function($ctrl) {
+                                $ctrl.$onRendered = function() {
+                                    // debugger
+                                }
+                            }
                         },
                         'hint@': {
-                            template: "当前状态是contacts.detail"
+                            template: "当前状态是 {{id}} contacts.detail",
+                            controller: function($ctrl) {
+                                $ctrl.vmodels = [avalon.vmodels.contacts]
+                            }
                         },
                         'tip': {
-                            template: "当前ID是{{contact.id}}"
+                            templateProvider: function(params) {
+                                return "当前ID是" + params.contactId
+                            }
                         },
                         "complex@": {
                             template: "<font color='red'>我只有呵呵了</font>"
@@ -217,7 +219,6 @@
                 // contacts.detail.item //
                 /////////////////////////
                 avalon.state("contacts.detail.item", {
-                    controller: "contacts",
                     url: "/item/{itemID}",
                     onEnter: function() {
                         var itemID = this.params.itemID
@@ -391,7 +392,7 @@
                     arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
                 })
             }
-            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;], function() {
+            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;, &quot;mmRequest/mmRequest&quot;], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -463,136 +464,32 @@
                 // contacts //
                 /////////////
                 avalon.state(&quot;contacts&quot;, {
-                    controller: &quot;test&quot;,
                     abstract: true,
                     url: &quot;/contacts&quot;,
                     templateUrl: &quot;contacts.html&quot;,
+                    // controllerProvider: function(params) {
+                    //     var prom = new Promise(function(rs, rj) {
+                    //         require([&quot;mmRouter/js/contacts.js&quot;], function($ctrl) {
+                    //             rs($ctrl)
+                    //         })
+                    //     })
+                    //     return prom
+                    // },
+                    controllerUrl: [&quot;mmRouter/js/contacts.js&quot;],
                     onEnter: function() {
-                        if (!avalon.vmodels.contacts) {
-                            var lastId
-                            var vmodel = avalon.define({
-                                $id: &quot;contacts&quot;,
-                                // $skipArray: [&quot;contact&quot;, &quot;item&quot;],
-                                edit: function() {
-                                    avalon.router.go(&quot;contacts.detail.item.edit&quot;)
-                                },
-                                done: function() {
-                                    avalon.router.go(&quot;contacts.detail.item&quot;)
-                                },
-                                goToRandom: function() {
-                                    var contacts = vmodel.contacts
-                                    var id = NaN
-                                    while (true) {
-                                        var index = Math.floor(Math.random() * contacts.length)
-                                        id = contacts[index].id
-                                        if (id !== lastId)//确保不重复
-                                            break
-                                    }
-                                    lastId = id
-                                    avalon.router.go(&quot;contacts.detail&quot;, {contactId: id})
-                                },
-                                contacts: [
-                                    {
-                                        id: 1,
-                                        name: &quot;司徒正美&quot;,
-                                        items: [
-                                            {
-                                                &quot;id&quot;: &quot;a&quot;,
-                                                &quot;type&quot;: &quot;phone number&quot;,
-                                                &quot;value&quot;: &quot;555-1234-1234&quot;
-                                            },
-                                            {
-                                                &quot;id&quot;: &quot;b&quot;,
-                                                &quot;type&quot;: &quot;email&quot;,
-                                                &quot;value&quot;: &quot;alice@mailinator.com&quot;
-                                            }
-                                        ]
-
-                                    }, {
-                                        id: 2,
-                                        name: &quot;清风火羽&quot;,
-                                        &quot;items&quot;: [
-                                            {
-                                                &quot;id&quot;: &quot;a&quot;,
-                                                &quot;type&quot;: &quot;blog&quot;,
-                                                &quot;value&quot;: &quot;http://bob.blogger.com&quot;
-                                            },
-                                            {
-                                                &quot;id&quot;: &quot;b&quot;,
-                                                &quot;type&quot;: &quot;fax&quot;,
-                                                &quot;value&quot;: &quot;555-999-9999&quot;
-                                            }
-                                        ]
-
-                                    },
-                                    {
-                                        id: 3,
-                                        name: &quot;光明之星&quot;,
-                                        &quot;items&quot;: [
-                                            {
-                                                &quot;id&quot;: &quot;a&quot;,
-                                                &quot;type&quot;: &quot;blog&quot;,
-                                                &quot;value&quot;: &quot;http://bob.blogger.com&quot;
-                                            },
-                                            {
-                                                &quot;id&quot;: &quot;b&quot;,
-                                                &quot;type&quot;: &quot;fax&quot;,
-                                                &quot;value&quot;: &quot;111-222-333&quot;
-                                            }
-                                        ]
-
-                                    },
-                                    {
-                                        id: 4,
-                                        name: &quot;rubylouver&quot;,
-                                        &quot;items&quot;: [
-                                            {
-                                                &quot;id&quot;: &quot;a&quot;,
-                                                &quot;type&quot;: &quot;blog&quot;,
-                                                &quot;value&quot;: &quot;http://bob.rubylouver.com&quot;
-                                            },
-                                            {
-                                                &quot;id&quot;: &quot;b&quot;,
-                                                &quot;type&quot;: &quot;fax&quot;,
-                                                &quot;value&quot;: &quot;111-222-333&quot;
-                                            }
-                                        ]
-
-                                    }
-                                ],
-                                id: NaN,
-                                contact: {
-                                },
-                                item: {}
-                            })
-                            vmodel.$watch(&quot;id&quot;, function(a) {
-                                vmodel.contact = (vmodel.contacts.filter(function(el) {
-                                    return  el.id == a
-                                }) || [{}])[0]
-                            })
-
-                        }
-
-                        var done = this.async()
-                        // setTimeout(done, 4000)
-                        done &amp;&amp; done()
+                        // var done = this.async()
+                        // // setTimeout(done, 4000)
+                        // done &amp;&amp; done()
                     }
                 })
                 ///////////////////
                 // contacts.list //
                 //////////////////
                 avalon.state(&quot;contacts.list&quot;, {
-                    controller: &quot;contacts&quot;,
                     url: &quot;&quot;,
-                    onBeforeLoad: function() {
-                        avalon.log(&quot;contacts.list:onBeforeLoad&quot;)
-                    },
-                    onAfterLoad: function() {
-                        avalon.log(&quot;contacts.list:onAfterLoad&quot;)
-                    },
                     views: {
                         &quot;&quot;: {
-                            templateUrl: &quot;contacts.list.html&quot;
+                            templateUrl: &quot;contactssss.list.html&quot;
                         },
                         &quot;hint@&quot;: {
                             template: &quot;当前状态是contacts.list&quot;
@@ -606,33 +503,42 @@
                 // contacts.detail //
                 //////////////////
                 avalon.state(&quot;contacts.detail&quot;, {
-                    controller: &quot;contacts&quot;,
                     url: &quot;/{contactId}&quot;,
                     onEnter: function(a) {
-                        var done = this.async(),
-                            me = this
-                        setTimeout(function() {
-                            if(a == me.params.contactId) {
+                        // var done = this.async(),
+                        //     me = this
+                        // setTimeout(function() {
+                        //     if(a == me.params.contactId) {
                                 avalon.vmodels.contacts.id = a
-                                done()
-                            } else {
-                                done(false)
-                            }
-                        }, 500)
-                    },
-                    // 只要是query或者params变化，屏蔽掉通过innerHTML重写视图
-                    ignoreChange: function(changeType) {
-                        if(changeType) return true
+                        //         done()
+                        //     } else {
+                        //         done(false)
+                        //     }
+                        // }, 500)
                     },
                     views: {
                         &quot;&quot;: {
-                            templateUrl: &quot;contacts.detail.html&quot;
+                            templateUrl: &quot;contacts.detail.html&quot;,
+                            // 只要是query或者params变化，屏蔽掉通过innerHTML重写视图
+                            ignoreChange: function(changeType) {
+                                if(changeType) return true
+                            },
+                            controller: function($ctrl) {
+                                $ctrl.$onRendered = function() {
+                                    // debugger
+                                }
+                            }
                         },
                         'hint@': {
-                            template: &quot;当前状态是contacts.detail&quot;
+                            template: &quot;当前状态是 {{id}} contacts.detail&quot;,
+                            controller: function($ctrl) {
+                                $ctrl.vmodels = [avalon.vmodels.contacts]
+                            }
                         },
                         'tip': {
-                            template: &quot;当前ID是{{contact.id}}&quot;
+                            templateProvider: function(params) {
+                                return &quot;当前ID是&quot; + params.contactId
+                            }
                         },
                         &quot;complex@&quot;: {
                             template: &quot;&lt;font color='red'&gt;我只有呵呵了&lt;/font&gt;&quot;
@@ -643,7 +549,6 @@
                 // contacts.detail.item //
                 /////////////////////////
                 avalon.state(&quot;contacts.detail.item&quot;, {
-                    controller: &quot;contacts&quot;,
                     url: &quot;/item/{itemID}&quot;,
                     onEnter: function() {
                         var itemID = this.params.itemID

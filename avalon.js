@@ -5,7 +5,7 @@
  http://weibo.com/jslouvre/
  
  Released under the MIT license
- avalon.js 1.41 built in 2015.3.19
+ avalon.js 1.41 built in 2015.3.26
  support IE6+ and other browsers
  ==================================================*/
 (function(global, factory) {
@@ -53,6 +53,7 @@ function log() {
 var subscribers = "$" + expose
 var otherRequire = window.require
 var otherDefine = window.define
+var innerRequire
 var stopRepeatAssign = false
 var rword = /[^, ]+/g //切割字符串为一个个小块，以空格或豆号分开它们，结合replace实现字符串的forEach
 var rcomplexType = /^(?:object|array)$/
@@ -189,9 +190,7 @@ avalon.isWindow = function(obj) {
         return false
     // 利用IE678 window == document为true,document == window竟然为false的神奇特性
     // 标准浏览器及IE9，IE10等使用 正则检测
-    /* jshint ignore:start */
-    return obj == obj.document && obj.document != obj
-    /* jshint ignore:end */
+    return obj == obj.document && obj.document != obj //jshint ignore:line
 }
 
 function isWindow(obj) {
@@ -725,8 +724,7 @@ if (window.SVGElement) {
     var svg = DOC.createElementNS(svgns, "svg")
     svg.innerHTML = '<circle cx="50" cy="50" r="40" fill="red" />'
     if (!rsvg.test(svg.firstChild)) { // #409
-        /* jshint ignore:start */
-        function enumerateNode(node, targetNode) {
+        function enumerateNode(node, targetNode) {// jshint ignore:line
             if (node && node.childNodes) {
                 var nodes = node.childNodes
                 for (var i = 0, el; el = nodes[i++]; ) {
@@ -735,7 +733,7 @@ if (window.SVGElement) {
                                 el.tagName.toLowerCase())
                         ap.forEach.call(el.attributes, function (attr) {
                             svg.setAttribute(attr.name, attr.value) //复制属性
-                        })
+                        })// jshint ignore:line
                         // 递归处理子节点
                         enumerateNode(el, svg)
                         targetNode.appendChild(svg)
@@ -743,7 +741,6 @@ if (window.SVGElement) {
                 }
             }
         }
-        /* jshint ignore:end */
         Object.defineProperties(SVGElement.prototype, {
             "outerHTML": {//IE9-11,firefox不支持SVG元素的innerHTML,outerHTML属性
                 enumerable: true,
@@ -917,13 +914,14 @@ function escapeRegExp(target) {
     //将字符串安全格式化为正则表达式的源码
     return (target + "").replace(rregexp, "\\$&")
 }
-var innerRequire = noop
+
 var plugins = {
-    loader: function(builtin) {
-        window.define = builtin ? innerRequire.define : otherDefine
-        window.require = builtin ? innerRequire : otherRequire
+    loader: function (builtin) {
+        var flag = innerRequire && builtin
+        window.require = flag ? innerRequire : otherRequire
+        window.define = flag ? innerRequire.define : otherDefine
     },
-    interpolate: function(array) {
+    interpolate: function (array) {
         openTag = array[0]
         closeTag = array[1]
         if (openTag === closeTag) {
@@ -3218,7 +3216,10 @@ bindingHandlers.attr = function (data, vmodels) {
         var elem = data.element
         data.includeRendered = getBindingCallback(elem, "data-include-rendered", vmodels)
         data.includeLoaded = getBindingCallback(elem, "data-include-loaded", vmodels)
-        var outer = data.includeReplaced = !!avalon(elem).data("includeReplace")
+        var outer = data.includeReplace = !!avalon(elem).data("includeReplace")
+        if (avalon(elem).data("includeCache")) {
+            data.templateCache = {}
+        }
         data.startInclude = DOC.createComment("ms-include")
         data.endInclude = DOC.createComment("ms-include-end")
         if (outer) {
@@ -3269,7 +3270,7 @@ bindingExecutors.attr = function (val, elem, data) {
         var vmodels = data.vmodels
         var rendered = data.includeRendered
         var loaded = data.includeLoaded
-        var replace = data.includeReplaced
+        var replace = data.includeReplace
         var target = replace ? elem.parentNode : elem
         var scanTemplate = function (text) {
             if (loaded) {
@@ -3280,19 +3281,31 @@ bindingExecutors.attr = function (val, elem, data) {
                     rendered.call(target)
                 }, NaN)
             }
+            var lastID = data.includeLastID
+            if (data.templateCache && lastID && lastID !== val) {
+                var lastTemplate = data.templateCache[lastID]
+                if (!lastTemplate) {
+                    lastTemplate = data.templateCache[lastID] = DOC.createElement("div")
+                    ifGroup.appendChild(lastTemplate)
+                }
+            }
+            data.includeLastID = val
             while (true) {
                 var node = data.startInclude.nextSibling
                 if (node && node !== data.endInclude) {
                     target.removeChild(node)
+                    if (lastTemplate)
+                        lastTemplate.appendChild(node)
                 } else {
                     break
                 }
             }
-            var dom = avalon.parseHTML(text)
+            var dom = getTemplateNodes(data, val, text)
             var nodes = avalon.slice(dom.childNodes)
             target.insertBefore(dom, data.endInclude)
             scanNodeArray(nodes, vmodels)
         }
+
         if (data.param === "src") {
             if (cacheTmpls[val]) {
                 avalon.nextTick(function () {
@@ -3353,6 +3366,18 @@ bindingExecutors.attr = function (val, elem, data) {
             parent.replaceChild(elem, comment)
         }
     }
+}
+
+function getTemplateNodes(data, id, text) {
+    var div = data.templateCache && data.templateCache[id]
+    if (div) {
+        var dom = DOC.createDocumentFragment(), firstChild
+        while (firstChild = div.firstChild) {
+            dom.appendChild(firstChild)
+        }
+        return dom
+    }
+    return  avalon.parseHTML(text)
 }
 
 //这几个指令都可以使用插值表达式，如ms-src="aaa/{{b}}/{{c}}.html"
@@ -4847,7 +4872,6 @@ new function() {// jshint ignore:line
     var loadings = [] //正在加载中的模块列表
     var factorys = [] //放置define方法的factory函数
     var rjsext = /\.js$/i
-    var name2url = {}
     function makeRequest(name, config) {
 //1. 去掉资源前缀
         var res = "js"
@@ -4893,7 +4917,7 @@ new function() {// jshint ignore:line
         //1. 如果该模块已经发出请求，直接返回
         var module = modules[name]
         var urlNoQuery = name && req.urlNoQuery
-        if (module && module.state >= 3) {
+        if (module && module.state >= 1) {
             return name
         }
         module = modules[urlNoQuery]
@@ -5151,10 +5175,6 @@ new function() {// jshint ignore:line
             if (!deps)
                 continue
             for (var j = 0, key; key = deps[j]; j++) {
-                var k = name2url[key]
-                if (k) {
-                    key = deps[j] = k
-                }
                 if (Object(modules[key]).state !== 4) {
                     continue loop
                 }
@@ -5320,7 +5340,6 @@ new function() {// jshint ignore:line
         var module = Object(modules[id])
         module.state = 4
         for (var i = 0, array = [], d; d = deps[i++]; ) {
-            d = name2url[d] || d
             if (d === "exports") {
                 var obj = module.exports || (module.exports = {})
                 array.push(obj)

@@ -12,7 +12,7 @@ define(["mmRouter/mmState",
 				templateUrl: "ppt/views/tpl.html"
 			}
 		},
-		onChange: function(pageNumber) {
+		onEnter: function(pageNumber) {
 			if(pageNumber === "") return avalon.router.redirect("/1")
 			var done = this.async(),
 				ppt = avalon.vmodels.ppt
@@ -34,15 +34,15 @@ define(["mmRouter/mmState",
                 oldNode.parentNode && oldNode.parentNode.removeChild(oldNode)
             }, 1000)
         },
-        unload: function() {
+        onUnload: function() {
         	avalon.vmodels.ppt.content = ""
         },
         // 显示加载效果
-        begin: function() {
+        onBegin: function() {
         	if(avalon.vmodels.$loading) avalon.vmodels.$loading.toggle = true
         },
     	// 隐藏loading效果
-        onload: function() {
+        onLoad: function() {
         	if(avalon.vmodels.$loading) avalon.vmodels.$loading.toggle = false
         	avalon.vmodels.ppt.curentPage = avalon.vmodels.ppt._curentPage
         	// 语法高亮

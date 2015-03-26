@@ -164,7 +164,10 @@ html {
 	z-index:9;
 }
 
-.parallax2{
+.parallax2 {
 	z-index:8;
 }
 
+.low-ie {
+	text-align: center;
+}

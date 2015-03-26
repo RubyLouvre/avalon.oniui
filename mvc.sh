@@ -12,6 +12,7 @@ sed -i "s/..\/..\/js/mmRouter\/js/g" avalon.mmRouter.ex8.html
 sed -i "s/..\/..\/js/mmRouter\/js/g" js/app.js
 cp ../mmPromise/mmPromise.js ../../mmRouter/
 cp mm*.js ../../mmRouter/
+cp README.md ../../mmRouter/ -f
 cd ../../mmRouter/
 sed -i "s/..\/mmPromise\///g" mm*.js
 sed -i "s/mmRouter\///g" mm*.js

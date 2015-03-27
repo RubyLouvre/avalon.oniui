@@ -1,4 +1,4 @@
-define("nativePromise", ["avalon"], function (avalon) {
+define(["avalon"], function (avalon) {
 //chrome36的原生Promise还多了一个defer()静态方法，允许不通过传参就能生成Promise实例，
 //另还多了一个chain(onSuccess, onFail)原型方法，意义不明
 //目前，firefox24, opera19也支持原生Promise(chrome32就支持了，但需要打开开关，自36起直接可用)
@@ -9,6 +9,21 @@ define("nativePromise", ["avalon"], function (avalon) {
     }
     function ng(e) {
         throw e
+    }
+
+    function done(onSuccess) {//添加成功回调
+        return this.then(onSuccess, ng)
+    }
+    function fail(onFail) {//添加出错回调
+        return this.then(ok, onFail)
+    }
+    function defer() {
+        var ret = {};
+        ret.promise = new this(function (resolve, reject) {
+            ret.resolve = resolve
+            ret.reject = reject
+        });
+        return ret
     }
     var msPromise = function (executor) {
         this._callbacks = []
@@ -188,20 +203,7 @@ define("nativePromise", ["avalon"], function (avalon) {
     }
     msPromise.defer = defer
 
-    function done(onSuccess) {//添加成功回调
-        return this.then(onSuccess, ng)
-    }
-    function fail(onFail) {//添加出错回调
-        return this.then(ok, onFail)
-    }
-    function defer() {
-        var ret = {};
-        ret.promise = new this(function (resolve, reject) {
-            ret.resolve = resolve
-            ret.reject = reject
-        });
-        return ret
-    }
+
 
     avalon.Promise = msPromise
     var nativePromise = window.Promise
@@ -212,8 +214,8 @@ define("nativePromise", ["avalon"], function (avalon) {
             nativePromise.defer = defer
         }
     }
-
     return window.Promise = nativePromise || msPromise
+
 })
 //https://github.com/ecomfe/er/blob/master/src/Deferred.js
 //http://jser.info/post/77696682011/es6-promises

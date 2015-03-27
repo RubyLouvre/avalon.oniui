@@ -330,18 +330,23 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
     avalon.state = function(stateName, opts) {
         var state = StateModel(stateName, opts)
         avalon.router.get(state.url, function(params, _local) {
-            var me = this, promises = [], resolved = state.resolved, _resovle, _reject, _data = []
+            var me = this, promises = [], _resovle, _reject, _data = []
             state.resolved = getPromise(function(rs, rj) {
                 _resovle = rs
                 _reject = rj
             })
             avalon.each(state.views, function(name, view) {
                 var params = me.params,
-                    promise = fromPromise(view, params), 
-                    warnings = "warning: " + stateName + "状态对象的【" + name + "】视图对象"
+                    reason = {
+                        type: "view",
+                        name: name,
+                        params: params,
+                        state: state
+                    },
+                    promise = fromPromise(view, params, reason)
                 promises.push(promise)
                 // template不能cache
-                promise.$then(function(s) {
+                promise.then(function(s) {
                     _local[name] = {
                         template: s,
                         name: name,
@@ -350,15 +355,8 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         params: state.filterParams(params),
                         vmodels: view.$controller && view.$controller.vmodels
                     }
-                }, function(msg) {
-                    avalon.log(warnings + " " + msg)
-                    _reject({
-                        type: "view",
-                        name: name,
-                        state: state,
-                        params: params,
-                        message: "view " + name + " not found"
-                    })
+                })["catch"](function(e) {
+                    // do nothing，在all里面捕获错误
                 })
                 var prom,
                     callback = function($ctrl) {
@@ -370,43 +368,58 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         var $onEnter = view.$controller && view.$controller.$onEnter
                         if($onEnter) {
                             var prom = getPromise(function(rs, rj) {
-                                var res = $onEnter(params, rs, rj)
+                                var reason = {
+                                        type: "data",
+                                        state: state,
+                                        params: params
+                                    },
+                                    res = $onEnter(params, rs, function(message) {
+                                        reason.message = message
+                                        rj(reason)
+                                    })
                                 // // if promise
                                 if(res && res.then) {
-                                    promises.push(res)
+                                    _data.push(res)
                                     rs(res)
                                 // error msg
                                 } else if(res && res !== true) {
-                                    rj(res)
+                                    reason.message = res
+                                    rj(reason)
                                 } else if(res === undefine) {
-                                    rs("load ok")
+                                    rs()
                                 }
-                                // res ==== true will pause here
+                                // res === true will pause here
                             })
                             _data.push(prom)
                         }
                     }
-                // cache controller
+                // controller似乎可以缓存着
                 if(view.$controller) return resolveData()
                 // 加载controller模块
                 if(view.controller) {
-                    promise.$then(function() {
+                    promise.then(function() {
                         callback(avalon.controller(view.controller))
+                    })["catch"](function(e) {
+                        // do nothing，在all里面捕获错误
                     })
                 } else if(view.controllerUrl) {
                     prom = getPromise(function(rs, rj) {
                         var url = avalon.isFunction(view.controllerUrl) ? view.controllerUrl(params) : view.controllerUrl
                         avalon.controller.loader(url, function($ctrl) {
-                            promise.$then(function() {
+                            promise.then(function() {
                                 callback($ctrl)
+                            })["catch"](function(e) {
+                                // do nothing，在all里面捕获错误
                             })
                             rs()
                         })
                     })
                 } else if(view.controllerProvider) {
                     prom = avalon.isFunction(view.controllerProvider) ? view.controllerProvider(params) : view.controllerProvider
-                    promise.$then(function() {
-                        prom.then ? prom.$then(callback) : callback(prom)
+                    promise.then(function() {
+                        prom.then ? prom.then(callback)["catch"](function(e) {/*do nothing，在all里面捕获错误*/}) : callback(prom)
+                    })["catch"](function(e) {
+                        // do nothing，在all里面捕获错误
                     })
                 }
                 // is promise
@@ -414,8 +427,10 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     promises.push(prom)
                 }
             })
+            // 模板和controller就绪
             getPromise(promises).$then(function(values) {
                 state._local = _local
+                // 数据就绪
                 getPromise(_data).$then(function() {
                     _resovle()
                 })
@@ -427,7 +442,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         return this
     }
 
-    
+    // 将所有的promise error适配到这里来
     function promiseError(e) {
         avalon.log(e)
     }
@@ -647,7 +662,15 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
             $ctrl.name = first
             second($ctrl)
         } else if(typeof first == "string" || typeof first == "object") {
-            first = Array.apply(null, arguments)
+            first = first instanceof Array ? first : Array.apply(null, arguments)
+            avalon.each(first, function(index, item) {
+                if(typeof item == "string") {
+                    first[index] = avalon.vmodels[item]
+                }
+                item = first[index]
+                if("$onRendered" in item) $ctrl.$onRendered = item["$onRendered"]
+                if("$onEnter" in  item) $ctrl.$onEnter = item["$onEnter"]
+            })
             $ctrl.$vmodels = first
         } else {
             throw new Error("参数错误" + arguments)
@@ -702,13 +725,14 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
     }
     
     // 【avalon.state】的辅助函数，opts.template的处理函数
-    function fromString(template, params) {
+    function fromString(template, params, reason) {
         var promise = getPromise(function(resolve, reject) {
             var str = typeof template === "function" ? template(params) : template
             if (typeof str == "string") {
                 resolve(str)
             } else {
-                reject("template必须对应一个字符串或一个返回字符串的函数")
+                reason.message = "template必须对应一个字符串或一个返回字符串的函数"
+                reject(reason)
             }
         })
         return promise
@@ -718,13 +742,14 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         return new (window.XMLHttpRequest || ActiveXObject)("Microsoft.XMLHTTP")
     }
     // 【avalon.state】的辅助函数，opts.templateUrl的处理函数
-    function fromUrl(url, params) {
+    function fromUrl(url, params, reason) {
         var promise = getPromise(function(resolve, reject) {
             if (typeof url === "function") {
                 url = url(params)
             }
             if (typeof url !== "string") {
-                return reject("templateUrl必须对应一个URL")
+                reason.message = "templateUrl必须对应一个URL"
+                reject(reason)
             }
             if (avalon.templateCache[url]) {
                 return  resolve(avalon.templateCache[url])
@@ -734,7 +759,8 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                 if (xhr.readyState === 4) {
                     var status = xhr.status;
                     if (status > 399 && status < 600) {
-                        reject("templateUrl对应资源不存在或没有开启 CORS")
+                        reason.message = "templateUrl对应资源不存在或没有开启 CORS"
+                        reject(reason)
                     } else {
                         resolve(avalon.templateCache[url] = xhr.responseText)
                     }
@@ -750,30 +776,33 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         return promise
     }
     // 【avalon.state】的辅助函数，opts.templateProvider的处理函数
-    function fromProvider(fn, params) {
+    function fromProvider(fn, params, reason) {
         var promise = getPromise(function(resolve, reject) {
             if (typeof fn === "function") {
                 var ret = fn(params)
                 if (ret && ret.then || typeof ret == "string") {
                     resolve(ret)
                 } else {
-                    reject("templateProvider为函数时应该返回一个Promise或thenable对象")
+                    reason.message = "templateProvider为函数时应该返回一个Promise或thenable对象或字符串"
+                    reject(reason)
                 }
             } else if (fn && fn.then) {
                 resolve(fn)
             } else {
-                reject("templateProvider不为函数时应该对应一个Promise或thenable对象")
+                reason.message = "templateProvider不为函数时应该对应一个Promise或thenable对象"
+                reject(reason)
             }
         })
         return promise
     }
     // 【avalon.state】的辅助函数，将template或templateUrl或templateProvider转换为可用的Promise对象
-    function fromPromise(config, params) {
-        return config.template ? fromString(config.template, params) :
-                config.templateUrl ? fromUrl(config.templateUrl, params) :
-                config.templateProvider ? fromProvider(config.templateProvider, params) :
+    function fromPromise(config, params, reason) {
+        return config.template ? fromString(config.template, params, reason) :
+                config.templateUrl ? fromUrl(config.templateUrl, params, reason) :
+                config.templateProvider ? fromProvider(config.templateProvider, params, reason) :
                 getPromise(function(resolve, reject) {
-                    reject("必须存在template, templateUrl, templateProvider中的一个")
+                    reason.message = "必须存在template, templateUrl, templateProvider中的一个"
+                    reject(reason)
                 })
     }
     window._states = _states

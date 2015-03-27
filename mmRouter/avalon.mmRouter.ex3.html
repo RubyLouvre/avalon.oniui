@@ -159,7 +159,7 @@
                     url: "",
                     views: {
                         "": {
-                            templateUrl: "contactssss.list.html"
+                            templateUrl: "contacts.list.html"
                         },
                         "hint@": {
                             template: "当前状态是contacts.list"
@@ -392,7 +392,7 @@
                     arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
                 })
             }
-            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;, &quot;mmRequest/mmRequest&quot;], function() {
+            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -467,15 +467,15 @@
                     abstract: true,
                     url: &quot;/contacts&quot;,
                     templateUrl: &quot;contacts.html&quot;,
-                    // controllerProvider: function(params) {
-                    //     var prom = new Promise(function(rs, rj) {
-                    //         require([&quot;mmRouter/js/contacts.js&quot;], function($ctrl) {
-                    //             rs($ctrl)
-                    //         })
-                    //     })
-                    //     return prom
-                    // },
-                    controllerUrl: [&quot;mmRouter/js/contacts.js&quot;],
+                    controllerProvider: function(params) {
+                        var prom = new Promise(function(rs, rj) {
+                            require([&quot;mmRouter/js/contacts.js&quot;], function($ctrl) {
+                                rs($ctrl)
+                            })
+                        })
+                        return prom
+                    },
+                    // controllerUrl: [&quot;mmRouter/js/contacts.js&quot;],
                     onEnter: function() {
                         // var done = this.async()
                         // // setTimeout(done, 4000)
@@ -489,7 +489,7 @@
                     url: &quot;&quot;,
                     views: {
                         &quot;&quot;: {
-                            templateUrl: &quot;contactssss.list.html&quot;
+                            templateUrl: &quot;contacts.list.html&quot;
                         },
                         &quot;hint@&quot;: {
                             template: &quot;当前状态是contacts.list&quot;

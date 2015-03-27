@@ -57,6 +57,16 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     var target = event.target || event.srcElement;
                     var files = target.files || target.value;
                     vm.addFiles(files);
+
+                    // 这里先把input file移除出dom tree，重新建立一个新的input file，再加回dom tree。
+                    // 主要是为了清除input file的已选文件。暂时没有更好的办法。
+                    var html = target.outerHTML,
+                        pNode = target.parentNode,
+                        fileInputWrapper = document.createElement("div");
+                    pNode.removeChild(target);
+                    fileInputWrapper.innerHTML = html;
+                    avalon(fileInputWrapper.children[0]).bind("change", vm.onFileFieldChanged);
+                    pNode.appendChild(fileInputWrapper.children[0]);
                 };
                 // Flash和H5都会调用此方法来生成文件扩展名过滤
                 vm.getInputAcceptTypes = function (_isFalsh) {
@@ -112,8 +122,12 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
 
                     vm.$runtime.attachEvent("beforeFileCache", function (plainFileObject) {
                         var isDuplicatedFile = false;
+
                         for (var i = 0; i < vm.previews.length; i++) {
-                            if (vm.previews[i].fileLocalToken == plainFileObject.fileLocalToken) {
+                            var runtimeFile = vm.$runtime.getFileByLocalToken(vm.previews[i].fileLocalToken);
+                            if (!runtimeFile) continue;
+
+                            if (vm.compareFileObjects(runtimeFile, plainFileObject)) {
                                 isDuplicatedFile = true;
                                 break;
                             }

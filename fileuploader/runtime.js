@@ -44,6 +44,10 @@ function ($$) {
 		this.blobConstructor = blobConstructor;
 	};
 
+	runtimeContructor.prototype.getFileByLocalToken = function (fileLocalToken) {
+		return this.files[fileLocalToken];
+	}
+
 	runtimeContructor.prototype.removeFileByToken = function (fileLocalToken) {
 		var fileObj = this.files[fileLocalToken];
 		if (!fileObj) return;

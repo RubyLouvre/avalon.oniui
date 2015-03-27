@@ -38,12 +38,14 @@ define([], function () {
         $ctrl.$onEnter = function(param, rs, rj) {
             avalon.get("./js/list.json", {}, function(res){
                 setTimeout(function() {
-                    vmodel.contacts = eval("(" + res + ")")
-                    rs("get json failed")
+                    // 这样写似乎更保险
+                    rs(function() {
+                        vmodel.contacts = eval("(" + res + ")")
+                    })
                 }, 1000)
             }, "text")
             // here will stop
-            return true
+            return false
         }
 
         // 初始化

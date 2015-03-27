@@ -293,7 +293,7 @@ mmRouter的使用
                                 <tr>
                                     <td>opts.controller</td>
                                     <td></td>
-                                    <td>如果不写views属性,则默认view为""，为默认的view指定一个控制器</td>
+                                    <td>如果不写views属性,则默认view为""，为默认的view指定一个控制器，该配置会直接作为avalon.controller的参数生成一个$ctrl对象</td>
                                 </tr>
                                 <tr>
                                     <td>opts.controllerUrl</td>
@@ -309,7 +309,16 @@ mmRouter的使用
                                     <td>opts.views</td>
                                     <td></td>
                                     <td>如果不写views属性,则默认view为""，对多个[ms-view]容器进行处理,每个对象应拥有template, templateUrl,
-                                        templateProvider，可以给每个对象搭配一个controller||controllerUrl||controllerProvider属性</td>
+                                        templateProvider，可以给每个对象搭配一个controller||controllerUrl||controllerProvider属性
+                                        views的结构为
+                                        <pre>
+{
+"": {template: "xxx"}
+"aaa": {template: "xxx"}
+"bbb@": {template: "xxx"}
+}
+</pre>views的每个键名(keyname)的结构为viewname@statename， 如果名字不存在@，则viewname直接为keyname，statename为opts.stateName
+                                        如果名字存在@, viewname为match[0], statename为match[1]</td>
                                 </tr>
                                 <tr>
                                     <td>opts.views.template</td>
@@ -329,15 +338,7 @@ mmRouter的使用
                                 <tr>
                                     <td>opts.views.ignoreChange</td>
                                     <td></td>
-                                    <td>用法同state.ignoreChange，只是针对的粒度更细一些，针对到具体的view views的结构为
-                                        <pre>
-{
-"": {template: "xxx"}
-"aaa": {template: "xxx"}
-"bbb@": {template: "xxx"}
-}
-</pre>views的每个键名(keyname)的结构为viewname@statename， 如果名字不存在@，则viewname直接为keyname，statename为opts.stateName
-                                        如果名字存在@, viewname为match[0], statename为match[1]</td>
+                                    <td>用法同state.ignoreChange，只是针对的粒度更细一些，针对到具体的view</td>
                                 </tr>
                                 <tr>
                                     <td>opts.onBeforeEnter</td>
@@ -347,7 +348,22 @@ mmRouter的使用
                                 <tr>
                                     <td>opts.onEnter</td>
                                     <td>Function</td>
-                                    <td>当切换为当前状态时调用的回调，this指向状态对象，参数为匹配的参数， 我们可以在此方法 定义此模板用到的VM， 或修改VM的属性</td>
+                                    <td>进入状态触发，可以返回false，或任意不为true的错误信息或一个promise对象，用法跟视图的$onEnter一致</td>
+                                </tr>
+                                <tr>
+                                    <td>onEnter.params</td>
+                                    <td>Function</td>
+                                    <td>视图所属的state的参数</td>
+                                </tr>
+                                <tr>
+                                    <td>onEnter.resolve</td>
+                                    <td>Function</td>
+                                    <td>$onEnter return false的时候，进入同步等待，直到手动调用resolve</td>
+                                </tr>
+                                <tr>
+                                    <td>onEnter.reject</td>
+                                    <td>Function</td>
+                                    <td>数据加载失败，调用</td>
                                 </tr>
                                 <tr>
                                     <td>opts.onBeforeExit</td>
@@ -476,23 +492,63 @@ this.params
                         </td>
                     </tr>
                     <tr>
-                        <td>async()</td>
-                        <td>Function</td>
-                        <td></td>
-                        <td>state.async 表示当前的状态是异步，中断状态chain的继续执行，返回一个done函数，通过done(false)终止状态链的执行，任意其他非false参数，将继续
-                            <pre>
-onEnter: function() {
-var done = this.async()
-setTimeout(done, 4000)
-}
-</pre>
-                        </td>
-                    </tr>
-                    <tr>
                         <td>controller()</td>
                         <td>Function</td>
                         <td></td>
-                        <td>avalon.controller 给avalon.state定义的状态配置控制器</td>
+                        <td>avalon.controller 给avalon.state视图对象配置控制器
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td></td>
+                                    <td>控制器名字</td>
+                                </tr>
+                                <tr>
+                                    <td>factory</td>
+                                    <td>Function</td>
+                                    <td>控制器</td>
+                                </tr>
+                                <tr>
+                                    <td>factory.$ctrl</td>
+                                    <td>Object</td>
+                                    <td>实际生成的控制器对象</td>
+                                </tr>
+                                <tr>
+                                    <td>factory.$onBeforeUnload</td>
+                                    <td>Function</td>
+                                    <td>该视图被卸载前触发，return false可以阻止视图卸载，并阻止跳转</td>
+                                </tr>
+                                <tr>
+                                    <td>factory.$onEnter</td>
+                                    <td>Function</td>
+                                    <td>给该视图加载数据，可以返回false，或任意不为true的错误信息或一个promise对象，传递3个参数</td>
+                                </tr>
+                                <tr>
+                                    <td>factory.$onEnter.params</td>
+                                    <td>Function</td>
+                                    <td>视图所属的state的参数</td>
+                                </tr>
+                                <tr>
+                                    <td>factory.$onEnter.resolve</td>
+                                    <td>Function</td>
+                                    <td>$onEnter return false的时候，进入同步等待，直到手动调用resolve</td>
+                                </tr>
+                                <tr>
+                                    <td>factory.$onEnter.reject</td>
+                                    <td>Function</td>
+                                    <td>数据加载失败，调用</td>
+                                </tr>
+                                <tr>
+                                    <td>factory.$onRendered</td>
+                                    <td>Function</td>
+                                    <td>视图元素scan完成之后，调用</td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                     <tr>
                         <td>loader(url,callback)</td>
@@ -513,7 +569,7 @@ setTimeout(done, 4000)
                     <a href="avalon.mmRouter.ex2.html">mmRouter综合示例三: scrolltoview</a>
                 </li>
                 <li>
-                    <a href="avalon.mmRouter.ex3.html">mmRouter综合示例四: avalon.router.go</a>
+                    <a href="avalon.mmRouter.ex3.html">mmRouter试验田: 最新版mmRouter试验田</a>
                 </li>
                 <li>
                     <a href="avalon.mmRouter.ex4.html">mmRouter: avalon.state</a>

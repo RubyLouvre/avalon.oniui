@@ -1,6 +1,6 @@
 
 define(["avalon"], 
-function (avalon) {
+function ($$) {
 	/*
 	 * 文件状态代码。0-100为正常状态，101以后为错误状态
 	 */
@@ -16,11 +16,11 @@ function (avalon) {
 	//var FILE_ERROR_FAIL_SLICE = 102;	// FileQueue无法拆分文件
 	var FILE_ERROR_FAIL_UPLOAD = 103;	// FileQueue发送文件时碰见错误
 
-	var runtimeContructor = function (uploaderVm, blobConstructor, blobqueueConstructor, md5) {
+	var runtimeContructor = function (uploaderVm, blobConstructor, blobqueueConstructor) {
 		this.vm = uploaderVm;
-		this.md5gen = md5;
 		this.files = {};
 		this.files.length = 0;
+		this.readBlobCallbacks = {};
 		this.blobqueue = new blobqueueConstructor(this, uploaderVm.serverConfig);
 		this.blobqueue.attachEvent("blobUploaded", function (blob, allBlobDone) {
 			blob.purgeData();	// 释放数据区以减轻内存压力
@@ -44,30 +44,22 @@ function (avalon) {
 		this.blobConstructor = blobConstructor;
 	};
 
-	runtimeContructor.prototype.purgeFileData = function (fileObj) {
+	runtimeContructor.prototype.removeFileByToken = function (fileLocalToken) {
+		var fileObj = this.files[fileLocalToken];
+		if (!fileObj) return;
+		
 		fileObj.data = null;
 		if (fileObj.__flashfile) {
-			this.flash.removeCacheFileByMd5(fileObj.md5);
-		}
-	}
-
-	runtimeContructor.prototype.removeFileByMd5 = function (md5) {
-		var fileObj = this.files[md5];
-		if (!fileObj) return;
-
-		if (fileObj.__flashfile) {
-			this.flash.removeCacheFileByMd5(md5);
+			this.flash.removeCacheFileByToken(fileLocalToken);
 		}
 		this.files.length--;
-		this.purgeFileData(fileObj);
-		delete this.files[md5];
+		delete this.files[fileLocalToken];
 	}
 
 
 	// 调试Flash的函数。Flash调用此函数在浏览器打印Log
 	runtimeContructor.prototype.printFlashLog = function (args) {
-		
-	//	avalon.log.apply(avalon.log, args);
+	//	$$.log.apply($$.log, args);
 	}
 
 	runtimeContructor.prototype.sumUploadedSize = function (fileObj) {
@@ -78,148 +70,145 @@ function (avalon) {
 		return s;
 	}
 
+	// H5和Flash都会调用此方法，参数是一个{ name: xxx, size: 000 }的对象。第一检查文件尺寸，第二根据文件的扩展名获取预览的参数，第三为文件申请一个localToken。
+	runtimeContructor.prototype.getFileContext = function (basicFileInfo) {
+		var sizeOk = this.testFileSize(basicFileInfo);
+		var context = {
+			canBeAdded: false,
+			defaultPreview: false,
+			enablePreviewGen: false,
+			previewWidth: 0,
+			previewHeight: 0,
+			fileLocalToken: this.applyFileLocalToken()
+		};
+		if (sizeOk) {
+			context.canBeAdded = true;
+			var fileName = basicFileInfo.name;
+			var fileConfig = this.vm.getFileConfigByExtName(this.vm, fileName.substr(fileName.lastIndexOf('.')));
+
+			context.defaultPreview = fileConfig.noPreviewPath;
+			context.enablePreviewGen = fileConfig.enablePreview && fileConfig.isImageFile;
+			context.previewWidth = fileConfig.previewWidth;
+			context.previewHeight = fileConfig.previewHeight;
+		}
+		return context;
+	}
+
 	// 只有H5会调用此方法，参数必须是一个H5的File对象。增加文件时，检查文件大小限制和缓存池限制。
 	runtimeContructor.prototype.tryAddFile = function (file) {
+		var fileContext = this.getFileContext({ name: file.name, size: file.size });
+		if (!fileContext.canBeAdded) return;
+		
 		var fileObj = {
 			name: file.name,
 			data: file,
-			md5: undefined,
+			fileLocalToken: fileContext.fileLocalToken,
+			fileKey: undefined,	// 分块上传时的关键词，server使用此属性来辨识分块的文件归属
 			size: file.size,
 			status: null,
-			preview: null,
+			preview: fileContext.defaultPreview,
 			__flashfile: false,
 			__html5file: true,
+			lastModified: file.lastModified,
 			chunkAmount: 0,	// 进入实际发送队列后此属性才会被真正计算
 			blobsProgress: [] // 每个Blob已经上传完毕的字节数
 		};
-		if (this.testFileSize(fileObj)) {
+
+		if (fileContext.enablePreviewGen) {
+			this.getImagePreview(file, fileContext.previewWidth, fileContext.previewHeight, function (preview) {
+				if (preview) fileObj.preview = preview;
+				this.addFile(fileObj);
+			});
+		} else {
 			this.addFile(fileObj);
 		}
 	}
 
-	// file参数只接受两种类型，第一为HTML5的File对象，第二为Flash生成的FileObj
+	// 只有H5会调用此方法。生成文件预览图。
+	runtimeContructor.prototype.getImagePreview = function (imgFile, previewWidth, previewHeight, callback) {
+		var me = this;
+		var promise = new Promise(function(resolve, reject) {
+			var fileReader = new FileReader();
+			fileReader.onload = function () {
+				var img = new Image();
+				img.onload = function () {
+	                var canvasEl = document.createElement("canvas"),
+	                    ctx = canvasEl.getContext('2d'),
+	                    imgWidth = img.width,
+	                    imgHeight = img.height,
+	                    imageAspectRatio = imgWidth / imgHeight,    // 输入图片的宽高比
+	                    canvasAspectRatio = previewWidth / previewHeight, // 预览的宽高比
+	                    drawX = drawY = 0,
+	                    drawHeight = previewHeight,    // 绘制入Canvas中的预览图高度
+	                    drawWidth = previewWidth;      // 绘制入Canvas中的预览图宽度
+
+	                canvasEl.width = previewWidth;
+	                canvasEl.height = previewHeight;
+	                // 等比压缩图片至Canvas。此处计算宽高比，并得出压缩图像在Canvas上的位置。
+	                // drawY对于过宽的图像调整为纵向居中，drawX对于过长的图像调整为横向居中。
+	                if (imageAspectRatio > canvasAspectRatio) {
+	                    drawHeight = imgHeight * previewWidth / imgWidth;
+	                    drawY = (previewHeight - drawHeight) / 2;
+	                } else if (imageAspectRatio < canvasAspectRatio) {
+	                    drawWidth = imgWidth * previewHeight / imgHeight;
+	                    drawX = (previewWidth - drawWidth) / 2;
+	                }
+
+	                ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+	                resolve(canvasEl.toDataURL("image/png"));
+	                
+	                // 释放内存。
+	                ctx.clearRect(0, 0, previewWidth, previewHeight);
+	                img.onload = img.onerror = null;
+	                img = null;
+	            }
+	            img.onerror = function () {
+	            	img.onload = img.onerror = null;
+	                img = null;
+	                resolve(false);
+	            }
+	            img.src = this.result;
+
+				fileReader.onload = fileReader.onerror = null;
+				fileReader = null;
+			}
+			fileReader.onerror = function () {
+				resolve(false);
+			}
+			// 用setTimeout来解决图片过大时，浏览器卡死的问题
+			setTimeout(function() {
+				fileReader.readAsDataURL(imgFile);
+			},100);
+		});
+		
+		promise.then(function (preview) {
+			callback.call(me, preview);
+		});
+	}
+
+	runtimeContructor.prototype.fileLocalTokenSeed = 
+		(runtimeContructor.prototype.fileLocalTokenSeed == undefined) ? 0 : runtimeContructor.prototype.fileLocalTokenSeed;
+
+	runtimeContructor.prototype.applyFileLocalToken = function () {
+		this.fileLocalTokenSeed++;
+		return "__avalonfile"+this.fileLocalTokenSeed;
+	}
+
+	// H5和Flash都会调用此方法。
 	runtimeContructor.prototype.addFile = function (fileObj) {
 		var me = this;
-		fileObj.status = FILE_CACHED;
 
-		var promise = new Promise(function(resolve, reject) {
-			if (fileObj.__html5file) {
-				var extName = fileObj.name.substr(fileObj.name.lastIndexOf('.')),
-					fileConfig = me.vm.getFileConfigByExtName(me.vm, extName);
-				fileObj.preview = fileConfig.noPreviewPath;
-				var fileReader = new FileReader();
-				fileReader.onload = function () {
-					var result = this.result;
-
-					// 释放内存
-					fileReader.onload = null;
-					fileReader = null;
-
-					// H5输出的base64code上带有“data:;base64,”之类的格式信息，需要除掉。第一个逗号后才是真正的文件内容，所以MD5需要截断result
-					fileObj.md5 = me.md5Bytes(result.substr(result.indexOf(',') + 1));
-
-					// 如果不需要生成Preview或者文件类型不被认为是图片类型，则直接resolve，否则需要重新读图生成base64预览
-					if (!fileConfig.enablePreview || !fileConfig.isImageFile) {
-						resolve(fileObj);
-					} else {
-						fileReader = new FileReader();
-						fileReader.onload = function () {
-							var img = new Image();
-							img.onload = function () {
-	                            var canvasEl = document.createElement("canvas"),
-	                                ctx = canvasEl.getContext('2d'),
-	                                imgWidth = img.width,
-	                                imgHeight = img.height,
-	                                imageAspectRatio = imgWidth / imgHeight,    // 输入图片的宽高比
-	                                canvasAspectRatio = fileConfig.previewWidth / fileConfig.previewHeight, // 预览的宽高比
-	                                drawX = drawY = 0,
-	                                drawHeight = fileConfig.previewHeight,    // 绘制入Canvas中的预览图高度
-	                                drawWidth = fileConfig.previewWidth;      // 绘制入Canvas中的预览图宽度
-
-	                            canvasEl.width = fileConfig.previewWidth;
-	                            canvasEl.height = fileConfig.previewHeight;
-	                            // 等比压缩图片至Canvas。此处计算宽高比，并得出压缩图像在Canvas上的位置。
-	                            // drawY对于过宽的图像调整为纵向居中，drawX对于过长的图像调整为横向居中。
-	                            if (imageAspectRatio > canvasAspectRatio) {
-	                                drawHeight = imgHeight * fileConfig.previewWidth / imgWidth;
-	                                drawY = (fileConfig.previewHeight - drawHeight) / 2;
-	                            } else if (imageAspectRatio < canvasAspectRatio) {
-	                                drawWidth = imgWidth * fileConfig.previewHeight / imgHeight;
-	                                drawX = (fileConfig.previewWidth - drawWidth) / 2;
-	                            }
-
-	                            ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
-	                            fileObj.preview = canvasEl.toDataURL("image/png");
-	                            
-	                            // 释放内存。
-	                            ctx.clearRect(0, 0, fileConfig.previewWidth, fileConfig.previewHeight);
-	                            img.onload = img.onerror = null;
-	                            img = null;
-
-	                            resolve(fileObj);
-	                        }
-	                        img.onerror = function () {
-	                        	img.onload = img.onerror = null;
-	                            img = null;
-	                            resolve(fileObj);
-
-	                        //     me.fireEvent('failToGeneratePreview', fileObj); 要不要发送一个错误事件？看以后的需求
-	                        }
-	                        img.src = this.result;
-
-							fileReader.onload = null;
-							fileReader = null;
-						}
-						// 用setTimeout来解决图片过大时，浏览器卡死的问题
-						setTimeout(function() {
-							fileReader.readAsDataURL(fileObj.data);
-						},100)
-					}
-				}
-				fileReader.readAsDataURL(fileObj.data.slice(0, Math.min(fileConfig.md5Size, fileObj.size)));
-			} else if (fileObj.__flashfile) {
-				// ---Flash文件在读入时---
-				// 已经生成了Preview和Md5
-				// name, size等其他属性已经预备完毕
-				resolve(fileObj);
-			} else {
-				reject({
-					event: "unknownFileBlob",
-					file: fileObj
-				});
+		if (me.fireEvent('beforeFileCache', fileObj)) {
+			me.setFileObjectStatus(fileObj, FILE_CACHED);
+			me.files[fileObj.fileLocalToken] = fileObj;
+			me.files.length++;
+		} else {
+			// 如果不需要对此文件进行处理，从文件读取区域和缓存区域，移除此文件数据的引用以释放内存。
+			if (fileObj.__flashfile) {
+				me.flash.removeCacheFileByToken(fileObj.fileLocalToken);
 			}
-		});
-
-		promise.then(function (fileObj) {
-			if (me.fireEvent('beforeFileCache', fileObj)) {
-				me.setFileObjectStatus(fileObj, FILE_CACHED);
-				me.files[fileObj.md5] = fileObj;
-				me.files.length++;
-
-				// 由于Flash读取文件后是放在读取区域，还未进入文件缓存区域，所以需要通知Flash进行缓存。
-				if (fileObj.__flashfile) {
-					me.flash.cacheFileByMd5(fileObj.md5);
-				}
-			} else {
-				// 如果不需要对此文件进行处理，从文件读取区域和缓存区域，移除此文件数据的引用以释放内存。
-				if (fileObj.__flashfile) {
-					me.flash.removeCacheFileByMd5(fileObj.md5);
-				}
-			}
-		}, function (reason) {
-			if (reason.hasOwnProperty('event')) {
-				me.fireEvent(reason.event, reason.args);
-			}
-		});
-	};
-
-	runtimeContructor.prototype.md5Bytes = function (bytes) {
-		var m = bytes;
-		if (bytes.length > this.vm.md5Size) {
-			m = bytes.slice(0, this.vm.md5Size);
 		}
-		return this.md5gen(m);
-	}
+	};
 
 	runtimeContructor.prototype.testFileSize = function (fileObj) {
 		var fileSizeLimitation = this.vm.maxFileSize,
@@ -249,56 +238,94 @@ function (avalon) {
         return 0;
 	}
 
-	runtimeContructor.prototype.queueFileByMd5 = function (fileMd5) {
+	runtimeContructor.prototype.queueFileByToken = function (fileLocalToken) {
 		var me = this,
-			fileObj = me.files[fileMd5],
+			fileObj = me.files[fileLocalToken],
 			chunked = me.vm.chunked,
 			chunkSize = me.vm.chunkSize;
 		if (fileObj == undefined || fileObj.status != FILE_CACHED) return;
 
 		var blobs = [];
-		if (!chunked || fileObj.size <= chunkSize) {
-			blobs.push(new me.blobConstructor(0, fileObj.size, fileObj, blobs.length));
-		} else {
-			var offset = 0;
-			while (offset < fileObj.size) {
-				blobs.push(
-					new me.blobConstructor(offset, Math.min(fileObj.size - offset, chunkSize), fileObj, blobs.length)
-				);
-				offset+=chunkSize;
+
+		var promise = new Promise(function (resolve, reject) {
+			if (!chunked) {
+				blobs.push(new me.blobConstructor(0, fileObj.size, fileObj, blobs.length));
+				resolve();
+			} else {
+				me.vm.getFileKey(me.vm, fileObj, function (fileKey) {
+					fileObj.fileKey = fileKey;
+					var offset = 0;
+					while (offset < fileObj.size) {
+						blobs.push(
+							new me.blobConstructor(offset, Math.min(fileObj.size - offset, chunkSize), fileObj, blobs.length)
+						);
+						offset+=chunkSize;
+					}
+					resolve();
+				}, me);
 			}
-		}
-		me.setFileObjectStatus(fileObj, FILE_QUEUED);
-		this.blobqueue.push(blobs);
-		fileObj.chunkAmount = blobs.length;
-		fileObj.blobsProgress = [];
+		});
 
-		// this.blobqueue.wakeupSendTask();
-
-		// if (window.File != undefined && fileObj.data != undefined && fileObj.data instanceof File) {
-		// 	this.queueHtml5File(fileObj, chunked, chunkSize);
-		// } else {
-		// 	this.queueFlashFile(fileObj, chunked, chunkSize);
-		// }
+		promise.then(function() {
+			me.setFileObjectStatus(fileObj, FILE_QUEUED);
+			me.blobqueue.push(blobs);
+			fileObj.chunkAmount = blobs.length;
+			fileObj.blobsProgress = [];
+		}, function () {
+			debugger;
+		})
 	}
 
 	runtimeContructor.prototype.readBlob = function(blob, callback, scope) {
-		var fileObj = blob.fileObj;
+		var fileObj = blob.fileObj,
+			blobKey = fileObj.fileLocalToken+"#"+blob.index;
 
 		if (fileObj.status == FILE_QUEUED) {
 			this.setFileObjectStatus(fileObj, FILE_IN_UPLOADING);
 		}
-		try {
-			if (window.File != undefined && fileObj.data != undefined && fileObj.data instanceof File) {
-				blob.data = fileObj.data.slice(blob.offset, blob.offset + blob.size);
-			} else {
-				avalon.log("****FileUploader: Start to get flash blob data. Blob index: ", blob.index);
-				blob.data = this.flash.readBlob(blob.fileObj.md5, blob.offset, blob.size);
-				avalon.log("****FileUploader: JS Get the FLASH BLOB result. LENGTH: ", blob.data.length, ". Blob Size: ", blob.size);
-			}
-			callback.call(scope, blob);
-		} catch (e) {
-			this.setFileObjectStatus(fileObj, FILE_ERROR_FAIL_READ);
+
+		// 因readBlob在Flash环境下是一个异步的过程，必须要将callback和scope注册到runtime本身，等待read结束后再调用callback
+		this.readBlobCallbacks[blobKey] = {
+			blob: blob,
+			scope: scope,
+			callback: callback
+		};
+
+		if (fileObj.__html5file) {
+			this.readBlobEnd(blobKey, fileObj.data.slice(blob.offset, blob.offset + blob.size));
+		} else {
+			this.flash.readBlob(blob.fileObj.fileLocalToken, blob.offset, blob.size, blobKey);
+		}
+	}
+
+	runtimeContructor.prototype.readBlobEnd = function (blobKey, data) {
+		var blob = this.readBlobCallbacks[blobKey].blob,
+			scope = this.readBlobCallbacks[blobKey].scope,
+			callback = this.readBlobCallbacks[blobKey].callback;
+
+		delete this.readBlobCallbacks[blobKey];
+		blob.data = data;
+		callback.call(scope, blob);
+	}
+
+	runtimeContructor.prototype.getRequestParamConfig = function (blob) {
+		var requiredParamsConfig = $$.mix({
+			blobParamName: "blob",
+			fileLocalTokenParamName: "fileKey",
+			totalChunkParamName: "total",
+			chunkIndexParamName: "chunk",
+			fileNameParamName: "fileName"
+		}, this.vm.requiredParamsConfig);
+
+		var customizedParams = {};
+
+		if (typeof this.vm.madeRequestParams == "function") {
+			customizedParams = this.vm.madeRequestParams.call(this.vm, blob.fileObj, blob) || {};
+		}
+
+		return {
+			requiredParamsConfig: requiredParamsConfig,
+			customizedParams: customizedParams
 		}
 	}
 
@@ -317,7 +344,6 @@ function (avalon) {
 		delete this.vm;
 		delete this.blobqueue;
 		delete this.files;
-		delete this.md5gen;
 		delete this.blobConstructor;
 	}
 

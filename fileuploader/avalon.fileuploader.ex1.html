@@ -21,8 +21,12 @@
 		            serverConfig: {
 		                url: "../../Handler1.ashx",
 		                userName: undefined,
-		                password: undefined
-		            }
+		                password: undefined,
+		                keyGenUrl: "../../getFileKey.ashx"
+		            },
+		            enableRemoteKeyGen: false,
+		            chunked: true,
+		            chunkSize: 1024*1024
 				};
 			});
 			$$.scan();

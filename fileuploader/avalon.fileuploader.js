@@ -258,6 +258,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
 
             multipleFileAllowed: true,
             enableRemoteKeyGen: false,
+            enableMd5Validation: true,
             serverConfig: {
                 timeout: 30000,
                 concurrentRequest: 3,
@@ -459,6 +460,15 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                 "zip": "application/zip"
             },
 
+            requiredParamsConfig: {
+                blobParamName: "blob",
+                fileLocalTokenParamName: "fileKey",
+                totalChunkParamName: "total",
+                chunkIndexParamName: "chunk",
+                fileNameParamName: "fileName",
+                blobMd5ParamName: "md5"
+            },
+
             onFileOverSize: avalon.noop,
             onSameFileAdded: avalon.noop,
             onFilePoolOverSize: avalon.noop,
@@ -512,6 +522,10 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
 
             localFileKeyGen: function (opts, fileObj, resolve, reject) {
                 resolve(opts.$md5gen(fileObj.name + "#" + fileObj.size + "#" + fileObj.fileLocalToken));
+            },
+
+            getMd5: function (opts, bytes) {
+                return opts.$md5gen(bytes);
             },
 
             remoteFileKeyGen: function (opts, fileObj, resolve, reject) {

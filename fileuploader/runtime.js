@@ -281,7 +281,8 @@ function ($$) {
 	}
 
 	runtimeContructor.prototype.readBlob = function(blob, callback, scope) {
-		var fileObj = blob.fileObj,
+		var me = this,
+			fileObj = blob.fileObj,
 			blobKey = fileObj.fileLocalToken+"#"+blob.index;
 
 		if (fileObj.status == FILE_QUEUED) {
@@ -296,19 +297,34 @@ function ($$) {
 		};
 
 		if (fileObj.__html5file) {
-			this.readBlobEnd(blobKey, fileObj.data.slice(blob.offset, blob.offset + blob.size));
+			var blobData = fileObj.data.slice(blob.offset, blob.offset + blob.size);
+			var fileReader = new FileReader();
+			fileReader.onload = function() {
+				fileReader.onload = null;
+				fileReader.onerror = null;
+				me.readBlobEnd(blobKey, fileObj.data.slice(blob.offset, blob.offset + blob.size), this.result.substr(this.result.indexOf(",")+1));
+			}
+			fileReader.onerror = function () {
+				fileReader.onload = null;
+				fileReader.onerror = null;
+				me.setFileObjectStatus(blob.fileObj, FILE_ERROR_FAIL_READ)
+			}
+			fileReader.readAsDataURL(blobData);
 		} else {
 			this.flash.readBlob(blob.fileObj.fileLocalToken, blob.offset, blob.size, blobKey);
 		}
 	}
 
-	runtimeContructor.prototype.readBlobEnd = function (blobKey, data) {
+	runtimeContructor.prototype.readBlobEnd = function (blobKey, data, stringData) {
 		var blob = this.readBlobCallbacks[blobKey].blob,
 			scope = this.readBlobCallbacks[blobKey].scope,
 			callback = this.readBlobCallbacks[blobKey].callback;
 
+		if (typeof data == 'string' && stringData == undefined) stringData = data;
+
 		delete this.readBlobCallbacks[blobKey];
 		blob.data = data;
+		if (this.vm.enableMd5Validation) blob.md5 = this.vm.getMd5(this.vm, stringData);
 		callback.call(scope, blob);
 	}
 
@@ -318,7 +334,8 @@ function ($$) {
 			fileLocalTokenParamName: "fileKey",
 			totalChunkParamName: "total",
 			chunkIndexParamName: "chunk",
-			fileNameParamName: "fileName"
+			fileNameParamName: "fileName",
+			blobMd5ParamName: "md5"
 		}, this.vm.requiredParamsConfig);
 
 		var customizedParams = {};

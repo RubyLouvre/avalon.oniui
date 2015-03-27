@@ -155,7 +155,8 @@ define(["avalon"], function (avalon) {
 			totalChunkParamName = paramConfig.requiredParamsConfig.totalChunkParamName,
 			chunkIndexParamName = paramConfig.requiredParamsConfig.chunkIndexParamName,
 			fileNameParamName = paramConfig.requiredParamsConfig.fileNameParamName,
-			customizedParams = paramConfig.customizedParams;
+			customizedParams = paramConfig.customizedParams,
+			blobMd5ParamName = paramConfig.requiredParamsConfig.blobMd5ParamName;
 
 		var data = {};
 		data[blobParamName] = blob.data;
@@ -163,6 +164,7 @@ define(["avalon"], function (avalon) {
 		data[totalChunkParamName] = blob.fileObj.chunkAmount;
 		data[chunkIndexParamName] = blob.index;
 		data[fileNameParamName] = blob.fileObj.name;
+		if(!!blob.md5) data[blobMd5ParamName] = blob.md5;
 
 
 		data = avalon.mix(data, customizedParams);

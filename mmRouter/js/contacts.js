@@ -36,6 +36,15 @@ define([], function () {
         $ctrl.$vmodels = [vmodel]
         // 加载数据
         $ctrl.$onEnter = function(param, rs, rj) {
+            // var pro = new Promise(function(rs) {
+            //     setTimeout(function() {
+            //         rs("faild")
+            //     }, 1000)
+            // })
+            // return pro.then(function() {
+
+            // })
+            // return "faild" 
             avalon.get("./js/list.json", {}, function(res){
                 setTimeout(function() {
                     // 这样写似乎更保险

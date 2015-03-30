@@ -163,11 +163,11 @@ package
 				fileObj.modifyTime = fileObj.modifyTime - fileObj.modifyTime % 1000; // 去除毫秒数，因为h5读不到毫秒。
 				
 				if (fileContext.enablePreviewGen) {
-					generatePreview(file, fileContext.previewWidth, fileContext.previewHeight, function(preview:String):void {
+					generatePreview(file, fileContext.previewWidth, fileContext.previewHeight, fileObj, function(preview:String, fObj:Object):void {
 						if (preview != null) {
-							fileObj.preview = preview;
+							fObj.preview = preview;
 						}
-						ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.addFile", fileObj);
+						ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.addFile", fObj);
 					});
 				} else {
 					ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.addFile", fileObj);
@@ -197,7 +197,7 @@ package
 		
 		
 		// 生成PNG格式的预览图。
-		private function generatePreview(file:FileReference, previewWidth:Number, previewHeight:Number, callback:Function):void {
+		private function generatePreview(file:FileReference, previewWidth:Number, previewHeight:Number, fileObj:Object, callback:Function):void {
 			var fileloaded:Function = function ():void {
 				var imgLoader:Loader = new Loader();
 				imgLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(event:Event):void {
@@ -219,7 +219,7 @@ package
 					
 					c.encodeBytes(pngEncoder.encode(bitmapData));
 					var code:String =  "data:image/png;base64," + c.toString();
-					callback(code);
+					callback(code, fileObj);
 					
 					imgLoader.unload();
 					c = null;

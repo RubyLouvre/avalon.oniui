@@ -233,7 +233,12 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     }
                 };
 
-                vm.$skipArray = ["serverConfig", "previewFileTypes", "acceptFileTypes", "previewWidth", "previewHeight", "enablePreviewGenerating", "chunked", "chunkSize", "noPreviewPath"];
+                vm.$skipArray = [
+                    "maxFileSize", "filePoolSize", "chunked", "chunkSize", 
+                    "acceptFileTypes", "previewWidth", "previewHeight", "enablePreviewGenerating",
+                    "enableRemoteKeyGen", "enableMd5Validation", "serverConfig", "noPreviewPath",
+                    "previewFileTypes", "requiredParamsConfig"
+                    ];
             });
             return vmodel;
         };
@@ -461,7 +466,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
 
             requiredParamsConfig: {
                 blobParamName: "blob",
-                fileLocalTokenParamName: "fileKey",
+                fileTokenParamName: "fileKey",
                 totalChunkParamName: "total",
                 chunkIndexParamName: "chunk",
                 fileNameParamName: "fileName",

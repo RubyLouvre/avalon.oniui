@@ -10,7 +10,7 @@
 </head>
 <body ms-controller="demo">
 	<h1><a name="chunk">MD5验证</a></h1>
-	<p>设置enableMd5Validation为true时，会在发送给服务器的请求内，加入分块数据base64编码后的MD5码，在未开启分块上传或者文件小于分块尺寸限定时，附加的MD5码为整个文件的MD5。默认的MD5验证为关闭状态</p>
+	<p>设置enableMd5Validation为true时，会在发送给服务器的请求内，加入分块数据base64编码后的MD5码，在未开启分块上传或者文件小于分块尺寸限定时，附加的MD5码为整个文件的MD5。默认的MD5验证为关闭状态。本例打开了MD5验证，可在F12工具内看见新增的MD5码。</p>
     <div ms-widget="fileuploader,demoUploader1,$uploaderOptions1"></div>
 
 

@@ -152,7 +152,7 @@ define(["avalon"], function (avalon) {
 	blobQueue.prototype.buildRequestParams = function (blob) {
 		var paramConfig = this.$runtime.getRequestParamConfig(blob),
 			blobParamName = paramConfig.requiredParamsConfig.blobParamName,
-			fileLocalTokenParamName = paramConfig.requiredParamsConfig.fileLocalTokenParamName,
+			fileTokenParamName = paramConfig.requiredParamsConfig.fileTokenParamName,
 			totalChunkParamName = paramConfig.requiredParamsConfig.totalChunkParamName,
 			chunkIndexParamName = paramConfig.requiredParamsConfig.chunkIndexParamName,
 			fileNameParamName = paramConfig.requiredParamsConfig.fileNameParamName,
@@ -161,7 +161,7 @@ define(["avalon"], function (avalon) {
 
 		var data = {};
 		data[blobParamName] = blob.data;
-		if(!!blob.fileObj.fileKey) data[fileLocalTokenParamName] = blob.fileObj.fileKey;
+		if(!!blob.fileObj.fileKey) data[fileTokenParamName] = blob.fileObj.fileKey;
 		data[totalChunkParamName] = blob.fileObj.chunkAmount;
 		data[chunkIndexParamName] = blob.index;
 		data[fileNameParamName] = blob.fileObj.name;

@@ -333,7 +333,7 @@ function ($$) {
 	runtimeContructor.prototype.getRequestParamConfig = function (blob) {
 		var requiredParamsConfig = $$.mix({
 			blobParamName: "blob",
-			fileLocalTokenParamName: "fileKey",
+			fileTokenParamName: "fileKey",
 			totalChunkParamName: "total",
 			chunkIndexParamName: "chunk",
 			fileNameParamName: "fileName",

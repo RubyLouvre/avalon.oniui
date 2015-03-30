@@ -10,17 +10,17 @@
 </head>
 <body ms-controller="demo">
 	<h1><a name="size-limit">尺寸限定</a></h1>
-	<p>可以使用maxFileSize来限制单个文件的大小，使用filePoolSize选项配置待上传文件池的大小。maxFileSize默认值是5M，filePoolSize默认值是200M。本例中maxFileSize的值是1024*500(500KB)，单个文件超出此尺寸时会触发onFileOverSize回调。filePoolSize为1024*1024(1MB)，未上传文件总大小超出此尺寸时会触发onFilePoolOverSize回调。</p>
-	<p>注意：filePoolSize的值不要过大，因为在采用Flash方案的低版本浏览器（IE9及以下）内，Flash只能一次将文件读入内存，过大的filePoolSize可能导致浏览器占用内存过高。</p>
+	<p class="end">可以使用maxFileSize来限制单个文件的大小，使用filePoolSize选项配置待上传文件池的大小。maxFileSize默认值是5M，filePoolSize默认值是200M。本例中maxFileSize的值是1024*500(500KB)，单个文件超出此尺寸时会触发onFileOverSize回调。filePoolSize为1024*1024(1MB)，未上传文件总大小超出此尺寸时会触发onFilePoolOverSize回调。</p>
+	<p class="end">注意：filePoolSize的值不要过大，因为在采用Flash方案的低版本浏览器（IE9及以下）内，Flash只能一次将文件读入内存，过大的filePoolSize可能导致浏览器占用内存过高。</p>
     <div ms-widget="fileuploader,demoUploader1,$uploaderOptions1"></div>
 
 	<h1>开启分块上传</h1>
-	<p>可以使用chunked:true来开启文件分块上传，默认为关闭；chunkSize可以配置每个分块文件的大小，默认是1024*1024（1MB）。本例中chunkSize被设为500KB。可以在Chrome的F12工具中看到请求数量。</p>
-	<p>注意：在低版本浏览器中的Flash分块方案，最终采用base64代码发送文件内容，形成的请求大约是分块尺寸的1.5倍，如果服务器端限制了请求的大小，分块大小应设置在服务器请求限制的60%以下。</p>
+	<p class="end">可以使用chunked:true来开启文件分块上传，默认为关闭；chunkSize可以配置每个分块文件的大小，默认是1024*1024（1MB）。本例中chunkSize被设为500KB。可以在Chrome的F12工具中看到请求数量。</p>
+	<p class="end">注意：在低版本浏览器中的Flash分块方案，最终采用base64代码发送文件内容，形成的请求大约是分块尺寸的1.5倍，如果服务器端限制了请求的大小，分块大小应设置在服务器请求限制的60%以下。</p>
     <div ms-widget="fileuploader,demoUploader2,$uploaderOptions2"></div>
 
 	<h1>并发请求数限制</h1>
-	<p>可以使用serverConfig.concurrentRequest来并行的请求数量，默认的并发数为3。注意，并非concurrentRequest越大越快，浏览器本身存在并发请求数量限制，而且过多的挂起的请求会拖慢浏览器的速度。</p>
+	<p class="end">可以使用serverConfig.concurrentRequest来并行的请求数量，默认的并发数为3。注意，并非concurrentRequest越大越快，浏览器本身存在并发请求数量限制，而且过多的挂起的请求会拖慢浏览器的速度。</p>
     <div ms-widget="fileuploader,demoUploader3,$uploaderOptions3"></div>
 
 

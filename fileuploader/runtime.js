@@ -58,6 +58,8 @@ function ($$) {
 		}
 		this.files.length--;
 		delete this.files[fileLocalToken];
+
+		this.blobqueue.stopUploadByLocalToken(fileLocalToken);
 	}
 
 
@@ -219,8 +221,8 @@ function ($$) {
 			poolSizeLimitation = this.vm.filePoolSize,
 			size = fileObj.size;
 		
-		var fileSizeOK = (fileSizeLimitation > 0) && (size <= fileSizeLimitation);
-		var poolSizeOK = (poolSizeLimitation > 0) && (this.getFilesSizeSum() + size <= poolSizeLimitation);
+		var fileSizeOK = (fileSizeLimitation <= 0) || (size <= fileSizeLimitation);
+		var poolSizeOK = (poolSizeLimitation <= 0) || (this.getFilesSizeSum() + size <= poolSizeLimitation);
 
 		if (fileSizeOK && poolSizeOK) {
 			return true;
@@ -302,7 +304,7 @@ function ($$) {
 			fileReader.onload = function() {
 				fileReader.onload = null;
 				fileReader.onerror = null;
-				me.readBlobEnd(blobKey, fileObj.data.slice(blob.offset, blob.offset + blob.size), this.result.substr(this.result.indexOf(",")+1));
+				me.readBlobEnd(blobKey, blobData, this.result.substr(this.result.indexOf(",")+1));
 			}
 			fileReader.onerror = function () {
 				fileReader.onload = null;

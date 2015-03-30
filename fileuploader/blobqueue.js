@@ -21,6 +21,36 @@ define(["avalon"], function (avalon) {
 		}
 	}
 
+	blobQueue.prototype.stopUploadByLocalToken = function (fileLocalToken) {
+		/*****************************************************
+		 * 1. 从队列中移除所有同文件的blob
+		 * 2. 从RequestPool里取得同文件的其他blob，并取消发送
+		 *****************************************************/
+
+		var i = 0,
+			queueBlob, requestPoolItem;
+		// 清除Queue中的blob
+		while (i < this.queue.length) {
+			queueBlob = this.queue[i];
+			if (queueBlob.fileObj.fileLocalToken == fileLocalToken) {
+				avalon.Array.removeAt(this.queue, i);
+			} else {
+				i++;
+			}
+		}
+
+		i = 0;
+		while (i < this.requestPool.length) {
+			requestPoolItem = this.requestPool[i];
+			if (requestPoolItem.fileLocalToken == fileLocalToken) {
+				avalon.Array.remove(this.requestPool, requestPoolItem);
+				requestPoolItem.request.abort();
+			} else {
+				i++;
+			}
+		}
+	}
+
 	blobQueue.prototype.push = function (items) {
 		if (!Array.isArray(items)) items = [items];
 		var me = this;
@@ -114,36 +144,7 @@ define(["avalon"], function (avalon) {
 	}
 
 	blobQueue.prototype.onBlobError = function (blob, textStatus, error, requestPoolItem) {
-		/*****************************************************
-		 * 1. 从队列中移除所有同文件的blob
-		 * 2. 从RequestPool里取得同文件的其他blob，并取消发送
-		 *****************************************************/
-		var fileLocalToken = requestPoolItem.fileLocalToken,
-			i = 0,
-			queueBlob,
-			requestPoolItem;
-
-		// 清除Queue中的blob
-		while (i < this.queue.length) {
-			queueBlob = this.queue[i];
-			if (queueBlob.fileObj.fileLocalToken == fileLocalToken) {
-				avalon.Array.removeAt(this.queue, i);
-			} else {
-				i++;
-			}
-		}
-
-		i = 0;
-		while (i < this.requestPool.length) {
-			requestPoolItem = this.requestPool[i];
-			if (requestPoolItem.fileLocalToken == fileLocalToken) {
-				avalon.Array.remove(this.requestPool, requestPoolItem);
-				requestPoolItem.request.abort();
-			} else {
-				i++;
-			}
-		}
-
+		this.stopUploadByLocalToken(requestPoolItem.fileLocalToken);
 		this.fireEvent("blobFailToUpload", blob, textStatus, error);
 		avalon.log("****FileUploader.runtime: Blob upload error. File token: ", blob.fileObj.fileLocalToken, " .Chunk index: ", blob.index, " . Message: ", textStatus)
 	}

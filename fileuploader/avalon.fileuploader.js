@@ -179,10 +179,10 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     vm.$runtime.attachEvent("onFileProgress", function (fileObj, uploadedSize, fileSize) {
                         var previewVm = this.getPreviewVmByfileLocalToken(this, fileObj.fileLocalToken);
                         if (previewVm == null) {
-                            debugger    // 如果走到这里，应该是个编程错误
+                            debugger    // 如果走到这里，应该是文件被删除了。
                             return;
                         }
-                        previewVm.uploadProgress = Math.min(100, uploadedSize / fileSize);
+                        previewVm.uploadProgress = Math.min(100, uploadedSize / fileSize * 100);
                     }, vm);
                     vm.$runtime.attachEvent("onFileOverSize", function (fileObj) {
                         vm.onFileOverSize.call(vm, fileObj);
@@ -233,12 +233,11 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     }
                 };
 
-                vm.$skipArray = ["serverConfig", "previewFileTypes", "md5Size", "acceptFileTypes", "previewWidth", "previewHeight", "enablePreviewGenerating", "chunked", "chunkSize", "noPreviewPath"];
+                vm.$skipArray = ["serverConfig", "previewFileTypes", "acceptFileTypes", "previewWidth", "previewHeight", "enablePreviewGenerating", "chunked", "chunkSize", "noPreviewPath"];
             });
             return vmodel;
         };
         widget.defaults = {
-            md5Size: 1024*64,
             maxFileSize: 1024*1024*10,
             filePoolSize: 1024*1024*200,
             chunkSize: 1024 * 1024,
@@ -258,7 +257,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
 
             multipleFileAllowed: true,
             enableRemoteKeyGen: false,
-            enableMd5Validation: true,
+            enableMd5Validation: false,
             serverConfig: {
                 timeout: 30000,
                 concurrentRequest: 3,
@@ -557,7 +556,6 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
 
                 var extNameNoDot = extName.replace(".", "");
                 var r = {
-                    md5Size: opts.md5Size,
                     isImageFile: (opts.$mime.hasOwnProperty(extNameNoDot) && opts.$mime[extNameNoDot].indexOf("image/") == 0),
                     enablePreview: opts.enablePreviewGenerating,
                     previewWidth: opts.previewWidth,

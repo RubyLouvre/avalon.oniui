@@ -51,6 +51,8 @@
 
 .oni-uploader-wrapper div.preview-image-wrapper {
 	display:inline-block;
+	_display: inline;
+	_zoom: 1;
 	margin: 5px;
 	overflow:hidden;
 	position: relative;

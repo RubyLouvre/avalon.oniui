@@ -6,7 +6,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
     "./spark-md5",
     "mmRequest/mmRequest",
     "css!./avalon.fileuploader.css"], 
-    function (avalon, template, eventMixin, blobConstructor, runtimeConstructor, blobqueueConstructor, md5) {
+    function (avalon, template, eventMixin, blobConstructor, runtimeConstructor, blobqueueConstructor, md5gen) {
         var widgetName = 'fileuploader';
         var widget = avalon.ui[widgetName] = function(element, data, vmodels) {
         	var options = data[widgetName+'Options'],
@@ -28,12 +28,14 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                 eventMixin(blobqueueConstructor);
                 eventMixin(runtimeConstructor);
 
+                vm.$md5gen = md5gen;
+
                 vm.$runtime = null;
 
                 vm.onPreviewRemoveClicked = function (el) {
-                    var md5 = el.md5;
+                    var fileLocalToken = el.fileLocalToken;
                     vm.previews.remove(el);
-                    vm.$runtime.removeFileByMd5(el.md5);
+                    vm.$runtime.removeFileByToken(el.fileLocalToken);
                 }
                 vm.addFileClicked = function (e) {
                     if (vm.useHtml5Runtime) {
@@ -55,6 +57,16 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     var target = event.target || event.srcElement;
                     var files = target.files || target.value;
                     vm.addFiles(files);
+
+                    // 这里先把input file移除出dom tree，重新建立一个新的input file，再加回dom tree。
+                    // 主要是为了清除input file的已选文件。暂时没有更好的办法。
+                    var html = target.outerHTML,
+                        pNode = target.parentNode,
+                        fileInputWrapper = document.createElement("div");
+                    pNode.removeChild(target);
+                    fileInputWrapper.innerHTML = html;
+                    avalon(fileInputWrapper.children[0]).bind("change", vm.onFileFieldChanged);
+                    pNode.appendChild(fileInputWrapper.children[0]);
                 };
                 // Flash和H5都会调用此方法来生成文件扩展名过滤
                 vm.getInputAcceptTypes = function (_isFalsh) {
@@ -106,12 +118,16 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     }
                 }
             	vm.$init = function() {
-                    vm.$runtime = new runtimeConstructor(vm, blobConstructor, blobqueueConstructor, md5);
+                    vm.$runtime = new runtimeConstructor(vm, blobConstructor, blobqueueConstructor, md5gen);
 
                     vm.$runtime.attachEvent("beforeFileCache", function (plainFileObject) {
                         var isDuplicatedFile = false;
+
                         for (var i = 0; i < vm.previews.length; i++) {
-                            if (vm.previews[i].md5 == plainFileObject.md5) {
+                            var runtimeFile = vm.$runtime.getFileByLocalToken(vm.previews[i].fileLocalToken);
+                            if (!runtimeFile) continue;
+
+                            if (vm.compareFileObjects(runtimeFile, plainFileObject)) {
                                 isDuplicatedFile = true;
                                 break;
                             }
@@ -123,7 +139,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                         } else {
                             vm.previews.push({
                                 name: plainFileObject.name,
-                                md5: plainFileObject.md5,
+                                fileLocalToken: plainFileObject.fileLocalToken,
                                 preview: plainFileObject.preview,
                                 uploadProgress: 0,
                                 uploadStatus: 0,
@@ -133,7 +149,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                         }
                     }, vm);
                     vm.$runtime.attachEvent("fileStatusChanged", function (fileObj, beforeStatus, afterStatus) {
-                        var previewVm = this.getPreviewVmByMd5(this, fileObj.md5);
+                        var previewVm = this.getPreviewVmByfileLocalToken(this, fileObj.fileLocalToken);
                         if (previewVm == null) {
                             debugger    // 如果走到这里，应该是个编程错误
                             return;
@@ -161,12 +177,12 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                         }
                     }, vm);
                     vm.$runtime.attachEvent("onFileProgress", function (fileObj, uploadedSize, fileSize) {
-                        var previewVm = this.getPreviewVmByMd5(this, fileObj.md5);
+                        var previewVm = this.getPreviewVmByfileLocalToken(this, fileObj.fileLocalToken);
                         if (previewVm == null) {
-                            debugger    // 如果走到这里，应该是个编程错误
+                            debugger    // 如果走到这里，应该是文件被删除了。
                             return;
                         }
-                        previewVm.uploadProgress = Math.min(100, uploadedSize / fileSize);
+                        previewVm.uploadProgress = Math.min(100, uploadedSize / fileSize * 100);
                     }, vm);
                     vm.$runtime.attachEvent("onFileOverSize", function (fileObj) {
                         vm.onFileOverSize.call(vm, fileObj);
@@ -217,13 +233,17 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     }
                 };
 
-                vm.$skipArray = ["serverConfig", "previewFileTypes", "md5Size", "acceptFileTypes", "previewWidth", "previewHeight", "enablePreviewGenerating", "chunked", "chunkSize", "noPreviewPath"];
+                vm.$skipArray = [
+                    "maxFileSize", "filePoolSize", "chunked", "chunkSize", 
+                    "acceptFileTypes", "previewWidth", "previewHeight", "enablePreviewGenerating",
+                    "enableRemoteKeyGen", "enableMd5Validation", "serverConfig", "noPreviewPath",
+                    "previewFileTypes", "requiredParamsConfig"
+                    ];
             });
             return vmodel;
         };
         widget.defaults = {
-            md5Size: 1024*64,
-            maxFileSize: 1024*1024*5,
+            maxFileSize: 1024*1024*10,
             filePoolSize: 1024*1024*200,
             chunkSize: 1024 * 1024,
             chunked: false,
@@ -241,9 +261,15 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
             showProgress: true,
 
             multipleFileAllowed: true,
+            enableRemoteKeyGen: false,
+            enableMd5Validation: false,
             serverConfig: {
                 timeout: 30000,
-                concurrentRequest: 3
+                concurrentRequest: 3,
+                userName: undefined,
+                password: undefined,
+                url: undefined,
+                keyGenUrl: undefined
             },
             noPreviewPath: "no-preview.png",
             previewFileTypes: { },
@@ -438,48 +464,103 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                 "zip": "application/zip"
             },
 
+            requiredParamsConfig: {
+                blobParamName: "blob",
+                fileTokenParamName: "fileKey",
+                totalChunkParamName: "total",
+                chunkIndexParamName: "chunk",
+                fileNameParamName: "fileName",
+                blobMd5ParamName: "md5"
+            },
+
             onFileOverSize: avalon.noop,
             onSameFileAdded: avalon.noop,
             onFilePoolOverSize: avalon.noop,
+            madeRequestParams: avalon.noop,
 
             uploadAll: function (opts) {
                 opts.previews.forEach(function(p) {
-                    opts.uploadFile(opts, p.md5);
+                    opts.uploadFile(opts, p.fileLocalToken);
                 });
             },
             uploadFile: function (opts, index) {
-                var fileMd5 = undefined,
+                var fileLocalToken = undefined,
                     inVarType = typeof index;
                 if (inVarType == 'number') {
-                    fileMd5 = opts.preview[i].md5;
+                    fileLocalToken = opts.preview[i].fileLocalToken;
                 } else if (inVarType == 'string') {
-                    fileMd5 = index;
+                    fileLocalToken = index;
                 } else {
                     // 不接受Index或者Md5以外的参数类型
                     return;
                 }
 
-                opts.$runtime.queueFileByMd5(fileMd5);
+                opts.$runtime.queueFileByToken(fileLocalToken);
             },
-            getPreviewVmByMd5: function (opts, md5) {
+            getPreviewVmByfileLocalToken: function (opts, fileLocalToken) {
                 var previewVm = null;
                 for (var i = 0; i < opts.previews.length; i++) {
-                    if (opts.previews[i].md5 == md5) {
+                    if (opts.previews[i].fileLocalToken == fileLocalToken) {
                         previewVm = opts.previews[i];
                         break;
                     }
                 }
                 return previewVm;
             },
+
+            getFileKey: function (opts, fileObj, callback, scope) {
+                var promise = new Promise(function (resolve, reject) {
+                    if (opts.enableRemoteKeyGen) {
+                        opts.remoteFileKeyGen(opts, fileObj, resolve, reject);
+                    } else {
+                        opts.localFileKeyGen(opts, fileObj, resolve, reject);
+                    }
+                });
+
+                promise.then(function(key) {
+                    callback.call(scope, key, true);
+                }, function (reason) {
+                    callback.call(scope, undefined, false);
+                });
+            },
+
+            localFileKeyGen: function (opts, fileObj, resolve, reject) {
+                resolve(opts.$md5gen(fileObj.name + "#" + fileObj.size + "#" + fileObj.fileLocalToken));
+            },
+
+            getMd5: function (opts, bytes) {
+                return opts.$md5gen(bytes);
+            },
+
+            remoteFileKeyGen: function (opts, fileObj, resolve, reject) {
+                avalon.ajax({
+                    type: "get",
+                    url: opts.serverConfig.keyGenUrl,
+                    timeout: opts.serverConfig.timeout || 30000,
+                    password: opts.serverConfig.password,
+                    username: opts.serverConfig.userName,
+                    cache: false,
+                    success: function (response) {
+                        resolve(response);
+                    },
+                    error: function (textStatus, error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            compareFileObjects: function(f1, f2) {
+                return f1.size == f2.size && f1.name == f2.name && true;
+            },
+
             getFileConfigByExtName: function (opts, extName) {
                 // flash会调用此方法获取文件类型的配置，但是opts只能传输vmId，所以opts在Flash调用时是vmId，需要转成vm本身
                 if (typeof opts == 'string')
                     opts = avalon.vmodels[opts];
 
 
-                var extNameNoDot = extName.replace(".", "");
+                var extNameNoDot = extName.replace(".", "").toLowerCase();
                 var r = {
-                    md5Size: opts.md5Size,
                     isImageFile: (opts.$mime.hasOwnProperty(extNameNoDot) && opts.$mime[extNameNoDot].indexOf("image/") == 0),
                     enablePreview: opts.enablePreviewGenerating,
                     previewWidth: opts.previewWidth,

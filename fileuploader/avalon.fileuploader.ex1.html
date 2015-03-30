@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="avalon.fileuploader.ex.css"/>
 </head>
 <body ms-controller="demo">
+	<h1>uploader基础配置项</h1>
     <div ms-widget="fileuploader,demoUploader,$uploaderOptions"></div>
 
 	<script>
@@ -17,12 +18,16 @@
 				vm.$uploaderOptions = {
 		            addButtonText: "添加文件",
 		            uploadButtonText: "开始上传",
-            		acceptFileTypes: "image.*,*.txt,*.js",
+					acceptFileTypes: "image.*,*.txt,*.js",
 		            serverConfig: {
 		                url: "../../Handler1.ashx",
 		                userName: undefined,
-		                password: undefined
-		            }
+		                password: undefined,
+		                keyGenUrl: "../../getFileKey.ashx"
+		            },
+		            enableRemoteKeyGen: false,
+		            chunked: true,
+		            chunkSize: 1024*1024
 				};
 			});
 			$$.scan();

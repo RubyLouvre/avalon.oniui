@@ -559,7 +559,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     opts = avalon.vmodels[opts];
 
 
-                var extNameNoDot = extName.replace(".", "");
+                var extNameNoDot = extName.replace(".", "").toLowerCase();
                 var r = {
                     isImageFile: (opts.$mime.hasOwnProperty(extNameNoDot) && opts.$mime[extNameNoDot].indexOf("image/") == 0),
                     enablePreview: opts.enablePreviewGenerating,

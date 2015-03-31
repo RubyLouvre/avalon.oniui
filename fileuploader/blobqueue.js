@@ -21,12 +21,11 @@ define(["avalon"], function (avalon) {
 		}
 	}
 
+	/*
+	 * 1. 从队列中移除所有同文件的blob
+	 * 2. 从RequestPool里取得同文件的其他blob，并取消发送
+	 */
 	blobQueue.prototype.stopUploadByLocalToken = function (fileLocalToken) {
-		/*****************************************************
-		 * 1. 从队列中移除所有同文件的blob
-		 * 2. 从RequestPool里取得同文件的其他blob，并取消发送
-		 *****************************************************/
-
 		var i = 0,
 			queueBlob, requestPoolItem;
 		// 清除Queue中的blob
@@ -39,6 +38,7 @@ define(["avalon"], function (avalon) {
 			}
 		}
 
+		// 从RequestPool中移除相关的上传请求，并取消这些请求
 		i = 0;
 		while (i < this.requestPool.length) {
 			requestPoolItem = this.requestPool[i];
@@ -64,7 +64,7 @@ define(["avalon"], function (avalon) {
 		})
 		// this.fireEvent('onFileQueued', fileObj);
 	}
-
+/*
 	blobQueue.prototype.wakeupSendTask = function () {
 
 	}
@@ -72,7 +72,7 @@ define(["avalon"], function (avalon) {
 	blobQueue.prototype.sleepSendTask = function () {
 		// if (this.sendTaskId != undefined) clearInterval(this.sendTaskId);
 	}
-
+*/
 	blobQueue.prototype.taskFn = function () {
 		var me = this;
 		if (this.isRequestPoolFull() || this.queue.length == 0) {
@@ -80,8 +80,8 @@ define(["avalon"], function (avalon) {
 		}
 
 		this.$runtime.readBlob(this.pop(), function (blob) {
+			// 构建mmRequest的配置
 			var formData = this.buildRequestParams(blob);
-			//request.send(request.formData);
 			var requestPoolItem = {
 				fileLocalToken: blob.fileObj.fileLocalToken,
 				request: null
@@ -108,6 +108,8 @@ define(["avalon"], function (avalon) {
 			} else {
 				requestConfig.form = formData;
 			}
+
+			// 发送请求
 			try {
 				var request = avalon.ajax(requestConfig);
 				requestPoolItem.request = request;
@@ -133,8 +135,8 @@ define(["avalon"], function (avalon) {
 		avalon.Array.remove(this.requestPool, requestPoolItem);
 		fileObj.blobsProgress[blob.index] = blob.size;
 
+		// 单个文件已完成的blob数量+1。若完成blob数量等于文件分块总数量，则表示文件已上传结束，移除blob完成数量监视
 		this.filesBlobMonitor[fileObj.fileLocalToken]++;
-
 		var fileUploadDone = this.filesBlobMonitor[fileObj.fileLocalToken] == fileObj.chunkAmount;
 		if (fileUploadDone) {
 			delete this.filesBlobMonitor[fileObj.fileLocalToken];
@@ -149,6 +151,9 @@ define(["avalon"], function (avalon) {
 		avalon.log("****FileUploader.runtime: Blob upload error. File token: ", blob.fileObj.fileLocalToken, " .Chunk index: ", blob.index, " . Message: ", textStatus)
 	}
 
+	/*
+	 * 拼接Blob的Ajax请求的数据参数。
+	 */
 	blobQueue.prototype.buildRequestParams = function (blob) {
 		var paramConfig = this.$runtime.getRequestParamConfig(blob),
 			blobParamName = paramConfig.requiredParamsConfig.blobParamName,

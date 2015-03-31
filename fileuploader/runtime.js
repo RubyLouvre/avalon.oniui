@@ -1,6 +1,8 @@
 
 define(["avalon"], 
 function ($$) {
+	var mixFunction = $$.mix;
+	var logFunction = $$.log;
 	/*
 	 * 文件状态代码。0-100为正常状态，101以后为错误状态
 	 */
@@ -26,8 +28,8 @@ function ($$) {
 			blob.purgeData();	// 释放数据区以减轻内存压力
 			this.fireEvent("onFileProgress", blob.fileObj, this.sumUploadedSize(blob.fileObj), blob.fileObj.size);
 			if (allBlobDone) {
+				this.purgeFileObjData(blob.fileObj);
 				this.setFileObjectStatus(blob.fileObj, FILE_UPLOADED);
-				//blob.fileObj.destroy
 			}
 		}, this);
 		this.blobqueue.attachEvent("blobProgressUpdated", function (blob) {
@@ -48,26 +50,38 @@ function ($$) {
 		return this.files[fileLocalToken];
 	}
 
+	/*
+	 * 从runtime中移除一个文件。文件的引用和数据都会被销毁，正在进行的发送请求也会取消。
+	 */
 	runtimeContructor.prototype.removeFileByToken = function (fileLocalToken) {
 		var fileObj = this.files[fileLocalToken];
 		if (!fileObj) return;
 		
-		fileObj.data = null;
-		if (fileObj.__flashfile) {
-			this.flash.removeCacheFileByToken(fileLocalToken);
-		}
-		this.files.length--;
+		this.purgeFileObjData(fileObj);
 		delete this.files[fileLocalToken];
 
 		this.blobqueue.stopUploadByLocalToken(fileLocalToken);
 	}
 
+	/*
+	 * 销毁fileObj的data区的文件数据。HTML5环境下，data区是一个File的引用；Flash环境下data区没有数据，但是文件数据被存在flash内，需要清除。
+	 */
+	runtimeContructor.prototype.purgeFileObjData = function (fileObj) {
+		fileObj.data = null;
+		if (fileObj.__flashfile) {
+			this.flash.removeCacheFileByToken(fileLocalToken);
+		}
+	}
+
 
 	// 调试Flash的函数。Flash调用此函数在浏览器打印Log
 	runtimeContructor.prototype.printFlashLog = function (args) {
-	//	$$.log.apply($$.log, args);
+	//	logFunction.apply(logFunction, args);
 	}
 
+	/*
+	 * 计算一个FileObj已上传的字节数
+	 */
 	runtimeContructor.prototype.sumUploadedSize = function (fileObj) {
 		var s = 0;
 		for (var i = 0; i < fileObj.blobsProgress.length; i++) {
@@ -76,7 +90,10 @@ function ($$) {
 		return s;
 	}
 
-	// H5和Flash都会调用此方法，参数是一个{ name: xxx, size: 000 }的对象。第一检查文件尺寸，第二根据文件的扩展名获取预览的参数，第三为文件申请一个localToken。
+	/*
+	 * H5和Flash都会调用此方法，参数是一个{ name: xxx, size: 000 }的对象。
+	 * 第一检查文件尺寸并申请一个唯一的fileLocalToken，第二根据文件的扩展名获取预览的参数。
+	 */
 	runtimeContructor.prototype.getFileContext = function (basicFileInfo) {
 		var sizeOk = this.testFileSize(basicFileInfo);
 		var context = {
@@ -200,7 +217,9 @@ function ($$) {
 		return "__avalonfile"+this.fileLocalTokenSeed;
 	}
 
-	// H5和Flash都会调用此方法。
+	/*
+	 * H5和Flash都会调用此方法。增加一个新的FileObj到runtime中。此时的FileObj的预览、LocalToken等关键数据已经全部生成。
+	 */
 	runtimeContructor.prototype.addFile = function (fileObj) {
 		var me = this;
 
@@ -216,6 +235,9 @@ function ($$) {
 		}
 	};
 
+	/*
+	 * 检查一个FileObj的文件大小是否符合规定。第一需要满足单个文件尺寸限制，第二需要满足文件池大小的限制。
+	 */
 	runtimeContructor.prototype.testFileSize = function (fileObj) {
 		var fileSizeLimitation = this.vm.maxFileSize,
 			poolSizeLimitation = this.vm.filePoolSize,
@@ -331,7 +353,7 @@ function ($$) {
 	}
 
 	runtimeContructor.prototype.getRequestParamConfig = function (blob) {
-		var requiredParamsConfig = $$.mix({
+		var requiredParamsConfig = mixFunction({
 			blobParamName: "blob",
 			fileTokenParamName: "fileKey",
 			totalChunkParamName: "total",
@@ -370,6 +392,9 @@ function ($$) {
 		delete this.blobConstructor;
 	}
 
+	/*
+	 * 计算runtime管理的所有文件的大小总和。
+	 */
 	runtimeContructor.prototype.getFilesSizeSum = function () {
 		var sum = 0;
 		for (var i in this.files) {

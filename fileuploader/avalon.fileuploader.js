@@ -137,14 +137,41 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                             avalon.log("****FileUploader: 不能添加一样的文件。");
                             return false;   // False会阻止runtime缓存文件。
                         } else {
+                            var previewData = plainFileObject.preview,
+                                userAgent = window.navigator.userAgent.toLowerCase(),
+                                isIE678 = userAgent.indexOf("msie 6") > 0 || userAgent.indexOf("msie 7") > 0 || userAgent.indexOf("msie 8") > 0,
+                                isBase64Preview = (previewData.indexOf("data:image") == 0),
+                                previewObj = null;
+
+                            // IE6,7,8下将base64的图片先换成noPreview图，然后再将base64发送给图片服务器获得新图片地址。
+                            if (isBase64Preview && isIE678) {
+                                plainFileObject.preview = vm.noPreviewPath;
+                                if (!!vm.serverConfig.previewUrl) {
+                                    avalon.ajax({
+                                        type: "post",
+                                        url: vm.serverConfig.previewUrl,
+                                        timeout: vm.serverConfig.timeout || 30000,
+                                        data: { img: previewData },
+                                        password: vm.serverConfig.password,
+                                        username: vm.serverConfig.userName,
+                                        cache: false,
+                                        success: function (response) {
+                                            previewObj.preview = response;
+                                        }
+                                    });
+                                }
+                            }
+
                             vm.previews.push({
                                 name: plainFileObject.name,
                                 fileLocalToken: plainFileObject.fileLocalToken,
                                 preview: plainFileObject.preview,
                                 uploadProgress: 0,
                                 uploadStatus: 0,
-                                message: ""
+                                message: "" // 显示在进度条上的文本
                             });
+
+                            previewObj = vm.previews[vm.previews.length - 1];
                             return true;   // True让runtime继续缓存文件。
                         }
                     }, vm);
@@ -269,6 +296,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                 userName: undefined,
                 password: undefined,
                 url: undefined,
+                previewUrl: undefined,
                 keyGenUrl: undefined
             },
             noPreviewPath: "no-preview.png",

@@ -308,8 +308,13 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             return mat.toUpperCase()
         })
     }
-
+    var commonInit = true
     var widget = avalon.ui.tree = function(element, data, vmodels) {
+        if(commonInit) {
+            avalon.bind(document.body, "selectstart", disabelSelect)
+            avalon.bind(document.body, "drag", disabelSelect)
+            commonInit = false
+        }
         var options = data.treeOptions, cache = {}// 缓存节点
         //方便用户对原始模板进行修改,提高定制性
         options.template = options.getTemplate(template, options)
@@ -1062,8 +1067,6 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "te
             }
         }
     }
-    avalon.bind(document.body, "selectstart", disabelSelect)
-    avalon.bind(document.body, "drag", disabelSelect)
     widget.defaults = {
         toggle: true,
         view: {//@config {Object} 视觉效果相关的配置

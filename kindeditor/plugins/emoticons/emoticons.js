@@ -9,7 +9,9 @@
 
 KindEditor.plugin('emoticons', function(K) {
 	var self = this, name = 'emoticons',
-		path = (self.emoticonsPath || self.pluginsPath + 'emoticons/images/'),
+		//path = (self.emoticonsPath || self.pluginsPath + 'emoticons/images/'),
+    //transmit emoticons/images to http://source.qunarzz.com/general/oniui/kindeditor/plugins/emoticons/
+		path = (self.emoticonsPath || "http://source.qunarzz.com/general/oniui/kindeditor/plugins/emoticons/"),
 		allowPreview = self.allowPreviewEmoticons === undefined ? true : self.allowPreviewEmoticons,
 		currentPageNum = 1;
 	self.clickToolbar(name, function() {

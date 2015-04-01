@@ -40,28 +40,31 @@
     	{{uploadButtonText}}
     </button>
 
-    <div style="position:absolute;width:50%;height:44px;display:inline-block;left:0px;" ms-if="useFlashRuntime">
+    <div	class="flash-wrapper"
+    		ms-if = "useFlashRuntime">
 		<object
 			classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
-			width="168"
+			width="100%"
 			align="middle"
-			height="44"
+			height="100%"
 			codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0"
 			id="##VM_ID##_flash"
-			style="float:right;"
 			>
 			<param name="allowScriptAccess" value="sameDomain" />
+			<param name="scaleMode" value="exactFit">
 			<param name="bgcolor" value="" />
+			<param name="wmode" value="transparent">
 			<param name="allowFullScreen" value="false" />
 			<param name="movie" value="avalon.fileuploader.swf?vmid=##VM_ID##" />
 			<param name="quality" value="high" />
 			<embed src="avalon.fileuploader.swf?vmid=##VM_ID##"
 				type="application/x-shockwave-flash"
 				align="middle"
-				width="168"
-				height="44"
-				quality="high"
+				width="100%"
+				scaleMode="exactFit"
 				wmode="transparent"
+				height="100%"
+				quality="high"
 				pluginspage="http://www.adobe.com/go/getflashplayer_cn"
 				allowScriptAccess="sameDomain"
 				allowFullScreen="false" 

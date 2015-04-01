@@ -51,6 +51,8 @@
 
 .oni-uploader-wrapper div.preview-image-wrapper {
 	display:inline-block;
+	_display: inline;
+	_zoom: 1;
 	margin: 5px;
 	overflow:hidden;
 	position: relative;
@@ -121,4 +123,12 @@
 	display: inline-block;
 	overflow: hidden;
 	margin: 5px;
+}
+.oni-uploader-wrapper .flash-wrapper {
+	position:absolute;
+	width:168px;
+	height:44px;
+	right:50%;
+	display:inline-block;
+	margin:0 5px 0 0;
 }

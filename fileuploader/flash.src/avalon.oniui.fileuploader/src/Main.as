@@ -32,15 +32,13 @@ package
         private var _fileRef:FileReferenceList;
 		
 		private var _fileDics:Dictionary;
-		private var _fileCacheDics:Dictionary;
+		private var _fileStatusDics:Dictionary;
+		private var FILE_READ_END:Number = 2;
+		private var FILE_IN_READING:Number = 1;
+		private var FILE_NOT_READ:Number = 0;
 		
 		// 来自JS的外部参数
 		private var _vmId:String;	// VM的ID
-		private var _buttonStyle:Object;
-		private var _generatePreview:Boolean = false;
-		private var _displayPreview:Boolean = false;
-		private var _previewGeneratedJSCallbackName:String;
-		private var _fileAddedCallbackName:String;
 		private var _registed:Boolean = false;
 		
 		
@@ -51,44 +49,41 @@ package
             if (stage) init();
             else addEventListener(Event.ADDED_TO_STAGE, init);
 			_fileDics = new Dictionary();
-			_fileCacheDics = new Dictionary();
+			_fileStatusDics = new Dictionary();
 			ExternalInterface.addCallback("readBlob", readBlob);
 			
-			ExternalInterface.addCallback("cacheFileByMd5", cacheFileByMd5);
-			ExternalInterface.addCallback("removeCacheFileByMd5", removeCacheFileByMd5);
+			ExternalInterface.addCallback("removeCacheFileByToken", removeCacheFileByToken);
 		}
 		
-		public function removeCacheFileByMd5(fileMd5:String):void {
-			delete _fileCacheDics[fileMd5];
-		}
-		public function cacheFileByMd5(fileMd5:String):void {
-			var file:FileReference = _fileCacheDics[fileMd5];
-			if (file != null) {
-				_fileDics[fileMd5] = file;
-				delete _fileCacheDics[fileMd5];
+		public function removeCacheFileByToken(fileToken:String):void {
+			var file:FileReference = _fileDics[fileToken];
+			
+			if (file!=null) {
+				delete _fileDics[fileToken];
+				delete _fileStatusDics[file];
 			}
 		}
 		
-		private function readBlob(fileMd5:String, offset:Number, size:Number):String {
-			var result:String = "";
-			try {
-				var file:FileReference = _fileDics[fileMd5];
-				if (file == null) return "";
-				
-				jsLog(["****Flash.readBlob. Start to read file chunk. Md5: ", fileMd5, ". offset: ", offset, ". size: ", size]);
-				var dataBytes:ByteArray = new ByteArray();
-				file.data.position = offset;
-				file.data.readBytes(dataBytes, 0, size);
-				
-				var b:Base64Encoder = new Base64Encoder();
-				b.encodeBytes(dataBytes);
-				jsLog(["****Flash.readBlob End."]);
-				result = b.toString().replace(/[\r\n]/g, "");
-			} catch (e:Error) {
-				jsLog(["****Flash.readBlob Error. Message: ", e.message]);
-			} finally {
-				return result;
-			}
+		private function readBlob(fileToken:String, offset:Number, size:Number, blobKey:String):void {
+			var file:FileReference = _fileDics[fileToken];
+			this.readFile(file, function ():void { 
+				var result:String = "";
+				try {
+					jsLog(["****Flash.readBlob. Start to read file chunk. Token: ", fileToken, ". offset: ", offset, ". size: ", size]);
+					var dataBytes:ByteArray = new ByteArray();
+					file.data.position = offset;
+					file.data.readBytes(dataBytes, 0, size);
+					
+					var b:Base64Encoder = new Base64Encoder();
+					b.encodeBytes(dataBytes);
+					jsLog(["****Flash.readBlob End."]);
+					result = b.toString().replace(/[\r\n]/g, "");
+				} catch (e:Error) {
+					jsLog(["****Flash.readBlob Error. Message: ", e.message]);
+				} finally {
+					ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.readBlobEnd", blobKey, result);
+				}
+			}, this, []);
 		}
 		private function jsLog(args):void {
 			var logs:Array = null;
@@ -100,7 +95,10 @@ package
 			ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.printFlashLog", logs);
 		}
 		private function init(e:Event = null):void {
-            removeEventListener(Event.ADDED_TO_STAGE, init);
+			stage.scaleMode = "exactFit";
+			this.graphics.beginFill(0xFFCC00, 0);
+			this.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
+			removeEventListener(Event.ADDED_TO_STAGE, init);
             // entry point
 			stage.addEventListener(MouseEvent.CLICK, clickHandler);
 			
@@ -133,11 +131,6 @@ package
             
             _fileRef.browse(getFilterTypes());
         }
-        
-		// 生成文件的Key。以后可以用MD5
-		private function getFileKey(file:FileReference):String {
-			return file.name+file.type+file.size;
-		}
 		
 		// 文件选择结束后的处理事件
         private function selectHandler(evt:Event):void {
@@ -147,65 +140,69 @@ package
 			
 			for(var i:int=0;i<count;i++) {
                 file = files[i] as FileReference;
+				var fileContext:Object = ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.getFileContext", { name: file.name, size: file.size } );
+				if (!fileContext.canBeAdded) continue;
+				
+				_fileDics[fileContext.fileLocalToken] = file;
+				_fileStatusDics[file] = FILE_NOT_READ;
+				
 				var fileObj:Object = {
 					name: file.name,
 					data: null,
-					md5:  undefined,
+					fileLocalToken:  fileContext.fileLocalToken,
+					fileKey: undefined,	// 分块上传时的关键词，server使用此属性来辨识分块的文件归属
 					size: file.size,
 					status: null,
-					preview: null,
+					preview: fileContext.defaultPreview,
 					__flashfile: true,
 					__html5file: false,
 					chunkAmount: 0,
+					modifyTime: file.modificationDate.getTime(),
 					blobsProgress: []
 				};
-				var testFileSizeResult:Object = ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.testFileSize", fileObj);
-				if (!testFileSizeResult) continue;
+				fileObj.modifyTime = fileObj.modifyTime - fileObj.modifyTime % 1000; // 去除毫秒数，因为h5读不到毫秒。
 				
-				var extName:String = file.name.substr(file.name.lastIndexOf("."));	// 文件扩展名
-				
-				// 获取文件类型的配置参数，包含:
-				// 计算MD5时需要的文件包尺寸: md5Size
-				// 是否判断为图片文件: isImageFile
-				// 是否需要Preview: enablePreview
-				// 预览图宽高: previewWidth | previewHeight
-				// 默认预览图地址: noPreviewPath
-				// 文件尺寸限制：fileSizeLimitation
-				var runtimeConfig:Object = ExternalInterface.call("avalon.vmodels." + _vmId + ".getFileConfigByExtName", _vmId, extName);
-				fileObj.preview =  runtimeConfig.noPreviewPath;
-				
-				
-				// 加载文件，并将文件考前的数个字节编码，发送给JS。
-				var callback:Function = function():void {
-					file.removeEventListener(Event.COMPLETE, callback);
-					
-					var c:ByteArray = new ByteArray();
-					file.data.readBytes(c, 0, Math.min(runtimeConfig.md5Size as Number, file.size));
-					var b:Base64Encoder = new Base64Encoder();
-					b.encodeBytes(c);
-					fileObj.md5 = ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.md5Bytes", b.toString().replace(/[\r\n]/g, ""));
-					_fileCacheDics[fileObj.md5] = file;
-					
-					if (runtimeConfig.enablePreview && runtimeConfig.isImageFile) {
-						generatePreview(file, runtimeConfig, fileObj);
-					} else {
-						ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.addFile", fileObj);
-					}
-				};
-				file.addEventListener(Event.COMPLETE, callback, false, 0, true);
-				file.load();
+				if (fileContext.enablePreviewGen) {
+					generatePreview(file, fileContext.previewWidth, fileContext.previewHeight, fileObj, function(preview:String, fObj:Object):void {
+						if (preview != null) {
+							fObj.preview = preview;
+						}
+						ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.addFile", fObj);
+					});
+				} else {
+					ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.addFile", fileObj);
+				}
             }
         }
 		
-		// 生成JPEG格式的预览图。如果配置了Callback的话，发送Base64代码给JS
-		private function generatePreview(file:FileReference, runtimeConfig:Object, fileObj:Object):void {
-			if (file != null) {
+		private function readFile(file:FileReference, callback:Function, scope:Object, args:Array):void {
+			if (file == null) return;
+			var fileStatus:Number = _fileStatusDics[file];
+			
+			if (fileStatus == FILE_READ_END) {
+				callback.apply(scope, args);
+			} else {
+				var fn:Function = function ():void {
+					_fileStatusDics[file] = FILE_READ_END;
+					file.removeEventListener(Event.COMPLETE, fn);
+					callback.apply(scope, args);
+				};
+				file.addEventListener(Event.COMPLETE, fn);
+				if (fileStatus == FILE_NOT_READ) {
+					file.load();
+					_fileStatusDics[file] = FILE_IN_READING;
+				}
+			}
+		}
+		
+		
+		// 生成PNG格式的预览图。
+		private function generatePreview(file:FileReference, previewWidth:Number, previewHeight:Number, fileObj:Object, callback:Function):void {
+			var fileloaded:Function = function ():void {
 				var imgLoader:Loader = new Loader();
 				imgLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(event:Event):void {
 					var imageWidth:Number = event.currentTarget.loader.content.width;
 					var imageHeight:Number = event.currentTarget.loader.content.height;
-					var previewHeight:Number = runtimeConfig.previewHeight;
-					var previewWidth:Number = runtimeConfig.previewWidth;
 					var scale:Number = Math.min(previewHeight / imageHeight, previewWidth / imageWidth);
 					var tx:Number = (previewWidth - scale * imageWidth) / 2;
 					var ty:Number = (previewHeight - scale * imageHeight) / 2;
@@ -222,8 +219,7 @@ package
 					
 					c.encodeBytes(pngEncoder.encode(bitmapData));
 					var code:String =  "data:image/png;base64," + c.toString();
-					fileObj.preview = code;
-					ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.addFile", fileObj);
+					callback(code, fileObj);
 					
 					imgLoader.unload();
 					c = null;
@@ -232,7 +228,8 @@ package
 				});
 				imgLoader.loadBytes(file.data);
 			}
+			
+			this.readFile(file, fileloaded, this, []);
 		}
 	}
-	
 }

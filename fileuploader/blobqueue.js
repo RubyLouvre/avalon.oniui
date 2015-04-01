@@ -9,7 +9,7 @@ define(["avalon"], function (avalon) {
 			me.taskFn.call(me);
 		}, 100);
 
-		this.filesBlobMonitor = {};	// 存放Md5和uploadedBlob数量的键值对
+		this.filesBlobMonitor = {};	// 存放fileLocalToken和uploadedBlob数量的键值对
 	}
 
 	blobQueue.prototype.pop = function () {
@@ -21,6 +21,36 @@ define(["avalon"], function (avalon) {
 		}
 	}
 
+	blobQueue.prototype.stopUploadByLocalToken = function (fileLocalToken) {
+		/*****************************************************
+		 * 1. 从队列中移除所有同文件的blob
+		 * 2. 从RequestPool里取得同文件的其他blob，并取消发送
+		 *****************************************************/
+
+		var i = 0,
+			queueBlob, requestPoolItem;
+		// 清除Queue中的blob
+		while (i < this.queue.length) {
+			queueBlob = this.queue[i];
+			if (queueBlob.fileObj.fileLocalToken == fileLocalToken) {
+				avalon.Array.removeAt(this.queue, i);
+			} else {
+				i++;
+			}
+		}
+
+		i = 0;
+		while (i < this.requestPool.length) {
+			requestPoolItem = this.requestPool[i];
+			if (requestPoolItem.fileLocalToken == fileLocalToken) {
+				avalon.Array.remove(this.requestPool, requestPoolItem);
+				requestPoolItem.request.abort();
+			} else {
+				i++;
+			}
+		}
+	}
+
 	blobQueue.prototype.push = function (items) {
 		if (!Array.isArray(items)) items = [items];
 		var me = this;
@@ -28,8 +58,8 @@ define(["avalon"], function (avalon) {
 		me.length += items.length;
 
 		items.forEach(function (blob) {
-			if (!me.filesBlobMonitor.hasOwnProperty(blob.fileObj.md5)) {
-				me.filesBlobMonitor[blob.fileObj.md5] = 0;
+			if (!me.filesBlobMonitor.hasOwnProperty(blob.fileObj.fileLocalToken)) {
+				me.filesBlobMonitor[blob.fileObj.fileLocalToken] = 0;
 			}
 		})
 		// this.fireEvent('onFileQueued', fileObj);
@@ -53,7 +83,7 @@ define(["avalon"], function (avalon) {
 			var formData = this.buildRequestParams(blob);
 			//request.send(request.formData);
 			var requestPoolItem = {
-				md5: blob.fileObj.md5,
+				fileLocalToken: blob.fileObj.fileLocalToken,
 				request: null
 			};
 			var requestConfig = {
@@ -94,79 +124,63 @@ define(["avalon"], function (avalon) {
 			var fileObj = blob.fileObj;
 			fileObj.blobsProgress[blob.index] = e.loaded;
 			this.fireEvent("blobProgressUpdated", blob);
-        	// TODO:XUZICN
         }
 	}
 
 	blobQueue.prototype.onBlobSuccess = function (blob, response, requestPoolItem) {
 		var fileObj = blob.fileObj;
-		avalon.log("FileUploader.blobqueue: Blob tranfered. File MD5: ", fileObj.md5, ". Blob Index: ", blob.index);
+		avalon.log("FileUploader.blobqueue: Blob tranfered. File token: ", fileObj.fileLocalToken, ". Blob Index: ", blob.index);
 		avalon.Array.remove(this.requestPool, requestPoolItem);
 		fileObj.blobsProgress[blob.index] = blob.size;
 
-		this.filesBlobMonitor[fileObj.md5]++;
+		this.filesBlobMonitor[fileObj.fileLocalToken]++;
 
-		var fileUploadDone = this.filesBlobMonitor[fileObj.md5] == fileObj.chunkAmount;
+		var fileUploadDone = this.filesBlobMonitor[fileObj.fileLocalToken] == fileObj.chunkAmount;
 		if (fileUploadDone) {
-			delete this.filesBlobMonitor[fileObj.md5];
+			delete this.filesBlobMonitor[fileObj.fileLocalToken];
 		}
 		this.fireEvent("blobUploaded", blob, fileUploadDone);
-		avalon.log("****FileUploader.runtime: Blob upload done. File MD5: ", blob.fileObj.md5, " .Chunk index: ", blob.index,  " . All blob done: ", fileUploadDone)
+		avalon.log("****FileUploader.runtime: Blob upload done. File token: ", blob.fileObj.fileLocalToken, " .Chunk index: ", blob.index,  " . All blob done: ", fileUploadDone)
 	}
 
 	blobQueue.prototype.onBlobError = function (blob, textStatus, error, requestPoolItem) {
-		/*****************************************************
-		 * 1. 从队列中移除所有同文件的blob
-		 * 2. 从RequestPool里取得同文件的其他blob，并取消发送
-		 *****************************************************/
-		var md5 = requestPoolItem.md5,
-			i = 0,
-			queueBlob,
-			requestPoolItem;
-
-		// 清除Queue中的blob
-		while (i < this.queue.length) {
-			queueBlob = this.queue[i];
-			if (queueBlob.fileObj.md5 == md5) {
-				avalon.Array.removeAt(this.queue, i);
-			} else {
-				i++;
-			}
-		}
-
-		i = 0;
-		while (i < this.requestPool.length) {
-			requestPoolItem = this.requestPool[i];
-			if (requestPoolItem.md5 == md5) {
-				avalon.Array.remove(this.requestPool, requestPoolItem);
-				requestPoolItem.request.abort();
-			} else {
-				i++;
-			}
-		}
-
+		this.stopUploadByLocalToken(requestPoolItem.fileLocalToken);
 		this.fireEvent("blobFailToUpload", blob, textStatus, error);
-		avalon.log("****FileUploader.runtime: Blob upload error. File MD5: ", blob.fileObj.md5, " .Chunk index: ", blob.index, " . Message: ", textStatus)
+		avalon.log("****FileUploader.runtime: Blob upload error. File token: ", blob.fileObj.fileLocalToken, " .Chunk index: ", blob.index, " . Message: ", textStatus)
 	}
 
 	blobQueue.prototype.buildRequestParams = function (blob) {
-		if (window.FormData == undefined) {
-			return {
-				blob: blob.data,
-				fileKey: blob.fileObj.md5,
-				total: blob.fileObj.chunkAmount,
-				chunk: blob.index,
-				fileName: blob.fileObj.name
-			};
-		} else {
+		var paramConfig = this.$runtime.getRequestParamConfig(blob),
+			blobParamName = paramConfig.requiredParamsConfig.blobParamName,
+			fileTokenParamName = paramConfig.requiredParamsConfig.fileTokenParamName,
+			totalChunkParamName = paramConfig.requiredParamsConfig.totalChunkParamName,
+			chunkIndexParamName = paramConfig.requiredParamsConfig.chunkIndexParamName,
+			fileNameParamName = paramConfig.requiredParamsConfig.fileNameParamName,
+			customizedParams = paramConfig.customizedParams,
+			blobMd5ParamName = paramConfig.requiredParamsConfig.blobMd5ParamName;
+
+		var data = {};
+		data[blobParamName] = blob.data;
+		if(!!blob.fileObj.fileKey) data[fileTokenParamName] = blob.fileObj.fileKey;
+		data[totalChunkParamName] = blob.fileObj.chunkAmount;
+		data[chunkIndexParamName] = blob.index;
+		data[fileNameParamName] = blob.fileObj.name;
+		if(!!blob.md5) data[blobMd5ParamName] = blob.md5;
+
+
+		data = avalon.mix(data, customizedParams);
+
+		// 转FormData
+		if (window.FormData != undefined) {
 	        var formData = new FormData();
-	        formData.append('blob', blob.data);
-	        formData.append('fileKey', blob.fileObj.md5);
-	        formData.append('total', blob.fileObj.chunkAmount);
-	        formData.append('chunk', blob.index);
-	        formData.append('fileName', blob.fileObj.name);
-        	return formData;
+	        for (var i in data) {
+	        	if (data.hasOwnProperty(i)) {
+	        		formData.append(i, data[i]);
+	        	}
+	        }
+	        data = formData;
 	    }
+		return data;
 	}
 
 	blobQueue.prototype.isRequestPoolFull = function () {

@@ -7,7 +7,8 @@
                     <li>
                         <a href="#!/contacts">所有联系人</a>
                     </li>
-                    <li ms-repeat="contacts" ms-if-loop="$index < 2">
+                    <li ms-repeat="contacts" 
+                        ms-class="active:el.id==id" ms-if-loop="$index < 2">
                         <a  ms-href="#!/contacts/{{el.id}}" >{{el.name}}</a>
                     </li>
                 </ul>

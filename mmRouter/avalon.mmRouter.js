@@ -5,6 +5,7 @@
  * @enName mmRouter
  * @introduce
  *
+ <p><a href="avalon.mmRouter.old.doc.html">旧版文档</a><a href="https://github.com/gogoyqj/avalon.oniui/blob/master/mmRouter/README.md">迁移教程</a></p>
  <p>路由器插件，实现类似angular ui-router的功能</p>
 <h5>mmRouter的使用</h5>
 1、引入依赖(直接依赖于mmRouter, 总共依赖于avalon, mmRouter, mmHistory)
@@ -65,7 +66,6 @@ avalon.scan()
 ```
 mmRouter与mmHistory的API列表<br>
 * `avalon.history.start(opts)`， 开始监听URL变化，opts。 enter image description here<br>
-<div><img src="http://htmljs.b0.upaiyun.com/uploads/1411112779022-router2.jpg"/></div><br>
 * `avalon.history.stop()`， 中止监听URL变化。<br>
 * `avalon.router.get(path, callback)`，用于添加路由规则。第一个为路由规则，<br>
 如"/aaa", "/bbb/:bbbId","/eee/{eeeId}/ddd/{dddId:[0-9]{6}}" 冒号后的东西或花括号的东西表示为参数，<br>
@@ -95,6 +95,5 @@ mmRouter与mmHistory的API列表<br>
 * `avalon.router.setLastPath(path)` ， 这是框架自己调用，保存最近一次跳转的路径
 * `avalon.router.getLastPath()` 取得最近一次跳转的路径，比如用户F5强制页面，你在ready回调中执行此方法，
 得到path，然后将它放进navigate中就能回到原来的页面了。
-[http://rubylouvre.github.io/mvvm/avalon.router.html](http://rubylouvre.github.io/mvvm/avalon.router.html)
 <h3>路由器与多个VM的协作（每个VM定义在不同的JS文件中）</h3>
  */

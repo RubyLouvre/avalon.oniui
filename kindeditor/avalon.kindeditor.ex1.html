@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>默认模式</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="descriptions" content="kindeditor默认模式"/>
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <script src="../highlight/shCore.js"></script>
+    <script type="text/javascript" src="../avalon.js"></script>
+</head>
+<body ms-controller="demo">
+    <div class="wrapper">
+        <h1>默认模式</h1>
+        <textarea name="content" ms-widget="kindeditor" ms-duplex="txt"></textarea>
+        <p>内容为：{{txt|html}}</p>
+        <pre class="brush:html;gutter:false;" ms-skip>
+            &lt;!DOCTYPE html&gt;
+            &lt;html&gt;
+            &lt;head lang="en"&gt;
+                &lt;meta charset="UTF-8"&gt;
+                &lt;title&gt;默认模式&lt;/title&gt;
+                &lt;meta name="viewport" content="width=device-width"&gt;
+                &lt;meta name="descriptions" content="kindeditor默认模式"/&gt;
+                &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+                &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+                &lt;script type="text/javascript" src="../avalon.js"&gt;&lt;/script&gt;
+            &lt;/head&gt;
+            &lt;body ms-controller="demo"&gt;
+                &lt;div class="wrapper"&gt;
+                    &lt;h1&gt;默认模式&lt;/h1&gt;
+                    &lt;textarea name="content" ms-widget="kindeditor" ms-duplex="txt"&gt;&lt;/textarea&gt;
+                    &lt;p&gt;内容为：&#123;&#123;txt|html&#125;&#125;&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;script&gt;
+                require(["./kindeditor/avalon.kindeditor", "domReady!"], function() &#123;
+                    var demoVM = avalon.define(&#123;
+                        $id: "demo",
+                        txt: "kindeditor widget"
+                    &#125;);
+                    avalon.scan();
+                &#125;)
+            &lt;/script&gt;
+            &lt;/body&gt;
+            &lt;/html&gt;
+        </pre>
+    </div>
+<script>
+    require(["./kindeditor/avalon.kindeditor", "domReady!"], function() {
+        var demoVM = avalon.define({
+            $id: "demo",
+            txt: "kindeditor widget"
+        });
+        avalon.scan();
+    })
+</script>
+</body>
+</html>

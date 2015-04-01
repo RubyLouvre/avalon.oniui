@@ -549,7 +549,7 @@ define(["avalon","../mmPromise/mmPromise"], function(avalon) {
                                 var reason = {
                                     element: elem,
                                     data: data.data,
-                                    message: elem.getAttribute("data-duplex-message") || hook.message,
+                                    message:elem.getAttribute("data-duplex-"+name+"-message") || elem.getAttribute("data-duplex-message") || hook.message,
                                     validateRule: name,
                                     getMessage: getMessage
                                 }
@@ -692,14 +692,47 @@ define(["avalon","../mmPromise/mmPromise"], function(avalon) {
  
  </p>
  
- <p> 也可以在页面添加不依赖于ms-duplex的绑定</p>
+ <h2>错误提示信息的添加</h2>
+ <p>比如说&lt;input ms-duplex-alpha="aaa"/&lt;要求用户输出的都是字母，如果输入其他类型的内容，
+ 它就会报错<b style="color:red">必须是字母</p>。为什么呢，因为alpha为一个内置拦截器，
+ 定义在avalon.duplexHooks上，结构为</p>
  ```javascript
- validateVM.data.push({
- valueAccessor: function(){}
- validateParam: "xxx",
- element: element
- })
+        alpha: {
+            message: '必须是字母',
+            get: function(value, data, next) {
+                next(/^[a-z]+$/i.test(value))
+                return value
+            }
+        },
  ```
+如果想显示别的提示信息有三种办法，一就是重写这个栏截器的message属性；
+二就是添加data-duplex-message="新提示信息"（不过这个已经不提倡使用了，
+因为一个表单控制可能使用N个拦截器做验证，如ms-duplex-required-alpha-minlength，
+这会覆盖其他拦截器的默认提示信息）；三就是使用data-duplex-alpha-message="专门用于alpha提示信息" 
+  ```html
+    <input ms-duplex-required-alpha-minlength="aaa" data-duplex-alpha-message="只能全是英文字母"
+ ```    
+此外，提示信息里面可以使用插值表达式，虽然不能使用变量，也应该够用，比如说minlength拦截器
+ ```javascript
+        minlength: {
+            message: '最少输入{{min}}个字',
+            get: function(value, data, next) {
+                var elem = data.element
+                var a = parseInt(elem.getAttribute("minlength"), 10)
+                if (!isFinite(a)) {
+                    a = parseInt(elem.getAttribute("data-duplex-minlength"), 10)
+                }
+                var num = data.data.min = a
+                next(value.length >= num)
+                return value
+            }
+        },
+ ```          
+我们必须传入一个min参数,这要在元素上添加
+ ```html
+    <input ms-duplex-minlength="aaa" data-duplex-min="6"
+ ```         
+ 这样报错时就提示要<b>最少输入6个字</b>      
  */
 
 /**

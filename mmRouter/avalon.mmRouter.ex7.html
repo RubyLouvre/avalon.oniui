@@ -30,7 +30,7 @@
                 })
 
                 avalon.state.config({
-                    onload: function(from, to) {
+                    onLoad: function(from, to) {
                         var me = to
                         if(this.currentState && this.currentState.stateName == me.stateName) {
                             loading = avalon.vmodels.loading
@@ -40,19 +40,20 @@
                     }
                 })
 
-                function onChange() {
+                function onEnter() {
                     var state = this.stateName,
                         loading = avalon.vmodels.loading,
-                        me = this
+                        me = this,
+                        done = arguments[arguments.length - 2]
                     // 这个状态是异步，所有需要经由该状态的状态都会受影响
                     // 标记该状态是异步
-                    var done = me.async()
                     home.logs.push(me.stateName + "正在等待中...")
                     // if(loading) loading.toggle = true
                     setTimeout(function() {
                         // 告知done
                         done && done()
                     }, 2000)
+                    return false
                 }
 
                 avalon.each(links, function(index, state) {
@@ -64,7 +65,7 @@
                         url: tmp,
                         onAfterLoad: function() {
                         },
-                        onChange: onChange,
+                        onEnter: onEnter,
                         onUpdate: function() {
                             avalon.log(arguments)
                         }
@@ -130,7 +131,7 @@
                 })
 
                 avalon.state.config({
-                    onload: function(from, to) {
+                    onLoad: function(from, to) {
                         var me = to
                         if(this.currentState &amp;&amp; this.currentState.stateName == me.stateName) {
                             loading = avalon.vmodels.loading
@@ -140,19 +141,20 @@
                     }
                 })
 
-                function onChange() {
+                function onEnter() {
                     var state = this.stateName,
                         loading = avalon.vmodels.loading,
-                        me = this
+                        me = this,
+                        done = arguments[arguments.length - 2]
                     // 这个状态是异步，所有需要经由该状态的状态都会受影响
                     // 标记该状态是异步
-                    var done = me.async()
                     home.logs.push(me.stateName + &quot;正在等待中...&quot;)
                     // if(loading) loading.toggle = true
                     setTimeout(function() {
                         // 告知done
                         done &amp;&amp; done()
                     }, 2000)
+                    return false
                 }
 
                 avalon.each(links, function(index, state) {
@@ -164,7 +166,7 @@
                         url: tmp,
                         onAfterLoad: function() {
                         },
-                        onChange: onChange,
+                        onEnter: onEnter,
                         onUpdate: function() {
                             avalon.log(arguments)
                         }

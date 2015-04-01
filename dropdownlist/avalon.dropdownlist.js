@@ -22,7 +22,7 @@ define(["../textbox/avalon.textbox.js", "../dropdown/avalon.dropdown.js", "css!.
                 realTimeData: options.realTimeData,
                 enable: options.enable,
                 getTemplate: function(tmp) {
-                    return tmp.replace('ms-visible="toggle||multiple">', "$&<input ms-widget='textbox' ms-css-width='{{listWidth-12}}' ms-duplex='_search' ms-keydown='_keydown' ms-attr-placeholder='placeholder'/>")
+                    return tmp.replace('ms-visible="toggle||multiple">', "ms-visible='toggle||multiple'><input ms-widget='textbox' ms-css-width='{{listWidth-12}}' ms-duplex='_search' ms-keydown='_keydown' ms-attr-placeholder='placeholder'/>")
                 },
                 onShow: function() {
                     vmodel.searchBox.widgetElement.focus()

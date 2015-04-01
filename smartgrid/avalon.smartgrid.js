@@ -248,8 +248,6 @@ define(["avalon",
                 }
             }
             avalon.mix(options.$pagerConfig, options.pager)
-        } else {
-            options.pager = {};
         }
         options.pager = null
         //方便用户对原始模板进行修改,提高制定性

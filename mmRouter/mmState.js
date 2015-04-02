@@ -421,7 +421,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         }
                     }
                 // controller似乎可以缓存着
-                if(view.$controller) return resolveData()
+                if(view.$controller && view.cacheController !== false) return resolveData()
                 // 加载controller模块
                 if(view.controller) {
                     prom = promise.then(function() {

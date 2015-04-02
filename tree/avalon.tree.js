@@ -171,7 +171,10 @@
         }
       ```
  */
-define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", "text!./avalon.tree.parent.html",  "text!./avalon.tree.nodes.html", "../live/avalon.live", "css!./avalon.tree.css", "css!../chameleon/oniui-common.css"], function(avalon, template, leafTemplate, parentTemplate, nodesTemplate) {
+define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html", 
+    "text!./avalon.tree.parent.html",  "text!./avalon.tree.nodes.html", 
+    "../live/avalon.live", "css!./avalon.tree.css", 
+    "css!../chameleon/oniui-common.css"], function(avalon, template, leafTemplate, parentTemplate, nodesTemplate) {
 
     var optionKeyToFixMix = {view: 1, callback: 1, data: 1},
         eventList = ["click", "dblClick", "collapse", "expand", "select", "contextmenu", "mousedown", "mouseup"],

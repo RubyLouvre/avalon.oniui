@@ -1,5 +1,5 @@
 // 通过 avalon.mix(true, targetVm, avalon.treeMenu)来将树转化成菜单
-define(["./avalon.tree", "css!tree/tree-menu.css"], function () {
+define(["./avalon.tree", "css!./tree-menu.css"], function () {
 	avalon.treeMenu = {
 	    view: {
 	        showLine: false, // 不展示树的连接线

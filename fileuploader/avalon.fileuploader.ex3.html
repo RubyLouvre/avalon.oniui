@@ -15,7 +15,7 @@
     <div ms-widget="fileuploader,demoUploader1,$uploaderOptions1"></div>
 
 	<h1>开启分块上传</h1>
-	<p class="end">可以使用chunked:true来开启文件分块上传，默认为关闭；chunkSize可以配置每个分块文件的大小，默认是1024*1024（1MB）。本例中chunkSize被设为500KB。可以在Chrome的F12工具中看到请求数量。</p>
+	<p class="end">可以使用chunked:true来开启文件分块上传，默认为关闭；chunkSize可以配置每个分块文件的大小，默认是1024*1024（1MB）。本例中chunkSize被设为500KB，文件尺寸限定为20MB。可以在Chrome的F12工具中看到请求数量。</p>
     <div ms-widget="fileuploader,demoUploader2,$uploaderOptions2"></div>
 
 	<h1>并发请求数限制</h1>
@@ -53,6 +53,8 @@
 
 				vm.$uploaderOptions2 = $$.mix({
 					chunked: true,
+					maxFileSize: 1024 * 1024 * 20,
+					filePoolSize: 1024 * 1024 * 200,
 					chunkSize: 1024 * 500
 				}, basicOptions);
 

@@ -70,6 +70,7 @@
 	line-height: 14px;
 	background-color: #333;
 	opacity: 0.8;
+	filter:alpha(Opacity=80);
 	text-align: left;
 }
 .oni-uploader-wrapper div.preview-image-wrapper div.preview-menu div {

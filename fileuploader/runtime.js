@@ -42,8 +42,8 @@ function ($$) {
 		fileObj.attachEvent("fileStatusChanged", this.onFileStatusChanged, this);
 	};
 
-	runtimeContructor.prototype.onFileStatusChanged = function (fileObj, beforeStatus, afterStatus) {
-		if (afterStatus == fileObj.FILE_UPLOADED) {
+	runtimeContructor.prototype.onFileStatusChanged = function (fileObj, beforeStatus) {
+		if (fileObj.status == fileObj.FILE_UPLOADED) {
 			delete this.files[fileObj.fileLocalToken];
 			fileObj.purge();
 		}

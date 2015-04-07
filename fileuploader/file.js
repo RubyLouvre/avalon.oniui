@@ -10,6 +10,7 @@ define(["avalon"], function ($$) {
 		this.status = this.FILE_INIT;
 		this.chunked = chunked;
 		this.blobs = [];
+		this.uploadedPercentage = 0;
 		this.flashEventHub = flashEventHub;
 
 		this.doneBlobs = 0;	// 已成功上传的分片数量
@@ -32,14 +33,23 @@ define(["avalon"], function ($$) {
 	}
 
 	fileConstructor.prototype.onBlobProgressed = function (blob, uploadedBytes) {
-		this.fireEvent("fileProgressed", this, Math.min(100, this.sumUploadedBytes() / this.size * 100));
+		this.setUploadedPercentage(Math.min(100, this.sumUploadedBytes() / this.size * 100));
+	}
+
+	fileConstructor.prototype.setUploadedPercentage = function (percentage, silent) {
+		var beforePercentage = this.uploadedPercentage;
+		this.uploadedPercentage = Math.round(percentage*100) / 100;
+		if (silent !== true) {
+			this.fireEvent("fileProgressed", this, beforePercentage);
+		}
 	}
 
 	fileConstructor.prototype.onBlobUploaded = function (blob, responseText) {
 		this.doneBlobs++;
 		if (this.doneBlobs != this.blobs.length) {
-			this.fireEvent("fileProgressed", this, Math.min(100, this.sumUploadedBytes() / this.size * 100));
+			this.setUploadedPercentage(Math.min(100, this.sumUploadedBytes() / this.size * 100));
 		} else {
+			this.setUploadedPercentage(100, true);
 			this.setStatus(this.FILE_UPLOADED);
 		}
 	}
@@ -60,7 +70,7 @@ define(["avalon"], function ($$) {
 		var beforeStatus = this.status;
 		this.status = status;
 		if (silent !== true) {
-			this.fireEvent("fileStatusChanged", this, beforeStatus, status);
+			this.fireEvent("fileStatusChanged", this, beforeStatus);
 		}
 	}
 

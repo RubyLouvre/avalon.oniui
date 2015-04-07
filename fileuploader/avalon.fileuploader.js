@@ -18,6 +18,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
 
             var vmodel = avalon.define(data[widgetName+'Id'], function(vm) {
                 avalon.mix(vm, options);
+                avalon.mix(vm.serverConfig, vm.$serverConfigDefault);
 
                 var supportMultiple = (document.createElement('input').multiple != undefined),
                     supportFile = (window.File != undefined),
@@ -96,10 +97,11 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                         var fileObj = new fileConstructor(fileInfo, this.$flashEventHub, this.chunked, this.chunkSize, blobConstructor);
                         fileObj.attachEvent("fileStatusChanged", this.onFileStatusChanged, this);
 
-                        fileObj.attachEvent("fileProgressed", function (f, p) {
+                        fileObj.attachEvent("fileProgressed", function (f, beforePercentage) {
                             var previewVm = this.getPreviewVmByfileLocalToken(this, f.fileLocalToken);
                             if (!previewVm) return;
-                            previewVm.uploadProgress = p;
+                            previewVm.message = this.getFileMessageText(f);
+                            previewVm.uploadProgress = f.uploadedPercentage;
                         }, this);
 
                         this.$runtime.addFile(fileObj);
@@ -111,7 +113,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                             uploadStatus: fileObj.status,
                             done: false,
                             size: fileObj.size,
-                            message: "" // 显示在进度条上的文本
+                            message: this.getFileMessageText(fileObj)
                         });
                     }, opts);
 
@@ -251,11 +253,18 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
             serverConfig: {
                 timeout: 30000,
                 concurrentRequest: 3,
+                blobRetryTimes: 5,
                 userName: undefined,
                 password: undefined,
                 url: undefined,
                 previewUrl: undefined,
                 keyGenUrl: undefined
+            },
+
+            $serverConfigDefault: {
+                timeout: 30000,
+                concurrentRequest: 3,
+                blobRetryTimes: 1
             },
             noPreviewPath: "no-preview.png",
             previewFileTypes: { },
@@ -603,34 +612,42 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                 return false;
             },
 
-            onFileStatusChanged: function (fileObj, beforeStatus, afterStatus) {
-                var previewVm = this.getPreviewVmByfileLocalToken(this, fileObj.fileLocalToken);
-                if (previewVm == null && beforeStatus != null && afterStatus != fileObj.FILE_CACHED) {
-                    debugger    // 如果走到这里，应该是个编程错误
-                    return;
-                }
-                switch (afterStatus) {
+            getFileMessageText: function (fileObj) {
+                var message = "";
+                switch (fileObj.status) {
                     case fileObj.FILE_CACHED:
+                        message = "File cached.";
                         break;
                     case fileObj.FILE_QUEUED:
-                        previewVm.message = "QUEUED";
+                        message = "File queued.";
                         break;
                     case fileObj.FILE_IN_UPLOADING:
-                        previewVm.message = "UPLOADING";
+                        message = "{0}%".replace('{0}', fileObj.uploadedPercentage);
                         break;
                     case fileObj.FILE_UPLOADED:
-                        previewVm.message = "UPLOADED";
-                        previewVm.uploadProgress = 100;
-                        previewVm.done = true;
+                        message = "File uploaded.";
                         break;
                     case fileObj.FILE_ERROR_FAIL_READ:
-                        previewVm.message = "FAIL_TO_READ";
+                        message = "Fail to read file.";
                         break;
                     case fileObj.FILE_ERROR_FAIL_UPLOAD:
-                        previewVm.message = "FAIL_TO_UPLOAD";
+                        message = "Fail to upload file.";
                         break;
                     default:
                         break;
+                }
+                return message;
+            },
+
+            onFileStatusChanged: function (fileObj, beforeStatus) {
+                var previewVm = this.getPreviewVmByfileLocalToken(this, fileObj.fileLocalToken);
+                if (previewVm == null) {
+                    return;
+                }
+                previewVm.message = this.getFileMessageText(fileObj);
+                if (fileObj.status == fileObj.FILE_UPLOADED) {
+                    previewVm.uploadProgress = 100;
+                    previewVm.done = true;
                 }
             },
 

@@ -20,7 +20,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                 avalon.mix(vm, options);
 
                 var supportMultiple = (document.createElement('input').multiple != undefined),
-                    supportFile = (window.file != undefined),
+                    supportFile = (window.File != undefined),
                     supportCanvas = (document.createElement('canvas').getContext && document.createElement('canvas').getContext('2d')),
                     isIE = avalon.browser.name.toLowerCase() == 'ie',
                     version = avalon.browser.version;
@@ -28,7 +28,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                 vm.$supportBase64Img = (!isIE) || (version >= 8);
                 vm.$base64Limitation = (isIE && version == 8) ? 32 * 1024 : Number.MAX_VALUE;
                 vm.useHtml5Runtime = supportMultiple && supportFile && supportCanvas;
-                vm.useFlashRuntime = true;
+                vm.useFlashRuntime = !vm.useHtml5Runtime;
 
                 vm.previews = [];
                 

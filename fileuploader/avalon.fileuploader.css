@@ -12,7 +12,9 @@
 	border-bottom: 1px dashed #aaa;
 	margin-bottom: 20px;
 	text-align: left;
+	overflow-y: auto;
 	font-size: 12px;
+	*position: relative; /*IE6下滚动条有问题，加上Position修复*/
 }
 .oni-uploader-wrapper button {
 	width: 168px;

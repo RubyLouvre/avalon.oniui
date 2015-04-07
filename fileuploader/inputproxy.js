@@ -48,7 +48,7 @@ function ($$) {
 				me.fireEvent("newFileSelected", fileInfo);
 
 				if (fileContext.enablePreviewGen) {
-					this.getImagePreview(files[i], fileContext.previewWidth, fileContext.previewHeight, function (preview) {
+					this.getImagePreview(fileInfo, fileContext.previewWidth, fileContext.previewHeight, function (fileInfo, preview) {
 						if (preview && preview != fileInfo.preview) {
 							me.onPreviewUpdated(fileInfo.fileLocalToken, preview);
 						}
@@ -57,7 +57,7 @@ function ($$) {
         	}
         }
 	}
-	proxyContructor.prototype.getImagePreview = function (imgFile, previewWidth, previewHeight, callback) {
+	proxyContructor.prototype.getImagePreview = function (fileInfo, previewWidth, previewHeight, callback) {
 		var me = this;
 		var promise = new Promise(function(resolve, reject) {
 			var fileReader = new FileReader();
@@ -109,12 +109,12 @@ function ($$) {
 			}
 			// 用setTimeout来解决图片过大时，浏览器卡死的问题
 			setTimeout(function() {
-				fileReader.readAsDataURL(imgFile);
+				fileReader.readAsDataURL(fileInfo.data);
 			},100);
 		});
 		
 		promise.then(function (preview) {
-			callback.call(me, preview);
+			callback.call(me, fileInfo, preview);
 		});
 	}
 

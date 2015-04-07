@@ -94,7 +94,8 @@ define(["avalon"], function (avalon) {
 			paramConfig: paramConfig,
 		    timeout: this.serverConfig.timeout || 30000,
 		    password: this.serverConfig.password,
-		    username: this.serverConfig.userName
+		    username: this.serverConfig.userName,
+		    blobRetryTimes: this.serverConfig.blobRetryTimes
 		});
 
 		if (sentSucessed) {

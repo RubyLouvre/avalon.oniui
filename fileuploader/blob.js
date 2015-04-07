@@ -119,7 +119,8 @@ define(["avalon"], function (avalon) {
 
 	blob.prototype.onError = function (textStatus) {
 		this.retried++;
-		if (this.retried < 3) {
+		var retryConfig = this.uploadConfig.blobRetryTimes ? this.uploadConfig.blobRetryTimes : 0;
+		if (this.retried < retryConfig) {
 			this.log("FileUploader: fail to upload blob. Retrying for ", this.retried, " time(s).");
 			this.upload(this.uploadConfig);
 		} else {

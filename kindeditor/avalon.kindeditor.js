@@ -54,9 +54,15 @@ define(["avalon", "./kindeditor.4.1.0.js"], function(avalon, K) {
                             if(avalon.type( afterChange ) === "function") {
                                 afterChange.call($instance)
                             }
-                            syncFlag = false
-                            $element.val($instance.html())
-                            data.handler()
+                            //kindeditor的afterchange事件无论值是否改变都会触发
+                            //如果当前editor的值与vm中变量的值不一致，对元素进行赋值，并将syncFlag置为false，进行单向处理，防止死循环
+                            if($element.val() !== $instance.html()) {
+                                syncFlag = false
+                                $element.val($instance.html())
+                                data.handler()
+                            } else {
+                                syncFlag = true
+                            }
                         }
                     }
 
@@ -105,4 +111,5 @@ define(["avalon", "./kindeditor.4.1.0.js"], function(avalon, K) {
  [多语言设置](avalon.kindeditor.ex4.html)
  [只读模式](avalon.kindeditor.ex5.html)
  [统计字数](avalon.kindeditor.ex6.html)
+ [异步修改数据](avalon.kindeditor.ex7.html)
  */

@@ -95,6 +95,8 @@
 	top: 0px;
 	left: 0px;
 	z-index:-1;
+	width: 100%;
+	height: 100%;
 }
 .oni-uploader-wrapper div.preview-image-wrapper .preview-progress-wrapper {
 	position: absolute;

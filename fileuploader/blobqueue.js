@@ -5,6 +5,7 @@ define(["avalon"], function (avalon) {
 		this.queue = [];
 		this.requestPool = [];
 		this.serverConfig = serverConfig;
+		this.inSending = 0;	//正在发送的请求数量
 		this.sendTaskId = setInterval(function () {
 			me.taskFn.call(me);
 		}, 100);
@@ -16,7 +17,6 @@ define(["avalon"], function (avalon) {
 		if (this.queue.length <= 0) {
 			return false;
 		} else {
-			avalon.log("****FileUploader.blobQueue: Blob poped. Index: ", this.queue[0].index)
 			return this.queue.shift();
 		}
 	}
@@ -27,7 +27,7 @@ define(["avalon"], function (avalon) {
 	 */
 	blobQueue.prototype.stopUploadByLocalToken = function (fileLocalToken) {
 		var i = 0,
-			queueBlob, requestPoolItem;
+			queueBlob, poolBlob;
 		// 清除Queue中的blob
 		while (i < this.queue.length) {
 			queueBlob = this.queue[i];
@@ -41,10 +41,10 @@ define(["avalon"], function (avalon) {
 		// 从RequestPool中移除相关的上传请求，并取消这些请求
 		i = 0;
 		while (i < this.requestPool.length) {
-			requestPoolItem = this.requestPool[i];
-			if (requestPoolItem.fileLocalToken == fileLocalToken) {
-				avalon.Array.remove(this.requestPool, requestPoolItem);
-				requestPoolItem.request.abort();
+			poolBlob = this.requestPool[i];
+			if (poolBlob.fileObj.fileLocalToken == fileLocalToken) {
+				avalon.Array.remove(this.requestPool, poolBlob);
+				poolBlob.cancelUpload();
 			} else {
 				i++;
 			}
@@ -62,7 +62,6 @@ define(["avalon"], function (avalon) {
 				me.filesBlobMonitor[blob.fileObj.fileLocalToken] = 0;
 			}
 		})
-		// this.fireEvent('onFileQueued', fileObj);
 	}
 /*
 	blobQueue.prototype.wakeupSendTask = function () {
@@ -79,76 +78,44 @@ define(["avalon"], function (avalon) {
 			return;
 		}
 
-		this.$runtime.readBlob(this.pop(), function (blob) {
-			// 构建mmRequest的配置
-			var formData = this.buildRequestParams(blob);
-			var requestPoolItem = {
-				fileLocalToken: blob.fileObj.fileLocalToken,
-				request: null
-			};
-			var requestConfig = {
-			    type: "post",
-			    url: this.serverConfig.url,
-			    timeout: this.serverConfig.timeout || 30000,
-			    password: this.serverConfig.password,
-			    username: this.serverConfig.userName,
-			    success: function () {
-			    	me.onBlobSuccess.call(me, blob, this.response, requestPoolItem);
-			    },
-			    cache: false,
-			    progressCallback: function (e) {
-			    	me.onBlobProgress.call(me, e, blob, this, requestPoolItem);			    	
-			    },
-			    error: function (textStatus, error) {
-			    	me.onBlobError.call(me, blob, textStatus, error, requestPoolItem);
-			    }
-			};
-			if (window.FormData == undefined || !(formData instanceof FormData)) {
-				requestConfig.data = formData;
-			} else {
-				requestConfig.form = formData;
-			}
-
-			// 发送请求
-			try {
-				var request = avalon.ajax(requestConfig);
-				requestPoolItem.request = request;
-				this.requestPool.push(requestPoolItem);
-			} catch (e) {
-				this.fireEvent("failToSendRequest", blob, e);
-			}
-		}, this);
-	}
-
-	
-	blobQueue.prototype.onBlobProgress = function (e, blob, request, requestPoolItem) {
-        if (e.lengthComputable) {
-			var fileObj = blob.fileObj;
-			fileObj.blobsProgress[blob.index] = e.loaded;
-			this.fireEvent("blobProgressUpdated", blob);
-        }
-	}
-
-	blobQueue.prototype.onBlobSuccess = function (blob, response, requestPoolItem) {
-		var fileObj = blob.fileObj;
-		avalon.log("FileUploader.blobqueue: Blob tranfered. File token: ", fileObj.fileLocalToken, ". Blob Index: ", blob.index);
-		avalon.Array.remove(this.requestPool, requestPoolItem);
-		fileObj.blobsProgress[blob.index] = blob.size;
-
-		// 单个文件已完成的blob数量+1。若完成blob数量等于文件分块总数量，则表示文件已上传结束，移除blob完成数量监视
-		this.filesBlobMonitor[fileObj.fileLocalToken]++;
-		var fileUploadDone = this.filesBlobMonitor[fileObj.fileLocalToken] == fileObj.chunkAmount;
-		if (fileUploadDone) {
-			delete this.filesBlobMonitor[fileObj.fileLocalToken];
+		this.inSending++;	// 正在发送+1
+		var blob = this.pop();
+		// FILE_QUEUED状态表示文件是首次发送，修改文件状态至FILE_IN_UPLOADING
+		if (blob.fileObj.status == blob.fileObj.FILE_QUEUED) {
+			blob.fileObj.setStatus(blob.fileObj.FILE_IN_UPLOADING);
 		}
-		this.fireEvent("blobUploaded", blob, fileUploadDone);
-		avalon.log("****FileUploader.runtime: Blob upload done. File token: ", blob.fileObj.fileLocalToken, " .Chunk index: ", blob.index,  " . All blob done: ", fileUploadDone)
+
+		blob.attachEvent("blobUploaded", me.onBlobSuccess, me);
+		blob.attachEvent("blobErrored", me.onBlobError, me);
+
+		var paramConfig = this.$runtime.getRequestParamConfig(blob);
+		var sentSucessed = blob.upload({
+			url: this.serverConfig.url,
+			paramConfig: paramConfig,
+		    timeout: this.serverConfig.timeout || 30000,
+		    password: this.serverConfig.password,
+		    username: this.serverConfig.userName
+		});
+
+		if (sentSucessed) {
+			this.requestPool.push(blob);
+		} else {
+			blob.fileObj.setStatus(blob.fileObj.FILE_ERROR_FAIL_UPLOAD);
+		}
 	}
 
-	blobQueue.prototype.onBlobError = function (blob, textStatus, error, requestPoolItem) {
-		this.stopUploadByLocalToken(requestPoolItem.fileLocalToken);
-		this.fireEvent("blobFailToUpload", blob, textStatus, error);
-		avalon.log("****FileUploader.runtime: Blob upload error. File token: ", blob.fileObj.fileLocalToken, " .Chunk index: ", blob.index, " . Message: ", textStatus)
+
+	blobQueue.prototype.onBlobSuccess = function (blob, response) {
+		this.inSending--;
+		var fileObj = blob.fileObj;
+		this.log("****FileUploader.blobqueue: Blob tranfered. File token: ", fileObj.fileLocalToken, ". Blob Index: ", blob.index);
+		avalon.Array.remove(this.requestPool, blob);
+	}
+
+	blobQueue.prototype.onBlobError = function (blob, textStatus, error) {
+		this.inSending--;
+		this.stopUploadByLocalToken(blob.fileObj.fileLocalToken);
+		this.log("****FileUploader.runtime: Blob upload error. File token: ", blob.fileObj.fileLocalToken, " .Chunk index: ", blob.index, " . Message: ", textStatus)
 	}
 
 	/*
@@ -189,7 +156,7 @@ define(["avalon"], function (avalon) {
 	}
 
 	blobQueue.prototype.isRequestPoolFull = function () {
-		return this.requestPool.length >= (this.serverConfig.concurrentRequest || 3);
+		return this.inSending >= (this.serverConfig.concurrentRequest || 3);
 	}
 
 	blobQueue.prototype.purge = function () {

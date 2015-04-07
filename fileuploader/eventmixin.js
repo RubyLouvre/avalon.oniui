@@ -1,4 +1,7 @@
 define(["avalon"], function(avalon) {
+	var jsDebugger = true;
+	var flashDebugger = true;
+
 	var mixEvent = function mixEvent(jsClass) {
 		if (jsClass.prototype.__eventmixed) return;
 		jsClass.prototype.__eventmixed = true;	// 防止被Mix两次
@@ -16,9 +19,10 @@ define(["avalon"], function(avalon) {
 		}
 		jsClass.prototype.fireEvent = function (event) {
 			if (!this.listeners) return;
+			var listeners = this.listeners;
 			var args = Array.prototype.slice.apply(arguments, [1]);
-			if (this.listeners.hasOwnProperty(event)) {
-				var eventListeners = this.listeners[event];
+			if (listeners.hasOwnProperty(event)) {
+				var eventListeners = listeners[event];
 				var excuteResult = true;
 				eventListeners.forEach(function(e) {
 					var r = e.fn.apply(e.scope, args);
@@ -42,15 +46,21 @@ define(["avalon"], function(avalon) {
 				});
 			}
 		}
+		jsClass.prototype.log = function () {
+			if (this.jsDebuggerOn) avalon.log.apply(avalon, Array.prototype.slice.call(arguments, 0));
+		}
+		jsClass.prototype.jsDebuggerOn = jsDebugger;
+		jsClass.prototype.flashDebuggerOn = jsDebugger;
+
 		if (jsClass.prototype.hasOwnProperty('purge')) {
 			var originPurge = jsClass.prototype.purge;
 			jsClass.prototype.purge = function () {
 				originPurge.call(this);
-				delete eventFirer.listeners;				
+				delete this.listeners;				
 			}
 		} else {
 			jsClass.prototype.purge = function () {
-				delete eventFirer.listeners;
+				delete this.listeners;
 			}
 		}
 	};

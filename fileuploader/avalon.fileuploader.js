@@ -1,12 +1,15 @@
 
-define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
-    "./blob",   // NO EVENT MIXIN
+define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "./eventmixin",
+    "./blob",
+    "./file",
+    "./flasheventhub",
     "./runtime",
     "./blobqueue",
     "./spark-md5",
+    "./inputproxy",
     "mmRequest/mmRequest",
     "css!./avalon.fileuploader.css"], 
-    function (avalon, template, eventMixin, blobConstructor, runtimeConstructor, blobqueueConstructor, md5gen) {
+    function (avalon, template, browser, eventMixin, blobConstructor, fileConstructor, fehConstructor, runtimeConstructor, blobqueueConstructor, md5gen, inputProxyContructor) {
         var widgetName = 'fileuploader';
         var widget = avalon.ui[widgetName] = function(element, data, vmodels) {
         	var options = data[widgetName+'Options'],
@@ -17,16 +20,23 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                 avalon.mix(vm, options);
 
                 var supportMultiple = (document.createElement('input').multiple != undefined),
-                supportBase64Decode = (window.atob != undefined),
-                supportCanvas = (document.createElement('canvas').getContext && document.createElement('canvas').getContext('2d'));
+                    supportFile = (window.file != undefined),
+                    supportCanvas = (document.createElement('canvas').getContext && document.createElement('canvas').getContext('2d')),
+                    isIE = avalon.browser.name.toLowerCase() == 'ie',
+                    version = avalon.browser.version;
 
-                vm.useHtml5Runtime = supportMultiple && supportBase64Decode && supportCanvas;
-                vm.useFlashRuntime = !vm.useHtml5Runtime;
+                vm.$supportBase64Img = (!isIE) || (version >= 8);
+                vm.$base64Limitation = (isIE && version == 8) ? 32 * 1024 : Number.MAX_VALUE;
+                vm.useHtml5Runtime = supportMultiple && supportFile && supportCanvas;
+                vm.useFlashRuntime = true;
 
                 vm.previews = [];
                 
+                eventMixin(blobConstructor);
+                eventMixin(inputProxyContructor);
                 eventMixin(blobqueueConstructor);
                 eventMixin(runtimeConstructor);
+                eventMixin(fileConstructor);
 
                 vm.$md5gen = md5gen;
 
@@ -38,8 +48,12 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     vm.$runtime.removeFileByToken(el.fileLocalToken);
                 }
                 vm.addFileClicked = function (e) {
+                    var target = e.target || e.srcElement;
+                    if (!vm.__inputRegisted) {
+                        vm.registInput(vm, target, true);
+                        vm.__inputRegisted = true;
+                    }
                     if (vm.useHtml5Runtime) {
-                        var target = e.target || e.srcElement;
                         var $wrapper = avalon(target);
                         for (var i = 0; i < $wrapper.element.children.length; i++) {
                             var subNode = $wrapper.element.children[i];
@@ -50,23 +64,66 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                         }
                     }
                 }
+
+                vm.$flashEventHub = undefined;
+                vm.$fileInputProxy = undefined;
+
+                vm.registInput = function (opts, target, isH5) {
+                    if (typeof opts == 'string') {
+                        opts = avalon.vmodels[opts];
+                    }
+
+                    var flashOrInput = undefined;
+
+                    if (isH5) {
+                        flashOrInput = target;
+                    } else {
+                        var flash = undefined;
+                        if(navigator.appName.indexOf("Microsoft")!=-1){
+                            flash = window.document.getElementById(target);
+                        } else {
+                            flash = window.document[target];
+                        }
+                        opts.$flashEventHub = new fehConstructor(flash);
+                        flashOrInput = opts.$flashEventHub;
+                    }
+
+                    opts.$fileInputProxy = new inputProxyContructor(flashOrInput, isH5, {
+                        fn: opts.getFileContext,
+                        scope: opts
+                    });
+                    opts.$fileInputProxy.attachEvent("newFileSelected", function(fileInfo) {
+                        var fileObj = new fileConstructor(fileInfo, this.$flashEventHub, this.chunked, this.chunkSize, blobConstructor);
+                        fileObj.attachEvent("fileStatusChanged", this.onFileStatusChanged, this);
+
+                        fileObj.attachEvent("fileProgressed", function (f, p) {
+                            var previewVm = this.getPreviewVmByfileLocalToken(this, f.fileLocalToken);
+                            if (!previewVm) return;
+                            previewVm.uploadProgress = p;
+                        }, this);
+
+                        this.$runtime.addFile(fileObj);
+                        this.previews.push({
+                            name: fileInfo.name,
+                            fileLocalToken: fileInfo.fileLocalToken,
+                            preview: fileInfo.preview,
+                            uploadProgress: fileInfo.progress,
+                            uploadStatus: fileObj.status,
+                            done: false,
+                            size: fileObj.size,
+                            message: "" // 显示在进度条上的文本
+                        });
+                    }, opts);
+
+                    opts.$fileInputProxy.attachEvent("previewGenerated", function(fileLocalToken, preview) {
+                        var previewVm = this.getPreviewVmByfileLocalToken(this, fileLocalToken);
+                        if (!previewVm || previewVm.preview == preview) return;
+                        previewVm.preview = preview;
+                    }, opts)
+                };
+
                 vm.uploadClicked = function (event) {
                     vm.uploadAll(vm);
-                };
-                vm.onFileFieldChanged = function (event) {
-                    var target = event.target || event.srcElement;
-                    var files = target.files || target.value;
-                    vm.addFiles(files);
-
-                    // 这里先把input file移除出dom tree，重新建立一个新的input file，再加回dom tree。
-                    // 主要是为了清除input file的已选文件。暂时没有更好的办法。
-                    var html = target.outerHTML,
-                        pNode = target.parentNode,
-                        fileInputWrapper = document.createElement("div");
-                    pNode.removeChild(target);
-                    fileInputWrapper.innerHTML = html;
-                    avalon(fileInputWrapper.children[0]).bind("change", vm.onFileFieldChanged);
-                    pNode.appendChild(fileInputWrapper.children[0]);
                 };
                 // Flash和H5都会调用此方法来生成文件扩展名过滤
                 vm.getInputAcceptTypes = function (_isFalsh) {
@@ -118,108 +175,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     }
                 }
             	vm.$init = function() {
-                    vm.$runtime = new runtimeConstructor(vm, blobConstructor, blobqueueConstructor, md5gen);
-
-                    vm.$runtime.attachEvent("beforeFileCache", function (plainFileObject) {
-                        var isDuplicatedFile = false;
-
-                        for (var i = 0; i < vm.previews.length; i++) {
-                            var runtimeFile = vm.$runtime.getFileByLocalToken(vm.previews[i].fileLocalToken);
-                            if (!runtimeFile) continue;
-
-                            if (vm.compareFileObjects(runtimeFile, plainFileObject)) {
-                                isDuplicatedFile = true;
-                                break;
-                            }
-                        }
-                        if (isDuplicatedFile) {
-                            vm.onSameFileAdded.call(vm, plainFileObject);
-                            avalon.log("****FileUploader: 不能添加一样的文件。");
-                            return false;   // False会阻止runtime缓存文件。
-                        } else {
-                            var previewData = plainFileObject.preview,
-                                userAgent = window.navigator.userAgent.toLowerCase(),
-                                isIE678 = userAgent.indexOf("msie 6") > 0 || userAgent.indexOf("msie 7") > 0 || userAgent.indexOf("msie 8") > 0,
-                                isBase64Preview = (previewData.indexOf("data:image") == 0),
-                                previewObj = null;
-
-                            // IE6,7,8下将base64的图片先换成noPreview图，然后再将base64发送给图片服务器获得新图片地址。
-                            if (isBase64Preview && isIE678) {
-                                plainFileObject.preview = vm.noPreviewPath;
-                                if (!!vm.serverConfig.previewUrl) {
-                                    avalon.ajax({
-                                        type: "post",
-                                        url: vm.serverConfig.previewUrl,
-                                        timeout: vm.serverConfig.timeout || 30000,
-                                        data: { img: previewData },
-                                        password: vm.serverConfig.password,
-                                        username: vm.serverConfig.userName,
-                                        cache: false,
-                                        success: function (response) {
-                                            previewObj.preview = response;
-                                        }
-                                    });
-                                }
-                            }
-
-                            vm.previews.push({
-                                name: plainFileObject.name,
-                                fileLocalToken: plainFileObject.fileLocalToken,
-                                preview: plainFileObject.preview,
-                                uploadProgress: 0,
-                                uploadStatus: 0,
-                                message: "" // 显示在进度条上的文本
-                            });
-
-                            previewObj = vm.previews[vm.previews.length - 1];
-                            return true;   // True让runtime继续缓存文件。
-                        }
-                    }, vm);
-                    vm.$runtime.attachEvent("fileStatusChanged", function (fileObj, beforeStatus, afterStatus) {
-                        var previewVm = this.getPreviewVmByfileLocalToken(this, fileObj.fileLocalToken);
-                        if (previewVm == null) {
-                            debugger    // 如果走到这里，应该是个编程错误
-                            return;
-                        }
-                        switch (afterStatus) {
-                            case vm.$runtime.FILE_QUEUED:
-                                previewVm.message = "QUEUED";
-                                break;
-                            case vm.$runtime.FILE_IN_UPLOADING:
-                                previewVm.message = "UPLOADING";
-                                break;
-                            case vm.$runtime.FILE_UPLOADED:
-                                previewVm.message = "UPLOADED";
-                                previewVm.uploadProgress = 100;
-                                break;
-                            case vm.$runtime.FILE_ERROR_FAIL_READ:
-                                previewVm.message = "FAIL_TO_READ";
-                                debugger
-                                break;
-                            case vm.$runtime.FILE_ERROR_FAIL_UPLOAD:
-                                previewVm.message = "FAIL_TO_UPLOAD";
-                                break;
-                            default:
-                                break;
-                        }
-                    }, vm);
-                    vm.$runtime.attachEvent("onFileProgress", function (fileObj, uploadedSize, fileSize) {
-                        var previewVm = this.getPreviewVmByfileLocalToken(this, fileObj.fileLocalToken);
-                        if (previewVm == null) {
-                            debugger    // 如果走到这里，应该是文件被删除了。
-                            return;
-                        }
-                        previewVm.uploadProgress = Math.min(100, uploadedSize / fileSize * 100);
-                    }, vm);
-                    vm.$runtime.attachEvent("onFileOverSize", function (fileObj) {
-                        vm.onFileOverSize.call(vm, fileObj);
-                        avalon.log("****FileUploader: 文件大小超出限制。");
-                    }, vm);
-                    vm.$runtime.attachEvent("onPoolOverSize", function (fileObj) {
-                        vm.onFilePoolOverSize.call(vm, fileObj);
-                        avalon.log("****FileUploader: 待上传文件总大小超出限制。");
-                    }, vm);
-
+                    vm.$runtime = new runtimeConstructor(vm, blobqueueConstructor);
 
 	            	element.innerHTML = template.replace(/##VM_ID##/ig, vm.$id);  // 将vmid附加如flash的url中
 
@@ -264,7 +220,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                     "maxFileSize", "filePoolSize", "chunked", "chunkSize", 
                     "acceptFileTypes", "previewWidth", "previewHeight", "enablePreviewGenerating",
                     "enableRemoteKeyGen", "enableMd5Validation", "serverConfig", "noPreviewPath",
-                    "previewFileTypes", "requiredParamsConfig"
+                    "previewFileTypes", "requiredParamsConfig", "__inputRegisted"
                     ];
             });
             return vmodel;
@@ -274,6 +230,8 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
             filePoolSize: 1024*1024*200,
             chunkSize: 1024 * 1024,
             chunked: false,
+
+            __inputRegisted: false,
 
             addButtonText: "Add Files",
             uploadButtonText: "Upload",
@@ -508,6 +466,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
 
             uploadAll: function (opts) {
                 opts.previews.forEach(function(p) {
+                    if (p.done) return;
                     opts.uploadFile(opts, p.fileLocalToken);
                 });
             },
@@ -519,7 +478,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
                 } else if (inVarType == 'string') {
                     fileLocalToken = index;
                 } else {
-                    // 不接受Index或者Md5以外的参数类型
+                    // 不接受Index或者token以外的参数类型
                     return;
                 }
 
@@ -578,7 +537,101 @@ define(["avalon", "text!./avalon.fileuploader.html", "./eventmixin",
             },
 
             compareFileObjects: function(f1, f2) {
-                return f1.size == f2.size && f1.name == f2.name && true;
+                return f1.size == f2.size && f1.name == f2.name;
+            },
+            getFileContext: function (basicFileInfo) {
+                var context = {
+                    canBeAdded: this.testFileBasicInfo(this, basicFileInfo),
+                    defaultPreview: false,
+                    enablePreviewGen: false,
+                    previewWidth: 0,
+                    previewHeight: 0,
+                    fileLocalToken: undefined,
+                    previewUrl: this.serverConfig.previewUrl || null,
+                    timeout: this.serverConfig.timeout || null,
+                    userName: this.serverConfig.userName || null,
+                    password: this.serverConfig.password || null,
+                    $env: {
+                        supportBase64Img: this.$supportBase64Img,
+                        base64Limitation: this.$base64Limitation
+                    }
+                };
+
+                if (context.canBeAdded) {
+                    var fileName = basicFileInfo.name;
+                    var fileConfig = this.getFileConfigByExtName(this, fileName.substr(fileName.lastIndexOf('.')));
+
+                    context.defaultPreview = fileConfig.noPreviewPath;
+                    context.enablePreviewGen = fileConfig.enablePreview && fileConfig.isImageFile;
+                    context.previewWidth = fileConfig.previewWidth;
+                    context.previewHeight = fileConfig.previewHeight;
+                }
+                return context;
+            },
+            testFileBasicInfo: function (opts, basicFileInfo) {
+                var sizeOk = opts.testFileSize(opts, basicFileInfo);
+                if (sizeOk) {
+                    for (var i = 0; i < opts.previews.length; i++) {
+                        if (opts.compareFileObjects(opts.previews[i], basicFileInfo)) {
+                            opts.onSameFileAdded.call(opts, basicFileInfo);
+                            return false;
+                        }
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            /*
+             * 检查一个FileObj的文件大小是否符合规定。第一需要满足单个文件尺寸限制，第二需要满足文件池大小的限制。
+             */
+            testFileSize: function (opts, fileObj) {
+                var fileSizeLimitation = opts.maxFileSize,
+                    poolSizeLimitation = opts.filePoolSize,
+                    size = fileObj.size;
+                
+                var fileSizeOK = (fileSizeLimitation <= 0) || (size <= fileSizeLimitation);
+                var poolSizeOK = (poolSizeLimitation <= 0) || (opts.$runtime.getFilesSizeSum() + size <= poolSizeLimitation);
+
+                if (fileSizeOK && poolSizeOK) {
+                    return true;
+                } else if (!fileSizeOK) {
+                    opts.onFileOverSize.call(opts, fileObj);
+                } else {
+                    opts.onFilePoolOverSize.call(opts, fileObj);
+                }
+                return false;
+            },
+
+            onFileStatusChanged: function (fileObj, beforeStatus, afterStatus) {
+                var previewVm = this.getPreviewVmByfileLocalToken(this, fileObj.fileLocalToken);
+                if (previewVm == null && beforeStatus != null && afterStatus != fileObj.FILE_CACHED) {
+                    debugger    // 如果走到这里，应该是个编程错误
+                    return;
+                }
+                switch (afterStatus) {
+                    case fileObj.FILE_CACHED:
+                        break;
+                    case fileObj.FILE_QUEUED:
+                        previewVm.message = "QUEUED";
+                        break;
+                    case fileObj.FILE_IN_UPLOADING:
+                        previewVm.message = "UPLOADING";
+                        break;
+                    case fileObj.FILE_UPLOADED:
+                        previewVm.message = "UPLOADED";
+                        previewVm.uploadProgress = 100;
+                        previewVm.done = true;
+                        break;
+                    case fileObj.FILE_ERROR_FAIL_READ:
+                        previewVm.message = "FAIL_TO_READ";
+                        break;
+                    case fileObj.FILE_ERROR_FAIL_UPLOAD:
+                        previewVm.message = "FAIL_TO_UPLOAD";
+                        break;
+                    default:
+                        break;
+                }
             },
 
             getFileConfigByExtName: function (opts, extName) {

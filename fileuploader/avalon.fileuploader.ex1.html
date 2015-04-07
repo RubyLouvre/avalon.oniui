@@ -25,6 +25,15 @@
 		                password: undefined,
 		                keyGenUrl: "../../getFileKey.ashx"
 		            },
+					onFileOverSize: function (fileObj) {
+						alert(fileObj.name+"超出了文件尺寸限制")
+					},
+					onFilePoolOverSize: function (fileObj, poolSize) {
+						alert("文件缓存池达已满，不能继续添加文件。")
+					},
+					onSameFileAdded: function () {
+						alert("不能添加相同的文件");
+					},
 		            enableRemoteKeyGen: false,
 		            chunked: true,
 		            chunkSize: 1024*1024

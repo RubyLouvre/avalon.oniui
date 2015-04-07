@@ -16,7 +16,6 @@
 
 	<h1>开启分块上传</h1>
 	<p class="end">可以使用chunked:true来开启文件分块上传，默认为关闭；chunkSize可以配置每个分块文件的大小，默认是1024*1024（1MB）。本例中chunkSize被设为500KB。可以在Chrome的F12工具中看到请求数量。</p>
-	<p class="end">注意：在低版本浏览器中的Flash分块方案，最终采用base64代码发送文件内容，形成的请求大约是分块尺寸的1.3到1.4倍，如果服务器端限制了请求的大小，分块大小应设置在服务器请求限制的70%以下。</p>
     <div ms-widget="fileuploader,demoUploader2,$uploaderOptions2"></div>
 
 	<h1>并发请求数限制</h1>
@@ -40,6 +39,9 @@
 					},
 					onFilePoolOverSize: function (fileObj, poolSize) {
 						alert("文件缓存池达已满，不能继续添加文件。")
+					},
+					onSameFileAdded: function () {
+						alert("不能添加相同的文件");
 					}
 				};
 

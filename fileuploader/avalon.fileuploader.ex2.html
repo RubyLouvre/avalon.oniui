@@ -41,7 +41,16 @@
 		                url: "../../Handler1.ashx",
 		                userName: undefined,
 		                password: undefined
-		            }
+		            },
+					onFileOverSize: function (fileObj) {
+						alert(fileObj.name+"超出了文件尺寸限制")
+					},
+					onFilePoolOverSize: function (fileObj, poolSize) {
+						alert("文件缓存池达已满，不能继续添加文件。")
+					},
+					onSameFileAdded: function () {
+						alert("不能添加相同的文件");
+					}
 				};
 
 				vm.$uploaderOptions1 = $$.mix({
@@ -69,6 +78,17 @@
 				}, basicOptions);
 
 				vm.$uploaderOptions5 = {
+		            addButtonText: "添加文件",
+		            uploadButtonText: "开始上传",
+					onFileOverSize: function (fileObj) {
+						alert(fileObj.name+"超出了文件尺寸限制")
+					},
+					onFilePoolOverSize: function (fileObj, poolSize) {
+						alert("文件缓存池达已满，不能继续添加文件。")
+					},
+					onSameFileAdded: function () {
+						alert("不能添加相同的文件");
+					},
 		            serverConfig: {
 		                url: "../../Handler1.ashx",
 		                previewUrl: "../../preview.ashx",

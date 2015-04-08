@@ -8,7 +8,7 @@ define(["avalon"], function (avalon) {
 		this.inSending = 0;	//正在发送的请求数量
 		this.sendTaskId = setInterval(function () {
 			me.taskFn.call(me);
-		}, 100);
+		}, 20);
 
 		this.filesBlobMonitor = {};	// 存放fileLocalToken和uploadedBlob数量的键值对
 	}
@@ -74,42 +74,40 @@ define(["avalon"], function (avalon) {
 */
 	blobQueue.prototype.taskFn = function () {
 		var me = this;
-		if (this.isRequestPoolFull() || this.queue.length == 0) {
-			return;
-		}
+		
+		while (!this.isRequestPoolFull() && this.queue.length != 0) {
+			this.inSending++;	// 正在发送+1
+			var blob = this.pop();
+			// FILE_QUEUED状态表示文件是首次发送，修改文件状态至FILE_IN_UPLOADING
+			if (blob.fileObj.status == blob.fileObj.FILE_QUEUED) {
+				blob.fileObj.setStatus(blob.fileObj.FILE_IN_UPLOADING);
+			}
 
-		this.inSending++;	// 正在发送+1
-		var blob = this.pop();
-		// FILE_QUEUED状态表示文件是首次发送，修改文件状态至FILE_IN_UPLOADING
-		if (blob.fileObj.status == blob.fileObj.FILE_QUEUED) {
-			blob.fileObj.setStatus(blob.fileObj.FILE_IN_UPLOADING);
-		}
+			blob.attachEvent("blobUploaded", me.onBlobSuccess, me);
+			blob.attachEvent("blobErrored", me.onBlobError, me);
 
-		blob.attachEvent("blobUploaded", me.onBlobSuccess, me);
-		blob.attachEvent("blobErrored", me.onBlobError, me);
+			var paramConfig = this.$runtime.getRequestParamConfig(blob);
+			var sentSucessed = blob.upload({
+				url: this.serverConfig.url,
+				paramConfig: paramConfig,
+			    timeout: this.serverConfig.timeout || 30000,
+			    password: this.serverConfig.password,
+			    username: this.serverConfig.userName,
+			    blobRetryTimes: this.serverConfig.blobRetryTimes
+			});
 
-		var paramConfig = this.$runtime.getRequestParamConfig(blob);
-		var sentSucessed = blob.upload({
-			url: this.serverConfig.url,
-			paramConfig: paramConfig,
-		    timeout: this.serverConfig.timeout || 30000,
-		    password: this.serverConfig.password,
-		    username: this.serverConfig.userName,
-		    blobRetryTimes: this.serverConfig.blobRetryTimes
-		});
-
-		if (sentSucessed) {
-			this.requestPool.push(blob);
-		} else {
-			blob.fileObj.setStatus(blob.fileObj.FILE_ERROR_FAIL_UPLOAD);
+			if (sentSucessed) {
+				this.requestPool.push(blob);
+			} else {
+				blob.fileObj.setStatus(blob.fileObj.FILE_ERROR_FAIL_UPLOAD);
+			}
 		}
 	}
 
 
 	blobQueue.prototype.onBlobSuccess = function (blob, response) {
 		this.inSending--;
-		var fileObj = blob.fileObj;
-		this.log("****FileUploader.blobqueue: Blob tranfered. File token: ", fileObj.fileLocalToken, ". Blob Index: ", blob.index);
+		this.log("****FileUploader.blobqueue: Blob tranfered. File token: ", blob.fileObj.fileLocalToken, ". Blob Index: ", blob.index);
 		avalon.Array.remove(this.requestPool, blob);
 	}
 

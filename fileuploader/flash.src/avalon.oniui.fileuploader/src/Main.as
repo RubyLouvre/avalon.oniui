@@ -31,6 +31,7 @@ package
 	import flash.events.SecurityErrorEvent;
 	import flash.events.HTTPStatusEvent;
 	import flash.events.ErrorEvent;
+	import flash.events.IEventDispatcher;
 	
 	/**
 	 * ...
@@ -80,7 +81,6 @@ package
 		public function uploadBlob(fileToken:String, offset:Number, size:Number, config:Object):void {
 			var file:FileReference = _fileDics[fileToken];
 			if (file == null) return;
-			jsLog(["FLASH START UPLOAD. CALLBACKS: ", config.onSuccess, "|", config.onError]);
 			this.readFile(file, function (position:Number, length:Number, c:Object, f:FileReference):void {
 				
 				var successCallback:String = c.onSuccess;
@@ -110,16 +110,26 @@ package
 				request.data = form.GetFormData(); 
 				var urlLoader:URLLoader = new URLLoader();
 				var completeFn:Function = function(e:Event):void {
+					urlLoader.removeEventListener(Event.COMPLETE, completeFn);
+					urlLoader.removeEventListener(IOErrorEvent.IO_ERROR, errorFn);
+					urlLoader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, errorFn);
 					fireAsyncBridgeEvent(successCallback, [urlLoader.data as String], false);
 				};
 				var errorFn: Function = function(e:ErrorEvent):void {
+					urlLoader.removeEventListener(Event.COMPLETE, completeFn);
+					urlLoader.removeEventListener(IOErrorEvent.IO_ERROR, errorFn);
+					urlLoader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, errorFn);
+					fireAsyncBridgeEvent(successCallback, [urlLoader.data as String], false);
 					fireAsyncBridgeEvent(errorCallback, [e.toString()], false);
 				};
-				urlLoader.addEventListener(Event.COMPLETE, completeFn, false, 0, true);
-				urlLoader.addEventListener(IOErrorEvent.IO_ERROR, errorFn, false, 0, true);
-				urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, errorFn, false, 0, true);
+				urlLoader.addEventListener(Event.COMPLETE, completeFn);
+				urlLoader.addEventListener(IOErrorEvent.IO_ERROR, errorFn);
+				urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, errorFn);
 				urlLoader.load(request);
 			}, this, [offset, size, config, file]);
+		}
+		
+		private function uploadBlobCompleted(e:Event):void {
 		}
 		
 		public function removeCacheFileByToken(fileToken:String):void {

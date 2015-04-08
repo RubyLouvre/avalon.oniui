@@ -45,6 +45,7 @@ define(["avalon"], function (avalon) {
 			if (poolBlob.fileObj.fileLocalToken == fileLocalToken) {
 				avalon.Array.remove(this.requestPool, poolBlob);
 				poolBlob.cancelUpload();
+				this.inSending--;
 			} else {
 				i++;
 			}
@@ -55,7 +56,6 @@ define(["avalon"], function (avalon) {
 		if (!Array.isArray(items)) items = [items];
 		var me = this;
 		me.queue = me.queue.concat(items);
-		me.length += items.length;
 
 		items.forEach(function (blob) {
 			if (!me.filesBlobMonitor.hasOwnProperty(blob.fileObj.fileLocalToken)) {
@@ -117,43 +117,6 @@ define(["avalon"], function (avalon) {
 		this.inSending--;
 		this.stopUploadByLocalToken(blob.fileObj.fileLocalToken);
 		this.log("****FileUploader.runtime: Blob upload error. File token: ", blob.fileObj.fileLocalToken, " .Chunk index: ", blob.index, " . Message: ", textStatus)
-	}
-
-	/*
-	 * 拼接Blob的Ajax请求的数据参数。
-	 */
-	blobQueue.prototype.buildRequestParams = function (blob) {
-		var paramConfig = this.$runtime.getRequestParamConfig(blob),
-			blobParamName = paramConfig.requiredParamsConfig.blobParamName,
-			fileTokenParamName = paramConfig.requiredParamsConfig.fileTokenParamName,
-			totalChunkParamName = paramConfig.requiredParamsConfig.totalChunkParamName,
-			chunkIndexParamName = paramConfig.requiredParamsConfig.chunkIndexParamName,
-			fileNameParamName = paramConfig.requiredParamsConfig.fileNameParamName,
-			customizedParams = paramConfig.customizedParams,
-			blobMd5ParamName = paramConfig.requiredParamsConfig.blobMd5ParamName;
-
-		var data = {};
-		data[blobParamName] = blob.data;
-		if(!!blob.fileObj.fileKey) data[fileTokenParamName] = blob.fileObj.fileKey;
-		data[totalChunkParamName] = blob.fileObj.chunkAmount;
-		data[chunkIndexParamName] = blob.index;
-		data[fileNameParamName] = blob.fileObj.name;
-		if(!!blob.md5) data[blobMd5ParamName] = blob.md5;
-
-
-		data = avalon.mix(data, customizedParams);
-
-		// 转FormData
-		if (window.FormData != undefined) {
-	        var formData = new FormData();
-	        for (var i in data) {
-	        	if (data.hasOwnProperty(i)) {
-	        		formData.append(i, data[i]);
-	        	}
-	        }
-	        data = formData;
-	    }
-		return data;
 	}
 
 	blobQueue.prototype.isRequestPoolFull = function () {

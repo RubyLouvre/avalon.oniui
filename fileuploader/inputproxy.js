@@ -1,4 +1,23 @@
-define(["avalon"], 
+/**
+ * @cnName FileUploader组件内部对于文件分块的包装。
+ * @enName Wrap Blob in FileUploader
+ * @introduce
+ *    <p>对于文件分块的一个包装类，负责抹平HTML5和Flash文件接口的差异。每个实例对应一个文件分块。本类的实例不承载文件分块的实际数据。</p>
+ *    <p>属性介绍</p>
+ *    <p>offset：在文件字节中的开始位置。</p>
+ *    <p>size：分块尺寸。按字节计算。</p>
+ *    <p>fileObj：blob所属的文件对象。是FileUploader的File类的实例。</p>
+ *    <p>uploadedBytes：已上传的字节数。</p>
+ *    <p>retried：上传失败后重试的次数。</p>
+ *    <p>successEventBusToken：采用Flash上传时，FlashEventHub中注册的分块上传成功的事件名。</p>
+ *    <p>errorEventBusToken：采用Flash上传时，FlashEventHub中注册的分块上传失败  的事件名。</p>
+ *    <p>事件介绍</p>
+ *    <p>blobProgressed事件：使用Flash上传时该事件无效。当文件分块的上传进度发生变化时产生的事件。包含两个参数，参数1为文件分块对象本身，参数2为已上传的字节数。</p>
+ *    <p>blobUploaded事件：当文件分块上传成功时产生的事件。包含两个参数，参数1为文件对象分块本身，参数2为服务器返回的responseText。</p>
+ *    <p>blobErrored事件：当文件分块上传并且重试数次后仍然失败，此事件会触发。包含两个参数，参数1为文件对象分块本身，参数2为服务器返回的error状态文本。</p>
+ *  @updatetime 2015-4-7
+ */
+ define(["avalon"], 
 function ($$) {
 	var proxyContructor = function (target, isH5, contextGen) {
 		this.contextGen = contextGen;

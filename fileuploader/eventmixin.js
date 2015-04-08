@@ -1,6 +1,14 @@
-define(["avalon"], function(avalon) {
-	var jsDebugger = true;
-	var flashDebugger = true;
+/**
+ * @cnName FileUploader组件内部应用的事件传播系统
+ * @enName EventMixin for FileUploader
+ * @introduce
+ *    <p>为解耦FileUploader内部的组件，编制了一个简单的事件系统。
+ *      对于任何原生的JS类都可以使用MixEvent(Class)来加入事件的能力。MixEvent后为Class的原型上加入了attachEvent、unattachEvent、fireEvent、purge等方法。</p>
+ *  @updatetime 2015-4-7
+ */
+define(["avalon"], function($$) {
+	var jsDebugger = false;
+	var flashDebugger = false;
 
 	var mixEvent = function mixEvent(jsClass) {
 		if (jsClass.prototype.__eventmixed) return;
@@ -47,7 +55,7 @@ define(["avalon"], function(avalon) {
 			}
 		}
 		jsClass.prototype.log = function () {
-			if (this.jsDebuggerOn) avalon.log.apply(avalon, Array.prototype.slice.call(arguments, 0));
+			if (this.jsDebuggerOn) $$.log.apply($$, Array.prototype.slice.call(arguments, 0));
 		}
 		jsClass.prototype.jsDebuggerOn = jsDebugger;
 		jsClass.prototype.flashDebuggerOn = jsDebugger;

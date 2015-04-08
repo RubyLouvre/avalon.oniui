@@ -19,7 +19,7 @@
                 <p>说明：配置dateCellRender用来格式化输出日期</p>
             </fieldset>
             <script> 
-                require("datepicker/avalon.datepicker", function(avalon) {
+                require(["datepicker/avalon.datepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.datepicker = {
                             dateCellRender: function(date, vmodel, dateObject) {
@@ -51,7 +51,7 @@
                             &lt;p&gt;说明：配置dateCellRender用来格式化输出日期&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.datepicker", function(avalon) {
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.datepicker = {
                                         dateCellRender: function(date, vmodel, dateObject) {

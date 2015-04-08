@@ -34,7 +34,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             type = type
             item = item.split("{{MS_WIDGET_DIVIDER}}")
             templateCache[type] = {
-                "svg": item[1],
+                "svg": item[1] || item[0],
                 "vml": item[0]
             }
         }
@@ -327,6 +327,13 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
     }, function(vmodel, ele) {
         return _config["ball"].effect(vmodel, ele, ["path", "arc"])
     })
+    // 注册自定义图片
+    addType("img", {
+        src: "https://source.qunarzz.com/piao/images/loading_camel.gif",//@config type=img，loading效果的gif图片
+        width: 52,//@config type=img，loading效果宽度
+        height: 39,//@config type=img，loading效果高度
+        miao: 0
+    }, void 0, void 0)
     var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect
     var widget = avalon.ui.loading = function(element, data, vmodels) {
 
@@ -368,20 +375,18 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                 vmodel.width = vmodel.width == false ? vmodel.height : vmodel.width
                 vmodel.height = vmodel.height == false ? vmodel.width : vmodel.height
                 // 计算绘图数据
-                var loop = 0, drawer = vmodel.drawer(vmodel)
-                while(loop < vmodel.count && drawer) {
-                    drawer(loop)
-                    loop++
+                if(vmodel.drawer) {
+                    var loop = 0, drawer = vmodel.drawer(vmodel)
+                    while(loop < vmodel.count && drawer) {
+                        drawer(loop)
+                        loop++
+                    }
                 }
                 elementParent.appendChild(avalon.parseHTML(vmodel.template.replace("{{MS_WIDGET_HTML}}", html).replace("{{MS_WIDGET_ID}}", vmodel.$loadingID)))
-                if (continueScan) {
-                    continueScan()
-                } else {
-                    avalon.log("avalon请尽快升到1.3.7+")
-                    avalon.scan(element, [vmodel].concat(vmodels))
-                    if (typeof options.onInit === "function") {
-                        options.onInit.call(element, vmodel, options, vmodels)
-                    }
+                avalon.log("avalon请尽快升到1.3.7+")
+                avalon.scan(elementParent, [vmodel].concat(vmodels))
+                if (typeof options.onInit === "function") {
+                    options.onInit.call(element, vmodel, options, vmodels)
                 }
                 vmodel._effect()
             }
@@ -448,9 +453,6 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
         //@config onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
         color: "#619FE8", //@config 效果的颜色
-        // width: 32, //@config loading动画的宽度，圆形排列的外直径
-        // height: 32, //@config loading动画的高度，如果不设置，默认等于width
-        // widthInner: 28,//@config loading动画是圆形排列的时候，这个参数指的是内直径
         type: "ball", //@config 类型，默认是ball，球，可取spin,ticks
         toggle: true, //@config 是否显示
         modal: true, //@config 是否显示遮罩

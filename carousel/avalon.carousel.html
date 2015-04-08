@@ -16,7 +16,10 @@
 			 ms-css-position="itemPosition"
 			 ms-css-opacity="getOpacity($index)"
 			 >
-			<img ms-src="{{el}}" alt=""/>
+			<img class="oni-carousel-img" ms-src="{{el.src}}" ms-alt="{{el.alt}}" />
+			<div class="oni-carousel-content">
+				MS_OPTION_CONTENT
+			</div>
 		</div>
 	</div>
 	<div class="oni-carousel-selection-wrap" 

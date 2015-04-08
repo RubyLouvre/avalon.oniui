@@ -37,7 +37,7 @@
 <p>好了，我们正式介绍如何编写组件本身。我们要记住一点，<a href="https://github.com/RubyLouvre/avalon">avalon</a>所有操作都与扫描机制息息相关，就像jQuery喜欢把它的API选择器引擎绑架在一起。为什么这样说呢，因为视图与代码分定义在不同的地方，只有经过扫描后，视图中的绑定才会挟持它们所在的元素节点与VM关联在一起。框架会默认在domReady之后扫描一次。
     如果这时我们用到的组件所对应的JS文件还没有加载好，那么当加载好后我们需要自己手动扫描。</p>
 <pre class="brush:javascript;gutter:false;toolbar:false;">
-require("avalon.dialog", function() {
+require(["avalon.dialog"], function() {
     avalon.define("test", function(vm) {
         vm.$skipArray = ["dialog"]
         vm.dialog = {

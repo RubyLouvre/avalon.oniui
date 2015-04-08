@@ -33,7 +33,7 @@
                     &lt;/div&gt;
 
                     &lt;script&gt;
-                        require("avalon.textbox", function() {
+                        require(["textbox/avalon.textbox"], function() {
                             avalon.define("demo6", function(vm) {
                                 vm.inputValue = "";
                                 vm.changedCallback = function() {
@@ -63,12 +63,12 @@
         </div>
 
         <script>
-            require("textbox/avalon.textbox", function() {
+            require(["textbox/avalon.textbox"], function() {
                 avalon.define("demo6", function(vm) {
                     vm.inputValue = "";
-                    vm.changedCallback = function() {
+                    vm.changedCallback = function(val) {
                         console.log(arguments)
-                        vm.inputValue += "_tht result of callback handler";
+                        vm.inputValue = val + "_tht result of callback handler";
                     }
                 })
 

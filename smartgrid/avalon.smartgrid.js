@@ -203,13 +203,27 @@ define(["avalon",
     }
     var countter = 0
     var widget = avalon.ui.smartgrid = function (element, data, vmodels) {
-        var options = data.smartgridOptions, $element = avalon(element), pager = options.pager, vmId = data.smartgridId;
+        var options = data.smartgridOptions, $element = avalon(element), pager = options.pager, vmId = data.smartgridId,
+            $initRender = true
         perfectColumns(options, element);
         initContainer(options, element);
         options._position = positionAbsolute ? 'absolute' : 'fixed';
         options.loading.onInit = function (vm, options, vmodels) {
             vmodel.loadingVModel = vm;
         };
+        options.$pagerConfig = {
+            canChangePageSize: true,
+            options: [
+                10,
+                20,
+                50,
+                100
+            ],    //默认[10,20,50,100]
+            onInit: function(pagerVM, options, vmodels) {
+                vmodel && (vmodel.pager = pagerVM)
+                pagerVM && vmodel._entryCount(pagerVM)
+            }
+        }
         options.pageable = options.pageable !== void 0 ? options.pageable : true;
         if (avalon.type(pager) === 'object') {
             pager.prevText = pager.prevText || '\u4E0A\u4E00\u9875';
@@ -225,9 +239,17 @@ define(["avalon",
                     return tmpl + optionsStr;
                 };
             }
-        } else {
-            options.pager = {};
+            if (pager.onInit && typeof pager.onInit === "function") {
+                var onInit = pager.onInit
+                pager.onInit = function(pagerVM, options, vmodels) {
+                    vmodel && (vmodel.pager = pagerVM)
+                    onInit(pagerVM, options, vmodels)
+                    pagerVM && vmodel._entryCount(pagerVM)
+                }
+            }
+            avalon.mix(options.$pagerConfig, options.pager)
         }
+        options.pager = null
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options);
         options.$skipArray = [
@@ -242,13 +264,14 @@ define(["avalon",
             'loadingVModel',
             'loading',
             'pageable',
-            'pager',
             'noResult',
             'sortable',
+            'pager',
             'data',// 一定不要去掉啊，去掉了就会出错
             'containerMinWidth',
             '_disabledData',
-            '_enabledData'
+            '_enabledData',
+            '_filterCheckboxData'
         ].concat(options.$skipArray);
         var vmodel = avalon.define(vmId, function (vm) {
             avalon.mix(vm, options);
@@ -261,7 +284,10 @@ define(["avalon",
             vm._allEnabledData = [];
             vm._disabledData = [];
             vm._enabledData = [];
+            vm._filterCheckboxData = [];
             vm.loadingVModel = null;
+            vm._dataRender = false
+            vm.perPages = void 0
             vm._hiddenAffixHeader = function(column, allChecked) {
                 var selectable = vmodel.selectable
                 return selectable && selectable.type && column.key=='selected' && !allChecked
@@ -278,6 +304,16 @@ define(["avalon",
                 });
                 return selectedData.concat(vmodel._enabledData);
             };
+            vm._entryCount = function(pagerVM) {
+                if(vm.perPages !== void 0) return
+                function countEntry(n) {
+                    var data = vm.data
+                    vm.perPages = n
+                    if(data.length > n) vm.render(data.slice(0, n))
+                }
+                pagerVM.$watch("perPages", countEntry)
+                countEntry(pagerVM.perPages)
+            }
             vm.selectAll = function (b) {
                 b = b !== void 0 ? b : true;
                 vmodel._selectAll(null, b);
@@ -362,7 +398,6 @@ define(["avalon",
                             data, 
                             input = tr.cells[0].getElementsByTagName('input')[0], 
                             dataIndex = input && avalon(input).attr('data-index');
-
                         if (dataIndex !== null && dataIndex !== void 0) {
                             data = datas[dataIndex];
                             if (!data.disable) {
@@ -375,7 +410,7 @@ define(["avalon",
                         }
                     }
                     if (val) {
-                        vmodel._enabledData = vmodel._allEnabledData;
+                        vmodel._enabledData = vmodel._allEnabledData.concat();
                     } else {
                         vmodel._enabledData = [];
                     }
@@ -406,7 +441,7 @@ define(["avalon",
             };
             vm._setColumnWidth = function (resize) {
                 var cells = vmodel._container.getElementsByTagName('tr')[0].cells, columns = vmodel.columns, _columns = columns.$model, $gridContainer = avalon(vmodel.container), containerWidth = $gridContainer.width(), minColumnWidth = getMinColumnWidth(_columns), firstStringColumn = getFirstStringColumn(columns, vmodel);
-                if (minColumnWidth > containerWidth && !resize) {
+                if (minColumnWidth > containerWidth && !resize || !vm.autoResize) {
                     $gridContainer.css('width', minColumnWidth);
                     firstStringColumn.width = firstStringColumn.configWidth;
                 } else {
@@ -443,6 +478,9 @@ define(["avalon",
                         data[name] = data[name] !== void 0 ? data[name] : column.defaultValue;
                     }
                 }
+                if(vm.pageable && vm.pager && vm.pager.perPages) {
+                    if(datas.length > vm.pager.perPages) datas = datas.slice(0, vm.pager.perPages)
+                }
                 html = fn({
                     data: datas,
                     columns: _columns,
@@ -454,12 +492,23 @@ define(["avalon",
                 });
                 return html;
             };
+            vm._getAllCheckboxDisabledStatus = function(allSelected) {
+                var disabledCheckboxLen = vmodel._filterCheckboxData.length,
+                    disabledData = vmodel._disabledData.length,
+                    noneSelectedDataLen = disabledCheckboxLen + disabledData
+
+                if (allSelected) {
+                    return noneSelectedDataLen === vmodel.data.length ? true : false
+                } else {
+                    return false
+                }
+            };
 
             /**
              * @interface 增加行，已經渲染的不會再操作
              * @param 新增的行
              */
-            vm.addRows = function(data, init) {
+            vm.addRows = function(data, init, noShowLoading) {
                 // 防止 addRows([])带来问题
                 if((!data || !data.length) && !init) return
                 var tableTemplate = "",
@@ -492,11 +541,11 @@ define(["avalon",
                     vmodel._allSelected = allSelected;
                     getSelectedData(vmodel);
                 }
-                vmodel.showLoading(vmodel.data);
+                if (!noShowLoading) vmodel.showLoading(vmodel.data);
                 avalon.nextTick(function () {
                     avalon.scan(vmodel.container, [vmodel].concat(vmodels));
                     vmodel._setColumnWidth();
-                    vmodel.hideLoading();
+                    if (!noShowLoading) vmodel.hideLoading();
                 });
                 if (sorting) sorting = false
             }
@@ -520,15 +569,20 @@ define(["avalon",
                 }
                 if(!vmodel.getLen(vmodel.data)) vmodel.render(void 0, true)
             }
-            vm.render = function (data, init) {
+            vm.render = function (data, init, noShowLoading) {
                 if (avalon.type(data) === 'array') {
                     vmodel.data = data;
                 } else {
                     init = data;
                 }
-                dataFracte(vmodel);
                 init = init === void 0 || init ? true : false
-                vmodel.addRows(void 0, init)
+                if (!$initRender) {
+                    dataFracte(vmodel);
+                    vmodel._dataRender = !vmodel._dataRender
+                } else {
+                    $initRender = false
+                }
+                vmodel.addRows(void 0, init, noShowLoading)
                 if (sorting) {
                     sorting = false;
                 } else if (!init) {
@@ -536,9 +590,10 @@ define(["avalon",
                 }
             };
             vm.$init = function () {
-                var container = vmodel.container, pagerVM = null, intervalID = 0, gridFrame = '';
+                var container = vmodel.container, gridFrame = '';
                 gridFrame = gridHeader.replace('MS_OPTION_ID', vmodel.$id);
                 container.innerHTML = gridFrame;
+                dataFracte(vmodel)
                 avalon.scan(container, vmodel);
                 avalon.nextTick(function () {
                     vmodel._container = container.getElementsByTagName('tbody')[0];
@@ -567,13 +622,14 @@ define(["avalon",
                 }
                 element.resizeTimeoutId = 0;
                 callbacksNeedRemove.resizeCallback = avalon(window).bind('resize', function () {
+                    if(!vmodel.autoResize) return
                     clearTimeout(element.resizeTimeoutId);
                     var clientWidth = avalon(window).width();
                     if (clientWidth <= vmodel.containerMinWidth) {
                         element.style.width = vmodel.containerMinWidth + 'px';
                     }
                     element.resizeTimeoutId = setTimeout(function () {
-                        vmodel._setColumnWidth(true);
+                        vmodel._container && vmodel._setColumnWidth(true);
                     }, 150);
                 });
                 if (typeof options.onInit === 'function') {
@@ -586,29 +642,12 @@ define(["avalon",
                 avalon(window).unbind('resize', callbacksNeedRemove.resizeCallback).unbind('scroll', callbacksNeedRemove.scrollCallback);
             };
         });
-        if (vmodel.pageable) {
-            var flagPager = false;
-            var intervalID = setInterval(function () {
-                var elem = document.getElementById('pager-' + vmodel.$id);
-                if (elem && !flagPager) {
-                    elem.setAttribute('ms-widget', 'pager,pager-' + vmodel.$id);
-                    avalon(elem).addClass('oni-smartgrid-pager-wrapper');
-                    avalon.scan(elem, vmodel);
-                    flagPager = true;
-                }
-                var pagerVM = avalon.vmodels['pager-' + vmodel.$id];
-                if (pagerVM) {
-                    vmodel.pager = pagerVM;
-                    clearInterval(intervalID);
-                    element.removeAttribute('id');
-                }
-            }, 100);
-        }
         return vmodel;
     };
     widget.defaults = {
         container: '',
         // element | id
+        autoResize: true,
         data: [],
         columns: [],
         allChecked: true,
@@ -624,15 +663,7 @@ define(["avalon",
             modal: true,
             modalBackground: '#000'
         },
-        pager: {
-            canChangePageSize: true,
-            options: [
-                10,
-                20,
-                50,
-                100
-            ]    //默认[10,20,50,100]
-        },
+        
         sortable: { remoteSort: true },
         addRow: function (tmpl, columns, vmodel) {
             return tmpl;
@@ -660,7 +691,8 @@ define(["avalon",
         var type = options.selectable.type, container = options._container;
         if (type === 'Checkbox' || type === "Radio") {
             avalon.bind(container, 'click', function (event) {
-                var target = event.target, $target = avalon(target), $tr = avalon(target.parentNode.parentNode), datas = options.data, onSelectAll = options.onSelectAll, enabledData = options._enabledData, disabledData = options._disabledData, dataIndex = $target.attr('data-index');
+                var target = event.target, $target = avalon(target), $tr = avalon(target.parentNode.parentNode), datas = options.data, onSelectAll = options.onSelectAll, enabledData = options._enabledData, disabledData = options._disabledData, dataIndex = $target.attr('data-index'),
+                    filterCheckboxData = options._filterCheckboxData;
                 if (!$target.attr('data-role') || dataIndex === null) {
                     return;
                 }
@@ -682,34 +714,32 @@ define(["avalon",
                         options.onRowSelect.call($tr[0], rowData, isSelected);
                     }
                 }
-                if (enabledData.length == datas.length - disabledData.length) {
-                    options._allSelected = true    // 是否全选的回调，通过用户点击单独的行来确定是否触发
-                        // if (avalon.type(onSelectAll) === "function") {
-                        //     onSelectAll.call(options, datas, true)
-                        // }
-                    ;
+                if (enabledData.length == datas.length - disabledData.length- filterCheckboxData.length) {
+                    options._allSelected = true 
                 } else {
-                    options._allSelected = false    // if (!selectedData.length) { // 通过点击每一行最终确定是否全选的回调
-                        //     if (avalon.type(onSelectAll) === "function") {
-                        //         onSelectAll.call(options, datas, false)
-                        //     }
-                        // }
-                    ;
+                    options._allSelected = false  
                 }
             });
         }
     }
 
     function dataFracte(vmodel) {
-        var data = vmodel.data, enabledData = vmodel._enabledData = [], disabledData = vmodel._disabledData = [];
-        data.forEach(function (dataItem, index) {
+        var data = vmodel.data, enabledData = vmodel._enabledData = [], disabledData = vmodel._disabledData = [],
+            filterCheckboxData = vmodel._filterCheckboxData = []
+
+        for(var i = 0, len = data.length, dataItem; i < len; i++) {
+            dataItem = data[i]
             if (dataItem.disable) {
                 disabledData.push(dataItem);
-            } else {
-                enabledData.push(dataItem);
+                continue
             }
-        });
-        vmodel._allEnabledData = enabledData;
+            if (dataItem.checkboxShow == false) {
+                filterCheckboxData.push(dataItem)
+                continue
+            }
+            enabledData.push(dataItem);
+        }
+        vmodel._allEnabledData = enabledData.concat();
     }
     function getSelectedData(vmodel) {
         var datas = vmodel.data, enabledData = vmodel._enabledData = [];
@@ -745,16 +775,27 @@ define(["avalon",
         return showColumnWidth;
     }
     function isSelectAll(datas) {
-        var allSelected = true, len = datas.length;
+        var allSelected = true, len = datas.length,
+            checkboxFilterAll = 0
+
         if (!len) {
             allSelected = false;
             return;
         }
         for (var i = 0; i < len; i++) {
             var data = datas[i];
-            if (!data.selected && !data.disable) {
+            if (data.selected === void 0) {
+                data.selected = false
+            }
+            if (data.checkboxShow !== false && !data.selected && !data.disable) {
                 allSelected = false;
             }
+            if (data.checkboxShow === false) {
+                checkboxFilterAll++
+            }
+        }
+        if (checkboxFilterAll === len) {
+            allSelected = false
         }
         return allSelected;
     }
@@ -803,7 +844,10 @@ define(["avalon",
                 selectFormat = function (vmId, field, index, selected, rowData, disable, allSelected) {
                     if (allSelected && type === 'Radio')
                         return;
-                    return '<input type=\'' + type.toLowerCase() + '\'' + (disable ? 'disabled ' : '') + (selected ? 'checked=\'checked\'' : '') + 'name=\'selected\' ' + (allSelected ? 'ms-click=\'_selectAll\' ms-duplex-radio=\'_allSelected\'' : 'data-index=\'' + index + '\'') + 'data-role=\'selected\'/>';
+                    if (rowData.checkboxShow === false) {
+                        return ""
+                    }
+                    return '<input type=\'' + type.toLowerCase() + '\'' + ' ms-disabled=\'_getAllCheckboxDisabledStatus('+ (allSelected ? true : false) + ', _dataRender)\' ' + (selected ? 'checked=\'checked\'' : '') + ' name=\'selected\' ' + (allSelected ? ' ms-click=\'_selectAll\' ms-duplex-radio=\'_allSelected\'' : ' data-index=\'' + index + '\'') + ' data-role=\'selected\'/>';
                 };
                 allSelected = isSelectAll(options.data) || false;
                 options._allSelected = allSelected;

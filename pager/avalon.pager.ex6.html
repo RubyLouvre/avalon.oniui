@@ -12,13 +12,26 @@
         </script>
         <script>
             require(["pager/avalon.pager"], function() {
+                var pager
                 avalon.define("test", function(vm) {
                     vm.pager = {
                         alwaysShowNext: true,
-                        alwaysShowPrev: true
+                        alwaysShowPrev: true,
+                        onInit: function(p) {
+                            pager = p
+                        },
+                        onJump: function(a) {
+                            avalon.log(a)
+                        }
                     }
                     vm.$skipArray = ["pager"]
                 })
+                setTimeout(function() {
+                    pager.currentPage = 4
+                    setTimeout(function() {
+                        pager.currentPage = 3
+                    }, 2000)
+                }, 3000)
                 avalon.scan()
             })
         </script>

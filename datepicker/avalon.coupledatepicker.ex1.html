@@ -37,7 +37,7 @@
                 <p>说明：双日历框除了上述的dom结构外也可以让其子元素为空，组件会自动创建需要的包装子元素</p>
             </fieldset>
             <script> 
-                require("datepicker/avalon.coupledatepicker", function(avalon) {
+                require(["datepicker/avalon.coupledatepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                     })
                     avalon.scan();
@@ -79,7 +79,7 @@
                             &lt;p&gt;说明：双日历框除了上述的dom结构外也可以让其子元素为空，组件会自动创建需要的包装子元素&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.coupledatepicker", function(avalon) {
+                            require(["datepicker/avalon.coupledatepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                 })
                                 avalon.scan();

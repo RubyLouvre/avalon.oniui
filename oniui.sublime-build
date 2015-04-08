@@ -1,0 +1,5 @@
+{
+	"shell": true,
+	"cmd": ["sublime-build.sh", "$file_base_name", "$file_extension"],
+	"working_dir": "${file_path/\\/\//}/../"
+}

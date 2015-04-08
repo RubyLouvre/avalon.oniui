@@ -12,9 +12,8 @@ define(["avalon",
             eEnd   : (touch ? 'touchend' : 'mouseup'),
         },
         templateArr = template.split("MS_OPTION_TEXTBOX"),
-        template = templateArr[1],
         textbox = templateArr[0];
-
+    template = templateArr[1]
     var widget = avalon.ui.timer = function(element, data, vmodels) {
         var options = data.timerOptions,
             scrollElements = {},

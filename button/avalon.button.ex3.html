@@ -43,7 +43,7 @@
             </div>
         </fieldset>
         <script>
-            require("./button/avalon.button", function() {
+            require(["./button/avalon.button"], function() {
                 avalon.define("demo", function(vm) {
                     vm.$skipArray = ["group1", "group2", "group3", "group4","group5", "group6","group7", "group8","group9", "group10","group11", "group12",]
                     vm.group1 = {
@@ -333,7 +333,7 @@
             &lt;/div&gt;
         &lt;/fieldset&gt;
         &lt;script&gt;
-            require("./button/avalon.button", function() {
+            require(["./button/avalon.button"], function() {
                 avalon.define("demo", function(vm) {
                     vm.$skipArray = ["group1", "group2", "group3", "group4","group5", "group6","group7", "group8","group9", "group10","group11", "group12",]
                     vm.group1 = {

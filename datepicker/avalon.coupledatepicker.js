@@ -31,12 +31,14 @@ define(["../avalon.getModel",
             var ruleVM = avalon.getModel(rules, vmodels)
             rules = ruleVM[1][ruleVM[0]];
         }
-        rules = rules.$model || rules
-        if (rules) { // 让rules对象的toMinDate、toMaxDate、fromMinDate、fromMaxDate是可监控的属性
+        if (rules && avalon.type(rules) === "object") { // 让rules对象的toMinDate、toMaxDate、fromMinDate、fromMaxDate是可监控的属性
+            rules = avalon.mix({}, rules.$model || rules)
             rules.toMinDate = rules.toMinDate || ""
             rules.toMaxDate = rules.toMaxDate || ""
             rules.fromMinDate = rules.fromMinDate || ""
             rules.fromMaxDate = rules.fromMaxDate || ""
+        } else {
+            rules = ""
         }
         options.rules = rules
         _toMinDate = rules.toMinDate
@@ -110,11 +112,16 @@ define(["../avalon.getModel",
                     fromContainer = null,
                     toContainer = null,
                     calendarTemplate = "",
-                    inputFromValue = ""
+                    inputFromValue = "",
+                    scanVM = [vmodel]
 
                 avalon(element).addClass("oni-coupledatepicker")
                 if (duplexFrom) {
                     inputFromValue = duplexFrom[1][duplexFrom[0]]
+                    scanVM.push(duplexFrom[1])
+                }
+                if (duplexTo) {
+                    scanVM.push(duplexTo[1])
                 }
                 applyRules(inputFromValue && parseDate(inputFromValue))
 
@@ -134,14 +141,9 @@ define(["../avalon.getModel",
                     calendar = avalon.parseHTML(calendarTemplate)
                     element.appendChild(calendar)
                 }
-                if (continueScan) {
-                    continueScan()
-                } else {
-                    avalon.log("avalon请尽快升到1.3.7+")
-                    avalon.scan(element, [vmodel].concat(vmodels))
-                    if (typeof options.onInit === "function") {
-                        options.onInit.call(element, vmodel, options, vmodels)
-                    }
+                avalon.scan(element, scanVM.concat(vmodels))
+                if (typeof options.onInit === "function") {
+                    options.onInit.call(element, vmodel, options, vmodels)
                 }
             };
             vm.$remove = function() {
@@ -347,6 +349,7 @@ define(["../avalon.getModel",
          * @returns {Date} 解析后的日期对象 
          */
         parseDate: function(str){
+            if (avalon.type(str) === "date") return str
             var separator = this.separator
             var reg = "^(\\d{4})" + separator+ "(\\d{1,2})"+ separator+"(\\d{1,2})$"
             reg = new RegExp(reg)
@@ -359,6 +362,10 @@ define(["../avalon.getModel",
          * @returns {String} 格式化后的日期字符串 
          */
         formatDate: function(date){
+            if (avalon.type(date) !== "date") {
+                avalon.log("the type of " + date + "must be Date")
+                return ""
+            }
             var separator = this.separator,
                 year = date.getFullYear(), 
                 month = date.getMonth(), 

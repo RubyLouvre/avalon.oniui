@@ -1,8 +1,7 @@
 define(["../avalon.getModel", 'text!./avalon.rating.html', 'css!../chameleon/oniui-common.css'],
     function(avalon, sourceHTML) {
 
-    var ratingTemplate = sourceHTML,
-        getFunc = function(name, vmodels) {
+    var getFunc = function(name, vmodels) {
             var changeVM = avalon.getModel(name, vmodels);
             return changeVM && changeVM[1][changeVM[0]] || avalon.noop;
         },
@@ -15,6 +14,7 @@ define(["../avalon.getModel", 'text!./avalon.rating.html', 'css!../chameleon/oni
         var options = data.ratingOptions,
             onSelect = getFunc('onSelect', vmodels),
             onFloat = getFunc('onFloat', vmodels),
+            ratingTemplate = options.getTemplate(sourceHTML),
             rating;
 
         var vmodel = avalon.define(data.ratingId, function(vm) {
@@ -26,22 +26,31 @@ define(["../avalon.getModel", 'text!./avalon.rating.html', 'css!../chameleon/oni
             vm.list = new Array(options.max);
 
             vm.mouseover = function(index) {
-                vm.floatValue = index + 1;
+                vmodel.floatValue = index + 1;
             };
 
             vm.select = function(index) {
-                vm.value = index + 1;
+                vmodel.value = index + 1;
             };
 
             vm.mouseout = function() {
-                vm.floatValue = vm.value;
+                vmodel.floatValue = vmodel.value;
             };
 
             vm.setByIp = function() {
                 var value = parseInt(element.value);
-                if (value !== vm.value) {
-                    vm.value = vm.floatValue = value ? value : 0;
+                if (value !== vmodel.value) {
+                    vmodel.value = vmodel.floatValue = value ? value : 0;
                 }
+            };
+
+            vm.getRating = function() {
+                return vmodel.value
+            }
+
+            vm.set = function(value) {
+                vmodel.value = value;
+                vmodel.floatValue = value;
             };
 
             vm.$init = function() {
@@ -51,14 +60,17 @@ define(["../avalon.getModel", 'text!./avalon.rating.html', 'css!../chameleon/oni
                     parentNode.insertBefore(rating, element);
                     parentNode.insertBefore(element, rating);
                     element.setAttribute("data-duplex-changed", "setByIp");
-                    vm.$watch('value', function(v) {
+                    vmodel.$watch('value', function(v) {
                         element.value = v;
                     });
                 } else {
-                    vm.value = vm.floatValue = vm.defaultValue;
+                    vmodel.value = vmodel.floatValue = vmodel.defaultValue;
                     element.appendChild(rating);
                 }
                 avalon.scan(rating.parentNode, [vmodel].concat(vmodels));
+                if (typeof options.onInit === "function") {
+                    options.onInit.call(element, vmodel, options, vmodels)
+                }
             };
 
             vm.$remove = function() {
@@ -88,7 +100,10 @@ define(["../avalon.getModel", 'text!./avalon.rating.html', 'css!../chameleon/oni
         notSelectedContent: '&#xf006;',
         selectedColor: '#00A3C2',
         selectedContent: '&#xf005;',
-        size: 20
+        size: 20,
+        getTemplate: function(tmp) {
+            return tmp
+        }
     };
 
     return avalon;

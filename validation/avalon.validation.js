@@ -70,7 +70,7 @@
  * <p>如果用户指定了<code>norequired</code>验证规则，如果input为空, 那么就会跳过之后的所有验证</p>
  */
 
-define(["../promise/avalon.promise"], function(avalon) {
+define(["avalon","../mmPromise/mmPromise"], function(avalon) {
     if (!avalon.duplexHooks) {
         throw new Error("你的版本少于avalon1.3.7，不支持ms-duplex2.0，请使用avalon.validation.old.js")
     }
@@ -549,7 +549,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                                 var reason = {
                                     element: elem,
                                     data: data.data,
-                                    message: elem.getAttribute("data-duplex-message") || hook.message,
+                                    message:elem.getAttribute("data-duplex-"+name+"-message") || elem.getAttribute("data-duplex-message") || hook.message,
                                     validateRule: name,
                                     getMessage: getMessage
                                 }
@@ -627,10 +627,13 @@ define(["../promise/avalon.promise"], function(avalon) {
                     if (validateParams.length) {
                         if (vm.validateInKeyup) {
                             data.bound("keyup", function(e) {
-                                var ev = fixEvent(e)
-                                setTimeout(function() {
-                                    vm.validate(data, 0, ev)
-                                })
+                                var type = data.element && data.element.getAttribute("data-duplex-event")
+                                if (!type || /^(?:key|mouse|click|input)/.test(type)) {
+                                    var ev = fixEvent(e)
+                                    setTimeout(function() {
+                                        vm.validate(data, 0, ev)
+                                    })
+                                }
                             })
                         }
                         if (vm.validateInBlur) {
@@ -669,7 +672,7 @@ define(["../promise/avalon.promise"], function(avalon) {
         onSuccess: avalon.noop, //@config {Function} 空函数，单个验证成功时触发，this指向被验证元素this指向被验证元素，传参为一个对象数组外加一个可能存在的事件对象
         onError: avalon.noop, //@config {Function} 空函数，单个验证失败时触发，this与传参情况同上
         onComplete: avalon.noop, //@config {Function} 空函数，单个验证无论成功与否都触发，this与传参情况同上
-        onValidateAll: avalon.noop, //@config {Function} 空函数，整体验证后或调用了validateAll方法后触发
+        onValidateAll: avalon.noop, //@config {Function} 空函数，整体验证后或调用了validateAll方法后触发；有了这东西你就不需要在form元素上ms-on-submit="submitForm"，直接将提交逻辑写在onValidateAll回调上
         onReset: avalon.noop, //@config {Function} 空函数，表单元素获取焦点时触发，this指向被验证元素，大家可以在这里清理className、value
         onResetAll: avalon.noop, //@config {Function} 空函数，当用户调用了resetAll后触发，
         validateInBlur: true, //@config {Boolean} true，在blur事件中进行验证,触发onSuccess, onError, onComplete回调
@@ -689,14 +692,47 @@ define(["../promise/avalon.promise"], function(avalon) {
  
  </p>
  
- <p> 也可以在页面添加不依赖于ms-duplex的绑定</p>
+ <h2>错误提示信息的添加</h2>
+ <p>比如说&lt;input ms-duplex-alpha="aaa"/&lt;要求用户输出的都是字母，如果输入其他类型的内容，
+ 它就会报错<b style="color:red">必须是字母</p>。为什么呢，因为alpha为一个内置拦截器，
+ 定义在avalon.duplexHooks上，结构为</p>
  ```javascript
- validateVM.data.push({
- valueAccessor: function(){}
- validateParam: "xxx",
- element: element
- })
+        alpha: {
+            message: '必须是字母',
+            get: function(value, data, next) {
+                next(/^[a-z]+$/i.test(value))
+                return value
+            }
+        },
  ```
+如果想显示别的提示信息有三种办法，一就是重写这个栏截器的message属性；
+二就是添加data-duplex-message="新提示信息"（不过这个已经不提倡使用了，
+因为一个表单控制可能使用N个拦截器做验证，如ms-duplex-required-alpha-minlength，
+这会覆盖其他拦截器的默认提示信息）；三就是使用data-duplex-alpha-message="专门用于alpha提示信息" 
+  ```html
+    <input ms-duplex-required-alpha-minlength="aaa" data-duplex-alpha-message="只能全是英文字母"
+ ```    
+此外，提示信息里面可以使用插值表达式，虽然不能使用变量，也应该够用，比如说minlength拦截器
+ ```javascript
+        minlength: {
+            message: '最少输入{{min}}个字',
+            get: function(value, data, next) {
+                var elem = data.element
+                var a = parseInt(elem.getAttribute("minlength"), 10)
+                if (!isFinite(a)) {
+                    a = parseInt(elem.getAttribute("data-duplex-minlength"), 10)
+                }
+                var num = data.data.min = a
+                next(value.length >= num)
+                return value
+            }
+        },
+ ```          
+我们必须传入一个min参数,这要在元素上添加
+ ```html
+    <input ms-duplex-minlength="aaa" data-duplex-min="6"
+ ```         
+ 这样报错时就提示要<b>最少输入6个字</b>      
  */
 
 /**

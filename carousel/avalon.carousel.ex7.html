@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>carousel组件</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width">
+		<script src="../avalon.js"></script>
+		<script src="../highlight/shCore.js"></script>
+		<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+		<script>
+			require(["carousel/avalon.carousel"], function() {
+				avalon.define("demo", function(vm) {
+					vm.$opt = {
+						content: '<h2>{{el.title}}</h2>',
+						pictures: [{
+							src: "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
+							title: 'picture-1',
+							alt: 'this is picture-1'
+						}, {
+							src: "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
+							title: 'picture-2',
+							alt: 'this is picture-2'
+						}, {
+							src: "http://placehold.it/500x200/777/dddddd.jpg&text=slide3",
+							title: 'picture-3',
+							alt: 'this is picture-3'
+						}, {
+							src: "http://placehold.it/500x200/999/dddddd.jpg&text=slide4",
+							title: 'picture-4',
+							alt: 'this is picture-4'
+
+						}, {
+							src: "http://placehold.it/500x200/aaa/dddddd.jpg&text=slide5",
+							title: 'picture-5',
+							alt: 'this is picture-5'
+						}]
+					}
+					vm.$skipArray = ["carousel"]
+				})
+				avalon.scan()
+			})
+		</script>
+	</head>
+	<body ms-controller="demo">
+		<div class="wrapper">
+			<h1>图片轮播组件-自定义图片内容模板</h1>
+			<fieldset>
+				<legend>自定义图片内容模板</legend>
+				<div ms-widget="carousel, carousel, $opt"></div>
+			</fieldset>
+			<pre ms-skip class="brush:html;gutter:false;toolbar:false">
+	&lt;!DOCTYPE html&gt;
+	&lt;html&gt;
+		&lt;head&gt;
+			&lt;title&gt;carousel组件&lt;/title&gt;
+			&lt;meta charset="UTF-8"&gt;
+			&lt;meta name="viewport" content="width=device-width"&gt;
+			&lt;script src="../avalon.js"&gt;&lt;/script&gt;
+			&lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+			&lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+			&lt;script&gt;
+				require(["carousel/avalon.carousel"], function() {
+					avalon.define("demo", function(vm) {
+						vm.$opt = {
+							content: '<h2>{{el.title}}</h2>',
+							pictures: [{
+								src: "http://placehold.it/500x200/333/dddddd.jpg&text=slide1",
+								title: 'picture-1',
+								alt: 'this is picture-1'
+							}, {
+								src: "http://placehold.it/500x200/555/dddddd.jpg&text=slide2",
+								title: 'picture-2',
+								alt: 'this is picture-2'
+							}, {
+								src: "http://placehold.it/500x200/777/dddddd.jpg&text=slide3",
+								title: 'picture-3',
+								alt: 'this is picture-3'
+							}, {
+								src: "http://placehold.it/500x200/999/dddddd.jpg&text=slide4",
+								title: 'picture-4',
+								alt: 'this is picture-4'
+
+							}, {
+								src: "http://placehold.it/500x200/aaa/dddddd.jpg&text=slide5",
+								title: 'picture-5',
+								alt: 'this is picture-5'
+							}]
+						}
+						vm.$skipArray = ["carousel"]
+					})
+					avalon.scan()
+				})
+			&lt;/script&gt;
+		&lt;/head&gt;
+		&lt;body ms-controller="demo"&gt;
+			&lt;div class="wrapper"&gt;
+			&lt;h1&gt;图片轮播组件-自定义图片内容模板&lt;/h1&gt;
+			&lt;fieldset&gt;
+				&lt;legend&gt;自定义图片内容模板&lt;/legend&gt;
+				&lt;div ms-widget="carousel, carousel, $opt"&gt;&lt;/div&gt;
+			&lt;/fieldset&gt;
+		&lt;/div&gt;
+		&lt;/body&gt;
+	&lt;/html&gt;
+			</pre>
+		</div>
+	</body>
+</html>

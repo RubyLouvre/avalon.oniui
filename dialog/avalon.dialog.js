@@ -23,7 +23,6 @@ define(["../avalon.getModel",
         maskLayerSimulate = avalon.parseHTML(_maskLayerSimulate).firstChild, 
         dialogShows = [], //存在层上层时由此数组判断层的个数
         dialogNum = 0, //保存页面dialog的数量，当dialogNum为0时，清除maskLayer
-        maxZIndex = getMaxZIndex(), //保存body直接子元素中最大的z-index值， 保证dialog在最上层显示
         //IE6 userAgent Mozilla/4.0(compatible;MISE 6.0;Windows NT 6.1;...)
         isIE6 = (window.navigator.userAgent || '').toLowerCase().indexOf('msie 6') !== -1,
         iFrame = null,
@@ -76,7 +75,7 @@ define(["../avalon.getModel",
         _lastFooter = options.getFooter(_lastFooter, options)
         var vmodel = avalon.define(data.dialogId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "template", "container", "modal", "zIndexIncrementGlobal", "initChange"]
+            vm.$skipArray = ["widgetElement", "template", "container", "modal", "zIndexIncrementGlobal", "initChange", "content"]
             vm.widgetElement = element
             vm.position = position
             // 如果显示模式为alert或者配置了showClose为false，不显示关闭按钮
@@ -172,11 +171,15 @@ define(["../avalon.getModel",
                     vmodel._close(e)
                 }
             }
-
+/**
+         * @config {Function} 动态修改dialog的content
+         * @param m {Object} 重新渲染dialog的配置对象，包括title、content、content中涉及的插值表达式，需要注意的是，title和content不是真正渲染的内容，所以不需要avalon进行扫描监控，定义的时候必须在其前面加上"$",否则组件不会渲染成想要的效果
+         */
             /**
-             * desc: 可以动态改变dialog的显示内容
-             * @param content: 要替换的content，可以是已经渲染ok的view也可以是未解析渲染的模板
-             * @param noScan: 当content是模板时noScan设为false或者不设置，组件会自动解析渲染模板，如果是已经渲染ok的，将noScan设为true，组件将不再进行解析操作
+             * @config {Function} 可以动态改变dialog的显示内容
+             * @param content {String} 要替换的content，可以是已经渲染ok的view也可以是未解析渲染的模板
+             * @param noScan {Boolean} 当content是模板时noScan设为false或者不设置，组件会自动解析渲染模板，如果是已经渲染ok的，将noScan设为true，组件将不再进行解析操作
+             * @param contentVmodels {Array} 如果content为未解析的模板，noScan为false，contentVmodels是用来解析模板content的vmodels
              */
             vm.setContent = function(content, noScan, contentVmodels) {
                 var scanVmodels = contentVmodels ? contentVmodels : [vmodel].concat(vmodels)
@@ -231,7 +234,11 @@ define(["../avalon.getModel",
                     clientHeight = body.clientHeight,
                     docBody = document.body,
                     // container必须是dom tree中某个元素节点对象或者元素的id，默认将dialog添加到body元素
-                    elementParent = ((avalon.type(container) === "object" && container.nodeType === 1 && docBody.contains(container)) ? container : document.getElementById(container)) || docBody
+                    elementParent = ((avalon.type(container) === "object" && container.nodeType === 1 && docBody.contains(container)) ? container : document.getElementById(container)) || docBody,
+                    defaults = avalon.ui.dialog.defaults
+                if (!defaults.zIndex) {
+                    defaults.zIndex = getMaxZIndex() //保存body直接子元素中最大的z-index值， 保证dialog在最上层显示
+                }
                 if (avalon(docBody).height() < clientHeight) {
                     avalon(docBody).css("min-height", clientHeight)
                 }
@@ -322,7 +329,7 @@ define(["../avalon.getModel",
         title: "&nbsp;", //@config 设置弹窗的标题
         draggable: false, //@config 设置dialog是否可拖动
         type: "confirm", //@config 配置弹窗的类型，可以配置为alert来模拟浏览器
-        content: "", //@config 配置dialog的content，默认取dialog的innerHTML作为dialog的content，如果innerHTML为空，再去取content配置项
+        content: "", //@config 配置dialog的content，默认取dialog的innerHTML作为dialog的content，如果innerHTML为空，再去取content配置项.需要注意的是：content只在初始化配置的起作用，之后需要通过setContent来动态的修改
         /**
          * @config {Function} 定义点击"确定"按钮后的回调操作
          * @param event {Number} 事件对象
@@ -348,16 +355,18 @@ define(["../avalon.getModel",
          * @param vmodel {Object} 组件对应的Vmodel
          */
         onClose: avalon.noop, //点击右上角的“关闭”按钮的回调
-        setTitle: avalon.noop, //动态修改dialog的title
-        setContent: avalon.noop, //动态修改dialog的content
+        //@config 动态修改dialog的title,也可通过dialogVM.title直接修改
+        setTitle: avalon.noop, 
+        setContent: avalon.noop, 
         /**
          * @config {Function} 重新渲染模板
          * @param m {Object} 重新渲染dialog的配置对象，包括title、content、content中涉及的插值表达式，需要注意的是，title和content不是真正渲染的内容，所以不需要avalon进行扫描监控，定义的时候必须在其前面加上"$",否则组件不会渲染成想要的效果
          */
-        setModel: avalon.noop, //重新渲染dialog
-        showClose: true, //@config 配置dialog是否显示"取消"按钮，但是如果type为alert，不论showClose为true or false都不会显示"取消"按钮
-        toggle: false, //通过此属性的决定dialog的显示或者隐藏状态
-        widgetElement: "", //保存对绑定元素的引用
+        setModel: avalon.noop, 
+        //@config配置dialog是否显示"取消"按钮，但是如果type为alert，不论showClose为true or false都不会显示"取消"按钮
+        showClose: true, 
+        toggle: false, //@config 通过此属性的决定dialog的显示或者隐藏状态
+        widgetElement: "", //@config 保存对绑定元素的引用
         container: "body", //@config dialog元素的上下文父元素，container必须是dialog要appendTo的父元素的id或者元素dom对象
         confirmName: "确定", //@config 配置dialog的"确定"按钮的显示文字
         cancelName: "取消", //@config 配置dialog的"取消"按钮的显示文字
@@ -373,7 +382,7 @@ define(["../avalon.getModel",
             return tmp
         },
         modal: true, //@config 是否显示遮罩
-        zIndex: maxZIndex, //@config 通过设置vmodel的zIndex来改变dialog的z-index,默认是body直接子元素中的最大z-index值，如果都没有设置就默认的为10
+        zIndex: 0, //@config 通过设置vmodel的zIndex来改变dialog的z-index,默认是body直接子元素中的最大z-index值，如果都没有设置就默认的为10
         zIndexIncrementGlobal: 0 //@config 相对于zIndex的增量, 用于全局配置，如果只是作用于单个dialog那么zIndex的配置已足够，设置全局需要通过avalon.ui.dialog.defaults.zIndexIncrementGlobal = Number来设置
     }
     avalon(window).bind("keydown", function(e) {

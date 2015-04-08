@@ -81,6 +81,15 @@ define(["avalon",
             if(vm.multiple && vm.$hasDuplex && vm.$skipArray.indexOf("value") === -1) {
                 vm.$skipArray.push("value")
             }
+            vm.render = function(data) {
+                if (data === void 0) {
+                    return
+                }
+                vmodel.data = getDataFromOption(data.$model || data)
+                if (vmodel.toggle) {
+                    vmodel._styleFix(true)
+                }
+            }
             vm.widgetElement = element;
             vm.menuWidth = "auto";   //下拉列表框宽度
             vm.menuHeight = vm.height;  //下拉列表框高度
@@ -263,7 +272,7 @@ define(["avalon",
                     avalon.unbind(window, "resize", resizeHandler)
                 }
                 vmodel.toggle = false;
-                listNode && vmodel.container.removeChild(listNode);
+                listNode && vmodel.container && vmodel.container.contains(listNode) && vmodel.container.removeChild(listNode);
                 avalon.log("dropdown $remove")
             }
 
@@ -314,13 +323,14 @@ define(["avalon",
                         vmodel.activeIndex = vmodel.data.$model.indexOf(option)
                     }
                     if (vmodel.menuNode) {
-                        avalon(vmodel.menuNode).css({ 'height': '' });
-                        avalon(vmodel.dropdownNode).css({ 'height': '' });
-                        vmodel._styleFix();
+                        vmodel._styleFix(true)
                     }
                 }
             };
             vm._keydown = function(event) {
+                if(vmodel.keyboardEvent === false) {
+                    return;
+                }
 
                 //如果是单选下拉框，可以通过键盘移动
                 if (!vmodel.multiple) {
@@ -371,7 +381,7 @@ define(["avalon",
             }
             //下拉列表的显示依赖toggle值，该函数用来处理下拉列表的初始化，定位
             vm._toggle = function(b) {
-                if (vmodel.data.length ===0 || !vmodel.enable || vmodel.readOnly) {
+                if ((vmodel.data.length ===0 && !vmodel.realTimeData)|| !vmodel.enable || vmodel.readOnly) {
                     vmodel.toggle = false;
                     return;
                 }
@@ -382,8 +392,8 @@ define(["avalon",
                     listNode = createListNode();
                     list = listNode.firstChild;
                     vmodel.container.appendChild(listNode)
-                    avalon.scan(list, [vmodel].concat(vmodels))
                     listNode = list
+                    avalon.scan(list, [vmodel].concat(vmodels))
                     vmodel.menuNode = document.getElementById("menu-" + vmodel.$id)     //下拉列表框内层容器 （包裹滚动条部分的容器）
                     vmodel.dropdownNode = document.getElementById("list-" + vmodel.$id) //下拉列表框内容（有滚动条的部分）
                 }
@@ -418,7 +428,7 @@ define(["avalon",
                         if (!selectedItemIndex) {
                             selectedItemIndex = firstItemIndex;
                         }
-                        vmodel.activeIndex = selectedItemIndex;
+                        vmodel.activeIndex = selectedItemIndex || 0;
                     }
                     vmodel.scrollWidget = avalon.vmodels["scrollbar-" + vmodel.$id];
                     vmodel._styleFix();
@@ -515,11 +525,17 @@ define(["avalon",
             }
 
             //当下拉列表中的项目发生改变时，调用该函数修正显示，顺序是修正下拉框高宽 --> 滚动条更新显示 --> 定位下拉框
-            vm._styleFix = function() {
+            vm._styleFix = function(resetHeight) {
                 var MAX_HEIGHT = options.height || 200,
                     $menu = avalon(vmodel.menuNode),
-                    height = vmodel.dropdownNode.scrollHeight
+                    height = '' 
 
+                if (resetHeight) {
+                    vmodel.menuHeight = ''
+                    avalon(vmodel.dropdownNode).css({ 'height': '' });
+                }
+                
+                height = vmodel.dropdownNode.scrollHeight
                 vmodel.menuWidth = !ie6 ? vmodel.listWidth - $menu.css("borderLeftWidth").replace(styleReg, "$1") - $menu.css("borderRightWidth").replace(styleReg, "$1") : vmodel.listWidth;
                 if (height > MAX_HEIGHT) {
                     vmodel._disabledScrollbar(false);
@@ -551,8 +567,8 @@ define(["avalon",
                 var nodes = siblings(vmodel.dropdownNode.firstChild),
                     $activeNode = avalon(nodes[activeIndex]),
                     menuHeight = vmodel.menuHeight,
-                    nodeTop = $activeNode.position().top - avalon(nodes[0]).position().top,
-                    nodeHeight = $activeNode.height(),
+                    nodeTop = nodes.length ? $activeNode.position().top - avalon(nodes[0]).position().top : 0,
+                    nodeHeight = nodes.length ? $activeNode.height() : 0,
                     scrollTop = vmodel.dropdownNode.scrollTop
 
                 if(nodeTop > scrollTop + menuHeight - nodeHeight || nodeTop + nodeHeight < scrollTop) {
@@ -704,6 +720,7 @@ define(["avalon",
     widget.version = "1.0";
 
     widget.defaults = {
+        realTimeData: false,
         container: null, //@config 放置列表的容器
         width: 200, //@config 自定义宽度
         listWidth: 200, //@config 自定义下拉列表的宽度
@@ -718,7 +735,7 @@ define(["avalon",
         textFiled: "text", //@config 模型数据项中对应显示text的字段,可以传function，根据数据源对text值进行格式化
         valueField: "value", //@config 模型数据项中对应value的字段
         value: [], //@config 设置组件的初始值
-        label: null, //@config 设置组件的提示文案，可以是一个字符串，也可以是一个对象
+        label: "", //@config 设置组件的提示文案，可以是一个字符串，也可以是一个对象
         multiple: false, //@config 是否为多选模式
         listClass: "",   //@config 列表添加自定义className来控制样式
         title: "",
@@ -734,7 +751,8 @@ define(["avalon",
         onHide: null,    //@config 下拉框隐藏的回调函数
         onChange: null,  //@config value改变时的回调函数
         $hasDuplex: false, 
-        multipleChange: false, 
+        multipleChange: false,
+        keyboardEvent: true,  //@config 是否支持键盘事件
         /**
          * @config 模板函数,方便用户自定义模板
          * @param str {String} 默认模板
@@ -775,7 +793,8 @@ define(["avalon",
                     value: el.value,
                     enable: ensureBool(el.enable, true),
                     group: true,
-                    parent: parent
+                    parent: parent,
+                    toggle: true
                 })
                 getDataFromOption(el.options, ret, el)
             } else {
@@ -793,7 +812,8 @@ define(["avalon",
                     enable: ensureBool(parent && parent.enable, true) && ensureBool(el.enable, true),
                     group: false,
                     parent: parent,
-                    data: el            //只有在dataModel的模式下有效
+                    data: el,           //只有在dataModel的模式下有效
+                    toggle: true
                 })
             }
         }
@@ -846,7 +866,8 @@ define(["avalon",
                         value: "",
                         enable: !el.disabled,
                         group: true,        //group不能添加ui-state-active
-                        parent: false
+                        parent: false,
+                        toggle: true
                     }
                     ret.push(parent)
                     getDataFromHTML(el, ret, parent)
@@ -857,7 +878,8 @@ define(["avalon",
                         value: parseData(el.value.trim()||el.text.trim()),
                         enable: ensureBool(parent && parent.enable, true) && !el.disabled,
                         group: false,
-                        parent: parent
+                        parent: parent,
+                        toggle: true
                     })
                 }
             }
@@ -876,6 +898,7 @@ define(["avalon",
         var size = data.size(),
             left = [],
             right = [],
+            dataItem = {},
             i,
             ret
 
@@ -883,12 +906,14 @@ define(["avalon",
         //当向上选择时，选择从左段的队尾到右段的队头
         //当向下选择时，选择从右端的对头到左段的队尾
         for(i = 0; i < index; i ++) {
-            if(data[i].enable && !data[i].group) {
+            dataItem = data[i]
+            if(dataItem.enable && !dataItem.group && dataItem.toggle) {
                 left.push(i)
             }
         }
         for(i = index + 1; i < size; i ++) {
-            if(data[i].enable && !data[i].group) {
+            dataItem = data[i]
+            if(dataItem.enable && !dataItem.group && dataItem.toggle) {
                 right.push(i)
             }
         }

@@ -188,6 +188,24 @@
                         <td>type=spinning-spin 圆内直径</td>
                     </tr>
                     <tr>
+                        <td>src</td>
+                        <td>String</td>
+                        <td>"https://source.qunarzz.com/piao/images/loading_camel.gif"</td>
+                        <td>type=img，loading效果的gif图片</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>Number</td>
+                        <td>52</td>
+                        <td>type=img，loading效果宽度</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>Number</td>
+                        <td>39</td>
+                        <td>type=img，loading效果高度</td>
+                    </tr>
+                    <tr>
                         <td>onInit</td>
                         <td>Member</td>
                         <td>avalon.noop</td>
@@ -200,40 +218,46 @@
                         <td>效果的颜色</td>
                     </tr>
                     <tr>
-                        <td>toggle</td>
-                        <td>Boolean</td>
-                        <td>true</td>
+                        <td>type</td>
+                        <td>String</td>
+                        <td>"ball"</td>
                         <td>类型，默认是ball，球，可取spin,ticks</td>
                     </tr>
                     <tr>
-                        <td>modal</td>
+                        <td>toggle</td>
                         <td>Boolean</td>
                         <td>true</td>
                         <td>是否显示</td>
                     </tr>
                     <tr>
+                        <td>modal</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否显示遮罩</td>
+                    </tr>
+                    <tr>
                         <td>modalOpacity</td>
                         <td>Number</td>
                         <td>0.1</td>
-                        <td>是否显示遮罩</td>
+                        <td>遮罩透明度</td>
                     </tr>
                     <tr>
                         <td>modalBackground</td>
                         <td>String</td>
                         <td>"#fff"</td>
-                        <td>遮罩透明度</td>
+                        <td>遮罩背景色</td>
                     </tr>
                     <tr>
                         <td>container</td>
                         <td>Unary</td>
                         <td>void 0</td>
-                        <td>遮罩背景色</td>
+                        <td>loading效果显示的容器，默认是绑定widget的元素</td>
                     </tr>
                     <tr>
                         <td>getTemplate(tmpl,opts,tplName)</td>
                         <td>Function</td>
                         <td></td>
-                        <td>loading效果显示的容器，默认是绑定widget的元素</td>
+                        <td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td>
                     </tr>
                     <tr>
                         <td align="center" colspan="4">接口方法与固有属性</td>
@@ -300,7 +324,7 @@
                     <a href="avalon.loading.ex6.html">loading:spinning-spin</a>
                 </li>
                 <li>
-                    <a href="avalon.loading.ex7.html">loading</a>
+                    <a href="avalon.loading.ex7.html">loading:img</a>
                 </li>
             </ul>
         </div>

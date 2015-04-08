@@ -22,7 +22,7 @@
                 <button ms-click="changeContent('b')">修改notice b的content</button>
                 <button ms-click="toggleType('b')">修改notice b的type</button>
                 <script>
-                    require("notice/avalon.notice", function(avalon) {
+                    require(["notice/avalon.notice"], function(avalon) {
                         var model = avalon.define("noticeDemo", function(vm) {
                             vm.$bOpts = {
                                 header: "提示信息title",
@@ -71,7 +71,7 @@
                         &lt;button ms-click="changeContent('b')"&gt;修改notice b的content&lt;/button&gt;
                         &lt;button ms-click="toggleType('b')"&gt;修改notice b的type&lt;/button&gt;
                         &lt;script&gt;
-                            require("notice/avalon.notice", function(avalon) {
+                            require(["notice/avalon.notice"], function(avalon) {
                                 var model = avalon.define("noticeDemo", function(vm) {
                                     vm.$bOpts = {
                                         header: "提示信息title",

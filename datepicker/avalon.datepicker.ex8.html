@@ -24,7 +24,7 @@
                 <p>说明：配置separator为"/",设置日期显示格式为"yyyy/mm/dd"，鉴于上一个demo中对于手动输入日期规则的限制，同时试试这两个demo的手动输入效果体会一下两者的不同</p>
             </fieldset>
             <script> 
-                require("datepicker/avalon.datepicker", function(avalon) {
+                require(["datepicker/avalon.datepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         vm.$aOpts = {
                             parseDate : function(str){
@@ -68,7 +68,7 @@
                             &lt;p&gt;说明：配置separator为"/",设置日期显示格式为"yyyy/mm/dd"，鉴于上一个demo中对于手动输入日期规则的限制，同时试试这两个demo的手动输入效果体会一下两者的不同&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.datepicker", function(avalon) {
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     vm.$aOpts = {
                                         parseDate : function(str){

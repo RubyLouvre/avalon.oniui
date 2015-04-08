@@ -1,0 +1,12 @@
+.oni-dropdown .oni-textbox {
+  border-bottom-width: 0; }
+.oni-dropdown .oni-textbox-focus {
+  border: 1px solid #ccc;
+  border-bottom-width: 0; }
+  .oni-dropdown .oni-textbox-focus .oni-textbox-icon {
+    color: #3775c0; }
+
+.oni-textbox-icon {
+  position: absolute;
+  right: 6px;
+  top: 3px; }

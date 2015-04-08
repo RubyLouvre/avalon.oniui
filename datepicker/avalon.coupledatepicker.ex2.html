@@ -28,7 +28,7 @@
                 <p>日历默认每周的第一天从周一开始，可以配置为从任一天开始，但是周日用0表示，周一到周六分别用1-6表示</p>
             </fieldset>
             <script> 
-                require("datepicker/avalon.coupledatepicker", function(avalon) {
+                require(["datepicker/avalon.coupledatepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
                         
                     })
@@ -62,7 +62,7 @@
                             &lt;p&gt;日历默认每周的第一天从周一开始，可以配置为从任一天开始，但是周日用0表示，周一到周六分别用1-6表示&lt;/p&gt;
                         &lt;/fieldset&gt;
                         &lt;script&gt; 
-                            require("datepicker/avalon.coupledatepicker", function(avalon) {
+                            require(["datepicker/avalon.coupledatepicker"], function(avalon) {
                                 var model = avalon.define("demo", function(vm) {
                                     
                                 })

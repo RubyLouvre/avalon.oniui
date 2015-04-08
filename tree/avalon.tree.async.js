@@ -1,5 +1,5 @@
 //異步插件
-define(["avalon", "./avalon.tree", "./mmRequest"], function () {
+define(["avalon", "./avalon.tree", "../mmRequest/mmRequest"], function () {
 	var undefine = void 0
 	// 排除辅助字段
 	avalon.ui.tree.leafIgnoreField.push("zAsync")

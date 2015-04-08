@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Basic Layout demo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script type="text/javascript" src="../avalon.js"></script>
+    </head>
+    <body ms-controller="demo">
+        <div style="width: 600px; height: 500px;padding: 10px 0 0 50px;">
+            <div ms-widget="layout,layoutVM,$layoutVMOptions" class="container"></div>
+        </div>
+        <script>
+            require(["./layout/avalon.layout"], function() {
+                avalon.define("demo", function(vm) {
+                    vm.$layoutVMOptions = {
+                        northRegion: {
+                            size: "20%",
+                            resizable: true,
+                            regionClass: "north"
+                        },
+                        southRegion: {
+                            size: 110,
+                            resizable: false,
+                            regionClass: "some-css-class0 some-css-class1"
+                        },
+                        eastRegion: {
+                            size: 120,
+                            resizable: true
+                        },
+                        westRegion: {
+                            size: "25%",
+                            resizable: true
+                        },
+                        centreRegion: {
+                            regionClass: "addtional-class-for-centre"
+                        },
+                        stretchMax: true,
+                        resizerSize: 5,
+                        regionBorderWidth: 1
+                    };
+                })
+                avalon.scan()
+            })
+        </script>
+        <pre class="brush:html;gutter:false;">
+            &lt;!DOCTYPE html&gt;
+            &lt;html&gt;
+                &lt;head&gt;
+                    &lt;title&gt;Basic Layout demo&lt;/title&gt;
+                    &lt;meta charset="UTF-8"&gt;
+                    &lt;meta name="viewport" content="width=device-width"&gt;
+                    &lt;link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/&gt;
+                    &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+                    &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+                    &lt;script type="text/javascript" src="../avalon.js"&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body ms-controller="demo"&gt;
+                    &lt;div style="width: 600px; height: 500px;"&gt;
+                        &lt;div ms-widget="layout,layoutVM,$layoutVMOptions" class="container" style="margin:10px 0 0 50px;"&gt;&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;script&gt;
+                        require(["./layout/avalon.layout"], function() &#123;
+                            avalon.define("demo", function(vm) &#123;
+                                vm.$layoutVMOptions = &#123;
+                                    northRegion: &#123;
+                                        size: "20%",
+                                        resizable: true,
+                                        regionClass: "north"
+                                    &#125;,
+                                    southRegion: &#123;
+                                        size: 110,
+                                        resizable: false,
+                                        regionClass: "some-css-class0 some-css-class1"
+                                    &#125;,
+                                    eastRegion: &#123;
+                                        size: 120,
+                                        resizable: true
+                                    &#125;,
+                                    westRegion: &#123;
+                                        size: "25%",
+                                        resizable: true
+                                    &#125;,
+                                    centreRegion: &#123;
+                                        regionClass: "addtional-class-for-centre"
+                                    &#125;,
+                                    stretchMax: true,
+                                    resizerSize: 5,
+                                    regionBorderWidth: 1
+                                &#125;;
+                            &#125;)
+                            avalon.scan()
+                        &#125;)
+                    &lt;/script&gt;
+                &lt;/body&gt;
+            &lt;/html&gt;
+        </pre>
+    </body>
+</html>

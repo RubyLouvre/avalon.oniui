@@ -1,4 +1,4 @@
-define(["../promise/avalon.promise"], function(avalon) {
+define(["avalon","../mmPromise/mmPromise"], function(avalon) {
 //如果avalon的版本少于1.3.7，那么重写ms-duplex指令，方便直接使用ms-duplex2.0, 只兼容到1.2x
 //但它不支持pipe方法，换言之，不支持类型转换，只做验证
     if (!avalon.duplexHooks) {
@@ -634,7 +634,7 @@ define(["../promise/avalon.promise"], function(avalon) {
                         } else {
                             vm.onSuccess.call(elem, reasons, event)
                         }
-                        vm.onComplete.call(elem, reasons,, event)
+                        vm.onComplete.call(elem, reasons, event)
                     }
                     return reasons
                 })
@@ -687,14 +687,18 @@ define(["../promise/avalon.promise"], function(avalon) {
                     if (validateParams.length) {
                         if (vm.validateInKeyup) {
                             data.bound("keyup", function(e) {
-                                setTimeout(function() {
-                                    vm.validate(data,0,  e)
-                                })
+                                var type = data.element && data.element.getAttribute("data-duplex-event")
+                                if (!type || /^(?:key|mouse|click|input)/.test(type)) {
+                                    var ev = fixEvent(e)
+                                    setTimeout(function() {
+                                        vm.validate(data, 0, ev)
+                                    })
+                                }
                             })
                         }
                         if (vm.validateInBlur) {
                             data.bound("blur", function(e) {
-                                vm.validate(data, 0,  e)
+                                vm.validate(data, 0, e)
                             })
                         }
                         if (vm.resetInFocus) {
@@ -718,7 +722,7 @@ define(["../promise/avalon.promise"], function(avalon) {
     function getMessage() {
         var data = this.data || {}
         return this.message.replace(rformat, function(_, name) {
-            return data[name] == null ?  "" : data[name]
+            return data[name] == null ? "" : data[name]
         })
     }
     widget.defaults = {

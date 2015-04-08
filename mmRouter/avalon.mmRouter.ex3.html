@@ -154,7 +154,21 @@
                             templateUrl: "contacts.list.html"
                         },
                         "hint@": {
-                            template: "当前状态是contacts.list"
+                            template: "当前状态是contacts.list",
+                            controllerProvider: function() {
+                                // return {}
+                                var _rs,
+                                    pro = new Promise(function(rs, rj) {
+                                        _rs = rs
+                                        setTimeout(function() {
+                                            rs({
+                                                $onRendered: avalon.noop
+                                            })
+                                            // rj("faild")
+                                        }, 1000)
+                                    })
+                                return pro
+                            }
                         },
                         "complex@": {
                             template: "<font color='red'>默认内容内不能包含ms-view-这是由于现在的设计造成的，可以后续考虑重写ms-view的逻辑</font>"
@@ -258,7 +272,8 @@
                         if(loading) loading.toggle = false
                     },
                     onError: function(keyname, state) {
-                        avalon.router.navigate("/", {replace: true})
+                        console.log(arguments)
+                        // avalon.router.navigate("/", {replace: true})
                     },
                     onViewEnter: function(newNode, oldNode) {
                         oldNode.style.marginLeft = "-50%"
@@ -462,7 +477,21 @@
                             templateUrl: &quot;contacts.list.html&quot;
                         },
                         &quot;hint@&quot;: {
-                            template: &quot;当前状态是contacts.list&quot;
+                            template: &quot;当前状态是contacts.list&quot;,
+                            controllerProvider: function() {
+                                // return {}
+                                var _rs,
+                                    pro = new Promise(function(rs, rj) {
+                                        _rs = rs
+                                        setTimeout(function() {
+                                            rs({
+                                                $onRendered: avalon.noop
+                                            })
+                                            // rj(&quot;faild&quot;)
+                                        }, 1000)
+                                    })
+                                return pro
+                            }
                         },
                         &quot;complex@&quot;: {
                             template: &quot;&lt;font color='red'&gt;默认内容内不能包含ms-view-这是由于现在的设计造成的，可以后续考虑重写ms-view的逻辑&lt;/font&gt;&quot;
@@ -566,7 +595,8 @@
                         if(loading) loading.toggle = false
                     },
                     onError: function(keyname, state) {
-                        avalon.router.navigate(&quot;/&quot;, {replace: true})
+                        console.log(arguments)
+                        // avalon.router.navigate(&quot;/&quot;, {replace: true})
                     },
                     onViewEnter: function(newNode, oldNode) {
                         oldNode.style.marginLeft = &quot;-50%&quot;

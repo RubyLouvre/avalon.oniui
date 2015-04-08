@@ -104,9 +104,9 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 					var image_preload = new Image()
 					image_preload.src = images[i].src
 				}
-				icons.push("./images/arrows-left-hover-icon.png","./images/arrows-right-hover-icon.png")
+				icons.push("http://source.qunarzz.com/general/oniui/carousel/arrows-left-hover-icon.png","http://source.qunarzz.com/general/oniui/carousel/arrows-right-hover-icon.png")
 				for (var i = 0; i < icons.length; i++) {
-					icons[i] = path + icons[i]
+					icons[i] = (icons[i].match(/^http/g) ? "" : path) + icons[i]
 					var image_preload = new Image()
 					image_preload.src = icons[i]
 				}

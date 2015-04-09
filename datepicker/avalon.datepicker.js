@@ -95,9 +95,7 @@ define(["../avalon.getModel",
             vm.day = day
             vm.years = years
             vm.months = [1,2,3,4,5,6,7,8,9,10,11,12]
-            vm._position = "absolute"
-            vm.minute = 0
-            vm.hour = 0
+            vm._position = "absolute"            
             vm._datepickerToggle = true
             vm._monthToggle = false
             vm._yearToggle = false
@@ -1053,6 +1051,8 @@ define(["../avalon.getModel",
     widget.version = 1.0
     widget.defaults = {
         startDay: 1, //@config 设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推, 默认从周一开始
+        minute: 0, //@config 设置time的默认minute
+        hour: 0, //@config 设置time的hour
         width: 90, //@config 设置日历框宽度
         showTip: true, //@config 是否显示节日提示
         disabled: false, //@config 是否禁用日历组件

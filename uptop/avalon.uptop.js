@@ -7,7 +7,7 @@ define(["avalon"], function(avalon) {
             height: 60,
             animate: false, 
             toggle: false,
-            backgroundUrl: "up.png"
+            backgroundUrl: "http://source.qunarzz.com/general/oniui/uptop/up.png"
         },
         template = "<div ms-css-right='distanceToRight' ms-css-bottom='distanceToBottom' ms-title='title' ms-click='goTop' ms-css-width='width' ms-css-height='height' ms-visible='toggle' class='ui-icon'></div>",
         element = avalon.parseHTML(template).firstChild,

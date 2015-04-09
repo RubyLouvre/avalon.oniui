@@ -1,4 +1,4 @@
-define(["mmRouter/mmHistory"], function() {
+define(["./mmHistory"], function() {
 
     function Router() {
         var table = {}

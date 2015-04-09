@@ -1,4 +1,4 @@
-define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
+define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
 //重写mmRouter中的route方法     
     avalon.router.route = function(method, path, query, options) {
         path = path.trim()
@@ -200,8 +200,9 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     // 重复点击直接return
                     return
                 }
-                if(changeType == "query") mmState.query = avalon.mix({}, toParams.query)
             }
+
+            mmState.query = avalon.mix({}, toParams.query)
 
             // onBeforeUnload check
             if(callStateFunc("onBeforeUnload", this, fromState, toState) === false || broadCastBeforeUnload(exitChain, enterChain) === false) {
@@ -378,9 +379,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         $ctrl: view.$controller,
                         vmodels: view.$controller && view.$controller.vmodels
                     }
-                })["catch"](function(e) {
-                    // do nothing，在all里面捕获错误
-                })
+                }, avalon.noop) // 捕获模板报错
                 var prom,
                     callback = function($ctrl) {
                         _local[name].vmodels = $ctrl.$vmodels
@@ -390,7 +389,7 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                     resolveData = function() {
                         var $onEnter = view.$controller && view.$controller.$onEnter
                         if($onEnter) {
-                            var prom = getPromise(function(rs, rj) {
+                            var innerProm = getPromise(function(rs, rj) {
                                 var reason = {
                                         type: "data",
                                         state: state,
@@ -403,7 +402,9 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                                 // if promise
                                 if(res && res.then) {
                                     _data.push(res)
-                                    rs(res)
+                                    res.then(function() {
+                                        rs(res)
+                                    })
                                 // error msg
                                 } else if(res && res !== true) {
                                     reason.message = res
@@ -413,20 +414,18 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                                 }
                                 // res === false will pause here
                             })
-                            prom = prom.$then(function(cb) {
+                            innerProm = innerProm.then(function(cb) {
                                 avalon.isFunction(cb) && _callbacks.push(cb)
                             })
-                            _data.push(prom)
+                            _data.push(innerProm)
                         }
                     }
                 // controller似乎可以缓存着
-                if(view.$controller) return resolveData()
+                if(view.$controller && view.cacheController !== false) return resolveData()
                 // 加载controller模块
                 if(view.controller) {
                     prom = promise.then(function() {
                         callback(avalon.controller(view.controller))
-                    })["catch"](function(e) {
-                        // do nothing，在all里面捕获错误
                     })
                 } else if(view.controllerUrl) {
                     prom = getPromise(function(rs, rj) {
@@ -435,19 +434,32 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
                         avalon.controller.loader(url, function($ctrl) {
                             promise.then(function() {
                                 callback($ctrl)
-                            })["catch"](function(e) {
-                                // do nothing，在all里面捕获错误
+                                rs()
                             })
-                            rs()
                         })
                     })
                 } else if(view.controllerProvider) {
-                    prom = avalon.isFunction(view.controllerProvider) ? view.controllerProvider(params) : view.controllerProvider
-                    prom.then && promises.push(prom)
-                    prom = promise.then(function() {
-                        prom.then ? prom.then(callback)["catch"](function(e) {/*do nothing，在all里面捕获错误*/}) : callback(prom)
-                    })["catch"](function(e) {
-                        // do nothing，在all里面捕获错误
+                    var res = avalon.isFunction(view.controllerProvider) ? view.controllerProvider(params) : view.controllerProvider
+                    prom = getPromise(function(rs, rj) {
+                        // if promise
+                        if(res && res.then) {
+                            _data.push(res)
+                            res.then(function(r) {
+                                promise.then(function() {
+                                    callback(r)
+                                    rs()
+                                })
+                            }, function(e) {
+                                reason.message = e
+                                rj(reason)
+                            })
+                        // error msg
+                        } else {
+                            promise.then(function() {
+                                callback(res)
+                                rs()
+                            })
+                        }
                     })
                 }
                 // is promise
@@ -473,9 +485,17 @@ define("mmState", ["../mmPromise/mmPromise", "mmRouter/mmRouter"], function() {
         return this
     }
 
+    function isError(e) {
+        return e instanceof Error 
+    }
+
     // 将所有的promise error适配到这里来
     function promiseError(e) {
-        callStateFunc("onError", mmState, e, e && e.state)
+        if(isError(e)) {
+            throw e
+        } else {
+            callStateFunc("onError", mmState, e, e && e.state)
+        }
     }
 
     function getPromise(excutor) {

@@ -36,22 +36,20 @@
 
 ##### app.js
 
-    define(["mmRouter/mmState", 
-            "mmRouter/ppt/model/ppt"], function () {
+    define(["mmRouter/mmState"], function () {
         avalon.state("ppt", {//定义一个状态
             url: "/:pageNumber",
             controller: "ppt",
             views: {// 视图
                 "viewname": {
                     templateUrl: "ppt/views/tpl.html"
-                }
+                },
+                controller: ["mmRouter/ppt/model/ppt"]
             },
-            onChange: function(pageNumber) {
+            onEnter: function(pageNumber, resolve, reject) {
                 // 异步
-                var done = this.async()
-                setTimeout(function() {
-                    done()
-                }, 1000)
+                setTimeout(resolve, 2000)
+                return false
             }
         })
         // 全局配置
@@ -89,6 +87,12 @@
     define([], function() {
         var ppt = avalon.define("ppt", function(vm) {
             // xxx
+        })
+        return avalon.controller(function($ctrl) {
+            $ctrl.$vmodels = [ppt]
+            $ctrl.$onRendered = function() {}
+            $ctrl.$onEnter = function() {}
+            $ctrl.$onBeforeUnload = function() {}
         })
     })
 

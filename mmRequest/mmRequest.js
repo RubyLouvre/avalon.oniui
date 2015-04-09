@@ -1,7 +1,7 @@
 //=========================================
 //  数据交互模块 by 司徒正美
 //==========================================
-define("mmRequest", ["avalon", "mmPromise/mmPromise"], function(avalon) {
+define("mmRequest", ["avalon", "../mmPromise/mmPromise"], function(avalon) {
     var global = this || (0, eval)("this")
     var DOC = global.document
     var encode = encodeURIComponent

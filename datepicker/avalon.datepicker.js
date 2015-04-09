@@ -95,9 +95,7 @@ define(["../avalon.getModel",
             vm.day = day
             vm.years = years
             vm.months = [1,2,3,4,5,6,7,8,9,10,11,12]
-            vm._position = "absolute"
-            vm.minute = 0
-            vm.hour = 0
+            vm._position = "absolute"            
             vm._datepickerToggle = true
             vm._monthToggle = false
             vm._yearToggle = false
@@ -1053,14 +1051,16 @@ define(["../avalon.getModel",
     widget.version = 1.0
     widget.defaults = {
         startDay: 1, //@config 设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推, 默认从周一开始
-        width: 90,
-        showTip: true,
+        minute: 0, //@config 设置time的默认minute
+        hour: 0, //@config 设置time的hour
+        width: 90, //@config 设置日历框宽度
+        showTip: true, //@config 是否显示节日提示
         disabled: false, //@config 是否禁用日历组件
         changeMonthAndYear: false, //@config 是否可以通过下拉框选择月份或者年份
         mobileMonthAndYear: false, //@config PC端可以通过设置changeMonthAndYear为true使用dropdown的形式选择年份或者月份，但是移动端只能通过设置mobileMonthAndYear为true来选择月份、年份
         showOtherMonths: false, //@config 是否显示非当前月的日期
         numberOfMonths: 1, //@config 一次显示的日历月份数, 默认一次显示一个
-        allowBlank : false,
+        allowBlank : false, //@config 是否允许日历框为空
         minDate : null, //@config 最小的可选日期，可以配置为Date对象，也可以是yyyy-mm-dd格式的字符串，或者当分隔符是“/”时，可以是yyyy/mm/dd格式的字符串
         maxDate : null, //@config 最大的可选日期，可以配置为Date对象，也可以是yyyy-mm-dd格式的字符串，或者当分隔符是“/”时，可以是yyyy/mm/dd格式的字符串
         stepMonths : 1, //@config 当点击next、prev链接时应该跳过几个月份, 默认一个月份
@@ -1080,10 +1080,10 @@ define(["../avalon.getModel",
          * @param vmodel {Vmodel} 日历组件对应vmodel
          * @param dateItem {Object} 对应的包含日期相关信息的对象
          */
-        dateCellRender: false,
-        watermark: true,
-        zIndex: -1,
-        showDatepickerAlways: false,
+        dateCellRender: false, // 是否可以自定义日历单元格内容
+        watermark: true, //@config 是否显示水印文字
+        zIndex: -1, //@config设置日历的z-index
+        showDatepickerAlways: false, //@config是否总是显示datepicker
         timer: false, //@config 是否在组件中可选择时间
         /**
          * @config {Function} 选中日期后的回调

@@ -37,4 +37,5 @@ define([], function() {
 		}
 
 	})
+	return ppt
 })

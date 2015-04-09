@@ -10,6 +10,9 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 * 调整了状态机模型，去掉累赘的逻辑
 * 明确viewname[@statename]语法规则
 * 规范接口命名
+* 给state新增配置ignoreChange，当mmState.currentState == state时，更新视图的时候调用该函数，return true mmRouter则不会去重写视图和scan，请确保该视图内用到的数据没有放到avalon，用以特定情况下提升性能
+* query只参与mmState.currentState是否需要执行onEnter && 刷新视图的逻辑判定，但是在所有state内都是可以通过this.query或者this.getQuery获取
+* 弱化state & 全局接口，接口细分，给view对象新增controller系列属性，用以解决模块化开发+工程化
 
 2、如何迁移
 * 引用新的script文件，默认已经切换到新版
@@ -27,11 +30,12 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 |旧接口|新接口|说明|
 | ------------- | ----------- | ----------- |
 |state.onBeforeChange|onBeforeEnter|进入状态之前回调，参数未变化|
-|state.onChange|onEnter|进入状态回调，参数未变化|
+|state.async|去掉|去掉这个接口|
+|state.onChange|onEnter|进入状态回调，参数调整，参照文档|
 |state.onBeforeUnload|onBeforeExit|退出状态之前回调，参数未变化|
 |state.onAfterUnload|onExit|退出状态之前回调，参数未变化|
-|state.onBeforeLoad|onBeforeLoad|view加载完成前回调，不再与节点关联，只触发一次|
-|state.onAfterLoad|onBeforeLoad|view加载完成后回调，不再与节点关联，只触发一次|
+|state.onBeforeLoad|去掉该接口|通过给view对象配置controller替代|
+|state.onAfterLoad|去掉该接口|通过给view对象配置controller替代|
 |avalon.state.config.beforeUnload|onBeforeUnload|A=>B触发，全局，只跳转前触发一次，用以展示提示信息，规范命名，参数未变|
 |avalon.state.config.abort|onAbort|取消跳转，规范命名，参数未变|
 |avalon.state.config.unload|onUnload|全局，规范命名，参数未变|

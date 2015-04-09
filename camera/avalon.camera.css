@@ -87,13 +87,13 @@
     cursor: pointer; }
   .oni-camera .prev {
     left: 7%;
-    background: url(./images/arrows-left-icon.png) no-repeat; }
+    background: url(http://source.qunarzz.com/general/oniui/camera/arrows-left-icon.png) no-repeat; }
   .oni-camera .prev:hover {
-    background: url(./images/arrows-left-hover-icon.png) no-repeat; }
+    background: url(http://source.qunarzz.com/general/oniui/camera/arrows-left-hover-icon.png) no-repeat; }
   .oni-camera .after {
     left: 93%;
-    background: url(./images/arrows-right-icon.png) no-repeat; }
+    background: url(http://source.qunarzz.com/general/oniui/camera/arrows-right-icon.png) no-repeat; }
   .oni-camera .after:hover {
-    background: url(./images/arrows-right-hover-icon.png) no-repeat; }
+    background: url(http://source.qunarzz.com/general/oniui/camera/arrows-right-hover-icon.png) no-repeat; }
 
 /*# sourceMappingURL=avalon.camera.css.map */

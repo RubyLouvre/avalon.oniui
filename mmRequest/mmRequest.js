@@ -1,7 +1,7 @@
 //=========================================
 //  数据交互模块 by 司徒正美
 //==========================================
-define("mmRequest", ["avalon", "mmPromise/mmPromise"], function(avalon) {
+define("mmRequest", ["avalon", "../mmPromise/mmPromise"], function(avalon) {
     var global = this || (0, eval)("this")
     var DOC = global.document
     var encode = encodeURIComponent
@@ -600,7 +600,11 @@ define("mmRequest", ["avalon", "mmPromise/mmPromise"], function(avalon) {
                  * progress
                  */
                 if (opts.progressCallback) {
-                    transport.onprogress = opts.progressCallback
+                    // 判断是否 ie6-9
+                    var isOldIE = document.all && !window.atob
+                    if (!isOldIE) {
+                        transport.onprogress = opts.progressCallback
+                    }
                 }
 
                 var dataType = opts.dataType
@@ -635,6 +639,12 @@ define("mmRequest", ["avalon", "mmPromise/mmPromise"], function(avalon) {
                 var transport = this.transport
                 if (!transport) {
                     return
+                }
+
+                // by zilong：避免abort后还继续派发onerror等事件
+                if (forceAbort && this.timeoutID) {
+                    clearTimeout(this.timeoutID);
+                    delete this.timeoutID
                 }
                 try {
                     var completed = transport.readyState === 4
@@ -733,7 +743,13 @@ define("mmRequest", ["avalon", "mmPromise/mmPromise"], function(avalon) {
                 var node = this.transport
                 if (!node) {
                     return
+                }                
+                // by zilong：避免abort后还继续派发onerror等事件
+                if (forceAbort && this.timeoutID) {
+                    clearTimeout(this.timeoutID);
+                    delete this.timeoutID
                 }
+                
                 var execute = /loaded|complete|undefined/i.test(node.readyState)
                 if (forceAbort || execute) {
                     node.onerror = node.onload = node.onreadystatechange = null

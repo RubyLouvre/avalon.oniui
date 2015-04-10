@@ -490,8 +490,9 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
 
             vm.validateAll = function (callback) {
                 var fn = typeof callback === "function" ? callback : vm.onValidateAll
-                var promise = vm.data.filter(function (el) {
-                    return el.element && !el.element.disabled && vmodel.widgetElement.contains(el.element);
+                var promise = vm.data.filter(function (data) {
+                    var el = data.element
+                    return el && !el.disabled && vmodel.widgetElement.contains(el)
                 }).map(function (data) {
                     return  vm.validate(data, true)
                 })
@@ -499,6 +500,23 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
                     var reasons = []
                     for (var i = 0, el; el = array[i++]; ) {
                         reasons = reasons.concat(el)
+                    }
+                    if (vm.deduplicateInValidateAll) {
+                        var uniq = {}
+                        reasons = reasons.filter(function (data) {
+                            var el = data.element
+                            var id = el.getAttribute("data-validation-id")
+                            if (!id) {
+                                id = setTimeout("1")
+                                el.setAttribute("data-validation-id", id)
+                            }
+                            if (uniq[id]) {
+                                return false
+                            } else {
+                                uniq[id] = true
+                                return true
+                            }
+                        })
                     }
                     fn.call(vm.widgetElement, reasons)//这里只放置未通过验证的组件
                 })
@@ -682,7 +700,8 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
         validateInBlur: true, //@config {Boolean} true，在blur事件中进行验证,触发onSuccess, onError, onComplete回调
         validateInKeyup: true, //@config {Boolean} true，在keyup事件中进行验证,触发onSuccess, onError, onComplete回调
         validateAllInSubmit: true, //@config {Boolean} true，在submit事件中执行onValidateAll回调
-        resetInFocus: true //@config {Boolean} true，在focus事件中执行onReset回调
+        resetInFocus: true, //@config {Boolean} true，在focus事件中执行onReset回调,
+        deduplicateInValidateAll : false //@config {Boolean} false，在validateAll回调中对reason数组根据元素节点进行去重
     }
 //http://bootstrapvalidator.com/
 //https://github.com/rinh/jvalidator/blob/master/src/index.js

@@ -15,7 +15,9 @@ KindEditor.plugin('image', function(K) {
 		allowFileManager = K.undef(self.allowFileManager, false),
 		uploadJson = K.undef(self.uploadJson, self.basePath + 'php/upload_json.php'),
 		imageTabIndex = K.undef(self.imageTabIndex, 0),
-		imgPath = self.pluginsPath + 'image/images/',
+		//imgPath = self.pluginsPath + 'image/images/',
+        //transmit to http://source.qunarzz.com/general/oniui/kindeditor/plugins/image/
+		imgPath = "http://source.qunarzz.com/general/oniui/kindeditor/plugins/image/",
 		extraParams = K.undef(self.extraFileUploadParams, {}),
 		filePostName = K.undef(self.filePostName, 'imgFile'),
 		fillDescAfterUploadImage = K.undef(self.fillDescAfterUploadImage, false),

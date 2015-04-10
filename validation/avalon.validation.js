@@ -701,7 +701,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
         validateInKeyup: true, //@config {Boolean} true，在keyup事件中进行验证,触发onSuccess, onError, onComplete回调
         validateAllInSubmit: true, //@config {Boolean} true，在submit事件中执行onValidateAll回调
         resetInFocus: true, //@config {Boolean} true，在focus事件中执行onReset回调,
-        deduplicateInValidateAll : false //@config {Boolean} false，在validateAll回调中对reason数组根据元素节点进行去重
+        deduplicateInValidateAll: false //@config {Boolean} false，在validateAll回调中对reason数组根据元素节点进行去重
     }
 //http://bootstrapvalidator.com/
 //https://github.com/rinh/jvalidator/blob/master/src/index.js
@@ -770,5 +770,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
  [禁止获得焦点时的onRest回调 resetInFocus ](avalon.validation.ex8.html)
  [与textbox组件的混用, ms-duplex-string的使用 ](avalon.validation.ex9.html)
  [验证表单元素存在disabled的情况 ](avalon.validation.ex10.html)
+ [deduplicateInValidateAll:true对validatieAll回调的reasons数组根据element进行去重 ](avalon.validation.ex13.html)
+ 
  
  */

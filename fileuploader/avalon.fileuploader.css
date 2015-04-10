@@ -12,7 +12,9 @@
 	border-bottom: 1px dashed #aaa;
 	margin-bottom: 20px;
 	text-align: left;
+	overflow-y: auto;
 	font-size: 12px;
+	*position: relative; /*IE6下滚动条有问题，加上Position修复*/
 }
 .oni-uploader-wrapper button {
 	width: 168px;
@@ -68,6 +70,7 @@
 	line-height: 14px;
 	background-color: #333;
 	opacity: 0.8;
+	filter:alpha(Opacity=80);
 	text-align: left;
 }
 .oni-uploader-wrapper div.preview-image-wrapper div.preview-menu div {
@@ -95,6 +98,8 @@
 	top: 0px;
 	left: 0px;
 	z-index:-1;
+	width: 100%;
+	height: 100%;
 }
 .oni-uploader-wrapper div.preview-image-wrapper .preview-progress-wrapper {
 	position: absolute;

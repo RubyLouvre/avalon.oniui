@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <script src="../avalon.js"></script>
+    <script type="text/javascript">
+        require(['dropdown/avalon.dropdown.js'], function() {
+            var sr = [
+                {
+                    value: '1',
+                    label: '1'
+                }, {
+                    value: '2',
+                    label: '2'
+                }, {
+                    value: 'false',
+                    label: 'false'
+                },
+                {
+                    value: 'null',
+                    label: 'null'
+                }
+            ];
+            avalon.ready(function() {
+                var dropdownVm = avalon.define('dropdown', function(vm) {
+                    vm.$skipArray = ['opts'];
+                    vm.opts = {
+                        data: [],
+                        onSelect: function(e, n, o, vmodel) {
+                            var _sr = avalon.mix(true, [], sr)
+                            avalon.each(_sr, function(i, v) {
+                                if(v.value === n) {
+                                    v.enable = false
+                                } else {
+                                    v.enable = true
+                                }
+                            })
+                            dropdownVm.source.clear();
+                            dropdownVm.source.pushArray(_sr);
+                            avalon.each(vmodel.data, function(i, v) {
+                                v.enable = true
+                            })
+                        }
+                    };
+                    vm.source = [];
+                    vm.value = '1';
+                });
+
+                dropdownVm.opts.$source = dropdownVm.source;
+                avalon.scan();
+                setTimeout(function() {
+                    dropdownVm.source.pushArray(sr)
+                }, 500)
+            });
+        });
+    </script>
+    <script src="../highlight/shCore.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div ms-controller="dropdown">
+            <h2>dropdown（下拉框）</h2>
+            <p>多个dropdown共享状态</p>
+            <select ms-widget="dropdown,$,opts"></select>
+            <select ms-widget="dropdown,$,opts"></select>
+            <select ms-widget="dropdown,$,opts"></select>
+            <select ms-widget="dropdown,$,opts"></select>
+        </div>
+    </div>
+</body>
+</html>

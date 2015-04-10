@@ -10,7 +10,9 @@
 KindEditor.plugin('filemanager', function(K) {
 	var self = this, name = 'filemanager',
 		fileManagerJson = K.undef(self.fileManagerJson, self.basePath + 'php/file_manager_json.php'),
-		imgPath = self.pluginsPath + name + '/images/',
+		//imgPath = self.pluginsPath + name + '/images/',
+        //transmit to http://source.qunarzz.com/general/oniui/kindeditor/plugins/filemanager/
+		imgPath = "http://source.qunarzz.com/general/oniui/kindeditor/plugins/filemanager/",
 		lang = self.lang(name + '.');
 	function makeFileTitle(filename, filesize, datetime) {
 		return filename + ' (' + Math.ceil(filesize / 1024) + 'KB, ' + datetime + ')';

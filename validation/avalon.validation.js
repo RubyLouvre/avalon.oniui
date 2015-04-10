@@ -67,7 +67,9 @@
  *   getMessage: function(){}//用户调用到方法即可以拿到完整的错误消息——“当前位置必须是在北京”
  * }
  * ```
- * <p>如果用户指定了<code>norequired</code>验证规则，如果input为空, 那么就会跳过之后的所有验证</p>
+ * <p>如果用户指定了<code>norequired</code>验证规则，如果input为空, 那么就会跳过之后的所有验证; 在定义拦截器时,务必将它放在最前面,
+ * 如ms-duplex-norequired-int-gt='xxx'
+ * </p>
  */
 
 define(["avalon","../mmPromise/mmPromise"], function(avalon) {
@@ -170,7 +172,6 @@ define(["avalon","../mmPromise/mmPromise"], function(avalon) {
             message: '可以不写',
             get: function(value, data, next) {
                 next(true)
-                data.norequired = value === ""
                 return value
             }
         },
@@ -539,11 +540,8 @@ define(["avalon","../mmPromise/mmPromise"], function(avalon) {
                             resolve = a
                             reject = b
                         }))
-                        var next = function(a) {
-                            if (data.norequired)
-                                a = true
-                            delete data.norequired
-                            if (a) {
+                        var next = function() {
+                            if (data.norequired && value === "") {
                                 resolve(true)
                             } else {
                                 var reason = {
@@ -619,6 +617,9 @@ define(["avalon","../mmPromise/mmPromise"], function(avalon) {
                             validateParams.push(name)
                         } else {
                             params.push(name)
+                        }
+                        if(name === "norequired"){
+                            data.norequired = true
                         }
                     })
                     data.validate = vm.validate

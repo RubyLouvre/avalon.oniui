@@ -414,6 +414,7 @@ define(["../avalon.getModel",
                 }
             }
         }
+
         // 根据rules的设置确定结束日期可选的范围及默认值
         function applyRules(date) {
             var minDate = _toMinDate && parseDate(_toMinDate), 
@@ -559,17 +560,15 @@ define(["../avalon.getModel",
                 toOldValue = formatDate(_oldValue && _oldValue[1] || "")
 
             if(!val && !_confirmClick) {
-                if (duplexFrom && duplexFrom[1][duplexFrom[0]] != fromOldValue) {
-                    duplexFrom[1][duplexFrom[0]] = fromOldValue
-                    applyRules()
-                } else if (!duplexFrom && vmodel.inputFromValue != fromOldValue) {
-                    vmodel.inputFromValue = fromOldValue
-                    applyRules()
-                }
                 if (duplexTo && duplexTo[1][duplexTo[0]] != toOldValue) {
                     duplexTo[1][duplexTo[0]] = toOldValue
                 } else if (!duplexTo && vmodel.inputToValue != toOldValue) {
                     vmodel.inputToValue = toOldValue
+                }
+                if (duplexFrom && duplexFrom[1][duplexFrom[0]] != fromOldValue) {
+                    duplexFrom[1][duplexFrom[0]] = fromOldValue
+                } else if (!duplexFrom && vmodel.inputFromValue != fromOldValue) {
+                    vmodel.inputFromValue = fromOldValue
                 }
             } else if(_confirmClick){
                 _confirmClick = false

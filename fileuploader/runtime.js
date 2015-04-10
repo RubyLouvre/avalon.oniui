@@ -1,4 +1,10 @@
-
+/**
+ * @cnName FileUploader组件内部的文件管理器。
+ * @enName File manager for FileUploader.
+ * @introduce
+ *    <p>管理FileUploader的文件对象；持有发送队列。</p>
+ *  @updatetime 2015-4-7
+ */
 define(["avalon"], 
 function ($$) {
 	var mixFunction = $$.mix;
@@ -9,10 +15,6 @@ function ($$) {
 		this.files = {};
 		this.blobqueue = new blobqueueConstructor(this, uploaderVm.serverConfig);
 	};
-
-	runtimeContructor.prototype.getFileByLocalToken = function (fileLocalToken) {
-		return this.files[fileLocalToken];
-	}
 
 	/*
 	 * 从runtime中移除一个文件。文件的引用和数据都会被销毁，正在进行的发送请求也会取消。
@@ -42,7 +44,11 @@ function ($$) {
 		fileObj.attachEvent("fileStatusChanged", this.onFileStatusChanged, this);
 	};
 
+	/*
+	 * 对所有管理的文件状态监控的回调函数。
+	 */
 	runtimeContructor.prototype.onFileStatusChanged = function (fileObj, beforeStatus) {
+		// 为了优化内存使用，上传成功后自动移除并销毁文件。
 		if (fileObj.status == fileObj.FILE_UPLOADED) {
 			delete this.files[fileObj.fileLocalToken];
 			fileObj.purge();

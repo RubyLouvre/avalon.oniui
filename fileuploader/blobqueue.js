@@ -1,4 +1,11 @@
-define(["avalon"], function (avalon) {
+/**
+ * @cnName FileUploader组件内部Blob队列。列中的Blob在队列不忙的时候会被自动发送。
+ * @enName Blobqueue for FileUploader. Upload blobs automaticlly when the queue is not busy.
+ * @introduce
+ *    <p>具备并发请求管理、自动发送的功能。</p>
+ *  @updatetime 2015-4-10
+ */
+ define(["avalon"], function (avalon) {
 	function blobQueue (runtime, serverConfig) {
 		var me = this;
 		this.$runtime = runtime;

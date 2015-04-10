@@ -12,17 +12,17 @@ define(["mmRouter/mmState",
 				templateUrl: "ppt/views/tpl.html"
 			}
 		},
-		onEnter: function(pageNumber) {
+		onEnter: function(pageNumber, resolve) {
 			if(pageNumber === "") return avalon.router.redirect("/1")
-			var done = this.async(),
-				ppt = avalon.vmodels.ppt
+			var ppt = avalon.vmodels.ppt
 			if(ppt._curentPage != pageNumber) ppt._curentPage = pageNumber
 			avalon.get("ppt/views/ppts/" + ppt.getHTML(pageNumber) + ".html", {pageNumber: pageNumber}, function(res) {
 				ppt.content = markdown.toHTML(res)
 				setTimeout(function() {
-					done()
+					resolve()
 				}, pageNumber > 1 ? 0 : mmState.prevState ? 0 : 2000)
 			}, "text")
+			return false
 		}
 	})
 	avalon.state.config({

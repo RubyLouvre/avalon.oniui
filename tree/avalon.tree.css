@@ -22,7 +22,7 @@
     margin: 0;
     padding: 0 0 0 18px; }
   .oni-tree li ul.line {
-    background: url(./line_conn.gif) 0 0 repeat-y;
+    background: url(http://source.qunarzz.com/general/oniui/tree/line_conn.gif) 0 0 repeat-y;
     zoom: 1; }
   .oni-tree li ul.noline_docu {
     background: none; }
@@ -84,8 +84,8 @@
     background-color: transparent;
     background-repeat: no-repeat;
     background-attachment: scroll;
-    background-image: url("./treeStandard.png");
-    *background-image: url("./treeStandard.gif"); }
+    background-image: url("http://source.qunarzz.com/general/oniui/tree/treeStandard.png");
+    *background-image: url("http://source.qunarzz.com/general/oniui/tree/treeStandard.gif"); }
   .oni-tree li span.chk {
     width: 13px;
     height: 13px;
@@ -198,7 +198,7 @@
     *vertical-align: middle; }
   .oni-tree li span.ico_loading {
     margin-right: 2px;
-    background: url(./loading.gif) no-repeat scroll 0 0 transparent;
+    background: url(http://source.qunarzz.com/general/oniui/tree/loading.gif) no-repeat scroll 0 0 transparent;
     vertical-align: top;
     *vertical-align: middle; }
   .oni-tree ul.tmpTargetTree {
@@ -217,8 +217,8 @@
     background-repeat: no-repeat;
     background-attachment: scroll;
     background-position: -110px -80px;
-    background-image: url("./treeStandard.png");
-    *background-image: url("./treeStandard.gif"); }
+    background-image: url("http://source.qunarzz.com/general/oniui/tree/treeStandard.png");
+    *background-image: url("http://source.qunarzz.com/general/oniui/tree/treeStandard.gif"); }
   .oni-tree ul.tree.treeDragUL {
     margin: 0;
     padding: 0;

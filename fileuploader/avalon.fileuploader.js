@@ -243,7 +243,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
 
             enablePreviewGenerating: true,  //@config {Boolean} 是否开启预览图的生成功能
             showPreview: true,  //@config {Boolean} 是否显示预览图
-            showProgress: false, //@config {Boolean} 是否显示进度条
+            showProgress: true, //@config {Boolean} 是否显示进度条
 
             multipleFileAllowed: true,
             enableRemoteKeyGen: false,   //@config {Boolean} 分块上传时，是否预先和服务器握手，获取一个文件Id

@@ -58,12 +58,14 @@ $uiname : "oni-carousel";
 			}
 
 			.#{$uiname}-link{
+				display: block;
 				position: absolute;
-				top: 10px;
-				bottom: 0;
+				width: 1px; //ie click hack
+				height: 1px; //ie click hack
+				top: 0;
 				left: 0;
-				right: 0;
 				z-index: 10;
+				background-image:url(about:blank);
 			}
 		}
 	}

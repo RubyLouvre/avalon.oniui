@@ -15,14 +15,16 @@
              ms-css-position="itemPosition"
              ms-css-opacity="getOpacity($index)"
                 >
+            <img class="oni-img-placeholder" ms-if="lazyloading" ms-src="placeholderImg" />
+            <img class="oni-img-origin" ms-src="{{el.src}}" ms-on-load="imgOnload($event, $index)" ms-attr-alt="{{el.alt}}"/>
             <a class="oni-carousel-link"
                target="_blank"
                ms-if="typeof links[$index] !== 'undefined' && links[$index] !== ''"
                ms-attr-title="{{links[$index].title}}"
-               ms-href="{{links[$index].href}}">
+               ms-href="{{links[$index].href}}"
+               ms-css-width="pictureWidth"
+               ms-css-height="pictureHeight">
             </a>
-            <img class="oni-img-placeholder" ms-if="lazyloading" ms-src="placeholderImg" />
-            <img class="oni-img-origin" ms-src="{{el.src}}" ms-on-load="imgOnload($event, $index)" ms-attr-alt="{{el.alt}}"/>
         </div>
     </div>
     <div class="oni-carousel-selection-wrap"

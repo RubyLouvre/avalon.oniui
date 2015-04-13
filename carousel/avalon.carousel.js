@@ -299,7 +299,9 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 			vmodel.panelPosition = "relative"
 		}
 		vmodel.pictures.push( vmodel.pictures[0] )
-		// vmodel.pictures[vmodel.pictures.length] = vmodel.pictures[0] //将第一个元素加到图片数组末尾形成循环
+		if(typeof vmodel.links[0] !== "undefined"){
+			vmodel.links.push( vmodel.links[0] )
+		}
 		vmodel.autoPlay() //自动开始轮播
 
 		return vmodel

@@ -17,14 +17,14 @@
 	zoom: 1;
 }
 .ke-toolbar-icon-url {
-	background-image: url(editor.gif);
+	background-image: url(http://source.qunarzz.com/general/oniui/kindeditor/themes/qq/editor.gif);
 	width:18px;
 	*xwidth:20px;
 	height:18px;
 	*xheight:20px;
 }
 .ke-icon-checked{
-	background-image: url(../default/default.png);
+	background-image: url(http://source.qunarzz.com/general/oniui/kindeditor/themes/default/default.png);
 	width:16px;
 	height:16px;
 }

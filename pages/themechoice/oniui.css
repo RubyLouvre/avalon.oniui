@@ -1804,8 +1804,6 @@ div.oni-tab {
 .oni-suggest .oni-suggest-item-selected { background-color: #3775c0; color: #fff; }
 .oni-suggest .oni-suggest-item-hover { background-color: #f8f8f8; color: #333333; }
 
-/*# sourceMappingURL=avalon.suggest.css.map */
-
 
 /*
 这是每个都组件都应该引用的部分
@@ -2067,8 +2065,6 @@ div.ui-loading {
   position: absolute;
   right: 6px;
   top: 3px; }
-
-/*# sourceMappingURL=avalon.dropdownlist.css.map */
 
 
 /*

@@ -114,7 +114,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 
 				// 预加载icons
 				var icons = []
-				icons.push("/images/arrows-left-hover-icon.png","/images/arrows-right-hover-icon.png")
+				icons.push("http://source.qunarzz.com/general/oniui/carousel/arrows-left-hover-icon.png","http://source.qunarzz.com/general/oniui/carousel/arrows-right-hover-icon.png")
 				for (var i = 0; i < icons.length; i++) {
 					icons[i] = path + icons[i]
 					var icon_preload = new Image()

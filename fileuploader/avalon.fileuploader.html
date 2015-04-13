@@ -1,6 +1,6 @@
 
 
-<div class="oni-uploader-wrapper">
+<div class="oni-fileuploader-wrapper">
 	<div class="preview-stage"
 		ms-if="showPreview">
 		<div 
@@ -9,12 +9,12 @@
 			ms-css-width="previewWidth"
 			ms-css-height="previewHeight">
 			<div class="preview-menu">
-				<div><a class="icon" href="javascript:void(0);" ms-on-click="onPreviewRemoveClicked(el)">&times;</a>{{el.name}}</div>
+				<div><a class="oni-icon icon" ms-on-click="onPreviewRemoveClicked(el)">&#xf057;</a><span>{{el.name}}</span></div>
 			</div>
-			<img ms-attr-src="el.preview"/>
+			<img ms-attr-src="el.preview" alt=""/>
 			<div class="preview-progress-wrapper">
 				<div class="preview-progress-body">
-					<div class='progress-bar' ms-css-width="{{el.uploadProgress}}%"></div>
+					<div class='progress-bar' ms-css-width="{{el.uploadProgress}}%" ms-if="showProgress"></div>
 					<span class="message">{{el.message}}</span>
 				</div>
 			</div>
@@ -29,7 +29,6 @@
 		<input type="file" 
 				ms-if="useHtml5Runtime"
 				ms-attr-accept="getInputAcceptTypes(false)"
-				ms-on-change="onFileFieldChanged"
 				ms-attr-multiple="multipleFileAllowed"
 				style="display:none" />
 	</button>

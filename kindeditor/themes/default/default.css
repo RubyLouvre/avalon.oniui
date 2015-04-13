@@ -439,7 +439,7 @@
 	display: block;
 }
 .ke-toolbar-icon-url {
-	background-image: url(default.png);
+	background-image: url(http://source.qunarzz.com/general/oniui/kindeditor/themes/default/default.png);
 }
 .ke-toolbar .ke-outline {
 	border: 1px solid #F0F0EE;
@@ -517,7 +517,7 @@
 	background-position: -0px -754px;
 	width: 15px;
 	height: 11px;
-	background-image: url(default.png);
+	background-image: url(http://source.qunarzz.com/general/oniui/kindeditor/themes/default/default.png);
 }
 .ke-statusbar-right-icon {
 	position: absolute;
@@ -527,7 +527,7 @@
 	background-position: -5px -741px;
 	width: 11px;
 	height: 11px;
-	background-image: url(default.png);
+	background-image: url(http://source.qunarzz.com/general/oniui/kindeditor/themes/default/default.png);
 }
 /* menu */
 .ke-menu {
@@ -676,7 +676,7 @@
 	border:0;
 	margin:0;
 	padding: 0 10px;
-	background: url(background.png) repeat scroll 0 0 #F0F0EE;
+	background: url(http://source.qunarzz.com/general/oniui/kindeditor/themes/default/background.png) repeat scroll 0 0 #F0F0EE;
 	border-bottom: 1px solid #CFCFCF;
 	height: 24px;
 	font: 12px/24px "sans serif",tahoma,verdana,helvetica;
@@ -686,7 +686,7 @@
 }
 .ke-dialog-icon-close {
 	display: block;
-	background: url(default.png) no-repeat scroll 0px -688px;
+	background: url(http://source.qunarzz.com/general/oniui/kindeditor/themes/default/default.png) no-repeat scroll 0px -688px;
 	width: 16px;
 	height: 16px;
 	position: absolute;
@@ -757,7 +757,7 @@
 	text-align: center;
 }
 .ke-dialog-loading-content {
-	background: url("../common/loading.gif") no-repeat;
+	background: url(http://source.qunarzz.com/general/oniui/kindeditor/themes/common/loading.gif) no-repeat;
     color: #666;
     font-size: 14px;
     font-weight: bold;
@@ -788,7 +788,7 @@
 	opacity:0.5;
 }
 .ke-button-common {
-	background: url(background.png) no-repeat scroll 0 -25px transparent;
+	background: url(http://source.qunarzz.com/general/oniui/kindeditor/themes/default/background.png) no-repeat scroll 0 -25px transparent;
 	cursor: pointer;
 	height: 23px;
 	line-height: 23px;
@@ -981,7 +981,7 @@
 }
 .ke-swfupload-body .ke-delete {
 	display: block;
-	background: url(default.png) no-repeat scroll 0px -688px;
+	background: url(http://source.qunarzz.com/general/oniui/kindeditor/themes/default/default.png) no-repeat scroll 0px -688px;
 	width: 16px;
 	height: 16px;
 	position: absolute;

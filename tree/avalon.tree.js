@@ -311,8 +311,13 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
             return mat.toUpperCase()
         })
     }
-
+    var commonInit = true
     var widget = avalon.ui.tree = function(element, data, vmodels) {
+        if(commonInit) {
+            avalon.bind(document.body, "selectstart", disabelSelect)
+            avalon.bind(document.body, "drag", disabelSelect)
+            commonInit = false
+        }
         var options = data.treeOptions, cache = {}// 缓存节点
         //方便用户对原始模板进行修改,提高定制性
         options.template = options.getTemplate(template, options)
@@ -711,14 +716,14 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
                     if(vm.data.simpleData.enable && (nodes instanceof Array)) {
                         nodes = vm.transformTozTreeNodes(nodes)
                     } else {
-                        nodes = [nodes]
+                        nodes = nodes instanceof Array ? nodes : [nodes]
                     }
                     nodes = dataFormator(nodes, parentLeaf, undefine, undefine, vm)
                     // 这里node依旧没有$id属性
                     dataFormator(nodes, parentLeaf, "构建父子节点衔接关系", undefine, vm)
                     if(parentLeaf) parentLeaf.isParent = true
                     // open的监听可能没有捕捉到
-                    if(!isSilent) parentLeaf.open = true
+                    if(!isSilent && parentLeaf) parentLeaf.open = true
                     var arr = vm.getNodes(parentLeaf), len = arr.length
                     arr.pushArray(nodes)
                     var addNodes = arr.slice(len) || []
@@ -780,7 +785,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
              */
             vm.reset = function(children) {
                 vm.children.clear()
-                vm.addNodes(undefine, dataBak || children)
+                vm.addNodes(undefine, children || dataBak)
             }
 
             /**
@@ -1065,8 +1070,6 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
             }
         }
     }
-    avalon.bind(document.body, "selectstart", disabelSelect)
-    avalon.bind(document.body, "drag", disabelSelect)
     widget.defaults = {
         toggle: true,
         view: {//@config {Object} 视觉效果相关的配置

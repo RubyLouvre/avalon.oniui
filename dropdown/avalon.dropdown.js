@@ -309,6 +309,7 @@ define(["avalon",
             vm._refresh = function(len) {
                 vmodel.data.clear();
                 vmodel.label = '';
+                vmodel.__cursorInList__ = false
                 if (len > 0) {
                     //当data改变时，解锁滚动条
                     vmodel._disabledScrollbar(false);
@@ -970,4 +971,5 @@ define(["avalon",
  [异步渲染组件的选项](avalon.dropdown.ex11.html)
  [联动的dropdown](avalon.dropdown.ex12.html)
  [dropdown状态保持功能](avalon.dropdown.ex13.html)
+ [多个dropdown共享状态](avalon.dropdown.ex14.html)
  */

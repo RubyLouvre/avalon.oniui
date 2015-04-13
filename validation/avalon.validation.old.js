@@ -258,8 +258,15 @@ define(["avalon","../mmPromise/mmPromise"], function(avalon) {
         },
         required: {
             message: '必须填写',
-            get: function(value, data, next) {
+            get: function (value, data, next) {
                 next(value !== "")
+                return value
+            }
+        },
+        norequired: {
+            message: '可以不写',
+            get: function (value, data, next) {
+                next(true)
                 return value
             }
         },
@@ -601,6 +608,9 @@ define(["avalon","../mmPromise/mmPromise"], function(avalon) {
                             reject = b
                         }))
                         var next = function(a) {
+                           if (data.norequired && value === "") {
+                                a = true
+                            }
                             if (a) {
                                 resolve(true)
                             } else {
@@ -679,6 +689,9 @@ define(["avalon","../mmPromise/mmPromise"], function(avalon) {
                             validateParams.push(name)
                         } else {
                             params.push(name)
+                        }
+                        if (name === "norequired") {
+                            data.norequired = true
                         }
                     })
                     data.validate = vm.validate

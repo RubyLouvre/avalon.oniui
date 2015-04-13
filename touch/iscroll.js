@@ -1,6 +1,6 @@
 define(["avalon"], function () {
 /*! iScroll v5.1.3 ~ (c) 2008-2014 Matteo Spinelli ~ http://cubiq.org/license */
-(function (window, document, Math) {
+return (function (window, document, Math) {
 var rAF = window.requestAnimationFrame	||
 	window.webkitRequestAnimationFrame	||
 	window.mozRequestAnimationFrame		||
@@ -2006,7 +2006,7 @@ if ( typeof module != 'undefined' && module.exports ) {
 } else {
 	window.IScroll = IScroll;
 }
+return IScroll
 
 })(window, document, Math);
-	return IScroll
 })

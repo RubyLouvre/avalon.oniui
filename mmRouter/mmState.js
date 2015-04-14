@@ -840,6 +840,7 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
                     var status = xhr.status;
                     if (status > 399 && status < 600) {
                         reason.message = "templateUrl对应资源不存在或没有开启 CORS"
+                        reason.status = status
                         reject(reason)
                     } else {
                         resolve(avalon.templateCache[url] = xhr.responseText)

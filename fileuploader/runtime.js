@@ -5,12 +5,12 @@
  *    <p>管理FileUploader的文件对象；持有发送队列。</p>
  *  @updatetime 2015-4-7
  */
-define(["avalon"], 
-function ($$) {
+define(["avalon", "./eventmixin", "./blobqueue"], 
+function ($$, eventMixin, blobqueueConstructor) {
 	var mixFunction = $$.mix;
 	var logFunction = $$.log;
 
-	var runtimeContructor = function (uploaderVm, blobqueueConstructor) {
+	var runtimeContructor = function (uploaderVm) {
 		this.vm = uploaderVm;
 		this.files = {};
 		this.blobqueue = new blobqueueConstructor(this, uploaderVm.serverConfig);
@@ -197,5 +197,7 @@ function ($$) {
 		}
 		return sum;
 	}
+
+	eventMixin(runtimeContructor);
 	return runtimeContructor;
 });

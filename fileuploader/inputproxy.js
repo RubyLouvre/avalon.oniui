@@ -8,8 +8,7 @@
  *    <p>filePreviewUpdated事件：对某一文件的预览生成结束，并获得了结果后，触发此事件。</p>
  *  @updatetime 2015-4-7
  */
- define(["avalon"], 
-function ($$) {
+define(["avalon", "./eventmixin"], function (avalon, eventMixin) {
 	var proxyContructor = function (target, isH5, contextGen) {
 		this.contextGen = contextGen;
 		if (isH5) {
@@ -149,6 +148,8 @@ function ($$) {
         	me.onH5FileFieldChanged.call(me, event)
         });
 	}
+
+	eventMixin(proxyContructor);
 
 	return proxyContructor;
 });

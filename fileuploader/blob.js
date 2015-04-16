@@ -17,7 +17,7 @@
  *    <p>blobErrored事件：当文件分块上传并且重试数次后仍然失败，此事件会触发。包含两个参数，参数1为文件对象分块本身，参数2为服务器返回的error状态文本。</p>
  *  @updatetime 2015-4-7
  */
-define(["avalon"], function (avalon) {
+define(["avalon", "./eventmixin"], function (avalon, eventMixin) {
 	function blob(offset, size, index, fileObj) {
 		this.offset = offset;
 		this.size = size;
@@ -194,9 +194,7 @@ define(["avalon"], function (avalon) {
 		}
 	}
 
-
-
-
+	eventMixin(blob);
 
 	return blob;
 });

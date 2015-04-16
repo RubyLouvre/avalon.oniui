@@ -5,17 +5,15 @@
  *    <p>文件上传组件。支持预览、大文件和分块上传。</p>
  *  @updatetime 2015-4-10
  */
-define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "./eventmixin",
-    "./blob",
+define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser",
     "./file",
     "./flasheventhub",
     "./runtime",
-    "./blobqueue",
     "./spark-md5",
     "./inputproxy",
     "mmRequest/mmRequest",
     "css!./avalon.fileuploader.css"], 
-    function (avalon, template, browser, eventMixin, blobConstructor, fileConstructor, fehConstructor, runtimeConstructor, blobqueueConstructor, md5gen, inputProxyContructor) {
+    function (avalon, template, browser, fileConstructor, fehConstructor, runtimeConstructor, md5gen, inputProxyContructor) {
         var widgetName = 'fileuploader';
         var widget = avalon.ui[widgetName] = function(element, data, vmodels) {
         	var options = data[widgetName+'Options'],
@@ -39,12 +37,6 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                 vm.useFlashRuntime = !vm.useHtml5Runtime;
 
                 vm.previews = [];   // 渲染到Template上的预览数据
-                
-                eventMixin(blobConstructor);
-                eventMixin(inputProxyContructor);
-                eventMixin(blobqueueConstructor);
-                eventMixin(runtimeConstructor);
-                eventMixin(fileConstructor);
 
                 vm.$md5gen = md5gen;
 
@@ -109,7 +101,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                         scope: opts
                     });
                     opts.$fileInputProxy.attachEvent("newFileSelected", function(fileInfo) {
-                        var fileObj = new fileConstructor(fileInfo, this.$flashEventHub, this.chunked, this.chunkSize, blobConstructor);
+                        var fileObj = new fileConstructor(fileInfo, this.$flashEventHub, this.chunked, this.chunkSize);
                         fileObj.attachEvent("fileStatusChanged", this.onFileStatusChanged, this);
 
                         fileObj.attachEvent("fileProgressed", function (f, beforePercentage) {
@@ -200,7 +192,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                     }
                 }
             	vm.$init = function() {
-                    vm.$runtime = new runtimeConstructor(vm, blobqueueConstructor);
+                    vm.$runtime = new runtimeConstructor(vm);
 
 	            	element.innerHTML = template.replace(/##VM_ID##/ig, vm.$id);  // 将vmid附加如flash的url中
 

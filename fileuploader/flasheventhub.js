@@ -1,5 +1,4 @@
-define(["avalon"], 
-function ($$) {
+define(function (eventMixin) {
 	var fehContructor = function (flash) {
 		this.events = {};
 		this.__flash = flash;

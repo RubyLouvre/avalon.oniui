@@ -5,10 +5,8 @@
  *    <p>管理FileUploader的文件对象；持有发送队列。</p>
  *  @updatetime 2015-4-7
  */
-define(["avalon", "./eventmixin", "./blobqueue"], 
-function ($$, eventMixin, blobqueueConstructor) {
-	var mixFunction = $$.mix;
-
+define(["./avalon.fileuploaderAdapter", "./eventmixin", "./blobqueue"], 
+function (adapter, eventMixin, blobqueueConstructor) {
 	var runtimeContructor = function (uploaderVm) {
 		this.vm = uploaderVm;
 		this.files = {};
@@ -151,7 +149,7 @@ function ($$, eventMixin, blobqueueConstructor) {
 	}
 */
 	runtimeContructor.prototype.getRequestParamConfig = function (blob) {
-		var requiredParamsConfig = mixFunction({
+		var requiredParamsConfig = adapter.extend({
 			blobParamName: "blob",
 			fileTokenParamName: "fileKey",
 			totalChunkParamName: "total",

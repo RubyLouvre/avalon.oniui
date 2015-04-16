@@ -6,7 +6,7 @@
  *      对于任何原生的JS类都可以使用MixEvent(Class)来加入事件的能力。MixEvent后为Class的原型上加入了attachEvent、unattachEvent、fireEvent、purge等方法。</p>
  *  @updatetime 2015-4-7
  */
-define(["avalon"], function($$) {
+define(["./avalon.fileuploaderAdapter"], function(adapter) {
 	var mixEvent = function mixEvent(jsClass) {
 		if (jsClass.prototype.__eventmixed) return;
 		jsClass.prototype.__eventmixed = true;	// 防止被Mix两次
@@ -52,7 +52,7 @@ define(["avalon"], function($$) {
 			}
 		}
 		jsClass.prototype.log = function () {
-			$$.log.apply($$, Array.prototype.slice.call(arguments, 0));
+			adapter.log.apply(adapter, Array.prototype.slice.call(arguments, 0));
 		}
 
 		if (jsClass.prototype.hasOwnProperty('purge')) {

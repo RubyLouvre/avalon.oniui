@@ -5,7 +5,7 @@
  *    <p>具备并发请求管理、自动发送的功能。</p>
  *  @updatetime 2015-4-10
  */
-define(["avalon", "./eventmixin"], function (avalon, eventMixin) {
+define(["./eventmixin"], function (eventMixin) {
 	function blobQueue (runtime, serverConfig) {
 		var me = this;
 		this.$runtime = runtime;
@@ -39,7 +39,7 @@ define(["avalon", "./eventmixin"], function (avalon, eventMixin) {
 		while (i < this.queue.length) {
 			queueBlob = this.queue[i];
 			if (queueBlob.fileObj.fileLocalToken == fileLocalToken) {
-				avalon.Array.removeAt(this.queue, i);
+				this.queue.splice(i, 1);
 			} else {
 				i++;
 			}
@@ -50,7 +50,7 @@ define(["avalon", "./eventmixin"], function (avalon, eventMixin) {
 		while (i < this.requestPool.length) {
 			poolBlob = this.requestPool[i];
 			if (poolBlob.fileObj.fileLocalToken == fileLocalToken) {
-				avalon.Array.remove(this.requestPool, poolBlob);
+				this.requestPool.splice(i, 1);
 				poolBlob.cancelUpload();
 				this.inSending--;
 			} else {
@@ -115,7 +115,11 @@ define(["avalon", "./eventmixin"], function (avalon, eventMixin) {
 	blobQueue.prototype.onBlobSuccess = function (blob, response) {
 		this.inSending--;
 		this.log("****FileUploader.blobqueue: Blob tranfered. File token: ", blob.fileObj.fileLocalToken, ". Blob Index: ", blob.index);
-		avalon.Array.remove(this.requestPool, blob);
+
+		var blobAt = this.requestPool.indexOf(blob);
+		if (blobAt >= 0) {
+			this.requestPool.splice(blobAt, 1);
+		}
 	}
 
 	blobQueue.prototype.onBlobError = function (blob, textStatus, error) {

@@ -26,7 +26,7 @@ define(function (eventMixin) {
 
 			while (i < listeners.length) {
 				if (listeners[i].fn === fn && listeners[i].scope === scope) {
-					avalon.Array.removeAt(listeners, i);
+					listeners.splice(i, 1);
 				} else {
 					i++;
 				}

@@ -8,7 +8,7 @@
  *    <p>filePreviewUpdated事件：对某一文件的预览生成结束，并获得了结果后，触发此事件。</p>
  *  @updatetime 2015-4-7
  */
-define(["avalon", "./eventmixin"], function (avalon, eventMixin) {
+define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, eventMixin) {
 	var proxyContructor = function (target, isH5, contextGen) {
 		this.contextGen = contextGen;
 		if (isH5) {
@@ -129,7 +129,7 @@ define(["avalon", "./eventmixin"], function (avalon, eventMixin) {
 
     proxyContructor.prototype.applyFileLocalToken = function () {
         this.fileLocalTokenSeed++;
-        return "__avalonfile"+this.fileLocalTokenSeed;
+        return "__file"+this.fileLocalTokenSeed;
     }
 
 	proxyContructor.prototype.onFlashFileAdded = function (fileInfo) {
@@ -143,10 +143,9 @@ define(["avalon", "./eventmixin"], function (avalon, eventMixin) {
 	}
 
 	proxyContructor.prototype.listenToInput = function (input) {
-		var me = this;
-        avalon(input).bind("change", function (event) {
-        	me.onH5FileFieldChanged.call(me, event)
-        });
+		adapter.bindEvent(input, "change", function(event) {
+        	this.onH5FileFieldChanged.call(this, event);
+		}, this);
 	}
 
 	eventMixin(proxyContructor);

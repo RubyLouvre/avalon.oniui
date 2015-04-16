@@ -149,7 +149,7 @@ package
 			} else {
 				logs = args;
 			}
-			ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.printFlashLog", logs);
+			ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.log", logs);
 			
 		}
 		private function init(e:Event = null):void {

@@ -7,9 +7,6 @@
  *  @updatetime 2015-4-7
  */
 define(["avalon"], function($$) {
-	var jsDebugger = false;
-	var flashDebugger = false;
-
 	var mixEvent = function mixEvent(jsClass) {
 		if (jsClass.prototype.__eventmixed) return;
 		jsClass.prototype.__eventmixed = true;	// 防止被Mix两次
@@ -55,10 +52,8 @@ define(["avalon"], function($$) {
 			}
 		}
 		jsClass.prototype.log = function () {
-			if (this.jsDebuggerOn) $$.log.apply($$, Array.prototype.slice.call(arguments, 0));
+			$$.log.apply($$, Array.prototype.slice.call(arguments, 0));
 		}
-		jsClass.prototype.jsDebuggerOn = jsDebugger;
-		jsClass.prototype.flashDebuggerOn = jsDebugger;
 
 		if (jsClass.prototype.hasOwnProperty('purge')) {
 			var originPurge = jsClass.prototype.purge;

@@ -8,7 +8,6 @@
 define(["avalon", "./eventmixin", "./blobqueue"], 
 function ($$, eventMixin, blobqueueConstructor) {
 	var mixFunction = $$.mix;
-	var logFunction = $$.log;
 
 	var runtimeContructor = function (uploaderVm) {
 		this.vm = uploaderVm;
@@ -27,11 +26,6 @@ function ($$, eventMixin, blobqueueConstructor) {
 
 		this.blobqueue.stopUploadByLocalToken(fileLocalToken);
 		fileObj.purge();
-	}
-
-	// 调试Flash的函数。Flash调用此函数在浏览器打印Log
-	runtimeContructor.prototype.printFlashLog = function (args) {
-		logFunction.apply(logFunction, args);
 	}
 
 	/*

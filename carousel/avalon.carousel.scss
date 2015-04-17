@@ -1,17 +1,17 @@
-
+@charset "utf-8";
 @import "../chameleon/oniui-theme";
 @mixin transition($duration) {
-    -webkit-transition: $duration;
-    -moz-transition: $duration;
-    -ms-transition: $duration;
-    -o-transition: $duration;
-    transition: $duration;
+	-webkit-transition: $duration;
+	-moz-transition: $duration;
+	-ms-transition: $duration;
+	-o-transition: $duration;
+	transition: $duration;
 }
 $uiname : "oni-carousel";
 @if($oinui-theme == smoothness) {
 	$carousel: (
-		bg: #fff,
-		borderColor:#aaaaaa
+			bg: #fff,
+			borderColor:#aaaaaa
 	) !global
 }
 
@@ -37,7 +37,7 @@ $uiname : "oni-carousel";
 			text-align: center;
 			background-color: #f2f2f2;
 
-			.#{$uiname}-img {
+			.oni-img-origin{
 				position: absolute;
 				top: 50%;
 				left: 50%;
@@ -50,17 +50,28 @@ $uiname : "oni-carousel";
 				*left: 0;
 			}
 
-			.#{$uiname}-content {
+			.oni-img-placeholder{
 				position: absolute;
+				top: 50%;
+				left: 50%;
+				@include transform(translate(-50%, -50%));
+			}
+
+			.#{$uiname}-link{
+				display: block;
+				position: absolute;
+				width: 1px; //ie click hack
+				height: 1px; //ie click hack
 				top: 0;
 				left: 0;
-				width: 100%;
-				height: 100%;
+				z-index: 10;
+				background-image:url(about:blank);
 			}
 		}
 	}
 	.#{$uiname}-selection-wrap{
 		position: absolute;
+		z-index: 20;
 		bottom: 4%;
 		left: 50%;
 		a{
@@ -76,10 +87,11 @@ $uiname : "oni-carousel";
 		.selected{
 			background-color: #00a3c2;
 		}
-		
+
 	}
 	.arrow{
 		position: absolute;
+		z-index: 20;
 		top:50%;
 		width: 30px;
 		height: 30px;
@@ -89,15 +101,23 @@ $uiname : "oni-carousel";
 	.prev{
 		left: 7%;
 		background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-left-icon.png) no-repeat;
+		_background:none;
+		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-left-icon.png',sizingMethod='crop');
 	}
 	.prev:hover{
 		background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-left-hover-icon.png) no-repeat;
+		_background:none;
+		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-left-hover-icon.png',sizingMethod='crop');
 	}
 	.after{
 		left: 93%;
 		background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-right-icon.png) no-repeat;
+		_background:none;
+		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-right-icon.png',sizingMethod='crop');
 	}
 	.after:hover{
 		background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-right-hover-icon.png) no-repeat;
+		_background:none;
+		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-right-hover-icon.png',sizingMethod='crop');
 	}
 }

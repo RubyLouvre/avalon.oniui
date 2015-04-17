@@ -406,7 +406,7 @@ define(["avalon",
                 }
 
                 if (!b) {
-                    avalon.type(vmodel.onHide) === "function" && vmodel.onHide.call(this, listNode);
+                    avalon.type(vmodel.onHide) === "function" && vmodel.onHide.call(element, listNode, vmodel);
                 } else {
                     var firstItemIndex, selectedItemIndex, value = vmodel.value;
                     if (avalon.type(value) !== "array") {
@@ -435,7 +435,7 @@ define(["avalon",
                     vmodel._styleFix();
                     vmodel._position();
                     if(avalon.type(vmodel.onShow) === "function") {
-                        vmodel.onShow.call(this, listNode);
+                        vmodel.onShow.call(element, listNode, vmodel);
                     }
                 }
             };

@@ -194,12 +194,14 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                             collision: vmodel.collision, 
                             within: document.body
                         })
+                        var tipPos = tipElem.offset(),
+                            elemPos = atEle.offset()
                         // position组件自动调整的时候调整箭头上下朝向
                         if(elem.nodeName) {
-                            if(tipElem.position().top > atEle.position().top + elem.offsetHeight && vmodel.arrClass == "bottom") {
+                            if(tipPos.top > atEle.offset().top + elem.offsetHeight && vmodel.arrClass == "bottom") {
                                 vmodel.arrClass = "top"
                                 tipElem.removeClass("oni-tooltip-bottom").addClass("oni-tooltip-top")
-                            } else if(tipElem.position().top + tooltipElem.offsetHeight < atEle.position().top && vmodel.arrClass == "top") {
+                            } else if(tipPos.top + tooltipElem.offsetHeight < atEle.offset().top && vmodel.arrClass == "top") {
                                 vmodel.arrClass = "bottom"
                                 tipElem.removeClass("oni-tooltip-top").addClass("oni-tooltip-bottom")
                             }
@@ -208,8 +210,8 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                             if(arrOut && arrIn) {
                                 var dir = vmodel.arrClass == "bottom" || vmodel.arrClass == "left",
                                     avalonElem = avalon(elem),
-                                    moveToLeft = tipElem.position().left + tooltipElem.offsetWidth / 2 > avalonElem.position().left + elem.offsetWidth,
-                                    moveToRight = tipElem.position().left + tooltipElem.offsetWidth / 2 < avalonElem.position().left
+                                    moveToLeft = tipPos.left + tooltipElem.offsetWidth / 2 > avalonElem.offset().left + elem.offsetWidth,
+                                    moveToRight = tipPos.left + tooltipElem.offsetWidth / 2 < avalonElem.offset().left
                                 // tip元素中线偏出elem
                                 if((vmodel.arrClass == "top" || vmodel.arrClass == "bottom") && ( moveToRight || moveToLeft)) {
                                     arrOut.position({
@@ -254,9 +256,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                                     })
                                 } else {
                                     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-                                    var tipPos = tipElem.offset(),
-                                        elemPos = avalon(elem).offset(),
-                                        elemH = elem.offsetHeight,
+                                    var elemH = elem.offsetHeight,
                                         elemW = elem.offsetWidth,
                                         oleft
                                     switch(vmodel.arrClass) {

@@ -8,22 +8,22 @@
                 ms-if="numberOfMonths!==1" 
                 ms-click="_prev(prevMonth, $event)"
                 ms-class="oni-datepicker-prev-disabled:!prevMonth" 
-                style="left:15px;">&#xf053;</i>
+                style="left:15px;">&#xf047;</i>
             <i  class="oni-datepicker-next oni-icon" 
                 ms-if="numberOfMonths!==1" 
                 ms-click="_next(nextMonth, $event)"
                 ms-class="oni-datepicker-next-disabled:!nextMonth" 
-                style="right:15px;">&#xf054;</i>
+                style="right:15px;">&#xf03e;</i>
             <div class="oni-datepicker-content-content" 
                  ms-repeat-calendar="data" 
                  ms-visible="_datepickerToggle">
                 <div class="oni-datepicker-header" ms-if="numberOfMonths===1">
                     <i class="oni-datepicker-prev oni-icon" 
                        ms-click="_prev(prevMonth, $event)"
-                       ms-class="oni-datepicker-prev-disabled:!prevMonth">&#xf053;</i>
+                       ms-class="oni-datepicker-prev-disabled:!prevMonth">&#xf047;</i>
                     <i class="oni-datepicker-next oni-icon"    
                        ms-click="_next(nextMonth, $event)"
-                       ms-class="oni-datepicker-next-disabled:!nextMonth">&#xf054;</i>
+                       ms-class="oni-datepicker-next-disabled:!nextMonth">&#xf03e;</i>
                     <div class="oni-datepicker-title" ms-if="changeMonthAndYear && regional.showMonthAfterYear">
                         <select ms-each="years" data-each-rendered="_afterYearRendered">
                             <option ms-attr-value="el">{{el}}</option>
@@ -103,7 +103,7 @@
                             <th class="prev" style="visibility: visible;text-align:left">
                                 <i class="oni-datepicker-prev oni-icon" 
                                    ms-click="_prevYear(mobileYear)"
-                                   ms-class="oni-datepicker-prev-disabled:mobileYear===years[0]">&#xf053;</i>
+                                   ms-class="oni-datepicker-prev-disabled:mobileYear===years[0]">&#xf047;</i>
                             </th>
                             <th style="text-align:center" 
                                 ms-click="_selectYears" 
@@ -111,7 +111,7 @@
                             <th class="next" style="visibility: visible;text-align:right">
                                 <i class="oni-datepicker-next oni-icon" 
                                    ms-click="_nextYear(mobileYear)"
-                                   ms-class="oni-datepicker-prev-disabled:mobileYear===years[years.length-1]">&#xf054;</i>
+                                   ms-class="oni-datepicker-prev-disabled:mobileYear===years[years.length-1]">&#xf03e;</i>
                             </th>
                         </tr>
                     </thead>
@@ -143,7 +143,7 @@
                             <th class="prev" style="visibility: visible;text-align:left">
                                 <i class="oni-datepicker-prev oni-icon" 
                                    ms-click="_prevYears" 
-                                   ms-class="oni-datepicker-prev-disabled:_years[0]<=years[0]">&#xf053;</i>
+                                   ms-class="oni-datepicker-prev-disabled:_years[0]<=years[0]">&#xf047;</i>
                             </th>
                             <th style="text-align:center" 
                                 ms-hover="oni-state-hover:mobileMonthAndYear">{{_years[0]}}-{{_years[9]}}
@@ -151,7 +151,7 @@
                             <th class="next" style="visibility: visible;text-align:right">
                                 <i class="oni-datepicker-next oni-icon" 
                                     ms-click="_nextYears"
-                                    ms-class="oni-datepicker-next-disabled:_years[_years.length-1]>=years[years.length-1]">&#xf054;</i>
+                                    ms-class="oni-datepicker-next-disabled:_years[_years.length-1]>=years[years.length-1]">&#xf03e;</i>
                             </th>
                         </tr>
                     </thead>

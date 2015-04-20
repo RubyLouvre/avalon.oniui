@@ -771,6 +771,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
  [与textbox组件的混用, ms-duplex-string的使用 ](avalon.validation.ex9.html)
  [验证表单元素存在disabled的情况 ](avalon.validation.ex10.html)
  [deduplicateInValidateAll:true对validatieAll回调的reasons数组根据element进行去重 ](avalon.validation.ex13.html)
- 
+  [验证dropdown组件 ](avalon.validation.ex14.html)
+
  
  */

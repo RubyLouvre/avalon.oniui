@@ -298,7 +298,7 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                 vm.$bindRegionNode = function (region, domNode, resizable) {
                     var $node = avalon(domNode);
                     if (docks.hasOwnProperty(region)) {
-                        $node.addClass(region+'-region region');
+                        $node.addClass('oni-layout-' + region+'-region oni-layout-region');
                         vmodel.$dockedAreas[region] = $node;
                         for (var n in docks[region].attrBindings) {
                             $node.attr(n, docks[region].attrBindings[n]);
@@ -325,7 +325,7 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                         domCreator.innerHTML = "<div ms-draggable ms-controller=\"" + vmodel.$id + "\" data-draggable-ghosting=\"true\" data-draggable-start=\"startFn\" data-draggable-stop=\"stopFn\"></div>";
                         resizer = domCreator.childNodes[0];
                         $resizer = avalon(resizer);
-                        $resizer.addClass(region + "-resizer resizer");
+                        $resizer.addClass('oni-layout-' + region + "-resizer oni-layout-resizer");
                         for (var n in draggableConfig) {
                             if (draggableConfig.hasOwnProperty(n)) {
                                 $resizer.attr(n, draggableConfig[n]);
@@ -338,13 +338,13 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
                 };
 
                 vm.$registNestedLayout = function(nestedVM) {
-                    vm.$dockedAreas[nestedVM.parentLayoutRegion].addClass("nested-region");
+                    vm.$dockedAreas[nestedVM.parentLayoutRegion].addClass("oni-layout-nested-region");
                     avalon.Array.ensure(vm.$nestedLayouts, nestedVM);
                     nestedVM.isSubLayout = true;
                     vm[nestedVM.parentLayoutRegion+"Region"].isNested = true;
                 };
                 vm.$unregistNestedLayout = function (nestedVM) {
-                    vm.$dockedAreas[nestedVM.parentLayoutRegion].removeClass("nested-region");
+                    vm.$dockedAreas[nestedVM.parentLayoutRegion].removeClass("oni-layout-nested-region");
                     avalon.Array.remove(vm.$nestedLayouts, nestedVM);
                     nestedVM.isSubLayout = false;
                     vm[nestedVM.parentLayoutRegion+"Region"].isNested = false;

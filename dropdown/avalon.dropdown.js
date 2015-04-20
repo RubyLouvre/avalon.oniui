@@ -100,12 +100,15 @@ define(["avalon",
                 if (vmodel.multiple) {
                     //创建菜单
                     listNode = createListNode();
+                    var list = listNode.firstChild;
                     elemParent.insertBefore(listNode, element);
+                    list.appendChild(element);
                 } else {//如果是单选
                     var title;
                     titleNode = avalon.parseHTML(titleTemplate);
                     title = titleNode.firstChild;
                     elemParent.insertBefore(titleNode, element);
+                    title.appendChild(element);
                     titleNode = title;
 
                     //设置title宽度
@@ -238,18 +241,16 @@ define(["avalon",
                     });
                 }
 
-                avalon.ready(function() {
-                    avalon.scan(element.previousSibling, [vmodel].concat(vmodels));
-                    if(continueScan){
-                        continueScan()
-                    } else{
-                        avalon.log("请尽快升到avalon1.3.7+")
-                        if (typeof options.onInit === "function") {
-                            options.onInit.call(element, vmodel, options, vmodels)
-                        }
+                avalon.scan(element.parentNode, [vmodel].concat(vmodels));
+                if(continueScan){
+                    continueScan()
+                } else{
+                    avalon.log("请尽快升到avalon1.3.7+")
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
                     }
-                    vmodel.multiple && optionsSync()
-                });
+                }
+                vmodel.multiple && optionsSync()
             }
 
             vm.repeatRendered = function() {
@@ -406,7 +407,7 @@ define(["avalon",
                 }
 
                 if (!b) {
-                    avalon.type(vmodel.onHide) === "function" && vmodel.onHide.call(this, listNode);
+                    avalon.type(vmodel.onHide) === "function" && vmodel.onHide.call(element, listNode, vmodel);
                 } else {
                     var firstItemIndex, selectedItemIndex, value = vmodel.value;
                     if (avalon.type(value) !== "array") {
@@ -435,7 +436,7 @@ define(["avalon",
                     vmodel._styleFix();
                     vmodel._position();
                     if(avalon.type(vmodel.onShow) === "function") {
-                        vmodel.onShow.call(this, listNode);
+                        vmodel.onShow.call(element, listNode, vmodel);
                     }
                 }
             };

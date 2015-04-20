@@ -27,6 +27,15 @@
 	<p>将showPreview设为false以关闭预览图显示。注意将enablePreviewGenerating配置项设为false可以增强性能，否则将继续生成base64的preview用以自定义preview的外观，具体参见<a href="avalon.fileuploader.ex5.html">自定义预览窗</a>的例子</p>
     <div ms-widget="fileuploader,demoUploader4,$uploaderOptions4"></div>
 
+	<h1>在IE6-8下开启预览功能</h1>
+	<p>uploader采用base64压缩图片并预览。因为浏览器特性限制，IE6-8下无法保证能够预览本地图片。默认状况下，IE6-8下新增的图片预览图都是“noPreview”指定的图片。但是可以在serverConfig中的previewUrl属性指定一个服务，将base64转换成图片，这样在IE6-8下也可以看到预览图了。</p>
+    <div ms-widget="fileuploader,demoUploader5,$uploaderOptions5"></div>
+
+	<h1>配置上传进度条上的文本消息</h1>
+	<p>当文件状态产生变化时，进度条上会有一个文本信息。通过覆盖getFileMessageText方法可以自定义此文本。getFileMessageText方法的参数是一个文件对象，包含了文件名、尺寸、上传进度的信息。</p>
+	<p><strong>注意：不要修改此文件对象的任何属性值。</strong></p>
+    <div ms-widget="fileuploader,demoUploader6,$uploaderOptions6"></div>
+
 	<script>
 		require(["./fileuploader/avalon.fileuploader","domReady!"], function($$){
 			var model = $$.define("demo", function(vm){
@@ -37,9 +46,17 @@
 		                url: "../../Handler1.ashx",
 		                userName: undefined,
 		                password: undefined
-		            }
+		            },
+					onFileOverSize: function (fileObj) {
+						alert(fileObj.name+"超出了文件尺寸限制")
+					},
+					onFilePoolOverSize: function (fileObj, poolSize) {
+						alert("文件缓存池达已满，不能继续添加文件。")
+					},
+					onSameFileAdded: function () {
+						alert("不能添加相同的文件");
+					}
 				};
-
 
 				vm.$uploaderOptions1 = $$.mix({
 		            previewWidth: 200,
@@ -65,6 +82,54 @@
 		            enablePreviewGenerating: false
 				}, basicOptions);
 
+				vm.$uploaderOptions5 = {
+		            addButtonText: "添加文件",
+		            uploadButtonText: "开始上传",
+					onFileOverSize: function (fileObj) {
+						alert(fileObj.name+"超出了文件尺寸限制")
+					},
+					onFilePoolOverSize: function (fileObj, poolSize) {
+						alert("文件缓存池达已满，不能继续添加文件。")
+					},
+					onSameFileAdded: function () {
+						alert("不能添加相同的文件");
+					},
+		            serverConfig: {
+		                url: "../../Handler1.ashx",
+		                previewUrl: "../../preview.ashx",
+		                userName: undefined,
+		                password: undefined
+		            }
+				};
+
+				vm.$uploaderOptions6 = $$.mix({
+					getFileMessageText: function (fileObj) {
+		                var message = "";
+		                switch (fileObj.status) {
+		                    case fileObj.FILE_CACHED:
+		                        message = "已缓存";
+		                        break;
+		                    case fileObj.FILE_QUEUED:
+		                        message = "文件已入队列。";
+		                        break;
+		                    case fileObj.FILE_IN_UPLOADING:
+		                        message = "已上传{0}%".replace('{0}', fileObj.uploadedPercentage);
+		                        break;
+		                    case fileObj.FILE_UPLOADED:
+		                        message = "上传成功.";
+		                        break;
+		                    case fileObj.FILE_ERROR_FAIL_READ:
+		                        message = "无法读取文件.";
+		                        break;
+		                    case fileObj.FILE_ERROR_FAIL_UPLOAD:
+		                        message = "上传失败.";
+		                        break;
+		                    default:
+		                        break;
+		                }
+		                return message;
+		            }
+				}, basicOptions);
 
 			});
 			$$.scan();

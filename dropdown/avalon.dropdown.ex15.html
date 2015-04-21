@@ -11,6 +11,7 @@
                 var dm = avalon.define('dropdown', function(vm) {
                     vm.value = 'value5';
                     vm.dropdown = {
+                        hoverAutoShow: true,
                         onChange: function() {
                             console.log(dm.value)
                         },
@@ -28,7 +29,7 @@
         <div class="wrapper">
             <div ms-controller="dropdown">
                 <h2>dropdown（下拉框）</h2>
-                <p>使用html配置并使用duplex绑定</p>
+                <p>开启鼠标移入打开下拉列表鼠标移出关闭下拉列表功能</p>
                 <select ms-widget="dropdown"
                         ms-duplex="value">
                     <optgroup label="group1">
@@ -59,6 +60,15 @@
                 avalon.ready(function() {
                     avalon.define('dropdown', function(vm) {
                         vm.value = 'value5';
+                        vm.dropdown = {
+                            hoverAutoShow: true,
+                            onChange: function() {
+                                console.log(dm.value)
+                            },
+                            onSelect: function() {
+                                console.log(dm.value)
+                            }
+                        }
                     });
                     avalon.scan();
                 });

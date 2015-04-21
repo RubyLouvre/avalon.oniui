@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tooltip组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <style type="text/css">
+            body{
+                padding-bottom: 400px;
+            }
+            div.ct{
+                text-align: center;
+                padding: 50px 0 0 0;
+            }
+            a{
+                font-size: 13px;
+                margin-left: 20px;
+                display: inline-block;
+            }
+            input {
+                width: 150px;
+            }
+        </style>
+        <script>
+            var str = '请输入';
+            require(["tooltip/avalon.tooltip", "textbox/avalon.textbox"], function() {
+                vmodel = avalon.define("test", function(vm) {
+                    vm.$qqOpt = {
+                        autohide: !true
+                    };
+                    vm.tip = function() {
+                        avalon.vmodels.ppo2.showBy(this, "content")
+                    }
+                    vm.$skipArray = ["tooltip"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body class="oni-helper-reset">
+        <div ms-controller="test">
+                <h1>input元素hover显示tip-父容器做代理</h1>
+                <div class="oni-helper-reset ct" ms-widget="tooltip,ppo2, $qqOpt" data-tooltip-delegate="true" data-tooltip-position="bc">
+                    <input type="text" ms-widget="textbox" value="hover me" ms-on-mouseenter="tip"/>
+                    <input type="text" ms-widget="textbox" value="hover me" ms-on-mouseenter="tip"/>
+                </div>
+                <div class="ct"></div>
+        </div>
+</body>
+</html

@@ -1,4 +1,4 @@
-
+@charset "UTF-8";
 /*
 这是每个都组件都应该引用的部分
 */
@@ -59,10 +59,10 @@ div.oni-flipswitch {
     -ms-transition: all .5s; }
   .oni-flipswitch-left, .oni-flipswitch-right {
     width: 33%;
-    color: white;
+    color: #fff;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
   .oni-flipswitch-right {
-    color: #9b9b9b; }
+    color: #9B9B9B; }
   .oni-flipswitch-dragger {
     width: 34%; }
     .oni-flipswitch-dragger-ball {
@@ -129,7 +129,7 @@ div.oni-flipswitch {
     border-radius: 14px;
     background-color: #68c969; }
   .oni-flipswitch-use-no-img .oni-flipswitch-dragger-ball {
-    background: white;
+    background: #fff;
     border-radius: 12px; }
   .oni-flipswitch-use-no-img.oni-flipswitch-mini .oni-flipswitch-bg {
     border-radius: 8px; }
@@ -144,7 +144,7 @@ div.oni-flipswitch {
   .oni-flipswitch-use-no-img.oni-flipswitch-large .oni-flipswitch-dragger-ball {
     border-radius: 19px; }
   .oni-flipswitch-use-no-img .oni-flipswitch-uckbg {
-    background-color: #999999; }
+    background-color: #999; }
 
 .oni-state-disabled .oni-flipswitch-oval-hd, .oni-state-hover .oni-flipswitch-oval-hd {
   display: block; }
@@ -153,8 +153,10 @@ div.oni-flipswitch {
 
 .oni-state-disabled .oni-flipswitch-bar label, .oni-state-disabled .oni-flipswitch-bar span {
   cursor: default;
-  color: white; }
+  color: #fff; }
 .oni-state-disabled .oni-flipswitch-oval-hd {
   display: block; }
 .oni-state-disabled .oni-flipswitchoval-n {
   display: none; }
+
+/*# sourceMappingURL=avalon.flipswitch.css.map */

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <script src="../avalon.js"></script>
+    <script type="text/javascript">
+        require(['dropdown/avalon.dropdown.js'], function() {
+            var sr = [
+                {
+                    value: '1',
+                    label: '1'
+                }, {
+                    value: '2',
+                    label: '2'
+                }, {
+                    value: 'false',
+                    label: 'false'
+                },
+                {
+                    value: 'null',
+                    label: 'null'
+                }
+            ];
+            avalon.ready(function() {
+                var dropdownVm = avalon.define('dropdown', function(vm) {
+                    vm.$skipArray = ['opts'];
+                    vm.opts = {
+                        data: [],
+                        onSelect: function(e, n, o, vmodel) {
+                            var _sr = avalon.mix(true, [], sr)
+                            avalon.each(_sr, function(i, v) {
+                                if(v.value === n) {
+                                    v.enable = false
+                                } else {
+                                    v.enable = true
+                                }
+                            })
+                            dropdownVm.source.clear();
+                            dropdownVm.source.pushArray(_sr);
+                            avalon.each(vmodel.data, function(i, v) {
+                                v.enable = true
+                            })
+                        }
+                    };
+                    vm.source = [];
+                    vm.value = '1';
+                });
+
+                dropdownVm.opts.$source = dropdownVm.source;
+                avalon.scan();
+                setTimeout(function() {
+                    dropdownVm.source.pushArray(sr)
+                }, 500)
+            });
+        });
+    </script>
+    <script src="../highlight/shCore.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div ms-controller="dropdown">
+            <h2>dropdown（下拉框）</h2>
+            <p>多个dropdown共享状态</p>
+            <select ms-widget="dropdown,$,opts"></select>
+            <select ms-widget="dropdown,$,opts"></select>
+            <select ms-widget="dropdown,$,opts"></select>
+            <select ms-widget="dropdown,$,opts"></select>
+        </div>
+        <pre class="brush:html;gutter:false;toolbar:false;" ms-skip>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width"&gt;
+    &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+    &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript"&gt;
+        require(['dropdown/avalon.dropdown.js'], function() &#123;
+            var sr = [
+                &#123;
+                    value: '1',
+                    label: '1'
+                &#125;, &#123;
+                    value: '2',
+                    label: '2'
+                &#125;, &#123;
+                    value: 'false',
+                    label: 'false'
+                &#125;,
+                &#123;
+                    value: 'null',
+                    label: 'null'
+                &#125;
+            ];
+            avalon.ready(function() &#123;
+                var dropdownVm = avalon.define('dropdown', function(vm) &#123;
+                    vm.$skipArray = ['opts'];
+                    vm.opts = &#123;
+                        data: [],
+                        onSelect: function(e, n, o, vmodel) &#123;
+                            var _sr = avalon.mix(true, [], sr)
+                            avalon.each(_sr, function(i, v) &#123;
+                                if(v.value === n) &#123;
+                                    v.enable = false
+                                &#125; else &#123;
+                                    v.enable = true
+                                &#125;
+                            &#125;)
+                            dropdownVm.source.clear();
+                            dropdownVm.source.pushArray(_sr);
+                            avalon.each(vmodel.data, function(i, v) &#123;
+                                v.enable = true
+                            &#125;)
+                        &#125;
+                    &#125;;
+                    vm.source = [];
+                    vm.value = '1';
+                &#125;);
+
+                dropdownVm.opts.$source = dropdownVm.source;
+                avalon.scan();
+                setTimeout(function() &#123;
+                    dropdownVm.source.pushArray(sr)
+                &#125;, 500)
+            &#125;);
+        &#125;);
+    &lt;/script&gt;
+    &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="wrapper"&gt;
+        &lt;div ms-controller="dropdown"&gt;
+            &lt;h2&gt;dropdown（下拉框）&lt;/h2&gt;
+            &lt;p&gt;多个dropdown共享状态&lt;/p&gt;
+            &lt;select ms-widget="dropdown,$,opts"&gt;&lt;/select&gt;
+            &lt;select ms-widget="dropdown,$,opts"&gt;&lt;/select&gt;
+            &lt;select ms-widget="dropdown,$,opts"&gt;&lt;/select&gt;
+            &lt;select ms-widget="dropdown,$,opts"&gt;&lt;/select&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+    </div>
+</body>
+</html>

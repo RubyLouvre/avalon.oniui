@@ -16,6 +16,7 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
+    <class path="com\probertson\utils" />
   </classpaths>
   <!-- Build options -->
   <build>

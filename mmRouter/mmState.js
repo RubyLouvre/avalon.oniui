@@ -521,7 +521,7 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
      *  @param {Function} config.onViewEnter 视图插入动画函数，有一个默认效果
      *  @param {Node} config.onViewEnter.arguments[0] 新视图节点
      *  @param {Node} config.onViewEnter.arguments[1] 旧的节点
-     *  @param {Function} config.onError 出错的回调，this指向对应的state，第一个参数是一个object，object.type表示出错的类型，比如view表示加载出错，object.name则对应出错的view name，第二个参数是对应的state
+     *  @param {Function} config.onError 出错的回调，this指向对应的state，第一个参数是一个object，object.type表示出错的类型，比如view表示加载出错，object.name则对应出错的view name，object.xhr则是当使用默认模板加载器的时候的httpRequest对象，第二个参数是对应的state
     */
     avalon.state.config = function(config) {
         avalon.mix(avalon.state, config || {})
@@ -820,6 +820,37 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
     // 【fromUrl】的辅助函数，得到一个XMLHttpRequest对象
     var getXHR = function() {
         return new (window.XMLHttpRequest || ActiveXObject)("Microsoft.XMLHTTP")
+    }/*
+     *  @interface avalon.state.templateLoader 通过url异步加载模板的函数，默认是通过内置的httpRequest去加载，但是在node-webkit环境是不work的，因此开放了这个配置，用以自定义url模板加载器，会在一个promise实例里调用这个方法去加载模板
+     *  @param url 模板地址
+     *  @param resolve 加载成功，如果需要缓存模板，请调用<br>
+        resolve(avalon.templateCache[url] = templateString)<br>
+        否则，请调用<br>
+        resolve(templateString)<br>
+     *  @param reject 加载失败，请调用reject(reason)
+     *  @param reason 挂在失败原因的对象
+     */
+    avalon.state.templateLoader = function(url, resolve, reject, reason) {
+        var xhr = getXHR()
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                var status = xhr.status;
+                if (status > 399 && status < 600) {
+                    reason.message = "templateUrl对应资源不存在或没有开启 CORS"
+                    reason.status = status
+                    reason.xhr = xhr
+                    reject(reason)
+                } else {
+                    resolve(avalon.templateCache[url] = xhr.responseText)
+                }
+            }
+        }
+        xhr.open("GET", url, true)
+        if ("withCredentials" in xhr) {
+            xhr.withCredentials = true
+        }
+        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+        xhr.send()
     }
     // 【avalon.state】的辅助函数，opts.templateUrl的处理函数
     function fromUrl(url, params, reason) {
@@ -829,29 +860,12 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
             }
             if (typeof url !== "string") {
                 reason.message = "templateUrl必须对应一个URL"
-                reject(reason)
+                return reject(reason)
             }
             if (avalon.templateCache[url]) {
                 return  resolve(avalon.templateCache[url])
             }
-            var xhr = getXHR()
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    var status = xhr.status;
-                    if (status > 399 && status < 600) {
-                        reason.message = "templateUrl对应资源不存在或没有开启 CORS"
-                        reject(reason)
-                    } else {
-                        resolve(avalon.templateCache[url] = xhr.responseText)
-                    }
-                }
-            }
-            xhr.open("GET", url, true)
-            if ("withCredentials" in xhr) {
-                xhr.withCredentials = true
-            }
-            xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-            xhr.send()
+            avalon.state.templateLoader(url, resolve, reject, reason)
         })
         return promise
     }

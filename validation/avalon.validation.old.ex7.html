@@ -73,6 +73,7 @@
                             removeError(this)
                         },
                         onValidateAll: function(reasons) {
+                            console.log(reasons)
                             reasons.forEach(function(reason) {
                                 avalon(reason.element).removeClass("success").addClass("error")
                                 showError(reason.element, reason)
@@ -92,10 +93,9 @@
             <h3>验证组件</h3>
             <p>norequired对应的input.value为空时会忽略之后所有验证</p>
             <p><input ms-duplex-gt="a" max="9" placeholder="必须大于9"></p>
-            <p><input ms-duplex-norequired-gt="b" max="9" placeholder="可以不写,但写时必须大于9"></p>
+            <p><input ms-duplex-norequired-gt-int="b" max="9" placeholder="可以不写,但写时必须大于9"></p>
 
-            <button type="submit">submit
-            </button>
+            <button type="submit">submit</button>
             <button type="button" ms-click="reset">reset
             </button>
         </form>

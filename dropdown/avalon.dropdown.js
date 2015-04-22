@@ -329,6 +329,20 @@ define(["avalon",
                     }
                 }
             };
+
+
+            vm._titleenter = function() {
+                if (vmodel.hoverAutoShow) {
+                    vmodel._toggle()
+                    // vmodel.toggle = true
+                }
+            };
+            vm._titleleave = function() {
+                if (vmodel.hoverAutoShow) {
+                    vmodel.toggle = false
+                }
+            };
+            
             vm._keydown = function(event) {
                 if(vmodel.keyboardEvent === false) {
                     return;
@@ -491,10 +505,16 @@ define(["avalon",
             //单选下拉框在失去焦点时会收起
             vm._listenter = function() {
                 vmodel.__cursorInList__ = true
+                if (vmodel.hoverAutoShow) {
+                    vmodel.toggle = true
+                }
             }
 
             vm._listleave = function() {
                 vmodel.__cursorInList__ = false
+                if (vmodel.hoverAutoShow) {
+                    vmodel.toggle = false
+                }
             };
             vm._blur = function() {
                 if (!vmodel.__cursorInList__ && !vmodel.multiple && vmodel.toggle) {
@@ -730,6 +750,7 @@ define(["avalon",
         height: 200, //@config 下拉列表的高度
         enable: true, //@config 组件是否可用
         readOnly: false, //@config 组件是否只读
+        hoverAutoShow: false, //@config 是否开启鼠标移入打开下拉列表鼠标移出关闭下拉列表功能
         readonlyAttr: null, //@config readonly依赖的属性
         currentOption: null,  //@config 组件当前的选项
         data: [], //@config 下拉列表显示的数据模型
@@ -973,4 +994,5 @@ define(["avalon",
  [联动的dropdown](avalon.dropdown.ex12.html)
  [dropdown状态保持功能](avalon.dropdown.ex13.html)
  [多个dropdown共享状态](avalon.dropdown.ex14.html)
+ [鼠标移入移出下拉菜单自动显示隐藏](avalon.dropdown.ex15.html)
  */

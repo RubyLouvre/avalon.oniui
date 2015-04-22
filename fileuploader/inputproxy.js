@@ -13,6 +13,7 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 		this.contextGen = contextGen;
 		if (isH5) {
 			this.listenToInput(target);
+			this.__fileInput = target;
 		} else {
 			target.listenTo("newFileGenerated", this.onFlashFileAdded, this);
 			target.listenTo("filePreviewUpdated", this.onPreviewUpdated, this);
@@ -38,7 +39,8 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
         pNode.removeChild(target);
         fileInputWrapper.innerHTML = html;
         this.listenToInput(fileInputWrapper.children[0]);
-        pNode.appendChild(fileInputWrapper.children[0]);
+        this.__fileInput = fileInputWrapper.children[0];
+        pNode.appendChild(this.__fileInput);
 
         var me = this;
         for (var i = 0; i < files.length; i++) {
@@ -137,7 +139,7 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 	}
 
 	proxyContructor.prototype.getFileContext = function (basicInfo) {
-		var context = this.contextGen.fn.call(this.contextGen.scope, basicInfo);
+		var context = this.contextGen.fn.call(this.contextGen.scope, basicInfo) || {};
 		context.fileLocalToken = this.applyFileLocalToken();
 		return context;
 	}

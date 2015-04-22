@@ -120,6 +120,8 @@ define(["./eventmixin", "./blob"], function (eventMixin, blobConstructor) {
 		}
 	}
 
+	fileConstructor.prototype.__isFileObject = true;
+
 	/*
 	 * 文件状态代码。0-100为正常状态，101以后为错误状态
 	 */

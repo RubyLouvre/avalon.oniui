@@ -63,14 +63,9 @@ package
             else addEventListener(Event.ADDED_TO_STAGE, init);
 			_fileDics = new Dictionary();
 			_fileStatusDics = new Dictionary();
-			ExternalInterface.addCallback("test", test);
 			ExternalInterface.addCallback("uploadBlob", uploadBlob);
 			
 			ExternalInterface.addCallback("removeCacheFileByToken", removeCacheFileByToken);
-		}
-		
-		public function test(fileToken:String, offset:Number, size:Number, config:Object):String {
-			return fileToken + offset.toString() + size.toString();
 		}
 		
 		private function blobReadCall(e:Event):void {
@@ -178,7 +173,7 @@ package
         private function clickHandler(evt:MouseEvent):void {							
 			// 第一次点击按钮时，向VM注册Flash。不能在初始化时注册，因为VM极有可能还未加载结束。
 			if (!_registed) {
-				ExternalInterface.call("avalon.vmodels." + _vmId + ".registInput", _vmId, ExternalInterface.objectID, false);
+				ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.registFlash", ExternalInterface.objectID, false);
 				_registed = true;
 			}
 			
@@ -204,7 +199,7 @@ package
 				continue;*/
 				
 				
-				var fileContext:Object = ExternalInterface.call("avalon.vmodels." + _vmId + ".$fileInputProxy.getFileContext", { name: file.name, size: file.size } );
+				var fileContext:Object = ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.__inputProxy.getFileContext", { name: file.name, size: file.size } );
 				if (!fileContext.canBeAdded) continue;
 				_fileDics[fileContext.fileLocalToken] = file;
 				_fileStatusDics[file] = {
@@ -283,7 +278,7 @@ package
         }
 		
 		private function fireAsyncBridgeEvent(fnName:String, args:Array, removeListeners:Boolean):void {
-			ExternalInterface.call("avalon.vmodels." + _vmId + ".$flashEventHub.fireAsync", fnName, args, removeListeners);
+			ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.$flashEventHub.fireAsync", fnName, args, removeListeners);
 		}
 		
 		private function readFile(file:FileReference, callback:Function, scope:Object, args:Array):void {

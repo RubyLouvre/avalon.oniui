@@ -116,7 +116,6 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 		data[fileNameParamName] = this.fileObj.name;
 		if(!!this.md5) data[blobMd5ParamName] = this.md5;
 		data = adapter.extend(data, customizedParams);
-
 		data["__dataField"] = blobParamName;	// __dateField是文件二进制字节的参数名。
 		return data;
 	}
@@ -154,6 +153,7 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 		// 转FormData
         var formData = new FormData();
         for (var i in data) {
+        	if (i == '__dataField') continue;
         	if (data.hasOwnProperty(i)) {
         		formData.append(i, data[i]);
         	}

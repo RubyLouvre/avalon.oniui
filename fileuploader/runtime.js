@@ -5,13 +5,202 @@
  *    <p>管理FileUploader的文件对象；持有发送队列。</p>
  *  @updatetime 2015-4-7
  */
-define(["./avalon.fileuploaderAdapter", "./eventmixin", "./blobqueue"], 
-function (adapter, eventMixin, blobqueueConstructor) {
-	var runtimeContructor = function (uploaderVm) {
-		this.vm = uploaderVm;
+define(["./avalon.fileuploaderAdapter", "./eventmixin", "./blobqueue", "./file", "./flasheventhub",
+    "./inputproxy",
+    "./spark-md5"], 
+function (adapter, eventMixin, blobqueueConstructor, fileConstructor, flasheventhub, inputProxyContructor, md5gen) {
+	var runtimeContructor = function (config, uploadButtonDom, addButtonDom, fileInputDom, flashId) {
+		adapter.bindEvent(uploadButtonDom, 'click', this.onUploadClick, this);
+		if (!!addButtonDom && !!fileInputDom) {
+			adapter.bindEvent(addButtonDom, 'click', function (e) {
+				if (e.target === addButtonDom) {
+					e.stopPropagation();
+					this.__inputProxy.__fileInput.click();
+				}
+			}, this);
+			this.constructInputProxy(fileInputDom, true);
+        }
 		this.files = {};
-		this.blobqueue = new blobqueueConstructor(this, uploaderVm.serverConfig);
+
+		config.serverConfig = adapter.extend({
+            timeout: 30000,
+            concurrentRequest: 3,
+            blobRetryTimes: 1,
+            userName: undefined,
+            password: undefined,
+            url: undefined,
+            previewUrl: undefined,
+            keyGenUrl: undefined
+        }, config.serverConfig);
+		this.config = config;
+
+		this.blobqueue = new blobqueueConstructor(this, config.serverConfig);
+		this.md5gen = md5gen;
 	};
+
+    runtimeContructor.prototype.registFlash = function (flashId) {
+        var flash = undefined;
+        if(navigator.appName.indexOf("Microsoft")!=-1){
+            flash = window.document.getElementById(flashId);
+        } else {
+            flash = window.document[flashId];
+        }
+        this.$flashEventHub = new flasheventhub(flash);
+        this.constructInputProxy(this.$flashEventHub, false);
+    }
+
+
+    /*
+     * @interface 分块上传时，为文件生成一个RemoteKey的方法。enableRemoteKeyGen配置为true时，会调用remoteFileKeyGen方法生成key。否则使用localFileKeyGen。
+     * @param fileLocalToken {String} 文件的LocalToken。
+     * @param callback {Function} 生成成功后的回调函数。
+     * @param scope {Object} callback的作用域。
+     */
+    runtimeContructor.prototype.getFileKey = function (fileObj, callback, scope) {
+    	var me = this;
+        var promise = new Promise(function (resolve, reject) {
+        	
+            if (me.config.enableRemoteKeyGen) {
+                me.remoteFileKeyGen(fileObj, resolve, reject);
+            } else {
+                me.localFileKeyGen(fileObj, resolve, reject);
+            }
+        });
+
+        promise.then(function(key) {
+            callback.call(scope, key, true);
+        }, function (reason) {
+            callback.call(scope, undefined, false);
+        });
+    }
+    /*
+     * @config 分块上传时，为文件生成一个RemoteKey的方法。enableRemoteKeyGen配置为true时，会调用此方法。重写此方法时，生成key成功后，调用resolve(key)来结束此方法。
+     * @param fileLocalToken {String} 文件的LocalToken。
+     * @param resolve {Function} Promise的resolve函数。
+     * @param reject {Object} Promise的reject函数。
+     */
+    runtimeContructor.prototype.remoteFileKeyGen = function (fileObj, resolve, reject) {
+        avalon.ajax({
+            type: "get",
+            url: this.config.serverConfig.keyGenUrl,
+            timeout: this.config.serverConfig.timeout || 30000,
+            password: this.config.serverConfig.password,
+            username: this.config.serverConfig.userName,
+            cache: false,
+            success: function (response) {
+                resolve(response);
+            },
+            error: function (textStatus, error) {
+                reject(error);
+            }
+        });
+    }
+    /*
+     * @config 分块上传时，为文件生成一个RemoteKey的方法。enableRemoteKeyGen配置为false时，会调用此方法。重写此方法时，生成key成功后，调用resolve(key)来结束此方法。
+     * @param fileLocalToken {String} 文件的LocalToken。
+     * @param resolve {Function} Promise的resolve函数。
+     * @param reject {Object} Promise的reject函数。
+     */
+    runtimeContructor.prototype.localFileKeyGen = function (fileObj, resolve, reject) {
+        resolve(this.md5gen(fileObj.name + "#" + fileObj.size + "#" + fileObj.fileLocalToken));
+    }
+
+	runtimeContructor.prototype.onUploadClick = function (event) {
+		this.uploadAllFiles();
+	}
+
+	runtimeContructor.prototype.onPreviewGenerated = function (fileLocalToken, preview) {
+		this.fireEvent("previewGenerated", fileLocalToken, preview);
+	}
+
+	runtimeContructor.prototype.onNewFileSelected = function (fileInfo) {
+    	var fileObj = new fileConstructor(fileInfo, this.$flashEventHub, this.config.chunked, this.config.chunkSize);
+        fileObj.attachEvent("fileStatusChanged", this.onFileStatusChanged, this);
+        fileObj.attachEvent("fileProgressed", this.onFileProgressed, this);
+        this.addFile(fileObj);
+        this.fireEvent("newFileAdded", fileInfo, fileObj);
+	}
+
+	runtimeContructor.prototype.onFileProgressed = function (fileObj, beforePercentage) {
+		this.fireEvent("fileProgressed", fileObj, beforePercentage);
+	}
+
+	runtimeContructor.prototype.constructInputProxy = function (fileInputDom, h5) {
+        var inputProxy = new inputProxyContructor(fileInputDom, h5, {
+            fn: this.getFileContext,
+            scope: this
+        });
+        inputProxy.attachEvent("newFileSelected", this.onNewFileSelected, this);
+        inputProxy.attachEvent("previewGenerated", this.onPreviewGenerated, this);
+        this.__inputProxy = inputProxy;
+	}
+
+
+    /*
+     * 根据文件基本信息，获取文件的上下文环境，包括是否重复文件、尺寸是否合规、预览配置、文件类型等。不要覆盖这个方法。
+     * basicFileInfo {Object} 文件基本信息对象
+     */
+    runtimeContructor.prototype.getFileContext = function (basicFileInfo) {
+        var context = {
+            canBeAdded: this.testFileBasicInfo(basicFileInfo),
+            defaultPreview: false,
+            enablePreviewGen: false,
+            previewWidth: 0,
+            previewHeight: 0,
+            fileLocalToken: undefined,
+            previewUrl: this.config.serverConfig.previewUrl || null,
+            timeout: this.config.serverConfig.timeout || null,
+            userName: this.config.serverConfig.userName || null,
+            password: this.config.serverConfig.password || null,
+            $env: {
+                supportBase64Img: this.$supportBase64Img,
+                base64Limitation: this.$base64Limitation
+            }
+        };
+
+        if (context.canBeAdded) {
+            var fileName = basicFileInfo.name;
+            var fileConfig = this.getFileConfigByExtName(fileName.substr(fileName.lastIndexOf('.')));
+
+            context.defaultPreview = fileConfig.noPreviewPath;
+            context.enablePreviewGen = fileConfig.enablePreview && fileConfig.isImageFile;
+            context.previewWidth = fileConfig.previewWidth;
+            context.previewHeight = fileConfig.previewHeight;
+        }
+        return context;
+    }
+
+	/*
+	 * 开始上传所有文件。
+	 */
+	runtimeContructor.prototype.uploadAllFiles = function () {
+		for (var n in this.files) {
+			var f = this.files[n];
+			if (f.__isFileObject) {
+				this.queueFileByToken(f.fileLocalToken);
+			}
+		}
+	}
+
+
+
+    runtimeContructor.prototype.getFileConfigByExtName = function (extName) {
+	    var config = this.config;
+	    var imgFileExts = ["png", "jpg", "jpeg", "gif"];    // 暂时不支持其他类型的图片预览
+	    var extNameNoDot = extName.replace(".", "").toLowerCase();
+	    var r = {
+	        isImageFile: imgFileExts.indexOf(extNameNoDot) >= 0,
+	        enablePreview: config.enablePreviewGenerating,
+	        previewWidth: config.previewWidth,
+	        previewHeight: config.previewHeight,
+	        noPreviewPath: config.noPreviewPath,
+	        fileSizeLimitation: config.maxFileSize
+	    }
+	    if (!r.isImageFile && !!config.previewFileTypes && config.previewFileTypes.hasOwnProperty(extName)) {
+	        r.noPreviewPath = config.previewFileTypes[extName];
+	    }
+	    return r;
+	}
 
 	/*
 	 * 从runtime中移除一个文件。文件的引用和数据都会被销毁，正在进行的发送请求也会取消。
@@ -40,6 +229,7 @@ function (adapter, eventMixin, blobqueueConstructor) {
 	 * 对所有管理的文件状态监控的回调函数。
 	 */
 	runtimeContructor.prototype.onFileStatusChanged = function (fileObj, beforeStatus) {
+		this.fireEvent('fileStatusChanged', fileObj, beforeStatus);
 		// 为了优化内存使用，上传成功后自动移除并销毁文件。
 		if (fileObj.status == fileObj.FILE_UPLOADED) {
 			delete this.files[fileObj.fileLocalToken];
@@ -63,7 +253,7 @@ function (adapter, eventMixin, blobqueueConstructor) {
 				resolve();
 			} else {
 				// 分块的文件需要生成一个远程的FileKey。
-				me.vm.getFileKey(me.vm, fileObj, function (fileKey) {
+				me.getFileKey(fileObj, function (fileKey) {
 					fileObj.fileKey = fileKey;
 					resolve();
 				}, me);
@@ -77,77 +267,53 @@ function (adapter, eventMixin, blobqueueConstructor) {
 			debugger;
 		})
 	}
-/*
-	runtimeContructor.prototype.readBlob = function(blob, callback, scope) {
-		var me = this,
-			fileObj = blob.fileObj,
-			blobKey = fileObj.fileLocalToken+"#"+blob.index;
 
-		if (fileObj.status == FILE_QUEUED) {
-			this.setFileObjectStatus(fileObj, FILE_IN_UPLOADING);
-		}
+    /*
+     * @interface 比较两个文件对象，并返回true或者false表示是否为相同的文件。
+     * @param f1 {Object} 第一个文件对象
+     * @param f2 {Object} 第二个文件对象
+     */
+    runtimeContructor.prototype.compareFileObjects = function(f1, f2) {
+        return f1.size == f2.size && f1.name == f2.name;
+    }
 
-		// 因readBlob在Flash环境下是一个异步的过程，必须要将callback和scope注册到runtime本身，等待read结束后再调用callback
-		this.readBlobCallbacks[blobKey] = {
-			blob: blob,
-			scope: scope,
-			callback: callback
-		};
 
-		if (fileObj.__html5file) {
-			var blobData = fileObj.data.slice(blob.offset, blob.offset + blob.size);
-			var fileReader = new FileReader();
-			fileReader.onload = function() {
-				fileReader.onload = null;
-				fileReader.onerror = null;
-				me.readBlobEnd(blobKey, blobData, this.result.substr(this.result.indexOf(",")+1));
-			}
-			fileReader.onerror = function () {
-				fileReader.onload = null;
-				fileReader.onerror = null;
-				me.setFileObjectStatus(blob.fileObj, FILE_ERROR_FAIL_READ)
-			}
-			fileReader.readAsDataURL(blobData);
-		} else {
-			this.flash.readBlob(blob.fileObj.fileLocalToken, blob.offset, blob.size, blobKey);
-		}
-	}
+    runtimeContructor.prototype.testFileBasicInfo = function (basicFileInfo) {
+        var sizeOk = this.testFileSize(basicFileInfo);
+        if (sizeOk) {
+        	for (var f in this.files) {
+                if (this.compareFileObjects(this.files[f], basicFileInfo)) {
+                    this.fireEvent("sameFileSelected", basicFileInfo);
+                    return false;
+                }
+        	}
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /*
+     * 检查一个FileObj的文件大小是否符合规定。第一需要满足单个文件尺寸限制，第二需要满足文件池大小的限制。
+     */
+    runtimeContructor.prototype.testFileSize = function (fileObj) {
+        var config = this.config,
+        	fileSizeLimitation = config.maxFileSize,
+            poolSizeLimitation = config.filePoolSize,
+            size = fileObj.size;
+        
+        var fileSizeOK = (fileSizeLimitation <= 0) || (size <= fileSizeLimitation);
+        var poolSizeOK = (poolSizeLimitation <= 0) || (this.getFilesSizeSum() + size <= poolSizeLimitation);
 
-	runtimeContructor.prototype.readBlobEnd = function (blobKey, data, stringData) {
-		var blob = this.readBlobCallbacks[blobKey].blob,
-			scope = this.readBlobCallbacks[blobKey].scope,
-			callback = this.readBlobCallbacks[blobKey].callback;
+        if (fileSizeOK && poolSizeOK) {
+            return true;
+        } else if (!fileSizeOK) {
+        	this.fireEvent("fileOverSize", fileObj);
+        } else {
+        	this.fireEvent("filePoolOverSize", fileObj);
+        }
+        return false;
+    }
 
-		if (typeof data == 'string' && stringData == undefined) stringData = data;
-
-		delete this.readBlobCallbacks[blobKey];
-		blob.data = data;
-		if (this.vm.enableMd5Validation) blob.md5 = this.vm.getMd5(this.vm, stringData);
-		callback.call(scope, blob);
-	}
-	runtimeContructor.prototype.recieveBlobData2 = function (blobKey, blobArrays) {
-		this.readBlobEnd(blobKey, blobArrays.join(""));
-	}
-
-	runtimeContructor.prototype.recieveBlobData = function (blobKey, index, stringData, total) {
-		if (this.__flashBlobBuffer == undefined) this.__flashBlobBuffer = {};
-		if (this.__flashBlobBuffer[blobKey] == undefined) {
-			this.__flashBlobBuffer[blobKey] = [];
-			this.__flashBlobBuffer[blobKey].recieved = 0;
-		}
-
-		var buffer = this.__flashBlobBuffer[blobKey];
-		buffer.recieved++;
-		while (buffer.length <= index) {
-			buffer.push("");
-		}
-		buffer[index] = stringData;
-		if (buffer.recieved == total) {
-			var blobData = buffer[0];
-			this.readBlobEnd(blobKey, blobData, blobData);
-		}
-	}
-*/
 	runtimeContructor.prototype.getRequestParamConfig = function (blob) {
 		var requiredParamsConfig = adapter.extend({
 			blobParamName: "blob",
@@ -156,12 +322,12 @@ function (adapter, eventMixin, blobqueueConstructor) {
 			chunkIndexParamName: "chunk",
 			fileNameParamName: "fileName",
 			blobMd5ParamName: "md5"
-		}, this.vm.requiredParamsConfig);
+		}, this.config.requiredParamsConfig);
 
 		var customizedParams = {};
 
-		if (typeof this.vm.madeRequestParams == "function") {
-			customizedParams = this.vm.madeRequestParams.call(this.vm, blob.fileObj, blob) || {};
+		if (typeof this.config.madeRequestParams == "function") {
+			customizedParams = this.config.madeRequestParams.call(this, blob.fileObj, blob) || {};
 		}
 
 		return {
@@ -172,7 +338,6 @@ function (adapter, eventMixin, blobqueueConstructor) {
 
 	runtimeContructor.prototype.purge = function () {
 		this.blobqueue.purge();
-		delete this.vm;
 		delete this.blobqueue;
 		delete this.files;
 	}

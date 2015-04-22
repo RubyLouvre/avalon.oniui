@@ -9,7 +9,7 @@
 			ms-css-width="previewWidth"
 			ms-css-height="previewHeight">
 			<div class="preview-menu">
-				<div><a class="oni-icon icon" ms-on-click="onPreviewRemoveClicked(el)">&#xf057;</a><span>{{el.name}}</span></div>
+				<div><a class="oni-icon icon" ms-on-click="onPreviewRemoveClicked(el)">&#xf003;</a><span>{{el.name}}</span></div>
 			</div>
 			<img ms-attr-src="el.preview" alt=""/>
 			<div class="preview-progress-wrapper">
@@ -23,8 +23,7 @@
 
 	<button 
 		type="button" 
-		class="uploader-button-add uploader-button"
-		ms-click="addFileClicked" >
+		class="uploader-button-add uploader-button" >
 		{{addButtonText}}
 		<input type="file" 
 				ms-if="useHtml5Runtime"
@@ -34,8 +33,7 @@
 	</button>
 	<button 
 		type="button"
-		class="uploader-button-upload uploader-button"
-    	ms-click="uploadClicked">
+		class="uploader-button-upload uploader-button">
     	{{uploadButtonText}}
     </button>
 

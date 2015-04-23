@@ -218,13 +218,13 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                                         of: tooltipElem, 
                                         at: (moveToRight ? "right" : "left") + " " + (dir ? "bottom" : "top"), 
                                         my: (moveToRight ? "right-10" : "left+10") + " " + (dir ? "top" : "bottom"), 
-                                        within: document.body
+                                        within: tooltipElem
                                     })
                                     arrIn.position({
                                         of: tooltipElem, 
                                         at: (moveToRight ? "right" : "left") + " " + (dir ? "bottom" : "top"), 
                                         my: (moveToRight ? "right-11" : "left+11") + " " + (dir ? "top-" : "bottom+") + lessH/2, 
-                                        within: document.body
+                                        within: tooltipElem
                                     })
                                 // 竖直方向，高度不够  
                                 } else if((vmodel.arrClass == "bottom" || vmodel.arrClass == "top") && tooltipElem.offsetWidth < elem.offsetWidth) {
@@ -232,13 +232,13 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                                         of: tooltipElem, 
                                         at: "center " + (dir ? "bottom" : "top"), 
                                         my: "center " + (dir ? "top" : "bottom"), 
-                                        within: document.body
+                                        within: tooltipElem
                                     })
                                     arrIn.position({
                                         of: tooltipElem, 
                                         at: "center " + (dir ? "bottom" : "top"), 
                                         my: "center " + (dir ? "top-" : "bottom+") + lessH, 
-                                        within: document.body
+                                        within: tooltipElem
                                     })
                                 // 水平方向，宽度不够
                                 } else if((vmodel.arrClass == "left" || vmodel.arrClass == "right") && tooltipElem.offsetHeight < elem.offsetHeight) {
@@ -246,13 +246,13 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                                         of: tooltipElem, 
                                         at: (dir ? "left" : "right") + " center", 
                                         my: (dir ? "right" : "left") + " center", 
-                                        within: document.body
+                                        within: tooltipElem
                                     })
                                     arrIn.position({
                                         of: tooltipElem, 
                                         at: (dir ? "left" : "right") + " center", 
                                         my: (dir ? "right+" : "left-") + lessW  + " center", 
-                                        within: document.body
+                                        within: tooltipElem
                                     })
                                 } else {
                                     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvv

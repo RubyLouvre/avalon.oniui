@@ -76,8 +76,8 @@ html .oni-helper-max-index, body .oni-helper-max-index {
   font-family: fontawesome;
   font-style: normal;
   font-weight: normal;
-  src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.eot?v=4.2.0");
-  src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.eot?#iefix&v=4.2.0") format("embedded-opentype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.woff?v=4.2.0") format("woff"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.ttf?v=4.2.0") format("truetype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular") format("svg"); }
+  src: url("http://source.qunarzz.com/fonts/oniui/0.0.2/oniui-webfont.eot?v=4.2.0");
+  src: url("http://source.qunarzz.com/fonts/oniui/0.0.2/oniui-webfont.eot?#iefix&v=4.2.0") format("embedded-opentype"), url("http://source.qunarzz.com/fonts/oniui/0.0.2/oniui-webfont.woff?v=4.2.0") format("woff"), url("http://source.qunarzz.com/fonts/oniui/0.0.2/oniui-webfont.ttf?v=4.2.0") format("truetype"), url("http://source.qunarzz.com/fonts/oniui/0.0.2/oniui-webfont.svg?v=4.2.0#fontawesomeregular") format("svg"); }
 .oni-icon {
   -webkit-touch-callout: none;
   -webkit-user-select: none;

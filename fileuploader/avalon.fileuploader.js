@@ -201,9 +201,10 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                 }
             	vm.$init = function() {
                     vm.$runtime = new runtimeConstructor(vm, blobqueueConstructor);
-
 	            	element.innerHTML = template.replace(/##VM_ID##/ig, vm.$id);  // 将vmid附加如flash的url中
 
+                    vm.rootElement = element.getElementsByTagName("*")[0];
+                    
                     vmodels = [vm].concat(vmodels);
                     avalon.scan(element, vmodels);
                     if(typeof vmodel.onInit === "function"){
@@ -217,7 +218,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                 };
 
                 vm.$skipArray = [
-                    "maxFileSize", "filePoolSize", "chunked", "chunkSize", 
+                    "maxFileSize", "filePoolSize", "chunked", "chunkSize", "rootElement",
                     "acceptFileTypes", "previewWidth", "previewHeight", "enablePreviewGenerating",
                     "enableRemoteKeyGen", "enableMd5Validation", "serverConfig", "noPreviewPath",
                     "previewFileTypes", "requiredParamsConfig", "__inputRegisted"

@@ -11,6 +11,7 @@ define(["../avalon.getModel",
         "text!./avalon.datepicker.html", 
         "../dropdown/avalon.dropdown.js",
         "../slider/avalon.slider.js",
+        "css!../chameleon/oniui-common.css",
         "css!./avalon.datepicker.css"], function(avalon, holidayDate, sourceHTML) {
     var calendarTemplate = sourceHTML,
         HOLIDAYS,
@@ -76,7 +77,7 @@ define(["../avalon.getModel",
                 regional: widget.defaultRegional
             })
             vm.$skipArray = ["container", "showDatepickerAlways", "timer", "sliderMinuteOpts",
-                "sliderHourOpts", "template", "widgetElement", "dayNames", "allowBlank",
+                "sliderHourOpts", "template", "widgetElement", "rootElement", "dayNames", "allowBlank",
                 "months", "years", "numberOfMonths",
                 "showOtherMonths", "watermark", "weekNames",
                 "stepMonths", "changeMonthAndYear", "startDay", "mobileMonthAndYear",
@@ -86,6 +87,7 @@ define(["../avalon.getModel",
             vm.weekNames = []
             vm.tip = vm.tip || ""
             vm.widgetElement = element
+            vm.rootElement = {}
             vm.data = []
             vm.prevMonth = -1 //控制prev class是否禁用
             vm.nextMonth = -1 //控制next class是否禁用
@@ -438,6 +440,7 @@ define(["../avalon.getModel",
                 } else {
                     avalon.scan(div, [vmodel])
                 }
+                vm.rootElement = div
                 avalon.scan(calendar, [vmodel].concat(vmodels))
                 setTimeout(function() {
                     calendarDays(vmodel.month, vmodel.year)

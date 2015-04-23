@@ -407,7 +407,7 @@ define(["../avalon.getModel",
                     elementPar.insertBefore(div,element)
                     div.appendChild(element)
                     if (vmodel.showTip) {
-                        var tip = avalon.parseHTML("<div class='oni-datepicker-tip'>{{tip}}<i class='oni-icon oni-icon-calendar-o'>&#xf133;</i></div>")
+                        var tip = avalon.parseHTML("<div class='oni-datepicker-tip'>{{tip}}<i class='oni-icon oni-icon-calendar-o'>&#xf088;</i></div>")
                         div.appendChild(tip)
                     } else {
                         element.style.paddingRight = "0px"

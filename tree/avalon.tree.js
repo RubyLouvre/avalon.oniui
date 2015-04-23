@@ -1004,8 +1004,6 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
                         }
                     }, ele = event ? event.srcElement || event.target : null,
                     callbackEnabled = !event || !event.cancelCallback
-                if(cmd === "dblclick" && !vm.view.dblClickExpand
-                    ) return
                 // 执行前检测，返回
                 vmodel.$fire("e:before" + eventName, arg)
                 if(callbackEnabled) {
@@ -1016,8 +1014,11 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
                     }
                 }
                 if(action) {
-                    if(!avalon.isFunction(action)) action = vm[action]
-                    if(avalon.isFunction(action)) res = action.call(ele, arg)
+                    if(!(cmd === "dblClick" && !vm.view.dblClickExpand
+                    )) {
+                        if(!avalon.isFunction(action)) action = vm[action]
+                        if(avalon.isFunction(action)) res = action.call(ele, arg)
+                    }
                 }
                 if(res !== undefine) arg.res = res
                 // 被消除

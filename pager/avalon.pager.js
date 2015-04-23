@@ -41,7 +41,7 @@ define(["avalon",
                 regional: widget.defaultRegional
             })
             vm.widgetElement = element
-            vm.rootlement = {}
+            vm.rootElement = {}
             vm.$skipArray = ["showPages","rootElement", "widgetElement", "template", "ellipseText", "alwaysShowPrev", "alwaysShowNext"]
             //这些属性不被监控
             vm.$init = function(continueScan) {
@@ -49,7 +49,7 @@ define(["avalon",
                 element.style.display = "none"
                 setTimeout(function() {
                     element.innerHTML = pageHTML
-                    vm.rootlement = element.getElementsByTagName("*")[0]
+                    vm.rootElement = element.getElementsByTagName("*")[0]
                     element.style.display = "block"
                     if (continueScan) {
                         continueScan()

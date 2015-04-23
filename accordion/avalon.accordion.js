@@ -56,8 +56,9 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
         })
         var vmodel = avalon.define(data.accordionId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["widgetElement", "rendered","autoRun","template","accordionClass","currentTrigge","initIndex","multiple","trigger","triggerType", "accordionVmodel"]
+            vm.$skipArray = ["widgetElement", "rendered","autoRun","template","accordionClass","currentTrigge","initIndex","multiple","trigger","triggerType", "accordionVmodel", "rootElement"]
             vm.widgetElement = element
+            vm.rootElement = {}
             vm.$headers = [] // 保存所有面板的header
             vm.$panels = [] // 保存所有的面板content
             vm.$triggers = []
@@ -102,6 +103,7 @@ define(["../avalon.getModel", "text!./avalon.accordion.html", "css!../chameleon/
                     vmodel.currentIndex = initIndex
                     vmodel.data[initIndex].toggle = true 
                 }
+                vm.rootElement = element.getElementsByTagName("*")[0]
                 if (continueScan) {
                     continueScan()
                 } else {

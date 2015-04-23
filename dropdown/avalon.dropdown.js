@@ -77,7 +77,7 @@ define(["avalon",
         var titleNode, listNode;
         var vmodel = avalon.define(data.dropdownId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["widgetElement", "duplexName", "menuNode", "dropdownNode", "scrollWidget"];
+            vm.$skipArray = ["widgetElement", "duplexName", "menuNode", "dropdownNode", "scrollWidget", "rootElement"];
             if(vm.multiple && vm.$hasDuplex && vm.$skipArray.indexOf("value") === -1) {
                 vm.$skipArray.push("value")
             }
@@ -91,6 +91,7 @@ define(["avalon",
                 }
             }
             vm.widgetElement = element;
+            vm.rootElement = {}
             vm.menuWidth = "auto";   //下拉列表框宽度
             vm.menuHeight = vm.height;  //下拉列表框高度
             vm.dataSource = dataSource;    //源节点的数据源，通过dataSource传递的值将完全模拟select
@@ -240,7 +241,6 @@ define(["avalon",
                         vmodel._refresh(n)
                     });
                 }
-
                 avalon.scan(element.parentNode, [vmodel].concat(vmodels));
                 if(continueScan){
                     continueScan()
@@ -409,6 +409,7 @@ define(["avalon",
                     list = listNode.firstChild;
                     vmodel.container.appendChild(listNode)
                     listNode = list
+                    vm.rootElement = list
                     avalon.scan(list, [vmodel].concat(vmodels))
                     vmodel.menuNode = document.getElementById("menu-" + vmodel.$id)     //下拉列表框内层容器 （包裹滚动条部分的容器）
                     vmodel.dropdownNode = document.getElementById("list-" + vmodel.$id) //下拉列表框内容（有滚动条的部分）

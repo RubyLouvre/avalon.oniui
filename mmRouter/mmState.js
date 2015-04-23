@@ -35,6 +35,7 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
      *  @param options 扩展配置
      *  @param options.reload true强制reload，即便url、参数并未发生变化
      *  @param options.replace true替换history，否则生成一条新的历史记录
+     *  @param options.confirmed true不触发onBeforeUnload,$onBeforeUnload,onBeforeExit
     */
     avalon.router.go = function(toName, params, options) {
         var from = mmState.currentState, 
@@ -69,18 +70,18 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
         activeState: NaN, // 当前实际处于的状态
         oldNodes: [],
         query: {}, // 从属于currentState
-        popOne: function(chain, params, callback) {
+        popOne: function(chain, params, callback, notConfirmed) {
             var cur = chain.pop(), me = this
             if(!cur) return callback()
             // 阻止退出
-            if(cur.onBeforeExit() === false) return callback(false)
+            if(notConfirmed && cur.onBeforeExit() === false) return callback(false)
             me.activeState = cur.parentState || _root
-            cur._local = null
             cur.done = function(success) {
                 cur._pending = false
                 cur.done = null
+                cur._local = null
                 if(success !== false) {
-                    if(me.activeState) return me.popOne(chain, params, callback)
+                    if(me.activeState) return me.popOne(chain, params, callback, notConfirmed)
                 }
                 return callback(success)
             }
@@ -101,7 +102,6 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
                 return callback(false)
             }
             _local = inherit(_local)
-            toLocals && toLocals.push(_local)
             me.activeState = cur // 更新当前实际处于的状态
             cur.done = function(success) {
                 // 防止async处触发已经销毁的done
@@ -157,7 +157,7 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
                 i = 0,
                 changeType, // 是params变化？query变化？这个东西可以用来配置是否屏蔽视图刷新逻辑
                 state = toChain[i],
-                _local = _root._local,
+                _local = _root.sourceLocal,
                 toLocals = []
                 if(!reload) {
                     // 找到共有父状态chain，params未变化
@@ -168,7 +168,14 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
                     }
                 }
                 var exitChain = fromChain.slice(i),// 需要退出的chain
-                    enterChain = toChain.slice(i)// 需要进入的chain
+                    enterChain = toChain.slice(i),// 需要进入的chain
+                    commonLocal = _local
+                // 建立toLocals，用来计算哪些view会被替换
+                while(state = toChain[i]) {
+                    _local = toLocals[i] = inherit(_local, state.sourceLocal)
+                    i++
+                }
+                mmState._local = _local
                 done = function(success, e) {
                     if(over) return
                     over = true
@@ -188,8 +195,6 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
                             params: toParams
                         }, me.currentState)
                     }
-
-                    if(info && avalon.history) avalon.history.updateLocation(info.path + info.query, avalon.mix({}, options, {silent: true}), !fromState && location.hash)
                 }
             toState.path = ("/" + info.path).replace(/^[\/]{2,}/g, "/")
             if(!reload && fromState === toState) {
@@ -205,7 +210,7 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
             mmState.query = avalon.mix({}, toParams.query)
 
             // onBeforeUnload check
-            if(callStateFunc("onBeforeUnload", this, fromState, toState) === false || broadCastBeforeUnload(exitChain, enterChain) === false) {
+            if(options && !options.confirmed && (callStateFunc("onBeforeUnload", this, fromState, toState) === false || broadCastBeforeUnload(exitChain, enterChain) === false)) {
                 return callStateFunc("onAbort", this, fromState, toState)
             }
             if(over === true) {
@@ -215,12 +220,13 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
             callStateFunc("onUnload", this, fromState, toState)
             this.currentState = toState
             this.prevState = fromState
+            if(info && avalon.history) avalon.history.updateLocation(info.path + info.query, avalon.mix({}, options, {silent: true}), !fromState && location.hash)
             callStateFunc("onBegin", this, fromState, toState)
             this.popOne(exitChain, toParams, function(success) {
                 // 中断
                 if(success === false) return done(success)
-                me.pushOne(enterChain, toParams, done, _local, toLocals)
-            })
+                me.pushOne(enterChain, toParams, done, commonLocal, toLocals)
+            }, !(options && options.confirmed))
         }
     }
     //将template,templateUrl,templateProvider等属性从opts对象拷贝到新生成的view对象上的
@@ -249,6 +255,7 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
         }
         return fragment
     }
+    window.loadCache = loadCache
     function setCache(name, element) {
         var fragment = document.createDocumentFragment(),
             divPlaceHolder = document.getElementById(name),
@@ -269,26 +276,33 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
                 fragment.appendChild(f)
                 divPlaceHolder.eles.push(f)
             }
+            templateCache[name] = true
         }
         divPlaceHolder.appendChild(fragment)
     }
     function broadCastBeforeUnload(exitChain, enterChain) {
         var lastLocal = mmState.lastLocal
-        if(!lastLocal || !enterChain[0]) return
-        var end = enterChain[0].stateName, tmp, state
+        if(!lastLocal || !enterChain[0] && !exitChain[0]) return
+        var newLocal = mmState._local,
+            cacheQueue = []
         for(var i in lastLocal) {
-            state = lastLocal[i].state
-            tmp = state.stateName
-            if(end.indexOf(i) == 0 && end != tmp) {
-                continue
+            var local = lastLocal[i]
+            // 所有被更新的view
+            if(!(i in newLocal) || newLocal[i] != local) {
+                if(local.$ctrl && ("$onBeforeUnload" in local.$ctrl)) {
+                    if(local.$ctrl.$onBeforeUnload(exitChain[0], enterChain[0]) === false) return false
+                }
+                if(local._element && (exitChain[0] != enterChain[0])) cacheQueue.push(local)
             }
-            if(!lastLocal[i].$ctrl) continue
-            if("$onBeforeUnload" in lastLocal[i].$ctrl) {
-                if(lastLocal[i].$ctrl.$onBeforeUnload(exitChain[0], enterChain[0]) === false) return false
-            }
-            // here cache
-            
         }
+        avalon.each(cacheQueue, function(index, local) {
+            var ele = local._element,
+                name = avalon(ele).data("currentCache")
+            if(name) {
+                setCache(name, ele)
+            }
+        })
+        cacheQueue = null
     }
     // 靠谱的解决方法
     avalon.bindingHandlers.view = function(data, vmodels) {
@@ -319,19 +333,32 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
             currentLocal = _local
             _currentState = _local && _local.state
             // 缓存，如果加载dom上，则是全局配置，针对template还可以开一个单独配置
-            var cacheTpl = $element.data("viewCache")
+            var cacheTpl = $element.data("viewCache"),
+                lastCache = $element.data("currentCache")
             if(_local) {
-                cacheTpl = (("viewCache" in _local) ? _local.viewCache : cacheTpl) && (viewname + "@" + _currentState.stateName)
+                cacheTpl = (_local.viewCache === false ? false : _local.viewCache || cacheTpl) && (viewname + "@" + _currentState.stateName)
             } else if(cacheTpl) {
-                cacheTpl = viewname + "@default"
+                cacheTpl = viewname + "@__default__"
             }
-            // 忽略变化或者cache，则不更新dom
-            if(_local && _currentState === currentState && _local.ignoreChange && _local.ignoreChange(changeType, viewname) || changeType && cacheTpl) return
+            // stateB->stateB，配置了参数变化不更新dom
+            if(_local && _currentState === currentState && _local.ignoreChange && _local.ignoreChange(changeType, viewname)) return
+            // 需要load和使用的cache是一份
+            if(cacheTpl && cacheTpl === lastCache) return
             _element = compileNode(tpl, element, $element, oldElement, _currentState)
-            var old = oldElement
-            oldElement = _element
             var html = _local ? _local.template : defaultHTML,
                 fragment
+            if(cacheTpl) {
+                if(_local) _local._element = _element
+                else mmState.currentState._local[viewname] = {
+                    state: mmState.currentState,
+                    template: defaultHTML,
+                    _element: _element
+                }
+            }
+            avalon.clearHTML(_element)
+            oldElement = _element
+            _element.removeAttribute("ms-view")
+            _element.setAttribute("ui-view", data.value)
             // 本次更新的dom需要用缓存
             if(cacheTpl) {
                 // 已缓存
@@ -341,42 +368,25 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
                 } else {
                     fragment = avalon.parseHTML(html)
                 }
-                cacheContainer = cacheContainer || getCacheContainer()
-                // 被替换的dom是否需要缓存
-                var cacheName = _local && $element.data("currentCache") || viewname + "@default"
-                setCache(cacheName, old)
-                avalon.clearHTML(_element)
-                // 将load的cache写入dom树
                 _element.appendChild(fragment)
-                if(_element.tagName == "TD") {
-                    console.log(_element.childNodes)
-                    console.log(_element)
-                }
                 // 更新现在使用的cache名字
                 $element.data("currentCache", cacheTpl)
-                templateCache[cacheName] = true
                 if(templateCache[cacheTpl]) return
             } else {
-                var cacheName = $element.data("currentCache")
-                if(cacheName) {
-                    // 缓存被替换的dom
-                    setCache(cacheName, old)
-                    templateCache[cacheName] = true
-                } else {
-                    // fix IE bug...
-                    avalon.clearHTML(_element)
-                }
                 _element.innerHTML = html
+                $element.data("currentCache", false)
             }
-            _element.removeAttribute("ms-view")
-            _element.setAttribute("ui-view", data.value)
+            // default
+            if(!_local && cacheTpl) $element.data("currentCache", cacheTpl)
             avalon.each(getViewNodes(_element), function(i, node) {
                 avalon(node).data("statename", _currentState && _currentState.stateName || "")
             })
             // merge上下文vmodels + controller指定的vmodels
             avalon.scan(_element, (_local && _local.vmodels || []).concat(vmodels || []))
             // 触发视图绑定的controller的事件
-            if(_local && _local.$ctrl && _local.$ctrl.$onRendered) _local.$ctrl.$onRendered.apply(_element, [_local]) 
+            if(_local && _local.$ctrl) {
+                _local.$ctrl.$onRendered && _local.$ctrl.$onRendered.apply(_element, [_local]) 
+            }
         }
         update("firsttime")
         _root.watch("updateview", function(state, changeType) {
@@ -388,6 +398,9 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
             var element = avalon.parseHTML(tpl).childNodes[0]
             avalon(element).addClass("oni-mmRouter-enter")
             avalon(oldElement).removeClass("oni-mmRouter-enter").addClass("oni-mmRouter-exit")
+            avalon.each(getViewNodes(oldElement, "ui-view"), function(index, node) {
+                avalon(node).removeClass("oni-mmRouter-enter").addClass("oni-mmRouter-exit")
+            })
             oldElement.parentNode.insertBefore(element, oldElement.nextSibling)
             mmState.oldNodes.push(oldElement)
             callStateFunc("onViewEnter", _currentState, element, oldElement)
@@ -464,12 +477,11 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
                         name: name,
                         state: state,
                         ignoreChange: "ignoreChange" in view ? view.ignoreChange : me.ignoreChange,
+                        viewCache: "viewCache" in view ? view.viewCache : me.viewCache,
                         params: state.filterParams(params),
                         $ctrl: view.$controller,
                         vmodels: view.$controller && view.$controller.vmodels
                     }
-                    var viewCache = "viewCache" in view ? view.viewCache : me.viewCache
-                    if(viewCache !== undefine) _local[name].viewCache = viewCache
                 }, avalon.noop) // 捕获模板报错
                 var prom,
                     callback = function($ctrl) {
@@ -641,7 +653,8 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
             var stateName = this.stateName,
                 me = this,
                 chain = stateName.split("."),
-                len = chain.length - 1
+                len = chain.length - 1,
+                sourceLocal = me.sourceLocal = {}
             this.chain = []
             avalon.each(chain, function(key, name) {
                 if(key == len) {
@@ -661,7 +674,7 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
                 this.url = parent.url + (this.url || "")
                 this.parentState = parent
             }
-            if (!this.views) {
+            if (!this.views && stateName != "") {
                 var view = {}
                 "template,templateUrl,templateProvider,controller,controllerUrl,controllerProvider,viewCache".replace(/\w+/g, function(prop) {
                     copyTemplateProperty(view, me, prop)
@@ -676,6 +689,7 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
                     name += "@" + (parent ? parent.stateName || "" : "")
                 }
                 views[name] = view
+                sourceLocal[name] = {}
             })
             this.views = views
             this._self = options
@@ -883,13 +897,13 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
     function getStateByName(stateName) {
         return _states[stateName]
     }
-    function getViewNodes(node) {
-        var nodes
+    function getViewNodes(node, query) {
+        var nodes, query = query || "ms-view"
         if(node.querySelectorAll) {
-            nodes = node.querySelectorAll("[ms-view]")
+            nodes = node.querySelectorAll("[" + query + "]")
         } else {
             nodes = Array.prototype.filter.call(node.getElementsByTagName("*"), function(node) {
-                return typeof node.getAttribute("ms-view") === "string"
+                return typeof node.getAttribute("query") === "string"
             })
         }
         return nodes

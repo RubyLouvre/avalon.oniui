@@ -53,7 +53,7 @@
             }
         </style>
         <script >
-            avalon.config({debug: true})
+            avalon.config({debug: false})
             var cs = [], arr = "contacts.detail.item.edit".split(".")
             for(var i = 0; i < arr.length; i++) {
                 cs.push({
@@ -68,12 +68,18 @@
                 avalon.define({
                     $id: "test",
                     codes: cs,
+                    c: function() {
+                        avalon.vmodels.test.count += 2
+                        return avalon.vmodels.test.count
+                    },
+                    count: 1,
                     run: function(id) {
                         var code  = document.getElementById(id)
                         if(!code) return
                         code = code.value
                         eval(code)
-                    }
+                    },
+                    $skipArray: ["count"]
                 })
                 avalon.define({
                     $id: "usVmodelAsController",
@@ -165,7 +171,7 @@
                                                 $onRendered: avalon.noop
                                             })
                                             // rj("faild")
-                                        }, 1000)
+                                        }, 1)
                                     })
                                 return pro
                             }
@@ -185,7 +191,7 @@
                             templateUrl: "contacts.detail.html",
                             // 只要是query或者params变化，屏蔽掉通过innerHTML重写视图
                             ignoreChange: function(changeType) {
-                                if(changeType) return true
+                                // if(changeType) return true
                             },
                             controller: function($ctrl) {
                                 // 视图元素scan完成后回调
@@ -229,6 +235,7 @@
                     views: {
                         "": {
                             templateUrl: "contacts.detail.item.html"
+                            //, viewCache: false
                         },
                         'hint@': {
                             template: "当前状态是contacts.detail.item"
@@ -488,7 +495,7 @@
                                                 $onRendered: avalon.noop
                                             })
                                             // rj(&quot;faild&quot;)
-                                        }, 1000)
+                                        }, 10)
                                     })
                                 return pro
                             }
@@ -603,7 +610,7 @@
                         mmState.oldNodes.push(oldNode)
                         setTimeout(function() {
                             oldNode.parentNode &amp;&amp; oldNode.parentNode.removeChild(oldNode)
-                        }, 1000)
+                        }, 10)
                     }
                 })
                 //启动路由

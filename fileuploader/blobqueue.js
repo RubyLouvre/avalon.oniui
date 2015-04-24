@@ -5,7 +5,8 @@
  *    <p>具备并发请求管理、自动发送的功能。</p>
  *  @updatetime 2015-4-10
  */
-define(["./eventmixin"], function (eventMixin) {
+var blobQueueConstructor = (function (eventMixin) {
+	
 	function blobQueue (runtime, serverConfig) {
 		var me = this;
 		this.$runtime = runtime;
@@ -139,4 +140,4 @@ define(["./eventmixin"], function (eventMixin) {
 	}
 	eventMixin(blobQueue);
 	return blobQueue;
-});
+})(eventMixin);

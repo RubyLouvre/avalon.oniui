@@ -237,7 +237,7 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
         }
     }
     function getCacheContainer() {
-        return document.head.getElementsByTagName("avalon")[0]
+        return document.getElementsByTagName("avalon")[0]
     }
     var templateCache = {},
         cacheContainer = getCacheContainer()
@@ -267,9 +267,9 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
         }
         // 引用
         if(divPlaceHolder.eles) {
-            for(var i in divPlaceHolder.eles) {
-                fragment.appendChild(divPlaceHolder.eles[i])
-            }
+            avalon.each(divPlaceHolder.eles, function(index, ele) {
+                fragment.appendChild(ele)
+            })
         } else {
             divPlaceHolder.eles = []
             while(f = element.firstChild) {
@@ -348,11 +348,14 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
             var html = _local ? _local.template : defaultHTML,
                 fragment
             if(cacheTpl) {
-                if(_local) _local._element = _element
-                else mmState.currentState._local[viewname] = {
-                    state: mmState.currentState,
-                    template: defaultHTML,
-                    _element: _element
+                if(_local) {
+                    _local._element = _element
+                } else {
+                    mmState.currentState._local[viewname] = {
+                        state: mmState.currentState,
+                        template: defaultHTML,
+                        _element: _element
+                    }
                 }
             }
             avalon.clearHTML(_element)
@@ -376,6 +379,7 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
                 _element.innerHTML = html
                 $element.data("currentCache", false)
             }
+            console.log(viewname)
             // default
             if(!_local && cacheTpl) $element.data("currentCache", cacheTpl)
             avalon.each(getViewNodes(_element), function(i, node) {
@@ -903,7 +907,7 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
             nodes = node.querySelectorAll("[" + query + "]")
         } else {
             nodes = Array.prototype.filter.call(node.getElementsByTagName("*"), function(node) {
-                return typeof node.getAttribute("query") === "string"
+                return typeof node.getAttribute(query) === "string"
             })
         }
         return nodes

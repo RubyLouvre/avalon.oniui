@@ -131,7 +131,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             vm.widgetElement = element
             vm.arrClass = "left"
             var tooltipElems = {}
-            vm.$skipArray = ["widgetElement", "template", "delegate"]
+            vm.$skipArray = ["widgetElement", "template", "delegate", "rootElement"]
             vm.toggle = ""
             var inited
             vm.$init = function(continueScan) {
@@ -146,6 +146,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                     vmodel.event = "mouseover"
                 }
                 tooltipElem = tooltipELementMaker(vmodel.container)
+                vm.rootElement = tooltipElem
                 avalon.scan(tooltipElem, [vmodel].concat(vmodels))
                 vmodel.event && element.setAttribute("ms-" + vmodel.event + "-101", "_showHandlder($event)")
                 if (continueScan) {

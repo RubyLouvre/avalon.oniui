@@ -39,7 +39,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
             avalon.mix(vm, options)
             vm.widgetElement = element
             vm.$css3support = css3support && vm.animated
-            vm.$skipArray = ["widgetElement", "template"]
+            vm.$skipArray = ["widgetElement", "template", "rootElement"]
             vm.$svgSupport = svgSupport
             if(vm.size == "large") {
                 vm.draggerRadius = 19
@@ -116,6 +116,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 var divCon = avalon.parseHTML(formateTpl(vmodel.template))
                 newDiv = divCon.childNodes[0]
                 insertAfer(element, newDiv)
+                vm.rootElement = newDiv
                 divCon = null
 
                 inputEle = element

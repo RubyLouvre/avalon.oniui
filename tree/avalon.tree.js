@@ -347,7 +347,8 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
             avalon.mix(vm, newOpt)
             vm.widgetElement = element
             vm.widgetElement.innerHTML = vm.template
-            vm.$skipArray = ["widgetElement", "template", "callback"]
+            vm.rootElement = element.getElementsByTagName("*")[0]
+            vm.$skipArray = ["widgetElement", "template", "callback", "rootElement"]
             vm._select = []
 
             var inited

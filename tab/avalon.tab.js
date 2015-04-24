@@ -83,7 +83,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         }
 
         var vmodel = avalon.define(data["tabId"], function(vm) {
-            vm.$skipArray = [/*"disable", "enable", "add", "activate", "remove", "getTemplate", */"widgetElement", "callInit"/*, "onActivate", "onAjaxCallback"*/]
+            vm.$skipArray = [/*"disable", "enable", "add", "activate", "remove", "getTemplate", */"widgetElement", "callInit"/*, "onActivate", "onAjaxCallback"*/, "rootElement"]
 
 
             vm.tabs = []
@@ -108,6 +108,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                 var tabFrag = _getTemplate(vm._getTemplate(0, vm), vm)
                     , panelFrag = _getTemplate(vm._getTemplate("panel", vm), vm)
                 element.innerHTML = vmodel.bottom ? panelFrag + tabFrag : tabFrag + panelFrag
+                vm.rootElement = element
                
                 if (continueScan) {
                     continueScan()

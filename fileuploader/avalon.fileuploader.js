@@ -108,11 +108,11 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                         fn: opts.getFileContext,
                         scope: opts
                     });
-                    opts.$fileInputProxy.attachEvent("newFileSelected", function(fileInfo) {
+                    opts.$fileInputProxy.addEventListener("newFileSelected", function(fileInfo) {
                         var fileObj = new fileConstructor(fileInfo, this.$flashEventHub, this.chunked, this.chunkSize, blobConstructor);
-                        fileObj.attachEvent("fileStatusChanged", this.onFileStatusChanged, this);
+                        fileObj.addEventListener("fileStatusChanged", this.onFileStatusChanged, this);
 
-                        fileObj.attachEvent("fileProgressed", function (f, beforePercentage) {
+                        fileObj.addEventListener("fileProgressed", function (f, beforePercentage) {
                             var previewVm = this.getPreviewByToken(this, f.fileLocalToken);
                             if (!previewVm) return;
                             previewVm.message = this.getFileMessageText(f);
@@ -132,7 +132,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                         });
                     }, opts);
 
-                    opts.$fileInputProxy.attachEvent("previewGenerated", function(fileLocalToken, preview) {
+                    opts.$fileInputProxy.addEventListener("previewGenerated", function(fileLocalToken, preview) {
                         var previewVm = this.getPreviewByToken(this, fileLocalToken);
                         if (!previewVm || previewVm.preview == preview) return;
                         previewVm.preview = preview;
@@ -199,6 +199,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                         return types.join(",");
                     }
                 }
+                vm.rootElement = null;
             	vm.$init = function() {
                     vm.$runtime = new runtimeConstructor(vm, blobqueueConstructor);
 	            	element.innerHTML = template.replace(/##VM_ID##/ig, vm.$id);  // 将vmid附加如flash的url中

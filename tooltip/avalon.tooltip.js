@@ -131,7 +131,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             vm.widgetElement = element
             vm.arrClass = "left"
             var tooltipElems = {}
-            vm.$skipArray = ["widgetElement", "template", "delegate"]
+            vm.$skipArray = ["widgetElement", "template", "delegate", "rootElement"]
             vm.toggle = ""
             var inited
             vm.$init = function(continueScan) {
@@ -146,6 +146,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                     vmodel.event = "mouseover"
                 }
                 tooltipElem = tooltipELementMaker(vmodel.container)
+                vm.rootElement = tooltipElem
                 avalon.scan(tooltipElem, [vmodel].concat(vmodels))
                 vmodel.event && element.setAttribute("ms-" + vmodel.event + "-101", "_showHandlder($event)")
                 if (continueScan) {
@@ -194,12 +195,14 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                             collision: vmodel.collision, 
                             within: document.body
                         })
+                        var tipPos = tipElem.offset(),
+                            elemPos = atEle.offset()
                         // position组件自动调整的时候调整箭头上下朝向
                         if(elem.nodeName) {
-                            if(tipElem.position().top > atEle.position().top + elem.offsetHeight && vmodel.arrClass == "bottom") {
+                            if(tipPos.top > atEle.offset().top + elem.offsetHeight && vmodel.arrClass == "bottom") {
                                 vmodel.arrClass = "top"
                                 tipElem.removeClass("oni-tooltip-bottom").addClass("oni-tooltip-top")
-                            } else if(tipElem.position().top + tooltipElem.offsetHeight < atEle.position().top && vmodel.arrClass == "top") {
+                            } else if(tipPos.top + tooltipElem.offsetHeight < atEle.offset().top && vmodel.arrClass == "top") {
                                 vmodel.arrClass = "bottom"
                                 tipElem.removeClass("oni-tooltip-top").addClass("oni-tooltip-bottom")
                             }
@@ -208,21 +211,21 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                             if(arrOut && arrIn) {
                                 var dir = vmodel.arrClass == "bottom" || vmodel.arrClass == "left",
                                     avalonElem = avalon(elem),
-                                    moveToLeft = tipElem.position().left + tooltipElem.offsetWidth / 2 > avalonElem.position().left + elem.offsetWidth,
-                                    moveToRight = tipElem.position().left + tooltipElem.offsetWidth / 2 < avalonElem.position().left
+                                    moveToLeft = tipPos.left + tooltipElem.offsetWidth / 2 > avalonElem.offset().left + elem.offsetWidth,
+                                    moveToRight = tipPos.left + tooltipElem.offsetWidth / 2 < avalonElem.offset().left
                                 // tip元素中线偏出elem
                                 if((vmodel.arrClass == "top" || vmodel.arrClass == "bottom") && ( moveToRight || moveToLeft)) {
                                     arrOut.position({
                                         of: tooltipElem, 
                                         at: (moveToRight ? "right" : "left") + " " + (dir ? "bottom" : "top"), 
                                         my: (moveToRight ? "right-10" : "left+10") + " " + (dir ? "top" : "bottom"), 
-                                        within: document.body
+                                        within: tooltipElem
                                     })
                                     arrIn.position({
                                         of: tooltipElem, 
                                         at: (moveToRight ? "right" : "left") + " " + (dir ? "bottom" : "top"), 
                                         my: (moveToRight ? "right-11" : "left+11") + " " + (dir ? "top-" : "bottom+") + lessH/2, 
-                                        within: document.body
+                                        within: tooltipElem
                                     })
                                 // 竖直方向，高度不够  
                                 } else if((vmodel.arrClass == "bottom" || vmodel.arrClass == "top") && tooltipElem.offsetWidth < elem.offsetWidth) {
@@ -230,13 +233,13 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                                         of: tooltipElem, 
                                         at: "center " + (dir ? "bottom" : "top"), 
                                         my: "center " + (dir ? "top" : "bottom"), 
-                                        within: document.body
+                                        within: tooltipElem
                                     })
                                     arrIn.position({
                                         of: tooltipElem, 
                                         at: "center " + (dir ? "bottom" : "top"), 
                                         my: "center " + (dir ? "top-" : "bottom+") + lessH, 
-                                        within: document.body
+                                        within: tooltipElem
                                     })
                                 // 水平方向，宽度不够
                                 } else if((vmodel.arrClass == "left" || vmodel.arrClass == "right") && tooltipElem.offsetHeight < elem.offsetHeight) {
@@ -244,19 +247,17 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                                         of: tooltipElem, 
                                         at: (dir ? "left" : "right") + " center", 
                                         my: (dir ? "right" : "left") + " center", 
-                                        within: document.body
+                                        within: tooltipElem
                                     })
                                     arrIn.position({
                                         of: tooltipElem, 
                                         at: (dir ? "left" : "right") + " center", 
                                         my: (dir ? "right+" : "left-") + lessW  + " center", 
-                                        within: document.body
+                                        within: tooltipElem
                                     })
                                 } else {
                                     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-                                    var tipPos = tipElem.offset(),
-                                        elemPos = avalon(elem).offset(),
-                                        elemH = elem.offsetHeight,
+                                    var elemH = elem.offsetHeight,
                                         elemW = elem.offsetWidth,
                                         oleft
                                     switch(vmodel.arrClass) {

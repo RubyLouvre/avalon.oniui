@@ -79,8 +79,8 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 		var fileObj = this.fileObj;
 		if (fileObj.flashEventHub) {
 			/***** FLASH目前不支持Progress事件，不注册progress事件*************/
-			fileObj.flashEventHub.listenTo(this.successEventBusToken, this.onSuccess, this);
-			fileObj.flashEventHub.listenTo(this.errorEventBusToken, this.onError, this);
+			fileObj.flashEventHub.addEventListener(this.successEventBusToken, this.onSuccess, this);
+			fileObj.flashEventHub.addEventListener(this.errorEventBusToken, this.onError, this);
 		}
 	}
 	
@@ -91,8 +91,8 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 		var fileObj = this.fileObj;
 		if (fileObj.flashEventHub) {
 			/***** FLASH目前不支持Progress事件，不注册progress事件*************/
-			fileObj.flashEventHub.unlisten(this.successEventBusToken, this.onSuccess, this);
-			fileObj.flashEventHub.unlisten(this.errorEventBusToken, this.onError, this);
+			fileObj.flashEventHub.removeEventListener(this.successEventBusToken, this.onSuccess, this);
+			fileObj.flashEventHub.removeEventListener(this.errorEventBusToken, this.onError, this);
 		}
 	}
 
@@ -122,7 +122,7 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 
 	blob.prototype.onProgress = function (uploadedBytes) {
 		this.uploadedBytes = this.uploadedBytes;
-		this.fireEvent("blobProgressed", this, uploadedBytes);
+		this.dispatchEvent("blobProgressed", this, uploadedBytes);
 	}
 
 	blob.prototype.onSuccess = function (responseText) {
@@ -130,7 +130,7 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 
 		delete this.uploadConfig;
 		this.uploadedBytes = this.size;
-		this.fireEvent("blobUploaded", this, responseText);
+		this.dispatchEvent("blobUploaded", this, responseText);
 	}
 
 	blob.prototype.onError = function (textStatus) {
@@ -142,7 +142,7 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 		} else {
 			delete this.uploadConfig;
 			this.unbindFlashEventHub();
-			this.fireEvent("blobErrored", this, textStatus);
+			this.dispatchEvent("blobErrored", this, textStatus);
 		}
 	}
 
@@ -189,7 +189,7 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 			this.request = adapter.ajax(requestConfig);
 			return true;
 		} catch (e) {
-			this.fireEvent("blobErrored", blob, e.message);
+			this.dispatchEvent("blobErrored", blob, e.message);
 			return false;
 		}
 	}

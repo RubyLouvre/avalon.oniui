@@ -41,13 +41,15 @@ define(["avalon",
                 regional: widget.defaultRegional
             })
             vm.widgetElement = element
-            vm.$skipArray = ["showPages", "widgetElement", "template", "ellipseText", "alwaysShowPrev", "alwaysShowNext"]
+            vm.rootElement = {}
+            vm.$skipArray = ["showPages","rootElement", "widgetElement", "template", "ellipseText", "alwaysShowPrev", "alwaysShowNext"]
             //这些属性不被监控
             vm.$init = function(continueScan) {
                 var pageHTML = options.template
                 element.style.display = "none"
                 setTimeout(function() {
                     element.innerHTML = pageHTML
+                    vm.rootElement = element.getElementsByTagName("*")[0]
                     element.style.display = "block"
                     if (continueScan) {
                         continueScan()

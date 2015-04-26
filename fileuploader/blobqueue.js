@@ -91,8 +91,8 @@ var blobQueueConstructor = (function (eventMixin) {
 				blob.fileObj.setStatus(blob.fileObj.FILE_IN_UPLOADING);
 			}
 
-			blob.attachEvent("blobUploaded", me.onBlobSuccess, me);
-			blob.attachEvent("blobErrored", me.onBlobError, me);
+			blob.addEventListener("blobUploaded", me.onBlobSuccess, me);
+			blob.addEventListener("blobErrored", me.onBlobError, me);
 
 			var paramConfig = this.$runtime.getRequestParamConfig(blob);
 			var sentSucessed = blob.upload({

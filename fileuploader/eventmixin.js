@@ -3,14 +3,14 @@
  * @enName EventMixin for FileUploader
  * @introduce
  *    <p>为解耦FileUploader内部的组件，编制了一个简单的事件系统。
- *      对于任何原生的JS类都可以使用MixEvent(Class)来加入事件的能力。MixEvent后为Class的原型上加入了attachEvent、unattachEvent、fireEvent、purge等方法。</p>
+ *      对于任何原生的JS类都可以使用MixEvent(Class)来加入事件的能力。MixEvent后为Class的原型上加入了addEventListener、removeEventListener、dispatchEvent、purge等方法。</p>
  *  @updatetime 2015-4-7
  */
 var eventMix = (function(adapter) {
 	var mixEvent = function mixEvent(jsClass) {
 		if (jsClass.prototype.__eventmixed) return;
 		jsClass.prototype.__eventmixed = true;	// 防止被Mix两次
-		jsClass.prototype.attachEvent = function (event, fn, scope) {
+		jsClass.prototype.addEventListener = function (event, fn, scope) {
 			if (!this.listeners) {
 				this.listeners = {};
 			}
@@ -22,7 +22,7 @@ var eventMix = (function(adapter) {
 				fn: fn
 			});
 		}
-		jsClass.prototype.fireEvent = function (event) {
+		jsClass.prototype.dispatchEvent = function (event) {
 			if (!this.listeners) return;
 			var listeners = this.listeners;
 			var args = Array.prototype.slice.apply(arguments, [1]);
@@ -36,7 +36,7 @@ var eventMix = (function(adapter) {
 				return excuteResult;
 			}
 		}
-		jsClass.prototype.unattachEvent = function (event, fn, scope) {
+		jsClass.prototype.removeEventListener = function (event, fn, scope) {
 			if (!this.listeners) return;
 			if (this.listeners.hasOwnProperty(event)) {
 				var eventListeners = this.listeners[event];

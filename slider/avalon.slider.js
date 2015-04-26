@@ -90,7 +90,8 @@ define(["../draggable/avalon.draggable",
         }
         var vmodel = avalon.define(data.sliderId, function(vm) {
             avalon.mix(vm, options);
-            vm.$skipArray = ["template", "widgetElement", "step", "_dragEnd"]
+            vm.$skipArray = ["template","rootElement", "widgetElement", "step", "_dragEnd"]
+            vm.rootElement = slider
             vm.widgetElement = element
             vm.step = (options.step > 0) ? options.step : 1
             vm.disabled = element.disabled

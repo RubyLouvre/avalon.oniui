@@ -458,7 +458,7 @@ mmRouter的使用
                                     <td>config.onError</td>
                                     <td>Function</td>
                                     <td>出错的回调，this指向对应的state，第一个参数是一个object，object.type表示出错的类型，比如view表示加载出错，object.name则对应出错的view
-                                        name，第二个参数是对应的state</td>
+                                        name，object.xhr则是当使用默认模板加载器的时候的httpRequest对象，第二个参数是对应的state</td>
                                 </tr>
                             </table>
                         </td>
@@ -556,6 +556,46 @@ this.params
                         <td></td>
                         <td>avalon.controller.loader avalon.controller异步引入模块的加载器，默认是通过avalon.require加载</td>
                     </tr>
+                    <tr>
+                        <td>templateLoader(url,resolve,reject,reason)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.state.templateLoader 通过url异步加载模板的函数，默认是通过内置的httpRequest去加载，但是在node-webkit环境是不work的，因此开放了这个配置，用以自定义url模板加载器，会在一个promise实例里调用这个方法去加载模板
+                            <table
+                            border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>url</td>
+                                    <td></td>
+                                    <td>url 模板地址</td>
+                                </tr>
+                                <tr>
+                                    <td>resolve</td>
+                                    <td></td>
+                                    <td>resolve 加载成功，如果需要缓存模板，请调用
+                                        <br>resolve(avalon.templateCache[url] = templateString)
+                                        <br>否则，请调用
+                                        <br>resolve(templateString)
+                                        <br>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>reject</td>
+                                    <td></td>
+                                    <td>reject 加载失败，请调用reject(reason)</td>
+                                </tr>
+                                <tr>
+                                    <td>reason</td>
+                                    <td></td>
+                                    <td>reason 挂在失败原因的对象</td>
+                                </tr>
+                </table>
+                </td>
+                </tr>
                 </table>
             </fieldset>
             <ul class="example-links">

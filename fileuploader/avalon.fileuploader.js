@@ -100,6 +100,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser",
                         return types.join(",");
                     }
                 }
+                vm.rootElement = null;
             	vm.$init = function() {
 
 	            	element.innerHTML = template.replace(/##VM_ID##/ig, vm.$id);  // 将vmid附加如flash的url中
@@ -148,6 +149,8 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser",
                     vm.$runtime.attachEvent("previewGenerated", vm.onPreviewUpdated, vm);
                     vm.$runtime.attachEvent("sameFileSelected", vm.onSameFileAdded, vm);
 
+                    vm.rootElement = element.getElementsByTagName("*")[0];
+                    
                     vmodels = [vm].concat(vmodels);
                     avalon.scan(element, vmodels);
                     if(typeof vmodel.onInit === "function"){
@@ -161,7 +164,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser",
                 };
 
                 vm.$skipArray = [
-                    "maxFileSize", "filePoolSize", "chunked", "chunkSize", 
+                    "maxFileSize", "filePoolSize", "chunked", "chunkSize", "rootElement",
                     "acceptFileTypes", "previewWidth", "previewHeight", "enablePreviewGenerating",
                     "enableRemoteKeyGen", "enableMd5Validation", "serverConfig", "noPreviewPath",
                     "previewFileTypes", "requiredParamsConfig", "__inputRegisted"

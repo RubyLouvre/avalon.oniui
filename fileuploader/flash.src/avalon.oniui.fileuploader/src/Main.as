@@ -278,7 +278,7 @@ package
         }
 		
 		private function fireAsyncBridgeEvent(fnName:String, args:Array, removeListeners:Boolean):void {
-			ExternalInterface.call("avalon.vmodels." + _vmId + ".$runtime.$flashEventHub.fireAsync", fnName, args, removeListeners);
+			ExternalInterface.call("avalon.vmodels." + _vmId + ".$flashEventHub.dispatchEventAsync", fnName, args, removeListeners);
 		}
 		
 		private function readFile(file:FileReference, callback:Function, scope:Object, args:Array):void {

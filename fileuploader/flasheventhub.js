@@ -4,7 +4,7 @@ define(function (eventMixin) {
 		this.__flash = flash;
 	}
 
-	fehContructor.prototype.listenTo = function (eName, fn, scope) {
+	fehContructor.prototype.addEventListener = function (eName, fn, scope) {
 		scope = scope || window;
 		if (!this.events.hasOwnProperty(eName)) {
 			this.events[eName] = {
@@ -18,7 +18,7 @@ define(function (eventMixin) {
 		});
 	}
 
-	fehContructor.prototype.unlisten = function (eName, fn, scope) {
+	fehContructor.prototype.removeEventListener = function (eName, fn, scope) {
 		scope = scope || window;
 		if (this.events.hasOwnProperty(eName)) {
 			var listeners = this.events[eName].listeners,
@@ -51,7 +51,7 @@ define(function (eventMixin) {
 	 * 异步的触发一个Flash Event。
 	 * Flash的EI.call是一个同步函数，setTimeout可以让Flash尽早的从挂起状态中解除。
 	 */
-	fehContructor.prototype.fireAsync = function (eName, args, removeEvent) {
+	fehContructor.prototype.dispatchEventAsync = function (eName, args, removeEvent) {
 		if (this.events.hasOwnProperty(eName)) {
 			var listeners = this.events[eName].listeners;
 			setTimeout(function() {

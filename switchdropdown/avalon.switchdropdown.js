@@ -27,7 +27,7 @@ define(['avalon',
             label : ' 启用',
             iconClass: 'g-icon-start',
             title: '启用',
-            font: '&#xf111;',
+            font: '&#xf084;',
             titleValue: ' 已启用'
         },
         {
@@ -35,7 +35,7 @@ define(['avalon',
             label : ' 暂停',
             iconClass: 'g-icon-pause',
             title: '暂停',
-            font: '&#xf04c;',
+            font: '&#xf086;',
             titleValue: ' 已暂停'
         }];
 

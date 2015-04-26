@@ -41,7 +41,7 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                 barParElement
 
             vm.$d = svgSupport && vm.circle && circleValueList(options.circleRadius, options.circleBorderWidth) || []
-            vm.$skipArray = ["widgetElement", "template", "svgSupport"]
+            vm.$skipArray = ["widgetElement", "template", "svgSupport", "rootElement"]
             vm.svgSupport = svgSupport
             vm.ended = false
             // svg绘制一个圆，路径数据
@@ -58,6 +58,7 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                 if(inited) return
                 inited = true
                 newElem.innerHTML = vmodel.template
+                vm.rootElement = element
                 if (continueScan) {
                     continueScan()
                 } else {

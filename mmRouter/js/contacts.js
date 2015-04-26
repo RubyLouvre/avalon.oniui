@@ -7,7 +7,7 @@ define([], function () {
             avalon.router.go("contacts.detail.item.edit")
         },
         done: function() {
-            avalon.router.go("contacts.detail.item")
+            avalon.router.go("contacts.detail.item",null, {confirmed: true})
         },
         goToRandom: function() {
             var contacts = vmodel.contacts
@@ -51,7 +51,7 @@ define([], function () {
                     rs(function() {
                         vmodel.contacts = eval("(" + res + ")")
                     })
-                }, 1000)
+                }, 10)
             }, "text")
             // here will stop
             return false

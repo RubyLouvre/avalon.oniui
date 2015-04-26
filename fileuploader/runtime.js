@@ -41,7 +41,7 @@ function ($$) {
 		this.files[fileObj.fileLocalToken] = fileObj;
 		fileObj.setStatus(fileObj.FILE_CACHED);
 
-		fileObj.attachEvent("fileStatusChanged", this.onFileStatusChanged, this);
+		fileObj.addEventListener("fileStatusChanged", this.onFileStatusChanged, this);
 	};
 
 	/*

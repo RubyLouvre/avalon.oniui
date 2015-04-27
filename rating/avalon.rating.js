@@ -97,9 +97,9 @@ define(["../avalon.getModel", 'text!./avalon.rating.html', 'css!../chameleon/oni
         max: 5,
         margin: 3,
         notSelectedColor: '#CECECE',
-        notSelectedContent: '&#xf006;',
+        notSelectedContent: '&#xf08A;',
         selectedColor: '#00A3C2',
-        selectedContent: '&#xf005;',
+        selectedContent: '&#xf038;',
         size: 20,
         getTemplate: function(tmp) {
             return tmp

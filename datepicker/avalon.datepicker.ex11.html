@@ -22,7 +22,7 @@
             <script> 
                 require(["datepicker/avalon.datepicker", "slider/avalon.slider"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
-                        vm.time = ""
+                        vm.time = "2015-04-28 16:24"
                         vm.datepicker = {
                             onSelectTime: function(vmodel) {
                                 var currentTime = new Date(vmodel.year, vmodel.month, vmodel.day, vmodel.hour, vmodel.minute)

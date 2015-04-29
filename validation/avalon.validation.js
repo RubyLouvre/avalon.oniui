@@ -717,7 +717,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
  
  <h2>错误提示信息的添加</h2>
  <p>比如说&lt;input ms-duplex-alpha="aaa"/&lt;要求用户输出的都是字母，如果输入其他类型的内容，
- 它就会报错<b style="color:red">必须是字母</p>。为什么呢，因为alpha为一个内置拦截器，
+ 它就会报错<b style="color:red">必须是字母</b>。为什么呢，因为alpha为一个内置拦截器，
  定义在avalon.duplexHooks上，结构为</p>
  ```javascript
  alpha: {
@@ -762,7 +762,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
  @links
  [自带验证规则required,int,decimal,alpha,chs,ipv4,phone](avalon.validation.ex1.html)
  [自带验证规则qq,id,email,url,date,passport,pattern](avalon.validation.ex2.html)
- [自带验证规则maxlength,minlength,lt,gt,eq,equal](avalon.validation.ex3.html)
+ [自带验证规则maxlength,minlength,lt,gt,eq,repeat](avalon.validation.ex3.html)
  [自带验证规则contains,contain](avalon.validation.ex4.html)
  [自带验证规则repeat(重复密码)](avalon.validation.ex5.html)
  [自定义验证规则](avalon.validation.ex6.html)

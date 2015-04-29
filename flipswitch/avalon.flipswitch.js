@@ -38,6 +38,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
         var vmodel = avalon.define(data.flipswitchId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
+            vm.rootElement = ""
             vm.$css3support = css3support && vm.animated
             vm.$skipArray = ["widgetElement", "template", "rootElement"]
             vm.$svgSupport = svgSupport

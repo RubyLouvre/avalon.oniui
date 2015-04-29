@@ -91,6 +91,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
 
             avalon.mix(vm, options)
             vm.widgetElement = element
+            vm.rootElement = ""
            
             var inited
                 , switchTimer

@@ -132,6 +132,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             vm.arrClass = "left"
             var tooltipElems = {}
             vm.$skipArray = ["widgetElement", "template", "delegate", "rootElement"]
+            vm.rootElement = ""
             vm.toggle = ""
             var inited
             vm.$init = function(continueScan) {

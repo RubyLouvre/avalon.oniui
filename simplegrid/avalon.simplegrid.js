@@ -102,6 +102,7 @@ define(["avalon",
             vm.$skipArray = ["_init", "widgetElement", "data", "addColumnCallbacks", "scrollPanel", "topTable", "bottomTable", "startIndex", "pager", "endIndex", "template", "loading", "loadingVModel", "rootElement"]
             vm.loadingVModel = null
             vm.widgetElement = element
+            vm.rootElement = element
             vm.gridWidth = "100%"
             vm.startIndex = 0
             vm.endIndex = options.showRows
@@ -115,7 +116,6 @@ define(["avalon",
             vm.$init = function() {
                 avalon.ready(function() {
                     element.innerHTML = options.template.replace(/MS_OPTION_ID/g, vmodel.$id)
-                    vm.rootElement = element
                     _vmodels = [vmodel].concat(vmodels)
 
                     avalon.scan(element, _vmodels)

@@ -2,10 +2,11 @@
  * @cnName 滑动按钮组件
  * @enName flipswitch
  * @introduce
- *  <p> 将checkbox表单元素转化成富UI的开关，不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑
+ *  <p> 将checkbox表单元素转化成富UI的开关，[不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑] - 已支持
 </p>
  */
-define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggable", "css!./avalon.flipswitch.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
+define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggable", 
+    '../avalon.getModel', "css!./avalon.flipswitch.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 
     var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect,
         radiusSupport =typeof avalon.cssName("border-radius") == "string"
@@ -47,11 +48,11 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 vm.height = 38
                 vm.width = 76
             } else if(vm.size == "mini") {
-                vm.draggerRadius = 7
+                vm.draggerRadius = 6
                 vm.height = 12
                 vm.width = 28
             } else if(vm.size == "small") {
-                vm.draggerRadius = 9
+                vm.draggerRadius = 8
                 vm.height = 18
                 vm.width = 36
             }
@@ -131,7 +132,21 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 if(inputEle.checked) {
                     vmodel.checked = true
                 } 
-                inputEle.setAttribute("ms-checked", "checked")
+                inputEle.setAttribute("ms-attr-checked", "checked")
+                var du = inputEle.getAttribute("ms-duplex")
+                if(du) {
+                    var tarVmodel = avalon.getModel(du, vmodels)
+                    inputEle.removeAttribute("ms-duplex")
+                    tarVmodel = tarVmodel[1]
+                    if(tarVmodel) {
+                        tarVmodel[du].$watch("length", function(v) {
+                            vmodel.checked = !!v
+                        })
+                        vmodel.$watch("checked", function(v) {
+                            tarVmodel[du] = v ? ["on"] : []
+                        })
+                    }
+                }
 
                 newDiv.appendChild(inputEle)
                 inputEle.msRetain = false;
@@ -250,6 +265,8 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 return !vmodel.$svgSupport && !radiusSupport
             }
 
+            vm.radiusSupport = radiusSupport
+
             // 根据样式绘制圆，圆角等
             //interface _draw() 动态更换皮肤后，可以调用这个方法更新提取switch样式
             // vm._draw = function() {
@@ -353,7 +370,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
         onColor: "#45A846", //\@config 选中情况颜色，会尝试自动到样式文件里面提取
         offColor: "#D5D5D5", //\@config 未选中情况颜色，会尝试自动到样式文件里面提取
         disabledColor: "#DEDEDE",//\@config 禁用情况颜色，会尝试自动到样式文件里面提取
-        draggerRadius: 7, //\@config normal size拖动头半径，会尝试自动到样式文件里面提取
+        draggerRadius: 12, //\@config normal size拖动头半径，会尝试自动到样式文件里面提取
         height: 24,   //\@config normal size高度，会尝试自动到样式文件里面提取
         width: 48,    //\@config normal size宽度，会尝试自动到样式文件里面提取
         css3support: false,

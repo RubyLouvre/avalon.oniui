@@ -91,7 +91,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
 
             avalon.mix(vm, options)
             vm.widgetElement = element
-            vm.rootElement = ""
+            vm.rootElement = element
            
             var inited
                 , switchTimer
@@ -109,7 +109,6 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                 var tabFrag = _getTemplate(vm._getTemplate(0, vm), vm)
                     , panelFrag = _getTemplate(vm._getTemplate("panel", vm), vm)
                 element.innerHTML = vmodel.bottom ? panelFrag + tabFrag : tabFrag + panelFrag
-                vm.rootElement = element
                
                 if (continueScan) {
                     continueScan()

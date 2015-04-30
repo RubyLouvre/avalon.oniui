@@ -419,7 +419,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             }
             //@interface showBy($event, content) 参数满足 {target: elem}这样，或者是一个elem元素亦可，tooltip会按照elem定位，并作为参数传递给contentGetter，如果指定content，则忽略contentGetter的返回，直接显示content内容
             vm.showBy = function(obj, content) {
-                var tar = obj && obj.tagName ? obj : obj.target || obj.srcElement
+                var tar = obj && obj.tagName ? obj : obj.target || obj.srcElement || ofElement || element
                 // 如果已显示则更新内容
                 if(vmodel.toggle) vmodel.content = content || vmodel.contentGetter.call(vmodel, tar)
                 _event_ele = ofElement = tar

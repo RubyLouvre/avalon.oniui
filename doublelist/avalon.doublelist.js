@@ -22,7 +22,7 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                 vm.onChange = vm.change
             }
             vm.widgetElement = element
-            vm.rootElement = element
+            vm.rootElement = ""
             vm.$skipArray = ["widgetElement", "template", "rootElement"]
 
             var inited, id = +(new Date())
@@ -34,7 +34,7 @@ define(["avalon", "text!./avalon.doublelist.html", "text!./avalon.doublelist.dat
                     selectTemplate = vmodel._getTemplate("select")
                 vmodel.template = vmodel.template.replace(/\{\{MS_OPTION_SELECT\}\}/g, selectTemplate).replace(/\{\{MS_OPTION_DATA\}\}/g, dataTemplate).replace(/\{\{MS_OPTION_ID\}\}/g, id)
                 element.innerHTML = vmodel.template
-
+                vmodel.rootElement = element.getElementsByTagName("*")[0]
                 vmodel._getSelect()
                 if(continueScan){
                     continueScan()

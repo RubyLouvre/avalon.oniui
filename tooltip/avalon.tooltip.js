@@ -497,7 +497,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
     }
 
     widget.defaults = {
-        toggle: false, //@config 组件是否显示，可以通过设置为false来隐藏组件
+        toggle: false, //@config 组件是否显示，可以通过设置为false来隐藏组件，设置为true来显示【在原来的位置展示原来的内容，如果需要改变位置、内容，请使用showBy】
         collision: "none",//@config 溢出检测，当被定位元素在某些方向上溢出窗口，则移动它到另一个位置。与 my 和 at 选项相似，该选项会接受一个单一的值或一对 horizontal/vertical 值。例如：flip、fit、fit flip、fit none。/nflip：翻转元素到目标的相对一边，再次运行 collision 检测一遍查看元素是否适合。无论哪一边允许更多的元素可见，则使用那一边。/nfit：把元素从窗口的边缘移开。/nflipfit：首先应用 flip 逻辑，把元素放置在允许更多元素可见的那一边。然后应用 fit 逻辑，确保尽可能多的元素可见。/nnone: 不检测
         event: "mouseenter",  //@config 显示tooltip的事件，默认hover的时候显示tooltip，为false的时候就不绑定事件，如果后面设置了自动隐藏，则mouseenter对应的是mouseleave,focus对应的是blur，进行自动隐藏事件侦听，使用代理的时候，目测不支持focus,blur，event可以配置为空，则不会添加事件侦听
         content: void 0,        //@config tooltip显示内容，默认去获取element的title属性

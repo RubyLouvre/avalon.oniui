@@ -1,12 +1,15 @@
 <div class="oni-flipswitch oni-state-default oni-helper-reset oni-flipswitch-use-no-img" 
+	 ms-class-103="oni-flipswitch-drawing:!radiusSupport"
 	 ms-class-100="oni-flipswitch-{{MS_OPTION_SIZE}} oni-flipswitch-{{MS_OPTION_THEME}}" 
-	 ms-class-100="oni-flipswitch-off:_addThisClass()" 
+	 ms-class-102="oni-flipswitch-off:_addThisClass()" 
 	 ms-class-101="oni-state-disabled:disabled" 
 	 ms-click="toggleStatus" 
 	 ms-hover="oni-state-hover" 
 	 ms-visible="toggle">
 	<div class="oni-flipswitch-modal" ms-visible="disabled"></div>
-	<div class="oni-flipswitch-bar oni-helper-clearfix" ms-class="oni-flipswitch-animate:$css3support" ms-if="dir=='left'">
+	<div class="oni-flipswitch-bar oni-helper-clearfix" ms-class="oni-flipswitch-animate:$css3support" ms-if="dir=='left'" 
+	     ms-css-margin-top="(-height/2) + 'px'" 
+	     ms-css-height="height +'px'">
 		<span class="oni-flipswitch-left" ms-if="hdir">{{MS_OPTION_ON_TEXT|html}}</span>
 		<span class="oni-flipswitch-right" ms-if="!hdir">{{MS_OPTION_OFF_TEXT|html}}</span>
 		<label class="oni-flipswitch-dragger">
@@ -47,7 +50,8 @@
 		<span class="oni-flipswitch-left" ms-if="!hdir">{{MS_OPTION_ON_TEXT|html}}</span>
 		<span class="oni-flipswitch-right" ms-if="hdir">{{MS_OPTION_OFF_TEXT|html}}</span>
 	</div>
-	<div class="oni-flipswitch-bg oni-flipswitch-ico" ms-class-101="oni-flipswitch-uckbg:!checked" ms-class-102="oni-flipswitch-uckbg-disabled:disabled"><svg ms-if="_shallDrawSvg()" version="1.1" 
+	<div class="oni-flipswitch-bg oni-flipswitch-ico" ms-class-101="oni-flipswitch-uckbg:!checked" ms-class-102="oni-flipswitch-uckbg-disabled:disabled" 
+	    ms-css-height="height+4+'px'"><svg ms-if="_shallDrawSvg()" version="1.1" 
 		width="100%" 
 		height="100%" 
 		style="position:absolute;z-index:3;left:0;top:0;" 
@@ -59,12 +63,12 @@
 			height="100%" 
 			ms-attr-fill="_getFillColor()"/>
 		</svg>
-		<v:roundrect ms-if="_shallDrawVML()" style="behavior:url(#default#VML);position:absolute;left:-1px;top:0;" 
+		<v:roundrect ms-if="_shallDrawVML()" style="position:absolute;left:-1px;top:0;" 
 		stroked="false"  
-		filled="t" 
-		arcsize="1.0" 
+		filled="t"
+		arcsize="1.0"  
 		ms-attr-fillcolor="_getFillColor()" 
-	    ms-css-height="height+'px'" 
+	    ms-css-height="height+4+'px'" 
 	    ms-css-width="width+'px'">
 		</v:roundrect>
 	</div>

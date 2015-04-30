@@ -7,6 +7,12 @@
  */
 define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  "css!./avalon.tooltip.css","css!../chameleon/oniui-common.css"], function(avalon, template) {
     var undefine
+    function hideElement(ele) {
+        ele.style.display = "none"
+    }
+    function showElement(ele) {
+        ele.style.display = "block"
+    }
     var widget = avalon.ui.tooltip = function(element, data, vmodels) {
         var options = data.tooltipOptions
             , selfContent = ""
@@ -164,7 +170,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             vm.$remove = function() {
                 if(tooltipElem && tooltipElem.parentNode) tooltipElem.parentNode.removeChild(tooltipElem)
             }
-            //@interface show(elem) 不建议使用这个方法，请使用showBy({target: ele})显示tooltip，相对于elem定位，elem为元素或者event事件对象，如果elem为空，则采用之前缓存的对象，两者都为空，则只展示，不改变位置
+            //@interface show(elem) 用这个方法来刷新tooltip的位置
             vm.show = function(elem) {
                 if(vmodel.disabled || !tooltipElem) return
                 if(elem == undefine) elem = ofElement
@@ -176,7 +182,8 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                         tipElemMy = customMy,
                         bs = tooltipElem.getElementsByTagName("b"), 
                         arrOut, 
-                        arrIn
+                        arrIn,
+                        container = vmodel.container
                     for(var i = 0, len = bs.length; i < len; i++) {
                         var tb = avalon(bs[i])
                         if(tb.hasClass("oni-tooltip-arrow-out")) {
@@ -187,14 +194,14 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                     }
                     // 哎，无语的加个延时
                     avalon.nextTick(function() {
-                        tooltipElem.style.display = "block"
+                        showElement(tooltipElem)
                         // 定位toolp元素
                         tipElem.position({
                             of: elem, 
                             at: tipElemAt, 
                             my: tipElemMy, 
                             collision: vmodel.collision, 
-                            within: document.body
+                            within: (avalon.isFunction(container) ? container() : container) || document.body
                         })
                         var tipPos = tipElem.offset(),
                             elemPos = atEle.offset()
@@ -293,23 +300,23 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                                 }
                             }
                         }
-                    })
-                }
-                // IE里面透明箭头显示有问题，屏蔽掉
-                if(vmodel.animated && !!-[1,]) {
-                    clearInterval(animateTimer)
-                    var now = (avalon(tooltipElem).css("opacity") * 100) >> 0
-                    if(now != 100) {
-                        var dis = vmodel._animateArrMaker(now, 100)
-                        dis.splice(0, 1)
-                        animateTimer = setInterval(function() {
-                            if(dis.length <= 0) {
-                                return clearInterval(animateTimer)
+                        // IE里面透明箭头显示有问题，屏蔽掉
+                        if(vmodel.animated && !!-[1,]) {
+                            clearInterval(animateTimer)
+                            var now = (avalon(tooltipElem).css("opacity") * 100) >> 0
+                            if(now != 100) {
+                                var dis = vmodel._animateArrMaker(now, 100)
+                                dis.splice(0, 1)
+                                animateTimer = setInterval(function() {
+                                    if(dis.length <= 0) {
+                                        return clearInterval(animateTimer)
+                                    }
+                                    avalon(tooltipElem).css("opacity",  dis[0] / 100)
+                                    dis.splice(0, 1) 
+                                }, 16)
                             }
-                            avalon(tooltipElem).css("opacity",  dis[0] / 100)
-                            dis.splice(0, 1) 
-                        }, 16)
-                    }
+                        }
+                    })
                 }
             }
             //@interface hide($event) 隐藏tooltip，参数是$event，可缺省
@@ -331,7 +338,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                         var dis = vmodel._animateArrMaker(now, 0)
                         animateTimer = setInterval(function() {
                             if(dis.length <= 0) {
-                                tooltipElem.style.display = "none"
+                                hideElement(tooltipElem)
                                 avalon(tooltipElem).addClass("oni-tooltip-hidden")
                                 return clearInterval(animateTimer)
                             }
@@ -340,7 +347,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                         }, 50)
                     }
                 } else {
-                    tooltipElem.style.display = "none"
+                    hideElement(tooltipElem)
                 }
             }
             // 为了实现通过toggle属性控制显示隐藏
@@ -417,9 +424,13 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                     }
                 }
             }
-            //@interface showBy($event, content) 参数满足 {target: elem}这样，或者是一个elem元素亦可，tooltip会按照elem定位，并作为参数传递给contentGetter，如果指定content，则忽略contentGetter的返回，直接显示content内容
+            /*
+             * @interface showBy($event, content) 参数满足 {target: elem}这样，或者是一个elem元素亦可，tooltip会按照elem定位，并作为参数传递给contentGetter，如果指定content，则忽略contentGetter的返回，直接显示content内容
+             * @param $event 定位参照物，可以是一个事件，也可以是一个元素，如果未提供有效的元素或者事件，则采用上一次定位的元素或者事件来定位
+             * @param content 用来填充tooltip的内容
+             */
             vm.showBy = function(obj, content) {
-                var tar = obj && obj.tagName ? obj : obj.target || obj.srcElement || ofElement || element
+                var tar = obj && obj.tagName ? obj : obj && obj.target || obj && obj.srcElement || ofElement || element
                 // 如果已显示则更新内容
                 if(vmodel.toggle) vmodel.content = content || vmodel.contentGetter.call(vmodel, tar)
                 _event_ele = ofElement = tar
@@ -427,7 +438,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                 if(!vmodel.toggle) {
                     vmodel.toggle = true
                 } else {
-                    vmodel.show() // 更新位置
+                    vmodel.show(tar) // 更新位置
                 }
                 setContent = undefine
             }
@@ -476,7 +487,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
 
         vmodel.$watch("toggle", function(n) {
             if(n) {
-                vmodel._show()
+                vmodel._show(ofElement, setContent || vmodel.content)
             } else {
                 vmodel._hide()
             }
@@ -490,7 +501,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
         collision: "none",//@config 溢出检测，当被定位元素在某些方向上溢出窗口，则移动它到另一个位置。与 my 和 at 选项相似，该选项会接受一个单一的值或一对 horizontal/vertical 值。例如：flip、fit、fit flip、fit none。/nflip：翻转元素到目标的相对一边，再次运行 collision 检测一遍查看元素是否适合。无论哪一边允许更多的元素可见，则使用那一边。/nfit：把元素从窗口的边缘移开。/nflipfit：首先应用 flip 逻辑，把元素放置在允许更多元素可见的那一边。然后应用 fit 逻辑，确保尽可能多的元素可见。/nnone: 不检测
         event: "mouseenter",  //@config 显示tooltip的事件，默认hover的时候显示tooltip，为false的时候就不绑定事件，如果后面设置了自动隐藏，则mouseenter对应的是mouseleave,focus对应的是blur，进行自动隐藏事件侦听，使用代理的时候，目测不支持focus,blur，event可以配置为空，则不会添加事件侦听
         content: void 0,        //@config tooltip显示内容，默认去获取element的title属性
-        container: void 0, //@config {Element} 把tooltip元素append到container指定的这个元素内
+        container: void 0, //@config {Element} 把tooltip元素append到container指定的这个元素内，可以是一个函数，用以返回一个元素
         width: "auto",        //@config tip宽度，默认是auto
         height: "auto",       //@config tip高度，默认是auto    
         arrow: true,          //@config 是否显示尖角图标，默认为true

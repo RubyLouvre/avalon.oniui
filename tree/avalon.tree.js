@@ -721,13 +721,15 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
                     }
                     nodes = dataFormator(nodes, parentLeaf, undefine, undefine, vm)
                     // 这里node依旧没有$id属性
-                    dataFormator(nodes, parentLeaf, "构建父子节点衔接关系", undefine, vm)
+                    // dataFormator(nodes, parentLeaf, "构建父子节点衔接关系", undefine, vm)
                     if(parentLeaf) parentLeaf.isParent = true
                     // open的监听可能没有捕捉到
                     if(!isSilent && parentLeaf) parentLeaf.open = true
                     var arr = vm.getNodes(parentLeaf), len = arr.length
                     arr.pushArray(nodes)
                     var addNodes = arr.slice(len) || []
+                    // 构建，只有在nodes被push到数组之后才会拥有$id,$events等属性
+                    dataFormator(addNodes, parentLeaf, '\u6784\u5EFA\u7236\u5B50\u8282\u70B9\u8854\u63A5\u5173\u7CFB', undefine, vm);
                     // 更具$id属性build cache
                     avalon.each(addNodes, function(i, leaf) {
                         cache[leaf.$id] = leaf

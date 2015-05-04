@@ -355,6 +355,7 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             vm.opacities = []
             avalon.mix(vm, options)
             vm.widgetElement = element
+            vm.rootElement = ""
             vm.svgSupport = svgSupport
             vm.$loadingID = widgetCount + "" + _key
             vm.$timer = ""

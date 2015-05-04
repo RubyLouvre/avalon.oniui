@@ -34,6 +34,7 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
         var vmodel = avalon.define(data.progressbarId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
+            vm.rootElement = element
             var newElem = element, 
                 simulateTimer,
                 barElement,
@@ -58,7 +59,6 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                 if(inited) return
                 inited = true
                 newElem.innerHTML = vmodel.template
-                vm.rootElement = element
                 if (continueScan) {
                     continueScan()
                 } else {

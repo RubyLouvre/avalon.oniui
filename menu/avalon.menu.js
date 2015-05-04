@@ -73,6 +73,7 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
         var vmodel = avalon.define(data.menuId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
+            vm.rootElement = element
             vm._oldActive = options.active
             vm._subMenus = {} // 维护一个子menu列表，用对象，更好读写
             vm.$skipArray = ["widgetElement", "template", "_subMenus", "_oldActive", "rootElement"]
@@ -88,7 +89,6 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
                 }
 
                 element.innerHTML = vmodel.template
-                vm.rootElement = element
                 if(vmodel._depth === 1) {
                     element.setAttribute("ms-hover-100", "oni-helper-max-index")
                     avalon(element).addClass("oni-menu oni-helper-clearfix oni-helper-reset" + (vmodel.dir === "v" ? " oni-menu-vertical" : ""))

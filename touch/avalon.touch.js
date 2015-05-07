@@ -71,6 +71,7 @@
  */
 define(['avalon'], function(avalon) {
 	void function() {
+		if(!("addEventListener" in  document)) return
 	    var ua = navigator.userAgent
 	    var isAndroid = ua.indexOf('Android') > 0
 	    var isIOS = /iP(ad|hone|od)/.test(ua)

@@ -50,7 +50,8 @@ div.oni-flipswitch {
     position: absolute;
     z-index: 10;
     width: 150%;
-    left: 0; }
+    left: 0;
+    top: 50%; }
   .oni-flipswitch-animate {
     transition: all .5s;
     -webkit-transition: all .5s;
@@ -59,19 +60,17 @@ div.oni-flipswitch {
     -ms-transition: all .5s; }
   .oni-flipswitch-left, .oni-flipswitch-right {
     width: 33%;
-    color: #fff;
+    color: white;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
   .oni-flipswitch-right {
-    color: #9B9B9B; }
+    color: #9b9b9b; }
   .oni-flipswitch-dragger {
     width: 34%; }
     .oni-flipswitch-dragger-ball {
       width: 24px;
       height: 24px;
       left: 50%;
-      top: 50%;
       margin-left: -12px;
-      margin-top: -10px;
       position: absolute; }
       .oni-flipswitch-dragger-ball-unchecked {
         margin-left: -12px; }
@@ -80,22 +79,19 @@ div.oni-flipswitch {
   .oni-flipswitch-large .oni-flipswitch-dragger-ball {
     height: 38px;
     width: 38px;
-    margin-left: -20px;
-    margin-top: -17px; }
+    margin-left: -20px; }
     .oni-flipswitch-large .oni-flipswitch-dragger-ball-unchecked {
       margin-left: -20px; }
   .oni-flipswitch-mini .oni-flipswitch-dragger-ball {
-    height: 14px;
-    width: 14px;
-    margin-left: -8px;
-    margin-top: -6px; }
+    height: 12px;
+    width: 12px;
+    margin-left: -8px; }
     .oni-flipswitch-mini .oni-flipswitch-dragger-ball-unchecked {
       margin-left: -8px; }
   .oni-flipswitch-small .oni-flipswitch-dragger-ball {
     height: 18px;
     width: 18px;
-    margin-left: -10px;
-    margin-top: -7px; }
+    margin-left: -10px; }
     .oni-flipswitch-small .oni-flipswitch-dragger-ball-unchecked {
       margin-left: -10px; }
   .oni-flipswitch-left, .oni-flipswitch-right, .oni-flipswitch-dragger {
@@ -129,12 +125,12 @@ div.oni-flipswitch {
     border-radius: 14px;
     background-color: #68c969; }
   .oni-flipswitch-use-no-img .oni-flipswitch-dragger-ball {
-    background: #fff;
+    background: white;
     border-radius: 12px; }
   .oni-flipswitch-use-no-img.oni-flipswitch-mini .oni-flipswitch-bg {
     border-radius: 8px; }
   .oni-flipswitch-use-no-img.oni-flipswitch-mini .oni-flipswitch-dragger-ball {
-    border-radius: 7px; }
+    border-radius: 6px; }
   .oni-flipswitch-use-no-img.oni-flipswitch-small .oni-flipswitch-bg {
     border-radius: 11px; }
   .oni-flipswitch-use-no-img.oni-flipswitch-small .oni-flipswitch-dragger-ball {
@@ -144,7 +140,9 @@ div.oni-flipswitch {
   .oni-flipswitch-use-no-img.oni-flipswitch-large .oni-flipswitch-dragger-ball {
     border-radius: 19px; }
   .oni-flipswitch-use-no-img .oni-flipswitch-uckbg {
-    background-color: #999; }
+    background-color: #999999; }
+  .oni-flipswitch-drawing .oni-flipswitch-dragger-ball, .oni-flipswitch-drawing .oni-flipswitch-bg {
+    background: none; }
 
 .oni-state-disabled .oni-flipswitch-oval-hd, .oni-state-hover .oni-flipswitch-oval-hd {
   display: block; }
@@ -153,10 +151,8 @@ div.oni-flipswitch {
 
 .oni-state-disabled .oni-flipswitch-bar label, .oni-state-disabled .oni-flipswitch-bar span {
   cursor: default;
-  color: #fff; }
+  color: white; }
 .oni-state-disabled .oni-flipswitch-oval-hd {
   display: block; }
 .oni-state-disabled .oni-flipswitchoval-n {
   display: none; }
-
-/*# sourceMappingURL=avalon.flipswitch.css.map */

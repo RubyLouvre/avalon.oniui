@@ -3,7 +3,7 @@ echo "now building $1"
 cp ${1}/avalon.${1}.js ${1}/avalon.${1}.jsbak
 if [ $1"" == "tree" ];then
 	cat ${1}/avalon.${1}.*.js >> ${1}/avalon.${1}.js
-	scss ${1}/treeMenu.scss > ${1}/${1}-menu.css
+	scss.bat ${1}/treeMenu.scss --default-encoding utf-8 > ${1}/${1}-menu.css
 else
 	cat ${1}/mm*.js >> ${1}/avalon.${1}.js
 fi

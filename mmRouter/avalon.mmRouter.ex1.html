@@ -37,6 +37,9 @@
                 position: absolute;
                 top:0;
             }
+            .slider {
+                position: relative;
+            }
             .oni-mmRouter-slide.oni-mmRouter-enter, .oni-mmRouter-slide.oni-mmRouter-leave {
                 -webkit-transition: -webkit-transform 0.3s ease-in, opacity 0.3s ease-in;
                 -moz-transition: -moz-transform 0.3s ease-in, opacity 0.3s ease-in;
@@ -307,7 +310,6 @@
                 })
                 avalon.state.config({
                     onViewEnter: function(newNode, oldNode) {
-                        mmState.oldNodes.push(oldNode)
                         setTimeout(function() {
                             avalon(newNode).addClass("oni-mmRouter-enter-active")
                             avalon(oldNode).addClass("oni-mmRouter-leave-active")
@@ -378,6 +380,9 @@
             .oni-mmRouter-slide.oni-mmRouter-enter {
                 position: absolute;
                 top:0;
+            }
+            .slider {
+                position: relative;
             }
             .oni-mmRouter-slide.oni-mmRouter-enter, .oni-mmRouter-slide.oni-mmRouter-leave {
                 -webkit-transition: -webkit-transform 0.3s ease-in, opacity 0.3s ease-in;
@@ -649,7 +654,6 @@
                 })
                 avalon.state.config({
                     onViewEnter: function(newNode, oldNode) {
-                        mmState.oldNodes.push(oldNode)
                         setTimeout(function() {
                             avalon(newNode).addClass(&quot;oni-mmRouter-enter-active&quot;)
                             avalon(oldNode).addClass(&quot;oni-mmRouter-leave-active&quot;)

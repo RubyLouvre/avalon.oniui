@@ -99,7 +99,9 @@ define(["../avalon.getModel",
                 avalon.Array.ensure(dialogShows, vmodel)
                 len = dialogShows.length
                 if (len) {
-                    avalon(maskLayer).css("display", "block")
+                    if (vmodel.modal) {
+                        avalon(maskLayer).css("display", "block")
+                    }
                     avalon(maskLayerSimulate).css("display", "block")
                 }
                 // 通过zIndex的提升来调整遮罩层，保证层上层存在时遮罩层始终在顶层dialog下面(顶层dialog zIndex-1)但是在其他dialog上面

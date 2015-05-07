@@ -208,6 +208,7 @@ define(["avalon"], function() {
             }
             frame.createTweens()
             frame.build()//如果是先hide再show,那么执行createTweens后再执行build则更为平滑
+            frame.fire("afterBefore", frame)//为了修复fadeToggle的bug
             frame.startTime = now
         } else { //中间自动生成的补间
             var per = (now - frame.startTime) / frame.duration
@@ -310,6 +311,7 @@ define(["avalon"], function() {
         this.orig = []
         this.props = {}
         this.dataShow = {}
+        var frame = this
     }
     var root = document.documentElement
 
@@ -340,7 +342,8 @@ define(["avalon"], function() {
             //show 开始时计算其width1 height1 保存原来的width height display改为inline-block或block overflow处理 赋值（width1，height1）
             //hide 保存原来的width height 赋值为(0,0) overflow处理 结束时display改为none;
             //toggle 开始时判定其是否隐藏，使用再决定使用何种策略
-            if (elem.nodeType === 1 && ("height" in props || "width" in props)) {
+            // fadeToggle的show，也需要把元素展示了
+            if (elem.nodeType === 1 && ("height" in props || "width" in props || frame.showState === "show")) {
                 //如果是动画则必须将它显示出来
                 frame.overflow = [style.overflow, style.overflowX, style.overflowY]
                 var display = style.display || avalon.css(elem, "display")
@@ -380,9 +383,9 @@ define(["avalon"], function() {
                     frame.overflow = null
                 })
             }
-
             frame.bind("after", function() {
                 if (frame.showState === "hide") {
+                    elem.setAttribute("olddisplay", avalon.css(elem, "display"))
                     this.style.display = "none"
                     this.dataShow = {}
                     for (var i in frame.orig) { //还原为初始状态
@@ -559,7 +562,7 @@ define(["avalon"], function() {
                 return !result || result === "auto" ? 0 : result
             },
             set: function(tween) {
-                avalon.css(tween.elem, tween.prop, tween.now + (tween.unit || (typeof tween.now == "string" ? "" : 0)))
+                avalon.css(tween.elem, tween.prop, tween.now + (tween.unit || ""))
             }
         }
     }

@@ -201,7 +201,7 @@ define(["avalon"], function() {
         //并在动画结束后，从子列队选取下一个动画实例取替自身
         var now = +new Date
         if (!frame.startTime) { //第一帧
-            frame.fire("before")//动画开始前做些预操作
+            frame.fire("before", frame)//动画开始前做些预操作
             var elem = frame.elem
             if (avalon.css(elem, "display") === "none" && !elem.dataShow) {
                 frame.build()//如果是一开始就隐藏,那就必须让它显示出来
@@ -216,11 +216,11 @@ define(["avalon"], function() {
                 for (var i = 0, tween; tween = frame.tweens[i++]; ) {
                     tween.run(per, end)
                 }
-                frame.fire("step") //每执行一帧调用的回调
+                frame.fire("step", frame) //每执行一帧调用的回调
             }
             if (end) { //最后一帧
-                frame.fire("after") //动画结束后执行的一些收尾工作
-                frame.fire("complete") //执行用户回调
+                frame.fire("after", frame) //动画结束后执行的一些收尾工作
+                frame.fire("complete", frame) //执行用户回调
                 if (frame.revert) { //如果设置了倒带
                     this.revertTweens()
                     delete this.startTime
@@ -421,7 +421,7 @@ define(["avalon"], function() {
         var tween = new Tween(name, frame)
         var from = dataShow[name] || tween.cur() //取得起始值
         var to
-        if (/color$/.test(name)) {
+        if (/color$/i.test(name)) {
             //用于分解属性包中的样式或属性,变成可以计算的因子
             parts = [color2array(from), color2array(value)]
         } else {
@@ -559,7 +559,7 @@ define(["avalon"], function() {
                 return !result || result === "auto" ? 0 : result
             },
             set: function(tween) {
-                avalon.css(tween.elem, tween.prop, tween.now + tween.unit)
+                avalon.css(tween.elem, tween.prop, tween.now + (tween.unit || (typeof tween.now == "string" ? "" : 0)))
             }
         }
     }
@@ -585,7 +585,7 @@ define(["avalon"], function() {
         pause: function() {
             var cur = this[0]
             for (var i = 0, frame; frame = timeline[i]; i++) {
-                if (frame.elme === cur) {
+                if (frame.elem === cur) {
                     frame.paused = new Date - 0
                 }
             }
@@ -595,7 +595,7 @@ define(["avalon"], function() {
             var now = new Date
             var elem = this[0]
             for (var i = 0, fx; fx = timeline[i]; i++) {
-                if (fx.elem === elem) {
+                if (fx.elem === elem && fx.paused) {
                     fx.startTime += (now - fx.paused)
                     delete fx.paused
                 }

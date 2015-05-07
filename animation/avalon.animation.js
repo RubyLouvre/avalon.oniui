@@ -160,6 +160,7 @@ define(["avalon"], function() {
      */
     var timeline = avalon.timeline = []
     function insertFrame(frame) { //插入关键帧
+        var fps = frame.fps || effect.fps
         if (frame.queue) { //如果插入到已有的某一帧的子列队
             var gotoQueue = 1
             for (var i = timeline.length, el; el = timeline[--i]; ) {
@@ -176,7 +177,7 @@ define(["avalon"], function() {
             timeline.push(frame)
         }
         if (insertFrame.id === null) { //时间轴只要存在帧就会执行定时器
-            insertFrame.id = setInterval(deleteFrame, 1000 / effect.fps)
+            insertFrame.id = setInterval(deleteFrame, 1000 / fps)
         }
     }
 

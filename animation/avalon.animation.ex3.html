@@ -154,19 +154,18 @@
             }
             .container {
                 border: 3px solid #000;
-                height: 24px;
+                height: 100px;
                 width: 500px;
                 margin: 40px;
             }
             .runner {
-                height: 24px;
+                height: 100px;
                 background: red;
-                width: 0;
             }
         &lt;/style&gt;
     &lt;/head&gt;
     &lt;body ms-controller=&quot;test&quot;&gt;
-        &lt;h1&gt;算子 &amp;&amp; fps 修改 with &amp;&amp; backgroundColor&lt;/h1&gt;
+        &lt;h1&gt;算子 &amp;&amp; fps fadeToggle, fadeIn, fadeOut&lt;/h1&gt;
         &lt;div class=&quot;menu&quot;&gt;
             &lt;label for=&quot;biz&quot;&gt;算子：&lt;/label&gt;
             &lt;select id=&quot;biz&quot;
@@ -193,16 +192,15 @@
         &lt;div class=&quot;canvas&quot; id=&quot;canvas&quot;&gt;
             
         &lt;/div&gt;
-        
         &lt;script&gt;
             var canvas = document.getElementById(&quot;canvas&quot;),
                 runner = document.getElementById(&quot;runner&quot;),
-                duration = 2000,
+                duration = 1000,
                 len = 500,
                 vmodel,
-                fps = 30,
+                fps = 40,
                 unit = 1000 / fps,
-                time = 0
+                time = unit
 
             function addPoint(x, y) {
                 var div = document.createElement(&quot;div&quot;)
@@ -212,8 +210,14 @@
             }
             function doSomething(args) {
                 var x = time / duration * len,
-                    frame = args[0]
-                addPoint( x + &quot;px&quot;, (len - parseInt(runner.style.width)) + &quot;px&quot;)
+                    frame = args[0],
+                    y = len
+                if(frame &amp;&amp; frame.tweens &amp;&amp; frame.tweens[0]) {
+                    var tween = frame.tweens[0],
+                        xunit = tween.unit
+                    if(xunit == &quot;px&quot;) y = tween.now / 100 * len
+                }
+                addPoint( x + &quot;px&quot;, y + &quot;px&quot;)
                 time += unit
             }
             require([&quot;animation/avalon.animation&quot;], function() {
@@ -230,8 +234,7 @@
                         canvas.innerHTML = &quot; &quot;
                     } 
                     vm.stop = function() {
-                        runner.style.width = &quot;0&quot;
-                        time = 0
+                        time = unit
                         return avalon(runner).stop()
                     }
                     vm.pause = function() {
@@ -241,27 +244,23 @@
                         avalon(runner).resume()
                     }
                     vm.run = function() {
-                        runner.style.backgroundColor = &quot;#ffffff&quot;
-                        vm.stop().delay(1000).animate({
-                            width: len,
-                            backgroundColor: &quot;blue&quot;
-                        }, {
+                        vm.stop().fadeToggle({
                             duration: duration,
                             easing: vm.effect,
-                            before: doSomething,
-                            step: doSomething,
-                            after: doSomething
+                            step: doSomething
                         })
                     }
                 })
                 vmodel.$watch(&quot;fps&quot;, function(n) {
                     vmodel.fps = n
                     unit = 1000 / n
+                    time = unit
                     avalon.fn.animate.fps = n
                 })
                 avalon.scan()
             })
         &lt;/script&gt;
+        
     &lt;/body&gt;
 &lt;/html&gt;
 </pre>

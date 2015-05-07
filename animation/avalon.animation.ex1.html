@@ -194,7 +194,6 @@
         &lt;div class=&quot;canvas&quot; id=&quot;canvas&quot;&gt;
             
         &lt;/div&gt;
-        
         &lt;script&gt;
             var canvas = document.getElementById(&quot;canvas&quot;),
                 runner = document.getElementById(&quot;runner&quot;),
@@ -211,7 +210,7 @@
                 div.style.top = y
                 canvas.appendChild(div)
             }
-            function doSomething() {
+            function doSomething(args) {
                 var x = time / duration * len,
                     frame = args[0]
                 addPoint( x + &quot;px&quot;, (len - parseInt(runner.style.width)) + &quot;px&quot;)
@@ -263,6 +262,7 @@
                 avalon.scan()
             })
         &lt;/script&gt;
+        
     &lt;/body&gt;
 &lt;/html&gt;
 </pre>

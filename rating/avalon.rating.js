@@ -20,6 +20,8 @@ define(["../avalon.getModel", 'text!./avalon.rating.html', 'css!../chameleon/oni
         var vmodel = avalon.define(data.ratingId, function(vm) {
 
             avalon.mix(vm, options);
+            vm.rootElement = ""
+            vm.widgetElement = element
 
             vm.value = vm.floatValue = element.value;
 
@@ -55,6 +57,7 @@ define(["../avalon.getModel", 'text!./avalon.rating.html', 'css!../chameleon/oni
 
             vm.$init = function() {
                 rating = avalon.parseHTML(ratingTemplate).firstChild;
+                vm.rootElement = rating
                 if (canEdit(element)) {
                     var parentNode = element.parentNode;
                     parentNode.insertBefore(rating, element);

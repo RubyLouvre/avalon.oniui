@@ -34,6 +34,7 @@ define(["avalon"], function(avalon) {
             avalon.mix(vm, options)
             vm.$skipArray = ["fileInput", "widgetElement"]
             vm.widgetElement = element
+            vm.rootElement = element
             vm.$init = function() {
                 var _vmodels = [vmodel].concat(vmodels)
                 fileChangeCallback = avalon.bind(file, "change", function() {

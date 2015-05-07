@@ -3,6 +3,8 @@ mmRouter
 
 avalon的三柱臣之一（ 路由，动画，AJAX）
 
+[详细文档](http://ued.qunar.com/oniui/mmRouter/avalon.mmRouter.doc.html)
+
 如何从mmState迁移到new-mmState
 -----------------------------------
 1、新版new-mmState特性

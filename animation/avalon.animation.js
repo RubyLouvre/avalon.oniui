@@ -160,6 +160,7 @@ define(["avalon"], function() {
      */
     var timeline = avalon.timeline = []
     function insertFrame(frame) { //插入关键帧
+        var fps = frame.fps || effect.fps
         if (frame.queue) { //如果插入到已有的某一帧的子列队
             var gotoQueue = 1
             for (var i = timeline.length, el; el = timeline[--i]; ) {
@@ -176,7 +177,7 @@ define(["avalon"], function() {
             timeline.push(frame)
         }
         if (insertFrame.id === null) { //时间轴只要存在帧就会执行定时器
-            insertFrame.id = setInterval(deleteFrame, 1000 / effect.fps)
+            insertFrame.id = setInterval(deleteFrame, 1000 / fps)
         }
     }
 
@@ -201,13 +202,14 @@ define(["avalon"], function() {
         //并在动画结束后，从子列队选取下一个动画实例取替自身
         var now = +new Date
         if (!frame.startTime) { //第一帧
-            frame.fire("before")//动画开始前做些预操作
+            frame.fire("before", frame)//动画开始前做些预操作
             var elem = frame.elem
             if (avalon.css(elem, "display") === "none" && !elem.dataShow) {
                 frame.build()//如果是一开始就隐藏,那就必须让它显示出来
             }
             frame.createTweens()
             frame.build()//如果是先hide再show,那么执行createTweens后再执行build则更为平滑
+            frame.fire("afterBefore", frame)//为了修复fadeToggle的bug
             frame.startTime = now
         } else { //中间自动生成的补间
             var per = (now - frame.startTime) / frame.duration
@@ -216,11 +218,11 @@ define(["avalon"], function() {
                 for (var i = 0, tween; tween = frame.tweens[i++]; ) {
                     tween.run(per, end)
                 }
-                frame.fire("step") //每执行一帧调用的回调
+                frame.fire("step", frame) //每执行一帧调用的回调
             }
             if (end) { //最后一帧
-                frame.fire("after") //动画结束后执行的一些收尾工作
-                frame.fire("complete") //执行用户回调
+                frame.fire("after", frame) //动画结束后执行的一些收尾工作
+                frame.fire("complete", frame) //执行用户回调
                 if (frame.revert) { //如果设置了倒带
                     this.revertTweens()
                     delete this.startTime
@@ -310,6 +312,7 @@ define(["avalon"], function() {
         this.orig = []
         this.props = {}
         this.dataShow = {}
+        var frame = this
     }
     var root = document.documentElement
 
@@ -340,7 +343,8 @@ define(["avalon"], function() {
             //show 开始时计算其width1 height1 保存原来的width height display改为inline-block或block overflow处理 赋值（width1，height1）
             //hide 保存原来的width height 赋值为(0,0) overflow处理 结束时display改为none;
             //toggle 开始时判定其是否隐藏，使用再决定使用何种策略
-            if (elem.nodeType === 1 && ("height" in props || "width" in props)) {
+            // fadeToggle的show，也需要把元素展示了
+            if (elem.nodeType === 1 && ("height" in props || "width" in props || frame.showState === "show")) {
                 //如果是动画则必须将它显示出来
                 frame.overflow = [style.overflow, style.overflowX, style.overflowY]
                 var display = style.display || avalon.css(elem, "display")
@@ -380,9 +384,9 @@ define(["avalon"], function() {
                     frame.overflow = null
                 })
             }
-
             frame.bind("after", function() {
                 if (frame.showState === "hide") {
+                    elem.setAttribute("olddisplay", avalon.css(elem, "display"))
                     this.style.display = "none"
                     this.dataShow = {}
                     for (var i in frame.orig) { //还原为初始状态
@@ -421,7 +425,7 @@ define(["avalon"], function() {
         var tween = new Tween(name, frame)
         var from = dataShow[name] || tween.cur() //取得起始值
         var to
-        if (/color$/.test(name)) {
+        if (/color$/i.test(name)) {
             //用于分解属性包中的样式或属性,变成可以计算的因子
             parts = [color2array(from), color2array(value)]
         } else {
@@ -559,7 +563,7 @@ define(["avalon"], function() {
                 return !result || result === "auto" ? 0 : result
             },
             set: function(tween) {
-                avalon.css(tween.elem, tween.prop, tween.now + tween.unit)
+                avalon.css(tween.elem, tween.prop, tween.now + (tween.unit || ""))
             }
         }
     }
@@ -585,7 +589,7 @@ define(["avalon"], function() {
         pause: function() {
             var cur = this[0]
             for (var i = 0, frame; frame = timeline[i]; i++) {
-                if (frame.elme === cur) {
+                if (frame.elem === cur) {
                     frame.paused = new Date - 0
                 }
             }
@@ -595,7 +599,7 @@ define(["avalon"], function() {
             var now = new Date
             var elem = this[0]
             for (var i = 0, fx; fx = timeline[i]; i++) {
-                if (fx.elem === elem) {
+                if (fx.elem === elem && fx.paused) {
                     fx.startTime += (now - fx.paused)
                     delete fx.paused
                 }

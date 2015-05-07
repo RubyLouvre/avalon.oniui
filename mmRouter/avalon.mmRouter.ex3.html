@@ -50,7 +50,6 @@
                 float: left;
                 display: inline;
                 background: #fff;
-                transition: margin-left .5s;
             }
         </style>
         <script >
@@ -63,7 +62,7 @@
                     arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
                 })
             }
-            require(["ready!", "mmRouter/mmState", "loading/avalon.loading", "mmRequest/mmRequest"], function() {
+            require(["ready!", "mmRouter/mmState", "loading/avalon.loading", "mmRequest/mmRequest", "animation/avalon.animation"], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -282,13 +281,12 @@
                         // avalon.router.navigate("/", {replace: true})
                     },
                     onViewEnter: function(newNode, oldNode) {
-                        mmState.oldNodes.push(oldNode)
-                        setTimeout(function() {
-                            oldNode.style.marginLeft = "-50%"
-                            setTimeout(function() {
-                                oldNode.parentNode && oldNode.parentNode.removeChild(oldNode)
-                            }, 1000)
-                        }, 1)
+                        avalon(oldNode).animate({
+                            marginLeft: "-100%"
+                        }, 500, function() {
+                            oldNode.parentNode && oldNode.parentNode.removeChild(oldNode)
+                        })
+                        
                     }
                 })
                 //启动路由
@@ -381,7 +379,6 @@
                 float: left;
                 display: inline;
                 background: #fff;
-                transition: margin-left .5s;
             }
         &lt;/style&gt;
         &lt;script &gt;
@@ -394,7 +391,7 @@
                     arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
                 })
             }
-            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;, &quot;mmRequest/mmRequest&quot;], function() {
+            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;, &quot;mmRequest/mmRequest&quot;, &quot;animation/avalon.animation&quot;], function() {
 
                 //一个顶层VM
                 avalon.define({
@@ -613,13 +610,12 @@
                         // avalon.router.navigate(&quot;/&quot;, {replace: true})
                     },
                     onViewEnter: function(newNode, oldNode) {
-                        mmState.oldNodes.push(oldNode)
-                        setTimeout(function() {
-                            oldNode.style.marginLeft = &quot;-50%&quot;
-                            setTimeout(function() {
-                                oldNode.parentNode &amp;&amp; oldNode.parentNode.removeChild(oldNode)
-                            }, 1000)
-                        }, 1)
+                        avalon(oldNode).animate({
+                            marginLeft: &quot;-100%&quot;
+                        }, 500, function() {
+                            oldNode.parentNode &amp;&amp; oldNode.parentNode.removeChild(oldNode)
+                        })
+                        
                     }
                 })
                 //启动路由

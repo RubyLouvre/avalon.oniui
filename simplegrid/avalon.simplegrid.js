@@ -99,9 +99,10 @@ define(["avalon",
         options.loading = avalon.type(options.loading) === "object" ? avalon.mix(options.loading, loadingOpts) : loadingOpts
         var vmodel = avalon.define(data.simplegridId, function(vm) {
             avalon.mix(vm, options)
-            vm.$skipArray = ["_init", "widgetElement", "data", "addColumnCallbacks", "scrollPanel", "topTable", "bottomTable", "startIndex", "pager", "endIndex", "template", "loading", "loadingVModel"]
+            vm.$skipArray = ["_init", "widgetElement", "data", "addColumnCallbacks", "scrollPanel", "topTable", "bottomTable", "startIndex", "pager", "endIndex", "template", "loading", "loadingVModel", "rootElement"]
             vm.loadingVModel = null
             vm.widgetElement = element
+            vm.rootElement = ""
             vm.gridWidth = "100%"
             vm.startIndex = 0
             vm.endIndex = options.showRows
@@ -116,7 +117,7 @@ define(["avalon",
                 avalon.ready(function() {
                     element.innerHTML = options.template.replace(/MS_OPTION_ID/g, vmodel.$id)
                     _vmodels = [vmodel].concat(vmodels)
-
+                    vm.rootElement = element.getElementsByTagName("*")[0]
                     avalon.scan(element, _vmodels)
                     if (typeof options.onInit === "function") {
                         options.onInit.call(element, vmodel, options, vmodels)

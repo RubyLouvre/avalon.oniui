@@ -46,9 +46,9 @@ define(["avalon"], function ($$) {
 		var chunkIndex = 0;
 		while (offset < this.size) {
 			var blob = new blobConstructor(offset, Math.min(chunkSize, this.size - offset), chunkIndex, this);
-			blob.attachEvent("blobProgressed", this.onBlobProgressed, this);
-			blob.attachEvent("blobUploaded", this.onBlobUploaded, this);
-			blob.attachEvent("blobErrored", this.onBlobErrored, this);
+			blob.addEventListener("blobProgressed", this.onBlobProgressed, this);
+			blob.addEventListener("blobUploaded", this.onBlobUploaded, this);
+			blob.addEventListener("blobErrored", this.onBlobErrored, this);
 			offset+=chunkSize;
 			this.blobs.push(blob);
 			chunkIndex++;
@@ -63,7 +63,7 @@ define(["avalon"], function ($$) {
 		var beforePercentage = this.uploadedPercentage;
 		this.uploadedPercentage = Math.round(percentage*100) / 100;
 		if (silent !== true) {
-			this.fireEvent("fileProgressed", this, beforePercentage);
+			this.dispatchEvent("fileProgressed", this, beforePercentage);
 		}
 	}
 
@@ -101,7 +101,7 @@ define(["avalon"], function ($$) {
 		var beforeStatus = this.status;
 		this.status = status;
 		if (silent !== true) {
-			this.fireEvent("fileStatusChanged", this, beforeStatus);
+			this.dispatchEvent("fileStatusChanged", this, beforeStatus);
 		}
 	}
 

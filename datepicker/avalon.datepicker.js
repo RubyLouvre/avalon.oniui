@@ -11,6 +11,7 @@ define(["../avalon.getModel",
         "text!./avalon.datepicker.html", 
         "../dropdown/avalon.dropdown.js",
         "../slider/avalon.slider.js",
+        "css!../chameleon/oniui-common.css",
         "css!./avalon.datepicker.css"], function(avalon, holidayDate, sourceHTML) {
     var calendarTemplate = sourceHTML,
         HOLIDAYS,
@@ -76,7 +77,7 @@ define(["../avalon.getModel",
                 regional: widget.defaultRegional
             })
             vm.$skipArray = ["container", "showDatepickerAlways", "timer", "sliderMinuteOpts",
-                "sliderHourOpts", "template", "widgetElement", "dayNames", "allowBlank",
+                "sliderHourOpts", "template", "widgetElement", "rootElement", "dayNames", "allowBlank",
                 "months", "years", "numberOfMonths",
                 "showOtherMonths", "watermark", "weekNames",
                 "stepMonths", "changeMonthAndYear", "startDay", "mobileMonthAndYear",
@@ -86,6 +87,7 @@ define(["../avalon.getModel",
             vm.weekNames = []
             vm.tip = vm.tip || ""
             vm.widgetElement = element
+            vm.rootElement = {}
             vm.data = []
             vm.prevMonth = -1 //控制prev class是否禁用
             vm.nextMonth = -1 //控制next class是否禁用
@@ -226,13 +228,13 @@ define(["../avalon.getModel",
                     vmodel._datepickerToggle = false
                 }
             }
-            vm._getNow = function() {
-                var date = new Date(),
-                    time = date.toTimeString(),
+            vm.getInitTime = function(timeDate) {
+                var date = formatDate(timeDate),
+                    time = timeDate.toTimeString(),
                     now = time.substr(0, time.lastIndexOf(":"));
-                vmodel.hour = date.getHours()
-                vmodel.minute = date.getMinutes()
-                return now
+                vmodel.hour = timeDate.getHours()
+                vmodel.minute = timeDate.getMinutes()
+                return date + ' ' + now
             }
             vm._dateCellRender = function(outerIndex, index, rowIndex, date) {
                 if (vmodel.dateCellRender) {
@@ -407,7 +409,7 @@ define(["../avalon.getModel",
                     elementPar.insertBefore(div,element)
                     div.appendChild(element)
                     if (vmodel.showTip) {
-                        var tip = avalon.parseHTML("<div class='oni-datepicker-tip'>{{tip}}<i class='oni-icon oni-icon-calendar-o'>&#xf133;</i></div>")
+                        var tip = avalon.parseHTML("<div class='oni-datepicker-tip'>{{tip}}<i class='oni-icon oni-icon-calendar-o'>&#xf088;</i></div>")
                         div.appendChild(tip)
                     } else {
                         element.style.paddingRight = "0px"
@@ -416,8 +418,9 @@ define(["../avalon.getModel",
                 }
                 if (vmodel.timer) {
                     vmodel.width = 100
-                    if (_initValue && validateDate(_initValue)) {
-                        _initValue = _initValue + " " + vmodel._getNow()
+                    var time = validateTime(_initValue)
+                    if (_initValue && time) {
+                        _initValue = vmodel.getInitTime(time)
                     }
                 }
                 element.value = _initValue
@@ -438,6 +441,7 @@ define(["../avalon.getModel",
                 } else {
                     avalon.scan(div, [vmodel])
                 }
+                vm.rootElement = div
                 avalon.scan(calendar, [vmodel].concat(vmodels))
                 setTimeout(function() {
                     calendarDays(vmodel.month, vmodel.year)
@@ -1006,6 +1010,23 @@ define(["../avalon.getModel",
         function validateDate(date) {
             if (typeof date == "string") {
                 return parseDate(date)
+            } else {
+                return date;
+            }
+        }
+        // 检验time
+        function validateTime(date) {
+            if (typeof date == "string") {
+                var theDate = parseDate(date),
+                    timeReg = /\s[0-2]?[0-9]:[0-5]?[0-9]/,
+                    _time = date.match(timeReg)
+                if (theDate && _time && _time.length) {
+                    var time = _time[0].split(':'),
+                        hour = +time[0],
+                        minute = +time[1]
+                    theDate = new Date(theDate.getFullYear(), theDate.getMonth(), theDate.getDate(), hour, minute)
+                }
+                return theDate
             } else {
                 return date;
             }

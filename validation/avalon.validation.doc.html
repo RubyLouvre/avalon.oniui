@@ -266,7 +266,7 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                 <h2>错误提示信息的添加</h2>
                 <p>比如说&lt;input ms-duplex-alpha="aaa"/&lt;要求用户输出的都是字母，如果输入其他类型的内容， 它就会报错
                     <b
-                    style="color:red">必须是字母</p>。为什么呢，因为alpha为一个内置拦截器， 定义在avalon.duplexHooks上，结构为</p>
+                    style="color:red">必须是字母</b>。为什么呢，因为alpha为一个内置拦截器， 定义在avalon.duplexHooks上，结构为</p>
                 <pre class="brush:javascript;gutter:false;toolbar:false;"> alpha: {
      message: '必须是字母',
      get: function(value, data, next) {
@@ -301,7 +301,7 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                     <a href="avalon.validation.ex2.html">自带验证规则qq,id,email,url,date,passport,pattern</a>
                 </li>
                 <li>
-                    <a href="avalon.validation.ex3.html">自带验证规则maxlength,minlength,lt,gt,eq,equal</a>
+                    <a href="avalon.validation.ex3.html">自带验证规则maxlength,minlength,lt,gt,eq,repeat</a>
                 </li>
                 <li>
                     <a href="avalon.validation.ex4.html">自带验证规则contains,contain</a>

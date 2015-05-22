@@ -46,10 +46,11 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
         var vmodel = avalon.define(data.noticeId, function(vm) {
             avalon.mix(vm, options);
             vm.$closeTimer = 0; // 定时器引用
-            vm.$skipArray = ["template", "widgetElement", "_isAffix", "container", "elementHeight"];
+            vm.$skipArray = ["template", "widgetElement", "_isAffix", "container", "elementHeight", "rootElement"];
             vm.elementHeight = 0
             vm.content = vm.content || elementInnerHTML;
             vm._isAffix = vm.isPlace && vm.isAffix;
+            vm.rootElement = {};
             vm.widgetElement = element;
             // type的改变影响notice显示类的改变
             vm.typeClass = vm[vm.type + "Class"];
@@ -120,6 +121,7 @@ define(["../avalon.getModel", "text!./avalon.notice.html", "css!../chameleon/oni
                     container.appendChild(AffixPlaceholder);
                     avalon.scan(AffixPlaceholder, [vmodel]);
                 }
+                vm.rootElement = templateView
                 avalon.scan(templateView, [vmodel].concat(vmodels))
                 if (typeof options.onInit === 'function') {
                     //vmodels是不包括vmodel的

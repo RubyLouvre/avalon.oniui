@@ -9,13 +9,13 @@ define(["avalon",
     "text!./avalon.pager.html",
     "css!../chameleon/oniui-common.css",
     "css!./avalon.pager.css"
-], function(avalon, template) {
+], function (avalon, template) {
 
-    var widget = avalon.ui.pager = function(element, data, vmodels) {
+    var widget = avalon.ui.pager = function (element, data, vmodels) {
         var options = data.pagerOptions
         var pageOptions = options.options
         if (Array.isArray(pageOptions)) {
-            options.options = pageOptions.map(function(el) {
+            options.options = pageOptions.map(function (el) {
                 var obj = {}
                 switch (typeof el) {
                     case "number":
@@ -36,18 +36,20 @@ define(["avalon",
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options)
         options._currentPage = options.currentPage
-        var vmodel = avalon.define(data.pagerId, function(vm) {
+        var vmodel = avalon.define(data.pagerId, function (vm) {
             avalon.mix(vm, options, {
                 regional: widget.defaultRegional
             })
             vm.widgetElement = element
-            vm.$skipArray = ["showPages", "widgetElement", "template", "ellipseText", "alwaysShowPrev", "alwaysShowNext"]
+            vm.rootElement = {}
+            vm.$skipArray = ["showPages", "rootElement", "widgetElement", "template", "ellipseText", "alwaysShowPrev", "alwaysShowNext"]
             //这些属性不被监控
-            vm.$init = function(continueScan) {
+            vm.$init = function (continueScan) {
                 var pageHTML = options.template
                 element.style.display = "none"
-                setTimeout(function() {
+                setTimeout(function () {
                     element.innerHTML = pageHTML
+                    vm.rootElement = element.getElementsByTagName("*")[0]
                     element.style.display = "block"
                     if (continueScan) {
                         continueScan()
@@ -60,12 +62,13 @@ define(["avalon",
                     }
                 }, 100)
             }
-            vm.$remove = function() {
+            vm.$remove = function () {
                 element.innerHTML = element.textContent = ""
             }
-            vm.jumpPage = function(event, page) {
+            vm.jumpPage = function (event, page) {
                 event.preventDefault()
-                if (page !== vm.currentPage) {
+                var enabled = this.className.indexOf("state-disabled") === -1
+                if (enabled && page !== vm.currentPage) {
                     switch (page) {
                         case "first":
                             vm.currentPage = 1
@@ -89,36 +92,34 @@ define(["avalon",
                             vm.currentPage = page
                             break
                     }
-                    if (this.className.indexOf("state-disabled") === -1) {
-                        vm.onJump.call(element, event, vm)
-                        efficientChangePages(vm.pages, getPages(vm))
-                    }
+                    vm.onJump.call(element, event, vm)
+                    efficientChangePages(vm.pages, getPages(vm))
                 }
             }
-            vm.$watch("totalItems", function() {
+            vm.$watch("totalItems", function () {
                 efficientChangePages(vm.pages, getPages(vm))
             })
-            vm.$watch("perPages", function(a) {
+            vm.$watch("perPages", function (a) {
                 vm.currentPage = 1
                 efficientChangePages(vm.pages, getPages(vm))
             })
-            vm.$watch("currentPage", function(a) {
+            vm.$watch("currentPage", function (a) {
                 vmodel._currentPage = a
                 efficientChangePages(vm.pages, getPages(vm))
             })
-            vm.isShowPrev = function() {
+            vm.isShowPrev = function () {
                 var a = vm.alwaysShowPrev;
                 var b = vm.firstPage
                 return a || b !== 1
             }
-            vm.isShowNext = function() {
+            vm.isShowNext = function () {
                 var a = vm.alwaysShowNext
                 var b = vm.lastPage
                 var c = vm.totalPages
                 return a || b !== c
             }
 
-            vm.changeCurrentPage = function(e, value) {
+            vm.changeCurrentPage = function (e, value) {
                 if (e.type === "keyup") {
                     value = this.value
                     if (e.keyCode !== 13)
@@ -138,15 +139,15 @@ define(["avalon",
             vm.getPages = getPages
 
             //设置语言包
-            vm.setRegional = function(regional) {
+            vm.setRegional = function (regional) {
                 vmodel.regional = regional
             }
-            vm._getTotalPages = function(totalPages) {
+            vm._getTotalPages = function (totalPages) {
                 //return {{regional.totalText}}{{totalPages}}{{regional.pagesText}}，{{regional.toText}}{{regional.numberText}}
                 var regional = vmodel.regional,
-                    html = [regional.totalText, totalPages]
+                        html = [regional.totalText, totalPages]
 
-                if(totalPages > 1) {
+                if (totalPages > 1) {
                     html.push(regional.pagesText)
                 } else {
                     html.push(regional.pageText)
@@ -164,7 +165,7 @@ define(["avalon",
              * @param {Number} totalPages 最大页码
              * @returns {String}
              */
-            vm.getTitle = function(a, currentPage, totalPages) {
+            vm.getTitle = function (a, currentPage, totalPages) {
 
                 var regional = vmodel.regional
 
@@ -217,10 +218,10 @@ define(["avalon",
                 el: obj[i].el
             })
         }
-        scripts.sort(function(a, b) {
+        scripts.sort(function (a, b) {
             return a.el - b.el
         })
-        scripts.forEach(function(el, index) {
+        scripts.forEach(function (el, index) {
             el.index = index
         })
         //添加添加
@@ -286,7 +287,7 @@ define(["avalon",
          * @param {Object} opts
          * @returns {String}
          */
-        getTemplate: function(tmpl, opts) {
+        getTemplate: function (tmpl, opts) {
             return tmpl
         },
         options: [], // @config {Array}数字数组或字符串数组或对象数组,但都转换为对象数组,每个对象都应包含text,value两个属性, 用于决定每页有多少页(看avalon.pager.ex3.html) 
@@ -295,7 +296,7 @@ define(["avalon",
          * @param {Event} e
          * @param {Number} page  当前页码
          */
-        onJump: function(e, page) {
+        onJump: function (e, page) {
         }
     }
 

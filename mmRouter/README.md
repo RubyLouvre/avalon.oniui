@@ -3,6 +3,8 @@ mmRouter
 
 avalon的三柱臣之一（ 路由，动画，AJAX）
 
+[详细文档](http://ued.qunar.com/oniui/mmRouter/avalon.mmRouter.doc.html)
+
 如何从mmState迁移到new-mmState
 -----------------------------------
 1、新版new-mmState特性
@@ -13,6 +15,7 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 * 给state新增配置ignoreChange，当mmState.currentState == state时，更新视图的时候调用该函数，return true mmRouter则不会去重写视图和scan，请确保该视图内用到的数据没有放到avalon，用以特定情况下提升性能
 * query只参与mmState.currentState是否需要执行onEnter && 刷新视图的逻辑判定，但是在所有state内都是可以通过this.query或者this.getQuery获取
 * 弱化state & 全局接口，接口细分，给view对象新增controller系列属性，用以解决模块化开发+工程化
+* 新增dom cache功能，进一步提升性能
 
 2、如何迁移
 * 引用新的script文件，默认已经切换到新版

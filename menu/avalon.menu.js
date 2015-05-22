@@ -73,9 +73,10 @@ define(["avalon", "text!./avalon.menu.html", "css!./avalon.menu.css", "css!../ch
         var vmodel = avalon.define(data.menuId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
+            vm.rootElement = element
             vm._oldActive = options.active
             vm._subMenus = {} // 维护一个子menu列表，用对象，更好读写
-            vm.$skipArray = ["widgetElement", "template", "_subMenus", "_oldActive"]
+            vm.$skipArray = ["widgetElement", "template", "_subMenus", "_oldActive", "rootElement"]
 
             var inited, outVmodel = vmodels && vmodels[1], clickKey = "fromMenu" + uid
             vm.$init = function(continueScan) {

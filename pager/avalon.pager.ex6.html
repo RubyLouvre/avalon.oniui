@@ -20,8 +20,8 @@
                         onInit: function(p) {
                             pager = p
                         },
-                        onJump: function(a) {
-                            avalon.log(a)
+                        onJump: function(e, data) {
+                           location.href = "#page=" + data.currentPage
                         }
                     }
                     vm.$skipArray = ["pager"]
@@ -37,7 +37,7 @@
         </script>
     </head>
     <body ms-controller="test">
-        <h1>总是显示上一页与下一页按钮</h1>
+        <h1>总是显示上一页与下一页按钮(与例2对照看)</h1>
         <div ms-widget="pager"></div>
         <pre class="brush:html;gutter:false;toolbar:false">
 &lt;!DOCTYPE html&gt;

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>animation组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <style type="text/css">
+            .canvas {
+                border: 3px solid #000;
+                width: 500px;
+                height: 500px;
+                margin: 40px;
+                position: relative;
+                overflow: visible;
+            }
+            .canvas div {
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                background: red;
+            }
+            .container {
+                border: 3px solid #000;
+                height: 24px;
+                width: 500px;
+                margin: 40px;
+            }
+            .runner {
+                height: 24px;
+                background: red;
+                width: 0;
+            }
+        </style>
+    </head>
+    <body ms-controller="test">
+        <h1>算子 && fps 修改 with && backgroundColor</h1>
+        <div class="menu">
+            <label for="biz">算子：</label>
+            <select id="biz"
+                ms-duplex="effect">
+                <option 
+                        ms-repeat-effect="effects" ms-value="effect">{{effect}}</option>
+            </select>
+            <label for="fps">fps</label>
+            <input type="number" 
+                   ms-duplex="fps">
+            <input type="button" value="clear" 
+                   ms-click="clear">
+            <input type="button" value="pause" 
+                   ms-click="pause">
+            <input type="button" value="resume" 
+                   ms-click="resume">
+            <input type="button" value="run" 
+                   ms-click="run">
+        </div>
+        <div></div>
+        <div class="container">
+            <div class="runner" id="runner"></div>
+        </div>
+        <div class="canvas" id="canvas">
+            
+        </div>
+        <script>
+            var canvas = document.getElementById("canvas"),
+                runner = document.getElementById("runner"),
+                duration = 2000,
+                len = 500,
+                vmodel,
+                fps = 30,
+                unit = 1000 / fps,
+                time = 0
+
+            function addPoint(x, y) {
+                var div = document.createElement("div")
+                div.style.left = x
+                div.style.top = y
+                canvas.appendChild(div)
+            }
+            function doSomething(args) {
+                var x = time / duration * len,
+                    frame = args[0]
+                addPoint( x + "px", (len - parseInt(runner.style.width)) + "px")
+                time += unit
+            }
+            require(["animation/avalon.animation"], function() {
+                var effects = []
+                for(var effect in avalon.easing) {
+                    effects.push(effect)
+                }
+                avalon.fn.animate.fps = fps
+                vmodel = avalon.define("test", function(vm) {
+                    vm.effects = effects
+                    vm.effect = effects[0]
+                    vm.fps = avalon.fn.animate.fps
+                    vm.clear = function() {
+                        canvas.innerHTML = " "
+                    } 
+                    vm.stop = function() {
+                        runner.style.width = "0"
+                        time = 0
+                        return avalon(runner).stop()
+                    }
+                    vm.pause = function() {
+                        avalon(runner).pause()
+                    }
+                    vm.resume = function() {
+                        avalon(runner).resume()
+                    }
+                    vm.run = function() {
+                        runner.style.backgroundColor = "#ffffff"
+                        vm.stop().delay(1000).animate({
+                            width: len,
+                            backgroundColor: "blue"
+                        }, {
+                            duration: duration,
+                            easing: vm.effect,
+                            before: doSomething,
+                            step: doSomething,
+                            after: doSomething
+                        })
+                    }
+                })
+                vmodel.$watch("fps", function(n) {
+                    vmodel.fps = n
+                    unit = 1000 / n
+                    avalon.fn.animate.fps = n
+                })
+                avalon.scan()
+            })
+        </script>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;animation组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;style type=&quot;text/css&quot;&gt;
+            .canvas {
+                border: 3px solid #000;
+                width: 500px;
+                height: 500px;
+                margin: 40px;
+                position: relative;
+                overflow: visible;
+            }
+            .canvas div {
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                background: red;
+            }
+            .container {
+                border: 3px solid #000;
+                height: 24px;
+                width: 500px;
+                margin: 40px;
+            }
+            .runner {
+                height: 24px;
+                background: red;
+                width: 0;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;算子 &amp;&amp; fps 修改 with &amp;&amp; backgroundColor&lt;/h1&gt;
+        &lt;div class=&quot;menu&quot;&gt;
+            &lt;label for=&quot;biz&quot;&gt;算子：&lt;/label&gt;
+            &lt;select id=&quot;biz&quot;
+                ms-duplex=&quot;effect&quot;&gt;
+                &lt;option 
+                        ms-repeat-effect=&quot;effects&quot; ms-value=&quot;effect&quot;&gt;{{effect}}&lt;/option&gt;
+            &lt;/select&gt;
+            &lt;label for=&quot;fps&quot;&gt;fps&lt;/label&gt;
+            &lt;input type=&quot;number&quot; 
+                   ms-duplex=&quot;fps&quot;&gt;
+            &lt;input type=&quot;button&quot; value=&quot;clear&quot; 
+                   ms-click=&quot;clear&quot;&gt;
+            &lt;input type=&quot;button&quot; value=&quot;pause&quot; 
+                   ms-click=&quot;pause&quot;&gt;
+            &lt;input type=&quot;button&quot; value=&quot;resume&quot; 
+                   ms-click=&quot;resume&quot;&gt;
+            &lt;input type=&quot;button&quot; value=&quot;run&quot; 
+                   ms-click=&quot;run&quot;&gt;
+        &lt;/div&gt;
+        &lt;div&gt;&lt;/div&gt;
+        &lt;div class=&quot;container&quot;&gt;
+            &lt;div class=&quot;runner&quot; id=&quot;runner&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;canvas&quot; id=&quot;canvas&quot;&gt;
+            
+        &lt;/div&gt;
+        &lt;script&gt;
+            var canvas = document.getElementById(&quot;canvas&quot;),
+                runner = document.getElementById(&quot;runner&quot;),
+                duration = 2000,
+                len = 500,
+                vmodel,
+                fps = 30,
+                unit = 1000 / fps,
+                time = 0
+
+            function addPoint(x, y) {
+                var div = document.createElement(&quot;div&quot;)
+                div.style.left = x
+                div.style.top = y
+                canvas.appendChild(div)
+            }
+            function doSomething(args) {
+                var x = time / duration * len,
+                    frame = args[0]
+                addPoint( x + &quot;px&quot;, (len - parseInt(runner.style.width)) + &quot;px&quot;)
+                time += unit
+            }
+            require([&quot;animation/avalon.animation&quot;], function() {
+                var effects = []
+                for(var effect in avalon.easing) {
+                    effects.push(effect)
+                }
+                avalon.fn.animate.fps = fps
+                vmodel = avalon.define(&quot;test&quot;, function(vm) {
+                    vm.effects = effects
+                    vm.effect = effects[0]
+                    vm.fps = avalon.fn.animate.fps
+                    vm.clear = function() {
+                        canvas.innerHTML = &quot; &quot;
+                    } 
+                    vm.stop = function() {
+                        runner.style.width = &quot;0&quot;
+                        time = 0
+                        return avalon(runner).stop()
+                    }
+                    vm.pause = function() {
+                        avalon(runner).pause()
+                    }
+                    vm.resume = function() {
+                        avalon(runner).resume()
+                    }
+                    vm.run = function() {
+                        runner.style.backgroundColor = &quot;#ffffff&quot;
+                        vm.stop().delay(1000).animate({
+                            width: len,
+                            backgroundColor: &quot;blue&quot;
+                        }, {
+                            duration: duration,
+                            easing: vm.effect,
+                            before: doSomething,
+                            step: doSomething,
+                            after: doSomething
+                        })
+                    }
+                })
+                vmodel.$watch(&quot;fps&quot;, function(n) {
+                    vmodel.fps = n
+                    unit = 1000 / n
+                    avalon.fn.animate.fps = n
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

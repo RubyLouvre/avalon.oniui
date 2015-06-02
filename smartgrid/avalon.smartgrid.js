@@ -823,6 +823,8 @@ define(["avalon",
             if (column.sortable) {
                 column.sortTrend = 'ndb';
             }
+            // 防止某些情形下format被覆盖
+            if(avalon.isFunction(format)) return
             if (format && !options.htmlHelper[format]) {
                 options.htmlHelper[format] = function (vmId, field, index, cellValue, rowData) {
                     avalon.log('\u65B9\u6CD5' + format + '\u672A\u5B9A\u4E49');

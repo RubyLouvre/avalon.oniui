@@ -840,6 +840,7 @@ define("mmState", ["../mmPromise/mmPromise", "./mmRouter"], function() {
     avalon.controller = function() {
         var first = arguments[0],
             second = arguments[1]
+        if(first && (first instanceof _controller)) return first
         var $ctrl = _controller()
         if(avalon.isFunction(first)) {
             first($ctrl)

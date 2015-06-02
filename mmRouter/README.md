@@ -3,6 +3,8 @@ mmRouter
 
 avalon的三柱臣之一（ 路由，动画，AJAX）
 
+[详细文档](http://ued.qunar.com/oniui/mmRouter/avalon.mmRouter.doc.html)
+
 如何从mmState迁移到new-mmState
 -----------------------------------
 1、新版new-mmState特性
@@ -116,6 +118,17 @@ avalon.scan()
     <li><a href="#!/fff?a=1&nn=4&dfg=676">fff</a></li>
 </ul>
 ```
+mmHistory、mmRouter与mmHistory的关系
+----------------------------------------
+
+mmHistroy是负责监听URL地址栏的变化及用户是否已经点击了前进后退按钮
+
+mmRouter是负责定义路由规则与对应的回调， 当mmHistory监听到URL变化或历史变化时就会匹配路由规则，触发回调
+
+mmState是基于mmRouter的增强，之前mmRouter的回调是用户自己处理视图的切换。现在mmState是将当前页面分得更切， 一个页面分N个子页面，子页面又可以有子页面……每个页面相当于一种状态。mmState可以将我们将这些页面的异步加载或数据的异步加载或者业务逻辑的编写,对应vmodel的定义完美的组织起来，并且提供了各种的回调，方便你在某个页面进场前显示loading，进场处淡出loading，两个页面切换间使用动画效果
+
+
+
 mmRouter与mmHistory的API列表
 ----------------------------------------
 * `avalon.history.start(opts)`， 开始监听URL变化，opts：

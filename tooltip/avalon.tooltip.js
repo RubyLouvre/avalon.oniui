@@ -203,6 +203,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                             collision: vmodel.collision, 
                             within: (avalon.isFunction(container) ? container() : container) || document.body
                         })
+                        avalon(tooltipElem).removeClass("oni-tooltip-hidden")
                         var tipPos = tipElem.offset(),
                             elemPos = atEle.offset()
                         // position组件自动调整的时候调整箭头上下朝向
@@ -396,7 +397,6 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                     tooltipElem = tooltipELementMaker(vmodel.container)
                     avalon.scan(tooltipElem, [vmodel].concat(vmodels))
                 }
-                avalon(tooltipElem).removeClass("oni-tooltip-hidden")
                 // 减少抖动
                 if(!vmodel.track) {
                     _init(vmodel.arrClass)

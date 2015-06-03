@@ -40,7 +40,7 @@ define(["avalon", "./kindeditor.4.1.0.js"], function(avalon, K) {
                             syncFlag = true
 
                         //使用data.changed实现对数据改变的监听
-                        data.changed = function( value, data) {
+                        data.changed = function(value, data) {
                             changed.call(this, value, data)
                             if(syncFlag) {
                                 $instance.html($element.val())
@@ -60,8 +60,6 @@ define(["avalon", "./kindeditor.4.1.0.js"], function(avalon, K) {
                                 syncFlag = false
                                 $element.val($instance.html())
                                 data.handler()
-                            } else {
-                                syncFlag = true
                             }
                         }
                     }

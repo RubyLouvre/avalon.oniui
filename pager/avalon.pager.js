@@ -294,9 +294,9 @@ define(["avalon",
         /**
          * @config {Function} 页面跳转时触发的函数,如果当前链接处于不可以点状态(oni-state-disabled),是不会触发的
          * @param {Event} e
-         * @param {Number} page  当前页码
+         * @param {Object} vm  组件对应的VM
          */
-        onJump: function (e, page) {
+        onJump: function (e, vm) {
         }
     }
 

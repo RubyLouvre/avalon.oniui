@@ -72,19 +72,20 @@
  * </p>
  */
 
-define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
+define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
     if (!avalon.duplexHooks) {
         throw new Error("你的版本少于avalon1.3.7，不支持ms-duplex2.0，请使用avalon.validation.old.js")
     }
-//==========================avalon.validation的专有逻辑========================
+    //==========================avalon.validation的专有逻辑========================
+
     function idCard(val) {
         if ((/^\d{15}$/).test(val)) {
             return true;
         } else if ((/^\d{17}[0-9xX]$/).test(val)) {
             var vs = "1,0,x,9,8,7,6,5,4,3,2".split(","),
-                    ps = "7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2".split(","),
-                    ss = val.toLowerCase().split(""),
-                    r = 0;
+                ps = "7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2".split(","),
+                ss = val.toLowerCase().split(""),
+                r = 0;
             for (var i = 0; i < 17; i++) {
                 r += ps[i] * ss[i];
             }
@@ -93,8 +94,9 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
     }
     // isCorrectDate("2015-2-21") true
     // isCorrectDate("2015-2-31") false
+
     function isCorrectDate(value) {
-        if (typeof value === "string" && value) {//是字符串但不能是空字符
+        if (typeof value === "string" && value) { //是字符串但不能是空字符
             var arr = value.split("-") //可以被-切成3份，并且第1个是4个字符
             if (arr.length === 3 && arr[0].length === 4) {
                 var year = ~~arr[0] //全部转换为非负整数
@@ -106,6 +108,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
         }
         return false
     }
+
     //  var remail = /^[a-zA-Z0-9.!#$%&amp;'*+\-\/=?\^_`{|}~\-]+@[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*$/
     var remail = /^([A-Z0-9]+[_|\_|\.]?)*[A-Z0-9]+@([A-Z0-9]+[_|\_|\.]?)*[A-Z0-9]+\.[A-Z]{2,3}$/i
     var ripv4 = /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i
@@ -120,16 +123,16 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
         ce: /^(?:0?1)(?:33|53|8[079])\d{8}$/,
         //中国大陆
         cn: /^(?:0?1)[3458]\d{9}$/
-                //中国香港
-                //   hk: /^(?:0?[1569])(?:\d{7}|\d{8}|\d{12})$/,
-                //澳门
-                // macao: /^6\d{7}$/,
-                //台湾
-                //  tw: /^(?:0?[679])(?:\d{7}|\d{8}|\d{10})$//*,
-                //韩国
-                //  kr:/^(?:0?[17])(?:\d{9}|\d{8})$/,
-                //日本
-                // jp:/^(?:0?[789])(?:\d{9}|\d{8})$/*/
+        //中国香港
+        //   hk: /^(?:0?[1569])(?:\d{7}|\d{8}|\d{12})$/,
+        //澳门
+        // macao: /^6\d{7}$/,
+        //台湾
+        //  tw: /^(?:0?[679])(?:\d{7}|\d{8}|\d{10})$//*,
+        //韩国
+        //  kr:/^(?:0?[17])(?:\d{9}|\d{8})$/,
+        //日本
+        // jp:/^(?:0?[789])(?:\d{9}|\d{8})$/*/
     }
     /*
      * http://login.sdo.com/sdo/PRes/4in1_2/js/login.js
@@ -156,7 +159,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
 
     avalon.mix(avalon.duplexHooks, {
         trim: {
-            get: function (value, data) {
+            get: function(value, data) {
                 if (data.element.type !== "password") {
                     value = String(value || "").trim()
                 }
@@ -165,28 +168,28 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
         },
         required: {
             message: '必须填写',
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(value !== "")
                 return value
             }
         },
         norequired: {
             message: '可以不写',
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(true)
                 return value
             }
         },
         "int": {
             message: "必须是整数",
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(/^\-?\d+$/.test(value))
                 return value
             }
         },
         phone: {
             message: "手机号码不合法",
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 var ok = false
                 for (var i in phoneOne) {
                     if (phoneOne[i].test(value)) {
@@ -195,96 +198,96 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
                     }
                 }
                 next(ok)
-                return  value
+                return value
             }
         },
         decimal: {
             message: '必须是小数',
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(/^\-?\d*\.?\d+$/.test(value))
                 return value
             }
         },
         alpha: {
             message: '必须是字母',
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(/^[a-z]+$/i.test(value))
                 return value
             }
         },
         alpha_numeric: {
             message: '必须为字母或数字',
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(/^[a-z0-9]+$/i.test(value))
                 return value
             }
         },
         alpha_dash: {
             message: '必须为字母或数字及下划线等特殊字符',
-            validate: function (value, data, next) {
+            validate: function(value, data, next) {
                 next(/^[a-z0-9_\-]+$/i.test(value))
                 return value
             }
         },
         chs: {
             message: '必须是中文字符',
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(/^[\u4e00-\u9fa5]+$/.test(value))
                 return value
             }
         },
         chs_numeric: {
             message: '必须是中文字符或数字及下划线等特殊字符',
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(/^[\\u4E00-\\u9FFF0-9_\-]+$/i.test(value))
                 return value
             }
         },
         qq: {
             message: "腾讯QQ号从10000开始",
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(/^[1-9]\d{4,10}$/.test(value))
                 return value
             }
         },
         id: {
             message: "身份证格式错误",
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(idCard(value))
                 return value
             }
         },
         ipv4: {
             message: "ip地址不正确",
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(ripv4.test(value))
                 return value
             }
         },
         ipv6: {
             message: "ip地址不正确",
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(ripv6.test(value))
                 return value
             }
         },
         email: {
             message: "邮件地址错误",
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(remail.test(value))
                 return value
             }
         },
         url: {
             message: "URL格式错误",
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(/^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/.test(value))
                 return value
             }
         },
         repeat: {
             message: "密码输入不一致",
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 var id = data.element.getAttribute("data-duplex-repeat") || ""
                 var other = avalon(document.getElementById(id)).val() || ""
                 next(value === other)
@@ -293,21 +296,21 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
         },
         date: {
             message: '必须符合日期格式 YYYY-MM-DD',
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(isCorrectDate(value))
                 return value
             }
         },
         passport: {
             message: '护照格式错误或过长',
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 next(/^[a-zA-Z0-9]{4,20}$/i.test(value))
                 return value
             }
         },
         minlength: {
             message: '最少输入{{min}}个字',
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 var elem = data.element
                 var a = parseInt(elem.getAttribute("minlength"), 10)
                 if (!isFinite(a)) {
@@ -320,7 +323,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
         },
         maxlength: {
             message: '最多输入{{max}}个字',
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 var elem = data.element
                 var a = parseInt(elem.getAttribute("maxlength"), 10)
                 if (!isFinite(a)) {
@@ -333,7 +336,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
         },
         gt: {
             message: '必须大于{{max}}',
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 var elem = data.element
                 var a = parseInt(elem.getAttribute("max"), 10)
                 if (!isFinite(a)) {
@@ -346,7 +349,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
         },
         lt: {
             message: '必须小于{{min}}',
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 var elem = data.element
                 var a = parseInt(elem.getAttribute("min"), 10)
                 if (!isFinite(a)) {
@@ -360,7 +363,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
         //contain
         eq: {
             message: '必须等于{{eq}}',
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 var elem = data.element
                 var a = parseInt(elem.getAttribute("data-duplex-eq"), 10)
                 var num = data.data.eq = a
@@ -370,7 +373,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
         },
         contains: {
             message: "必须包含{{array}}中的一个",
-            get: function (val, data, next) {
+            get: function(val, data, next) {
                 var vmValue = [].concat(val).map(String)
                 var domValue = (data.element.getAttribute("data-duplex-contains") || "").split(",")
                 data.data.array = domValue
@@ -388,7 +391,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
         },
         contain: {
             message: "必须包含{{array}}",
-            get: function (val, data, next) {
+            get: function(val, data, next) {
                 var vmValue = [].concat(val).map(String)
                 var domValue = (data.element.getAttribute("data-duplex-contain") || "").split(",")
                 data.data.array = domValue.join('与')
@@ -410,7 +413,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
         },
         pattern: {
             message: '必须匹配/{{pattern}}/这样的格式',
-            get: function (value, data, next) {
+            get: function(value, data, next) {
                 var elem = data.element
                 var h5pattern = elem.getAttribute("pattern")
                 var mspattern = elem.getAttribute("data-duplex-pattern")
@@ -421,41 +424,42 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
             }
         }
     })
-//<input type="number" max=x min=y step=z/> <input type="range" max=x min=y step=z/>
-//
-    function fixEvent(event) {
-        if (event.target) {
-            return event
+    //<input type="number" max=x min=y step=z/> <input type="range" max=x min=y step=z/>
+    //
+
+        function fixEvent(event) {
+            if (event.target) {
+                return event
+            }
+            var ret = {}
+            for (var i in event) {
+                ret[i] = event[i]
+            }
+            var target = ret.target = event.srcElement
+            if (event.type.indexOf("key") === 0) {
+                ret.which = event.charCode != null ? event.charCode : event.keyCode
+            } else if (/mouse|click/.test(event.type)) {
+                var doc = target.ownerDocument || document
+                var box = doc.compatMode === "BackCompat" ? doc.body : doc.documentElement
+                ret.pageX = event.clientX + (box.scrollLeft >> 0) - (box.clientLeft >> 0)
+                ret.pageY = event.clientY + (box.scrollTop >> 0) - (box.clientTop >> 0)
+                ret.wheelDeltaY = ret.wheelDelta
+                ret.wheelDeltaX = 0
+            }
+            ret.timeStamp = new Date - 0
+            ret.originalEvent = event
+            ret.preventDefault = function() { //阻止默认行为
+                event.returnValue = false
+            }
+            ret.stopPropagation = function() { //阻止事件在DOM树中的传播
+                event.cancelBubble = true
+            }
+            return ret
         }
-        var ret = {}
-        for (var i in event) {
-            ret[i] = event[i]
-        }
-        var target = ret.target = event.srcElement
-        if (event.type.indexOf("key") === 0) {
-            ret.which = event.charCode != null ? event.charCode : event.keyCode
-        } else if (/mouse|click/.test(event.type)) {
-            var doc = target.ownerDocument || document
-            var box = doc.compatMode === "BackCompat" ? doc.body : doc.documentElement
-            ret.pageX = event.clientX + (box.scrollLeft >> 0) - (box.clientLeft >> 0)
-            ret.pageY = event.clientY + (box.scrollTop >> 0) - (box.clientTop >> 0)
-            ret.wheelDeltaY = ret.wheelDelta
-            ret.wheelDeltaX = 0
-        }
-        ret.timeStamp = new Date - 0
-        ret.originalEvent = event
-        ret.preventDefault = function () { //阻止默认行为
-            event.returnValue = false
-        }
-        ret.stopPropagation = function () { //阻止事件在DOM树中的传播
-            event.cancelBubble = true
-        }
-        return ret
-    }
-    var widget = avalon.ui.validation = function (element, data, vmodels) {
+    var widget = avalon.ui.validation = function(element, data, vmodels) {
         var options = data.validationOptions
         var onSubmitCallback
-        var vmodel = avalon.define(data.validationId, function (vm) {
+        var vmodel = avalon.define(data.validationId, function(vm) {
             avalon.mix(vm, options)
             vm.$skipArray = ["widgetElement", "data", "validationHooks", "validateInKeyup", "validateAllInSubmit", "resetInBlur"]
             vm.widgetElement = element
@@ -463,11 +467,11 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
             /**
              * @interface 为元素绑定submit事件，阻止默认行为
              */
-            vm.$init = function () {
+            vm.$init = function() {
                 element.setAttribute("novalidate", "novalidate");
                 avalon.scan(element, [vmodel].concat(vmodels))
                 if (vm.validateAllInSubmit) {
-                    onSubmitCallback = avalon.bind(element, "submit", function (e) {
+                    onSubmitCallback = avalon.bind(element, "submit", function(e) {
                         e.preventDefault()
                         vm.validateAll(vm.onValidateAll)
                     })
@@ -479,7 +483,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
             /**
              * @interface 销毁组件，移除相关回调
              */
-            vm.$destory = function () {
+            vm.$destory = function() {
                 vm.data = []
                 onSubmitCallback && avalon.unbind(element, "submit", onSubmitCallback)
                 element.textContent = element.innerHTML = ""
@@ -490,22 +494,22 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
              * @param callback {Null|Function} 最后执行的回调，如果用户没传就使用vm.onValidateAll
              */
 
-            vm.validateAll = function (callback) {
+            vm.validateAll = function(callback) {
                 var fn = typeof callback === "function" ? callback : vm.onValidateAll
-                var promise = vm.data.filter(function (data) {
+                var promise = vm.data.filter(function(data) {
                     var el = data.element
                     return el && !el.disabled && vmodel.widgetElement.contains(el)
-                }).map(function (data) {
-                    return  vm.validate(data, true)
+                }).map(function(data) {
+                    return vm.validate(data, true)
                 })
-                Promise.all(promise).then(function (array) {
+                Promise.all(promise).then(function(array) {
                     var reasons = []
-                    for (var i = 0, el; el = array[i++]; ) {
+                    for (var i = 0, el; el = array[i++];) {
                         reasons = reasons.concat(el)
                     }
                     if (vm.deduplicateInValidateAll) {
                         var uniq = {}
-                        reasons = reasons.filter(function (data) {
+                        reasons = reasons.filter(function(data) {
                             var el = data.element
                             var id = el.getAttribute("data-validation-id")
                             if (!id) {
@@ -520,7 +524,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
                             }
                         })
                     }
-                    fn.call(vm.widgetElement, reasons)//这里只放置未通过验证的组件
+                    fn.call(vm.widgetElement, reasons) //这里只放置未通过验证的组件
                 })
             }
 
@@ -528,14 +532,15 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
              * @interface 重置当前表单元素
              * @param callback {Null|Function} 最后执行的回调，如果用户没传就使用vm.onResetAll
              */
-            vm.resetAll = function (callback) {
-                vm.data.filter(function (el) {
+            vm.resetAll = function(callback) {
+                vm.data.filter(function(el) {
                     return el.element
-                }).forEach(function (data) {
+                }).forEach(function(data) {
                     try {
-                        vm.onReset.call(data.element, {type: "reset"}, data)
-                    } catch (e) {
-                    }
+                        vm.onReset.call(data.element, {
+                            type: "reset"
+                        }, data)
+                    } catch (e) {}
                 })
                 var fn = typeof callback == "function" ? callback : vm.onResetAll
                 fn.call(vm.widgetElement)
@@ -546,45 +551,45 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
              * @param isValidateAll {Undefined|Boolean} 是否全部验证,是就禁止onSuccess, onError, onComplete触发
              * @param event {Undefined|Event} 方便用户判定这是由keyup,还是blur等事件触发的
              */
-            vm.validate = function (data, isValidateAll, event) {
+            vm.validate = function(data, isValidateAll, event) {
                 var value = data.valueAccessor()
                 var inwardHooks = vmodel.validationHooks
                 var globalHooks = avalon.duplexHooks
                 var promises = []
                 var elem = data.element
-                data.validateParam.replace(/\w+/g, function (name) {
+                data.validateParam.replace(/\w+/g, function(name) {
                     var hook = inwardHooks[name] || globalHooks[name]
                     if (!elem.disabled) {
                         var resolve, reject
-                        promises.push(new Promise(function (a, b) {
-                            resolve = a
-                            reject = b
-                        }))
-                        var next = function (a) {
-                            if (data.norequired && value === "") {
-                                a = true
-                            }
-                            if (a) {
-                                resolve(true)
-                            } else {
-                                var reason = {
-                                    element: elem,
-                                    data: data.data,
-                                    message: elem.getAttribute("data-duplex-" + name + "-message") || elem.getAttribute("data-duplex-message") || hook.message,
-                                    validateRule: name,
-                                    getMessage: getMessage
+                            promises.push(new Promise(function(a, b) {
+                                resolve = a
+                                reject = b
+                            }))
+                            var next = function(a) {
+                                if (data.norequired && value === "") {
+                                    a = true
                                 }
-                                resolve(reason)
-                            }
+                                if (a) {
+                                    resolve(true)
+                                } else {
+                                    var reason = {
+                                        element: elem,
+                                        data: data.data,
+                                        message: elem.getAttribute("data-duplex-" + name + "-message") || elem.getAttribute("data-duplex-message") || hook.message,
+                                        validateRule: name,
+                                        getMessage: getMessage
+                                    }
+                                    resolve(reason)
+                                }
                         }
                         data.data = {}
                         hook.get(value, data, next)
                     }
                 })
                 //如果promises不为空，说明经过验证拦截器
-                var lastPromise = Promise.all(promises).then(function (array) {
+                var lastPromise = Promise.all(promises).then(function(array) {
                     var reasons = []
-                    for (var i = 0, el; el = array[i++]; ) {
+                    for (var i = 0, el; el = array[i++];) {
                         if (typeof el === "object") {
                             reasons.push(el)
                         }
@@ -603,28 +608,28 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
 
             }
             //收集下方表单元素的数据
-            vm.$watch("avalon-ms-duplex-init", function (data) {
+            vm.$watch("avalon-ms-duplex-init", function(data) {
                 var inwardHooks = vmodel.validationHooks
                 data.valueAccessor = data.evaluator.apply(null, data.args)
 
                 switch (avalon.type(data.valueAccessor())) {
                     case "array":
-                        data.valueResetor = function () {
+                        data.valueResetor = function() {
                             this.valueAccessor([])
                         }
                         break
                     case "boolean":
-                        data.valueResetor = function () {
+                        data.valueResetor = function() {
                             this.valueAccessor(false)
                         }
                         break
                     case "number":
-                        data.valueResetor = function () {
+                        data.valueResetor = function() {
                             this.valueAccessor(0)
                         }
                         break
                     default:
-                        data.valueResetor = function () {
+                        data.valueResetor = function() {
                             this.valueAccessor("")
                         }
                         break
@@ -634,7 +639,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
                 if (typeof data.pipe !== "function" && avalon.contains(element, data.element)) {
                     var params = []
                     var validateParams = []
-                    data.param.replace(/\w+/g, function (name) {
+                    data.param.replace(/\w+/g, function(name) {
                         var hook = inwardHooks[name] || globalHooks[name]
                         if (hook && typeof hook.get === "function" && hook.message) {
                             validateParams.push(name)
@@ -650,27 +655,27 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
                     data.validateParam = validateParams.join("-")
                     if (validateParams.length) {
                         if (vm.validateInKeyup) {
-                            data.bound("keyup", function (e) {
+                            data.bound("keyup", function(e) {
                                 var type = data.element && data.element.getAttribute("data-duplex-event")
                                 if (!type || /^(?:key|mouse|click|input)/.test(type)) {
                                     var ev = fixEvent(e)
-                                    setTimeout(function () {
+                                    setTimeout(function() {
                                         vm.validate(data, 0, ev)
                                     })
                                 }
                             })
                         }
                         if (vm.validateInBlur) {
-                            data.bound("blur", function (e) {
+                            data.bound("blur", function(e) {
                                 vm.validate(data, 0, fixEvent(e))
                             })
                         }
                         if (vm.resetInFocus) {
-                            data.bound("focus", function (e) {
+                            data.bound("focus", function(e) {
                                 vm.onReset.call(data.element, fixEvent(e), data)
                             })
                         }
-                        var array = vm.data.filter(function (el) {
+                        var array = vm.data.filter(function(el) {
                             return el.element
                         })
                         avalon.Array.ensure(array, data)
@@ -685,12 +690,13 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
         return vmodel
     }
     var rformat = /\\?{{([^{}]+)\}}/gm
-    function getMessage() {
-        var data = this.data || {}
-        return this.message.replace(rformat, function (_, name) {
-            return data[name] == null ? "" : data[name]
-        })
-    }
+
+        function getMessage() {
+            var data = this.data || {}
+            return this.message.replace(rformat, function(_, name) {
+                return data[name] == null ? "" : data[name]
+            })
+        }
     widget.defaults = {
         validationHooks: {}, //@config {Object} 空对象，用于放置验证规则
         onSuccess: avalon.noop, //@config {Function} 空函数，单个验证成功时触发，this指向被验证元素this指向被验证元素，传参为一个对象数组外加一个可能存在的事件对象
@@ -705,9 +711,9 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
         resetInFocus: true, //@config {Boolean} true，在focus事件中执行onReset回调,
         deduplicateInValidateAll: false //@config {Boolean} false，在validateAll回调中对reason数组根据元素节点进行去重
     }
-//http://bootstrapvalidator.com/
-//https://github.com/rinh/jvalidator/blob/master/src/index.js
-//http://baike.baidu.com/view/2582.htm?fr=aladdin&qq-pf-to=pcqq.group
+    //http://bootstrapvalidator.com/
+    //https://github.com/rinh/jvalidator/blob/master/src/index.js
+    //http://baike.baidu.com/view/2582.htm?fr=aladdin&qq-pf-to=pcqq.group
 })
 /**
  @other

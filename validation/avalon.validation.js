@@ -91,19 +91,21 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
             return (vs[r % 11] == ss[17]);
         }
     }
+    // isCorrectDate("2015-2-21") true
+    // isCorrectDate("2015-2-31") false
     function isCorrectDate(value) {
-        if (rdate.test(value)) {
-            var date = parseInt(RegExp.$1, 10);
-            var month = parseInt(RegExp.$2, 10);
-            var year = parseInt(RegExp.$3, 10);
-            var xdata = new Date(year, month - 1, date, 12, 0, 0, 0);
-            if ((xdata.getUTCFullYear() === year) && (xdata.getUTCMonth() === month - 1) && (xdata.getUTCDate() === date)) {
-                return true
+        if (typeof value === "string" && value) {//是字符串但不能是空字符
+            var arr = value.split("-") //可以被-切成3份，并且第1个是4个字符
+            if (arr.length === 3 && arr[0].length === 4) {
+                var year = ~~arr[0] //全部转换为非负整数
+                var month = ~~arr[1] - 1
+                var date = ~~arr[2]
+                var d = new Date(year, month, date)
+                return d.getFullYear() === year && d.getMonth() === month && d.getDate() === date
             }
         }
         return false
     }
-    var rdate = /^\d{4}\-\d{1,2}\-\d{1,2}$/
     //  var remail = /^[a-zA-Z0-9.!#$%&amp;'*+\-\/=?\^_`{|}~\-]+@[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*$/
     var remail = /^([A-Z0-9]+[_|\_|\.]?)*[A-Z0-9]+@([A-Z0-9]+[_|\_|\.]?)*[A-Z0-9]+\.[A-Z]{2,3}$/i
     var ripv4 = /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i
@@ -771,7 +773,7 @@ define(["avalon", "../mmPromise/mmPromise"], function (avalon) {
  [与textbox组件的混用, ms-duplex-string的使用 ](avalon.validation.ex9.html)
  [验证表单元素存在disabled的情况 ](avalon.validation.ex10.html)
  [deduplicateInValidateAll:true对validatieAll回调的reasons数组根据element进行去重 ](avalon.validation.ex13.html)
-  [验证dropdown组件 ](avalon.validation.ex14.html)
-
+ [验证dropdown组件 ](avalon.validation.ex14.html)
+ 
  
  */

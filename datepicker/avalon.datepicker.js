@@ -392,7 +392,8 @@ define(["../avalon.getModel",
             }
             
             vm.$init = function(continueScan) {
-                var elementPar = element.parentNode
+                var elementPar = element.parentNode,
+                    initDate = null
 
                 calendar = avalon.parseHTML(calendarTemplate).firstChild
                 elementPar.insertBefore(calendar, element)
@@ -424,6 +425,9 @@ define(["../avalon.getModel",
                     }
                 }
                 element.value = _initValue
+                if (initDate = parseDate(_initValue)) {
+                    vmodel.tip = getDateTip(cleanDate(initDate)).text
+                }
                 element.disabled = vmodel.disabled
 
                 if (vmodel.showDatepickerAlways) {

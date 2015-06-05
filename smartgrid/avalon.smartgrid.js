@@ -808,7 +808,7 @@ define(["avalon",
                 column.toggle = true;
             }
             column.configWidth = columnWidth;
-            if (!columnWidth) {
+            if (!columnWidth && _columnWidth) {
                 if (_columnWidth.indexOf('%')) {
                     columnWidth = parentContainerWidth * parseInt(_columnWidth) / 100;
                     column.configWidth = columnWidth;

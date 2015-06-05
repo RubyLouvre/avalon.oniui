@@ -42,6 +42,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
             vm.draggerHeight = vm.draggerWidth = ""
             vm.inFocuse = false
             vm._position = []
+            vm.rootElement = element
             vm.viewElement = element
             vm.$skipArray = ["rootElement"]
             vm.dragging = false
@@ -52,7 +53,6 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
             vm.$init = function(continueScan) {
                 if(inited) return
                 inited = true
-                vm.rootElement = element
                 vmodel.widgetElement.style.position = "relative"
                 //document body情形需要做一下修正
                 vmodel.viewElement = vmodel.widgetElement == document.body ? document.getElementsByTagName(

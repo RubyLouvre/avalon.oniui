@@ -255,6 +255,11 @@ mmRouter的使用
                                     <td></td>
                                     <td>true替换history，否则生成一条新的历史记录</td>
                                 </tr>
+                                <tr>
+                                    <td>options.confirmed</td>
+                                    <td></td>
+                                    <td>true不触发onBeforeUnload,$onBeforeUnload,onBeforeExit</td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
@@ -303,7 +308,8 @@ mmRouter的使用
                                 <tr>
                                     <td>opts.controllerProvider</td>
                                     <td></td>
-                                    <td>指定默认view控制器的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数</td>
+                                    <td>指定默认view控制器的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数 @param opts.viewCache
+                                        是否缓存这个模板生成的dom，设置会覆盖dom元素上的data-view-cache，也可以分别配置到views上每个单独的view上</td>
                                 </tr>
                                 <tr>
                                     <td>opts.views</td>
@@ -628,9 +634,6 @@ this.params
                 </li>
                 <li>
                     <a href="avalon.mmRouter.ex9.html">mmRouter-基于状态机的路由器</a>
-                </li>
-                <li>
-                    <a href="avalon.mmRouter.ex10.html">mmRouter示例: avalon.router.go</a>
                 </li>
             </ul>
         </div>

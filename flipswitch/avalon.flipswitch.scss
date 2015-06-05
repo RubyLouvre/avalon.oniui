@@ -66,6 +66,7 @@ div#{$uiname}{
 		z-index: 10;
 		width: 150%;
 		left:0;
+		top:50%;
 	}
 	&-animate{
 		transition:all .5s;
@@ -88,9 +89,9 @@ div#{$uiname}{
 			width: 24px;
 			height: 24px;
 			left: 50%;
-			top:50%;
+			// top:50%;
 			margin-left: -12px;
-			margin-top: -10px;
+			// margin-top: -10px;
 			&-unchecked{
 				margin-left: -12px;
 			}
@@ -106,7 +107,7 @@ div#{$uiname}{
 				height: 38px;
 				width: 38px;
 				margin-left: -20px;
-				margin-top: -17px;
+				// margin-top: -17px;
 				&-unchecked{
 					margin-left: -20px;
 				}
@@ -116,10 +117,10 @@ div#{$uiname}{
 	&-mini{
 		#{$uiname}{
 			&-dragger-ball{
-				height: 14px;
-				width: 14px;
+				height: 12px;
+				width: 12px;
 				margin-left: -8px;
-				margin-top: -6px;
+				// margin-top: -6px;
 				&-unchecked{
 					margin-left: -8px;
 				}
@@ -132,7 +133,7 @@ div#{$uiname}{
 				height: 18px;
 				width: 18px;
 				margin-left: -10px;
-				margin-top: -7px;
+				// margin-top: -7px;
 				&-unchecked{
 					margin-left: -10px;
 				}
@@ -187,7 +188,7 @@ div#{$uiname}{
 				border-radius: 8px;
 			}
 			#{$uiname}-dragger-ball{
-				border-radius: 7px;
+				border-radius: 6px;
 			}
 		}
 		&#{$uiname}-small{
@@ -208,6 +209,12 @@ div#{$uiname}{
 		}
 		#{$uiname}-uckbg{
 			background-color: map-get($switch, offBg);
+		}
+	}
+
+	&-drawing {
+		#{$uiname}-dragger-ball, #{$uiname}-bg{
+			background: none;
 		}
 	}
 }

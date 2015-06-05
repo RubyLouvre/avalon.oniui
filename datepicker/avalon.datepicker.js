@@ -228,13 +228,13 @@ define(["../avalon.getModel",
                     vmodel._datepickerToggle = false
                 }
             }
-            vm._getNow = function() {
-                var date = new Date(),
-                    time = date.toTimeString(),
+            vm.getInitTime = function(timeDate) {
+                var date = formatDate(timeDate),
+                    time = timeDate.toTimeString(),
                     now = time.substr(0, time.lastIndexOf(":"));
-                vmodel.hour = date.getHours()
-                vmodel.minute = date.getMinutes()
-                return now
+                vmodel.hour = timeDate.getHours()
+                vmodel.minute = timeDate.getMinutes()
+                return date + ' ' + now
             }
             vm._dateCellRender = function(outerIndex, index, rowIndex, date) {
                 if (vmodel.dateCellRender) {
@@ -418,8 +418,9 @@ define(["../avalon.getModel",
                 }
                 if (vmodel.timer) {
                     vmodel.width = 100
-                    if (_initValue && validateDate(_initValue)) {
-                        _initValue = _initValue + " " + vmodel._getNow()
+                    var time = validateTime(_initValue)
+                    if (_initValue && time) {
+                        _initValue = vmodel.getInitTime(time)
                     }
                 }
                 element.value = _initValue
@@ -1013,6 +1014,23 @@ define(["../avalon.getModel",
                 return date;
             }
         }
+        // 检验time
+        function validateTime(date) {
+            if (typeof date == "string") {
+                var theDate = parseDate(date),
+                    timeReg = /\s[0-2]?[0-9]:[0-5]?[0-9]/,
+                    _time = date.match(timeReg)
+                if (theDate && _time && _time.length) {
+                    var time = _time[0].split(':'),
+                        hour = +time[0],
+                        minute = +time[1]
+                    theDate = new Date(theDate.getFullYear(), theDate.getMonth(), theDate.getDate(), hour, minute)
+                }
+                return theDate
+            } else {
+                return date;
+            }
+        }
         return vmodel
     }
 
@@ -1259,4 +1277,5 @@ define(["../avalon.getModel",
  [具有时间选择功能的datepicker](avalon.datepicker.ex11.html)
  [带格式化输出配置的datepicker](avalon.datepicker.ex12.html)
  [多语言支持](avalon.datepicker.ex13.html)
+ [datepicker的验证](avalon.datepicker.ex14.html)
  */

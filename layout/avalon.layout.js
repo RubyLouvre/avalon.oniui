@@ -3,7 +3,7 @@
  * @enName Layout
  * @introduce
  *    <p>区域布局管理组件。一个组件中最多分为5个区域，分别为东西南北中区。其中中区是默认存在并不可移除的。</p>
- *  @updatetime 2015-2-15
+ *  @updatetime 2015-6-5
  */
 define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
     function(avalon, tpl) {
@@ -534,11 +534,23 @@ define(["avalon", "../draggable/avalon.draggable", "css!./avalon.layout.css"],
 );
 /**
  * @other
+ * <p><b>使用ms-layout-dock在Layout组件下自定义区域内的内容</b></p>
+ * 除了使用API的方式配置Layout组件，还可以使用ms-layout-dock属性，在HTML文档内配置区域的位置以及内容。如下：
+ * ```html
+<div ms-widget="layout,layoutVM,$layoutVMOptions" class="container">
+    <div ms-layout-dock="north">        
+        <div style="width:100%;height:100px;background-image:logo.png">聪明你的旅行</div>
+    </div>
+</div>
+例子4内有完整的示例方式。
+ * ```
  * <p><b>region对象</b></p>
  * region对象是一个非常重要的对象，下面是说明和默认值
  * ```js
 {
      //区域尺寸。不可用于centre区域。数字或者百分比。
+     //对于North和South来说，代表的是Height，因为Width是固定等于整个Layout的Width
+     //对于East和West来说，代表的是Width，因为Height是固定等于整个Layout.Height - North.size - South.size
      size: 0, 
 
      //是否增加一个resizer。不可用于centre区域

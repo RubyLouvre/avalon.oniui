@@ -297,24 +297,33 @@
             </fieldset>
             <div class="others">
                 <p>
-                    <b>region对象</b>
-                </p>region对象是一个非常重要的对象，下面是说明和默认值
-                <pre class="brush:javascript;gutter:false;toolbar:false;"> {
-     //区域尺寸。不可用于centre区域。数字或者百分比。
-     size: 0, 
+                    <b>使用ms-layout-dock在Layout组件下自定义区域内的内容</b>
+                </p>除了使用API的方式配置Layout组件，还可以使用ms-layout-dock属性，在HTML文档内配置区域的位置以及内容。如下：
+                <pre
+                class="brush:html;gutter:false;toolbar:false;">&lt;div ms-widget=&quot;layout,layoutVM,$layoutVMOptions&quot; class=&quot;container&quot;&gt;
+                    &lt;div ms-layout-dock=&quot;north&quot;&gt; &lt;div style=&quot;width:100%;height:100px;background-image:logo.png&quot;&gt;聪明你的旅行&lt;/div&gt;
+                    &lt;/div&gt; &lt;/div&gt;例子4内有完整的示例方式。</pre>
+                    <p>
+                        <b>region对象</b>
+                    </p>region对象是一个非常重要的对象，下面是说明和默认值
+                    <pre class="brush:javascript;gutter:false;toolbar:false;">{
+    //区域尺寸。不可用于centre区域。数字或者百分比。
+    //对于North和South来说，代表的是Height，因为Width是固定等于整个Layout的Width
+    //对于East和West来说，代表的是Width，因为Height是固定等于整个Layout.Height - North.size - South.size
+    size: 0,
 
-     //是否增加一个resizer。不可用于centre区域
-     resizable: false,
+    //是否增加一个resizer。不可用于centre区域
+    resizable: false,
 
-     //增加在区域上的CSS
-     regionClass: "", 
+    //增加在区域上的CSS
+    regionClass: "",
 
-     //区域被移除后的回调。不可用于centre区域。配置了本项后，移除区域时不会触发主配置的afterRemove回调
-     afterRemove: undefined,
+    //区域被移除后的回调。不可用于centre区域。配置了本项后，移除区域时不会触发主配置的afterRemove回调
+    afterRemove: undefined,
 
-     //区域改变大小后的回调。不可用于centre区域。配置了本项后，改变区域大小时不会触发主要的afterResize回调
-     afterResize: undefined 
- }</pre>
+    //区域改变大小后的回调。不可用于centre区域。配置了本项后，改变区域大小时不会触发主要的afterResize回调
+    afterResize: undefined
+}</pre>
             </div>
             <ul class="example-links">
                 <li>

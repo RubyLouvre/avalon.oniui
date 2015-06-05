@@ -249,7 +249,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
 
             multipleFileAllowed: true,
             enableRemoteKeyGen: false,   //@config {Boolean} 分块上传时，是否预先和服务器握手，获取一个文件Id
-            enableMd5Validation: false, //@config {Boolean} 是否开启文件分块MD5验证，开启后每个文件请求内都会附加上文件数据的Md5码
+            enableMd5Validation: false, 
             /*
             * @config {Object} 服务器请求配置对象。具体属性参看下表
             * @param timeout {Number} 请求超时的毫秒数。默认为30000（30秒）
@@ -281,7 +281,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
             * @param totalChunkParamName {String} 分块总数的参数名称。默认为"total"
             * @param chunkIndexParamName {String} 分块的序列号参数名称。默认为"chunk"
             * @param fileNameParamName {String} 文件名领域的参数名。默认为"fileName"
-            * @param blobMd5ParamName {String} 文件分块的md码领域的参数名。默认为"md5"
+            
             */
             requiredParamsConfig: { },
 
@@ -612,11 +612,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
             localFileKeyGen: function (opts, fileObj, resolve, reject) {
                 resolve(opts.$md5gen(fileObj.name + "#" + fileObj.size + "#" + fileObj.fileLocalToken));
             },
-            /*
-             * @interface 使用vm的md5配置，生成一个md5码。
-             * @param opts {Object} vmodel
-             * @param bytes {String} MD5码的源字符串。
-             */
+            
             getMd5: function (opts, bytes) {
                 return opts.$md5gen(bytes);
             },
@@ -762,3 +758,10 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
         return avalon;
     }
 );
+/**
+ @links
+ [uploader基础配置项](avalon.fileuploader.ex1.html)
+ [预览图和进度条配置](avalon.fileuploader.ex2.html)
+ [大文件和分块配置](avalon.fileuploader.ex3.html)
+ [文件Ajax请求参数的配置](avalon.fileuploader.ex5.html)
+*/

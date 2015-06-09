@@ -392,7 +392,8 @@ define(["../avalon.getModel",
             }
             
             vm.$init = function(continueScan) {
-                var elementPar = element.parentNode
+                var elementPar = element.parentNode,
+                    initDate = null
 
                 calendar = avalon.parseHTML(calendarTemplate).firstChild
                 elementPar.insertBefore(calendar, element)
@@ -424,6 +425,9 @@ define(["../avalon.getModel",
                     }
                 }
                 element.value = _initValue
+                if (initDate = parseDate(_initValue)) {
+                    vmodel.tip = getDateTip(cleanDate(initDate)).text
+                }
                 element.disabled = vmodel.disabled
 
                 if (vmodel.showDatepickerAlways) {
@@ -1277,4 +1281,5 @@ define(["../avalon.getModel",
  [具有时间选择功能的datepicker](avalon.datepicker.ex11.html)
  [带格式化输出配置的datepicker](avalon.datepicker.ex12.html)
  [多语言支持](avalon.datepicker.ex13.html)
+ [datepicker的验证](avalon.datepicker.ex14.html)
  */

@@ -174,10 +174,12 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
             
             // 处理提示项的鼠标点击，也就是更新input值，同时隐藏提示框?
             vm.clickcallback = function(idx, event) {
-                var selectValue = vmodel.list[idx].value
-                vmodel.onChangeCallback(selectValue, vmodel.inputElement, event);
+                var selectObj = vmodel.list[idx],
+                    selectValue = selectObj.value
+
+                vmodel.onChangeCallback(selectValue, vmodel.inputElement, event, selectObj);
                 if (typeof vmodel.onSelectItem === "function") {
-                    vmodel.onSelectItem.call(null, selectValue, vmodel.inputElement)
+                    vmodel.onSelectItem.call(null, selectValue, vmodel.inputElement, event, selectObj)
                 }
                 vmodel.toggle = false;
             }

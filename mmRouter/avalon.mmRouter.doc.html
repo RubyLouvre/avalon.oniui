@@ -327,22 +327,23 @@ mmRouter的使用
                                         如果名字存在@, viewname为match[0], statename为match[1]</td>
                                 </tr>
                                 <tr>
-                                    <td>opts.views.template</td>
+                                    <td>opts.views.{viewname}.template</td>
                                     <td></td>
-                                    <td>指定当前模板，也可以为一个函数，传入opts.params作参数，</td>
+                                    <td>指定当前模板，也可以为一个函数，传入opts.params作参数，* @param opts.views.viewname.cacheController
+                                        是否缓存view的控制器，默认true</td>
                                 </tr>
                                 <tr>
-                                    <td>opts.views.templateUrl</td>
+                                    <td>opts.views.{viewname}.templateUrl</td>
                                     <td></td>
                                     <td>指定当前模板的路径，也可以为一个函数，传入opts.params作参数</td>
                                 </tr>
                                 <tr>
-                                    <td>opts.views.templateProvider</td>
+                                    <td>opts.views.{viewname}.templateProvider</td>
                                     <td></td>
                                     <td>指定当前模板的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数</td>
                                 </tr>
                                 <tr>
-                                    <td>opts.views.ignoreChange</td>
+                                    <td>opts.views.{viewname}.ignoreChange</td>
                                     <td></td>
                                     <td>用法同state.ignoreChange，只是针对的粒度更细一些，针对到具体的view</td>
                                 </tr>
@@ -516,40 +517,45 @@ this.params
                                 <tr>
                                     <td>factory</td>
                                     <td>Function</td>
-                                    <td>控制器</td>
+                                    <td>控制器函数，传递一个内部生成的控制器对象作为参数</td>
                                 </tr>
                                 <tr>
-                                    <td>factory.$ctrl</td>
+                                    <td>factory.arguments[0]</td>
                                     <td>Object</td>
-                                    <td>实际生成的控制器对象</td>
+                                    <td>$ctrl 控制器的第一个参数：实际生成的控制器对象</td>
                                 </tr>
                                 <tr>
-                                    <td>factory.$onBeforeUnload</td>
+                                    <td>$ctrl.$vmodels</td>
+                                    <td>Object</td>
+                                    <td>给视图指定一个scan的vmodels数组，实际scan的时候$vmodels.concat(dom树上下文继承的vmodels)</td>
+                                </tr>
+                                <tr>
+                                    <td>$ctrl.$onBeforeUnload</td>
                                     <td>Function</td>
                                     <td>该视图被卸载前触发，return false可以阻止视图卸载，并阻止跳转</td>
                                 </tr>
                                 <tr>
-                                    <td>factory.$onEnter</td>
+                                    <td>$ctrl.$onEnter</td>
                                     <td>Function</td>
                                     <td>给该视图加载数据，可以返回false，或任意不为true的错误信息或一个promise对象，传递3个参数</td>
                                 </tr>
                                 <tr>
-                                    <td>factory.$onEnter.params</td>
-                                    <td>Function</td>
-                                    <td>视图所属的state的参数</td>
+                                    <td>$ctrl.$onEnter.arguments[0]</td>
+                                    <td>Object</td>
+                                    <td>params第一个参数：视图所属的state的参数</td>
                                 </tr>
                                 <tr>
-                                    <td>factory.$onEnter.resolve</td>
+                                    <td>$ctrl.$onEnter.arguments[1]</td>
                                     <td>Function</td>
-                                    <td>$onEnter return false的时候，进入同步等待，直到手动调用resolve</td>
+                                    <td>resolve $onEnter 第二个参数：return false的时候，进入同步等待，直到手动调用resolve</td>
                                 </tr>
                                 <tr>
-                                    <td>factory.$onEnter.reject</td>
+                                    <td>$ctrl.$onEnter.arguments[2]</td>
                                     <td>Function</td>
-                                    <td>数据加载失败，调用</td>
+                                    <td>reject 第三个参数：数据加载失败，调用</td>
                                 </tr>
                                 <tr>
-                                    <td>factory.$onRendered</td>
+                                    <td>$ctrl.$onRendered</td>
                                     <td>Function</td>
                                     <td>视图元素scan完成之后，调用</td>
                                 </tr>

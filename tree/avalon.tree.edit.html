@@ -16,5 +16,6 @@
 <span class="edit-input"><input type="text" class="rename" 
       ms-attr-id="'input'+leaf.$id"
       ms-attr-value="leaf.name" 
+      ms-if="exprAnd(leaf, edit.enable)" 
       ms-on-focus="excute('focus',$event,leaf,'editFocus')"
       ms-on-blur="excute('blur',$event,leaf,'saveChange')"></span> 

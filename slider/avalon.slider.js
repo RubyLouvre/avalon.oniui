@@ -44,9 +44,9 @@ define(["../draggable/avalon.draggable",
             value = values[1]
         }
         // 如果没有配置value和values,且range是min或者max，重置value
-        if (!value && oRange === "min" && !values) {
+        if (!value && oRange === "min" && !values && value !== 0) {
             value =  valueMin || value;
-        } else if (!value && oRange === 'max' && !values) {
+        } else if (!value && oRange === 'max' && !values && value !== 0) {
             value = valueMax || value;
         }
         if (options.step !== 1 && !/\D/.test(options.step)) {

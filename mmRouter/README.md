@@ -258,7 +258,6 @@ mmState的使用
     })
 ```
 3、定义各种状态，内部会转换为一个路由表，交由mmRouter去处理。
-5、开始扫描
 ```javascript
     avalon.state("root.list", { // 定义一个子状态，对应url是 /{pageId}，比如/1，/2
         url: "{pageId}",

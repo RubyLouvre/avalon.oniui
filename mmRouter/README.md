@@ -241,7 +241,6 @@ mmState的使用
 5、开始扫描
 ```javascript
     avalon.state("home", {
-        controller: "test",
         url: "/",
         views: {
             "": {
@@ -258,7 +257,6 @@ mmState的使用
 
     })
 ```
-注意，第一个状态，__必须指定controller__，controller为顶层VM的`$id`。
 注意，添加状态的顺序，必须先添加aaa, 再添加aaa.bbb，再添加aaa.bbb.ccc，不能先添加aaa.bbb，再添加aaa。
 
 4、启动历史管理器
@@ -279,7 +277,6 @@ avalon.state(stateName: opts)
 
 * stateName： 指定当前状态名
 * url:  当前状态对应的路径规则，与祖先状态们组成一个完整的匹配规则
-* controller： 指定当前所在的VM的名字（如果是顶级状态对象，必须指定）
 * views: 对多个[ms-view]容器进行处理,
 
   每个对象应拥有template, templateUrl, templateProvider, onBeforeLoad, onAfterLoad属性

@@ -5,6 +5,8 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 
 [详细文档](http://ued.qunar.com/oniui/mmRouter/avalon.mmRouter.doc.html)
 
+[例子](https://github.com/gogoyqj/mmRouter-demo-list)
+
 如何从mmState迁移到new-mmState
 -----------------------------------
 1、新版new-mmState特性
@@ -330,5 +332,5 @@ avalon.state(stateName: opts)
 * parentState: 父状态对象（框架内部生成）
 
 
-具体可以看<https://rawgit.com/RubyLouvre/mmRouter/master/index2.html>示例页面
+具体可以看<https://github.com/gogoyqj/mmRouter-demo-list>例子
 

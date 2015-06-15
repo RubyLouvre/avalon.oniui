@@ -226,44 +226,58 @@ mmState的使用
 
     })
 ```
-2、定义顶层VM， 名字随便叫，但页面上有一个ms-controller，因为 mmState内部有一个getViews方法，通过它得到所有ms-views所在的子孙元素
-`getViews("test","contacts.list")` 得到`DIV[avalonctrl="test"] [ms-view]`这样一个CSS表达式，再通过`document.querySelectorAll`
-或内部为兼容IE67实现的简单选择器引擎进行元素查找。
+2、定义顶层的vmodel + state，推荐的架构：
 ```javascript
     require(["ready!", "mmState"], function() {
-        //一个顶层VM
-         avalon.define({
-             $id: "test" /
-         })
+        // 定义一个顶层的vmodel，用来放置全局共享数据
+        var root = avalon.define("root", function(vm) {
+            vm.page = ""
+        })
+
+        // 定义一个全局抽象状态，用来渲染通用不会改变的视图，比如header，footer
+        avalon.state("root", {
+            url: "/",
+            abstract: true, // 抽象状态，不会对应到url上
+            views: {
+                "": {
+                    templateUrl: "./script/template/blog.html", // 指定模板地址
+                    controllerUrl: "./controller/blog.js" // 指定控制器地址
+                }, // 也可以不配置 ""，直接在子状态内定义 "@"来覆盖重写
+                "footer@": { // 视图名字的语法请仔细查阅文档
+                    template: function() {
+                        return "<div style=\"text-align:center;\">this is footer</div>"
+                    } // 指定一个返回字符串的函数来获取模板
+                }
+            }
+        })
+        avalon.state.config({
+            onError: function() {
+                console.log(arguments)
+            } // 强烈打开错误配置
+        })
     })
 ```
 3、定义各种状态，内部会转换为一个路由表，交由mmRouter去处理。
 5、开始扫描
 ```javascript
-    avalon.state("home", {
-        url: "/",
+    avalon.state("root.list", { // 定义一个子状态，对应url是 /{pageId}，比如/1，/2
+        url: "{pageId}",
         views: {
             "": {
-                template: '<p class="lead">Welcome to the UI-Router Demo</p>' +
-                        '<p>Use the menu above to navigate. ' +
-                        'Pay attention to the <code>$state</code> and <code>$stateParams</code> values below.</p>' +
-                        '<p>Click these links—<a href="#!/contacts/1">Alice</a> or ' +
-                        '<a href="#!/contacts/2">Bob</a>—to see a url redirect in action.</p>'
-            },
-            'hint@': {
-                template: "当前状态是home"
+                templateUrl: "./script/template/list.html",
+                controllerUrl: "./controller/lists.js",
+                ignoreChange: function(type) {
+                    return !!type
+                } // url通过{}配置的参数变量发生变化的时候是否通过innerHTML重刷ms-view内的DOM，默认会，如果你做的是翻页这种应用，建议使用例子内的配置，把数据更新到vmodel上即可
             }
         }
-
     })
 ```
 注意，添加状态的顺序，必须先添加aaa, 再添加aaa.bbb，再添加aaa.bbb.ccc，不能先添加aaa.bbb，再添加aaa。
 
 4、启动历史管理器
 ```javascript
-    avalon.history.start({
-        basepath: "/mmRouter"
-    })
+    avalon.history.start({}) // options
 ```
 5、开始扫描
 ```javascript
@@ -285,7 +299,15 @@ avalon.state(stateName: opts)
 
   onBeforeLoad, onAfterLoad是可选
 
-  如果不写views属性,则默认view为"",这四个属性可以直接写在opts对象上
+  如果不写views属性,则默认view【ms-view=""】为"",也可以通过添加一个viewname属性来指定一个viewname，等价于
+```  
+  views: {
+      viewname: {
+          xxx
+      }
+  }
+```
+  ,这四个属性可以直接写在opts对象上
 
   views的结构为：
 

@@ -11,7 +11,8 @@
 <div style="color:red;">
 1、TypeError: avalon.require is not a function  --mmState.js
 有什么办法，用的是avalon.shim.js - 重写avalon.controller.loader这个函数，参考下边具体的文档说明
-</div>
+</div><br>
+<a href="https://github.com/RubyLouvre/mmRouter/issues/71">更多问题</a>
 <h5>mmRouter的使用</h5>
 1、引入依赖(直接依赖于mmRouter, 总共依赖于avalon, mmRouter, mmHistory)
 ```javascript

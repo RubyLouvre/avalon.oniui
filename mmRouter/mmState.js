@@ -423,7 +423,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
      * @param opts.controllerUrl 指定默认view控制器的路径，适用于模块化开发，该情形下默认通过avalon.controller.loader去加载一个符合amd规范，并返回一个avalon.controller定义的对象，传入opts.params作参数
      * @param opts.controllerProvider 指定默认view控制器的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数
      @param opts.viewCache 是否缓存这个模板生成的dom，设置会覆盖dom元素上的data-view-cache，也可以分别配置到views上每个单独的view上
-     * @param opts.views: 如果不写views属性,则默认view为""，对多个[ms-view]容器进行处理,每个对象应拥有template, templateUrl, templateProvider，可以给每个对象搭配一个controller||controllerUrl||controllerProvider属性
+     * @param opts.views: 如果不写views属性,则默认view【ms-view=""】为""，也可以通过指定一个viewname属性来配置【ms-view="viewname"】，对多个[ms-view]容器进行处理,每个对象应拥有template, templateUrl, templateProvider，可以给每个对象搭配一个controller||controllerUrl||controllerProvider属性
      *     views的结构为
      *<pre>
      *     {
@@ -679,9 +679,9 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
                 "template,templateUrl,templateProvider,controller,controllerUrl,controllerProvider,viewCache".replace(/\w+/g, function(prop) {
                     copyTemplateProperty(view, me, prop)
                 })
-                this.views = {
-                    "": view
-                }
+                var viewname = "viewname" in this ? this.viewname : ""
+                this.views = {}
+                this.views[viewname] = view
             }
             var views = {}
             avalon.each(this.views, function(name, view) {

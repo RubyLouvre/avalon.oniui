@@ -18,7 +18,8 @@ define(["avalon"], function(avalon) {
         hashPrefix: "!",
         iframeID: null, //IE6-7，如果有在页面写死了一个iframe，这样似乎刷新的时候不会丢掉之前的历史
         interval: 50, //IE6-7,使用轮询，这是其时间时隔
-        fireAnchor: true//决定是否将滚动条定位于与hash同ID的元素上
+        fireAnchor: true,//决定是否将滚动条定位于与hash同ID的元素上
+        routeElementJudger: avalon.noop // 判断a元素是否是触发router切换的链接
     }
 
     var oldIE = window.VBArray && History.IEVersion <= 7
@@ -67,6 +68,15 @@ define(["avalon"], function(avalon) {
         _getAbsolutePath: function(a) {
             return !a.hasAttribute ? a.getAttribute("href", 4) : a.href
         },
+        /*
+         * @interface avalon.history.start 开始监听历史变化
+         * @param options 配置参数
+         * @param options.hashPrefix hash以什么字符串开头，默认是 "!"，对应实际效果就是"#!"
+         * @param options.routeElementJudger 判断a元素是否是触发router切换的链接的函数，return true则触发切换，默认为avalon.noop，history内部有一个判定逻辑，是先判定a元素的href属性是否以hashPrefix开头，如果是则当做router切换元素，因此综合判定规则是 href.indexOf(hashPrefix) == 0 || routeElementJudger(ele)
+         * @param options.html5Mode 是否采用html5模式，即不使用hash来记录历史，默认false
+         * @param options.fireAnchor 决定是否将滚动条定位于与hash同ID的元素上，默认为true
+         * @param options.basepath 根目录，默认为"/"
+         */
         start: function(options) {
             if (History.started)
                 throw new Error("avalon.history has already been started")
@@ -230,7 +240,8 @@ define(["avalon"], function(avalon) {
     //劫持页面上所有点击事件，如果事件源来自链接或其内部，
     //并且它不会跳出本页，并且以"#/"或"#!/"开头，那么触发updateLocation方法
     avalon.bind(document, "click", function(event) {
-        var defaultPrevented = "defaultPrevented" in event ? event['defaultPrevented'] : event.returnValue === false
+        var defaultPrevented = "defaultPrevented" in event ? event['defaultPrevented'] : event.returnValue === false,
+            routeElementJudger = avalon.history.options.routeElementJudger
         if (defaultPrevented || event.ctrlKey || event.metaKey || event.which === 2)
             return
         var target = event.target
@@ -248,7 +259,7 @@ define(["avalon"], function(avalon) {
                 return
             }
             var hash = href.replace(prefix, "").trim()
-            if (href.indexOf(prefix) === 0 && hash !== "") {
+            if (href.indexOf(prefix) === 0 && hash !== "" || routeElementJudger(target)) {
                 event.preventDefault()
                 avalon.router && avalon.router.navigate(hash)
             }

@@ -120,6 +120,51 @@
                         <td align="center" colspan="4">接口方法与固有属性</td>
                     </tr>
                     <tr>
+                        <td>start(options)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.history.start 开始监听历史变化
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td></td>
+                                    <td>options 配置参数</td>
+                                </tr>
+                                <tr>
+                                    <td>options.hashPrefix</td>
+                                    <td></td>
+                                    <td>hash以什么字符串开头，默认是 "!"，对应实际效果就是"#!"</td>
+                                </tr>
+                                <tr>
+                                    <td>options.routeElementJudger</td>
+                                    <td></td>
+                                    <td>判断a元素是否是触发router切换的链接的函数，return true则触发切换，默认为avalon.noop，history内部有一个判定逻辑，是先判定a元素的href属性是否以hashPrefix开头，如果是则当做router切换元素，因此综合判定规则是
+                                        href.indexOf(hashPrefix) == 0 || routeElementJudger(ele)</td>
+                                </tr>
+                                <tr>
+                                    <td>options.html5Mode</td>
+                                    <td></td>
+                                    <td>是否采用html5模式，即不使用hash来记录历史，默认false</td>
+                                </tr>
+                                <tr>
+                                    <td>options.fireAnchor</td>
+                                    <td></td>
+                                    <td>决定是否将滚动条定位于与hash同ID的元素上，默认为true</td>
+                                </tr>
+                                <tr>
+                                    <td>options.basepath</td>
+                                    <td></td>
+                                    <td>根目录，默认为"/"</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>redirect(hash)</td>
                         <td>Function</td>
                         <td></td>

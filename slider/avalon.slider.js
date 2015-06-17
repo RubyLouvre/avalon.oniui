@@ -44,9 +44,9 @@ define(["../draggable/avalon.draggable",
             value = values[1]
         }
         // 如果没有配置value和values,且range是min或者max，重置value
-        if (!value && oRange === "min" && !values) {
+        if (!value && oRange === "min" && !values && value !== 0) {
             value =  valueMin || value;
-        } else if (!value && oRange === 'max' && !values) {
+        } else if (!value && oRange === 'max' && !values && value !== 0) {
             value = valueMax || value;
         }
         if (options.step !== 1 && !/\D/.test(options.step)) {
@@ -83,10 +83,18 @@ define(["../draggable/avalon.draggable",
         }
         function correctValue(val) {
             var step = (options.step > 0) ? options.step : 1
-            var valModStep = (val-valueMin) % step
+            var stepLength
+            try {
+                stepLength = step.toString().split(".")[1].length
+                }
+                catch (e) {
+                stepLength = 0
+                }
+            var m = Math.pow(10, stepLength)
+            var valModStep = (val-valueMin) * m % step * m
             var n = (val-valueMin) / step 
-            val = valueMin + (valModStep * 2 >= step ? step * Math.ceil(n) : step * Math.floor(n))
-            return val;
+            val = (valueMin * m + (valModStep * 2 >= step ? step * m * Math.ceil(n) : step * m * Math.floor(n))) / m
+            return val
         }
         var vmodel = avalon.define(data.sliderId, function(vm) {
             avalon.mix(vm, options);

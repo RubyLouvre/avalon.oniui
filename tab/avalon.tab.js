@@ -59,6 +59,9 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
             , tabs = []
             , tabsParent
 
+        // 支持使用ms-repeat生成html结构，所以先scan一次
+        avalon.scan(element, vmodels)
+
         // 遍历tabs属性，设置disabled属性，防止在IE里面出错
         avalon.each(options.tabs, function(i, item) {
             item.disabled = !!item.disabled

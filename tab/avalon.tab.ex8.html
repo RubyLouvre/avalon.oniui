@@ -10,7 +10,8 @@
         require(["tab/avalon.tab"], function() {
             avalon.define("test", function(vm) {
                 vm.tab = {
-                    event: "click"
+                    event: "click",
+                    preScanPannel: true
                 }
                 vm.$skipArray = ["tab"]
                 vm.tabs = ["tab1", "tab2"]

@@ -40,6 +40,8 @@ div#{$uiname} {
 			font-weight: bold;
 			background: #ccc;
 			z-index: 10;
+			cursor: pointer;
+			color: #000;
 			&-left{
 				left: 0;
 			}

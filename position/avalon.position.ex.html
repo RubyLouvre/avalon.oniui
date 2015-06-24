@@ -114,10 +114,10 @@
         <h1>position+spinner+dropdown+draggable</h1>
         <p ms-repeat-el="list">
             <label style="display:inline-block;width:100px;">{{el}}</label><br>
-            <select ms-widget="dropdown,$,opts" ms-attr-id="el+1">
+            <select ms-widget="dropdown,$,opts" ms-attr-id="el+1" ms-value="value">
             </select>
             <input ms-widget="spinner" ms-attr-id="{{el+'less'+1}}">
-            <select ms-widget="dropdown,$,opts2" ms-attr-id="el+2">
+            <select ms-widget="dropdown,$,opts2" ms-attr-id="el+2" ms-value="value">
             </select>
             <input ms-widget="spinner" ms-attr-id="{{el+'less'+2}}">
         </p>

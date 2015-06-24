@@ -292,7 +292,11 @@
                 //启动路由
                 avalon.history.start({
                     // basepath: "/mmRouter",
-                    fireAnchor: false
+                    fireAnchor: false,
+                    routeElementJudger: function(ele) {
+                        ele = avalon(ele)
+                        if(ele.hasClass("route-ele")) return true
+                    }
                 })
                 //go!!!!!!!!! 
                 avalon.scan()
@@ -319,7 +323,7 @@
                 </li>
             </ul>
             <div class="header">
-                <a href="#!//">mmState</a>  <a href="#!/contacts">contacts</a>  <a href="#!/about">about</a>
+                <a href="#!//">mmState</a>  <a href="#!/contacts">contacts</a>  <a href="#!/about">about</a> <a href="/about" class="route-ele">about</a>
                 <p class="hint" ms-view="hint" 
                    ms-class="b2"></p>
             </div>
@@ -621,7 +625,11 @@
                 //启动路由
                 avalon.history.start({
                     // basepath: &quot;/mmRouter&quot;,
-                    fireAnchor: false
+                    fireAnchor: false,
+                    routeElementJudger: function(ele) {
+                        ele = avalon(ele)
+                        if(ele.hasClass(&quot;route-ele&quot;)) return true
+                    }
                 })
                 //go!!!!!!!!! 
                 avalon.scan()
@@ -648,7 +656,7 @@
                 &lt;/li&gt;
             &lt;/ul&gt;
             &lt;div class=&quot;header&quot;&gt;
-                &lt;a href=&quot;#!//&quot;&gt;mmState&lt;/a&gt;  &lt;a href=&quot;#!/contacts&quot;&gt;contacts&lt;/a&gt;  &lt;a href=&quot;#!/about&quot;&gt;about&lt;/a&gt;
+                &lt;a href=&quot;#!//&quot;&gt;mmState&lt;/a&gt;  &lt;a href=&quot;#!/contacts&quot;&gt;contacts&lt;/a&gt;  &lt;a href=&quot;#!/about&quot;&gt;about&lt;/a&gt; &lt;a href=&quot;/about&quot; class=&quot;route-ele&quot;&gt;about&lt;/a&gt;
                 &lt;p class=&quot;hint&quot; ms-view=&quot;hint&quot; 
                    ms-class=&quot;b2&quot;&gt;&lt;/p&gt;
             &lt;/div&gt;

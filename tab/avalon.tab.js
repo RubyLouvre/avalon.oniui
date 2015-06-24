@@ -74,6 +74,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         // 扫描获取panels
         if(options.tabpanels == void 0) {
             panelsParent = options.panelContainerGetter(element)
+            if(options.preScanPannel) avalon.scan(panelsParent, vmodels)
             tabpanels = _getData(panelsParent, "div")
             if(options.distroyDom) {
                 try{
@@ -376,6 +377,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         shallPanelAlwaysShow: false,//@config shallPanelAlwaysShow() panel不通过display:none,block来切换，而是一直显示，通过其他方式切换到视野，默认为false
         event: "mouseenter",    //@config  tab选中事件，默认mouseenter
         removable: false,      //@config  是否支持删除，默认否，另外可能存在某些tab可以删除，某些不可以删除的情况，如果某些tab不能删除则需要在li元素或者tabs数组里给对应的元素指定removable : false，例如 li data-removable="false" or {title: "xxx", removable: false}
+        preScanPannel: false, //@config 是否需要先扫面元素，再创建widget，默认否
         activeDelay: 0,         //@config  比较适用于mouseenter事件情形，延迟切换tab，例如200，即200ms
         collapsible: false,     //@config  当切换面板的事件为click时，如果对处于激活状态的按钮再点击，将会它失去激活并且对应的面板会收起来,再次点击它时，它还原，并且对应面板重新出现
         contentType: "content", //@config  panel是静态元素，还是需要通过异步载入，还可取值为ajax，但是需要给对应的panel指定一个正确的ajax地址

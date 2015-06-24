@@ -24,6 +24,9 @@
                 }, {
                     title: "下载",
                     href: "pages/download/index.html"
+                }, {
+                    title: "打包工具",
+                    href: "http://l-uedapp2.h.dev.cn0.qunar.com:8088/"
                 }
 
             ]
@@ -186,7 +189,7 @@
                     <a class="logo" ms-href='{{ location.href.indexOf("localhost") !== -1 ? "/avalon/index.html": "/oniui/index.html"}}'></a>
                     <ul id="oniui_component_list">
                         <li ms-repeat-page="pages" ms-class="active: $index == activeIndex" ms-click="changeActiveIndex($index)">
-                            <a ms-href="#{{page.href}}" >{{page.title | html}}</a>
+                            <a ms-href="{{(page.href.indexOf('http') == 0 ? '' : '#') + page.href}}" >{{page.title | html}}</a>
                         </li>
                     </ul>
                     <div class="search">

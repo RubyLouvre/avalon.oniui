@@ -1,4 +1,4 @@
-
+@charset "UTF-8";
 /*
 这是每个都组件都应该引用的部分
 */
@@ -22,7 +22,9 @@ div.oni-tab {
       width: 8px;
       font-weight: bold;
       background: #ccc;
-      z-index: 10; }
+      z-index: 10;
+      cursor: pointer;
+      color: #000; }
       .oni-tab-slider-button-left {
         left: 0; }
   .oni-tab .oni-tab-nav {

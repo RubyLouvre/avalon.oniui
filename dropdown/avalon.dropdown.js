@@ -981,6 +981,8 @@ define(["avalon",
 
 /**
  @links
+ 
+[使用html配置multiple组件](avalon.dropdown.ex16.html)
  [使用html配置multiple组件](avalon.dropdown.ex1.html)
  [使用html配置multiple并使用双工绑定](avalon.dropdown.ex2.html)
  [使用option配置multiple并使用双工绑定](avalon.dropdown.ex3.html)

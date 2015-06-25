@@ -276,11 +276,33 @@ mmState的使用
 ```
 注意，添加状态的顺序，必须先添加aaa, 再添加aaa.bbb，再添加aaa.bbb.ccc，不能先添加aaa.bbb，再添加aaa。
 
-4、启动历史管理器
+4、编写控制器
+```javascript
+    define([], function() {
+        // 定义所有相关的vmodel
+        var blog = avalon.define("blog", function(vm) {
+        })
+
+        return avalon.controller(function($ctrl) {
+            // 视图渲染后，意思是avalon.scan完成
+            $ctrl.$onRendered = function() {
+            }
+            // 进入视图
+            $ctrl.$onEnter = function() {
+            }
+            // 对应的视图销毁前
+            $ctrl.$onBeforeUnload = function() {}
+            // 指定一个avalon.scan视图的vmodels，vmodels = $ctrl.$vmodels.concact(DOM树上下文vmodels)
+            $ctrl.$vmodels = []
+        })
+    })
+```
+
+5、启动历史管理器
 ```javascript
     avalon.history.start({}) // options
 ```
-5、开始扫描
+6、开始扫描
 ```javascript
    avalon.scan()
 ```

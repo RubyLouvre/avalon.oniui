@@ -8,16 +8,18 @@
         <script src="../highlight/shCore.js"></script>
     </head>
     <body ms-controller="test">
-        <h1>供用户调用API</h1>
-        <div ms-widget="smartgrid, sg1"></div>
-        <button ms-click="setColumns">设置列的显示隐藏</button>
-        <button ms-click="showNoResult">清空数据</button>
-        <button ms-click="getRawData">获取表格数据</button>
-        <button ms-click="getSelected">获取选中行的表格数据</button>
-        <button ms-click="isSelectAll">判断是否全选</button>
-        <button ms-click="showLoading">显示缓冲提示</button>
-        <button ms-click="hideLoading">隐藏缓冲提示</button>
-        <button ms-click="selectAll">全选或者全不选表格数据</button>
+        <div style="width:960px; margin: 0 auto">
+            <h1>供用户调用API</h1>
+            <div ms-widget="smartgrid, sg1"></div>
+            <button ms-click="setColumns">设置列的显示隐藏</button>
+            <button ms-click="showNoResult">清空数据</button>
+            <button ms-click="getRawData">获取表格数据</button>
+            <button ms-click="getSelected">获取选中行的表格数据</button>
+            <button ms-click="isSelectAll">判断是否全选</button>
+            <button ms-click="showLoading">显示缓冲提示</button>
+            <button ms-click="hideLoading">隐藏缓冲提示</button>
+            <button ms-click="selectAll">全选或者全不选表格数据</button>
+        </div>
         <script>
             require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown", "dropdown/avalon.dropdown"], function() {
                 function getDatas(number) {
@@ -132,7 +134,7 @@
                 avalon.scan()
             })
         </script>
-        <div ms-skip>
+        <div ms-skip style="width:960px; margin: 0 auto">
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
                 &lt;html&gt;

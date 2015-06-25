@@ -204,7 +204,17 @@ define(["avalon",
     var countter = 0
     var widget = avalon.ui.smartgrid = function (element, data, vmodels) {
         var options = data.smartgridOptions, $element = avalon(element), pager = options.pager, vmId = data.smartgridId,
-            $initRender = true
+            $initRender = true,
+            _dataVM,
+            _data = []
+        if (typeof options.data === 'number') {
+            for (var i = 0, v; v = vmodels[i++];) {
+                if (v._uiName && v._uiName === 'smartgrid') {
+                    options.data = v.data[options.data][options.field] || []
+                    break;
+                }
+            }
+        }
         perfectColumns(options, element);
         initContainer(options, element);
         options._position = positionAbsolute ? 'absolute' : 'fixed';
@@ -221,7 +231,7 @@ define(["avalon",
             ],    //默认[10,20,50,100]
             onInit: function(pagerVM, options, vmodels) {
                 vmodel && (vmodel.pager = pagerVM)
-                pagerVM && vmodel._entryCount(pagerVM)
+                // pagerVM && vmodel._entryCount(pagerVM)
             }
         }
         options.pageable = options.pageable !== void 0 ? options.pageable : true;
@@ -244,15 +254,17 @@ define(["avalon",
                 pager.onInit = function(pagerVM, options, vmodels) {
                     vmodel && (vmodel.pager = pagerVM)
                     onInit(pagerVM, options, vmodels)
-                    pagerVM && vmodel._entryCount(pagerVM)
+                    // pagerVM && vmodel._entryCount(pagerVM)
                 }
             }
-            avalon.mix(options.$pagerConfig, options.pager)
+            avalon.mix(options.$pagerConfig, pager)
         }
         options.pager = null
         //方便用户对原始模板进行修改,提高制定性
         options.template = options.getTemplate(template, options);
         options.$skipArray = [
+            'smartgrid',
+            '_uiName',
             '_allEnabledData',
             'template',
             'widgetElement',
@@ -304,16 +316,17 @@ define(["avalon",
                 });
                 return selectedData.concat(vmodel._enabledData);
             };
-            vm._entryCount = function(pagerVM) {
-                if(vm.perPages !== void 0) return
-                function countEntry(n) {
-                    var data = vm.data
-                    vm.perPages = n
-                    if(data.length > n) vm.render(data.slice(0, n))
-                }
-                pagerVM.$watch("perPages", countEntry)
-                countEntry(pagerVM.perPages)
-            }
+            // vm._entryCount = function(pagerVM) {
+            //     if(vm.perPages !== void 0) return 
+
+            //     function countEntry(n) {
+            //         var data = vm.data
+            //         vm.perPages = n
+            //         if(data.length > n) vm.render(data.slice(0, n))
+            //     }
+            //     pagerVM.$watch("perPages", countEntry)
+            //     countEntry(pagerVM.perPages)
+            // }
             vm.selectAll = function (b) {
                 b = b !== void 0 ? b : true;
                 vmodel._selectAll(null, b);
@@ -478,9 +491,9 @@ define(["avalon",
                         data[name] = data[name] !== void 0 ? data[name] : column.defaultValue;
                     }
                 }
-                if(vm.pageable && vm.pager && vm.pager.perPages) {
-                    if(datas.length > vm.pager.perPages) datas = datas.slice(0, vm.pager.perPages)
-                }
+                // if(vm.pageable && vm.pager && vm.pager.perPages) {
+                //     if(datas.length > vm.pager.perPages) datas = datas.slice(0, vm.pager.perPages)
+                // }
                 html = fn({
                     data: datas,
                     columns: _columns,
@@ -544,7 +557,9 @@ define(["avalon",
                 if (!noShowLoading) vmodel.showLoading(vmodel.data);
                 avalon.nextTick(function () {
                     avalon.scan(vmodel.container, [vmodel].concat(vmodels));
-                    vmodel._setColumnWidth();
+                    // if (!vmodel.noHeader) {
+                        vmodel._setColumnWidth();
+                    // }
                     if (!noShowLoading) vmodel.hideLoading();
                 });
                 if (sorting) sorting = false
@@ -645,9 +660,12 @@ define(["avalon",
         return vmodel;
     };
     widget.defaults = {
+        _uiName: 'smartgrid',
         container: '',
         // element | id
         autoResize: true,
+        noHeader: false,
+        noFooter: false,
         data: [],
         columns: [],
         allChecked: true,
@@ -828,13 +846,19 @@ define(["avalon",
             if (format && !options.htmlHelper[format]) {
                 options.htmlHelper[format] = function (vmId, field, index, cellValue, rowData) {
                     avalon.log('\u65B9\u6CD5' + format + '\u672A\u5B9A\u4E49');
-                    return cellValue;
+                    if (typeof cellValue === 'string') {
+                        return avalon.filters.sanitize(cellValue);
+                    }
+                    return cellValue
                 };
             }
             htmlFunction = options.htmlHelper[format];
             if (!htmlFunction) {
                 htmlFunction = function (vmId, field, index, cellValue, rowData) {
-                    return cellValue;
+                    if (typeof cellValue === 'string') {
+                        return avalon.filters.sanitize(cellValue);
+                    }
+                    return cellValue
                 };
             }
             column.format = htmlFunction    // EJS模板对于helper的渲染是通过将helper中的方法分别作为compiler的参数存在的，为了在静态模板中可以使用fn()这种方式渲染数据，只好统一将渲染数据的方法保存在format中
@@ -849,7 +873,9 @@ define(["avalon",
                     if (rowData.checkboxShow === false) {
                         return ""
                     }
-                    return '<input type=\'' + type.toLowerCase() + '\'' + ' ms-disabled=\'_getAllCheckboxDisabledStatus('+ (allSelected ? true : false) + ', _dataRender)\' ' + (selected ? 'checked=\'checked\'' : '') + ' name=\'selected\' ' + (allSelected ? ' ms-click=\'_selectAll\' ms-duplex-radio=\'_allSelected\'' : ' data-index=\'' + index + '\'') + ' data-role=\'selected\'/>';
+                    var disableStr = disable ? ' disabled ' : ' ms-disabled=\'_getAllCheckboxDisabledStatus('+ (allSelected ? true : false) + ', _dataRender)\' '
+                    
+                    return '<input type=\'' + type.toLowerCase() + '\'' + disableStr + (selected ? 'checked=\'checked\'' : '') + ' name=\'selected\' ' + (allSelected ? ' ms-click=\'_selectAll\' ms-duplex-radio=\'_allSelected\'' : ' data-index=\'' + index + '\'') + ' data-role=\'selected\'/>';
                 };
                 allSelected = isSelectAll(options.data) || false;
                 options._allSelected = allSelected;
@@ -896,6 +922,7 @@ define(["avalon",
  [自定义smartgrid各种事件回调](avalon.smartgrid.ex5.html)
  [供用户调用API](avalon.smartgrid.ex6.html)
  [配置addRow为表格添加新行](avalon.smartgrid.ex7.html)
+ [通过data的disable属性禁用部分数据](avalon.smartgrid.ex8.html)
  */
 
 /**

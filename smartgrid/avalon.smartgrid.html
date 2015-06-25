@@ -5,7 +5,7 @@
                  ms-class="oni-smartgrid-{{column.toggle? 'show': 'hide'}}"
                  ms-css-width="column.width"/>
         </colgroup>
-        <thead class="oni-smartgrid-header">
+        <thead class="oni-smartgrid-header" ms-if='!noHeader'>
             <tr class="oni-smartgrid-header-fixed" 
                 ms-if="isAffix"
                 ms-css-top="_headerTop" 
@@ -45,7 +45,7 @@
         </thead>
         <tbody class="oni-smartgrid-body">
         </tbody>
-        <tfoot class="oni-smartgrid-footer">
+        <tfoot class="oni-smartgrid-footer" ms-if='!noFooter'>
             <tr>
                 <td ms-attr-colspan="{{columns.size()}}" class="oni-smartgrid-pager-wrapper">
                     <div ms-visible="pageable && _pagerShow">

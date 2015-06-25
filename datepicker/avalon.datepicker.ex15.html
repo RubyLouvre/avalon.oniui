@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<style type="text/css">
+    h3 {
+        text-align: center;
+        padding: 20px;
+    }
+    p {
+        background: #eee;
+        color: #f00; 
+        padding: 6px;
+        margin: 20px 0 0 0;
+    }
+    fieldset > p {
+        text-indent: 0;
+    }
+    .datepickerWrapper {
+        position: relative;
+        padding: 50px 10px;
+    }
+    .borderRed {
+        border: 3px solid #f00;
+    }
+    .syntaxhighlighter {
+        width: 100% !important; 
+    }
+</style>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div ms-controller="demo">
+            <div class='datepickerWrapper' style="text-align:center;">
+                <h3>通过position配置datepicker的显示位置</h3>
+                <button ms-click="normalPosition">normal</button>
+                <button ms-click="positionRB">set position 'rb'</button>
+                <button ms-click="positionLT">set position 'lt'</button>
+                <button ms-click="positionRT">set position 'rt'</button>
+                <button ms-click="positionCustom">set position custom className</button>
+            </div>
+            <fieldset style="margin-top: 20px; padding: 20px 10px;">
+                <legend>set datepicker position</legend>
+                <input ms-widget="datepicker, d1"/>
+                <p>{{description}}</p>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.datepicker"], function(avalon) {
+                    function showDatepicker() {
+                        setTimeout(function() {
+                            avalon.vmodels.d1.toggle = true
+                        }, 500)
+                    }
+                    var model = avalon.define("demo", function(vm) {
+                        vm.description = 'datepicker的默认展示位置'
+                        vm.normalPosition = function() {
+                            avalon.vmodels.d1.position = ""
+                            showDatepicker()
+                        }
+                        vm.positionRB = function() {
+                            vm.description = '配置datepicker的position为rb'
+                            avalon.vmodels.d1.position = "rb"
+                            showDatepicker()
+                        }
+                        vm.positionLT = function() {
+                            vm.description = '配置datepicker的position为lt'
+                            avalon.vmodels.d1.position = "lt"
+                            showDatepicker()
+                        }
+                        vm.positionRT = function() {
+                            vm.description = '配置datepicker的position为rt'
+                            avalon.vmodels.d1.position = "rt"
+                            showDatepicker()
+                        }
+                        vm.positionCustom = function() {
+                            vm.description = '配置position为自定义的class(borderRed)'
+                            avalon.vmodels.d1.position = "borderRed"
+                            showDatepicker()
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;smartgrid demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div ms-controller="demo"&gt;
+                        &lt;div class='datepickerWrapper' style="text-align:center;"&gt;
+                            &lt;h3&gt;通过position配置datepicker的显示位置&lt;/h3&gt;
+                            &lt;button ms-click="normalPosition"&gt;normal&lt;/button&gt;
+                            &lt;button ms-click="positionRB"&gt;set position 'rb'&lt;/button&gt;
+                            &lt;button ms-click="positionLT"&gt;set position 'lt'&lt;/button&gt;
+                            &lt;button ms-click="positionRT"&gt;set position 'rt'&lt;/button&gt;
+                            &lt;button ms-click="positionCustom"&gt;set position custom className&lt;/button&gt;
+                        &lt;/div&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;set datepicker position&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker, d1"/&gt;
+                            &lt;p&gt;{{description}}&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
+                                function showDatepicker() {
+                                    setTimeout(function() {
+                                        avalon.vmodels.d1.toggle = true
+                                    }, 500)
+                                }
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.description = 'datepicker的默认展示位置'
+                                    vm.normalPosition = function() {
+                                        avalon.vmodels.d1.position = ""
+                                        showDatepicker()
+                                    }
+                                    vm.positionRB = function() {
+                                        vm.description = '配置datepicker的position为rb'
+                                        avalon.vmodels.d1.position = "rb"
+                                        showDatepicker()
+                                    }
+                                    vm.positionLT = function() {
+                                        vm.description = '配置datepicker的position为lt'
+                                        avalon.vmodels.d1.position = "lt"
+                                        showDatepicker()
+                                    }
+                                    vm.positionRT = function() {
+                                        vm.description = '配置datepicker的position为rt'
+                                        avalon.vmodels.d1.position = "rt"
+                                        showDatepicker()
+                                    }
+                                    vm.positionCustom = function() {
+                                        vm.description = '配置position为自定义的class(borderRed)'
+                                        avalon.vmodels.d1.position = "borderRed"
+                                        showDatepicker()
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>
+

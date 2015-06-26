@@ -10,14 +10,13 @@
  */
  define(["avalon"], 
 function ($$) {
-	var proxyContructor = function (target, isH5, contextGen) {
+	var proxyContructor = function (contextGen) {
 		this.contextGen = contextGen;
-		if (isH5) {
-			this.addEventListenerInput(target);
-		} else {
-			target.addEventListener("newFileGenerated", this.onFlashFileAdded, this);
-			target.addEventListener("filePreviewUpdated", this.onPreviewUpdated, this);
-		}
+	}
+
+	proxyContructor.prototype.bindFlashEvent = function (target) {
+		target.addEventListener("newFileGenerated", this.onFlashFileAdded, this);
+		target.addEventListener("filePreviewUpdated", this.onPreviewUpdated, this);
 	}
 
 	proxyContructor.prototype.onPreviewUpdated = function (fileLocalToken, preview) {
@@ -28,8 +27,6 @@ function ($$) {
 
 	proxyContructor.prototype.onH5FileFieldChanged = function (event) {
         var target = event.target || event.srcElement;
-        var files = target.files || target.value;
-
         // 这里先把input file移除出dom tree，重新建立一个新的input file，再加回dom tree。
         // 主要是为了清除input file的已选文件。暂时没有更好的办法。
         var html = target.outerHTML,
@@ -41,6 +38,11 @@ function ($$) {
         this.addEventListenerInput(fileInputWrapper.children[0]);
         pNode.appendChild(fileInputWrapper.children[0]);
 
+        var files = target.files || target.value;
+        this.addNewFiles(files);
+	}
+
+	proxyContructor.prototype.addNewFiles = function (files) {
         var me = this;
         for (var i = 0; i < files.length; i++) {
         	var fileContext = this.getFileContext({ name: files[i].name, size: files[i].size });
@@ -67,6 +69,7 @@ function ($$) {
         	}
         }
 	}
+
 	proxyContructor.prototype.getImagePreview = function (fileInfo, previewWidth, previewHeight, callback) {
 		var me = this;
 		var promise = new Promise(function(resolve, reject) {

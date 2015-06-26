@@ -95,14 +95,19 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                     vm.previews.remove(el);
                     vm.$runtime.removeFileByToken(el.fileLocalToken);
                 }
+
                 vm.onDragOver = function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
+                    if (vm.enableDragDrop) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
                 }
                 vm.onDrop = function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    vm.$fileInputProxy.addNewFiles(e.dataTransfer.files);
+                    if (vm.enableDragDrop) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        vm.$fileInputProxy.addNewFiles(e.dataTransfer.files);
+                    }
                 }
                 avalon.bind(window, "dragover", vm.onDragOver);
                 avalon.bind(window, "drop", vm.onDrop);
@@ -304,8 +309,8 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                 blobMd5ParamName: "md5"
             },
 
-            //@config {boolean} 是否开启文件拖放，只支持Chrome、FireFox、Safari及IE10+
-            enableDnD: true,
+            //@config {Boolean} 是否开启文件拖放，只支持Chrome、FireFox、Safari及IE10+。默认关闭
+            enableDragDrop: false,
 
             //@config {String} 无预览的图片文件地址。
             noPreviewPath: "http://source.qunarzz.com/general/oniui/fileuploader/no-preview.png",

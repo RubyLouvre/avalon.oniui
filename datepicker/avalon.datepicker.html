@@ -1,8 +1,8 @@
 <div class="oni-datepicker"
      ms-visible="toggle"
      ms-class="oni-datepicker-multiple:numberOfMonths!==1">
-    <div class="oni-datepicker-wrapper" ms-css-position="_position">
-        <div class="oni-datepicker-content" >
+    <div class="oni-datepicker-wrapper" ms-css-position="_position" ms-class="{{_getPositionClass(position)}}">
+        <div class="oni-datepicker-content">
             <div class="oni-datepicker-label" ms-if="numberOfMonths===1">{{calendarLabel}}</div>
             <i  class="oni-datepicker-prev oni-icon" 
                 ms-if="numberOfMonths!==1" 

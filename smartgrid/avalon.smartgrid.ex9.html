@@ -22,7 +22,7 @@
 
                     for (var i = 0; i < number; i++) {
                         data.push({
-                            name: '<a href="javascript:alert(1)">' + random.toString(32).slice(4, 10) + "</b>",
+                            name: '<a href="javascript:alert(1)">' + random.toString(32).slice(4, 10) + "</a>",
                             age: parseInt(10 + Math.random() * 20) + "\<script\>console.log('aaa')\</script\>",
                             salary: "1000\<script\>alert('1')\</script\>",
                             change: "<span onclick='alert(2)' style='color:" + (factor === 1 ? 'green' : 'red') + "'>" + random.toFixed(2) * factor + "</span>"

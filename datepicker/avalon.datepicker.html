@@ -16,7 +16,9 @@
                 style="right:15px;">&#xf03e;</i>
             <div class="oni-datepicker-content-content" 
                  ms-repeat-calendar="data" 
-                 ms-visible="_datepickerToggle">
+                 ms-visible="_datepickerToggle"
+                 ms-css-width='calendarWidth'
+                 data-repeat-rendered="dataRendered">
                 <div class="oni-datepicker-header" ms-if="numberOfMonths===1">
                     <i class="oni-datepicker-prev oni-icon" 
                        ms-click="_prev(prevMonth, $event)"
@@ -60,9 +62,10 @@
                         </tr>
                     </thead>
                 </table>
-                <table class="oni-datepicker-calendar-days">
+                <table class="oni-datepicker-calendar-days" id='oni-datepicker-days'>
                     <tbody>
-                        <tr ms-repeat-days="calendar.rows">
+                        <tr ms-repeat-days="calendar.rows"
+                            ms-if-loop="_rowShow(days)">
                             <td class="oni-datepicker-default"
                                 ms-repeat-item="days"
                                 ms-class="{{_setDayClass($index, $outer.$index, $outer.$outer.$index, item)}}"
@@ -92,11 +95,16 @@
                     <button type="button" class="oni-btn oni-btn-small" style="float: left" ms-click="_getNow">{{regional.nowText}}</button>
                     <button type="button" class="oni-btn oni-btn-primary oni-btn-small" style="float:right" ms-click="_selectTime">{{regional.confirmText}}</button>
                 </div>
-                <div class="oni-datepicker-watermark" ms-if="watermark">
+                <div class="oni-datepicker-watermark" 
+                     ms-if="watermark"
+                     ms-css-font-size='_height'
+                     ms-css-line-height='{{_height}}px'
+                     ms-css-width='calendarWidth'
+                     ms-css-height='_height'>
                     {{calendar.month+1}}
                 </div>
             </div>
-            <div class="oni-datepicker-content-content oni-datepicker-month-year" ms-if="mobileMonthAndYear" ms-visible="_monthToggle">
+            <div class="oni-datepicker-content-content oni-datepicker-month-year" ms-if="mobileMonthAndYear" ms-visible="_monthToggle" ms-css-width='calendarWidth'>
                 <table>
                     <thead>
                         <tr class="oni-datepicker-title">
@@ -136,7 +144,7 @@
                 </table>
             </div>
 
-            <div class="oni-datepicker-content-content oni-datepicker-month-year" ms-if="mobileMonthAndYear" ms-visible="_yearToggle">
+            <div class="oni-datepicker-content-content oni-datepicker-month-year" ms-if="mobileMonthAndYear" ms-visible="_yearToggle" ms-css-width='calendarWidth'>
                 <table>
                     <thead>
                         <tr class="oni-datepicker-title">

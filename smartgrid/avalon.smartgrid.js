@@ -204,6 +204,7 @@ define(["avalon",
     var countter = 0
     var widget = avalon.ui.smartgrid = function (element, data, vmodels) {
         var options = data.smartgridOptions, $element = avalon(element), pager = options.pager, vmId = data.smartgridId,
+            gridEle, containerWrapper, smartgridHeader,
             $initRender = true,
             _dataVM,
             _data = []
@@ -215,8 +216,8 @@ define(["avalon",
                 }
             }
         }
-        perfectColumns(options, element);
         initContainer(options, element);
+        perfectColumns(options, element, vmId);
         options._position = positionAbsolute ? 'absolute' : 'fixed';
         options.loading.onInit = function (vm, options, vmodels) {
             vmodel.loadingVModel = vm;
@@ -231,7 +232,6 @@ define(["avalon",
             ],    //默认[10,20,50,100]
             onInit: function(pagerVM, options, vmodels) {
                 vmodel && (vmodel.pager = pagerVM)
-                // pagerVM && vmodel._entryCount(pagerVM)
             }
         }
         options.pageable = options.pageable !== void 0 ? options.pageable : true;
@@ -254,7 +254,6 @@ define(["avalon",
                 pager.onInit = function(pagerVM, options, vmodels) {
                     vmodel && (vmodel.pager = pagerVM)
                     onInit(pagerVM, options, vmodels)
-                    // pagerVM && vmodel._entryCount(pagerVM)
                 }
             }
             avalon.mix(options.$pagerConfig, pager)
@@ -269,8 +268,6 @@ define(["avalon",
             'template',
             'widgetElement',
             'container',
-            '_container',
-            '_position',
             'htmlHelper',
             'selectable',
             'loadingVModel',
@@ -280,18 +277,18 @@ define(["avalon",
             'sortable',
             'pager',
             'data',// 一定不要去掉啊，去掉了就会出错
-            'containerMinWidth',
             '_disabledData',
             '_enabledData',
-            '_filterCheckboxData'
+            '_filterCheckboxData',
+            'maxGridWidth',
+            'bodyHeight'
         ].concat(options.$skipArray);
         var vmodel = avalon.define(vmId, function (vm) {
             avalon.mix(vm, options);
             vm.widgetElement = element;
             vm._headerTop = 0 + options.affixHeight;
-            vm._container = null;
             vm._fixHeaderToggle = false;
-            vm._gridWidth = 0;
+            vm._gridWidth = 'auto';
             vm._pagerShow = false;
             vm._allEnabledData = [];
             vm._disabledData = [];
@@ -304,9 +301,15 @@ define(["avalon",
                 var selectable = vmodel.selectable
                 return selectable && selectable.type && column.key=='selected' && !allChecked
             }
+            /**
+             * @interface 获取表格数据,当然也可以通过vmodel.data直接获得表格数据
+             */
             vm.getRawData = function () {
                 return vmodel.data;
             };
+            /**
+             * @interface 获取选中表格行的数据集合
+             */
             vm.getSelected = function () {
                 var disabledData = vmodel._disabledData, selectedData = [];
                 disabledData.forEach(function (dataItem, index) {
@@ -316,25 +319,22 @@ define(["avalon",
                 });
                 return selectedData.concat(vmodel._enabledData);
             };
-            // vm._entryCount = function(pagerVM) {
-            //     if(vm.perPages !== void 0) return 
-
-            //     function countEntry(n) {
-            //         var data = vm.data
-            //         vm.perPages = n
-            //         if(data.length > n) vm.render(data.slice(0, n))
-            //     }
-            //     pagerVM.$watch("perPages", countEntry)
-            //     countEntry(pagerVM.perPages)
-            // }
+            /**
+             * @interface {Function} 全选表格，或者全不选
+             * @param b {Boolean} true表示全选，false表示全不选，为空时以true对待
+             */
             vm.selectAll = function (b) {
                 b = b !== void 0 ? b : true;
                 vmodel._selectAll(null, b);
             };
+            /**
+             * @interface {Function} 判断表过是否全选
+             * @returns {Boolean} true表示全选，false表示全不选
+             */
             vm.isSelectAll = function () {
                 return vmodel._allSelected;
             };
-            //如果当前列可以排序，那么点击标题旁边的icon,将会调用此方法
+            
             vm.sortColumn = function (column, index, event) {
                 var target = event.target, $target = avalon(target), sortTrend = '', field = column.key, trend = 0, onColumnSort = vmodel.onColumnSort;
                 if (!vmodel.data.length)
@@ -368,7 +368,11 @@ define(["avalon",
                         });
                     } else {
                         vmodel.data.sort(function (a, b) {
-                            return trend * a[field].localeCompare(b[field]);
+                            try {
+                                return trend * a[field].localeCompare(b[field]);
+                            } catch(e) {
+                                return trend * (a[field] - b[field]) || 0;
+                            }
                         });
                     }
                     vmodel.render();
@@ -377,6 +381,11 @@ define(["avalon",
                     }
                 }
             };
+            /**
+             * @interface {Function} 设置列的显示或者隐藏
+             * @param columns {String|Array} 可以是字符串，也可以是数组，列出要设置的列的key值
+             * @param b {Boolean} true为显示列，false为隐藏列，设置了列的isLock属性为ture时始终显示列
+             */
             vm.setColumns = function (columns, b) {
                 var columnsOption = vmodel.columns;
                 columns = [].concat(columns);
@@ -388,84 +397,115 @@ define(["avalon",
                     }
                 }
             };
+            /**
+             * @interface {Function} 调用此方法清空表格数据
+             * @param text {String} 无数据情况下的说明文字，默认为“暂时没有数据”
+             */
             vm.showNoResult = function (text) {
                 // 只要数据为空组件会自动showNoResult,考虑到使用习惯保留了showNoResult，不过其实完全可以不用
                 vmodel.noResult = text || vmodel.noResult;
                 vmodel.data = [];
                 vmodel.render();
             };
+            /**
+             * @interface {Function} 显示缓冲提示
+             */
             vm.showLoading = function () {
                 vmodel.loadingVModel.toggle = true;
             };
+            /**
+             * @interface {Function} 隐藏缓冲提示
+             */
             vm.hideLoading = function () {
                 vmodel.loadingVModel.toggle = false;
             };
             vm._selectAll = function (event, selected) {
-                var datas = vmodel.data, trs = vmodel._container.getElementsByTagName('tr'), onSelectAll = vmodel.onSelectAll;
-                setTimeout(function () {
-                    var val = event ? event.target.checked : selected, enableData = datas.concat();
-                    vmodel._allSelected = val;
-                    for (var i = 0, len = trs.length; i < len; i++) {
-                        var tr = trs[i], 
-                            $tr = avalon(tr), 
-                            data, 
-                            input = tr.cells[0].getElementsByTagName('input')[0], 
-                            dataIndex = input && avalon(input).attr('data-index');
-                        if (dataIndex !== null && dataIndex !== void 0) {
-                            data = datas[dataIndex];
-                            if (!data.disable) {
-                                data.selected = val;
-                                input.checked = val;
-                                $tr[val ? 'addClass' : 'removeClass']('oni-smartgrid-selected');
-                            }
-                        } else {
-                            continue;
+                var datas = vmodel.data, rows = containerWrapper.children, onSelectAll = vmodel.onSelectAll,
+                    val = event ? event.target.checked : selected, 
+                    enableData = datas.concat();
+
+                for (var i = 0, len = rows.length; i < len; i++) {
+                    var row = rows[i],
+                        $row = avalon(row)
+
+                    if (!$row.hasClass('oni-smartgrid-row')) {
+                        continue
+                    }
+                    var input = row.children[0].getElementsByTagName('input')[0], 
+                        dataIndex = input && avalon(input).attr('data-index'),
+                        data
+
+                    if (dataIndex !== null && dataIndex !== void 0) {
+                        data = datas[dataIndex];
+                        if (!data.disable) {
+                            data.selected = val;
+                            input.checked = val;
+                            $row[val ? 'addClass' : 'removeClass']('oni-smartgrid-selected');
                         }
-                    }
-                    if (val) {
-                        vmodel._enabledData = vmodel._allEnabledData.concat();
                     } else {
-                        vmodel._enabledData = [];
+                        continue;
                     }
-                    if (avalon.type(onSelectAll) === 'function') {
-                        onSelectAll.call(vmodel, datas, val);
-                    }
-                }, 100);
+                }
+                if (val) {
+                    vmodel._enabledData = vmodel._allEnabledData.concat();
+                } else {
+                    vmodel._enabledData = [];
+                }
+                if (avalon.type(onSelectAll) === 'function') {
+                    onSelectAll.call(vmodel, datas, val);
+                }
+                setTimeout(function() {
+                    vmodel._allSelected = val;
+                },100)
             };
             vm._toggleColumn = function (toggle, index) {
-                if (!vmodel._container)
+                if (!containerWrapper)
                     return toggle;
-                var trs = vmodel._container.getElementsByTagName('tr'), cell = null;
-                for (var i = 0, tr, len = trs.length; i < len; i++) {
-                    tr = trs[i];
-                    cell = tr.cells[index];
-                    if (cell) {
+                var rows = containerWrapper.children, column = null;
+                for (var i = 0, row, len = rows.length; i < len; i++) {
+                    row = rows[i]
+                    if (!avalon(row).hasClass('oni-smartgrid-row')) {
+                        continue
+                    }
+                    column = row.children[index];
+                    if (column) {
                         if (toggle) {
-                            tr.cells[index].style.display = 'table-cell';
+                            column.style.display = 'table-cell';
                         } else {
-                            tr.cells[index].style.display = 'none';
+                            column.style.display = 'none';
                         }
                     }
                 }
-                setTimeout(function () {
-                    vmodel._setColumnWidth();
-                }, 100);
+                // setTimeout(function () {
+                //     vmodel._setColumnWidth();
+                // }, 100);
                 return toggle;
             };
             vm._setColumnWidth = function (resize) {
-                var cells = vmodel._container.getElementsByTagName('tr')[0].cells, columns = vmodel.columns, _columns = columns.$model, $gridContainer = avalon(vmodel.container), containerWidth = $gridContainer.width(), minColumnWidth = getMinColumnWidth(_columns), firstStringColumn = getFirstStringColumn(columns, vmodel);
-                if (minColumnWidth > containerWidth && !resize || !vm.autoResize) {
-                    $gridContainer.css('width', minColumnWidth);
-                    firstStringColumn.width = firstStringColumn.configWidth;
-                } else {
-                    $gridContainer.css('width', 'auto');
-                    firstStringColumn.width = 'auto';
+                var parentContainerWidth = avalon(vmodel.container.parentNode).width() -2,
+                    columnsInfo = getMaxWidthColumn(vmodel.columns),
+                    showColumnWidth = columnsInfo.showColumnWidth,
+                    maxWidthColumn = columnsInfo.maxWidthColumn,
+                    maxWidth = maxWidthColumn.configWidth,
+                    adjustColumns = [maxWidthColumn],
+                    autoWidth = autoWidth = parentContainerWidth - showColumnWidth + maxWidth,
+                    rows = Array.prototype.slice.call(containerWrapper.children)
+                if (!autoWidth) {
+                    return false
                 }
-                for (var i = 0, len = cells.length; i < len; i++) {
-                    var $cell = avalon(cells[i]), cellWidth = $cell.width(), column = columns[i];
-                    column._fixWidth = cellWidth;
-                }
-                vmodel._gridWidth = containerWidth;
+                setColumnWidth(adjustColumns, autoWidth)
+                rows.forEach(function(row, index) {
+                    var columns = vmodel.columns.$model,
+                        rowColumns = row.children,
+                        columnsLen = columns.length;
+
+                    if (rowColumns.length < columnsLen) {
+                        return false;
+                    }
+                    for(var i = 0; i < columnsLen; i++) {
+                        rowColumns[i].style.width = columns[i].width + 'px'
+                    }
+                })
             };
             vm._getTemplate = function (defineDatas, startIndex) {
                 var fn, html, id = 'smartgrid_tmp_' + tempId, dt = defineDatas || vmodel.data, _columns = vmodel.columns, columns = _columns.$model, selectableType = vmodel.selectable && vmodel.selectable.type || '', datas = [];
@@ -491,9 +531,6 @@ define(["avalon",
                         data[name] = data[name] !== void 0 ? data[name] : column.defaultValue;
                     }
                 }
-                // if(vm.pageable && vm.pager && vm.pager.perPages) {
-                //     if(datas.length > vm.pager.perPages) datas = datas.slice(0, vm.pager.perPages)
-                // }
                 html = fn({
                     data: datas,
                     columns: _columns,
@@ -519,7 +556,9 @@ define(["avalon",
 
             /**
              * @interface 增加行，已經渲染的不會再操作
-             * @param 新增的行
+             * @param data {Array} 新增的行
+             * @param init {Boolean} 是否为初始化grid
+             * @param noShowLoading {Boolean} 渲染期间是否显示loading
              */
             vm.addRows = function(data, init, noShowLoading) {
                 // 防止 addRows([])带来问题
@@ -527,7 +566,6 @@ define(["avalon",
                 var tableTemplate = "",
                     rows,
                     container = vmodel.container,
-                    containerWrapper = container.getElementsByTagName("tbody")[0] || container.getElementsByTagName("table")[0],
                     selectable = vmodel.selectable,
                     len = vmodel.getLen(vmodel.data),
                     arrLen = vmodel.data.length
@@ -555,11 +593,9 @@ define(["avalon",
                     getSelectedData(vmodel);
                 }
                 if (!noShowLoading) vmodel.showLoading(vmodel.data);
+                containerWrapper.lastChild.style.borderBottomWidth = 0
                 avalon.nextTick(function () {
                     avalon.scan(vmodel.container, [vmodel].concat(vmodels));
-                    // if (!vmodel.noHeader) {
-                        vmodel._setColumnWidth();
-                    // }
                     if (!noShowLoading) vmodel.hideLoading();
                 });
                 if (sorting) sorting = false
@@ -584,6 +620,12 @@ define(["avalon",
                 }
                 if(!vmodel.getLen(vmodel.data)) vmodel.render(void 0, true)
             }
+            /**
+             * @interface {Function} 用新的数据重新渲染表格视图
+             * @param data {Array} 重新渲染表格的数据集合
+             * @param init {Boolean} 是否为初始化grid
+             * @param noShowLoading {Boolean} 渲染期间是否显示loading
+             */
             vm.render = function (data, init, noShowLoading) {
                 if (avalon.type(data) === 'array') {
                     vmodel.data = data;
@@ -597,6 +639,9 @@ define(["avalon",
                 } else {
                     $initRender = false
                 }
+                if (!vmodel.noHeader && init && vmodel.isAffix && !vmodel.maxGridWidth) {
+                    vmodel._gridWidth = avalon(gridEle).innerWidth()
+                }
                 vmodel.addRows(void 0, init, noShowLoading)
                 if (sorting) {
                     sorting = false;
@@ -606,47 +651,56 @@ define(["avalon",
             };
             vm.$init = function () {
                 var container = vmodel.container, gridFrame = '';
+
                 gridFrame = gridHeader.replace('MS_OPTION_ID', vmodel.$id);
                 container.innerHTML = gridFrame;
                 dataFracte(vmodel)
                 avalon.scan(container, vmodel);
+                gridEle = document.getElementById('oni-smartgrid') 
+                containerWrapper = document.getElementById('oni-smartgrid-body')
+                
+                smartgridHeader = document.getElementById('oni-smartgrid-header')
+                gridEle.id = ''
+                containerWrapper.id=''
+                smartgridHeader.id=''
+                if (vmodel.maxGridWidth) {
+                    var gridMainEle = document.getElementById('oni-smartgrid-main')
+                    gridMainEle.style.width = vmodel.maxGridWidth + 'px'
+                    gridMainEle.id=''
+                    vmodel._position = 'relative'
+                    gridMainEle.parentNode.style.cssText = '*overflow-x: scroll;_overflow-x: scroll;'
+                }
+                if (!vmodel.bodyHeight) {
+                    containerWrapper.parentNode.style.cssText = '*overflow-y:hidden;_overflow-y:hidden;'
+                } else {
+                    containerWrapper.parentNode.style.cssText = '*overflow-y:scroll;_overflow-y:scroll;height:'+vmodel.bodyHeight+'px'
+                }
                 avalon.nextTick(function () {
-                    vmodel._container = container.getElementsByTagName('tbody')[0];
                     vmodel.render(true);
-                    bindEvents(vmodel);
+                    bindEvents(vmodel, container);
                 });
                 if (vmodel.isAffix) {
-                    callbacksNeedRemove.scrollCallback = avalon(window).bind('scroll', function () {
-                        var scrollTop = Math.max(document.body.scrollTop, document.documentElement.scrollTop), offsetTop = $element.offset().top, headerHeight = avalon(element.getElementsByTagName('thead')[0]).css('height'), top = scrollTop - offsetTop + vmodel.affixHeight, clientHeight = avalon(window).height(), tableHeight = $element.outerHeight(), _position = vmodel._position;
-                        if (tableHeight > clientHeight && scrollTop > offsetTop + headerHeight && offsetTop + tableHeight > scrollTop) {
-                            if (_position === 'absolute') {
-                                vmodel._headerTop = Math.floor(top);
-                            }
-                            if (!vmodel.$model._fixHeaderToggle) {
-                                vmodel._fixHeaderToggle = true;
-                            }
-                        } else {
-                            if (_position === 'absolute') {
+                    if (!callbacksNeedRemove.scrollCallback) {
+                        callbacksNeedRemove.scrollCallback = avalon(window).bind('scroll', function () {
+
+                            var scrollTop = Math.max(document.body.scrollTop, document.documentElement.scrollTop), offsetTop = $element.offset().top, headerHeight = avalon(smartgridHeader).css('height'), top = scrollTop - offsetTop + vmodel.affixHeight, clientHeight = avalon(window).height(), tableHeight = $element.outerHeight(), _position = vmodel._position;
+                            if (tableHeight > clientHeight && scrollTop > offsetTop + headerHeight && offsetTop + tableHeight > scrollTop) {
+                                if (vmodel._position !== 'fixed') {
+                                    vmodel._headerTop = Math.floor(top);
+                                }
+                                if (!vmodel.$model._fixHeaderToggle) {
+                                    vmodel._fixHeaderToggle = true;
+                                }
+                            } else {
                                 vmodel._headerTop = 0;
+                                if (vmodel.$model._fixHeaderToggle) {
+                                    vmodel._fixHeaderToggle = false;
+                                }
                             }
-                            if (vmodel.$model._fixHeaderToggle) {
-                                vmodel._fixHeaderToggle = false;
-                            }
-                        }
-                    });
+                        });
+                    }
                 }
                 element.resizeTimeoutId = 0;
-                callbacksNeedRemove.resizeCallback = avalon(window).bind('resize', function () {
-                    if(!vmodel.autoResize) return
-                    clearTimeout(element.resizeTimeoutId);
-                    var clientWidth = avalon(window).width();
-                    if (clientWidth <= vmodel.containerMinWidth) {
-                        element.style.width = vmodel.containerMinWidth + 'px';
-                    }
-                    element.resizeTimeoutId = setTimeout(function () {
-                        vmodel._container && vmodel._setColumnWidth(true);
-                    }, 150);
-                });
                 if (typeof options.onInit === 'function') {
                     options.onInit.call(element, vmodel, options, vmodels);
                 }
@@ -654,41 +708,92 @@ define(["avalon",
             vm.$remove = function () {
                 var container = vmodel.container;
                 container.innerHTML = container.textContent = '';
-                avalon(window).unbind('resize', callbacksNeedRemove.resizeCallback).unbind('scroll', callbacksNeedRemove.scrollCallback);
+                avalon(window).unbind('scroll', callbacksNeedRemove.scrollCallback);
             };
         });
         return vmodel;
     };
     widget.defaults = {
         _uiName: 'smartgrid',
-        container: '',
-        // element | id
-        autoResize: true,
-        noHeader: false,
-        noFooter: false,
-        data: [],
-        columns: [],
-        allChecked: true,
-        htmlHelper: {},
-        noResult: '\u6682\u65F6\u6CA1\u6709\u6570\u636E',
+        container: '', //@config 设置组件的容器元素，可以是字符串,表示对应元素的id，也可以是元素对象
+        pageable: true, //@config 表格是否需要分页，默认需要，false不需要
+        noHeader: false, //@config 是否显示表格头部
+        noFooter: false, //@config 是否显示表格底部
+        data: [], //@config 表格数据
+        /* @config 表格列信息对象的集合
+         * <pre>[{
+    key: "name", <span>//列标志 </span>
+    name: "姓名", <span>//列名</span>
+    sortable: true, <span>//是否可对列排序</span>
+    isLock: true, <span>//是否锁死列，设为true会始终显示此列，无论配置如何</span>
+    align": "left", <span>//设置列的对齐方式，"left"|"center"|"right"默认为"center"</span>
+    defaultValue: "shirly", <span>//列的默认值，当数据中没有为此列设置值时显示此默认值</span>
+    customClass: "custom", <span>//设置此列单元格的自定义类</span>
+    toggle: false, <span>//是否显示此列，true显示false不显示</span>
+    width: 400, <span>//设置列宽，必须是Number</span>
+    localSort: function(a, b, f) { <span>//自定义列的本地排序规则</span>
+        return a[f].localeCompare(b[f]);
+    },
+    format: "upperCaseName" <span>//包装列数据的方法，此方法名对应到htmlHelper对象中的方法</span>
+}, ...]</pre>
+         */
+        columns: [], 
+        allChecked: true, //@config 当设置selectable之后，是否显示表头的全选框，默认显示，false不显示
+        htmlHelper: {}, //@config 包装数据的方法集合,可<a href="avalon.smartgrid.ex2.html">参见实例2</a>的使用
+        noResult: '暂时没有数据', //@config 数据为空时表格的提示信息
+        /**
+         * @config {Function} 远程排序操作的方法
+         * @param field {String} 待排序的列名
+         * @param sortTrend {String} 排序规则，"asc"为升序"desc"为降序
+         * @param vmodel {Object} smartgrid组件对应的Vmodel
+         */
         remoteSort: avalon.noop,
-        isAffix: false,
-        affixHeight: 0,
-        containerMinWidth: 600,
-        selectable: false,
-        loading: {
+        isAffix: false, //@config 表头在表格内容超过可视区高度时是否吸顶，true吸顶，false不吸顶，默认不吸顶
+        affixHeight: 0, //@config 配置吸顶元素距离窗口顶部的高度
+        selectable: false, //@config 为表格添加Checkbox或者Radio操作项，格式为<pre>{type: 'Checkbox'}</pre>
+        bodyHeight: 0,
+        //@config 设置loading缓冲的配置项，具体使用方法参见loading文档
+        loading: { 
             toggle: false,
             modal: true,
             modalBackground: '#000'
         },
-        
+        pager: {}, //@config 设置pager的配置项，smartgrid组件默认会添加pager，也可以改变表格显示数目，默认可选10、20、50、100条数据，如果不希望显示此选项，可以设置canChangePageSize为false
+
+        //@config 是否进行远程排序，默认true，进行远程排序必须配置远程排序的方法：remoteSort
         sortable: { remoteSort: true },
+        /**
+         * @config {Function} 为表格添加新行
+         * @param tmp {String} 表格的body模板
+         * @param columns {Array} 列信息数组
+         * @param vmodel {Object} smartgrid组件对应的Vmodel
+         * @returns {String} 用户定制后的模板
+         */
         addRow: function (tmpl, columns, vmodel) {
             return tmpl;
         },
         getTemplate: function (str, options) {
             return str;
-        }
+        },
+        /**
+         * @config {Function} 排序回调
+         * @param sortType {String} 排序规则，"asc"为升序"desc"为降序
+         * @param field {String} 排序的列名
+         */
+        onColumnSort: avalon.noop,
+        /**
+         * @config {Function} 用户选中一行或者取消一行选中状态的回调
+         * @param rowData {Object} 被操作行的数据对象
+         * @param isSelected {Boolean} 行的选中状态，true选中状态，false非选中状态
+         * @param dataIndex {Number} 当前行数据在data中的索引
+         */
+        onRowSelect: avalon.noop,
+        /**
+         * @config {Function} 用户全选或全不选的回调
+         * @param datas {Array} 表格数据
+         * @param isSelectedAll {Boolean} 全选状态，true选中状态，false非选中状态
+         */
+        onSelectAll: avalon.noop
     };
     function initContainer(options, element) {
         var container = options.container;
@@ -703,13 +808,14 @@ define(["avalon",
         container = container || element;
         options.container = container;
     }
-    function bindEvents(options) {
-        if (!options.selectable)
+    function bindEvents(options, containerWrapper) {
+        if (!options.selectable) {
             return;
-        var type = options.selectable.type, container = options._container;
+        }
+        var type = options.selectable.type;
         if (type === 'Checkbox' || type === "Radio") {
-            avalon.bind(container, 'click', function (event) {
-                var target = event.target, $target = avalon(target), $tr = avalon(target.parentNode.parentNode), datas = options.data, onSelectAll = options.onSelectAll, enabledData = options._enabledData, disabledData = options._disabledData, dataIndex = $target.attr('data-index'),
+            avalon.bind(containerWrapper, 'click', function (event) {
+                var target = event.target, $target = avalon(target), $row = avalon(target.parentNode.parentNode), datas = options.data, onSelectAll = options.onSelectAll, enabledData = options._enabledData, disabledData = options._disabledData, dataIndex = $target.attr('data-index'),
                     filterCheckboxData = options._filterCheckboxData;
                 if (!$target.attr('data-role') || dataIndex === null) {
                     return;
@@ -717,19 +823,19 @@ define(["avalon",
                 if ($target.attr('data-role') === 'selected') {
                     var rowData = datas[dataIndex], isSelected = target.checked;
                     if (isSelected) {
-                        options.selectable.type === 'Checkbox' ? $tr.addClass('oni-smartgrid-selected') : 0;
+                        options.selectable.type === 'Checkbox' ? $row.addClass('oni-smartgrid-selected') : 0;
                         if(options.selectable.type === 'Radio'){
                             enabledData.splice(0, enabledData.length);
                         }
                         rowData.selected = true;
                         avalon.Array.ensure(enabledData, rowData);
                     } else {
-                        $tr.removeClass('oni-smartgrid-selected');
+                        $row.removeClass('oni-smartgrid-selected');
                         rowData.selected = false;
                         avalon.Array.remove(enabledData, rowData);
                     }
                     if (avalon.type(options.onRowSelect) === 'function') {
-                        options.onRowSelect.call($tr[0], rowData, isSelected);
+                        options.onRowSelect.call($row[0], rowData, isSelected, dataIndex);
                     }
                 }
                 if (enabledData.length == datas.length - disabledData.length- filterCheckboxData.length) {
@@ -768,37 +874,29 @@ define(["avalon",
             }
         }
     }
-    function getFirstStringColumn(columns, vmodel) {
-        for (var i = 0, len = columns.length; i < len; i++) {
-            var column = columns[i], type = column.type;
-            type = type === void 0 ? 'String' : type;
-            if (column.toggle && type === 'String') {
-                return column;
-            }
-        }
-        if (vmodel.selectable && vmodel.selectable.type) {
-            return columns[1];
-        } else {
-            return columns[0];
-        }
-    }
-    function getMinColumnWidth(columns) {
-        var showColumnWidth = 0;
-        for (var i = 0, len = columns.length; i < len; i++) {
-            var column = columns[i];
+    function getMaxWidthColumn(columns, vmodel) {
+        var maxWidth = 0, maxWidthColumn = null, 
+            showColumnWidth = 0,
+            _columns = columns.$model || columns;
+        for (var i = 0, len = _columns.length; i < len; i++) {
+            var column = _columns[i], columnWidth = column.width;
             if (column.toggle) {
-                showColumnWidth += parseInt(column.configWidth) || 0;
+                columnWidth > maxWidth ? (maxWidth = columnWidth) && (maxWidthColumn = columns[i]) : 0;
+                showColumnWidth += columnWidth
             }
         }
-        return showColumnWidth;
+        return {
+            maxWidthColumn: maxWidthColumn,
+            showColumnWidth: showColumnWidth
+        }
     }
+
     function isSelectAll(datas) {
         var allSelected = true, len = datas.length,
             checkboxFilterAll = 0
 
         if (!len) {
-            allSelected = false;
-            return;
+            return false;
         }
         for (var i = 0; i < len; i++) {
             var data = datas[i];
@@ -817,8 +915,10 @@ define(["avalon",
         }
         return allSelected;
     }
-    function perfectColumns(options, element) {
-        var columns = options.columns, selectColumn = {}, parentContainerWidth = avalon(element.parentNode).width(), allColumnWidth = 0, maxWidth = 0, maxWidthColumn = {};
+    function perfectColumns(options, element, vmId) {
+        var columns = options.columns, selectColumn = {}, 
+            parentContainerWidth = avalon(options.container.parentNode).width() -2, 
+            allColumnWidth = 0, maxWidth = 0, maxWidthColumn = {};
         for (var i = 0, len = columns.length; i < len; i++) {
             var column = columns[i], format = column.format, htmlFunction = '', _columnWidth = column.width, columnWidth = ~~_columnWidth;
             column.align = column.align || 'center';
@@ -828,13 +928,16 @@ define(["avalon",
             column.configWidth = columnWidth;
             if (!columnWidth && _columnWidth) {
                 if (_columnWidth.indexOf('%')) {
-                    columnWidth = parentContainerWidth * parseInt(_columnWidth) / 100;
+                    columnWidth = parseInt(parentContainerWidth * parseFloat(_columnWidth) / 100);
                     column.configWidth = columnWidth;
                 } else {
                     columnWidth = 'auto';
                 }
             }
-            column.width = column._fixWidth = columnWidth;
+            if (_columnWidth === void 0) {
+                columnWidth = 'auto'
+            }
+            column.width = columnWidth;
             allColumnWidth += ~~columnWidth;
             ~~columnWidth > maxWidth ? (maxWidth = columnWidth) && (maxWidthColumn = column) : 0;
             column.customClass = column.customClass || '';
@@ -875,10 +978,9 @@ define(["avalon",
                     }
                     var disableStr = disable ? ' disabled ' : ' ms-disabled=\'_getAllCheckboxDisabledStatus('+ (allSelected ? true : false) + ', _dataRender)\' '
                     
-                    return '<input type=\'' + type.toLowerCase() + '\'' + disableStr + (selected ? 'checked=\'checked\'' : '') + ' name=\'selected\' ' + (allSelected ? ' ms-click=\'_selectAll\' ms-duplex-radio=\'_allSelected\'' : ' data-index=\'' + index + '\'') + ' data-role=\'selected\'/>';
+                    return '<input type=\'' + type.toLowerCase() + '\'' + disableStr + (selected ? 'checked=\'checked\'' : '') + ' name=\'selected\' ' + (allSelected ? ' ms-on-click=\'_selectAll\' ms-duplex-radio=\'_allSelected\'' : ' data-index=\'' + index + '\'') + ' data-role=\'selected\'/>';
                 };
-                allSelected = isSelectAll(options.data) || false;
-                options._allSelected = allSelected;
+                options._allSelected = false
             }
             selectColumn = {
                 key: 'selected',
@@ -893,23 +995,43 @@ define(["avalon",
                 customClass: ''
             };
             allColumnWidth += 25;
-            selectColumn.width = selectColumn._fixWidth = 25;
             columns.unshift(selectColumn);
         }
-        if (allColumnWidth > parentContainerWidth) {
-            if (~~maxWidthColumn.width) {
-                maxWidthColumn.width = 'auto';
-            } else {
-                for (i = 0; i < len; i++) {
-                    column = columns[i];
-                    if (~~column.width) {
-                        column.width = 'auto';
-                        break;
-                    }
-                }
+        for (var _columns = [], i = 0; i < len; i++) {
+            var column = columns[i]
+            if (column.width === 'auto') {
+                _columns.push(column)
             }
         }
+        var autoWidth = 0
+        autoWidth = parentContainerWidth - allColumnWidth + maxWidth
+        if (allColumnWidth > parentContainerWidth) {
+            if (!_columns.length) {
+                options.maxGridWidth = allColumnWidth + 20
+            } else {
+                _columns.push(maxWidthColumn)
+                setColumnWidth(_columns, autoWidth)
+            }
+        } else {
+            if (maxWidth) {
+                if (!_columns.length) {
+                    _columns.push(maxWidthColumn)
+                } else {
+                    autoWidth = parentContainerWidth - allColumnWidth
+                }
+            } 
+            setColumnWidth(_columns, autoWidth)
+        }
         options.columns = columns;
+    }
+    function setColumnWidth(columns, width) {
+        var column = null,
+            len = columns.length,
+            columnWidth = width / len
+        for (var i = 0; i< len; i++) {
+            column = columns[i]
+            column.width = columnWidth
+        }
     }
     return avalon;
 })
@@ -923,6 +1045,10 @@ define(["avalon",
  [供用户调用API](avalon.smartgrid.ex6.html)
  [配置addRow为表格添加新行](avalon.smartgrid.ex7.html)
  [通过data的disable属性禁用部分数据](avalon.smartgrid.ex8.html)
+ [通过avalon.filters.sanitize(str)来防止xss攻击](avalon.smartgrid.ex9.html)
+ [嵌套的表格](avalon.smartgrid.ex10.html)
+ [grid会根据columns配置的width自主决定是否显示水平滚动条](avalon.smartgrid.ex11.html)
+ [通过设置bodyHeight使得表格体可以垂直滚动](avalon.smartgrid.ex12.html)
  */
 
 /**

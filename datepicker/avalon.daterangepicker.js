@@ -256,6 +256,7 @@ define(["../avalon.getModel",
                 vmodel.inputElement = container
                 vmodel.calendarWrapper = calendarWrapper 
                 element.appendChild(daterangepicker)
+                avalon(element).addClass('oni-daterangepicker-wrapper')
                 avalon.bind(document, "click", function(event) {
                     var target = event.target
                     if (!element.contains(target)) {

@@ -63,12 +63,12 @@
                         },
                         allChecked: false,
                         addRow: function(tmp, columns, vmodel) {
-                            var tr = '<tr style="text-align:left"><td colspan="' + columns.length + '"><label>',
+                            var tr = '<div class="oni-smartgrid-row"><div class="oni-smartgrid-column" style="width:25px;text-align:center">',
                                 checkbox = ""
                             if (columns[0].key === "selected") {
                                 checkbox = "{{columns[0].name|html}}"
                             }
-                            tr = tr + checkbox + '<span style="padding-left: 10px">全选</span></label><input type="button" value="上线"/><input type="button" value="下线"/><input type="button" value="删除"/>{{test}}</td></tr>'
+                            tr = tr + checkbox + '</div><div class="oni-smartgrid-column"><span style="padding-left: 10px">全选</span><input type="button" value="上线"/><input type="button" value="下线"/><input type="button" value="删除"/>{{test}}</div></div>'
                             return tr+tmp
                         },
                         htmlHelper: { // 渲染列数据的方法集合

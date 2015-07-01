@@ -144,7 +144,7 @@
                                     <td>options.routeElementJudger</td>
                                     <td></td>
                                     <td>判断a元素是否是触发router切换的链接的函数，return true则触发切换，默认为avalon.noop，history内部有一个判定逻辑，是先判定a元素的href属性是否以hashPrefix开头，如果是则当做router切换元素，因此综合判定规则是
-                                        href.indexOf(hashPrefix) == 0 || routeElementJudger(ele)</td>
+                                        href.indexOf(hashPrefix) == 0 || routeElementJudger(ele, ele.href)，如果routeElementJudger返回true则跳转至href，如果返回的是字符串，则跳转至返回的字符串，如果返回false则返回浏览器默认行为</td>
                                 </tr>
                                 <tr>
                                     <td>options.html5Mode</td>

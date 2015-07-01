@@ -72,7 +72,7 @@ define(["avalon"], function(avalon) {
          * @interface avalon.history.start 开始监听历史变化
          * @param options 配置参数
          * @param options.hashPrefix hash以什么字符串开头，默认是 "!"，对应实际效果就是"#!"
-         * @param options.routeElementJudger 判断a元素是否是触发router切换的链接的函数，return true则触发切换，默认为avalon.noop，history内部有一个判定逻辑，是先判定a元素的href属性是否以hashPrefix开头，如果是则当做router切换元素，因此综合判定规则是 href.indexOf(hashPrefix) == 0 || routeElementJudger(ele)
+         * @param options.routeElementJudger 判断a元素是否是触发router切换的链接的函数，return true则触发切换，默认为avalon.noop，history内部有一个判定逻辑，是先判定a元素的href属性是否以hashPrefix开头，如果是则当做router切换元素，因此综合判定规则是 href.indexOf(hashPrefix) == 0 || routeElementJudger(ele, ele.href)，如果routeElementJudger返回true则跳转至href，如果返回的是字符串，则跳转至返回的字符串，如果返回false则返回浏览器默认行为
          * @param options.html5Mode 是否采用html5模式，即不使用hash来记录历史，默认false
          * @param options.fireAnchor 决定是否将滚动条定位于与hash同ID的元素上，默认为true
          * @param options.basepath 根目录，默认为"/"
@@ -259,7 +259,11 @@ define(["avalon"], function(avalon) {
                 return
             }
             var hash = href.replace(prefix, "").trim()
-            if (href.indexOf(prefix) === 0 && hash !== "" || routeElementJudger(target)) {
+            if(!(href.indexOf(prefix) === 0 && hash !== "")) {
+                hash = routeElementJudger(target, href)
+                if(hash === true) hash = href
+            }
+            if (hash) {
                 event.preventDefault()
                 avalon.router && avalon.router.navigate(hash)
             }

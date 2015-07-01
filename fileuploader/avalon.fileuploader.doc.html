@@ -207,6 +207,12 @@
                         </td>
                     </tr>
                     <tr>
+                        <td>enableDragDrop</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否开启文件拖放，只支持Chrome、FireFox、Safari及IE10+。默认关闭</td>
+                    </tr>
+                    <tr>
                         <td>noPreviewPath</td>
                         <td>String</td>
                         <td>"http://source.qunarzz.com/general/oniui/fileuploader/no-preview.png"</td>
@@ -466,7 +472,7 @@
                     <td>registInput(opts,target,isH5)</td>
                     <td>Function</td>
                     <td></td>
-                    <td>Add按钮首次点击时调用此函数，生成InputProxy、FlashEventHub和runtime的实例。</td>
+                    <td>Add按钮首次点击或者首次接收Drop文件时调用此函数，生成InputProxy、FlashEventHub和runtime的实例。</td>
                 </tr>
                 <tr>
                     <td>uploadClicked(event)</td>

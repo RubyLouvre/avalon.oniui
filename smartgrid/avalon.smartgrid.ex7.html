@@ -8,12 +8,12 @@
         <script src="../highlight/shCore.js"></script>
     </head>
     <body ms-controller="test">
-        <h1>通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数</h1>
-        <p>配置selectable设置表格是否需要添加选中行功能，type可以设置为"Checkbox"或者"Radio"</p>
-        
-        <div ms-widget="smartgrid, sg1"></div>
-        <button ms-click="noneSelected">让所有的数据都不可选中</button>
-        <button ms-click="partsSelectable">部分数据可选中</button>
+        <div style="width:960px; margin: 0 auto">
+            <h1>配置addRow为表格添加新行</h1>
+            <div ms-widget="smartgrid, sg1"></div>
+            <button ms-click="noneSelected">让所有的数据都不可选中</button>
+            <button ms-click="partsSelectable">部分数据可选中</button>
+        </div>
         <script>
             require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
                 function getDatas(number, selected) {
@@ -63,12 +63,12 @@
                         },
                         allChecked: false,
                         addRow: function(tmp, columns, vmodel) {
-                            var tr = '<tr style="text-align:left"><td colspan="' + columns.length + '"><label>',
+                            var tr = '<div class="oni-smartgrid-row"><div class="oni-smartgrid-column" style="width:25px;text-align:center">',
                                 checkbox = ""
                             if (columns[0].key === "selected") {
                                 checkbox = "{{columns[0].name|html}}"
                             }
-                            tr = tr + checkbox + '<span style="padding-left: 10px">全选</span></label><input type="button" value="上线"/><input type="button" value="下线"/><input type="button" value="删除"/>{{test}}</td></tr>'
+                            tr = tr + checkbox + '</div><div class="oni-smartgrid-column"><span style="padding-left: 10px">全选</span><input type="button" value="上线"/><input type="button" value="下线"/><input type="button" value="删除"/>{{test}}</div></div>'
                             return tr+tmp
                         },
                         htmlHelper: { // 渲染列数据的方法集合
@@ -153,7 +153,7 @@
                 avalon.scan()
             })
         </script>
-        <div ms-skip>
+        <div ms-skip style="width:960px; margin: 0 auto">
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
                 &lt;html&gt;
@@ -163,6 +163,7 @@
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body ms-controller="test"&gt;
+                    &lt;h1&gt;配置addRow为表格添加新行&lt;/h1&gt;
                     &lt;div ms-widget="smartgrid, sg1" style="width:760px; margin: 0 auto"&gt;&lt;/div&gt;
                     &lt;button ms-click="noneSelected">让所有的数据都不可选中&lt;/button&gt;
                     &lt;button ms-click="partsSelectable"&gt;部分数据可选中&lt;/button&gt;

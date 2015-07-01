@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数</title>
+        <title>简单的表格组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../avalon.js"></script>
@@ -9,11 +9,9 @@
     </head>
     <body ms-controller="test">
         <div style="width:960px; margin: 0 auto">
-            <h1>通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数</h1>
-            <p>配置selectable设置表格是否需要添加选中行功能，type可以设置为"Checkbox"或者"Radio"</p>
-            <p>说明：当selectable.type设为Checkbox时，设置数据的checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false时务必保证对应的selected为false或者不存在selected的设置</p>
-            <div ms-widget="smartgrid, sg1, opts"></div>
-            <button ms-click="render">重新渲染数据</button>
+            <h1>通过data的disable属性禁用部分数据</h1>
+            <button ms-click="renderGrid" ms-visible="toggle" style='margin-bottom: 30px;'>render data</button>
+            <div ms-widget="smartgrid, sg1, opts" ></div>
         </div>
         <script>
             require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
@@ -21,7 +19,7 @@
                     var data = []
                     for (var i = 0; i < number; i++) {
                         data.push({
-                            description: "北上广经济型计划"+i,
+                            description: "北上广经济型计划",
                             operate: i % 5 ? 0 : 1,
                             buget: 5800,
                             display: 13534646,
@@ -30,23 +28,15 @@
                             consume: 1135800,
                             averageClickRate: 1.82,
                             disable: i == 3 ? true : false,
-                            selected: false,
-                            checkboxShow: false
+                            selected: true
                         })
                     }
-                    data[2].checkboxShow = true
-                    
-                    // data[0].checkboxShow = false //当selectable.type为Checkbox时，设置checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false，务必保证selected为false或者不存在selected的设置
                     return data
                 } 
                 
                 avalon.define("test", function(vm) {
+                    vm.toggle = "false"
                     vm.$skipArray = ["opts"] //不需要转为监控属性的属性务必放到$skipArray数组中，减少开销提高性能
-                    vm.render = function() {
-                        var data = getDatas(8)
-                        data[0].checkboxShow = true
-                        avalon.vmodels.sg1.render(data)
-                    }
                     vm.opts = {
                         // 不希望组件的配置项被smartgrid监控，将其放到$skipArray数组中，添加其他组件同理
                         $skipArray: ["switchdropdown", "dropdown", "pager"],
@@ -63,26 +53,6 @@
                         dropdown : {
                             width: 100,
                             listWidth: 100
-                        },
-                        htmlHelper: { // 渲染列数据的方法集合
-                            // 包装工资列的数据
-                            $X: function(vmId, field, index, cellValue, rowData) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
-                                avalon.log("arguments is : ")
-                                avalon.log(arguments)
-                                return "$"+cellValue
-                            },
-                            // operate列包装成switchdropdown组件
-                            switchdropdown: function(vmId, field, index, cellValue, rowData, disable) {
-                                var openOption = cellValue == 0 ? '<option value="0" selected>启用</option>' : '<option value="0">启用</option>',
-                                    pauseOption = cellValue == 1 ? '<option value="1" selected>暂停</option>' : '<option value="1">暂停</option>'
-
-                                return ['<select ms-widget="switchdropdown" rowindex="'+index+'" field="'+field+'"  vmId="'+vmId+'" '+ (disable ? "disabled": "") +'>', openOption, pauseOption, '</select>'].join('')
-                            },
-                            // busy列包装成dropdown组件
-                            dropdown: function(vmId, field, index, cellValue, rowData, disable) {
-                                var option = "<option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'></option>"
-                                return '<select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'" ' + (disable ? "disabled" : "") + '>' + option + '</select>'
-                            }
                         },
                         columns: [
                             {
@@ -142,8 +112,11 @@
                                 format: "$X" // 定义渲染数据的方法名
                             }
                         ],
-                        // data: getDatas(8)
+
                         data: []
+                    }
+                    vm.renderGrid = function() {
+                        avalon.vmodels.sg1.render(getDatas(10))
                     }
                 })
                 avalon.scan()
@@ -159,18 +132,16 @@
                     &lt;script src='avalon.js'&gt;&lt;/script&gt;
                 &lt;/head&gt;
                 &lt;body ms-controller="test"&gt;
-                    &lt;h1&gt;通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数&lt;/h1&gt;
-                    &lt;p&gt;配置selectable设置表格是否需要添加选中行功能，type可以设置为"Checkbox"或者"Radio"&lt;/p&gt;
-                    &lt;p&gt;说明：当selectable.type设为Checkbox时，设置数据的checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false时务必保证对应的selected为false或者不存在selected的设置&lt;/p&gt;
-                    &lt;div ms-widget="smartgrid, sg1, opts"&gt;&lt;/div&gt;
-                    &lt;button ms-click="render"&gt;重新渲染数据&lt;/button&gt;
+                    &lt;h1&gt;通过data的disable属性禁用部分数据&lt;/h1&gt;
+                    &lt;button ms-click="renderGrid" ms-visible="toggle" style='margin-bottom: 30px;'&gt;render data&lt;/button&gt;
+                    &lt;div ms-widget="smartgrid, sg1, opts" &gt;&lt;/div&gt;
                     &lt;script&gt;
                         require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
                             function getDatas(number) {
                                 var data = []
                                 for (var i = 0; i &lt; number; i++) {
                                     data.push({
-                                        description: "北上广经济型计划"+i,
+                                        description: "北上广经济型计划",
                                         operate: i % 5 ? 0 : 1,
                                         buget: 5800,
                                         display: 13534646,
@@ -179,23 +150,15 @@
                                         consume: 1135800,
                                         averageClickRate: 1.82,
                                         disable: i == 3 ? true : false,
-                                        selected: false,
-                                        checkboxShow: false
+                                        selected: true
                                     })
                                 }
-                                data[2].checkboxShow = true
-                                
-                                // data[0].checkboxShow = false //当selectable.type为Checkbox时，设置checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false，务必保证selected为false或者不存在selected的设置
                                 return data
                             } 
                             
                             avalon.define("test", function(vm) {
+                                vm.toggle = "false"
                                 vm.$skipArray = ["opts"] //不需要转为监控属性的属性务必放到$skipArray数组中，减少开销提高性能
-                                vm.render = function() {
-                                    var data = getDatas(8)
-                                    data[0].checkboxShow = true
-                                    avalon.vmodels.sg1.render(data)
-                                }
                                 vm.opts = {
                                     // 不希望组件的配置项被smartgrid监控，将其放到$skipArray数组中，添加其他组件同理
                                     $skipArray: ["switchdropdown", "dropdown", "pager"],
@@ -212,26 +175,6 @@
                                     dropdown : {
                                         width: 100,
                                         listWidth: 100
-                                    },
-                                    htmlHelper: { // 渲染列数据的方法集合
-                                        // 包装工资列的数据
-                                        $X: function(vmId, field, index, cellValue, rowData) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
-                                            avalon.log("arguments is : ")
-                                            avalon.log(arguments)
-                                            return "$"+cellValue
-                                        },
-                                        // operate列包装成switchdropdown组件
-                                        switchdropdown: function(vmId, field, index, cellValue, rowData, disable) {
-                                            var openOption = cellValue == 0 ? '&lt;option value="0" selected&gt;启用&lt;/option&gt;' : '&lt;option value="0"&gt;启用&lt;/option&gt;',
-                                                pauseOption = cellValue == 1 ? '&lt;option value="1" selected&gt;暂停&lt;/option&gt;' : '&lt;option value="1"&gt;暂停&lt;/option&gt;'
-
-                                            return ['&lt;select ms-widget="switchdropdown" rowindex="'+index+'" field="'+field+'"  vmId="'+vmId+'" '+ (disable ? "disabled": "") +'&gt;', openOption, pauseOption, '&lt;/select&gt;'].join('')
-                                        },
-                                        // busy列包装成dropdown组件
-                                        dropdown: function(vmId, field, index, cellValue, rowData, disable) {
-                                            var option = "&lt;option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'&gt;&lt;/option&gt;"
-                                            return '&lt;select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'" ' + (disable ? "disabled" : "") + '&gt;' + option + '&lt;/select&gt;'
-                                        }
                                     },
                                     columns: [
                                         {
@@ -291,8 +234,11 @@
                                             format: "$X" // 定义渲染数据的方法名
                                         }
                                     ],
-                                    // data: getDatas(8)
+
                                     data: []
+                                }
+                                vm.renderGrid = function() {
+                                    avalon.vmodels.sg1.render(getDatas(10))
                                 }
                             })
                             avalon.scan()

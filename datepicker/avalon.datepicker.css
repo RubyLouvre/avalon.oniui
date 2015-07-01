@@ -1,3 +1,7 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
 .oni-datepicker {
   position: relative;
   display: block;
@@ -97,7 +101,6 @@
 
 .oni-datepicker-content-content {
   padding: 0 10px;
-  width: 196px;
   position: relative;
   display: -moz-inline-stack;
   display: inline-block;
@@ -112,15 +115,11 @@
   position: absolute;
   top: 60px;
   left: 10px;
-  width: 196px;
-  height: 150px;
   background: transparent;
   color: #000;
   _color: #f2f2f2;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=5);
   opacity: 0.05;
-  font-size: 150px;
-  line-height: 150px;
   text-align: center; }
 
 .oni-datepicker-month-year span {

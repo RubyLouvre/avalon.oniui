@@ -655,7 +655,7 @@ define(["avalon",
                 gridFrame = gridHeader.replace('MS_OPTION_ID', vmodel.$id);
                 container.innerHTML = gridFrame;
                 dataFracte(vmodel)
-                avalon.scan(container, vmodel);
+                avalon.scan(container, [vmodel].concat(vmodels));
                 gridEle = document.getElementById('oni-smartgrid') 
                 containerWrapper = document.getElementById('oni-smartgrid-body')
                 

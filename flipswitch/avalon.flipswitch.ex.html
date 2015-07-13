@@ -17,10 +17,10 @@
                             this.style.display = "block"
                         }
                     }
-                    vm.goal = []
+                    vm.goal = false
                     vm.$skipArray = ["flipswitch"]
                 })
-                avalon.vmodels.test.goal.$watch("length", function(v) {
+                avalon.vmodels.test.$watch("goal", function(v) {
                     console.log(v)
                 })
                 avalon.scan()
@@ -72,7 +72,7 @@
                     vm.goal = []
                     vm.$skipArray = [&quot;flipswitch&quot;]
                 })
-                avalon.vmodels.test.goal.$watch(&quot;length&quot;, function(v) {
+                avalon.vmodels.test.$watch("goal", function(v) {
                     console.log(v)
                 })
                 avalon.scan()

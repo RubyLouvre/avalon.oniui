@@ -2,7 +2,8 @@
  * @cnName 滑动按钮组件
  * @enName flipswitch
  * @introduce
- *  <p> 将checkbox表单元素转化成富UI的开关，[不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑] - 已支持
+ *  <p> 将checkbox表单元素转化成富UI的开关，[不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑] - 在2015.7.13以后已支持
+ * <font color="red">注意：input元素的checked属性会覆盖ms-duplex的属性配置的值，即配置了checked="checked"，即便ms-duplex="value" && value= false，组件也会处于选中状态，并会将value赋值未true</font>
 </p>
  */
 define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggable", 
@@ -122,6 +123,25 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 divCon = null
 
                 inputEle = element
+                // 提取ms-duplex绑定
+                var du = inputEle.getAttribute("ms-duplex")
+                if(du) {
+                    var tarVmodel = avalon.getModel(du, vmodels)
+                    inputEle.removeAttribute("ms-duplex")
+                    tarVmodel = tarVmodel[1]
+                    if(tarVmodel) {
+                        tarVmodel.$watch(du, function(v) {
+                            vmodel.checked = !!v
+                        })
+                        vmodel.$watch("checked", function(v) {
+                            tarVmodel[du] = v
+                        })
+                    }
+                }
+
+                // 先行scan一次，2015.7.13，实现通过ms-checked绑定初始值
+                avalon.scan(inputEle, vmodels);
+
                 // 阻止节点移除事件触发$destroy
                 inputEle.msRetain = true;
 
@@ -132,22 +152,8 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 if(inputEle.checked) {
                     vmodel.checked = true
                 } 
-                inputEle.setAttribute("ms-attr-checked", "checked")
-                var du = inputEle.getAttribute("ms-duplex")
-                if(du) {
-                    var tarVmodel = avalon.getModel(du, vmodels)
-                    inputEle.removeAttribute("ms-duplex")
-                    tarVmodel = tarVmodel[1]
-                    if(tarVmodel) {
-                        tarVmodel[du].$watch("length", function(v) {
-                            vmodel.checked = !!v
-                        })
-                        vmodel.$watch("checked", function(v) {
-                            tarVmodel[du] = v ? ["on"] : []
-                        })
-                    }
-                }
-
+                // inputEle.setAttribute("ms-attr-checked", "checked")
+                inputEle.setAttribute("ms-duplex-checked", "checked");
                 newDiv.appendChild(inputEle)
                 inputEle.msRetain = false;
 

@@ -26,7 +26,7 @@
                     <colgroup>
                         <col width="180" />
                         <col width="80" />
-                        <col width="180" />
+                        <col width="120" />
                     </colgroup>
                     <tr>
                         <th>名字</th>
@@ -40,20 +40,54 @@
                     <tr>
                         <td>container</td>
                         <td>String</td>
-                        <td>""</td>
-                        <td>设置组件的容器元素，可以是字符串表示对应元素的id，也可以是元素对象引用</td>
-                    </tr>
-                    <tr>
-                        <td>autoResize</td>
-                        <td>Boolean</td>
-                        <td>true</td>
-                        <td>表格单元根据窗口自动调整宽度，为false的时候以设置的宽度为准，固定不变</td>
+                        <td>''</td>
+                        <td>设置组件的容器元素，可以是字符串,表示对应元素的id，也可以是元素对象</td>
                     </tr>
                     <tr>
                         <td>pageable</td>
                         <td>Boolean</td>
                         <td>true</td>
                         <td>表格是否需要分页，默认需要，false不需要</td>
+                    </tr>
+                    <tr>
+                        <td>noHeader</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否显示表格头部</td>
+                    </tr>
+                    <tr>
+                        <td>noFooter</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否显示表格底部</td>
+                    </tr>
+                    <tr>
+                        <td>data</td>
+                        <td>Array</td>
+                        <td>[]</td>
+                        <td>表格数据</td>
+                    </tr>
+                    <tr>
+                        <td>columns</td>
+                        <td>Array</td>
+                        <td>[]</td>
+                        <td>g 表格列信息对象的集合
+                            <pre>[{
+    key: "name", <span>//列标志 </span>
+    name: "姓名", <span>//列名</span>
+    sortable: true, <span>//是否可对列排序</span>
+    isLock: true, <span>//是否锁死列，设为true会始终显示此列，无论配置如何</span>
+    align": "left", <span>//设置列的对齐方式，"left"|"center"|"right"默认为"center"</span>
+    defaultValue: "shirly", <span>//列的默认值，当数据中没有为此列设置值时显示此默认值</span>
+    customClass: "custom", <span>//设置此列单元格的自定义类</span>
+    toggle: false, <span>//是否显示此列，true显示false不显示</span>
+    width: 400, <span>//设置列宽，必须是Number</span>
+    localSort: function(a, b, f) { <span>//自定义列的本地排序规则</span>
+        return a[f].localeCompare(b[f]);
+    },
+    format: "upperCaseName" <span>//包装列数据的方法，此方法名对应到htmlHelper对象中的方法</span>
+}, ...]</pre>
+                        </td>
                     </tr>
                     <tr>
                         <td>allChecked</td>
@@ -71,7 +105,7 @@
                     <tr>
                         <td>noResult</td>
                         <td>String</td>
-                        <td>"暂时没有数据"</td>
+                        <td>'暂时没有数据'</td>
                         <td>数据为空时表格的提示信息</td>
                     </tr>
                     <tr>
@@ -88,7 +122,7 @@
                                 <tr>
                                     <td>field</td>
                                     <td>String</td>
-                                    <td>带排序的列名</td>
+                                    <td>待排序的列名</td>
                                 </tr>
                                 <tr>
                                     <td>sortTrend</td>
@@ -107,9 +141,7 @@
                         <td>isAffix</td>
                         <td>Boolean</td>
                         <td>false</td>
-                        <td>表头在表格内容超过可视区高度时是否吸顶，true吸顶，false不吸顶，默认不吸顶
-                            <p>ps：在IE6下的吸顶是通过absolute定位的，所以会有跳动的感觉，所以谨慎使用吸顶效果</p>
-                        </td>
+                        <td>表头在表格内容超过可视区高度时是否吸顶，true吸顶，false不吸顶，默认不吸顶</td>
                     </tr>
                     <tr>
                         <td>affixHeight</td>
@@ -118,15 +150,23 @@
                         <td>配置吸顶元素距离窗口顶部的高度</td>
                     </tr>
                     <tr>
+                        <td>selectable</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>为表格添加Checkbox或者Radio操作项，格式为
+                            <pre>{type: 'Checkbox'}</pre>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>loading</td>
                         <td>Object</td>
-                        <td>{ toggle: false, modal: true, modalBackground: "#000" }</td>
-                        <td>设置loading缓冲的配置项，具体使用方法参见loading document</td>
+                        <td>{ toggle: false, modal: true, modalBackground: '#000' }</td>
+                        <td>设置loading缓冲的配置项，具体使用方法参见loading文档</td>
                     </tr>
                     <tr>
                         <td>pager</td>
-                        <td></td>
-                        <td></td>
+                        <td>Object</td>
+                        <td>{}</td>
                         <td>设置pager的配置项，smartgrid组件默认会添加pager，也可以改变表格显示数目，默认可选10、20、50、100条数据，如果不希望显示此选项，可以设置canChangePageSize为false</td>
                     </tr>
                     <tr>
@@ -147,7 +187,7 @@
                                     <th>说明</th>
                                 </tr>
                                 <tr>
-                                    <td>tmpl</td>
+                                    <td>tmp</td>
                                     <td>String</td>
                                     <td>表格的body模板</td>
                                 </tr>
@@ -214,6 +254,11 @@
                                     <td>Boolean</td>
                                     <td>行的选中状态，true选中状态，false非选中状态</td>
                                 </tr>
+                                <tr>
+                                    <td>dataIndex</td>
+                                    <td>Number</td>
+                                    <td>当前行数据在data中的索引</td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
@@ -248,39 +293,13 @@
                         <td>getRawData()</td>
                         <td>Function</td>
                         <td></td>
-                        <td>获取表格数据,当然也可以通过vmodel.data直接获得表格数据
-                            <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>返回</td>
-                                    <td>Array</td>
-                                    <td>表格的渲染数据</td>
-                                </tr>
-                            </table>
-                        </td>
+                        <td>获取表格数据,当然也可以通过vmodel.data直接获得表格数据</td>
                     </tr>
                     <tr>
                         <td>getSelected()</td>
                         <td>Function</td>
                         <td></td>
-                        <td>获取选中表格行的数据集合
-                            <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>返回</td>
-                                    <td>Array</td>
-                                    <td>选中数据集合</td>
-                                </tr>
-                            </table>
-                        </td>
+                        <td>获取选中表格行的数据集合</td>
                     </tr>
                     <tr>
                         <td>selectAll(b)</td>
@@ -376,7 +395,36 @@
                         <td>隐藏缓冲提示</td>
                     </tr>
                     <tr>
-                        <td>render(data,init)</td>
+                        <td>addRows(data,init,noShowLoading)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>增加行，已經渲染的不會再操作
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>data</td>
+                                    <td>Array</td>
+                                    <td>新增的行</td>
+                                </tr>
+                                <tr>
+                                    <td>init</td>
+                                    <td>Boolean</td>
+                                    <td>是否为初始化grid</td>
+                                </tr>
+                                <tr>
+                                    <td>noShowLoading</td>
+                                    <td>Boolean</td>
+                                    <td>渲染期间是否显示loading</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>render(data,init,noShowLoading)</td>
                         <td>Function</td>
                         <td></td>
                         <td>用新的数据重新渲染表格视图
@@ -391,37 +439,17 @@
                                     <td>Array</td>
                                     <td>重新渲染表格的数据集合</td>
                                 </tr>
+                                <tr>
+                                    <td>init</td>
+                                    <td>Boolean</td>
+                                    <td>是否为初始化grid</td>
+                                </tr>
+                                <tr>
+                                    <td>noShowLoading</td>
+                                    <td>Boolean</td>
+                                    <td>渲染期间是否显示loading</td>
+                                </tr>
                             </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>data</td>
-                        <td>Array</td>
-                        <td>[]</td>
-                        <td>表格数据</td>
-                    </tr>
-                    <tr>
-                        <td>columns</td>
-                        <td>Array</td>
-                        <td>[]</td>
-                        <td>表格列信息对象的集合，格式为
-                            <pre>
-                [{
-                    key: "name", //列标志 
-                    name: "姓名", //列名
-                    sortable: true, //是否可对列排序
-                    isLock: true, //是否锁死列，设为true会始终显示此列，无论配置如何
-                    align": "left", //设置列的对齐方式，"left"|"center"|"right"默认为"center"
-                    defaultValue: "shirly", //列的默认值，当数据中没有为此列设置值时显示此默认值
-                    customClass: "ddd", //设置此列单元格的自定义类
-                    toggle: false, //是否显示此列，true显示false不显示
-                    width: 400, //设置列宽，必须是Number
-                    localSort: function(a, b, f) { //自定义列的本地排序规则
-                        return a[f].localeCompare(b[f]);
-                    },
-                    format: "upperCaseName" //包装列数据的方法，此方法名对应到htmlHelper对象中的方法
-                }, ...]
-            </pre>
                         </td>
                     </tr>
                 </table>
@@ -463,6 +491,21 @@
                 </li>
                 <li>
                     <a href="avalon.smartgrid.ex7.html">配置addRow为表格添加新行</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex8.html">通过data的disable属性禁用部分数据</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex9.html">通过avalon.filters.sanitize(str)来防止xss攻击</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex10.html">嵌套的表格</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex11.html">grid会根据columns配置的width自主决定是否显示水平滚动条</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex12.html">通过设置bodyHeight使得表格体可以垂直滚动</a>
                 </li>
             </ul>
         </div>

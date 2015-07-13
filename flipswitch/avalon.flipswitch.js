@@ -2,7 +2,8 @@
  * @cnName 滑动按钮组件
  * @enName flipswitch
  * @introduce
- *  <p> 将checkbox表单元素转化成富UI的开关，[不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑] - 已支持
+ *  <p> 将checkbox表单元素转化成富UI的开关，[不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑] - 在2015.7.13以后已支持
+ * <font color="red">注意：如果指定了ms-duplex，则采用duplex指定的值，接着只采用checked属性为true时情景，最后采用data-flipswitch-cheched以及option.checked，因此可以通过ms-duplex，ms-checked，data-flipswitch-cheched以及option.checked来配置初始值</font>
 </p>
  */
 define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggable", 
@@ -122,32 +123,38 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 divCon = null
 
                 inputEle = element
+                // 提取ms-duplex绑定
+                var du = inputEle.getAttribute("ms-duplex")
+                var tarVmodel
+                var duplexValue
+                if(du) {
+                    tarVmodel = avalon.getModel(du, vmodels)
+                    inputEle.removeAttribute("ms-duplex")
+                    tarVmodel = tarVmodel[1]
+                    if(tarVmodel) {
+                        tarVmodel.$watch(du, function(v) {
+                            vmodel.checked = !!v
+                        })
+                        vmodel.$watch("checked", function(v) {
+                            tarVmodel[du] = v
+                        })
+                        duplexValue = tarVmodel[du]
+                    }
+                }
+
+                // 先行scan一次，2015.7.13，实现通过ms-checked绑定初始值
+                avalon.scan(inputEle, vmodels);
+
                 // 阻止节点移除事件触发$destroy
                 inputEle.msRetain = true;
 
                 inputEle.parentNode.removeChild(inputEle)
                 inputEle.style.display = "none"
 
-                // input元素的checked属性优先级高
-                if(inputEle.checked) {
-                    vmodel.checked = true
-                } 
-                inputEle.setAttribute("ms-attr-checked", "checked")
-                var du = inputEle.getAttribute("ms-duplex")
-                if(du) {
-                    var tarVmodel = avalon.getModel(du, vmodels)
-                    inputEle.removeAttribute("ms-duplex")
-                    tarVmodel = tarVmodel[1]
-                    if(tarVmodel) {
-                        tarVmodel[du].$watch("length", function(v) {
-                            vmodel.checked = !!v
-                        })
-                        vmodel.$watch("checked", function(v) {
-                            tarVmodel[du] = v ? ["on"] : []
-                        })
-                    }
-                }
-
+                // 如果指定了ms-duplex，则采用duplex指定的值，接着只采用checked属性为true时情景，最后采用data-flipswitch-cheched以及option.checked
+                vmodel.checked = typeof duplexValue != "undefined" ? duplexValue : inputEle.checked || vmodel.checked
+                // inputEle.setAttribute("ms-attr-checked", "checked")
+                inputEle.setAttribute("ms-duplex-checked", "checked");
                 newDiv.appendChild(inputEle)
                 inputEle.msRetain = false;
 
@@ -266,81 +273,6 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
             }
 
             vm.radiusSupport = radiusSupport
-
-            // 根据样式绘制圆，圆角等
-            //interface _draw() 动态更换皮肤后，可以调用这个方法更新提取switch样式
-            // vm._draw = function() {
-            //     if(radiusSupport) return
-            //     var divs = newDiv.getElementsByTagName("div")
-            //         , bs = newDiv.getElementsByTagName("b")
-            //         , bg
-            //         , ball
-            //     if(vmodel.getStyleFromSkin) {
-            //         avalon.each(divs, function(i, item) {
-            //             var ae = avalon(item)
-            //             if(ae.hasClass("oni-flipswitch-bg")) bg = ae
-            //         }) 
-            //         avalon.each(bs, function(i, item) {
-            //             var ae = avalon(item)
-            //             if(ae.hasClass("oni-flipswitch-dragger-ball")) ball = ae
-            //         }) 
-            //     }
-            //     if(bg) {
-            //         // 从css里面提取颜色等设置，写入vmodel
-            //         var par = avalon(newDiv),
-            //             bgColor = bg.css("background-color"),
-            //             offColor = bgColor,
-            //             disabledColor = bgColor,
-            //             w = bg.css("width"),
-            //             h = bg.css("height")
-            //         // 防止由于样式没有加载成功造成无法获取正确的样式
-            //         if(!parseInt(h)) {
-            //             return setTimeout(vmodel._draw, 16)
-            //         }
-            //         if(vmodel.disabled) {
-            //             vmodel.disabled = false
-            //             if(vmodel.checked) {
-            //                 bgColor = bg.css("background-color")
-            //                 vmodel.checked = false
-            //                 offColor = bg.css("background-color")
-            //                 vmodel.checked = true
-            //             } else {
-            //                 offColor = bg.css("background-color")
-            //                 vmodel.checked = true
-            //                 bgColor = bg.css("background-color")
-            //                 vmodel.checked = false
-            //             }
-            //             vmodel.disabled = true
-            //         } else {
-            //             if(vmodel.checked) {
-            //                 bgColor = bg.css("background-color")
-            //                 vmodel.checked = false
-            //                 offColor = bg.css("background-color")
-            //                 vmodel.checked = true
-            //             } else {
-            //                 vmodel.checked = true
-            //                 bgColor = bg.css("background-color")
-            //                 vmodel.checked = false
-            //             }
-            //             vmodel.disabled = true
-            //             disabledColor = bg.css("background-color")
-            //             vmodel.disabled = false
-            //         }
-            //         vmodel.onColor = bgColor
-            //         vmodel.offColor = offColor
-            //         vmodel.disabledColor = disabledColor
-            //         vmodel.height = parseInt(h)
-            //         vmodel.width = parseInt(w)
-            //         bg.css("background-color", "transparent")
-            //     }
-            //     if(ball) {
-            //         var bbColor = ball.css("background-color"),
-            //             bw = parseInt(ball.css("width")) >> 0
-            //         vmodel.draggerColor = bbColor
-            //         vmodel.draggerRadius = bw / 2
-            //         ball.css("background-color", "transparent")
-            //     }
-            // }
 
             return vm
         })

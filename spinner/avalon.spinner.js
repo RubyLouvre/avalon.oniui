@@ -19,7 +19,7 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
                 }
             })(),
             duplexVM = duplex && avalon.getModel(duplex, vmodels) || null,
-            disabled = element.msData["ms-disabled"],
+            disabled = element.msData["ms-attr-disabled"],
             disabledVM = disabled && avalon.getModel(disabled, vmodels) || null,
             min = Number(options.min),
             max = Number(options.max),
@@ -29,10 +29,6 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
 
         if (duplexVM) {
             duplexVM[1].$watch(duplexVM[0], function(val) {
-                if (/[^0-9]/.test(val + '')) {
-                    vmodel.value = element.value = oldValue;
-                    return
-                }
                 if (val === '') {
                     return
                 }

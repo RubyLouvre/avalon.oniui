@@ -293,9 +293,9 @@
                 avalon.history.start({
                     // basepath: "/mmRouter",
                     fireAnchor: false,
-                    routeElementJudger: function(ele) {
+                    routeElementJudger: function(ele, href) {
                         ele = avalon(ele)
-                        if(ele.hasClass("route-ele")) return true
+                        if(ele.hasClass("route-ele")) return true // return href
                     }
                 })
                 //go!!!!!!!!! 
@@ -626,9 +626,9 @@
                 avalon.history.start({
                     // basepath: &quot;/mmRouter&quot;,
                     fireAnchor: false,
-                    routeElementJudger: function(ele) {
+                    routeElementJudger: function(ele, href) {
                         ele = avalon(ele)
-                        if(ele.hasClass(&quot;route-ele&quot;)) return true
+                        if(ele.hasClass(&quot;route-ele&quot;)) return true // return href
                     }
                 })
                 //go!!!!!!!!! 

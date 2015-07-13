@@ -19,6 +19,7 @@
                     }
                     vm.goal = false
                     vm.$skipArray = ["flipswitch"]
+                    vm.hehe = [{c: true}, {c: false}]
                 })
                 avalon.vmodels.test.$watch("goal", function(v) {
                     console.log(v)
@@ -31,6 +32,10 @@
 <div ms-controller="test">
         <h1>不同大小size，默认设置，选中状态</h1>
         <div>
+            <b>支持ms-repeat</b>
+            <div ms-repeat-item="hehe">
+                <input type="checkbox" ms-widget="flipswitch" ms-duplex="item.c" ms-attr-title="item.c">
+            </div>
             <p>---------size=mini---------</p>
             <div class="this-for-test-3">
                 checked属性优先级低于duplex

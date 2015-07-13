@@ -3,7 +3,7 @@
  * @enName flipswitch
  * @introduce
  *  <p> 将checkbox表单元素转化成富UI的开关，[不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑] - 在2015.7.13以后已支持
- * <font color="red">注意：如果指定了ms-duplex，则采用duplex指定的值，接着只采用checked属性为true时情景，最后采用data-flipswitch-cheched以及option.checked，因此可以通过ms-duplex，ms-checked，data-flipswitch-cheched以及option.checked来配置初始值</font>
+ * <font color="red">注意：如果指定了ms-duplex，则采用duplex指定的值，接着只采用checked属性为true时情景，最后采用data-flipswitch-cheched以及option.checked，因此可以通过ms-duplex，ms-checked，data-flipswitch-cheched以及option.checked来配置初始值，ms-duplex会进入一个异步scan的逻辑</font>
 </p>
  */
 define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggable", 
@@ -125,73 +125,87 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 inputEle = element
                 // 提取ms-duplex绑定
                 var du = inputEle.getAttribute("ms-duplex")
+                if(du) {
+                    inputEle.removeAttribute("ms-duplex")
+                }
                 var tarVmodel
                 var duplexValue
-                if(du) {
-                    tarVmodel = avalon.getModel(du, vmodels)
-                    inputEle.removeAttribute("ms-duplex")
-                    tarVmodel = tarVmodel[1]
-                    if(tarVmodel) {
-                        tarVmodel.$watch(du, function(v) {
-                            vmodel.checked = !!v
-                        })
-                        vmodel.$watch("checked", function(v) {
-                            tarVmodel[du] = v
-                        })
-                        duplexValue = tarVmodel[du]
+                function _scan() {
+
+                    // 阻止节点移除事件触发$destroy
+                    inputEle.msRetain = true;
+
+                    inputEle.parentNode.removeChild(inputEle)
+                    inputEle.style.display = "none"
+
+                    // 如果指定了ms-duplex，则采用duplex指定的值，接着只采用checked属性为true时情景，最后采用data-flipswitch-cheched以及option.checked
+                    vmodel.checked = typeof duplexValue != "undefined" ? duplexValue : inputEle.checked || vmodel.checked
+                    // inputEle.setAttribute("ms-attr-checked", "checked")
+                    inputEle.setAttribute("ms-duplex-checked", "checked");
+                    newDiv.appendChild(inputEle)
+                    inputEle.msRetain = false;
+
+                    if (continueScan) {
+                        continueScan()
+                    } else {
+                        avalon.log("avalon请尽快升到1.3.7+")
+                        if (typeof options.onInit === "function") {
+                            options.onInit.call(element, vmodel, options, vmodels)
+                        }
+                    }
+                    avalon.scan(newDiv, [vmodel].concat(vmodels))
+
+                    bar = newDiv.firstChild
+
+                    while(bar) {
+                        if(bar.className && bar.className.indexOf("oni-flipswitch-bar") != -1) break
+                        bar = bar.nextSibling
+                    }
+                    bar.style[vmodel.dir] = vmodel._addthisCss()
+
+                    if(vmodel.draggable) {
+                        dragger = bar.firstChild
+                        while(dragger) {
+                            if(dragger.className && dragger.className.indexOf("oni-flipswitch-dragger") != -1) break
+                            dragger = dragger.nextSibling
+                        }
+                        if(dragger) {
+                            bar.setAttribute("ms-draggable", "")
+                            var avaElem = avalon(bar)
+                            avalon.each(attrMaps, function(key, item) {
+                                var _key = key.replace(/^dr/, "").replace(/[A-Z]/, function(mat) {return "-" + mat.toLowerCase()})
+                                avaElem.data("draggable" + _key, typeof item != "function" ? item : key)
+                            })
+                        }
+                        avalon.scan(bar, [vmodel].concat(vmodels))
                     }
                 }
 
                 // 先行scan一次，2015.7.13，实现通过ms-checked绑定初始值
                 avalon.scan(inputEle, vmodels);
-
-                // 阻止节点移除事件触发$destroy
-                inputEle.msRetain = true;
-
-                inputEle.parentNode.removeChild(inputEle)
-                inputEle.style.display = "none"
-
-                // 如果指定了ms-duplex，则采用duplex指定的值，接着只采用checked属性为true时情景，最后采用data-flipswitch-cheched以及option.checked
-                vmodel.checked = typeof duplexValue != "undefined" ? duplexValue : inputEle.checked || vmodel.checked
-                // inputEle.setAttribute("ms-attr-checked", "checked")
-                inputEle.setAttribute("ms-duplex-checked", "checked");
-                newDiv.appendChild(inputEle)
-                inputEle.msRetain = false;
-
-                if (continueScan) {
-                    continueScan()
+                
+                if(du) {
+                    // 我猜测repeat里面有延时，不然会读不到$proxy.el这种。。。只有这样了
+                    avalon.nextTick(function() {
+                        tarVmodel = avalon.getModel(du, vmodels) || []
+                        du = tarVmodel[0]
+                        tarVmodel = tarVmodel[1]
+                        if(tarVmodel) {
+                            tarVmodel.$watch(du, function(v) {
+                                vmodel.checked = !!v
+                            })
+                            vmodel.$watch("checked", function(v) {
+                                tarVmodel[du] = v
+                            })
+                            duplexValue = tarVmodel[du]
+                        }
+                        _scan()
+                    })
                 } else {
-                    avalon.log("avalon请尽快升到1.3.7+")
-                    if (typeof options.onInit === "function") {
-                        options.onInit.call(element, vmodel, options, vmodels)
-                    }
+                    _scan
                 }
-                avalon.scan(newDiv, [vmodel].concat(vmodels))
 
-                bar = newDiv.firstChild
-
-                while(bar) {
-                    if(bar.className && bar.className.indexOf("oni-flipswitch-bar") != -1) break
-                    bar = bar.nextSibling
-                }
-                bar.style[vmodel.dir] = vmodel._addthisCss()
-
-                if(vmodel.draggable) {
-                    dragger = bar.firstChild
-                    while(dragger) {
-                        if(dragger.className && dragger.className.indexOf("oni-flipswitch-dragger") != -1) break
-                        dragger = dragger.nextSibling
-                    }
-                    if(dragger) {
-                        bar.setAttribute("ms-draggable", "")
-                        var avaElem = avalon(bar)
-                        avalon.each(attrMaps, function(key, item) {
-                            var _key = key.replace(/^dr/, "").replace(/[A-Z]/, function(mat) {return "-" + mat.toLowerCase()})
-                            avaElem.data("draggable" + _key, typeof item != "function" ? item : key)
-                        })
-                    }
-                    avalon.scan(bar, [vmodel].concat(vmodels))
-                }
+               
             }
             vm.$remove = function() {
                 newDiv.parentNode.insertBefore(inputEle, newDiv)

@@ -247,6 +247,7 @@ require([
 
 ```
 然后将combo文件的require.js与r.js，然后命令行node r.js -o build.js，就生成main-built.js文件
+![image](https://cloud.githubusercontent.com/assets/190846/8647486/eb41a380-298a-11e5-9ed3-4c6b746ca0d4.png)
 
 详细教程还是需要到[官网](http://avalonjs.github.io/#zh/engineering/loader.rjs.html)去看 
 

@@ -187,11 +187,11 @@ main.js是你的入口文件，作用类似于C语言的main函数
 require([
     "avalon",
     "domReady!",
-    "avalon.tab.js",
-    "avalon.pager.js",
-    "avalon.datepicker.js"
+    "./tab/avalon.tab",
+    "./pager/avalon.pager",
+    "./datepicker/avalon.datepicker"
 ], function (avalon) {
-    avalon.log("domReady完成1")
+    avalon.log("domReady完成")
    var vm = avalon.define({$id: "demo"})
     avalon.scan(document.body, vm);
     //你们的业务代码
@@ -201,7 +201,7 @@ require([
 现在除了回调里面的代码是你们写的，其他都是oniui或avalon的文件，如果你们的同事又写一个业务代码，如
 ```javascript
 //aaa.js
-require(["avalon.dropdown"], function(){
+require(["./dropdown/avalon.dropdown"], function(){
   //你们的业务代码
 })
 ```
@@ -210,12 +210,12 @@ require(["avalon.dropdown"], function(){
 require([
     "avalon",
     "domReady!",
-    "avalon.tab",
-    "avalon.pager",
-    "avalon.datepicker",
+    "./tab/avalon.tab",
+    "./pager/avalon.pager",
+    "./datepicker/avalon.datepicker"
     "./aaa"
 ], function (avalon) {
-    avalon.log("domReady完成1")
+    avalon.log("domReady完成")
    var vm = avalon.define({$id: "demo"})
     avalon.scan(document.body, vm);
     //你们的业务代码
@@ -237,10 +237,8 @@ require([
         "css-builder": "./combo/css-builder",
         "normalize": "./combo/normalize",
         domReady: "./combo/domReady",
-        "avalon.tab": "./tab/avalon.tab",
-        "avalon.pager": "./pager/avalon.pager",
-        "avalon.datepicker": "./datepicker/avalon.datepicker"
     },
+    //optimize: "none",//如果要调试就不压缩
     name: "main", //如果从哪一个文件开始合并
     out: "./main-built.js" //确定要生成的文件路径及名字
 })
@@ -250,11 +248,6 @@ require([
 ![image](https://cloud.githubusercontent.com/assets/190846/8647486/eb41a380-298a-11e5-9ed3-4c6b746ca0d4.png)
 
 详细教程还是需要到[官网](http://avalonjs.github.io/#zh/engineering/loader.rjs.html)去看 
-
-
-
-
-
 
 
 

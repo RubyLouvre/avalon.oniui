@@ -1,4 +1,5 @@
 ({
+  
     baseUrl: "./", //找到main.js文件的目录
     paths: {
         avalon: "./avalon.shim",
@@ -7,10 +8,9 @@
         "css-builder": "./combo/css-builder",
         "normalize": "./combo/normalize",
         domReady: "./combo/domReady",
-        "avalon.tab": "./tab/avalon.tab",
-        "avalon.pager": "./pager/avalon.pager",
-        "avalon.datepicker": "./datepicker/avalon.datepicker"
     },
+
+    //optimize: "none",//如果要调试就不压缩
     name: "main", //如果从哪一个文件开始合并
     out: "./main-built.js" //确定要生成的文件路径及名字
 })

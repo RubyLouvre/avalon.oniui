@@ -192,7 +192,9 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                         tarVmodel = tarVmodel[1]
                         if(tarVmodel) {
                             tarVmodel.$watch(du, function(v) {
-                                vmodel.checked = !!v
+                                if(!!v != vmodel.checked) {
+                                    vmodel._toggle()
+                                }
                             })
                             vmodel.$watch("checked", function(v) {
                                 tarVmodel[du] = v

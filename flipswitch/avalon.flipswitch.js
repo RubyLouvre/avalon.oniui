@@ -202,7 +202,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                         _scan()
                     })
                 } else {
-                    _scan
+                    _scan()
                 }
 
                

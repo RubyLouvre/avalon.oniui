@@ -96,10 +96,13 @@ define(["../avalon.getModel",
                 var len = 0, //当前显示的dialog的个数
                     selectLength = document.getElementsByTagName("select").length,
                     maxZIndex = vmodel.zIndex
+
                 avalon.Array.ensure(dialogShows, vmodel)
                 len = dialogShows.length
                 if (len) {
-                    avalon(maskLayer).css("display", "block")
+                    if (vmodel.modal) {
+                        avalon(maskLayer).css("display", "block")
+                    }
                     avalon(maskLayerSimulate).css("display", "block")
                 }
                 // 通过zIndex的提升来调整遮罩层，保证层上层存在时遮罩层始终在顶层dialog下面(顶层dialog zIndex-1)但是在其他dialog上面
@@ -238,7 +241,9 @@ define(["../avalon.getModel",
                     defaults = avalon.ui.dialog.defaults
                 if (!defaults.zIndex) {
                     defaults.zIndex = getMaxZIndex() //保存body直接子元素中最大的z-index值， 保证dialog在最上层显示
+                    vmodel.zIndex = defaults.zIndex
                 }
+
                 if (avalon(docBody).height() < clientHeight) {
                     avalon(docBody).css("min-height", clientHeight)
                 }

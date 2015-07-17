@@ -7,9 +7,10 @@
         <meta name="viewport" content="width=device-width">
         <meta name="descriptions" content="旧版文档迁移教程
  路由器插件，实现类似angular ui-router的功能
-mmRouter的使用
-1、引入依赖(直接依赖于mmRouter, 总共依赖于avalon, mmRouter, mmHistory)
-<pre class=&quot;brush:javascript;gutter:fals" />
+常见问题及解决方案
+
+1、TypeError: avalon.require is not a function  --mmState.js
+有什么办法，用的是aval" />
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
         />
         <script src="../highlight/shCore.js"></script>
@@ -25,6 +26,11 @@ mmRouter的使用
                     <a href="https://github.com/gogoyqj/avalon.oniui/blob/master/mmRouter/README.md">迁移教程</a>
                 </p>
                 <p>路由器插件，实现类似angular ui-router的功能</p>
+                <h5>常见问题及解决方案</h5>
+                <div style="color:red;">1、TypeError: avalon.require is not a function --mmState.js 有什么办法，用的是avalon.shim.js
+                    - 重写avalon.controller.loader这个函数，参考下边具体的文档说明</div>
+                <br>
+                <a href="https://github.com/RubyLouvre/mmRouter/issues/71">更多问题</a>
                 <h5>mmRouter的使用</h5>1、引入依赖(直接依赖于mmRouter, 总共依赖于avalon, mmRouter, mmHistory)
                 <pre
                 class="brush:javascript;gutter:false;toolbar:false;">require(["mmRouter"], function() {})</pre>2、定义VM
@@ -112,6 +118,51 @@ mmRouter的使用
                     </tr>
                     <tr>
                         <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>start(options)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.history.start 开始监听历史变化
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td></td>
+                                    <td>options 配置参数</td>
+                                </tr>
+                                <tr>
+                                    <td>options.hashPrefix</td>
+                                    <td></td>
+                                    <td>hash以什么字符串开头，默认是 "!"，对应实际效果就是"#!"</td>
+                                </tr>
+                                <tr>
+                                    <td>options.routeElementJudger</td>
+                                    <td></td>
+                                    <td>判断a元素是否是触发router切换的链接的函数，return true则触发切换，默认为avalon.noop，history内部有一个判定逻辑，是先判定a元素的href属性是否以hashPrefix开头，如果是则当做router切换元素，因此综合判定规则是
+                                        href.indexOf(hashPrefix) == 0 || routeElementJudger(ele, ele.href)，如果routeElementJudger返回true则跳转至href，如果返回的是字符串，则跳转至返回的字符串，如果返回false则返回浏览器默认行为</td>
+                                </tr>
+                                <tr>
+                                    <td>options.html5Mode</td>
+                                    <td></td>
+                                    <td>是否采用html5模式，即不使用hash来记录历史，默认false</td>
+                                </tr>
+                                <tr>
+                                    <td>options.fireAnchor</td>
+                                    <td></td>
+                                    <td>决定是否将滚动条定位于与hash同ID的元素上，默认为true</td>
+                                </tr>
+                                <tr>
+                                    <td>options.basepath</td>
+                                    <td></td>
+                                    <td>根目录，默认为"/"</td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                     <tr>
                         <td>redirect(hash)</td>
@@ -255,6 +306,11 @@ mmRouter的使用
                                     <td></td>
                                     <td>true替换history，否则生成一条新的历史记录</td>
                                 </tr>
+                                <tr>
+                                    <td>options.confirmed</td>
+                                    <td></td>
+                                    <td>true不触发onBeforeUnload,$onBeforeUnload,onBeforeExit</td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
@@ -303,13 +359,14 @@ mmRouter的使用
                                 <tr>
                                     <td>opts.controllerProvider</td>
                                     <td></td>
-                                    <td>指定默认view控制器的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数</td>
+                                    <td>指定默认view控制器的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数 @param opts.viewCache
+                                        是否缓存这个模板生成的dom，设置会覆盖dom元素上的data-view-cache，也可以分别配置到views上每个单独的view上</td>
                                 </tr>
                                 <tr>
                                     <td>opts.views</td>
                                     <td></td>
-                                    <td>如果不写views属性,则默认view为""，对多个[ms-view]容器进行处理,每个对象应拥有template, templateUrl,
-                                        templateProvider，可以给每个对象搭配一个controller||controllerUrl||controllerProvider属性
+                                    <td>如果不写views属性,则默认view【ms-view=""】为""，也可以通过指定一个viewname属性来配置【ms-view="viewname"】，对多个[ms-view]容器进行处理,每个对象应拥有template,
+                                        templateUrl, templateProvider，可以给每个对象搭配一个controller||controllerUrl||controllerProvider属性
                                         views的结构为
                                         <pre>
 {
@@ -321,22 +378,23 @@ mmRouter的使用
                                         如果名字存在@, viewname为match[0], statename为match[1]</td>
                                 </tr>
                                 <tr>
-                                    <td>opts.views.template</td>
+                                    <td>opts.views.{viewname}.template</td>
                                     <td></td>
-                                    <td>指定当前模板，也可以为一个函数，传入opts.params作参数，</td>
+                                    <td>指定当前模板，也可以为一个函数，传入opts.params作参数，* @param opts.views.viewname.cacheController
+                                        是否缓存view的控制器，默认true</td>
                                 </tr>
                                 <tr>
-                                    <td>opts.views.templateUrl</td>
+                                    <td>opts.views.{viewname}.templateUrl</td>
                                     <td></td>
                                     <td>指定当前模板的路径，也可以为一个函数，传入opts.params作参数</td>
                                 </tr>
                                 <tr>
-                                    <td>opts.views.templateProvider</td>
+                                    <td>opts.views.{viewname}.templateProvider</td>
                                     <td></td>
                                     <td>指定当前模板的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数</td>
                                 </tr>
                                 <tr>
-                                    <td>opts.views.ignoreChange</td>
+                                    <td>opts.views.{viewname}.ignoreChange</td>
                                     <td></td>
                                     <td>用法同state.ignoreChange，只是针对的粒度更细一些，针对到具体的view</td>
                                 </tr>
@@ -458,7 +516,7 @@ mmRouter的使用
                                     <td>config.onError</td>
                                     <td>Function</td>
                                     <td>出错的回调，this指向对应的state，第一个参数是一个object，object.type表示出错的类型，比如view表示加载出错，object.name则对应出错的view
-                                        name，第二个参数是对应的state</td>
+                                        name，object.xhr则是当使用默认模板加载器的时候的httpRequest对象，第二个参数是对应的state</td>
                                 </tr>
                             </table>
                         </td>
@@ -510,40 +568,45 @@ this.params
                                 <tr>
                                     <td>factory</td>
                                     <td>Function</td>
-                                    <td>控制器</td>
+                                    <td>控制器函数，传递一个内部生成的控制器对象作为参数</td>
                                 </tr>
                                 <tr>
-                                    <td>factory.$ctrl</td>
+                                    <td>factory.arguments[0]</td>
                                     <td>Object</td>
-                                    <td>实际生成的控制器对象</td>
+                                    <td>$ctrl 控制器的第一个参数：实际生成的控制器对象</td>
                                 </tr>
                                 <tr>
-                                    <td>factory.$onBeforeUnload</td>
+                                    <td>$ctrl.$vmodels</td>
+                                    <td>Object</td>
+                                    <td>给视图指定一个scan的vmodels数组，实际scan的时候$vmodels.concat(dom树上下文继承的vmodels)</td>
+                                </tr>
+                                <tr>
+                                    <td>$ctrl.$onBeforeUnload</td>
                                     <td>Function</td>
                                     <td>该视图被卸载前触发，return false可以阻止视图卸载，并阻止跳转</td>
                                 </tr>
                                 <tr>
-                                    <td>factory.$onEnter</td>
+                                    <td>$ctrl.$onEnter</td>
                                     <td>Function</td>
                                     <td>给该视图加载数据，可以返回false，或任意不为true的错误信息或一个promise对象，传递3个参数</td>
                                 </tr>
                                 <tr>
-                                    <td>factory.$onEnter.params</td>
-                                    <td>Function</td>
-                                    <td>视图所属的state的参数</td>
+                                    <td>$ctrl.$onEnter.arguments[0]</td>
+                                    <td>Object</td>
+                                    <td>params第一个参数：视图所属的state的参数</td>
                                 </tr>
                                 <tr>
-                                    <td>factory.$onEnter.resolve</td>
+                                    <td>$ctrl.$onEnter.arguments[1]</td>
                                     <td>Function</td>
-                                    <td>$onEnter return false的时候，进入同步等待，直到手动调用resolve</td>
+                                    <td>resolve $onEnter 第二个参数：return false的时候，进入同步等待，直到手动调用resolve</td>
                                 </tr>
                                 <tr>
-                                    <td>factory.$onEnter.reject</td>
+                                    <td>$ctrl.$onEnter.arguments[2]</td>
                                     <td>Function</td>
-                                    <td>数据加载失败，调用</td>
+                                    <td>reject 第三个参数：数据加载失败，调用</td>
                                 </tr>
                                 <tr>
-                                    <td>factory.$onRendered</td>
+                                    <td>$ctrl.$onRendered</td>
                                     <td>Function</td>
                                     <td>视图元素scan完成之后，调用</td>
                                 </tr>
@@ -556,6 +619,46 @@ this.params
                         <td></td>
                         <td>avalon.controller.loader avalon.controller异步引入模块的加载器，默认是通过avalon.require加载</td>
                     </tr>
+                    <tr>
+                        <td>templateLoader(url,resolve,reject,reason)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.state.templateLoader 通过url异步加载模板的函数，默认是通过内置的httpRequest去加载，但是在node-webkit环境是不work的，因此开放了这个配置，用以自定义url模板加载器，会在一个promise实例里调用这个方法去加载模板
+                            <table
+                            border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>url</td>
+                                    <td></td>
+                                    <td>url 模板地址</td>
+                                </tr>
+                                <tr>
+                                    <td>resolve</td>
+                                    <td></td>
+                                    <td>resolve 加载成功，如果需要缓存模板，请调用
+                                        <br>resolve(avalon.templateCache[url] = templateString)
+                                        <br>否则，请调用
+                                        <br>resolve(templateString)
+                                        <br>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>reject</td>
+                                    <td></td>
+                                    <td>reject 加载失败，请调用reject(reason)</td>
+                                </tr>
+                                <tr>
+                                    <td>reason</td>
+                                    <td></td>
+                                    <td>reason 挂在失败原因的对象</td>
+                                </tr>
+                </table>
+                </td>
+                </tr>
                 </table>
             </fieldset>
             <ul class="example-links">
@@ -588,9 +691,6 @@ this.params
                 </li>
                 <li>
                     <a href="avalon.mmRouter.ex9.html">mmRouter-基于状态机的路由器</a>
-                </li>
-                <li>
-                    <a href="avalon.mmRouter.ex10.html">mmRouter示例: avalon.router.go</a>
                 </li>
             </ul>
         </div>

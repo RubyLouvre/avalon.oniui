@@ -42,18 +42,18 @@
             }
             .oni-mmRouter-leave {
                 position: relative;
-                z-index: -1;                
+                margin-left: 0;
+                /*z-index: -1;                */
             }
             .oni-mmRouter-slide {
                 width: 50%;
                 float: left;
                 display: inline;
                 background: #fff;
-                transition: margin-left .5s;
             }
         </style>
         <script >
-            avalon.config({debug: true})
+            avalon.config({debug: false})
             var cs = [], arr = "contacts.detail.item.edit".split(".")
             for(var i = 0; i < arr.length; i++) {
                 cs.push({
@@ -62,18 +62,24 @@
                     arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
                 })
             }
-            require(["ready!", "mmRouter/mmState", "loading/avalon.loading", "mmRequest/mmRequest"], function() {
+            require(["ready!", "mmRouter/mmState", "loading/avalon.loading", "mmRequest/mmRequest", "animation/avalon.animation"], function() {
 
                 //一个顶层VM
                 avalon.define({
                     $id: "test",
                     codes: cs,
+                    c: function() {
+                        avalon.vmodels.test.count += 2
+                        return avalon.vmodels.test.count
+                    },
+                    count: 1,
                     run: function(id) {
                         var code  = document.getElementById(id)
                         if(!code) return
                         code = code.value
                         eval(code)
-                    }
+                    },
+                    $skipArray: ["count"]
                 })
                 avalon.define({
                     $id: "usVmodelAsController",
@@ -101,7 +107,6 @@
                 // hone   //
                 /////////////
                 avalon.state("home", {
-                    controller: "test",
                     url: "/",
                     views: {
                         "": {
@@ -117,7 +122,6 @@
                     }
 
                 }).state("about", {
-                    controller: "test",
                     url: "/about",
                     views: {
                         "": {
@@ -165,7 +169,7 @@
                                                 $onRendered: avalon.noop
                                             })
                                             // rj("faild")
-                                        }, 1000)
+                                        }, 1)
                                     })
                                 return pro
                             }
@@ -185,7 +189,7 @@
                             templateUrl: "contacts.detail.html",
                             // 只要是query或者params变化，屏蔽掉通过innerHTML重写视图
                             ignoreChange: function(changeType) {
-                                if(changeType) return true
+                                // if(changeType) return true
                             },
                             controller: function($ctrl) {
                                 // 视图元素scan完成后回调
@@ -229,6 +233,7 @@
                     views: {
                         "": {
                             templateUrl: "contacts.detail.item.html"
+                            //, viewCache: false
                         },
                         'hint@': {
                             template: "当前状态是contacts.detail.item"
@@ -276,17 +281,22 @@
                         // avalon.router.navigate("/", {replace: true})
                     },
                     onViewEnter: function(newNode, oldNode) {
-                        oldNode.style.marginLeft = "-50%"
-                        mmState.oldNodes.push(oldNode)
-                        setTimeout(function() {
+                        avalon(oldNode).animate({
+                            marginLeft: "-100%"
+                        }, 500, function() {
                             oldNode.parentNode && oldNode.parentNode.removeChild(oldNode)
-                        }, 1000)
+                        })
+                        
                     }
                 })
                 //启动路由
                 avalon.history.start({
-                    basepath: "/mmRouter",
-                    fireAnchor: false
+                    // basepath: "/mmRouter",
+                    fireAnchor: false,
+                    routeElementJudger: function(ele, href) {
+                        ele = avalon(ele)
+                        if(ele.hasClass("route-ele")) return true // return href
+                    }
                 })
                 //go!!!!!!!!! 
                 avalon.scan()
@@ -313,7 +323,7 @@
                 </li>
             </ul>
             <div class="header">
-                <a href="#!//">mmState</a>  <a href="#!/contacts">contacts</a>  <a href="#!/about">about</a>
+                <a href="#!//">mmState</a>  <a href="#!/contacts">contacts</a>  <a href="#!/about">about</a> <a href="/about" class="route-ele">about</a>
                 <p class="hint" ms-view="hint" 
                    ms-class="b2"></p>
             </div>
@@ -365,18 +375,18 @@
             }
             .oni-mmRouter-leave {
                 position: relative;
-                z-index: -1;                
+                margin-left: 0;
+                /*z-index: -1;                */
             }
             .oni-mmRouter-slide {
                 width: 50%;
                 float: left;
                 display: inline;
                 background: #fff;
-                transition: margin-left .5s;
             }
         &lt;/style&gt;
         &lt;script &gt;
-            avalon.config({debug: true})
+            avalon.config({debug: false})
             var cs = [], arr = &quot;contacts.detail.item.edit&quot;.split(&quot;.&quot;)
             for(var i = 0; i &lt; arr.length; i++) {
                 cs.push({
@@ -385,18 +395,24 @@
                     arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
                 })
             }
-            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;, &quot;mmRequest/mmRequest&quot;], function() {
+            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;, &quot;mmRequest/mmRequest&quot;, &quot;animation/avalon.animation&quot;], function() {
 
                 //一个顶层VM
                 avalon.define({
                     $id: &quot;test&quot;,
                     codes: cs,
+                    c: function() {
+                        avalon.vmodels.test.count += 2
+                        return avalon.vmodels.test.count
+                    },
+                    count: 1,
                     run: function(id) {
                         var code  = document.getElementById(id)
                         if(!code) return
                         code = code.value
                         eval(code)
-                    }
+                    },
+                    $skipArray: [&quot;count&quot;]
                 })
                 avalon.define({
                     $id: &quot;usVmodelAsController&quot;,
@@ -424,7 +440,6 @@
                 // hone   //
                 /////////////
                 avalon.state(&quot;home&quot;, {
-                    controller: &quot;test&quot;,
                     url: &quot;/&quot;,
                     views: {
                         &quot;&quot;: {
@@ -440,7 +455,6 @@
                     }
 
                 }).state(&quot;about&quot;, {
-                    controller: &quot;test&quot;,
                     url: &quot;/about&quot;,
                     views: {
                         &quot;&quot;: {
@@ -488,7 +502,7 @@
                                                 $onRendered: avalon.noop
                                             })
                                             // rj(&quot;faild&quot;)
-                                        }, 1000)
+                                        }, 1)
                                     })
                                 return pro
                             }
@@ -508,7 +522,7 @@
                             templateUrl: &quot;contacts.detail.html&quot;,
                             // 只要是query或者params变化，屏蔽掉通过innerHTML重写视图
                             ignoreChange: function(changeType) {
-                                if(changeType) return true
+                                // if(changeType) return true
                             },
                             controller: function($ctrl) {
                                 // 视图元素scan完成后回调
@@ -552,6 +566,7 @@
                     views: {
                         &quot;&quot;: {
                             templateUrl: &quot;contacts.detail.item.html&quot;
+                            //, viewCache: false
                         },
                         'hint@': {
                             template: &quot;当前状态是contacts.detail.item&quot;
@@ -599,17 +614,22 @@
                         // avalon.router.navigate(&quot;/&quot;, {replace: true})
                     },
                     onViewEnter: function(newNode, oldNode) {
-                        oldNode.style.marginLeft = &quot;-50%&quot;
-                        mmState.oldNodes.push(oldNode)
-                        setTimeout(function() {
+                        avalon(oldNode).animate({
+                            marginLeft: &quot;-100%&quot;
+                        }, 500, function() {
                             oldNode.parentNode &amp;&amp; oldNode.parentNode.removeChild(oldNode)
-                        }, 1000)
+                        })
+                        
                     }
                 })
                 //启动路由
                 avalon.history.start({
-                    basepath: &quot;/mmRouter&quot;,
-                    fireAnchor: false
+                    // basepath: &quot;/mmRouter&quot;,
+                    fireAnchor: false,
+                    routeElementJudger: function(ele, href) {
+                        ele = avalon(ele)
+                        if(ele.hasClass(&quot;route-ele&quot;)) return true // return href
+                    }
                 })
                 //go!!!!!!!!! 
                 avalon.scan()
@@ -636,7 +656,7 @@
                 &lt;/li&gt;
             &lt;/ul&gt;
             &lt;div class=&quot;header&quot;&gt;
-                &lt;a href=&quot;#!//&quot;&gt;mmState&lt;/a&gt;  &lt;a href=&quot;#!/contacts&quot;&gt;contacts&lt;/a&gt;  &lt;a href=&quot;#!/about&quot;&gt;about&lt;/a&gt;
+                &lt;a href=&quot;#!//&quot;&gt;mmState&lt;/a&gt;  &lt;a href=&quot;#!/contacts&quot;&gt;contacts&lt;/a&gt;  &lt;a href=&quot;#!/about&quot;&gt;about&lt;/a&gt; &lt;a href=&quot;/about&quot; class=&quot;route-ele&quot;&gt;about&lt;/a&gt;
                 &lt;p class=&quot;hint&quot; ms-view=&quot;hint&quot; 
                    ms-class=&quot;b2&quot;&gt;&lt;/p&gt;
             &lt;/div&gt;

@@ -11,6 +11,7 @@ define(["../avalon.getModel",
         "text!./avalon.datepicker.html", 
         "../dropdown/avalon.dropdown.js",
         "../slider/avalon.slider.js",
+        "css!../chameleon/oniui-common.css",
         "css!./avalon.datepicker.css"], function(avalon, holidayDate, sourceHTML) {
     var calendarTemplate = sourceHTML,
         HOLIDAYS,
@@ -29,6 +30,7 @@ define(["../avalon.getModel",
             monthYearChangedBoth = false,
             datepickerData = [],            
             _initValue = "",
+            daysWrapper = null,
             years=[],
             minDateVM,
             maxDateVM,
@@ -76,16 +78,18 @@ define(["../avalon.getModel",
                 regional: widget.defaultRegional
             })
             vm.$skipArray = ["container", "showDatepickerAlways", "timer", "sliderMinuteOpts",
-                "sliderHourOpts", "template", "widgetElement", "dayNames", "allowBlank",
+                "sliderHourOpts", "template", "widgetElement", "rootElement", "dayNames", "allowBlank",
                 "months", "years", "numberOfMonths",
                 "showOtherMonths", "watermark", "weekNames",
                 "stepMonths", "changeMonthAndYear", "startDay", "mobileMonthAndYear",
                 "formatErrorTip"    //格式错误提示文案
             ]
+            vm._height = 150
             vm.dateError = vm.dateError || ""
             vm.weekNames = []
             vm.tip = vm.tip || ""
             vm.widgetElement = element
+            vm.rootElement = {}
             vm.data = []
             vm.prevMonth = -1 //控制prev class是否禁用
             vm.nextMonth = -1 //控制next class是否禁用
@@ -102,6 +106,25 @@ define(["../avalon.getModel",
             vm._years = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019]
             vm.elementYear = year
             vm.elementMonth = month
+            vm._getPositionClass = function(position) {
+                var _position = vm._position
+                if (_position === 'absolute') {
+                    switch(position) {
+                        case "rb":
+                            return 'oni-datepicker-wrapper-right' 
+                        break
+                        case "lt":
+                            return 'oni-datepicker-wrapper-top' 
+                        break
+                        case "rt": 
+                            return 'oni-datepicker-wrapper-top-right' 
+                        break
+                        default:
+                            return position 
+                        break
+                    }
+                }
+            }
             vm._setWeekClass = function(dayName) {
                 var dayNames = vmodel.regional.day
                 if ((dayNames.indexOf(dayName) % 7 == 0) || (dayNames.indexOf(dayName) % 7 == 6)) {
@@ -150,6 +173,9 @@ define(["../avalon.getModel",
                     className += " oni-state-disabled"
                 }
                 return className
+            }
+            vm._rowShow = function(rowDays) {
+                return rowDays[0] !== ""
             }
             vm.sliderMinuteOpts = {
                 onInit: function(sliderMinute, options, vmodels) {
@@ -226,6 +252,25 @@ define(["../avalon.getModel",
                     vmodel._datepickerToggle = false
                 }
             }
+            vm.getInitTime = function(timeDate) {
+                var date = formatDate(timeDate),
+                    time = timeDate.toTimeString(),
+                    now = time.substr(0, time.lastIndexOf(":"));
+                vmodel.hour = timeDate.getHours()
+                vmodel.minute = timeDate.getMinutes()
+                return date + ' ' + now
+            }
+            vm._dateCellRender = function(outerIndex, index, rowIndex, date) {
+                var dateCellRender = vmodel.dateCellRender
+                if (dateCellRender && (typeof dateCellRender === 'function')) {
+                    var dayItem = datepickerData[rowIndex]["rows"][outerIndex][index]
+                    if (date === "") {
+                        return date
+                    }
+                    return dateCellRender(date, vmodel, dayItem)
+                }
+                return date
+            }
             vm._getNow = function() {
                 var date = new Date(),
                     time = date.toTimeString(),
@@ -233,16 +278,6 @@ define(["../avalon.getModel",
                 vmodel.hour = date.getHours()
                 vmodel.minute = date.getMinutes()
                 return now
-            }
-            vm._dateCellRender = function(outerIndex, index, rowIndex, date) {
-                if (vmodel.dateCellRender) {
-                    var dayItem = datepickerData[rowIndex]["rows"][outerIndex][index]
-                    if (date === "") {
-                        return date
-                    }
-                    return vmodel.dateCellRender(date, vmodel, dayItem)
-                }
-                return date
             }
             vm._selectTime = function(event) {
                 var timeFilter = avalon.filters.timer,
@@ -388,9 +423,15 @@ define(["../avalon.getModel",
             vm.setRegional = function(regional) {
                 vmodel.regional = regional
             }
-            
+            vm.dataRendered = function() {
+                if (!daysWrapper) {
+                    daysWrapper = document.getElementById('oni-datepicker-days')
+                    daysWrapper && (daysWrapper.id = '')
+                }
+            }
             vm.$init = function(continueScan) {
-                var elementPar = element.parentNode
+                var elementPar = element.parentNode,
+                    initDate = null
 
                 calendar = avalon.parseHTML(calendarTemplate).firstChild
                 elementPar.insertBefore(calendar, element)
@@ -407,7 +448,7 @@ define(["../avalon.getModel",
                     elementPar.insertBefore(div,element)
                     div.appendChild(element)
                     if (vmodel.showTip) {
-                        var tip = avalon.parseHTML("<div class='oni-datepicker-tip'>{{tip}}<i class='oni-icon oni-icon-calendar-o'>&#xf133;</i></div>")
+                        var tip = avalon.parseHTML("<div class='oni-datepicker-tip'>{{tip}}<i class='oni-icon oni-icon-calendar-o'>&#xf088;</i></div>")
                         div.appendChild(tip)
                     } else {
                         element.style.paddingRight = "0px"
@@ -416,11 +457,15 @@ define(["../avalon.getModel",
                 }
                 if (vmodel.timer) {
                     vmodel.width = 100
-                    if (_initValue && validateDate(_initValue)) {
-                        _initValue = _initValue + " " + vmodel._getNow()
+                    var time = validateTime(_initValue)
+                    if (_initValue && time) {
+                        _initValue = vmodel.getInitTime(time)
                     }
                 }
                 element.value = _initValue
+                if (initDate = parseDate(_initValue)) {
+                    vmodel.tip = getDateTip(cleanDate(initDate)).text
+                }
                 element.disabled = vmodel.disabled
 
                 if (vmodel.showDatepickerAlways) {
@@ -438,10 +483,12 @@ define(["../avalon.getModel",
                 } else {
                     avalon.scan(div, [vmodel])
                 }
+                vm.rootElement = div
                 avalon.scan(calendar, [vmodel].concat(vmodels))
                 setTimeout(function() {
                     calendarDays(vmodel.month, vmodel.year)
                 }, 10)
+
                 if (typeof options.onInit === "function" ){
                     //vmodels是不包括vmodel的
                     options.onInit.call(element, vmodel, options, vmodels)
@@ -469,6 +516,10 @@ define(["../avalon.getModel",
             if (val) {
                 vmodel.elementMonth = elementMonth || -1
                 vmodel.elementYear = elementYear || -1
+                if (daysWrapper) {
+                    vmodel._height = avalon(daysWrapper).height()
+                    daysWrapper = null
+                }
             } else {
                 if (vmodel.year != elementYear && vmodel.month != elementMonth) {
                     if (!date) {
@@ -1010,6 +1061,23 @@ define(["../avalon.getModel",
                 return date;
             }
         }
+        // 检验time
+        function validateTime(date) {
+            if (typeof date == "string") {
+                var theDate = parseDate(date),
+                    timeReg = /\s[0-2]?[0-9]:[0-5]?[0-9]/,
+                    _time = date.match(timeReg)
+                if (theDate && _time && _time.length) {
+                    var time = _time[0].split(':'),
+                        hour = +time[0],
+                        minute = +time[1]
+                    theDate = new Date(theDate.getFullYear(), theDate.getMonth(), theDate.getDate(), hour, minute)
+                }
+                return theDate
+            } else {
+                return date;
+            }
+        }
         return vmodel
     }
 
@@ -1050,6 +1118,7 @@ define(["../avalon.getModel",
 
     widget.version = 1.0
     widget.defaults = {
+        calendarWidth: 196, //@config 设置日历展示宽度
         startDay: 1, //@config 设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推, 默认从周一开始
         minute: 0, //@config 设置time的默认minute
         hour: 0, //@config 设置time的hour
@@ -1080,11 +1149,12 @@ define(["../avalon.getModel",
          * @param vmodel {Vmodel} 日历组件对应vmodel
          * @param dateItem {Object} 对应的包含日期相关信息的对象
          */
-        dateCellRender: false, // 是否可以自定义日历单元格内容
+        dateCellRender: false,
         watermark: true, //@config 是否显示水印文字
         zIndex: -1, //@config设置日历的z-index
         showDatepickerAlways: false, //@config是否总是显示datepicker
         timer: false, //@config 是否在组件中可选择时间
+        position: '', //@config 设置datepicker的显示位置，可以为"rb"、"lt"、"rt"或者自定义的class,默认""
         /**
          * @config {Function} 选中日期后的回调
          * @param date {String} 当前选中的日期
@@ -1256,4 +1326,7 @@ define(["../avalon.getModel",
  [具有时间选择功能的datepicker](avalon.datepicker.ex11.html)
  [带格式化输出配置的datepicker](avalon.datepicker.ex12.html)
  [多语言支持](avalon.datepicker.ex13.html)
+ [datepicker的验证](avalon.datepicker.ex14.html)
+ [datepicker显示位置的设置](avalon.datepicker.ex15.html)
+ [datepicker宽度、格式自定义](avalon.datepicker.ex16.html)
  */

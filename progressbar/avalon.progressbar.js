@@ -34,6 +34,7 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
         var vmodel = avalon.define(data.progressbarId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
+            vm.rootElement = element
             var newElem = element, 
                 simulateTimer,
                 barElement,
@@ -41,7 +42,7 @@ define(["avalon", "text!./avalon.progressbar.html", "css!./avalon.progressbar.cs
                 barParElement
 
             vm.$d = svgSupport && vm.circle && circleValueList(options.circleRadius, options.circleBorderWidth) || []
-            vm.$skipArray = ["widgetElement", "template", "svgSupport"]
+            vm.$skipArray = ["widgetElement", "template", "svgSupport", "rootElement"]
             vm.svgSupport = svgSupport
             vm.ended = false
             // svg绘制一个圆，路径数据

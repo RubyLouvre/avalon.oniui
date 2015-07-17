@@ -52,6 +52,41 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                 vm.$flashEventHub = undefined;
                 vm.$fileInputProxy = undefined;
 
+
+                vm.$fileInputProxy = new inputProxyContructor({
+                    fn: vm.getFileContext,
+                    scope: vm
+                });
+                vm.$fileInputProxy.addEventListener("newFileSelected", function(fileInfo) {
+                    var fileObj = new fileConstructor(fileInfo, this.$flashEventHub, this.chunked, this.chunkSize, blobConstructor);
+                    fileObj.addEventListener("fileStatusChanged", this.onFileStatusChanged, this);
+
+                    fileObj.addEventListener("fileProgressed", function (f, beforePercentage) {
+                        var previewVm = this.getPreviewByToken(this, f.fileLocalToken);
+                        if (!previewVm) return;
+                        previewVm.message = this.getFileMessageText(f);
+                        previewVm.uploadProgress = f.uploadedPercentage;
+                    }, this);
+
+                    this.$runtime.addFile(fileObj);
+                    this.previews.push({
+                        name: fileInfo.name,
+                        fileLocalToken: fileInfo.fileLocalToken,
+                        preview: fileInfo.preview,
+                        uploadProgress: fileInfo.progress,
+                        uploadStatus: fileObj.status,
+                        done: false,
+                        size: fileObj.size,
+                        message: this.getFileMessageText(fileObj)
+                    });
+                }, vm);
+
+                vm.$fileInputProxy.addEventListener("previewGenerated", function(fileLocalToken, preview) {
+                    var previewVm = this.getPreviewByToken(this, fileLocalToken);
+                    if (!previewVm || previewVm.preview == preview) return;
+                    previewVm.preview = preview;
+                }, vm);
+
                 /**
                  * @interface 侦听Preview上的x按钮。负责移除Preview和runtime的FileObj。
                  */
@@ -60,6 +95,22 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                     vm.previews.remove(el);
                     vm.$runtime.removeFileByToken(el.fileLocalToken);
                 }
+
+                vm.onDragOver = function (e) {
+                    if (vm.enableDragDrop) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                }
+                vm.onDrop = function (e) {
+                    if (vm.enableDragDrop) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        vm.$fileInputProxy.addNewFiles(e.dataTransfer.files);
+                    }
+                }
+                avalon.bind(window, "dragover", vm.onDragOver);
+                avalon.bind(window, "drop", vm.onDrop);
                 /**
                  * @interface 侦听Add按钮的Click事件。
                  */
@@ -82,17 +133,15 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                 }
 
                 /**
-                 * @interface Add按钮首次点击时调用此函数，生成InputProxy、FlashEventHub和runtime的实例。
+                 * @interface Add按钮首次点击或者首次接收Drop文件时调用此函数，生成InputProxy、FlashEventHub和runtime的实例。
                  */
                 vm.registInput = function (opts, target, isH5) {
                     if (typeof opts == 'string') {
                         opts = avalon.vmodels[opts];
                     }
 
-                    var flashOrInput = undefined;
-
                     if (isH5) {
-                        flashOrInput = target;
+                        opts.$fileInputProxy.addEventListenerInput(target);
                     } else {
                         var flash = undefined;
                         if(navigator.appName.indexOf("Microsoft")!=-1){
@@ -101,42 +150,8 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                             flash = window.document[target];
                         }
                         opts.$flashEventHub = new fehConstructor(flash);
-                        flashOrInput = opts.$flashEventHub;
+                        opts.$fileInputProxy.bindFlashEvent(opts.$flashEventHub);
                     }
-
-                    opts.$fileInputProxy = new inputProxyContructor(flashOrInput, isH5, {
-                        fn: opts.getFileContext,
-                        scope: opts
-                    });
-                    opts.$fileInputProxy.attachEvent("newFileSelected", function(fileInfo) {
-                        var fileObj = new fileConstructor(fileInfo, this.$flashEventHub, this.chunked, this.chunkSize, blobConstructor);
-                        fileObj.attachEvent("fileStatusChanged", this.onFileStatusChanged, this);
-
-                        fileObj.attachEvent("fileProgressed", function (f, beforePercentage) {
-                            var previewVm = this.getPreviewByToken(this, f.fileLocalToken);
-                            if (!previewVm) return;
-                            previewVm.message = this.getFileMessageText(f);
-                            previewVm.uploadProgress = f.uploadedPercentage;
-                        }, this);
-
-                        this.$runtime.addFile(fileObj);
-                        this.previews.push({
-                            name: fileInfo.name,
-                            fileLocalToken: fileInfo.fileLocalToken,
-                            preview: fileInfo.preview,
-                            uploadProgress: fileInfo.progress,
-                            uploadStatus: fileObj.status,
-                            done: false,
-                            size: fileObj.size,
-                            message: this.getFileMessageText(fileObj)
-                        });
-                    }, opts);
-
-                    opts.$fileInputProxy.attachEvent("previewGenerated", function(fileLocalToken, preview) {
-                        var previewVm = this.getPreviewByToken(this, fileLocalToken);
-                        if (!previewVm || previewVm.preview == preview) return;
-                        previewVm.preview = preview;
-                    }, opts)
                 };
                 /**
                  * @interface 上传按钮的事件侦听函数。
@@ -199,11 +214,13 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                         return types.join(",");
                     }
                 }
+                vm.rootElement = null;
             	vm.$init = function() {
                     vm.$runtime = new runtimeConstructor(vm, blobqueueConstructor);
-
 	            	element.innerHTML = template.replace(/##VM_ID##/ig, vm.$id);  // 将vmid附加如flash的url中
 
+                    vm.rootElement = element.getElementsByTagName("*")[0];
+                    
                     vmodels = [vm].concat(vmodels);
                     avalon.scan(element, vmodels);
                     if(typeof vmodel.onInit === "function"){
@@ -217,7 +234,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                 };
 
                 vm.$skipArray = [
-                    "maxFileSize", "filePoolSize", "chunked", "chunkSize", 
+                    "maxFileSize", "filePoolSize", "chunked", "chunkSize", "rootElement",
                     "acceptFileTypes", "previewWidth", "previewHeight", "enablePreviewGenerating",
                     "enableRemoteKeyGen", "enableMd5Validation", "serverConfig", "noPreviewPath",
                     "previewFileTypes", "requiredParamsConfig", "__inputRegisted"
@@ -247,7 +264,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
 
             multipleFileAllowed: true,
             enableRemoteKeyGen: false,   //@config {Boolean} 分块上传时，是否预先和服务器握手，获取一个文件Id
-            enableMd5Validation: false, //@config {Boolean} 是否开启文件分块MD5验证，开启后每个文件请求内都会附加上文件数据的Md5码
+            enableMd5Validation: false, 
             /*
             * @config {Object} 服务器请求配置对象。具体属性参看下表
             * @param timeout {Number} 请求超时的毫秒数。默认为30000（30秒）
@@ -279,7 +296,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
             * @param totalChunkParamName {String} 分块总数的参数名称。默认为"total"
             * @param chunkIndexParamName {String} 分块的序列号参数名称。默认为"chunk"
             * @param fileNameParamName {String} 文件名领域的参数名。默认为"fileName"
-            * @param blobMd5ParamName {String} 文件分块的md码领域的参数名。默认为"md5"
+            
             */
             requiredParamsConfig: { },
 
@@ -291,6 +308,9 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                 fileNameParamName: "fileName",
                 blobMd5ParamName: "md5"
             },
+
+            //@config {Boolean} 是否开启文件拖放，只支持Chrome、FireFox、Safari及IE10+。默认关闭
+            enableDragDrop: false,
 
             //@config {String} 无预览的图片文件地址。
             noPreviewPath: "http://source.qunarzz.com/general/oniui/fileuploader/no-preview.png",
@@ -610,11 +630,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
             localFileKeyGen: function (opts, fileObj, resolve, reject) {
                 resolve(opts.$md5gen(fileObj.name + "#" + fileObj.size + "#" + fileObj.fileLocalToken));
             },
-            /*
-             * @interface 使用vm的md5配置，生成一个md5码。
-             * @param opts {Object} vmodel
-             * @param bytes {String} MD5码的源字符串。
-             */
+            
             getMd5: function (opts, bytes) {
                 return opts.$md5gen(bytes);
             },
@@ -760,3 +776,10 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
         return avalon;
     }
 );
+/**
+ @links
+ [uploader基础配置项](avalon.fileuploader.ex1.html)
+ [预览图和进度条配置](avalon.fileuploader.ex2.html)
+ [大文件和分块配置](avalon.fileuploader.ex3.html)
+ [文件Ajax请求参数的配置](avalon.fileuploader.ex5.html)
+*/

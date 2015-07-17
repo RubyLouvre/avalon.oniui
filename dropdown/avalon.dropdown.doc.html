@@ -2,7 +2,7 @@
 <html>
     
     <head>
-        <title>Name 下拉框</title>
+        <title>下拉框</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <meta name="descriptions" content="因为原生select实在是难用，avalon的dropdown组件在兼容原生select的基础上，对其进行了增强。
@@ -27,7 +27,7 @@
         <div class="wrapper">
             <h2>dropdown</h2>
             <fieldset>
-                <legend>Name 下拉框</legend>
+                <legend>下拉框</legend>
                 <p>因为原生
                     <code>select</code>实在是难用，avalon的dropdown组件在兼容原生
                     <code>select</code>的基础上，对其进行了增强。</p>
@@ -97,6 +97,12 @@
                         <td>组件是否只读</td>
                     </tr>
                     <tr>
+                        <td>hoverAutoShow</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否开启鼠标移入打开下拉列表鼠标移出关闭下拉列表功能</td>
+                    </tr>
+                    <tr>
                         <td>readonlyAttr</td>
                         <td>Object</td>
                         <td>null</td>
@@ -140,8 +146,8 @@
                     </tr>
                     <tr>
                         <td>label</td>
-                        <td>Object</td>
-                        <td>null</td>
+                        <td>String</td>
+                        <td>""</td>
                         <td>设置组件的提示文案，可以是一个字符串，也可以是一个对象</td>
                     </tr>
                     <tr>
@@ -191,6 +197,12 @@
                         <td>Object</td>
                         <td>null</td>
                         <td>value改变时的回调函数</td>
+                    </tr>
+                    <tr>
+                        <td>keyboardEvent</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否支持键盘事件</td>
                     </tr>
                     <tr>
                         <td>getTemplate(str,options)</td>
@@ -264,6 +276,9 @@
             </fieldset>
             <ul class="example-links">
                 <li>
+                    <a href="avalon.dropdown.ex16.html">使用html配置multiple组件</a>
+                </li>
+                <li>
                     <a href="avalon.dropdown.ex1.html">使用html配置multiple组件</a>
                 </li>
                 <li>
@@ -304,6 +319,9 @@
                 </li>
                 <li>
                     <a href="avalon.dropdown.ex14.html">多个dropdown共享状态</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdown.ex15.html">鼠标移入移出下拉菜单自动显示隐藏</a>
                 </li>
             </ul>
         </div>

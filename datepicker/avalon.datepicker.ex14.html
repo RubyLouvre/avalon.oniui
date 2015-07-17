@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<style type="text/css">
+    .success, .error {
+        background: #000;
+    }
+    .success {
+        color: #0f0;
+    }
+    .error {
+        color: #f00;
+    }
+    b {
+        padding-right: 10px;
+    }
+
+</style>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>datepicker validation demo</h1>
+        <div class="demo-show" ms-controller="demo">
+            <form ms-widget="validation, val1">
+                <fieldset style='background: #eee'>
+                    datepicker的验证情况: {{validationMessage|html}}
+                </fieldset>
+                <fieldset style="position: relative; z-index: 2">
+                    <input ms-widget="datepicker, d1" ms-duplex-date='date'/>
+                </fieldset>
+            </form>
+            <script>
+                require(["validation/avalon.validation", "datepicker/avalon.datepicker"], function() {
+                    var demoVM = avalon.define({
+                        $id: 'demo',
+                        $skipArray: ['validation'],
+                        validationMessage: '',
+                        validation: {
+                            validateInBlur: false,
+                            validationHooks: {
+                                date: {
+                                    message: "要求日期必须介于2015-06-01到2015-06-20之间",
+                                    get: function(value, data, next) {
+                                        var datepickerVM = avalon.vmodels.d1.$model,
+                                            parseDate = datepickerVM.parseDate.bind(datepickerVM),
+                                            currentDate = parseDate(value),
+                                            minDate = parseDate('2015-06-01'),
+                                            maxDate = parseDate('2015-06-20'),
+                                            ret = currentDate >= minDate && currentDate <= maxDate
+                                        next(ret)
+                                        return value
+                                    }
+                                }
+                            } ,
+                            onError: function (reasons) {
+                                reasons.forEach(function (reason) {
+                                    demoVM.validationMessage = '<p class="error"><b>Error:</b>' + reason.getMessage() + '</p>'
+                                })
+                            },
+                            onSuccess: function (reasons) {
+                                demoVM.validationMessage = '<p class="success"><b>Success:</b>日期符合验证规则</p>'
+                            }
+                        },
+                        date: ''
+                    })
+                    demoVM.$watch('date', function() {
+                        var validationVM = avalon.vmodels.val1,
+                            datepickerVM = avalon.vmodels.d1,
+                            input = datepickerVM.widgetElement
+
+                        validationVM.data.forEach(function (data) {
+                            if (data.element === input) {
+                                validationVM.validate(data, 0, {})
+                            }
+                        })
+                    })
+                    avalon.scan()
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;datepicker demo&lt;/title&gt;
+                    &lt;style type="text/css"&gt;
+                        .success, .error {
+                            background: #000;
+                        }
+                        .success {
+                            color: #0f0;
+                        }
+                        .error {
+                            color: #f00;
+                        }
+                        b {
+                            padding-right: 10px;
+                        }
+
+                    &lt;/style&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;h1&gt;datepicker validation demo&lt;/h1&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;form ms-widget="validation, val1"&gt;
+                            &lt;fieldset style='background: #eee'&gt;
+                                datepicker的验证情况: {{validationMessage|html}}
+                            &lt;/fieldset&gt;
+                            &lt;fieldset style="position: relative; z-index: 2"&gt;
+                                &lt;input ms-widget="datepicker, d1" ms-duplex-date='date'/&gt;
+                            &lt;/fieldset&gt;
+                        &lt;/form&gt;
+                        &lt;script&gt;
+                            require(["validation/avalon.validation", "datepicker/avalon.datepicker"], function() {
+                                var demoVM = avalon.define({
+                                    $id: 'demo',
+                                    $skipArray: ['validation'],
+                                    validationMessage: '',
+                                    validation: {
+                                        validateInBlur: false,
+                                        validationHooks: {
+                                            date: {
+                                                message: "要求日期必须介于2015-06-01到2015-06-20之间",
+                                                get: function(value, data, next) {
+                                                    var datepickerVM = avalon.vmodels.d1.$model,
+                                                        parseDate = datepickerVM.parseDate.bind(datepickerVM),
+                                                        currentDate = parseDate(value),
+                                                        minDate = parseDate('2015-06-01'),
+                                                        maxDate = parseDate('2015-06-20'),
+                                                        ret = currentDate &gt;= minDate && currentDate &lt;= maxDate
+                                                    next(ret)
+                                                    return value
+                                                }
+                                            }
+                                        } ,
+                                        onError: function (reasons) {
+                                            reasons.forEach(function (reason) {
+                                                demoVM.validationMessage = '&lt;p class="error"&gt;&lt;b&gt;Error:&lt;/b&gt;' + reason.getMessage() + '&lt;/p&gt;'
+                                            })
+                                        },
+                                        onSuccess: function (reasons) {
+                                            demoVM.validationMessage = '&lt;p class="success"&gt;&lt;b&gt;Success:&lt;/b&gt;日期符合验证规则&lt;/p&gt;'
+                                        }
+                                    },
+                                    date: ''
+                                })
+                                demoVM.$watch('date', function() {
+                                    var validationVM = avalon.vmodels.val1,
+                                        datepickerVM = avalon.vmodels.d1,
+                                        input = datepickerVM.widgetElement
+
+                                    validationVM.data.forEach(function (data) {
+                                        if (data.element === input) {
+                                            validationVM.validate(data, 0, {})
+                                        }
+                                    })
+                                })
+                                avalon.scan()
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>

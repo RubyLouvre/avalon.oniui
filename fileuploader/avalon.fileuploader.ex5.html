@@ -15,8 +15,8 @@
 	<p>2）fileTokenParamName：在开启文件分块时，作为服务器识别分块数据归属的唯一标识符。默认值为“fileKey”。仅在分块上传时生效。</p>
 	<p>3）totalChunkParamName：标识文件一共包含多少个分块，未开始分块上传时，该参数对应的值总是1。默认值是“total”。</p>
 	<p>4）chunkIndexParamName：分块数据对应的index，从0开始。默认值是“chunk”</p>
-	<p>5）fileNameParamName：文件名参数名。默认值是“fileName”。</p>
-	<p class='end'>6）blobMd5ParamName：文件名参数名。默认值是“md5”。仅在开启<a href="avalon.fileuploader.ex4.html#chunk">MD5验证</a>时生效。</p>
+	<p class='end'>5）fileNameParamName：文件名参数名。默认值是“fileName”。</p>
+	<!-- <p class='end'>6）blobMd5ParamName：文件名参数名。默认值是“md5”。仅在开启<a href="avalon.fileuploader.ex4.html#chunk">MD5验证</a>时生效。</p> -->
     <div ms-widget="fileuploader,demoUploader1,$uploaderOptions1"></div>
 
 	<h1><a name="requestaddparam">为Ajax请求加入自定义的Param和数据</a></h1>
@@ -56,11 +56,11 @@
 						fileTokenParamName: "fileIndicator",
 						totalChunkParamName: "chunkAmount",
 						chunkIndexParamName: "chunkIndex",
-						fileNameParamName: "name",
-						blobMd5ParamName: "dataMd53"
+						fileNameParamName: "name"
+						// blobMd5ParamName: "dataMd53"
 					},
-					chunked: true,
-					enableMd5Validation: true
+					chunked: true
+					// enableMd5Validation: true
 				}, basicOptions);
 
 

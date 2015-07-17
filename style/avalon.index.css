@@ -61,7 +61,7 @@ a, a:active, a:hover {
     *zoom: 1;
     margin: 0 auto;
     font-size: 16px;
-    width: 24em;
+    width: 37em;
 }
 .header .nav ul:after { 
     content: "."; 

@@ -178,6 +178,14 @@ define(["../textbox/avalon.textbox.js", "../dropdown/avalon.dropdown.js", "css!.
     return avalon
 })
 
+ /**
+  *  @other
+<p>dropdownlist组件继承于dropdown组件,因此许多参数请参考dropdown</p>
+<p>我们可以通过dropdownVm.value得到当前选中项的value值,
+也可以通过dropdownVm.getSelected()得到当前选中项的value值
+此外，我们也可能通过dropdownVm.activeIndex得到当前选中项的对应的索引值</p>
+*/
+
 // 功能参考：http://select2.github.io/examples.html
 /**
  @links

@@ -7,7 +7,7 @@
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
         <script src="../avalon.js"></script>
         <script type="text/javascript">
-            require(['dropdown/avalon.dropdown', "ready!"], function() {
+            require(['dropdown/avalon.dropdown', "domReady!"], function() {
                 var dm = avalon.define('dropdown', function(vm) {
                     vm.value = 'value5';
                     vm.dropdown = {

@@ -2,10 +2,12 @@
  * @cnName 滑动按钮组件
  * @enName flipswitch
  * @introduce
- *  <p> 将checkbox表单元素转化成富UI的开关，不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑
+ *  <p> 将checkbox表单元素转化成富UI的开关，[不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑] - 在2015.7.13以后已支持
+ * <font color="red">注意：如果指定了ms-duplex，则采用duplex指定的值，接着只采用checked属性为true时情景，最后采用data-flipswitch-cheched以及option.checked，因此可以通过ms-duplex，ms-checked，data-flipswitch-cheched以及option.checked来配置初始值，ms-duplex会进入一个异步scan的逻辑</font>
 </p>
  */
-define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggable", "css!./avalon.flipswitch.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
+define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggable", 
+    '../avalon.getModel', "css!./avalon.flipswitch.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 
     var svgSupport = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect,
         radiusSupport =typeof avalon.cssName("border-radius") == "string"
@@ -38,19 +40,20 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
         var vmodel = avalon.define(data.flipswitchId, function(vm) {
             avalon.mix(vm, options)
             vm.widgetElement = element
+            vm.rootElement = ""
             vm.$css3support = css3support && vm.animated
-            vm.$skipArray = ["widgetElement", "template"]
+            vm.$skipArray = ["widgetElement", "template", "rootElement"]
             vm.$svgSupport = svgSupport
             if(vm.size == "large") {
                 vm.draggerRadius = 19
                 vm.height = 38
                 vm.width = 76
             } else if(vm.size == "mini") {
-                vm.draggerRadius = 7
+                vm.draggerRadius = 6
                 vm.height = 12
                 vm.width = 28
             } else if(vm.size == "small") {
-                vm.draggerRadius = 9
+                vm.draggerRadius = 8
                 vm.height = 18
                 vm.width = 36
             }
@@ -116,58 +119,95 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 var divCon = avalon.parseHTML(formateTpl(vmodel.template))
                 newDiv = divCon.childNodes[0]
                 insertAfer(element, newDiv)
+                vm.rootElement = newDiv
                 divCon = null
 
                 inputEle = element
-                // 阻止节点移除事件触发$destroy
-                inputEle.msRetain = true;
+                // 提取ms-duplex绑定
+                var du = inputEle.getAttribute("ms-duplex")
+                if(du) {
+                    inputEle.removeAttribute("ms-duplex")
+                }
+                var tarVmodel
+                var duplexValue
+                function _scan() {
 
-                inputEle.parentNode.removeChild(inputEle)
-                inputEle.style.display = "none"
+                    // 阻止节点移除事件触发$destroy
+                    inputEle.msRetain = true;
 
-                // input元素的checked属性优先级高
-                if(inputEle.checked) {
-                    vmodel.checked = true
-                } 
-                inputEle.setAttribute("ms-checked", "checked")
+                    inputEle.parentNode.removeChild(inputEle)
+                    inputEle.style.display = "none"
 
-                newDiv.appendChild(inputEle)
-                inputEle.msRetain = false;
+                    // 如果指定了ms-duplex，则采用duplex指定的值，接着只采用checked属性为true时情景，最后采用data-flipswitch-cheched以及option.checked
+                    vmodel.checked = typeof duplexValue != "undefined" ? duplexValue : inputEle.checked || vmodel.checked
+                    // inputEle.setAttribute("ms-attr-checked", "checked")
+                    inputEle.setAttribute("ms-duplex-checked", "checked");
+                    newDiv.appendChild(inputEle)
+                    inputEle.msRetain = false;
 
-                if (continueScan) {
-                    continueScan()
+                    if (continueScan) {
+                        continueScan()
+                    } else {
+                        avalon.log("avalon请尽快升到1.3.7+")
+                        if (typeof options.onInit === "function") {
+                            options.onInit.call(element, vmodel, options, vmodels)
+                        }
+                    }
+                    avalon.scan(newDiv, [vmodel].concat(vmodels))
+
+                    bar = newDiv.firstChild
+
+                    while(bar) {
+                        if(bar.className && bar.className.indexOf("oni-flipswitch-bar") != -1) break
+                        bar = bar.nextSibling
+                    }
+                    bar.style[vmodel.dir] = vmodel._addthisCss()
+
+                    if(vmodel.draggable) {
+                        dragger = bar.firstChild
+                        while(dragger) {
+                            if(dragger.className && dragger.className.indexOf("oni-flipswitch-dragger") != -1) break
+                            dragger = dragger.nextSibling
+                        }
+                        if(dragger) {
+                            bar.setAttribute("ms-draggable", "")
+                            var avaElem = avalon(bar)
+                            avalon.each(attrMaps, function(key, item) {
+                                var _key = key.replace(/^dr/, "").replace(/[A-Z]/, function(mat) {return "-" + mat.toLowerCase()})
+                                avaElem.data("draggable" + _key, typeof item != "function" ? item : key)
+                            })
+                        }
+                        avalon.scan(bar, [vmodel].concat(vmodels))
+                    }
+                }
+
+                // 先行scan一次，2015.7.13，实现通过ms-checked绑定初始值
+                avalon.scan(inputEle, vmodels);
+                
+                if(du) {
+                    // 我猜测repeat里面有延时，不然会读不到$proxy.el这种。。。只有这样了
+                    avalon.nextTick(function() {
+                        tarVmodel = avalon.getModel(du, vmodels) || []
+                        du = tarVmodel[0]
+                        tarVmodel = tarVmodel[1]
+                        if(tarVmodel) {
+                            tarVmodel.$watch(du, function(v) {
+                                if(!!v != vmodel.checked) {
+                                    vmodel._toggle()
+                                }
+                            })
+                            vmodel.$watch("checked", function(v) {
+                                tarVmodel[du] = v
+                            })
+                            duplexValue = tarVmodel[du]
+                        }
+                        _scan()
+                    })
                 } else {
-                    avalon.log("avalon请尽快升到1.3.7+")
-                    if (typeof options.onInit === "function") {
-                        options.onInit.call(element, vmodel, options, vmodels)
-                    }
+                    _scan()
                 }
-                avalon.scan(newDiv, [vmodel].concat(vmodels))
 
-                bar = newDiv.firstChild
-
-                while(bar) {
-                    if(bar.className && bar.className.indexOf("oni-flipswitch-bar") != -1) break
-                    bar = bar.nextSibling
-                }
-                bar.style[vmodel.dir] = vmodel._addthisCss()
-
-                if(vmodel.draggable) {
-                    dragger = bar.firstChild
-                    while(dragger) {
-                        if(dragger.className && dragger.className.indexOf("oni-flipswitch-dragger") != -1) break
-                        dragger = dragger.nextSibling
-                    }
-                    if(dragger) {
-                        bar.setAttribute("ms-draggable", "")
-                        var avaElem = avalon(bar)
-                        avalon.each(attrMaps, function(key, item) {
-                            var _key = key.replace(/^dr/, "").replace(/[A-Z]/, function(mat) {return "-" + mat.toLowerCase()})
-                            avaElem.data("draggable" + _key, typeof item != "function" ? item : key)
-                        })
-                    }
-                    avalon.scan(bar, [vmodel].concat(vmodels))
-                }
+               
             }
             vm.$remove = function() {
                 newDiv.parentNode.insertBefore(inputEle, newDiv)
@@ -248,80 +288,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
                 return !vmodel.$svgSupport && !radiusSupport
             }
 
-            // 根据样式绘制圆，圆角等
-            //interface _draw() 动态更换皮肤后，可以调用这个方法更新提取switch样式
-            // vm._draw = function() {
-            //     if(radiusSupport) return
-            //     var divs = newDiv.getElementsByTagName("div")
-            //         , bs = newDiv.getElementsByTagName("b")
-            //         , bg
-            //         , ball
-            //     if(vmodel.getStyleFromSkin) {
-            //         avalon.each(divs, function(i, item) {
-            //             var ae = avalon(item)
-            //             if(ae.hasClass("oni-flipswitch-bg")) bg = ae
-            //         }) 
-            //         avalon.each(bs, function(i, item) {
-            //             var ae = avalon(item)
-            //             if(ae.hasClass("oni-flipswitch-dragger-ball")) ball = ae
-            //         }) 
-            //     }
-            //     if(bg) {
-            //         // 从css里面提取颜色等设置，写入vmodel
-            //         var par = avalon(newDiv),
-            //             bgColor = bg.css("background-color"),
-            //             offColor = bgColor,
-            //             disabledColor = bgColor,
-            //             w = bg.css("width"),
-            //             h = bg.css("height")
-            //         // 防止由于样式没有加载成功造成无法获取正确的样式
-            //         if(!parseInt(h)) {
-            //             return setTimeout(vmodel._draw, 16)
-            //         }
-            //         if(vmodel.disabled) {
-            //             vmodel.disabled = false
-            //             if(vmodel.checked) {
-            //                 bgColor = bg.css("background-color")
-            //                 vmodel.checked = false
-            //                 offColor = bg.css("background-color")
-            //                 vmodel.checked = true
-            //             } else {
-            //                 offColor = bg.css("background-color")
-            //                 vmodel.checked = true
-            //                 bgColor = bg.css("background-color")
-            //                 vmodel.checked = false
-            //             }
-            //             vmodel.disabled = true
-            //         } else {
-            //             if(vmodel.checked) {
-            //                 bgColor = bg.css("background-color")
-            //                 vmodel.checked = false
-            //                 offColor = bg.css("background-color")
-            //                 vmodel.checked = true
-            //             } else {
-            //                 vmodel.checked = true
-            //                 bgColor = bg.css("background-color")
-            //                 vmodel.checked = false
-            //             }
-            //             vmodel.disabled = true
-            //             disabledColor = bg.css("background-color")
-            //             vmodel.disabled = false
-            //         }
-            //         vmodel.onColor = bgColor
-            //         vmodel.offColor = offColor
-            //         vmodel.disabledColor = disabledColor
-            //         vmodel.height = parseInt(h)
-            //         vmodel.width = parseInt(w)
-            //         bg.css("background-color", "transparent")
-            //     }
-            //     if(ball) {
-            //         var bbColor = ball.css("background-color"),
-            //             bw = parseInt(ball.css("width")) >> 0
-            //         vmodel.draggerColor = bbColor
-            //         vmodel.draggerRadius = bw / 2
-            //         ball.css("background-color", "transparent")
-            //     }
-            // }
+            vm.radiusSupport = radiusSupport
 
             return vm
         })
@@ -351,7 +318,7 @@ define(["avalon", "text!./avalon.flipswitch.html", "../draggable/avalon.draggabl
         onColor: "#45A846", //\@config 选中情况颜色，会尝试自动到样式文件里面提取
         offColor: "#D5D5D5", //\@config 未选中情况颜色，会尝试自动到样式文件里面提取
         disabledColor: "#DEDEDE",//\@config 禁用情况颜色，会尝试自动到样式文件里面提取
-        draggerRadius: 7, //\@config normal size拖动头半径，会尝试自动到样式文件里面提取
+        draggerRadius: 12, //\@config normal size拖动头半径，会尝试自动到样式文件里面提取
         height: 24,   //\@config normal size高度，会尝试自动到样式文件里面提取
         width: 48,    //\@config normal size宽度，会尝试自动到样式文件里面提取
         css3support: false,

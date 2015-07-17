@@ -8,8 +8,10 @@
         <script src="../highlight/shCore.js"></script>
     </head>
     <body ms-controller="test">
-        <h1>演示表格吸顶效果，并且取消pager的显示</h1>
-        <div ms-widget="smartgrid, sg1" ></div>
+        <div style="width:960px; margin: 0 auto">
+            <h1>演示表格吸顶效果，并且取消pager的显示</h1>
+            <div ms-widget="smartgrid, sg1" ></div>
+        </div>
         <script>
             require(["smartgrid/avalon.smartgrid"], function() {
                 function getDatas(number) {
@@ -42,7 +44,7 @@
                                 defaultValue: "shirly", //列的默认值
                                 customClass: "ddd", //自定义此列单元格类
                                 toggle: false, //控制列的显示隐藏
-                                width: 400 //设置列的宽度
+                                width: 200 //设置列的宽度
                             }, {
                                 key : "age",
                                 name : "年龄",
@@ -63,7 +65,7 @@
                 avalon.scan()
             })
         </script>
-        <div ms-skip>
+        <div ms-skip style="width:960px; margin: 0 auto">
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
                 &lt;html&gt;

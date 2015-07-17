@@ -13,8 +13,16 @@
             require(["flipswitch/avalon.flipswitch"], function() {
                 avalon.define("test", function(vm) {
                     vm["flipswitch"] = {
+                        onInit: function() {
+                            this.style.display = "block"
+                        }
                     }
+                    vm.goal = false
                     vm.$skipArray = ["flipswitch"]
+                    vm.hehe = [{c: true}, {c: false}]
+                })
+                avalon.vmodels.test.$watch("goal", function(v) {
+                    console.log(v)
                 })
                 avalon.scan()
             })
@@ -24,9 +32,15 @@
 <div ms-controller="test">
         <h1>不同大小size，默认设置，选中状态</h1>
         <div>
+            <b>支持ms-repeat</b>
+            <div ms-repeat-item="hehe">
+                <input type="checkbox" ms-widget="flipswitch" ms-duplex="item.c" ms-attr-title="item.c">
+            </div>
             <p>---------size=mini---------</p>
             <div class="this-for-test-3">
-                <input checked="checked" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="mini">
+                checked属性优先级低于duplex
+                <input checked="checked" 
+                       ms-duplex="goal" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="mini">
             </div>
             <p>---------size=small---------</p>
             <div class="this-for-test">
@@ -57,8 +71,15 @@
             require([&quot;flipswitch/avalon.flipswitch&quot;], function() {
                 avalon.define(&quot;test&quot;, function(vm) {
                     vm[&quot;flipswitch&quot;] = {
+                        onInit: function() {
+                            this.style.display = &quot;block&quot;
+                        }
                     }
+                    vm.goal = []
                     vm.$skipArray = [&quot;flipswitch&quot;]
+                })
+                avalon.vmodels.test.$watch("goal", function(v) {
+                    console.log(v)
                 })
                 avalon.scan()
             })
@@ -70,7 +91,8 @@
         &lt;div&gt;
             &lt;p&gt;---------size=mini---------&lt;/p&gt;
             &lt;div class=&quot;this-for-test-3&quot;&gt;
-                &lt;input checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;flipswitch&quot; data-flipswitch-size=&quot;mini&quot;&gt;
+                &lt;input checked=&quot;checked&quot; 
+                       ms-duplex=&quot;goal&quot; type=&quot;checkbox&quot; ms-widget=&quot;flipswitch&quot; data-flipswitch-size=&quot;mini&quot;&gt;
             &lt;/div&gt;
             &lt;p&gt;---------size=small---------&lt;/p&gt;
             &lt;div class=&quot;this-for-test&quot;&gt;

@@ -10,26 +10,23 @@
  */
  define(["avalon"], 
 function ($$) {
-	var proxyContructor = function (target, isH5, contextGen) {
+	var proxyContructor = function (contextGen) {
 		this.contextGen = contextGen;
-		if (isH5) {
-			this.listenToInput(target);
-		} else {
-			target.listenTo("newFileGenerated", this.onFlashFileAdded, this);
-			target.listenTo("filePreviewUpdated", this.onPreviewUpdated, this);
-		}
+	}
+
+	proxyContructor.prototype.bindFlashEvent = function (target) {
+		target.addEventListener("newFileGenerated", this.onFlashFileAdded, this);
+		target.addEventListener("filePreviewUpdated", this.onPreviewUpdated, this);
 	}
 
 	proxyContructor.prototype.onPreviewUpdated = function (fileLocalToken, preview) {
-		this.fireEvent("previewGenerated", fileLocalToken, preview);
+		this.dispatchEvent("previewGenerated", fileLocalToken, preview);
 	}
 
 	proxyContructor.prototype.fileLocalTokenSeed = (proxyContructor.prototype.fileLocalTokenSeed == undefined) ? 0 : (proxyContructor.prototype.fileLocalTokenSeed);
 
 	proxyContructor.prototype.onH5FileFieldChanged = function (event) {
         var target = event.target || event.srcElement;
-        var files = target.files || target.value;
-
         // 这里先把input file移除出dom tree，重新建立一个新的input file，再加回dom tree。
         // 主要是为了清除input file的已选文件。暂时没有更好的办法。
         var html = target.outerHTML,
@@ -38,9 +35,14 @@ function ($$) {
         if (!pNode) return;
         pNode.removeChild(target);
         fileInputWrapper.innerHTML = html;
-        this.listenToInput(fileInputWrapper.children[0]);
+        this.addEventListenerInput(fileInputWrapper.children[0]);
         pNode.appendChild(fileInputWrapper.children[0]);
 
+        var files = target.files || target.value;
+        this.addNewFiles(files);
+	}
+
+	proxyContructor.prototype.addNewFiles = function (files) {
         var me = this;
         for (var i = 0; i < files.length; i++) {
         	var fileContext = this.getFileContext({ name: files[i].name, size: files[i].size });
@@ -55,7 +57,7 @@ function ($$) {
 					__html5file: true,
 					lastModified: files[i].lastModified
 				};
-				me.fireEvent("newFileSelected", fileInfo);
+				me.dispatchEvent("newFileSelected", fileInfo);
 
 				if (fileContext.enablePreviewGen) {
 					this.getImagePreview(fileInfo, fileContext.previewWidth, fileContext.previewHeight, function (fileInfo, preview) {
@@ -67,6 +69,7 @@ function ($$) {
         	}
         }
 	}
+
 	proxyContructor.prototype.getImagePreview = function (fileInfo, previewWidth, previewHeight, callback) {
 		var me = this;
 		var promise = new Promise(function(resolve, reject) {
@@ -134,7 +137,7 @@ function ($$) {
     }
 
 	proxyContructor.prototype.onFlashFileAdded = function (fileInfo) {
-		this.fireEvent("newFileSelected", fileInfo);
+		this.dispatchEvent("newFileSelected", fileInfo);
 	}
 
 	proxyContructor.prototype.getFileContext = function (basicInfo) {
@@ -143,7 +146,7 @@ function ($$) {
 		return context;
 	}
 
-	proxyContructor.prototype.listenToInput = function (input) {
+	proxyContructor.prototype.addEventListenerInput = function (input) {
 		var me = this;
         avalon(input).bind("change", function (event) {
         	me.onH5FileFieldChanged.call(me, event)

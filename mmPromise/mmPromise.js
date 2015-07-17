@@ -173,7 +173,7 @@ define(["avalon"], function (avalon) {
         return new msPromise(function (resolve, reject) {
             // 空数组直接resolve
             if (!iterable.length)
-                resolve()
+                resolve(result)
             function loop(a, index) {
                 a.then(function (ret) {
                     if (!end) {

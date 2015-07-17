@@ -42,7 +42,9 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
             vm.draggerHeight = vm.draggerWidth = ""
             vm.inFocuse = false
             vm._position = []
+            vm.rootElement = element
             vm.viewElement = element
+            vm.$skipArray = ["rootElement"]
             vm.dragging = false
 
             var inited,

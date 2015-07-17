@@ -355,10 +355,11 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
             vm.opacities = []
             avalon.mix(vm, options)
             vm.widgetElement = element
+            vm.rootElement = ""
             vm.svgSupport = svgSupport
             vm.$loadingID = widgetCount + "" + _key
             vm.$timer = ""
-            vm.$skipArray = ["widgetElement", "template", "opacities", "data"]
+            vm.$skipArray = ["widgetElement", "template", "opacities", "data", "rootElement"]
 
             var inited
             vm.$init = function(continueScan) {
@@ -382,7 +383,10 @@ define(["avalon", "text!./avalon.loading.html", "text!./avalon.loading.bar.html"
                         loop++
                     }
                 }
-                elementParent.appendChild(avalon.parseHTML(vmodel.template.replace("{{MS_WIDGET_HTML}}", html).replace("{{MS_WIDGET_ID}}", vmodel.$loadingID)))
+                var frag = avalon.parseHTML(vmodel.template.replace("{{MS_WIDGET_HTML}}", html).replace("{{MS_WIDGET_ID}}", vmodel.$loadingID))
+                newDiv = frag.childNodes[0]
+                elementParent.appendChild(newDiv)
+                vm.rootElement = newDiv
                 avalon.log("avalon请尽快升到1.3.7+")
                 avalon.scan(elementParent, [vmodel].concat(vmodels))
                 if (typeof options.onInit === "function") {

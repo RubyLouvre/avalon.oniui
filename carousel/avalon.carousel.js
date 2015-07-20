@@ -75,15 +75,22 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				element.innerHTML = pageHTML
 				element.style.display = "block"
 
-				if (vm.adaptiveWidth || vm.pictureWidth === "100%") { //自动填充外围容器宽度
+				if (vm.adaptiveWidth){
+					vm.pictureWidth = "100%"
+				}
+				if (vm.adaptiveHeight){
+					vm.pictureHeight = "100%"
+				}
+
+				if (vm.pictureWidth === "100%") { //自动填充外围容器宽度
 					vm.pictureWidth = element.offsetWidth
 				}
-				if (vm.adaptiveHeight || vm.pictureHeight === "100%") { //自动填充外围容器高度
+				if (vm.pictureHeight === "100%") { //自动填充外围容器高度
 					element.style.height = "100%"
 					var children = element.children
 					for (var i = 0, len = children.length; i < len; i++) {
 						if (children[i].getAttribute("class") === "oni-carousel") {
-							children[i].style.height = "100%"
+							children[i].style.pictureHeight = "100%"
 						}
 					}
 				}

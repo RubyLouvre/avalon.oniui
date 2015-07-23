@@ -1,11 +1,11 @@
 <div class="oni-carousel"
      ms-css-width="containerWidth"
      ms-css-height="containerHeight"
-     ms-mouseenter="stopPlay"
-     ms-mouseleave="restartPlay('carousel')"
+     ms-mouseenter="mouseEnter"
+     ms-mouseleave="mouseLeave(this)"
         >
     <div class="oni-carousel-panel"
-         ms-css-width="pictureWidth * picNum"
+         ms-css-width="pictureWidth * pictures.length"
          ms-css-left="panelOffsetX"
          ms-css-position="panelPosition"
             >
@@ -16,10 +16,10 @@
              ms-css-opacity="getOpacity($index)"
                 >
             <img class="oni-img-placeholder"
-                 ms-if="lazyloading"
+                 ms-if="lazyload"
                  ms-src="placeholderImg" />
             <img class="oni-img-origin"
-                 ms-visible="!lazyloading"
+                 ms-visible="!lazyload"
                  ms-src="{{el.src}}"
                  ms-on-load="imgOnload(this)"
                  ms-attr-alt="{{el.alt}}"/>
@@ -38,7 +38,7 @@
         <a ms-class="selected:el==currentIndex"
            ms-mouseenter="selectPic($index,$event)"
            ms-click="selectPic($index,$event)"
-           ms-mouseleave="restartPlay('tab')"
+           ms-mouseleave="mouseLeave(this)"
            ms-repeat="selections"
                 ></a>
     </div>

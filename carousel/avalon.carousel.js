@@ -64,6 +64,10 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 			vm.imgNodeArr = new Array(vm.picNum)
 			vm.lazyloading = options.lazyload
 			vm.placeholderImg = path + "/images/loading.gif"
+
+			vm.containerWidth = vm.pictureWidth
+			vm.containerHeight = vm.pictureHeight
+
 			vm.$skipArray = ["widgetElement", "template", "selectionWrapOffset"]
 
 			var inited
@@ -75,17 +79,25 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				element.innerHTML = pageHTML
 				element.style.display = "block"
 
+				// 处理自适应尺寸
 				if (vm.adaptiveWidth || vm.pictureWidth === "100%") { //自动填充外围容器宽度
+					element.style.width = vm.containerWidth = "100%"
 					vm.pictureWidth = element.offsetWidth
+
+					handleWindowResize("width")
 				}
 				if (vm.adaptiveHeight || vm.pictureHeight === "100%") { //自动填充外围容器高度
+					vm.pictureHeight = vm.containerHeight = "100%"
 					element.style.height = "100%"
+
 					var children = element.children
 					for (var i = 0, len = children.length; i < len; i++) {
 						if (children[i].getAttribute("class") === "oni-carousel") {
-							children[i].style.height = "100%"
+							children[i].style.pictureHeight = "100%"
 						}
 					}
+
+					handleWindowResize("height")
 				}
 
 				// 预加载图片
@@ -131,6 +143,14 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 					}
 				}
 
+				// 延迟carousel的内容显示，防止多次重绘
+				var children = element.children
+				for (var i = 0, len = children.length; i < len; i++) {
+					if (children[i].getAttribute("class") === "oni-carousel") {
+						children[i].style.display = "block"
+					}
+				}
+
 			}
 			vm.$remove = function() {
 				element.innerHTML = element.textContent = ""
@@ -159,32 +179,63 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 			var animated = false //动画正在进行
 			var duringTime = vm.during / 10 //补间动画的时间长度
 			var lastIndex //上一张图片index
-			vm.animate = function(direct, distance) { //@method animate(direct, distance) 图片滚动，direct为方向（1/-1），distance为距离（>0整数）
-				if (animated) { //防止动画队列堆积
+			var resizingWindow = false // 是否要中断动画
+
+			/**
+			 * @param direct {1或者-1} 图片滚动的方向
+			 * @param distance {正整数} 距离，比如从第一张图跳到第三张图，距离为2
+			 * @return undefined
+			 *
+			 * @description
+			 * 图片滚动动画
+			 */
+			vm.animate = function(direct, distance) {
+				//防止动画队列堆积
+				if (animated) {
 					return
 				}
+
 				distance = distance || 1
+
 				if (vm.effect === "slide") {
-					//移动准备
-					if (direct === 1 && vm.panelOffsetX === -vm.pictureWidth * (vm.picNum - 1)) { //点击为正方向且panel处于队列末尾，队列先回到0
+					//将要正向移动且panel处于队列末尾，队列先回到0
+					if (direct === 1 && vm.panelOffsetX === -vm.pictureWidth * (vm.picNum - 1)) {
 						vm.panelOffsetX = 0
-					} else if (direct === -1 && vm.panelOffsetX === 0) { //点击为负方向且panel处于队列开始，队列先回到末尾
+					}
+
+					//将要负向移动且panel处于队列开始，队列先回到末尾
+					else if (direct === -1 && vm.panelOffsetX === 0) {
 						vm.panelOffsetX = -vm.pictureWidth * (vm.picNum - 1)
 					}
-					var offset = vm.panelOffsetX - vm.pictureWidth * direct * distance //设置移动终点位置
 
 					//进行移动
 					var currentTime = 0 //当前时间
 					var startpos = vm.panelOffsetX //位置初始值
 					var duringDistance = vm.pictureWidth * -direct * distance //位置变化量
+
 					var go = function() {
+
 						animated = false
-						if ((vm.panelOffsetX <= -vm.pictureWidth * (vm.pictures.length - 1)) && direct > 0) { //队列已到末尾位置，且将要往正方向移动，队列回到0
+
+						//队列已到末尾位置，且将要往正方向移动，队列回到0
+						if ((vm.panelOffsetX <= -vm.pictureWidth * (vm.pictures.length - 1)) && direct > 0) {
 							vm.panelOffsetX = 0
-						} else if ((vm.panelOffsetX >= 0) && direct < 0) { //队列已到开始位置，且将要往反方向移动，队列回到末尾
+						}
+
+						//队列已到开始位置，且将要往反方向移动，队列回到末尾
+						else if ((vm.panelOffsetX >= 0) && direct < 0) {
 							vm.panelOffsetX = -vm.pictureWidth * (vm.picNum - 1)
-						} else { //队列还未到终点，在移动过程中
-							vm.panelOffsetX = Tween[vm.easing](currentTime, startpos, duringDistance, duringTime) //移动
+						}
+
+						//队列还未到终点，在移动过程中
+						else {
+							// 在窗口大小改变时修正动画初始位置和移动距离
+							if(resizingWindow){
+								startpos = - lastIndex * vm.pictureWidth
+								duringDistance = vm.pictureWidth * -direct * distance
+							}
+
+							vm.panelOffsetX = Tween[vm.easing](currentTime, startpos, duringDistance, duringTime)
 							if (currentTime < duringTime) {
 								currentTime += 1
 								requestAnimationFrame(go)
@@ -221,6 +272,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 					vm.currentIndex = vm.selections.length - 1
 				}
 			}
+
 			vm.getOpacity = function(index) { //@method getOpacity(index) fade effect 下改变前后图片透明度
 				if (vm.effect !== 'slide') {
 					var num = vm.fadein + vm.fadeout
@@ -293,6 +345,30 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 					play()
 				}
 			}
+
+			// 响应window.onresize事件
+			function handleWindowResize(orientation){
+				window.addEventListener('resize', function(){
+					if(orientation === "width"){
+						vmodel.pictureWidth = avalon.css(element, "width")
+
+						// 动画进行中resize
+						if(animated){
+							resizingWindow = true
+						}
+						// 动画静止时resize
+						else{
+							if(typeof lastIndex !== "undefined"){
+								vmodel.panelOffsetX = - (( lastIndex || 0 ) + 1) * vmodel.pictureWidth
+							} else{
+								vmodel.panelOffsetX = - ( lastIndex || 0 ) * vmodel.pictureWidth
+							}
+						}
+					} else if (orientation === "height"){
+						vmodel.pictureHeight = avalon.css(element, "height")
+					}
+				}, true);
+			}
 		})
 		if (vmodel.effect !== "slide") { //fade 或者 none 模式下的布局
 			vmodel.itemPosition = "absolute"
@@ -302,7 +378,13 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 		if(typeof vmodel.links[0] !== "undefined"){
 			vmodel.links.push( vmodel.links[0] )
 		}
-		vmodel.autoPlay() //自动开始轮播
+
+		// 当第一张图片加载完毕后开始动画
+		var firstImg = new Image()
+		firstImg.onload = function(e){
+			vmodel.autoPlay() //自动开始轮播
+		}
+		firstImg.src = vmodel.pictures[0].src
 
 		return vmodel
 	}

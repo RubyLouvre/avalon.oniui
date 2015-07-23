@@ -143,6 +143,20 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 					}
 				}
 
+				// 处理vm.pictures中的link
+				var links = []
+				for (var i = 0, len = vm.pictures.length; i < len; i++){
+					var picture = vm.pictures[i]
+
+					if(typeof picture.href !== "undefined"){
+						links[i] = {
+							href: picture.href,
+							title: picture.title
+						}
+					}
+				}
+				vm.links = links
+
 				// 延迟carousel的内容显示，防止多次重绘
 				var children = element.children
 				for (var i = 0, len = children.length; i < len; i++) {
@@ -370,10 +384,14 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				}, true);
 			}
 		})
-		if (vmodel.effect !== "slide") { //fade 或者 none 模式下的布局
+
+		// fade 或者 none 模式下的布局
+		if (vmodel.effect !== "slide") {
 			vmodel.itemPosition = "absolute"
 			vmodel.panelPosition = "relative"
 		}
+
+		// 处理循环末尾的图片及链接
 		vmodel.pictures.push( vmodel.pictures[0] )
 		if(typeof vmodel.links[0] !== "undefined"){
 			vmodel.links.push( vmodel.links[0] )

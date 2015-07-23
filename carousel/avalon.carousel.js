@@ -63,7 +63,9 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 			vm.arrowRightBg = vm.arrowRightNormalSrc !== "" ? "url("+vm.arrowRightNormalSrc+")" : ""
 			vm.imgNodeArr = new Array(vm.picNum)
 			vm.lazyloading = options.lazyload
-			vm.placeholderImg = path + "/images/loading.gif"
+
+			vm.componentVisible = false
+			vm.placeholderImg = "http://simg4.qunarzz.com/tts/images/demo/spinner_tra.gif"
 
 			vm.containerWidth = vm.pictureWidth
 			vm.containerHeight = vm.pictureHeight
@@ -98,30 +100,6 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 					}
 
 					handleWindowResize("height")
-				}
-
-				// 预加载图片
-				var originPictures = vm.pictures.slice(),
-					placeholderPics = []
-				for (var i = 0; i < vm.picNum; i++) {
-					var imgPreload = new Image()
-
-					if(vm.lazyload){
-						for(var j = 0; j < vm.picNum; j++){
-							placeholderPics.push(path + "/images/placeholder.png")
-						}
-						vm.pictures = placeholderPics;
-
-						(function(i) {
-							imgPreload.onload = function(e){
-								setTimeout(function(){
-									vm.imgNodeArr[i].setAttribute("src", originPictures[i])
-								},200)
-							}
-						})(i)
-					}
-
-					imgPreload.src = vm.pictures[i].src
 				}
 
 				// 预加载icons
@@ -183,8 +161,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				vm.autoPlay()
 			}
 
-			vm.imgOnload = function(e, i){
-				vm.imgNodeArr[i] = e.target
+			vm.imgOnload = function(target){
+				avalon.css(target, "display", "inline")
 			}
 
 			//动画参数
@@ -400,7 +378,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 		// 当第一张图片加载完毕后开始动画
 		var firstImg = new Image()
 		firstImg.onload = function(e){
-			vmodel.autoPlay() //自动开始轮播
+			vmodel.autoPlay() // 自动开始轮播
+			vmodel.componentVisible = true // 显示部件
 		}
 		firstImg.src = vmodel.pictures[0].src
 

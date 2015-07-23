@@ -15,8 +15,14 @@
              ms-css-position="itemPosition"
              ms-css-opacity="getOpacity($index)"
                 >
-            <img class="oni-img-placeholder" ms-if="lazyloading" ms-src="placeholderImg" />
-            <img class="oni-img-origin" ms-src="{{el.src}}" ms-on-load="imgOnload($event, $index)" ms-attr-alt="{{el.alt}}"/>
+            <img class="oni-img-placeholder"
+                 ms-if="lazyloading"
+                 ms-src="placeholderImg" />
+            <img class="oni-img-origin"
+                 ms-visible="!lazyloading"
+                 ms-src="{{el.src}}"
+                 ms-on-load="imgOnload(this)"
+                 ms-attr-alt="{{el.alt}}"/>
             <a class="oni-carousel-link"
                target="_blank"
                ms-if="typeof links[$index] !== 'undefined' && links[$index] !== ''"
@@ -26,7 +32,7 @@
         </div>
     </div>
     <div class="oni-carousel-selection-wrap"
-         ms-visible="alwaysShowSelection"
+         ms-visible="alwaysShowSelection && componentVisible"
          ms-css-margin-left="selectionWrapOffset"
             >
         <a ms-class="selected:el==currentIndex"
@@ -40,7 +46,7 @@
        ms-click="animate(-1)"
        ms-mouseenter="arrowHover('left')"
        ms-mouseleave="arrowBlur('left')"
-       ms-visible="arrowVisible"
+       ms-visible="arrowVisible && componentVisible"
        ms-css-background-image="arrowLeftBg"
             >
     </a>
@@ -48,7 +54,7 @@
        ms-click="animate(1)"
        ms-mouseenter="arrowHover('right')"
        ms-mouseleave="arrowBlur('right')"
-       ms-visible="arrowVisible"
+       ms-visible="arrowVisible && componentVisible"
        ms-css-background-image="arrowRightBg"
             >
     </a>

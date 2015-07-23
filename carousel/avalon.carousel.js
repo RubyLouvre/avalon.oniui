@@ -464,8 +464,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 		arrowRightHoverSrc: "", //@config  右箭头hover状态图标，可不传
 		arrowLeftClass:"", //@config  左右箭头的className，可不传
 		arrowRightClass:"", //@config  左右箭头的className，可不传
-		lazyload: false, //@config  图片进行懒加载
-		placeholderImg: "http://simg4.qunarzz.com/tts/images/demo/spinner_tra.gif", //@config  懒加载loading图
+		lazyload: true, //@config  图片进行懒加载
+		lazyloadImg: "http://simg4.qunarzz.com/tts/images/demo/spinner_tra.gif", //@config  懒加载loading图
 		onInit: avalon.noop, //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
 		getTemplate: function(tmpl, opts, tplName) {
 			return tmpl

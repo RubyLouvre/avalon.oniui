@@ -43,6 +43,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 			vm.arrowLeftBg = vm.arrowLeftNormalSrc !== "" ? "url("+vm.arrowLeftNormalSrc+")" : ""
 			vm.arrowRightBg = vm.arrowRightNormalSrc !== "" ? "url("+vm.arrowRightNormalSrc+")" : ""
 
+			vm.pictureTitle = ""
+
 			vm.$skipArray = ["widgetElement", "template", "selectionWrapOffset",
 				"animated","lastIndex","resizingWindow"]
 
@@ -75,7 +77,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 					new Image().src = icons[i]
 				}
 
-				// 处理vm.pictures中的link
+				// 处理vm.pictures中的link & title
 				var links = []
 				for (var i = 0, len = vm.pictures.length; i < len; i++){
 					var picture = vm.pictures[i]
@@ -86,6 +88,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 							title: picture.title
 						}
 					}
+
+					vm.pictureTitle = links[0].title
 				}
 				vm.links = links
 
@@ -235,7 +239,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				}
 				go()
 
-				//更新图片index
+				//更新图片index & title
 				vm.lastIndex = vm.currentIndex //当前图片变为上一张
 				vm.currentIndex += 1 * direct * distance
 				if (vm.currentIndex > vm.selections.length - 1) { //最右端继续+1时回0
@@ -243,6 +247,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				} else if (vm.currentIndex < 0) { //最左端继续-1时回末尾
 					vm.currentIndex = vm.selections.length - 1
 				}
+				vm.pictureTitle = vm.links[vm.currentIndex].title
 			}
 
 			/**
@@ -451,6 +456,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 		easing: "easeInOut", //@config  缓动类型，取值 linear:无缓动效果 / easeIn:在过渡的开始提供缓动效果 / easeOut:在过渡的结尾提供缓动效果 / easeInOut 在过渡的开始和结尾提供缓动效果
 		timeout: 2500, //@config  切换时间间隔
 		during: 300, //@config  切换速度，越小越快，单位为毫秒
+		showTitle: false, //@config  显示图片标题
 		alwaysShowArrow: true, //@config  显示左右切换箭头
 		alwaysShowSelection: true, //@config  显示底部圆形切换部件
 		autoSlide: true, //@config  自动播放

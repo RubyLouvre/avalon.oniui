@@ -59,7 +59,7 @@
         height: 100%;
         top: 0;
         left: 0;
-        z-index: 10;
+        z-index: 5;
         background-image: url(about:blank); }
   .oni-carousel .oni-carousel-selection-wrap {
     position: absolute;
@@ -83,6 +83,27 @@
       cursor: pointer; }
     .oni-carousel .oni-carousel-selection-wrap .selected {
       background-color: #00a3c2; }
+  .oni-carousel .oni-carousel-selection-wrap-keep-right {
+    left: initial;
+    right: 3%; }
+  .oni-carousel .oni-carousel-title-wrap {
+    position: absolute;
+    z-index: 10;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 8px 12px;
+    background-color: black;
+    color: #fff;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70);
+    opacity: 0.7;
+    -webkit-touch-callout: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    user-select: text; }
+    .oni-carousel .oni-carousel-title-wrap p {
+      margin: 0;
+      padding: 0; }
   .oni-carousel .arrow {
     position: absolute;
     z-index: 20;

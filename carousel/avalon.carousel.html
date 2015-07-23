@@ -32,6 +32,7 @@
         </div>
     </div>
     <div class="oni-carousel-selection-wrap"
+         ms-class="oni-carousel-selection-wrap-keep-right:showTitle"
          ms-visible="alwaysShowSelection && componentVisible"
          ms-css-margin-left="selectionWrapOffset"
             >
@@ -41,6 +42,10 @@
            ms-mouseleave="mouseLeave(this)"
            ms-repeat="selections"
                 ></a>
+    </div>
+    <div class="oni-carousel-title-wrap"
+            ms-if="showTitle">
+        <p>{{pictureTitle}}</p>
     </div>
     <a ms-class="{{arrowLeftClass}}" class="arrow prev png24"
        ms-click="animate(-1)"

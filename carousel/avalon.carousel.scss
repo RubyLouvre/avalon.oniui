@@ -92,7 +92,7 @@ $uiname : "oni-carousel";
 		left: initial;
 		right: 3%;
 	}
-	.#{$uiname}-title-wrap{
+	.#{$uiname}-description-wrap{
 		position: absolute;
 		z-index: 10;
 		bottom: 0;
@@ -103,7 +103,7 @@ $uiname : "oni-carousel";
 		@include opacity(0.7);
 		@include user-select("text");
 
-		.#{$uiname}-title{
+		.#{$uiname}-description{
 			padding: 8px 12px;
 		}
 	}

@@ -19,14 +19,20 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 
 			vm.widgetElement = element
 
-			// oni-carousel尺寸
+			// 处理carousel尺寸
+			if(String(vm.pictureWidth).indexOf("px") !== -1){
+				vm.pictureWidth = parseInt(vm.pictureWidth, 10)
+			}
+			if(String(vm.pictureHeight).indexOf("px") !== -1){
+				vm.pictureHeight = parseInt(vm.pictureHeight, 10)
+			}
 			vm.containerWidth = vm.pictureWidth
 			vm.containerHeight = vm.pictureHeight
 
-			// oni-carousel-panel位置偏移量
+			// 初始化oni-carousel-panel位置偏移量
 			vm.panelOffsetX = 0
 
-			// oni-carousel-item结构
+			// 初始化oni-carousel-item结构
 			vm.itemPosition = "relative"
 			vm.panelPosition = "absolute"
 
@@ -159,7 +165,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 			 * @return undefined
 			 */
 			vm.animate = function(direct, distance) {
-				var duringTime = vm.during / 10 //补间动画的时间长度
+				var duringTime = vm.duration / 10 //补间动画的时间长度
 
 				//防止动画队列堆积
 				if (vm.animated) {
@@ -244,7 +250,6 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				} else if (vm.currentIndex < 0) { //最左端继续-1时回末尾
 					vm.currentIndex = vm.selections.length - 1
 				}
-				console.log(vm.links[vm.currentIndex].title)
 			}
 
 			/**
@@ -450,29 +455,29 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 
 	widget.vertion = "1.0.1"
 	widget.defaults = {
-		pictures: [], //@config  轮播图片素材
-		links: [], //@config  图片链接
-		pictureWidth: 500, //@config  图片显示宽度
-		pictureHeight: 200, //@config  图片显示高度
-		effect: "slide", //@config  图片切换类型，取值：none:无特效 / fade:渐隐 / slide:滑动
-		easing: "easeInOut", //@config  缓动类型，取值 linear:无缓动效果 / easeIn:在过渡的开始提供缓动效果 / easeOut:在过渡的结尾提供缓动效果 / easeInOut 在过渡的开始和结尾提供缓动效果
-		timeout: 2500, //@config  切换时间间隔
-		during: 300, //@config  切换速度，越小越快，单位为毫秒
-		showTitle: false, //@config  显示图片标题
+		pictures: [], //@config  轮播图片素材，每个图片可以用对象方式配置src,alt,href,title,description
+		links: [], // 图片链接
+		pictureWidth: 500, //@config  组件宽度
+		pictureHeight: 200, //@config  组件高度
+		effect: "slide", //@config  图片切换类型，none:无特效 / fade:渐隐 / slide:滑动
+		easing: "easeInOut", //@config  缓动类型， linear:无缓动效果 / easeIn:在过渡的开始提供缓动效果 / easeOut:在过渡的结尾提供缓动效果 / easeInOut 在过渡的开始和结尾提供缓动效果
+		timeout: 2500, //@config  图片切换时间间隔
+		duration: 300, //@config  图片切换速度
+		showDescription: false, //@config  显示图片描述
 		alwaysShowArrow: true, //@config  显示左右切换箭头
 		alwaysShowSelection: true, //@config  显示底部圆形切换部件
 		autoSlide: true, //@config  自动播放
 		hoverStop: true, //@config  鼠标经过停止播放
-		adaptiveWidth: false, //@config  适应外围宽度，为true时指定pictureWidth不起作用
-		adaptiveHeight: false, //@config  适应外围高度，为true时指定pictureHeight不起作用
-		eventType: "click", //@config  触发tab切换的nav上的事件类型，取值click\mouseenter\both
-		arrowLeftNormalSrc: "", //@config  左箭头正常状态图标，可不传
-		arrowRightNormalSrc: "", //@config  右箭头正常状态图标，可不传
-		arrowLeftHoverSrc: "", //@config  左箭头hover状态图标，可不传
-		arrowRightHoverSrc: "", //@config  右箭头hover状态图标，可不传
-		arrowLeftClass:"", //@config  左右箭头的className，可不传
-		arrowRightClass:"", //@config  左右箭头的className，可不传
-		lazyload: true, //@config  图片进行懒加载
+		adaptiveWidth: false, // 适应外围宽度，为true时指定pictureWidth不起作用
+		adaptiveHeight: false, // 适应外围高度，为true时指定pictureHeight不起作用
+		eventType: "click", //@config  触发导航切换图片的事件类型，click\mouseenter\both
+		arrowLeftNormalSrc: "", //@config  左箭头正常状态图标
+		arrowRightNormalSrc: "", //@config  右箭头正常状态图标
+		arrowLeftHoverSrc: "", //@config  左箭头hover状态图标
+		arrowRightHoverSrc: "", //@config  右箭头hover状态图标
+		arrowLeftClass:"", // 左右箭头的className
+		arrowRightClass:"", // 左右箭头的className
+		lazyload: true, //@config  图片懒加载
 		lazyloadImg: "http://simg4.qunarzz.com/tts/images/demo/spinner_tra.gif", //@config  懒加载loading图
 		onInit: avalon.noop, //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
 		getTemplate: function(tmpl, opts, tplName) {
@@ -484,11 +489,13 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 
 /**
  @links
- [图片轮播组件-默认配置图片轮播](avalon.carousel.ex.html)
+ [图片轮播组件-默认配置](avalon.carousel.ex.html)
  [图片轮播组件-自定义宽高](avalon.carousel.ex1.html)
- [图片轮播组件-自定义图片切换时间间隔 / 自定义图片切换速度](avalon.carousel.ex2.html)
- [图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过不停止播放](avalon.carousel.ex3.html)
- [图片轮播组件-自定义effect](avalon.carousel.ex4.html)
- [图片轮播组件-自定义缓动类型](avalon.carousel.ex5.html)
- [图片轮播组件-自定义填充外围宽度和高度](avalon.carousel.ex6.html)
+ [图片轮播组件-自定义图片切换时间间隔 / 图片切换速度](avalon.carousel.ex2.html)
+ [图片轮播组件-配置小部件](avalon.carousel.ex3.html)
+ [图片轮播组件-自定义切换动画效果](avalon.carousel.ex4.html)
+ [图片轮播组件-自定义动画缓动类型](avalon.carousel.ex5.html)
+ [图片轮播组件-自适应容器尺寸](avalon.carousel.ex6.html)
+ [图片轮播组件-自定义图片标题和描述](avalon.carousel.ex7.html)
+ [图片轮播组件-自定义懒加载loading图](avalon.carousel.ex8.html)
  */

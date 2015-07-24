@@ -86,7 +86,7 @@
   .oni-carousel .oni-carousel-selection-wrap-keep-right {
     left: initial;
     right: 3%; }
-  .oni-carousel .oni-carousel-title-wrap {
+  .oni-carousel .oni-carousel-description-wrap {
     position: absolute;
     z-index: 10;
     bottom: 0;
@@ -100,7 +100,7 @@
     -webkit-user-select: text;
     -moz-user-select: text;
     user-select: text; }
-    .oni-carousel .oni-carousel-title-wrap .oni-carousel-title {
+    .oni-carousel .oni-carousel-description-wrap .oni-carousel-description {
       padding: 8px 12px; }
   .oni-carousel .arrow {
     position: absolute;

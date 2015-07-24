@@ -32,7 +32,7 @@
         </div>
     </div>
     <div class="oni-carousel-selection-wrap"
-         ms-class="oni-carousel-selection-wrap-keep-right:showTitle"
+         ms-class="oni-carousel-selection-wrap-keep-right:showDescription"
          ms-visible="alwaysShowSelection && componentVisible"
          ms-css-margin-left="selectionWrapOffset"
             >
@@ -42,13 +42,13 @@
            ms-mouseleave="mouseLeave(this)"
            ms-repeat="selections"
                 ></a>
-    </div>
-    <div class="oni-carousel-title-wrap" ms-if="showTitle">
-        <div class="oni-carousel-title"
+    </div>D
+    <div class="oni-carousel-description-wrap" ms-if="showDescription">
+        <div class="oni-carousel-description"
              ms-repeat="pictures"
-             ms-visible="currentIndex === $index && links[$index].title"
-             ms-attr-title="{{links[$index].title}}">
-            {{links[$index].title | html}}
+             ms-visible="currentIndex === $index && pictures[$index].description"
+             ms-attr-title="{{pictures[$index].description}}">
+            {{pictures[$index].description | html}}
         </div>
     </div>
     <a ms-class="{{arrowLeftClass}}" class="arrow prev png24"

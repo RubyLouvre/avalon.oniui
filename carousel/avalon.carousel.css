@@ -92,7 +92,6 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 8px 12px;
     background-color: black;
     color: #fff;
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70);
@@ -101,9 +100,8 @@
     -webkit-user-select: text;
     -moz-user-select: text;
     user-select: text; }
-    .oni-carousel .oni-carousel-title-wrap p {
-      margin: 0;
-      padding: 0; }
+    .oni-carousel .oni-carousel-title-wrap .oni-carousel-title {
+      padding: 8px 12px; }
   .oni-carousel .arrow {
     position: absolute;
     z-index: 20;

@@ -22,7 +22,7 @@
                  ms-visible="!lazyload"
                  ms-src="{{el.src}}"
                  ms-on-load="imgOnload(this)"
-                 ms-attr-alt="{{el.alt}}"/>
+                 ms-attr-alt="{{el.alt}}" />
             <a class="oni-carousel-link"
                target="_blank"
                ms-if="typeof links[$index] !== 'undefined' && links[$index] !== ''"
@@ -43,9 +43,13 @@
            ms-repeat="selections"
                 ></a>
     </div>
-    <div class="oni-carousel-title-wrap"
-            ms-if="showTitle">
-        <p>{{pictureTitle}}</p>
+    <div class="oni-carousel-title-wrap" ms-if="showTitle">
+        <div class="oni-carousel-title"
+             ms-repeat="pictures"
+             ms-visible="currentIndex === $index && links[$index].title"
+             ms-attr-title="{{links[$index].title}}">
+            {{links[$index].title | html}}
+        </div>
     </div>
     <a ms-class="{{arrowLeftClass}}" class="arrow prev png24"
        ms-click="animate(-1)"

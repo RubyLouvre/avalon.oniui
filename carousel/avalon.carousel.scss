@@ -98,15 +98,13 @@ $uiname : "oni-carousel";
 		bottom: 0;
 		left: 0;
 		right: 0;
-		padding: 8px 12px;
 		background-color: rgb(0,0,0);
 		color: #fff;
 		@include opacity(0.7);
 		@include user-select("text");
 
-		p{
-			margin: 0;
-			padding: 0;
+		.#{$uiname}-title{
+			padding: 8px 12px;
 		}
 	}
 	.arrow{

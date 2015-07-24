@@ -43,8 +43,6 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 			vm.arrowLeftBg = vm.arrowLeftNormalSrc !== "" ? "url("+vm.arrowLeftNormalSrc+")" : ""
 			vm.arrowRightBg = vm.arrowRightNormalSrc !== "" ? "url("+vm.arrowRightNormalSrc+")" : ""
 
-			vm.pictureTitle = ""
-
 			vm.$skipArray = ["widgetElement", "template", "selectionWrapOffset",
 				"animated","lastIndex","resizingWindow"]
 
@@ -54,6 +52,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				if (inited) return
 				inited = true
 				var pageHTML = options.template
+
 
 				// 加入组件DOM
 				element.style.display = "none"
@@ -88,8 +87,6 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 							title: picture.title
 						}
 					}
-
-					vm.pictureTitle = links[0].title
 				}
 				vm.links = links
 
@@ -247,7 +244,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				} else if (vm.currentIndex < 0) { //最左端继续-1时回末尾
 					vm.currentIndex = vm.selections.length - 1
 				}
-				vm.pictureTitle = vm.links[vm.currentIndex].title
+				console.log(vm.links[vm.currentIndex].title)
 			}
 
 			/**
@@ -278,7 +275,9 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 			vm.hoverIndex = 0;
 			vm.selectPic = function(index, e) { //@method selectPic(index) 通过底部圆形选择图片
 				vm.hoverIndex = index
+
 				if (e.type === vm.eventType || vm.eventType === "both") {
+
 					var distance = vm.currentIndex - index
 					var direct = distance > 0 ? -1 : 1
 
@@ -294,16 +293,19 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 						clearTimeout(vm.timer)
 						vm.timer = null
 					}
-					//修复hover的TAB和select的TAB不一致
-					var fixIndex = setInterval(function(){
-						if(vm.currentIndex !== vm.hoverIndex){
-							var distance = vm.currentIndex - vm.hoverIndex
-							var direct = distance > 0 ? -1 : 1
-							vm.animate(direct, Math.abs(distance))
-						} else{
-							clearInterval(fixIndex)
-						}
-					},800)
+
+					// 维护hover的TAB和select的TAB总是一致
+					if (vm.eventType !== "click") {
+						var fixIndex = setInterval(function () {
+							if (vm.currentIndex !== vm.hoverIndex) {
+								var distance = vm.currentIndex - vm.hoverIndex
+								var direct = distance > 0 ? -1 : 1
+								vm.animate(direct, Math.abs(distance))
+							} else {
+								clearInterval(fixIndex)
+							}
+						}, 800)
+					}
 				}
 			}
 

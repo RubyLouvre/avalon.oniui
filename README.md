@@ -155,6 +155,102 @@ avalon.oniui
 license
 ==========================
 MIT
+
+如何打包
+==========================
+比如这是你们的业务页面
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="require.js" data-main="main-built"></script>
+      
+    </head>
+    <body>
+        <div ms-controller="demo">
+            <input ms-widget="datepicker"/>
+        </div>
+    </body>
+</html>
+
+```
+它依赖于require.js，data-main的值main-built是你们上线后的JS文件（这里去掉后缀名js）
+有main-built.js就有main.js
+main.js是你的入口文件，作用类似于C语言的main函数
+
+你们到avalon项目将里面的[combo目录](https://github.com/RubyLouvre/avalon/tree/master/combo)搬到oniui目录下，里面有你们需要的各种工具
+比如我们的main.js是这样
+```javascript
+require([
+    "avalon",
+    "domReady!",
+    "./tab/avalon.tab",
+    "./pager/avalon.pager",
+    "./datepicker/avalon.datepicker"
+], function (avalon) {
+    avalon.log("domReady完成")
+   var vm = avalon.define({$id: "demo"})
+    avalon.scan(document.body, vm);
+    //你们的业务代码
+})
+
+```
+现在除了回调里面的代码是你们写的，其他都是oniui或avalon的文件，如果你们的同事又写一个业务代码，如
+```javascript
+//aaa.js
+require(["./dropdown/avalon.dropdown"], function(){
+  //你们的业务代码
+})
+```
+那么上面的代码就变成
+```javascript
+require([
+    "avalon",
+    "domReady!",
+    "./tab/avalon.tab",
+    "./pager/avalon.pager",
+    "./datepicker/avalon.datepicker"
+    "./aaa"
+], function (avalon) {
+    avalon.log("domReady完成")
+   var vm = avalon.define({$id: "demo"})
+    avalon.scan(document.body, vm);
+    //你们的业务代码
+})
+
+```
+显然，avalon是对应avalon.js，但由于我们是使用requirejs，那么我们就要用到[avalon.shim.js](https://github.com/RubyLouvre/avalon/tree/master/dist)(这个版本没有自带加载器)
+“domReady!”我们可以在combo文件夹下找到domReady.js，这是一个requirejs插件。avalon.tab又是什么呢，聪明的你们应该能
+猜到这应该是一个快捷方式，用于在某个地方对应我们的实际JS文件。
+
+嗯，下面就是我们打包的重点，建议一个build.js
+```javascript
+({
+    baseUrl: "./", //找到main.js文件的目录
+    paths: {
+        avalon: "./avalon.shim",
+        text: "./combo/text", //由于分居两个目录，因此路径都需要处理一下
+        css: "./combo/css",
+        "css-builder": "./combo/css-builder",
+        "normalize": "./combo/normalize",
+        domReady: "./combo/domReady",
+    },
+    //optimize: "none",//如果要调试就不压缩
+    name: "main", //如果从哪一个文件开始合并
+    out: "./main-built.js" //确定要生成的文件路径及名字
+})
+
+```
+然后将combo文件的require.js与r.js，然后命令行node r.js -o build.js，就生成main-built.js文件
+![image](https://cloud.githubusercontent.com/assets/190846/8647486/eb41a380-298a-11e5-9ed3-4c6b746ca0d4.png)
+
+详细教程还是需要到[官网](http://avalonjs.github.io/#zh/engineering/loader.rjs.html)去看 
+
+
+
 如何为OniUI贡献一套新的皮肤
 ==========================
 <b>chameleon</b>是OniUI的皮肤生成系统,基于sass的compass框架改写而成.

@@ -8,6 +8,19 @@
 
 define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 
+    /**
+     * 逐帧动画
+     * @param callback {Function} 动画函数
+     */
+    var requestAnimationFrame = (function () { //requestAnimationFrame 兼容
+        return window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            function (callback) {
+                window.setTimeout(callback, 10)
+            }
+    })()
+
 	var widget = avalon.ui.carousel = function(element, data, vmodels) {
 
 		var options = data.carouselOptions
@@ -356,54 +369,56 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				}
 			}
 
-			/**
-			 * 处理window水平resize
-			 * @param cantainer {DOM} oni-carousel
-			 */
-			function handleWindowResizeWidth(cantainer){
-				cantainer.style.width = vmodel.containerWidth = "100%"
-				vmodel.pictureWidth = element.offsetWidth
+            /**
+             * 处理window水平resize
+             * @param cantainer {DOM} oni-carousel
+             */
+            function handleWindowResizeWidth(cantainer) {
+                cantainer.style.width = vmodel.containerWidth = "100%"
+                vmodel.pictureWidth = element.offsetWidth
 
-				window.addEventListener('resize', function(){
-					vmodel.pictureWidth = avalon.css(element, "width")
+                addResizeEvent(function(){
+                    vmodel.pictureWidth = avalon.css(element, "width")
 
-					// 动画进行中resize
-					if(vm.animated){
-						vm.resizingWindow = true
-					}
-					// 动画静止时resize
-					else{
-						if(typeof vm.lastIndex !== "undefined"){
-							vmodel.panelOffsetX = - (( vm.lastIndex || 0 ) + 1) * vmodel.pictureWidth
-						} else{
-							vmodel.panelOffsetX = - ( vm.lastIndex || 0 ) * vmodel.pictureWidth
-						}
-					}
-				}, true);
-			}
+                    // 动画进行中resize
+                    if (vm.animated) {
+                        vm.resizingWindow = true
+                    }
+                    // 动画静止时resize
+                    else {
+                        if (typeof vm.lastIndex !== "undefined") {
+                            vmodel.panelOffsetX = -(( vm.lastIndex || 0 ) + 1) * vmodel.pictureWidth
+                        } else {
+                            vmodel.panelOffsetX = -( vm.lastIndex || 0 ) * vmodel.pictureWidth
+                        }
+                    }
+                })
+            }
 
-			/**
-			 * 处理window竖直resize
-			 * @param cantainer {DOM} oni-carousel
-			 */
-			function handleWindowResizeHeight(container){
-				vmodel.pictureHeight = vmodel.containerHeight = container.style.height = "100%"
+            /**
+             * 处理window竖直resize
+             * @param cantainer {DOM} oni-carousel
+             */
+            function handleWindowResizeHeight(container) {
+                vmodel.pictureHeight = vmodel.containerHeight = container.style.height = "100%"
 
-				window.addEventListener('resize', function(){
-					vmodel.pictureHeight = avalon.css(element, "height")
-				}, true);
-			}
+                addResizeEvent(function(){
+                    vmodel.pictureHeight = avalon.css(element, "height")
+                });
+            }
 
-			/**
-			 * 逐帧动画
-			 * @param callback {Function} 动画函数
-			 */
-			function requestAnimationFrame(callback) {
-				return window.requestAnimationFrame(callback) ||
-					window.webkitRequestAnimationFrame(callback) ||
-					window.mozRequestAnimationFrame(callback) ||
-					window.setTimeout(callback, 10) // IE 10 以下
-			}
+            /**
+             * 兼容绑定window resize
+             * @param func {Function} resize动作响应
+             */
+            function addResizeEvent(func){
+                if (window.addEventListener){
+                    window.addEventListener("resize", func, false);
+                }
+                else{
+                    window.attachEvent("onresize", func);
+                }
+            }
 
 			/**
 			 * 缓动函数

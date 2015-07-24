@@ -51,20 +51,18 @@
             {{pictures[$index].description | html}}
         </div>
     </div>
-    <a ms-class="{{arrowLeftClass}}" class="arrow prev png24"
+    <img class="oni-carousel-arrow oni-carousel-prev"
        ms-click="animate(-1)"
        ms-mouseenter="arrowHover('left')"
        ms-mouseleave="arrowBlur('left')"
        ms-visible="arrowVisible && componentVisible"
-       ms-css-background-image="arrowLeftBg"
-            >
-    </a>
-    <a ms-class="{{arrowRightClass}}" class="arrow after png24"
+       ms-src="arrowLeftSrc"
+    />
+    <img class="oni-carousel-arrow oni-carousel-after"
        ms-click="animate(1)"
        ms-mouseenter="arrowHover('right')"
        ms-mouseleave="arrowBlur('right')"
        ms-visible="arrowVisible && componentVisible"
-       ms-css-background-image="arrowRightBg"
-            >
-    </a>
+       ms-src="arrowRightSrc"
+    />
 </div>

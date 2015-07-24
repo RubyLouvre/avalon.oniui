@@ -45,9 +45,9 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 			vm.selectionWrapOffset = -vm.pictures.length * 20 / 2 //圆形选择CSS位置修正
 
 			// 左右箭头
+			vm.arrowLeftSrc = vm.arrowLeftNormalSrc
+			vm.arrowRightSrc = vm.arrowRightNormalSrc
 			vm.arrowVisible = false
-			vm.arrowLeftBg = vm.arrowLeftNormalSrc !== "" ? "url("+vm.arrowLeftNormalSrc+")" : ""
-			vm.arrowRightBg = vm.arrowRightNormalSrc !== "" ? "url("+vm.arrowRightNormalSrc+")" : ""
 
 			vm.$skipArray = ["widgetElement", "template", "selectionWrapOffset",
 				"animated","lastIndex","resizingWindow"]
@@ -74,10 +74,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				}
 
 				// 预加载icons
-				var icons = [
-					"http://source.qunarzz.com/general/oniui/carousel/arrows-left-hover-icon.png",
-					"http://source.qunarzz.com/general/oniui/carousel/arrows-right-hover-icon.png"
-				]
+				var icons = [vm.arrowLeftNormalSrc, vm.arrowLeftHoverSrc,
+					vm.arrowRightNormalSrc, vm.arrowRightHoverSrc]
 				for (var i = 0, len = icons.length; i < len; i++) {
 					new Image().src = icons[i]
 				}
@@ -97,10 +95,12 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				vm.links = links
 
 				// 延迟oni-carousel的内容显示，防止多次重绘
-				var children = element.children
+				var children = element.children,
+					oniCarousel = null
 				for (var i = 0, len = children.length; i < len; i++) {
 					if (children[i].getAttribute("class") === "oni-carousel") {
-						children[i].style.display = "block"
+						oniCarousel = children[i]
+						oniCarousel.style.display = "block"
 					}
 				}
 
@@ -197,7 +197,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 						vm.animated = false
 
 						//队列已到末尾位置，且将要往正方向移动，队列回到0
-						if ((vm.panelOffsetX <= -vm.pictureWidth * (vm.pictures.length - 1)) && direct > 0) {
+						if ((vm.panelOffsetX <= -vm.pictureWidth * (vm.pictures.length - 1))
+							&& direct > 0) {
 							vm.panelOffsetX = 0
 						}
 
@@ -214,7 +215,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 								duringDistance = vm.pictureWidth * -direct * distance
 							}
 
-							vm.panelOffsetX = Tween(vm.easing, currentTime, startpos, duringDistance, duringTime)
+							vm.panelOffsetX = Tween(vm.easing, currentTime,
+								startpos, duringDistance, duringTime)
 							if (currentTime < duringTime) {
 								currentTime += 1
 								requestAnimationFrame(go)
@@ -320,9 +322,9 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 			 */
 			vm.arrowHover = function(direction) {
 				if (direction === "left") {
-					vm.arrowLeftBg = vm.arrowLeftHoverSrc !== "" ? "url("+vm.arrowLeftHoverSrc+")" : ""
+					vm.arrowLeftSrc = vm.arrowLeftHoverSrc
 				} else {
-					vm.arrowRightBg = vm.arrowRightHoverSrc !== "" ? "url("+vm.arrowRightHoverSrc+")" : ""
+					vm.arrowRightSrc = vm.arrowRightHoverSrc
 				}
 			}
 
@@ -332,9 +334,9 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 			 */
 			vm.arrowBlur = function(direction) {
 				if (direction === "left") {
-					vm.arrowLeftBg = vm.arrowLeftNormalSrc !== "" ? "url("+vm.arrowLeftNormalSrc+")" : ""
+					vm.arrowLeftSrc = vm.arrowLeftNormalSrc
 				} else {
-					vm.arrowRightBg = vm.arrowRightNormalSrc !== "" ? "url("+vm.arrowRightNormalSrc+")" : ""
+					vm.arrowRightSrc = vm.arrowRightNormalSrc
 				}
 			}
 
@@ -471,14 +473,12 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 		adaptiveWidth: false, // 适应外围宽度，为true时指定pictureWidth不起作用
 		adaptiveHeight: false, // 适应外围高度，为true时指定pictureHeight不起作用
 		eventType: "click", //@config  触发导航切换图片的事件类型，click\mouseenter\both
-		arrowLeftNormalSrc: "", //@config  左箭头正常状态图标
-		arrowRightNormalSrc: "", //@config  右箭头正常状态图标
-		arrowLeftHoverSrc: "", //@config  左箭头hover状态图标
-		arrowRightHoverSrc: "", //@config  右箭头hover状态图标
-		arrowLeftClass:"", // 左右箭头的className
-		arrowRightClass:"", // 左右箭头的className
+		arrowLeftNormalSrc: "http://source.qunarzz.com/general/oniui/carousel/arrows-left-icon.png", //@config  左箭头正常状态图标
+		arrowRightNormalSrc: "http://source.qunarzz.com/general/oniui/carousel/arrows-right-icon.png", //@config  右箭头正常状态图标
+		arrowLeftHoverSrc: "http://source.qunarzz.com/general/oniui/carousel/arrows-left-hover-icon.png", //@config  左箭头hover状态图标
+		arrowRightHoverSrc: "http://source.qunarzz.com/general/oniui/carousel/arrows-right-hover-icon.png", //@config  右箭头hover状态图标
 		lazyload: true, //@config  图片懒加载
-		lazyloadImg: "http://simg4.qunarzz.com/tts/images/demo/spinner_tra.gif", //@config  懒加载loading图
+		lazyloadImg: "http://t.cn/RLXSMrg", //@config  懒加载loading图
 		onInit: avalon.noop, //@optMethod onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
 		getTemplate: function(tmpl, opts, tplName) {
 			return tmpl

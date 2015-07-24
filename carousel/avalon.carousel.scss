@@ -21,6 +21,8 @@ $uiname : "oni-carousel";
 	position: relative;
 	margin: 0 auto;
 	overflow: hidden;
+	width: 300px;
+	height: 100px;
 	@include user-select();
 	.#{$uiname}-panel {
 		height: 100%;
@@ -107,35 +109,23 @@ $uiname : "oni-carousel";
 			padding: 8px 12px;
 		}
 	}
-	.arrow{
+	.#{$uiname}-arrow{
 		position: absolute;
 		z-index: 20;
 		top:50%;
-		width: 30px;
-		height: 30px;
-		margin: -15px 0 0 -15px;
+		margin: -15px 0 0 0;
 		cursor: pointer;
+		// ie6
+		behavior: expression((this.runtimeStyle.behavior="none")&&(this.pngSet?this.pngSet=true:(this.nodeName == "IMG" && this.src.toLowerCase().indexOf('.png')>-1?(this.runtimeStyle.backgroundImage = "none",
+       this.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + this.src + "', sizingMethod='image')",
+       this.src = "http://7xkm02.com1.z0.glb.clouddn.com/Transparent.gif"):(this.origBg = this.origBg? this.origBg :this.currentStyle.backgroundImage.toString().replace('url("','').replace('")',''),
+       this.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + this.origBg + "', sizingMethod='crop')",
+       this.runtimeStyle.backgroundImage = "none")),this.pngSet=true));
 	}
-	.prev{
-		left: 7%;
-		background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-left-icon.png) no-repeat;
-		_background:none;
-		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-left-icon.png',sizingMethod='crop');
+	.#{$uiname}-prev{
+		left: 5%;
 	}
-	.prev:hover{
-		background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-left-hover-icon.png) no-repeat;
-		_background:none;
-		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-left-hover-icon.png',sizingMethod='crop');
-	}
-	.after{
-		left: 93%;
-		background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-right-icon.png) no-repeat;
-		_background:none;
-		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-right-icon.png',sizingMethod='crop');
-	}
-	.after:hover{
-		background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-right-hover-icon.png) no-repeat;
-		_background:none;
-		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-right-hover-icon.png',sizingMethod='crop');
+	.#{$uiname}-after{
+		right: 5%;
 	}
 }

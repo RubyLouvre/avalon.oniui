@@ -6,6 +6,8 @@
   position: relative;
   margin: 0 auto;
   overflow: hidden;
+  width: 300px;
+  height: 100px;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -102,31 +104,16 @@
     user-select: text; }
     .oni-carousel .oni-carousel-description-wrap .oni-carousel-description {
       padding: 8px 12px; }
-  .oni-carousel .arrow {
+  .oni-carousel .oni-carousel-arrow {
     position: absolute;
     z-index: 20;
     top: 50%;
-    width: 30px;
-    height: 30px;
-    margin: -15px 0 0 -15px;
-    cursor: pointer; }
-  .oni-carousel .prev {
-    left: 7%;
-    background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-left-icon.png) no-repeat;
-    _background: none;
-    _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-left-icon.png',sizingMethod='crop'); }
-  .oni-carousel .prev:hover {
-    background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-left-hover-icon.png) no-repeat;
-    _background: none;
-    _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-left-hover-icon.png',sizingMethod='crop'); }
-  .oni-carousel .after {
-    left: 93%;
-    background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-right-icon.png) no-repeat;
-    _background: none;
-    _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-right-icon.png',sizingMethod='crop'); }
-  .oni-carousel .after:hover {
-    background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-right-hover-icon.png) no-repeat;
-    _background: none;
-    _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-right-hover-icon.png',sizingMethod='crop'); }
+    margin: -15px 0 0 0;
+    cursor: pointer;
+    behavior: expression((this.runtimeStyle.behavior="none")&&(this.pngSet?this.pngSet=true:(this.nodeName == "IMG" && this.src.toLowerCase().indexOf('.png')>-1?(this.runtimeStyle.backgroundImage = "none", this.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + this.src + "', sizingMethod='image')", this.src = "http://7xkm02.com1.z0.glb.clouddn.com/Transparent.gif"):(this.origBg = this.origBg? this.origBg :this.currentStyle.backgroundImage.toString().replace('url("','').replace('")',''), this.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + this.origBg + "', sizingMethod='crop')", this.runtimeStyle.backgroundImage = "none")),this.pngSet=true)); }
+  .oni-carousel .oni-carousel-prev {
+    left: 5%; }
+  .oni-carousel .oni-carousel-after {
+    right: 5%; }
 
 /*# sourceMappingURL=avalon.carousel.css.map */

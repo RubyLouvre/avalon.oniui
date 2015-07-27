@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
+    
     <head>
         <title>carousel组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        />
         <script>
             require(["carousel/avalon.carousel"], function() {
                 avalon.define("demo", function(vm) {
@@ -29,8 +31,10 @@
                         }, {
                             src: "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"
                         }],
-                        arrowLeftClass: "myArrowLeftClass",
-                        arrowRightClass: "myArrowRightClass"
+                        arrowLeftNormalSrc: "http://7xkm02.com1.z0.glb.clouddn.com/al.png",
+                        arrowLeftHoverSrc:"http://7xkm02.com1.z0.glb.clouddn.com/alh.png",
+                        arrowRightNormalSrc: "http://7xkm02.com1.z0.glb.clouddn.com/ar.png",
+                        arrowRightHoverSrc:"http://7xkm02.com1.z0.glb.clouddn.com/arh.png"
                     }
                     vm.$opt3 = {
                         pictures: [{
@@ -46,51 +50,35 @@
                 avalon.scan()
             })
         </script>
-        <style type="text/css">
-            /* 自定义左右箭头的样式 */
-            .oni-carousel .myArrowLeftClass,.oni-carousel .myArrowRightClass{
-                width: 48px; 
-                height: 48px; 
-                margin: -24px 0 0 -24px; 
-            }
-            .oni-carousel .myArrowLeftClass{
-                background-image: url(./images/ex-left.png);
-            }
-            .oni-carousel .myArrowLeftClass:hover{
-                background-image: url(./images/ex-left-hover.png);
-            } 
-            .oni-carousel .myArrowRightClass{
-                background-image: url(./images/ex-right.png);
-            }
-            .oni-carousel .myArrowRightClass:hover{
-                background-image: url(./images/ex-right-hover.png);
-            }
-        </style>
     </head>
+    
     <body>
         <div class="wrapper" ms-controller="demo">
-        <h1>图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过不停止播放</h1>
-        <fieldset>
-            <legend>自定义不显示左右切换箭头和底部圆形选择部件</legend>
-            <div ms-widget="carousel,carousel1,$opt1"></div>
-        </fieldset>
-        <fieldset>
-            <legend>自定义箭头arrowClass，并修改样式</legend>
-            <div ms-widget="carousel,carousel2,$opt2"></div>
-        </fieldset>
-        <fieldset>
-            <legend>自定义鼠标经过不停止播放</legend>
-            <div ms-widget="carousel,carousel3,$opt3"></div>
-        </fieldset>
-        <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+            <h1>图片轮播组件-配置小部件</h1>
+            <fieldset>
+                <legend>不显示左右切换箭头和底部圆形选择部件</legend>
+                <div ms-widget="carousel,carousel1,$opt1"></div>
+            </fieldset>
+            <fieldset>
+                <legend>自定义箭头样式</legend>
+                <div ms-widget="carousel,carousel2,$opt2"></div>
+            </fieldset>
+            <fieldset>
+                <legend>鼠标经过不停止播放</legend>
+                <div ms-widget="carousel,carousel3,$opt3"></div>
+            </fieldset>
+            <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
 &lt;html&gt;
+    
     &lt;head&gt;
         &lt;title&gt;carousel组件&lt;/title&gt;
         &lt;meta charset="UTF-8"&gt;
         &lt;meta name="viewport" content="width=device-width"&gt;
         &lt;script src="../avalon.js"&gt;&lt;/script&gt;
         &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
-        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        /&gt;
         &lt;script&gt;
             require(["carousel/avalon.carousel"], function() {
                 avalon.define("demo", function(vm) {
@@ -113,8 +101,10 @@
                         }, {
                             src: "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"
                         }],
-                        arrowLeftClass: "myArrowLeftClass",
-                        arrowRightClass: "myArrowRightClass"
+                        arrowLeftNormalSrc: "http://7xkm02.com1.z0.glb.clouddn.com/al.png",
+                        arrowLeftHoverSrc:"http://7xkm02.com1.z0.glb.clouddn.com/alh.png",
+                        arrowRightNormalSrc: "http://7xkm02.com1.z0.glb.clouddn.com/ar.png",
+                        arrowRightHoverSrc:"http://7xkm02.com1.z0.glb.clouddn.com/arh.png"
                     }
                     vm.$opt3 = {
                         pictures: [{
@@ -130,48 +120,29 @@
                 avalon.scan()
             })
         &lt;/script&gt;
-        &lt;style type="text/css"&gt;
-            /* 自定义左右箭头的样式 */
-            .ui-carousel .myArrowLeftClass,.ui-carousel .myArrowRightClass{
-                width: 48px; 
-                height: 48px; 
-                margin: -24px 0 0 -24px; 
-            }
-            .ui-carousel .myArrowLeftClass{
-                background-image: url(./images/ex-left.png);
-            }
-            .ui-carousel .myArrowLeftClass:hover{
-                background-image: url(./images/ex-left-hover.png);
-            } 
-            .ui-carousel .myArrowRightClass{
-                background-image: url(./images/ex-right.png);
-            }
-            .ui-carousel .myArrowRightClass:hover{
-                background-image: url(./images/ex-right-hover.png);
-            }
-        &lt;/style&gt;
     &lt;/head&gt;
+    
     &lt;body&gt;
         &lt;div class="wrapper" ms-controller="demo"&gt;
-        &lt;h1&gt;图片轮播组件-自定义不显示左右切换箭头和底部圆形选择部件 / 自定义鼠标经过不停止播放&lt;/h1&gt;
-        &lt;fieldset&gt;
-            &lt;legend&gt;自定义不显示左右切换箭头和底部圆形选择部件&lt;/legend&gt;
-            &lt;div ms-widget="carousel,carousel1,$opt1"&gt;&lt;/div&gt;
-        &lt;/fieldset&gt;
-        &lt;fieldset&gt;
-            &lt;legend&gt;自定义箭头arrowClass，并修改样式&lt;/legend&gt;
-            &lt;div ms-widget="carousel,carousel2,$opt2"&gt;&lt;/div&gt;
-        &lt;/fieldset&gt;
-        &lt;fieldset&gt;
-            &lt;legend&gt;自定义鼠标经过不停止播放&lt;/legend&gt;
-            &lt;div ms-widget="carousel,carousel3,$opt3"&gt;&lt;/div&gt;
-        &lt;/fieldset&gt;
-        &lt;pre ms-skip class="brush:html;gutter:false;toolbar:false"&gt;
-        &lt;/pre&gt;
-    &lt;/div&gt;
+            &lt;h1&gt;图片轮播组件-配置小部件&lt;/h1&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;不显示左右切换箭头和底部圆形选择部件&lt;/legend&gt;
+                &lt;div ms-widget="carousel,carousel1,$opt1"&gt;&lt;/div&gt;
+            &lt;/fieldset&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;自定义箭头样式&lt;/legend&gt;
+                &lt;div ms-widget="carousel,carousel2,$opt2"&gt;&lt;/div&gt;
+            &lt;/fieldset&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;鼠标经过不停止播放&lt;/legend&gt;
+                &lt;div ms-widget="carousel,carousel3,$opt3"&gt;&lt;/div&gt;
+            &lt;/fieldset&gt;
+        &lt;/div&gt;
     &lt;/body&gt;
+
 &lt;/html&gt;
-        </pre>
-    </div>
+</pre>
+        </div>
     </body>
+
 </html>

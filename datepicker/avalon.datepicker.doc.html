@@ -2,11 +2,10 @@
 <html>
     
     <head>
-        <title>Name 日期选择器</title>
+        <title>日期选择器</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <meta name="descriptions" content="datepicker组件方便快速创建功能齐备的日历组件，通过不同的配置日历可以满足显示多个月份、通过prev、next切换月份、或者通过下拉选择框切换日历的年份、月份，当然也可以手动输入日期，日历组件也会根据输入域中的日期值高亮显示对应日期等等各种需求
-
  " />
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
         />
@@ -17,7 +16,7 @@
         <div class="wrapper">
             <h2>datepicker</h2>
             <fieldset>
-                <legend>Name 日期选择器</legend>
+                <legend>日期选择器</legend>
                 <p>datepicker组件方便快速创建功能齐备的日历组件，通过不同的配置日历可以满足显示多个月份、通过prev、next切换月份、或者通过下拉选择框切换日历的年份、月份，当然也可以手动输入日期，日历组件也会根据输入域中的日期值高亮显示对应日期等等各种需求</p>
             </fieldset>
             <fieldset>
@@ -234,6 +233,35 @@
                         <td>设置datepicker的显示位置，可以为"rb"、"lt"、"rt"或者自定义的class,默认""</td>
                     </tr>
                     <tr>
+                        <td>onBeforeRender</td>
+                        <td>Function</td>
+                        <td>null</td>
+                        <td>在渲染日期前的准备工作，比如格式化日期前需请求的服务器数据
+                            <table border="1">
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>vmodel</td>
+                                    <td>Object</td>
+                                    <td>当前日期组件对应的Vmodel</td>
+                                </tr>
+                                <tr>
+                                    <td>month</td>
+                                    <td>Number</td>
+                                    <td>当前month(0-11)</td>
+                                </tr>
+                                <tr>
+                                    <td>year</td>
+                                    <td>Number</td>
+                                    <td>当前year</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>onSelect</td>
                         <td>Function</td>
                         <td>avalon.noop</td>
@@ -403,6 +431,9 @@
                 </li>
                 <li>
                     <a href="avalon.datepicker.ex16.html">datepicker宽度、格式自定义</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex17.html">onBeforRender异步获取数据格式化日历</a>
                 </li>
             </ul>
         </div>

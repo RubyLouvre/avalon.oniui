@@ -21,6 +21,8 @@ $uiname : "oni-carousel";
 	position: relative;
 	margin: 0 auto;
 	overflow: hidden;
+	width: 300px;
+	height: 100px;
 	@include user-select();
 	.#{$uiname}-panel {
 		height: 100%;
@@ -35,7 +37,7 @@ $uiname : "oni-carousel";
 			@include inline-block();
 			overflow: hidden;
 			text-align: center;
-			background-color: #f2f2f2;
+			background-color: #fff;
 
 			.oni-img-origin{
 				position: absolute;
@@ -54,17 +56,17 @@ $uiname : "oni-carousel";
 				position: absolute;
 				top: 50%;
 				left: 50%;
-				@include transform(translate(-50%, -50%));
+				margin: -30px 0 0 -30px;
 			}
 
 			.#{$uiname}-link{
 				display: block;
 				position: absolute;
-				width: 1px; //ie click hack
-				height: 1px; //ie click hack
+				width: 100%;
+				height: 100%;
 				top: 0;
 				left: 0;
-				z-index: 10;
+				z-index: 5;
 				background-image:url(about:blank);
 			}
 		}
@@ -87,37 +89,43 @@ $uiname : "oni-carousel";
 		.selected{
 			background-color: #00a3c2;
 		}
-
 	}
-	.arrow{
+	.#{$uiname}-selection-wrap-keep-right{
+		left: initial;
+		right: 3%;
+	}
+	.#{$uiname}-description-wrap{
+		position: absolute;
+		z-index: 10;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background-color: rgb(0,0,0);
+		color: #fff;
+		@include opacity(0.7);
+		@include user-select("text");
+
+		.#{$uiname}-description{
+			padding: 8px 12px;
+		}
+	}
+	.#{$uiname}-arrow{
 		position: absolute;
 		z-index: 20;
 		top:50%;
-		width: 30px;
-		height: 30px;
-		margin: -15px 0 0 -15px;
+		margin: -15px 0 0 0;
 		cursor: pointer;
+		// ie6
+		behavior: expression((this.runtimeStyle.behavior="none")&&(this.pngSet?this.pngSet=true:(this.nodeName == "IMG" && this.src.toLowerCase().indexOf('.png')>-1?(this.runtimeStyle.backgroundImage = "none",
+       this.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + this.src + "', sizingMethod='image')",
+       this.src = "http://7xkm02.com1.z0.glb.clouddn.com/Transparent.gif"):(this.origBg = this.origBg? this.origBg :this.currentStyle.backgroundImage.toString().replace('url("','').replace('")',''),
+       this.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + this.origBg + "', sizingMethod='crop')",
+       this.runtimeStyle.backgroundImage = "none")),this.pngSet=true));
 	}
-	.prev{
-		left: 7%;
-		background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-left-icon.png) no-repeat;
-		_background:none;
-		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-left-icon.png',sizingMethod='crop');
+	.#{$uiname}-prev{
+		left: 5%;
 	}
-	.prev:hover{
-		background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-left-hover-icon.png) no-repeat;
-		_background:none;
-		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-left-hover-icon.png',sizingMethod='crop');
-	}
-	.after{
-		left: 93%;
-		background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-right-icon.png) no-repeat;
-		_background:none;
-		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-right-icon.png',sizingMethod='crop');
-	}
-	.after:hover{
-		background: url(http://source.qunarzz.com/general/oniui/carousel/arrows-right-hover-icon.png) no-repeat;
-		_background:none;
-		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://source.qunarzz.com/general/oniui/carousel/arrows-right-hover-icon.png',sizingMethod='crop');
+	.#{$uiname}-after{
+		right: 5%;
 	}
 }

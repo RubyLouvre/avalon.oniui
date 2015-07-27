@@ -29,7 +29,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
     // 响应wheel,binded
     var wheelBinded,
         wheelArr = [],
-        keyArr = []
+        keyArr = [],
+        scrollerGetted = []
 
     var widget = avalon.ui.scrollbar = function(element, data, vmodels) {
         var options = data.scrollbarOptions
@@ -203,6 +204,13 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                 })
 
                 vmodel.update("init")
+
+                if(scroller && scrollerGetted.length) {
+                    avalon.each(scrollerGetted, function(i, func) {
+                        func()
+                    })
+                    scrollerGetted = []
+                }
             }
 
             // data-draggable-before-start="beforeStartFn" 
@@ -287,6 +295,9 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
             //@interface update()更新滚动条状态，windowresize，内容高度变化等情况下调用，不能带参数
             vm.update = function(ifInit, x, y) {
                 if(vmodel.disabled) return
+                if(!scroller) return scrollerGetted.push(function() {
+                    vmodel.update(ifInit, x, y)
+                })
                 var ele = avalon(vmodel.viewElement),
                     // 滚动内容宽高
                     viewW,

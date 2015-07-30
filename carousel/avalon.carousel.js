@@ -8,19 +8,6 @@
 
 define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 
-    /**
-     * 逐帧动画
-     * @param callback {Function} 动画函数
-     */
-    var requestAnimationFrame = (function () { //requestAnimationFrame 兼容
-        return window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame ||
-            function (callback) {
-                window.setTimeout(callback, 10)
-            }
-    })()
-
 	var widget = avalon.ui.carousel = function(element, data, vmodels) {
 
 		var options = data.carouselOptions
@@ -265,6 +252,18 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				} else if (vm.currentIndex < 0) { //最左端继续-1时回末尾
 					vm.currentIndex = vm.selections.length - 1
 				}
+
+                /**
+                 * 逐帧动画
+                 * @param callback {Function} 动画函数
+                 */
+                function requestAnimationFrame(callback) { //requestAnimationFrame 兼容
+                    if(window.requestAnimationFrame){
+                        return window.requestAnimationFrame(callback)
+                    } else{
+                        return window.setTimeout(callback, 10)
+                    }
+                }
 			}
 
 			/**
@@ -470,7 +469,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 		return vmodel
 	}
 
-	widget.vertion = "1.0.1"
+	widget.vertion = "0.0.2"
 	widget.defaults = {
 		pictures: [], //@config  轮播图片素材，每个图片可以用对象方式配置src,alt,href,title,description
 		links: [], // 图片链接

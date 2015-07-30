@@ -73,7 +73,7 @@ define(["avalon", "css!../chameleon/oniui-common.css", "css!./avalon.button.css"
                     return
                 }
                 if (typeof options.disabled !== "boolean") {
-                    options.disabled = !!element.disabled
+                    element.disabled = !!options.disabled
                 } else {
                     element.disabled = options.disabled
                 }

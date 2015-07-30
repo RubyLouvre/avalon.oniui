@@ -175,7 +175,15 @@ define(["../avalon.getModel",
                 return className
             }
             vm._rowShow = function(rowDays) {
-                return rowDays[0] !== ""
+                var len = rowDays.length,
+                    flag = false
+                for (var i = 0; i < len; i++) {
+                    if (rowDays[i] !== "") {
+                        flag = true
+                        break;
+                    }
+                }
+                return flag
             }
             vm.sliderMinuteOpts = {
                 onInit: function(sliderMinute, options, vmodels) {
@@ -261,13 +269,24 @@ define(["../avalon.getModel",
                 return date + ' ' + now
             }
             vm._dateCellRender = function(outerIndex, index, rowIndex, date) {
-                var dateCellRender = vmodel.dateCellRender
+                var dateCellRender = vmodel.dateCellRender,
+                    calendar = datepickerData[rowIndex],
+                    month = calendar.month,
+                    year = calendar.year
+
                 if (dateCellRender && (typeof dateCellRender === 'function')) {
                     var dayItem = datepickerData[rowIndex]["rows"][outerIndex][index]
-                    if (date === "") {
+                    if (month === vmodel.month && year === vmodel.year) {
+                        if (date === "") {
+                            dayItem.html = ""
+                            return date
+                        }
+                        date = dateCellRender(date, vmodel, dayItem)
+                        dayItem.html = date
                         return date
+                    } else {
+                        return dayItem.html
                     }
-                    return dateCellRender(date, vmodel, dayItem)
                 }
                 return date
             }
@@ -908,6 +927,15 @@ define(["../avalon.getModel",
         }
         // 根据month、year得到要显示的日期数据
         function calendarDays (month, year) {
+            if (typeof vmodel.onBeforeRender === "function") {
+                vmodel.onBeforeRender(vmodel, month, year, function() {
+                    _calendarDays(month, year)
+                })
+                return 
+            }
+            _calendarDays(month, year)
+        }
+        function _calendarDays(month, yeaer) {
             var startDay = vmodel.startDay,
                 firstDayOfMonth = new Date(year, month , 1),
                 cellDate =  new Date(year , month , 1 - ( firstDayOfMonth.getDay() - startDay + 7 ) % 7 ),
@@ -929,7 +957,7 @@ define(["../avalon.getModel",
 
             vmodel.prevMonth = prev
             vmodel.nextMonth = next
-            
+
             for (var i = 0, len = vmodel.numberOfMonths; i < len; i++) {
                 
                 for (var m=0; m<6; m++) {
@@ -1004,6 +1032,15 @@ define(["../avalon.getModel",
             }
         }
         function setCalendarDays(month, year, day) {
+            if (typeof vmodel.onBeforeRender === "function") {
+                vmodel.onBeforeRender(vmodel, month, year, function() {
+                    _setCalendarDays(month, year, day)
+                })
+                return 
+            }
+            _setCalendarDays(month, year, day)
+        }
+        function _setCalendarDays(month, year, day) {
             var startDay = vmodel.startDay,
                 firstDayOfMonth = new Date(year, month , 1),
                 cellDate =  new Date(year , month , 1 - ( firstDayOfMonth.getDay() - startDay + 7 ) % 7 ),
@@ -1051,7 +1088,6 @@ define(["../avalon.getModel",
                 month = firstDayOfMonth.getMonth()
                 cellDate = new Date(year, month, 1 - (firstDayOfMonth.getDay() - startDay + 7) % 7)
             }
-
         }
         // 检验date
         function validateDate(date) {
@@ -1155,6 +1191,13 @@ define(["../avalon.getModel",
         showDatepickerAlways: false, //@config是否总是显示datepicker
         timer: false, //@config 是否在组件中可选择时间
         position: '', //@config 设置datepicker的显示位置，可以为"rb"、"lt"、"rt"或者自定义的class,默认""
+        /**
+         * @config {Function} 在渲染日期前的准备工作，比如格式化日期前需请求的服务器数据
+         * @param vmodel {Object} 当前日期组件对应的Vmodel
+         * @param month {Number} 当前month(0-11) 
+         * @param year {Number} 当前year
+         */
+        onBeforeRender: null,
         /**
          * @config {Function} 选中日期后的回调
          * @param date {String} 当前选中的日期
@@ -1329,4 +1372,5 @@ define(["../avalon.getModel",
  [datepicker的验证](avalon.datepicker.ex14.html)
  [datepicker显示位置的设置](avalon.datepicker.ex15.html)
  [datepicker宽度、格式自定义](avalon.datepicker.ex16.html)
+ [onBeforRender异步获取数据格式化日历](avalon.datepicker.ex17.html)
  */

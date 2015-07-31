@@ -159,30 +159,32 @@ define(["avalon",
                     }
 
                     vmodel.$watch("value", function(n, o) {
-                        var onChange = avalon.type(vmodel.onChange) === "function" && vmodel.onChange || false
-                        if (keepState) {
-                            keepState = false
-                            return 
-                        }
-                        function valueStateKeep(stateKeep) {
-                            if (stateKeep) {
-                                keepState = true
-                                vmodel.value = o
-                            } else {
+                        avalon.nextTick(function(){
+                            var onChange = avalon.type(vmodel.onChange) === "function" && vmodel.onChange || false
+                            if (keepState) {
+                                keepState = false
+                                return
+                            }
+                            function valueStateKeep(stateKeep) {
+                                if (stateKeep) {
+                                    keepState = true
+                                    vmodel.value = o
+                                } else {
+                                    if (duplexModel) {
+                                        duplexModel[1][duplexModel[0]] = n
+                                        element.value = n
+                                    }
+                                    vmodel.currentOption = setLabelTitle(n);
+                                }
+                            }
+                            if ((onChange && onChange.call(element, n, o, vmodel, valueStateKeep) !== false) || !onChange) {
                                 if (duplexModel) {
                                     duplexModel[1][duplexModel[0]] = n
                                     element.value = n
                                 }
                                 vmodel.currentOption = setLabelTitle(n);
                             }
-                        }
-                        if ((onChange && onChange.call(element, n, o, vmodel, valueStateKeep) !== false) || !onChange) {
-                            if (duplexModel) {
-                                duplexModel[1][duplexModel[0]] = n
-                                element.value = n
-                            }
-                            vmodel.currentOption = setLabelTitle(n);
-                        }
+                        })
                     });
                 } else {
                     vmodel.value.$watch("length", function() {

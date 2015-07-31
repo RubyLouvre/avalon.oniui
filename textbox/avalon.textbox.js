@@ -18,12 +18,13 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
             sourceList = "",
             inputWraper = "",
             placeholder = "",
-            placehold = options.placeholder;
+            placehold = options.placeholder,
+            _sourceHTML = sourceHTML
         
         // 解析html并获取需要的Dom对象引用
-        sourceHTML = sourceHTML.replace(/MS_OPTION_DISABLEDCLASS/gm, options.disabledClass);
-        sourceHTML = options.getTemplate(sourceHTML);
-        sourceList = avalon.parseHTML(sourceHTML).firstChild ;
+        _sourceHTML = _sourceHTML.replace(/MS_OPTION_DISABLEDCLASS/gm, options.disabledClass);
+        _sourceHTML = options.getTemplate(_sourceHTML);
+        sourceList = avalon.parseHTML(_sourceHTML).firstChild ;
 
         inputWraper = sourceList.getElementsByTagName("div")[0];
         placeholder = sourceList.getElementsByTagName("span")[0];

@@ -95,7 +95,6 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 							title: picture.title
 						}
 					}
-
 				}
 				vm.links = links
 
@@ -169,7 +168,6 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 
 				if(index === 0){
 					vm.autoPlay() // 自动开始轮播
-					vm.componentVisible = true // 显示部件
 				}
 			}
 
@@ -385,6 +383,9 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 			 */
 			vm.timer = null //轮播计时器
 			vm.autoPlay = function() {
+
+				vm.componentVisible = true // 显示部件
+
 				if (vm.timer === null && vm.autoSlide) {
 					function play() {
 						vm.timer = setTimeout(function() {

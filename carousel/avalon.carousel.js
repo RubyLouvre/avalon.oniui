@@ -8,6 +8,8 @@
 
 define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "css!../chameleon/oniui-common.css"], function(avalon, template) {
 
+
+
 	var widget = avalon.ui.carousel = function(element, data, vmodels) {
 
 		var options = data.carouselOptions
@@ -48,6 +50,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 			vm.arrowLeftSrc = vm.arrowLeftNormalSrc
 			vm.arrowRightSrc = vm.arrowRightNormalSrc
 			vm.arrowVisible = false
+
+			vm.ieVer = undefined
 
 			vm.$skipArray = ["widgetElement", "template", "selectionWrapOffset",
 				"animated","lastIndex","resizingWindow"]
@@ -91,6 +95,7 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 							title: picture.title
 						}
 					}
+
 				}
 				vm.links = links
 
@@ -102,6 +107,18 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 						oniCarousel = children[i]
 						oniCarousel.style.display = "block"
 					}
+				}
+
+				// fade 或者 none 模式下的布局
+				if (vm.effect !== "slide") {
+					vm.itemPosition = "absolute"
+					vm.panelPosition = "relative"
+				}
+
+				// 处理循环末尾的图片及链接
+				vm.pictures.push( vm.pictures[0] )
+				if(typeof vm.links[0] !== "undefined"){
+					vm.links.push( vm.links[0] )
 				}
 
 				if(continueScan){
@@ -123,6 +140,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 			 * 指针移入，停止轮播，并显示左右控制箭头
 			 */
 			vm.mouseEnter = function() {
+				fixPngs();
+
 				vm.arrowVisible = vm.alwaysShowArrow ? true : false
 				if (vm.hoverStop && vm.autoSlide) {
 					clearTimeout(vm.timer)
@@ -145,8 +164,13 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 			 * 图片加载成功之后显示
 			 * @param target {DOM} 加载成功的图片
 			 */
-			vm.imgOnload = function(target){
+			vm.imgOnload = function(target, index){
 				avalon.css(target, "display", "inline")
+
+				if(index === 0){
+					vm.autoPlay() // 自动开始轮播
+					vm.componentVisible = true // 显示部件
+				}
 			}
 
 			// 动画效果为fade时，渐入/渐出的图片透明度
@@ -338,6 +362,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				} else {
 					vm.arrowRightSrc = vm.arrowRightHoverSrc
 				}
+
+				fixPngs()
 			}
 
 			/**
@@ -350,6 +376,8 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 				} else {
 					vm.arrowRightSrc = vm.arrowRightNormalSrc
 				}
+
+				fixPngs()
 			}
 
 			/**
@@ -444,27 +472,41 @@ define(["avalon", "text!./avalon.carousel.html", "css!./avalon.carousel.css", "c
 					default:break;
 				}
 			}
+
+			/**
+			 * 处理IE6下png
+			 */
+			function fixPngs(){
+				if(typeof vm.ieVer === "undefined"){
+					getIEVersion()
+				}
+
+				if(vm.ieVer === 6){
+					for (var i = 0; i < document.images.length; i++){
+						var s = document.images[i].src;
+						if (s.indexOf('.png') > 0)
+							fixPng(s, document.images[i]);
+					}
+				}
+
+				function fixPng(src, imgObj){
+					imgObj.src = 'http://7xkm02.com1.z0.glb.clouddn.com/Transparent.gif';
+					imgObj.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled='true', src='" + src + "', sizingMethod='fixed')";
+				}
+
+				function getIEVersion() {
+					var rv = -1; // Return value assumes failure.
+					if (navigator.appName == 'Microsoft Internet Explorer')
+					{
+						var ua = navigator.userAgent;
+						var re  = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+						if (re.exec(ua) != null)
+							rv = parseFloat( RegExp.$1 );
+					}
+					vm.ieVer = rv
+				}
+			}
 		})
-
-		// fade 或者 none 模式下的布局
-		if (vmodel.effect !== "slide") {
-			vmodel.itemPosition = "absolute"
-			vmodel.panelPosition = "relative"
-		}
-
-		// 处理循环末尾的图片及链接
-		vmodel.pictures.push( vmodel.pictures[0] )
-		if(typeof vmodel.links[0] !== "undefined"){
-			vmodel.links.push( vmodel.links[0] )
-		}
-
-		// 当第一张图片加载完毕后开始动画
-		var firstImg = new Image()
-		firstImg.onload = function(e){
-			vmodel.autoPlay() // 自动开始轮播
-			vmodel.componentVisible = true // 显示部件
-		}
-		firstImg.src = vmodel.pictures[0].src
 
 		return vmodel
 	}

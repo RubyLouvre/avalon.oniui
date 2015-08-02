@@ -73,16 +73,7 @@
                         area.city = area.cities[0];
                     }
                 },
-                $cityOpts: {
-                    onChange: function() {
-                        var area = dropdown.places[avalon(this).data("index")];
-                        console.log(avalon(this).data("index"))
-                        console.log(area)
-                   //     alert(area.city)
-                     //   alert(area.area)
-                      //  alert(area.province)
-                    }
-                },
+                $cityOpts: {},
                 places: []
             });
 

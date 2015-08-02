@@ -185,12 +185,13 @@ define(["../draggable/avalon.draggable"], function(avalon) {
             }
         }
 
+
         if (data.dir.indexOf("e") !== -1) {
             var width = data.startResizeWidth + event.pageX - data.startPageX;
             width = Math.min(Math.max(width, b.minWidth), b.maxWidth);
             data.resizeWidth = width;
             if (aspest) {
-                data.resizeHeight = width / data.aspectRatio;
+                data.resizeHeight = data.startResizeHeight + (event.pageX - data.startPageX) / data.aspectRatio;
             }
         }
         if (data.dir.indexOf("s") !== -1) {
@@ -198,7 +199,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
             height = Math.min(Math.max(height, b.minHeight), b.maxHeight);
             data.resizeHeight = height;
             if (aspest) {
-                data.resizeWidth = height * data.aspectRatio;
+                data.resizeWidth = data.startResizeWidth + (event.pageY - data.startPageY) * data.aspectRatio;
             }
         }
         if (data.dir.indexOf("w") !== -1) {
@@ -206,7 +207,11 @@ define(["../draggable/avalon.draggable"], function(avalon) {
             if (data.resizeWidth >= b.minWidth && data.resizeWidth <= b.maxWidth) {
                 data.resizeLeft = data.startResizeLeft + event.pageX - data.startPageX;
                 if (aspest) {
-                    data.resizeTop = data.startResizeTop + (event.pageX - data.startPageX) / data.aspectRatio;
+                    data.resizeHeight = data.startResizeHeight - (event.pageX - data.startPageX) / data.aspectRatio;
+
+                    if(data.dir.indexOf("s") === -1) {
+                        data.resizeTop = data.startResizeTop + (event.pageX - data.startPageX) / data.aspectRatio;
+                    }
                 }
             }
         }
@@ -215,7 +220,11 @@ define(["../draggable/avalon.draggable"], function(avalon) {
             if (data.resizeHeight >= b.minHeight && data.resizeHeight <= b.maxHeight) {
                 data.resizeTop = data.startResizeTop + event.pageY - data.startPageY;
                 if (aspest) {
-                    data.resizeLeft = data.startResizeLeft + (event.pageY - data.startPageY) * data.aspectRatio;
+                    data.resizeWidth = data.startResizeWidth - (event.pageY - data.startPageY) * data.aspectRatio;
+
+                    if(data.dir.indexOf("e") === -1){
+                        data.resizeLeft = data.startResizeLeft + (event.pageY - data.startPageY) * data.aspectRatio;
+                    }
                 }
             }
         }

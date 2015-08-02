@@ -46,6 +46,7 @@
         *top: 0;
         *left: 0; }
       .oni-carousel .oni-carousel-panel .oni-carousel-item .oni-img-placeholder {
+        _display: none;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -105,8 +106,7 @@
     z-index: 20;
     top: 50%;
     margin: -15px 0 0 0;
-    cursor: pointer;
-    behavior: expression((this.runtimeStyle.behavior="none")&&(this.pngSet?this.pngSet=true:(this.nodeName == "IMG" && this.src.toLowerCase().indexOf('.png')>-1?(this.runtimeStyle.backgroundImage = "none", this.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + this.src + "', sizingMethod='image')", this.src = "http://7xkm02.com1.z0.glb.clouddn.com/Transparent.gif"):(this.origBg = this.origBg? this.origBg :this.currentStyle.backgroundImage.toString().replace('url("','').replace('")',''), this.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + this.origBg + "', sizingMethod='crop')", this.runtimeStyle.backgroundImage = "none")),this.pngSet=true)); }
+    cursor: pointer; }
   .oni-carousel .oni-carousel-prev {
     left: 5%; }
   .oni-carousel .oni-carousel-after {

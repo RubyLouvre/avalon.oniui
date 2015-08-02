@@ -185,6 +185,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
             }
         }
 
+
         if (data.dir.indexOf("e") !== -1) {
             var width = data.startResizeWidth + event.pageX - data.startPageX;
             width = Math.min(Math.max(width, b.minWidth), b.maxWidth);
@@ -207,7 +208,10 @@ define(["../draggable/avalon.draggable"], function(avalon) {
                 data.resizeLeft = data.startResizeLeft + event.pageX - data.startPageX;
                 if (aspest) {
                     data.resizeHeight = data.startResizeHeight - (event.pageX - data.startPageX) / data.aspectRatio;
-                    data.resizeTop = data.startResizeTop + (event.pageX - data.startPageX) / data.aspectRatio;
+
+                    if(data.dir.indexOf("s") === -1) {
+                        data.resizeTop = data.startResizeTop + (event.pageX - data.startPageX) / data.aspectRatio;
+                    }
                 }
             }
         }
@@ -217,7 +221,10 @@ define(["../draggable/avalon.draggable"], function(avalon) {
                 data.resizeTop = data.startResizeTop + event.pageY - data.startPageY;
                 if (aspest) {
                     data.resizeWidth = data.startResizeWidth - (event.pageY - data.startPageY) * data.aspectRatio;
-                    data.resizeLeft = data.startResizeLeft + (event.pageY - data.startPageY) * data.aspectRatio;
+
+                    if(data.dir.indexOf("e") === -1){
+                        data.resizeLeft = data.startResizeLeft + (event.pageY - data.startPageY) * data.aspectRatio;
+                    }
                 }
             }
         }

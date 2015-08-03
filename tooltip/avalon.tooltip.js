@@ -153,6 +153,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                     vmodel.event = "mouseover"
                 }
                 tooltipElem = tooltipELementMaker(vmodel.container)
+
                 vm.rootElement = tooltipElem
                 avalon.scan(tooltipElem, [vmodel].concat(vmodels))
                 vmodel.event && element.setAttribute("ms-" + vmodel.event + "-101", "_showHandlder($event)")
@@ -172,6 +173,9 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
             }
             //@interface show(elem) 用这个方法来刷新tooltip的位置
             vm.show = function(elem) {
+                // 每次显示前先找到最大z-index
+                vm._setToolTipZIndex()
+
                 if(vmodel.disabled || !tooltipElem) return
                 if(elem == undefine) elem = ofElement
                 if(elem) {
@@ -446,6 +450,29 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
                 var elem = avalon(tooltipElem)
                 return elem.css("display") != "none" && !elem.hasClass("oni-tooltip-hidden")
             }
+            vm._setToolTipZIndex = function(){
+                if(vm.zIndex === "maxZIndex"){
+                    avalon.css(tooltipElem, "z-index", getMaxZIndex())
+                } else{
+                    avalon.css(tooltipElem, "z-index", parseInt(vm.zIndex, 10))
+                }
+
+                // 获取body子元素最大的z-index
+                function getMaxZIndex() {
+                    var children = document.body.children,
+                        maxIndex = 10, //当body子元素都未设置zIndex时，默认取10
+                        zIndex;
+                    for (var i = 0, el; el = children[i++];) {
+                        if (el.nodeType === 1) {
+                            zIndex = parseInt(avalon(el).css("z-index"), 10)
+                            if (zIndex) {
+                                maxIndex = Math.max(maxIndex, zIndex)
+                            }
+                        }
+                    }
+                    return maxIndex + 1
+                }
+            }
             /**
              *  @interface 将toolTip元素注入到指定的元素内，请在调用appendTo之后再调用showBy
              *  @param 目标元素
@@ -514,6 +541,7 @@ define(["avalon", "text!./avalon.tooltip.html", "../position/avalon.position",  
         positionMy: false,    //@config tooltip元素的定位点，like: left top+11
         positionAt: false,    //@config element元素的定位点，like: left top+11,positionAt && positionMy时候忽略position设置
         hiddenDelay: 16,    //@config tooltip自动隐藏时间，单位ms
+        zIndex: "maxZIndex", //@config tooltip的z-index值，默认是body直接子元素中的最大z-index值
         //@config onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method
         onInit: avalon.noop,
         contentGetter: function(elem) {

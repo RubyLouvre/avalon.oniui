@@ -8,7 +8,6 @@
 div.oni-tooltip {
   padding: 10px;
   position: absolute;
-  z-index: 9999;
   max-width: 300px;
   overflow: visible;
   background: #ffe44f;

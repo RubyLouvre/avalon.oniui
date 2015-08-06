@@ -4,7 +4,7 @@
         <title>mmRouter组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <script src="../avalon.js"></script>
+        <script src="../avalon.modern.js"></script>
         <script src="../highlight/shCore.js"></script>
         <style>
             .header{
@@ -184,8 +184,8 @@
                     onEnter: function(a) {
                         avalon.vmodels.contacts.id = a
                     },
-                    views: {
-                        "": {
+                    views: [
+                        {
                             templateUrl: "contacts.detail.html",
                             // 只要是query或者params变化，屏蔽掉通过innerHTML重写视图
                             ignoreChange: function(changeType) {
@@ -197,24 +197,25 @@
                                 }
                             }
                         },
-                        'hint@': {
-                            template: "当前状态是 {{id}} contacts.detail",
-                            // controller: function($ctrl) {
-                            //     $ctrl.$vmodels = [avalon.vmodels.contacts]
-                            // }
-                            controller: "contacts"
-                        },
-                        'tip': {
+                        {
+                            name: "tip",
                             templateProvider: function(params) {
                                 return "当前ID是" + params.contactId + "<div ms-view=\"complex\"></div>"
                             }
                         },
-                        "complex@contacts.detail": {
+                        {
+                            name: "hint@",
+                            template: "当前状态是 {{id}} contacts.detail",
+                            controller: "contacts"
+                        },
+                        {
+                            name: "complex@contacts.detail",
                             template: "<font color='red'>我只有呵呵了 -- {{name}}</font>",
                             // 把一个符合controller规范的vmodel用来生成$ctrl
                             controller: "usVmodelAsController"
                         }
-                    }
+
+                    ]
                 }).state("contacts.detail.item", {
                     url: "/item/{itemID}",
                     onEnter: function() {

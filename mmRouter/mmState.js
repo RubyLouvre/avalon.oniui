@@ -683,8 +683,11 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
                 this.views = {}
                 this.views[viewname] = view
             }
-            var views = {}
-            avalon.each(this.views, function(name, view) {
+            var views = {},
+                viewsIsArray = this.views instanceof Array // 如果是一个数组
+            
+            avalon.each(this.views, function(maybeName, view) {
+                var name = viewsIsArray ? view.name || "" : maybeName // 默认缺省
                 if (name.indexOf("@") < 0) {
                     name += "@" + (parent ? parent.stateName || "" : "")
                 }

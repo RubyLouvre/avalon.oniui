@@ -10,9 +10,9 @@
                     ms-css-width="_gridWidth">
                     <div ms-repeat-column="columns" 
                         class="oni-smartgrid-column"
-                        ms-visible="column.toggle" 
+                        ms-visible="column.toggle"
                         ms-css-width="column.width" 
-                        ms-css-text-align="column.align" 
+                        ms-css-text-align="column.align"
                         ms-class="{{column.customClass}}"
                         ms-class-1="oni-smartgrid-hidden: _hiddenAffixHeader(column, allChecked)">
                         <div class="oni-smartgrid-column-cell">
@@ -29,10 +29,11 @@
                 <div id="oni-smartgrid-header">
                     <div ms-repeat-column="columns" 
                         class="oni-smartgrid-column"
+                        ms-visible="column.toggle"
+                        ms-css-width="column.width"
                         ms-css-text-align="column.align" 
                         ms-class="{{column.customClass}}"
-                        ms-class-1="oni-smartgrid-hidden: _hiddenAffixHeader(column, allChecked)"
-                        ms-css-width="column.width">
+                        ms-class-1="oni-smartgrid-hidden: _hiddenAffixHeader(column, allChecked)">
                         <div class="oni-smartgrid-column-cell">
                             {{column.name|sanitize|html}}
                             <span  ms-click="sortColumn(column, $index, $event)"
@@ -80,11 +81,10 @@ MS_OPTION_EJS
         <div id="<&=tr.$id&>" class="<&=selectedClass&> oni-smartgrid-row" ms-hover="oni-smartgrid-hover">
             <&- for(var j=0, tdl=@columns.length, td; j<tdl; j++) { &>
                 <&- td=@columns[j].$model; 
-                    var display=td.toggle ? "width:"+td.width+"px;" : "display:none;", 
-                    textAlign="text-align:"+td.align,
-                    customClass = td.customClass || "",
-                    format = td.format;&>
-                <div style="<&= display &>" class="oni-smartgrid-column">
+                    var textAlign="text-align:"+td.align,
+                        customClass = td.customClass || "",
+                        format = td.format;&>
+                <div class="oni-smartgrid-column" ms-visible="columns[<&= j &>]['toggle']" ms-css-width="columns[<&= j &>]['width']">
                     <div style="<&= textAlign &>" class="<&= customClass &> oni-smartgrid-column-cell">
                         <&= format(@vmId, td.key , i, tr[td.key], tr, tr.disable) &>
                     </div>
@@ -92,4 +92,5 @@ MS_OPTION_EJS
             <& } &>
         </div>  
     <& } &>  
-<& } &>    
+<& } &>
+

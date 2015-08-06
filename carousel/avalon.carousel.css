@@ -58,8 +58,7 @@
         height: 100%;
         top: 0;
         left: 0;
-        z-index: 5;
-        background-image: url(about:blank); }
+        z-index: 5;}
   .oni-carousel .oni-carousel-selection-wrap {
     position: absolute;
     z-index: 20;

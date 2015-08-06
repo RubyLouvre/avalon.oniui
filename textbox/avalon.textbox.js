@@ -145,6 +145,11 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                 }
                 // 如果输入域有值，则隐藏占位符，否则显示，默认显示
                 vm.elementDisabled = element.disabled;
+
+                // 设置最小高度
+                if(vmodel.adaptiveHeight.minHeight){
+                    avalon.css(element, "height", vmodel.adaptiveHeight.minHeight)
+                }
             }
         })  
         var  msDuplexValue, msData
@@ -157,6 +162,16 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
         if (msDuplexValue) {
             vmSub = avalon.getModel(msDuplexValue, vmodels);
             if(vmSub) {
+
+                // 获取文本框高度
+                if(vmodel.adaptiveHeight){
+                    var elementInitialHeight
+
+                    setTimeout(function(){
+                        elementInitialHeight = avalon.css(element, "height")
+                    },0)
+                }
+
                 // 根据对元素双向绑定的数据的监听来判断是显示还是隐藏占位符，并且判定元素的禁用与否
                 vmSub[1].$watch(vmSub[0], function() {
                     vmodel.elementDisabled = element.disabled;
@@ -167,9 +182,40 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                             vmodel.toggle = true
                         }
                     }
+
+                    if(vmodel.adaptiveHeight) {
+                        FitToContent(elementInitialHeight)
+                    }
                 })
             }
         }
+
+        function FitToContent(elementInitialHeight)
+        {
+            if(vmodel.adaptiveHeight.maxHeight && vmodel.adaptiveHeight.maxHeight !== ""){
+                var maxHeight = parseInt(vmodel.adaptiveHeight.maxHeight, 10)
+            }
+            if(vmodel.adaptiveHeight.minHeight && vmodel.adaptiveHeight.minHeight !== ""){
+                var minHeight = parseInt(vmodel.adaptiveHeight.minHeight, 10)
+            }
+
+            if (element.clientHeight == element.scrollHeight) {
+                element.style.height = (minHeight || elementInitialHeight) + "px";
+            }
+
+            var adjustedHeight = element.clientHeight,
+                shouldHigher =  !maxHeight || maxHeight > adjustedHeight
+
+            if (shouldHigher)
+            {
+                adjustedHeight = Math.max(element.scrollHeight, adjustedHeight);
+                if ( maxHeight )
+                    adjustedHeight = Math.min(maxHeight, adjustedHeight);
+                if ( adjustedHeight > element.clientHeight )
+                    element.style.height = adjustedHeight + "px";
+            }
+        }
+
         msData = element.msData["ms-disabled"] || element.msData["ms-attr-disabled"] || element.msData["ms-enabled"] || element.msData["ms-attr-enabled"];
         if (msData) {
             vmSub = avalon.getModel(msData, vmodels);
@@ -212,7 +258,8 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
         },
         stateClass: "", //@config 为textbox添加样式，默认可以添加oni-textbox-error
         suggestOnChange: "", //@config 配置提示补全时切换提示项之后的callback
-        suggestFocus: false //@config 特殊的suggest，当focus时即显示特定的提示列表
+        suggestFocus: false, //@config 特殊的suggest，当focus时即显示特定的提示列表
+        adaptiveHeight: "" //@config 使textbox自适应高度，并可以配置自适应时的minHeight/maxHeight
     }
     return avalon ;
 })

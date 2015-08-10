@@ -15,7 +15,6 @@ div#{$uiname}{
 	// current style
 	padding: 10px;
 	position: absolute;
-	z-index: 9999;
 	max-width: 300px;
 	overflow: visible;
 	background: map-get($tooltip, bg);

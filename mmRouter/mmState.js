@@ -71,6 +71,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
         oldNodes: [],
         query: {}, // 从属于currentState
         popOne: function(chain, params, callback, notConfirmed) {
+            if(mmState._toParams !== params) return callback(false, {type: "abort"})
             var cur = chain.pop(), me = this
             if(!cur) return callback()
             // 阻止退出
@@ -89,6 +90,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
             if(!cur._pending && cur.done) cur.done(success)
         },
         pushOne: function(chain, params, callback, _local, toLocals) {
+            if(mmState._toParams !== params) return callback(false, {type: "abort"})
             var cur = chain.shift(), me = this
             // 退出
             if(!cur) {
@@ -220,6 +222,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
             callStateFunc("onUnload", this, fromState, toState)
             this.currentState = toState
             this.prevState = fromState
+            mmState._toParams = toParams
             if(info && avalon.history) avalon.history.updateLocation(info.path + info.query, avalon.mix({}, options, {silent: true}), !fromState && location.hash)
             callStateFunc("onBegin", this, fromState, toState)
             this.popOne(exitChain, toParams, function(success) {
@@ -683,8 +686,11 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
                 this.views = {}
                 this.views[viewname] = view
             }
-            var views = {}
-            avalon.each(this.views, function(name, view) {
+            var views = {},
+                viewsIsArray = this.views instanceof Array // 如果是一个数组
+            
+            avalon.each(this.views, function(maybeName, view) {
+                var name = viewsIsArray ? view.name || "" : maybeName // 默认缺省
                 if (name.indexOf("@") < 0) {
                     name += "@" + (parent ? parent.stateName || "" : "")
                 }

@@ -5,9 +5,7 @@
         <title>气泡组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <meta name="descriptions" content=" 给一个元素或者给元素里满足配置条件的系列元素添加一个富UI及交互的气泡提示框
-
- " />
+        <meta name="descriptions" content=" 给一个元素或者给元素里满足配置条件的系列元素添加一个富UI及交互的气泡提示框" />
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
         />
         <script src="../highlight/shCore.js"></script>
@@ -142,6 +140,12 @@
                         <td>tooltip自动隐藏时间，单位ms</td>
                     </tr>
                     <tr>
+                        <td>zIndex</td>
+                        <td>Number</td>
+                        <td>maxZIndex</td>
+                        <td>tooltip的z-index值，默认是body直接子元素中的最大z-index值</td>
+                    </tr>
+                    <tr>
                         <td>onInit</td>
                         <td>Member</td>
                         <td>avalon.noop</td>
@@ -247,6 +251,9 @@
                 </li>
                 <li>
                     <a href="avalon.tooltip.ex6.html">input元素获取焦点显示tip</a>
+                </li>
+                <li>
+                    <a href="avalon.tooltip.ex7.html">显示tooltip时动态获取最大z-index</a>
                 </li>
             </ul>
         </div>

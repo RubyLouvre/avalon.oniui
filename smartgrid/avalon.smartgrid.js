@@ -1204,6 +1204,11 @@ define(["avalon",
                 columns = sgVmodel.columns
 
             for(var i = 0, len = columns.length; i < len; i++){
+
+                if(columns[i].key === "selected" && columns[i].name.slice(1,6) === "input"){
+                    continue;
+                }
+
                 columnsData.push({
                     key: columns[i].key,
                     name: columns[i].name,

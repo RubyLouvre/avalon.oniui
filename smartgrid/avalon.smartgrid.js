@@ -508,12 +508,17 @@ define(["avalon",
                 })
             };
             vm._getTemplate = function (defineDatas, startIndex) {
-                var fn, html, id = 'smartgrid_tmp_' + tempId, dt = defineDatas || vmodel.data, _columns = vmodel.columns, columns = _columns.$model, selectableType = vmodel.selectable && vmodel.selectable.type || '', datas = [];
+                var fn, html,
+                    id = 'smartgrid_tmp_' + tempId, dt = defineDatas || vmodel.data, _columns = vmodel.columns, columns = _columns.$model,
+                    selectableType = vmodel.selectable && vmodel.selectable.type || '', datas = [];
+
                 avalon.each(dt, function(i, item) {
                     if(item.$id && item.$id != "remove") datas.push(item)
                 })
-                var dataLen = datas.length
-                checkRow = selectableType === 'Checkbox';
+
+                var dataLen = datas.length,
+                    checkRow = selectableType === 'Checkbox';
+
                 if (!EJS[id]) {
                     fn = EJS.compile(options.template, vmodel.htmlHelper);
                     EJS[id] = fn;
@@ -540,6 +545,7 @@ define(["avalon",
                     startIndex: startIndex || 0,
                     checkRow: checkRow
                 });
+
                 return html;
             };
             vm._getAllCheckboxDisabledStatus = function(allSelected) {
@@ -756,7 +762,7 @@ define(["avalon",
         remoteSort: avalon.noop,
         isAffix: false, //@config 表头在表格内容超过可视区高度时是否吸顶，true吸顶，false不吸顶，默认不吸顶
         affixHeight: 0, //@config 配置吸顶元素距离窗口顶部的高度
-        selectable: false, //@config 为表格添加Checkbox或者Radio操作项，格式为<pre>{type: 'Checkbox'}</pre>
+        selectable: false, //@config 为表格添加Checkbox或者Radio操作项，格式为<pre>{type: 'Checkbox', width: '25px'}</pre>
         bodyHeight: 0,
         //@config 设置loading缓冲的配置项，具体使用方法参见loading文档
         loading: { 
@@ -974,7 +980,19 @@ define(["avalon",
             ;
         }
         if (options.selectable) {
-            var type = options.selectable.type, selectFormat, allSelected = true;
+            var type = options.selectable.type,
+                selectFormat,
+                allSelected = true,
+                selectableWidth = options.selectable.width || 25;
+
+            if(typeof selectableWidth === "string"){
+                if(selectableWidth.indexOf("%") !== -1){
+                    selectableWidth = parseInt(selectableWidth, 10) / 100 * parentContainerWidth
+                } else{
+                    selectableWidth = parseInt(selectableWidth, 10)
+                }
+            }
+
             if (type === 'Checkbox' || type === 'Radio') {
                 selectFormat = function (vmId, field, index, selected, rowData, disable, allSelected) {
                     if (allSelected && type === 'Radio')
@@ -991,8 +1009,8 @@ define(["avalon",
             selectColumn = {
                 key: 'selected',
                 name: selectFormat(options.$id, 'selected', -1, allSelected, [], null, true),
-                width: 25,
-                configWidth: 25,
+                width: selectableWidth,
+                configWidth: selectableWidth,
                 sortable: false,
                 type: options.selectable.type,
                 format: selectFormat,
@@ -1000,7 +1018,7 @@ define(["avalon",
                 align: 'center',
                 customClass: ''
             };
-            allColumnWidth += 25;
+            allColumnWidth += selectableWidth;
             columns.unshift(selectColumn);
         }
         for (var _columns = [], i = 0; i < len; i++) {
@@ -1009,8 +1027,9 @@ define(["avalon",
                 _columns.push(column)
             }
         }
-        var autoWidth = 0
-        autoWidth = parentContainerWidth - allColumnWidth + maxWidth
+
+        var autoWidth = parentContainerWidth - allColumnWidth + maxWidth
+
         if (allColumnWidth > parentContainerWidth) {
             if (!_columns.length) {
                 options.maxGridWidth = allColumnWidth + 20

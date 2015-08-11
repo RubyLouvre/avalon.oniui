@@ -1028,7 +1028,7 @@ define(["avalon",
             }
         }
 
-        var autoWidth = parentContainerWidth - allColumnWidth + maxWidth
+        var autoWidth = Math.floor(parentContainerWidth - allColumnWidth + maxWidth) - 1
 
         if (allColumnWidth > parentContainerWidth) {
             if (!_columns.length) {
@@ -1044,7 +1044,7 @@ define(["avalon",
                 } else {
                     autoWidth = parentContainerWidth - allColumnWidth
                 }
-            } 
+            }
             setColumnWidth(_columns, autoWidth)
         }
         options.columns = columns;

@@ -419,6 +419,21 @@ define(["avalon",
             vm.hideLoading = function () {
                 vmodel.loadingVModel.toggle = false;
             };
+            /**
+             * 响应window.resize以调整宽度为百分比的内容
+             */
+            vm._adjustColWidth = function() {
+                var cols = vmodel.columns,
+                    parentWidth = avalon(vmodel.container.parentNode).width()
+
+                for(var i = 0, len = cols.length; i < len; i++){
+                    var col = cols[i]
+
+                    if(col.originalWidth.indexOf("%") !== -1){
+                        col.width = Math.floor((parentWidth * parseInt(col.originalWidth, 10)) / 100) -1
+                    }
+                }
+            }
             vm._selectAll = function (event, selected) {
                 var datas = vmodel.data, rows = containerWrapper.children, onSelectAll = vmodel.onSelectAll,
                     val = event ? event.target.checked : selected, 
@@ -488,7 +503,7 @@ define(["avalon",
                     maxWidthColumn = columnsInfo.maxWidthColumn,
                     maxWidth = maxWidthColumn.configWidth,
                     adjustColumns = [maxWidthColumn],
-                    autoWidth = autoWidth = parentContainerWidth - showColumnWidth + maxWidth,
+                    autoWidth = parentContainerWidth - showColumnWidth + maxWidth,
                     rows = Array.prototype.slice.call(containerWrapper.children)
                 if (!autoWidth) {
                     return false
@@ -712,8 +727,20 @@ define(["avalon",
                     addColHandlerTo(vmodel.colHandlerContainer, vmodel)
                 }
 
+
                 if (typeof options.onInit === 'function') {
                     options.onInit.call(element, vmodel, options, vmodels);
+                }
+
+                if (window.addEventListener){
+                    window.addEventListener("resize", function(){
+                        vm._adjustColWidth()
+                    });
+                }
+                else{
+                    window.attachEvent("onresize", function(){
+                        vm._adjustColWidth()
+                    });
                 }
             };
             vm.$remove = function () {
@@ -934,6 +961,9 @@ define(["avalon",
         for (var i = 0, len = columns.length; i < len; i++) {
             var column = columns[i], format = column.format, htmlFunction = '', _columnWidth = column.width, columnWidth = ~~_columnWidth;
             column.align = column.align || 'center';
+
+            column.originalWidth = _columnWidth
+
             if (column.toggle === void 0 || column.isLock) {
                 column.toggle = true;
             }
@@ -1011,6 +1041,7 @@ define(["avalon",
                 name: selectFormat(options.$id, 'selected', -1, allSelected, [], null, true),
                 width: selectableWidth,
                 configWidth: selectableWidth,
+                originalWidth: options.selectable.width || 25,
                 sortable: false,
                 type: options.selectable.type,
                 format: selectFormat,

@@ -419,6 +419,21 @@ define(["avalon",
             vm.hideLoading = function () {
                 vmodel.loadingVModel.toggle = false;
             };
+            /**
+             * 响应window.resize以调整宽度为百分比的内容
+             */
+            vm._adjustColWidth = function() {
+                var cols = vmodel.columns,
+                    parentWidth = avalon(vmodel.container.parentNode).width()
+
+                for(var i = 0, len = cols.length; i < len; i++){
+                    var col = cols[i]
+
+                    if(col.originalWidth.indexOf("%") !== -1){
+                        col.width = Math.floor((parentWidth * parseInt(col.originalWidth, 10)) / 100) -1
+                    }
+                }
+            }
             vm._selectAll = function (event, selected) {
                 var datas = vmodel.data, rows = containerWrapper.children, onSelectAll = vmodel.onSelectAll,
                     val = event ? event.target.checked : selected, 
@@ -488,7 +503,7 @@ define(["avalon",
                     maxWidthColumn = columnsInfo.maxWidthColumn,
                     maxWidth = maxWidthColumn.configWidth,
                     adjustColumns = [maxWidthColumn],
-                    autoWidth = autoWidth = parentContainerWidth - showColumnWidth + maxWidth,
+                    autoWidth = parentContainerWidth - showColumnWidth + maxWidth,
                     rows = Array.prototype.slice.call(containerWrapper.children)
                 if (!autoWidth) {
                     return false
@@ -508,12 +523,17 @@ define(["avalon",
                 })
             };
             vm._getTemplate = function (defineDatas, startIndex) {
-                var fn, html, id = 'smartgrid_tmp_' + tempId, dt = defineDatas || vmodel.data, _columns = vmodel.columns, columns = _columns.$model, selectableType = vmodel.selectable && vmodel.selectable.type || '', datas = [];
+                var fn, html,
+                    id = 'smartgrid_tmp_' + tempId, dt = defineDatas || vmodel.data, _columns = vmodel.columns, columns = _columns.$model,
+                    selectableType = vmodel.selectable && vmodel.selectable.type || '', datas = [];
+
                 avalon.each(dt, function(i, item) {
                     if(item.$id && item.$id != "remove") datas.push(item)
                 })
-                var dataLen = datas.length
-                checkRow = selectableType === 'Checkbox';
+
+                var dataLen = datas.length,
+                    checkRow = selectableType === 'Checkbox';
+
                 if (!EJS[id]) {
                     fn = EJS.compile(options.template, vmodel.htmlHelper);
                     EJS[id] = fn;
@@ -540,6 +560,7 @@ define(["avalon",
                     startIndex: startIndex || 0,
                     checkRow: checkRow
                 });
+
                 return html;
             };
             vm._getAllCheckboxDisabledStatus = function(allSelected) {
@@ -706,8 +727,20 @@ define(["avalon",
                     addColHandlerTo(vmodel.colHandlerContainer, vmodel)
                 }
 
+
                 if (typeof options.onInit === 'function') {
                     options.onInit.call(element, vmodel, options, vmodels);
+                }
+
+                if (window.addEventListener){
+                    window.addEventListener("resize", function(){
+                        vm._adjustColWidth()
+                    });
+                }
+                else{
+                    window.attachEvent("onresize", function(){
+                        vm._adjustColWidth()
+                    });
                 }
             };
             vm.$remove = function () {
@@ -756,7 +789,7 @@ define(["avalon",
         remoteSort: avalon.noop,
         isAffix: false, //@config 表头在表格内容超过可视区高度时是否吸顶，true吸顶，false不吸顶，默认不吸顶
         affixHeight: 0, //@config 配置吸顶元素距离窗口顶部的高度
-        selectable: false, //@config 为表格添加Checkbox或者Radio操作项，格式为<pre>{type: 'Checkbox'}</pre>
+        selectable: false, //@config 为表格添加Checkbox或者Radio操作项，格式为<pre>{type: 'Checkbox', width: '25px'}</pre>
         bodyHeight: 0,
         //@config 设置loading缓冲的配置项，具体使用方法参见loading文档
         loading: { 
@@ -928,6 +961,9 @@ define(["avalon",
         for (var i = 0, len = columns.length; i < len; i++) {
             var column = columns[i], format = column.format, htmlFunction = '', _columnWidth = column.width, columnWidth = ~~_columnWidth;
             column.align = column.align || 'center';
+
+            column.originalWidth = _columnWidth
+
             if (column.toggle === void 0 || column.isLock) {
                 column.toggle = true;
             }
@@ -974,7 +1010,19 @@ define(["avalon",
             ;
         }
         if (options.selectable) {
-            var type = options.selectable.type, selectFormat, allSelected = true;
+            var type = options.selectable.type,
+                selectFormat,
+                allSelected = true,
+                selectableWidth = options.selectable.width || 25;
+
+            if(typeof selectableWidth === "string"){
+                if(selectableWidth.indexOf("%") !== -1){
+                    selectableWidth = parseInt(selectableWidth, 10) / 100 * parentContainerWidth
+                } else{
+                    selectableWidth = parseInt(selectableWidth, 10)
+                }
+            }
+
             if (type === 'Checkbox' || type === 'Radio') {
                 selectFormat = function (vmId, field, index, selected, rowData, disable, allSelected) {
                     if (allSelected && type === 'Radio')
@@ -991,8 +1039,9 @@ define(["avalon",
             selectColumn = {
                 key: 'selected',
                 name: selectFormat(options.$id, 'selected', -1, allSelected, [], null, true),
-                width: 25,
-                configWidth: 25,
+                width: selectableWidth,
+                configWidth: selectableWidth,
+                originalWidth: options.selectable.width || 25,
                 sortable: false,
                 type: options.selectable.type,
                 format: selectFormat,
@@ -1000,7 +1049,7 @@ define(["avalon",
                 align: 'center',
                 customClass: ''
             };
-            allColumnWidth += 25;
+            allColumnWidth += selectableWidth;
             columns.unshift(selectColumn);
         }
         for (var _columns = [], i = 0; i < len; i++) {
@@ -1009,8 +1058,9 @@ define(["avalon",
                 _columns.push(column)
             }
         }
-        var autoWidth = 0
-        autoWidth = parentContainerWidth - allColumnWidth + maxWidth
+
+        var autoWidth = Math.floor(parentContainerWidth - allColumnWidth + maxWidth) - 1
+
         if (allColumnWidth > parentContainerWidth) {
             if (!_columns.length) {
                 options.maxGridWidth = allColumnWidth + 20
@@ -1025,7 +1075,7 @@ define(["avalon",
                 } else {
                     autoWidth = parentContainerWidth - allColumnWidth
                 }
-            } 
+            }
             setColumnWidth(_columns, autoWidth)
         }
         options.columns = columns;
@@ -1204,6 +1254,11 @@ define(["avalon",
                 columns = sgVmodel.columns
 
             for(var i = 0, len = columns.length; i < len; i++){
+
+                if(columns[i].key === "selected" && columns[i].name.slice(1,6) === "input"){
+                    continue;
+                }
+
                 columnsData.push({
                     key: columns[i].key,
                     name: columns[i].name,

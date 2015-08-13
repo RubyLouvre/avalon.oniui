@@ -327,7 +327,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
         function update(firsttime, currentState, changeType) {
             // node removed, remove callback
             if(!document.contains(comment)) {
-                element = par = comment = $element = oldElement = update = null
+                data = vmodels = element = par = comment = $element = oldElement = update = null
                 return !"delete from watch"
             }
             var definedParentStateName = $element.data("statename") || "",

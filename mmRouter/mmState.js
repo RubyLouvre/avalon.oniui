@@ -148,7 +148,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
                 fromState = this.activeState // 更新实际的fromState
                 fromAbort = true
             }
-
+            mmState.oldNodes = []
             var info = avalon.router.urlFormate(toState.url, toParams, toParams.query),
                 me = this,
                 options = options || {},
@@ -184,6 +184,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
                     over = true
                     me.currentState = me.activeState
                     enterChain = exitChain = commonLocal = _local = toParams= null
+                    mmState.oldNodes = []
                     if(success !== false) {
                         mmState.lastLocal = mmState.currentState._local
                         _root.fire("updateview", me.currentState, changeType)

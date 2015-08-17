@@ -1,147 +1,30 @@
+/*
+* reset
+*/
+html, body, div, p, ul, li, h1, h2, h3, h4, h5 {
+  margin: 0;
+  padding: 0; }
+
+html {
+  height: 100%; }
+
 body {
-    font: 14px/1.5 "微软雅黑","OpenSansRegular","Helvetica Neue",Helvetica,Arial,sans-serif;
-    margin: 0;
-    padding: 0 0 100px;
-}
-h1,h2,h3,h4{font-weight: normal;}
-h2 {
-    text-align: center;
-}
+  position: relative;
+  height: 100%;
+  background-color: #f9fafe;
+  color: #212121;
+  font-size: 14px;
+  font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif; }
+
+ul, ol {
+  list-style: none; }
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: #212121; }
+
 .wrapper {
-    margin: 0 auto;
-    padding: 0 20px;
-    max-width: 960px;
-    text-align: left;
-}
-.wrapper fieldset{
-    margin-top: 1em;
-    border: 2px #666 solid;
-}
-[ms-controller],.ms-controller{
-    visibility: hidden;
-}
-pre {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-}
-.wrapper fieldset legend {
-    padding: 0 12px;
-    font-size: 18px;
-    color: #28966f;
-}
-/*doc table的样式*/
-table.table-doc {  
-    table-layout: fixed;
-    margin: 10px auto;
-    border: 1px solid #cad9ea;  
-    border-collapse: collapse;
-    color: #666; 
-    font-size: 14px;
-    width: 100%;
-}
-table.table-doc table{
-     width: 99%;
-     border-collapse: collapse;
-}
-.table-doc td, .table-doc th {
-    word-break:break-words;
-}
-
-.table-doc td:nth-child(1) {
-    width: 180px;
-}
-/*.table-doc td:nth-child(2) {
-    width: 180px;
-}*/
-.table-doc td,.table-doc th{  
-    border: 1px solid #e1e1e1;  
-    padding: 6px 12px;  
-    line-height: 26px;
-}
-.table-doc th{
-    font-weight: normal;
-    background-color: #296;
-    color: #fff;
-}
-.table-doc tr.odd, .table-doc tr:nth-child(odd){  
-    background-color: #F1F1F1;  
-}
-.table-doc caption {
-    color: #FF0000;
-    text-align: left;
-    line-height: 40px;
-    font-size: 16px;
-}
-.pad30 {
-    padding: 30px;   
-}
-.nav li a {
-    color: #000;
-    font-weight: 400;
-    text-decoration: none;
-    font-size: 16px;
-    line-height: 30px;
-    display: inline-block;
-}
-.wrapper code{
-    background: none repeat scroll 0 0 #f1f0ea;
-    border: 1px solid #dddbcc;
-    border-radius: 2px;
-    font-family: Consolas,monospace,sans-serif;
-    font-size: 0.85em;
-    padding: 1px 3px;
-    white-space: pre;
-}
-fieldset > p{
-    text-indent:2em;
-}
-.demo {
-    color:#f00; 
-    font-weight: bold;
-    font-size: 20px;
-}
-
-.statement {
-    color: green;
-    padding: 0 10px;
-}
-.demo-show {
-    border: 1px solid #ccc;
-    padding: 10px;
-    background: #fff;
-    margin: 5px 0 20px 0;
-    color: #000;
-}
-.use-description {
-    color: #8A2BE2;
-}
-.warn, .warning {
-    color: #f00;
-}
-.oniui-content{border: 0 none;border-spacing: 0;}
-
-/*14.9.28 表单示例样式*/
-.form-example a{color: #09c;}
-.form-example a:hover{color: #3ce;}
-/*left-wrap*/
-.form-example .example-wrap{padding: 20px; font-size: 14px; color: #333; line-height: 20px; word-wrap: break-word;}
-.form-example .example-wrap .hint{background-color: #DFF0D8;padding: 15px; margin: 20px 0; border: 1px #ddd solid; border-radius: 1px;}
-/*form*/
-.form-example .form {display:inline-block; width:45%; margin: 0 20px 0 0;}
-.form-example .form .item {margin: 0 0 15px;}
-.form-example .form .item .img-responsive{margin: 5px 0 0; max-width: 100%;}
-.form-example .form input[type="text"]{width: 85%; padding: 6px 12px; border:1px #ccc solid; border-radius: 4px;-webkit-box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset;}
-.form-example .form .item input[type="text"]:focus{border-color: rgb(129, 183, 225); -webkit-box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px 0px inset, rgba(102, 175, 232, 0.4) 0px 0px 5.8px 0px;} 
-.form-example .form .item .item-entry-wrap{width: 100%; margin: 10px 0 0 0;}
-.form-example .form .item .item-entry{width: 100%; padding: 10px; background: rgba(0, 0, 0, .02); border:1px #ccc solid;box-sizing:border-box;}
-.form-example .form .item .item-entry .radios-wrap{padding: 10px 0;border-bottom: rgba(0, 0, 0, .1) solid thin; }
-.form-example .form .item .item-entry .upper-wrap,.form .item .item-entry a{margin: 8px 0 0;}
-/*data-wrap*/
-.form-example .data-wrap {display:inline-block; width:45%;vertical-align:top;}
-.form-example .data-wrap pre{padding: 9.5px; margin: 0; border:1px #ccc solid; font-family: Menlo,Monaco,Consolas,"Courier New",monospace; font-size: 12px;}
-/*14.9.28 表单示例样式 结束*/
-
-/*14.10.13 组件库demo示例链接样式*/
-.example-links li{padding: 2px 0;}
-.example-links a{text-decoration: none; color:#547c73;}
-
+  margin: 52px 0 0;
+  border-top: 1px #e5e9f2 solid;
+  background-color: #fff; }

@@ -1,0 +1,45 @@
+@import "../chameleon/compass/css3";
+
+$font-stack: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
+
+$color-normal: #212121;
+$color-title: #212121;
+$color-header-bg: #2c2f34;
+$color-theme-blue: #1489e6;
+$color-border-grey: #e5e9f2;
+
+$font-normal: 14px;
+
+/*
+* reset
+*/
+html,body,div,p,ul,li,h1,h2,h3,h4,h5{
+  margin: 0;
+  padding: 0;
+}
+html{
+  height: 100%;
+}
+body{
+  position: relative;
+  height: 100%;
+  background-color: #f9fafe;
+  color: $color-normal;
+  font-size: $font-normal;
+  font-family: $font-stack;
+}
+ul,ol{
+  list-style: none;
+}
+a{
+  cursor: pointer;
+  text-decoration: none;
+  color: $color-normal;
+}
+
+.wrapper{
+  margin: 52px 0 0;
+  border-top: 1px $color-border-grey solid;
+  background-color: #fff;
+}
+

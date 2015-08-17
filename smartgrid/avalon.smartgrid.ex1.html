@@ -47,6 +47,9 @@
                         sg1.render()
                     }
                     vm.opts = {
+                        onInit: function(){
+                            avalon.log("--init---")
+                        },
                         autoResize: false,
                         columns: [
                             {

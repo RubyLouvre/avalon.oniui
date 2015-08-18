@@ -1,45 +1,83 @@
-@import "../chameleon/compass/css3";
+@import "../pages/index/styles/base";
 
-$font-stack: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
-
-$color-normal: #212121;
-$color-title: #212121;
-$color-header-bg: #2c2f34;
-$color-theme-blue: #1489e6;
-$color-border-grey: #e5e9f2;
-
-$font-normal: 14px;
-
-/*
-* reset
-*/
-html,body,div,p,ul,li,h1,h2,h3,h4,h5{
-  margin: 0;
-  padding: 0;
-}
-html{
-  height: 100%;
-}
 body{
-  position: relative;
-  height: 100%;
-  background-color: #f9fafe;
-  color: $color-normal;
-  font-size: $font-normal;
-  font-family: $font-stack;
-}
-ul,ol{
-  list-style: none;
-}
-a{
-  cursor: pointer;
-  text-decoration: none;
-  color: $color-normal;
-}
-
-.wrapper{
-  margin: 52px 0 0;
-  border-top: 1px $color-border-grey solid;
   background-color: #fff;
+}
+.wrapper{
+  position: relative;
+  padding: 40px 60px;
+  background-color: #fff;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-width: 12px;
+    border-color: $color-theme-blue transparent transparent $color-theme-blue;
+    border-style: solid;
+  }
+
+  h2 {
+    padding: 0 0 0 10px;
+    font-size: 24px;
+    font-weight: normal;
+  }
+
+  fieldset{
+    position: relative;
+    max-width: 100%;
+    margin: 80px 0 0;
+    padding: 30px;
+    background-color: #f9fafe;
+    border: 1px $color-border-grey solid;
+
+    >legend{
+      position: absolute;
+      top: -50px;
+      left: 0;
+      padding: 0 0 0 10px;
+      font-size: 18px;
+      border-left: 4px $color-theme-blue solid;
+    }
+  }
+
+  .table-doc{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0 0 30px;
+    border: 1px $color-border-grey solid;
+    border-collapse: collapse;
+    background-color: #fff;
+
+    th,td{
+      padding: 20px;
+      border: 1px $color-border-grey solid;
+      word-break: break-all;
+    }
+
+    th{
+      font-weight: normal;
+      background-color: #2c2f34;
+      color: #fff
+    }
+
+    td{
+      border-width: 1px 0;
+    }
+
+    table{
+      width: 100%;
+      margin: 10px 0 0;
+      border-collapse: collapse;
+      border: 1px $color-border-grey solid;
+    }
+  }
+
+  .example-links{
+    display: none;
+  }
 }
 

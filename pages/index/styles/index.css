@@ -26,7 +26,6 @@ html {
 body {
   position: relative;
   height: 100%;
-  background-color: #f9fafe;
   color: #212121;
   font-size: 14px;
   font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif; }
@@ -80,6 +79,9 @@ h1, h2, h3, h4, h5 {
   vertical-align: middle;
   background: url("/static/image/app_sprite.png") 0 0 no-repeat; }
 
+body {
+  background-color: #f9fafe; }
+
 /*
 * layout
 *
@@ -130,56 +132,66 @@ h1, h2, h3, h4, h5 {
 
 .l-aside {
   position: absolute;
-  top: 80px;
+  top: 0;
   left: 0;
   bottom: 0;
   width: 276px;
   float: left;
   border-right: 1px #e5e9f2 solid; }
 
-.l-search {
-  padding: 10px 0px;
+.oni-layout-search-bar {
   border-bottom: 1px #e5e9f2 solid; }
-  .l-search .search-wrap {
-    margin: 0 12px;
-    border: 1px #e5e9f2 solid;
-    background-color: #fff;
-    font-size: 0; }
-    .l-search .search-wrap .search-input {
-      width: 215px;
-      padding: 0 0 0 10px;
-      line-height: 30px;
-      vertical-align: middle;
-      font-size: 14px;
-      border: none;
-      outline: none; }
-    .l-search .search-wrap .search-button {
-      display: -moz-inline-stack;
-      display: inline-block;
-      vertical-align: middle;
-      *vertical-align: auto;
-      zoom: 1;
-      *display: inline;
-      width: 25px;
-      height: 30px;
-      line-height: 30px;
-      text-align: center;
-      font-size: 16px; }
+  .oni-layout-search-bar .search-section {
+    width: 276px;
+    padding: 10px 0px;
+    border-right: 1px #e5e9f2 solid; }
+    .oni-layout-search-bar .search-section .search-wrap {
+      margin: 0 12px;
+      border: 1px #e5e9f2 solid;
+      background-color: #fff;
+      font-size: 0; }
+      .oni-layout-search-bar .search-section .search-wrap .search-input {
+        width: 215px;
+        padding: 0 0 0 10px;
+        line-height: 30px;
+        vertical-align: middle;
+        font-size: 14px;
+        border: none;
+        outline: none; }
+      .oni-layout-search-bar .search-section .search-wrap .search-button {
+        display: -moz-inline-stack;
+        display: inline-block;
+        vertical-align: middle;
+        *vertical-align: auto;
+        zoom: 1;
+        *display: inline;
+        width: 25px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        font-size: 16px; }
 
-.l-list-wrap {
+.oni-layout-main-container {
   position: absolute;
-  top: 53px;
+  top: 133px;
+  left: 0;
+  right: 0;
+  bottom: 0; }
+
+.list-wrap {
+  position: absolute;
+  top: 0;
   left: 0;
   bottom: 0;
   width: 277px;
   overflow: auto; }
-  .l-list-wrap .list-name {
+  .list-wrap .list-name {
     margin: 20px 12px; }
-  .l-list-wrap .list {
+  .list-wrap .list {
     margin: -10px 0 30px;
     overflow: hidden;
     font-size: 16px; }
-    .l-list-wrap .list > li > a {
+    .list-wrap .list > li > a {
       display: -moz-inline-stack;
       display: inline-block;
       vertical-align: middle;
@@ -188,10 +200,10 @@ h1, h2, h3, h4, h5 {
       *display: inline;
       width: 90%;
       padding: 10px 12px; }
-      .l-list-wrap .list > li > a:hover {
+      .list-wrap .list > li > a:hover {
         background-color: #1489e6;
         color: #fff; }
-    .l-list-wrap .list > li .cur-widget {
+    .list-wrap .list > li .active-dir {
       background-color: #1489e6;
       color: #fff; }
 
@@ -199,7 +211,7 @@ h1, h2, h3, h4, h5 {
   position: absolute;
   left: 277px;
   right: 0;
-  top: 80px;
+  top: 0;
   bottom: 0;
   overflow: hidden; }
 

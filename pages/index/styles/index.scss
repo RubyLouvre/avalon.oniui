@@ -1,0 +1,158 @@
+@import "base";
+
+body{
+  background-color: #f9fafe;
+}
+
+/*
+* layout
+*
+*/
+.l-header{
+  background-color: $color-header-bg;
+  color: #fff;
+  min-width: 980px;
+
+  .oniicon{
+    vertical-align: middle;
+  }
+
+  .container{
+    height: 80px;
+    line-height: 80px;
+    padding: 0 12px;
+
+    .nav{
+      @include inline-block;
+
+      .nav-list{
+        margin: -5px 0 0 170px;
+
+        .nav-item{
+          @include inline-block;
+          margin: 0 10px 0 0;
+
+          .nav-link{
+            @include inline-block;
+            width: 120px;
+            height: 40px;
+            line-height: 40px;
+            color: #fff;
+            text-align: center;
+            border-radius: $border-radiaus-btn;
+            border: 1px #383d50 solid;
+          }
+        }
+
+        .active{
+          .nav-link{
+            background-color: $color-theme-blue;
+          }
+        }
+      }
+    }
+  }
+}
+
+.l-aside{
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 276px;
+  float: left;
+  border-right: 1px $color-border-grey solid;
+}
+
+.oni-layout-search-bar{
+  border-bottom: 1px $color-border-grey solid;
+
+  .search-section{
+    width: 276px;
+    padding: 10px 0px;
+    border-right: 1px $color-border-grey solid;
+
+    .search-wrap{
+      margin: 0 12px;
+      border: 1px #e5e9f2 solid;
+      background-color: #fff;
+      font-size: 0;
+
+      .search-input{
+        width: 215px;
+        padding: 0 0 0 10px;
+        line-height: 30px;
+        vertical-align: middle;
+        font-size: 14px;
+        border: none;
+        outline: none;
+      }
+      .search-button{
+        @include inline-block;
+        width: 25px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+.oni-layout-main-container{
+  position: absolute;
+  top: 133px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.list-wrap{
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 277px;
+  overflow: auto;
+
+  .list-name{
+    margin: 20px 12px;
+  }
+  .list{
+    margin: -10px 0 30px;
+    overflow: hidden;
+    font-size: 16px;
+
+    >li{
+      >a{
+        @include inline-block;
+        width: 90%;
+        padding: 10px 12px;
+
+        &:hover{
+          background-color: $color-theme-blue;
+          color: #fff;
+        }
+      }
+      .active-dir{
+        background-color: $color-theme-blue;
+        color: #fff;
+      }
+    }
+  }
+}
+
+.l-main{
+  position: absolute;
+  left: 277px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.oniui-content, iframe{
+  width: 100%;
+  height: 100%;
+  border: 0 none;
+}

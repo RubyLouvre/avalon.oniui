@@ -1,4 +1,5 @@
 @import "base";
+@import "download";
 
 body{
   background-color: #f9fafe;
@@ -26,7 +27,7 @@ body{
       @include inline-block;
 
       .nav-list{
-        margin: -5px 0 0 170px;
+        margin: -5px 0 0 140px;
 
         .nav-item{
           @include inline-block;
@@ -54,15 +55,6 @@ body{
   }
 }
 
-.l-aside{
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 276px;
-  float: left;
-  border-right: 1px $color-border-grey solid;
-}
 
 .oni-layout-search-bar{
   border-bottom: 1px $color-border-grey solid;
@@ -73,13 +65,13 @@ body{
     border-right: 1px $color-border-grey solid;
 
     .search-wrap{
-      margin: 0 12px;
+      margin: 0 13px;
       border: 1px #e5e9f2 solid;
       background-color: #fff;
       font-size: 0;
 
       .search-input{
-        width: 215px;
+        width: 212px;
         padding: 0 0 0 10px;
         line-height: 30px;
         vertical-align: middle;
@@ -87,13 +79,14 @@ body{
         border: none;
         outline: none;
       }
-      .search-button{
+      .icon-search{
         @include inline-block;
         width: 25px;
         height: 30px;
         line-height: 30px;
         text-align: center;
-        font-size: 16px;
+        font-size: 18px;
+        color: #2a2d33;
         cursor: pointer;
       }
     }
@@ -106,7 +99,18 @@ body{
   left: 0;
   right: 0;
   bottom: 0;
+
+  .aside{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 276px;
+    float: left;
+    border-right: 1px $color-border-grey solid;
+  }
 }
+
 
 .list-wrap{
   position: absolute;
@@ -115,6 +119,52 @@ body{
   bottom: 0;
   width: 277px;
   overflow: auto;
+  font-size: 16px;
+
+  .list-item{
+    padding: 10px 12px;
+    cursor: pointer;
+
+    &:hover{
+      background-color: $color-theme-blue;
+      color: #fff;
+
+      .iconfont{
+        color: #fff;
+      }
+    }
+  }
+
+  .icon-arrow{
+    height: 45px;
+    line-height: 45px;
+    font-size: 20px;
+    color: #5c5f67;
+  }
+
+  .backto-menu{
+    position: relative;
+    padding-left: 30px;
+    border-bottom: 1px $color-border-grey solid;
+
+    .icon-arrow{
+      position: absolute;
+      left: 5px;
+      top: 0;
+    }
+  }
+
+  .current-widget{
+    position: relative;
+    border-bottom: 1px $color-border-grey solid;
+
+    .icon-arrow{
+      position: absolute;
+      right: 2px;
+      top: 0;
+      color: #5c5f67;
+    }
+  }
 
   .list-name{
     margin: 20px 12px;
@@ -122,18 +172,11 @@ body{
   .list{
     margin: -10px 0 30px;
     overflow: hidden;
-    font-size: 16px;
 
     >li{
       >a{
         @include inline-block;
-        width: 90%;
-        padding: 10px 12px;
-
-        &:hover{
-          background-color: $color-theme-blue;
-          color: #fff;
-        }
+        width: 247px;
       }
       .active-dir{
         background-color: $color-theme-blue;

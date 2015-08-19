@@ -1,11 +1,12 @@
-//avalon.config({
-//    debug: false
-//})
+avalon.config({
+    debug: false
+})
 
-require(["pages/index/widget.list", "ready!", "mmRouter/mmState"], function (widgetList) {
+require(["pages/index/widget.list", "mmRouter/mmState", "ready!"], function (widgetList) {
     var pagesVM = avalon.define({
         $id: "pages",
-        activeNav: "组件库",
+        st: "200px",
+        activeNav: getActiveNav(),
         switchNavTo: function(key){
             if(pagesVM.pages[key][0] !== "#"){
                 return
@@ -18,22 +19,39 @@ require(["pages/index/widget.list", "ready!", "mmRouter/mmState"], function (wid
             "下载": "#!/download",
             "打包工具": "http://l-uedapp2.h.dev.cn0.qunar.com:8088/"
         },
-        generateLink: function(key, val, group){
-            if(typeof widgetList.widgets[group] !== "undefined"){
-                return "#!/widgets/?widgetId=" + key
-            } else if(typeof val !== "undefined"){
-                var exampleId = val.match(/ex\d?(?=\.html)/)[0]
-                return "#!/widgets/?widgetId=" + group + "&ex=" + exampleId
+        showWidgetExs: function(){
+            pagesVM.goWidgetBtnVisible = false
+            pagesVM.backToMenuBtnVisible = true
+
+            prepareExampleDirectory(pagesVM, widgetList, getHashValue("widgetId"))
+        },
+        backToMenu: function(){
+            pagesVM.goWidgetBtnVisible = true
+            pagesVM.backToMenuBtnVisible = false
+
+            prepareWidgetDirectory(pagesVM, widgetList)
+        },
+        searchKey: "",
+        search: function(e){
+            if(e.keyCode === 13){
+                scrollDir(pagesVM.searchKey, pagesVM.directorys.$model)
             }
         },
+        selectSearchKey: function(e){
+            e.target.setSelectionRange(0, this.value.length)
+        },
         directorys: {},
-        currentWidget: "cookie",
-        currentEx: ""
+        currentWidget: "accordion",
+        currentWidgetIntro: "手风琴",
+        currentEx: "",
+
+        goWidgetBtnVisible: false,
+        backToMenuBtnVisible: false
     })
 
     var widgetsVM = avalon.define({
         $id: "widgets",
-        widgetSrc: "cookie/avalon.cookie.doc.html"
+        widgetSrc: "accordion/avalon.accordion.ex1.html"
     })
 
     avalon.state("index", {
@@ -42,6 +60,9 @@ require(["pages/index/widget.list", "ready!", "mmRouter/mmState"], function (wid
             "": {
                 templateUrl: "pages/index/views/widgets/index.html"
             }
+        },
+        onEnter: function(){
+            location.href = "#!/widgets"
         }
     })
     avalon.state("widgets", {
@@ -52,37 +73,159 @@ require(["pages/index/widget.list", "ready!", "mmRouter/mmState"], function (wid
             }
         },
         onBeforeEnter: function() {
+            pagesVM.activeNav = "组件库"
+
             var widgetId = getHashValue("widgetId"),
                 ex = getHashValue("ex")
 
-            if(typeof widgetId !== "undefined"){
-                var obj = {}
-                obj[widgetId] = widgetList.examples[widgetId]
-                pagesVM.directorys = obj
-            } else if(typeof widgetId === "undefined"){
-                pagesVM.directorys = widgetList.widgets
-                widgetId = pagesVM.currentWidget = "cookie"
-            }
-
-            if(typeof ex !== "undefined"){
-                pagesVM.currentEx = "avalon." + widgetId + "." + ex + ".html"
-            } else{
-                pagesVM.currentEx = ""
-            }
-
-            if(typeof ex !== "undefined"){
-                widgetsVM.widgetSrc =  widgetId+ "/avalon." + widgetId + "." + ex + ".html"
-            } else{
-                widgetsVM.widgetSrc =  widgetId+ "/avalon." + widgetId + ".doc.html"
-            }
+            preparePage(widgetId, ex, pagesVM, widgetsVM, widgetList)
         }
     })
+
+    function idToHref(id) {
+        switch (id) {
+            case "ms-checked":
+            case "ms-disabled":
+            case "ms-enabled":
+            case "ms-selected":
+            case "ms-readonly":
+                return "ms-attr"
+            case "ms-href":
+            case "ms-src":
+            case "ms-alt":
+            case "ms-title":
+            case "ms-value":
+                return "string-bindings"
+            case "ms-class":
+            case "ms-hover":
+            case "ms-active":
+                return "ms-class"
+        }
+
+        return id
+    }
+    var apisVM = avalon.define("apis", function(vm) {
+        vm.bindings = ("ms-alt,ms-attr,ms-checked,ms-class,ms-css,ms-data,ms-disabled,ms-duplex,ms-href,ms-html,ms-if,ms-include,ms-on," +
+        "ms-readonly,ms-repeat,ms-selected,ms-src,ms-text,ms-title,ms-value,ms-visible,ms-widget").match(avalon.rword).sort();
+        vm.statics = {
+            "mix(a,b)": "★★★相当于jQuery.extend, 或用于深浅拷贝属性",
+            "log(s)": "打印日志,如avalon.log(a); avalon.log(a, b)",
+            "isFunction(s)": "判定是否为函数,1.3.6新增",
+            "error(s)": "抛出异常",
+            "ui": "用于放置组件",
+            "vmodels": "★★★用于放置avalon.define(id, fn)产生的ViewModel",
+            "noop": "一个空函数",
+            "ready(fn)": "★★★domReady，将回调延迟到DOM树后才执行",
+            "oneObject(str | array, val?)": "★★★如果传入一个字符串则将它以逗号转换为一个字符串数组，否则一定要传字符串数组，第二个参数可选，为生成的对象的值。此方法是用于生成一个键名不一样，但键值都一样的对象。如{a:1, b:1, c:1, d:1}",
+            "type(obj)": "★★★返回传参的数据类型，值可能为array, date, object, json, number, string, null, undefined",
+            "isWindow(obj)": "判定是否为window对象",
+            "isPlainObject(obj)": "判定是否是一个朴素的javascript对象（Object），不是DOM对象，不是BOM对象，不是自定义类的实例",
+            "slice(obj, start?, end?)": "用于转换一个类数组对象为一个纯数组，后面两个为索引值，可以只取原对象的一部分元素",
+            "range(start, end, step)": "生成一个整数数组，功能与underscorejs或python的同名函数一致",
+            "bind(el, type, fn, phase)": "绑定事件，返回一个回调给你自行卸载",
+            "unbind(el, type, fn, phase)": "卸载事件",
+            "each(obj,fn)": "★★★功能同jQuery.each， 都是索引值或键名在前，值或元素在后",
+            "avalon.define(id, factory)": "★★★定义一个ViewModel",
+            "scan(el?, vmodels?, group ?)": "★★★扫描DOM树，抽取绑定(el默认为DOM,vmodels默认为空数组",
+
+            "define(id?, deps?, factory)": "●一个全局方法，用于定义AMD规范的JS模块",
+            "require(deps, callback)": "●一个全局方法，用于加载JS模块",
+            "css(node, name, value?)": "如果只有两个参数，读取元素的某个样式，三个参数时，设置元素某个样式;<br/>" +
+            "在设置样式时,如果是长宽等计量属性,你可以直接传一个数值,框架会自动帮你添加px单位;<br/>" +
+            "如果是取值时,你的第三个参数是true,它会帮你去掉单位,转换为纯数值",
+            "nextTick(fn)": "延迟执行某个函数，类似于setTimeout(fn, 0)",
+            "contains(a, b)": "判定A元素包含B元素",
+            "parseHTML(str)": "将一段字符串转换为文档碎片",
+            "innerHTML(node, str)": "对节点node进行innerHTML操作，在旧式IE下，head, table, td, tr, th等元素的innerHTML是只读，这个方法进行了兼容处理",
+            "clearHTML(node)": "清空元素的所有子节点",
+            "Array.remove(array, el)": "移除某个元素，成功返回true，失败返回false",
+            "Array.removeAt(array, index)": "移除某个位置上的元素，成功返回true，失败返回false",
+            "Array.ensure(array, el)": "只有数组不存在此元素时才添加它",
+            "avalon.filters.uppercase(str)": "全部大写",
+            "avalon.filters.lowercase(str)": "全部小写",
+            "avalon.filters.truncate(str, length, truncation)": "length，新字符串长度，truncation，新字符串的结尾的字段",
+            "avalon.filters.camelize(str)": "驼峰化",
+            "avalon.filters.escape(str)": "将字符串经过 html 转义得到适合在页面中显示的内容, 例如替换 &lt; 为 &amplt;",
+            "avalon.filters.currency(str,symbol)": "货币处理，默认第2个参数为￥",
+            "avalon.filters.number(str, decimals, dec_point, thousands_sep)": "数字格式化<br/>" +
+            "str 必需 要格式化的数字<br/>" +
+            "decimals	可选，规定多少个小数位<br/>" +
+            "dec_point	可选，规定用作小数点的字符串（默认为 . ）<br/>" +
+            "thousands_sep 可选，规定用作千位分隔符的字符串（默认为','）。如果设置了该参数，那么所有其他参数都是必需的"
+
+        }
+        vm.prototypes = {
+            bind: "绑定事件"
+        }
+        vm.callbacks = ["data-callback"]
+        vm.staticMethod = ["static-method"]
+        vm.prototypeMethod = ["prototype-method"]
+        vm.formExamples = ["form-examples"]
+        vm.supportSVG = !!window.SVGElement
+        vm.concepts = [
+            {
+                name: "非监控属性",
+                id: "unobservable"
+            },
+            {
+                name: "监控属性",
+                id: "observable"
+            },
+            {
+                name: "监控数组",
+                id: "collection"
+            },
+            {
+                name: "计算属性",
+                id: "computed"
+            },
+            {
+                name: "$watch方法",
+                id: "$watch"
+            },
+            {
+                name: "$fire方法",
+                id: "$fire"
+            },
+            {
+                name: "视图模型",
+                id: "vmodel"
+            },
+            {
+                name: "数据模型",
+                id: "$model"
+            }]
+        vm.bindingIncludes = []
+        vm.scrollToView = function(id) {
+            id = idToHref(id)
+            var el = document.getElementById(id)
+            if (el) {
+                var top = avalon(el).offset().top - 70
+                avalon(window.parent).scrollTop(top)
+            }
+        }
+        vm.highlight = function() {
+            SyntaxHighlighter.highlight()
+        }
+    })
+    var uniq = {}
+    apisVM.bindings.forEach(function(ID) {
+        var newID = idToHref(ID)
+        if (!uniq[newID]) {
+            apisVM.bindingIncludes.push(newID)
+            uniq[newID] = 1
+        }
+    })
+
     avalon.state("apis", {
         url: "/apis",
         views: {
             "": {
                 templateUrl: "pages/index/views/apis/index.html"
             }
+        },
+        onBeforeEnter: function() {
+            pagesVM.activeNav = "APIs"
         }
     })
     avalon.state("download", {
@@ -91,6 +234,9 @@ require(["pages/index/widget.list", "ready!", "mmRouter/mmState"], function (wid
             "": {
                 templateUrl: "pages/index/views/download/index.html"
             }
+        },
+        onBeforeEnter: function() {
+            pagesVM.activeNav = "下载"
         }
     })
 
@@ -106,4 +252,159 @@ function getHashValue(key, href) {
 
     var matches = href.match(new RegExp(key+'=([^&]*)'));
     return matches ? matches[1] : undefined;
+}
+
+function getWidgetIntro(key, widgets){
+    for(var i in widgets){
+        var widgetsGroup = widgets[i]
+
+        if(typeof widgetsGroup[key] !== "undefined"){
+            return widgetsGroup[key]
+        }
+    }
+}
+
+function getActiveNav(){
+    var activeNav = location.hash.slice(3)
+
+    if(activeNav === "download"){
+        return "下载"
+    } else if(activeNav === "apis"){
+        return "APIs"
+    } else{
+        return "组件库"
+    }
+}
+
+function scrollDir(searchKey, dirs){
+    var GROUP_H = 54,
+        WIDGET_H = 44
+
+    var listWrap = document.getElementById("listWrap"),
+        firstMatchPosition,
+        scrollPosition = 0
+
+    for(var groupKey in dirs){
+        var group = dirs[groupKey]
+
+        scrollPosition += GROUP_H
+
+        for(var widgetKey in group){
+            var findWidget = new RegExp("^" + searchKey + "\w*", 'i').test(widgetKey),
+                findWidgetIntro = group[widgetKey].indexOf(searchKey) !== -1
+
+            scrollPosition += WIDGET_H
+
+            if(findWidget || findWidgetIntro){
+
+                if(typeof firstMatchPosition === "undefined"){
+                    firstMatchPosition = scrollPosition
+                }
+
+                if(listWrap.scrollTop < scrollPosition){
+                    listWrap.scrollTop = scrollPosition
+                    return
+                }
+            }
+        }
+    }
+
+    listWrap.scrollTop = firstMatchPosition
+}
+
+function preparePage(widgetId, ex, pagesVM, widgetsVM, widgetList){
+    var pageStatus = {
+        inWidgetPage: typeof widgetId !== "undefined" && typeof ex === "undefined",
+        inExamplePage: typeof widgetId !== "undefined" && typeof ex !== "undefined",
+        inWidgetIndexPage: typeof widgetId === "undefined"
+    }
+
+    prepareMenuButton()
+    prepareDirectory()
+    prepareCurrentStatus()
+    prepareFrameSrc()
+
+    function prepareMenuButton(){
+        if(pageStatus.inWidgetIndexPage){
+            pagesVM.goWidgetBtnVisible = true
+            pagesVM.backToMenuBtnVisible = false
+        } else{
+            pagesVM.goWidgetBtnVisible = false
+            pagesVM.backToMenuBtnVisible = true
+        }
+    }
+
+    function prepareDirectory(){
+        if(pageStatus.inWidgetIndexPage){
+            prepareWidgetDirectory(pagesVM, widgetList)
+        } else{
+            prepareExampleDirectory(pagesVM, widgetList, widgetId)
+        }
+    }
+
+    function prepareCurrentStatus(){
+        if(pageStatus.inWidgetPage){
+            pagesVM.currentWidget = widgetId
+            pagesVM.currentWidgetIntro = getWidgetIntro(widgetId, widgetList.widgets)
+
+            var exs = widgetList.examples[widgetId],
+                firstEx
+
+            for(var i in exs){
+                firstEx = exs[i]
+                break
+            }
+            pagesVM.currentEx = firstEx
+        } else if(pageStatus.inExamplePage){
+            pagesVM.currentWidget = widgetId
+            pagesVM.currentWidgetIntro = getWidgetIntro(widgetId, widgetList.widgets)
+            pagesVM.currentEx = "avalon." + widgetId + "." + ex + ".html"
+        }
+    }
+
+    function prepareFrameSrc(){
+        if(pageStatus.inWidgetIndexPage){
+            pagesVM.directorys = widgetList.widgets
+        } else if(pageStatus.inWidgetPage){
+            widgetsVM.widgetSrc =  widgetId + "/" + pagesVM.currentEx
+        } else if(pageStatus.inExamplePage){
+            pagesVM.currentEx = "avalon." + widgetId + "." + ex + ".html"
+            widgetsVM.widgetSrc =  widgetId+ "/avalon." + widgetId + "." + ex + ".html"
+        }
+    }
+}
+
+function prepareWidgetDirectory(pagesVM, widgetList){
+    var directoryObj =  avalon.mix(true, {}, widgetList.widgets)
+
+    for(var widgetGroupId in directoryObj){
+        var widgetGroup = directoryObj[widgetGroupId]
+
+        for(var widgetIndex in widgetGroup){
+
+            directoryObj[widgetGroupId][widgetIndex] = {
+                intro: widgetGroup[widgetIndex],
+                href: "#!/widgets/?widgetId=" + widgetIndex
+            }
+        }
+    }
+
+    pagesVM.directorys = directoryObj
+}
+
+function prepareExampleDirectory(pagesVM, widgetList, widgetId){
+    var exampleObj = {},
+        widgetExs = exampleObj[widgetId] = avalon.mix(true, {}, widgetList.examples[widgetId])
+
+    for(var exId in widgetExs){
+        var exampleId = widgetExs[exId].match(/ex\d*(?=\.html)/)[0],
+            exHref = "#!/widgets/?widgetId=" + widgetId + "&ex=" + exampleId
+
+        widgetExs[exId] = {
+            content: widgetExs[exId],
+            href: exHref
+        }
+    }
+
+    pagesVM.directorys = exampleObj
 }

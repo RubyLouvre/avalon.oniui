@@ -1,9 +1,6 @@
 @import "../pages/index/styles/base";
 
 body{
-  background-color: #fff;
-}
-.wrapper{
   position: relative;
   padding: 40px 60px;
   background-color: #fff;
@@ -24,7 +21,7 @@ body{
     font-weight: normal;
   }
 
-  fieldset{
+  p, fieldset{
     position: relative;
     max-width: 100%;
     margin: 80px 0 0;
@@ -40,6 +37,10 @@ body{
       font-size: 18px;
       border-left: 4px $color-theme-blue solid;
     }
+  }
+
+  p{
+    margin: 10px 0;
   }
 
   .table-doc{
@@ -80,4 +81,6 @@ body{
     display: none;
   }
 }
+
+
 

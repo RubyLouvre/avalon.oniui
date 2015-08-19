@@ -1,17 +1,6 @@
 define("exs", function(){
     return {
         widgets: {
-            "功能组件": {
-                "cookie": "cookie工具集",
-                "draggable": "拖拽/可拖动",
-                "lazyload": "懒加载",
-                "mmPromise": "异步列队",
-                "mmRouter": "复选框列表",
-                "position": "定位",
-                "resizable": "伸缩",
-                "store": "本地储存",
-                "validation": "验证"
-            },
             "UI组件": {
                 "accordion": "手风琴",
                 "at": "@组件",
@@ -55,6 +44,17 @@ define("exs", function(){
                 "tree": "树",
                 "tooltip": "气泡提示",
                 "uploader": "图片上传/文件上传"
+            },
+            "功能组件": {
+                "cookie": "cookie工具集",
+                "draggable": "拖拽/可拖动",
+                "lazyload": "懒加载",
+                "mmPromise": "异步列队",
+                "mmRouter": "路由",
+                "position": "定位",
+                "resizable": "伸缩",
+                "store": "本地储存",
+                "validation": "验证"
             }
         },
         examples: {
@@ -405,10 +405,6 @@ define("exs", function(){
                 "自定义列的显示/隐藏": "avalon.smartgrid.ex13.html"
             },
             "store": {
-                "http://www.cnblogs.com/NNUF/archive/2012/06/01/2531436.html": "http://www.cnblogs.com/NNUF/archive/2012/06/01/2531436.html",
-                "http://www.cnblogs.com/zjcn/archive/2012/07/03/2575026.html": "http://www.cnblogs.com/zjcn/archive/2012/07/03/2575026.html",
-                "http://dev-test.nemikor.com/web-storage/support-test/": "http://dev-test.nemikor.com/web-storage/support-test/",
-                "http://arty.name/localstorage.html": "http://arty.name/localstorage.html",
                 "例子1": "avalon.store.ex1.html"
             },
             "tab": {
@@ -423,7 +419,10 @@ define("exs", function(){
                 "使用ms-repeat生成html结构": "avalon.tab.ex8.html",
                 "tab很多以slider形式展示": "avalon.tab.ex9.html"
             },
-            "timer": {},
+            "timer": {
+                "通过鼠标拖动来分别选择dates、hour、minute": "avalon.timer.ex1.html",
+                "通过鼠标滚动来分别选择dates、hour、minute": "avalon.timer.ex2.html"
+            },
             "textbox": {
                 "基本textbox、配置了width、tabIndex的textbox以及配置了disabledClass的textbox": "avalon.textbox.ex1.html",
                 "拥有占位符的textbox": "avalon.textbox.ex2.html",

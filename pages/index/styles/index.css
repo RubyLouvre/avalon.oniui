@@ -79,6 +79,118 @@ h1, h2, h3, h4, h5 {
   vertical-align: middle;
   background: url("/static/image/app_sprite.png") 0 0 no-repeat; }
 
+@font-face {
+  font-family: 'iconfont';
+  src: url("../fonts/iconfont.eot");
+  /* IE9*/
+  src: url("../fonts/iconfont.eot?#iefix") format("embedded-opentype"), url("../fonts/iconfont.woff") format("woff"), url("../fonts/iconfont.ttf") format("truetype"), url("../fonts/iconfont.svg#uxiconfont") format("svg");
+  /* iOS 4.1- */ }
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale; }
+
+/*
+* reset
+*
+*/
+html, body, div, p, ul, li, h1, h2, h3, h4, h5 {
+  margin: 0;
+  padding: 0; }
+
+html {
+  height: 100%; }
+
+body {
+  position: relative;
+  height: 100%;
+  color: #212121;
+  font-size: 14px;
+  font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif; }
+
+ul, ol {
+  list-style: none; }
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: #212121; }
+
+h1, h2, h3, h4, h5 {
+  color: #212121;
+  font-size: 16px; }
+
+/*
+* custom classes
+*
+*/
+.hidden {
+  display: none; }
+
+.overdot {
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  zoom: 1;
+  *display: inline;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  overflow: hidden; }
+
+/*
+* components
+*
+*/
+.more-button {
+  display: block;
+  width: 260px;
+  margin: 15px auto 0;
+  padding: 8px 0;
+  background-color: #fff;
+  text-align: center;
+  border: 1px #c8c8c8 solid; }
+
+.icon {
+  display: inline-block;
+  vertical-align: middle;
+  background: url("/static/image/app_sprite.png") 0 0 no-repeat; }
+
+.oni-layout-download {
+  margin-left: 276px;
+  font-size: 16px; }
+  .oni-layout-download .wrap {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    margin: 0 30px 0 0;
+    padding: 20px 25px;
+    border: 1px #e5e9f2 solid;
+    border-radius: 3px; }
+    .oni-layout-download .wrap .avatar {
+      float: left; }
+    .oni-layout-download .wrap .intro-wrap {
+      margin: 0 0 0 90px; }
+    .oni-layout-download .wrap .link {
+      display: -moz-inline-stack;
+      display: inline-block;
+      vertical-align: middle;
+      *vertical-align: auto;
+      zoom: 1;
+      *display: inline;
+      margin: 6px 0 0;
+      padding: 5px 15px;
+      border-radius: 5px;
+      background-color: #2eb5f9;
+      color: #fff; }
+
 body {
   background-color: #f9fafe; }
 
@@ -104,7 +216,7 @@ body {
       zoom: 1;
       *display: inline; }
       .l-header .container .nav .nav-list {
-        margin: -5px 0 0 170px; }
+        margin: -5px 0 0 140px; }
         .l-header .container .nav .nav-list .nav-item {
           display: -moz-inline-stack;
           display: inline-block;
@@ -130,15 +242,6 @@ body {
         .l-header .container .nav .nav-list .active .nav-link {
           background-color: #1489e6; }
 
-.l-aside {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 276px;
-  float: left;
-  border-right: 1px #e5e9f2 solid; }
-
 .oni-layout-search-bar {
   border-bottom: 1px #e5e9f2 solid; }
   .oni-layout-search-bar .search-section {
@@ -146,19 +249,19 @@ body {
     padding: 10px 0px;
     border-right: 1px #e5e9f2 solid; }
     .oni-layout-search-bar .search-section .search-wrap {
-      margin: 0 12px;
+      margin: 0 13px;
       border: 1px #e5e9f2 solid;
       background-color: #fff;
       font-size: 0; }
       .oni-layout-search-bar .search-section .search-wrap .search-input {
-        width: 215px;
+        width: 212px;
         padding: 0 0 0 10px;
         line-height: 30px;
         vertical-align: middle;
         font-size: 14px;
         border: none;
         outline: none; }
-      .oni-layout-search-bar .search-section .search-wrap .search-button {
+      .oni-layout-search-bar .search-section .search-wrap .icon-search {
         display: -moz-inline-stack;
         display: inline-block;
         vertical-align: middle;
@@ -169,7 +272,8 @@ body {
         height: 30px;
         line-height: 30px;
         text-align: center;
-        font-size: 16px;
+        font-size: 18px;
+        color: #2a2d33;
         cursor: pointer; }
 
 .oni-layout-main-container {
@@ -178,6 +282,14 @@ body {
   left: 0;
   right: 0;
   bottom: 0; }
+  .oni-layout-main-container .aside {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 276px;
+    float: left;
+    border-right: 1px #e5e9f2 solid; }
 
 .list-wrap {
   position: absolute;
@@ -185,13 +297,42 @@ body {
   left: 0;
   bottom: 0;
   width: 277px;
-  overflow: auto; }
+  overflow: auto;
+  font-size: 16px; }
+  .list-wrap .list-item {
+    padding: 10px 12px;
+    cursor: pointer; }
+    .list-wrap .list-item:hover {
+      background-color: #1489e6;
+      color: #fff; }
+      .list-wrap .list-item:hover .iconfont {
+        color: #fff; }
+  .list-wrap .icon-arrow {
+    height: 45px;
+    line-height: 45px;
+    font-size: 20px;
+    color: #5c5f67; }
+  .list-wrap .backto-menu {
+    position: relative;
+    padding-left: 30px;
+    border-bottom: 1px #e5e9f2 solid; }
+    .list-wrap .backto-menu .icon-arrow {
+      position: absolute;
+      left: 5px;
+      top: 0; }
+  .list-wrap .current-widget {
+    position: relative;
+    border-bottom: 1px #e5e9f2 solid; }
+    .list-wrap .current-widget .icon-arrow {
+      position: absolute;
+      right: 2px;
+      top: 0;
+      color: #5c5f67; }
   .list-wrap .list-name {
     margin: 20px 12px; }
   .list-wrap .list {
     margin: -10px 0 30px;
-    overflow: hidden;
-    font-size: 16px; }
+    overflow: hidden; }
     .list-wrap .list > li > a {
       display: -moz-inline-stack;
       display: inline-block;
@@ -199,11 +340,7 @@ body {
       *vertical-align: auto;
       zoom: 1;
       *display: inline;
-      width: 90%;
-      padding: 10px 12px; }
-      .list-wrap .list > li > a:hover {
-        background-color: #1489e6;
-        color: #fff; }
+      width: 247px; }
     .list-wrap .list > li .active-dir {
       background-color: #1489e6;
       color: #fff; }

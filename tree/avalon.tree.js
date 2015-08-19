@@ -374,7 +374,18 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
             vm.$remove = function() {
                 element.innerHTML = element.textContent = ""
                 cache = null
-                vm._select = null
+                var i = 0
+                vm.children.clear()
+                vm._select.clear()
+                // 从数组中移除，防止内存泄露
+                while(disabelSelectArr[i]) {
+                    if(disabelSelectArr[i] === element) {
+                        disabelSelectArr.splice(i, 0)
+                        break
+                    }
+                    i++
+                }
+                vm.rootElement = element = null
             }
             vm.computeIconClass = function(leaf) {
                 return (leaf.iconSkin ? leaf.iconSkin + "_" : "") + "ico_" + (leaf.isParent ? vm.hasClassOpen(leaf, "ignoreNoline") ? "open" : "close" : "docu")

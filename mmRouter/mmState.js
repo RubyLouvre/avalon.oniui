@@ -41,7 +41,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
         var from = mmState.currentState, 
             to = StateModel.is(toName) ? toName : getStateByName(toName), 
             params = params || {}
-        params = avalon.mix(true, {}, to.params, params)
+        var params = avalon.mix(true, {}, to.params, params)
         if (to) {
             mmState.transitionTo(from, to, params, options)
         }
@@ -61,6 +61,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
                 node = nodes[i]
             node.parentNode && node.parentNode.removeChild(node)
             nodes.splice(i, 1)
+            node = null
         }
     }
     Event.$watch("onAbort", removeOld)
@@ -71,6 +72,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
         oldNodes: [],
         query: {}, // 从属于currentState
         popOne: function(chain, params, callback, notConfirmed) {
+            if(mmState._toParams !== params) return callback(false, {type: "abort"})
             var cur = chain.pop(), me = this
             if(!cur) return callback()
             // 阻止退出
@@ -89,9 +91,11 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
             if(!cur._pending && cur.done) cur.done(success)
         },
         pushOne: function(chain, params, callback, _local, toLocals) {
+            if(mmState._toParams !== params) return callback(false, {type: "abort"})
             var cur = chain.shift(), me = this
             // 退出
             if(!cur) {
+                chain = null
                 return callback()
             }
             cur.syncParams(params)
@@ -101,7 +105,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
                 cur.syncParams(cur.oldParams)
                 return callback(false)
             }
-            _local = inherit(_local)
+            var _local = inherit(_local)
             me.activeState = cur // 更新当前实际处于的状态
             cur.done = function(success) {
                 // 防止async处触发已经销毁的done
@@ -117,7 +121,6 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
                 }
                 var resolved = cur.callback.apply(cur, [params, _local])
                 resolved.$then(function(res) {
-                    var a = resolved
                     // sync params to oldParams
                     avalon.mix(true, cur.oldParams, cur.params)
                     // 继续状态链
@@ -145,7 +148,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
                 fromState = this.activeState // 更新实际的fromState
                 fromAbort = true
             }
-
+            mmState.oldNodes = []
             var info = avalon.router.urlFormate(toState.url, toParams, toParams.query),
                 me = this,
                 options = options || {},
@@ -180,6 +183,8 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
                     if(over) return
                     over = true
                     me.currentState = me.activeState
+                    enterChain = exitChain = commonLocal = _local = toParams= null
+                    mmState.oldNodes = []
                     if(success !== false) {
                         mmState.lastLocal = mmState.currentState._local
                         _root.fire("updateview", me.currentState, changeType)
@@ -220,6 +225,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
             callStateFunc("onUnload", this, fromState, toState)
             this.currentState = toState
             this.prevState = fromState
+            mmState._toParams = toParams
             if(info && avalon.history) avalon.history.updateLocation(info.path + info.query, avalon.mix({}, options, {silent: true}), !fromState && location.hash)
             callStateFunc("onBegin", this, fromState, toState)
             this.popOne(exitChain, toParams, function(success) {
@@ -255,7 +261,6 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
         }
         return fragment
     }
-    window.loadCache = loadCache
     function setCache(name, element) {
         var fragment = document.createDocumentFragment(),
             divPlaceHolder = document.getElementById(name),
@@ -322,7 +327,10 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
         par.insertBefore(comment, element)
         function update(firsttime, currentState, changeType) {
             // node removed, remove callback
-            if(!document.contains(comment)) return !"delete from watch"
+            if(!document.contains(comment)) {
+                data = vmodels = element = par = comment = $element = oldElement = update = null
+                return !"delete from watch"
+            }
             var definedParentStateName = $element.data("statename") || "",
                 parentState = getStateByName(definedParentStateName) || _root,
                 _local
@@ -578,6 +586,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
                     avalon.each(_callbacks, function(i, func) {
                         func()
                     })
+                    promises = _data = _callbacks = null
                     _resovle()
                 })
             })
@@ -683,8 +692,11 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
                 this.views = {}
                 this.views[viewname] = view
             }
-            var views = {}
-            avalon.each(this.views, function(name, view) {
+            var views = {},
+                viewsIsArray = this.views instanceof Array // 如果是一个数组
+            
+            avalon.each(this.views, function(maybeName, view) {
+                var name = viewsIsArray ? view.name || "" : maybeName // 默认缺省
                 if (name.indexOf("@") < 0) {
                     name += "@" + (parent ? parent.stateName || "" : "")
                 }
@@ -1006,5 +1018,4 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
                     reject(reason)
                 })
     }
-    window._states = _states
 })

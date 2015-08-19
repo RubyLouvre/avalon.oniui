@@ -37,7 +37,8 @@ define(["./avalon.suggest", "text!./avalon.textbox.html","css!../chameleon/oniui
                     focus : options.suggestFocus || false ,
                     onChange : options.suggestOnChange || "",
                     type: "textbox",
-                    limit: options.limit || 8
+                    limit: options.limit || 8,
+                    disableLetter:options.suggestDisableLetter || false
                 }
             $suggestopts = avalon.mix(suggestConfig, options.suggestion)
             options.$suggestopts = $suggestopts;

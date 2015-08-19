@@ -169,7 +169,8 @@ body {
         height: 30px;
         line-height: 30px;
         text-align: center;
-        font-size: 16px; }
+        font-size: 16px;
+        cursor: pointer; }
 
 .oni-layout-main-container {
   position: absolute;

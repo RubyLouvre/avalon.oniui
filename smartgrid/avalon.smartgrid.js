@@ -428,8 +428,7 @@ define(["avalon",
 
                 for(var i = 0, len = cols.length; i < len; i++){
                     var col = cols[i]
-
-                    if(col.originalWidth.indexOf("%") !== -1){
+                    if( String(col.originalWidth).indexOf("%") !== -1){
                         col.width = Math.floor((parentWidth * parseInt(col.originalWidth, 10)) / 100) -1
                     }
                 }

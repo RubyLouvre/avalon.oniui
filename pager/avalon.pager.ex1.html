@@ -15,6 +15,9 @@
               
                 avalon.define("test", function(vm) {
                     vm.pager = {
+                        onInit: function(){
+                            avalon.log("--onInit--")
+                        },
                         currentPage: 8,
                         totalItems: 1436,
                         showJumper: true

@@ -792,7 +792,7 @@ define(["../avalon.getModel",
                 if(options.type==="range") {
                     return ;
                 }
-                if(!calendar.contains(target) && !tipContainer.contains(target) && vmodel.toggle && !vmodel.timer) {
+                if(!calendar.contains(target) && !tipContainer.contains(target) && vmodel.toggle) {
                     vmodel.toggle = false;
                     return ;
                 } else if(!vmodel.toggle && !vmodel.disabled && tipContainer.contains(target)){

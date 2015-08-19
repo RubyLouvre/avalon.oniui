@@ -348,8 +348,9 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
             vm.widgetElement = element
             vm.widgetElement.innerHTML = vm.template
             vm.rootElement = element.getElementsByTagName("*")[0]
-            vm.$skipArray = ["widgetElement", "template", "callback", "rootElement"]
+            vm.$skipArray = ["widgetElement", "template", "callback", "rootElement", "_select"]
             vm._select = []
+            vm.selectIDS = []
 
             var inited
             vm.$init = function(continueScan) {
@@ -376,7 +377,8 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
                 cache = null
                 var i = 0
                 vm.children.clear()
-                vm._select.clear()
+                vm.selectIDS.clear()
+                vm._select = null
                 // 从数组中移除，防止内存泄露
                 while(disabelSelectArr[i]) {
                     if(disabelSelectArr[i] === element) {
@@ -798,6 +800,8 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
              * @param {Array} 指定用来重置的数据，为空表示用第一次初始化时候的数据来重置
              */
             vm.reset = function(children) {
+                vm._select = []
+                vm.selectIDS = []
                 vm.children.clear()
                 vm.addNodes(undefine, children || dataBak)
             }
@@ -868,8 +872,8 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
 
             //选中相关，可能是一个性能瓶颈，之后可以作为优化的点
             vm.hasClassSelect = function(leaf) {
-                for(var i = 0, len = vm._select.length; i < len; i++) {
-                    if(vm._select[i].$id === leaf.$id) return i + 1
+                for(var i = 0, len = vm.selectIDS.length; i < len; i++) {
+                    if(vm.selectIDS[i] === leaf.$id) return i + 1
                 }
                 return 0
             }
@@ -898,18 +902,20 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
                 if(!leaf.url) event.preventDefault && event.preventDefault()
                 if(all) {
                     var _s = vm._select,
+                        sids = vm.selectIDS,
                         info = vm._getSelectIDs(leaf),
                         total = count = info.total,
                         dict = info.dict
                     // 删除优化
-                    if(total > 1) _s.$unwatch()
+                    if(total > 1) sids.$unwatch()
                     for(var i = 0; i < _s.length; i++) {
                         var k = _s[i]
                         if(dict[k.$id]) {
                             _s.splice(i, 1)
+                            sids.splice(i, 1)
                             i--
                             count--
-                            if(count == 1 && total > 1) _s.$watch()
+                            if(count == 1 && total > 1) sids.$watch()
                         }
                     }
                     res = dict = null
@@ -917,11 +923,14 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
                     var id = leaf.$id, index = vm.hasClassSelect(leaf)
                     if(index) {
                         vm._select.splice(index - 1, 1)
+                        vm.selectIDS.splice(index - 1, 1)
                     } else {
                         if(vm.ctrlCMD(event, leaf)) {
                             vm._select.push(leaf)
+                            vm.selectIDS.push(leaf.$id)
                         } else {
                             vm._select = [leaf]
+                            vm.selectIDS = [leaf.$id]
                         }
                     }
                 }
@@ -934,8 +943,14 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
              */
             vm.selectNode = function(leaf, appendOrReplace) {
                 if(vm.view.selectedMulti === false) appendOrReplace = false
-                if(appendOrReplace) vm._select.push(leaf)
-                else vm._select = [leaf]
+                if(appendOrReplace) {
+                    vm._select.push(leaf)
+                    vm.selectIDS.push(leaf.$id)
+                }
+                else {
+                    vm._select = [leaf]
+                    vm.selectIDS = [leaf.$id]
+                }
             }
 
             /**
@@ -960,7 +975,13 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
              * @param {object} 指定的节点，为空的时候表示取消所有
              */
             vm.cancelSelectedNode = function(leaf) {
-                vm._select.remove(leaf)
+                for(var i = 0, len = vm._select.length; i < len; i++) {
+                    if(vm._select[i] === leaf) {
+                        vm._select.splice(i, 1)
+                        break
+                    }
+                }
+                vm.selectIDS.remove(leaf.$id)
             }
 
             /**
@@ -970,13 +991,15 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
             vm.cancelSelectedChildren = function(arg) {
                 if(!leaf) {
                     // clear all
-                    vm._select.clear()
+                    vm._select = []
+                    vm.selectIDS.clear()
                 } else {
                     vm.selectFun(arg, "all")
                 }
             }
 
             vm.ctrlCMD = function(event, leaf) {
+                if(event.ctrlKey) event.preventDefault()
                 return event.ctrlKey && vm.optionToBoolen(vm.view.selectedMulti, leaf, event)
             }
 

@@ -9,7 +9,7 @@ body{
 * layout
 *
 */
-.l-header{
+.oni-layout-header{
   background-color: $color-header-bg;
   color: #fff;
   min-width: 980px;
@@ -106,97 +106,226 @@ body{
     left: 0;
     bottom: 0;
     width: 276px;
-    float: left;
     border-right: 1px $color-border-grey solid;
-  }
-}
+    font-size: 16px;
+    overflow: auto;
 
+    .list {
+      margin: -10px 0 30px;
+      overflow: hidden;
+    }
+    .list-name{
+      margin: 20px 12px;
+    }
+    .list-item{
+      .list-item-link{
+        @include inline-block;
+        padding: 0 12px;
+        width: 235px;
+        height: 44px;
+        line-height: 44px;
+        cursor: pointer;
+      }
+    }
 
-.list-wrap{
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 277px;
-  overflow: auto;
-  font-size: 16px;
-
-  .list-item{
-    padding: 10px 12px;
-    cursor: pointer;
-
-    &:hover{
+    .active-dir, .list-item:hover{
       background-color: $color-theme-blue;
       color: #fff;
+
+      >a{
+        color: #fff;
+      }
 
       .iconfont{
         color: #fff;
       }
     }
-  }
-
-  .icon-arrow{
-    height: 45px;
-    line-height: 45px;
-    font-size: 20px;
-    color: #5c5f67;
-  }
-
-  .backto-menu{
-    position: relative;
-    padding-left: 30px;
-    border-bottom: 1px $color-border-grey solid;
 
     .icon-arrow{
-      position: absolute;
-      left: 5px;
-      top: 0;
-    }
-  }
-
-  .current-widget{
-    position: relative;
-    border-bottom: 1px $color-border-grey solid;
-
-    .icon-arrow{
-      position: absolute;
-      right: 2px;
-      top: 0;
+      height: 45px;
+      line-height: 45px;
+      font-size: 20px;
       color: #5c5f67;
     }
-  }
 
-  .list-name{
-    margin: 20px 12px;
-  }
-  .list{
-    margin: -10px 0 30px;
-    overflow: hidden;
+    .backto-menu{
+      position: relative;
+      max-width: 100%;
+      padding-left: 30px;
+      overflow: hidden;
+      border-bottom: 1px $color-border-grey solid;
 
-    >li{
-      >a{
-        @include inline-block;
-        width: 247px;
-      }
-      .active-dir{
-        background-color: $color-theme-blue;
-        color: #fff;
+      .icon-arrow{
+        position: absolute;
+        left: 5px;
+        top: 0;
       }
     }
+
+    .current-widget{
+      position: relative;
+      border-bottom: 1px $color-border-grey solid;
+
+      .icon-arrow{
+        position: absolute;
+        right: 2px;
+        top: 0;
+        color: #5c5f67;
+      }
+    }
+
   }
 }
 
-.l-main{
+.oni-layout-main{
   position: absolute;
   left: 277px;
   right: 0;
   top: 0;
   bottom: 0;
   overflow: hidden;
-}
 
-.oniui-content, iframe{
-  width: 100%;
-  height: 100%;
-  border: 0 none;
+  iframe{
+    width: 100%;
+    height: 100%;
+    border: 0 none;
+  }
+
+  .api-content-wrap{
+    height: 100%;
+    overflow: auto;
+    background-color: #fff;
+
+    .api-content{
+      position: relative;
+      padding: 40px 60px;
+
+      &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-width: 12px;
+        border-color: $color-theme-blue transparent transparent $color-theme-blue;
+        border-style: solid;
+      }
+
+      p, fieldset{
+        position: relative;
+        max-width: 100%;
+        margin: 80px 0 0;
+        padding: 30px;
+        background-color: #f9fafe;
+        border: 1px $color-border-grey solid;
+
+        >legend{
+          position: absolute;
+          top: -50px;
+          left: 0;
+          padding: 0 0 0 10px;
+          font-size: 18px;
+          border-left: 4px $color-theme-blue solid;
+        }
+      }
+
+      p{
+        margin: 10px 0;
+      }
+
+      .table-doc{
+        width: 100%;
+        margin: 0 0 30px;
+        border: 1px $color-border-grey solid;
+        border-collapse: collapse;
+        background-color: #fff;
+
+        th,td{
+          padding: 20px;
+          border: 1px $color-border-grey solid;
+          word-break: break-all;
+        }
+
+        th{
+          font-weight: normal;
+          background-color: #2c2f34;
+          color: #fff
+        }
+
+        td{
+          border-width: 1px 0;
+          vertical-align: top;
+        }
+      }
+
+      dt{
+        margin: 40px 0 0;
+        padding: 0 0 0 10px;
+        font-size: 18px;
+        border-left: 4px $color-theme-blue solid;
+      }
+      dd, blockquote{
+        margin: 10px 0;
+        padding: 30px;
+        background-color: #f9fafe;
+        border: 1px $color-border-grey solid;
+      }
+      ul, ol{
+        >li{
+          background-color: #fff;
+          border: 1px $color-border-grey solid;
+          padding: 5px;
+          margin: 5px 0;
+        }
+      }
+
+      a{
+        color: $color-theme-blue;
+      }
+
+      button{
+        @include inline-block;
+        height: 32px;
+        line-height: 30px;
+        padding: 0px 15px;
+        border: 1px #aaa solid;
+        font-size: 14px;
+        border-radius: 3px;
+        color: #555;
+        background-color: #fff;
+        outline: none;
+        cursor: pointer;
+
+        &:hover{
+          color: #111;
+          border-color: #666;
+        }
+      }
+
+      input{
+        @include inline-block;
+        height: 32px;
+        padding: 0 5px;
+        line-height: 30px;
+        border: 1px #aaa solid;
+        font-size: 14px;
+        outline: none;
+        border-radius: 3px;
+        color: #555;
+        background-color: #fff;
+
+        &[disabled], &[readonly]{
+          background-color: #ccc;
+        }
+        &[type="submit"]{
+          padding: 0px 15px;
+          cursor: pointer;
+
+          &:hover{
+            color: #111;
+            border-color: #666;
+          }
+        }
+      }
+    }
+  }
 }

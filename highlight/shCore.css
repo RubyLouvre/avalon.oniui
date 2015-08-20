@@ -197,15 +197,6 @@
 	padding-left: 20px !important;
 }
 
-.syntaxhighlighter .toolbar .item.viewSource
-{
-	background-image: url(page_white_code.png) !important;
-}
-
-.syntaxhighlighter .toolbar .item.printSource
-{
-	background-image: url(printer.png) !important;
-}
 
 .syntaxhighlighter .toolbar .item.copyToClipboard
 {
@@ -214,10 +205,6 @@
 	overflow: visible !important;
 }
 
-.syntaxhighlighter .toolbar .item.about
-{
-	background-image: url(help.png) !important;
-}
 
 /** 
  * Print view.

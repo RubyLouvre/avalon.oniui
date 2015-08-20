@@ -33,12 +33,23 @@ require(["pages/index/widget.list", "mmRouter/mmState", "ready!"], function (wid
         },
         searchKey: "",
         search: function(e){
-            if(e.keyCode === 13){
-                scrollDir(pagesVM.searchKey, pagesVM.directorys.$model)
+            if(e.keyCode === 13 || e.type === "click"){
+
+                if(pagesVM.activeNav === "组件库"){
+                    pagesVM.backToMenu()
+                    scrollDir("widgets", pagesVM.searchKey, pagesVM.directorys.$model)
+                } else{
+                    scrollDir("apis", pagesVM.searchKey, pagesVM.directorys.$model)
+                }
+
             }
         },
         selectSearchKey: function(e){
             e.target.setSelectionRange(0, this.value.length)
+        },
+        getDocHref: function(){
+            var widgetId = getHashValue("widgetId")
+            return "#!/widgets/?widgetId=" + widgetId + "&ex=doc"
         },
         directorys: {},
         currentWidget: "accordion",
@@ -46,7 +57,11 @@ require(["pages/index/widget.list", "mmRouter/mmState", "ready!"], function (wid
         currentEx: "",
 
         goWidgetBtnVisible: false,
-        backToMenuBtnVisible: false
+        backToMenuBtnVisible: true,
+
+        listSrc: "pages/index/views/widgets/list.html",
+
+        currentAnchor: "非监控属性"
     })
 
     var widgetsVM = avalon.define({
@@ -82,32 +97,62 @@ require(["pages/index/widget.list", "mmRouter/mmState", "ready!"], function (wid
         }
     })
 
-    function idToHref(id) {
-        switch (id) {
-            case "ms-checked":
-            case "ms-disabled":
-            case "ms-enabled":
-            case "ms-selected":
-            case "ms-readonly":
-                return "ms-attr"
-            case "ms-href":
-            case "ms-src":
-            case "ms-alt":
-            case "ms-title":
-            case "ms-value":
-                return "string-bindings"
-            case "ms-class":
-            case "ms-hover":
-            case "ms-active":
-                return "ms-class"
+    var apis = {
+        "核心概念": {
+            "非监控属性": "concepts/unobservable.html",
+            "监控属性": "concepts/observable.html",
+            "监控数组": "concepts/collection.html",
+            "计算属性": "concepts/computed.html",
+            "watch方法": "concepts/$watch.html",
+            "fire方法": "concepts/$fire.html",
+            "视图模型": "concepts/vmodel.html",
+            "数据模型": "concepts/$model.html"
+        },
+        "bindings": {
+            "ms-alt": "bindings/string-bindings.html",
+            "ms-attr": "bindings/ms-attr.html",
+            "ms-checked": "bindings/ms-attr.html",
+            "ms-class": "bindings/ms-class.html",
+            "ms-css": "bindings/ms-css.html",
+            "ms-data": "bindings/ms-data.html",
+            "ms-disabled": "bindings/ms-attr.html",
+            "ms-duplex": "bindings/ms-duplex.html",
+            "ms-href": "bindings/string-bindings.html",
+            "ms-html": "bindings/ms-html.html",
+            "ms-if": "bindings/ms-if.html",
+            "ms-include": "bindings/ms-include.html",
+            "ms-on": "bindings/ms-on.html",
+            "ms-readonly": "bindings/ms-attr.html",
+            "ms-repeat": "bindings/ms-repeat.html",
+            "ms-selected": "bindings/ms-attr.html",
+            "ms-src": "bindings/string-bindings.html",
+            "ms-text": "bindings/ms-text.html",
+            "ms-title": "bindings/string-bindings.html",
+            "ms-value": "bindings/string-bindings.html",
+            "ms-visible": "bindings/ms-visible.html",
+            "ms-widget": "bindings/ms-widget.html"
+        },
+        "回调方法": {
+            "data-callback": "callbacks/data-callback.html"
+        },
+        "静态方法": {
+            "statics": "statics/statics.html"
+        },
+        "原型方法": {
+            "prototypes": "prototypes/prototypes.html"
+        },
+        "表单示例": {
+            "form": "form/index.html"
         }
-
-        return id
     }
-    var apisVM = avalon.define("apis", function(vm) {
-        vm.bindings = ("ms-alt,ms-attr,ms-checked,ms-class,ms-css,ms-data,ms-disabled,ms-duplex,ms-href,ms-html,ms-if,ms-include,ms-on," +
-        "ms-readonly,ms-repeat,ms-selected,ms-src,ms-text,ms-title,ms-value,ms-visible,ms-widget").match(avalon.rword).sort();
-        vm.statics = {
+
+    var apisVM = avalon.define({
+        $id: "apis",
+        apiSrc: "",
+        highlight: function() {
+            SyntaxHighlighter.highlight()
+        },
+        statics: {
             "mix(a,b)": "★★★相当于jQuery.extend, 或用于深浅拷贝属性",
             "log(s)": "打印日志,如avalon.log(a); avalon.log(a, b)",
             "isFunction(s)": "判定是否为函数,1.3.6新增",
@@ -152,68 +197,6 @@ require(["pages/index/widget.list", "mmRouter/mmState", "ready!"], function (wid
             "decimals	可选，规定多少个小数位<br/>" +
             "dec_point	可选，规定用作小数点的字符串（默认为 . ）<br/>" +
             "thousands_sep 可选，规定用作千位分隔符的字符串（默认为','）。如果设置了该参数，那么所有其他参数都是必需的"
-
-        }
-        vm.prototypes = {
-            bind: "绑定事件"
-        }
-        vm.callbacks = ["data-callback"]
-        vm.staticMethod = ["static-method"]
-        vm.prototypeMethod = ["prototype-method"]
-        vm.formExamples = ["form-examples"]
-        vm.supportSVG = !!window.SVGElement
-        vm.concepts = [
-            {
-                name: "非监控属性",
-                id: "unobservable"
-            },
-            {
-                name: "监控属性",
-                id: "observable"
-            },
-            {
-                name: "监控数组",
-                id: "collection"
-            },
-            {
-                name: "计算属性",
-                id: "computed"
-            },
-            {
-                name: "$watch方法",
-                id: "$watch"
-            },
-            {
-                name: "$fire方法",
-                id: "$fire"
-            },
-            {
-                name: "视图模型",
-                id: "vmodel"
-            },
-            {
-                name: "数据模型",
-                id: "$model"
-            }]
-        vm.bindingIncludes = []
-        vm.scrollToView = function(id) {
-            id = idToHref(id)
-            var el = document.getElementById(id)
-            if (el) {
-                var top = avalon(el).offset().top - 70
-                avalon(window.parent).scrollTop(top)
-            }
-        }
-        vm.highlight = function() {
-            SyntaxHighlighter.highlight()
-        }
-    })
-    var uniq = {}
-    apisVM.bindings.forEach(function(ID) {
-        var newID = idToHref(ID)
-        if (!uniq[newID]) {
-            apisVM.bindingIncludes.push(newID)
-            uniq[newID] = 1
         }
     })
 
@@ -225,9 +208,61 @@ require(["pages/index/widget.list", "mmRouter/mmState", "ready!"], function (wid
             }
         },
         onBeforeEnter: function() {
+            var currentApi = getHashValue("api"), currentApiSrc
+            var firstApi
+
+            for(var i in apis){
+                for(var j in apis[i]){
+                    firstApi = apis[i][j]
+                    break
+                }
+                break
+            }
+
+            // 找crrentAPI对应的链接
+            for(var i in apis){
+                for(var j in apis[i]){
+                    if(j === currentApi){
+                        currentApiSrc = apis[i][j]
+                        break
+                    }
+                }
+            }
+
             pagesVM.activeNav = "APIs"
+            pagesVM.listSrc = "pages/index/views/apis/list.html"
+
+            if(typeof currentApi !== "undefined"){
+                apisVM.apiSrc =  "pages/index/views/apis/" + currentApiSrc
+            } else{
+                apisVM.apiSrc =  "pages/index/views/apis/" + firstApi
+            }
+
+            // 添加href
+            var apisObj = avalon.mix(true, {}, apis)
+
+            for(var groupIndex in apisObj){
+                var apiGroup = apisObj[groupIndex]
+
+                for(var apiIndex in apiGroup){
+                    apiGroup[apiIndex] = {
+                        content: apiGroup[apiIndex],
+                        href: "#!/apis?api=" + apiIndex
+                    }
+                }
+            }
+
+            // 确定active anchor
+            if(typeof currentApi !== "undefined"){
+                pagesVM.currentAnchor = currentApi
+            } else{
+                pagesVM.currentAnchor = "非监控属性"
+            }
+
+            pagesVM.directorys = apisObj
         }
     })
+
     avalon.state("download", {
         url: "/download",
         views: {
@@ -243,6 +278,7 @@ require(["pages/index/widget.list", "mmRouter/mmState", "ready!"], function (wid
     avalon.history.start({
         basepath: "/mmRouter"
     })
+
     avalon.scan();
 
 });
@@ -251,7 +287,10 @@ function getHashValue(key, href) {
     href = href || location.hash
 
     var matches = href.match(new RegExp(key+'=([^&]*)'));
-    return matches ? matches[1] : undefined;
+
+    if(matches){
+        return decodeURI(matches[1])
+    }
 }
 
 function getWidgetIntro(key, widgets){
@@ -276,13 +315,17 @@ function getActiveNav(){
     }
 }
 
-function scrollDir(searchKey, dirs){
+function scrollDir(type, searchKey, dirs){
     var GROUP_H = 54,
         WIDGET_H = 44
 
     var listWrap = document.getElementById("listWrap"),
-        firstMatchPosition,
+        firstMatchPosition, matchPattern,
         scrollPosition = 0
+
+    if(type === "apis"){
+        scrollPosition -= WIDGET_H
+    }
 
     for(var groupKey in dirs){
         var group = dirs[groupKey]
@@ -290,12 +333,21 @@ function scrollDir(searchKey, dirs){
         scrollPosition += GROUP_H
 
         for(var widgetKey in group){
-            var findWidget = new RegExp("^" + searchKey + "\w*", 'i').test(widgetKey),
-                findWidgetIntro = group[widgetKey].indexOf(searchKey) !== -1
 
             scrollPosition += WIDGET_H
 
-            if(findWidget || findWidgetIntro){
+            var matchPattern
+
+            if(type === "widgets"){
+                var findWidget = new RegExp("^" + searchKey + "\w*", 'i').test(widgetKey),
+                    findWidgetIntro = group[widgetKey].intro.indexOf(searchKey) !== -1
+
+                matchPattern = findWidget || findWidgetIntro
+            } else if(type === "apis"){
+                matchPattern = widgetKey.indexOf(searchKey) !== -1
+            }
+
+            if(matchPattern){
 
                 if(typeof firstMatchPosition === "undefined"){
                     firstMatchPosition = scrollPosition
@@ -335,6 +387,8 @@ function preparePage(widgetId, ex, pagesVM, widgetsVM, widgetList){
     }
 
     function prepareDirectory(){
+        pagesVM.listSrc = "pages/index/views/widgets/list.html"
+
         if(pageStatus.inWidgetIndexPage){
             prepareWidgetDirectory(pagesVM, widgetList)
         } else{
@@ -343,7 +397,10 @@ function preparePage(widgetId, ex, pagesVM, widgetsVM, widgetList){
     }
 
     function prepareCurrentStatus(){
-        if(pageStatus.inWidgetPage){
+        if(pageStatus.inWidgetIndexPage){
+            pagesVM.currentWidget = "accordion"
+            pagesVM.currentWidgetIntro = "手风琴"
+        } else if(pageStatus.inWidgetPage){
             pagesVM.currentWidget = widgetId
             pagesVM.currentWidgetIntro = getWidgetIntro(widgetId, widgetList.widgets)
 
@@ -364,7 +421,7 @@ function preparePage(widgetId, ex, pagesVM, widgetsVM, widgetList){
 
     function prepareFrameSrc(){
         if(pageStatus.inWidgetIndexPage){
-            pagesVM.directorys = widgetList.widgets
+            widgetsVM.widgetSrc = "accordion/avalon.accordion.ex1.html"
         } else if(pageStatus.inWidgetPage){
             widgetsVM.widgetSrc =  widgetId + "/" + pagesVM.currentEx
         } else if(pageStatus.inExamplePage){
@@ -393,6 +450,8 @@ function prepareWidgetDirectory(pagesVM, widgetList){
 }
 
 function prepareExampleDirectory(pagesVM, widgetList, widgetId){
+    widgetId = widgetId || "accordion"
+
     var exampleObj = {},
         widgetExs = exampleObj[widgetId] = avalon.mix(true, {}, widgetList.examples[widgetId])
 

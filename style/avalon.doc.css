@@ -80,6 +80,7 @@ h1, h2, h3, h4, h5 {
   background: url("/static/image/app_sprite.png") 0 0 no-repeat; }
 
 body {
+  height: auto;
   position: relative;
   padding: 40px 60px;
   background-color: #fff; }
@@ -112,9 +113,6 @@ body {
   body p {
     margin: 10px 0; }
   body .table-doc {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     margin: 0 0 30px;
     border: 1px #e5e9f2 solid;

@@ -1,6 +1,7 @@
 @import "../pages/index/styles/base";
 
 body{
+  height: auto;
   position: relative;
   padding: 40px 60px;
   background-color: #fff;
@@ -44,9 +45,6 @@ body{
   }
 
   .table-doc{
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     margin: 0 0 30px;
     border: 1px $color-border-grey solid;

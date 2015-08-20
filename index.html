@@ -11,7 +11,7 @@
 </head>
 <body class="ms-controller" ms-controller="pages" ms-uptop data-uptop-background-url="uptop/up_green.png">
 
-<div class="l-header">
+<div class="oni-layout-header">
     <div class="container">
         <a href="#!/widgets" ms-click="switchNavTo('组件库')"><img class="oniicon" src="pages/index/imgs/oniicon.png"></a>
 
@@ -37,43 +37,15 @@
                    ms-duplex="searchKey"
                    ms-keyup="search()"
                    ms-click="selectSearchKey()"/>
-            <span class="iconfont icon-search">&#xF067;</span>
+            <span class="iconfont icon-search" ms-click="search()">&#xF067;</span>
         </div>
     </div>
 </div>
 
 <div class="oni-layout-main-container">
-    <div class="aside" ms-if="activeNav === '组件库'">
-        <!-- 设置id以获取该节点，在搜索时设置其scrollTop -->
-        <div id="listWrap" class="list-wrap">
-            <div class="list-item current-widget"
-                 ms-if="goWidgetBtnVisible"
-                 ms-click="showWidgetExs()">
-                {{currentWidget}}-{{currentWidgetIntro}}
-                <div class="iconfont icon-arrow">&#xF07F;</div>
-            </div>
-            <div class="list-item backto-menu"
-                 ms-if="backToMenuBtnVisible"
-                 ms-click="backToMenu()">
-                <div class="iconfont icon-arrow">&#xF07D;</div>
-                返回所有组件库
-            </div>
-            <div ms-repeat="directorys">
-                <h3 class="list-name">{{$key}}</h3>
-                <ul class="list">
-                    <li ms-repeat="$val">
-                        <a class="overdot list-item"
-                           ms-attr-href="$val.href"
-                           ms-class="active-dir:currentWidget === $key || currentEx === $val">
-                           {{$key}}<span ms-if="typeof $val.intro !== 'undefined'">-{{$val.intro}}</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div ms-view></div>
+    <!-- 设置id以获取该节点，在搜索时设置其scrollTop -->
+    <div id="listWrap" class="aside" ms-if="activeNav !== '下载'" ms-include-src="listSrc"></div>
+    <div ms-view class="oni-layout-main"></div>
 </div>
 
 </body>

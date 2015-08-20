@@ -228,7 +228,7 @@ define("exs", function(){
                 "统计字数": "avalon.kindeditor.ex6.html",
                 "异步修改数据": "avalon.kindeditor.ex7.html"
             },
-            "Layout": {
+            "layout": {
                 "最基础的Layout配置": "avalon.layout.ex1.html",
                 "移除和增加区域": "avalon.layout.ex2.html",
                 "嵌套的Layout": "avalon.layout.ex3.html",

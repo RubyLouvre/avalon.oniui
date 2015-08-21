@@ -1,7 +1,7 @@
 <div class="list-item current-widget"
      ms-if="goWidgetBtnVisible"
      ms-click="showWidgetExs()">
-    <div class="list-item-link">
+    <div class="overdot list-item-link">
       {{currentWidget}}-{{currentWidgetIntro}}
       <div class="iconfont icon-arrow">&#xF07F;</div>
     </div>
@@ -23,7 +23,7 @@
               {{$key}}<span ms-if="typeof $val.intro !== 'undefined'">-{{$val.intro}}</span>
             </a>
         </li>
-        <li class="overdot list-item" ms-if="backToMenuBtnVisible">
+        <li class="list-item" ms-if="backToMenuBtnVisible">
             <a class="overdot list-item-link"
                ms-attr-href="getDocHref()"
                ms-class="active-dir:/doc(?=\.html)/.test(currentEx)">

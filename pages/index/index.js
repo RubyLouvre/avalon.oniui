@@ -423,10 +423,10 @@ function preparePage(widgetId, ex, pagesVM, widgetsVM, widgetList){
         if(pageStatus.inWidgetIndexPage){
             widgetsVM.widgetSrc = "accordion/avalon.accordion.ex1.html"
         } else if(pageStatus.inWidgetPage){
-            widgetsVM.widgetSrc =  widgetId + "/" + pagesVM.currentEx
+            widgetsVM.widgetSrc =  getWidgetfolder(widgetId) + "/" + pagesVM.currentEx
         } else if(pageStatus.inExamplePage){
             pagesVM.currentEx = "avalon." + widgetId + "." + ex + ".html"
-            widgetsVM.widgetSrc =  widgetId+ "/avalon." + widgetId + "." + ex + ".html"
+            widgetsVM.widgetSrc =  getWidgetfolder(widgetId)+ "/avalon." + widgetId + "." + ex + ".html"
         }
     }
 }
@@ -466,4 +466,12 @@ function prepareExampleDirectory(pagesVM, widgetList, widgetId){
     }
 
     pagesVM.directorys = exampleObj
+}
+
+function getWidgetfolder(widgetId){
+    if(widgetId === "coupledatepicker" || widgetId === "daterangepicker"){
+        return "datepicker"
+    } else{
+        return widgetId
+    }
 }

@@ -44,6 +44,14 @@ body{
     margin: 10px 0;
   }
 
+  .table-doc-title{
+    margin: 40px 0 20px;
+    padding: 0 0 0 10px;
+    border-left: 4px $color-theme-blue solid;
+    font-size: 18px;
+    font-weight: normal;
+  }
+
   .table-doc{
     width: 100%;
     margin: 0 0 30px;

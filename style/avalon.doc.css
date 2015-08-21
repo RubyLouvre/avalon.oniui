@@ -1,22 +1,8 @@
-@font-face {
-  font-family: 'iconfont';
-  src: url("../fonts/iconfont.eot");
-  /* IE9*/
-  src: url("../fonts/iconfont.eot?#iefix") format("embedded-opentype"), url("../fonts/iconfont.woff") format("woff"), url("../fonts/iconfont.ttf") format("truetype"), url("../fonts/iconfont.svg#uxiconfont") format("svg");
-  /* iOS 4.1- */ }
-.iconfont {
-  font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.2px;
-  -moz-osx-font-smoothing: grayscale; }
-
 /*
 * reset
 *
 */
-html, body, div, p, ul, li, h1, h2, h3, h4, h5 {
+html, body, div, p, ul, ol, li, h1, h2, h3, h4, h5 {
   margin: 0;
   padding: 0; }
 
@@ -42,13 +28,13 @@ h1, h2, h3, h4, h5 {
   color: #212121;
   font-size: 16px; }
 
+.ms-controller, .ms-important {
+  visibility: hidden; }
+
 /*
 * custom classes
 *
 */
-.hidden {
-  display: none; }
-
 .overdot {
   display: -moz-inline-stack;
   display: inline-block;
@@ -61,24 +47,20 @@ h1, h2, h3, h4, h5 {
   -o-text-overflow: ellipsis;
   overflow: hidden; }
 
-/*
-* components
-*
-*/
-.more-button {
-  display: block;
-  width: 260px;
-  margin: 15px auto 0;
-  padding: 8px 0;
-  background-color: #fff;
-  text-align: center;
-  border: 1px #c8c8c8 solid; }
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale; }
 
-.icon {
-  display: inline-block;
-  vertical-align: middle;
-  background: url("/static/image/app_sprite.png") 0 0 no-repeat; }
-
+@font-face {
+  font-family: 'iconfont';
+  src: url("../fonts/iconfont.eot");
+  /* IE9*/
+  src: url("../fonts/iconfont.eot?#iefix") format("embedded-opentype"), url("../fonts/iconfont.woff") format("woff"), url("../fonts/iconfont.ttf") format("truetype"), url("../fonts/iconfont.svg#uxiconfont") format("svg");
+  /* iOS 4.1- */ }
 body {
   height: auto;
   position: relative;
@@ -112,6 +94,12 @@ body {
       border-left: 4px #1489e6 solid; }
   body p {
     margin: 10px 0; }
+  body .table-doc-title {
+    margin: 40px 0 20px;
+    padding: 0 0 0 10px;
+    border-left: 4px #1489e6 solid;
+    font-size: 18px;
+    font-weight: normal; }
   body .table-doc {
     width: 100%;
     margin: 0 0 30px;

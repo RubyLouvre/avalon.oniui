@@ -7,8 +7,9 @@
         <meta name="viewport" content="width=device-width">
         <meta name="descriptions" content=" 实现扫描DOM结构或者接受数组传参，生成tab，支持click、mouseenter事件响应切换，支持mouseenter情形延迟响应切换，支持click情形tab选中情况下再次点击回调，支持自动切换效果，支持tab增删禁用启用并可混合设置同步tab可删除状态，支持混合配制panel内容类型并支持panel内容是ajax配置回调，注意扫描dom情形下，会销毁原有的dom，且会忽略所有的ol，ul，li元素上原有的绑定
 
- ">
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+ " />
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        />
         <script src="../highlight/shCore.js"></script>
     </head>
     
@@ -19,14 +20,14 @@
                 <legend>tab组件</legend>
                 <p>实现扫描DOM结构或者接受数组传参，生成tab，支持click、mouseenter事件响应切换，支持mouseenter情形延迟响应切换，支持click情形tab选中情况下再次点击回调，支持自动切换效果，支持tab增删禁用启用并可混合设置同步tab可删除状态，支持混合配制panel内容类型并支持panel内容是ajax配置回调，注意扫描dom情形下，会销毁原有的dom，且会忽略所有的ol，ul，li元素上原有的绑定</p>
             </fieldset>
-            <h3 class="table-doc-title">使用说明</h3>
-            <table class="table-doc" border="1">
-                <colgroup>
-                    <col width="180">
-                        <col width="95">
-                            <col width="120">
-                </colgroup>
-                <tbody>
+            <fieldset>
+                <legend>使用说明</legend>
+                <table class="table-doc" border="1">
+                    <colgroup>
+                        <col width="180" />
+                        <col width="80" />
+                        <col width="120" />
+                    </colgroup>
                     <tr>
                         <th>名字</th>
                         <th>类型</th>
@@ -218,8 +219,8 @@
                         <td></td>
                         <td>remove(e, index) 删除索引指向的tab，绑定情形下ms-click="remove($event, index)"，js调用则是vm.remove(index)</td>
                     </tr>
-                </tbody>
-            </table>
+                </table>
+            </fieldset>
             <ul class="example-links">
                 <li>
                     <a href="avalon.tab.ex.html">扫描dom树获取数据</a>

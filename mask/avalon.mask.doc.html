@@ -7,10 +7,11 @@
         <meta name="viewport" content="width=device-width">
         <meta name="descriptions" content="这是ms-duplex2.0的一个扩展模块，用于引导用户输入。
 通过如下方式使用:
-<input ms-duplex-mask=&quot;a&quot; data-duplex-mask=&quot;((00/00其他字符0000)&quot; />
+&lt;input ms-duplex-mask=&quot;a&quot; data-duplex-mask=&quot;((00/00其他字符0000)&quot; /&gt;
 
- ">
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+ " />
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        />
         <script src="../highlight/shCore.js"></script>
     </head>
     
@@ -21,16 +22,16 @@
                 <legend>输入引导模块</legend>
                 <p>这是ms-duplex2.0的一个扩展模块，用于引导用户输入。</p>
                 <p>通过如下方式使用:</p>
-                <pre class="brush:html;gutter:false;toolbar:false;">&lt;input ms-duplex-mask="a" data-duplex-mask="((00/00其他字符0000)" /&gt;</pre>
+                <pre class="brush:html;gutter:false;toolbar:false;">&lt;input ms-duplex-mask=&quot;a&quot; data-duplex-mask=&quot;((00/00其他字符0000)&quot; /&gt;</pre>
             </fieldset>
-            <h3 class="table-doc-title">使用说明</h3>
-            <table class="table-doc" border="1">
-                <colgroup>
-                    <col width="180">
-                        <col width="95">
-                            <col width="120">
-                </colgroup>
-                <tbody>
+            <fieldset>
+                <legend>使用说明</legend>
+                <table class="table-doc" border="1">
+                    <colgroup>
+                        <col width="180" />
+                        <col width="80" />
+                        <col width="120" />
+                    </colgroup>
                     <tr>
                         <th>名字</th>
                         <th>类型</th>
@@ -94,32 +95,30 @@
                         <td></td>
                         <td>此对象上每个键名都是元字符，都对应一个对象，上面有pattern(正则)，placehoder(占位符，如果你不想用"_")</td>
                     </tr>
-                </tbody>
-            </table>
+                </table>
+            </fieldset>
             <div class="others">data-duplex-mask-translations应该对应的一个对象，默认情况下已经有如下东西了：
                 <table class="table-doc"
                 border="1">
                     <colgroup>
-                        <col width="190">
+                        <col width="190" />
                     </colgroup>
-                    <tbody>
-                        <tr>
-                            <th>元字符</th>
-                            <th>意义</th>
-                        </tr>
-                        <tr>
-                            <td>9</td>
-                            <td>表示任何数字，0-9，正则为/\d/</td>
-                        </tr>
-                        <tr>
-                            <td>A</td>
-                            <td>表示任何字母，，正则为/[a-zA-Z]/</td>
-                        </tr>
-                        <tr>
-                            <td>*</td>
-                            <td>表示任何非空字符，正则为/\S/</td>
-                        </tr>
-                    </tbody>
+                    <tr>
+                        <th>元字符</th>
+                        <th>意义</th>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>表示任何数字，0-9，正则为/\d/</td>
+                    </tr>
+                    <tr>
+                        <td>A</td>
+                        <td>表示任何字母，，正则为/[a-zA-Z]/</td>
+                    </tr>
+                    <tr>
+                        <td>*</td>
+                        <td>表示任何非空字符，正则为/\S/</td>
+                    </tr>
                 </table>
             </div>
             <ul class="example-links">

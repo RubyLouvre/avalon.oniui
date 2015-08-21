@@ -7,8 +7,9 @@
         <meta name="viewport" content="width=device-width">
         <meta name="descriptions" content=" 可以通过接口控制或者随机模拟进度条效果，支持条形，圆形，倒计时等效果功能
 
- ">
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+ " />
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        />
         <script src="../highlight/shCore.js"></script>
     </head>
     
@@ -19,14 +20,14 @@
                 <legend>进度条组件</legend>
                 <p>可以通过接口控制或者随机模拟进度条效果，支持条形，圆形，倒计时等效果功能</p>
             </fieldset>
-            <h3 class="table-doc-title">使用说明</h3>
-            <table class="table-doc" border="1">
-                <colgroup>
-                    <col width="180">
-                        <col width="95">
-                            <col width="120">
-                </colgroup>
-                <tbody>
+            <fieldset>
+                <legend>使用说明</legend>
+                <table class="table-doc" border="1">
+                    <colgroup>
+                        <col width="180" />
+                        <col width="80" />
+                        <col width="120" />
+                    </colgroup>
                     <tr>
                         <th>名字</th>
                         <th>类型</th>
@@ -131,7 +132,7 @@
                         <td>Function</td>
                         <td></td>
                         <td>simulater(value, vmodel) 模拟进度进行效果函数，参数为当前进度和vmodel，默认return value + 5
-                            * Math.random() &gt;&gt; 0</td>
+                            * Math.random() >> 0</td>
                     </tr>
                     <tr>
                         <td>getTemplate(tmpl,opts)</td>
@@ -178,8 +179,8 @@
                         <td></td>
                         <td>progress(value) 设置value值，其实也可以直接设置vmodel.value</td>
                     </tr>
-                </tbody>
-            </table>
+                </table>
+            </fieldset>
             <ul class="example-links">
                 <li>
                     <a href="avalon.progressbar.ex.html">外部设置进度值</a>

@@ -7,8 +7,9 @@
         <meta name="viewport" content="width=device-width">
         <meta name="descriptions" content="dialog组件提供弹窗显示或者隐藏,通过简单配置可以水平居中显示dialog弹窗，此组件支持弹窗中再弹窗，也可以用来模拟alert的行为，非常方便
 
- ">
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+ " />
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        />
         <script src="../highlight/shCore.js"></script>
     </head>
     
@@ -19,14 +20,14 @@
                 <legend>Name 对话框</legend>
                 <p>dialog组件提供弹窗显示或者隐藏,通过简单配置可以水平居中显示dialog弹窗，此组件支持弹窗中再弹窗，也可以用来模拟alert的行为，非常方便</p>
             </fieldset>
-            <h3 class="table-doc-title">使用说明</h3>
-            <table class="table-doc" border="1">
-                <colgroup>
-                    <col width="180">
-                        <col width="95">
-                            <col width="120">
-                </colgroup>
-                <tbody>
+            <fieldset>
+                <legend>使用说明</legend>
+                <table class="table-doc" border="1">
+                    <colgroup>
+                        <col width="180" />
+                        <col width="80" />
+                        <col width="120" />
+                    </colgroup>
                     <tr>
                         <th>名字</th>
                         <th>类型</th>
@@ -42,28 +43,26 @@
                         <td></td>
                         <td>可以动态改变dialog的显示内容
                             <table border="1">
-                                <tbody>
-                                    <tr>
-                                        <th style="width:100px">参数名/返回值</th>
-                                        <th style="width:70px">类型</th>
-                                        <th>说明</th>
-                                    </tr>
-                                    <tr>
-                                        <td>content</td>
-                                        <td>String</td>
-                                        <td>要替换的content，可以是已经渲染ok的view也可以是未解析渲染的模板</td>
-                                    </tr>
-                                    <tr>
-                                        <td>noScan</td>
-                                        <td>Boolean</td>
-                                        <td>当content是模板时noScan设为false或者不设置，组件会自动解析渲染模板，如果是已经渲染ok的，将noScan设为true，组件将不再进行解析操作</td>
-                                    </tr>
-                                    <tr>
-                                        <td>contentVmodels</td>
-                                        <td>Array</td>
-                                        <td>如果content为未解析的模板，noScan为false，contentVmodels是用来解析模板content的vmodels</td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>content</td>
+                                    <td>String</td>
+                                    <td>要替换的content，可以是已经渲染ok的view也可以是未解析渲染的模板</td>
+                                </tr>
+                                <tr>
+                                    <td>noScan</td>
+                                    <td>Boolean</td>
+                                    <td>当content是模板时noScan设为false或者不设置，组件会自动解析渲染模板，如果是已经渲染ok的，将noScan设为true，组件将不再进行解析操作</td>
+                                </tr>
+                                <tr>
+                                    <td>contentVmodels</td>
+                                    <td>Array</td>
+                                    <td>如果content为未解析的模板，noScan为false，contentVmodels是用来解析模板content的vmodels</td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
@@ -103,28 +102,26 @@
                         <td>avalon.noop</td>
                         <td>定义点击"确定"按钮后的回调操作
                             <table border="1">
-                                <tbody>
-                                    <tr>
-                                        <th style="width:100px">参数名/返回值</th>
-                                        <th style="width:70px">类型</th>
-                                        <th>说明</th>
-                                    </tr>
-                                    <tr>
-                                        <td>event</td>
-                                        <td>Number</td>
-                                        <td>事件对象</td>
-                                    </tr>
-                                    <tr>
-                                        <td>vmodel</td>
-                                        <td>Object</td>
-                                        <td>组件对应的Vmodel</td>
-                                    </tr>
-                                    <tr>
-                                        <td>返回</td>
-                                        <td>Boolean</td>
-                                        <td>如果return false，dialog不会关闭，用于异步操作</td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>event</td>
+                                    <td>Number</td>
+                                    <td>事件对象</td>
+                                </tr>
+                                <tr>
+                                    <td>vmodel</td>
+                                    <td>Object</td>
+                                    <td>组件对应的Vmodel</td>
+                                </tr>
+                                <tr>
+                                    <td>返回</td>
+                                    <td>Boolean</td>
+                                    <td>如果return false，dialog不会关闭，用于异步操作</td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
@@ -134,18 +131,16 @@
                         <td>avalon.noop</td>
                         <td>定义显示dialog时的回调
                             <table border="1">
-                                <tbody>
-                                    <tr>
-                                        <th style="width:100px">参数名/返回值</th>
-                                        <th style="width:70px">类型</th>
-                                        <th>说明</th>
-                                    </tr>
-                                    <tr>
-                                        <td>vmodel</td>
-                                        <td>Object</td>
-                                        <td>组件对应的Vmodel</td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>vmodel</td>
+                                    <td>Object</td>
+                                    <td>组件对应的Vmodel</td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
@@ -155,28 +150,26 @@
                         <td>avalon.noop</td>
                         <td>定义点击"取消"按钮后的回调操作
                             <table border="1">
-                                <tbody>
-                                    <tr>
-                                        <th style="width:100px">参数名/返回值</th>
-                                        <th style="width:70px">类型</th>
-                                        <th>说明</th>
-                                    </tr>
-                                    <tr>
-                                        <td>event</td>
-                                        <td>Object</td>
-                                        <td>事件对象</td>
-                                    </tr>
-                                    <tr>
-                                        <td>vmodel</td>
-                                        <td>Object</td>
-                                        <td>组件对应的Vmodel</td>
-                                    </tr>
-                                    <tr>
-                                        <td>返回</td>
-                                        <td>Boolean</td>
-                                        <td>如果return false，dialog不会关闭，用于异步操作</td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>event</td>
+                                    <td>Object</td>
+                                    <td>事件对象</td>
+                                </tr>
+                                <tr>
+                                    <td>vmodel</td>
+                                    <td>Object</td>
+                                    <td>组件对应的Vmodel</td>
+                                </tr>
+                                <tr>
+                                    <td>返回</td>
+                                    <td>Boolean</td>
+                                    <td>如果return false，dialog不会关闭，用于异步操作</td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
@@ -186,23 +179,21 @@
                         <td>avalon.noop</td>
                         <td>定义点击"关闭"按钮后的回调操作
                             <table border="1">
-                                <tbody>
-                                    <tr>
-                                        <th style="width:100px">参数名/返回值</th>
-                                        <th style="width:70px">类型</th>
-                                        <th>说明</th>
-                                    </tr>
-                                    <tr>
-                                        <td>event</td>
-                                        <td>Object</td>
-                                        <td>事件对象</td>
-                                    </tr>
-                                    <tr>
-                                        <td>vmodel</td>
-                                        <td>Object</td>
-                                        <td>组件对应的Vmodel</td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>event</td>
+                                    <td>Object</td>
+                                    <td>事件对象</td>
+                                </tr>
+                                <tr>
+                                    <td>vmodel</td>
+                                    <td>Object</td>
+                                    <td>组件对应的Vmodel</td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
@@ -218,18 +209,16 @@
                         <td>avalon.noop</td>
                         <td>重新渲染模板
                             <table border="1">
-                                <tbody>
-                                    <tr>
-                                        <th style="width:100px">参数名/返回值</th>
-                                        <th style="width:70px">类型</th>
-                                        <th>说明</th>
-                                    </tr>
-                                    <tr>
-                                        <td>m</td>
-                                        <td>Object</td>
-                                        <td>重新渲染dialog的配置对象，包括title、content、content中涉及的插值表达式，需要注意的是，title和content不是真正渲染的内容，所以不需要avalon进行扫描监控，定义的时候必须在其前面加上"$",否则组件不会渲染成想要的效果</td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>m</td>
+                                    <td>Object</td>
+                                    <td>重新渲染dialog的配置对象，包括title、content、content中涉及的插值表达式，需要注意的是，title和content不是真正渲染的内容，所以不需要avalon进行扫描监控，定义的时候必须在其前面加上"$",否则组件不会渲染成想要的效果</td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
@@ -275,23 +264,21 @@
                         <td></td>
                         <td>通过此方法配置dialog的footer
                             <table border="1">
-                                <tbody>
-                                    <tr>
-                                        <th style="width:100px">参数名/返回值</th>
-                                        <th style="width:70px">类型</th>
-                                        <th>说明</th>
-                                    </tr>
-                                    <tr>
-                                        <td>tmp</td>
-                                        <td>String</td>
-                                        <td>dialog默认模板的footer</td>
-                                    </tr>
-                                    <tr>
-                                        <td>返回</td>
-                                        <td>String</td>
-                                        <td>用户自定义的dialog的footer</td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>tmp</td>
+                                    <td>String</td>
+                                    <td>dialog默认模板的footer</td>
+                                </tr>
+                                <tr>
+                                    <td>返回</td>
+                                    <td>String</td>
+                                    <td>用户自定义的dialog的footer</td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
@@ -314,8 +301,8 @@
                         <td>相对于zIndex的增量, 用于全局配置，如果只是作用于单个dialog那么zIndex的配置已足够，设置全局需要通过avalon.ui.dialog.defaults.zIndexIncrementGlobal
                             = Number来设置</td>
                     </tr>
-                </tbody>
-            </table>
+                </table>
+            </fieldset>
             <ul class="example-links">
                 <li>
                     <a href="avalon.dialog.ex.html">dialog功能全览</a>

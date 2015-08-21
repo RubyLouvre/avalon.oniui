@@ -6,8 +6,9 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <meta name="descriptions" content="coupledatepicker其实是普通日历的升级版，可以通过设置起始日期与结束日期的最小间隔天数和最大间隔天数将截止日期限制在一定的选择范围中
- ">
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+ " />
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        />
         <script src="../highlight/shCore.js"></script>
     </head>
     
@@ -18,14 +19,14 @@
                 <legend>Name 日期范围选择的双日历</legend>
                 <p>coupledatepicker其实是普通日历的升级版，可以通过设置起始日期与结束日期的最小间隔天数和最大间隔天数将截止日期限制在一定的选择范围中</p>
             </fieldset>
-            <h3 class="table-doc-title">使用说明</h3>
-            <table class="table-doc" border="1">
-                <colgroup>
-                    <col width="180">
-                        <col width="95">
-                            <col width="180">
-                </colgroup>
-                <tbody>
+            <fieldset>
+                <legend>使用说明</legend>
+                <table class="table-doc" border="1">
+                    <colgroup>
+                        <col width="180" />
+                        <col width="80" />
+                        <col width="180" />
+                    </colgroup>
                     <tr>
                         <th>名字</th>
                         <th>类型</th>
@@ -70,9 +71,15 @@
                         <td>String</td>
                         <td>""</td>
                         <td>设置双日历框的工作规则
-                            <pre class="brush:javascript;gutter:false;toolbar:false">{ rules: 'null, 0D, 8D', fromMinDate: '2014-05-02', fromMaxDate: '2014-06-28',
-                                toMinDate: '2014-06-01', toMaxDate: '2014-07-12' }</pre>可以是绑定组件时定义的配置对象中的一个rules对象，也可以是一个字符串，指向一个上述对象。
-                            其中对象中的rules属性定义结束初始日期异常时默认显示的日期、初始日期和结束日子之间最小相隔天数、最大相隔天数，格式是[+-]\d[DMY]，分别代表几天、几个月或者几年，也可以附加+或者-号，+号表示正数几天，-号表示负数几天
+                            <pre class="brush:javascript;gutter:false;toolbar:false">
+            {
+                rules: 'null, 0D, 8D',
+                fromMinDate: '2014-05-02',
+                fromMaxDate: '2014-06-28',
+                toMinDate: '2014-06-01',
+                toMaxDate: '2014-07-12'
+            }
+            </pre>可以是绑定组件时定义的配置对象中的一个rules对象，也可以是一个字符串，指向一个上述对象。 其中对象中的rules属性定义结束初始日期异常时默认显示的日期、初始日期和结束日子之间最小相隔天数、最大相隔天数，格式是[+-]\d[DMY]，分别代表几天、几个月或者几年，也可以附加+或者-号，+号表示正数几天，-号表示负数几天
                             fromMinDate代表起始日期可以设置的最小日期 fromMaxDate代表起始日期可以设置的最大日期 toMinDate代表结束日期可以设置的最小日期
                             toMaxDate代表结束日期可以设置的最大日期</td>
                     </tr>
@@ -82,23 +89,21 @@
                         <td></td>
                         <td>将符合日期格式要求的字符串解析为date对象并返回，不符合格式的字符串返回null,用户可以根据自己需要自行配置解析过程
                             <table border="1">
-                                <tbody>
-                                    <tr>
-                                        <th style="width:100px">参数名/返回值</th>
-                                        <th style="width:70px">类型</th>
-                                        <th>说明</th>
-                                    </tr>
-                                    <tr>
-                                        <td>str</td>
-                                        <td>String</td>
-                                        <td>需要解析的日期字符串</td>
-                                    </tr>
-                                    <tr>
-                                        <td>返回</td>
-                                        <td>Date</td>
-                                        <td>解析后的日期对象</td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>str</td>
+                                    <td>String</td>
+                                    <td>需要解析的日期字符串</td>
+                                </tr>
+                                <tr>
+                                    <td>返回</td>
+                                    <td>Date</td>
+                                    <td>解析后的日期对象</td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
@@ -108,28 +113,26 @@
                         <td></td>
                         <td>将日期对象转换为符合要求的日期字符串
                             <table border="1">
-                                <tbody>
-                                    <tr>
-                                        <th style="width:100px">参数名/返回值</th>
-                                        <th style="width:70px">类型</th>
-                                        <th>说明</th>
-                                    </tr>
-                                    <tr>
-                                        <td>date</td>
-                                        <td>Date</td>
-                                        <td>需要格式化的日期对象</td>
-                                    </tr>
-                                    <tr>
-                                        <td>返回</td>
-                                        <td>String</td>
-                                        <td>格式化后的日期字符串</td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <th style="width:100px">参数名/返回值</th>
+                                    <th style="width:70px">类型</th>
+                                    <th>说明</th>
+                                </tr>
+                                <tr>
+                                    <td>date</td>
+                                    <td>Date</td>
+                                    <td>需要格式化的日期对象</td>
+                                </tr>
+                                <tr>
+                                    <td>返回</td>
+                                    <td>String</td>
+                                    <td>格式化后的日期字符串</td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
-                </tbody>
-            </table>
+                </table>
+            </fieldset>
             <ul class="example-links">
                 <li>
                     <a href="avalon.coupledatepicker.ex1.html">不同构建方式的coupledatepicker，注意按demo说明方式设置</a>

@@ -1,129 +1,113 @@
-/*
-* reset
-*
-*/
-html, body, div, p, ul, ol, li, h1, h2, h3, h4, h5 {
-  margin: 0;
-  padding: 0; }
-
-html {
-  height: 100%; }
-
-body {
-  position: relative;
+.api-content-wrap {
   height: 100%;
-  color: #212121;
-  font-size: 14px;
-  font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif; }
+  overflow: auto;
+  background-color: #fff; }
+  .api-content-wrap .api-content {
+    position: relative;
+    padding: 40px 60px; }
+    .api-content-wrap .api-content:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-width: 12px;
+      border-color: #1489e6 transparent transparent #1489e6;
+      border-style: solid; }
+    .api-content-wrap .api-content p, .api-content-wrap .api-content fieldset {
+      position: relative;
+      max-width: 100%;
+      margin: 80px 0 0;
+      padding: 30px;
+      background-color: #f9fafe;
+      border: 1px #e5e9f2 solid; }
+      .api-content-wrap .api-content p > legend, .api-content-wrap .api-content fieldset > legend {
+        position: absolute;
+        top: -50px;
+        left: 0;
+        padding: 0 0 0 10px;
+        font-size: 18px;
+        border-left: 4px #1489e6 solid; }
+    .api-content-wrap .api-content p {
+      margin: 10px 0; }
+    .api-content-wrap .api-content .table-doc {
+      width: 100%;
+      margin: 0 0 30px;
+      border: 1px #e5e9f2 solid;
+      border-collapse: collapse;
+      background-color: #fff; }
+      .api-content-wrap .api-content .table-doc th, .api-content-wrap .api-content .table-doc td {
+        padding: 20px;
+        border: 1px #e5e9f2 solid;
+        word-break: break-all; }
+      .api-content-wrap .api-content .table-doc th {
+        font-weight: normal;
+        background-color: #2c2f34;
+        color: #fff; }
+      .api-content-wrap .api-content .table-doc td {
+        border-width: 1px 0;
+        vertical-align: top; }
+    .api-content-wrap .api-content dt {
+      margin: 40px 0 0;
+      padding: 0 0 0 10px;
+      font-size: 18px;
+      border-left: 4px #1489e6 solid; }
+    .api-content-wrap .api-content dd, .api-content-wrap .api-content blockquote {
+      margin: 10px 0;
+      padding: 30px;
+      background-color: #f9fafe;
+      border: 1px #e5e9f2 solid; }
+    .api-content-wrap .api-content ul > li, .api-content-wrap .api-content ol > li {
+      background-color: #fff;
+      border: 1px #e5e9f2 solid;
+      padding: 5px;
+      margin: 5px 0; }
+    .api-content-wrap .api-content a {
+      color: #1489e6; }
+    .api-content-wrap .api-content button {
+      display: -moz-inline-stack;
+      display: inline-block;
+      vertical-align: middle;
+      *vertical-align: auto;
+      zoom: 1;
+      *display: inline;
+      height: 32px;
+      line-height: 30px;
+      padding: 0px 15px;
+      border: 1px #aaa solid;
+      font-size: 14px;
+      border-radius: 3px;
+      color: #555;
+      background-color: #fff;
+      outline: none;
+      cursor: pointer; }
+      .api-content-wrap .api-content button:hover {
+        color: #111;
+        border-color: #666; }
+    .api-content-wrap .api-content input {
+      display: -moz-inline-stack;
+      display: inline-block;
+      vertical-align: middle;
+      *vertical-align: auto;
+      zoom: 1;
+      *display: inline;
+      height: 32px;
+      padding: 0 5px;
+      line-height: 30px;
+      border: 1px #aaa solid;
+      font-size: 14px;
+      outline: none;
+      border-radius: 3px;
+      color: #555;
+      background-color: #fff; }
+      .api-content-wrap .api-content input[disabled], .api-content-wrap .api-content input[readonly] {
+        background-color: #ccc; }
+      .api-content-wrap .api-content input[type="submit"] {
+        padding: 0px 15px;
+        cursor: pointer; }
+        .api-content-wrap .api-content input[type="submit"]:hover {
+          color: #111;
+          border-color: #666; }
 
-ul, ol {
-  list-style: none; }
-
-a {
-  cursor: pointer;
-  text-decoration: none;
-  color: #212121; }
-
-h1, h2, h3, h4, h5 {
-  color: #212121;
-  font-size: 16px; }
-
-.ms-controller, .ms-important {
-  visibility: hidden; }
-
-/*
-* custom classes
-*
-*/
-.overdot {
-  display: -moz-inline-stack;
-  display: inline-block;
-  vertical-align: middle;
-  *vertical-align: auto;
-  zoom: 1;
-  *display: inline;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  -o-text-overflow: ellipsis;
-  overflow: hidden; }
-
-.iconfont {
-  font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.2px;
-  -moz-osx-font-smoothing: grayscale; }
-
-@font-face {
-  font-family: 'iconfont';
-  src: url("../fonts/iconfont.eot");
-  /* IE9*/
-  src: url("../fonts/iconfont.eot?#iefix") format("embedded-opentype"), url("../fonts/iconfont.woff") format("woff"), url("../fonts/iconfont.ttf") format("truetype"), url("../fonts/iconfont.svg#uxiconfont") format("svg");
-  /* iOS 4.1- */ }
-/*
-* reset
-*
-*/
-html, body, div, p, ul, ol, li, h1, h2, h3, h4, h5 {
-  margin: 0;
-  padding: 0; }
-
-html {
-  height: 100%; }
-
-body {
-  position: relative;
-  height: 100%;
-  color: #212121;
-  font-size: 14px;
-  font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif; }
-
-ul, ol {
-  list-style: none; }
-
-a {
-  cursor: pointer;
-  text-decoration: none;
-  color: #212121; }
-
-h1, h2, h3, h4, h5 {
-  color: #212121;
-  font-size: 16px; }
-
-.ms-controller, .ms-important {
-  visibility: hidden; }
-
-/*
-* custom classes
-*
-*/
-.overdot {
-  display: -moz-inline-stack;
-  display: inline-block;
-  vertical-align: middle;
-  *vertical-align: auto;
-  zoom: 1;
-  *display: inline;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  -o-text-overflow: ellipsis;
-  overflow: hidden; }
-
-.iconfont {
-  font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.2px;
-  -moz-osx-font-smoothing: grayscale; }
-
-@font-face {
-  font-family: 'iconfont';
-  src: url("../fonts/iconfont.eot");
-  /* IE9*/
-  src: url("../fonts/iconfont.eot?#iefix") format("embedded-opentype"), url("../fonts/iconfont.woff") format("woff"), url("../fonts/iconfont.ttf") format("truetype"), url("../fonts/iconfont.svg#uxiconfont") format("svg");
-  /* iOS 4.1- */ }
 .oni-layout-download {
   font-size: 16px; }
   .oni-layout-download .wrap {
@@ -154,12 +138,69 @@ h1, h2, h3, h4, h5 {
       background-color: #2eb5f9;
       color: #fff; }
 
+/*
+* reset
+*/
+html, body, div, p, ul, ol, li, h1, h2, h3, h4, h5 {
+  margin: 0;
+  padding: 0; }
+
+html, body {
+  height: 100%; }
+
 body {
-  background-color: #f9fafe; }
+  position: relative;
+  color: #212121;
+  background-color: #f9fafe;
+  font-size: 14px;
+  font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif; }
+
+ul, ol {
+  list-style: none; }
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: #212121; }
+
+h1, h2, h3, h4, h5 {
+  color: #212121;
+  font-size: 16px; }
+
+.ms-controller, .ms-important {
+  visibility: hidden; }
 
 /*
+* custom classes
+*/
+.overdot {
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  zoom: 1;
+  *display: inline;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  overflow: hidden; }
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale; }
+
+@font-face {
+  font-family: 'iconfont';
+  src: url("../fonts/iconfont.eot");
+  /* IE9*/
+  src: url("../fonts/iconfont.eot?#iefix") format("embedded-opentype"), url("../fonts/iconfont.woff") format("woff"), url("../fonts/iconfont.ttf") format("truetype"), url("../fonts/iconfont.svg#uxiconfont") format("svg");
+  /* iOS 4.1- */ }
+/*
 * layout
-*
 */
 .oni-layout-header {
   background-color: #2c2f34;
@@ -254,6 +295,15 @@ body {
     border-right: 1px #e5e9f2 solid;
     font-size: 16px;
     overflow: auto; }
+    .oni-layout-main-container .aside::-webkit-scrollbar {
+      width: 9px; }
+    .oni-layout-main-container .aside::-webkit-scrollbar-track-piece {
+      background-color: #f9fafe;
+      border-left: 1px #e5e9f2 solid; }
+    .oni-layout-main-container .aside::-webkit-scrollbar-thumb {
+      height: 50px;
+      background-color: #a0b0c0;
+      border-radius: 10px; }
     .oni-layout-main-container .aside .list {
       margin: -10px 0 30px;
       overflow: hidden; }
@@ -313,112 +363,3 @@ body {
     width: 100%;
     height: 100%;
     border: 0 none; }
-  .oni-layout-main .api-content-wrap {
-    height: 100%;
-    overflow: auto;
-    background-color: #fff; }
-    .oni-layout-main .api-content-wrap .api-content {
-      position: relative;
-      padding: 40px 60px; }
-      .oni-layout-main .api-content-wrap .api-content:before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        border-width: 12px;
-        border-color: #1489e6 transparent transparent #1489e6;
-        border-style: solid; }
-      .oni-layout-main .api-content-wrap .api-content p, .oni-layout-main .api-content-wrap .api-content fieldset {
-        position: relative;
-        max-width: 100%;
-        margin: 80px 0 0;
-        padding: 30px;
-        background-color: #f9fafe;
-        border: 1px #e5e9f2 solid; }
-        .oni-layout-main .api-content-wrap .api-content p > legend, .oni-layout-main .api-content-wrap .api-content fieldset > legend {
-          position: absolute;
-          top: -50px;
-          left: 0;
-          padding: 0 0 0 10px;
-          font-size: 18px;
-          border-left: 4px #1489e6 solid; }
-      .oni-layout-main .api-content-wrap .api-content p {
-        margin: 10px 0; }
-      .oni-layout-main .api-content-wrap .api-content .table-doc {
-        width: 100%;
-        margin: 0 0 30px;
-        border: 1px #e5e9f2 solid;
-        border-collapse: collapse;
-        background-color: #fff; }
-        .oni-layout-main .api-content-wrap .api-content .table-doc th, .oni-layout-main .api-content-wrap .api-content .table-doc td {
-          padding: 20px;
-          border: 1px #e5e9f2 solid;
-          word-break: break-all; }
-        .oni-layout-main .api-content-wrap .api-content .table-doc th {
-          font-weight: normal;
-          background-color: #2c2f34;
-          color: #fff; }
-        .oni-layout-main .api-content-wrap .api-content .table-doc td {
-          border-width: 1px 0;
-          vertical-align: top; }
-      .oni-layout-main .api-content-wrap .api-content dt {
-        margin: 40px 0 0;
-        padding: 0 0 0 10px;
-        font-size: 18px;
-        border-left: 4px #1489e6 solid; }
-      .oni-layout-main .api-content-wrap .api-content dd, .oni-layout-main .api-content-wrap .api-content blockquote {
-        margin: 10px 0;
-        padding: 30px;
-        background-color: #f9fafe;
-        border: 1px #e5e9f2 solid; }
-      .oni-layout-main .api-content-wrap .api-content ul > li, .oni-layout-main .api-content-wrap .api-content ol > li {
-        background-color: #fff;
-        border: 1px #e5e9f2 solid;
-        padding: 5px;
-        margin: 5px 0; }
-      .oni-layout-main .api-content-wrap .api-content a {
-        color: #1489e6; }
-      .oni-layout-main .api-content-wrap .api-content button {
-        display: -moz-inline-stack;
-        display: inline-block;
-        vertical-align: middle;
-        *vertical-align: auto;
-        zoom: 1;
-        *display: inline;
-        height: 32px;
-        line-height: 30px;
-        padding: 0px 15px;
-        border: 1px #aaa solid;
-        font-size: 14px;
-        border-radius: 3px;
-        color: #555;
-        background-color: #fff;
-        outline: none;
-        cursor: pointer; }
-        .oni-layout-main .api-content-wrap .api-content button:hover {
-          color: #111;
-          border-color: #666; }
-      .oni-layout-main .api-content-wrap .api-content input {
-        display: -moz-inline-stack;
-        display: inline-block;
-        vertical-align: middle;
-        *vertical-align: auto;
-        zoom: 1;
-        *display: inline;
-        height: 32px;
-        padding: 0 5px;
-        line-height: 30px;
-        border: 1px #aaa solid;
-        font-size: 14px;
-        outline: none;
-        border-radius: 3px;
-        color: #555;
-        background-color: #fff; }
-        .oni-layout-main .api-content-wrap .api-content input[disabled], .oni-layout-main .api-content-wrap .api-content input[readonly] {
-          background-color: #ccc; }
-        .oni-layout-main .api-content-wrap .api-content input[type="submit"] {
-          padding: 0px 15px;
-          cursor: pointer; }
-          .oni-layout-main .api-content-wrap .api-content input[type="submit"]:hover {
-            color: #111;
-            border-color: #666; }

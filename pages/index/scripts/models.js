@@ -217,7 +217,7 @@ define("models", function(){
                 "多个dropdown共享状态": "avalon.dropdown.ex14.html",
                 "鼠标移入移出下拉菜单自动显示隐藏": "avalon.dropdown.ex15.html"
             },
-            "FileUploader": {
+            "fileuploader": {
                 "uploader基础配置项": "avalon.fileuploader.ex1.html",
                 "预览图和进度条配置": "avalon.fileuploader.ex2.html",
                 "大文件和分块配置": "avalon.fileuploader.ex3.html",
@@ -454,8 +454,7 @@ define("models", function(){
             },
             "uploader": {
                 "概览": "avalon.uploader.ex1.html",
-                "各种回调": "avalon.uploader.ex2.html",
-                "版本及变动记录": "avalon.uploader.log.html"
+                "各种回调": "avalon.uploader.ex2.html"
             },
             "tree": {
                 "tree - Base模块功能": "avalon.tree.ex.html",

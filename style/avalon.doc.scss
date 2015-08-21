@@ -1,10 +1,53 @@
-@import "../pages/index/styles/base";
+@import "../pages/index/styles/global";
+
+/*
+* reset
+*/
+html,body,div,p,ul,ol,li,h1,h2,h3,h4,h5{
+  margin: 0;
+  padding: 0;
+}
+html, body{
+  height: 100%;
+}
+body{
+  position: relative;
+  color: $color-normal;
+  font-size: $font-normal;
+  font-family: $font-stack;
+}
+ul,ol{
+  list-style: none;
+}
+a{
+  cursor: pointer;
+  text-decoration: none;
+  color: $color-normal;
+}
+h1,h2,h3,h4,h5{
+  color: $color-title;
+  font-size: $font-large;
+}
 
 body{
   height: auto;
   position: relative;
   padding: 40px 60px;
   background-color: #fff;
+
+  &::-webkit-scrollbar {
+    width: 9px;
+  }
+  &::-webkit-scrollbar-track-piece {
+    background-color: #fff;
+    border-left: 1px $color-border-grey solid;
+    border-right: 1px $color-border-grey solid;
+  }
+  &::-webkit-scrollbar-thumb {
+    height: 50px;
+    background-color: #a0b0c0;
+    border-radius: 10px;
+  }
 
   &:before {
     content: "";
@@ -22,13 +65,27 @@ body{
     font-weight: normal;
   }
 
-  p, fieldset{
+  p{
+    position: relative;
+    max-width: 100%;
+    margin: 10px 0;
+    padding: 30px;
+    background-color: #f9fafe;
+    border: 1px $color-border-grey solid;
+  }
+
+  fieldset{
     position: relative;
     max-width: 100%;
     margin: 80px 0 0;
     padding: 30px;
     background-color: #f9fafe;
     border: 1px $color-border-grey solid;
+
+    p{
+      padding: 0;
+      border: 0 none;
+    }
 
     >legend{
       position: absolute;
@@ -38,10 +95,6 @@ body{
       font-size: 18px;
       border-left: 4px $color-theme-blue solid;
     }
-  }
-
-  p{
-    margin: 10px 0;
   }
 
   .table-doc-title{

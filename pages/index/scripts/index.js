@@ -6,7 +6,7 @@ avalon.config({
     debug: false
 })
 
-require(["pages/index/models", "pages/index/utils", "pages/index/vmodels", "mmRouter/mmState"], function (models, utils, vms) {
+require(["pages/index/scripts/models", "pages/index/scripts/utils", "pages/index/scripts/vmodels", "mmRouter/mmState"], function (models, utils, vms) {
 
     avalon.state("index", {
         url: "/",

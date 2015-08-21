@@ -1,17 +1,15 @@
 /*
 * reset
-*
 */
 html, body, div, p, ul, ol, li, h1, h2, h3, h4, h5 {
   margin: 0;
   padding: 0; }
 
-html {
+html, body {
   height: 100%; }
 
 body {
   position: relative;
-  height: 100%;
   color: #212121;
   font-size: 14px;
   font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif; }
@@ -28,44 +26,21 @@ h1, h2, h3, h4, h5 {
   color: #212121;
   font-size: 16px; }
 
-.ms-controller, .ms-important {
-  visibility: hidden; }
-
-/*
-* custom classes
-*
-*/
-.overdot {
-  display: -moz-inline-stack;
-  display: inline-block;
-  vertical-align: middle;
-  *vertical-align: auto;
-  zoom: 1;
-  *display: inline;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  -o-text-overflow: ellipsis;
-  overflow: hidden; }
-
-.iconfont {
-  font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.2px;
-  -moz-osx-font-smoothing: grayscale; }
-
-@font-face {
-  font-family: 'iconfont';
-  src: url("../fonts/iconfont.eot");
-  /* IE9*/
-  src: url("../fonts/iconfont.eot?#iefix") format("embedded-opentype"), url("../fonts/iconfont.woff") format("woff"), url("../fonts/iconfont.ttf") format("truetype"), url("../fonts/iconfont.svg#uxiconfont") format("svg");
-  /* iOS 4.1- */ }
 body {
   height: auto;
   position: relative;
   padding: 40px 60px;
   background-color: #fff; }
+  body::-webkit-scrollbar {
+    width: 9px; }
+  body::-webkit-scrollbar-track-piece {
+    background-color: #fff;
+    border-left: 1px #e5e9f2 solid;
+    border-right: 1px #e5e9f2 solid; }
+  body::-webkit-scrollbar-thumb {
+    height: 50px;
+    background-color: #a0b0c0;
+    border-radius: 10px; }
   body:before {
     content: "";
     position: absolute;
@@ -78,22 +53,30 @@ body {
     padding: 0 0 0 10px;
     font-size: 24px;
     font-weight: normal; }
-  body p, body fieldset {
+  body p {
+    position: relative;
+    max-width: 100%;
+    margin: 10px 0;
+    padding: 30px;
+    background-color: #f9fafe;
+    border: 1px #e5e9f2 solid; }
+  body fieldset {
     position: relative;
     max-width: 100%;
     margin: 80px 0 0;
     padding: 30px;
     background-color: #f9fafe;
     border: 1px #e5e9f2 solid; }
-    body p > legend, body fieldset > legend {
+    body fieldset p {
+      padding: 0;
+      border: 0 none; }
+    body fieldset > legend {
       position: absolute;
       top: -50px;
       left: 0;
       padding: 0 0 0 10px;
       font-size: 18px;
       border-left: 4px #1489e6 solid; }
-  body p {
-    margin: 10px 0; }
   body .table-doc-title {
     margin: 40px 0 20px;
     padding: 0 0 0 10px;

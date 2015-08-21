@@ -1,13 +1,69 @@
-@import "base";
+@import "../../../chameleon/compass/css3";
+@import "global";
+@import "apis";
 @import "download";
 
+/*
+* reset
+*/
+html,body,div,p,ul,ol,li,h1,h2,h3,h4,h5{
+  margin: 0;
+  padding: 0;
+}
+html, body{
+  height: 100%;
+}
 body{
+  position: relative;
+  color: $color-normal;
   background-color: #f9fafe;
+  font-size: $font-normal;
+  font-family: $font-stack;
+
+}
+ul,ol{
+  list-style: none;
+}
+a{
+  cursor: pointer;
+  text-decoration: none;
+  color: $color-normal;
+}
+h1,h2,h3,h4,h5{
+  color: $color-title;
+  font-size: $font-large;
+}
+.ms-controller, .ms-important{
+  visibility: hidden;
+}
+
+/*
+* custom classes
+*/
+.overdot{
+  @include inline-block;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  -o-text-overflow:ellipsis;
+  overflow:hidden;
+}
+.iconfont{
+  font-family:"iconfont" !important;
+  font-size:16px;font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+@font-face {font-family: 'iconfont';
+  src: url('../fonts/iconfont.eot'); /* IE9*/
+  src: url('../fonts/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../fonts/iconfont.woff') format('woff'), /* chrome、firefox */
+  url('../fonts/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url('../fonts/iconfont.svg#uxiconfont') format('svg'); /* iOS 4.1- */
 }
 
 /*
 * layout
-*
 */
 .oni-layout-header{
   background-color: $color-header-bg;
@@ -110,6 +166,19 @@ body{
     font-size: 16px;
     overflow: auto;
 
+    &::-webkit-scrollbar {
+      width: 9px;
+    }
+    &::-webkit-scrollbar-track-piece {
+      background-color: #f9fafe;
+      border-left: 1px $color-border-grey solid;
+    }
+    &::-webkit-scrollbar-thumb {
+      height: 50px;
+      background-color: #a0b0c0;
+      border-radius: 10px;
+    }
+
     .list {
       margin: -10px 0 30px;
       overflow: hidden;
@@ -189,143 +258,5 @@ body{
     width: 100%;
     height: 100%;
     border: 0 none;
-  }
-
-  .api-content-wrap{
-    height: 100%;
-    overflow: auto;
-    background-color: #fff;
-
-    .api-content{
-      position: relative;
-      padding: 40px 60px;
-
-      &:before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        border-width: 12px;
-        border-color: $color-theme-blue transparent transparent $color-theme-blue;
-        border-style: solid;
-      }
-
-      p, fieldset{
-        position: relative;
-        max-width: 100%;
-        margin: 80px 0 0;
-        padding: 30px;
-        background-color: #f9fafe;
-        border: 1px $color-border-grey solid;
-
-        >legend{
-          position: absolute;
-          top: -50px;
-          left: 0;
-          padding: 0 0 0 10px;
-          font-size: 18px;
-          border-left: 4px $color-theme-blue solid;
-        }
-      }
-
-      p{
-        margin: 10px 0;
-      }
-
-      .table-doc{
-        width: 100%;
-        margin: 0 0 30px;
-        border: 1px $color-border-grey solid;
-        border-collapse: collapse;
-        background-color: #fff;
-
-        th,td{
-          padding: 20px;
-          border: 1px $color-border-grey solid;
-          word-break: break-all;
-        }
-
-        th{
-          font-weight: normal;
-          background-color: #2c2f34;
-          color: #fff
-        }
-
-        td{
-          border-width: 1px 0;
-          vertical-align: top;
-        }
-      }
-
-      dt{
-        margin: 40px 0 0;
-        padding: 0 0 0 10px;
-        font-size: 18px;
-        border-left: 4px $color-theme-blue solid;
-      }
-      dd, blockquote{
-        margin: 10px 0;
-        padding: 30px;
-        background-color: #f9fafe;
-        border: 1px $color-border-grey solid;
-      }
-      ul, ol{
-        >li{
-          background-color: #fff;
-          border: 1px $color-border-grey solid;
-          padding: 5px;
-          margin: 5px 0;
-        }
-      }
-
-      a{
-        color: $color-theme-blue;
-      }
-
-      button{
-        @include inline-block;
-        height: 32px;
-        line-height: 30px;
-        padding: 0px 15px;
-        border: 1px #aaa solid;
-        font-size: 14px;
-        border-radius: 3px;
-        color: #555;
-        background-color: #fff;
-        outline: none;
-        cursor: pointer;
-
-        &:hover{
-          color: #111;
-          border-color: #666;
-        }
-      }
-
-      input{
-        @include inline-block;
-        height: 32px;
-        padding: 0 5px;
-        line-height: 30px;
-        border: 1px #aaa solid;
-        font-size: 14px;
-        outline: none;
-        border-radius: 3px;
-        color: #555;
-        background-color: #fff;
-
-        &[disabled], &[readonly]{
-          background-color: #ccc;
-        }
-        &[type="submit"]{
-          padding: 0px 15px;
-          cursor: pointer;
-
-          &:hover{
-            color: #111;
-            border-color: #666;
-          }
-        }
-      }
-    }
   }
 }

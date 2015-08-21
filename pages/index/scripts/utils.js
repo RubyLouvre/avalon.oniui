@@ -141,7 +141,6 @@ define("utils", function(){
 
                     var exs = models.examples[widgetId],
                         firstEx
-
                     for(var i in exs){
                         firstEx = exs[i]
                         break

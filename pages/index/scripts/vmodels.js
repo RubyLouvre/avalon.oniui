@@ -2,7 +2,7 @@
  * 各个页面的vmodel
  */
 
-define(["pages/index/models", "pages/index/utils", "mmRouter/mmState", "domReady!"], function (models, utils) {
+define(["pages/index/scripts/models", "pages/index/scripts/utils", "mmRouter/mmState", "domReady!"], function (models, utils) {
     var vmodels = {
         pages: avalon.define({
             $id: "pages",
@@ -16,10 +16,10 @@ define(["pages/index/models", "pages/index/utils", "mmRouter/mmState", "domReady
             },
             activeNav: utils.getActiveNav(),
             switchNavTo: function (key) {
-                if (vmodels.navs[key][0] !== "#") {
+                if (vmodels.pages.navs[key][0] !== "#") {
                     return
                 }
-                vmodels.activeNav = key
+                vmodels.pages.activeNav = key
             },
 
             // 搜索框
@@ -27,11 +27,11 @@ define(["pages/index/models", "pages/index/utils", "mmRouter/mmState", "domReady
             search: function (e) {
                 if (e.keyCode === 13 || e.type === "click") {
 
-                    if (pagesVM.activeNav === "组件库") {
-                        pagesVM.backToMenu()
-                        utils.scrollDir("widgets", pagesVM.searchKey, pagesVM.directorys.$model)
+                    if (vmodels.pages.activeNav === "组件库") {
+                        vmodels.pages.backToMenu()
+                        utils.scrollDir("widgets", vmodels.pages.searchKey, vmodels.pages.directorys.$model)
                     } else {
-                        utils.scrollDir("apis", pagesVM.searchKey, pagesVM.directorys.$model)
+                        utils.scrollDir("apis", vmodels.pages.searchKey, vmodels.pages.directorys.$model)
                     }
                 }
             },
@@ -43,16 +43,16 @@ define(["pages/index/models", "pages/index/utils", "mmRouter/mmState", "domReady
             goWidgetBtnVisible: false,
             backToMenuBtnVisible: false,
             showWidgetExs: function () {
-                pagesVM.goWidgetBtnVisible = false
-                pagesVM.backToMenuBtnVisible = true
+                vmodels.pages.goWidgetBtnVisible = false
+                vmodels.pages.backToMenuBtnVisible = true
 
-                utils.prepareExampleDirectory(pagesVM, models, utils.getHashValue("widgetId"))
+                utils.prepareExampleDirectory(vmodels.pages, models, utils.getHashValue("widgetId"))
             },
             backToMenu: function () {
-                pagesVM.goWidgetBtnVisible = true
-                pagesVM.backToMenuBtnVisible = false
+                vmodels.pages.goWidgetBtnVisible = true
+                vmodels.pages.backToMenuBtnVisible = false
 
-                utils.prepareWidgetDirectory(pagesVM, models)
+                utils.prepareWidgetDirectory(vmodels.pages, models)
             },
 
             // 获取组件使用说明链接

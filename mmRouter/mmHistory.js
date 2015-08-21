@@ -211,7 +211,7 @@ define(["avalon"], function(avalon) {
                 var newHash = this.prefix + hash
                 if(st && hash != this.getHash()) {
                     this._setIframeHistory(newHash, rp)
-                    if(this.fragment) avalon.router.setLastPath(this.fragment.split("?")[0])
+                    if(this.fragment) avalon.router.setLastPath(this.fragment)
                     this.fragment = this._getHash(newHash)
                 }
                 this._setHash(this.location, newHash, rp)

@@ -23,10 +23,9 @@
               {{$key}}<span ms-if="typeof $val.intro !== 'undefined'">-{{$val.intro}}</span>
             </a>
         </li>
-        <li class="list-item" ms-if="backToMenuBtnVisible">
+        <li class="list-item" ms-if="backToMenuBtnVisible" ms-class="active-dir:/doc(?=\.html)/.test(currentEx)">
             <a class="overdot list-item-link"
-               ms-attr-href="getDocHref()"
-               ms-class="active-dir:/doc(?=\.html)/.test(currentEx)">
+               ms-attr-href="getDocHref()">
                 组件使用说明
             </a>
         </li>

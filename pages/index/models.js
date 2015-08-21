@@ -1,4 +1,8 @@
-define("exs", function(){
+/**
+ * 页面数据
+ */
+
+define("models", function(){
     return {
         widgets: {
             "UI组件": {
@@ -475,6 +479,100 @@ define("exs", function(){
                 "deduplicateInValidateAll:true对validatieAll回调的reasons数组根据element进行去重": "avalon.validation.ex13.html",
                 "验证dropdown组件": "avalon.validation.ex14.html"
             }
+        },
+        apis: {
+            "核心概念": {
+                "非监控属性": "concepts/unobservable.html",
+                "监控属性": "concepts/observable.html",
+                "监控数组": "concepts/collection.html",
+                "计算属性": "concepts/computed.html",
+                "watch方法": "concepts/$watch.html",
+                "fire方法": "concepts/$fire.html",
+                "视图模型": "concepts/vmodel.html",
+                "数据模型": "concepts/$model.html"
+            },
+            "bindings": {
+                "ms-alt": "bindings/string-bindings.html",
+                "ms-attr": "bindings/ms-attr.html",
+                "ms-checked": "bindings/ms-attr.html",
+                "ms-class": "bindings/ms-class.html",
+                "ms-css": "bindings/ms-css.html",
+                "ms-data": "bindings/ms-data.html",
+                "ms-disabled": "bindings/ms-attr.html",
+                "ms-duplex": "bindings/ms-duplex.html",
+                "ms-href": "bindings/string-bindings.html",
+                "ms-html": "bindings/ms-html.html",
+                "ms-if": "bindings/ms-if.html",
+                "ms-include": "bindings/ms-include.html",
+                "ms-on": "bindings/ms-on.html",
+                "ms-readonly": "bindings/ms-attr.html",
+                "ms-repeat": "bindings/ms-repeat.html",
+                "ms-selected": "bindings/ms-attr.html",
+                "ms-src": "bindings/string-bindings.html",
+                "ms-text": "bindings/ms-text.html",
+                "ms-title": "bindings/string-bindings.html",
+                "ms-value": "bindings/string-bindings.html",
+                "ms-visible": "bindings/ms-visible.html",
+                "ms-widget": "bindings/ms-widget.html"
+            },
+            "回调方法": {
+                "data-callback": "callbacks/data-callback.html"
+            },
+            "静态方法": {
+                "statics": "statics/statics.html"
+            },
+            "原型方法": {
+                "prototypes": "prototypes/prototypes.html"
+            },
+            "表单示例": {
+                "form": "form/index.html"
+            }
+        },
+        statics: {
+            "mix(a,b)": "★★★相当于jQuery.extend, 或用于深浅拷贝属性",
+            "log(s)": "打印日志,如avalon.log(a); avalon.log(a, b)",
+            "isFunction(s)": "判定是否为函数,1.3.6新增",
+            "error(s)": "抛出异常",
+            "ui": "用于放置组件",
+            "vmodels": "★★★用于放置avalon.define(id, fn)产生的ViewModel",
+            "noop": "一个空函数",
+            "ready(fn)": "★★★domReady，将回调延迟到DOM树后才执行",
+            "oneObject(str | array, val?)": "★★★如果传入一个字符串则将它以逗号转换为一个字符串数组，否则一定要传字符串数组，第二个参数可选，为生成的对象的值。此方法是用于生成一个键名不一样，但键值都一样的对象。如{a:1, b:1, c:1, d:1}",
+            "type(obj)": "★★★返回传参的数据类型，值可能为array, date, object, json, number, string, null, undefined",
+            "isWindow(obj)": "判定是否为window对象",
+            "isPlainObject(obj)": "判定是否是一个朴素的javascript对象（Object），不是DOM对象，不是BOM对象，不是自定义类的实例",
+            "slice(obj, start?, end?)": "用于转换一个类数组对象为一个纯数组，后面两个为索引值，可以只取原对象的一部分元素",
+            "range(start, end, step)": "生成一个整数数组，功能与underscorejs或python的同名函数一致",
+            "bind(el, type, fn, phase)": "绑定事件，返回一个回调给你自行卸载",
+            "unbind(el, type, fn, phase)": "卸载事件",
+            "each(obj,fn)": "★★★功能同jQuery.each， 都是索引值或键名在前，值或元素在后",
+            "avalon.define(id, factory)": "★★★定义一个ViewModel",
+            "scan(el?, vmodels?, group ?)": "★★★扫描DOM树，抽取绑定(el默认为DOM,vmodels默认为空数组",
+
+            "define(id?, deps?, factory)": "●一个全局方法，用于定义AMD规范的JS模块",
+            "require(deps, callback)": "●一个全局方法，用于加载JS模块",
+            "css(node, name, value?)": "如果只有两个参数，读取元素的某个样式，三个参数时，设置元素某个样式;<br/>" +
+            "在设置样式时,如果是长宽等计量属性,你可以直接传一个数值,框架会自动帮你添加px单位;<br/>" +
+            "如果是取值时,你的第三个参数是true,它会帮你去掉单位,转换为纯数值",
+            "nextTick(fn)": "延迟执行某个函数，类似于setTimeout(fn, 0)",
+            "contains(a, b)": "判定A元素包含B元素",
+            "parseHTML(str)": "将一段字符串转换为文档碎片",
+            "innerHTML(node, str)": "对节点node进行innerHTML操作，在旧式IE下，head, table, td, tr, th等元素的innerHTML是只读，这个方法进行了兼容处理",
+            "clearHTML(node)": "清空元素的所有子节点",
+            "Array.remove(array, el)": "移除某个元素，成功返回true，失败返回false",
+            "Array.removeAt(array, index)": "移除某个位置上的元素，成功返回true，失败返回false",
+            "Array.ensure(array, el)": "只有数组不存在此元素时才添加它",
+            "avalon.filters.uppercase(str)": "全部大写",
+            "avalon.filters.lowercase(str)": "全部小写",
+            "avalon.filters.truncate(str, length, truncation)": "length，新字符串长度，truncation，新字符串的结尾的字段",
+            "avalon.filters.camelize(str)": "驼峰化",
+            "avalon.filters.escape(str)": "将字符串经过 html 转义得到适合在页面中显示的内容, 例如替换 &lt; 为 &amplt;",
+            "avalon.filters.currency(str,symbol)": "货币处理，默认第2个参数为￥",
+            "avalon.filters.number(str, decimals, dec_point, thousands_sep)": "数字格式化<br/>" +
+            "str 必需 要格式化的数字<br/>" +
+            "decimals	可选，规定多少个小数位<br/>" +
+            "dec_point	可选，规定用作小数点的字符串（默认为 . ）<br/>" +
+            "thousands_sep 可选，规定用作千位分隔符的字符串（默认为','）。如果设置了该参数，那么所有其他参数都是必需的"
         }
     }
 })

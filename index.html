@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>OniUI(new)</title>
+    <title>OniUI</title>
     <link type="text/css" rel="stylesheet" href="pages/index/styles/index.css"/>
     <script src="avalon.js"></script>
     <script src="highlight/shCore.js"></script>
@@ -17,7 +17,7 @@
 
         <div class="nav">
             <ul class="nav-list">
-                <li class="nav-item" ms-repeat-page="pages" ms-class="active: $key == activeNav">
+                <li class="nav-item" ms-repeat="navs" ms-class="active: $key == activeNav">
                     <a class="nav-link"
                        ms-href="{{$val}}"
                        ms-click="switchNavTo($key)"

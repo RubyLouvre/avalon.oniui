@@ -7,9 +7,8 @@
         <meta name="viewport" content="width=device-width">
         <meta name="descriptions" content="按钮组件提供丰富的样式、形式选择，除与bootstrap可用的button样式保持一致外，支持small、default、big、large四种尺寸，同时支持图标button，可以是仅有图标的button，图标在左边的button、图标在右边的button、两边都有图标的button，当然也支持图标组，有水平图标组、垂直图标组两种形式
 
- " />
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
-        />
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
         <script src="../highlight/shCore.js"></script>
     </head>
     
@@ -20,14 +19,14 @@
                 <legend>按钮组件</legend>
                 <p>按钮组件提供丰富的样式、形式选择，除与bootstrap可用的button样式保持一致外，支持small、default、big、large四种尺寸，同时支持图标button，可以是仅有图标的button，图标在左边的button、图标在右边的button、两边都有图标的button，当然也支持图标组，有水平图标组、垂直图标组两种形式</p>
             </fieldset>
-            <fieldset>
-                <legend>使用说明</legend>
-                <table class="table-doc" border="1">
-                    <colgroup>
-                        <col width="180" />
-                        <col width="80" />
-                        <col width="120" />
-                    </colgroup>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
                     <tr>
                         <th>名字</th>
                         <th>类型</th>
@@ -57,54 +56,12 @@
                             <p>data属性配置button组的内容，每一个数组元素都是一个包含单个按钮基本信息的对象。</p>
                             <p>注意，请只在button组由至少两个按钮组成时，才配置button组件为button组，也就是设置groups为true时，且配置相应的data</p>
                             <p>当然还有一种直接列出button组内容的方式，不过这种情况需要指定组件名为buttonset，请看
-                                <a href="./avalon.button.ex4.html">demo 4</a>a></p>
-                            <pre>
-
-            data: [{
-
-                type: "labeledIcon",
-
-                iconPosition: "right",
-
-                icon: "\&\#xf04c;",
-
-                size: "large",
-
-                color: "success",
-
-                text: "暂停"
-
-            }, {
-
-                type: "labeledIcon",
-
-                iconPosition: "right",
-
-                icon: "\&\#xf04b;",
-
-                size: "large",
-
-                color: "success",
-
-                text: "播放"
-
-            }, {
-
-                type: "labeledIcon",
-
-                iconPosition: "right",
-
-                icon: "\&\#xf074;",
-
-                size: "large",
-
-                color: "success",
-
-                text: "拖曳"
-
-            }]                                
-
-         </pre>
+                                <a href="./avalon.button.ex4.html">demo 4</a>a&gt;</p>
+                            <pre>data: [{ type: "labeledIcon", iconPosition: "right", icon: "\&amp;\#xf04c;",
+                                size: "large", color: "success", text: "暂停" }, { type: "labeledIcon", iconPosition:
+                                "right", icon: "\&amp;\#xf04b;", size: "large", color: "success", text:
+                                "播放" }, { type: "labeledIcon", iconPosition: "right", icon: "\&amp;\#xf074;",
+                                size: "large", color: "success", text: "拖曳" }]</pre>
                         </td>
                     </tr>
                     <tr>
@@ -124,7 +81,7 @@
                         <td>String</td>
                         <td>""</td>
                         <td>当type为icon或者labeledIcon时，定义展示icon的内容，本组件的icon是使用web font实现，当iconPosition为"left"或者"right"时，将icon的码赋给icon，当iconPosition为"left-right",将left
-                            icon与right icon的码以"-"分隔，比如data-button-icon="\&\#xf001;-\&\#xf06b;"</td>
+                            icon与right icon的码以"-"分隔，比如data-button-icon="\&amp;\#xf001;-\&amp;\#xf06b;"</td>
                     </tr>
                     <tr>
                         <td>size</td>
@@ -163,8 +120,8 @@
                         <td>""</td>
                         <td>设置button的宽度，注意button的盒模型设为了border-box</td>
                     </tr>
-                </table>
-            </fieldset>
+                </tbody>
+            </table>
             <ul class="example-links">
                 <li>
                     <a href="avalon.button.ex1.html">设置button的大小、宽度，展示不同类型的button</a>

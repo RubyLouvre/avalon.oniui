@@ -5,10 +5,8 @@
         <title>布局组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <meta name="descriptions" content="区域布局管理组件。一个组件中最多分为5个区域，分别为东西南北中区。其中中区是默认存在并不可移除的。"
-        />
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
-        />
+        <meta name="descriptions" content="区域布局管理组件。一个组件中最多分为5个区域，分别为东西南北中区。其中中区是默认存在并不可移除的。">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
         <script src="../highlight/shCore.js"></script>
     </head>
     
@@ -19,14 +17,14 @@
                 <legend>布局组件</legend>
                 <p>区域布局管理组件。一个组件中最多分为5个区域，分别为东西南北中区。其中中区是默认存在并不可移除的。</p>
             </fieldset>
-            <fieldset>
-                <legend>使用说明</legend>
-                <table class="table-doc" border="1">
-                    <colgroup>
-                        <col width="180" />
-                        <col width="80" />
-                        <col width="120" />
-                    </colgroup>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
                     <tr>
                         <th>名字</th>
                         <th>类型</th>
@@ -102,21 +100,23 @@
                         <td></td>
                         <td>删除一个Region并将DOM移出文档
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>opts</td>
-                                    <td>Object</td>
-                                    <td>vmodel</td>
-                                </tr>
-                                <tr>
-                                    <td>region</td>
-                                    <td>Object</td>
-                                    <td>east, south, west或者north。centre区域不可移除。</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>region</td>
+                                        <td>Object</td>
+                                        <td>east, south, west或者north。centre区域不可移除。</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -126,26 +126,28 @@
                         <td></td>
                         <td>新增一个不存在的区域
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>opts</td>
-                                    <td>Object</td>
-                                    <td>vmodel</td>
-                                </tr>
-                                <tr>
-                                    <td>region</td>
-                                    <td>Object</td>
-                                    <td>east, south, west或者north。</td>
-                                </tr>
-                                <tr>
-                                    <td>cfg</td>
-                                    <td>Object</td>
-                                    <td>区域配置对象。参看region配置</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>region</td>
+                                        <td>Object</td>
+                                        <td>east, south, west或者north。</td>
+                                    </tr>
+                                    <tr>
+                                        <td>cfg</td>
+                                        <td>Object</td>
+                                        <td>区域配置对象。参看region配置</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -155,26 +157,28 @@
                         <td></td>
                         <td>拖动拖放器后区域大小改变的回调函数。单独的区域配置中若有相同的回调函数，则该区域被拖动后主配置的回调不会触发
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>region</td>
-                                    <td>Object</td>
-                                    <td>east, south, west或者north。</td>
-                                </tr>
-                                <tr>
-                                    <td>beforeSize</td>
-                                    <td>Number</td>
-                                    <td>拖放前的尺寸</td>
-                                </tr>
-                                <tr>
-                                    <td>afterSize</td>
-                                    <td>Number</td>
-                                    <td>拖放后的尺寸</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>region</td>
+                                        <td>Object</td>
+                                        <td>east, south, west或者north。</td>
+                                    </tr>
+                                    <tr>
+                                        <td>beforeSize</td>
+                                        <td>Number</td>
+                                        <td>拖放前的尺寸</td>
+                                    </tr>
+                                    <tr>
+                                        <td>afterSize</td>
+                                        <td>Number</td>
+                                        <td>拖放后的尺寸</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -184,16 +188,18 @@
                         <td></td>
                         <td>移除一个区域后的回调函数。单独的区域配置中若有相同的回调函数，则该区域被移除后主配置的回调不会触发
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>region</td>
-                                    <td>Object</td>
-                                    <td>east, south, west或者north。</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>region</td>
+                                        <td>Object</td>
+                                        <td>east, south, west或者north。</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -203,26 +209,28 @@
                         <td></td>
                         <td>新增一个区域后的回调函数。
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>region</td>
-                                    <td>Object</td>
-                                    <td>east, south, west或者north。</td>
-                                </tr>
-                                <tr>
-                                    <td>dom</td>
-                                    <td>Object</td>
-                                    <td>新增区域的DOM节点</td>
-                                </tr>
-                                <tr>
-                                    <td>cfg</td>
-                                    <td>Object</td>
-                                    <td>region配置对象。参看region配置</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>region</td>
+                                        <td>Object</td>
+                                        <td>east, south, west或者north。</td>
+                                    </tr>
+                                    <tr>
+                                        <td>dom</td>
+                                        <td>Object</td>
+                                        <td>新增区域的DOM节点</td>
+                                    </tr>
+                                    <tr>
+                                        <td>cfg</td>
+                                        <td>Object</td>
+                                        <td>region配置对象。参看region配置</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -232,16 +240,18 @@
                         <td></td>
                         <td>当更改Layout尺寸后，需要调用此函数重新计算布局大小。
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>opts</td>
-                                    <td>Object</td>
-                                    <td>vmodel</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -251,21 +261,23 @@
                         <td></td>
                         <td>检测Layout是否包含一个区域。
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>opts</td>
-                                    <td>Object</td>
-                                    <td>vmodel</td>
-                                </tr>
-                                <tr>
-                                    <td>region</td>
-                                    <td>Object</td>
-                                    <td>east, south, west, north或者centre。</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>region</td>
+                                        <td>Object</td>
+                                        <td>east, south, west, north或者centre。</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -275,55 +287,45 @@
                         <td></td>
                         <td>获取一个区域的真实尺寸。
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>opts</td>
-                                    <td>Object</td>
-                                    <td>vmodel</td>
-                                </tr>
-                                <tr>
-                                    <td>region</td>
-                                    <td>Object</td>
-                                    <td>east, south, west或者north。</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>region</td>
+                                        <td>Object</td>
+                                        <td>east, south, west或者north。</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
-                </table>
-            </fieldset>
+                </tbody>
+            </table>
             <div class="others">
                 <p>
                     <b>使用ms-layout-dock在Layout组件下自定义区域内的内容</b>
                 </p>除了使用API的方式配置Layout组件，还可以使用ms-layout-dock属性，在HTML文档内配置区域的位置以及内容。如下：
                 <pre
-                class="brush:html;gutter:false;toolbar:false;">&lt;div ms-widget=&quot;layout,layoutVM,$layoutVMOptions&quot; class=&quot;container&quot;&gt;
-                    &lt;div ms-layout-dock=&quot;north&quot;&gt; &lt;div style=&quot;width:100%;height:100px;background-image:logo.png&quot;&gt;聪明你的旅行&lt;/div&gt;
+                class="brush:html;gutter:false;toolbar:false;">&lt;div ms-widget="layout,layoutVM,$layoutVMOptions" class="container"&gt;
+                    &lt;div ms-layout-dock="north"&gt; &lt;div style="width:100%;height:100px;background-image:logo.png"&gt;聪明你的旅行&lt;/div&gt;
                     &lt;/div&gt; &lt;/div&gt;例子4内有完整的示例方式。</pre>
                     <p>
                         <b>region对象</b>
                     </p>region对象是一个非常重要的对象，下面是说明和默认值
-                    <pre class="brush:javascript;gutter:false;toolbar:false;">{
-    //区域尺寸。不可用于centre区域。数字或者百分比。
-    //对于North和South来说，代表的是Height，因为Width是固定等于整个Layout的Width
-    //对于East和West来说，代表的是Width，因为Height是固定等于整个Layout.Height - North.size - South.size
-    size: 0,
-
-    //是否增加一个resizer。不可用于centre区域
-    resizable: false,
-
-    //增加在区域上的CSS
-    regionClass: "",
-
-    //区域被移除后的回调。不可用于centre区域。配置了本项后，移除区域时不会触发主配置的afterRemove回调
-    afterRemove: undefined,
-
-    //区域改变大小后的回调。不可用于centre区域。配置了本项后，改变区域大小时不会触发主要的afterResize回调
-    afterResize: undefined
-}</pre>
+                    <pre class="brush:javascript;gutter:false;toolbar:false;">{ //区域尺寸。不可用于centre区域。数字或者百分比。 //对于North和South来说，代表的是Height，因为Width是固定等于整个Layout的Width
+                        //对于East和West来说，代表的是Width，因为Height是固定等于整个Layout.Height - North.size - South.size
+                        size: 0, //是否增加一个resizer。不可用于centre区域 resizable: false, //增加在区域上的CSS regionClass:
+                        "", //区域被移除后的回调。不可用于centre区域。配置了本项后，移除区域时不会触发主配置的afterRemove回调 afterRemove:
+                        undefined, //区域改变大小后的回调。不可用于centre区域。配置了本项后，改变区域大小时不会触发主要的afterResize回调
+                        afterResize: undefined }</pre>
             </div>
             <ul class="example-links">
                 <li>

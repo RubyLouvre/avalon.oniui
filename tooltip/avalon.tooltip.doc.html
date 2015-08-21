@@ -5,9 +5,8 @@
         <title>气泡组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <meta name="descriptions" content=" 给一个元素或者给元素里满足配置条件的系列元素添加一个富UI及交互的气泡提示框" />
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
-        />
+        <meta name="descriptions" content=" 给一个元素或者给元素里满足配置条件的系列元素添加一个富UI及交互的气泡提示框">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
         <script src="../highlight/shCore.js"></script>
     </head>
     
@@ -18,14 +17,14 @@
                 <legend>气泡组件</legend>
                 <p>给一个元素或者给元素里满足配置条件的系列元素添加一个富UI及交互的气泡提示框</p>
             </fieldset>
-            <fieldset>
-                <legend>使用说明</legend>
-                <table class="table-doc" border="1">
-                    <colgroup>
-                        <col width="180" />
-                        <col width="80" />
-                        <col width="120" />
-                    </colgroup>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
                     <tr>
                         <th>名字</th>
                         <th>类型</th>
@@ -131,7 +130,7 @@
                         <td>positionAt</td>
                         <td>Boolean</td>
                         <td>false</td>
-                        <td>element元素的定位点，like: left top+11,positionAt && positionMy时候忽略position设置</td>
+                        <td>element元素的定位点，like: left top+11,positionAt &amp;&amp; positionMy时候忽略position设置</td>
                     </tr>
                     <tr>
                         <td>hiddenDelay</td>
@@ -191,30 +190,33 @@
                         <td>showBy($event, content) 参数满足 {target: elem}这样，或者是一个elem元素亦可，tooltip会按照elem定位，并作为参数传递给contentGetter，如果指定content，则忽略contentGetter的返回，直接显示content内容
                             <table
                             border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>obj</td>
-                                    <td></td>
-                                    <td>$event 定位参照物，可以是一个事件，也可以是一个元素，如果未提供有效的元素或者事件，则采用上一次定位的元素或者事件来定位</td>
-                                </tr>
-                                <tr>
-                                    <td>content</td>
-                                    <td></td>
-                                    <td>content 用来填充tooltip的内容</td>
-                                </tr>
-                </table>
-                </td>
-                </tr>
-                <tr>
-                    <td>appendTo(ele)</td>
-                    <td>Function</td>
-                    <td></td>
-                    <td>将toolTip元素注入到指定的元素内，请在调用appendTo之后再调用showBy
-                        <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>obj</td>
+                                        <td></td>
+                                        <td>$event 定位参照物，可以是一个事件，也可以是一个元素，如果未提供有效的元素或者事件，则采用上一次定位的元素或者事件来定位</td>
+                                    </tr>
+                                    <tr>
+                                        <td>content</td>
+                                        <td></td>
+                                        <td>content 用来填充tooltip的内容</td>
+                                    </tr>
+                                </tbody>
+            </table>
+            </td>
+            </tr>
+            <tr>
+                <td>appendTo(ele)</td>
+                <td>Function</td>
+                <td></td>
+                <td>将toolTip元素注入到指定的元素内，请在调用appendTo之后再调用showBy
+                    <table border="1">
+                        <tbody>
                             <tr>
                                 <th style="width:100px">参数名/返回值</th>
                                 <th style="width:70px">类型</th>
@@ -225,11 +227,12 @@
                                 <td></td>
                                 <td>目标元素</td>
                             </tr>
-                        </table>
-                    </td>
-                </tr>
-                </table>
-            </fieldset>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            </tbody>
+            </table>
             <ul class="example-links">
                 <li>
                     <a href="avalon.tooltip.ex.html">input元素不绑定事件，人工触发</a>

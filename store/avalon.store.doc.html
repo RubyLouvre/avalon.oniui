@@ -5,10 +5,8 @@
         <title>本地储存组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <meta name="descriptions" content="   IE8+及高级浏览器使用localStorage，旧式IE使用userData。这些方法放于avalon.store对象上。"
-        />
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
-        />
+        <meta name="descriptions" content="   IE8+及高级浏览器使用localStorage，旧式IE使用userData。这些方法放于avalon.store对象上。">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
         <script src="../highlight/shCore.js"></script>
     </head>
     
@@ -19,14 +17,14 @@
                 <legend>本地储存组件</legend>
                 <p>IE8+及高级浏览器使用localStorage，旧式IE使用userData。这些方法放于avalon.store对象上。</p>
             </fieldset>
-            <fieldset>
-                <legend>使用说明</legend>
-                <table class="table-doc" border="1">
-                    <colgroup>
-                        <col width="180" />
-                        <col width="80" />
-                        <col width="120" />
-                    </colgroup>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
                     <tr>
                         <th>名字</th>
                         <th>类型</th>
@@ -42,21 +40,23 @@
                         <td></td>
                         <td>添加或设置某一数据
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>name</td>
-                                    <td>String</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>value</td>
-                                    <td>String</td>
-                                    <td></td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>name</td>
+                                        <td>String</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>value</td>
+                                        <td>String</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -66,21 +66,23 @@
                         <td></td>
                         <td>获取某一数据
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>name</td>
-                                    <td>String</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>返回</td>
-                                    <td>String</td>
-                                    <td></td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>name</td>
+                                        <td>String</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -90,16 +92,18 @@
                         <td></td>
                         <td>移除某一数据
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>key</td>
-                                    <td>String</td>
-                                    <td></td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>key</td>
+                                        <td>String</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -115,16 +119,18 @@
                         <td></td>
                         <td>遍历所有数据
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>callback</td>
-                                    <td>Function</td>
-                                    <td>里面会依次传入key与value</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>callback</td>
+                                        <td>Function</td>
+                                        <td>里面会依次传入key与value</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -134,21 +140,23 @@
                         <td></td>
                         <td>得到所有数据，以对象形式返回
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>返回</td>
-                                    <td>Object</td>
-                                    <td></td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>Object</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
-                </table>
-            </fieldset>
+                </tbody>
+            </table>
             <div class="others">这里提供了一个用cookie实现本地储存的方案 https://developer.mozilla.org/en/DOM/Storage 其他有用的资料
                 <ul>
                     <li>

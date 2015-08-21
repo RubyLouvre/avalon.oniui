@@ -13,9 +13,8 @@ callback配置说明
             //点击前
             beforeClick: false,
             //双击
-            onDblClick:" />
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
-        />
+            onDblClick:">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
         <script src="../highlight/shCore.js"></script>
     </head>
     
@@ -194,14 +193,14 @@ callback配置说明
             type: "post" - Ajax 的 http 请求模式。[async.enable = true 时生效]
         }</pre>
             </fieldset>
-            <fieldset>
-                <legend>使用说明</legend>
-                <table class="table-doc" border="1">
-                    <colgroup>
-                        <col width="180" />
-                        <col width="80" />
-                        <col width="120" />
-                    </colgroup>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
                     <tr>
                         <th>名字</th>
                         <th>类型</th>
@@ -235,21 +234,23 @@ callback配置说明
                         <td>avalon.noop</td>
                         <td>完成初始化之后的回调
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>vmodel</td>
-                                    <td>vmodel</td>
-                                    <td>vmodel</td>
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>Object</td>
-                                    <td>options</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodel</td>
+                                        <td>vmodel</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options</td>
+                                        <td>Object</td>
+                                        <td>options</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -259,26 +260,28 @@ callback配置说明
                         <td></td>
                         <td>模板函数,方便用户自定义模板
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>str</td>
-                                    <td>String</td>
-                                    <td>默认模板</td>
-                                </tr>
-                                <tr>
-                                    <td>opts</td>
-                                    <td>Object</td>
-                                    <td>vmodel</td>
-                                </tr>
-                                <tr>
-                                    <td>返回</td>
-                                    <td>String</td>
-                                    <td>新模板</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>str</td>
+                                        <td>String</td>
+                                        <td>默认模板</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td>新模板</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -291,21 +294,23 @@ callback配置说明
                         <td></td>
                         <td>展开leaf节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>arg</td>
-                                    <td>Object</td>
-                                    <td>指定节点，也可以是{leaf:leaf} or leaf</td>
-                                </tr>
-                                <tr>
-                                    <td>all</td>
-                                    <td>boolen</td>
-                                    <td>表示是否迭代所有子孙节点</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>arg</td>
+                                        <td>Object</td>
+                                        <td>指定节点，也可以是{leaf:leaf} or leaf</td>
+                                    </tr>
+                                    <tr>
+                                        <td>all</td>
+                                        <td>boolen</td>
+                                        <td>表示是否迭代所有子孙节点</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -316,16 +321,18 @@ callback配置说明
                         <td>展开 / 折叠 全部节点，返回true表示展开，false表示折叠，此方法不会触发 beforeExpand / onExpand 和 beforeCollapse
                             / onCollapse 事件回调函数
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>openOrClose</td>
-                                    <td>arr</td>
-                                    <td>true 表示 展开 全部节点，false 表示 折叠 全部节点</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>openOrClose</td>
+                                        <td>arr</td>
+                                        <td>true 表示 展开 全部节点，false 表示 折叠 全部节点</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -335,21 +342,23 @@ callback配置说明
                         <td></td>
                         <td>折叠leaf节点的子节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>指定节点，也可以是{leaf:leaf} or leaf</td>
-                                </tr>
-                                <tr>
-                                    <td>all</td>
-                                    <td>boolen</td>
-                                    <td>表示是否迭代所有子孙节点</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>Object</td>
+                                        <td>指定节点，也可以是{leaf:leaf} or leaf</td>
+                                    </tr>
+                                    <tr>
+                                        <td>all</td>
+                                        <td>boolen</td>
+                                        <td>表示是否迭代所有子孙节点</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -359,16 +368,18 @@ callback配置说明
                         <td></td>
                         <td>隐藏某个节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>指定节点，也可以是{leaf:leaf} or leaf</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>Object</td>
+                                        <td>指定节点，也可以是{leaf:leaf} or leaf</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -378,16 +389,18 @@ callback配置说明
                         <td></td>
                         <td>隐藏节点集合
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>nodes</td>
-                                    <td>Array</td>
-                                    <td>节点集合</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>nodes</td>
+                                        <td>Array</td>
+                                        <td>节点集合</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -397,16 +410,18 @@ callback配置说明
                         <td></td>
                         <td>显示某个节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>node</td>
-                                    <td>Object</td>
-                                    <td>指定节点，也可以是{leaf:leaf} or leaf</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>node</td>
+                                        <td>Object</td>
+                                        <td>指定节点，也可以是{leaf:leaf} or leaf</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -416,16 +431,18 @@ callback配置说明
                         <td></td>
                         <td>显示节点集合
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>nodes</td>
-                                    <td>Array</td>
-                                    <td>节点集合</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>nodes</td>
+                                        <td>Array</td>
+                                        <td>节点集合</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -435,36 +452,38 @@ callback配置说明
                         <td></td>
                         <td>中序向下遍历树，返回一个数组
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>startLeaf</td>
-                                    <td>Object</td>
-                                    <td>起点，为空表示根</td>
-                                </tr>
-                                <tr>
-                                    <td>func</td>
-                                    <td>Function</td>
-                                    <td>递归操作，传递参数是当前节点，options，如果!!return != false，则将返回压入res</td>
-                                </tr>
-                                <tr>
-                                    <td>endFunc</td>
-                                    <td>Function</td>
-                                    <td>终止遍历判断，传递参数是res,当前节点,起点，return true则终止遍历</td>
-                                </tr>
-                                <tr>
-                                    <td>res</td>
-                                    <td>Array</td>
-                                    <td>存储结果的数组，为空则会内部声明一个</td>
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>Object</td>
-                                    <td>用于辅助func的参数</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>startLeaf</td>
+                                        <td>Object</td>
+                                        <td>起点，为空表示根</td>
+                                    </tr>
+                                    <tr>
+                                        <td>func</td>
+                                        <td>Function</td>
+                                        <td>递归操作，传递参数是当前节点，options，如果!!return != false，则将返回压入res</td>
+                                    </tr>
+                                    <tr>
+                                        <td>endFunc</td>
+                                        <td>Function</td>
+                                        <td>终止遍历判断，传递参数是res,当前节点,起点，return true则终止遍历</td>
+                                    </tr>
+                                    <tr>
+                                        <td>res</td>
+                                        <td>Array</td>
+                                        <td>存储结果的数组，为空则会内部声明一个</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options</td>
+                                        <td>Object</td>
+                                        <td>用于辅助func的参数</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -474,36 +493,38 @@ callback配置说明
                         <td></td>
                         <td>向上溯源，返回一个数组
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>startLeaf</td>
-                                    <td>Object</td>
-                                    <td>起点</td>
-                                </tr>
-                                <tr>
-                                    <td>func</td>
-                                    <td>Function</td>
-                                    <td>递归操作，传递参数是当前节点，options，如果!!return != false，则将返回压入res</td>
-                                </tr>
-                                <tr>
-                                    <td>endFunc</td>
-                                    <td>Function</td>
-                                    <td>终止遍历判断，传递参数是res,当前节点,起点，return true则终止遍历</td>
-                                </tr>
-                                <tr>
-                                    <td>res</td>
-                                    <td>Array</td>
-                                    <td>存储结果的数组，为空则会内部声明一个</td>
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>Object</td>
-                                    <td>用于辅助func的参数</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>startLeaf</td>
+                                        <td>Object</td>
+                                        <td>起点</td>
+                                    </tr>
+                                    <tr>
+                                        <td>func</td>
+                                        <td>Function</td>
+                                        <td>递归操作，传递参数是当前节点，options，如果!!return != false，则将返回压入res</td>
+                                    </tr>
+                                    <tr>
+                                        <td>endFunc</td>
+                                        <td>Function</td>
+                                        <td>终止遍历判断，传递参数是res,当前节点,起点，return true则终止遍历</td>
+                                    </tr>
+                                    <tr>
+                                        <td>res</td>
+                                        <td>Array</td>
+                                        <td>存储结果的数组，为空则会内部声明一个</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options</td>
+                                        <td>Object</td>
+                                        <td>用于辅助func的参数</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -513,36 +534,38 @@ callback配置说明
                         <td></td>
                         <td>同级访问，返回一个数组
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>startLeaf</td>
-                                    <td>Object</td>
-                                    <td>起点</td>
-                                </tr>
-                                <tr>
-                                    <td>func</td>
-                                    <td>Function</td>
-                                    <td>递归操作，传递参数是当前节点，options，如果!!return != false，则将返回压入res</td>
-                                </tr>
-                                <tr>
-                                    <td>endFunc</td>
-                                    <td>Function</td>
-                                    <td>终止遍历判断，传递参数是res,当前节点,起点，return true则终止遍历</td>
-                                </tr>
-                                <tr>
-                                    <td>res</td>
-                                    <td>Array</td>
-                                    <td>存储结果的数组，为空则会内部声明一个</td>
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>Object</td>
-                                    <td>用于辅助func的参数</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>startLeaf</td>
+                                        <td>Object</td>
+                                        <td>起点</td>
+                                    </tr>
+                                    <tr>
+                                        <td>func</td>
+                                        <td>Function</td>
+                                        <td>递归操作，传递参数是当前节点，options，如果!!return != false，则将返回压入res</td>
+                                    </tr>
+                                    <tr>
+                                        <td>endFunc</td>
+                                        <td>Function</td>
+                                        <td>终止遍历判断，传递参数是res,当前节点,起点，return true则终止遍历</td>
+                                    </tr>
+                                    <tr>
+                                        <td>res</td>
+                                        <td>Array</td>
+                                        <td>存储结果的数组，为空则会内部声明一个</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options</td>
+                                        <td>Object</td>
+                                        <td>用于辅助func的参数</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -552,16 +575,18 @@ callback配置说明
                         <td></td>
                         <td>根据$id快速获取节点 JSON 数据对象
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>id</td>
-                                    <td>Object</td>
-                                    <td>$id，avalon生成数据的pid</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>id</td>
+                                        <td>Object</td>
+                                        <td>$id，avalon生成数据的pid</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -571,16 +596,18 @@ callback配置说明
                         <td></td>
                         <td>获取某节点在同级节点中的序号
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>指定的节点</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>Object</td>
+                                        <td>指定的节点</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -590,16 +617,18 @@ callback配置说明
                         <td></td>
                         <td>获取全部节点数据，如果指定了leaf则返回leaf的所有子节点，不包括leaf
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>指定节点</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>Object</td>
+                                        <td>指定节点</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -609,31 +638,33 @@ callback配置说明
                         <td></td>
                         <td>根据自定义规则搜索节点数据 JSON 对象集合 或 单个节点数据，不包含指定的起始节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>fitler</td>
-                                    <td>Function</td>
-                                    <td>自定义过滤器函数 function filter(node) {...}</td>
-                                </tr>
-                                <tr>
-                                    <td>isSingle</td>
-                                    <td></td>
-                                    <td>isSingle = true 表示只查找单个节点 !!isSingle = false 表示查找节点集合</td>
-                                </tr>
-                                <tr>
-                                    <td>startLeaf</td>
-                                    <td></td>
-                                    <td>可以指定在某个父节点下的子节点中搜索</td>
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td></td>
-                                    <td>用户自定义的数据对象，用于 filter 中进行计算</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>fitler</td>
+                                        <td>Function</td>
+                                        <td>自定义过滤器函数 function filter(node) {...}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isSingle</td>
+                                        <td></td>
+                                        <td>isSingle = true 表示只查找单个节点 !!isSingle = false 表示查找节点集合</td>
+                                    </tr>
+                                    <tr>
+                                        <td>startLeaf</td>
+                                        <td></td>
+                                        <td>可以指定在某个父节点下的子节点中搜索</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options</td>
+                                        <td></td>
+                                        <td>用户自定义的数据对象，用于 filter 中进行计算</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -643,26 +674,28 @@ callback配置说明
                         <td></td>
                         <td>根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象，不包含指定的起始节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>key</td>
-                                    <td>String</td>
-                                    <td>需要精确匹配的属性名称</td>
-                                </tr>
-                                <tr>
-                                    <td>value</td>
-                                    <td></td>
-                                    <td>需要精确匹配的属性值，可以是任何类型，只要保证与 key 指定的属性值保持一致即可</td>
-                                </tr>
-                                <tr>
-                                    <td>startLeaf</td>
-                                    <td></td>
-                                    <td>可以指定在某个父节点下的子节点中搜索</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>key</td>
+                                        <td>String</td>
+                                        <td>需要精确匹配的属性名称</td>
+                                    </tr>
+                                    <tr>
+                                        <td>value</td>
+                                        <td></td>
+                                        <td>需要精确匹配的属性值，可以是任何类型，只要保证与 key 指定的属性值保持一致即可</td>
+                                    </tr>
+                                    <tr>
+                                        <td>startLeaf</td>
+                                        <td></td>
+                                        <td>可以指定在某个父节点下的子节点中搜索</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -672,26 +705,28 @@ callback配置说明
                         <td></td>
                         <td>根据节点数据的属性搜索，获取条件完全匹配的节点数据 JSON 对象集合，不包含指定的起始节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>key</td>
-                                    <td>String</td>
-                                    <td>需要精确匹配的属性名称</td>
-                                </tr>
-                                <tr>
-                                    <td>value</td>
-                                    <td></td>
-                                    <td>需要精确匹配的属性值，可以是任何类型，只要保证与 key 指定的属性值保持一致即可</td>
-                                </tr>
-                                <tr>
-                                    <td>startLeaf</td>
-                                    <td></td>
-                                    <td>可以指定在某个父节点下的子节点中搜索</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>key</td>
+                                        <td>String</td>
+                                        <td>需要精确匹配的属性名称</td>
+                                    </tr>
+                                    <tr>
+                                        <td>value</td>
+                                        <td></td>
+                                        <td>需要精确匹配的属性值，可以是任何类型，只要保证与 key 指定的属性值保持一致即可</td>
+                                    </tr>
+                                    <tr>
+                                        <td>startLeaf</td>
+                                        <td></td>
+                                        <td>可以指定在某个父节点下的子节点中搜索</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -701,21 +736,23 @@ callback配置说明
                         <td></td>
                         <td>根据节点数据的属性搜索，获取条件模糊匹配的节点数据 JSON 对象集合，不包含指定的起始节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>key</td>
-                                    <td></td>
-                                    <td>需要模糊匹配的属性值，用于查找的时候执行正则匹配，不是正则表达式</td>
-                                </tr>
-                                <tr>
-                                    <td>value</td>
-                                    <td></td>
-                                    <td>可以指定在某个父节点下的子节点中搜索</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>key</td>
+                                        <td></td>
+                                        <td>需要模糊匹配的属性值，用于查找的时候执行正则匹配，不是正则表达式</td>
+                                    </tr>
+                                    <tr>
+                                        <td>value</td>
+                                        <td></td>
+                                        <td>可以指定在某个父节点下的子节点中搜索</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -725,16 +762,18 @@ callback配置说明
                         <td></td>
                         <td>获取节点相邻的前一个节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>指定的节点</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>Object</td>
+                                        <td>指定的节点</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -744,16 +783,18 @@ callback配置说明
                         <td></td>
                         <td>获取节点相邻的后一个节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>指定节点</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>Object</td>
+                                        <td>指定节点</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -763,16 +804,18 @@ callback配置说明
                         <td></td>
                         <td>获取节点的父节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>指定的节点</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>Object</td>
+                                        <td>指定的节点</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -782,26 +825,28 @@ callback配置说明
                         <td></td>
                         <td>添加多个节点，返回被添加的节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>parentLeaf</td>
-                                    <td>Object</td>
-                                    <td>指定的父节点，如果增加根节点，请设置 parentNode 为 null 即可</td>
-                                </tr>
-                                <tr>
-                                    <td>nodes</td>
-                                    <td>Array</td>
-                                    <td>需要增加的节点数据 JSON 对象集合</td>
-                                </tr>
-                                <tr>
-                                    <td>isSilent</td>
-                                    <td></td>
-                                    <td>设定增加节点后是否自动展开父节点。isSilent = true 时，不展开父节点，其他值或缺省状态都自动展开。</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>parentLeaf</td>
+                                        <td>Object</td>
+                                        <td>指定的父节点，如果增加根节点，请设置 parentNode 为 null 即可</td>
+                                    </tr>
+                                    <tr>
+                                        <td>nodes</td>
+                                        <td>Array</td>
+                                        <td>需要增加的节点数据 JSON 对象集合</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isSilent</td>
+                                        <td></td>
+                                        <td>设定增加节点后是否自动展开父节点。isSilent = true 时，不展开父节点，其他值或缺省状态都自动展开。</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -811,16 +856,18 @@ callback配置说明
                         <td></td>
                         <td>将简单 Array 格式数据转换为 tree 使用的标准 JSON 嵌套数据格式
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>data</td>
-                                    <td></td>
-                                    <td>需要被转换的简单 Array 格式数据 或 某个单独的数据对象</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td></td>
+                                        <td>需要被转换的简单 Array 格式数据 或 某个单独的数据对象</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -830,21 +877,23 @@ callback配置说明
                         <td></td>
                         <td>将 tree 使用的标准 JSON 嵌套格式的数据转换为简单 Array 格式
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>data</td>
-                                    <td></td>
-                                    <td>需要被转换的 tree 节点数据对象集合 或 某个单独节点的数据对象</td>
-                                </tr>
-                                <tr>
-                                    <td>filter</td>
-                                    <td>Function</td>
-                                    <td>格式化过滤器函数</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td></td>
+                                        <td>需要被转换的 tree 节点数据对象集合 或 某个单独节点的数据对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>filter</td>
+                                        <td>Function</td>
+                                        <td>格式化过滤器函数</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -854,16 +903,18 @@ callback配置说明
                         <td></td>
                         <td>重置树的状态
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>children</td>
-                                    <td>Array</td>
-                                    <td>指定用来重置的数据，为空表示用第一次初始化时候的数据来重置</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>children</td>
+                                        <td>Array</td>
+                                        <td>指定用来重置的数据，为空表示用第一次初始化时候的数据来重置</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -873,31 +924,33 @@ callback配置说明
                         <td></td>
                         <td>复制节点，返回clone后的节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>targetLeaf</td>
-                                    <td>Object</td>
-                                    <td>参考节点</td>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>需要被复制的节点数据</td>
-                                </tr>
-                                <tr>
-                                    <td>moveType</td>
-                                    <td></td>
-                                    <td>复制到目标节点的相对位置 "inner"：成为子节点，"prev"：成为同级前一个节点，"next"：成为同级后一个节点</td>
-                                </tr>
-                                <tr>
-                                    <td>isSilent</td>
-                                    <td></td>
-                                    <td>设定复制节点后是否自动展开父节点，isSilent = true 时，不展开父节点，其他值或缺省状态都自动展开</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>targetLeaf</td>
+                                        <td>Object</td>
+                                        <td>参考节点</td>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>Object</td>
+                                        <td>需要被复制的节点数据</td>
+                                    </tr>
+                                    <tr>
+                                        <td>moveType</td>
+                                        <td></td>
+                                        <td>复制到目标节点的相对位置 "inner"：成为子节点，"prev"：成为同级前一个节点，"next"：成为同级后一个节点</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isSilent</td>
+                                        <td></td>
+                                        <td>设定复制节点后是否自动展开父节点，isSilent = true 时，不展开父节点，其他值或缺省状态都自动展开</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -907,31 +960,33 @@ callback配置说明
                         <td></td>
                         <td>移动节点，目测这个是相当费性能的。。。，返回被移动的节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>targetLeaf</td>
-                                    <td>Object</td>
-                                    <td>参考节点</td>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>被移动的节点</td>
-                                </tr>
-                                <tr>
-                                    <td>moveType</td>
-                                    <td></td>
-                                    <td>指定移动到目标节点的相对位置"inner"：成为子节点，"prev"：成为同级前一个节点，"next"：成为同级后一个节点</td>
-                                </tr>
-                                <tr>
-                                    <td>isSilent</td>
-                                    <td></td>
-                                    <td>设定移动节点后是否自动展开父节点，isSilent = true 时，不展开父节点，其他值或缺省状态都自动展开</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>targetLeaf</td>
+                                        <td>Object</td>
+                                        <td>参考节点</td>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>Object</td>
+                                        <td>被移动的节点</td>
+                                    </tr>
+                                    <tr>
+                                        <td>moveType</td>
+                                        <td></td>
+                                        <td>指定移动到目标节点的相对位置"inner"：成为子节点，"prev"：成为同级前一个节点，"next"：成为同级后一个节点</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isSilent</td>
+                                        <td></td>
+                                        <td>设定移动节点后是否自动展开父节点，isSilent = true 时，不展开父节点，其他值或缺省状态都自动展开</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -941,21 +996,23 @@ callback配置说明
                         <td></td>
                         <td>将指定的节点置为选中状态，无任何返回值
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>object</td>
-                                    <td>指定的节点，不能为空</td>
-                                </tr>
-                                <tr>
-                                    <td>appendOrReplace</td>
-                                    <td></td>
-                                    <td>是否保留原来选中的节点，否则清空原来选中的节点，当view.selectedMulti为false的时候，该参数无效，一律清空</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>object</td>
+                                        <td>指定的节点，不能为空</td>
+                                    </tr>
+                                    <tr>
+                                        <td>appendOrReplace</td>
+                                        <td></td>
+                                        <td>是否保留原来选中的节点，否则清空原来选中的节点，当view.selectedMulti为false的时候，该参数无效，一律清空</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -965,16 +1022,18 @@ callback配置说明
                         <td></td>
                         <td>获取以指定节点为起点，以数组形式返回所有被选中的节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>startLeaf</td>
-                                    <td>object</td>
-                                    <td>指定的节点，为空的时候表示由根开始查找</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>startLeaf</td>
+                                        <td>object</td>
+                                        <td>指定的节点，为空的时候表示由根开始查找</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -984,16 +1043,18 @@ callback配置说明
                         <td></td>
                         <td>取消选中子节点的选中状态，无任何返回值
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>object</td>
-                                    <td>指定的节点，为空的时候表示取消所有</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>object</td>
+                                        <td>指定的节点，为空的时候表示取消所有</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -1003,16 +1064,18 @@ callback配置说明
                         <td></td>
                         <td>取消节点上所有选中子节点的选中状态，无任何返回值
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>arg</td>
-                                    <td>object</td>
-                                    <td>通过arg.leaf 指定的节点</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>arg</td>
+                                        <td>object</td>
+                                        <td>通过arg.leaf 指定的节点</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -1029,36 +1092,38 @@ callback配置说明
                         <td></td>
                         <td>强行异步加载父节点的子节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td></td>
-                                    <td>指定需要异步加载的父节点 JSON 数据</td>
-                                </tr>
-                                <tr>
-                                    <td>reloadType</td>
-                                    <td></td>
-                                    <td>reloadType = "refresh" 表示清空后重新加载 reloadType != "refresh" 时，表示追加子节点处理</td>
-                                </tr>
-                                <tr>
-                                    <td>isSilent</td>
-                                    <td></td>
-                                    <td>设定异步加载后是否自动展开父节点。isSilent = true 时，不展开父节点，其他值或缺省状态都自动展开</td>
-                                </tr>
-                                <tr>
-                                    <td>callback</td>
-                                    <td></td>
-                                    <td>異步加載成功之後的回調</td>
-                                </tr>
-                                <tr>
-                                    <td>filter</td>
-                                    <td></td>
-                                    <td>默认是async内的dataFilter</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td></td>
+                                        <td>指定需要异步加载的父节点 JSON 数据</td>
+                                    </tr>
+                                    <tr>
+                                        <td>reloadType</td>
+                                        <td></td>
+                                        <td>reloadType = "refresh" 表示清空后重新加载 reloadType != "refresh" 时，表示追加子节点处理</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isSilent</td>
+                                        <td></td>
+                                        <td>设定异步加载后是否自动展开父节点。isSilent = true 时，不展开父节点，其他值或缺省状态都自动展开</td>
+                                    </tr>
+                                    <tr>
+                                        <td>callback</td>
+                                        <td></td>
+                                        <td>異步加載成功之後的回調</td>
+                                    </tr>
+                                    <tr>
+                                        <td>filter</td>
+                                        <td></td>
+                                        <td>默认是async内的dataFilter</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -1068,31 +1133,33 @@ callback配置说明
                         <td></td>
                         <td>勾选 或 取消勾选 单个节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>节点</td>
-                                </tr>
-                                <tr>
-                                    <td>checked</td>
-                                    <td></td>
-                                    <td>true 表示勾选节点 false 表示取消勾选 的节点数据</td>
-                                </tr>
-                                <tr>
-                                    <td>checkTypeFlag</td>
-                                    <td></td>
-                                    <td>true 表示按照 setting.check.chkboxType 属性进行父子节点的勾选联动操作 false 表示只修改此节点勾选状态，无任何勾选联动操作</td>
-                                </tr>
-                                <tr>
-                                    <td>callbackFlag</td>
-                                    <td></td>
-                                    <td>true 表示执行此方法时触发 beforeCheck & onCheck 事件回调函数 false 表示执行此方法时不触发事件回调函数</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>Object</td>
+                                        <td>节点</td>
+                                    </tr>
+                                    <tr>
+                                        <td>checked</td>
+                                        <td></td>
+                                        <td>true 表示勾选节点 false 表示取消勾选 的节点数据</td>
+                                    </tr>
+                                    <tr>
+                                        <td>checkTypeFlag</td>
+                                        <td></td>
+                                        <td>true 表示按照 setting.check.chkboxType 属性进行父子节点的勾选联动操作 false 表示只修改此节点勾选状态，无任何勾选联动操作</td>
+                                    </tr>
+                                    <tr>
+                                        <td>callbackFlag</td>
+                                        <td></td>
+                                        <td>true 表示执行此方法时触发 beforeCheck &amp; onCheck 事件回调函数 false 表示执行此方法时不触发事件回调函数</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -1102,21 +1169,23 @@ callback配置说明
                         <td></td>
                         <td>勾选 或 取消勾选 全部节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>checked</td>
-                                    <td></td>
-                                    <td>true 表示勾选全部节点 false 表示全部节点取消勾选</td>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>可以指定一个起始的节点</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>checked</td>
+                                        <td></td>
+                                        <td>true 表示勾选全部节点 false 表示全部节点取消勾选</td>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>Object</td>
+                                        <td>可以指定一个起始的节点</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -1126,21 +1195,23 @@ callback配置说明
                         <td></td>
                         <td>获取输入框被勾选 或 未勾选的节点集合
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>checked</td>
-                                    <td></td>
-                                    <td>true 表示勾选 false 表示未勾选</td>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>可以指定一个起始的节点</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>checked</td>
+                                        <td></td>
+                                        <td>true 表示勾选 false 表示未勾选</td>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>Object</td>
+                                        <td>可以指定一个起始的节点</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -1150,21 +1221,23 @@ callback配置说明
                         <td></td>
                         <td>获取输入框勾选状态被改变的节点集合
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>可以指定一个起始的节点</td>
-                                </tr>
-                                <tr>
-                                    <td>updateChanges</td>
-                                    <td></td>
-                                    <td>将当前状态更新到原始数据上</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>Object</td>
+                                        <td>可以指定一个起始的节点</td>
+                                    </tr>
+                                    <tr>
+                                        <td>updateChanges</td>
+                                        <td></td>
+                                        <td>将当前状态更新到原始数据上</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -1174,31 +1247,33 @@ callback配置说明
                         <td></td>
                         <td>禁用 或 解禁 某个节点的 checkbox / radio [check.enable = true 时有效]
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>可以指定一个起始的节点</td>
-                                </tr>
-                                <tr>
-                                    <td>disabled</td>
-                                    <td></td>
-                                    <td>true 表示禁用 checkbox / radio false 表示解禁 checkbox / radio</td>
-                                </tr>
-                                <tr>
-                                    <td>inheritParent</td>
-                                    <td></td>
-                                    <td>true 表示全部父节点进行同样的操作 false 表示不影响父节点</td>
-                                </tr>
-                                <tr>
-                                    <td>inheritChildren</td>
-                                    <td></td>
-                                    <td>true 表示全部子节点进行同样的操作 false 表示不影响子节点</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>Object</td>
+                                        <td>可以指定一个起始的节点</td>
+                                    </tr>
+                                    <tr>
+                                        <td>disabled</td>
+                                        <td></td>
+                                        <td>true 表示禁用 checkbox / radio false 表示解禁 checkbox / radio</td>
+                                    </tr>
+                                    <tr>
+                                        <td>inheritParent</td>
+                                        <td></td>
+                                        <td>true 表示全部父节点进行同样的操作 false 表示不影响父节点</td>
+                                    </tr>
+                                    <tr>
+                                        <td>inheritChildren</td>
+                                        <td></td>
+                                        <td>true 表示全部子节点进行同样的操作 false 表示不影响子节点</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -1208,16 +1283,18 @@ callback配置说明
                         <td></td>
                         <td>设置某节点进入编辑名称状态
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>arg</td>
-                                    <td>Object</td>
-                                    <td>{leaf:leaf}指定节点</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>arg</td>
+                                        <td>Object</td>
+                                        <td>{leaf:leaf}指定节点</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -1227,16 +1304,18 @@ callback配置说明
                         <td></td>
                         <td>取消节点的编辑名称状态，可以恢复原名称，也可以强行赋给新的名称
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>newName</td>
-                                    <td>String</td>
-                                    <td>重新给定的新名称</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>newName</td>
+                                        <td>String</td>
+                                        <td>重新给定的新名称</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -1246,21 +1325,23 @@ callback配置说明
                         <td></td>
                         <td>删除节点
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>leaf</td>
-                                    <td>Object</td>
-                                    <td>节点</td>
-                                </tr>
-                                <tr>
-                                    <td>callbackFlag</td>
-                                    <td></td>
-                                    <td>true 表示执行此方法时触发 beforeRemove & onRemove 事件回调函数 false 表示执行此方法时不触发事件回调函数</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>leaf</td>
+                                        <td>Object</td>
+                                        <td>节点</td>
+                                    </tr>
+                                    <tr>
+                                        <td>callbackFlag</td>
+                                        <td></td>
+                                        <td>true 表示执行此方法时触发 beforeRemove &amp; onRemove 事件回调函数 false 表示执行此方法时不触发事件回调函数</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -1270,21 +1351,23 @@ callback配置说明
                         <td></td>
                         <td>删除子节点 此方法不会触发任何事件回调函数
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>parentLeaf</td>
-                                    <td>Object</td>
-                                    <td>节点</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>parentLeaf</td>
+                                        <td>Object</td>
+                                        <td>节点</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
-                </table>
-            </fieldset>
+                </tbody>
+            </table>
             <ul class="example-links">
                 <li>
                     <a href="avalon.tree.ex.html">tree - Base模块功能</a>

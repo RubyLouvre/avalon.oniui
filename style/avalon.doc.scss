@@ -19,6 +19,7 @@ body{
 ul,ol{
   list-style: none;
 }
+
 a{
   cursor: pointer;
   text-decoration: none;
@@ -57,6 +58,10 @@ body{
     border-width: 12px;
     border-color: $color-theme-blue transparent transparent $color-theme-blue;
     border-style: solid;
+  }
+
+  h1{
+    margin: 0 0 10px;
   }
 
   h2 {

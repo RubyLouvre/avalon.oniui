@@ -293,6 +293,12 @@ define("models", function(){
                 "mmRequest-post": "avalon.mmRequest.ex2.html",
                 "mmRequest-get": "avalon.mmRequest.ex3.html"
             },
+            "miniswitch": {
+                "mmRequest-getScript": "avalon.miniswitch.ex1.html",
+                "mmRequest-post": "avalon.miniswitch.ex2.html",
+                "mmRequest-get": "avalon.miniswitch.ex3.html",
+                "mmRequest-getJSON": "avalon.miniswitch.ex4.html"
+            },
             "pager": {
                 "显示跳转台": "avalon.pager.ex1.html ",
                 "指定回调onJump": "avalon.pager.ex2.html ",
@@ -348,7 +354,9 @@ define("models", function(){
                 "缩放textarea, select, input等控件": "avalon.resizable.ex5.html",
                 "既能调整大小又能拖": "avalon.resizable.ex6.html"
             },
-            "rating": {},
+            "rating": {
+                "例子": "avalon.rating.ex.html"
+            },
             "scrollbar": {
                 "scrollbar-document.body带上下小箭头": "avalon.scrollbar.ex.html",
                 "scrollbar-元素带上下小箭头双滚动条": "avalon.scrollbar.ex1.html",

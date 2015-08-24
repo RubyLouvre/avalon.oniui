@@ -70,7 +70,7 @@ define(["avalon",
         for (var i = 0, n = dataModel.length; i < n; i++) {
             if (dataModel[i].value == options.value) {
                 options.activeIndex = i
-                options.currentOption = dataModel[i];
+                options.currentOption = avalon.mix(true, {}, dataModel[i]);
                 break;
             }
         }

@@ -14,7 +14,8 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
     "./spark-md5",
     "./inputproxy",
     "mmRequest/mmRequest",
-    "css!./avalon.fileuploader.css"], 
+    "css!../chameleon/oniui-common.css",
+    "css!./avalon.fileuploader.css"],
     function (avalon, template, browser, eventMixin, blobConstructor, fileConstructor, fehConstructor, runtimeConstructor, blobqueueConstructor, md5gen, inputProxyContructor) {
         var widgetName = 'fileuploader';
         var widget = avalon.ui[widgetName] = function(element, data, vmodels) {

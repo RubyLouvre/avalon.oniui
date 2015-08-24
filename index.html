@@ -28,7 +28,7 @@
     </div>
 </div>
 
-<div class="oni-layout-search-bar" ms-if="activeNav !== '下载'">
+<div class="oni-layout-search-bar" ms-visible="activeNav !== '下载'">
     <div class="search-section">
         <div class="search-wrap">
             <input id="test"class="search-input"
@@ -44,7 +44,7 @@
 
 <div class="oni-layout-main-container">
     <!-- 设置id以获取该节点，在搜索时设置其scrollTop -->
-    <div id="listWrap" class="aside" ms-if="activeNav !== '下载'" ms-include-src="listSrc"></div>
+    <div id="listWrap" class="aside" ms-visible="activeNav !== '下载'" ms-include-src="listSrc"></div>
     <div ms-view class="oni-layout-main"></div>
 </div>
 

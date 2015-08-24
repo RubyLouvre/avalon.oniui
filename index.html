@@ -33,10 +33,10 @@
         <div class="search-wrap">
             <input id="test"class="search-input"
                    type="text"
-                   placeholder="组件名或中文关键字..."
                    ms-duplex="searchKey"
                    ms-keyup="search()"
-                   ms-click="selectSearchKey()"/>
+                   ms-click="selectSearchKey()"
+                   ms-attr-placeholder="'搜索' + activeNav + '关键字'"/>
             <span class="iconfont icon-search" ms-click="search()">&#xF067;</span>
         </div>
     </div>

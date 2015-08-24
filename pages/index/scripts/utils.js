@@ -43,6 +43,10 @@ define("utils", function(){
          * @param dirs 获取源，不指定该值时从location.hash获取
          */
         scrollDir: function(type, searchKey, dirs){
+            if(searchKey === ""){
+                return
+            }
+
             var GROUP_H = 54,
                 WIDGET_H = 44
 

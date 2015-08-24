@@ -127,10 +127,12 @@ define(["../avalon.getModel",
             }
             vm._setWeekClass = function(dayName) {
                 var dayNames = vmodel.regional.day
-                if ((dayNames.indexOf(dayName) % 7 == 0) || (dayNames.indexOf(dayName) % 7 == 6)) {
-                    return "oni-datepicker-week-end"
-                } else {
-                    return ""
+                if (dayNames) {
+                    if ((dayNames.indexOf(dayName) % 7 == 0) || (dayNames.indexOf(dayName) % 7 == 6)) {
+                        return "oni-datepicker-week-end"
+                    } else {
+                        return ""
+                    }
                 }
             }
             vm._setDayClass = function(index, outerIndex, rowIndex, day) {

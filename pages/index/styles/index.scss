@@ -218,10 +218,13 @@ h1,h2,h3,h4,h5{
     }
 
     .icon-arrow{
-      height: 35px;
-      line-height: 35px;
       font-size: 16px;
       color: #5c5f67;
+    }
+
+    .current-widget, .backto-menu, .icon-arrow{
+      height: 43px;
+      line-height: 43px;
     }
 
     .backto-menu{
@@ -231,6 +234,9 @@ h1,h2,h3,h4,h5{
       overflow: hidden;
       border-bottom: 1px $color-border-grey solid;
 
+      .list-item-link{
+        padding: 0;
+      }
       .icon-arrow{
         position: absolute;
         left: 5px;

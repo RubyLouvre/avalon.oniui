@@ -342,16 +342,19 @@ h1, h2, h3, h4, h5 {
       .oni-layout-main-container .aside .active-dir .iconfont, .oni-layout-main-container .aside .list-item:hover .iconfont {
         color: #fff; }
     .oni-layout-main-container .aside .icon-arrow {
-      height: 35px;
-      line-height: 35px;
       font-size: 16px;
       color: #5c5f67; }
+    .oni-layout-main-container .aside .current-widget, .oni-layout-main-container .aside .backto-menu, .oni-layout-main-container .aside .icon-arrow {
+      height: 43px;
+      line-height: 43px; }
     .oni-layout-main-container .aside .backto-menu {
       position: relative;
       max-width: 100%;
       padding-left: 30px;
       overflow: hidden;
       border-bottom: 1px #e5e9f2 solid; }
+      .oni-layout-main-container .aside .backto-menu .list-item-link {
+        padding: 0; }
       .oni-layout-main-container .aside .backto-menu .icon-arrow {
         position: absolute;
         left: 5px;

@@ -15,16 +15,17 @@
  * Dual licensed under the MIT and GPL licenses.
  */
 .syntaxhighlighter {
-  background-color: #0a2b1d !important;
+  border: 1px #e5e9f2 solid;
+  background-color: #fff !important;
 }
 .syntaxhighlighter .line.alt1 {
-  background-color: #0a2b1d !important;
+  background-color: #fff !important;
 }
 .syntaxhighlighter .line.alt2 {
-  background-color: #0a2b1d !important;
+  background-color: #fff !important;
 }
 .syntaxhighlighter .line.highlighted.alt1, .syntaxhighlighter .line.highlighted.alt2 {
-  background-color: #233729 !important;
+  background-color: #fff !important;
 }
 .syntaxhighlighter .line.highlighted.number {
   color: white !important;
@@ -71,16 +72,16 @@
   color: #ffe862 !important;
 }
 .syntaxhighlighter .plain, .syntaxhighlighter .plain a {
-  color: #f8f8f8 !important;
+  color: #333 !important;
 }
 .syntaxhighlighter .comments, .syntaxhighlighter .comments a {
   color: #336442 !important;
 }
 .syntaxhighlighter .string, .syntaxhighlighter .string a {
-  color: #9df39f !important;
+  color: #67b682 !important;
 }
 .syntaxhighlighter .keyword {
-  color: #96dd3b !important;
+  color: #67b682 !important;
 }
 .syntaxhighlighter .preprocessor {
   color: #91bb9e !important;
@@ -98,12 +99,11 @@
   color: #e0e8ff !important;
 }
 .syntaxhighlighter .script {
-  font-weight: bold !important;
-  color: #96dd3b !important;
+  color: #333 !important;
   background-color: none !important;
 }
 .syntaxhighlighter .color1, .syntaxhighlighter .color1 a {
-  color: #eb939a !important;
+  color: #e60012 !important;
 }
 .syntaxhighlighter .color2, .syntaxhighlighter .color2 a {
   color: #91bb9e !important;
@@ -114,7 +114,4 @@
 
 .syntaxhighlighter .comments {
   font-style: italic !important;
-}
-.syntaxhighlighter .keyword {
-  font-weight: bold !important;
 }

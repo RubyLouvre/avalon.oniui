@@ -9,9 +9,8 @@
 也可以在配置对象上的validationHooks中添加验证规则。
 验证规则如下定义:
 alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-duplex-int-alpha_numeric=&quot;prop&quot;
-    message: '必须为字母或数字', //这是错误提示，可以使用{{expr}}插值" />
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
-        />
+    message: '必须为字母或数字', //这是错误提示，可以使用{{expr}}插值">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
         <script src="../highlight/shCore.js"></script>
     </head>
     
@@ -65,7 +64,7 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                 <p>注意，本组件是基于
                     <code>avalon1.3.7</code>开发，如果是很旧的版本，可以使用avalon.validation.old.js，它一直兼容到avalon1.2.0。</p>
                 <p>注意，本组件只能绑定在
-                    <code>form元素</code>上, &lt;form ms-widget="validation"&gt;&lt;/&gt</p>
+                    <code>form元素</code>上, &lt;form ms-widget="validation"&gt;&lt;/&gt;</p>
                 <p>验证框架提供了各式各样的回调，满足你最挑剔的需求：</p>
                 <pre class="brush:javascript;gutter:false;toolbar:false;">onSuccess, onError, onComplete, onValidateAll, onReset, onResetAll</pre>
                 <p>其中，前面四个是一个系列，它们都有1个参数，是一个对象数组，里面一些
@@ -84,14 +83,14 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                 <p>如果用户指定了
                     <code>norequired</code>验证规则，如果input为空, 那么就会跳过之后的所有验证; 在定义拦截器时,务必将它放在最前面, 如ms-duplex-norequired-int-gt='xxx'</p>
             </fieldset>
-            <fieldset>
-                <legend>使用说明</legend>
-                <table class="table-doc" border="1">
-                    <colgroup>
-                        <col width="180" />
-                        <col width="80" />
-                        <col width="120" />
-                    </colgroup>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
                     <tr>
                         <th>名字</th>
                         <th>类型</th>
@@ -194,16 +193,18 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                         <td></td>
                         <td>验证当前元素下的所有非disabled元素
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>callback</td>
-                                    <td>Null|Function</td>
-                                    <td>最后执行的回调，如果用户没传就使用vm.onValidateAll</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>callback</td>
+                                        <td>Null|Function</td>
+                                        <td>最后执行的回调，如果用户没传就使用vm.onValidateAll</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -213,16 +214,18 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                         <td></td>
                         <td>重置当前表单元素
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>callback</td>
-                                    <td>Null|Function</td>
-                                    <td>最后执行的回调，如果用户没传就使用vm.onResetAll</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>callback</td>
+                                        <td>Null|Function</td>
+                                        <td>最后执行的回调，如果用户没传就使用vm.onResetAll</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -233,31 +236,33 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
                         <td>验证单个元素对应的VM中的属性是否符合格式
                             <br>此方法是框架自己调用
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>data</td>
-                                    <td>Object</td>
-                                    <td>绑定对象</td>
-                                </tr>
-                                <tr>
-                                    <td>isValidateAll</td>
-                                    <td>Undefined|Boolean</td>
-                                    <td>是否全部验证,是就禁止onSuccess, onError, onComplete触发</td>
-                                </tr>
-                                <tr>
-                                    <td>event</td>
-                                    <td>Undefined|Event</td>
-                                    <td>方便用户判定这是由keyup,还是blur等事件触发的</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td>Object</td>
+                                        <td>绑定对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isValidateAll</td>
+                                        <td>Undefined|Boolean</td>
+                                        <td>是否全部验证,是就禁止onSuccess, onError, onComplete触发</td>
+                                    </tr>
+                                    <tr>
+                                        <td>event</td>
+                                        <td>Undefined|Event</td>
+                                        <td>方便用户判定这是由keyup,还是blur等事件触发的</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
-                </table>
-            </fieldset>
+                </tbody>
+            </table>
             <div class="others">
                 <p>avalon.validation自带了许多
                     <code>验证规则</code>，满足你一般的业务需求。</p>
@@ -286,7 +291,7 @@ alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-
              a = parseInt(elem.getAttribute("data-duplex-minlength"), 10)
          }
          var num = data.data.min = a
-         next(value.length >= num)
+         next(value.length &gt;= num)
          return value
      }
  },</pre>我们必须传入一个min参数,这要在元素上添加

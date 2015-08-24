@@ -27,6 +27,9 @@
  * You should have received a copy of the GNU General Public License
  * along with SyntaxHighlighter.  If not, see <http://www.gnu.org/copyleft/lesser.html>.
  */
+.lines{
+	overflow-x: auto;
+}
 .syntaxhighlighter,
 .syntaxhighlighter div,
 .syntaxhighlighter code,
@@ -36,8 +39,6 @@
 .syntaxhighlighter table tbody
 {
 	margin: 0 !important;
-	padding: 0 !important;
-	border: 0 !important;
 	outline: 0 !important;
 	background: none !important;
 	text-align: left !important;
@@ -51,19 +52,17 @@
 	height: auto !important;
 	width: auto !important;
 	line-height: 1.1em !important;
-	font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace !important;
+	font-family: Consolas, Menlo, Monaco, 'Lucida Console', 'Liberation Mono', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New', monospace, sans-serif;
 	font-weight: normal !important;
 	font-style: normal !important;
-	font-size: 1em !important;
+	font-size: 14px;
 	min-height: inherit !important; /* For IE8, FF & WebKit */
 	min-height: auto !important; /* For IE7 */
 }
 
 .syntaxhighlighter
 {
-	width: 99% !important; /* 99% fixes IE8 horizontal scrollbar */
 	margin: 1em 0 1em 0 !important;
-	padding: 1px !important; /* adds a little border on top and bottom */
 	position: relative !important;
 }
 
@@ -111,7 +110,7 @@
 
 .syntaxhighlighter .line .content
 {
-	padding-left: .5em !important;
+	padding: 5px;
 }
 
 .syntaxhighlighter .line .spaces
@@ -122,6 +121,7 @@
 .syntaxhighlighter.nogutter .line .content
 {
 	border-left: none !important;
+	white-space: nowrap;
 }
 
 .syntaxhighlighter .bar
@@ -197,15 +197,6 @@
 	padding-left: 20px !important;
 }
 
-.syntaxhighlighter .toolbar .item.viewSource
-{
-	background-image: url(page_white_code.png) !important;
-}
-
-.syntaxhighlighter .toolbar .item.printSource
-{
-	background-image: url(printer.png) !important;
-}
 
 .syntaxhighlighter .toolbar .item.copyToClipboard
 {
@@ -214,10 +205,6 @@
 	overflow: visible !important;
 }
 
-.syntaxhighlighter .toolbar .item.about
-{
-	background-image: url(help.png) !important;
-}
 
 /** 
  * Print view.

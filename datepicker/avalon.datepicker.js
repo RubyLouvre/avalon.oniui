@@ -127,10 +127,12 @@ define(["../avalon.getModel",
             }
             vm._setWeekClass = function(dayName) {
                 var dayNames = vmodel.regional.day
-                if ((dayNames.indexOf(dayName) % 7 == 0) || (dayNames.indexOf(dayName) % 7 == 6)) {
-                    return "oni-datepicker-week-end"
-                } else {
-                    return ""
+                if (dayNames) {
+                    if ((dayNames.indexOf(dayName) % 7 == 0) || (dayNames.indexOf(dayName) % 7 == 6)) {
+                        return "oni-datepicker-week-end"
+                    } else {
+                        return ""
+                    }
                 }
             }
             vm._setDayClass = function(index, outerIndex, rowIndex, day) {
@@ -792,7 +794,7 @@ define(["../avalon.getModel",
                 if(options.type==="range") {
                     return ;
                 }
-                if(!calendar.contains(target) && !tipContainer.contains(target) && vmodel.toggle && !vmodel.timer) {
+                if(!calendar.contains(target) && !tipContainer.contains(target) && vmodel.toggle) {
                     vmodel.toggle = false;
                     return ;
                 } else if(!vmodel.toggle && !vmodel.disabled && tipContainer.contains(target)){

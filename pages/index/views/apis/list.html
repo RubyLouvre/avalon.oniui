@@ -1,0 +1,11 @@
+<div ms-repeat="directorys">
+    <h3 class="list-name">{{$key}}</h3>
+    <ul class="list">
+        <li class="list-item" ms-repeat="$val" ms-class="active-dir:currentAnchor === $key">
+            <a class="overdot list-item-link"
+               ms-attr-href="$val.href">
+              {{$key}}
+            </a>
+        </li>
+    </ul>
+</div>

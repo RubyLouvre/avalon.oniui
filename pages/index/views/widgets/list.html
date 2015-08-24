@@ -1,5 +1,5 @@
 <div class="list-item current-widget"
-     ms-if="goWidgetBtnVisible"
+     ms-visible="goWidgetBtnVisible"
      ms-click="showWidgetExs()">
     <div class="overdot list-item-link">
       {{currentWidget}}-{{currentWidgetIntro}}
@@ -7,7 +7,7 @@
     </div>
 </div>
 <div class="list-item backto-menu"
-     ms-if="backToMenuBtnVisible"
+     ms-visible="backToMenuBtnVisible"
      ms-click="backToMenu()">
     <div class="list-item-link">
       <div class="iconfont icon-arrow">&#xF07D;</div>

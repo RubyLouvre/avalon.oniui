@@ -25,6 +25,10 @@
             border-radius: $border-radiaus-btn;
             background-color: #2eb5f9;
             color: #fff;
+            
+            &:hover{
+                background-color: #6cf;
+            }
         }
     }
 }

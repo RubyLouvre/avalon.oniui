@@ -46,8 +46,7 @@ define("models", function(){
                 "textbox": "提示功能的输入框",
                 "timer": "时间选择器",
                 "tree": "树",
-                "tooltip": "气泡提示",
-                "uploader": "图片上传/文件上传"
+                "tooltip": "气泡提示"
             },
             "功能组件": {
                 "cookie": "cookie工具集",

@@ -46,12 +46,11 @@
 <body>
     <div class="wrapper">
         <h1>onBeforeRender demo</h1>
-        <div ms-controller="demo">
-            <fieldset style="margin-top: 20px; padding: 20px 10px;">
-                <legend>set datepicker calendarWidth</legend>
+        <fieldset>
+            <legend>set datepicker calendarWidth</legend>
+            <div ms-controller="demo">
                 <input ms-widget="datepicker, d1" data-datepicker-calendar-width='300' data-datepicker-watermark='false'/>
-            </fieldset>
-            <script> 
+            <script>
                 var dates = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]
                 require(["datepicker/avalon.datepicker"], function(avalon) {
                     var model = avalon.define("demo", function(vm) {
@@ -83,6 +82,7 @@
                 })
             </script>
         </div>
+        </fieldset>
         <div ms-skip>
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;

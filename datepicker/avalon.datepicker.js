@@ -9,8 +9,8 @@
 define(["../avalon.getModel", 
         "./avalon.datepicker.lang",
         "text!./avalon.datepicker.html", 
-        "../dropdown/avalon.dropdown.js",
-        "../slider/avalon.slider.js",
+        "../dropdown/avalon.dropdown",
+        "../slider/avalon.slider",
         "css!../chameleon/oniui-common.css",
         "css!./avalon.datepicker.css"], function(avalon, holidayDate, sourceHTML) {
     var calendarTemplate = sourceHTML,
@@ -70,6 +70,8 @@ define(["../avalon.getModel",
         }
         options.changeMonthAndYear && (options.mobileMonthAndYear = false)
         initValue()
+
+        var unbindEvents = avalon.noop
 
         var vmodel = avalon.define(data.datepickerId, function(vm) {
 
@@ -519,6 +521,7 @@ define(["../avalon.getModel",
                 return vmodel.regional.titleFormat.call(vmodel.regional, year, month)
             }
             vm.$remove = function() {
+                unbindEvents()
                 var elementPar = element.parentNode,
                     eleParPar = elementPar.parentNode,
                     calendarPar = calendar.parentNode
@@ -785,98 +788,109 @@ define(["../avalon.getModel",
         // 初始化时绑定各种回调
         function bindEvents(calendar, tipContainer) {
             // focus Input元素时显示日历组件
-            avalon.bind(element, "focus", function(e) {
-                vmodel.toggle = true;
-            })
-            // 切换日期年月或者点击input输入域时不隐藏组件，选择日期或者点击文档的其他地方则隐藏日历组件
-            avalon.bind(document, "click", function(e) {
-                var target = e.target;
-                if(options.type==="range") {
-                    return ;
-                }
-                if(!calendar.contains(target) && !tipContainer.contains(target) && vmodel.toggle) {
-                    vmodel.toggle = false;
-                    return ;
-                } else if(!vmodel.toggle && !vmodel.disabled && tipContainer.contains(target)){
+            var arr = [
+                [element, "focus", function(e) {
                     vmodel.toggle = true;
-                    return ;
-                }
-            })
-
-            // 处理用户的输入
-            avalon.bind(element, "keydown", function(e) {
-                var keyCode = e.keyCode,  operate, eChar;
-                eChar = e.key;
-                if(eChar) {
-                    switch(eChar) {
-                        case "-": 
-                            operate = "-";
-                        break;
-                        case "/":
-                            operate = "/";
-                        break;
+                }],
+                // 切换日期年月或者点击input输入域时不隐藏组件，选择日期或者点击文档的其他地方则隐藏日历组件
+                [document, "click", function(e) {
+                    var target = e.target;
+                    if(options.type==="range") {
+                        return ;
                     }
-                } else {
-                    switch(keyCode) {
-                        case 189: 
-                            operate = "-";
-                        break;
-                        case 191:
-                            operate = "/";
-                        break;
+                    if(!calendar.contains(target) && !tipContainer.contains(target) && vmodel.toggle && !vmodel.timer) {
+                        vmodel.toggle = false;
+                        return ;
+                    } else if(!vmodel.toggle && !vmodel.disabled && tipContainer.contains(target)){
+                        vmodel.toggle = true;
+                        return ;
                     }
-                }
-                if(!vmodel.toggle) {
-                    vmodel.toggle = true;
-                }
-                // 37:向左箭头； 39:向右箭头；8:backspace；46:Delete
-                if((keyCode<48 || (keyCode>57 && keyCode<96) || keyCode>105) && keyCode !==13 && keyCode!==8 && options.separator !== operate && keyCode !== 27 && keyCode !== 9 && keyCode !== 37 && keyCode!== 39 && keyCode!==46) {
-                    e.preventDefault();
-                    return false;
-                } 
-            })
-            avalon.bind(element, "keyup", function(e) {
-                var value = element.value,
-                    year = vmodel.year, 
-                    month = vmodel.month, 
-                    keyCode = e.keyCode,
-                    dateMonth,
-                    dateYear,
-                    date
-                if (keyCode === 37 || keyCode === 39) {
-                    return false;
-                }
-                // 当按下Enter、Tab、Esc时关闭日历
-                if (keyCode === 13 || keyCode == 27 || keyCode == 9) {
-                    vmodel.toggle = false
-                    return false
-                }
-                if (date = parseDate(value)) {
-                    dateMonth = date.getMonth()
-                    dateYear = date.getFullYear()
-                    vmodel.dateError = "#cccccc"
-                    vmodel.tip = getDateTip(cleanDate(date)).text
-                    vmodel.day = date.getDate()
+                }],
 
-                    if (month != dateMonth && year != dateYear) {
-                        monthYearChangedBoth = true
-                        vmodel.year = dateYear
-                        vmodel.month = dateMonth
-                    } else if (month != dateMonth) {
-                        vmodel.month = dateMonth
+                // 处理用户的输入
+                [element, "keydown", function(e) {
+                    var keyCode = e.keyCode,  operate, eChar;
+                    eChar = e.key;
+                    if(eChar) {
+                        switch(eChar) {
+                            case "-": 
+                                operate = "-";
+                            break;
+                            case "/":
+                                operate = "/";
+                            break;
+                        }
                     } else {
-                        vmodel.year = dateYear
+                        switch(keyCode) {
+                            case 189: 
+                                operate = "-";
+                            break;
+                            case 191:
+                                operate = "/";
+                            break;
+                        }
                     }
-                } else {
-                    if (vmodel.allowBlank && value == "") {
-                        vmodel.tip = ""
+                    if(!vmodel.toggle) {
+                        vmodel.toggle = true;
+                    }
+                    // 37:向左箭头； 39:向右箭头；8:backspace；46:Delete
+                    if((keyCode<48 || (keyCode>57 && keyCode<96) || keyCode>105) && keyCode !==13 && keyCode!==8 && options.separator !== operate && keyCode !== 27 && keyCode !== 9 && keyCode !== 37 && keyCode!== 39 && keyCode!==46) {
+                        e.preventDefault();
+                        return false;
+                    } 
+                }],
+                [element, "keyup", function(e) {
+                    var value = element.value,
+                        year = vmodel.year, 
+                        month = vmodel.month, 
+                        keyCode = e.keyCode,
+                        dateMonth,
+                        dateYear,
+                        date
+                    if (keyCode === 37 || keyCode === 39) {
+                        return false;
+                    }
+                    // 当按下Enter、Tab、Esc时关闭日历
+                    if (keyCode === 13 || keyCode == 27 || keyCode == 9) {
+                        vmodel.toggle = false
+                        return false
+                    }
+                    if (date = parseDate(value)) {
+                        dateMonth = date.getMonth()
+                        dateYear = date.getFullYear()
                         vmodel.dateError = "#cccccc"
-                        return
+                        vmodel.tip = getDateTip(cleanDate(date)).text
+                        vmodel.day = date.getDate()
+
+                        if (month != dateMonth && year != dateYear) {
+                            monthYearChangedBoth = true
+                            vmodel.year = dateYear
+                            vmodel.month = dateMonth
+                        } else if (month != dateMonth) {
+                            vmodel.month = dateMonth
+                        } else {
+                            vmodel.year = dateYear
+                        }
+                    } else {
+                        if (vmodel.allowBlank && value == "") {
+                            vmodel.tip = ""
+                            vmodel.dateError = "#cccccc"
+                            return
+                        }
+                        vmodel.tip = vmodel.formatErrorTip;
+                        vmodel.dateError = "#ff8888";
                     }
-                    vmodel.tip = vmodel.formatErrorTip;
-                    vmodel.dateError = "#ff8888";
-                }
+                }]
+            ]
+            avalon.each(arr, function(i, item) {
+                avalon.bind(item[0], item[1], item[2])
             })
+            unbindEvents = function() {
+                avalon.each(arr, function(i, item) {
+                    avalon.unbind(item[0], item[1], item[2])
+                })
+                arr = null
+            }
         }
         // 通过prev、next按钮切换月份
         function toggleMonth(operate) {

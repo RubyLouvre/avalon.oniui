@@ -144,6 +144,8 @@
       border-radius: 5px;
       background-color: #2eb5f9;
       color: #fff; }
+      .oni-layout-download .wrap .link:hover {
+        background-color: #6cf; }
 
 /*
 * reset
@@ -304,7 +306,7 @@ h1, h2, h3, h4, h5 {
     bottom: 0;
     width: 276px;
     border-right: 1px #e5e9f2 solid;
-    font-size: 16px;
+    font-size: 14px;
     overflow: auto; }
     .oni-layout-main-container .aside::-webkit-scrollbar {
       width: 9px; }
@@ -329,8 +331,8 @@ h1, h2, h3, h4, h5 {
       *display: inline;
       padding: 0 12px;
       width: 235px;
-      height: 44px;
-      line-height: 44px;
+      height: 34px;
+      line-height: 34px;
       cursor: pointer; }
     .oni-layout-main-container .aside .active-dir, .oni-layout-main-container .aside .list-item:hover {
       background-color: #1489e6;
@@ -340,16 +342,19 @@ h1, h2, h3, h4, h5 {
       .oni-layout-main-container .aside .active-dir .iconfont, .oni-layout-main-container .aside .list-item:hover .iconfont {
         color: #fff; }
     .oni-layout-main-container .aside .icon-arrow {
-      height: 45px;
-      line-height: 45px;
-      font-size: 20px;
+      font-size: 16px;
       color: #5c5f67; }
+    .oni-layout-main-container .aside .current-widget, .oni-layout-main-container .aside .backto-menu, .oni-layout-main-container .aside .icon-arrow {
+      height: 43px;
+      line-height: 43px; }
     .oni-layout-main-container .aside .backto-menu {
       position: relative;
       max-width: 100%;
       padding-left: 30px;
       overflow: hidden;
       border-bottom: 1px #e5e9f2 solid; }
+      .oni-layout-main-container .aside .backto-menu .list-item-link {
+        padding: 0; }
       .oni-layout-main-container .aside .backto-menu .icon-arrow {
         position: absolute;
         left: 5px;

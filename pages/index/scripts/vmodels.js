@@ -64,6 +64,19 @@ define(["pages/index/scripts/models", "pages/index/scripts/utils", "mmRouter/mmS
             // 目录模板和内容
             listSrc: "pages/index/views/widgets/list.html",
             directorys: {},
+            scrollToTop: function(listItemData){
+                if(typeof listItemData.intro !== "undefined"){
+                    var listWrap = document.getElementById("listWrap")
+                    listWrap.scrollTop = 0
+                }
+            },
+            getListItemTitle: function(key, intro){
+                if(typeof intro !== "undefined"){
+                    return key + "-" + intro
+                } else{
+                    return key
+                }
+            },
 
             // 组件库页当前状态
             currentWidget: "accordion",

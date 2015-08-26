@@ -264,10 +264,12 @@ h1, h2, h3, h4, h5 {
     padding: 10px 0px;
     border-right: 1px #e5e9f2 solid; }
     .oni-layout-search-bar .search-section .search-wrap {
-      margin: 0 13px;
+      margin: 0 12px;
       border: 1px #e5e9f2 solid;
       background-color: #fff;
       font-size: 0; }
+      .oni-layout-search-bar .search-section .search-wrap:hover {
+        border-color: #ccc; }
       .oni-layout-search-bar .search-section .search-wrap .search-input {
         width: 212px;
         height: 30px;
@@ -329,8 +331,8 @@ h1, h2, h3, h4, h5 {
         *vertical-align: auto;
         zoom: 1;
         *display: inline;
-        padding: 0 12px 0 40px;
-        width: 200px;
+        padding: 0 42px 0 40px;
+        width: 185px;
         height: 34px;
         line-height: 34px;
         cursor: pointer; }
@@ -372,7 +374,7 @@ h1, h2, h3, h4, h5 {
         padding: 0; }
       .oni-layout-main-container .aside .backto-menu .icon-arrow {
         position: absolute;
-        left: 5px;
+        left: 9px;
         top: 0; }
     .oni-layout-main-container .aside .current-widget {
       position: relative;
@@ -381,7 +383,7 @@ h1, h2, h3, h4, h5 {
         padding: 0 12px; }
       .oni-layout-main-container .aside .current-widget .icon-arrow {
         position: absolute;
-        right: 2px;
+        right: 3px;
         top: 0;
         color: #5c5f67; }
   .oni-layout-main-container .oni-layout-main {

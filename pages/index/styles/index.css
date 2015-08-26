@@ -160,7 +160,7 @@ html, body {
 body {
   position: relative;
   color: #212121;
-  background-color: #f9fafe;
+  background-color: #fff;
   font-size: 14px;
   font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif; }
 
@@ -258,7 +258,8 @@ h1, h2, h3, h4, h5 {
           background-color: #1489e6; }
 
 .oni-layout-search-bar {
-  border-bottom: 1px #e5e9f2 solid; }
+  border-bottom: 1px #e5e9f2 solid;
+  background-color: #f9fafe; }
   .oni-layout-search-bar .search-section {
     width: 276px;
     padding: 10px 0px;
@@ -296,11 +297,13 @@ h1, h2, h3, h4, h5 {
         cursor: pointer; }
 
 .oni-layout-main-container {
+  background-color: #f9fafe;
   position: absolute;
   top: 133px;
   left: 0;
   right: 0;
-  bottom: 0; }
+  bottom: 0;
+  *top: 135px; }
   .oni-layout-main-container .aside {
     position: absolute;
     top: 0;

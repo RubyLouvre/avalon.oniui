@@ -17,7 +17,7 @@ html, body{
 body{
   position: relative;
   color: $color-normal;
-  background-color: #f9fafe;
+  background-color: #fff;
   font-size: $font-normal;
   font-family: $font-stack;
 
@@ -117,6 +117,7 @@ h1,h2,h3,h4,h5{
 
 .oni-layout-search-bar{
   border-bottom: 1px $color-border-grey solid;
+  background-color: $color-background-blue;
 
   .search-section{
     width: 276px;
@@ -159,11 +160,13 @@ h1,h2,h3,h4,h5{
 
 // 搜索条下方主体容器
 .oni-layout-main-container{
+  background-color: $color-background-blue;
   position: absolute;
   top: 133px;
   left: 0;
   right: 0;
   bottom: 0;
+  *top: 135px;
 
   // 目录列表
   .aside{

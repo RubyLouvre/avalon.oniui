@@ -69,7 +69,7 @@ h1,h2,h3,h4,h5{
 .oni-layout-header{
   background-color: $color-header-bg;
   color: #fff;
-  min-width: 980px;
+  min-width: $width-screen-min;
 
   .oniicon{
     border: 0 none;
@@ -116,6 +116,7 @@ h1,h2,h3,h4,h5{
 
 
 .oni-layout-search-bar{
+  min-width: $width-screen-min;
   border-bottom: 1px $color-border-grey solid;
   background-color: $color-background-blue;
 
@@ -292,6 +293,7 @@ h1,h2,h3,h4,h5{
     right: 0;
     top: 0;
     bottom: 0;
+    min-width: $width-screen-min - 277px;
     overflow: hidden;
   }
 }

@@ -17,10 +17,8 @@
                 >
             <img class="oni-img-placeholder"
                  ms-if="lazyload"
-                 ms-visible="pictruesLoaded"
                  ms-src="lazyloadImg" />
             <img class="oni-img-origin"
-                 ms-visible="!lazyload"
                  ms-src="{{el.src}}"
                  ms-on-load="imgOnload(this, $index)"
                  ms-attr-alt="{{el.alt}}" />

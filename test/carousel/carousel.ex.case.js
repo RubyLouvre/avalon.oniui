@@ -21,9 +21,11 @@ describe('carousel', function(){
         it('#hover到组件上时，箭头应该可见', function(done){
             carousel.simulate("mouseover");
 
+            var arrows = $(".oni-carousel-arrow", root)
+
             delay(done, function() {
                 expect(arrows.is(":visible")).to.equal(true);
-            }, 100);
+            }, 1000);
         });
     });
 

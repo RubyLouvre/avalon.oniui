@@ -12,6 +12,57 @@
 <body>
     <div class="wrapper">
         <h1>嵌套的accordion</h1>
+        <div class="demo-show" ms-controller="demo">
+            <div ms-widget="accordion,aa,$aaOpts">
+            </div>
+            <script>
+                require(["accordion/avalon.accordion"], function($$) {
+                    $$.define('demo',function(vm){
+                        vm.$aaOpts = {
+                            data: [{
+                                'title': '标题1',
+                                'content': '正文1<p>fasdfsdaf</p>'
+                            }, {
+                                'title': '标题2',
+                                'content': '正文2<div ms-widget="accordion,bb,$bbOpts" id="test"></div>'
+                            }],
+                            width: "600"
+                        }
+                        vm.$bbOpts = {
+                            data:  [
+                                {
+                                    title: "雪儿",
+                                    content: 'heelfifsfsd<div ms-widget="accordion,cc,$ccOpts" id="test"></div>'
+                                },
+                                {
+                                    title: "静儿",
+                                    content: '很好，我喜欢，继续额'
+                                }
+                            ],
+                            multiple: true
+                        }
+                        vm.$ccOpts = {
+                            data: [
+                                {
+                                    title: "三层嵌套标题一",
+                                    content: "三层嵌套内容一"
+                                },
+                                {
+                                    title: "三层嵌套标题二",
+                                    content: "三层嵌套内容二"
+                                },
+                                {
+                                    title: "三层嵌套标题三",
+                                    content: "三层嵌套内容三"
+                                }
+                            ],
+                            mode: "nav"
+                        }
+                    });
+                    $$.scan();
+                });
+            </script>
+        </div>
         <p class="example"></p>
         <p><span class="use-description">说明：</span>需要嵌套accordion时，在配置数据的content中设置绑定accordion的元素，并绑定accordion，具体使用方式请看demo</p>
         <div ms-skip>
@@ -79,57 +130,7 @@
                 &lt;/html&gt;
             </pre>
         </div>
-        <div class="demo-show" ms-controller="demo">
-            <div ms-widget="accordion,aa,$aaOpts">
-            </div>
-            <script> 
-                require(["accordion/avalon.accordion"], function($$) {
-                    $$.define('demo',function(vm){
-                        vm.$aaOpts = {
-                            data: [{
-                                'title': '标题1',
-                                'content': '正文1<p>fasdfsdaf</p>'
-                            }, {
-                                'title': '标题2',
-                                'content': '正文2<div ms-widget="accordion,bb,$bbOpts" id="test"></div>'
-                            }],
-                            width: "600"
-                        }
-                        vm.$bbOpts = {
-                            data:  [
-                                {
-                                    title: "雪儿",
-                                    content: 'heelfifsfsd<div ms-widget="accordion,cc,$ccOpts" id="test"></div>'
-                                },
-                                {
-                                    title: "静儿",
-                                    content: '很好，我喜欢，继续额'
-                                }
-                            ],
-                            multiple: true
-                        }
-                        vm.$ccOpts = {
-                            data: [
-                                {
-                                    title: "三层嵌套标题一",
-                                    content: "三层嵌套内容一"
-                                },
-                                {
-                                    title: "三层嵌套标题二",
-                                    content: "三层嵌套内容二"
-                                },
-                                {
-                                    title: "三层嵌套标题三",
-                                    content: "三层嵌套内容三"
-                                }
-                            ],
-                            mode: "nav"
-                        }
-                    });
-                    $$.scan();
-                });
-            </script>
-        </div>
+
     </div>
 </body>
 </html>

@@ -70,7 +70,7 @@ define(["avalon",
         for (var i = 0, n = dataModel.length; i < n; i++) {
             if (dataModel[i].value == options.value) {
                 options.activeIndex = i
-                options.currentOption = dataModel[i];
+                options.currentOption = avalon.mix(true, {}, dataModel[i]);
                 break;
             }
         }
@@ -322,7 +322,9 @@ define(["avalon",
                     if (!(option = setLabelTitle(vmodel.value))) {
                         vmodel.currentOption = vmodel.data[0].$model;
                         vmodel.activeIndex = 0;
-                        setLabelTitle(vmodel.value = vmodel.data[0].value);
+                        var v = vmodel.data[0].value;
+                        if(vmodel.multiple && !(v instanceof Array)) v = [v]; // 保证类型一致
+                        setLabelTitle(vmodel.value = v);
                     } else {
                         vmodel.activeIndex = vmodel.data.$model.indexOf(option)
                     }

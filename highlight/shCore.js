@@ -1544,26 +1544,26 @@ if (!window.SyntaxHighlighter)
                 this.code = sh.utils.unindent(this.code);
 
                 // add controls toolbar
-                if (this.getParam('toolbar'))
-                {
-                    this.bar = this.create('DIV');
-                    this.bar.className = 'bar';
-                    this.bar.appendChild(sh.toolbar.create(this));
-                    div.appendChild(this.bar);
-
-                    // set up toolbar rollover
-                    var bar = this.bar;
-                    function hide() {
-                        bar.className = bar.className.replace('show', '');
-                    }
-                    div.onmouseover = function() {
-                        hide();
-                        bar.className += ' show';
-                    };
-                    div.onmouseout = function() {
-                        hide();
-                    }
-                }
+                //if (this.getParam('toolbar'))
+                //{
+                //    this.bar = this.create('DIV');
+                //    this.bar.className = 'bar';
+                //    this.bar.appendChild(sh.toolbar.create(this));
+                //    div.appendChild(this.bar);
+                //
+                //    // set up toolbar rollover
+                //    var bar = this.bar;
+                //    function hide() {
+                //        bar.className = bar.className.replace('show', '');
+                //    }
+                //    div.onmouseover = function() {
+                //        hide();
+                //        bar.className += ' show';
+                //    };
+                //    div.onmouseout = function() {
+                //        hide();
+                //    }
+                //}
 
                 div.appendChild(this.lines);
 

@@ -1,224 +1,52 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" class="xjb_html">
-    <head>
-        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-        <meta http-equiv="x-ua-compatible" content="ie=edge" />
-        <title>去哪儿avalon ui</title>
-        <link type="text/css" rel="stylesheet" href="./style/avalon.doc.css" />
-        <link type="text/css" rel="stylesheet" href="./style/avalon.index.css" />
-        <script src="avalon.js"></script>
-        <script src="./pages/library/history.js"></script>
-        <script src="./highlight/shCore.js"></script>
-        <link rel=stylesheet type=text/css href="pages/timeline/css/base.css"/>
-        <script>
-        var page = avalon.define("pages", function(vm) {
-            vm.pages = [{
-                    title: "组件库",
-                    href: "pages/library/index.html"
-                }, {
-                    title: "组件概览",
-                    href: "pages/timeline/index.html"
-                }, {
-                    title: "APIs",
-                    href: "pages/apis/index.html"
-                }, {
-                    title: "下载",
-                    href: "pages/download/index.html"
-                }, {
-                    title: "打包工具",
-                    href: "http://l-uedapp2.h.dev.cn0.qunar.com:8088/"
-                }
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OniUI</title>
+    <link type="text/css" rel="stylesheet" href="pages/index/styles/index.css"/>
+    <script src="avalon.js"></script>
+    <script src="highlight/shCore.js"></script>
+    <script src="pages/index/scripts/index.js"></script>
+</head>
+<body class="ms-controller" ms-controller="pages">
 
-            ]
-            vm.changeActiveIndex = function(index) {
-                vm.activeIndex = index
-            }
+<div class="oni-layout-header">
+    <div class="container">
+        <a href="#!/widgets" ms-click="switchNavTo('组件库')"><img class="oniicon" src="pages/index/imgs/oniicon.png"></a>
 
-            vm.activeIndex = 0
-
-            vm.computeActiveIndex = function(url) {
-                var url = url || location.hash.replace(/#/g, "");
-                for (var i = 0, len = page.pages.length; i < len; i++) {
-                    if (page.pages[i].href === url) {
-                        return i;
-                    }
-                }
-                return 0
-            }
-
-            vm.searchComponentKey = ""
-            vm.searchComponent = function() {
-                _findComponent(vm.searchComponentKey)
-            }
-            vm.searchFocus = function() {
-                avalon.bind(document, "keypress", function(e) {
-                    var currKey = 0,
-                        e = e || event;
-                    if (e.keyCode == 13) {
-                        _findComponent(vm.searchComponentKey)
-                    }
-                })
-            }
-
-            vm.searchFailVisible = 0
-            vm.searchLastVisible = 0
-        })
-        page.activeIndex = page.computeActiveIndex()
-        require(["uptop/avalon.uptop", "ready!"], function() {
-            avalon.define("oniui_uptop", function(vm) {
-                vm.width = 120,
-                vm.animate = true
-            })
-        })
-
-        //搜索框输入后清空结果列表
-        page.$watch("searchComponentKey", function() {
-            searchResultList = []
-        })
-        
-        //搜索組件
-        var searchResultList = [] //搜索结果列表
-
-        function _findComponent(key) {
-            var list = document.getElementById("ui-list"), //find "ui-list" in pages/library/index.html
-                items = list.getElementsByTagName("a")
-            for (var i = 0, len = items.length; i < len; i++) {
-                if (items[i].innerHTML.trim().indexOf(key) !== -1 || _findInAdvice(items[i].innerHTML.trim()).indexOf(key) !== -1) {
-                    _selectElement(items[i])
-                    scroll(0, items[i].offsetTop)
-                    if (searchResultList.indexOf(i) === -1) {
-                        searchResultList.push(i)
-                        return
-                    }
-                }
-                //最后一个了
-                if (i === len - 1 && searchResultList.length !== 0) {
-                    searchResultList = []
-                    page.searchLastVisible = 1
-                    setTimeout(function() {
-                        page.searchLastVisible = 0
-                    }, 2000)
-                    return
-                }
-                page.searchTipVisible = 1
-                setTimeout(function() {
-                    page.searchTipVisible = 0
-                }, 2000)
-            }
-            //未找到组件
-            page.searchFailVisible = 1
-            setTimeout(function() {
-                page.searchFailVisible = 0
-            }, 2000)
-        }
-
-        function _findInAdvice(componentName) {
-            var advices = {
-                "accordion": "手风琴组件",
-                "at": "@组件",
-                "browser": "浏览器检测模块",
-                "button": "按钮组件",
-                "camera": "百叶窗图片轮播组件",
-                "carousel": "轮播组件/跑马灯组件",
-                "checkboxlist": "复选框列表组件",
-                "colorpicker": "颜色选择器组件/取色器组件",
-                "cookie": "cookie工具集组件",
-                "coupledatepicker": "日期范围选择的双日历组件",
-                "datepicker": "日期选择器组件",
-                "daterangepicker": "日期范围选择日历组件",
-                "dialog": "对话框弹窗组件",
-                "doublelist": "平衡木组件/左右列表组件/双列表组件",
-                "draggable": "拖拽组件/可拖动组件",
-                "dropdown": "下拉框组件",
-                "flipswitch": "滑动式开关组件",
-                "fileuploader": "文件上传组件",
-                "layout": "布局组件",
-                "lazyload": "懒加载组件",
-                "live": "事件代理绑定组件",
-                "loading": "加载动画效果组件",
-                "menu": "菜单组件",
-                "miniswitch": "下拉式开关组件",
-                "notice": "提示组件/提示信息组件",
-                "pager": "分页组件",
-                "position": "定位组件",
-                "preview": "图片预览组件/图片批量预览组件",
-                "progressbar": "进度条组件/倒计时组件",
-                "mmPromise": "异步列队组件",
-                "rating": "评分组件",
-                "resizable": "伸缩组件",
-                "scrollbar": "滚动条组件",
-                "scrollspy": "滚动监听组件",
-                "simplegrid": "表格组件/大数据展示组件",
-                "slider": "滑块组件",
-                "spinner": "数字输入框组件",
-                "store": "本地储存组件",
-                "switchdropdown": "切换下拉框组件",
-                "tab": "选项卡组件/标签页组件",
-                "textbox": "提示功能的输入框组件",
-                "timer": "时间选择器组件",
-                "tooltip": "气泡提示组件",
-                "uploader": "图片上传组件/文件上传组件",
-                "validation": "验证组件"
-            }
-            if (typeof advices[componentName] !== "undefined") {
-                return advices[componentName]
-            } else {
-                return ""
-            }
-        }
-        //选中文字
-        function _selectElement(element) {
-            if (window.getSelection) {
-                var sel = window.getSelection();
-                sel.removeAllRanges();
-                var range = document.createRange();
-                range.selectNodeContents(element);
-                sel.addRange(range);
-            } else if (document.selection) {
-                var textRange = document.body.createTextRange();
-                textRange.moveToElementText(element);
-                textRange.select();
-            }
-        }
-        </script>
-    </head>
-    <body class="ms-controller" ms-controller="pages" ms-uptop data-uptop-background-url="uptop/up_green.png" >
-        <div class="header">
-            <div class="fix">
-                <div id="nav" class="nav">
-                    <a class="logo" ms-href='{{ location.href.indexOf("localhost") !== -1 ? "/avalon/index.html": "/oniui/index.html"}}'></a>
-                    <ul id="oniui_component_list">
-                        <li ms-repeat-page="pages" ms-class="active: $index == activeIndex" ms-click="changeActiveIndex($index)">
-                            <a ms-href="{{(page.href.indexOf('http') == 0 ? '' : '#') + page.href}}" >{{page.title | html}}</a>
-                        </li>
-                    </ul>
-                    <div class="search">
-                        <span class="search-tip" ms-css-opacity="{{searchFailVisible}}">未找到组件</span>
-                        <span class="search-tip" ms-css-opacity="{{searchLastVisible}}">最后一个了</span>
-                        <input  type="text" 
-                                placeholder="组件名或中文关键字..." 
-                                ms-duplex="searchComponentKey"
-                                ms-focus="searchFocus"/>
-                        <a href="javascript:void(0);" ms-click="searchComponent"></a>
-                    </div>
-                </div>
-            </div>
-            <div class="placeHolder"></div>
-            <h1 id="avalon_oniui_banner"><span>Avalon新一代UI库： OniUI</span></h1>
-        </div>
-        <div class="content" ms-class="content{{activeIndex}}">
-            <div ms-repeat-page="pages" ms-if-loop="$index == activeIndex"  ms-include-src="page.href"><!--页面位于pages文件夹下面--></div>
-        </div>
-
-        <div class="footer">
-            <ul>
-                <li><a href="#">关于AvalonUI</a></li>
-                <li><a href="#">联系我们</a></li>
-                <li><a href="#">业务合作</a></li>
-                <li><a href="#">常见问题</a></li>
-                <li class="last"><a href="#">友情链接</a></li>
+        <div class="nav">
+            <ul class="nav-list">
+                <li class="nav-item" ms-repeat="navs" ms-class="active: $key == activeNav">
+                    <a class="nav-link"
+                       ms-href="{{$val}}"
+                       ms-click="switchNavTo($key)"
+                       >{{$key}}</a>
+                </li>
             </ul>
         </div>
+    </div>
+</div>
 
-    </body>
+<div class="oni-layout-search-bar" ms-visible="activeNav !== '下载'">
+    <div class="search-section">
+        <div class="search-wrap">
+            <input class="search-input"
+                   type="text"
+                   ms-duplex="searchKey"
+                   ms-keyup="search()"
+                   ms-click="selectSearchKey()"
+                   ms-attr-placeholder="'搜索' + activeNav + '关键字'"/>
+            <span class="iconfont icon-search" ms-click="search()">&#xF067;</span>
+        </div>
+    </div>
+</div>
+
+<div class="oni-layout-main-container">
+    <!-- 设置id以获取该节点，在搜索时设置其scrollTop -->
+    <div id="listWrap" class="aside" ms-visible="activeNav !== '下载'" ms-include-src="listSrc"></div>
+    <div ms-view class="oni-layout-main"></div>
+</div>
+
+</body>
 </html>

@@ -19,7 +19,9 @@
     <ul class="list">
         <li class="list-item" ms-repeat="$val" ms-class="active-dir:currentWidget === $key || currentEx === $val.content">
             <a class="overdot list-item-link"
-               ms-attr-href="$val.href">
+               ms-click="scrollToTop($val)"
+               ms-attr-href="$val.href"
+               ms-attr-title="getListItemTitle($key, $val.intro)">
               {{$key}}<span ms-if="typeof $val.intro !== 'undefined'">-{{$val.intro}}</span>
             </a>
         </li>

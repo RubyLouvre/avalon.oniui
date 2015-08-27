@@ -17,7 +17,7 @@ html, body{
 body{
   position: relative;
   color: $color-normal;
-  background-color: #f9fafe;
+  background-color: #fff;
   font-size: $font-normal;
   font-family: $font-stack;
 
@@ -69,7 +69,7 @@ h1,h2,h3,h4,h5{
 .oni-layout-header{
   background-color: $color-header-bg;
   color: #fff;
-  min-width: 980px;
+  min-width: $width-screen-min;
 
   .oniicon{
     border: 0 none;
@@ -116,7 +116,9 @@ h1,h2,h3,h4,h5{
 
 
 .oni-layout-search-bar{
+  min-width: $width-screen-min;
   border-bottom: 1px $color-border-grey solid;
+  background-color: $color-background-blue;
 
   .search-section{
     width: 276px;
@@ -124,11 +126,14 @@ h1,h2,h3,h4,h5{
     border-right: 1px $color-border-grey solid;
 
     .search-wrap{
-      margin: 0 13px;
+      margin: 0 12px;
       border: 1px #e5e9f2 solid;
       background-color: #fff;
       font-size: 0;
 
+      &:hover{
+        border-color: #ccc;
+      }
       .search-input{
         width: 212px;
         height: 30px;
@@ -156,11 +161,13 @@ h1,h2,h3,h4,h5{
 
 // 搜索条下方主体容器
 .oni-layout-main-container{
+  background-color: $color-background-blue;
   position: absolute;
   top: 133px;
   left: 0;
   right: 0;
   bottom: 0;
+  *top: 135px;
 
   // 目录列表
   .aside{
@@ -186,27 +193,45 @@ h1,h2,h3,h4,h5{
       border-radius: 10px;
     }
 
+    .list-name{
+      margin: 20px 12px 20px 30px;
+    }
+
     .list {
       margin: -10px 0 30px;
       overflow: hidden;
-    }
-    .list-name{
-      margin: 20px 12px;
-    }
-    .list-item{
-      .list-item-link{
-        @include inline-block;
-        padding: 0 12px;
-        width: 235px;
-        height: 34px;
-        line-height: 34px;
-        cursor: pointer;
+
+      .list-item{
+        .list-item-link{
+          @include inline-block;
+          padding: 0 42px 0 40px;
+          width: 185px;
+          height: 34px;
+          line-height: 34px;
+          cursor: pointer;
+
+          &:before {
+            @include inline-block;
+            content: "";
+            width: 4px;
+            height: 4px;
+            background-color: #212121;
+            border-radius: 50%;
+          }
+        }
       }
     }
 
-    .active-dir, .list-item:hover{
+
+    .list .active-dir, .list-item:hover{
       background-color: $color-theme-blue;
       color: #fff;
+
+      .list-item-link {
+        &:before {
+          background-color: #fff;
+        }
+      }
 
       >a{
         color: #fff;
@@ -225,6 +250,7 @@ h1,h2,h3,h4,h5{
     .current-widget, .backto-menu, .icon-arrow{
       height: 43px;
       line-height: 43px;
+      cursor: pointer;
     }
 
     .backto-menu{
@@ -239,7 +265,7 @@ h1,h2,h3,h4,h5{
       }
       .icon-arrow{
         position: absolute;
-        left: 5px;
+        left: 9px;
         top: 0;
       }
     }
@@ -248,9 +274,12 @@ h1,h2,h3,h4,h5{
       position: relative;
       border-bottom: 1px $color-border-grey solid;
 
+      .list-item-link{
+        padding: 0 12px;
+      }
       .icon-arrow{
         position: absolute;
-        right: 2px;
+        right: 3px;
         top: 0;
         color: #5c5f67;
       }
@@ -264,6 +293,7 @@ h1,h2,h3,h4,h5{
     right: 0;
     top: 0;
     bottom: 0;
+    min-width: $width-screen-min - 277px;
     overflow: hidden;
   }
 }

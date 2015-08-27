@@ -47,8 +47,8 @@ define("utils", function(){
                 return
             }
 
-            var GROUP_H = 54,
-                WIDGET_H = 44
+            var GROUP_H = 55,
+                WIDGET_H = 34
 
             var listWrap = document.getElementById("listWrap"),
                 firstMatchPosition, matchPattern,

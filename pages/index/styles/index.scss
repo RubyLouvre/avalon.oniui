@@ -17,10 +17,9 @@ html, body{
 body{
   position: relative;
   color: $color-normal;
-  background-color: #fff;
+  background-color: $color-background-blue;
   font-size: $font-normal;
   font-family: $font-stack;
-
 }
 ul,ol{
   list-style: none;

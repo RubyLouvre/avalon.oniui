@@ -18,9 +18,12 @@ describe('carousel', function(){
             expect(arrows.is(":visible")).to.equal(false);
         });
 
-        it('#hover到组件上时，箭头应该可见', function(){
+        it('#hover到组件上时，箭头应该可见', function(done){
             carousel.simulate("mouseover");
-            expect(arrows.is(":visible")).to.equal(true);
+
+            delay(done, function() {
+                expect(arrows.is(":visible")).to.equal(true);
+            }, 100);
         });
     });
 

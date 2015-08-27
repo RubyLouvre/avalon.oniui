@@ -21,8 +21,6 @@ describe('carousel', function(){
         it('#hover到组件上时，箭头应该可见', function(done){
             carousel.simulate("mouseover");
 
-            var arrows = $(".oni-carousel-arrow", root)
-
             delay(done, function() {
                 expect(arrows.is(":visible")).to.equal(true);
             }, 1000);
@@ -38,12 +36,18 @@ describe('carousel', function(){
 
         it('#点击右边箭头，切换到图2', function(){
             arrows.eq(1).simulate("click");
-            expect(vmodel.currentIndex).to.equal(1);
+
+            delay(done, function() {
+                expect(vmodel.currentIndex).to.equal(1);
+            }, 100);
         });
 
         it('#点击左边箭头，切换到图1', function () {
             arrows.eq(0).simulate("click");
-            expect(vmodel.currentIndex).to.equal(0);
+
+            delay(done, function() {
+                expect(vmodel.currentIndex).to.equal(0);
+            }, 100);
         });
     });
 

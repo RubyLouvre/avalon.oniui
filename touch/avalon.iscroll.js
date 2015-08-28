@@ -11,7 +11,7 @@
 * 详细说明文档请见 GitHub
 *
 */
-define(["./nscroll.js"], function(NScroll) {
+define(["./nscroll"], function(NScroll) {
     /**
      *
      * avalon.iscroll

@@ -741,12 +741,11 @@ define(["avalon",
                     var width = options._parentContainer.width() -2,
                         parentContainerWidth = options._parentContainerWidth;
                     if (width != parentContainerWidth) {
-                        parentContainerWidth  = width
+                        options._parentContainerWidth  = width
                         changeFlag = true
                     } else {
                         if (changeFlag) {
                             vmodel._adjustColWidth()
-                            vmodel._parentContainerWidth = width
                         }
                         clearInterval(t)
                     }

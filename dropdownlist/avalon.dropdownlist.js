@@ -5,7 +5,7 @@
  * @introduce
  *    <p>dropdownlist使得可以通过下拉搜索功能减少显示内容，方便用户查找选择</p>
  */
-define(["../textbox/avalon.textbox.js", "../dropdown/avalon.dropdown.js", "css!./avalon.dropdownlist.css"], function(avalon) {
+define(["../textbox/avalon.textbox", "../dropdown/avalon.dropdown", "css!./avalon.dropdownlist.css"], function(avalon) {
 
     var widget = avalon.ui.dropdownlist = function(element, data, vmodels) {
         var options = data.dropdownlistOptions,

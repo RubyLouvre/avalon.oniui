@@ -8,15 +8,15 @@
  *    <p>filePreviewUpdated事件：对某一文件的预览生成结束，并获得了结果后，触发此事件。</p>
  *  @updatetime 2015-4-7
  */
-define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, eventMixin) {
-	var proxyContructor = function (target, isH5, contextGen) {
+ define(["avalon"], 
+function ($$) {
+	var proxyContructor = function (contextGen) {
 		this.contextGen = contextGen;
-		if (isH5) {
-			this.addEventListenerInput(target);
-		} else {
-			target.addEventListener("newFileGenerated", this.onFlashFileAdded, this);
-			target.addEventListener("filePreviewUpdated", this.onPreviewUpdated, this);
-		}
+	}
+
+	proxyContructor.prototype.bindFlashEvent = function (target) {
+		target.addEventListener("newFileGenerated", this.onFlashFileAdded, this);
+		target.addEventListener("filePreviewUpdated", this.onPreviewUpdated, this);
 	}
 
 	proxyContructor.prototype.onPreviewUpdated = function (fileLocalToken, preview) {
@@ -27,8 +27,6 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 
 	proxyContructor.prototype.onH5FileFieldChanged = function (event) {
         var target = event.target || event.srcElement;
-        var files = target.files || target.value;
-
         // 这里先把input file移除出dom tree，重新建立一个新的input file，再加回dom tree。
         // 主要是为了清除input file的已选文件。暂时没有更好的办法。
         var html = target.outerHTML,
@@ -40,6 +38,11 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
         this.addEventListenerInput(fileInputWrapper.children[0]);
         pNode.appendChild(fileInputWrapper.children[0]);
 
+        var files = target.files || target.value;
+        this.addNewFiles(files);
+	}
+
+	proxyContructor.prototype.addNewFiles = function (files) {
         var me = this;
         for (var i = 0; i < files.length; i++) {
         	var fileContext = this.getFileContext({ name: files[i].name, size: files[i].size });
@@ -66,6 +69,7 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
         	}
         }
 	}
+
 	proxyContructor.prototype.getImagePreview = function (fileInfo, previewWidth, previewHeight, callback) {
 		var me = this;
 		var promise = new Promise(function(resolve, reject) {
@@ -129,7 +133,7 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 
     proxyContructor.prototype.applyFileLocalToken = function () {
         this.fileLocalTokenSeed++;
-        return "__file"+this.fileLocalTokenSeed;
+        return "__avalonfile"+this.fileLocalTokenSeed;
     }
 
 	proxyContructor.prototype.onFlashFileAdded = function (fileInfo) {
@@ -137,11 +141,10 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 	}
 
 	proxyContructor.prototype.getFileContext = function (basicInfo) {
-		var context = this.contextGen.fn.call(this.contextGen.scope, basicInfo) || {};
+		var context = this.contextGen.fn.call(this.contextGen.scope, basicInfo);
 		context.fileLocalToken = this.applyFileLocalToken();
 		return context;
 	}
-
 
 	proxyContructor.prototype.addEventListenerInput = function (input) {
 		var me = this;
@@ -149,8 +152,6 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
         	me.onH5FileFieldChanged.call(me, event)
         });
 	}
-
-	eventMixin(proxyContructor);
 
 	return proxyContructor;
 });

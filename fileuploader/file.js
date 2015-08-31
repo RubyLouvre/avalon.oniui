@@ -22,8 +22,8 @@
  *    <p>fileStatusChanged事件：当文件的状态发生变化时产生的事件。包含两个参数，参数1为文件对象本身，参数2为变化前的文件状态代码。</p>
  *  @updatetime 2015-4-7
  */
-define(["./eventmixin", "./blob"], function (eventMixin, blobConstructor) {
-	var fileConstructor = function (fileInfo, flashEventHub, chunked, chunkSize) {
+define(["avalon"], function ($$) {
+	var fileConstructor = function (fileInfo, flashEventHub, chunked, chunkSize, blobConstructor) {
 		this.name = fileInfo.name;
 		this.size = fileInfo.size;
 		this.data = fileInfo.data;
@@ -120,8 +120,6 @@ define(["./eventmixin", "./blob"], function (eventMixin, blobConstructor) {
 		}
 	}
 
-	fileConstructor.prototype.__isFileObject = true;
-
 	/*
 	 * 文件状态代码。0-100为正常状态，101以后为错误状态
 	 */
@@ -132,8 +130,6 @@ define(["./eventmixin", "./blob"], function (eventMixin, blobConstructor) {
 	fileConstructor.prototype.FILE_UPLOADED = 6; // 文件上传结束
 	fileConstructor.prototype.FILE_ERROR_FAIL_READ = 101; // FileQueue无法读取文件
 	fileConstructor.prototype.FILE_ERROR_FAIL_UPLOAD = 103; // FileQueue发送文件时碰见错误
-
-	eventMixin(fileConstructor);
 
 	return fileConstructor;
 });

@@ -6,7 +6,10 @@
  *      对于任何原生的JS类都可以使用MixEvent(Class)来加入事件的能力。MixEvent后为Class的原型上加入了addEventListener、removeEventListener、dispatchEvent、purge等方法。</p>
  *  @updatetime 2015-4-7
  */
-var eventMix = (function(adapter) {
+define(["avalon"], function($$) {
+	var jsDebugger = false;
+	var flashDebugger = false;
+
 	var mixEvent = function mixEvent(jsClass) {
 		if (jsClass.prototype.__eventmixed) return;
 		jsClass.prototype.__eventmixed = true;	// 防止被Mix两次
@@ -52,8 +55,10 @@ var eventMix = (function(adapter) {
 			}
 		}
 		jsClass.prototype.log = function () {
-			adapter.log.apply(adapter, Array.prototype.slice.call(arguments, 0));
+			if (this.jsDebuggerOn) $$.log.apply($$, Array.prototype.slice.call(arguments, 0));
 		}
+		jsClass.prototype.jsDebuggerOn = jsDebugger;
+		jsClass.prototype.flashDebuggerOn = jsDebugger;
 
 		if (jsClass.prototype.hasOwnProperty('purge')) {
 			var originPurge = jsClass.prototype.purge;
@@ -68,4 +73,4 @@ var eventMix = (function(adapter) {
 		}
 	};
 	return mixEvent;
-})(adapter);
+});

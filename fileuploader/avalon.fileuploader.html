@@ -1,6 +1,6 @@
 
 
-<div class="oni-fileuploader-wrapper">
+<div class="oni-fileuploader-wrapper" ms-on-drop="onDrop" ms-on-dragover="onDragOver">
 	<div class="preview-stage"
 		ms-if="showPreview">
 		<div 
@@ -23,7 +23,8 @@
 
 	<button 
 		type="button" 
-		class="uploader-button-add uploader-button" >
+		class="uploader-button-add uploader-button"
+		ms-click="addFileClicked" >
 		{{addButtonText}}
 		<input type="file" 
 				ms-if="useHtml5Runtime"
@@ -33,7 +34,8 @@
 	</button>
 	<button 
 		type="button"
-		class="uploader-button-upload uploader-button">
+		class="uploader-button-upload uploader-button"
+    	ms-click="uploadClicked">
     	{{uploadButtonText}}
     </button>
 

@@ -5,8 +5,7 @@
  *    <p>具备并发请求管理、自动发送的功能。</p>
  *  @updatetime 2015-4-10
  */
-var blobQueueConstructor = (function (eventMixin) {
-	
+ define(["avalon"], function (avalon) {
 	function blobQueue (runtime, serverConfig) {
 		var me = this;
 		this.$runtime = runtime;
@@ -40,7 +39,7 @@ var blobQueueConstructor = (function (eventMixin) {
 		while (i < this.queue.length) {
 			queueBlob = this.queue[i];
 			if (queueBlob.fileObj.fileLocalToken == fileLocalToken) {
-				this.queue.splice(i, 1);
+				avalon.Array.removeAt(this.queue, i);
 			} else {
 				i++;
 			}
@@ -51,7 +50,7 @@ var blobQueueConstructor = (function (eventMixin) {
 		while (i < this.requestPool.length) {
 			poolBlob = this.requestPool[i];
 			if (poolBlob.fileObj.fileLocalToken == fileLocalToken) {
-				this.requestPool.splice(i, 1);
+				avalon.Array.remove(this.requestPool, poolBlob);
 				poolBlob.cancelUpload();
 				this.inSending--;
 			} else {
@@ -116,11 +115,7 @@ var blobQueueConstructor = (function (eventMixin) {
 	blobQueue.prototype.onBlobSuccess = function (blob, response) {
 		this.inSending--;
 		this.log("****FileUploader.blobqueue: Blob tranfered. File token: ", blob.fileObj.fileLocalToken, ". Blob Index: ", blob.index);
-
-		var blobAt = this.requestPool.indexOf(blob);
-		if (blobAt >= 0) {
-			this.requestPool.splice(blobAt, 1);
-		}
+		avalon.Array.remove(this.requestPool, blob);
 	}
 
 	blobQueue.prototype.onBlobError = function (blob, textStatus, error) {
@@ -138,6 +133,5 @@ var blobQueueConstructor = (function (eventMixin) {
 		this.requestPool = null;
 		clearInterval(this.sendTaskId);
 	}
-	eventMixin(blobQueue);
 	return blobQueue;
-})(eventMixin);
+});

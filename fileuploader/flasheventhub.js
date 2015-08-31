@@ -1,4 +1,5 @@
-define(function (eventMixin) {
+define(["avalon"], 
+function ($$) {
 	var fehContructor = function (flash) {
 		this.events = {};
 		this.__flash = flash;
@@ -26,7 +27,7 @@ define(function (eventMixin) {
 
 			while (i < listeners.length) {
 				if (listeners[i].fn === fn && listeners[i].scope === scope) {
-					listeners.splice(i, 1);
+					avalon.Array.removeAt(listeners, i);
 				} else {
 					i++;
 				}

@@ -17,7 +17,7 @@
  *    <p>blobErrored事件：当文件分块上传并且重试数次后仍然失败，此事件会触发。包含两个参数，参数1为文件对象分块本身，参数2为服务器返回的error状态文本。</p>
  *  @updatetime 2015-4-7
  */
-define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, eventMixin) {
+define(["avalon"], function (avalon) {
 	function blob(offset, size, index, fileObj) {
 		this.offset = offset;
 		this.size = size;
@@ -115,7 +115,8 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 		data[chunkIndexParamName] = this.index;
 		data[fileNameParamName] = this.fileObj.name;
 		if(!!this.md5) data[blobMd5ParamName] = this.md5;
-		data = adapter.extend(data, customizedParams);
+		data = avalon.mix(data, customizedParams);
+
 		data["__dataField"] = blobParamName;	// __dateField是文件二进制字节的参数名。
 		return data;
 	}
@@ -153,7 +154,6 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 		// 转FormData
         var formData = new FormData();
         for (var i in data) {
-        	if (i == '__dataField') continue;
         	if (data.hasOwnProperty(i)) {
         		formData.append(i, data[i]);
         	}
@@ -186,7 +186,7 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 
 		// 发送请求
 		try {
-			this.request = adapter.ajax(requestConfig);
+			this.request = avalon.ajax(requestConfig);
 			return true;
 		} catch (e) {
 			this.dispatchEvent("blobErrored", blob, e.message);
@@ -194,7 +194,9 @@ define(["./avalon.fileuploaderAdapter", "./eventmixin"], function (adapter, even
 		}
 	}
 
-	eventMixin(blob);
+
+
+
 
 	return blob;
 });

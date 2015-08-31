@@ -48,10 +48,13 @@ function ($$) {
 	 * 对所有管理的文件状态监控的回调函数。
 	 */
 	runtimeContructor.prototype.onFileStatusChanged = function (fileObj, beforeStatus) {
-		// 为了优化内存使用，上传成功后自动移除并销毁文件。
+		var me = this;
+		// 为了优化内存使用，上传成功后自动移除并销毁文件。异步销毁是为了等待文件的各种回调触发结束。
 		if (fileObj.status == fileObj.FILE_UPLOADED) {
-			delete this.files[fileObj.fileLocalToken];
-			fileObj.purge();
+			setTimeout(function () {
+				delete me.files[fileObj.fileLocalToken];
+				fileObj.purge();
+			}, 1000);
 		}
 	}
 

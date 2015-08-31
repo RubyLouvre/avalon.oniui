@@ -112,7 +112,7 @@
 	}
 
 
-	blobQueue.prototype.onBlobSuccess = function (blob, response) {
+	blobQueue.prototype.onBlobSuccess = function (blob, responseText, textStatus) {
 		this.inSending--;
 		this.log("****FileUploader.blobqueue: Blob tranfered. File token: ", blob.fileObj.fileLocalToken, ". Blob Index: ", blob.index);
 		avalon.Array.remove(this.requestPool, blob);
@@ -121,7 +121,7 @@
 	blobQueue.prototype.onBlobError = function (blob, textStatus, error) {
 		this.inSending--;
 		this.stopUploadByLocalToken(blob.fileObj.fileLocalToken);
-		this.log("****FileUploader.runtime: Blob upload error. File token: ", blob.fileObj.fileLocalToken, " .Chunk index: ", blob.index, " . Message: ", textStatus)
+		this.log("****FileUploader.runtime: Blob upload error. File token: ", blob.fileObj.fileLocalToken, " .Chunk index: ", blob.index, " . Message: ", textStatus);
 	}
 
 	blobQueue.prototype.isRequestPoolFull = function () {

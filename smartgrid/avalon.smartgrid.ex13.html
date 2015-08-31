@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>自定义列的显示/隐藏</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+    <script src="../avalon.js"></script>
+    <script src="../highlight/shCore.js"></script>
+    <style>
+        .button-group{
+            position: relative;
+            z-index: 1;
+        }
+        #container{
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body ms-controller="test">
+
+<div style="width:960px; margin: 0 auto">
+    <h1>自定义列的显示/隐藏</h1>
+
+    <div class="button-group">
+        <div id="container"></div>
+        <span>这里可以自定义更多的按钮</span>
+    </div>
+
+    <div ms-widget="smartgrid, sg"></div>
+</div>
+
+<script>
+    require(["smartgrid/avalon.smartgrid"], function () {
+
+        avalon.define("test", function (vm) {
+            vm.smartgrid = {
+                data: getDatas(5),
+                columns: [
+                    {
+                        key: "name",
+                        name: "姓名",
+                        width: 400,
+                        isLock: true
+                    }, {
+                        key: "age",
+                        name: "年龄",
+                        toggle: false,
+                        width: 100
+                    }, {
+                        key: "salary",
+                        name: "薪水",
+                        width: 100
+                    }, {
+                        key: "busy",
+                        name: "忙吗",
+                        width: 200
+                    }
+                ],
+                colHandlerContainer: "container", //指定控制按钮的容器，可以是DOM节点或id
+                allChecked: false,
+                pageable: false,
+                $skipArray: ["switchdropdown"]
+            }
+        })
+
+        avalon.scan()
+
+        function getDatas(number) {
+            var data = []
+            for (var i = 0; i < number; i++) {
+                data.push({
+                    name: "shirly" + i,
+                    age: parseInt(10 + Math.random() * 20),
+                    salary: parseInt(Math.random() * 100),
+                    busy: i % 3 === 0
+                })
+            }
+            return data
+        }
+    })
+</script>
+<div ms-skip style="width:960px; margin: 0 auto">
+    <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+        &lt;!DOCTYPE html&gt;
+        &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;自定义列的显示/隐藏&lt;/title&gt;
+            &lt;meta charset="UTF-8"&gt;
+            &lt;meta name="viewport" content="width=device-width"&gt;
+            &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+            &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+            &lt;style&gt;
+                .button-group{
+                    position: relative;
+                    z-index: 1;
+                }
+                #container{
+                    position: absolute;
+                    right: 0;
+                    bottom: 0;
+                }
+            &lt;/style&gt;
+        &lt;/head&gt;
+        
+        &lt;body ms-controller="test"&gt;
+        
+        &lt;div style="width:960px; margin: 0 auto"&gt;
+            &lt;h1&gt;自定义列的显示/隐藏&lt;/h1&gt;
+        
+            &lt;div class="button-group"&gt;
+                &lt;div id="container"&gt;&lt;/div&gt;
+                &lt;span&gt;这里可以自定义更多的按钮&lt;/span&gt;
+            &lt;/div&gt;
+        
+            &lt;div ms-widget="smartgrid, sg"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        
+        &lt;script&gt;
+            require(["smartgrid/avalon.smartgrid"], function () {
+        
+                avalon.define("test", function (vm) {
+                    vm.smartgrid = {
+                        data: getDatas(5),
+                        columns: [
+                            {
+                                key: "name",
+                                name: "姓名",
+                                width: 400,
+                                isLock: true
+                            }, {
+                                key: "age",
+                                name: "年龄",
+                                toggle: false,
+                                width: 100
+                            }, {
+                                key: "salary",
+                                name: "薪水",
+                                width: 100
+                            }, {
+                                key: "busy",
+                                name: "忙吗",
+                                width: 200
+                            }
+                        ],
+                        colHandlerContainer: "container", //指定控制按钮的容器，可以是DOM节点或id
+                        allChecked: false,
+                        pageable: false,
+                        $skipArray: ["switchdropdown"]
+                    }
+                })
+        
+                avalon.scan()
+        
+                function getDatas(number) {
+                    var data = []
+                    for (var i = 0; i &lt; number; i++) {
+                        data.push({
+                            name: "shirly" + i,
+                            age: parseInt(10 + Math.random() * 20),
+                            salary: parseInt(Math.random() * 100),
+                            busy: i % 3 === 0
+                        })
+                    }
+                    return data
+                }
+            })
+        &lt;/script&gt;
+        &lt;div ms-skip style="width:960px; margin: 0 auto"&gt;
+        &lt;/div&gt;
+        &lt;/body&gt;
+        &lt;/html&gt;
+    </pre>
+</div>
+</body>
+</html>

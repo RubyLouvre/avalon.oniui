@@ -1,4 +1,4 @@
-define(["../datepicker/avalon.datepicker.js"], function() {
+define(["../datepicker/avalon.datepicker"], function() {
 
     var datepicker = avalon.ui.datepicker
 

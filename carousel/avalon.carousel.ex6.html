@@ -7,28 +7,36 @@
         <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
         <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+
+        <style>
+            .wrapper, .wrapper fieldset{
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+        </style>
         <script>
             require(["carousel/avalon.carousel"], function() {
-                avalon.define("demo", function(vm) {
+                var vmodal = avalon.define("demo", function(vm) {
                     vm.$opt1 = {
                         pictures: [{
-                            src: "http://placehold.it/500x200/333333/dddddd.jpg&text=slider1"
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg"
                         }, {
-                            src: "http://placehold.it/500x200/555555/dddddd.jpg&text=slider2"
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg"
                         }, {
-                            src: "http://placehold.it/500x200/777777/dddddd.jpg&text=slider3"
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg"
                         }],
-                        adaptiveWidth : "100%"
+                        pictureWidth : "100%"
                     }
                     vm.$opt2 = {
                         pictures: [{
-                            src: "http://placehold.it/500x200/333333/dddddd.jpg&text=slider1"
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg"
                         }, {
-                            src: "http://placehold.it/500x200/555555/dddddd.jpg&text=slider2"
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg"
                         }, {
-                            src: "http://placehold.it/500x200/777777/dddddd.jpg&text=slider3"
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg"
                         }],
-                        pictureHeight: "100%"
+                        pictureHeight : "100%"
                     }
                 })
                 avalon.scan()
@@ -37,7 +45,7 @@
     </head>
     <body>
         <div class="wrapper"  ms-controller="demo">
-        <h1>图片轮播组件-自定义填充外围宽度和高度</h1>
+        <h1>图片轮播组件-自定义填充外围宽度和高度，并适应窗口resize</h1>
         <fieldset>
             <legend>自定义填充外围宽度</legend>
             <div ms-widget="carousel,carousel1,$opt1"></div>
@@ -56,28 +64,35 @@
         &lt;script src="../avalon.js"&gt;&lt;/script&gt;
         &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
         &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+        &lt;style&gt;
+            .wrapper, .wrapper fieldset{
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+        &lt;/style&gt;
         &lt;script&gt;
             require(["carousel/avalon.carousel"], function() {
                 avalon.define("demo", function(vm) {
                     vm.$opt1 = {
                         pictures: [{
-                            src: "http://placehold.it/500x200/333333/dddddd.jpg&text=slider1"
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg"
                         }, {
-                            src: "http://placehold.it/500x200/555555/dddddd.jpg&text=slider2"
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg"
                         }, {
-                            src: "http://placehold.it/500x200/777777/dddddd.jpg&text=slider3"
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg"
                         }],
-                        adaptiveWidth : "100%"
+                        pictureWidth : "100%"
                     }
                     vm.$opt2 = {
                         pictures: [{
-                            src: "http://placehold.it/500x200/333333/dddddd.jpg&text=slider1"
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg"
                         }, {
-                            src: "http://placehold.it/500x200/555555/dddddd.jpg&text=slider2"
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg"
                         }, {
-                            src: "http://placehold.it/500x200/777777/dddddd.jpg&text=slider3"
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg"
                         }],
-                        pictureHeight: "100%"
+                        pictureHeight : "100%"
                     }
                 })
                 avalon.scan()

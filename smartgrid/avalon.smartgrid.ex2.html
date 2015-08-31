@@ -4,15 +4,18 @@
         <title>通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
         <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
     </head>
     <body ms-controller="test">
-        <h1>通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数</h1>
-        <p>配置selectable设置表格是否需要添加选中行功能，type可以设置为"Checkbox"或者"Radio"</p>
-        <p>说明：当selectable.type设为Checkbox时，设置数据的checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false时务必保证对应的selected为false或者不存在selected的设置</p>
-        <div ms-widget="smartgrid, sg1, opts" style="width:760px; margin: 0 auto"></div>
-        <button ms-click="render">重新渲染数据</button>
+        <div style="width:960px; margin: 0 auto">
+            <h1>通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数</h1>
+            <p>配置selectable设置表格是否需要添加选中行功能，type可以设置为"Checkbox"或者"Radio"</p>
+            <p>说明：当selectable.type设为Checkbox时，设置数据的checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false时务必保证对应的selected为false或者不存在selected的设置</p>
+            <div ms-widget="smartgrid, sg1, opts"></div>
+            <button ms-click="render">重新渲染数据</button>
+        </div>
         <script>
             require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
                 function getDatas(number) {
@@ -147,7 +150,7 @@
                 avalon.scan()
             })
         </script>
-        <div ms-skip>
+        <div ms-skip style="width:960px; margin: 0 auto">
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
                 &lt;html&gt;
@@ -159,8 +162,8 @@
                 &lt;body ms-controller="test"&gt;
                     &lt;h1&gt;通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数&lt;/h1&gt;
                     &lt;p&gt;配置selectable设置表格是否需要添加选中行功能，type可以设置为"Checkbox"或者"Radio"&lt;/p&gt;
-                    
-                    &lt;div ms-widget="smartgrid, sg1, opts" style="width:760px; margin: 0 auto"&gt;&lt;/div&gt;
+                    &lt;p&gt;说明：当selectable.type设为Checkbox时，设置数据的checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false时务必保证对应的selected为false或者不存在selected的设置&lt;/p&gt;
+                    &lt;div ms-widget="smartgrid, sg1, opts"&gt;&lt;/div&gt;
                     &lt;button ms-click="render"&gt;重新渲染数据&lt;/button&gt;
                     &lt;script&gt;
                         require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
@@ -181,6 +184,8 @@
                                         checkboxShow: false
                                     })
                                 }
+                                data[2].checkboxShow = true
+                                
                                 // data[0].checkboxShow = false //当selectable.type为Checkbox时，设置checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false，务必保证selected为false或者不存在selected的设置
                                 return data
                             } 
@@ -287,7 +292,8 @@
                                             format: "$X" // 定义渲染数据的方法名
                                         }
                                     ],
-                                    data: getDatas(8)
+                                    // data: getDatas(8)
+                                    data: []
                                 }
                             })
                             avalon.scan()

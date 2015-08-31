@@ -1,0 +1,139 @@
+@import "global";
+
+.api-content-wrap{
+    height: 100%;
+    overflow: auto;
+    background-color: #fff;
+
+    .api-content{
+        position: relative;
+        padding: 40px 60px;
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-width: 12px;
+            border-color: $color-theme-blue transparent transparent $color-theme-blue;
+            border-style: solid;
+        }
+
+        p, fieldset{
+            position: relative;
+            max-width: 100%;
+            margin: 80px 0 0;
+            padding: 30px;
+            background-color: #f9fafe;
+            border: 1px $color-border-grey solid;
+
+            >legend{
+                position: absolute;
+                top: -50px;
+                left: 0;
+                padding: 0 0 0 10px;
+                font-size: 18px;
+                border-left: 4px $color-theme-blue solid;
+            }
+        }
+
+        p{
+            margin: 10px 0;
+        }
+
+        .table-doc{
+            width: 100%;
+            margin: 0 0 30px;
+            border: 1px $color-border-grey solid;
+            border-collapse: collapse;
+            background-color: #fff;
+
+            th,td{
+                padding: 20px;
+                border: 1px $color-border-grey solid;
+                word-break: break-all;
+            }
+
+            th{
+                font-weight: normal;
+                background-color: #2c2f34;
+                color: #fff
+            }
+
+            td{
+                border-width: 1px 0;
+                vertical-align: top;
+            }
+        }
+
+        dt{
+            margin: 40px 0 0;
+            padding: 0 0 0 10px;
+            font-size: 18px;
+            border-left: 4px $color-theme-blue solid;
+        }
+        dd, blockquote{
+            margin: 10px 0;
+            padding: 30px;
+            background-color: #f9fafe;
+            border: 1px $color-border-grey solid;
+        }
+        ul, ol{
+            >li{
+                background-color: #fff;
+                border: 1px $color-border-grey solid;
+                padding: 5px;
+                margin: 5px 0;
+            }
+        }
+
+        a{
+            color: $color-theme-blue;
+        }
+
+        button{
+            @include inline-block;
+            height: 32px;
+            line-height: 30px;
+            padding: 0px 15px;
+            border: 1px #aaa solid;
+            font-size: 14px;
+            border-radius: 3px;
+            color: #555;
+            background-color: #fff;
+            outline: none;
+            cursor: pointer;
+
+            &:hover{
+                color: #111;
+                border-color: #666;
+            }
+        }
+
+        input{
+            @include inline-block;
+            height: 32px;
+            padding: 0 5px;
+            line-height: 30px;
+            border: 1px #aaa solid;
+            font-size: 14px;
+            outline: none;
+            border-radius: 3px;
+            color: #555;
+            background-color: #fff;
+
+            &[disabled], &[readonly]{
+                background-color: #ccc;
+            }
+            &[type="submit"]{
+                padding: 0px 15px;
+                cursor: pointer;
+
+                &:hover{
+                    color: #111;
+                    border-color: #666;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>tooltip组件</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+    <script src="../avalon.js"></script>
+    <script src="../highlight/shCore.js"></script>
+    <style>
+        button {
+            font-size: 13px;
+            margin-left: 20px;
+            display: inline-block;
+        }
+    </style>
+    <script>
+        var str = '请输入';
+        require(["tooltip/avalon.tooltip", "dialog/avalon.dialog"], function () {
+            vmodel = avalon.define("test", function (vm) {
+                vm.$tooltipOpt = {
+                    "contentGetter": function (elem) {
+                        if (elem.tagName.toLowerCase() == 'input' || elem.getAttribute("tp")) return str
+                    }
+                    , autohide: true
+                    , event: 'focus'
+                }
+                vm.$dialogopts = {
+                    type: 'alert',
+                    title: '对话框',
+                    showClose: true
+                };
+                vm.show = function (id) {
+                    avalon.vmodels[id].toggle = true;
+                }
+                vm.$skipArray = ["tooltip"]
+            })
+            avalon.scan()
+        })
+    </script>
+</head>
+<body ms-controller="test">
+
+<h1>显示tooltip时动态获取最大z-index</h1>
+<button ms-click="show('dialog')">打开对话框</button>
+<div ms-widget="dialog, dialog, $dialogopts">
+    <input type="text"
+           ms-widget="tooltip, tooltip, $tooltipOpt"
+           data-tooltip-delegate="false"
+           data-tooltip-position="tr"
+           data-tooltip-position-my="left bottom-10"
+           data-tooltip-position-at="right-20 top"
+           value="focus me"/>
+</div>
+
+    <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+        &lt;!DOCTYPE html&gt;
+        &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;tooltip组件&lt;/title&gt;
+            &lt;meta charset="UTF-8"&gt;
+            &lt;meta name="viewport" content="width=device-width"&gt;
+            &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+            &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+            &lt;script&gt;
+                var str = '请输入';
+                require(["tooltip/avalon.tooltip", "dialog/avalon.dialog"], function () {
+                    vmodel = avalon.define("test", function (vm) {
+                        vm.$ppOpt = {
+                            "contentGetter": function (elem) {
+                                if (elem.tagName.toLowerCase() == 'input' || elem.getAttribute("tp")) return str
+                            }
+                            , autohide: true
+                            , event: 'focus'
+                        }
+                        vm.opts = {
+                            type: 'alert',
+                            title: '配置type为alert模拟alert',
+                            showClose: true
+                        };
+                        vm.show = function( id ){
+                            avalon.vmodels[id].toggle = true;
+                        }
+                        vm.$skipArray = ["tooltip"]
+                    })
+                    avalon.scan()
+                })
+            &lt;/script&gt;
+        &lt;/head&gt;
+        &lt;body class="oni-helper-reset" ms-controller="test"&gt;
+        &lt;h1&gt;显示tooltip时动态获取最大z-index&lt;/h1&gt;
+        &lt;button ms-click="show('bb')"&gt;打开对话框&lt;/button&gt;
+        &lt;div ms-widget="dialog,bb,opts"&gt;
+            &lt;input type="text"
+           ms-widget="tooltip, tooltip, $tooltipOpt"
+           data-tooltip-delegate="false"
+           data-tooltip-position="tr"
+           data-tooltip-position-my="left bottom-10"
+           data-tooltip-position-at="right-20 top"
+           value="focus me"/&gt;
+        &lt;/div&gt;
+        &lt;/body&gt;
+        &lt;/html&gt;
+    </pre>
+</body>
+</html>

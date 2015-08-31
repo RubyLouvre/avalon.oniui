@@ -1,4 +1,3 @@
-
 @import "../chameleon/oniui-theme";
 $uiname: "oni-datepicker";
 $uiname-dropdown: "oni-dropdown";
@@ -44,6 +43,16 @@ $uiname-dropdown: "oni-dropdown";
     box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
     position: absolute;
     background: #fff;
+}
+.#{$uiname}-wrapper-right {
+    right: -1px;
+}
+.#{$uiname}-wrapper-top {
+    bottom: 24px;
+}
+.#{$uiname}-wrapper-top-right {
+    bottom: 24px;
+    right: -1px;
 }
 .#{$uiname}-content {
     border: 1px solid #e5e5e5;
@@ -99,7 +108,6 @@ $uiname-dropdown: "oni-dropdown";
 }
 .#{$uiname}-content-content {
     padding: 0 10px;
-    width: 196px;  
     position: relative;
     @include inline-block();
     white-space: normal;
@@ -109,14 +117,10 @@ $uiname-dropdown: "oni-dropdown";
     position: absolute;
     top: 60px;
     left: 10px;
-    width: 196px;
-    height: 150px;
     background: transparent;
     color: #000;
     _color: lighten(#000, 95%);
     @include opacity(0.05);
-    font-size: 150px;
-    line-height: 150px;
     text-align: center;
 }
 .#{$uiname}-month-year {

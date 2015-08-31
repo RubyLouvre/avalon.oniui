@@ -1,0 +1,611 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>smartgrid demo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <style type="text/css">
+            body {
+                font-size: 14px;
+            }
+            h1 {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body ms-controller="test">
+        <div style="width:960px; margin: 0 auto;">
+            <h1>grid会根据columns配置的width自主决定是否显示水平滚动条</h1>
+            <h2>smartgrid sg1</h2>
+            <div ms-widget="smartgrid, sg1, opts1" style='margin-bottom:20px;'></div>
+            <h2>smartgrid sg2</h2>
+            <div ms-widget="smartgrid, sg2, opts2" style='margin-bottom:20px;'></div>
+            <h2>smartgrid sg3</h2>
+            <div ms-widget="smartgrid, sg3, opts3" style='margin-bottom:20px;'></div>
+            <h2>smartgrid sg4</h2>
+            <div ms-widget="smartgrid, sg4, opts4" style='margin-bottom:20px;'></div>
+            <h2>smartgrid sg5</h2>
+            <div ms-widget="smartgrid, sg5, opts5" style='margin-bottom:20px;'></div>
+            <h2>smartgrid sg6</h2>
+            <div ms-widget="smartgrid, sg6, opts6" style='margin-bottom:20px;'></div>
+            <h2>smartgrid sg7</h2>
+            <div ms-widget="smartgrid, sg7, opts7" style='margin-bottom:20px;'></div>
+            <h2>smartgrid sg8</h2>
+            <div ms-widget="smartgrid, sg8, opts8" style='margin-bottom:20px;'></div>
+            <h2>smartgrid sg9</h2>
+            <div ms-widget="smartgrid, sg9, opts9" style='margin-bottom:20px;'></div>
+        </div>
+        <script>
+            require(["smartgrid/avalon.smartgrid"], function() {
+                function getDatas(number) {
+                    var data = []
+                    for (var i = 0; i < number; i++) {
+                        data.push({
+                            name: "shirly"+i,
+                            age: parseInt(10 + Math.random() * 20),
+                            selected: i%3 ? false: true,
+                            salary: parseInt(Math.random() * 100),
+                            operate : i % 5 ? 0 : 1,
+                            busy : !i%3 && !i%5 ? 0 : 1
+                        })
+                    }
+                    return data
+                } 
+                
+                avalon.define("test", function(vm) {
+                    vm.$skipArray = ["opts"]
+                    vm.reRenderData = function() {
+                        var sg1 = avalon.vmodels.sg1
+                        sg1.data = getDatas(500)
+                        sg1.render()
+                        // 或者直接通过sg1.render(getDatas(500))重新渲染数据
+                    }
+                    vm.clearData = function() {
+                        var sg1 = avalon.vmodels.sg1
+                        sg1.data = []
+                        sg1.render()
+                    }
+                    vm.opts1 = {
+                        autoResize: false,
+                        columns: [
+                            {
+                                key : "name", //列标识
+                                name : "姓名", //列名
+                                sortable : true, //是否可排序
+                                align: "left", //列的对象方式
+                                width: 400 //设置列的宽度
+                            }, {
+                                key : "age",
+                                name : "年龄",
+                                sortable : true,
+                                width: 400,
+                                type: "Number"
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                type : "Number",
+                                sortable : true,
+                                align: "right",
+                                width: 400
+                            }
+                        ],
+                        data: getDatas(3)
+                    }
+                    vm.opts2 = {
+                        autoResize: false,
+                        columns: [
+                            {
+                                key : "name", //列标识
+                                name : "姓名", //列名
+                                sortable : true, //是否可排序
+                                align: "left", //列的对象方式
+                                width: '50%' //设置列的宽度
+                            }, {
+                                key : "age",
+                                name : "年龄",
+                                sortable : true,
+                                width: 300,
+                                type: "Number"
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                type : "Number",
+                                sortable : true,
+                                align: "right",
+                                width: 300
+                            }
+                        ],
+                        data: getDatas(3)
+                    }
+                    vm.opts3 = {
+                        autoResize: false,
+                        columns: [
+                            {
+                                key : "name", //列标识
+                                name : "姓名", //列名
+                                sortable : true, //是否可排序
+                                align: "left" //列的对象方式
+                            }, {
+                                key : "age",
+                                name : "年龄",
+                                sortable : true,
+                                width: 600,
+                                type: "Number"
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                type : "Number",
+                                sortable : true,
+                                align: "right",
+                                width: 400
+                            }
+                        ],
+                        data: getDatas(3)
+                    }
+                    vm.opts4 = {
+                        autoResize: false,
+                        columns: [
+                            {
+                                key : "name", //列标识
+                                name : "姓名", //列名
+                                sortable : true, //是否可排序
+                                align: "left" //列的对象方式
+                            }, {
+                                key : "age",
+                                name : "年龄",
+                                sortable : true,
+                                width: 300,
+                                type: "Number"
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                type : "Number",
+                                sortable : true,
+                                align: "right",
+                                width: 300
+                            }
+                        ],
+                        data: getDatas(3)
+                    }
+                    vm.opts5 = {
+                        autoResize: false,
+                        columns: [
+                            {
+                                key : "name", //列标识
+                                name : "姓名", //列名
+                                sortable : true, //是否可排序
+                                align: "left" //列的对象方式
+                            }, {
+                                key : "age",
+                                name : "年龄",
+                                sortable : true,
+                                width: '20%',
+                                type: "Number"
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                type : "Number",
+                                sortable : true,
+                                align: "right",
+                                width: 300
+                            }
+                        ],
+                        data: getDatas(3)
+                    }
+                    vm.opts6 = {
+                        autoResize: false,
+                        columns: [
+                            {
+                                key : "name", //列标识
+                                name : "姓名", //列名
+                                sortable : true, //是否可排序
+                                align: "left", //列的对象方式
+                                width: 200 //设置列的宽度
+                            }, {
+                                key : "age",
+                                name : "年龄",
+                                sortable : true,
+                                width: 300,
+                                type: "Number"
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                type : "Number",
+                                sortable : true,
+                                align: "right",
+                                width: 300
+                            }
+                        ],
+                        data: getDatas(3)
+                    }
+                    vm.opts7 = {
+                        autoResize: false,
+                        columns: [
+                            {
+                                key : "name", //列标识
+                                name : "姓名", //列名
+                                sortable : true, //是否可排序
+                                align: "left", //列的对象方式
+                                width: '20%' //设置列的宽度
+                            }, {
+                                key : "age",
+                                name : "年龄",
+                                sortable : true,
+                                width: '20%',
+                                type: "Number"
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                type : "Number",
+                                sortable : true,
+                                align: "right",
+                                width: '20%'
+                            }
+                        ],
+                        data: getDatas(3)
+                    }
+                    vm.opts8 = {
+                        autoResize: false,
+                        columns: [
+                            {
+                                key : "name", //列标识
+                                name : "姓名", //列名
+                                sortable : true, //是否可排序
+                                align: "left", //列的对象方式
+                                width: 200 //设置列的宽度
+                            }, {
+                                key : "age",
+                                name : "年龄",
+                                sortable : true,
+                                width: '10%',
+                                type: "Number"
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                type : "Number",
+                                sortable : true,
+                                align: "right",
+                                width: 300
+                            }
+                        ],
+                        data: getDatas(3)
+                    }
+                    vm.opts9 = {
+                        autoResize: false,
+                        columns: [
+                            {
+                                key : "name", //列标识
+                                name : "姓名", //列名
+                                sortable : true, //是否可排序
+                                align: "left" //列的对象方式
+                            }, {
+                                key : "age",
+                                name : "年龄",
+                                sortable : true,
+                                type: "Number"
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                type : "Number",
+                                sortable : true,
+                                align: "right"
+                            }
+                        ],
+                        data: getDatas(3)
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+        <div ms-skip style="width:960px; margin: 0 auto">
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE html&gt;
+                &lt;html&gt;
+                    &lt;head&gt;
+                        &lt;title&gt;smartgrid demo&lt;/title&gt;
+                        &lt;meta charset="UTF-8"&gt;
+                        &lt;meta name="viewport" content="width=device-width"&gt;
+                        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+                        &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+                        &lt;style type="text/css"&gt;
+                            body {
+                                font-size: 14px;
+                            }
+                            h1 {
+                                text-align: center;
+                            }
+                        &lt;/style&gt;
+                    &lt;/head&gt;
+                    &lt;body ms-controller="test"&gt;
+                        &lt;div style="width:960px; margin: 0 auto;"&gt;
+                            &lt;h1&gt;grid会根据columns配置的width自主决定是否显示水平滚动条&lt;/h1&gt;
+                            &lt;h2&gt;smartgrid sg1&lt;/h2&gt;
+                            &lt;div ms-widget="smartgrid, sg1, opts1" style='margin-bottom:20px;'&gt;&lt;/div&gt;
+                            &lt;h2&gt;smartgrid sg2&lt;/h2&gt;
+                            &lt;div ms-widget="smartgrid, sg2, opts2" style='margin-bottom:20px;'&gt;&lt;/div&gt;
+                            &lt;h2&gt;smartgrid sg3&lt;/h2&gt;
+                            &lt;div ms-widget="smartgrid, sg3, opts3" style='margin-bottom:20px;'&gt;&lt;/div&gt;
+                            &lt;h2&gt;smartgrid sg4&lt;/h2&gt;
+                            &lt;div ms-widget="smartgrid, sg4, opts4" style='margin-bottom:20px;'&gt;&lt;/div&gt;
+                            &lt;h2&gt;smartgrid sg5&lt;/h2&gt;
+                            &lt;div ms-widget="smartgrid, sg5, opts5" style='margin-bottom:20px;'&gt;&lt;/div&gt;
+                            &lt;h2&gt;smartgrid sg6&lt;/h2&gt;
+                            &lt;div ms-widget="smartgrid, sg6, opts6" style='margin-bottom:20px;'&gt;&lt;/div&gt;
+                            &lt;h2&gt;smartgrid sg7&lt;/h2&gt;
+                            &lt;div ms-widget="smartgrid, sg7, opts7" style='margin-bottom:20px;'&gt;&lt;/div&gt;
+                            &lt;h2&gt;smartgrid sg8&lt;/h2&gt;
+                            &lt;div ms-widget="smartgrid, sg8, opts8" style='margin-bottom:20px;'&gt;&lt;/div&gt;
+                            &lt;h2&gt;smartgrid sg9&lt;/h2&gt;
+                            &lt;div ms-widget="smartgrid, sg9, opts9" style='margin-bottom:20px;'&gt;&lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;script&gt;
+                            require(["smartgrid/avalon.smartgrid"], function() {
+                                function getDatas(number) {
+                                    var data = []
+                                    for (var i = 0; i &lt; number; i++) {
+                                        data.push({
+                                            name: "shirly"+i,
+                                            age: parseInt(10 + Math.random() * 20),
+                                            selected: i%3 ? false: true,
+                                            salary: parseInt(Math.random() * 100),
+                                            operate : i % 5 ? 0 : 1,
+                                            busy : !i%3 && !i%5 ? 0 : 1
+                                        })
+                                    }
+                                    return data
+                                } 
+                                
+                                avalon.define("test", function(vm) {
+                                    vm.$skipArray = ["opts"]
+                                    vm.reRenderData = function() {
+                                        var sg1 = avalon.vmodels.sg1
+                                        sg1.data = getDatas(500)
+                                        sg1.render()
+                                        // 或者直接通过sg1.render(getDatas(500))重新渲染数据
+                                    }
+                                    vm.clearData = function() {
+                                        var sg1 = avalon.vmodels.sg1
+                                        sg1.data = []
+                                        sg1.render()
+                                    }
+                                    vm.opts1 = {
+                                        autoResize: false,
+                                        columns: [
+                                            {
+                                                key : "name", //列标识
+                                                name : "姓名", //列名
+                                                sortable : true, //是否可排序
+                                                align: "left", //列的对象方式
+                                                width: 400 //设置列的宽度
+                                            }, {
+                                                key : "age",
+                                                name : "年龄",
+                                                sortable : true,
+                                                width: 400,
+                                                type: "Number"
+                                            }, {
+                                                key : "salary",
+                                                name : "薪水",
+                                                type : "Number",
+                                                sortable : true,
+                                                align: "right",
+                                                width: 400
+                                            }
+                                        ],
+                                        data: getDatas(3)
+                                    }
+                                    vm.opts2 = {
+                                        autoResize: false,
+                                        columns: [
+                                            {
+                                                key : "name", //列标识
+                                                name : "姓名", //列名
+                                                sortable : true, //是否可排序
+                                                align: "left", //列的对象方式
+                                                width: '50%' //设置列的宽度
+                                            }, {
+                                                key : "age",
+                                                name : "年龄",
+                                                sortable : true,
+                                                width: 300,
+                                                type: "Number"
+                                            }, {
+                                                key : "salary",
+                                                name : "薪水",
+                                                type : "Number",
+                                                sortable : true,
+                                                align: "right",
+                                                width: 300
+                                            }
+                                        ],
+                                        data: getDatas(3)
+                                    }
+                                    vm.opts3 = {
+                                        autoResize: false,
+                                        columns: [
+                                            {
+                                                key : "name", //列标识
+                                                name : "姓名", //列名
+                                                sortable : true, //是否可排序
+                                                align: "left" //列的对象方式
+                                            }, {
+                                                key : "age",
+                                                name : "年龄",
+                                                sortable : true,
+                                                width: 600,
+                                                type: "Number"
+                                            }, {
+                                                key : "salary",
+                                                name : "薪水",
+                                                type : "Number",
+                                                sortable : true,
+                                                align: "right",
+                                                width: 400
+                                            }
+                                        ],
+                                        data: getDatas(3)
+                                    }
+                                    vm.opts4 = {
+                                        autoResize: false,
+                                        columns: [
+                                            {
+                                                key : "name", //列标识
+                                                name : "姓名", //列名
+                                                sortable : true, //是否可排序
+                                                align: "left" //列的对象方式
+                                            }, {
+                                                key : "age",
+                                                name : "年龄",
+                                                sortable : true,
+                                                width: 300,
+                                                type: "Number"
+                                            }, {
+                                                key : "salary",
+                                                name : "薪水",
+                                                type : "Number",
+                                                sortable : true,
+                                                align: "right",
+                                                width: 300
+                                            }
+                                        ],
+                                        data: getDatas(3)
+                                    }
+                                    vm.opts5 = {
+                                        autoResize: false,
+                                        columns: [
+                                            {
+                                                key : "name", //列标识
+                                                name : "姓名", //列名
+                                                sortable : true, //是否可排序
+                                                align: "left" //列的对象方式
+                                            }, {
+                                                key : "age",
+                                                name : "年龄",
+                                                sortable : true,
+                                                width: '20%',
+                                                type: "Number"
+                                            }, {
+                                                key : "salary",
+                                                name : "薪水",
+                                                type : "Number",
+                                                sortable : true,
+                                                align: "right",
+                                                width: 300
+                                            }
+                                        ],
+                                        data: getDatas(3)
+                                    }
+                                    vm.opts6 = {
+                                        autoResize: false,
+                                        columns: [
+                                            {
+                                                key : "name", //列标识
+                                                name : "姓名", //列名
+                                                sortable : true, //是否可排序
+                                                align: "left", //列的对象方式
+                                                width: 200 //设置列的宽度
+                                            }, {
+                                                key : "age",
+                                                name : "年龄",
+                                                sortable : true,
+                                                width: 300,
+                                                type: "Number"
+                                            }, {
+                                                key : "salary",
+                                                name : "薪水",
+                                                type : "Number",
+                                                sortable : true,
+                                                align: "right",
+                                                width: 300
+                                            }
+                                        ],
+                                        data: getDatas(3)
+                                    }
+                                    vm.opts7 = {
+                                        autoResize: false,
+                                        columns: [
+                                            {
+                                                key : "name", //列标识
+                                                name : "姓名", //列名
+                                                sortable : true, //是否可排序
+                                                align: "left", //列的对象方式
+                                                width: '20%' //设置列的宽度
+                                            }, {
+                                                key : "age",
+                                                name : "年龄",
+                                                sortable : true,
+                                                width: '20%',
+                                                type: "Number"
+                                            }, {
+                                                key : "salary",
+                                                name : "薪水",
+                                                type : "Number",
+                                                sortable : true,
+                                                align: "right",
+                                                width: '20%'
+                                            }
+                                        ],
+                                        data: getDatas(3)
+                                    }
+                                    vm.opts8 = {
+                                        autoResize: false,
+                                        columns: [
+                                            {
+                                                key : "name", //列标识
+                                                name : "姓名", //列名
+                                                sortable : true, //是否可排序
+                                                align: "left", //列的对象方式
+                                                width: 200 //设置列的宽度
+                                            }, {
+                                                key : "age",
+                                                name : "年龄",
+                                                sortable : true,
+                                                width: '10%',
+                                                type: "Number"
+                                            }, {
+                                                key : "salary",
+                                                name : "薪水",
+                                                type : "Number",
+                                                sortable : true,
+                                                align: "right",
+                                                width: 300
+                                            }
+                                        ],
+                                        data: getDatas(3)
+                                    }
+                                    vm.opts9 = {
+                                        autoResize: false,
+                                        columns: [
+                                            {
+                                                key : "name", //列标识
+                                                name : "姓名", //列名
+                                                sortable : true, //是否可排序
+                                                align: "left" //列的对象方式
+                                            }, {
+                                                key : "age",
+                                                name : "年龄",
+                                                sortable : true,
+                                                type: "Number"
+                                            }, {
+                                                key : "salary",
+                                                name : "薪水",
+                                                type : "Number",
+                                                sortable : true,
+                                                align: "right"
+                                            }
+                                        ],
+                                        data: getDatas(3)
+                                    }
+                                })
+                                avalon.scan()
+                            })
+                        &lt;/script&gt;
+                    &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>

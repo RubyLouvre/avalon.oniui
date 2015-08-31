@@ -4,6 +4,12 @@
         <title>scrollspy组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <style>
+            .oni-tab-panel-container{
+                border: 1px #aaa solid;
+            }
+        </style>
         <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
         <script>
@@ -158,7 +164,6 @@
                 </div>
             </div>
         </div>
-        <hr>
         <h2>ID索引：li[0] - #item0联动+原生滚动</h2>
         <div ms-widget="tab" rank="1">
             <ul class="oni-helper-reset oni-helper-clearfix">
@@ -168,13 +173,12 @@
                 <li href="#item3">item 3</li>
             </ul>
         </div>
-        <div id="rank1" data-scrollspy-spytarget="nav1" style="height:300px;overflow-y:scroll;">
+        <div class="oni-tab-panel-container" id="rank1" data-scrollspy-spytarget="nav1" style="height:300px;overflow-y:scroll;">
             <div ms-repeat="list" data-repeat-rendered="up" ms-attr-id="item{{$index}}">
                 this is div {{$index}}
                 <h5 style="height:500px;"></h5>
             </div>
         </div>
-        <hr>
         <h2>ID索引：li[0] - #item0联动+scrollbar组件实现的滚动</h2>
         <div ms-widget="tab" rank="2">
             <ul class="oni-helper-reset oni-helper-clearfix">
@@ -184,7 +188,7 @@
                 <li href="#item23">item 3</li>
             </ul>
         </div>
-        <div id="rank2" data-scrollspy-spytarget="nav2" ms-widget="scrollbar" style="height:300px;overflow-y:scroll;" ms-scrollspy="$,$cc2">
+        <div class="oni-tab-panel-container" id="rank2" data-scrollspy-spytarget="nav2" ms-widget="scrollbar" style="height:300px;overflow-y:scroll;" ms-scrollspy="$,$cc2">
             <div class="oni-scrollbar-scroller">
                 <div ms-repeat="list" data-repeat-rendered="up" ms-attr-id="item2{{$index}}">
                     this is div {{$index}}

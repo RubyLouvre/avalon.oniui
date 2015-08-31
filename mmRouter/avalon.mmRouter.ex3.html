@@ -4,6 +4,7 @@
         <title>mmRouter组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
         <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
         <style>
@@ -184,8 +185,8 @@
                     onEnter: function(a) {
                         avalon.vmodels.contacts.id = a
                     },
-                    views: {
-                        "": {
+                    views: [
+                        {
                             templateUrl: "contacts.detail.html",
                             // 只要是query或者params变化，屏蔽掉通过innerHTML重写视图
                             ignoreChange: function(changeType) {
@@ -197,24 +198,25 @@
                                 }
                             }
                         },
-                        'hint@': {
-                            template: "当前状态是 {{id}} contacts.detail",
-                            // controller: function($ctrl) {
-                            //     $ctrl.$vmodels = [avalon.vmodels.contacts]
-                            // }
-                            controller: "contacts"
-                        },
-                        'tip': {
+                        {
+                            name: "tip",
                             templateProvider: function(params) {
                                 return "当前ID是" + params.contactId + "<div ms-view=\"complex\"></div>"
                             }
                         },
-                        "complex@contacts.detail": {
+                        {
+                            name: "hint@",
+                            template: "当前状态是 {{id}} contacts.detail",
+                            controller: "contacts"
+                        },
+                        {
+                            name: "complex@contacts.detail",
                             template: "<font color='red'>我只有呵呵了 -- {{name}}</font>",
                             // 把一个符合controller规范的vmodel用来生成$ctrl
                             controller: "usVmodelAsController"
                         }
-                    }
+
+                    ]
                 }).state("contacts.detail.item", {
                     url: "/item/{itemID}",
                     onEnter: function() {
@@ -292,7 +294,11 @@
                 //启动路由
                 avalon.history.start({
                     // basepath: "/mmRouter",
-                    fireAnchor: false
+                    fireAnchor: false,
+                    routeElementJudger: function(ele, href) {
+                        ele = avalon(ele)
+                        if(ele.hasClass("route-ele")) return true // return href
+                    }
                 })
                 //go!!!!!!!!! 
                 avalon.scan()
@@ -319,7 +325,7 @@
                 </li>
             </ul>
             <div class="header">
-                <a href="#!//">mmState</a>  <a href="#!/contacts">contacts</a>  <a href="#!/about">about</a>
+                <a href="#!//">mmState</a>  <a href="#!/contacts">contacts</a>  <a href="#!/about">about</a> <a href="/about" class="route-ele">about</a>
                 <p class="hint" ms-view="hint" 
                    ms-class="b2"></p>
             </div>
@@ -333,7 +339,7 @@
         &lt;title&gt;mmRouter组件&lt;/title&gt;
         &lt;meta charset=&quot;UTF-8&quot;&gt;
         &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
-        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;../avalon.modern.js&quot;&gt;&lt;/script&gt;
         
         &lt;style&gt;
             .header{
@@ -513,8 +519,8 @@
                     onEnter: function(a) {
                         avalon.vmodels.contacts.id = a
                     },
-                    views: {
-                        &quot;&quot;: {
+                    views: [
+                        {
                             templateUrl: &quot;contacts.detail.html&quot;,
                             // 只要是query或者params变化，屏蔽掉通过innerHTML重写视图
                             ignoreChange: function(changeType) {
@@ -526,24 +532,25 @@
                                 }
                             }
                         },
-                        'hint@': {
-                            template: &quot;当前状态是 {{id}} contacts.detail&quot;,
-                            // controller: function($ctrl) {
-                            //     $ctrl.$vmodels = [avalon.vmodels.contacts]
-                            // }
-                            controller: &quot;contacts&quot;
-                        },
-                        'tip': {
+                        {
+                            name: &quot;tip&quot;,
                             templateProvider: function(params) {
                                 return &quot;当前ID是&quot; + params.contactId + &quot;&lt;div ms-view=\&quot;complex\&quot;&gt;&lt;/div&gt;&quot;
                             }
                         },
-                        &quot;complex@contacts.detail&quot;: {
+                        {
+                            name: &quot;hint@&quot;,
+                            template: &quot;当前状态是 {{id}} contacts.detail&quot;,
+                            controller: &quot;contacts&quot;
+                        },
+                        {
+                            name: &quot;complex@contacts.detail&quot;,
                             template: &quot;&lt;font color='red'&gt;我只有呵呵了 -- {{name}}&lt;/font&gt;&quot;,
                             // 把一个符合controller规范的vmodel用来生成$ctrl
                             controller: &quot;usVmodelAsController&quot;
                         }
-                    }
+
+                    ]
                 }).state(&quot;contacts.detail.item&quot;, {
                     url: &quot;/item/{itemID}&quot;,
                     onEnter: function() {
@@ -621,7 +628,11 @@
                 //启动路由
                 avalon.history.start({
                     // basepath: &quot;/mmRouter&quot;,
-                    fireAnchor: false
+                    fireAnchor: false,
+                    routeElementJudger: function(ele, href) {
+                        ele = avalon(ele)
+                        if(ele.hasClass(&quot;route-ele&quot;)) return true // return href
+                    }
                 })
                 //go!!!!!!!!! 
                 avalon.scan()
@@ -648,7 +659,7 @@
                 &lt;/li&gt;
             &lt;/ul&gt;
             &lt;div class=&quot;header&quot;&gt;
-                &lt;a href=&quot;#!//&quot;&gt;mmState&lt;/a&gt;  &lt;a href=&quot;#!/contacts&quot;&gt;contacts&lt;/a&gt;  &lt;a href=&quot;#!/about&quot;&gt;about&lt;/a&gt;
+                &lt;a href=&quot;#!//&quot;&gt;mmState&lt;/a&gt;  &lt;a href=&quot;#!/contacts&quot;&gt;contacts&lt;/a&gt;  &lt;a href=&quot;#!/about&quot;&gt;about&lt;/a&gt; &lt;a href=&quot;/about&quot; class=&quot;route-ele&quot;&gt;about&lt;/a&gt;
                 &lt;p class=&quot;hint&quot; ms-view=&quot;hint&quot; 
                    ms-class=&quot;b2&quot;&gt;&lt;/p&gt;
             &lt;/div&gt;

@@ -4,12 +4,15 @@
         <title>自定义smartgrid各种事件回调</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
         <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
     </head>
     <body ms-controller="test">
-        <h1>自定义smartgrid各种事件回调</h1>
-        <div ms-widget="smartgrid, sg1"></div>
+        <div style="width:960px; margin: 0 auto">
+            <h1>自定义smartgrid各种事件回调</h1>
+            <div ms-widget="smartgrid, sg1"></div>
+        </div>
         <script>
             require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
                 function getDatas(number) {
@@ -172,7 +175,7 @@
                 avalon.scan()
             })
         </script>
-        <div ms-skip>
+        <div ms-skip style="width:960px; margin: 0 auto">
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
                 &lt;html&gt;

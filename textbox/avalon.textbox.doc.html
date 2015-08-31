@@ -7,9 +7,8 @@
         <meta name="viewport" content="width=device-width">
         <meta name="descriptions" content="通过给简单的表单输入域设置不同的配置项可以使表单拥有舒服的视觉效果，也可以使其具有提示补全功能
 
- " />
-        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
-        />
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
         <script src="../highlight/shCore.js"></script>
     </head>
     
@@ -20,14 +19,14 @@
                 <legend>Name 具有提示功能的输入框</legend>
                 <p>通过给简单的表单输入域设置不同的配置项可以使表单拥有舒服的视觉效果，也可以使其具有提示补全功能</p>
             </fieldset>
-            <fieldset>
-                <legend>使用说明</legend>
-                <table class="table-doc" border="1">
-                    <colgroup>
-                        <col width="180" />
-                        <col width="80" />
-                        <col width="120" />
-                    </colgroup>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
                     <tr>
                         <th>名字</th>
                         <th>类型</th>
@@ -42,6 +41,12 @@
                         <td>Boolean</td>
                         <td>false</td>
                         <td>配置输入框有自动提示补全功能，提示类型由用户自定义，默认配置为false，也就是不开启自动补全功能</td>
+                    </tr>
+                    <tr>
+                        <td>suggestDisableLetter</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>配置输入框进行自动提示补全时，是否对字母进行过滤，默认配置为false,也就是说输入值包含字母时也会进行自动补全</td>
                     </tr>
                     <tr>
                         <td>autoTrim</td>
@@ -62,6 +67,12 @@
                         <td>配置textbox的显示宽</td>
                     </tr>
                     <tr>
+                        <td>adaptiveHeight</td>
+                        <td>Object</td>
+                        <td>""</td>
+                        <td>使textbox自适应高度，并可以配置自适应时的minHeight/maxHeight</td>
+                    </tr>
+                    <tr>
                         <td>autoFocus</td>
                         <td>Boolean</td>
                         <td>false</td>
@@ -79,26 +90,28 @@
                         <td></td>
                         <td>模板函数,方便用户自定义模板
                             <table border="1">
-                                <tr>
-                                    <th style="width:100px">参数名/返回值</th>
-                                    <th style="width:70px">类型</th>
-                                    <th>说明</th>
-                                </tr>
-                                <tr>
-                                    <td>str</td>
-                                    <td>String</td>
-                                    <td>默认模板</td>
-                                </tr>
-                                <tr>
-                                    <td>opts</td>
-                                    <td>Object</td>
-                                    <td>vmodel</td>
-                                </tr>
-                                <tr>
-                                    <td>返回</td>
-                                    <td>String</td>
-                                    <td>新模板</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>str</td>
+                                        <td>String</td>
+                                        <td>默认模板</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td>新模板</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </td>
                     </tr>
@@ -129,8 +142,8 @@
                         <td>""</td>
                         <td>绑定组件元素的dom对象的引用</td>
                     </tr>
-                </table>
-            </fieldset>
+                </tbody>
+            </table>
             <ul class="example-links">
                 <li>
                     <a href="avalon.textbox.ex1.html">基本textbox、配置了width、tabIndex的textbox以及配置了disabledClass的textbox</a>
@@ -149,6 +162,9 @@
                 </li>
                 <li>
                     <a href="avalon.textbox.ex6.html">添加回调操作的自动补全</a>
+                </li>
+                <li>
+                    <a href="avalon.textbox.ex7.html">自适应高度textarea</a>
                 </li>
             </ul>
         </div>

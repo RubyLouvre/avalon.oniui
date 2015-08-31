@@ -12,6 +12,40 @@
 <body>
     <div class="wrapper">
         <h1>accordion demo1</h1>
+
+        <div class="demo-show" ms-controller="demo">
+            <div ms-widget="accordion,aa,$aaOpts">
+            </div>
+            <script>
+                require(["accordion/avalon.accordion"], function($$) {
+                    $$.define('demo',function(vm){
+                        vm.$aaOpts = {
+                            data: [{
+                                'title': '标题1',
+                                'content': '正文1<p>fasdfsdaf</p>'
+                            }, {
+                                'title': '标题2',
+                                'content': '正文2'
+                            }],
+                            accordionClass: "oni-accordion-customClass",
+                            initIndex: 1,
+                            width: "500",
+                            onBeforeSwitch: function() {
+                                avalon.log(this);
+                                avalon.log(arguments);
+                                avalon.log("onBeforeSwitch callback");
+                            },
+                            onSwitch: function() {
+                                avalon.log("onSwitch callback");
+                            },
+                            multiple: true
+                        }
+                    });
+                    $$.scan();
+                });
+            </script>
+        </div>
+
         <p class="example">accordion组件的定义必须同时设置组件名、组件ID、组件配置项，比如：ms-widget="accordion, accordionId, accordionOpts",并且配置项最好以"$"开头，表示不被avalon扫描监控</p>
         <p><span class="use-description">说明：</span>accordion组件默认全部关闭面板，下面实例设置initIndex为1表示初始打开第二个面板；accordion组件默认不可同时打开多个面板或者关闭全部面板，这里设置multiple为true，使得组件可以同时打开多个面板，也可以关闭全部面板；可以为accordion设置自己想要的class，通过accordionClass配置;accordion组件默认宽度是"100%",下面的demo配置组件宽度为500px;在打开一个面板之前可以添加打开前的回调beforeSwtich，同样可以定义打开之后的回调onSwitch</p>
         <div ms-skip>
@@ -60,38 +94,7 @@
                 &lt;/html&gt;
             </pre>
         </div>
-        <div class="demo-show" ms-controller="demo">
-            <div ms-widget="accordion,aa,$aaOpts">
-            </div>
-            <script> 
-                require(["accordion/avalon.accordion"], function($$) {
-                    $$.define('demo',function(vm){
-                        vm.$aaOpts = {
-                            data: [{
-                                'title': '标题1',
-                                'content': '正文1<p>fasdfsdaf</p>'
-                            }, {
-                                'title': '标题2',
-                                'content': '正文2'
-                            }],
-                            accordionClass: "oni-accordion-customClass",
-                            initIndex: 1,
-                            width: "500",
-                            onBeforeSwitch: function() {
-                                avalon.log(this);
-                                avalon.log(arguments);
-                                avalon.log("onBeforeSwitch callback");
-                            },
-                            onSwitch: function() {
-                                avalon.log("onSwitch callback");
-                            },
-                            multiple: true
-                        }
-                    });
-                    $$.scan();
-                });
-            </script>
-        </div>
+
     </div>
 </body>
 </html>

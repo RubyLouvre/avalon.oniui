@@ -4,13 +4,15 @@
     <title>tab组件</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
     <script src="../avalon.js"></script>
     <script src="../highlight/shCore.js"></script>
     <script>
         require(["tab/avalon.tab"], function() {
             avalon.define("test", function(vm) {
                 vm.tab = {
-                    event: "click"
+                    event: "click",
+                    preScanPannel: true
                 }
                 vm.$skipArray = ["tab"]
                 vm.tabs = ["tab1", "tab2"]

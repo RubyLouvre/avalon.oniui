@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>textbox demo 7</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>textbox demo 7</h1>
+
+        <p class="example">自适应高度，组件标签必须为textarea，可配置最大最小高度</p>
+        <div class="demo-show" ms-controller="demo7">
+            <textarea ms-widget="textbox, textbox, $textboxOpts1" ms-duplex="content1" cols="50" placeholder="尝试不断复制上面的文字进来"></textarea>
+        </div>
+
+        <p class="example">不配置最大最小高度，可无限延伸，默认最小高度为60px</p>
+        <div class="demo-show" ms-controller="demo7">
+            <textarea ms-widget="textbox, textbox, $textboxOpts2" ms-duplex="content2" cols="50" placeholder="尝试不断复制上面的文字进来"></textarea>
+        </div>
+
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;div class="wrapper"&gt;
+                    &lt;h1&gt;textbox demo 7&lt;/h1&gt;
+
+                    &lt;p class="example"&gt;自适应高度，组件标签必须为textarea，可配置最大最小高度&lt;/p&gt;
+                    &lt;div class="demo-show" ms-controller="demo7"&gt;
+                        &lt;textarea ms-widget="textbox, textbox, $textboxOpts1" ms-duplex="content1" cols="50" placeholder="尝试不断复制上面的文字进来"&gt;&lt;/textarea&gt;
+                    &lt;/div&gt;
+
+                    &lt;p class="example"&gt;不配置最大最小高度，可无限延伸，默认最小高度为60px&lt;/p&gt;
+                    &lt;div class="demo-show" ms-controller="demo7"&gt;
+                        &lt;textarea ms-widget="textbox, textbox, $textboxOpts2" ms-duplex="content2" cols="50" placeholder="尝试不断复制上面的文字进来"&gt;&lt;/textarea&gt;
+                    &lt;/div&gt;
+
+                    &lt;script&gt;
+                        require(["textbox/avalon.textbox"], function() {
+                            avalon.define("demo7", function(vm) {
+                                vm.$textboxOpts1 = {
+                                    adaptiveHeight: {
+                                        minHeight: 30,
+                                        maxHeight: 200
+                                    }
+                                }
+                                vm.$textboxOpts2 = {
+                                    adaptiveHeight: {
+                                        minHeight: null, //不定义自适应范围
+                                        maxHeight: null
+                                    }
+                                }
+                                vm.content1 = ""
+                                vm.content2 = ""
+                            })
+                            avalon.scan();
+                        })
+                    &lt;/script&gt;
+                &lt;/div>
+            </pre>
+        </div>
+
+        <script>
+            require(["textbox/avalon.textbox"], function() {
+                avalon.define("demo7", function(vm) {
+                    vm.$textboxOpts1 = {
+                        adaptiveHeight: {
+                            minHeight: 30,
+                            maxHeight: 200
+                        }
+                    }
+                    vm.$textboxOpts2 = {
+                        adaptiveHeight: {
+                            minHeight: null, //不定义自适应范围
+                            maxHeight: null
+                        }
+                    }
+                    vm.content1 = ""
+                    vm.content2 = ""
+                })
+                avalon.scan();
+            })
+        </script>
+    </div>
+</body>
+</html>

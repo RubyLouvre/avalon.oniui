@@ -1,6 +1,7 @@
 define(["avalon"], function(avalon) {
     var DOC = document
     var root = DOC.documentElement
+    var eventMap = {}
     var IEEventMap = {
         "change": "click",
         "focus": "focusin",
@@ -46,10 +47,14 @@ define(["avalon"], function(avalon) {
         }
     }
     function dequeue(callbacks, obj, i) {
-        var parent = obj.elem.parentNode
-        if (!parent || parent.nodeType == 11) {
+        // var parent = obj.elem.parentNode
+        // 备注：如果是整块视图被移除，下面的判断就是无效的了，导致无法回收绑定 - 大片泄露，因此去掉
+        // 事件发生时候才回调，也会造成泄露
+        // if (!parent || parent.nodeType == 11) {
+        if(!(obj.elem && obj.elem.msRetain)) {
             callbacks.splice(i, 1)
         }
+        // }
     }
     var liveMap = avalon.bindingHandlers.live = function(data, vmodels) {
         var type = data.param
@@ -129,6 +134,7 @@ define(["avalon"], function(avalon) {
                     avalon.bind(DOC, "beforedeactivate", testChange)
                 }
             }
+            eventMap[live + type] = 1
             data.specialBind = function(elem, fn) {
                 var obj = {
                     elem: elem,
@@ -149,9 +155,29 @@ define(["avalon"], function(avalon) {
                 }
             }
         }
-
         avalon.bindingHandlers.on(data, vmodels)
     }
+
+    function releaseLiveBinded(filter) {
+        filter = avalon.isFunction(filter) ? filter : function(data) {
+            return !(data.elem && data.elem.msRetain) && !root.contains(data.elem)
+        }
+        for(var ekey in eventMap) {
+            var arr = liveMap[ekey]
+            if(arr) {
+                for(var i = 0, cb; cb = arr[i]; i++) {
+                    if(filter(arr[i])) {
+                        arr.splice(i, 1)
+                        i--
+                    }
+                }
+            }
+        }
+
+        setTimeout(releaseLiveBinded, 1200000) // 该处理等于只针对spa应用了，20分钟主动清理一次
+    }
+
+    releaseLiveBinded()
 
 })
 //avalon的事件代理模块

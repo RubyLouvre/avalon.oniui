@@ -4,15 +4,19 @@
         <title>简单的表格组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
         <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
     </head>
     <body ms-controller="test">
-        <h1>除设置columns和data外都是默认配置的smartgrid</h1>
-        <p>ps: 通过getDatas设置数据，通过改变数据的条数看看smartgrid对数据的渲染性能如何，这里重新渲染数据时设置的是500条</p>
-        <div ms-widget="smartgrid, sg1, opts" ></div>
-        <button ms-click="reRenderData">重新渲染数据</button>
-        <button ms-click="clearData">清空数据</button>
+        <div style="width:960px; margin: 0 auto">
+            <h1>除设置columns和data外都是默认配置的smartgrid</h1>
+            <p>设置column的customClass可以定义单个列的样式</p>
+            <p>ps: 通过getDatas设置数据，通过改变数据的条数看看smartgrid对数据的渲染性能如何，这里重新渲染数据时设置的是500条</p>
+            <div ms-widget="smartgrid, sg1, opts" style='margin-bottom:20px;'></div>
+            <button ms-click="reRenderData">重新渲染数据</button>
+            <button ms-click="clearData">清空数据</button>
+        </div>
         <script>
             require(["smartgrid/avalon.smartgrid"], function() {
                 function getDatas(number) {
@@ -44,6 +48,9 @@
                         sg1.render()
                     }
                     vm.opts = {
+                        onInit: function(){
+                            avalon.log("--init---")
+                        },
                         autoResize: false,
                         columns: [
                             {
@@ -77,7 +84,7 @@
                 avalon.scan()
             })
         </script>
-        <div ms-skip>
+        <div ms-skip style="width:960px; margin: 0 auto">
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
                 &lt;html&gt;

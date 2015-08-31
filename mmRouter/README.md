@@ -5,6 +5,8 @@ avalon的三柱臣之一（ 路由，动画，AJAX）
 
 [详细文档](http://ued.qunar.com/oniui/mmRouter/avalon.mmRouter.doc.html)
 
+[例子](https://github.com/gogoyqj/mmRouter-demo-list)
+
 如何从mmState迁移到new-mmState
 -----------------------------------
 1、新版new-mmState特性
@@ -226,48 +228,81 @@ mmState的使用
 
     })
 ```
-2、定义顶层VM， 名字随便叫，但页面上有一个ms-controller，因为 mmState内部有一个getViews方法，通过它得到所有ms-views所在的子孙元素
-`getViews("test","contacts.list")` 得到`DIV[avalonctrl="test"] [ms-view]`这样一个CSS表达式，再通过`document.querySelectorAll`
-或内部为兼容IE67实现的简单选择器引擎进行元素查找。
+2、定义顶层的vmodel + state，推荐的架构：
 ```javascript
     require(["ready!", "mmState"], function() {
-        //一个顶层VM
-         avalon.define({
-             $id: "test" /
-         })
+        // 定义一个顶层的vmodel，用来放置全局共享数据
+        var root = avalon.define("root", function(vm) {
+            vm.page = ""
+        })
+
+        // 定义一个全局抽象状态，用来渲染通用不会改变的视图，比如header，footer
+        avalon.state("root", {
+            url: "/",
+            abstract: true, // 抽象状态，不会对应到url上
+            views: {
+                "": {
+                    templateUrl: "./script/template/blog.html", // 指定模板地址
+                    controllerUrl: "./controller/blog.js" // 指定控制器地址
+                }, // 也可以不配置 ""，直接在子状态内定义 "@"来覆盖重写
+                "footer@": { // 视图名字的语法请仔细查阅文档
+                    template: function() {
+                        return "<div style=\"text-align:center;\">this is footer</div>"
+                    } // 指定一个返回字符串的函数来获取模板
+                }
+            }
+        })
+        avalon.state.config({
+            onError: function() {
+                console.log(arguments)
+            } // 强烈打开错误配置
+        })
     })
 ```
 3、定义各种状态，内部会转换为一个路由表，交由mmRouter去处理。
-5、开始扫描
 ```javascript
-    avalon.state("home", {
-        controller: "test",
-        url: "/",
+    avalon.state("root.list", { // 定义一个子状态，对应url是 /{pageId}，比如/1，/2
+        url: "{pageId}",
         views: {
             "": {
-                template: '<p class="lead">Welcome to the UI-Router Demo</p>' +
-                        '<p>Use the menu above to navigate. ' +
-                        'Pay attention to the <code>$state</code> and <code>$stateParams</code> values below.</p>' +
-                        '<p>Click these links—<a href="#!/contacts/1">Alice</a> or ' +
-                        '<a href="#!/contacts/2">Bob</a>—to see a url redirect in action.</p>'
-            },
-            'hint@': {
-                template: "当前状态是home"
+                templateUrl: "./script/template/list.html",
+                controllerUrl: "./controller/lists.js",
+                ignoreChange: function(type) {
+                    return !!type
+                } // url通过{}配置的参数变量发生变化的时候是否通过innerHTML重刷ms-view内的DOM，默认会，如果你做的是翻页这种应用，建议使用例子内的配置，把数据更新到vmodel上即可
             }
         }
-
     })
 ```
-注意，第一个状态，__必须指定controller__，controller为顶层VM的`$id`。
 注意，添加状态的顺序，必须先添加aaa, 再添加aaa.bbb，再添加aaa.bbb.ccc，不能先添加aaa.bbb，再添加aaa。
 
-4、启动历史管理器
+4、编写控制器
 ```javascript
-    avalon.history.start({
-        basepath: "/mmRouter"
+    define([], function() {
+        // 定义所有相关的vmodel
+        var blog = avalon.define("blog", function(vm) {
+        })
+
+        return avalon.controller(function($ctrl) {
+            // 视图渲染后，意思是avalon.scan完成
+            $ctrl.$onRendered = function() {
+            }
+            // 进入视图
+            $ctrl.$onEnter = function() {
+            }
+            // 对应的视图销毁前
+            $ctrl.$onBeforeUnload = function() {}
+            // 指定一个avalon.scan视图的vmodels，vmodels = $ctrl.$vmodels.concact(DOM树上下文vmodels)
+            $ctrl.$vmodels = []
+        })
     })
 ```
-5、开始扫描
+
+5、启动历史管理器
+```javascript
+    avalon.history.start({}) // options
+```
+6、开始扫描
 ```javascript
    avalon.scan()
 ```
@@ -277,40 +312,49 @@ avalon.state的参数与配置项与内部生成属性
 avalon.state(stateName: opts)
 ```
 
-* stateName： 指定当前状态名
-* url:  当前状态对应的路径规则，与祖先状态们组成一个完整的匹配规则
-* controller： 指定当前所在的VM的名字（如果是顶级状态对象，必须指定）
-* views: 对多个[ms-view]容器进行处理,
-
-  每个对象应拥有template, templateUrl, templateProvider, onBeforeLoad, onAfterLoad属性
-
-  template,templateUrl,templateProvider属性必须指定其一,要求返回一个字符串或一个Promise对象
-
-  onBeforeLoad, onAfterLoad是可选
-
-  如果不写views属性,则默认view为"",这四个属性可以直接写在opts对象上
-
-  views的结构为：
-
+* stateName 指定当前状态名
+* opts 配置
+* opts.url  当前状态对应的路径规则，与祖先状态们组成一个完整的匹配规则
+* {Function} opts.ignoreChange 当mmState.currentState == this时，更新视图的时候调用该函数，return true mmRouter则不会去重写视图和scan，请确保该视图内用到的数据没有放到avalon vmodel $skipArray内
+* opts.controller 如果不写views属性,则默认view为""，为默认的view指定一个控制器，该配置会直接作为avalon.controller的参数生成一个$ctrl对象
+* opts.controllerUrl 指定默认view控制器的路径，适用于模块化开发，该情形下默认通过avalon.controller.loader去加载一个符合amd规范，并返回一个avalon.controller定义的对象，传入opts.params作参数
+* opts.controllerProvider 指定默认view控制器的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数
+opts.viewCache 是否缓存这个模板生成的dom，设置会覆盖dom元素上的data-view-cache，也可以分别配置到views上每个单独的view上
+* opts.views: 如果不写views属性,则默认view【ms-view=""】为""，也可以通过指定一个viewname属性来配置【ms-view="viewname"】，等价于
+```  
+  views: {
+      viewname: {
+          xxx
+      }
+  }
 ```
-    {
-       "": {template: "xxx", onBeforeLoad: function(){} }
-       "aaa": {template: "xxx", onBeforeLoad: function(){} }
-       "bbb@": {template: "xxx", onBeforeLoad: function(){} }
-    }
-    views的每个键名(keyname)的结构为viewname@statename，
-        如果名字不存在@，则viewname直接为keyname，statename为opts.stateName
-        如果名字存在@, viewname为match[0], statename为match[1]
+对多个[ms-view]容器进行处理,每个对象应拥有template, templateUrl, templateProvider，可以给每个对象搭配一个controller||controllerUrl||controllerProvider属性
+
+*     views的结构为
 ```
-* template: 指定当前模板，也可以为一个函数，传入opts.params作参数
-* templateUrl: 指定当前模板的路径，也可以为一个函数，传入opts.params作参数
-* templateProvider: 指定当前模板的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数
-* onEnter: 当切换为当前状态时调用的回调，this指向状态对象，参数为匹配的参数，我们可以在此方法 定义此模板用到的VM， 或修改VM的属性
-* onBeforeLoad: 模板还没有插入DOM树执行的回调，this指向[ms-view]元素节点，参数为状态对象
-* onAfterLoad: 模板插入DOM树执行的回调，this指向[ms-view]元素节点，参数为状态对象
-* abstract:  表示它不参与匹配
-* parentState: 父状态对象（框架内部生成）
+      {
+         "": {template: "xxx"}
+         "aaa": {template: "xxx"}
+         "bbb@": {template: "xxx"}
+      }
+```
+* views的每个键名(keyname)的结构为viewname@statename，如果名字不存在@，则viewname直接为keyname，statename为opts.stateName 如果名字存在@, viewname为match[0], statename为match[1]
+* opts.views.{viewname}.template 指定当前模板，也可以为一个函数，传入opts.params作参数，* opts.views.viewname.cacheController 是否缓存view的控制器，默认true
+* opts.views.{viewname}.templateUrl 指定当前模板的路径，也可以为一个函数，传入opts.params作参数
+* opts.views.{viewname}.templateProvider 指定当前模板的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数
+* opts.views.{viewname}.ignoreChange 用法同state.ignoreChange，只是针对的粒度更细一些，针对到具体的view
+* {Function} opts.onBeforeEnter 切入某个state之前触发，this指向对应的state，如果return false则会中断并退出整个状态机
+* {Function} opts.onEnter 进入状态触发，可以返回false，或任意不为true的错误信息或一个promise对象，用法跟视图的$onEnter一致
+* {Function} onEnter.params 视图所属的state的参数
+* {Function} onEnter.resolve $onEnter return false的时候，进入同步等待，直到手动调用resolve
+* {Function} onEnter.reject 数据加载失败，调用
+* {Function} opts.onBeforeExit state退出前触发，this指向对应的state，如果return false则会中断并退出整个状态机
+* {Function} opts.onExit 退出后触发，this指向对应的state
+* opts.ignoreChange.changeType 值为"param"，表示params变化，值为"query"，表示query变化
+* opts.ignoreChange.viewname 关联的ms-view name
+* opts.abstract  表示它不参与匹配，this指向对应的state
+* {private} opts.parentState 父状态对象（框架内部生成）
 
 
-具体可以看<https://rawgit.com/RubyLouvre/mmRouter/master/index2.html>示例页面
+具体可以看<https://github.com/gogoyqj/mmRouter-demo-list>例子
 

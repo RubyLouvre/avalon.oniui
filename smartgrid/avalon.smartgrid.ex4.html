@@ -4,15 +4,18 @@
         <title>表格排序操作</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
         <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
     </head>
     <body ms-controller="test">
-        <h1>表格排序操作</h1>
-        <p>设置远程排序为true且配置了远程排序函数remotesort则进行远程排序，否则本地排序，默认的本地排序是数组的sort方法，根据需求可以自己配置排序规则</p>
-        <div ms-widget="smartgrid, sg1"></div>
-        <h2>对比一下，上面表格使用本地排序，下面表格使用远程排序</h2>
-        <div ms-widget="smartgrid, sg2, $sg2Options"></div>
+        <div style="width:960px; margin: 0 auto">
+            <h1>表格排序操作</h1>
+            <p>设置远程排序为true且配置了远程排序函数remotesort则进行远程排序，否则本地排序，默认的本地排序是数组的sort方法，根据需求可以自己配置排序规则</p>
+            <div ms-widget="smartgrid, sg1"></div>
+            <h2>对比一下，上面表格使用本地排序，下面表格使用远程排序</h2>
+            <div ms-widget="smartgrid, sg2, $sg2Options"></div>
+        </div>
         <script>
             require(["smartgrid/avalon.smartgrid"], function() {
                 function getDatas(number) {
@@ -65,6 +68,7 @@
                                 name: "操作",
                                 title: "操作",
                                 width: 200,
+                                sortable: true,
                                 localSort: function(a, b, f) { //自定义排序规则
                                     return (a[f] - b[f]) || 0
                                 }
@@ -124,7 +128,7 @@
                 avalon.scan()
             })
         </script>
-        <div ms-skip>
+        <div ms-skip style="width:960px; margin: 0 auto">
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
                 &lt;html&gt;
@@ -191,6 +195,7 @@
                                             name: "操作",
                                             title: "操作",
                                             width: 200,
+                                            sortable: true,
                                             localSort: function(a, b, f) { //自定义排序规则
                                                 return (a[f] - b[f]) || 0
                                             }

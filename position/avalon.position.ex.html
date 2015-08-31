@@ -4,6 +4,7 @@
         <title>position组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
         <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
         <script>
@@ -82,10 +83,6 @@
             })
         </script>
         <style type="text/css">
-            body{
-                width: 100%;
-                overflow: hidden;
-            }
             #within{
                 width:300px;
                 margin:20px auto;
@@ -114,10 +111,10 @@
         <h1>position+spinner+dropdown+draggable</h1>
         <p ms-repeat-el="list">
             <label style="display:inline-block;width:100px;">{{el}}</label><br>
-            <select ms-widget="dropdown,$,opts" ms-attr-id="el+1">
+            <select ms-widget="dropdown,$,opts" ms-attr-id="el+1" ms-value="value">
             </select>
             <input ms-widget="spinner" ms-attr-id="{{el+'less'+1}}">
-            <select ms-widget="dropdown,$,opts2" ms-attr-id="el+2">
+            <select ms-widget="dropdown,$,opts2" ms-attr-id="el+2" ms-value="value">
             </select>
             <input ms-widget="spinner" ms-attr-id="{{el+'less'+2}}">
         </p>

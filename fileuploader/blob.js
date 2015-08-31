@@ -126,15 +126,15 @@ define(["avalon"], function (avalon) {
 		this.dispatchEvent("blobProgressed", this, uploadedBytes);
 	}
 
-	blob.prototype.onSuccess = function (responseText) {
+	blob.prototype.onSuccess = function (response, textStatus, promise) {
 		this.unbindFlashEventHub();
 
 		delete this.uploadConfig;
 		this.uploadedBytes = this.size;
-		this.dispatchEvent("blobUploaded", this, responseText);
+		this.dispatchEvent("blobUploaded", this, promise.responseText, textStatus);
 	}
 
-	blob.prototype.onError = function (textStatus) {
+	blob.prototype.onError = function (textStatus, error) {
 		this.retried++;
 		var retryConfig = this.uploadConfig.blobRetryTimes ? this.uploadConfig.blobRetryTimes : 0;
 		if (this.retried < retryConfig) {
@@ -171,7 +171,7 @@ define(["avalon"], function (avalon) {
 		    password: config.password,
 		    username: config.userName,
 		    success: function () {
-		    	me.onSuccess();
+		    	me.onSuccess.apply(me, arguments);
 		    },
 		    cache: false,
 		    progressCallback: function (e) {        
@@ -179,7 +179,7 @@ define(["avalon"], function (avalon) {
 		    		me.onProgress(e.loaded);
 		        }
 		    },
-		    error: function (textStatus, error) {
+		    error: function (promise, textStatus, error) {
 		    	me.onError(textStatus, error);
 		    }
 		};

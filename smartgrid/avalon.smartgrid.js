@@ -208,6 +208,8 @@ define(["avalon",
             $initRender = true,
             _dataVM,
             _data = []
+        options._parentContainer = null
+        options._parentContainerWidth = 0
         if (typeof options.data === 'number') {
             for (var i = 0, v; v = vmodels[i++];) {
                 if (v._uiName && v._uiName === 'smartgrid') {
@@ -281,7 +283,9 @@ define(["avalon",
             '_enabledData',
             '_filterCheckboxData',
             'maxGridWidth',
-            'bodyHeight'
+            'bodyHeight',
+            '_parentContainer',
+            '_parentContainerWidth'
         ].concat(options.$skipArray);
         var vmodel = avalon.define(vmId, function (vm) {
             avalon.mix(vm, options);
@@ -671,7 +675,9 @@ define(["avalon",
                 }
             };
             vm.$init = function () {
-                var container = vmodel.container, gridFrame = '';
+                var container = vmodel.container, gridFrame = '',
+                    changeFlag = false,
+                    t = 0;
 
                 gridFrame = gridHeader.replace('MS_OPTION_ID', vmodel.$id);
                 container.innerHTML = gridFrame;
@@ -731,6 +737,19 @@ define(["avalon",
                 if (typeof options.onInit === 'function') {
                     options.onInit.call(element, vmodel, options, vmodels);
                 }
+                t = setInterval(function() {
+                    var width = options._parentContainer.width() -2,
+                        parentContainerWidth = options._parentContainerWidth;
+                    if (width != parentContainerWidth) {
+                        options._parentContainerWidth  = width
+                        changeFlag = true
+                    } else {
+                        if (changeFlag) {
+                            vmodel._adjustColWidth()
+                        }
+                        clearInterval(t)
+                    }
+                }, 300)
 
                 if (window.addEventListener){
                     window.addEventListener("resize", function(){
@@ -956,8 +975,12 @@ define(["avalon",
     }
     function perfectColumns(options, element, vmId) {
         var columns = options.columns, selectColumn = {}, 
-            parentContainerWidth = avalon(options.container.parentNode).width() -2, 
+            parentContainer = avalon(options.container.parentNode),
+            parentContainerWidth = parentContainer.width() -2, 
             allColumnWidth = 0, maxWidth = 0, maxWidthColumn = {};
+
+        options._parentContainer = parentContainer
+        options._parentContainerWidth = parentContainerWidth
         for (var i = 0, len = columns.length; i < len; i++) {
             var column = columns[i], format = column.format, htmlFunction = '', _columnWidth = column.width, columnWidth = ~~_columnWidth;
             column.align = column.align || 'center';

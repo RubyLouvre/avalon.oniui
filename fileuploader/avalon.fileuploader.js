@@ -69,6 +69,8 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                         previewVm.uploadProgress = f.uploadedPercentage;
                     }, this);
 
+                    fileObj.addEventListener('requestDone', this.onFileRequestResponsed, this);
+
                     this.$runtime.addFile(fileObj);
                     this.previews.push({
                         name: fileInfo.name,
@@ -753,6 +755,14 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
                     previewVm.done = true;
                 }
             },
+
+            /*
+            * @config {Function} 每个文件上传请求成功后的response侦听函数。开启chunk后这个函数侦听的是每个分块的请求。
+            * @param file {Object} 文件对象
+            * @param textStatus {string} ajax的textStatus
+            * @param responseText {string} 服务器返回的请求响应内容。
+            */
+            onFileRequestResponsed: avalon.noop,
 
             getFileConfigByExtName: function (opts, extName) {
                 if (typeof opts == 'string')

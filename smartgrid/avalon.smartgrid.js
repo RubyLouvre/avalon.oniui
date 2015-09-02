@@ -669,6 +669,8 @@ define(["avalon",
                 } else if (!init) {
                     vmodel.container.scrollIntoView();
                 }
+
+                _adjustColWidth()
             };
             vm.$init = function () {
                 var container = vmodel.container, gridFrame = '';

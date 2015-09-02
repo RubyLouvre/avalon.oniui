@@ -20,6 +20,7 @@
  *    <p>事件介绍</p>
  *    <p>fileProgressed事件：当文件的上传进度发生变化时产生的事件。包含两个参数，参数1为文件对象本身，参数2为之前的文件上传进度。</p>
  *    <p>fileStatusChanged事件：当文件的状态发生变化时产生的事件。包含两个参数，参数1为文件对象本身，参数2为变化前的文件状态代码。</p>
+ *	  <p>requestDone事件：收到文件上传请求（包含分块请求）的服务器响应后触发的事件。包含三个参数，参数1为文件对象本身，参数2为textStatus，参数3位responseText。</p>
  *  @updatetime 2015-4-7
  */
 define(["avalon"], function ($$) {
@@ -67,7 +68,7 @@ define(["avalon"], function ($$) {
 		}
 	}
 
-	fileConstructor.prototype.onBlobUploaded = function (blob, responseText) {
+	fileConstructor.prototype.onBlobUploaded = function (blob, responseText, textStatus) {
 		this.doneBlobs++;
 		if (this.doneBlobs != this.blobs.length) {
 			this.setUploadedPercentage(Math.min(100, this.sumUploadedBytes() / this.size * 100));
@@ -75,6 +76,7 @@ define(["avalon"], function ($$) {
 			this.setUploadedPercentage(100, true);
 			this.setStatus(this.FILE_UPLOADED);
 		}
+		this.dispatchEvent('requestDone', this, textStatus, responseText);
 	}
 
 	fileConstructor.prototype.onBlobErrored = function (blob, errorText) {

@@ -310,11 +310,12 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
         cacheQueue = null
     }
     // 靠谱的解决方法
-    avalon.bindingHandlers.view = function(data, vmodels) {
+    avalon.bindingHandlers.view = function(data) {
+        var vmodels = data.vmodels || arguments[1]
         var currentState = mmState.currentState,
             element = data.element,
             $element = avalon(element),
-            viewname = data.value,
+            viewname = data.value || data.expr || "",
             comment = document.createComment("ms-view:" + viewname),
             par = element.parentNode,
             defaultHTML = element.innerHTML,
@@ -401,6 +402,11 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
         update("firsttime")
         _root.watch("updateview", function(state, changeType) {
             return update.call(this, undefine, state, changeType)
+        })
+    }
+    if(avalon.directives) {
+        avalon.directive("view", {
+            init: avalon.bindingHandlers.view
         })
     }
     function compileNode(tpl, element, $element, _currentState) {

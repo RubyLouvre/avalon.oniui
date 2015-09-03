@@ -1,4 +1,4 @@
-define(["../pager/avalon.pager.js"], function() {
+define(["../pager/avalon.pager"], function() {
 
     var pager = avalon.ui.pager
 

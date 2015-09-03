@@ -5,7 +5,7 @@
  *    <p>kindeditor文本编辑器组件</p>
  */
 
-define(["avalon", "./kindeditor.4.1.0.js"], function(avalon, K) {
+define(["avalon", "./kindeditor.4.1.0"], function(avalon, K) {
     var widgetName = "kindeditor",
         widget = avalon.ui[widgetName] = function(element, data, vmodels) {
 

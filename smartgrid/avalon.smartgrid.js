@@ -668,6 +668,9 @@ define(["avalon",
                     vmodel._gridWidth = avalon(gridEle).innerWidth()
                 }
                 vmodel.addRows(void 0, init, noShowLoading)
+                if (avalon.type(data) === 'array' && data.length) {
+                    ajustColumnWidth(vmodel)
+                }
                 if (sorting) {
                     sorting = false;
                 } else if (!init) {
@@ -675,9 +678,7 @@ define(["avalon",
                 }
             };
             vm.$init = function () {
-                var container = vmodel.container, gridFrame = '',
-                    changeFlag = false,
-                    t = 0;
+                var container = vmodel.container, gridFrame = '';
 
                 gridFrame = gridHeader.replace('MS_OPTION_ID', vmodel.$id);
                 container.innerHTML = gridFrame;
@@ -732,24 +733,11 @@ define(["avalon",
                 if(vmodel.colHandlerContainer !== ""){
                     addColHandlerTo(vmodel.colHandlerContainer, vmodel)
                 }
-
-
                 if (typeof options.onInit === 'function') {
                     options.onInit.call(element, vmodel, options, vmodels);
                 }
-                t = setInterval(function() {
-                    var width = options._parentContainer.width() -2,
-                        parentContainerWidth = options._parentContainerWidth;
-                    if (width != parentContainerWidth) {
-                        options._parentContainerWidth  = width
-                        changeFlag = true
-                    } else {
-                        if (changeFlag) {
-                            vmodel._adjustColWidth()
-                        }
-                        clearInterval(t)
-                    }
-                }, 300)
+
+                ajustColumnWidth(vmodel)
 
                 if (window.addEventListener){
                     window.addEventListener("resize", function(){
@@ -762,6 +750,7 @@ define(["avalon",
                     });
                 }
             };
+            
             vm.$remove = function () {
                 var container = vmodel.container;
                 container.innerHTML = container.textContent = '';
@@ -853,6 +842,23 @@ define(["avalon",
          */
         onSelectAll: avalon.noop
     };
+    function ajustColumnWidth (options) {
+        var changeFlag = false,
+            t = 0;
+        t = setInterval(function() {
+            var width = options._parentContainer.width() -2,
+                parentContainerWidth = options._parentContainerWidth;
+            if (width != parentContainerWidth) {
+                options._parentContainerWidth  = width
+                changeFlag = true
+            } else {
+                if (changeFlag) {
+                    options._adjustColWidth()
+                }
+                clearInterval(t)
+            }
+        }, 300)
+    }
     function initContainer(options, element) {
         var container = options.container;
         if (container) {

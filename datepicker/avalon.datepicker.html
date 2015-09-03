@@ -65,7 +65,7 @@
                 <table class="oni-datepicker-calendar-days" id='oni-datepicker-days'>
                     <tbody>
                         <tr ms-repeat-days="calendar.rows"
-                            ms-if-loop="_rowShow(days)">
+                            ms-visible="_rowShow(days, _uc)">
                             <td class="oni-datepicker-default"
                                 ms-repeat-item="days"
                                 ms-class="{{_setDayClass($index, $outer.$index, $outer.$outer.$index, item)}}"

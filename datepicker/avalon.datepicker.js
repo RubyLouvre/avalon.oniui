@@ -84,8 +84,9 @@ define(["../avalon.getModel",
                 "months", "years", "numberOfMonths",
                 "showOtherMonths", "watermark", "weekNames",
                 "stepMonths", "changeMonthAndYear", "startDay", "mobileMonthAndYear",
-                "formatErrorTip"    //格式错误提示文案
+                "formatErrorTip" 
             ]
+            vm._uc = false //更新calendar
             vm._height = 150
             vm.dateError = vm.dateError || ""
             vm.weekNames = []
@@ -1085,6 +1086,7 @@ define(["../avalon.getModel",
                         dateMonth = cellDate.getMonth()
                         dateYear = cellDate.getFullYear()
                         dateDay = cellDate.getDate()
+
                         if (dateYear === year && dateMonth === month) { 
                             setCalendarDate(cellDate, vmodel, valueDate, dateMonth, dateYear, dateDay, day, i, m, n)
                         } else {
@@ -1094,6 +1096,9 @@ define(["../avalon.getModel",
                                 vmodel.data[i]["rows"][m].set(n, "")
                                 avalon.mix(datepickerData[i]["rows"][m][n], {day:"",_day: "", month: false, weekend: false, selected:false,dateDisabled: true})
                             }
+                        }
+                        if (m === 5 && n === 0) { // 强行触发_rowShow，控制最后一行元素的可见或隐藏
+                            vmodel._uc = !vmodel._uc
                         }
                         cellDate = new Date(cellDate.setDate(dateDay+1))
                     } 

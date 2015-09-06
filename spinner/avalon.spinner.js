@@ -168,6 +168,10 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
             })
         }
         function checkNum(val) {
+            if(val === "-"){
+                return val
+            }
+
             // 如果val包含非数值字符，设置为0
             var v = Number(val) || 0,
                 min = vmodel.min,

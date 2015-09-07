@@ -32,7 +32,15 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
                 if (val === '') {
                     return
                 }
+
+                var originVal = val
+
                 val = checkNum(val);
+
+                if(originVal != val){
+                    element.blur();
+                }
+
                 vmodel.value = element.value = oldValue = val;
             })
         }
@@ -141,7 +149,7 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
             } 
             if (typeof max == 'number' && !isNaN(Number(max)) && value > max) {
                 value = max;
-            } 
+            }
             vmodel.value = element.value  = value;
         }
         function decorateElement() {
@@ -183,7 +191,7 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
             // 当设置了数值options.max，且不是NaN，重置v，否则忽略
             if( typeof max == 'number' && !isNaN(Number(max)) ) {
                 if (v > max) v = max
-            } 
+            }
             return parseFloat(v)
         }
         return vmodel;

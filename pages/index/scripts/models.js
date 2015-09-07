@@ -53,6 +53,7 @@ define("models", function(){
                 "draggable": "拖拽/可拖动",
                 "lazyload": "懒加载",
                 "mmPromise": "异步列队",
+                "mmRequest": "ajax请求",
                 "mmRouter": "路由",
                 "position": "定位",
                 "resizable": "伸缩",

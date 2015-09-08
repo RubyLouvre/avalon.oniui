@@ -530,7 +530,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
             onFilePoolOverSize: avalon.noop,
             /*
             * @config {Function} 用于自定义Ajax请求的数据。发送Blob数据时，组件会调用此函数。返回的Object键值对会被加入到Ajax请求中。
-            * @param fileObj {Object} 文件对象
+            * @param fileObj {Object} 文件对象。参见文档内的“文件对象说明”。
             * @param blobObj {Object} 文件分块对象
             */
             madeRequestParams: avalon.noop,
@@ -715,7 +715,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
 
             /*
              * @config 获取文件预览上的文本信息。重写此方法可以自定义文件上传时的文本。当文件被加入、开始上传、进度变更、上传完毕以及发生错误时都会调用此方法。
-             * @param fileObj {Object} 文件对象
+             * @param fileObj {Object} 文件对象。参见文档内的“文件对象说明”。
              */
             getFileMessageText: function (fileObj) {
                 var message = "";
@@ -758,7 +758,7 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
 
             /*
             * @config {Function} 每个文件上传请求成功后的response侦听函数。开启chunk后这个函数侦听的是每个分块的请求。
-            * @param file {Object} 文件对象
+            * @param fileObj {Object} 文件对象。参见文档内的“文件对象说明”。
             * @param textStatus {string} ajax的textStatus
             * @param responseText {string} 服务器返回的请求响应内容。
             */
@@ -793,4 +793,5 @@ define(["avalon", "text!./avalon.fileuploader.html", "browser/avalon.browser", "
  [预览图和进度条配置](avalon.fileuploader.ex2.html)
  [大文件和分块配置](avalon.fileuploader.ex3.html)
  [文件Ajax请求参数的配置](avalon.fileuploader.ex5.html)
+ [fileObj对象说明](avalon.fileuploader.ex6.html)
 */

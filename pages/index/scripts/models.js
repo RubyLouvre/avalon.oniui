@@ -221,7 +221,8 @@ define("models", function(){
                 "uploader基础配置项": "avalon.fileuploader.ex1.html",
                 "预览图和进度条配置": "avalon.fileuploader.ex2.html",
                 "大文件和分块配置": "avalon.fileuploader.ex3.html",
-                "文件Ajax请求参数的配置": "avalon.fileuploader.ex5.html"
+                "文件Ajax请求参数的配置": "avalon.fileuploader.ex5.html",
+                "fileObj文件对象说明": "avalon.fileuploader.ex6.html"
             },
             "kindeditor": {
                 "默认配置": "avalon.kindeditor.ex1.html",

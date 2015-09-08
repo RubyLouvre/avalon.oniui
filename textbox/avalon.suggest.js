@@ -257,7 +257,13 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                 event.preventDefault();
                 if (!vmodel.toggle) return ;
                 vmodel.toggle = false;
-                vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event, vmodel.list[vmodel.selectedIndex]);
+
+                vmodel.inputElement.blur()
+
+                setTimeout(function(){
+                    vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement,
+                                                event, vmodel.list[vmodel.selectedIndex]);
+                }, 0)
             break;
             case 38:
                 // arrow up

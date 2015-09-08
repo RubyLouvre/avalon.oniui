@@ -28,20 +28,23 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
             maxVM
 
         if (duplexVM) {
+
             duplexVM[1].$watch(duplexVM[0], function(val) {
                 if (val === '') {
                     return
                 }
 
-                var originVal = val
+                var originalVal = val
 
                 val = checkNum(val);
 
-                if(originVal != val){
-                    element.blur();
+                if(originalVal != val){
+                    element.blur()
                 }
 
-                vmodel.value = element.value = oldValue = val;
+                setTimeout(function(){
+                    vmodel.value = element.value = oldValue = val;
+                }, 0)
             })
         }
         if (disabledVM) {

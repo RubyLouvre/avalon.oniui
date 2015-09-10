@@ -28,12 +28,23 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
             maxVM
 
         if (duplexVM) {
+
             duplexVM[1].$watch(duplexVM[0], function(val) {
                 if (val === '') {
                     return
                 }
+
+                var originalVal = val
+
                 val = checkNum(val);
-                vmodel.value = element.value = oldValue = val;
+
+                if(originalVal != val){
+                    element.blur()
+                }
+
+                setTimeout(function(){
+                    vmodel.value = element.value = oldValue = val;
+                }, 0)
             })
         }
         if (disabledVM) {
@@ -141,7 +152,7 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
             } 
             if (typeof max == 'number' && !isNaN(Number(max)) && value > max) {
                 value = max;
-            } 
+            }
             vmodel.value = element.value  = value;
         }
         function decorateElement() {
@@ -168,6 +179,10 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
             })
         }
         function checkNum(val) {
+            if(val === "-"){
+                return val
+            }
+
             // 如果val包含非数值字符，设置为0
             var v = Number(val) || 0,
                 min = vmodel.min,
@@ -179,7 +194,7 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
             // 当设置了数值options.max，且不是NaN，重置v，否则忽略
             if( typeof max == 'number' && !isNaN(Number(max)) ) {
                 if (v > max) v = max
-            } 
+            }
             return parseFloat(v)
         }
         return vmodel;

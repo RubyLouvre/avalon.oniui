@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>fileObj文件对象说明</title>
+	<script src="../avalon.js"></script>
+	<link rel="stylesheet" href="../style/avalon.doc.css"/>
+	<link rel="stylesheet" href="avalon.fileuploader.ex.css"/>
+</head>
+
+
+
+
+
+<body ms-controller="demo">
+	<h1><a name="requestaddparam">基础属性</a></h1>
+	<p style="text-indent:0;" class='end'>
+		<span>name：文件名</span>
+		<span>size：文件尺寸。按字节计算。</span>
+		<span>data：文件的数据。是一个HTML5的File对象。在IE6-9下为空。</span>
+		<span>modifyTime：最后修改时间。</span>
+		<span>fileLocalToken：在客户端生成的一个唯一的文件ID，不会和其他文件重复。</span>
+		<span>status：文件状态。详见<a href="#status" style="color:blue;">文件状态说明</a>。</span>
+		<span>chunked：是否开启分块。</span>
+		<span>uploadedPercentage：已上传的百分比。0到100，精确到小数点后两位。</span>
+		<span>doneBlobs：已成功上传的分块数量。</span>
+	</p>
+
+	<h1><a name="requestaddparam">文件状态说明</a></h1>
+	<p style="text-indent:0;" class='end'>
+		<span>每个fileObj的status属性都代表的文件的状态。文件对象内本身有状态的枚举的常数值，说明如下：</span>
+		<span>1）fileObj.FILE_INIT： 文件被加入后的原始状态，即文件选中后时的状态代码，这个状态非常短暂，会很快被FILE_CACHED代替。</span>
+		<span>2）fileObj.FILE_CACHED：已被runtime缓存。当你看到文件的缩略的时候已经变成了这个状态。</span>
+		<span>3）fileObj.FILE_QUEUED：已进入发送队列。点击上传的时候，会立即进入发送队列并将状态修改为FILE_QUEUED。</span>
+		<span>4）fileObj.FILE_IN_UPLOADING：文件已经开始上传。排队结束，第一个分块已经开始发送。</span>
+		<span>5）fileObj.FILE_UPLOADED：文件上传结束。</span>
+		<span>6）fileObj.FILE_ERROR_FAIL_READ：FileQueue无法读取文件。读取文件错误。</span>
+		<span>7）fileObj.FILE_ERROR_FAIL_UPLOAD：FileQueue发送文件时碰见错误，包含网络错误等。</span>
+	</p>
+</body>
+</html>
+

@@ -11,7 +11,7 @@
  *    <p>fileLocalToken：在客户端生成的一个唯一的文件ID，不会和其他文件重复。</p>
  *    <p>__flashfile：是否为一个由flash产生的文件。IE6-9等不支持File接口的浏览器下始终为true，其他的浏览器下始终是false。</p>
  *    <p>__html5file：与__flashfile互斥。表示是一个HTML5的文件。</p>
- *    <p>status：与__flashfile互斥。表示是一个HTML5的文件。</p>
+ *    <p>status：文件状态</p>
  *    <p>chunked：是否开启分块。</p>
  *    <p>blobs：分块的数组。里面包含1到多个blob类的实例。</p>
  *    <p>uploadedPercentage：已上传的百分比。0到100，精确到小数点后两位。</p>

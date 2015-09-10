@@ -98,7 +98,7 @@
 				};
 
 				vm.$uploaderOptions4 = $$.mix({
-					onFileRequestResponsed: function (file, textStatus, responseText) {
+					onFileRequestResponsed: function (fileObj, textStatus, responseText) {
 						console.log("收到了服务器的数据：", textStatus, ". ", responseText)
 					}
 				}, basicOptions);

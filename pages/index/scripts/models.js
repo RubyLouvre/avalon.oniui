@@ -53,6 +53,7 @@ define("models", function(){
                 "draggable": "拖拽/可拖动",
                 "lazyload": "懒加载",
                 "mmPromise": "异步列队",
+                "mmRequest": "ajax请求",
                 "mmRouter": "路由",
                 "position": "定位",
                 "resizable": "伸缩",
@@ -220,7 +221,8 @@ define("models", function(){
                 "uploader基础配置项": "avalon.fileuploader.ex1.html",
                 "预览图和进度条配置": "avalon.fileuploader.ex2.html",
                 "大文件和分块配置": "avalon.fileuploader.ex3.html",
-                "文件Ajax请求参数的配置": "avalon.fileuploader.ex5.html"
+                "文件Ajax请求参数的配置": "avalon.fileuploader.ex5.html",
+                "fileObj文件对象说明": "avalon.fileuploader.ex6.html"
             },
             "kindeditor": {
                 "默认配置": "avalon.kindeditor.ex1.html",

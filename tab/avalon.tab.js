@@ -304,36 +304,76 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
                     step = step > 0 ? step : 0
                 } else {
                     step = vm.sliderIndex + 1
-                    step = step <= vm.sliderLength - 1 ? step : vm.sliderLength - 1
                 }
+
                 vm.sliderIndex = step
+
+                var tabs = document.getElementById("tabs" + vm.tabs.$id)
+                var tabsWidth = tabs.scrollWidth,
+                    containerWidth = avalon(tabs.parentNode.parentNode).width(),
+                    tabsMargin = avalon(tabs.parentNode).css("margin-left")
+
+                var maxMarginLeft = tabsWidth - containerWidth
+
+                if(vm.sliderStep.indexOf("%") !== -1){
+                    vm._computedMarginLeft = vm.sliderIndex * parseInt(vm.sliderStep, 10) * containerWidth * 0.01
+                } else if(vm.sliderStep.indexOf("px") !== -1){
+                    vm._computedMarginLeft = vm.sliderIndex * parseInt(vm.sliderStep, 10)
+                } else{
+                    console.log("ERROR: sliderStep设置有误")
+                }
+
+                // 判断tabs是否达到最右侧
+                if((vm._computedMarginLeft) > maxMarginLeft){
+                    vm._computedMarginLeft = - maxMarginLeft + "px"
+                } else{
+                    vm._computedMarginLeft = - vm._computedMarginLeft + "px"
+                }
+
+                // 如果不再移动了，则sliderIndex不变化
+                if(dir === "next" && tabsMargin === vm._computedMarginLeft){
+                    vm.sliderIndex -= 1
+                }
+
+                vm.computeSlider()
                 vm.buttonEnable()
             }
+            vm._computedMarginLeft = "",
             vm.computeSlider = function() {
                 if(vm.dir === "v") return
                 var tabs = document.getElementById("tabs" + vm.tabs.$id)
                 if(tabs) {
-                    var w = tabs.scrollWidth,
-                        pw = tabs.parentNode.parentNode.clientWidth;
-                    if(w > pw) {
-                        vm.sliderLength = w / pw
-                    } else {
-                        vm.sliderLength = 0
-                    }
-                    vm.buttonEnable()
-                }
+                    setTimeout(function(){
 
+                        var tabsWidth = tabs.scrollWidth,
+                            containerWidth = avalon(tabs.parentNode.parentNode).width(),
+                            tabsMargin = avalon(tabs.parentNode).css("margin-left")
+
+                        // fix slider状态下删除tab对布局的影响
+                        if(tabsWidth < containerWidth){
+                            vm._computedMarginLeft = 0
+                        } else if(tabsWidth < containerWidth - parseInt(tabsMargin)){
+                            vm._computedMarginLeft = - (tabsWidth - containerWidth) + "px"
+                        }
+
+                        if(tabsWidth > containerWidth) {
+                            vm.sliderLength = tabsWidth / containerWidth
+                        } else {
+                            vm.sliderLength = 0
+                        }
+
+                        vm.buttonEnable()
+
+                    }, 0)
+                }
             }
             vm.buttonEnable = function() {
-                if(vm.sliderIndex >= vm.sliderLength - 1) {
-                    vm.nextEnable = 0
-                } else {
-                    vm.nextEnable = 1
-                }
-                if(vm.sliderIndex <= 0) {
-                    vm.prevEnable = 0
-                } else {
-                    vm.prevEnable = 1
+                if(vm.sliderLength > 1) {
+                    vm.prevEnable = true
+                    vm.nextEnable = true
+                } else{
+                    vm.prevEnable = false
+                    vm.nextEnable = false
                 }
             }
             return vm
@@ -387,6 +427,7 @@ define(["avalon","text!./avalon.tab.html", "text!./avalon.tab.panels.html", "tex
         titleCutCount: 8,       //@config  tab title截取长度，默认是8
         distroyDom: true,       //@config  扫描dom获取数据，是否销毁dom
         cutEnd: "...",          //@config  tab title截取字符后，连接的字符，默认为省略号
+        sliderStep: "100%",     //@config  点击slider箭头移动的距离
         forceCut: false,        //@config  强制截断，因为竖直方向默认是不截取的，因此添加一个强制截断，使得在纵向排列的时候title也可以被截断
         //tabs:undefined,              //@config  <pre>[/n{/ntitle:"xx",/n linkOnly: false,/n disabled:boolen,/n target: "_self",/n removable:boolen/n}/n]</pre>，单个tabs元素的removable针对该元素的优先级会高于组件的removable设置，linkOnly表示这只是一个链接，不响应active事件，也不阻止默认事件，target对应的是链接打开方式_self默认，可以使_blank,_parent，tab里的target配置优先级高于vm的target配置，应用于某个tab上，可以在元素上 data-target="xxx" 这样配置
         //tabpanels:undefined,         //@config  <pre>[/n{/ncontent:content or url,/n contentType: "content" or "ajax"/n}/n]</pre> 单个panel的contentType配置优先级高于组件的contentType

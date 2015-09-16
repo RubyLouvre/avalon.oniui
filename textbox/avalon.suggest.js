@@ -165,7 +165,31 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                         suggestHtml.style.cssText = "margin:0;left:0;top:0;width:"+suggestHtmlWidth ;
                         return ;
                     }
-                    suggestHtml.style.width = $textboxContainer.outerWidth() - 2 - avalon(suggestHtml).css("paddingLeft").replace(styleReg, '$1') - avalon(suggestHtml).css("paddingRight").replace(styleReg, '$1') + 'px';
+
+                    suggestHtml.style.width = $textboxContainer.outerWidth() - 2 - avalon(suggestHtml).css("paddingLeft").replace(styleReg, '$1') - avalon(suggestHtml).css("paddingRight").replace(styleReg, '$1') + 'px'
+
+                    var listHeight = avalon(suggestHtml).height(),
+                        offsetTop = getOffset(textboxContainer).top,
+                        inputHeight = avalon(textboxContainer).height(),
+                        windowHeihgt = avalon(window).height()
+
+                    var offsetBottom = windowHeihgt - offsetTop - inputHeight,
+                        exceedBottom = listHeight > offsetBottom
+
+                    if(exceedBottom){
+                        avalon(suggestHtml).css({top: "initial", bottom: inputHeight + 3 + "px"})
+                    }
+
+                    function getOffset( el ) {
+                        var _x = 0;
+                        var _y = 0;
+                        while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+                            _x += el.offsetLeft - el.scrollLeft;
+                            _y += el.offsetTop - el.scrollTop;
+                            el = el.offsetParent;
+                        }
+                        return { top: _y, left: _x };
+                    }
                 }
             })
             // 监控searchText值的变化，及时更新提示列表?

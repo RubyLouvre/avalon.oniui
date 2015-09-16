@@ -243,9 +243,7 @@ define("models", function(){
                 "懒加载组件-默认配置": "avalon.lazyload.ex.html",
                 "懒加载组件-自定义effect(加载效果)和各自delay(加载延迟)": "avalon.lazyload.ex1.html",
                 "懒加载组件-自定义加载中图片": "avalon.lazyload.ex2.html",
-                "懒加载组件-预加载采用文字模式": "avalon.lazyload.ex3.html",
-                "懒加载组件-懒加载页面元素": "avalon.lazyload.ex4.html",
-                "懒加载组件-自定义懒加载尺寸": "avalon.lazyload.ex5.html"
+                "懒加载组件-预加载采用文字模式": "avalon.lazyload.ex3.html"
             },
             "JSON": {},
             "live": {
